@@ -70,7 +70,6 @@ import javax.security.auth.callback.NameCallback;
 import javax.security.auth.callback.PasswordCallback;
 import javax.security.auth.callback.UnsupportedCallbackException;
 import javax.security.auth.login.LoginContext;
-import javax.security.auth.login.LoginException;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -158,47 +157,39 @@ public class KerberosHttpInvoker implements HttpInvoker
                 }
             }
 
-            HttpResponse response = null;
-            try
+            LOG.debug("User: {} | Password-length: {}", user, password.length());
+
+            LoginContext loginContext = new LoginContext(APP_CONFIGURATION_ENTRY_NAME, new KerberosCallBackHandler(user, password));
+            loginContext.login();
+
+            PrivilegedAction<HttpResponse> sendAction = new PrivilegedAction<HttpResponse>()
             {
-                LOG.debug("User: {} | Password-length: {}", user, password.length());
-
-                LoginContext loginContext = new LoginContext(APP_CONFIGURATION_ENTRY_NAME, new KerberosCallBackHandler(user, password));
-                loginContext.login();
-
-                PrivilegedAction<HttpResponse> sendAction = new PrivilegedAction<HttpResponse>()
+                @Override
+                public HttpResponse run()
                 {
-                    @Override
-                    public HttpResponse run()
+                    try
                     {
-                        try
-                        {
-                            Subject current = Subject.getSubject(AccessController.getContext());
-                            LOG.debug("----------------------------------------");
+                        Subject current = Subject.getSubject(AccessController.getContext());
+                        LOG.debug("----------------------------------------");
 
-                            Set<Principal> principals = current.getPrincipals();
-                            for (Principal next : principals)
-                            {
-                                LOG.debug("DOAS Principal: {}", next.getName());
-                            }
-                            LOG.debug("----------------------------------------");
-
-                            return call(url.toString(), method, contentType, headers, writer, session, offset, length, authProvider);
-                        }
-                        catch (IOException e)
+                        Set<Principal> principals = current.getPrincipals();
+                        for (Principal next : principals)
                         {
-                            LOG.error("IOException", e);
-                            return null;
+                            LOG.debug("DOAS Principal: {}", next.getName());
                         }
+                        LOG.debug("----------------------------------------");
+
+                        return call(url.toString(), method, contentType, headers, writer, session, offset, length, authProvider);
                     }
-                };
+                    catch (IOException e)
+                    {
+                        LOG.error("IOException", e);
+                        return null;
+                    }
+                }
+            };
 
-                response = Subject.doAs(loginContext.getSubject(), sendAction);
-            }
-            catch (LoginException le)
-            {
-                LOG.error("Failed login!", le);
-            }
+            HttpResponse response = Subject.doAs(loginContext.getSubject(), sendAction);
 
             // get the response
             Map<String, List<String>> responseHeaders = Arrays.stream(response.getAllHeaders())

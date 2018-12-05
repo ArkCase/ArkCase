@@ -26,6 +26,7 @@ package com.armedia.acm.services.billing.dao;
  * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
  * #L%
  */
+
 import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.services.billing.model.BillingInvoice;
 
@@ -74,7 +75,7 @@ public class BillingInvoiceDao extends AcmAbstractDao<BillingInvoice>
         List<BillingInvoice> billingInvoices = query.getResultList();
         if (null == billingInvoices)
         {
-            billingInvoices = new ArrayList<BillingInvoice>();
+            billingInvoices = new ArrayList<>();
         }
         return billingInvoices;
     }

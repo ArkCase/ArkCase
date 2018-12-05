@@ -112,7 +112,7 @@ public class FileWatcher implements FileListener, ApplicationContextAware, Appli
             fileExtension = getFileExtension(fileChangeEvent.getFile());
         }
 
-        if (getAllowedFileExtensionsList().contains(fileExtension))
+        if (getAllowedFileExtensionsList().contains(fileExtension) && fileChangeEvent != null)
         {
             LOG.debug("File {} added", fileChangeEvent.getFile().getName());
 

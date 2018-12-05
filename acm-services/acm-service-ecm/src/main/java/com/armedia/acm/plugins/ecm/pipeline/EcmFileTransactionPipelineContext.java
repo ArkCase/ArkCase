@@ -186,7 +186,7 @@ public class EcmFileTransactionPipelineContext extends AbstractPipelineContext
     /**
      * @deprecated use getFileContents
      */
-    public byte[] getFileByteArray()
+    public synchronized byte[] getFileByteArray()
     {
         try
         {

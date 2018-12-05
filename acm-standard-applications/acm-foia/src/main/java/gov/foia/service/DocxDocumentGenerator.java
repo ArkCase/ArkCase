@@ -29,6 +29,7 @@ package gov.foia.service;
 
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
+import com.armedia.acm.core.exceptions.CorrespondenceMergeFieldVersionException;
 import com.armedia.acm.correspondence.utils.PoiWordGenerator;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
@@ -67,7 +68,8 @@ public class DocxDocumentGenerator implements DocumentGenerator
 
     @Override
     public EcmFile generateAndUpload(FOIADocumentDescriptor documentDescriptor, FOIAObject acmObject, String targetCmisFolderId,
-            String targetFilename, Map<String, String> substitutions) throws DocumentGeneratorException
+            String targetFilename, Map<String, String> substitutions)
+            throws DocumentGeneratorException, CorrespondenceMergeFieldVersionException
     {
         try
         {
