@@ -79,10 +79,13 @@ public abstract class AcmAbstractDao<T>
     @Transactional(propagation = Propagation.SUPPORTS)
     public List<T> findAllOrderBy(String column)
     {
-        TypedQuery<T> allRecords = em.createQuery("SELECT e FROM " + getPersistenceClass().getSimpleName() + " e order by e." + column,
-                getPersistenceClass());
-        List<T> retval = allRecords.getResultList();
-        return retval;
+        CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
+        CriteriaQuery<T> allRecords = criteriaBuilder.createQuery(getPersistenceClass());
+        Root<T> entityRoot = allRecords.from(getPersistenceClass());
+        allRecords.select(entityRoot);
+        allRecords.orderBy(criteriaBuilder.asc(entityRoot.get(column)));
+
+        return em.createQuery(allRecords).getResultList();
     }
 
     @Transactional(propagation = Propagation.SUPPORTS)

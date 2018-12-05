@@ -1,8 +1,8 @@
-package com.armedia.acm.plugins.stateofarkcaseplugin.service;
+package com.armedia.acm.calendar.service.integration.exchange.exception;
 
 /*-
  * #%L
- * ACM Plugins: Plugin State of Arkcase
+ * ACM Service: Exchange Integration Calendar Service
  * %%
  * Copyright (C) 2014 - 2018 ArkCase LLC
  * %%
@@ -27,15 +27,10 @@ package com.armedia.acm.plugins.stateofarkcaseplugin.service;
  * #L%
  */
 
-import com.armedia.acm.core.exceptions.AcmStateOfArkcaseGenerateReportException;
-
-import java.io.File;
-import java.time.LocalDate;
-
-public interface AcmStateOfArkcaseService
+public class CalendarRecurrenceTypeException extends RuntimeException
 {
-    /**
-     * Generates state of Arkcase report as zip file
-     */
-    File generateReportForDay(LocalDate day) throws AcmStateOfArkcaseGenerateReportException;
+    public CalendarRecurrenceTypeException(String message)
+    {
+        super(message);
+    }
 }

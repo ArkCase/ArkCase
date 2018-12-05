@@ -38,7 +38,6 @@ import static org.junit.Assert.fail;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.group.AcmGroup;
-import com.armedia.acm.services.users.service.group.GroupService;
 import com.armedia.acm.spring.SpringContextHolder;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;

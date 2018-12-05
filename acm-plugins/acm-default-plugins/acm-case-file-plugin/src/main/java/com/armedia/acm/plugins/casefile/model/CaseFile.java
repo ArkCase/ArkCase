@@ -364,7 +364,7 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity,
         Optional<PersonAssociation> found = getPersonAssociations().stream()
                 .filter(personAssociation -> "Initiator".equalsIgnoreCase(personAssociation.getPersonType())).findFirst();
 
-        if (found != null && found.isPresent())
+        if (found.isPresent())
         {
             return found.get();
         }
@@ -386,7 +386,7 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity,
             Optional<PersonAssociation> found = getPersonAssociations().stream()
                     .filter(personAssociation -> "Initiator".equalsIgnoreCase(personAssociation.getPersonType())).findFirst();
 
-            if (found == null || !found.isPresent())
+            if (!found.isPresent())
             {
                 getPersonAssociations().add(originator);
             }

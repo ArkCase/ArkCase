@@ -29,9 +29,9 @@ package com.armedia.acm.services.notification.web.api;
 
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.services.notification.dao.NotificationDao;
-import com.armedia.acm.services.notification.exception.AcmNotificationException;
 import com.armedia.acm.services.notification.model.ApplicationNotificationEvent;
 import com.armedia.acm.services.notification.model.Notification;
+import com.armedia.acm.services.notification.model.NotificationConstants;
 import com.armedia.acm.services.notification.service.NotificationEventPublisher;
 
 import org.slf4j.Logger;
@@ -68,15 +68,15 @@ public class SaveNotificationAPIController
             {
                 log.info("Notification ID : " + notification.getId());
             }
+            else
+            {
+                throw new AcmUserActionFailedException("addNote", NotificationConstants.OBJECT_TYPE, null,
+                        "Could not save note, missing parent type and ID", new NullPointerException());
+            }
         }
 
         try
         {
-            if (notification == null)
-            {
-                throw new AcmNotificationException("Could not save notification, missing parent type and ID");
-            }
-
             // to db
             Notification newNotification = new Notification();
 
