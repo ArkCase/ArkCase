@@ -241,7 +241,7 @@
             ]
         },
         {
-            "id": "myOverdueCase",
+            "id": "myOverdueCases",
             "title": "dashboard.widgets.myOverdueCases.title",
             "configurable": true,
             "enableFiltering": false,
