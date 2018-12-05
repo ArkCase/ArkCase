@@ -101,7 +101,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 /**
  * HTTP proxy which can be used to proxy services which ArkCase is using in IFRAME and must be exposed to the outer
@@ -196,20 +195,19 @@ public class ProxyServlet extends HttpServlet
     protected static final HeaderGroup hopByHopHeaders;
     protected static final BitSet asciiQueryChars;
 
-    private static final String[] headers = new String[] {
-            "Connection",
-            "Keep-Alive",
-            "Proxy-Authenticate",
-            "Proxy-Authorization",
-            "TE",
-            "Trailers",
-            "Transfer-Encoding",
-            "Upgrade" };
-
     static
     {
         hopByHopHeaders = new HeaderGroup();
-        for (final String header : headers)
+        String[] headers = new String[] {
+                "Connection",
+                "Keep-Alive",
+                "Proxy-Authenticate",
+                "Proxy-Authorization",
+                "TE",
+                "Trailers",
+                "Transfer-Encoding",
+                "Upgrade" };
+        for (String header : headers)
         {
             hopByHopHeaders.addHeader(new BasicHeader(header, null));
         }
@@ -217,13 +215,35 @@ public class ProxyServlet extends HttpServlet
 
     static
     {
+        char[] c_unreserved = "_-!.~'()*".toCharArray();// plus alphanum
+        char[] c_punct = ",;:$&+=".toCharArray();
+        char[] c_reserved = "?/[]@".toCharArray();// plus punct
+
         asciiQueryChars = new BitSet(128);
-
-        "_-!.~'()*,;:$&+=?/[]@".chars().forEach(asciiQueryChars::set);
-
-        IntStream.rangeClosed('a', 'z').forEach(asciiQueryChars::set);
-        IntStream.rangeClosed('A', 'Z').forEach(asciiQueryChars::set);
-        IntStream.rangeClosed('0', '9').forEach(asciiQueryChars::set);
+        for (char c = 'a'; c <= 'z'; c++)
+        {
+            asciiQueryChars.set(c);
+        }
+        for (char c = 'A'; c <= 'Z'; c++)
+        {
+            asciiQueryChars.set(c);
+        }
+        for (char c = '0'; c <= '9'; c++)
+        {
+            asciiQueryChars.set(c);
+        }
+        for (char c : c_unreserved)
+        {
+            asciiQueryChars.set(c);
+        }
+        for (char c : c_punct)
+        {
+            asciiQueryChars.set(c);
+        }
+        for (char c : c_reserved)
+        {
+            asciiQueryChars.set(c);
+        }
 
         asciiQueryChars.set('%');// leave existing percent escapes in place
     }
@@ -235,49 +255,50 @@ public class ProxyServlet extends HttpServlet
     /**
      * List containing urls which need to be matched for rewriting strings in the content.
      */
-    protected static List<String> responseUrlMatchers;
+    protected List<String> responseUrlMatchers;
 
     /* MISC */
     /**
      * List containing content types which needs to be skipped for processing
      */
-    protected static List<String> skipResponseContentTypes;
+    protected List<String> skipResponseContentTypes;
     /**
      * List containing patterns for urls which need to be skipped
      */
-    protected static List<String> skipResponseUrlMatchers = null;
+    protected List<String> skipResponseUrlMatchers;
     /**
      * List containing patterns and parameters for urls which need to be added
      */
-    private static List<String> appendUrlParams = null;
+    protected List<String> appendUrlParams;
     /**
      * List containing patterns and additional headers for urls which need to be added
      */
-    private static List<String> additionalHeaders = null;
+    protected List<String> additionalHeaders;
 
     // These next 3 are cached here, and should only be referred to in initialization logic. See the
     // ATTR_* parameters.
-    protected static boolean doForwardIP = true;
+    protected boolean doForwardIP = true;
     /**
      * User agents shouldn't send the url fragment but what if it does?
      */
-    protected static boolean doPreserveHost = false;
-    protected static boolean doPreserveCookies = false;
+    protected boolean doSendUrlFragment = true;
+    protected boolean doPreserveHost = false;
+    protected boolean doPreserveCookies = false;
     /**
      * From the configured parameter "targetUri".
      */
-    protected static String targetUri;
-    protected static URI targetUriObj;// new URI(targetUri)
-    protected static HttpHost targetHost;// URIUtils.extractHost(targetUriObj);
+    protected String targetUri;
+    protected URI targetUriObj;// new URI(targetUri)
+    protected HttpHost targetHost;// URIUtils.extractHost(targetUriObj);
     /**
      * Patterns and replacements for replacing String in the response content
      */
-    private static List<String> responseContentRewritePairs;
+    private List<String> responseContentRewritePairs;
     /**
      * container for compiled pattern for further reuse
      */
-    private static Map<String, Pattern> compiledPatterns = new HashMap<>();
-    private static HttpClient proxyClient;
+    private Map<String, Pattern> compiledPatterns = new HashMap<>();
+    private HttpClient proxyClient;
 
     /**
      * Encodes characters in the query or fragment part of the URI.
@@ -882,6 +903,7 @@ public class ProxyServlet extends HttpServlet
     {
         return "!Proxy!" + getServletConfig().getServletName();
     }
+
     /**
      * Copy response body data (the entity) from the proxy to the servlet client.
      */
@@ -1029,7 +1051,6 @@ public class ProxyServlet extends HttpServlet
             uri.append(encodeUriQuery(queryString));
         }
 
-        boolean doSendUrlFragment = true;
         if (doSendUrlFragment && fragment != null)
         {
             uri.append('#');
@@ -1206,7 +1227,7 @@ public class ProxyServlet extends HttpServlet
      *            String that contains values separated with comma ","
      * @return List
      */
-    private static List<String> parseCsvAsList(String csv)
+    private List<String> parseCsvAsList(String csv)
     {
         if (StringUtils.isEmpty(csv))
         {
