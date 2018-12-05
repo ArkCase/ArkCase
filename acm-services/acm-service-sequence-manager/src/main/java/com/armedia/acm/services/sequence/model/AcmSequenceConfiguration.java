@@ -37,6 +37,8 @@ public class AcmSequenceConfiguration
 {
 
     private String sequenceName;
+    private Boolean sequenceEnabled;
+    private String sequenceDescription;
     private List<AcmSequencePart> sequenceParts;
 
     /**
@@ -54,6 +56,40 @@ public class AcmSequenceConfiguration
     public void setSequenceName(String sequenceName)
     {
         this.sequenceName = sequenceName;
+    }
+
+    /**
+     * @return the sequenceEnabled
+     */
+    public Boolean getSequenceEnabled()
+    {
+        return sequenceEnabled;
+    }
+
+    /**
+     * @param sequenceEnabled
+     *            the sequenceEnabled to set
+     */
+    public void setSequenceEnabled(Boolean sequenceEnabled)
+    {
+        this.sequenceEnabled = sequenceEnabled;
+    }
+
+    /**
+     * @return the sequenceDescription
+     */
+    public String getSequenceDescription()
+    {
+        return sequenceDescription;
+    }
+
+    /**
+     * @param sequenceDescription
+     *            the sequenceDescription to set
+     */
+    public void setSequenceDescription(String sequenceDescription)
+    {
+        this.sequenceDescription = sequenceDescription;
     }
 
     /**

@@ -38,9 +38,12 @@ import com.armedia.acm.plugins.casefile.pipeline.CaseFilePipelineContext;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.services.pipeline.PipelineManager;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
+import com.armedia.acm.services.sequence.model.AcmSequenceEvent;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -52,12 +55,13 @@ import java.util.Objects;
 /**
  * Created by armdev on 8/29/14.
  */
-public class SaveCaseServiceImpl implements SaveCaseService
+public class SaveCaseServiceImpl implements SaveCaseService, ApplicationEventPublisherAware
 {
     private final Logger log = LoggerFactory.getLogger(getClass());
     private CaseFileDao caseFileDao;
     private PipelineManager<CaseFile, CaseFilePipelineContext> pipelineManager;
     private EcmFileService ecmFileService;
+    private ApplicationEventPublisher applicationEventPublisher;
 
     @Override
     @Transactional
@@ -100,6 +104,7 @@ public class SaveCaseServiceImpl implements SaveCaseService
             {
                 saved = caseFileDao.save(caseFile);
                 log.info("Case saved '{}'", saved);
+                applicationEventPublisher.publishEvent(new AcmSequenceEvent(saved));
             }
             catch (Exception e)
             {
@@ -127,6 +132,8 @@ public class SaveCaseServiceImpl implements SaveCaseService
             CaseFile saved = caseFileDao.save(in);
 
             log.info("Case saved '{}'", saved);
+
+            applicationEventPublisher.publishEvent(new AcmSequenceEvent(saved));
             return saved;
 
         });
@@ -160,6 +167,17 @@ public class SaveCaseServiceImpl implements SaveCaseService
     public void setEcmFileService(EcmFileService ecmFileService)
     {
         this.ecmFileService = ecmFileService;
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see org.springframework.context.ApplicationEventPublisherAware#setApplicationEventPublisher(org.springframework.
+     * context.ApplicationEventPublisher)
+     */
+    @Override
+    public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher)
+    {
+        this.applicationEventPublisher = applicationEventPublisher;
     }
 
 }

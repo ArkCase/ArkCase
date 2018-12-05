@@ -31,8 +31,6 @@ import com.armedia.acm.services.sequence.model.AcmSequenceRegistry;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
@@ -54,8 +52,7 @@ public class AcmSequenceRegistryDao extends AcmAbstractDao<AcmSequenceRegistry>
         return AcmSequenceRegistry.class;
     }
 
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public int removeSequence(String sequenceValue)
+    public Integer removeSequenceRegistry(String sequenceValue)
     {
         String queryText = "DELETE FROM " +
                 "AcmSequenceRegistry sequenceRegistry " +
@@ -67,8 +64,7 @@ public class AcmSequenceRegistryDao extends AcmAbstractDao<AcmSequenceRegistry>
         return query.executeUpdate();
     }
 
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public int removeBySequenceAndPartName(String sequenceName, String sequencePartName)
+    public Integer removeSequenceRegistry(String sequenceName, String sequencePartName)
     {
         String queryText = "DELETE FROM " +
                 "AcmSequenceRegistry sequenceRegistry " +
@@ -82,8 +78,7 @@ public class AcmSequenceRegistryDao extends AcmAbstractDao<AcmSequenceRegistry>
         return query.executeUpdate();
     }
 
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public int updateSequenceAsUnused(String sequenceValue)
+    public Integer updateSequenceRegistryAsUnused(String sequenceValue)
     {
         String queryText = "UPDATE AcmSequenceRegistry sequenceRegistry " +
                 "SET sequenceRegistry.sequencePartValueUsedFlag = 'false' " +
@@ -95,35 +90,22 @@ public class AcmSequenceRegistryDao extends AcmAbstractDao<AcmSequenceRegistry>
         return query.executeUpdate();
     }
 
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public int insertSequence(AcmSequenceRegistry acmSequenceRegistry)
-    {
-        String insertSequenceSql = "INSERT INTO acm_sequence_registry " +
-                "(cm_sequence_value, cm_sequence_name, cm_sequence_part_name, cm_sequence_part_value) " +
-                "VALUES (?1,?2,?3,?4)";
-        Query insertSequenceQuery = getEm().createNativeQuery(insertSequenceSql);
-
-        insertSequenceQuery.setParameter(1, acmSequenceRegistry.getSequenceValue());
-        insertSequenceQuery.setParameter(2, acmSequenceRegistry.getSequenceName());
-        insertSequenceQuery.setParameter(3, acmSequenceRegistry.getSequencePartName());
-        insertSequenceQuery.setParameter(4, acmSequenceRegistry.getSequencePartValue());
-        return insertSequenceQuery.executeUpdate();
-    }
-
-    public List<AcmSequenceRegistry> getSequenceRegistryListBySequenceAndPartName(String sequenceName, String sequencePartName)
+    public List<AcmSequenceRegistry> getSequenceRegistryList(String sequenceName, String sequencePartName,
+            Boolean sequencePartValueUsedFlag)
     {
 
         String queryText = "SELECT sequenceRegistry " +
                 "FROM AcmSequenceRegistry sequenceRegistry " +
                 "WHERE sequenceRegistry.sequenceName = :sequenceName " +
                 "AND sequenceRegistry.sequencePartName = :sequencePartName " +
-                "AND sequenceRegistry.sequencePartValueUsedFlag = 'false' " +
+                "AND sequenceRegistry.sequencePartValueUsedFlag = :sequencePartValueUsedFlag " +
                 "ORDER BY sequenceRegistry.sequencePartValue";
 
         TypedQuery<AcmSequenceRegistry> query = getEm().createQuery(queryText, AcmSequenceRegistry.class);
 
         query.setParameter("sequenceName", sequenceName);
         query.setParameter("sequencePartName", sequencePartName);
+        query.setParameter("sequencePartValueUsedFlag", sequencePartValueUsedFlag.toString());
 
         List<AcmSequenceRegistry> sequenceRegistryList = query.getResultList();
         if (null == sequenceRegistryList)

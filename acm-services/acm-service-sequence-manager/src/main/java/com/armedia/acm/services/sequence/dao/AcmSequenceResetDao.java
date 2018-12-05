@@ -31,10 +31,7 @@ import com.armedia.acm.services.sequence.model.AcmSequenceReset;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
 import java.util.ArrayList;
@@ -54,24 +51,7 @@ public class AcmSequenceResetDao extends AcmAbstractDao<AcmSequenceReset>
         return AcmSequenceReset.class;
     }
 
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public int insertSequenceReset(AcmSequenceReset acmSequenceReset)
-    {
-        String insertSequenceSql = "INSERT INTO acm_sequence_reset " +
-                "(cm_sequence_name, cm_sequence_part_name, cm_reset_date, " +
-                "cm_reset_repeatable_flag, cm_reset_repeatable_period) " +
-                "VALUES (?1,?2,?3,?4,?5)";
-        Query insertSequenceQuery = getEm().createNativeQuery(insertSequenceSql);
-
-        insertSequenceQuery.setParameter(1, acmSequenceReset.getSequenceName());
-        insertSequenceQuery.setParameter(2, acmSequenceReset.getSequencePartName());
-        insertSequenceQuery.setParameter(3, acmSequenceReset.getResetDate());
-        insertSequenceQuery.setParameter(4, acmSequenceReset.getResetRepeatableFlag());
-        insertSequenceQuery.setParameter(5, acmSequenceReset.getResetRepeatablePeriod());
-        return insertSequenceQuery.executeUpdate();
-    }
-
-    public List<AcmSequenceReset> getSequenceResetList(String sequenceName, String sequencePartName, String resetExecutedFlag)
+    public List<AcmSequenceReset> getSequenceResetList(String sequenceName, String sequencePartName, Boolean resetExecutedFlag)
     {
 
         String queryText = "SELECT sequenceReset " +

@@ -30,24 +30,23 @@ package com.armedia.acm.services.sequence.generator;
 import com.armedia.acm.files.AbstractConfigurationFileEvent;
 import com.armedia.acm.files.ConfigurationFileChangedEvent;
 import com.armedia.acm.objectonverter.ObjectConverter;
-import com.armedia.acm.services.sequence.dao.AcmSequenceDao;
-import com.armedia.acm.services.sequence.dao.AcmSequenceRegistryDao;
-import com.armedia.acm.services.sequence.dao.AcmSequenceResetDao;
 import com.armedia.acm.services.sequence.model.AcmSequenceConfiguration;
 import com.armedia.acm.services.sequence.model.AcmSequenceEntity;
 import com.armedia.acm.services.sequence.model.AcmSequencePart;
 import com.armedia.acm.services.sequence.model.AcmSequencePartType;
 import com.armedia.acm.services.sequence.model.AcmSequenceRegistry;
 import com.armedia.acm.services.sequence.model.AcmSequenceReset;
+import com.armedia.acm.services.sequence.service.AcmSequenceService;
 
 import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ApplicationListener;
 
-import javax.persistence.OptimisticLockException;
-
+import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -70,29 +69,38 @@ public class AcmSequenceGenerator implements ApplicationListener<AbstractConfigu
 
     private ObjectConverter objectConverter;
 
-    private String sequenceConfiguration;
+    private File sequenceConfiguration;
 
-    private AcmSequenceDao sequenceDao;
-
-    private AcmSequenceRegistryDao sequenceRegistryDao;
-
-    private AcmSequenceResetDao sequenceResetDao;
+    private AcmSequenceService sequenceService;
 
     public void initSequenceMap()
     {
-        Map<String, AcmSequenceConfiguration> sequenceMap = new HashMap<>();
-        List<AcmSequenceConfiguration> acmSequenceConfigurations = getObjectConverter().getJsonUnmarshaller().unmarshallCollection(
-                getSequenceConfiguration(),
-                List.class, AcmSequenceConfiguration.class);
-
-        for (AcmSequenceConfiguration sequenceConfiguration : acmSequenceConfigurations)
+        log.debug("Creating sequence configuration from [{}]", getSequenceConfiguration().getAbsolutePath());
+        try
         {
-            sequenceMap.put(sequenceConfiguration.getSequenceName(), sequenceConfiguration);
+            Map<String, AcmSequenceConfiguration> sequenceMap = new HashMap<>();
+            List<AcmSequenceConfiguration> acmSequenceConfigurations = getObjectConverter().getJsonUnmarshaller().unmarshallCollection(
+                    FileUtils.readFileToString(getSequenceConfiguration()),
+                    List.class, AcmSequenceConfiguration.class);
+
+            for (AcmSequenceConfiguration sequenceConfiguration : acmSequenceConfigurations)
+            {
+                sequenceMap.put(sequenceConfiguration.getSequenceName(), sequenceConfiguration);
+            }
+            this.sequenceMap = sequenceMap;
         }
-        this.sequenceMap = sequenceMap;
+        catch (IOException e)
+        {
+            log.error("Unable to create sequence configuration from [{}]", getSequenceConfiguration().getAbsolutePath(), e);
+        }
     }
 
-    public String generateNextValue(String sequenceName, Object object)
+    public Boolean getSequenceEnabled(String sequenceName)
+    {
+        return sequenceMap.get(sequenceName).getSequenceEnabled();
+    }
+
+    public String generateValue(String sequenceName, Object object)
     {
 
         String sequenceValue = "";
@@ -161,7 +169,7 @@ public class AcmSequenceGenerator implements ApplicationListener<AbstractConfigu
         String autoIncrementPartValue = "";
 
         Integer nextValue = 0;
-        AcmSequenceEntity sequenceEntity = getSequenceDao().getAcmSequence(sequenceName, sequencePart.getSequencePartName());
+        AcmSequenceEntity sequenceEntity = getSequenceService().getSequenceEntity(sequenceName, sequencePart.getSequencePartName());
         // Create and use new sequence if not exists
         if (sequenceEntity == null)
         {
@@ -169,9 +177,9 @@ public class AcmSequenceGenerator implements ApplicationListener<AbstractConfigu
         }
         else
         {
-            // Reset and use new sequence if reset conditions are met
-            List<AcmSequenceReset> sequenceResetList = getSequenceResetDao().getSequenceResetList(sequenceName,
-                    sequencePart.getSequencePartName(), "false");
+            // Reset and use start sequence value if reset conditions are met
+            List<AcmSequenceReset> sequenceResetList = getSequenceService().getSequenceResetList(sequenceName,
+                    sequencePart.getSequencePartName(), Boolean.FALSE);
 
             if (sequenceResetList != null && !sequenceResetList.isEmpty())
             {
@@ -182,8 +190,8 @@ public class AcmSequenceGenerator implements ApplicationListener<AbstractConfigu
                 // Check for unused sequences
                 if (sequencePart.getSequenceFillBlanks() != null && sequencePart.getSequenceFillBlanks())
                 {
-                    List<AcmSequenceRegistry> sequenceRegistryList = getSequenceRegistryDao()
-                            .getSequenceRegistryListBySequenceAndPartName(sequenceName, sequencePart.getSequencePartName());
+                    List<AcmSequenceRegistry> sequenceRegistryList = getSequenceService()
+                            .getSequenceRegistryList(sequenceName, sequencePart.getSequencePartName(), Boolean.FALSE);
                     if (sequenceRegistryList != null && !sequenceRegistryList.isEmpty())
                     {
                         nextValue = getSequenceFromRegistry(sequenceRegistryList, sequencePart, autoincrementPartNameToValue);
@@ -220,7 +228,7 @@ public class AcmSequenceGenerator implements ApplicationListener<AbstractConfigu
             sequenceRegistry.setSequencePartName(k);
             sequenceRegistry.setSequencePartValue(v);
             sequenceRegistry.setSequenceName(sequenceName);
-            getSequenceRegistryDao().insertSequence(sequenceRegistry);
+            getSequenceService().saveSequenceRegistry(sequenceRegistry);
         });
     }
 
@@ -230,9 +238,10 @@ public class AcmSequenceGenerator implements ApplicationListener<AbstractConfigu
         sequenceEntity.setSequenceName(sequenceName);
         sequenceEntity.setSequencePartName(sequencePart.getSequencePartName());
         sequenceEntity.setSequencePartValue(sequencePart.getSequenceStartNumber() + sequencePart.getSequenceIncrementSize());
-        getSequenceDao().insertAcmSequence(sequenceEntity);
-        // getSequenceDao().save(sequenceEntity);
-        Integer partValue = sequenceEntity.getSequencePartValue();
+        // getSequenceService().insertSequenceEntity(sequenceEntity);
+        // Can not make it work EclipsLink-7311
+        AcmSequenceEntity saved = getSequenceService().saveSequenceEntity(sequenceEntity);
+        Integer partValue = saved.getSequencePartValue();
         autoincrementPartNameToValue.put(sequencePart.getSequencePartName(), partValue);
         return partValue;
     }
@@ -240,18 +249,23 @@ public class AcmSequenceGenerator implements ApplicationListener<AbstractConfigu
     private Integer updateSequence(AcmSequenceEntity sequenceEntity, String sequenceName, AcmSequencePart sequencePart,
             Map<String, Integer> autoincrementPartNameToValue)
     {
-        sequenceEntity.setSequencePartValue(sequenceEntity.getSequencePartValue() + sequencePart.getSequenceIncrementSize());
-        try
-        {
-            getSequenceDao().save(sequenceEntity);
-        }
-        catch (OptimisticLockException ole)
-        {
-            sequenceEntity = getSequenceDao().getAcmSequence(sequenceName, sequencePart.getSequencePartName());
-            sequenceEntity.setSequencePartValue(sequenceEntity.getSequencePartValue() + sequencePart.getSequenceIncrementSize());
-            getSequenceDao().save(sequenceEntity);
-        }
-        Integer partValue = sequenceEntity.getSequencePartValue();
+        /*
+         * sequenceEntity.setSequencePartValue(sequenceEntity.getSequencePartValue() +
+         * sequencePart.getSequenceIncrementSize());
+         * try
+         * {
+         * getSequenceDao().save(sequenceEntity);
+         * }
+         * catch (OptimisticLockException ole)
+         * {
+         * sequenceEntity = getSequenceDao().getAcmSequence(sequenceName, sequencePart.getSequencePartName());
+         * sequenceEntity.setSequencePartValue(sequenceEntity.getSequencePartValue() +
+         * sequencePart.getSequenceIncrementSize());
+         * getSequenceDao().save(sequenceEntity);
+         * }
+         */
+        AcmSequenceEntity updated = getSequenceService().updateSequenceEntity(sequenceEntity, sequencePart, false);
+        Integer partValue = updated.getSequencePartValue();
         autoincrementPartNameToValue.put(sequencePart.getSequencePartName(), partValue);
         return partValue;
     }
@@ -261,7 +275,7 @@ public class AcmSequenceGenerator implements ApplicationListener<AbstractConfigu
     {
         Integer partValue = sequenceRegistryList.get(0).getSequencePartValue();
         autoincrementPartNameToValue.put(sequencePart.getSequencePartName(), partValue);
-        getSequenceRegistryDao().getEm().remove(sequenceRegistryList.get(0));
+        getSequenceService().removeSequenceRegistry(sequenceRegistryList.get(0).getSequenceValue());
         return partValue;
     }
 
@@ -274,21 +288,17 @@ public class AcmSequenceGenerator implements ApplicationListener<AbstractConfigu
             LocalDateTime currentDateTime = LocalDateTime.now();
             if (currentDateTime.isAfter(sequenceReset.getResetDate()))
             {
-                sequenceEntity.setSequencePartValue(sequencePart.getSequenceStartNumber() + sequencePart.getSequenceIncrementSize());
-
-                // Save sequence entity with reset value
-                getSequenceDao().save(sequenceEntity);
 
                 // Remove unused sequences from registry, not needed anymore since we reset the respective sequence
-                getSequenceRegistryDao().removeBySequenceAndPartName(sequenceReset.getSequenceName(), sequenceReset.getSequencePartName());
+                getSequenceService().removeSequenceRegistry(sequenceReset.getSequenceName(), sequenceReset.getSequencePartName());
 
                 // Update sequence reset configuration with executed time and executed flag
                 sequenceReset.setResetExecutedDate(currentDateTime);
-                sequenceReset.setResetExecutedFlag("true");
-                getSequenceResetDao().save(sequenceReset);
+                sequenceReset.setResetExecutedFlag(Boolean.TRUE);
+                getSequenceService().updateSequenceReset(sequenceReset);
 
                 // Create new sequence reset configuration for repeatable reset
-                if (sequenceReset.getResetRepeatableFlag().equals("true"))
+                if (sequenceReset.getResetRepeatableFlag().equals(Boolean.TRUE))
                 {
                     AcmSequenceReset newSequenceReset = new AcmSequenceReset();
                     newSequenceReset.setSequenceName(sequenceReset.getSequenceName());
@@ -296,13 +306,16 @@ public class AcmSequenceGenerator implements ApplicationListener<AbstractConfigu
                     newSequenceReset.setResetRepeatableFlag(sequenceReset.getResetRepeatableFlag());
                     newSequenceReset.setResetRepeatablePeriod(sequenceReset.getResetRepeatablePeriod());
                     newSequenceReset.setResetDate(sequenceReset.getResetDate().plusDays(sequenceReset.getResetRepeatablePeriod()));
-                    getSequenceResetDao().insertSequenceReset(newSequenceReset);
+                    getSequenceService().saveSequenceReset(newSequenceReset);
                 }
             }
         }
 
-        autoincrementPartNameToValue.put(sequencePart.getSequencePartName(), sequenceEntity.getSequencePartValue());
-        return sequenceEntity.getSequencePartValue();
+        // Save sequence entity with reset value
+        AcmSequenceEntity savedSequenceEntity = getSequenceService().updateSequenceEntity(sequenceEntity, sequencePart, true);
+
+        autoincrementPartNameToValue.put(sequencePart.getSequencePartName(), savedSequenceEntity.getSequencePartValue());
+        return savedSequenceEntity.getSequencePartValue();
     }
 
     /*
@@ -356,7 +369,7 @@ public class AcmSequenceGenerator implements ApplicationListener<AbstractConfigu
     /**
      * @return the sequenceConfiguration
      */
-    public String getSequenceConfiguration()
+    public File getSequenceConfiguration()
     {
         return sequenceConfiguration;
     }
@@ -365,60 +378,26 @@ public class AcmSequenceGenerator implements ApplicationListener<AbstractConfigu
      * @param sequenceConfiguration
      *            the sequenceConfiguration to set
      */
-    public void setSequenceConfiguration(String sequenceConfiguration)
+    public void setSequenceConfiguration(File sequenceConfiguration)
     {
         this.sequenceConfiguration = sequenceConfiguration;
     }
 
     /**
-     * @return the sequenceDao
+     * @return the sequenceService
      */
-    public AcmSequenceDao getSequenceDao()
+    public AcmSequenceService getSequenceService()
     {
-        return sequenceDao;
+        return sequenceService;
     }
 
     /**
-     * @param sequenceDao
-     *            the sequenceDao to set
+     * @param sequenceService
+     *            the sequenceService to set
      */
-    public void setSequenceDao(AcmSequenceDao sequenceDao)
+    public void setSequenceService(AcmSequenceService sequenceService)
     {
-        this.sequenceDao = sequenceDao;
-    }
-
-    /**
-     * @return the sequenceRegistryDao
-     */
-    public AcmSequenceRegistryDao getSequenceRegistryDao()
-    {
-        return sequenceRegistryDao;
-    }
-
-    /**
-     * @param sequenceRegistryDao
-     *            the sequenceRegistryDao to set
-     */
-    public void setSequenceRegistryDao(AcmSequenceRegistryDao sequenceRegistryDao)
-    {
-        this.sequenceRegistryDao = sequenceRegistryDao;
-    }
-
-    /**
-     * @return the sequenceResetDao
-     */
-    public AcmSequenceResetDao getSequenceResetDao()
-    {
-        return sequenceResetDao;
-    }
-
-    /**
-     * @param sequenceResetDao
-     *            the sequenceResetDao to set
-     */
-    public void setSequenceResetDao(AcmSequenceResetDao sequenceResetDao)
-    {
-        this.sequenceResetDao = sequenceResetDao;
+        this.sequenceService = sequenceService;
     }
 
 }

@@ -69,10 +69,10 @@
             <column name="cm_reset_executed_date" type="${timestampType}"/>
             <column name="cm_reset_executed_flag" type="VARCHAR(10)" defaultValue="false"/>
             <column name="cm_reset_repeatable_flag" type="VARCHAR(10)" defaultValue="false"/>
-            <column name="cm_reset_repeatable_period" type="INTEGER">
+            <column name="cm_reset_repeatable_period" type="INTEGER" defaultValue="1">
                 <constraints nullable="false"/>
             </column>
         </createTable>
-        <addPrimaryKey tableName="acm_sequence_reset" columnNames="cm_sequence_name, cm_sequence_part_name"/>
+        <addPrimaryKey tableName="acm_sequence_reset" columnNames="cm_sequence_name, cm_sequence_part_name, cm_reset_date"/>
     </changeSet>
 </databaseChangeLog>

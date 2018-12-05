@@ -41,4 +41,8 @@ import java.lang.annotation.Target;
 public @interface AcmSequence
 {
     String sequenceName();
+
+    boolean isAttributeNull() default true;
+
+    String attributeValue() default "";
 }

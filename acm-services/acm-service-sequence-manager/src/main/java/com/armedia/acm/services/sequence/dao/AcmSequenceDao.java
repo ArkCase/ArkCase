@@ -28,10 +28,10 @@ package com.armedia.acm.services.sequence.dao;
  */
 import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.services.sequence.model.AcmSequenceEntity;
+import com.armedia.acm.services.sequence.model.AcmSequenceEntityId;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
@@ -51,7 +51,13 @@ public class AcmSequenceDao extends AcmAbstractDao<AcmSequenceEntity>
         return AcmSequenceEntity.class;
     }
 
-    public AcmSequenceEntity getAcmSequence(String sequenceName, String sequencePartName)
+    public AcmSequenceEntity find(AcmSequenceEntityId id)
+    {
+        AcmSequenceEntity found = getEm().find(AcmSequenceEntity.class, id);
+        return found;
+    }
+
+    public AcmSequenceEntity getSequenceEntity(String sequenceName, String sequencePartName)
     {
         AcmSequenceEntity sequenceEntity = null;
         String queryText = "SELECT sequenceEntity " +
@@ -77,19 +83,23 @@ public class AcmSequenceDao extends AcmAbstractDao<AcmSequenceEntity>
         return sequenceEntity;
     }
 
-    @Transactional
-    public int insertAcmSequence(AcmSequenceEntity acmSequenceEntity)
+    public Integer updateSequenceEntity(AcmSequenceEntity sequenceEntity)
     {
-        String insertSequenceSql = "INSERT INTO acm_sequence " +
-                "(cm_sequence_name, cm_sequence_part_name, " +
-                "cm_sequence_part_value) " +
-                "VALUES (?1,?2,?3)";
-        Query insertSequenceQuery = getEm().createNativeQuery(insertSequenceSql);
+        String queryText = "UPDATE AcmSequenceEntity sequenceEntity " +
+                "SET sequenceEntity.sequenceName = :sequenceName, " +
+                "sequenceEntity.sequencePartName = :sequencePartName, " +
+                "sequenceEntity.sequencePartValue = :sequencePartValue, " +
+                "sequenceEntity.sequencePartLock = :sequencePartLock " +
+                "WHERE sequenceEntity.sequenceName = :sequenceName " +
+                "AND sequenceEntity.sequencePartName = :sequencePartName";
 
-        insertSequenceQuery.setParameter(1, acmSequenceEntity.getSequenceName());
-        insertSequenceQuery.setParameter(2, acmSequenceEntity.getSequencePartName());
-        insertSequenceQuery.setParameter(3, acmSequenceEntity.getSequencePartValue());
-        return insertSequenceQuery.executeUpdate();
+        Query query = getEm().createQuery(queryText);
+
+        query.setParameter("sequenceName", sequenceEntity.getSequenceName());
+        query.setParameter("sequencePartName", sequenceEntity.getSequencePartName());
+        query.setParameter("sequencePartValue", sequenceEntity.getSequencePartValue());
+        query.setParameter("sequencePartLock", sequenceEntity.getSequencePartLock());
+        return query.executeUpdate();
     }
 
     @Override

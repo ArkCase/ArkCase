@@ -28,6 +28,7 @@ package com.armedia.acm.services.sequence.model;
  */
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 /**
  * @author sasko.tanaskoski
@@ -41,6 +42,8 @@ public class AcmSequenceResetId implements Serializable
     private String sequenceName;
 
     private String sequencePartName;
+
+    private LocalDateTime resetDate;
 
     /**
      * @return the sequenceName
@@ -74,6 +77,23 @@ public class AcmSequenceResetId implements Serializable
     public void setSequencePartName(String sequencePartName)
     {
         this.sequencePartName = sequencePartName;
+    }
+
+    /**
+     * @return the resetDate
+     */
+    public LocalDateTime getResetDate()
+    {
+        return resetDate;
+    }
+
+    /**
+     * @param resetDate
+     *            the resetDate to set
+     */
+    public void setResetDate(LocalDateTime resetDate)
+    {
+        this.resetDate = resetDate;
     }
 
 }
