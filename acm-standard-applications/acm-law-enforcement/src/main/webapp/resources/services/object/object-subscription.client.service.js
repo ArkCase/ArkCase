@@ -184,7 +184,6 @@ angular.module('services').factory('Object.SubscriptionService', [ '$resource', 
             });
 
         })
-        return result;
     };
 
     /**

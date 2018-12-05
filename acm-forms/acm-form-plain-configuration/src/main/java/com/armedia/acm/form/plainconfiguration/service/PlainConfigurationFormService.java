@@ -50,6 +50,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * @author riste.tutureski
@@ -332,14 +333,19 @@ public class PlainConfigurationFormService extends FrevvoFormAbstractService
     private PlainConfigurationForm getRegisteredForm(String id, String target)
     {
         List<PlainConfigurationForm> registeredForms = getPlainConfigurationFormFactory().convertFromProperties(null);
+        Optional<PlainConfigurationForm> optionalPlainConfigurationForm = null;
         PlainConfigurationForm registeredForm = null;
 
         if (registeredForms != null && id != null && target != null)
         {
             try
             {
-                registeredForm = registeredForms.stream()
-                        .filter(element -> id.equals(element.getFormId()) && target.equals(element.getTarget())).findFirst().get();
+                optionalPlainConfigurationForm = registeredForms.stream()
+                        .filter(element -> id.equals(element.getFormId()) && target.equals(element.getTarget())).findFirst();
+                if (optionalPlainConfigurationForm.isPresent())
+                {
+                    registeredForm = optionalPlainConfigurationForm.get();
+                }
             }
             catch (Exception e)
             {

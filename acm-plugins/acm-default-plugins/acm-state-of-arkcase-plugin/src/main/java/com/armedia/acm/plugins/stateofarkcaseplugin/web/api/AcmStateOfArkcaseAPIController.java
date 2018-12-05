@@ -27,6 +27,7 @@ package com.armedia.acm.plugins.stateofarkcaseplugin.web.api;
  * #L%
  */
 
+import com.armedia.acm.core.exceptions.AcmStateOfArkcaseGenerateReportException;
 import com.armedia.acm.plugins.stateofarkcaseplugin.service.AcmStateOfArkcaseService;
 
 import org.slf4j.Logger;
@@ -68,7 +69,7 @@ public class AcmStateOfArkcaseAPIController
     @RequestMapping(value = "/generate", method = RequestMethod.GET)
     public ResponseEntity<InputStreamResource> generateStateOfArkcase(
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @RequestParam(value = "date", required = false) LocalDate date)
-            throws FileNotFoundException
+            throws FileNotFoundException, AcmStateOfArkcaseGenerateReportException
     {
 
         File file = acmStateOfArkcaseService.generateReportForDay(date != null ? date : LocalDate.now());

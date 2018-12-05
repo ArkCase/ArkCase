@@ -245,7 +245,11 @@ angular.module('queues').factory('Queues.QueuesService', [ '$http', '$q', 'Ecm.M
                     name: filter.column
                 });
                 if (columnType && columnType.type) {
-                    columnType = columnType.type;
+                    if (columnType.name == 'request_id_lcs' || columnType.name == 'title_parseable_lcs') {
+                        columnType = 'number';
+                    } else {
+                        columnType = columnType.type;
+                    }
                 } else {
                     columnType = null;
                 }

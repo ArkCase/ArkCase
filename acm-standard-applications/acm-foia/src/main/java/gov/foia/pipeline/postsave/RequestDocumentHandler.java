@@ -35,6 +35,7 @@ import static gov.foia.model.FOIAConstants.NEW_FILE;
 
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
+import com.armedia.acm.core.exceptions.CorrespondenceMergeFieldVersionException;
 import com.armedia.acm.plugins.casefile.pipeline.CaseFilePipelineContext;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
@@ -68,7 +69,8 @@ public class RequestDocumentHandler implements PipelineHandler<FOIARequest, Case
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
     @Override
-    public void execute(FOIARequest request, CaseFilePipelineContext ctx) throws PipelineProcessException
+    public void execute(FOIARequest request, CaseFilePipelineContext ctx)
+            throws PipelineProcessException
     {
         log.debug("Entering pipeline handler for object: [{}]", request);
 
@@ -85,8 +87,16 @@ public class RequestDocumentHandler implements PipelineHandler<FOIARequest, Case
                     : businessObject.getContainer().getAttachmentFolder().getCmisFolderId();
             try
             {
-                EcmFile ecmFile = documentGenerator.generateAndUpload(documentDescriptor, businessObject, targetFolderId, arkcaseFilename,
-                        documentGeneratorService.getReportSubstitutions(businessObject));
+                EcmFile ecmFile = null;
+                try
+                {
+                    ecmFile = documentGenerator.generateAndUpload(documentDescriptor, businessObject, targetFolderId, arkcaseFilename,
+                            documentGeneratorService.getReportSubstitutions(businessObject));
+                }
+                catch (CorrespondenceMergeFieldVersionException e)
+                {
+                    throw new PipelineProcessException(e);
+                }
 
                 if (ctx != null)
                 {

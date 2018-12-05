@@ -29,7 +29,6 @@ package com.armedia.acm.services.note.web.api;
 
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.services.note.dao.NoteDao;
-import com.armedia.acm.services.note.exception.AcmNoteException;
 import com.armedia.acm.services.note.model.ApplicationNoteEvent;
 import com.armedia.acm.services.note.model.Note;
 import com.armedia.acm.services.note.model.NoteConstants;
@@ -68,14 +67,14 @@ public class SaveNoteAPIController
         {
             log.info("Note ID : {}", note.getId());
         }
+        else
+        {
+            throw new AcmUserActionFailedException("addNote", NoteConstants.OBJECT_TYPE, null,
+                    "Could not save note, missing parent type and ID", new NullPointerException());
+        }
 
         try
         {
-            if (note == null)
-            {
-                throw new AcmNoteException("Could not save note, missing parent type and ID");
-            }
-
             Note savedNote = getNoteDao().save(note);
 
             String noteEvent = note.getId() == null ? NoteConstants.NOTE_ADDED : NoteConstants.NOTE_UPDATED;
