@@ -37,6 +37,10 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -183,11 +187,25 @@ public class AuditDao extends AcmAbstractDao<AuditEvent>
 
     public List<AuditEvent> findPage(int startRow, int maxRows, String sortBy, String sort)
     {
-        String queryText = "SELECT ae " +
-                "FROM   AuditEvent ae " +
-                "WHERE ae.status != 'DELETE' " +
-                "ORDER BY ae." + sortBy + " " + sort + ", ae.id " + sort;
-        Query query = getEm().createQuery(queryText);
+        CriteriaBuilder builder = em.getCriteriaBuilder();
+        CriteriaQuery<AuditEvent> criteriaQuery = builder.createQuery(AuditEvent.class);
+        Root<AuditEvent> auditEvent = criteriaQuery.from(AuditEvent.class);
+
+        criteriaQuery.where(builder.notEqual(auditEvent.<Long> get("status"), "DELETE"));
+
+        if (sort.toUpperCase().equals("ASC"))
+        {
+            criteriaQuery.orderBy(builder.asc(auditEvent.get(sortBy)));
+            criteriaQuery.orderBy(builder.asc(auditEvent.<Long> get("id")));
+        }
+        else
+        {
+            criteriaQuery.orderBy(builder.desc(auditEvent.get(sortBy)));
+            criteriaQuery.orderBy(builder.desc(auditEvent.<Long> get("id")));
+        }
+
+        TypedQuery<AuditEvent> query = getEm().createQuery(criteriaQuery);
+
         query.setFirstResult(startRow);
         query.setMaxResults(maxRows);
 
