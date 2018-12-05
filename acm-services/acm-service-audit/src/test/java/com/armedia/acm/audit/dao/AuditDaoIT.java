@@ -28,6 +28,7 @@ package com.armedia.acm.audit.dao;
  */
 
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
 
 import com.armedia.acm.audit.model.AuditEvent;
 
@@ -58,6 +59,27 @@ public class AuditDaoIT
     private final Logger log = LoggerFactory.getLogger(getClass());
     @Autowired
     private AuditDao dao;
+
+    @Test
+    public void findPage() throws Exception
+    {
+        // just make sure the query executes
+        dao.findPage(0, 10, "parentObjectId", "ASC");
+    }
+
+    @Test
+    public void findPage_breakOnUnknownProperty() throws Exception
+    {
+        try
+        {
+            dao.findPage(0, 10, "parentObjectId; DELETE * FROM ACM_AUDIT_LOG;", "ASC");
+            fail("Should have thrown an exception on unsanitized input");
+        }
+        catch (IllegalArgumentException e)
+        {
+            log.info("Got the expected exception [{}]", e.getClass().getName());
+        }
+    }
 
     @Test
     public void findEvents() throws Exception
