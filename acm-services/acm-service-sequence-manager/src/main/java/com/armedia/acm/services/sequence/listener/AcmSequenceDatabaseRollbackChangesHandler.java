@@ -31,7 +31,7 @@ import com.armedia.acm.data.AcmDatabaseRollbackChangesEvent;
 import com.armedia.acm.data.AcmEntity;
 import com.armedia.acm.data.AcmObjectRollbacklist;
 import com.armedia.acm.services.sequence.annotation.AcmSequenceAnnotationReader;
-import com.armedia.acm.services.sequence.dao.AcmSequenceRegistryDao;
+import com.armedia.acm.services.sequence.service.AcmSequenceService;
 
 import org.apache.commons.beanutils.PropertyUtils;
 import org.slf4j.Logger;
@@ -39,6 +39,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;
 
 import java.lang.reflect.Field;
+import java.util.List;
 
 /**
  * @author sasko.tanaskoski
@@ -50,7 +51,7 @@ public class AcmSequenceDatabaseRollbackChangesHandler implements ApplicationLis
 
     private AcmSequenceAnnotationReader acmSequenceAnnotationReader;
 
-    private AcmSequenceRegistryDao sequenceRegistryDao;
+    private AcmSequenceService sequenceService;
 
     @Override
     public void onApplicationEvent(AcmDatabaseRollbackChangesEvent acmDatabaseRollbackChangesEvent)
@@ -64,18 +65,21 @@ public class AcmSequenceDatabaseRollbackChangesHandler implements ApplicationLis
     {
         if (object instanceof AcmEntity)
         {
-            Field annotatedField = getAcmSequenceAnnotationReader().getAnnotatedField(object.getClass());
-            if (annotatedField != null)
+            List<Field> annotatedFields = getAcmSequenceAnnotationReader().getAnnotatedFields(object.getClass());
+            for (Field annotatedField : annotatedFields)
             {
-                try
+                if (annotatedField != null)
                 {
-                    String sequenceValue = PropertyUtils.getProperty(object, annotatedField.getName()).toString();
-                    getSequenceRegistryDao().updateSequenceAsUnused(sequenceValue);
-                }
-                catch (Exception e)
-                {
-                    log.error("Error updating sequence as unused on field [{}], reason [{}]", annotatedField.getName(),
-                            e.getMessage(), e);
+                    try
+                    {
+                        String sequenceValue = PropertyUtils.getProperty(object, annotatedField.getName()).toString();
+                        getSequenceService().updateSequenceRegistryAsUnused(sequenceValue);
+                    }
+                    catch (Exception e)
+                    {
+                        log.error("Error updating sequence as unused on field [{}], reason [{}]", annotatedField.getName(),
+                                e.getMessage(), e);
+                    }
                 }
             }
         }
@@ -99,20 +103,20 @@ public class AcmSequenceDatabaseRollbackChangesHandler implements ApplicationLis
     }
 
     /**
-     * @return the sequenceRegistryDao
+     * @return the sequenceService
      */
-    public AcmSequenceRegistryDao getSequenceRegistryDao()
+    public AcmSequenceService getSequenceService()
     {
-        return sequenceRegistryDao;
+        return sequenceService;
     }
 
     /**
-     * @param sequenceRegistryDao
-     *            the sequenceRegistryDao to set
+     * @param sequenceService
+     *            the sequenceService to set
      */
-    public void setSequenceRegistryDao(AcmSequenceRegistryDao sequenceRegistryDao)
+    public void setSequenceService(AcmSequenceService sequenceService)
     {
-        this.sequenceRegistryDao = sequenceRegistryDao;
+        this.sequenceService = sequenceService;
     }
 
 }

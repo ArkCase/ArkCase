@@ -153,12 +153,12 @@
         <property name="preSaveHandlers">
             <list value-type="com.armedia.acm.services.pipeline.handler.PipelineHandler">
                 <ref bean="complaintSetCreatorHandler"/>
-                <ref bean="complaintContainerHandler"/>
             </list>
         </property>
         <property name="postSaveHandlers">
             <list value-type="com.armedia.acm.services.pipeline.handler.PipelineHandler">
                 <ref bean="complaintRulesHandler"/>
+                <ref bean="complaintContainerHandler"/>
                 <ref bean="complaintEcmFolderHandler"/>
                 <ref bean="complaintOutlookHandler"/>
                 <ref bean="complaintDocumentHandler"/>

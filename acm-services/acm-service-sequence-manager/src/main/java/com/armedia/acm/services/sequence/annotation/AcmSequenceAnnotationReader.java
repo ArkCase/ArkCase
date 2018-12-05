@@ -31,6 +31,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -48,16 +49,17 @@ public class AcmSequenceAnnotationReader
      * @param clazz
      * @return annotated field
      */
-    public Field getAnnotatedField(Class<? extends Object> clazz)
+    public List<Field> getAnnotatedFields(Class<? extends Object> clazz)
     {
+        List<Field> annotatedFields = new ArrayList<Field>();
         Field[] allFields = getDeclaredFields(clazz);
 
         for (Field field : allFields)
         {
             if (field.isAnnotationPresent(AcmSequence.class))
-                return field;
+                annotatedFields.add(field);
         }
-        return null;
+        return annotatedFields;
     }
 
     /**

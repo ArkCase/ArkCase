@@ -117,7 +117,7 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity,
     private Long id;
 
     @Column(name = "cm_case_number")
-    @AcmSequence(sequenceName = "caseFileSeq")
+    @AcmSequence(sequenceName = "caseNumberSequence")
     private String caseNumber;
 
     @Column(name = "cm_case_type")

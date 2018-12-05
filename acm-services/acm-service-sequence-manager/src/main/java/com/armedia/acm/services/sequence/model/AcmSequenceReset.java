@@ -60,6 +60,7 @@ public class AcmSequenceReset
     @Column(name = "cm_sequence_part_name")
     private String sequencePartName;
 
+    @Id
     @Column(name = "cm_reset_date")
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     @Convert(converter = LocalDateTimeConverter.class)
@@ -72,11 +73,11 @@ public class AcmSequenceReset
 
     @Column(name = "cm_reset_executed_flag")
     @Convert(converter = BooleanToStringConverter.class)
-    private String resetExecutedFlag;
+    private Boolean resetExecutedFlag;
 
     @Column(name = "cm_reset_repeatable_flag")
     @Convert(converter = BooleanToStringConverter.class)
-    private String resetRepeatableFlag;
+    private Boolean resetRepeatableFlag;
 
     @Column(name = "cm_reset_repeatable_period")
     private Integer resetRepeatablePeriod;
@@ -152,7 +153,7 @@ public class AcmSequenceReset
     /**
      * @return the resetExecutedFlag
      */
-    public String getResetExecutedFlag()
+    public Boolean getResetExecutedFlag()
     {
         return resetExecutedFlag;
     }
@@ -161,7 +162,7 @@ public class AcmSequenceReset
      * @param resetExecutedFlag
      *            the resetExecutedFlag to set
      */
-    public void setResetExecutedFlag(String resetExecutedFlag)
+    public void setResetExecutedFlag(Boolean resetExecutedFlag)
     {
         this.resetExecutedFlag = resetExecutedFlag;
     }
@@ -169,7 +170,7 @@ public class AcmSequenceReset
     /**
      * @return the resetRepeatableFlag
      */
-    public String getResetRepeatableFlag()
+    public Boolean getResetRepeatableFlag()
     {
         return resetRepeatableFlag;
     }
@@ -178,7 +179,7 @@ public class AcmSequenceReset
      * @param resetRepeatableFlag
      *            the resetRepeatableFlag to set
      */
-    public void setResetRepeatableFlag(String resetRepeatableFlag)
+    public void setResetRepeatableFlag(Boolean resetRepeatableFlag)
     {
         this.resetRepeatableFlag = resetRepeatableFlag;
     }
