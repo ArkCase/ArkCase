@@ -116,13 +116,35 @@ public class AuditDao extends AcmAbstractDao<AuditEvent>
          * Because of MySQL "late row lookup" problem for slow performance when using order by and limit
          * we need to use this trick to increase performance when there are lot of rows.
          */
+        String eventTypeClause = "";
+        if ( eventTypes != null && !eventTypes.isEmpty() )
+        {
+            StringBuilder builder = new StringBuilder(" AND ae.cm_audit_activity IN ( ");
+            int paramIndex = 3;
+            boolean first = true;
+            for ( String eventType : eventTypes )
+            {
+                if ( first )
+                {
+                    first = false;
+                }
+                else
+                {
+                    builder.append(", ");
+                }
+                builder.append("?").append(paramIndex);
+                paramIndex++;
+            }
+            builder.append(") ");
+            eventTypeClause = builder.toString();
+        }
         String queryText = "SELECT al.* " +
             "FROM (SELECT ae.cm_audit_id AS id" +
             " FROM acm_audit_log ae" +
             " WHERE ae.cm_audit_status != 'DELETE'" +
             " AND ((ae.cm_object_type = ?2 AND ae.cm_object_id = ?1) OR" +
             " (ae.cm_parent_object_type = ?2 AND ae.cm_parent_object_id = ?1))" +
-            (eventTypes != null && eventTypes.size() > 0 ? "      AND ae.cm_audit_activity IN (?3) " : "") +
+            eventTypeClause + 
             "      AND ae.cm_audit_activity_result = 'success'" +
             "  ) tmp" +
             " JOIN acm_audit_log al" +
@@ -156,7 +178,15 @@ public class AuditDao extends AcmAbstractDao<AuditEvent>
         query.setMaxResults(maxRows);
         query.setParameter(1, objectId);
         query.setParameter(2, objectType);
-        query.setParameter(3, eventTypes);
+        if ( eventTypes != null && !eventTypes.isEmpty() )
+        {
+            int paramIndex = 3;
+            for ( String event : eventTypes )
+            {
+                query.setParameter(paramIndex, event);
+                paramIndex++;
+            }
+        }
 
         List<AuditEvent> results = query.getResultList();
         return results;
