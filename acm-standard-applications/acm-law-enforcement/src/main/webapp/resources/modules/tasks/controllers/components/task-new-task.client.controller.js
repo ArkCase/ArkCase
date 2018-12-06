@@ -109,39 +109,10 @@ angular.module('tasks').controller(
                         usersMentioned: []
                     };
 
-                    // ---------------------   mention   ---------------------------------
-                    $scope.emailAddressesSummernote = [];
-                    $scope.usersMentionedSummernote = [];
-
-                    // Obtains a list of all users in ArkCase
-                    MentionsService.getUsers().then(function(users) {
-                        $scope.peopleSummernote = [];
-                        $scope.peopleEmailsSummernote = [];
-                        _.forEach(users, function(user) {
-                            $scope.peopleSummernote.push(user.name);
-                            $scope.peopleEmailsSummernote.push(user.email_lcs);
-                        });
-                    });
-
-                    $scope.options = {
-                        dialogsInBody: true,
-                        hint: {
-                            mentions: $scope.peopleSummernote,
-                            match: /\B@(\w*)$/,
-                            search: function(keyword, callback) {
-                                callback($.grep($scope.peopleSummernote, function(item) {
-                                    return item.indexOf(keyword) == 0;
-                                }));
-                            },
-                            content: function(item) {
-                                var index = $scope.peopleSummernote.indexOf(item);
-                                $scope.emailAddressesSummernote.push($scope.peopleEmailsSummernote[index]);
-                                $scope.usersMentionedSummernote.push('@' + item);
-                                return '@' + item;
-                            }
-                        }
+                    $scope.paramsSummernote = {
+                        emailAddresses: [],
+                        usersMentioned: []
                     };
-                    // -----------------------  end mention   ----------------------------
 
                     $scope.onComboAfterSave = function(dateType) {
                         if (dateType == "startDate") {
@@ -209,7 +180,7 @@ angular.module('tasks').controller(
                         $scope.saved = false;
                         $scope.loading = false;
                         MentionsService.sendEmailToMentionedUsers($scope.params.emailAddresses, $scope.params.usersMentioned, ObjectService.ObjectTypes.TASK, ObjectService.ObjectTypes.TASK, data.data.taskId, data.data.title);
-                        MentionsService.sendEmailToMentionedUsers($scope.emailAddressesSummernote, $scope.usersMentionedSummernote, ObjectService.ObjectTypes.TASK, "DETAILS", data.data.taskId, data.data.details);
+                        MentionsService.sendEmailToMentionedUsers($scope.paramsSummernote.emailAddresses, $scope.paramsSummernote.usersMentioned, ObjectService.ObjectTypes.TASK, "DETAILS", data.data.taskId, data.data.details);
                         $scope.onModalClose();
                     }
 
@@ -217,7 +188,7 @@ angular.module('tasks').controller(
                         $scope.saved = false;
                         $scope.loading = false;
                         MentionsService.sendEmailToMentionedUsers($scope.params.emailAddresses, $scope.params.usersMentioned, ObjectService.ObjectTypes.TASK, ObjectService.ObjectTypes.TASK, data.data.taskId, data.data.title);
-                        MentionsService.sendEmailToMentionedUsers($scope.emailAddressesSummernote, $scope.usersMentionedSummernote, ObjectService.ObjectTypes.TASK, "DETAILS", data.data.taskId, data.data.details);
+                        MentionsService.sendEmailToMentionedUsers($scope.paramsSummernote.emailAddresses, $scope.paramsSummernote.usersMentioned, ObjectService.ObjectTypes.TASK, "DETAILS", data.data.taskId, data.data.details);
                         if ($scope.modalParams.returnState != null && $scope.modalParams.returnState != ':returnState') {
                             $state.go($scope.modalParams.returnState, {
                                 type: $scope.modalParams.parentType,

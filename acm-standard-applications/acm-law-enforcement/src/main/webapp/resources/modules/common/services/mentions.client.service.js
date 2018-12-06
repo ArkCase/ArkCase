@@ -98,7 +98,6 @@ angular.module('services').factory('Mentions.Service', [ '$q', 'UtilService', 'L
             focus: true,
             dialogsInBody: true,
             hint: {
-                mentions: people,
                 match: /\B@(\w*)$/,
                 search: function(keyword, callback) {
                     callback($.grep(people, function(item) {

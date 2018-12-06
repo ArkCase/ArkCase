@@ -145,38 +145,10 @@ angular.module('cost-tracking').controller(
                     });
 
                     // ---------------------   mention   ---------------------------------
-                    $scope.emailAddresses = [];
-                    $scope.usersMentioned = [];
-
-                    // Obtains a list of all users in ArkCase
-                    MentionsService.getUsers().then(function(users) {
-                        $scope.people = [];
-                        $scope.peopleEmails = [];
-                        _.forEach(users, function(user) {
-                            $scope.people.push(user.name);
-                            $scope.peopleEmails.push(user.email_lcs);
-                        });
-                    });
-
-                    $scope.options = {
-                        dialogsInBody: true,
-                        hint: {
-                            mentions: $scope.people,
-                            match: /\B@(\w*)$/,
-                            search: function(keyword, callback) {
-                                callback($.grep($scope.people, function(item) {
-                                    return item.indexOf(keyword) == 0;
-                                }));
-                            },
-                            content: function(item) {
-                                var index = $scope.people.indexOf(item);
-                                $scope.emailAddresses.push($scope.peopleEmails[index]);
-                                $scope.usersMentioned.push('@' + item);
-                                return '@' + item;
-                            }
-                        }
+                    $scope.paramsSummernote = {
+                        emailAddresses: [],
+                        usersMentioned: []
                     };
-                    // -----------------------  end mention   ----------------------------
 
                     $scope.updateIsTypeSelected = function() {
                         if ($scope.costsheet.parentType == undefined) {
@@ -359,7 +331,7 @@ angular.module('cost-tracking').controller(
                                     objectType: objectTypeString,
                                     costsheetTitle: objectInfo.title
                                 });
-                                MentionsService.sendEmailToMentionedUsers($scope.emailAddresses, $scope.usersMentioned, ObjectService.ObjectTypes.COSTSHEET, "DETAILS", objectInfo.id, objectInfo.details);
+                                MentionsService.sendEmailToMentionedUsers($scope.paramsSummernote.emailAddresses, $scope.paramsSummernote.usersMentioned, ObjectService.ObjectTypes.COSTSHEET, "DETAILS", objectInfo.id, objectInfo.details);
                                 MessageService.info(costsheetUpdatedMessage);
                                 ObjectService.showObject(ObjectService.ObjectTypes.COSTSHEET, objectInfo.id);
                                 $modalInstance.close(objectInfo);
@@ -394,7 +366,7 @@ angular.module('cost-tracking').controller(
                                         costsheetTitle: objectInfo.title,
                                         action: objectAction
                                     });
-                                    MentionsService.sendEmailToMentionedUsers($scope.emailAddresses, $scope.usersMentioned, ObjectService.ObjectTypes.COSTSHEET, "DETAILS", costsheetInfo.id, costsheetInfo.details);
+                                    MentionsService.sendEmailToMentionedUsers($scope.paramsSummernote.emailAddresses, $scope.paramsSummernote.usersMentioned, ObjectService.ObjectTypes.COSTSHEET, "DETAILS", costsheetInfo.id, costsheetInfo.details);
                                     MessageService.info(costsheetUpdatedMessage);
                                     $modalInstance.close(objectInfo);
                                     $scope.loading = false;
