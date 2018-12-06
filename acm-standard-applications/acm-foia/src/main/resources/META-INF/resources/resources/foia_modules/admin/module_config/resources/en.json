@@ -58,7 +58,13 @@
             "enableEditingLdapUsers": "Enable managing users and groups",
             "syncEnabled": "Enable synchronize users",
             "cancel": "Cancel",
-            "ok": "OK"
+            "ok": "OK",
+            "confirmAuthUserPassword": "Confirm Auth User Password",
+            "groupControlGroup": "Group Control Group",
+            "id.validationMessage": "The ID can only consist of letters, numbers or dots.",
+            "userControlGroup": "User Control Group",
+            "userPrefix": "Username Prefix"
+
         },
         "menus": {
             "leftnav.item": "Admin"
@@ -86,7 +92,12 @@
             "changedGroupSearchFilter": "Enter search filter for all changed groups",
             "changedGroupSearchPageFilter": "Enter filter including sort-attribute for all changed groups",
             "groupSearchPageFilter": "Enter filter including sort-attribute (e.g. (&(objectClass=group)(gidNumber>=%s)))",
-            "enableEditingLdapUsers": "Check if managing users and groups to your DS is allowed"
+            "enableEditingLdapUsers": "Check if managing users and groups to your DS is allowed",
+            "syncEnabled": "Check if synchronize users to your DS is allowed",
+            "confirmAuthUserPassword": "Confirm password for authentication user",
+            "groupControlGroup": "Fill in the group control group for SAML environment.",
+            "userControlGroup": "Fill in the user control group for SAML environment.",
+            "userPrefix": "Fill in the username prefix for SAML environment."
         },
         "security.ldapConfig.messages": {
             "delete.success": "Successfully deleted row.",
@@ -260,7 +271,8 @@
             "cloneButton": "Clone User",
             "deleteUserBtn": "Delete User",
             "deleteUserMsg": "Are you sure you want to delete this user?",
-            "user": "User"
+            "user": "User",
+            "cancelBtn": "Cancel"
         },
         "security.group.management": {
             "title": "Group Management",
@@ -358,6 +370,15 @@
         },
         "security.emailTemplates": {
             "title": "Email Templates",
+            "table.title": "Email Templates",
+            "settings": {
+                "emailCaseFile.label": "Email Receiver CaseFile",
+                "emailComplaint.label": "Email Receiver Complaint",
+                "password.label": "Password",
+                "email.placeholder": "Enter Email address",
+                "password.placeholder": "Enter Password",
+                "btnSave": "Save"
+            },
             "table.columns": {
                 "templateName": "Template Name",
                 "emailPattern": "Email Pattern",
@@ -502,7 +523,12 @@
                 "filterStartDate": "Result Filter Start Date",
                 "filterEndDate": "Result Filter End Date",
                 "outputFormat": "Select Output Format",
-                "submit": "Submit"
+                "cancel": "Cancel",
+                "submit": "Submit",
+                "update": {
+                    "error": "Failed to update schedule.",
+                    "success": "Schedule updated successfully"
+                }
             }
         },
         "forms.title": "Forms",
@@ -666,7 +692,8 @@
                 "title": "Audit History",
                 "historyDays.label": "Keep Audit and Notification events (in days)",
                 "inform": "Setting successfully saved",
-                "apply.label": "Apply"
+                "apply.label": "Apply",
+                "dialog.OKBtn": "Confirm"
             },
             "holiday": {
                 "title": "Holiday Schedule",
@@ -684,7 +711,7 @@
                 }
             },
             "foia.config": {
-                "title": "Foia Configuration",
+                "title": "FOIA Configuration",
                 "header": "Configure FOIA Application",
                 "labels": {
                     "maxDaysBillingQueue": "Max days in Billing queue",
@@ -888,6 +915,35 @@
             "pdfConversion": {
                 "title": "PDF Conversion",
                 "enableResponseFolderConversion.checkbox": "Convert to PDF the documents in the Response Folder"
+            }
+        },
+        "transcription": {
+            "title": "Transcription Services",
+            "transcriptionManagement": "Transcription Management",
+            "transcriptionConfigForm": {
+                "save.button": "Save",
+                "automation.label": "Automation",
+                "enableTranscription.checkbox": "Enable Transcription",
+                "automaticTranscription.checkbox": "Automatic Transcription",
+                "overwriteTranscription.checkbox": "Overwrite Original Transcription with New Versions",
+                "mediaFileAdded.label": "When a new version of a media file is added, the system will:",
+                "generateTranscription.radio": "Generate a new transcription for the new version",
+                "copyTranscription.radio": "Copy the transcription from the active version to the new version",
+                "provider.label": "Provider",
+                "numOfFiles.label": "Number of Files for Processing",
+                "selectProvider": "Select a Provider",
+                "wordCount.label": "Word Count",
+                "costPerSecond.label": "Cost Per Second",
+                "confidenceThreshold.label": "Confidence Threshold",
+                "mediaDurationInSeconds.label": "Media duration threshold in seconds",
+                "silenceBetweenWords.label": "Silence between words in seconds",
+                "validation.messages": {
+                    "requiredErrorMsg": "This field is required",
+                    "maxErrorMsg": "Value must be less than or equal to 100",
+                    "minZeroValueErrorMsg": "Value must be greater than or equal to 0",
+                    "minOneValueErrorMsg": "Value must be greater than or equal to 1",
+                    "minPositiveValueErrorMsg": "Value must be greater than 0"
+                }
             }
         },
         "stateOfArkcase": {

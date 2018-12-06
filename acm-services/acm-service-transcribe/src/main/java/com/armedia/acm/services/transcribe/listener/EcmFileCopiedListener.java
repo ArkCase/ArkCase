@@ -74,7 +74,7 @@ public class EcmFileCopiedListener implements ApplicationListener<EcmFileCopiedE
                 }
                 catch (GetTranscribeException | CreateTranscribeException e)
                 {
-                    LOG.warn("Could not copy Transcription for EcmFile ID=[{}]. REASON=[{}]", copy != null ? copy.getId() : null,
+                    LOG.warn("Could not copy Transcription for EcmFile ID=[{}]. REASON=[{}]", copy.getId(),
                             e.getMessage());
                 }
             }

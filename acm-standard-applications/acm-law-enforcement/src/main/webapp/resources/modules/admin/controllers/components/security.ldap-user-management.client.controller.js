@@ -69,7 +69,6 @@ angular.module('admin').controller(
                         if (!_.isEmpty($scope.userData.chooseObject)) {
                             var data = {};
                             data.member = selectedObject;
-                            $scope.lastSelectedUser = {};
                             $scope.lastSelectedUser = selectedObject;
                             selectedUser = selectedObject;
                             currentAuthGroups = [];

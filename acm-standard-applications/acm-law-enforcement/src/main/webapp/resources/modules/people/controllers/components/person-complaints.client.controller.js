@@ -2,8 +2,8 @@
 
 angular.module('people').controller(
         'People.ComplaintsController',
-        [ '$scope', '$q', '$stateParams', '$translate', '$modal', 'UtilService', 'ObjectService', 'Person.InfoService', 'Authentication', 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'PersonAssociation.Service', 'Object.LookupService',
-                function($scope, $q, $stateParams, $translate, $modal, Util, ObjectService, PersonInfoService, Authentication, HelperUiGridService, HelperObjectBrowserService, PersonAssociationService, ObjectLookupService) {
+        [ '$scope', '$q', '$stateParams', '$translate', '$modal', 'UtilService', 'ObjectService', 'Person.InfoService', 'Authentication', 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'PersonAssociation.Service', 'Object.LookupService', 'Mentions.Service',
+                function($scope, $q, $stateParams, $translate, $modal, Util, ObjectService, PersonInfoService, Authentication, HelperUiGridService, HelperObjectBrowserService, PersonAssociationService, ObjectLookupService, MentionsService) {
 
                     var typeInitiator = 'Initiator1';
 
@@ -146,6 +146,8 @@ angular.module('people').controller(
                                 };
                                 $scope.gridOptions.data.push(rowEntity);
                             }
+                            MentionsService.sendEmailToMentionedUsers(data.emailAddresses, data.usersMentioned,
+                                ObjectService.ObjectTypes.PERSON, ObjectService.ObjectTypes.COMPLAINT, $scope.objectInfo.id, data.description);
                         });
                     }
 

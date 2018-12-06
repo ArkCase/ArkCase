@@ -525,7 +525,6 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService
                                 && !"".equals(folderIdString))
                         {
                             EcmFile file = getEcmFile(containerIdString, folderIdString, getFormName().toLowerCase() + "_xml");
-
                             formXml = getEcmFileService().update(file, xmlAttachment, getAuthentication());
                         }
                         else
@@ -543,31 +542,37 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService
                     if (pdf != null && pdf.size() == 1)
                     {
                         MultipartFile pdfAttachment = pdf.get(0);
-                        EcmFile pdfRendition = null;
-                        String _fileType = getFormName();
-
-                        if (pdfAttachment != null && pdfAttachment.getContentType() != null
-                                && pdfAttachment.getContentType().contains(EcmFileConstants.MIME_TYPE_PNG)
-                                && pdfAttachment.getContentType().contains(EcmFileConstants.MIME_TYPE_FREVVO_SIGNATURE_KEY))
+                        if (pdfAttachment != null)
                         {
-                            _fileType += "_signature";
-                        }
+                            EcmFile pdfRendition = null;
+                            String _fileType = getFormName();
 
-                        // Update PDF form if the mode is "edit", otherwise create new
-                        if ("edit".equals(mode) && null != containerIdString && !"".equals(containerIdString) && null != folderIdString
-                                && !"".equals(folderIdString))
-                        {
-                            EcmFile file = getEcmFile(containerIdString, folderIdString, _fileType.toLowerCase());
-                            file.setFileName(pdfAttachment.getName());
-                            getEcmFileDao().save(file);
+                            if (pdfAttachment != null && pdfAttachment.getContentType() != null
+                                    && pdfAttachment.getContentType().contains(EcmFileConstants.MIME_TYPE_PNG)
+                                    && pdfAttachment.getContentType().contains(EcmFileConstants.MIME_TYPE_FREVVO_SIGNATURE_KEY))
+                            {
+                                _fileType += "_signature";
+                            }
 
-                            pdfRendition = getEcmFileService().update(file, pdfAttachment, getAuthentication());
+                            // Update PDF form if the mode is "edit", otherwise create new
+                            if ("edit".equals(mode) && null != containerIdString && !"".equals(containerIdString) && null != folderIdString
+                                    && !"".equals(folderIdString))
+                            {
+                                EcmFile file = getEcmFile(containerIdString, folderIdString, _fileType.toLowerCase());
+                                if (file != null)
+                                {
+                                    file.setFileName(pdfAttachment.getName());
+                                    getEcmFileDao().save(file);
+                                }
+
+                                pdfRendition = getEcmFileService().update(file, pdfAttachment, getAuthentication());
+                            }
+                            else
+                            {
+                                pdfRendition = uploadFile(_fileType, targetCmisFolderId, parentObjectType, parentObjectId, pdfAttachment);
+                            }
+                            retval.setPdfRendition(pdfRendition);
                         }
-                        else
-                        {
-                            pdfRendition = uploadFile(_fileType, targetCmisFolderId, parentObjectType, parentObjectId, pdfAttachment);
-                        }
-                        retval.setPdfRendition(pdfRendition);
                     }
                 }
                 else

@@ -21,8 +21,9 @@ angular.module('organizations').controller(
                 '$timeout',
                 'PermissionsService',
                 'MessageService',
+                'Mentions.Service',
                 function($rootScope, $scope, $q, $stateParams, $translate, $modal, Util, ObjectService, OrganizationInfoService, Authentication, HelperUiGridService, HelperObjectBrowserService, ObjectLookupService, OrganizationSearchService, ObjectAssociationService, $timeout, PermissionsService,
-                        MessageService) {
+                        MessageService, MentionsService) {
 
                     Authentication.queryUserInfo().then(function(userInfo) {
                         $scope.userId = userInfo.userId;
@@ -157,6 +158,8 @@ angular.module('organizations').controller(
                                     updateAssociation(association, $scope.objectInfo, organization, data, rowEntity);
                                 });
                             }
+                            MentionsService.sendEmailToMentionedUsers(data.emailAddresses, data.usersMentioned,
+                                ObjectService.ObjectTypes.ORGANIZATION, "RELATED", $scope.objectInfo.organizationId, data.description);
                         });
                     }
 

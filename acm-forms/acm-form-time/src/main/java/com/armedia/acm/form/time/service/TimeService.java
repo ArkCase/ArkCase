@@ -37,12 +37,12 @@ import com.armedia.acm.frevvo.config.FrevvoFormChargeAbstractService;
 import com.armedia.acm.frevvo.config.FrevvoFormName;
 import com.armedia.acm.frevvo.model.UploadedFiles;
 import com.armedia.acm.objectonverter.DateFormats;
-import com.armedia.acm.services.timesheet.service.TimesheetConfigurationService;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.services.search.model.SearchConstants;
 import com.armedia.acm.services.timesheet.dao.AcmTimesheetDao;
 import com.armedia.acm.services.timesheet.model.AcmTimesheet;
 import com.armedia.acm.services.timesheet.model.TimesheetConstants;
+import com.armedia.acm.services.timesheet.service.TimesheetConfigurationService;
 import com.armedia.acm.services.timesheet.service.TimesheetEventPublisher;
 import com.armedia.acm.services.timesheet.service.TimesheetService;
 import com.armedia.acm.services.users.model.AcmUser;
@@ -196,7 +196,7 @@ public class TimeService extends FrevvoFormChargeAbstractService
                         .filter(item -> Objects.equal(item.getObjectId(), objectId) && Objects.equal(item.getType(), objectType))
                         .findFirst();
 
-                if (found != null && found.isPresent())
+                if (found.isPresent())
                 {
                     timeItem = found.get();
                 }

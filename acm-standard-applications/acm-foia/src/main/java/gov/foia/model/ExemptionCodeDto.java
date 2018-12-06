@@ -27,7 +27,11 @@ package gov.foia.model;
  * #L%
  */
 
-import javax.persistence.*;
+import javax.persistence.ColumnResult;
+import javax.persistence.ConstructorResult;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.SqlResultSetMapping;
 
 /**
  * Created by dragan.simonovski on 09/27/2016.

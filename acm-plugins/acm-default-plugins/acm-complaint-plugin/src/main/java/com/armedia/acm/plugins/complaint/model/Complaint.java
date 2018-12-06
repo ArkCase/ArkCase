@@ -457,7 +457,7 @@ public class Complaint implements Serializable, AcmAssignedObject, AcmEntity, Ac
         Optional<PersonAssociation> found = getPersonAssociations().stream()
                 .filter(personAssociation -> "Initiator".equalsIgnoreCase(personAssociation.getPersonType())).findFirst();
 
-        if (found != null && found.isPresent())
+        if (found.isPresent())
         {
             originator = found.get();
         }
@@ -480,7 +480,7 @@ public class Complaint implements Serializable, AcmAssignedObject, AcmEntity, Ac
             Optional<PersonAssociation> found = getPersonAssociations().stream()
                     .filter(personAssociation -> "Initiator".equalsIgnoreCase(personAssociation.getPersonType())).findFirst();
 
-            if (found == null || !found.isPresent())
+            if (!found.isPresent())
             {
                 getPersonAssociations().add(originator);
             }

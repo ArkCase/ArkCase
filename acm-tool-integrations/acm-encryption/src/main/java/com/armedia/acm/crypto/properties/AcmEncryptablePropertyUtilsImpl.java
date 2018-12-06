@@ -227,6 +227,8 @@ public class AcmEncryptablePropertyUtilsImpl implements AcmEncryptablePropertyUt
             keystore.load(is, null == keystorePassword ? null : keystorePassword.toCharArray());
             log.debug("Loaded key store");
         }
+        if (keystorePassword == null)
+            throw new KeyStoreException("Invalid keystore password");
         return (PrivateKey) keystore.getKey(keyAlias, keystorePassword.toCharArray());
     }
 

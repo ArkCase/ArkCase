@@ -1,140 +1,155 @@
 'use strict';
 
-angular
-        .module('document-repository')
-        .controller(
-                'DocumentRepository.NewDocumentRepositoryController',
-                [
-                        '$scope',
-                        '$modal',
-                        '$translate',
-                        '$window',
-                        'ConfigService',
-                        'UtilService',
-                        'Authentication',
-                        'Profile.UserInfoService',
-                        'DocumentRepository.InfoService',
-                        'MessageService',
-                        'ObjectService',
-                        'modalParams',
-                        function($scope, $modal, $translate, $window, ConfigService, Util, Authentication, UserInfoService,
-                                DocumentRepositoryInfoService, MessageService, ObjectService, modalParams) {
+angular.module('document-repository').controller(
+        'DocumentRepository.NewDocumentRepositoryController',
+        [
+                '$scope',
+                '$modal',
+                '$translate',
+                '$window',
+                'ConfigService',
+                'UtilService',
+                'Authentication',
+                'Profile.UserInfoService',
+                'DocumentRepository.InfoService',
+                'MessageService',
+                'ObjectService',
+                'modalParams',
+                'Mentions.Service',
+                function($scope, $modal, $translate, $window, ConfigService, Util, Authentication, UserInfoService,
+                        DocumentRepositoryInfoService, MessageService, ObjectService, modalParams, MentionsService) {
 
-                            $scope.modalParams = modalParams;
-                            $scope.docRepo = {};
-                            $scope.loading = false;
-                            var user = {};
-                            Authentication.queryUserInfo().then(function(userInfo) {
-                                user = userInfo;
-                                $scope.assignee = {};
-                                $scope.assignee.name = '';
-                                $scope.owningGroup = {};
-                                return userInfo;
-                            });
+                    $scope.modalParams = modalParams;
+                    $scope.docRepo = {};
+                    $scope.loading = false;
+                    var user = {};
 
-                            ConfigService.getModuleConfig("document-repository").then(function(moduleConfig) {
-                                $scope.userSearchConfig = _.find(moduleConfig.components, {
-                                    id : "userSearch"
-                                });
-                                return moduleConfig;
-                            });
+                    // --------------  mention --------------
+                    $scope.paramsName = {
+                        emailAddresses: [],
+                        usersMentioned: []
+                    };
 
-                            $scope.userOrGroupSearch = function() {
-                                var params = {};
-                                params.header = $translate.instant("document-repository.newRepository.searchUser");
-                                params.config = $scope.userSearchConfig;
+                    $scope.paramsDescription = {
+                        emailAddresses: [],
+                        usersMentioned: []
+                    };
 
-                                var modalInstance = $modal
-                                        .open({
-                                            templateUrl : "modules/document-repository/views/components/document-repository-assignee-picker-search-modal.client.view.html",
-                                            controller : [ '$scope', '$modalInstance', 'params', function($scope, $modalInstance, params) {
-                                                $scope.modalInstance = $modalInstance;
-                                                $scope.header = params.header;
-                                                $scope.filter = params.config.userSearchFilter;
-                                                $scope.extraFilter = params.config.userSearchFacetExtraFilter;
-                                                $scope.config = params.config;
-                                            } ],
-                                            animation : true,
-                                            size : 'lg',
-                                            backdrop : 'static',
-                                            resolve : {
-                                                params : function() {
-                                                    return params;
-                                                }
-                                            }
-                                        });
-                                modalInstance.result.then(function(selected) {
-                                    if (selected) {
-                                        var selectedObjectType = selected.masterSelectedItem.object_type_s;
-                                        if (selectedObjectType === 'USER') { // Selected user
-                                            var selectedUser = selected.masterSelectedItem;
-                                            var selectedGroup = selected.detailSelectedItems;
+                    Authentication.queryUserInfo().then(function(userInfo) {
+                        user = userInfo;
+                        $scope.assignee = {};
+                        $scope.assignee.name = '';
+                        $scope.owningGroup = {};
+                        return userInfo;
+                    });
 
-                                            $scope.assignee.object_id_s = selectedUser.object_id_s;
-                                            $scope.assignee.name = selectedUser.name;
-                                            if (selectedGroup) {
-                                                $scope.owningGroup.participantLdapId = selectedGroup.object_id_s;
-                                                $scope.owningGroup.name = selectedGroup.name;
-                                            }
+                    ConfigService.getModuleConfig("document-repository").then(function(moduleConfig) {
+                        $scope.userSearchConfig = _.find(moduleConfig.components, {
+                            id : "userSearch"
+                        });
+                        return moduleConfig;
+                    });
 
-                                            return;
-                                        } else if (selectedObjectType === 'GROUP') { // Selected group
-                                            var selectedUser = selected.detailSelectedItems;
-                                            var selectedGroup = selected.masterSelectedItem;
-                                            if (selectedUser) {
-                                                $scope.assignee.object_id_s = selectedUser.object_id_s;
-                                                $scope.assignee.name = selectedUser.name;
-                                            }
+                    $scope.userOrGroupSearch = function() {
+                        var params = {};
+                        params.header = $translate.instant("document-repository.newRepository.searchUser");
+                        params.config = $scope.userSearchConfig;
 
-                                            $scope.owningGroup.participantLdapId = selectedGroup.object_id_s;
-                                            $scope.owningGroup.name = selectedGroup.name;
-
-                                            return;
+                        var modalInstance = $modal
+                                .open({
+                                    templateUrl : "modules/document-repository/views/components/document-repository-assignee-picker-search-modal.client.view.html",
+                                    controller : [ '$scope', '$modalInstance', 'params', function($scope, $modalInstance, params) {
+                                        $scope.modalInstance = $modalInstance;
+                                        $scope.header = params.header;
+                                        $scope.filter = params.config.userSearchFilter;
+                                        $scope.extraFilter = params.config.userSearchFacetExtraFilter;
+                                        $scope.config = params.config;
+                                    } ],
+                                    animation : true,
+                                    size : 'lg',
+                                    backdrop : 'static',
+                                    resolve : {
+                                        params : function() {
+                                            return params;
                                         }
                                     }
                                 });
-                            };
+                        modalInstance.result.then(function(selected) {
+                            if (selected) {
+                                var selectedObjectType = selected.masterSelectedItem.object_type_s;
+                                if (selectedObjectType === 'USER') { // Selected user
+                                    var selectedUser = selected.masterSelectedItem;
+                                    var selectedGroup = selected.detailSelectedItems;
 
-                            $scope.changeType = function() {
-                                if ($scope.isPersonalDocRepo()) {
-                                    $scope.owningGroup.participantLdapId = '';
-                                    $scope.owningGroup.name = '';
-                                    $scope.assignee.name = user.fullName;
-                                    $scope.assignee.object_id_s = user.userId;
-                                } else {
-                                    $scope.assignee.name = '';
-                                    $scope.assignee.object_id_s = '';
-                                    $scope.owningGroup.participantLdapId = '';
-                                    $scope.owningGroup.name = '';
+                                    $scope.assignee.object_id_s = selectedUser.object_id_s;
+                                    $scope.assignee.name = selectedUser.name;
+                                    if (selectedGroup) {
+                                        $scope.owningGroup.participantLdapId = selectedGroup.object_id_s;
+                                        $scope.owningGroup.name = selectedGroup.name;
+                                    }
+
+                                    return;
+                                } else if (selectedObjectType === 'GROUP') { // Selected group
+                                    var selectedUser = selected.detailSelectedItems;
+                                    var selectedGroup = selected.masterSelectedItem;
+                                    if (selectedUser) {
+                                        $scope.assignee.object_id_s = selectedUser.object_id_s;
+                                        $scope.assignee.name = selectedUser.name;
+                                    }
+
+                                    $scope.owningGroup.participantLdapId = selectedGroup.object_id_s;
+                                    $scope.owningGroup.name = selectedGroup.name;
+
+                                    return;
                                 }
-                            };
+                            }
+                        });
+                    };
 
-                            $scope.saveNewDocumentRepository = function() {
-                                $scope.docRepo.participants = [];
-                                $scope.loading = true;
-                                DocumentRepositoryInfoService.saveDocumentRepository($scope.docRepo).then(function(data) {
-                                    if ($scope.isPersonalDocRepo()) {
-                                        ObjectService.showObject(ObjectService.ObjectTypes.MY_DOC_REPO, data.id);
-                                    } else {
-                                        ObjectService.showObject(ObjectService.ObjectTypes.DOC_REPO, data.id);
-                                    }
-                                    $scope.onModalClose();
-                                    $scope.loading = false;
-                                }, function(error) {
-                                    $scope.loading = false;
-                                    if (error.data && error.data.message) {
-                                        $scope.error = error.data.message;
-                                    } else {
-                                        MessageService.error(error);
-                                    }
-                                });
-                            };
+                    $scope.changeType = function() {
+                        if ($scope.isPersonalDocRepo()) {
+                            $scope.owningGroup.participantLdapId = '';
+                            $scope.owningGroup.name = '';
+                            $scope.assignee.name = user.fullName;
+                            $scope.assignee.object_id_s = user.userId;
+                        } else {
+                            $scope.assignee.name = '';
+                            $scope.assignee.object_id_s = '';
+                            $scope.owningGroup.participantLdapId = '';
+                            $scope.owningGroup.name = '';
+                        }
+                    };
 
-                            $scope.isPersonalDocRepo = function() {
-                                return $scope.docRepo.repositoryType === 'PERSONAL';
-                            };
+                    $scope.saveNewDocumentRepository = function() {
+                        $scope.docRepo.participants = [];
+                        $scope.loading = true;
+                        DocumentRepositoryInfoService.saveDocumentRepository($scope.docRepo).then(function(data) {
+                            if ($scope.isPersonalDocRepo()) {
+                                ObjectService.showObject(ObjectService.ObjectTypes.MY_DOC_REPO, data.id);
+                            } else {
+                                ObjectService.showObject(ObjectService.ObjectTypes.DOC_REPO, data.id);
+                            }
+                            MentionsService.sendEmailToMentionedUsers($scope.paramsName.emailAddresses, $scope.paramsName.usersMentioned,
+                                ObjectService.ObjectTypes.DOC_REPO, ObjectService.ObjectTypes.DOC_REPO, data.id, data.name);
+                            MentionsService.sendEmailToMentionedUsers($scope.paramsDescription.emailAddresses, $scope.paramsDescription.usersMentioned,
+                                ObjectService.ObjectTypes.DOC_REPO, ObjectService.ObjectTypes.DOC_REPO, data.id, data.description);
+                            $scope.onModalClose();
+                            $scope.loading = false;
+                        }, function(error) {
+                            $scope.loading = false;
+                            if (error.data && error.data.message) {
+                                $scope.error = error.data.message;
+                            } else {
+                                MessageService.error(error);
+                            }
+                        });
+                    };
 
-                            $scope.cancelModal = function() {
-                                $scope.onModalDismiss();
-                            };
-                        } ]);
+                    $scope.isPersonalDocRepo = function() {
+                        return $scope.docRepo.repositoryType === 'PERSONAL';
+                    };
+
+                    $scope.cancelModal = function() {
+                        $scope.onModalDismiss();
+                    };
+                } ]);

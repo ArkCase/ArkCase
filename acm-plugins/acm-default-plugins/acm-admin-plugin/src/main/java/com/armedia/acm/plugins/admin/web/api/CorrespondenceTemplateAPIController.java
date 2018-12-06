@@ -147,11 +147,16 @@ public class CorrespondenceTemplateAPIController
     @RequestMapping(value = "/template/{templateId}/{templateVersion:.+}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public CorrespondenceTemplateRequestResponse deleteTemplateByIdAndVersion(@PathVariable(value = "templateId") String templateId,
-            @PathVariable(value = "templateVersion") String templateVersion) throws IOException
+            @PathVariable(value = "templateVersion") String templateVersion) throws IOException, CorrespondenceTemplateNotFoundException
     {
         File templatesDir = new File(System.getProperty("user.home") + "/.arkcase/acm/correspondenceTemplates");
+        Optional<CorrespondenceTemplate> optionalChildDirectory = correspondenceService.getTemplateByIdAndVersion(templateId,
+                templateVersion);
+        String childDirectoryName = optionalChildDirectory.map(correspondenceTemplate -> correspondenceTemplate.getTemplateFilename())
+                .orElseThrow(CorrespondenceTemplateNotFoundException::new);
+
         File templateFile = new File(templatesDir,
-                correspondenceService.getTemplateByIdAndVersion(templateId, templateVersion).get().getTemplateFilename());
+                childDirectoryName);
         if (FileUtils.deleteQuietly(templateFile))
         {
             return mapTemplateToResponse(correspondenceService.deleteTemplateByIdAndVersion(templateId, templateVersion));

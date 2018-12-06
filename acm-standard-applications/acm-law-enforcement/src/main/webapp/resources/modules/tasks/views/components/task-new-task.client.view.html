@@ -36,10 +36,10 @@
             </div>
             <div class="row">
                 <div class="col-sm-12 form-group">
-                    <label for="subject" translate> tasks.newTask.subject.label </label>
+                    <label translate> tasks.newTask.subject.label </label>
                     <span class="required-asterisk">*</span>
-                    <input type="text" id="subject" ng-required="true" ng-model="config.data.title" name="subject"
-                            class="input-md form-control" placeholder="{{ 'tasks.newTask.subject.label'  | translate }}" id="subject">
+                    <mention-input ng-model="config.data.title" params="params"
+                            placeholder="{{ 'tasks.newTask.subject.label' | translate }}"></mention-input>
                 </div>
             </div>
 
@@ -84,9 +84,9 @@
                 </div>
             </div>
             <div class="row" ng-if="taskType === 'ACM_TASK'">
-                <div class="col-sm-12 form-group">
+                <div class="col-sm-12 remove-margin-bottom-from-summernote">
                     <label translate> tasks.newTask.notes.label </label>
-                    <summernote config="options" ng-model="config.data.details"></summernote>
+                    <mention-summernote ng-model="config.data.details" params="paramsSummernote"></mention-summernote>
                 </div>
             </div>
             <div class="row" ng-if="taskType === 'REVIEW_DOCUMENT' && documentsToReview">
