@@ -115,11 +115,7 @@ angular.module('admin').controller('Admin.DashboardConfigController', [ '$scope'
 
     function retrieveDataScroll(data, methodName, panelName) {
         DashboardConfigService[methodName](data).then(function(response) {
-            if (_.isArray(response.data)) {
-                $scope.fillList($scope.widgetsData[panelName], response.data);
-            } else {
-                $scope.fillList($scope.widgetsData[panelName], response.data);
-            }
+            $scope.fillList($scope.widgetsData[panelName], response.data);
 
             if (panelName === "selectedAuthorized") {
                 currentAuthRolesGroups = [];
@@ -149,7 +145,6 @@ angular.module('admin').controller('Admin.DashboardConfigController', [ '$scope'
     }
 
     $scope.onObjSelect = function(selectedObject) {
-        $scope.lastSelectedWidget = [];
         $scope.lastSelectedWidget = selectedObject;
 
         var data = {};

@@ -35,6 +35,7 @@ import com.armedia.acm.services.search.service.SearchResults;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.service.group.GroupService;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.mule.api.MuleException;
@@ -103,7 +104,7 @@ public class FirstAssigneeOwningGroupNotify extends AbstractEmailSenderService i
                }
                catch (Exception e)
                {
-                   LOG.error("Error occurred while trying to send Assignee email to owning group members", e);;
+                   LOG.error("Error occurred while trying to send Assignee email to owning group members", e);
                }
 
            }

@@ -55,7 +55,6 @@ angular.module('admin').controller('Admin.FunctionalAccessController', [ '$scope
     //callback function when app role is selected
     function onObjSelect(selectedObject) {
         if (!_.isEmpty($scope.rolesData.chooseObject)) {
-            $scope.lastSelectedRole = [];
             $scope.lastSelectedRole = selectedObject;
             var data = {};
             data.roleName = selectedObject;
