@@ -11,7 +11,8 @@
             </div>
         </div>
         <div class="panel-body remove-margin-bottom-from-summernote">
-            <summernote on-init="init()" editor="editor" config="options" ng-model="objectInfo.details"></summernote>
+            <mention-summernote ng-model="objectInfo.details" params="paramsSummernote" permissions="permissions"
+                    focus="true"></mention-summernote>
         </div>
     </div>
 </div>

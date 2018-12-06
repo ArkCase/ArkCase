@@ -220,38 +220,10 @@ angular.module('organizations').controller(
                     });
 
                     // ---------------------   mention   ---------------------------------
-                    $scope.emailAddresses = [];
-                    $scope.usersMentioned = [];
-
-                    // Obtains a list of all users in ArkCase
-                    MentionsService.getUsers().then(function(users) {
-                        $scope.people = [];
-                        $scope.peopleEmails = [];
-                        _.forEach(users, function(user) {
-                            $scope.people.push(user.name);
-                            $scope.peopleEmails.push(user.email_lcs);
-                        });
-                    });
-
-                    $scope.options = {
-                        dialogsInBody: true,
-                        hint: {
-                            mentions: $scope.people,
-                            match: /\B@(\w*)$/,
-                            search: function(keyword, callback) {
-                                callback($.grep($scope.people, function(item) {
-                                    return item.indexOf(keyword) == 0;
-                                }));
-                            },
-                            content: function(item) {
-                                var index = $scope.people.indexOf(item);
-                                $scope.emailAddresses.push($scope.peopleEmails[index]);
-                                $scope.usersMentioned.push('@' + item);
-                                return '@' + item;
-                            }
-                        }
+                    $scope.paramsSummernote = {
+                        emailAddresses: [],
+                        usersMentioned: []
                     };
-                    // -----------------------  end mention   ----------------------------
 
                     $scope.addContactMethod = function(contactType) {
                         $timeout(function() {
@@ -315,7 +287,7 @@ angular.module('organizations').controller(
                                 objectType: objectTypeString,
                                 organizationValue: objectInfo.organizationValue
                             });
-                            MentionsService.sendEmailToMentionedUsers($scope.emailAddresses, $scope.usersMentioned, ObjectService.ObjectTypes.ORGANIZATION, "DETAILS", objectInfo.organizationId, objectInfo.details);
+                            MentionsService.sendEmailToMentionedUsers($scope.paramsSummernote.emailAddresses, $scope.paramsSummernote.usersMentioned, ObjectService.ObjectTypes.ORGANIZATION, "DETAILS", objectInfo.organizationId, objectInfo.details);
                             MessageService.info(organizationCreatedMessage);
                             ObjectService.showObject(ObjectService.ObjectTypes.ORGANIZATION, objectInfo.organizationId);
                             $scope.onModalClose();
