@@ -126,6 +126,7 @@ angular.module('directives').directive(
                                         templateUrl: 'modules/common/views/user-group-picker-modal.client.view.html',
                                         controller: 'Common.UserGroupPickerController',
                                         size: 'lg',
+                                        backdrop: 'static',
                                         resolve: {
                                             $filter: function() {
                                                 return scope.userOrGroupSearchConfig.userOrGroupSearchFilters.userOrGroupFacetFilter;
