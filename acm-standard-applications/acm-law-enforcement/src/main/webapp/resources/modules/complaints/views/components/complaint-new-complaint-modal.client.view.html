@@ -86,8 +86,8 @@
             </div>
             <div id="collapseDesc" class="panel-collapse collapse">
                 <div class="panel-body">
-                    <div class="row form-group">
-                        <summernote id="complaintDesc" config="options" ng-model="complaint.details"></summernote>
+                    <div class="row remove-margin-bottom-from-summernote">
+                        <mention-summernote ng-model="complaint.details" params="paramsSummernote"></mention-summernote>
                     </div>
                 </div>
             </div>

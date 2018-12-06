@@ -13,7 +13,10 @@
 angular.module('services').factory('Mentions.Service', [ '$q', 'UtilService', 'LookupService', 'Ecm.EmailService', function($q, Util, LookupService, EcmEmailService) {
     return ({
         getUsers: getUsers,
-        sendEmailToMentionedUsers: sendEmailToMentionedUsers
+        sendEmailToMentionedUsers: sendEmailToMentionedUsers,
+        optionsWithMentionForSummernote: optionsWithMentionForSummernote,
+        REGEX: /\B@(\w*)$/,
+        search: search
     });
 
     /**
@@ -29,8 +32,8 @@ angular.module('services').factory('Mentions.Service', [ '$q', 'UtilService', 'L
     function getUsers() {
         // var usersList = [];
         var deferred = $q.defer();
-        LookupService.getUsers().then(function (users) {
-            _.forEach(users, function (user) {
+        LookupService.getUsers().then(function(users) {
+            _.forEach(users, function(user) {
                 user.label = user.name;
             });
             deferred.resolve(users);
@@ -52,9 +55,9 @@ angular.module('services').factory('Mentions.Service', [ '$q', 'UtilService', 'L
      *
      * @returns {Array} array with the email addresses
      */
-    function checkIfMentionedUsersStillExist(emailAddresses, usersMentioned, textMentioned){
-        _.forEach(usersMentioned, function (user, index) {
-            if(!_.includes(textMentioned, user)){
+    function checkIfMentionedUsersStillExist(emailAddresses, usersMentioned, textMentioned) {
+        _.forEach(usersMentioned, function(user, index) {
+            if (!_.includes(textMentioned, user)) {
                 emailAddresses.splice(index, 1);
             }
         });
@@ -77,7 +80,7 @@ angular.module('services').factory('Mentions.Service', [ '$q', 'UtilService', 'L
      *
      * @returns {Object} Promise
      */
-    function sendEmailToMentionedUsers(emailAddresses, usersMentioned, objectType, subType, objectId, textMentioned){
+    function sendEmailToMentionedUsers(emailAddresses, usersMentioned, objectType, subType, objectId, textMentioned) {
         emailAddresses = checkIfMentionedUsersStillExist(emailAddresses, usersMentioned, textMentioned);
         if (!Util.isArrayEmpty(emailAddresses)) {
             var emailData = {};
@@ -88,5 +91,41 @@ angular.module('services').factory('Mentions.Service', [ '$q', 'UtilService', 'L
             emailData.emailAddresses = emailAddresses;
             EcmEmailService.sendMentionsEmail(emailData);
         }
+    }
+
+    function optionsWithMentionForSummernote(people, peopleEmails, emailAddresses, usersMentioned) {
+        return {
+            focus: true,
+            dialogsInBody: true,
+            hint: {
+                match: /\B@(\w*)$/,
+                search: function(keyword, callback) {
+                    callback($.grep(people, function(item) {
+                        return item.indexOf(keyword) == 0;
+                    }));
+                },
+                content: function(item) {
+                    var index = people.indexOf(item);
+                    emailAddresses.push(peopleEmails[index]);
+                    usersMentioned.push('@' + item);
+                    return '@' + item;
+                }
+            }
+        };
+    }
+
+    function search(keyword, callback) {
+        return getUsers().then(function(users) {
+            var people = [];
+            var peopleEmails = [];
+            _.forEach(users, function(user) {
+                people.push(user.name);
+                peopleEmails.push(user.email_lcs);
+            });
+            console.log(people);
+            return callback($.grep(people, function(item) {
+                return item.indexOf(keyword) == 0;
+            }));
+        });
     }
 } ]);
