@@ -27,6 +27,7 @@ package com.armedia.acm.plugins.phonehome.service;
  * #L%
  */
 
+import com.armedia.acm.core.exceptions.AcmStateOfArkcaseGenerateReportException;
 import com.armedia.acm.plugins.stateofarkcaseplugin.service.AcmStateOfArkcaseService;
 
 import org.springframework.core.io.FileSystemResource;
@@ -52,7 +53,7 @@ public class PhoneHomeService
         gateway.postMultipartRequest(params);
     }
 
-    public void generateAndUploadReportFile()
+    public void generateAndUploadReportFile() throws AcmStateOfArkcaseGenerateReportException
     {
         uploadFile(stateOfArkcaseService.generateReportForDay(LocalDate.now().minus(1, ChronoUnit.DAYS)));
     }

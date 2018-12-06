@@ -664,7 +664,7 @@ public class FOIARequest extends CaseFile implements FOIAObject
         Optional<PersonAssociation> found = getPersonAssociations().stream()
                 .filter(personAssociation -> "Requester".equalsIgnoreCase(personAssociation.getPersonType())).findFirst();
 
-        if (found != null && found.isPresent())
+        if (found.isPresent())
         {
             return found.get();
         }
@@ -687,7 +687,7 @@ public class FOIARequest extends CaseFile implements FOIAObject
             Optional<PersonAssociation> found = getPersonAssociations().stream()
                     .filter(personAssociation -> "Requester".equalsIgnoreCase(personAssociation.getPersonType())).findFirst();
 
-            if (found == null || !found.isPresent())
+            if (!found.isPresent())
             {
                 getPersonAssociations().add(originator);
             }

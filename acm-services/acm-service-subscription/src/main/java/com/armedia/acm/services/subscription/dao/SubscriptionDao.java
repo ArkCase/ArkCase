@@ -101,11 +101,22 @@ public class SubscriptionDao extends AcmAbstractDao<AcmSubscription>
 
         // this should be native query? Actually acm_audit_log table is mapped as JPA entity class AuditEvent
         // and I used this model.
-        Query query = getEm().createQuery("SELECT aud.objectType, aud.objectId, "
-                + "aud.userId, aud.eventDate, aud.fullEventType, sub.userId, " + "sub.objectName, sub.objectTitle, sub.subscriptionId "
-                + "FROM AuditEvent aud, AcmSubscription sub " + "WHERE sub.subscriptionObjectType = aud.objectType "
-                + "AND sub.objectId = aud.objectId " + "AND aud.eventResult =:activityResult " + "AND aud.eventDate >:lastRunDate "
-                + (eventsToBeRemoved != null ? "AND aud.fullEventType NOT IN :eventsToBeRemoved " : ""));
+        Query query;
+        if (eventsToBeRemoved != null)
+        {
+            query = getEm().createQuery("SELECT aud.objectType, aud.objectId, "
+                    + "aud.userId, aud.eventDate, aud.fullEventType, sub.userId, " + "sub.objectName, sub.objectTitle, sub.subscriptionId "
+                    + "FROM AuditEvent aud, AcmSubscription sub " + "WHERE sub.subscriptionObjectType = aud.objectType "
+                    + "AND sub.objectId = aud.objectId " + "AND aud.eventResult =:activityResult " + "AND aud.eventDate >:lastRunDate "
+                    + "AND aud.fullEventType NOT IN :eventsToBeRemoved ");
+        }
+        else
+        {
+            query = getEm().createQuery("SELECT aud.objectType, aud.objectId, "
+                    + "aud.userId, aud.eventDate, aud.fullEventType, sub.userId, " + "sub.objectName, sub.objectTitle, sub.subscriptionId "
+                    + "FROM AuditEvent aud, AcmSubscription sub " + "WHERE sub.subscriptionObjectType = aud.objectType "
+                    + "AND sub.objectId = aud.objectId " + "AND aud.eventResult =:activityResult " + "AND aud.eventDate >:lastRunDate");
+        }
 
         query.setParameter("activityResult", SubscriptionConstants.AUDIT_ACTIVITY_RESULT_SUCCESS);
         query.setParameter("lastRunDate", lastRunDate);

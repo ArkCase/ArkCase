@@ -37,8 +37,8 @@ import com.armedia.acm.services.costsheet.model.AcmCostsheet;
 import com.armedia.acm.services.costsheet.model.AcmCostsheetEvent;
 import com.armedia.acm.services.costsheet.model.CostsheetConstants;
 import com.armedia.acm.services.participants.model.AcmParticipant;
-
 import com.armedia.acm.services.participants.model.ParticipantTypes;
+
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.codehaus.plexus.util.StringUtils;

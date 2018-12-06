@@ -62,10 +62,9 @@ public class CloseComplaintFormAPIController
             HttpServletRequest request, HttpSession session)
     {
         log.info("Closing complaint with id [{}]...", form.getComplaintId());
-        Map<String, String> message = null;
+        Map<String, String> message = new HashMap<>();
         try
         {
-            message = new HashMap<>();
             closeComplaintService.save(form, auth, mode);
             message.put("info", "The complaint is in approval mode");
         }
@@ -80,8 +79,8 @@ public class CloseComplaintFormAPIController
             {
                 message.put("info", "Closing complaint with id " + form.getComplaintId() + " failed");
             }
-            return message;
         }
+        return message;
     }
 
     public CloseComplaintService getCloseComplaintService()

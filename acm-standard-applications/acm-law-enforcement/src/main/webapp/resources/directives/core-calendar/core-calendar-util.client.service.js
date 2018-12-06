@@ -826,10 +826,11 @@ angular.module('directives').factory(
                          */
                         var regex = /.*(<body.*body>).*/gm;
                         var resultArray = regex.exec(cleanHtmlCode);
-                        if (resultArray.length > 1)
+                        if (resultArray.length > 1) {
                             details = resultArray[resultArray.length - 1];
+                        }
                         /*
-                        remove all html tags and you're left with only displayable text
+                            remove all html tags and you're left with only displayable text
                          */
                         details = details.replace(/<[^>]+>/gm, '');
                         var detailsSummary = details.slice(0, characters);
@@ -839,7 +840,8 @@ angular.module('directives').factory(
                         if (details.length > characters)
                             detailsSummary = detailsSummary + '...';
                         return detailsSummary;
-                    }
+                    };
+
                     /**
 
                      * @ngdoc method

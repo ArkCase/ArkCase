@@ -46,13 +46,13 @@ public class CheckCloseComplaintRequest implements PipelineHandler<CloseComplain
 
         if (form == null)
         {
-            message = "Cannot unmarshall Close Complaint Form.";
+            throw new PipelineProcessException("Cannot unmarshall Close Complaint Form.");
         }
 
         Complaint complaint = getComplaintDao().find(form.getComplaintId());
         if (complaint == null)
         {
-            message = "Cannot find complaint by given complaintId=" + form.getComplaintId();
+            throw new PipelineProcessException("Cannot find complaint by given complaintId=" + form.getComplaintId());
         }
 
         if (("IN APPROVAL".equals(complaint.getStatus()) || "CLOSED".equals(complaint.getStatus())) && !"edit".equals(mode))

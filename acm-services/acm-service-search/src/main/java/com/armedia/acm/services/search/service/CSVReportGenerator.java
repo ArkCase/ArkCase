@@ -176,7 +176,7 @@ public class CSVReportGenerator extends ReportGenerator
     @Override
     public String generateReportName(String name)
     {
-        DateFormat formatter = new SimpleDateFormat("YYYY-MM-dd-HH-mm-ss");
+        DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");
         return String.format("%s-%s.csv", name, formatter.format(new Date()));
     }
 

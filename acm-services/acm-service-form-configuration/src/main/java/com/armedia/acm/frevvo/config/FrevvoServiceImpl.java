@@ -64,6 +64,7 @@ public class FrevvoServiceImpl implements FrevvoService
 
     private Logger LOG = LoggerFactory.getLogger(getClass());
     private FrevvoFormUrl formUrl;
+    private ThreadLocal<FormsService> service = new ThreadLocal<>();
 
     @Override
     public void login()
@@ -71,8 +72,6 @@ public class FrevvoServiceImpl implements FrevvoService
         try
         {
             LOG.debug("Logging to Frevvo server.");
-            FormsService service = getFormsService();
-
             if (service != null)
             {
                 logout();
@@ -89,14 +88,13 @@ public class FrevvoServiceImpl implements FrevvoService
                 port = getFormUrl().getInternalPortAsInteger();
             }
 
-            service = new FormsService(protocol, host, port, null);
+            service.set(new FormsService(protocol, host, port, null));
 
             String designer = getFormUrl().getDesignerUser();
             String admin = getFormUrl().getAdminUser() + "@" + getFormUrl().getTenant();
             String adminPass = getFormUrl().getAdminPassword();
 
-            service.loginAs(designer, admin, adminPass);
-            getRequest().getSession().setAttribute(FrevvoFormConstants.FREVVO_FORMS_SERVICE, service);
+            service.get().loginAs(designer, admin, adminPass);
         }
         catch (Exception e)
         {
@@ -110,12 +108,8 @@ public class FrevvoServiceImpl implements FrevvoService
         try
         {
             LOG.debug("Logout from Frevvo server.");
-            FormsService service = (FormsService) getRequest().getSession().getAttribute(FrevvoFormConstants.FREVVO_FORMS_SERVICE);
-            if (service != null)
-            {
-                service.logout();
-                getRequest().getSession().removeAttribute(FrevvoFormConstants.FREVVO_FORMS_SERVICE);
-            }
+            service.get().logout();
+            service.remove();
         }
         catch (Exception e)
         {
@@ -130,9 +124,8 @@ public class FrevvoServiceImpl implements FrevvoService
         {
             LOG.debug("Taking Frevvo Application with id=" + id);
 
-            FormsService service = getFormsService();
-            URL appEntryUrl = service.getEntryURL(ApplicationEntry.class, id);
-            ApplicationEntry application = service.getEntry(fixFrevvoUrl(appEntryUrl), ApplicationEntry.class);
+            URL appEntryUrl = service.get().getEntryURL(ApplicationEntry.class, id);
+            ApplicationEntry application = service.get().getEntry(fixFrevvoUrl(appEntryUrl), ApplicationEntry.class);
 
             return application;
         }
@@ -151,9 +144,8 @@ public class FrevvoServiceImpl implements FrevvoService
         {
             LOG.debug("Taking Form with id=" + id);
 
-            FormsService service = getFormsService();
-            URL formEntryUrl = service.getEntryURL(FormTypeEntry.class, id);
-            FormTypeEntry form = service.getEntry(fixFrevvoUrl(formEntryUrl), FormTypeEntry.class);
+            URL formEntryUrl = service.get().getEntryURL(FormTypeEntry.class, id);
+            FormTypeEntry form = service.get().getEntry(fixFrevvoUrl(formEntryUrl), FormTypeEntry.class);
 
             return form;
         }
@@ -169,9 +161,8 @@ public class FrevvoServiceImpl implements FrevvoService
     {
         try
         {
-            FormsService service = getFormsService();
             URL formTypeUrl = new URL(application.getFormTypeFeedLink().getHref());
-            FormTypeFeed formFeed = service.getFeed(fixFrevvoUrl(formTypeUrl), FormTypeFeed.class);
+            FormTypeFeed formFeed = service.get().getFeed(fixFrevvoUrl(formTypeUrl), FormTypeFeed.class);
 
             return formFeed.getEntries();
         }
@@ -293,9 +284,8 @@ public class FrevvoServiceImpl implements FrevvoService
         {
             LOG.debug("Taking Schema for id=" + id);
 
-            FormsService service = getFormsService();
-            URL schemaEntryUrl = service.getEntryURL(FormTypeEntry.class, id);
-            SchemaEntry schema = service.getEntry(fixFrevvoUrl(schemaEntryUrl), SchemaEntry.class);
+            URL schemaEntryUrl = service.get().getEntryURL(FormTypeEntry.class, id);
+            SchemaEntry schema = service.get().getEntry(fixFrevvoUrl(schemaEntryUrl), SchemaEntry.class);
 
             return schema;
         }
@@ -309,19 +299,7 @@ public class FrevvoServiceImpl implements FrevvoService
     @Override
     public FormsService getFormsService()
     {
-        LOG.debug("Getting Forms Service.");
-
-        FormsService service = null;
-        try
-        {
-            service = (FormsService) getRequest().getSession().getAttribute(FrevvoFormConstants.FREVVO_FORMS_SERVICE);
-        }
-        catch (Exception e)
-        {
-            LOG.error("Cannot take Forms Service.", e);
-        }
-
-        return service;
+        return service.get();
     }
 
     private URL fixFrevvoUrl(URL url)

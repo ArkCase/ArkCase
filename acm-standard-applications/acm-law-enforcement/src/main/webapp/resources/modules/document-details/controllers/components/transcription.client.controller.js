@@ -117,7 +117,7 @@ angular.module('document-details').controller('Document.TranscriptionController'
                 });
             };
 
-            var createManualTranscription = function() {
+            var createManualTranscription = function(activeVersionId) {
                 $scope.isSaveLoading = true;
                 TranscriptionAppService.createTranscription($scope.transcribeDataModel).then(function(data) {
                     $scope.isSaveLoading = false;

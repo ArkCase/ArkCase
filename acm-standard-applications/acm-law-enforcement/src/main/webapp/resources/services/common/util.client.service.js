@@ -243,16 +243,15 @@ angular.module('services').factory('UtilService', [ '$q', '$log', '$filter', fun
          */
         ,
         isEmpty: function(val) {
-            if (undefined == val) {
+            switch (val) {
+            case undefined:
+            case "":
+            case null:
+            case "null":
                 return true;
-            } else if ("" === val) {
-                return true;
-            } else if (null == val) {
-                return true;
-            } else if ("null" == val) {
-                return true;
+            default:
+                return false;
             }
-            return false;
         }
 
         /**

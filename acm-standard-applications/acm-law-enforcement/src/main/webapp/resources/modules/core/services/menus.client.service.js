@@ -45,8 +45,6 @@ angular.module('core').service('Menus', [ '$q', 'PermissionsService', 'Admin.Mod
         } else {
             throw new Error('MenuId was not provided');
         }
-
-        return false;
     };
 
     // Get the menu object by menu id

@@ -41,6 +41,8 @@ import com.armedia.acm.calendar.service.RecurrenceDetails.Monthly;
 import com.armedia.acm.calendar.service.RecurrenceDetails.WeekOfMonth;
 import com.armedia.acm.calendar.service.RecurrenceDetails.Weekly;
 import com.armedia.acm.calendar.service.RecurrenceDetails.Yearly;
+import com.armedia.acm.calendar.service.integration.exchange.exception.CalendarRecurrenceTypeException;
+import com.armedia.acm.calendar.service.integration.exchange.exception.RecurrenceDetailsException;
 
 import org.springframework.web.multipart.MultipartFile;
 
@@ -226,18 +228,23 @@ public class ExchangeTypesConverter
                             convertDayOfWeek(yearly.getDayOfWeek()), convertWeekOfMonth(yearly.getWeekOfMonth()));
                 }
                 break;
+            default:
+                throw new CalendarRecurrenceTypeException(String.format("Calendar recurrence type unknown: %s", rc.getRecurrenceType()));
             }
             Integer endAfterOccurrances = rc.getEndAfterOccurrances();
-            if (endAfterOccurrances != null)
+            if (recurrence != null)
             {
-                recurrence.setNumberOfOccurrences(endAfterOccurrances);
+                if (endAfterOccurrances != null)
+                {
+                    recurrence.setNumberOfOccurrences(endAfterOccurrances);
+                }
+                ZonedDateTime endBy = rc.getEndBy();
+                if (endBy != null)
+                {
+                    recurrence.setEndDate(Date.from(endBy.toInstant()));
+                }
+                appointment.setRecurrence(recurrence);
             }
-            ZonedDateTime endBy = rc.getEndBy();
-            if (endBy != null)
-            {
-                recurrence.setEndDate(Date.from(endBy.toInstant()));
-            }
-            appointment.setRecurrence(recurrence);
         }
     }
 
@@ -507,6 +514,8 @@ public class ExchangeTypesConverter
                 relativeYearly.setWeekOfMonth(convertWeekOfTheMonth(ryp.getDayOfTheWeekIndex()));
                 recurrenceDetails = relativeYearly;
                 break;
+            default:
+                throw new RecurrenceDetailsException("Recurrence details unknown");
             }
             if (recurrence.getNumberOfOccurrences() != null)
             {
