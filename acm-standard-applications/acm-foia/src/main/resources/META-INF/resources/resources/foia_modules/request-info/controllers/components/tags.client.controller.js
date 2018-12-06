@@ -54,7 +54,7 @@ angular.module('cases').controller(
                                                 $scope.gridOptions.totalItems = $scope.tags.length;
                                             });
                                         } else {
-                                            messageService.info(tag.tags_s + " " + $translate.instant('request-info.comp.tags.message.tagAssociated'));
+                                            messageService.info(tag.tags_s + " " + $translate.instant('requests.comp.tags.message.tagAssociated'));
                                             _.remove(tagsFound, function() {
                                                 return tag;
                                             });
@@ -114,9 +114,9 @@ angular.module('cases').controller(
                         var id = Util.goodMapValue(rowEntity, "id", 0);
                         if (0 < id) { //do not need to call service when deleting a new row with id==0
                             ObjectTagsService.removeAssociateTag(componentHelper.currentObjectId, ObjectService.ObjectTypes.CASE_FILE, rowEntity.id).then(function() {
-                                messageService.info($translate.instant('request-info.comp.tags.message.delete.success'));
+                                messageService.info($translate.instant('requests.comp.tags.message.delete.success'));
                             }, function() {
-                                messageService.error($translate.instant('request-info.comp.tags.message.delete.error'));
+                                messageService.error($translate.instant('requests.comp.tags.message.delete.error'));
                             });
                         }
                     };
