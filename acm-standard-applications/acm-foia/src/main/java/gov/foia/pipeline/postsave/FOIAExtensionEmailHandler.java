@@ -34,6 +34,7 @@ import static gov.foia.model.FOIARequestUtils.extractRequestorEmailAddress;
 
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
+import com.armedia.acm.core.exceptions.CorrespondenceMergeFieldVersionException;
 import com.armedia.acm.plugins.casefile.pipeline.CaseFilePipelineContext;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
@@ -71,14 +72,23 @@ public class FOIAExtensionEmailHandler implements PipelineHandler<FOIARequest, C
     private UserDao userDao;
 
     @Override
-    public void execute(FOIARequest entity, CaseFilePipelineContext pipelineContext) throws PipelineProcessException
+    public void execute(FOIARequest entity, CaseFilePipelineContext pipelineContext)
+            throws PipelineProcessException
     {
         log.debug("FOIARequest extension post save handler called for RequestId={}", entity.getId());
 
         if (pipelineContext.getPropertyValue(FOIAConstants.FOIA_PIPELINE_EXTENSION_PROPERTY_KEY) != null)
         {
             log.debug("Generating extension document");
-            EcmFile file = generateExtensionDocument(entity, pipelineContext);
+            EcmFile file = null;
+            try
+            {
+                file = generateExtensionDocument(entity, pipelineContext);
+            }
+            catch (CorrespondenceMergeFieldVersionException e)
+            {
+                throw new PipelineProcessException(e);
+            }
 
             log.debug("Emailing extension document");
             emailRequestExtension(entity, file);
@@ -109,7 +119,8 @@ public class FOIAExtensionEmailHandler implements PipelineHandler<FOIARequest, C
         }
     }
 
-    private EcmFile generateExtensionDocument(FOIARequest entity, CaseFilePipelineContext pipelineContext) throws PipelineProcessException
+    private EcmFile generateExtensionDocument(FOIARequest entity, CaseFilePipelineContext pipelineContext)
+            throws PipelineProcessException, CorrespondenceMergeFieldVersionException
     {
         FOIADocumentDescriptor documentDescriptor = getDocumentGeneratorService().getDocumentDescriptor(entity,
                 FOIAConstants.REQ_EXTENSION);

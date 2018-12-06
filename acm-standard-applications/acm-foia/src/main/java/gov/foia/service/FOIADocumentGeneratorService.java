@@ -33,16 +33,19 @@ import static gov.foia.model.FOIARequestUtils.extractRequestorName;
 
 import com.armedia.acm.spring.SpringContextHolder;
 
+import javax.ws.rs.NotFoundException;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import gov.foia.model.FOIAConstants;
+import gov.foia.model.FOIADocumentDescriptor;
 import gov.foia.model.FOIAObject;
 import gov.foia.model.FOIAPerson;
 import gov.foia.model.FOIARequest;
-import gov.foia.model.FOIADocumentDescriptor;
 
 public class FOIADocumentGeneratorService
 {
@@ -52,10 +55,16 @@ public class FOIADocumentGeneratorService
 
     public FOIADocumentDescriptor getDocumentDescriptor(FOIAObject foiaObject, String reqAck)
     {
-        return contextHolder.getAllBeansOfType(FOIADocumentDescriptor.class).values().stream()
+        Optional<FOIADocumentDescriptor> optional = contextHolder.getAllBeansOfType(FOIADocumentDescriptor.class).values().stream()
                 .filter(documentDescriptor -> documentDescriptor.getReqAck().equals(reqAck)
                         && documentDescriptor.getType().equals(((FOIARequest) foiaObject).getRequestType()))
-                .findFirst().get();
+                .findFirst();
+        if (optional.isPresent())
+        {
+            return optional.get();
+        }
+        throw new NotFoundException("Document Descriptor Not Found");
+
     }
 
     public Map<String, String> getReportSubstitutions(FOIARequest request)

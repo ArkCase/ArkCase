@@ -32,6 +32,7 @@ import static gov.foia.model.FOIAConstants.EMAIL_FOOTER_ATTACHMENT;
 import static gov.foia.model.FOIAConstants.EMAIL_HEADER_ATTACHMENT;
 import static gov.foia.model.FOIARequestUtils.extractRequestorEmailAddress;
 
+import com.armedia.acm.core.exceptions.CorrespondenceMergeFieldVersionException;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.services.email.model.EmailWithAttachmentsDTO;
@@ -67,11 +68,12 @@ public class AcknowledgementDocumentService
 
     public void emailAcknowledgement(Long requestId)
     {
-        if(!foiaConfigurationService.readConfiguration().getReceivedDateEnabled())
+        if (!foiaConfigurationService.readConfiguration().getReceivedDateEnabled())
         {
             FOIARequest request = getRequestDao().find(requestId);
             String emailAddress = extractRequestorEmailAddress(request.getOriginator().getPerson());
-            if (emailAddress != null) {
+            if (emailAddress != null)
+            {
                 EmailWithAttachmentsDTO emailData = new EmailWithAttachmentsDTO();
                 emailData.setEmailAddresses(Arrays.asList(emailAddress));
 
@@ -88,25 +90,30 @@ public class AcknowledgementDocumentService
                 Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
                 String userIdOrName = request.getCreator();
-                try {
+                try
+                {
                     if (request.isExternal()) // request from external portal
                     {
                         getNotificationSender().sendEmailWithAttachments(emailData, auth, userIdOrName);
-                    } else // request from foia app
+                    }
+                    else // request from foia app
                     {
                         getNotificationSender().sendEmailWithAttachments(emailData, auth, getUserDao().findByUserId(userIdOrName));
                     }
 
-                } catch (Exception e) {
+                }
+                catch (Exception e)
+                {
                     log.error("Unable to email {} for {} [{}]", request.getRequestType(), documentDescriptor.getDoctype(), requestId, e);
                 }
             }
         }
     }
 
-    public void generateAndUpload(String objectType, Long requestId) throws DocumentGeneratorException
+    public void generateAndUpload(String objectType, Long requestId)
+            throws DocumentGeneratorException, CorrespondenceMergeFieldVersionException
     {
-        if(foiaConfigurationService.readConfiguration().getReceivedDateEnabled())
+        if (foiaConfigurationService.readConfiguration().getReceivedDateEnabled())
         {
             foiaQueueCorrespondenceService.handleRequestReceivedAcknowledgementLetter(requestId);
         }
@@ -116,7 +123,8 @@ public class AcknowledgementDocumentService
         }
     }
 
-    private void generateAndUploadACK(Long requestId)throws DocumentGeneratorException
+    private void generateAndUploadACK(Long requestId) throws DocumentGeneratorException, CorrespondenceMergeFieldVersionException
+
     {
         FOIARequest request = requestDao.find(requestId);
         FOIADocumentDescriptor documentDescriptor = documentGeneratorService.getDocumentDescriptor(request, FOIAConstants.ACK);

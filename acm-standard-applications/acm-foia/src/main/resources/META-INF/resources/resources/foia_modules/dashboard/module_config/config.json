@@ -239,6 +239,60 @@
                     "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity)'>{{row.entity.url}}</a>"
                 }
             ]
+        },
+        {
+            "id": "myOverdueCases",
+            "title": "dashboard.widgets.myOverdueCases.title",
+            "configurable": true,
+            "enableFiltering": false,
+            "paginationPageSizes": [
+                5,
+                10,
+                25
+            ],
+            "paginationPageSize": 5,
+            "columnDefs": [
+                {
+                    "field": "alerts",
+                    "displayName": "",
+                    "cellTemplate": "<div><a tooltip=\"{{'dashboard.widgets.myOverdueCases.table.overdue.tooltip' | translate}}\" tooltip-append-to-body=\"true\" tooltip-class=\"tooltip-overdue\"><i class=\"fa fa-exclamation-circle icon-overdue\"></i></a></div>",
+                    "width": 40,
+                    "enableSorting": false,
+                    "enableColumnMenu": false
+                },
+                {
+                    "name": "numDays",
+                    "displayName": "dashboard.widgets.myOverdueCases.numDays",
+                    "headerCellFilter": "translate",
+                    "width": 70,
+                    "enableSorting": true
+                },
+                {
+                    "name": "object_id_s",
+                    "displayName": "dashboard.widgets.myOverdueCases.uniqueId",
+                    "cellTemplate": "<a href='#' ng-click='grid.appScope.myOverdueCase.onTopicClick(row)'>{{row.entity.object_id_s}}</a>",
+                    "headerCellFilter": "translate",
+                    "enableSorting": true
+                },
+                {
+                    "name": "title_parseable_lcs",
+                    "displayName": "dashboard.widgets.myOverdueCases.topic",
+                    "cellTemplate": "<a href='#' ng-click='grid.appScope.myOverdueCase.onTopicClick(row)'>{{row.entity.title_parseable_lcs}}</a>",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "request_status_lcs",
+                    "displayName": "dashboard.widgets.myOverdueCases.status",
+                    "headerCellFilter": "translate",
+                    "enableSorting": true
+                },
+                {
+                    "name": "priority_lcs",
+                    "displayName": "dashboard.widgets.myOverdueCases.priority",
+                    "headerCellFilter": "translate",
+                    "enableSorting": true
+                }
+            ]
         }
     ],
     "modules": [

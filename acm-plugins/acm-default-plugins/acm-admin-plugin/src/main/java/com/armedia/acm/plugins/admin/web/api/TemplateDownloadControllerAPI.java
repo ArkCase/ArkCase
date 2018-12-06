@@ -74,7 +74,7 @@ public class TemplateDownloadControllerAPI
         try
         {
             File file = new File(templateFile.getURI());
-            if (file == null)
+            if (!file.exists())
             {
                 fileNotFound(response);
             }
