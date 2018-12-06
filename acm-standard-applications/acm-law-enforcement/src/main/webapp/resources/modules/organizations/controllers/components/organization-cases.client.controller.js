@@ -2,8 +2,8 @@
 
 angular.module('organizations').controller(
         'Organizations.CasesController',
-        [ '$scope', '$q', '$stateParams', '$translate', '$modal', 'UtilService', 'ObjectService', 'Organization.InfoService', 'Authentication', 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'Object.OrganizationService', 'OrganizationAssociation.Service', 'Object.LookupService',
-                function($scope, $q, $stateParams, $translate, $modal, Util, ObjectService, OrganizationInfoService, Authentication, HelperUiGridService, HelperObjectBrowserService, ObjectOrganizationService, OrganizationAssociationService, ObjectLookupService) {
+        [ '$scope', '$q', '$stateParams', '$translate', '$modal', 'UtilService', 'ObjectService', 'Organization.InfoService', 'Authentication', 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'Object.OrganizationService', 'OrganizationAssociation.Service', 'Object.LookupService', 'Mentions.Service',
+                function($scope, $q, $stateParams, $translate, $modal, Util, ObjectService, OrganizationInfoService, Authentication, HelperUiGridService, HelperObjectBrowserService, ObjectOrganizationService, OrganizationAssociationService, ObjectLookupService, MentionsService) {
 
                     Authentication.queryUserInfo().then(function(userInfo) {
                         $scope.userId = userInfo.userId;
@@ -144,6 +144,8 @@ angular.module('organizations').controller(
                                 };
                                 $scope.gridOptions.data.push(rowEntity);
                             }
+                            MentionsService.sendEmailToMentionedUsers(data.emailAddresses, data.usersMentioned,
+                                ObjectService.ObjectTypes.ORGANIZATION, ObjectService.ObjectTypes.CASE_FILE, $scope.objectInfo.organizationId, data.description);
                         });
                     }
 
