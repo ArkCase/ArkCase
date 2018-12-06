@@ -125,6 +125,11 @@ angular.module('complaints').controller(
                         usersMentioned: []
                     };
 
+                    $scope.paramsSummernote = {
+                        emailAddresses: [],
+                        usersMentioned: []
+                    };
+
                     // ---------------------------            initiator         --------------------------------------
                     var newPersonAssociation = function() {
                         return {
@@ -416,8 +421,8 @@ angular.module('complaints').controller(
                         $scope.loadingIcon = "fa fa-circle-o-notch fa-spin";
                         ComplaintInfoService.saveComplaintInfoNewComplaint(clearNotFilledElements(_.cloneDeep($scope.complaint))).then(function(objectInfo) {
                             var objectTypeString = $translate.instant('common.objectTypes.' + ObjectService.ObjectTypes.COMPLAINT);
-                            MentionsService.sendEmailToMentionedUsers($scope.params.emailAddresses, $scope.params.usersMentioned,
-                                ObjectService.ObjectTypes.COMPLAINT, ObjectService.ObjectTypes.COMPLAINT, objectInfo.complaintId, objectInfo.complaintTitle);
+                            MentionsService.sendEmailToMentionedUsers($scope.params.emailAddresses, $scope.params.usersMentioned, ObjectService.ObjectTypes.COMPLAINT, ObjectService.ObjectTypes.COMPLAINT, objectInfo.complaintId, objectInfo.complaintTitle);
+                            MentionsService.sendEmailToMentionedUsers($scope.paramsSummernote.emailAddresses, $scope.paramsSummernote.usersMentioned, ObjectService.ObjectTypes.COMPLAINT, "DETAILS", objectInfo.complaintId, objectInfo.details);
                             var complaintCreatedMessage = $translate.instant('{{objectType}} {{complaintTitle}} was created.', {
                                 objectType: objectTypeString,
                                 complaintTitle: objectInfo.complaintTitle

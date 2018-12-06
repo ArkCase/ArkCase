@@ -84,9 +84,9 @@
                 </div>
             </div>
             <div class="row" ng-if="taskType === 'ACM_TASK'">
-                <div class="col-sm-12 form-group">
+                <div class="col-sm-12 remove-margin-bottom-from-summernote">
                     <label translate> tasks.newTask.notes.label </label>
-                    <summernote config="options" ng-model="config.data.details"></summernote>
+                    <mention-summernote ng-model="config.data.details" params="paramsSummernote"></mention-summernote>
                 </div>
             </div>
             <div class="row" ng-if="taskType === 'REVIEW_DOCUMENT' && documentsToReview">

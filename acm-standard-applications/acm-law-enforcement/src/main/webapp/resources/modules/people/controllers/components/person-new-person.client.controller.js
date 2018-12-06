@@ -2,8 +2,8 @@
 
 angular.module('people').controller(
         'People.NewPersonController',
-        [ '$scope', '$stateParams', '$translate', 'Person.InfoService', '$state', 'Object.LookupService', 'MessageService', '$timeout', 'UtilService', '$modal', 'ConfigService', 'Organization.InfoService', 'ObjectService', 'modalParams',
-                function($scope, $stateParams, $translate, PersonInfoService, $state, ObjectLookupService, MessageService, $timeout, Util, $modal, ConfigService, OrganizationInfoService, ObjectService, modalParams) {
+        [ '$scope', '$stateParams', '$translate', 'Person.InfoService', '$state', 'Object.LookupService', 'MessageService', '$timeout', 'UtilService', '$modal', 'ConfigService', 'Organization.InfoService', 'ObjectService', 'modalParams', 'Mentions.Service',
+                function($scope, $stateParams, $translate, PersonInfoService, $state, ObjectLookupService, MessageService, $timeout, Util, $modal, ConfigService, OrganizationInfoService, ObjectService, modalParams, MentionsService) {
 
                     $scope.modalParams = modalParams;
                     $scope.loading = false;
@@ -74,6 +74,12 @@ angular.module('people').controller(
                         $scope.organizationTypes = organizationTypes;
                         return organizationTypes;
                     });
+
+                    // ---------------------   mention   ---------------------------------
+                    $scope.paramsSummernote = {
+                        emailAddresses: [],
+                        usersMentioned: []
+                    };
 
                     $scope.addContactMethod = function(contactType) {
                         $timeout(function() {
@@ -156,6 +162,7 @@ angular.module('people').controller(
                                 firstName: objectInfo.data.givenName,
                                 lastName: objectInfo.data.familyName
                             });
+                            MentionsService.sendEmailToMentionedUsers($scope.paramsSummernote.emailAddresses, $scope.paramsSummernote.usersMentioned, ObjectService.ObjectTypes.PERSON, "DETAILS", objectInfo.data.id, objectInfo.data.details);
                             MessageService.info(personWasCreatedMessage);
                             ObjectService.showObject(ObjectService.ObjectTypes.PERSON, objectInfo.data.id);
                             $scope.onModalClose();
