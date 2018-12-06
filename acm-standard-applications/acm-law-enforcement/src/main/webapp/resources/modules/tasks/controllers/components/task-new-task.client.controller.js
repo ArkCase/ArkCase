@@ -3,8 +3,8 @@
 angular.module('tasks').controller(
         'Tasks.NewTaskController',
         [ '$scope', '$state', '$sce', '$q', '$modal', 'ConfigService', 'UtilService', 'TicketService', 'LookupService', 'Frevvo.FormService', 'Task.NewTaskService', 'Authentication', 'Util.DateService', 'Dialog.BootboxService', 'ObjectService', 'Object.LookupService',
-                'Admin.FunctionalAccessControlService', 'modalParams', 'moment', '$translate', '$filter',
-                function($scope, $state, $sce, $q, $modal, ConfigService, Util, TicketService, LookupService, FrevvoFormService, TaskNewTaskService, Authentication, UtilDateService, DialogService, ObjectService, ObjectLookupService, AdminFunctionalAccessControlService, modalParams, moment, $translate, $filter) {
+                'Admin.FunctionalAccessControlService', 'modalParams', 'moment', 'Mentions.Service',
+                function($scope, $state, $sce, $q, $modal, ConfigService, Util, TicketService, LookupService, FrevvoFormService, TaskNewTaskService, Authentication, UtilDateService, DialogService, ObjectService, ObjectLookupService, AdminFunctionalAccessControlService, modalParams, moment, MentionsService) {
 
                     $scope.modalParams = modalParams;
                     $scope.taskType = $scope.modalParams.taskType || 'ACM_TASK';
@@ -87,6 +87,12 @@ angular.module('tasks').controller(
                     $scope.minStartDate = new Date();
                     $scope.minDueDate = new Date();
 
+                    // --------------  mention --------------
+                    $scope.params = {
+                        emailAddresses: [],
+                        usersMentioned: []
+                    };
+
                     $scope.onComboAfterSave = function(dateType){
                         if(dateType == "startDate"){
                             $scope.startDateChanged();
@@ -152,12 +158,16 @@ angular.module('tasks').controller(
                     function reviewDocumentTaskSuccessCallback(data) {
                         $scope.saved = false;
                         $scope.loading = false;
+                        MentionsService.sendEmailToMentionedUsers($scope.params.emailAddresses, $scope.params.usersMentioned,
+                            ObjectService.ObjectTypes.TASK, ObjectService.ObjectTypes.TASK, data.data.taskId, data.data.title);
                         $scope.onModalClose();
                     }
 
                     function saveNewTaskSuccessCallback(data) {
                         $scope.saved = false;
                         $scope.loading = false;
+                        MentionsService.sendEmailToMentionedUsers($scope.params.emailAddresses, $scope.params.usersMentioned,
+                            ObjectService.ObjectTypes.TASK, ObjectService.ObjectTypes.TASK, data.data.taskId, data.data.title);
                         if ($scope.modalParams.returnState != null && $scope.modalParams.returnState != ':returnState') {
                             $state.go($scope.modalParams.returnState, {
                                 type: $scope.modalParams.parentType,
