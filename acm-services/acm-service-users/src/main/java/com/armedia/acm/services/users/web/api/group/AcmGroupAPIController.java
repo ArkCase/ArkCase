@@ -128,8 +128,8 @@ public class AcmGroupAPIController
             @RequestParam(value = "dir", required = false, defaultValue = "ASC") String sortDirection,
             Authentication auth) throws MuleException
     {
+        groupName = new String(Base64.getUrlDecoder().decode(groupName.getBytes()));
         LOG.info("Taking groups from Solr for specific group.");
-
         return groupService.getAdHocMemberGroups(auth, startRow, maxRows, sortBy, sortDirection, authorized, groupName,
                 groupType);
     }

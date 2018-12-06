@@ -38,6 +38,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -82,7 +83,9 @@ public class ConfigService
         String rc = "{}";
         try
         {
-            rc = configList.stream().filter(x -> x.getConfigName().equals(name)).findFirst().get().getConfigAsJson();
+            Optional<AcmConfig> optionalRcString = configList.stream().filter(x -> x.getConfigName().equals(name)).findFirst();
+            if (optionalRcString.isPresent())
+                rc = optionalRcString.get().getConfigAsJson();
         }
         catch (NoSuchElementException e)
         {

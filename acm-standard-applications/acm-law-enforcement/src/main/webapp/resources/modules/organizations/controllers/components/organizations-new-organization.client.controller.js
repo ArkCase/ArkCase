@@ -2,8 +2,8 @@
 
 angular.module('organizations').controller(
         'Organizations.NewOrganizationController',
-        [ '$scope', '$stateParams', '$translate', 'Organization.InfoService', '$state', 'Object.LookupService', 'MessageService', '$timeout', 'UtilService', '$modal', 'ConfigService', 'Person.InfoService', 'ObjectService', 'modalParams',
-                function($scope, $stateParams, $translate, OrganizationInfoService, $state, ObjectLookupService, MessageService, $timeout, Util, $modal, ConfigService, PersonInfoService, ObjectService, modalParams) {
+        [ '$scope', '$stateParams', '$translate', 'Organization.InfoService', '$state', 'Object.LookupService', 'MessageService', '$timeout', 'UtilService', '$modal', 'ConfigService', 'Person.InfoService', 'ObjectService', 'modalParams', 'Mentions.Service',
+                function($scope, $stateParams, $translate, OrganizationInfoService, $state, ObjectLookupService, MessageService, $timeout, Util, $modal, ConfigService, PersonInfoService, ObjectService, modalParams, MentionsService) {
 
                     $scope.modalParams = modalParams;
                     $scope.loading = false;
@@ -219,6 +219,12 @@ angular.module('organizations').controller(
                         $scope.personOrganizationRelationTypes = personOrganizationRelationTypes;
                     });
 
+                    // ---------------------   mention   ---------------------------------
+                    $scope.paramsSummernote = {
+                        emailAddresses: [],
+                        usersMentioned: []
+                    };
+
                     $scope.addContactMethod = function(contactType) {
                         $timeout(function() {
                             contactMethodsCounts[contactType]++;
@@ -281,6 +287,7 @@ angular.module('organizations').controller(
                                 objectType: objectTypeString,
                                 organizationValue: objectInfo.organizationValue
                             });
+                            MentionsService.sendEmailToMentionedUsers($scope.paramsSummernote.emailAddresses, $scope.paramsSummernote.usersMentioned, ObjectService.ObjectTypes.ORGANIZATION, "DETAILS", objectInfo.organizationId, objectInfo.details);
                             MessageService.info(organizationCreatedMessage);
                             ObjectService.showObject(ObjectService.ObjectTypes.ORGANIZATION, objectInfo.organizationId);
                             $scope.onModalClose();

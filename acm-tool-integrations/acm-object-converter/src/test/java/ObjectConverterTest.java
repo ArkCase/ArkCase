@@ -24,6 +24,7 @@
  * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
  * #L%
  */
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 

@@ -27,8 +27,12 @@ package com.armedia.acm.correspondence.service;
  * #L%
  */
 
+import static com.armedia.acm.correspondence.service.CorrespondenceGenerator.CORRESPONDENCE_CATEGORY;
+import static com.armedia.acm.correspondence.service.CorrespondenceGenerator.WORD_MIME_TYPE;
+
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
+import com.armedia.acm.core.exceptions.CorrespondenceMergeFieldVersionException;
 import com.armedia.acm.correspondence.model.CorrespondenceMergeField;
 import com.armedia.acm.correspondence.model.CorrespondenceMergeFieldVersion;
 import com.armedia.acm.correspondence.model.CorrespondenceQuery;
@@ -36,6 +40,7 @@ import com.armedia.acm.correspondence.model.CorrespondenceTemplate;
 import com.armedia.acm.correspondence.model.QueryType;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.spring.SpringContextHolder;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.docx4j.dml.CTBlip;
@@ -60,6 +65,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import javax.xml.bind.JAXBException;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -75,9 +81,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
-import static com.armedia.acm.correspondence.service.CorrespondenceGenerator.CORRESPONDENCE_CATEGORY;
-import static com.armedia.acm.correspondence.service.CorrespondenceGenerator.WORD_MIME_TYPE;
 
 public class CorrespondenceService
 {
@@ -107,7 +110,8 @@ public class CorrespondenceService
      */
     public EcmFile generate(Authentication authentication, String templateName, String parentObjectType, Long parentObjectId,
             String targetCmisFolderId)
-            throws IOException, IllegalArgumentException, AcmCreateObjectFailedException, AcmUserActionFailedException
+            throws IOException, IllegalArgumentException, AcmCreateObjectFailedException, AcmUserActionFailedException,
+            CorrespondenceMergeFieldVersionException
     {
         CorrespondenceTemplate template = findTemplate(templateName);
 
@@ -341,7 +345,9 @@ public class CorrespondenceService
      * stack of a Spring MVC authentication... so there is an Authentication in the Spring Security context holder.
      */
     public EcmFile generate(String templateName, String parentObjectType, Long parentObjectId, String targetCmisFolderId)
-            throws IOException, IllegalArgumentException, AcmCreateObjectFailedException, AcmUserActionFailedException
+            throws IOException, IllegalArgumentException, AcmCreateObjectFailedException, AcmUserActionFailedException,
+            CorrespondenceMergeFieldVersionException
+
     {
         Authentication currentUser = SecurityContextHolder.getContext().getAuthentication();
 
@@ -515,9 +521,22 @@ public class CorrespondenceService
     /**
      * @param objectType
      * @return
-     * @throws IOException
+     * @throws IOException,
+     *             CorrespondenceMergeFieldVersionException
      */
-    public List<CorrespondenceMergeField> getActiveVersionMergeFieldsByType(String objectType) throws IOException
+    public List<CorrespondenceMergeField> getActiveVersionMergeFieldsByType(String objectType)
+            throws IOException, CorrespondenceMergeFieldVersionException
+    {
+        return mergeFieldManager.getActiveVersionMergeFieldsByType(objectType);
+    }
+
+    /**
+     * @param objectType
+     * @return
+     * @throws IOException,CorrespondenceMergeFieldVersionException
+     */
+    public List<CorrespondenceMergeField> getMergeFieldsByType(String objectType)
+            throws IOException, CorrespondenceMergeFieldVersionException
     {
         return mergeFieldManager.getActiveVersionMergeFieldsByType(objectType);
     }
@@ -527,17 +546,8 @@ public class CorrespondenceService
      * @return
      * @throws IOException
      */
-    public List<CorrespondenceMergeField> getMergeFieldsByType(String objectType) throws IOException
-    {
-        return mergeFieldManager.getActiveVersionMergeFieldsByType(objectType);
-    }
-
-    /**
-     * @param objectType
-     * @return
-     * @throws IOException
-     */
-    public CorrespondenceMergeFieldVersion getActiveMergingVersion(String objectType) throws IOException
+    public CorrespondenceMergeFieldVersion getActiveMergingVersion(String objectType)
+            throws IOException, CorrespondenceMergeFieldVersionException
     {
         return mergeFieldManager.getActiveMergingVersionByType(objectType);
     }
@@ -549,7 +559,7 @@ public class CorrespondenceService
      * @throws IOException
      */
     public List<CorrespondenceMergeField> saveMergeFieldsData(List<CorrespondenceMergeField> mergeFields, Authentication auth)
-            throws IOException
+            throws IOException, CorrespondenceMergeFieldVersionException
     {
         return mergeFieldManager.saveMergeFieldsData(mergeFields, auth);
     }
@@ -561,7 +571,7 @@ public class CorrespondenceService
      * @throws IOException
      */
     public CorrespondenceMergeFieldVersion setActiveMergingVersion(CorrespondenceMergeFieldVersion mergeFieldVersion, Authentication auth)
-            throws IOException
+            throws IOException, CorrespondenceMergeFieldVersionException
     {
         return mergeFieldManager.setActiveMergingVersion(mergeFieldVersion, auth);
     }

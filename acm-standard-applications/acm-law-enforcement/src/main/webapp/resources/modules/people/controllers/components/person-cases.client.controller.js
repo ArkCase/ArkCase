@@ -2,8 +2,8 @@
 
 angular.module('people').controller(
         'People.CasesController',
-        [ '$scope', '$q', '$stateParams', '$translate', '$modal', 'UtilService', 'ObjectService', 'Person.InfoService', 'Authentication', 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'Object.PersonService', 'PersonAssociation.Service', 'Object.LookupService',
-                function($scope, $q, $stateParams, $translate, $modal, Util, ObjectService, PersonInfoService, Authentication, HelperUiGridService, HelperObjectBrowserService, ObjectPersonService, PersonAssociationService, ObjectLookupService) {
+        [ '$scope', '$q', '$stateParams', '$translate', '$modal', 'UtilService', 'ObjectService', 'Person.InfoService', 'Authentication', 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'Object.PersonService', 'PersonAssociation.Service', 'Object.LookupService', 'Mentions.Service',
+                function($scope, $q, $stateParams, $translate, $modal, Util, ObjectService, PersonInfoService, Authentication, HelperUiGridService, HelperObjectBrowserService, ObjectPersonService, PersonAssociationService, ObjectLookupService, MentionsService) {
 
                     Authentication.queryUserInfo().then(function(userInfo) {
                         $scope.userId = userInfo.userId;
@@ -144,6 +144,8 @@ angular.module('people').controller(
                                 };
                                 $scope.gridOptions.data.push(rowEntity);
                             }
+                            MentionsService.sendEmailToMentionedUsers(data.emailAddresses, data.usersMentioned,
+                                ObjectService.ObjectTypes.PERSON, ObjectService.ObjectTypes.CASE_FILE, $scope.objectInfo.id, data.description);
                         });
                     }
 
