@@ -373,6 +373,18 @@
                 "save": "Save",
                 "doNotSave": "Do not save",
                 "cancel": "Cancel"
+            },
+            "myOverdueCases": {
+                "title": "My Overdue Requests",
+                "description": "Displays Overdue Requests",
+                "table": {
+                    "overdue.tooltip": "Request is Overdue"
+                },
+                "numDays": "Overdue",
+                "uniqueId": "Unique ID",
+                "topic": "Topic",
+                "status": "Status",
+                "priority": "Priority"
             }
         }
     },
