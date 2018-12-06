@@ -31,16 +31,13 @@ import com.armedia.acm.services.billing.exception.CreateBillingItemException;
 import com.armedia.acm.services.billing.model.BillingItem;
 import com.armedia.acm.services.billing.service.BillingService;
 import com.armedia.acm.services.timesheet.dao.AcmTimesheetDao;
-import com.armedia.acm.services.timesheet.model.AcmTime;
 import com.armedia.acm.services.timesheet.model.AcmTimesheet;
 import com.armedia.acm.services.timesheet.model.AcmTimesheetEvent;
 import com.armedia.acm.services.timesheet.service.TimesheetService;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class FOIATimesheetBillingListener implements ApplicationListener<AcmTimesheetEvent>
 {
@@ -55,8 +52,8 @@ public class FOIATimesheetBillingListener implements ApplicationListener<AcmTime
     {
         if (acmTimesheetEvent != null && !acmTimesheetEvent.isStartWorkflow())
         {
-            AcmTimesheet timesheet = (AcmTimesheet)acmTimesheetEvent.getSource();
-            if("FINAL".equals(timesheet.getStatus()))
+            AcmTimesheet timesheet = (AcmTimesheet) acmTimesheetEvent.getSource();
+            if ("FINAL".equals(timesheet.getStatus()))
             {
                 generateBillingItems(acmTimesheetEvent);
             }
@@ -65,7 +62,7 @@ public class FOIATimesheetBillingListener implements ApplicationListener<AcmTime
 
     private void generateBillingItems(AcmTimesheetEvent event)
     {
-        AcmTimesheet timesheet = (AcmTimesheet)event.getSource();
+        AcmTimesheet timesheet = (AcmTimesheet) event.getSource();
 
         getTimesheetService().accumulateTimesheetByTypeAndChangeCode(timesheet).values().stream().forEach(acmTime -> {
             createBillingItem(event.getUserId(), timesheet.getTitle(), acmTime.getObjectId(), acmTime.getType(), acmTime.getTotalCost());
@@ -86,7 +83,7 @@ public class FOIATimesheetBillingListener implements ApplicationListener<AcmTime
     }
 
     private BillingItem populateBillingItem(String creator, String itemDescription, Long parentObjectId, String parentObjectType,
-                                            Double itemAmount)
+            Double itemAmount)
     {
         BillingItem billingItem = new BillingItem();
         billingItem.setCreator(creator);

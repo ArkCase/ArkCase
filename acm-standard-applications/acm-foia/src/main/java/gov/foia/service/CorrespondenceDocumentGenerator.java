@@ -29,6 +29,7 @@ package gov.foia.service;
 
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
+import com.armedia.acm.core.exceptions.CorrespondenceMergeFieldVersionException;
 import com.armedia.acm.correspondence.model.CorrespondenceTemplate;
 import com.armedia.acm.correspondence.service.CorrespondenceService;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
@@ -36,6 +37,7 @@ import com.armedia.acm.plugins.ecm.model.EcmFile;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Map;
+import java.util.Optional;
 
 import gov.foia.model.FOIADocumentDescriptor;
 import gov.foia.model.FOIAObject;
@@ -47,16 +49,29 @@ public class CorrespondenceDocumentGenerator implements DocumentGenerator
 
     @Override
     public EcmFile generateAndUpload(FOIADocumentDescriptor documentDescriptor, FOIAObject acmObject, String targetCmisFolderId,
-            String targetFilename, Map<String, String> substitutions) throws DocumentGeneratorException
+            String targetFilename, Map<String, String> substitutions)
+            throws DocumentGeneratorException, CorrespondenceMergeFieldVersionException
     {
         try
         {        
             Collection<CorrespondenceTemplate> templates = getCorrespondenceService().getActiveVersionTemplates();
-            CorrespondenceTemplate template = templates.stream().filter(t -> t.getLabel().equals(documentDescriptor.getTemplate())).findFirst().get();
+            Optional<CorrespondenceTemplate> optionalCorrespondenceTemplate = templates.stream()
+                    .filter(t -> t.getLabel().equals(documentDescriptor.getTemplate())).findFirst();
+            if (optionalCorrespondenceTemplate.isPresent())
+            {
 
-            return getCorrespondenceService().generate(template.getTemplateFilename(), acmObject.getObjectType(),
-                    acmObject.getId(),
-                    targetCmisFolderId);
+                CorrespondenceTemplate template = optionalCorrespondenceTemplate.get();
+                return getCorrespondenceService().generate(template.getTemplateFilename(), acmObject.getObjectType(),
+                        acmObject.getId(),
+                        targetCmisFolderId);
+            }
+            else
+            {
+                throw new DocumentGeneratorException(
+                        "Failed to generate correspondence document for objectId: [" + acmObject.getId() + "], objectType: ["
+                                + acmObject.getObjectType() + "] and template:[" + documentDescriptor.getTemplate() + "]");
+            }
+
         }
         catch (IllegalArgumentException | IOException | AcmCreateObjectFailedException | AcmUserActionFailedException e)
         {

@@ -92,11 +92,7 @@ angular.module('admin').controller('Admin.SelectPrivilegesController', [ '$scope
 
     function retrieveDataScroll(data, methodName, panelName) {
         SelectPrivilegesService[methodName](data).then(function(response) {
-            if (_.isArray(response.data)) {
-                $scope.fillList($scope.rolesData[panelName], response.data);
-            } else {
-                $scope.fillList($scope.rolesData[panelName], response.data);
-            }
+            $scope.fillList($scope.rolesData[panelName], response.data);
 
             if (panelName === "selectedAuthorized") {
                 currentAuthGroups = [];
@@ -130,7 +126,6 @@ angular.module('admin').controller('Admin.SelectPrivilegesController', [ '$scope
         $scope.rolesData.selectedAuthorized = [];
         $scope.rolesData.selectedNotAuthorized = [];
         if (!_.isEmpty($scope.rolesData.chooseObject)) {
-            $scope.lastSelectedRole = {};
             $scope.lastSelectedRole = selectedObject;
             var data = {};
             data.role = selectedObject;

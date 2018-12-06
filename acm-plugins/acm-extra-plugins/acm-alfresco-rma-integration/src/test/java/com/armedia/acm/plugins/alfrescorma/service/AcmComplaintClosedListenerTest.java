@@ -41,7 +41,6 @@ import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 
 import java.util.Date;

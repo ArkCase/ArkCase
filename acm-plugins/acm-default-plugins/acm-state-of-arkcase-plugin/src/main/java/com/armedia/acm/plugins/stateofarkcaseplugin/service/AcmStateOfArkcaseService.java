@@ -27,6 +27,8 @@ package com.armedia.acm.plugins.stateofarkcaseplugin.service;
  * #L%
  */
 
+import com.armedia.acm.core.exceptions.AcmStateOfArkcaseGenerateReportException;
+
 import java.io.File;
 import java.time.LocalDate;
 
@@ -35,5 +37,5 @@ public interface AcmStateOfArkcaseService
     /**
      * Generates state of Arkcase report as zip file
      */
-    File generateReportForDay(LocalDate day);
+    File generateReportForDay(LocalDate day) throws AcmStateOfArkcaseGenerateReportException;
 }

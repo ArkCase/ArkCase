@@ -631,13 +631,12 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
                     || frevvoFile.getFileType().equals("timesheet_xml") && frevvoFile.getFileName().equals("form_timesheet")
                     || frevvoFile.getFileType().equals("costsheet_xml") && frevvoFile.getFileName().equals("form_costsheet"))
             {
-                for (EcmFileVersion frevvoFileVersion : frevvoFile.getVersions())
+                if (!frevvoFile.getVersions().isEmpty())
                 {
                     frevvoFile.setActiveVersionTag(versionTag);
-                    frevvoFile.setFileActiveVersionMimeType(frevvoFileVersion.getVersionMimeType());
-                    frevvoFile.setFileActiveVersionNameExtension(frevvoFileVersion.getVersionFileNameExtension());
+                    frevvoFile.setFileActiveVersionMimeType(frevvoFile.getVersions().get(0).getVersionMimeType());
+                    frevvoFile.setFileActiveVersionNameExtension(frevvoFile.getVersions().get(0).getVersionFileNameExtension());
                     getEcmFileDao().save(frevvoFile);
-                    break;
                 }
             }
         }
@@ -1285,7 +1284,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         if (elements != null)
         {
             Optional<String> reduced = elements.stream().reduce((x, y) -> x + " " + operator + " " + y);
-            if (reduced != null && reduced.isPresent())
+            if (reduced.isPresent())
             {
                 query = reduced.get();
 

@@ -196,27 +196,31 @@ public class ArkCaseTranscribeServiceImpl implements ArkCaseTranscribeService
                 throw new CreateTranscribeException(String.format("Could not create copy for Transcribe object with ID=[{}]. REASON=[%s]",
                         transcribe != null ? transcribe.getId() : null, e.getMessage()));
             }
-
-            if (StringUtils.isNotEmpty(transcribe.getProcessId()))
+            if (transcribe != null)
             {
-                ProcessInstance processInstance = getActivitiRuntimeService().createProcessInstanceQuery().includeProcessVariables()
-                        .processInstanceId(transcribe.getProcessId()).singleResult();
-                if (processInstance != null)
+                if (StringUtils.isNotEmpty(transcribe.getProcessId()))
                 {
-                    List<Long> ids = (List<Long>) processInstance.getProcessVariables()
-                            .get(TranscribeBusinessProcessVariableKey.IDS.toString());
-                    if (ids == null)
+                    ProcessInstance processInstance = getActivitiRuntimeService().createProcessInstanceQuery().includeProcessVariables()
+                            .processInstanceId(transcribe.getProcessId()).singleResult();
+                    if (processInstance != null)
                     {
-                        ids = new ArrayList<>();
-                    }
+                        List<Long> ids = (List<Long>) processInstance.getProcessVariables()
+                                .get(TranscribeBusinessProcessVariableKey.IDS.toString());
+                        if (ids == null)
+                        {
+                            ids = new ArrayList<>();
+                        }
 
-                    ids.add(savedCopy.getId());
-                    getActivitiRuntimeService().setVariable(processInstance.getId(), TranscribeBusinessProcessVariableKey.IDS.toString(),
-                            ids);
+                        ids.add(savedCopy.getId());
+                        getActivitiRuntimeService().setVariable(processInstance.getId(),
+                                TranscribeBusinessProcessVariableKey.IDS.toString(),
+                                ids);
+                    }
                 }
+
+                return savedCopy;
             }
 
-            return savedCopy;
         }
 
         throw new CreateTranscribeException(
@@ -910,7 +914,7 @@ public class ArkCaseTranscribeServiceImpl implements ArkCaseTranscribeService
             if (!allow)
             {
                 LOG.warn("The duration of the media file is more than allowed [{}] seconds. Automatic Transcription will be terminated.",
-                        configuration.getAllowedMediaDuration());
+                        configuration != null ? configuration.getAllowedMediaDuration() : "unknown");
             }
 
             return allow;

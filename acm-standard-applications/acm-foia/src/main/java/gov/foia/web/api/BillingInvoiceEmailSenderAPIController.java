@@ -29,7 +29,7 @@ package gov.foia.web.api;
 
 import com.armedia.acm.services.billing.model.BillingInvoiceRequest;
 import com.armedia.acm.services.users.model.AcmUser;
-import gov.foia.service.BillingInvoiceEmailSenderService;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
@@ -40,6 +40,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
+
+import gov.foia.service.BillingInvoiceEmailSenderService;
 
 @Controller
 @RequestMapping({ "/api/v1/plugin/billing/invoices", "/api/latest/plugin/billing/invoices" })

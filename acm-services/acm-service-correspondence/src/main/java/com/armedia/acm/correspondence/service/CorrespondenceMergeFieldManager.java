@@ -32,6 +32,7 @@ import static com.armedia.acm.correspondence.service.CorrespondenceMapper.mapCon
 import static com.armedia.acm.correspondence.service.CorrespondenceMapper.mapMergeFieldFromConfiguration;
 import static com.armedia.acm.correspondence.service.CorrespondenceMapper.mapMergeFieldVersionFromConfiguration;
 
+import com.armedia.acm.core.exceptions.CorrespondenceMergeFieldVersionException;
 import com.armedia.acm.correspondence.model.CorrespondenceMergeField;
 import com.armedia.acm.correspondence.model.CorrespondenceMergeFieldConfiguration;
 import com.armedia.acm.correspondence.model.CorrespondenceMergeFieldVersion;
@@ -54,6 +55,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -161,9 +163,17 @@ public class CorrespondenceMergeFieldManager implements ApplicationListener<Cont
      * @return mergeFields
      */
     public List<CorrespondenceMergeField> getActiveVersionMergeFieldsByType(String objectType)
+            throws CorrespondenceMergeFieldVersionException
     {
-        return mergeFields.stream()
-                .filter(mergeField -> mergeField.getFieldVersion().equals(getActiveMergingVersionByType(objectType).getMergingVersion()))
+        List<CorrespondenceMergeField> mergeFieldsInActiveVersion = new ArrayList<>();
+        for (CorrespondenceMergeField mergeField : mergeFields)
+        {
+            if (mergeField.getFieldVersion().equals(getActiveMergingVersionByType(objectType).getMergingVersion()))
+            {
+                mergeFieldsInActiveVersion.add(mergeField);
+            }
+        }
+        return mergeFieldsInActiveVersion.stream()
                 .filter(mergeField -> mergeField.getFieldType().equals(objectType)).collect(Collectors.toList());
     }
 
@@ -171,10 +181,15 @@ public class CorrespondenceMergeFieldManager implements ApplicationListener<Cont
      * @param objectType
      * @return mergeFieldVersion
      */
-    public CorrespondenceMergeFieldVersion getActiveMergingVersionByType(String objectType)
+    public CorrespondenceMergeFieldVersion getActiveMergingVersionByType(String objectType) throws CorrespondenceMergeFieldVersionException
     {
-        return mergeFieldsVersions.stream().filter(mergeFieldVersion -> mergeFieldVersion.isMergingActiveVersion())
-                .filter(mergeFieldVersion -> mergeFieldVersion.getMergingType().equals(objectType)).findFirst().get();
+        Optional<CorrespondenceMergeFieldVersion> correspondenceMergeFieldVersion = mergeFieldsVersions.stream()
+                .filter(mergeFieldVersion -> mergeFieldVersion.isMergingActiveVersion())
+                .filter(mergeFieldVersion -> mergeFieldVersion.getMergingType().equals(objectType)).findFirst();
+        if (correspondenceMergeFieldVersion.isPresent())
+            return correspondenceMergeFieldVersion.get();
+        else
+            throw new CorrespondenceMergeFieldVersionException("CorrespondenceMergeFieldVersionNotFoundException");
     }
 
     /**
@@ -195,7 +210,7 @@ public class CorrespondenceMergeFieldManager implements ApplicationListener<Cont
      * @throws IOException
      */
     public List<CorrespondenceMergeField> saveMergeFieldsData(List<CorrespondenceMergeField> newMergeFields, Authentication auth)
-            throws IOException
+            throws IOException, CorrespondenceMergeFieldVersionException
     {
         List<CorrespondenceMergeField> result = new ArrayList<>();
         String objectType = newMergeFields.get(0).getFieldType();
@@ -212,7 +227,7 @@ public class CorrespondenceMergeFieldManager implements ApplicationListener<Cont
         mergeFieldsVersions.add(newMergeFieldVersion);
         updateMergeFieldVersionConfiguration(mergeFieldsVersions);
 
-        newMergeFields.stream().forEach(mergeField -> {
+        newMergeFields.forEach(mergeField -> {
             CorrespondenceMergeField newMergeField = new CorrespondenceMergeField();
             newMergeField.setFieldVersion(newVersion);
             newMergeField.setFieldId(mergeField.getFieldId());
@@ -228,24 +243,35 @@ public class CorrespondenceMergeFieldManager implements ApplicationListener<Cont
     }
 
     /**
-     * @param mergeFieldversion
+     * @param mergeFieldVersion
      * @param auth
      * @return mergeFieldVersion
      * @throws IOException
      */
     public CorrespondenceMergeFieldVersion setActiveMergingVersion(CorrespondenceMergeFieldVersion mergeFieldVersion, Authentication auth)
-            throws IOException
+            throws IOException, CorrespondenceMergeFieldVersionException
     {
         String objectType = mergeFieldVersion.getMergingType();
         getActiveMergingVersionByType(objectType).setMergingActiveVersion(false);
-        CorrespondenceMergeFieldVersion activeVersion = mergeFieldsVersions.stream()
+
+        Optional<CorrespondenceMergeFieldVersion> optionalCorrespondenceMergeFieldVersion = mergeFieldsVersions.stream()
                 .filter(version -> version.getMergingVersion().equals(mergeFieldVersion.getMergingVersion()))
-                .filter(version -> version.getMergingType().equals(objectType)).findFirst().get();
-        activeVersion.setModified(new Date());
-        activeVersion.setModifier(auth.getName());
-        activeVersion.setMergingActiveVersion(true);
-        updateMergeFieldVersionConfiguration(mergeFieldsVersions);
-        return activeVersion;
+                .filter(version -> version.getMergingType().equals(objectType)).findFirst();
+        CorrespondenceMergeFieldVersion activeVersion;
+        if (!optionalCorrespondenceMergeFieldVersion.isPresent())
+        {
+            throw new CorrespondenceMergeFieldVersionException("CorrespondenceMergeFieldVersion not found");
+        }
+        else
+        {
+            activeVersion = optionalCorrespondenceMergeFieldVersion.get();
+            activeVersion.setModified(new Date());
+            activeVersion.setModifier(auth.getName());
+            activeVersion.setMergingActiveVersion(true);
+            updateMergeFieldVersionConfiguration(mergeFieldsVersions);
+            return activeVersion;
+        }
+
     }
 
     /**
@@ -265,7 +291,7 @@ public class CorrespondenceMergeFieldManager implements ApplicationListener<Cont
     }
 
     /**
-     * @param mergeFieldsVersion
+     * @param mergeFieldsVersions
      * @throws IOException
      */
     private void updateMergeFieldVersionConfiguration(Collection<CorrespondenceMergeFieldVersion> mergeFieldsVersions) throws IOException

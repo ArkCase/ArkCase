@@ -27,6 +27,7 @@ package com.armedia.acm.plugins.casefile.web.api;
  * #L%
  */
 
+import com.armedia.acm.core.exceptions.CorrespondenceMergeFieldVersionException;
 import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.casefile.pipeline.CaseFilePipelineContext;
@@ -63,7 +64,7 @@ public class CaseFileEnqueueAPIController
     public CaseFileEnqueueResponse enqueue(@PathVariable("caseId") Long caseId,
             @RequestParam(value = "nextQueue", required = true) String nextQueue,
             @RequestParam(value = "nextQueueAction") String nextQueueAction,
-            HttpSession session, Authentication auth)
+            HttpSession session, Authentication auth) throws CorrespondenceMergeFieldVersionException
     {
 
         CaseFilePipelineContext context = new CaseFilePipelineContext();
