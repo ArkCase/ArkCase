@@ -10,7 +10,7 @@
 
  * LookupService contains functions to lookup data (typically static data).
  */
-angular.module('services').factory('LookupService', [ '$resource', 'Acm.StoreService', 'UtilService', 'SearchService', 'MessageService', '$log', function($resource, Store, Util, SearchService, MessageService, $log) {
+angular.module('services').factory('LookupService', ['$resource', 'Acm.StoreService', 'UtilService', 'SearchService', 'MessageService', '$log', '$q', function ($resource, Store, Util, SearchService, MessageService, $log, $q) {
     var Service = $resource('api/latest/plugin', {}, {
 
         _getConfig: {
@@ -149,6 +149,34 @@ angular.module('services').factory('LookupService', [ '$resource', 'Acm.StoreSer
                     return userFullNames;
                 }
             }
+        });
+    };
+
+    /**
+     * @ngdoc method
+     * @name getUserFullName
+     * @methodOf services.service:LookupService
+     *
+     * @description
+     * User full name
+     *
+     * @returns {String}
+     */
+    Service.getUserFullName = function (userName) {
+        var foundUser = "";
+        return Service.getUserFullNames().then(function (foundUsers) {
+            angular.forEach(foundUsers, function (value, key) {
+                if (userName === value.id) {
+                    foundUser = value.name;
+                }
+            });
+
+            if (Util.isEmpty(foundUser)) {
+                return userName;
+            } else {
+                return foundUser;
+            }
+
         });
     };
 

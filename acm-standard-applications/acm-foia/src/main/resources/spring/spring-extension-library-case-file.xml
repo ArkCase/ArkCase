@@ -88,6 +88,9 @@
             <beans:property name="arkPermissionEvaluator" ref="arkPermissionEvaluator"/>
             <beans:property name="extensionWorkingDays" value="${request.extensionWorkingDays}"/>
         </beans:bean>
+        <beans:bean id="foiaConfigurationHandler" class="gov.foia.pipeline.postsave.FOIAConfigurationHandler">
+            <beans:property name="foiaConfigurationService" ref="foiaConfigurationService"/>
+        </beans:bean>
 
         <beans:bean id="foiaExtensionEmailHandler" class="gov.foia.pipeline.postsave.FOIAExtensionEmailHandler">
             <beans:property name="documentGeneratorService" ref="documentGeneratorService"/>
@@ -106,6 +109,7 @@
             </beans:property>
             <beans:property name="postSaveHandlers">
                 <beans:list value-type="com.armedia.acm.services.pipeline.handler.PipelineHandler">
+                    <beans:ref bean="foiaConfigurationHandler"/>
                     <beans:ref bean="caseFileRulesHandler"/>
                     <beans:ref bean="caseFileContainerHandler"/>
                     <beans:ref bean="caseFileEcmFolderHandler"/>
@@ -157,6 +161,8 @@
             <beans:property name="documentGenerator" ref="correspondenceDocumentGenerator"/>
             <beans:property name="notificationSender" ref="notificationSender"/>
             <beans:property name="userDao" ref="userJpaDao"/>
+            <beans:property name="foiaConfigurationService" ref="foiaConfigurationService"/>
+            <beans:property name="foiaQueueCorrespondenceService" ref="foiaQueueCorrespondenceService"/>
         </beans:bean>
 
         <beans:bean id="documentGeneratorService" class="gov.foia.service.FOIADocumentGeneratorService">
@@ -186,6 +192,7 @@
             <beans:property name="caseFileDao" ref="caseFileDao"/>
             <beans:property name="converter" ref="folderConverter"/>
             <beans:property name="responseFolderService" ref="responseFolderService"/>
+            <beans:property name="pdfConversionConfigurationService" ref="pdfConversionConfigurationService"/>
         </beans:bean>
 
         <beans:bean id="responseFolderCompressorService" class="gov.foia.service.ResponseFolderCompressorService">
@@ -229,6 +236,7 @@
             <beans:property name="requestDao" ref="foiaRequestDao"/>
             <beans:property name="documentGenerator" ref="correspondenceDocumentGenerator"/>
             <beans:property name="documentGeneratorService" ref="documentGeneratorService"/>
+            <beans:property name="foiaConfigurationService" ref="foiaConfigurationService"/>
         </beans:bean>
 
         <beans:bean id="foiaFileService" class="gov.foia.service.FOIAFileService">
@@ -253,6 +261,7 @@
             <beans:property name="originalRequestFolderNameFormat" ref="originalRequestFolderNameFormat"/>
             <beans:property name="appealTitleFormat" ref="appealTitleFormat"/>
             <beans:property name="queuesTimeToCompleteService" ref="queuesTimeToCompleteService"/>
+            <beans:property name="foiaConfigurationService" ref="foiaConfigurationService"/>
         </beans:bean>
 
         <beans:bean id="saveFOIARequestService" class="gov.foia.service.SaveFOIARequestService">
@@ -267,6 +276,20 @@
         <beans:bean id="appealTitleFormat" class="java.lang.String">
             <beans:constructor-arg value=" (Appeal of %s)"/>
         </beans:bean>
+
+        <bean id="enqueueCaseFileService" class="com.armedia.acm.plugins.casefile.service.EnqueueCaseFileServiceImpl">
+            <property name="caseFileDao" ref="caseFileDao"/>
+            <property name="leaveCurrentQueueBusinessRule" ref="leaveCurrentQueueBusinessRule"/>
+            <property name="caseFileNextPossibleQueuesBusinessRule" ref="caseFileNextPossibleQueuesBusinessRule"/>
+            <property name="enterQueueBusinessRule" ref="enterQueueBusinessRule"/>
+            <property name="onLeaveQueueBusinessRule" ref="onLeaveQueueBusinessRule"/>
+            <property name="onEnterQueueBusinessRule" ref="onEnterQueueBusinessRule"/>
+            <property name="queueService" ref="queueService"/>
+            <property name="startBusinessProcessService" ref="startBusinessProcessService"/>
+            <property name="saveCaseFileBusinessRule" ref="saveCaseFileBusinessRule"/>
+            <property name="acmObjectLockService" ref="objectLockService"/>
+            <property name="systemConfigurationService" ref="foiaConfigurationService"/>
+        </bean>
 
     </beans:beans>
 </beans:beans>

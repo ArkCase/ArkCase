@@ -62,11 +62,7 @@ angular.module('admin').controller('Admin.SecurityExchangeConfigurationControlle
         ExchangeConfigurationService.saveExchangeConfiguration($scope.exchangeConfigDataModel).then(function(res) {
             MessageService.succsessAction();
         }, function(err) {
-            if (err.status === 400) {
-                MessageService.errorAction();
-            } else {
-                MessageService.errorAction();
-            }
+            MessageService.errorAction();
         });
     };
 } ]);

@@ -26,4 +26,9 @@
         <property name="labelManagementService" ref="labelManagementService"/>
     </bean>
 
+    <bean id ="labelCheckService" class="com.armedia.acm.services.labels.service.LabelCheckService">
+        <property name="modulesLocation" value="#{ systemProperties ['user.home'] }/.arkcase/custom/modules/"/>
+        <property name="resourcesLocation" value="#{ systemProperties ['user.home'] }/.arkcase/acm/resources/resources/"/>
+    </bean>
+
 </beans>

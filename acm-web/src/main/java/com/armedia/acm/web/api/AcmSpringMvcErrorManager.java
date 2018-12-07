@@ -38,8 +38,10 @@ import com.armedia.acm.core.exceptions.AcmOutlookItemNotFoundException;
 import com.armedia.acm.core.exceptions.AcmParticipantsException;
 import com.armedia.acm.core.exceptions.AcmResourceNotFoundException;
 import com.armedia.acm.core.exceptions.AcmResourceNotModifiableException;
+import com.armedia.acm.core.exceptions.AcmStateOfArkcaseGenerateReportException;
 import com.armedia.acm.core.exceptions.AcmUpdateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
+import com.armedia.acm.core.exceptions.CorrespondenceMergeFieldVersionException;
 import com.armedia.acm.core.exceptions.InvalidLookupException;
 
 import org.json.JSONArray;
@@ -167,8 +169,22 @@ public class AcmSpringMvcErrorManager
     @ExceptionHandler(AcmObjectLockException.class)
     public void handleException(HttpServletResponse response, AcmObjectLockException e)
     {
-        log.error("AcmObjectLockException occured: " + e.getMessage(), e);
+        log.error("AcmObjectLockException occurred: " + e.getMessage(), e);
         sendResponse(HttpStatus.CONFLICT, response, e.getMessage());
+    }
+
+    @ExceptionHandler(CorrespondenceMergeFieldVersionException.class)
+    public void handleCorrespondenceMergeFieldExceptions(HttpServletResponse response, AcmObjectLockException e)
+    {
+        log.error("CorrespondenceMergeFieldVersionException occurred", e.getMessage(), e);
+        sendResponse(HttpStatus.NOT_FOUND, response, e.getMessage());
+    }
+
+    @ExceptionHandler(AcmStateOfArkcaseGenerateReportException.class)
+    public void handleAcmStateOfArkcaseGenerateReportException(HttpServletResponse response, AcmObjectLockException e)
+    {
+        log.error("AcmStateOfArkcaseGenerateReportException occurred", e.getMessage(), e);
+        sendResponse(HttpStatus.INTERNAL_SERVER_ERROR, response, e.getMessage());
     }
 
     @ExceptionHandler(AcmAppErrorJsonMsg.class)

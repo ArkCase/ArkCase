@@ -655,6 +655,12 @@
             "downloadError": "Zip file download Failed"
         }
     },
+    "common.directive.corePeople": {
+        "organizations.modal.dialogOrganizationPicker.table.columns": {
+            "name": "Name",
+            "type": "Type"
+        }
+    },
     "common.comp.acmLogin": {
         "confirmLogout": "For your protection, application is about to logout. Click Cancel to stay logged in.",
         "logoutBtn": "Logout",
@@ -712,7 +718,8 @@
             "url": "URL",
             "url.placeholder": "Enter URL",
             "removeContactMethod": "Remove",
-            "urlType": "URL Type"
+            "urlType": "URL Type",
+            "validationMessage": "The Phone Number you entered is invalid. Should be in this format: xxx-xxx-xxxx"
         },
         "organizations": {
             "title": "Organizations",
@@ -936,6 +943,9 @@
                 "details.btn.text": "View {{count}} Changes"
             }
         }
+    },
+    "common.objectAction": {
+        "updated": "was updated"
     },
     "common.multicorrespondence": {
         "modal": {

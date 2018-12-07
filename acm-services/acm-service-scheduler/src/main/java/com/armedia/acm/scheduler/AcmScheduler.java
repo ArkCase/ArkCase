@@ -27,10 +27,20 @@ package com.armedia.acm.scheduler;
  * #L%
  */
 
+import static com.armedia.acm.scheduler.AcmSchedulerConstants.BEAN_NAME_KEY;
+import static com.armedia.acm.scheduler.AcmSchedulerConstants.HOW_OFTEN_KEY;
+import static com.armedia.acm.scheduler.AcmSchedulerConstants.NAME_KEY;
+import static com.armedia.acm.scheduler.AcmSchedulerConstants.SCHEDULED_TASKS_CONFIGUTATION_FILENAME;
+import static com.armedia.acm.scheduler.AcmSchedulerConstants.SCHEDULE_ENABLED_KEY;
+import static com.armedia.acm.scheduler.AcmSchedulerConstants.SCHEDULE_INTERVAL_KEY;
+import static com.armedia.acm.scheduler.AcmSchedulerConstants.TASKS_KEY;
+import static com.armedia.acm.scheduler.AcmSchedulerConstants.TASK_LAST_RUN_KEY;
+
 import com.armedia.acm.files.AbstractConfigurationFileEvent;
 import com.armedia.acm.files.ConfigurationFileAddedEvent;
 import com.armedia.acm.files.ConfigurationFileChangedEvent;
 import com.armedia.acm.spring.SpringContextHolder;
+
 import org.apache.commons.io.FileUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -56,15 +66,6 @@ import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
-
-import static com.armedia.acm.scheduler.AcmSchedulerConstants.BEAN_NAME_KEY;
-import static com.armedia.acm.scheduler.AcmSchedulerConstants.HOW_OFTEN_KEY;
-import static com.armedia.acm.scheduler.AcmSchedulerConstants.NAME_KEY;
-import static com.armedia.acm.scheduler.AcmSchedulerConstants.SCHEDULED_TASKS_CONFIGUTATION_FILENAME;
-import static com.armedia.acm.scheduler.AcmSchedulerConstants.SCHEDULE_ENABLED_KEY;
-import static com.armedia.acm.scheduler.AcmSchedulerConstants.SCHEDULE_INTERVAL_KEY;
-import static com.armedia.acm.scheduler.AcmSchedulerConstants.TASKS_KEY;
-import static com.armedia.acm.scheduler.AcmSchedulerConstants.TASK_LAST_RUN_KEY;
 
 /**
  * A generic configurable scheduler capable of executing beans defined in spring context that implement the
@@ -398,6 +399,7 @@ public class AcmScheduler implements ApplicationListener<AbstractConfigurationFi
                 catch (InterruptedException e)
                 {
                     log.error("Configuration update thread was interrupted prematurely with exception {}.", e);
+                    throw new RuntimeException(e);
                 }
                 finally
                 {

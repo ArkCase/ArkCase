@@ -50,6 +50,7 @@
             "embezzlement%": "Embezzlement",
             "extortion%": "Extortion",
             "fraud%": "Fraud",
+            "generatedFromEmail%": "Generated from Email",
             "government%": "Government",
             "investorComplaint%": "Investor Complaint",
             "laborRacketeering%": "Labor Racketeering",
@@ -75,7 +76,10 @@
         "merge.button": "Merge",
         "claim.button": "Claim",
         "unclaim.button": "Unclaim",
-        "split.button": "Split"
+        "split.button": "Split",
+        "buckslip.add.cancel": "Cancel",
+        "buckslip.add.confirm": "Confirm",
+        "buckslip.add.title": "New Buck Slip"
     },
     "cases.comp.details": {
         "title": "Details",

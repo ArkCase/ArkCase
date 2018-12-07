@@ -27,14 +27,19 @@ angular.module('cases').controller(
                 'DocTreeExt.Email',
                 'EcmService',
                 'MessageService',
+                'Admin.EmailSenderConfigurationService',
                 'MultiCorrespondence.Service',
                 'ModalDialogService',
                 function($scope, $state, $stateParams, $modal, $q, $timeout, $translate, Util, LocaleService, ConfigService, ObjectService, ObjectLookupService, CaseInfoService, DocTreeService, HelperObjectBrowserService, Authentication, PermissionsService, ObjectModelService, DocTreeExtWebDAV,
-                        DocTreeExtCheckin, CorrespondenceService, DocTreeExtEmail, Ecm, MessageService, MultiCorrespondenceService, ModalDialogService) {
+                        DocTreeExtCheckin, CorrespondenceService, DocTreeExtEmail, Ecm, MessageService, EmailSenderConfigurationService, MultiCorrespondenceService, ModalDialogService) {
 
                     Authentication.queryUserInfo().then(function(userInfo) {
                         $scope.user = userInfo.userId;
                         return userInfo;
+                    });
+
+                    EmailSenderConfigurationService.getEmailSenderConfiguration().then(function(emailData) {
+                        $scope.sendEmailEnabled = emailData.data.allowDocuments;
                     });
 
                     var componentHelper = new HelperObjectBrowserService.Component({

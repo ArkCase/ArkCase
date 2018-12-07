@@ -14,6 +14,16 @@
         </property>
     </bean>
 
+    <bean id="logoutUrl" class="java.lang.String">
+        <constructor-arg index="0" value="/logout"/>
+    </bean>
+
+    <import resource="file:${user.home}/.arkcase/acm/app-config.xml"/>
+
+    <bean id="expiredUrl" class="java.lang.String">
+        <constructor-arg value="/expiredUrl"/>
+    </bean>
+
     <bean id="configList" class="java.util.ArrayList">
         <constructor-arg>
             <list/>

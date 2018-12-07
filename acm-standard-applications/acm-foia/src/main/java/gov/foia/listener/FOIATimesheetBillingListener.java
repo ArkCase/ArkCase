@@ -31,15 +31,13 @@ import com.armedia.acm.services.billing.exception.CreateBillingItemException;
 import com.armedia.acm.services.billing.model.BillingItem;
 import com.armedia.acm.services.billing.service.BillingService;
 import com.armedia.acm.services.timesheet.dao.AcmTimesheetDao;
-import com.armedia.acm.services.timesheet.model.AcmTime;
 import com.armedia.acm.services.timesheet.model.AcmTimesheet;
 import com.armedia.acm.services.timesheet.model.AcmTimesheetEvent;
+import com.armedia.acm.services.timesheet.service.TimesheetService;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class FOIATimesheetBillingListener implements ApplicationListener<AcmTimesheetEvent>
 {
@@ -47,14 +45,15 @@ public class FOIATimesheetBillingListener implements ApplicationListener<AcmTime
 
     private AcmTimesheetDao acmTimesheetDao;
     private BillingService billingService;
+    private TimesheetService timesheetService;
 
     @Override
     public void onApplicationEvent(AcmTimesheetEvent acmTimesheetEvent)
     {
         if (acmTimesheetEvent != null && !acmTimesheetEvent.isStartWorkflow())
         {
-            AcmTimesheet timesheet = (AcmTimesheet)acmTimesheetEvent.getSource();
-            if("FINAL".equals(timesheet.getStatus()))
+            AcmTimesheet timesheet = (AcmTimesheet) acmTimesheetEvent.getSource();
+            if ("FINAL".equals(timesheet.getStatus()))
             {
                 generateBillingItems(acmTimesheetEvent);
             }
@@ -63,33 +62,11 @@ public class FOIATimesheetBillingListener implements ApplicationListener<AcmTime
 
     private void generateBillingItems(AcmTimesheetEvent event)
     {
-        AcmTimesheet timesheet = (AcmTimesheet)event.getSource();
+        AcmTimesheet timesheet = (AcmTimesheet) event.getSource();
 
-        accumulateTimesheetByTypeAndChangeCode(timesheet).values().stream().forEach(acmTime -> {
+        getTimesheetService().accumulateTimesheetByTypeAndChangeCode(timesheet).values().stream().forEach(acmTime -> {
             createBillingItem(event.getUserId(), timesheet.getTitle(), acmTime.getObjectId(), acmTime.getType(), acmTime.getTotalCost());
         });
-    }
-
-    private Map<String, AcmTime> accumulateTimesheetByTypeAndChangeCode(AcmTimesheet timesheet)
-    {
-        Map<String, AcmTime> timesheetRowByTypeAndChangeCode = new HashMap<>();
-        for (AcmTime acmTime : timesheet.getTimes())
-        {
-            if (acmTime.getType().equals("CASE_FILE") || acmTime.getType().equals("COMPLAINT"))
-            {
-                String timesheetKey = acmTime.getType() + "_" + acmTime.getObjectId();
-                if (timesheetRowByTypeAndChangeCode.containsKey(timesheetKey))
-                {
-                    AcmTime rowPerDay = timesheetRowByTypeAndChangeCode.get(timesheetKey);
-                    rowPerDay.setTotalCost(rowPerDay.getTotalCost() + acmTime.getTotalCost());
-                }
-                else
-                {
-                    timesheetRowByTypeAndChangeCode.put(timesheetKey, acmTime);
-                }
-            }
-        }
-        return timesheetRowByTypeAndChangeCode;
     }
 
     private void createBillingItem(String userId, String title, Long parentObjectId, String parentObjectType, double balance)
@@ -106,7 +83,7 @@ public class FOIATimesheetBillingListener implements ApplicationListener<AcmTime
     }
 
     private BillingItem populateBillingItem(String creator, String itemDescription, Long parentObjectId, String parentObjectType,
-                                            Double itemAmount)
+            Double itemAmount)
     {
         BillingItem billingItem = new BillingItem();
         billingItem.setCreator(creator);
@@ -138,5 +115,13 @@ public class FOIATimesheetBillingListener implements ApplicationListener<AcmTime
         this.billingService = billingService;
     }
 
+    public TimesheetService getTimesheetService()
+    {
+        return timesheetService;
+    }
 
+    public void setTimesheetService(TimesheetService timesheetService)
+    {
+        this.timesheetService = timesheetService;
+    }
 }

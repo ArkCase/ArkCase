@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('cases').controller('Cases.ExemptionController',
-        [ '$scope', '$stateParams', '$q', 'Case.InfoService', 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'ExemptionService', '$modal', 'Object.LookupService', 'Profile.UserInfoService',
-                function($scope, $stateParams, $q, CaseInfoService, HelperUiGridService, HelperObjectBrowserService, ExemptionService, $modal, ObjectLookupService, UserInfoService) {
+    [ '$scope', '$stateParams', '$q', 'Case.InfoService', 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'ExemptionService', '$modal', 'Object.LookupService', 'Profile.UserInfoService', 'ConfigService',
+        function($scope, $stateParams, $q, CaseInfoService, HelperUiGridService, HelperObjectBrowserService, ExemptionService, $modal, ObjectLookupService, UserInfoService, ConfigService) {
 
             var componentHelper = new HelperObjectBrowserService.Component({
                 scope: $scope,
@@ -106,5 +106,13 @@ angular.module('cases').controller('Cases.ExemptionController',
                         $scope.gridOptions.totalItems = $scope.codes.data.length;
                     });
                 });
+            }
+
+            $scope.checkCodesDescription = function () {
+                $modal.open({
+                    size: 'lg',
+                    templateUrl: 'modules/cases/views/components/case-exemption-codes-description-modal.client.view.html',
+                    controller: 'Cases.ExemptionCodesDescriptionModalController'
+                })
             }
         } ]);

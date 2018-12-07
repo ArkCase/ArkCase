@@ -1,5 +1,5 @@
 angular.module('common').controller('Common.AddObjectAssociationModalController',
-        [ '$scope', '$modal', '$modalInstance', '$translate', 'Object.LookupService', 'UtilService', 'ConfigService', 'params', function($scope, $modal, $modalInstance, $translate, ObjectLookupService, Util, ConfigService, params) {
+        [ '$scope', '$modal', '$modalInstance', '$translate', 'Object.LookupService', 'UtilService', 'ConfigService', 'params', 'Mentions.Service', function($scope, $modal, $modalInstance, $translate, ObjectLookupService, Util, ConfigService, params, MentionsService) {
 
             ConfigService.getModuleConfig("common").then(function(moduleConfig) {
                 $scope.config = moduleConfig;
@@ -29,13 +29,21 @@ angular.module('common').controller('Common.AddObjectAssociationModalController'
                 return type.key == params.type;
             });
 
+            // --------------  mention --------------
+            $scope.params = {
+                emailAddresses: [],
+                usersMentioned: []
+            };
+
             $scope.onClickCancel = function() {
                 $modalInstance.dismiss('Cancel');
             };
 
             $scope.onClickOk = function() {
                 var retValue = {
-                    solrDocument: $scope.solrDocument
+                    solrDocument: $scope.solrDocument,
+                    emailAddresses: $scope.params.emailAddresses,
+                    usersMentioned: $scope.params.usersMentioned
                 };
                 if ($scope.types && $scope.type) {
                     retValue.type = $scope.type.key;

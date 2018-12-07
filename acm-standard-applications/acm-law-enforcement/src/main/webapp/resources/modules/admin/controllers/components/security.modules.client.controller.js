@@ -50,11 +50,7 @@ angular.module('admin').controller('Admin.ModulesController', [ '$scope', 'Admin
 
     function retrieveDataScroll(data, methodName, panelName) {
         ModulesService[methodName](data).then(function(response) {
-            if (_.isArray(response.data)) {
-                $scope.fillList($scope.modulesData[panelName], response.data);
-            } else {
-                $scope.fillList($scope.modulesData[panelName], response.data);
-            }
+            $scope.fillList($scope.modulesData[panelName], response.data);
 
             if (panelName === "selectedAuthorized") {
                 currentAuthRoles = [];
@@ -143,7 +139,6 @@ angular.module('admin').controller('Admin.ModulesController', [ '$scope', 'Admin
 
     //callback function when app role is selected
     $scope.onObjSelect = function(selectedObject) {
-        $scope.lastSelectedModule = {};
         $scope.lastSelectedModule = selectedObject;
 
         var data = {

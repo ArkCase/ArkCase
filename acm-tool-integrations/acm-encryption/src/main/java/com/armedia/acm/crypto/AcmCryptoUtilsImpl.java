@@ -149,7 +149,11 @@ public class AcmCryptoUtilsImpl implements AcmCryptoUtils
         byte[] keyBytes = new byte[keySize];
         if (truncate)
         {
-            System.arraycopy(passPhrase, 0, keyBytes, 0, truncate ? keyBytes.length : passPhrase.length);
+            System.arraycopy(passPhrase, 0, keyBytes, 0, keyBytes.length);
+        }
+        else
+        {
+            System.arraycopy(passPhrase, 0, keyBytes, 0, passPhrase.length);
         }
 
         return new SecretKeySpec(keyBytes, CryptoConstants.KEY_ALGORITHM);
@@ -344,7 +348,7 @@ public class AcmCryptoUtilsImpl implements AcmCryptoUtils
     public byte[] encryptWithPGP(byte[] clearData, char[] passPhrase, String fileName, int algorithm, boolean armor)
             throws AcmEncryptionBadKeyOrDataException
     {
-        try
+        try (ByteArrayOutputStream bOut = new ByteArrayOutputStream())
         {
             if (fileName == null)
             {
@@ -353,7 +357,6 @@ public class AcmCryptoUtilsImpl implements AcmCryptoUtils
 
             byte[] compressedData = compress(clearData, fileName, CompressionAlgorithmTags.ZIP);
 
-            ByteArrayOutputStream bOut = new ByteArrayOutputStream();
 
             OutputStream out = bOut;
             if (armor)
@@ -365,10 +368,11 @@ public class AcmCryptoUtilsImpl implements AcmCryptoUtils
                     new JcePGPDataEncryptorBuilder(algorithm).setSecureRandom(new SecureRandom()).setProvider("BC"));
             encGen.addMethod(new JcePBEKeyEncryptionMethodGenerator(passPhrase).setProvider("BC"));
 
-            OutputStream encOut = encGen.open(out, compressedData.length);
 
-            encOut.write(compressedData);
-            encOut.close();
+            try (OutputStream encOut = encGen.open(out, compressedData.length))
+            {
+                encOut.write(compressedData);
+            }
 
             if (armor)
             {
@@ -393,24 +397,26 @@ public class AcmCryptoUtilsImpl implements AcmCryptoUtils
 
         ByteArrayOutputStream bOut = new ByteArrayOutputStream();
         PGPCompressedDataGenerator comData = new PGPCompressedDataGenerator(algorithm);
-        OutputStream cos = comData.open(bOut); // open it with the final destination
+        // open it with the final destination
 
         PGPLiteralDataGenerator lData = new PGPLiteralDataGenerator();
 
         // we want to generate compressed data. This might be a user option later,
         // in which case we would pass in bOut.
-        OutputStream pOut = lData.open(cos, // the compressed output stream
+        try (OutputStream cos = comData.open(bOut);
+                OutputStream pOut = lData.open(cos, // the compressed output stream
                 PGPLiteralData.BINARY, fileName, // "filename" to store
                 clearData.length, // length of clear data
                 new Date() // current time
-        );
+                ))
+        {
+            pOut.write(clearData);
 
-        pOut.write(clearData);
-        pOut.close();
+            comData.close();
 
-        comData.close();
+            return bOut.toByteArray();
+        }
 
-        return bOut.toByteArray();
     }
 
     /**

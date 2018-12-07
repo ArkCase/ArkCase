@@ -27,6 +27,7 @@ package com.armedia.acm.plugins.stateofarkcaseplugin.service;
  * #L%
  */
 
+import com.armedia.acm.core.exceptions.AcmStateOfArkcaseGenerateReportException;
 import com.armedia.acm.service.stateofarkcase.exceptions.ErrorLogFileException;
 import com.armedia.acm.service.stateofarkcase.exceptions.StateOfArkcaseReportException;
 import com.armedia.acm.service.stateofarkcase.model.StateOfArkcase;
@@ -67,8 +68,9 @@ public class AcmStateOfArkcaseServiceImpl implements AcmStateOfArkcaseService
      * Generates state of Arkcase report and save is provided folder
      */
     @Override
-    public File generateReportForDay(LocalDate day)
+    public File generateReportForDay(LocalDate day) throws AcmStateOfArkcaseGenerateReportException
     {
+        final String errorMessage = "TempFile creation failed";
         if (LocalDate.now().isBefore(day))
         {
             // no report for tomorrow
@@ -95,6 +97,7 @@ public class AcmStateOfArkcaseServiceImpl implements AcmStateOfArkcaseService
         catch (IOException e)
         {
             log.error("Error creating temp file for state of arkcase dally report.", e.getMessage());
+            throw new AcmStateOfArkcaseGenerateReportException(errorMessage);
         }
 
         File errorsLogFile = null;
@@ -105,6 +108,7 @@ public class AcmStateOfArkcaseServiceImpl implements AcmStateOfArkcaseService
         catch (ErrorLogFileException e)
         {
             log.error("Error retrieving errors log file.", e.getMessage());
+            throw new AcmStateOfArkcaseGenerateReportException(errorMessage);
         }
 
         URI uri = URI.create(String.format("jar:%s", tempFile.toUri().toString()));
@@ -145,6 +149,7 @@ public class AcmStateOfArkcaseServiceImpl implements AcmStateOfArkcaseService
         catch (Exception e)
         {
             log.error("Error creating state of arkcase dally report.", e.getMessage());
+            throw new AcmStateOfArkcaseGenerateReportException(errorMessage);
         }
         return tempFile.toFile();
     }

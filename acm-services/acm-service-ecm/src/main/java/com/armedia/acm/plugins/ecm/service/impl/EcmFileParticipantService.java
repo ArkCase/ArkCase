@@ -38,7 +38,6 @@ import com.armedia.acm.plugins.ecm.utils.EcmFileParticipantServiceHelper;
 import com.armedia.acm.services.participants.model.AcmAssignedObject;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.participants.service.AcmParticipantService;
-
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -247,12 +246,61 @@ public class EcmFileParticipantService
         }
         else
         {
+
             // inherit participants where needed
             assignedObjectParticipants.stream().filter(participant -> participant.isReplaceChildrenParticipant()).forEach(
                     participant -> setParticipantToFolderAndChildren(folder,
                             getDocumentParticipantFromAssignedObjectParticipant(participant), restricted));
+
+
+            List<AcmParticipant> fileParticipants = assignedObjectParticipants.stream()
+                    .map(assignedObjectParticipant -> getDocumentParticipantFromAssignedObjectParticipant(assignedObjectParticipant))
+                    .collect(Collectors.toList());
+            //check Participants which should be deleted. Compare assignParticipants with the participants of folder
+            List<AcmParticipant> existDeletedParticipants = checkDifferentParticipant(fileParticipants, folder.getParticipants());
+
+            if(existDeletedParticipants.size() > 0)
+            {
+                setFolderParticipants(folder, fileParticipants, restricted);
+                getFileParticipantServiceHelper().removeDeletedParticipantFromFolderChild(folder,existDeletedParticipants);
+            }
+
         }
     }
+
+    /**
+     *  Check wether there is any participant should be deleted
+     * @param assignedObjectParticipants
+     * @return
+     */
+    private List<AcmParticipant> checkDifferentParticipant(List<AcmParticipant> assignedObjectParticipants, List<AcmParticipant> orignialObjectParticipants)
+    {
+        List<AcmParticipant> deletedParticipantList = new ArrayList<>();
+
+
+        for (AcmParticipant originalParticipant : orignialObjectParticipants)
+        {
+            boolean found = false;
+            for (AcmParticipant assignedObjectParticipant : assignedObjectParticipants)
+            {
+
+                if (assignedObjectParticipant.getParticipantLdapId().equals(originalParticipant.getParticipantLdapId()) &&
+                        assignedObjectParticipant.getParticipantType().equals(originalParticipant.getParticipantType()))
+                {
+                    found = true;
+                    break;
+                }
+            }
+            if(found == false){
+                //if the orginal participant is not in the assignedParticipant list
+                //add it to the delete list
+                deletedParticipantList.add(originalParticipant);
+            }
+        }
+
+        return deletedParticipantList;
+    }
+
 
     private AcmParticipant getDocumentParticipantFromAssignedObjectParticipant(AcmParticipant participant)
     {

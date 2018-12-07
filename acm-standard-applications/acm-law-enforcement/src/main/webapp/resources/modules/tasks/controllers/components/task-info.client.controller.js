@@ -97,6 +97,7 @@ angular.module('tasks').controller(
                             templateUrl: 'modules/common/views/user-group-picker-modal.client.view.html',
                             controller: 'Common.UserGroupPickerController',
                             size: 'lg',
+                            backdrop: 'static',
                             resolve: {
                                 $filter: function() {
                                     return $scope.userOrGroupSearchConfig.userOrGroupSearchFilters.userOrGroupFacetFilter;
@@ -169,11 +170,14 @@ angular.module('tasks').controller(
                         $scope.taskStartDateBeforeChange = $scope.dateInfo.taskStartDate;
                         $scope.dueDateBeforeChange = $scope.dateInfo.dueDate;
 
+                        var utcDate = moment.utc(UtilDateService.dateToIso(new Date($scope.dateInfo.taskStartDate))).format();
+                        $scope.maxYear = moment(utcDate).add(1, 'years').toDate().getFullYear();
+
                         var today = new Date();
                         if (moment($scope.dateInfo.taskStartDate).isAfter(today)) {
-                            $scope.minStartDate = new Date();
+                            $scope.minYear = today.getFullYear();
                         } else {
-                            $scope.minStartDate = $scope.dateInfo.taskStartDate;
+                            $scope.minYear = new Date($scope.dateInfo.taskStartDate).getFullYear();
                         }
 
                         var owningGroupParticipantType = 'owning group';

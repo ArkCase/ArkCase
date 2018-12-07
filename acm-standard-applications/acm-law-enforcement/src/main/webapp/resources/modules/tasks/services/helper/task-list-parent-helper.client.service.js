@@ -84,9 +84,9 @@ angular.module('tasks').factory(
                                     ObjectTaskService.queryChildTasks(that.objectType, currentObjectId, Util.goodValue(that.scope.start, 0), Util.goodValue(that.scope.pageSize, 10), Util.goodMapValue(that.scope.sort, "by"), Util.goodMapValue(that.scope.sort, "dir")).then(function(data) {
                                         var tasks = data.response.docs;
                                         angular.forEach(tasks, function(task) {
-                                            //calculate to show alert icons if task is in overdue or deadline is approaching
-                                            task.isOverdue = TaskAlertsService.calculateOverdue(new Date(task.due_tdt));
-                                            task.isDeadline = TaskAlertsService.calculateDeadline(new Date(task.due_tdt));
+                                            //calculate to show alert icons if task is in overdue or deadline is approaching if the status of the task is in different state than CLOSED.
+                                            task.isOverdue = TaskAlertsService.calculateOverdue(new Date(task.due_tdt)) && !(task.status_s === "CLOSED");
+                                            task.isDeadline = TaskAlertsService.calculateDeadline(new Date(task.due_tdt)) && !(task.status_s === "CLOSED");
                                         });
                                         that.scope.gridOptions = that.scope.gridOptions || {};
                                         that.scope.gridOptions.data = tasks;

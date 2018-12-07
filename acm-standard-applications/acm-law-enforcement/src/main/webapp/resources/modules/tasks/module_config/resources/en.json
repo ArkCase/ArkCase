@@ -389,5 +389,18 @@
             "nameDesc": "Sort Task Name Desc",
             "noSort": "(No Sort)"
         }
-    }
+    },
+    "tasks.signature":{
+        "dialog":{
+            "title": "Sign Task",
+            "body": "Sign with your password:",
+            "btn.cancel": "Cancel",
+            "btn.sign": "Sign"
+        }
+    },
+    "tasks.userSearch":{
+        "cancelButton": "Cancel",
+        "confirmButton": "Confirm"
+    },
+    "tasks.coordination.pickAssignee.placeholder": "Please Pick Assignee",
 }

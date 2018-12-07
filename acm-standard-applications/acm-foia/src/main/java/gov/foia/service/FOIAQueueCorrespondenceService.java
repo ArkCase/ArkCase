@@ -34,6 +34,7 @@ import static gov.foia.model.FOIARequestUtils.extractRequestorEmailAddress;
 
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
+import com.armedia.acm.core.exceptions.CorrespondenceMergeFieldVersionException;
 import com.armedia.acm.plugins.ecm.exception.AcmFolderException;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
@@ -47,6 +48,8 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 
 import gov.foia.dao.FOIARequestDao;
@@ -71,6 +74,7 @@ public class FOIAQueueCorrespondenceService
     private DocumentGenerator documentGenerator;
     private FOIADocumentGeneratorService documentGeneratorService;
     private FOIARequestDao requestDao;
+    private FoiaConfigurationService foiaConfigurationService;
 
     public void handleApproveCorrespondence(Long requestId)
     {
@@ -126,7 +130,6 @@ public class FOIAQueueCorrespondenceService
     {
 
         FOIARequest request = requestDao.find(requestId);
-
         {
 
             try
@@ -150,8 +153,41 @@ public class FOIAQueueCorrespondenceService
 
     }
 
+    public void handleFulfillCorrespondenceLetter(String objectType, Long requestId)
+    {
+        FOIARequest request = requestDao.find(requestId);
+        LocalDateTime receivedDate = request.getReceivedDate();
+        if (request.getQueue().getName().equals("Fulfill") && request.getPreviousQueue().getName().equals("Intake")
+                && receivedDate != null && foiaConfigurationService.readConfiguration().getReceivedDateEnabled() == false) {
+            handleRequestReceivedAcknowledgementLetter(requestId);
+        }
+
+    }
+
+    public void handleRequestReceivedAcknowledgementLetter(Long requestId)
+    {
+        FOIARequest request = requestDao.find(requestId);
+            try {
+                FOIADocumentDescriptor documentDescriptor = documentGeneratorService.getDocumentDescriptor(request, FOIAConstants.RECEIVE_ACK );
+
+                String arkcaseFilename = String.format(documentDescriptor.getFilenameFormat(), request.getId());
+                String targetFolderId = request.getContainer().getAttachmentFolder() == null
+                        ? request.getContainer().getFolder().getCmisFolderId()
+                        : request.getContainer().getAttachmentFolder().getCmisFolderId();
+
+                FOIAFile letter =  (FOIAFile) documentGenerator.generateAndUpload(documentDescriptor, request,
+                        targetFolderId, arkcaseFilename, documentGeneratorService.getReportSubstitutions(request));
+
+                emailCorrespondenceLetter(request, letter);
+            }
+            catch (Exception e) {
+                log.error("Unable to generate and email Correspondence Letter for {} [{}]", request.getRequestType(), request.getId(), e);
+            }
+    }
+
     private EcmFile generateCorrespondenceLetter(FOIARequest request, FOIADocumentDescriptor documentDescriptor)
-            throws AcmObjectNotFoundException, DocumentGeneratorException, AcmFolderException, AcmUserActionFailedException
+            throws AcmObjectNotFoundException, DocumentGeneratorException, AcmFolderException, AcmUserActionFailedException,
+            CorrespondenceMergeFieldVersionException
     {
         String arkcaseFilename = String.format(documentDescriptor.getFilenameFormat(), request.getId());
 
@@ -279,4 +315,11 @@ public class FOIAQueueCorrespondenceService
         this.requestDao = requestDao;
     }
 
+    public FoiaConfigurationService getFoiaConfigurationService() {
+        return foiaConfigurationService;
+    }
+
+    public void setFoiaConfigurationService(FoiaConfigurationService foiaConfigurationService) {
+        this.foiaConfigurationService = foiaConfigurationService;
+    }
 }

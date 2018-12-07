@@ -33,8 +33,10 @@ import static gov.foia.model.FOIARequest.REQUESTS_BY_STATUS;
 
 import com.armedia.acm.data.converter.BooleanToStringConverter;
 import com.armedia.acm.data.converter.LocalDateConverter;
+import com.armedia.acm.data.converter.LocalDateTimeConverter;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.voodoodyne.jackson.jsog.JSOGGenerator;
 
@@ -49,6 +51,7 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Transient;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Optional;
 
@@ -70,9 +73,9 @@ public class FOIARequest extends CaseFile implements FOIAObject
     public static final String REQUESTS_BY_STATUS = "FOIARequest.requestsByStatus";
     private static final long serialVersionUID = -8883225846554730667L;
     @Column(name = "fo_received_date")
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-    @Convert(converter = LocalDateConverter.class)
-    private LocalDate receivedDate;
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    @Convert(converter = LocalDateTimeConverter.class)
+    private LocalDateTime receivedDate;
 
     @Column(name = "fo_final_reply_date")
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
@@ -181,10 +184,13 @@ public class FOIARequest extends CaseFile implements FOIAObject
     @Transient
     private String originalRequestNumber;
 
+    @Transient
+    private FoiaConfiguration foiaConfiguration;
+
     /**
      * @return the receivedDate
      */
-    public LocalDate getReceivedDate()
+    public LocalDateTime getReceivedDate()
     {
         return receivedDate;
     }
@@ -193,7 +199,7 @@ public class FOIARequest extends CaseFile implements FOIAObject
      * @param receivedDate
      *            the receivedDate to set
      */
-    public void setReceivedDate(LocalDate receivedDate)
+    public void setReceivedDate(LocalDateTime receivedDate)
     {
         this.receivedDate = receivedDate;
     }
@@ -639,6 +645,14 @@ public class FOIARequest extends CaseFile implements FOIAObject
         this.notificationGroup = notificationGroup;
     }
 
+    public FoiaConfiguration getFoiaConfiguration() {
+        return foiaConfiguration;
+    }
+
+    public void setFoiaConfiguration(FoiaConfiguration foiaConfiguration) {
+        this.foiaConfiguration = foiaConfiguration;
+    }
+
     @Override
     public PersonAssociation getOriginator()
     {
@@ -650,7 +664,7 @@ public class FOIARequest extends CaseFile implements FOIAObject
         Optional<PersonAssociation> found = getPersonAssociations().stream()
                 .filter(personAssociation -> "Requester".equalsIgnoreCase(personAssociation.getPersonType())).findFirst();
 
-        if (found != null && found.isPresent())
+        if (found.isPresent())
         {
             return found.get();
         }
@@ -673,7 +687,7 @@ public class FOIARequest extends CaseFile implements FOIAObject
             Optional<PersonAssociation> found = getPersonAssociations().stream()
                     .filter(personAssociation -> "Requester".equalsIgnoreCase(personAssociation.getPersonType())).findFirst();
 
-            if (found == null || !found.isPresent())
+            if (!found.isPresent())
             {
                 getPersonAssociations().add(originator);
             }

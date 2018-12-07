@@ -213,6 +213,7 @@ public class WidgetDao extends AcmAbstractDao<Widget>
         return retval;
     }
 
+    @Transactional
     public WidgetRole addWidgetToARole(Widget widget, AcmRole role)
     {
         WidgetRole widgetRole = new WidgetRole();

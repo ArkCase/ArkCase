@@ -74,7 +74,7 @@ public abstract class AlfrescoService<T>
     {
         short attempt = 0;
         AlfrescoServiceException lastException = null;
-
+        boolean throwedException = false;
         while (attempt < maxAttempts)
         {
             try
@@ -87,6 +87,7 @@ public abstract class AlfrescoService<T>
                 LOG.warn("Exception in service attempt # {}: {} {}", attempt, e.getMessage(), e);
                 attempt++;
                 lastException = e;
+                throwedException = true;
                 try
                 {
                     Thread.sleep(backoffMillis);
@@ -94,12 +95,19 @@ public abstract class AlfrescoService<T>
                 catch (InterruptedException e1)
                 {
                     LOG.warn("Could not wait for the backoff period: {} {}", e1.getMessage(), e1);
+                    Thread.currentThread().interrupt();
                 }
             }
         }
-
-        LOG.error("Max attempts of {} have failed, throwing exception {} {}", maxAttempts, lastException.getMessage(), lastException);
-        throw lastException;
+        if (throwedException)
+        {
+            LOG.error("Max attempts of {} have failed, throwing exception {} {}", maxAttempts, lastException.getMessage(), lastException);
+            throw lastException;
+        }
+        else
+        {
+            throw new AlfrescoServiceException();
+        }
 
     }
 

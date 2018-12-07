@@ -94,7 +94,8 @@
             "changedGroupSearchFilter": "Enter search filter for all changed groups",
             "changedGroupSearchPageFilter": "Enter filter including sort-attribute for all changed groups",
             "groupSearchPageFilter": "Enter filter including sort-attribute (e.g. (&(objectClass=group)(gidNumber>=%s)))",
-            "enableEditingLdapUsers": "Check if managing users and groups to your DS is allowed"
+            "enableEditingLdapUsers": "Check if managing users and groups to your DS is allowed",
+            "syncEnabled": "Check if synchronize users to your DS is allowed"
         },
         "security.ldapConfig.messages": {
             "delete.success": "Successfully deleted row.",
@@ -269,7 +270,7 @@
             "deleteUserBtn": "Delete User",
             "deleteUserMsg": "Are you sure you want to delete this user?",
             "user": "User",
-            "cancelBtn" : "Cancel"
+            "cancelBtn": "Cancel"
         },
         "security.group.management": {
             "title": "Group Management",
@@ -368,7 +369,16 @@
             }
         },
         "security.emailTemplates": {
-            "title": "Email Templates",
+            "title": "Email Configuration",
+            "table.title": "Email Templates",
+            "settings": {
+                "emailCaseFile.label": "Email Receiver CaseFile",
+                "emailComplaint.label": "Email Receiver Complaint",
+                "password.label": "Password",
+                "email.placeholder": "Enter Email address",
+                "password.placeholder": "Enter Password",
+                "btnSave": "Save"
+            },
             "table.columns": {
                 "templateName": "Template Name",
                 "emailPattern": "Email Pattern",
@@ -503,6 +513,10 @@
                     "success": "Schedule deleted successfully",
                     "error": "Failed to delete schedule"
                 },
+                "update": {
+                    "success": "Schedule updated successfully",
+                    "error": "Failed to update schedule"
+                },
                 "createScheduleSuccess": "Schedule created successfully",
                 "createScheduleFailure": "Failed to create schedule",
                 "enterFutureDate": "Enter a start time in the future",
@@ -635,10 +649,10 @@
                 "delete.success": "Lookup is successfully deleted",
                 "delete.error": "Lookup can't be deleted",
                 "lookupExists.error": "Lookup with this name already exists",
-                "dialog":{
-                    "deleteEntryConfirm" :"Delete Entry",
-                    "deleteLookupConfirm" : "Delete Lookup",
-                    "cancel" : "Cancel"
+                "dialog": {
+                    "deleteEntryConfirm": "Delete Entry",
+                    "deleteLookupConfirm": "Delete Lookup",
+                    "cancel": "Cancel"
                 }
             },
             "module.config": {
@@ -670,7 +684,7 @@
                 "idleLimit.label": "Login idle limit (in milliseconds)",
                 "inform": "Settings will take effect for all new user sessions",
                 "apply.label": "Apply",
-                "dialog" : {
+                "dialog": {
                     "OKBtn": "Confirm"
                 }
             },
@@ -679,7 +693,7 @@
                 "historyDays.label": "Keep Audit and Notification events (in days)",
                 "inform": "Setting successfully saved",
                 "apply.label": "Apply",
-                "dialog" : {
+                "dialog": {
                     "OKBtn": "Confirm"
                 }
             },

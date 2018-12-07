@@ -33,9 +33,9 @@ import com.armedia.acm.services.users.model.AcmRoleToGroupMapping;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.event.LdapGroupCreatedEvent;
 import com.armedia.acm.services.users.model.event.LdapGroupDeletedEvent;
-
 import com.armedia.acm.services.users.model.group.AcmGroup;
 import com.armedia.acm.services.users.service.group.GroupService;
+
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

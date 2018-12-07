@@ -1,4 +1,4 @@
-'use-strict';
+'use strict';
 
 angular.module('audit').controller('Audit.SelectionController', [ '$scope', 'UtilService', 'Object.LookupService', function($scope, Util, ObjectLookupService) {
 

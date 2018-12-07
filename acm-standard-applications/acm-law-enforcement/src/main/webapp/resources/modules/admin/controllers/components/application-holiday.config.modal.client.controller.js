@@ -2,11 +2,7 @@
 
 angular.module('admin').controller('Admin.HolidayModalController', [ '$scope', '$modalInstance', 'params', 'Util.DateService', '$filter', function($scope, $modalInstance, params, UtilDateService, $filter) {
 
-    $scope.holidays = {
-        holidayName: '',
-        holidayDate: ''
-    }
-
+        
     $scope.holidays = params.holidays;
     $scope.holidays.holidayDate = new Date($scope.holidays.holidayDate);
     $scope.onClickCancel = function() {
