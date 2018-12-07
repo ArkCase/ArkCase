@@ -32,7 +32,8 @@ angular.module('document-repository').controller(
                             animation: $scope.animationsEnabled,
                             templateUrl: 'modules/document-repository/views/components/document-repository-tags-modal.client.view.html',
                             controller: 'DocumentRepository.TagsModalController',
-                            size: 'lg'
+                            size: 'lg',
+                            backdrop: 'static'
                         });
 
                         modalInstance.result.then(function(tags) {

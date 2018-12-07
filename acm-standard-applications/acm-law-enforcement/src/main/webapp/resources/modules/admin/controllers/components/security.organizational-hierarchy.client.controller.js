@@ -323,7 +323,8 @@ angular.module('admin').controller(
                                     }
                                 };
                             } ],
-                            size: 'sm'
+                            size: 'sm',
+                            backdrop: 'static'
                         });
                     }
 
@@ -378,6 +379,7 @@ angular.module('admin').controller(
                                 $scope.header = params.header ? params.header : $translate.instant('admin.security.organizationalHierarchy.addMembers.title');
                             } ],
                             size: 'lg',
+                            backdrop: 'static',
                             resolve: {
                                 params: params
                             }
@@ -440,7 +442,8 @@ angular.module('admin').controller(
                                     $modalInstance.close($scope.user);
                                 };
                             } ],
-                            size: 'sm'
+                            size: 'sm',
+                            backdrop: 'static'
                         });
 
                         modalInstance.result.then(function(user) {
@@ -686,7 +689,8 @@ angular.module('admin').controller(
                             animation: true,
                             templateUrl: 'modules/admin/views/components/security.organizational-hierarchy.create-group.dialog.html',
                             controller: [ '$scope', '$modalInstance', controllerFunction ],
-                            size: 'sm'
+                            size: 'sm',
+                            backdrop: 'static'
                         });
                     }
 
