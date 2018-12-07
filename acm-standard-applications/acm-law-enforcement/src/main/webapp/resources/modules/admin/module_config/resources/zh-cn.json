@@ -863,10 +863,11 @@
 				"test.conection.success": "成功连接."
             }
         },
-        "transcription": {
-            "title": "转录服务",
+        "mediaServices": {
+            "title": "Media Services_ZH_CN",
             "transcriptionManagement": "转录管理",
             "transcriptionConfigForm": {
+                "title": "转录服务",
                 "save.button": "保存",
                 "automation.label": "自动化",
                 "enableTranscription.checkbox": "启用转录",
@@ -890,6 +891,12 @@
                     "minOneValueErrorMsg": "值必须大于或等于1",
 					"minPositiveValueErrorMsg": "值必须大于0"
                 }
+            },
+            "ocrManagement": "OCR Management_ZH_CN",
+            "ocrConfigForm": {
+                "title": "OCR Services_ZH_CN",
+                "save.button": "Save_ZH_CN",
+                "enableOCR.checkbox": "Enable OCR_ZH_CN"
             }
         },
         "stateOfArkcase": {

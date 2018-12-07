@@ -863,10 +863,11 @@
 				"test.conection.success": "Успешно подключено."
             }
         },
-        "transcription": {
-            "title": "Услуги транскрипции",
+        "mediaServices": {
+            "title": "Media Services_RU",
             "transcriptionManagement": "Управление транскрипцией",
             "transcriptionConfigForm": {
+                "title": "Услуги транскрипции",
                 "save.button": "Сохранить",
                 "automation.label": "Aвтоматизация",
                 "enableTranscription.checkbox": "Включить транскрипцию",
@@ -889,7 +890,13 @@
                     "minZeroValueErrorMsg": "Значение должно быть больше или равно 0",
                     "minOneValueErrorMsg": "Значение должно быть больше или равно 1",
 					"minPositiveValueErrorMsg": "Значение должно быть больше 0"
-               }
+                }
+            },
+            "ocrManagement": "OCR Management_RU",
+            "ocrConfigForm": {
+                "title": "OCR Services_RU",
+                "save.button": "Save_RU",
+                "enableOCR.checkbox": "Enable OCR_RU"
             }
         },
         "stateOfArkcase": {
