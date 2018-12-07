@@ -176,6 +176,8 @@ public class SolrAdvancedSearchDocument extends SolrAbstractDocument implements 
     private boolean hidden_b;
 
     private Long parent_folder_id_i;
+    private String parent_object_type_s;
+    private String parent_object_id_s;
 
     @JsonIgnore
     public String getEcmFileId()
@@ -967,86 +969,104 @@ public class SolrAdvancedSearchDocument extends SolrAbstractDocument implements 
         this.parent_allow_user_ls = parent_allow_user_ls;
     }
 
+    public String getParent_object_type_s() {
+        return parent_object_type_s;
+    }
+
+    public void setParent_object_type_s(String parent_object_type_s) {
+        this.parent_object_type_s = parent_object_type_s;
+    }
+
+    public String getParent_object_id_s() {
+        return parent_object_id_s;
+    }
+
+    public void setParent_object_id_s(String parent_object_id_s) {
+        this.parent_object_id_s = parent_object_id_s;
+    }
+
     @Override
-    public String toString()
-    {
-        return "SolrAdvancedSearchDocument{" + "id='" + id + '\''
-                + ", object_id_s='" + object_id_s + '\''
-                + ", object_display_name_s='" + object_display_name_s + '\''
-                + ", object_type_s='" + object_type_s + '\''
-                + ", object_sub_type_s='" + object_sub_type_s + '\''
-                + ", name='" + name + '\''
-                + ", ext_s='" + ext_s + '\''
-                + ", mime_type_s='" + mime_type_s + '\''
-                + ", create_date_tdt=" + create_date_tdt
-                + ", creator_lcs='" + creator_lcs + '\''
-                + ", modified_date_tdt=" + modified_date_tdt
-                + ", modifier_lcs='" + modifier_lcs + '\''
-                + ", public_doc_b=" + public_doc_b
-                + ", protected_object_b=" + protected_object_b
-                + ", deny_group_ls=" + deny_group_ls
-                + ", allow_group_ls=" + allow_group_ls
-                + ", deny_user_ls=" + deny_user_ls
-                + ", allow_user_ls=" + allow_user_ls
-                + ", parent_deny_group_ls=" + parent_deny_group_ls
-                + ", parent_allow_group_ls=" + parent_allow_group_ls
-                + ", parent_deny_user_ls=" + parent_deny_user_ls
-                + ", parent_allow_user_ls=" + parent_allow_user_ls
-                + ", title_parseable='" + title_parseable + '\''
-                + ", description_parseable='" + description_parseable + '\''
-                + ", title_parseable_lcs='" + title_parseable_lcs + '\''
-                + ", description_no_html_tags_parseable='" + description_no_html_tags_parseable + '\''
-                + ", notes_no_html_tags_parseable='" + notes_no_html_tags_parseable + '\''
-                + ", incident_date_tdt=" + incident_date_tdt
-                + ", dueDate_tdt=" + dueDate_tdt
-                + ", priority_lcs='" + priority_lcs + '\''
-                + ", assignee_id_lcs='" + assignee_id_lcs + '\''
-                + ", assignee_first_name_lcs='" + assignee_first_name_lcs + '\''
-                + ", assignee_last_name_lcs='" + assignee_last_name_lcs + '\''
-                + ", assignee_full_name_lcs='" + assignee_full_name_lcs + '\''
-                + ", incident_type_lcs='" + incident_type_lcs + '\''
-                + ", tag_token_lcs='" + tag_token_lcs + '\''
-                + ", status_lcs='" + status_lcs + '\''
-                + ", person_title_lcs='" + person_title_lcs + '\''
-                + ", first_name_lcs='" + first_name_lcs + '\''
-                + ", last_name_lcs='" + last_name_lcs + '\''
-                + ", full_name_lcs='" + full_name_lcs + '\''
-                + ", email_lcs='" + email_lcs + '\''
-                + ", type_lcs='" + type_lcs + '\''
-                + ", value_parseable='" + value_parseable + '\''
-                + ", location_street_address_lcs='" + location_street_address_lcs + '\''
-                + ", location_city_lcs='" + location_city_lcs + '\''
-                + ", location_state_lcs='" + location_state_lcs + '\''
-                + ", location_postal_code_sdo='" + location_postal_code_sdo + '\''
-                + ", child_id_s='" + child_id_s + '\''
-                + ", child_type_s='" + child_type_s + '\''
-                + ", parent_id_s='" + parent_id_s + '\''
-                + ", parent_type_s='" + parent_type_s + '\''
-                + ", parent_name_t='" + parent_name_t + '\''
-                + ", parent_number_lcs='" + parent_number_lcs + '\''
-                + ", organization_id_ss=" + organization_id_ss
-                + ", postal_address_id_ss=" + postal_address_id_ss
-                + ", contact_method_ss=" + contact_method_ss
-                + ", person_alias_ss=" + person_alias_ss
-                + ", supervisor_id_s='" + supervisor_id_s + '\''
-                + ", child_id_ss=" + child_id_ss
-                + ", member_id_ss=" + member_id_ss
-                + ", groups_id_ss=" + groups_id_ss
-                + ", adhocTask_b=" + adhocTask_b
-                + ", owner_lcs='" + owner_lcs + '\''
-                + ", business_process_name_lcs='" + business_process_name_lcs + '\''
-                + ", business_process_id_i=" + business_process_id_i
-                + ", content_type='" + content_type + '\''
-                + ", ecmFileId='" + ecmFileId + '\''
-                + ", cmis_version_series_id_s='" + cmis_version_series_id_s + '\''
-                + ", tags_ss=" + tags_ss
-                + ", state_lcs='" + state_lcs + '\''
-                + ", data_lcs='" + data_lcs + '\''
-                + ", action_lcs='" + action_lcs + '\''
-                + ", notification_type_lcs='" + notification_type_lcs + '\''
-                + ", parent_ref_s='" + parent_ref_s + '\''
-                + ", hidden_b=" + hidden_b
-                + ", parent_folder_id_i=" + parent_folder_id_i
-                + '}';
+    public String toString() {
+        return "SolrAdvancedSearchDocument{" +
+                "id='" + id + '\'' +
+                ", object_id_s='" + object_id_s + '\'' +
+                ", object_display_name_s='" + object_display_name_s + '\'' +
+                ", object_type_s='" + object_type_s + '\'' +
+                ", object_sub_type_s='" + object_sub_type_s + '\'' +
+                ", name='" + name + '\'' +
+                ", ext_s='" + ext_s + '\'' +
+                ", mime_type_s='" + mime_type_s + '\'' +
+                ", create_date_tdt=" + create_date_tdt +
+                ", creator_lcs='" + creator_lcs + '\'' +
+                ", modified_date_tdt=" + modified_date_tdt +
+                ", modifier_lcs='" + modifier_lcs + '\'' +
+                ", public_doc_b=" + public_doc_b +
+                ", protected_object_b=" + protected_object_b +
+                ", deny_group_ls=" + deny_group_ls +
+                ", allow_group_ls=" + allow_group_ls +
+                ", deny_user_ls=" + deny_user_ls +
+                ", allow_user_ls=" + allow_user_ls +
+                ", parent_deny_group_ls=" + parent_deny_group_ls +
+                ", parent_allow_group_ls=" + parent_allow_group_ls +
+                ", parent_deny_user_ls=" + parent_deny_user_ls +
+                ", parent_allow_user_ls=" + parent_allow_user_ls +
+                ", title_parseable='" + title_parseable + '\'' +
+                ", description_parseable='" + description_parseable + '\'' +
+                ", title_parseable_lcs='" + title_parseable_lcs + '\'' +
+                ", description_no_html_tags_parseable='" + description_no_html_tags_parseable + '\'' +
+                ", notes_no_html_tags_parseable='" + notes_no_html_tags_parseable + '\'' +
+                ", incident_date_tdt=" + incident_date_tdt +
+                ", dueDate_tdt=" + dueDate_tdt +
+                ", priority_lcs='" + priority_lcs + '\'' +
+                ", assignee_id_lcs='" + assignee_id_lcs + '\'' +
+                ", assignee_first_name_lcs='" + assignee_first_name_lcs + '\'' +
+                ", assignee_last_name_lcs='" + assignee_last_name_lcs + '\'' +
+                ", assignee_full_name_lcs='" + assignee_full_name_lcs + '\'' +
+                ", incident_type_lcs='" + incident_type_lcs + '\'' +
+                ", tag_token_lcs='" + tag_token_lcs + '\'' +
+                ", status_lcs='" + status_lcs + '\'' +
+                ", person_title_lcs='" + person_title_lcs + '\'' +
+                ", first_name_lcs='" + first_name_lcs + '\'' +
+                ", last_name_lcs='" + last_name_lcs + '\'' +
+                ", full_name_lcs='" + full_name_lcs + '\'' +
+                ", email_lcs='" + email_lcs + '\'' +
+                ", type_lcs='" + type_lcs + '\'' +
+                ", value_parseable='" + value_parseable + '\'' +
+                ", location_street_address_lcs='" + location_street_address_lcs + '\'' +
+                ", location_city_lcs='" + location_city_lcs + '\'' +
+                ", location_state_lcs='" + location_state_lcs + '\'' +
+                ", location_postal_code_sdo='" + location_postal_code_sdo + '\'' +
+                ", child_id_s='" + child_id_s + '\'' +
+                ", child_type_s='" + child_type_s + '\'' +
+                ", parent_id_s='" + parent_id_s + '\'' +
+                ", parent_type_s='" + parent_type_s + '\'' +
+                ", parent_name_t='" + parent_name_t + '\'' +
+                ", parent_number_lcs='" + parent_number_lcs + '\'' +
+                ", organization_id_ss=" + organization_id_ss +
+                ", postal_address_id_ss=" + postal_address_id_ss +
+                ", contact_method_ss=" + contact_method_ss +
+                ", person_alias_ss=" + person_alias_ss +
+                ", supervisor_id_s='" + supervisor_id_s + '\'' +
+                ", child_id_ss=" + child_id_ss +
+                ", member_id_ss=" + member_id_ss +
+                ", groups_id_ss=" + groups_id_ss +
+                ", adhocTask_b=" + adhocTask_b +
+                ", owner_lcs='" + owner_lcs + '\'' +
+                ", business_process_name_lcs='" + business_process_name_lcs + '\'' +
+                ", business_process_id_i=" + business_process_id_i +
+                ", content_type='" + content_type + '\'' +
+                ", ecmFileId='" + ecmFileId + '\'' +
+                ", cmis_version_series_id_s='" + cmis_version_series_id_s + '\'' +
+                ", tags_ss=" + tags_ss +
+                ", state_lcs='" + state_lcs + '\'' +
+                ", data_lcs='" + data_lcs + '\'' +
+                ", action_lcs='" + action_lcs + '\'' +
+                ", notification_type_lcs='" + notification_type_lcs + '\'' +
+                ", parent_ref_s='" + parent_ref_s + '\'' +
+                ", hidden_b=" + hidden_b +
+                ", parent_folder_id_i=" + parent_folder_id_i +
+                ", parent_object_type_s='" + parent_object_type_s + '\'' +
+                ", parent_object_id_s='" + parent_object_id_s + '\'' +
+                '}';
     }
 }
