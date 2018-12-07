@@ -35,6 +35,7 @@
                     <div class="row form-group">
                         <div class="col-sm-6">
                             <label translate>complaints.comp.closeComplaint.information.complaint.disposition</label>
+							<span class="required-asterisk">*</span>
                             <p class="input-group">
                                 <select ng-model="closeComplaintRequest.disposition.dispositionType" ng-change="dispositionTypeChanged()"
                                         class="form-control input-md" required>
@@ -186,6 +187,7 @@
                     <div class="row">
                         <div class="col-sm-6 form-group">
                             <label class="control-label">&nbsp;</label>
+                            <span class="required-asterisk">*</span>
                             <input type="text" ng-model="approverName" class="input-md form-control"
                                    placeholder="{{'complaints.comp.closeComplaint.approver.placeholder' | translate}}"
                                    ng-click="userOrGroupSearch()" readonly required>

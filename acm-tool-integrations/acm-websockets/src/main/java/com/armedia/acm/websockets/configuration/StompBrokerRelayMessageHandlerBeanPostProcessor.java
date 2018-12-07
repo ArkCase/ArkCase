@@ -44,6 +44,7 @@ import javax.net.ssl.TrustManagerFactory;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.InetSocketAddress;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
@@ -118,7 +119,7 @@ public class StompBrokerRelayMessageHandlerBeanPostProcessor implements BeanPost
     {
         Reactor2StompCodec codec = new Reactor2StompCodec();
         ConfigurationReader reader = new PropertiesConfigurationReader();
-        Environment environment = new Environment(reader);
+
 
         SslOptions sslOptions = new SslOptions().sslProtocol("TLS").keystoreFile(keyStore).keystorePasswd(keyStorePass)
                 .trustManagers(getTrustManager(trustStore, trustStorePass, trustStoreType)).trustManagerPasswd(trustStorePass);
@@ -134,7 +135,15 @@ public class StompBrokerRelayMessageHandlerBeanPostProcessor implements BeanPost
             @Override
             public Spec.TcpClientSpec<Message<byte[]>, Message<byte[]>> apply(Spec.TcpClientSpec<Message<byte[]>, Message<byte[]>> spec)
             {
-                return spec.env(environment).codec(codec).connect(socketAddress).ssl(sslOptions).options(nettyClientSocketOptions);
+                try (Environment environment = new Environment(reader))
+                {
+                    return spec.env(environment).codec(codec).connect(socketAddress).ssl(sslOptions).options(nettyClientSocketOptions);
+                }
+                catch (IOException ex)
+                {
+                    log.error(ex.getMessage(), ex);
+                    return null;
+                }
             }
         };
         handler.setTcpClient(new Reactor2TcpClient<>(tcpClientSpecFactory));
@@ -152,11 +161,11 @@ public class StompBrokerRelayMessageHandlerBeanPostProcessor implements BeanPost
 
                 TrustManager[] trustManagers = null;
 
-                try
+                try (InputStream trustStoreStream = new FileInputStream(new File(trustStore)))
                 {
                     tmf = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
                     trustedCertStore = KeyStore.getInstance(trustStoreType);
-                    trustedCertStore.load(new FileInputStream(new File(trustStore)), trustStorePass.toCharArray());
+                    trustedCertStore.load(trustStoreStream, trustStorePass.toCharArray());
                     tmf.init(trustedCertStore);
                     trustManagers = tmf.getTrustManagers();
                 }

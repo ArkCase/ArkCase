@@ -126,6 +126,7 @@ angular.module('directives').directive(
                                         templateUrl: 'modules/common/views/user-group-picker-modal.client.view.html',
                                         controller: 'Common.UserGroupPickerController',
                                         size: 'lg',
+                                        backdrop: 'static',
                                         resolve: {
                                             $filter: function() {
                                                 return scope.userOrGroupSearchConfig.userOrGroupSearchFilters.userOrGroupFacetFilter;
@@ -152,7 +153,7 @@ angular.module('directives').directive(
                                                 //set for AFDP-6831 to inheritance in the Folder/file participants
                                                 var len = scope.objectInfo.participants.length;
                                                 for (var i = 0; i < len; i++) {
-                                                    if(scope.objectInfo.participants[i].participantType =='assignee'){
+                                                    if(scope.objectInfo.participants[i].participantType =='assignee' || scope.objectInfo.participants[i].participantType =='owning group'){
                                                         scope.objectInfo.participants[i].replaceChildrenParticipant = true;
                                                     }
                                                 }
@@ -178,7 +179,7 @@ angular.module('directives').directive(
                                                 //set for AFDP-6831 to inheritance in the Folder/file participants
                                                 var len = scope.objectInfo.participants.length;
                                                 for (var i = 0; i < len; i++) {
-                                                    if(scope.objectInfo.participants[i].participantType =='owning group') {
+                                                    if(scope.objectInfo.participants[i].participantType =='owning group' || scope.objectInfo.participants[i].participantType =='assignee') {
                                                         scope.objectInfo.participants[i].replaceChildrenParticipant = true;
                                                     }
                                                 }

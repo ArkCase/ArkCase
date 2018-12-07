@@ -27,6 +27,7 @@ package gov.foia.service;
  * #L%
  */
 
+import com.armedia.acm.auth.AcmAuthentication;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
@@ -36,8 +37,8 @@ import com.armedia.acm.plugins.person.model.Organization;
 import com.armedia.acm.plugins.person.model.PersonOrganizationAssociation;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.users.service.tracker.UserTrackerService;
-
 import com.armedia.acm.web.api.MDCConstants;
+
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItem;
 import org.apache.commons.io.IOUtils;
@@ -88,7 +89,8 @@ public class PortalCreateRequestService
         String ipAddress = in.getIpAddress();
 
         MDC.put(MDCConstants.EVENT_MDC_REQUEST_USER_ID_KEY, in.getUserId());
-        Authentication auth = new UsernamePasswordAuthenticationToken(in.getUserId(), in.getUserId());
+        Authentication _auth = new UsernamePasswordAuthenticationToken(in.getUserId(), in.getUserId());
+        AcmAuthentication auth = new AcmAuthentication(_auth);
 
         SecurityContextHolder.getContext().setAuthentication(auth);
 
@@ -127,9 +129,11 @@ public class PortalCreateRequestService
         FileItem fileItem = new DiskFileItem("", requestFile.getContentType(), false, file.getName(), (int) file.length(),
                 file.getParentFile());
 
-        InputStream input = new FileInputStream(file);
-        OutputStream os = fileItem.getOutputStream();
-        IOUtils.copy(input, os);
+        try (InputStream input = new FileInputStream(file))
+        {
+            OutputStream os = fileItem.getOutputStream();
+            IOUtils.copy(input, os);
+        }
 
         return new CommonsMultipartFile(fileItem);
 

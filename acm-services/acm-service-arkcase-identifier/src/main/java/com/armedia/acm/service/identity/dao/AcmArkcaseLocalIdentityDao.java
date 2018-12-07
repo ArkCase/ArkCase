@@ -127,12 +127,14 @@ public class AcmArkcaseLocalIdentityDao implements AcmArkcaseIdentityDao
         try
         {
             md = MessageDigest.getInstance(HASH_ALGORITHM);
+            return md.digest(identity.getBytes());
         }
         catch (NoSuchAlgorithmException e)
         {
             log.error("Error generating digest for arkcase identity. [{}]", e.getMessage());
         }
-        return md.digest(identity.getBytes());
+
+        return new byte[0];
     }
 
     public void setIdentityFilePath(String identityFilePath)

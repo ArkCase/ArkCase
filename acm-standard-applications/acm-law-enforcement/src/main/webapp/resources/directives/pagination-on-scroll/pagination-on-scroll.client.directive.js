@@ -1,4 +1,4 @@
-'use strick';
+'use strict';
 /**
  * @ngdoc directive
  * @name global.directive:paginationOnScroll

@@ -3,8 +3,8 @@
 angular.module('people').controller(
         'Person.AliasesController',
         [ '$scope', '$stateParams', '$translate', 'UtilService', 'ConfigService', 'Person.InfoService', 'MessageService', 'Helper.ObjectBrowserService', 'Helper.UiGridService', 'Authentication', 'Person.PicturesService', '$modal', 'PermissionsService', 'ObjectService', 'Object.LookupService',
-                'Object.ModelService',
-                function($scope, $stateParams, $translate, Util, ConfigService, PersonInfoService, MessageService, HelperObjectBrowserService, HelperUiGridService, Authentication, PersonPicturesService, $modal, PermissionsService, ObjectService, ObjectLookupService, ObjectModelService) {
+                'Mentions.Service',
+                function($scope, $stateParams, $translate, Util, ConfigService, PersonInfoService, MessageService, HelperObjectBrowserService, HelperUiGridService, Authentication, PersonPicturesService, $modal, PermissionsService, ObjectService, ObjectLookupService, MentionsService) {
 
                     new HelperObjectBrowserService.Component({
                         scope: $scope,
@@ -142,6 +142,10 @@ angular.module('people').controller(
                             if (data.isDefault || $scope.objectInfo.personAliases.length == 1) {
                                 $scope.objectInfo.defaultAlias = alias;
                             }
+
+                            $scope.objectInfo.emailAddresses = data.emailAddresses;
+                            $scope.objectInfo.usersMentioned = data.usersMentioned;
+                            $scope.objectInfo.textMentioned = data.alias.description;
                             saveObjectInfoAndRefresh();
                         });
                     }
@@ -152,6 +156,8 @@ angular.module('people').controller(
                             var objectInfo = Util.omitNg($scope.objectInfo);
                             promiseSaveInfo = PersonInfoService.savePersonInfo(objectInfo);
                             promiseSaveInfo.then(function(objectInfo) {
+                                MentionsService.sendEmailToMentionedUsers($scope.objectInfo.emailAddresses, $scope.objectInfo.usersMentioned,
+                                    ObjectService.ObjectTypes.PERSON, "ALIAS", objectInfo.id, $scope.objectInfo.textMentioned);
                                 $scope.$emit("report-object-updated", objectInfo);
                                 return objectInfo;
                             }, function(error) {

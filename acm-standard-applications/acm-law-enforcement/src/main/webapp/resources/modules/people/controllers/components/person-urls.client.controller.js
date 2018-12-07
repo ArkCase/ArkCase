@@ -2,8 +2,8 @@
 
 angular.module('people').controller(
         'People.UrlsController',
-        [ '$scope', '$q', '$stateParams', '$translate', '$modal', 'UtilService', 'ObjectService', 'Person.InfoService', 'Authentication', 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'PermissionsService', 'Object.LookupService', 'Object.ModelService',
-                function($scope, $q, $stateParams, $translate, $modal, Util, ObjectService, PersonInfoService, Authentication, HelperUiGridService, HelperObjectBrowserService, PermissionsService, ObjectLookupService, ObjectModelService) {
+        [ '$scope', '$q', '$stateParams', '$translate', '$modal', 'UtilService', 'ObjectService', 'Person.InfoService', 'Authentication', 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'PermissionsService', 'Object.LookupService', 'Mentions.Service',
+                function($scope, $q, $stateParams, $translate, $modal, Util, ObjectService, PersonInfoService, Authentication, HelperUiGridService, HelperObjectBrowserService, PermissionsService, ObjectLookupService, MentionsService) {
 
                     Authentication.queryUserInfo().then(function(userInfo) {
                         $scope.userId = userInfo.userId;
@@ -147,6 +147,9 @@ angular.module('people').controller(
                                 $scope.objectInfo.defaultUrl = url;
                             }
 
+                            $scope.objectInfo.emailAddresses = data.emailAddresses;
+                            $scope.objectInfo.usersMentioned = data.usersMentioned;
+                            $scope.objectInfo.textMentioned = data.url.description;
                             saveObjectInfoAndRefresh();
                         });
                     }
@@ -157,6 +160,8 @@ angular.module('people').controller(
                             var objectInfo = Util.omitNg($scope.objectInfo);
                             promiseSaveInfo = PersonInfoService.savePersonInfo(objectInfo);
                             promiseSaveInfo.then(function(objectInfo) {
+                                MentionsService.sendEmailToMentionedUsers($scope.objectInfo.emailAddresses, $scope.objectInfo.usersMentioned,
+                                    ObjectService.ObjectTypes.PERSON, "URL", objectInfo.id, $scope.objectInfo.textMentioned);
                                 $scope.$emit("report-object-updated", objectInfo);
                                 return objectInfo;
                             }, function(error) {

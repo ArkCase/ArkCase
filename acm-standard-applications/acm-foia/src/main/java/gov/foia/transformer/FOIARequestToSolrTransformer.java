@@ -36,6 +36,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.Map;
@@ -117,7 +118,7 @@ public class FOIARequestToSolrTransformer extends CaseFileToSolrTransformer
     {
         additionalProperties.put("object_sub_type_s", "FOIA_REQUEST");
 
-        additionalProperties.put("received_date_tdt", solrDateFromLocalDate(requestIn.getReceivedDate()));
+        additionalProperties.put("received_date_tdt", solrDateFromLocalDateTime(requestIn.getReceivedDate()));
         additionalProperties.put("final_reply_date_tdt", solrDateFromLocalDate(requestIn.getFinalReplyDate()));
         additionalProperties.put("scanned_date_tdt", solrDateFromLocalDate(requestIn.getScannedDate()));
         additionalProperties.put("expedite_flag_b", requestIn.getExpediteFlag());
@@ -168,6 +169,11 @@ public class FOIARequestToSolrTransformer extends CaseFileToSolrTransformer
     private Date solrDateFromLocalDate(LocalDate localDate)
     {
         return localDate == null ? null : Date.from(localDate.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
+    }
+
+    private Date solrDateFromLocalDateTime(LocalDateTime localDateTime)
+    {
+        return localDateTime == null ? null : Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
     }
 
 }

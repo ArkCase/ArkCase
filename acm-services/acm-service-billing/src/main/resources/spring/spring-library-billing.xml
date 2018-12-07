@@ -31,9 +31,10 @@
     </bean>
 
     <bean id="billingAcmTaskActivitiEventHandler" class="com.armedia.acm.services.billing.listener.BillingAcmTaskActivitiEventHandler">
-        <property name="billingService" ref="billingService"/>
         <property name="acmTimesheetDao" ref="acmTimesheetDao"/>
         <property name="acmCostsheetDao" ref="acmCostsheetDao"/>
+        <property name="billingService" ref="billingService"/>
+        <property name="timesheetService" ref="timesheetService"/>
     </bean>
 
 </beans>

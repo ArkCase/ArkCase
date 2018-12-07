@@ -1,16 +1,21 @@
 <div class="modal-header">
-    <h3><span translate>Sign Task</span></h3>
+    <h3><span translate>tasks.signature.dialog.title</span></h3>
 </div>
 <div class="modal-body">
     <!--
     The body of the dialog with the value to pass '{{valuePassed}}'
     -->
-    <div> Sign with your password:
+    <div><span translate>tasks.signature.dialog.body</span>
+        <span class="required-asterisk">*</span>
         <input type="password" placeholder="Enter password" ng-model="password" required />
     </div>
 </div>
 <div class="modal-footer">
-    <button type="button" class="btn btn-default" ng-click="onClickCancel()">Cancel</button>
-    <button type="button" class="btn btn-primary" ng-click="onClickOk()" ng-disabled="!password">Sign</button>
+    <button type="button" class="btn btn-default" ng-click="onClickCancel()">
+        <span translate>tasks.signature.dialog.btn.cancel</span>
+    </button>
+    <button type="button" class="btn btn-primary" ng-click="onClickOk()" ng-disabled="!password">
+        <span translate>tasks.signature.dialog.btn.sign</span>
+    </button>
 </div>
 

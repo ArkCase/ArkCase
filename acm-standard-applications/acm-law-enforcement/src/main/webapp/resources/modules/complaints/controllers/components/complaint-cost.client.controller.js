@@ -117,7 +117,7 @@ angular.module('complaints').controller(
                                 isEdit: true,
                                 costsheet: rowEntity
                             };
-                            showModal($scope.editCaseParams, true);
+                            showModal($scope.editCaseParams);
                         }
                     };
                 } ]);

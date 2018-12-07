@@ -19,10 +19,12 @@ angular.module('cases').controller(
 
                     var onObjectInfoRetrieved = function(objectInfo) {
                         $scope.objectInfo = objectInfo;
-                        $scope.objectInfo.scannedDate = UtilDateService.isoToDate(objectInfo.scannedDate);
                         $scope.objectInfo.releasedDate = UtilDateService.isoToDate(objectInfo.releasedDate);
                         $scope.objectInfo.recordSearchDateFrom = UtilDateService.isoToDate(objectInfo.recordSearchDateFrom);
                         $scope.objectInfo.recordSearchDateTo = UtilDateService.isoToDate(objectInfo.recordSearchDateTo);
+                        ObjectLookupService.getRequestCategories().then(function (requestCategories) {
+                            $scope.requestCategories = requestCategories;
+                        });
                         ObjectLookupService.getPayFees().then(function (payFees) {
                             $scope.payFees = payFees;
                             if ($scope.objectInfo.payFee !== '' && $scope.objectInfo.payFee !== "0" && $scope.objectInfo.payFee !== null) {
@@ -62,7 +64,6 @@ angular.module('cases').controller(
                             id: "requests"
                         });
                         $scope.requestTypes = config.requestTypes;
-                        $scope.categories = config.categories;
                     });
 
                     AdminHolidayService.getHolidays().then(function(response) {
@@ -156,7 +157,6 @@ angular.module('cases').controller(
                         var promiseSaveInfo = Util.errorPromise($translate.instant("common.service.error.invalidData"));
                         if (CaseInfoService.validateCaseInfo($scope.objectInfo)) {
                             var objectInfo = Util.omitNg($scope.objectInfo);
-                            objectInfo.scannedDate = UtilDateService.localDateToIso($scope.objectInfo.scannedDate);
                             objectInfo.releasedDate = UtilDateService.localDateToIso($scope.objectInfo.releasedDate);
                             objectInfo.recordSearchDateFrom = UtilDateService.localDateToIso($scope.objectInfo.recordSearchDateFrom);
                             objectInfo.recordSearchDateTo = UtilDateService.localDateToIso($scope.objectInfo.recordSearchDateTo);
@@ -191,10 +191,6 @@ angular.module('cases').controller(
                     $scope.opened = {};
                     $scope.opened.openedStart = false;
                     $scope.opened.openedEnd = false;
-
-                    $scope.openedScanned = {};
-                    $scope.openedScanned.openedStart = false;
-                    $scope.openedScanned.openedEnd = false;
 
                     $scope.openedRecordSearchDateFrom = {};
                     $scope.openedRecordSearchDateFrom.openedStart = false;

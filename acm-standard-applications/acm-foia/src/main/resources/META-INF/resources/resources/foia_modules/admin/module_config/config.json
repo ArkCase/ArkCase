@@ -1191,6 +1191,13 @@
                 ]
             },
             {
+                "type": "p/application/foiaConfig",
+                "label": "admin.application.foia.config.title",
+                "components": [
+                    "application-foia.config"
+                ]
+            },
+            {
                 "type": "p/branding",
                 "label": "admin.branding.title",
                 "icon": "fa fa-wrench",
@@ -1241,6 +1248,13 @@
                 "label": "admin.documentManagement.cmisConfiguration",
                 "components": [
                     "cmis-configuration"
+                ]
+            },
+            {
+                "type": "p/document/pdfConversion",
+                "label": "admin.documentManagement.pdfConversion.title",
+                "components": [
+                    "pdf-conversion"
                 ]
             },
             {

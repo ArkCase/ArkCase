@@ -115,16 +115,6 @@ public class CaseFileOnEnterQueueBusinessRuleTest
     }
 
     @Test
-    public void enterSuspendQueue() throws Exception
-    {
-        OnEnterQueueModel<FOIARequest, CaseFilePipelineContext> model = buildEnterQueueModel("Suspend");
-
-        workingMemory.execute(model);
-
-        assertEquals("foia-extension-suspend-process", model.getBusinessProcessName());
-    }
-
-    @Test
     public void enterApproveQueue() throws Exception
     {
         OnEnterQueueModel<FOIARequest, CaseFilePipelineContext> model = buildEnterQueueModel("Approve");

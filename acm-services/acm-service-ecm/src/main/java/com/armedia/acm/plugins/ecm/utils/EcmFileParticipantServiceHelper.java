@@ -6,22 +6,22 @@ package com.armedia.acm.plugins.ecm.utils;
  * %%
  * Copyright (C) 2014 - 2018 ArkCase LLC
  * %%
- * This file is part of the ArkCase software. 
- * 
- * If the software was purchased under a paid ArkCase license, the terms of 
- * the paid license agreement will prevail.  Otherwise, the software is 
+ * This file is part of the ArkCase software.
+ *
+ * If the software was purchased under a paid ArkCase license, the terms of
+ * the paid license agreement will prevail.  Otherwise, the software is
  * provided under the following open source license terms:
- * 
+ *
  * ArkCase is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *  
+ *
  * ArkCase is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
  * #L%
@@ -35,14 +35,12 @@ import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.web.api.MDCConstants;
-
 import org.slf4j.MDC;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.FlushModeType;
-
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -61,8 +59,13 @@ public class EcmFileParticipantServiceHelper
     @Async("fileParticipantsThreadPoolTaskExecutor")
     public void setParticipantsToFolderChildren(AcmFolder folder, List<AcmParticipant> participants, boolean restricted)
     {
-        setAuditPropertyEntityAdapterUserId();
 
+        setAuditPropertyEntityAdapterUserId();
+        setParticipantsToFolderChildrenRecursively(folder, participants, restricted);
+    }
+
+    private void setParticipantsToFolderChildrenRecursively(AcmFolder folder, List<AcmParticipant> participants, boolean restricted)
+    {
         for (AcmParticipant participant : participants)
         {
             if (participant.isReplaceChildrenParticipant())
@@ -133,12 +136,35 @@ public class EcmFileParticipantServiceHelper
         }
     }
 
+    /**
+     * @param folder
+     * @param deletedParticipants
+     */
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    @Async("fileParticipantsThreadPoolTaskExecutor")
+    public void removeDeletedParticipantFromFolderChild(AcmFolder folder, List<AcmParticipant> deletedParticipants)
+    {
+
+        if (folder.getId() != null)
+        {
+            for (AcmParticipant deletdParticipant : deletedParticipants)
+            {
+                removeParticipantFromFolderAndChildren(folder, deletdParticipant.getParticipantLdapId(),
+                        deletdParticipant.getParticipantType());
+            }
+        }
+    }
+
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     @Async("fileParticipantsThreadPoolTaskExecutor")
     public void setParticipantToFolderChildren(AcmFolder folder, AcmParticipant participant, boolean restricted)
     {
         setAuditPropertyEntityAdapterUserId();
+        setParticipantToFolderChildrenRecursively(folder, participant, restricted);
+    }
 
+    private void setParticipantToFolderChildrenRecursively(AcmFolder folder, AcmParticipant participant, boolean restricted)
+    {
         // set participant to child folders
         List<AcmFolder> subfolders = getFolderDao().findSubFolders(folder.getId(), FlushModeType.COMMIT);
         if (subfolders != null)

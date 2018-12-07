@@ -67,7 +67,12 @@ import java.util.UUID;
         "/spring/spring-library-object-lock.xml",
         "/spring/spring-library-object-converter.xml",
         "/spring/spring-library-ecm-file-lock.xml",
-        "/spring/spring-library-service-data.xml"
+        "/spring/spring-library-service-data.xml",
+        "/spring/spring-library-user-login.xml",
+        "/spring/spring-library-plugin-manager.xml",
+        "/spring/spring-library-audit-service.xml",
+        "/spring/spring-library-authentication-token.xml"
+        
 })
 public class FindFolderServiceIT
 {

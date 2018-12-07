@@ -133,10 +133,8 @@ public abstract class AbstractBatchXMLFileListener extends FileEventListener
     {
         DynamicEntity entity = null;
 
-        try
+        try (InputStream oxm = new FileInputStream(getOXMFilePath()))
         {
-            InputStream oxm = new FileInputStream(getOXMFilePath());
-
             Map<String, Object> properties = new HashMap<>();
             properties.put(JAXBContextProperties.OXM_METADATA_SOURCE, oxm);
             DynamicJAXBContext context = DynamicJAXBContextFactory.createContextFromOXM(getClass().getClassLoader(), properties);
@@ -494,6 +492,7 @@ public abstract class AbstractBatchXMLFileListener extends FileEventListener
                 catch (InterruptedException ie)
                 {
                     LOG.error("Error while thread sleep: " + ie.getMessage(), ie);
+                    Thread.currentThread().interrupt();
                 }
             }
         }
@@ -670,7 +669,7 @@ public abstract class AbstractBatchXMLFileListener extends FileEventListener
             // Try to find DynamicEntity object for given name
             Optional<DynamicEntity> found = documentLevelFields.stream()
                     .filter(element -> name.equals(element.<String> get(CaptureConstants.XML_BATCH_NAME_KEY))).findFirst();
-            if (found != null && found.isPresent())
+            if (found.isPresent())
             {
                 retval = found.get().<String> get(CaptureConstants.XML_BATCH_VALUE_KEY);
             }

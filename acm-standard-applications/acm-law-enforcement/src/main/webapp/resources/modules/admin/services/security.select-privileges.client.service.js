@@ -14,7 +14,7 @@
  *
  * The Admin.SelectPrivilegesService provides Create Role/Select privileges REST calls functionality
  */
-angular.module('admin').service('Admin.SelectPrivilegesService', function($http) {
+angular.module('admin').service('Admin.SelectPrivilegesService', [ '$http', 'base64', function($http, base64) {
     return ({
         getAppRoles: getAppRoles,
         getAllPrivileges: getAllPrivileges,
@@ -102,7 +102,7 @@ angular.module('admin').service('Admin.SelectPrivilegesService', function($http)
      * @returns {HttpPromise} Future info add role privileges
      */
     function addPrivilegeToApplicationRole(roleName, privileges) {
-        var url = 'api/latest/plugin/admin/rolesprivileges/' + roleName + '/privileges';
+        var url = 'api/latest/plugin/admin/rolesprivileges/' + base64.encode(roleName) + '/privileges';
         return $http({
             method: 'PUT',
             url: url,
@@ -128,7 +128,7 @@ angular.module('admin').service('Admin.SelectPrivilegesService', function($http)
      * @returns {HttpPromise} Future info add role privileges
      */
     function removePrivilegeFromApplicationRole(roleName, privileges) {
-        var url = 'api/latest/plugin/admin/rolesprivileges/' + roleName + '/privileges';
+        var url = 'api/latest/plugin/admin/rolesprivileges/' + base64.encode(roleName) + '/privileges';
         return $http({
             method: 'DELETE',
             url: url,
@@ -177,7 +177,7 @@ angular.module('admin').service('Admin.SelectPrivilegesService', function($http)
      * @returns {HttpPromise} Future info about role privileges
      */
     function getRolePrivilegesByName(data) {
-        var url = 'api/latest/plugin/admin/' + data.role.name + '/privileges';
+        var url = 'api/latest/plugin/admin/' + base64.encode(data.role.name) + '/privileges';
         return $http({
             method: 'GET',
             url: url,
@@ -217,4 +217,4 @@ angular.module('admin').service('Admin.SelectPrivilegesService', function($http)
             }
         });
     }
-});
+} ]);

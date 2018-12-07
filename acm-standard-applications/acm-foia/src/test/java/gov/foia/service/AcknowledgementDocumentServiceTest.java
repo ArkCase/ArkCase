@@ -66,6 +66,7 @@ import gov.foia.dao.FOIARequestDao;
 import gov.foia.model.FOIADocumentDescriptor;
 import gov.foia.model.FOIAObject;
 import gov.foia.model.FOIARequest;
+import gov.foia.model.FoiaConfiguration;
 
 /**
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Aug 17, 2016
@@ -101,6 +102,8 @@ public class AcknowledgementDocumentServiceTest extends EasyMockSupport
     private AcmFolder mockedFolder;
     private NotificationSender mockedNotificationSender;
     private FOIADocumentGeneratorService mockDocumentGeneratorService;
+    private FoiaConfigurationService mockedFoiaConfigurationService;
+    private FoiaConfiguration mockedFoiaConfiguration;
 
     @Before
     public void setUp()
@@ -125,12 +128,15 @@ public class AcknowledgementDocumentServiceTest extends EasyMockSupport
         mockedContainer = createMock(AcmContainer.class);
         mockedNotificationSender = createMock(NotificationSender.class);
         mockDocumentGeneratorService = createMock(FOIADocumentGeneratorService.class);
+        mockedFoiaConfigurationService = createMock(FoiaConfigurationService.class);
+        mockedFoiaConfiguration = createMock(FoiaConfiguration.class);
 
         acknowledgementService.setRequestDao(mockedFOIARequestFileDao);
         acknowledgementService.setEcmFileDao(mockedFileDao);
         acknowledgementService.setUserDao(mockedUserDao);
         acknowledgementService.setNotificationSender(mockedNotificationSender);
         acknowledgementService.setDocumentGeneratorService(mockDocumentGeneratorService);
+        acknowledgementService.setFoiaConfigurationService(mockedFoiaConfigurationService);
 
         mockedContactMethods = Arrays.asList(mockedContactMethod);
     }
@@ -234,6 +240,8 @@ public class AcknowledgementDocumentServiceTest extends EasyMockSupport
 
     public void testEmailExpect()
     {
+        expect(mockedFoiaConfigurationService.readConfiguration()).andReturn(mockedFoiaConfiguration);
+        expect(mockedFoiaConfiguration.getReceivedDateEnabled()).andReturn(false);
         expect(mockedFOIARequestFileDao.find(requestId)).andReturn(mockedRequest);
         expect(mockedRequest.getOriginator()).andReturn(mockedPersonAssociation);
         expect(mockedPersonAssociation.getPerson()).andReturn(mockedPerson);

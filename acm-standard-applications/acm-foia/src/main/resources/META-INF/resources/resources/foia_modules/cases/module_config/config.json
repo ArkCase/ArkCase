@@ -112,15 +112,15 @@
                     "organizations",
                     "documents",
                     "participants",
+                    "notes",
                     "tasks",
                     "references",
-                    "exemption",
-                    "tags",
-                    "notes",
                     "history",
                     "time",
                     "cost",
+                    "tags",
                     "calendar",
+                    "exemption",
                     "billing"
                 ]
             },
@@ -223,7 +223,7 @@
             {
                 "type": "p/CASE_FILE/exemption",
                 "label": "cases.tree.nodeTypes.exemptionCodes.label",
-                "icon": "fa fa-comments",
+                "icon": "fa fa-code",
                 "components": [
                     "exemption"
                 ]
@@ -830,7 +830,7 @@
         {
             "id": "exemption",
             "title": "cases.comp.exemption.title",
-            "icon": "fa fa-comments",
+            "icon": "fa fa-code",
             "enabled": true,
             "type": "grid",
             "enableFiltering": true,
@@ -1421,6 +1421,27 @@
                     "enableColumnMenu": false
                 }
 
+            ]
+        },
+        {
+            "id": "exemptionCodesDescription",
+            "enabled": "true",
+            "title": "cases.comp.exemption.exemptionCodesDescription",
+            "type": "grid",
+            "columnDefs": [
+                {
+                    "name": "key",
+                    "displayName": "cases.comp.exemption.table.columns.exemptionCode",
+                    "headerCellFilter": "translate",
+                    "width": 150
+                },
+                {
+                    "name": "value",
+                    "displayName": "cases.comp.exemption.description",
+                    "headerCellFilter": "translate",
+                    "cellFilter": "translate",
+                    "cellTemplate": "<div class='ui-grid-cell-wrap' translate>{{row.entity.value}}</div>"
+                }
             ]
         }
     ]

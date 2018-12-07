@@ -50,6 +50,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import gov.foia.model.FOIARequest;
+import gov.foia.service.FOIAExecutiveGroupNotificationService;
 
 /**
  * Created by dmiller on 8/9/16.
@@ -73,12 +74,16 @@ public class FulfillBusinessProcessIT
     @Qualifier("queueCaseService")
     private QueueCaseService queueCaseService;
 
+    @Autowired
+    @Qualifier("foiaExecutiveGroupNotificationService")
+    private FOIAExecutiveGroupNotificationService foiaExecutiveGroupNotificationService;
+
     @Before
     public void setUp() throws Exception
     {
         // deploy
         repo.createDeployment()
-                .addClasspathResource("activiti/foia-extension-fulfill-process.bpmn20.xml")
+                .addClasspathResource("activiti/foia-extension-fulfill-process_v3.bpmn20.xml")
                 .deploy();
     }
 

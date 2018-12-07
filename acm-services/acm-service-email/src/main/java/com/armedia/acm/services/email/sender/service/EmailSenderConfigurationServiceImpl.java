@@ -28,11 +28,11 @@ package com.armedia.acm.services.email.sender.service;
  */
 
 
-
 import com.armedia.acm.core.exceptions.AcmEncryptionException;
 import com.armedia.acm.crypto.properties.AcmEncryptablePropertyUtilsImpl;
 import com.armedia.acm.services.email.sender.model.EmailSenderConfiguration;
 import com.armedia.acm.services.email.sender.model.EmailSenderConfigurationConstants;
+
 import org.apache.commons.net.smtp.AuthenticatingSMTPClient;
 import org.apache.commons.net.smtp.SMTPClient;
 import org.apache.commons.net.smtp.SMTPReply;
@@ -232,7 +232,7 @@ public class EmailSenderConfigurationServiceImpl implements EmailSenderConfigura
         catch (Exception e)
         {
             log.error("SMTP Error, [{}]", e.getMessage(), e);
-            if (authenticatingSmtpClient.isConnected())
+            if (authenticatingSmtpClient != null && authenticatingSmtpClient.isConnected())
             {
                 try
                 {

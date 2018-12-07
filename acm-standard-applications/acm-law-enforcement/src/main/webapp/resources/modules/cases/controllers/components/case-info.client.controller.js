@@ -93,6 +93,7 @@ angular.module('cases').controller(
                             templateUrl: 'modules/common/views/user-group-picker-modal.client.view.html',
                             controller: 'Common.UserGroupPickerController',
                             size: 'lg',
+                            backdrop: 'static',
                             resolve: {
                                 $filter: function() {
                                     return $scope.userOrGroupSearchConfig.userOrGroupSearchFilters.userOrGroupFacetFilter;
@@ -123,7 +124,7 @@ angular.module('cases').controller(
                                     //set for AFDP-6831 to inheritance in the Folder/file participants
                                     var len = $scope.objectInfo.participants.length;
                                     for (var i = 0; i < len; i++) {
-                                        if($scope.objectInfo.participants[i].participantType =='assignee'){
+                                        if($scope.objectInfo.participants[i].participantType =='assignee' || $scope.objectInfo.participants[i].participantType =='owning group'){
                                             $scope.objectInfo.participants[i].replaceChildrenParticipant = true;
                                         }
                                     }
@@ -146,7 +147,7 @@ angular.module('cases').controller(
                                     //set for AFDP-6831 to inheritance in the Folder/file participants
                                     var len = $scope.objectInfo.participants.length;
                                     for (var i = 0; i < len; i++) {
-                                        if($scope.objectInfo.participants[i].participantType =='owning group') {
+                                        if($scope.objectInfo.participants[i].participantType =='owning group'|| $scope.objectInfo.participants[i].participantType =='assignee') {
                                             $scope.objectInfo.participants[i].replaceChildrenParticipant = true;
                                         }
                                     }
@@ -175,6 +176,10 @@ angular.module('cases').controller(
                         $scope.dueDateBeforeChange = $scope.dateInfo.dueDate;
                         $scope.owningGroup = ObjectModelService.getGroup(data);
                         $scope.assignee = ObjectModelService.getAssignee(data);
+
+                        var utcDate = moment.utc(UtilDateService.dateToIso(new Date(data.created))).format();
+                        $scope.maxYear = moment(utcDate).add(1, 'years').toDate().getFullYear();
+                        $scope.minYear = new Date(data.created).getFullYear();
 
                         CaseLookupService.getApprovers($scope.owningGroup, $scope.assignee).then(function(approvers) {
                             var options = [];

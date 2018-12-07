@@ -32,7 +32,6 @@ import com.armedia.acm.services.billing.exception.CreateBillingItemException;
 import com.armedia.acm.services.billing.model.BillingItem;
 import com.armedia.acm.services.billing.service.BillingService;
 import com.armedia.acm.services.costsheet.dao.AcmCostsheetDao;
-import com.armedia.acm.services.costsheet.model.AcmCost;
 import com.armedia.acm.services.costsheet.model.AcmCostsheet;
 import com.armedia.acm.services.costsheet.model.CostsheetConstants;
 import com.armedia.acm.services.timesheet.dao.AcmTimesheetDao;
@@ -40,6 +39,7 @@ import com.armedia.acm.services.timesheet.model.AcmTime;
 import com.armedia.acm.services.timesheet.model.AcmTimesheet;
 import com.armedia.acm.services.timesheet.model.TimesheetConstants;
 
+import com.armedia.acm.services.timesheet.service.TimesheetService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;
@@ -58,6 +58,7 @@ public class BillingAcmTaskActivitiEventHandler implements ApplicationListener<A
     private AcmTimesheetDao acmTimesheetDao;
     private AcmCostsheetDao acmCostsheetDao;
     private BillingService billingService;
+    private TimesheetService timesheetService;
     private Logger log = LoggerFactory.getLogger(getClass());
 
     @Override
@@ -65,7 +66,7 @@ public class BillingAcmTaskActivitiEventHandler implements ApplicationListener<A
     public void onApplicationEvent(AcmTaskActivitiEvent event)
     {
 
-        if (event.getTaskEvent().equals("complete"))
+        if (event.getTaskEvent().equals("complete") && event.getProcessVariables().containsKey("reviewOutcome") && event.getProcessVariables().get("reviewOutcome").equals("APPROVE"))
         {
             switch (event.getParentObjectType())
             {
@@ -83,31 +84,9 @@ public class BillingAcmTaskActivitiEventHandler implements ApplicationListener<A
     {
         AcmTimesheet timesheet = getAcmTimesheetDao().find(event.getParentObjectId());
 
-        accumulateTimesheetByTypeAndChangeCode(timesheet).values().stream().forEach(acmTime -> {
+        getTimesheetService().accumulateTimesheetByTypeAndChangeCode(timesheet).values().stream().forEach(acmTime -> {
             createBillingItem(event.getUserId(), timesheet.getTitle(), acmTime.getObjectId(), acmTime.getType(), acmTime.getTotalCost());
         });
-    }
-
-    private Map<String, AcmTime> accumulateTimesheetByTypeAndChangeCode(AcmTimesheet timesheet)
-    {
-        Map<String, AcmTime> timesheetRowByTypeAndChangeCode = new HashMap<>();
-        for (AcmTime acmTime : timesheet.getTimes())
-        {
-            if (acmTime.getType().equals("CASE_FILE") || acmTime.getType().equals("COMPLAINT"))
-            {
-                String timesheetKey = acmTime.getType() + "_" + acmTime.getObjectId();
-                if (timesheetRowByTypeAndChangeCode.containsKey(timesheetKey))
-                {
-                    AcmTime rowPerDay = timesheetRowByTypeAndChangeCode.get(timesheetKey);
-                    rowPerDay.setTotalCost(rowPerDay.getTotalCost() + acmTime.getTotalCost());
-                }
-                else
-                {
-                    timesheetRowByTypeAndChangeCode.put(acmTime.getType() + acmTime.getObjectId(), acmTime);
-                }
-            }
-        }
-        return timesheetRowByTypeAndChangeCode;
     }
 
     private void handleCostsheet(AcmTaskActivitiEvent event)
@@ -195,4 +174,13 @@ public class BillingAcmTaskActivitiEventHandler implements ApplicationListener<A
         this.billingService = billingService;
     }
 
+    public TimesheetService getTimesheetService()
+    {
+        return timesheetService;
+    }
+
+    public void setTimesheetService(TimesheetService timesheetService)
+    {
+        this.timesheetService = timesheetService;
+    }
 }
