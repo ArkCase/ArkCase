@@ -33,7 +33,7 @@
  * If response contains only 1 item, then display it.
  **/
 
-angular.module('directives').directive('searchModal', [ '$q', '$translate', 'UtilService', 'SearchService', 'Search.QueryBuilderService', '$injector', 'Person.InfoService', function($q, $translate, Util, SearchService, SearchQueryBuilder, $injector, PersonInfoService) {
+angular.module('directives').directive('searchModal', [ '$q', '$translate', 'UtilService', 'SearchService', 'Search.QueryBuilderService', '$injector', 'Person.InfoService', 'Helper.UiGridService', 'ObjectService', 'MessageService', function($q, $translate, Util, SearchService, SearchQueryBuilder, $injector, PersonInfoService, HelperUiGridService, ObjectService, MessageService) {
     return {
         restrict: 'E', //match only element name
         scope: {
@@ -130,6 +130,11 @@ angular.module('directives').directive('searchModal', [ '$q', '$translate', 'Uti
             scope.currentFacetSelection = [];
             scope.selectedItem = null;
             scope.selectedItems = [];
+
+            var gridHelper = new HelperUiGridService.Grid({
+                scope: scope
+            });
+
             var filterInitialValue = scope.filter;
             scope.queryExistingItems = function() {
                 if (!Util.isEmpty(scope.searchQuery)) {
@@ -309,7 +314,6 @@ angular.module('directives').directive('searchModal', [ '$q', '$translate', 'Uti
                     if (scope.multiSelect) {
                         scope.modalInstance.close(scope.selectedItems);
                     } else {
-
                         scope.modalInstance.close(scope.selectedItem);
                     }
                 }
@@ -317,6 +321,22 @@ angular.module('directives').directive('searchModal', [ '$q', '$translate', 'Uti
 
             scope.onClickCancel = function() {
                 scope.modalInstance.dismiss('cancel')
+            };
+
+            scope.onClickObjLink = function(event, rowEntity) {
+                event.preventDefault();
+                var targetType = Util.goodMapValue(rowEntity, "object_type_s");
+                var targetId = '';
+                if(targetType == ObjectService.ObjectTypes.FILE) {
+                    targetId= Util.goodMapValue(rowEntity, "object_id_s");
+                } else if(targetType == ObjectService.ObjectTypes.CASE_FILE || targetType == ObjectService.ObjectTypes.COMPLAINT){
+                    targetId = Util.goodMapValue(rowEntity, "parent_object_id_s");
+                } else {
+                    targetId = "-1";
+                    MessageService.error("The target type: " + targetType + " is not supported currently. The targetId is set to: ", targetId);
+                }
+                gridHelper.showObject(targetType, targetId);
+                scope.onClickCancel();
             };
 
             //prepare the UI-grid

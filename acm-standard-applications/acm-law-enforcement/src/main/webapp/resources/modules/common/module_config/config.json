@@ -624,14 +624,21 @@
           "headerCellFilter": "translate"
         },
         {
-          "name": "name",
-          "displayName": "common.dialogObjectPicker.table.columns.name",
+          "name": "title_parseable",
+          "displayName": "common.dialogObjectPicker.table.columns.title",
+          "headerCellFilter": "translate",
+          "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, {object_id_s:row.entity.object_id_s, object_type_s:row.entity.object_type_s})'>{{row.entity.title_parseable}}</a>"
+        },
+        {
+          "name": "parent_object_id_s",
+          "displayName": "common.dialogObjectPicker.table.columns.parentId",
           "headerCellFilter": "translate"
         },
         {
-          "name": "title_parseable",
-          "displayName": "common.dialogObjectPicker.table.columns.title",
-          "headerCellFilter": "translate"
+          "name": "parent_object_type_s",
+          "displayName": "common.dialogObjectPicker.table.columns.parentTitle",
+          "headerCellFilter": "translate",
+          "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, {parent_object_id_s:row.entity.parent_object_id_s, object_type_s:row.entity.parent_object_type_s})'>{{row.entity.parent_object_type_s}}</a>"
         }
       ],
       "paginationPageSizes": [
@@ -786,13 +793,18 @@
         "headerCellFilter": "translate"
       },
       {
-        "name": "name",
-        "displayName": "common.dialogObjectPicker.table.columns.name",
+        "name": "title_parseable",
+        "displayName": "common.dialogObjectPicker.table.columns.title",
         "headerCellFilter": "translate"
       },
       {
-        "name": "title_parseable",
-        "displayName": "common.dialogObjectPicker.table.columns.title",
+        "name": "parent_id_s",
+        "displayName": "common.dialogObjectPicker.table.columns.parentId",
+        "headerCellFilter": "translate"
+      },
+      {
+        "name": "parent_ref_s",
+        "displayName": "common.dialogObjectPicker.table.columns.parentTitle",
         "headerCellFilter": "translate"
       }
     ],
