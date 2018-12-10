@@ -866,7 +866,8 @@
                     "objectNumberRegexGroup": 2
                 },
                 "hideMenu": true,
-                "ecmAPIName": "retrieveFlatSearchResultListAdvanced"
+                "ecmAPIName": "retrieveFlatSearchResultListAdvanced",
+                "nodeCacheKey": "DUR"
             }
         },
         {
