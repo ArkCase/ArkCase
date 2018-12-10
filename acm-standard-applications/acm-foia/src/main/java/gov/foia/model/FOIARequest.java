@@ -6,22 +6,22 @@ package gov.foia.model;
  * %%
  * Copyright (C) 2014 - 2018 ArkCase LLC
  * %%
- * This file is part of the ArkCase software. 
- * 
- * If the software was purchased under a paid ArkCase license, the terms of 
- * the paid license agreement will prevail.  Otherwise, the software is 
+ * This file is part of the ArkCase software.
+ *
+ * If the software was purchased under a paid ArkCase license, the terms of
+ * the paid license agreement will prevail.  Otherwise, the software is
  * provided under the following open source license terms:
- * 
+ *
  * ArkCase is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *  
+ *
  * ArkCase is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
  * #L%
@@ -36,8 +36,9 @@ import com.armedia.acm.data.converter.LocalDateConverter;
 import com.armedia.acm.data.converter.LocalDateTimeConverter;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.voodoodyne.jackson.jsog.JSOGGenerator;
 
 import org.springframework.format.annotation.DateTimeFormat;
@@ -88,9 +89,9 @@ public class FOIARequest extends CaseFile implements FOIAObject
     private LocalDate scannedDate;
 
     @Column(name = "fo_release_date")
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-    @Convert(converter = LocalDateConverter.class)
-    private LocalDate releasedDate;
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    @Convert(converter = LocalDateTimeConverter.class)
+    private LocalDateTime releasedDate;
 
     @Column(name = "fo_billing_enter_date")
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
@@ -147,14 +148,16 @@ public class FOIARequest extends CaseFile implements FOIAObject
     private String deliveryMethodOfResponse;
 
     @Column(name = "fo_record_search_date_from")
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-    @Convert(converter = LocalDateConverter.class)
-    private LocalDate recordSearchDateFrom;
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    @Convert(converter = LocalDateTimeConverter.class)
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+    private LocalDateTime recordSearchDateFrom;
 
     @Column(name = "fo_record_search_date_to")
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-    @Convert(converter = LocalDateConverter.class)
-    private LocalDate recordSearchDateTo;
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    @Convert(converter = LocalDateTimeConverter.class)
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+    private LocalDateTime recordSearchDateTo;
 
     @Column(name = "fo_processing_fee_waive")
     private double processingFeeWaive;
@@ -241,7 +244,7 @@ public class FOIARequest extends CaseFile implements FOIAObject
     /**
      * @return the releasedDate
      */
-    public LocalDate getReleasedDate()
+    public LocalDateTime getReleasedDate()
     {
         return releasedDate;
     }
@@ -250,7 +253,7 @@ public class FOIARequest extends CaseFile implements FOIAObject
      * @param releasedDate
      *            the releasedDate to set
      */
-    public void setReleasedDate(LocalDate releasedDate)
+    public void setReleasedDate(LocalDateTime releasedDate)
     {
         this.releasedDate = releasedDate;
     }
@@ -499,7 +502,7 @@ public class FOIARequest extends CaseFile implements FOIAObject
     /**
      * @return the recordSearchDateFrom
      */
-    public LocalDate getRecordSearchDateFrom()
+    public LocalDateTime getRecordSearchDateFrom()
     {
         return recordSearchDateFrom;
     }
@@ -508,7 +511,7 @@ public class FOIARequest extends CaseFile implements FOIAObject
      * @param recordSearchDateFrom
      *            the recordSearchDateFrom to set
      */
-    public void setRecordSearchDateFrom(LocalDate recordSearchDateFrom)
+    public void setRecordSearchDateFrom(LocalDateTime recordSearchDateFrom)
     {
         this.recordSearchDateFrom = recordSearchDateFrom;
     }
@@ -516,7 +519,7 @@ public class FOIARequest extends CaseFile implements FOIAObject
     /**
      * @return the recordSearchDateTo
      */
-    public LocalDate getRecordSearchDateTo()
+    public LocalDateTime getRecordSearchDateTo()
     {
         return recordSearchDateTo;
     }
@@ -525,7 +528,7 @@ public class FOIARequest extends CaseFile implements FOIAObject
      * @param recordSearchDateTo
      *            the recordSearchDateTo to set
      */
-    public void setRecordSearchDateTo(LocalDate recordSearchDateTo)
+    public void setRecordSearchDateTo(LocalDateTime recordSearchDateTo)
     {
         this.recordSearchDateTo = recordSearchDateTo;
     }
@@ -664,7 +667,7 @@ public class FOIARequest extends CaseFile implements FOIAObject
         Optional<PersonAssociation> found = getPersonAssociations().stream()
                 .filter(personAssociation -> "Requester".equalsIgnoreCase(personAssociation.getPersonType())).findFirst();
 
-        if (found.isPresent())
+        if (found != null && found.isPresent())
         {
             return found.get();
         }
@@ -687,7 +690,7 @@ public class FOIARequest extends CaseFile implements FOIAObject
             Optional<PersonAssociation> found = getPersonAssociations().stream()
                     .filter(personAssociation -> "Requester".equalsIgnoreCase(personAssociation.getPersonType())).findFirst();
 
-            if (!found.isPresent())
+            if (found == null || !found.isPresent())
             {
                 getPersonAssociations().add(originator);
             }
