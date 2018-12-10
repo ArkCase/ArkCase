@@ -48,15 +48,6 @@ public class AcmSequenceEntity implements Serializable
 
     private static final long serialVersionUID = 4573350572913494010L;
 
-    /*
-     * @Id
-     * @TableGenerator(name = "acm_sequence_gen", table = "acm_sequence_id", pkColumnName = "cm_seq_name",
-     * valueColumnName = "cm_seq_num", pkColumnValue = "acm_sequence", initialValue = 1, allocationSize = 1)
-     * @GeneratedValue(strategy = GenerationType.TABLE, generator = "acm_sequence_gen")
-     * @Column(name = "cm_sequence_id")
-     * private Long id;
-     */
-
     @Id
     @Column(name = "cm_sequence_name")
     private String sequenceName;
@@ -71,24 +62,6 @@ public class AcmSequenceEntity implements Serializable
     @Version
     @Column(name = "cm_sequence_part_lock")
     private Integer sequencePartLock;
-
-    /*    *//**
-             * @return the id
-             */
-    /*
-     * public Long getId()
-     * {
-     * return id;
-     * }
-     *//**
-        * @param id
-        *            the id to set
-        *//*
-           * public void setId(Long id)
-           * {
-           * this.id = id;
-           * }
-           */
 
     /**
      * @return the sequenceName

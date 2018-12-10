@@ -1,5 +1,7 @@
 package com.armedia.acm.services.sequence.model;
 
+import com.armedia.acm.data.converter.BooleanToStringConverter;
+
 /*-
  * #%L
  * ACM Service: Sequence Manager
@@ -28,6 +30,7 @@ package com.armedia.acm.services.sequence.model;
  */
 
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
@@ -64,7 +67,8 @@ public class AcmSequenceRegistry implements Serializable
     private Integer sequencePartValue;
 
     @Column(name = "cm_sequence_part_value_used_flag")
-    private String sequencePartValueUsedFlag;
+    @Convert(converter = BooleanToStringConverter.class)
+    private Boolean sequencePartValueUsedFlag;
 
     /**
      * @return the sequenceValue
@@ -137,7 +141,7 @@ public class AcmSequenceRegistry implements Serializable
     /**
      * @return the sequencePartValueUsedFlag
      */
-    public String getSequencePartValueUsedFlag()
+    public Boolean getSequencePartValueUsedFlag()
     {
         return sequencePartValueUsedFlag;
     }
@@ -146,7 +150,7 @@ public class AcmSequenceRegistry implements Serializable
      * @param sequencePartValueUsedFlag
      *            the sequencePartValueUsedFlag to set
      */
-    public void setSequencePartValueUsedFlag(String sequencePartValueUsedFlag)
+    public void setSequencePartValueUsedFlag(Boolean sequencePartValueUsedFlag)
     {
         this.sequencePartValueUsedFlag = sequencePartValueUsedFlag;
     }
