@@ -105,7 +105,7 @@ public class AcmSequenceRegistryDao extends AcmAbstractDao<AcmSequenceRegistry>
 
         query.setParameter("sequenceName", sequenceName);
         query.setParameter("sequencePartName", sequencePartName);
-        query.setParameter("sequencePartValueUsedFlag", sequencePartValueUsedFlag.toString());
+        query.setParameter("sequencePartValueUsedFlag", sequencePartValueUsedFlag);
 
         List<AcmSequenceRegistry> sequenceRegistryList = query.getResultList();
         if (null == sequenceRegistryList)
