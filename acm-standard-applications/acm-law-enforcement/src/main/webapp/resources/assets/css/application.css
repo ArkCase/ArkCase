@@ -1730,7 +1730,7 @@ a.primary {
     left: 10%;
 }
 
-.popup-move-on-left > .editable + .form-inline{
+.popup-move-on-left > .editable + .form-inline {
     right: 20%;
 }
 
@@ -1741,6 +1741,7 @@ a.primary {
 .popup-move-on-left > .editable + .form-inline:after {
     left: 50%;
 }
+
 .disabledLink {
     color: #788288 !important;
     cursor: auto;
@@ -1786,4 +1787,8 @@ a.primary {
 /* wrap large text in ui grid cell template*/
 .ui-grid-cell-wrap {
     white-space: normal !important;
+}
+
+.remove-margin-bottom-from-summernote > .panel {
+    margin-bottom: 0px;
 }

@@ -94,7 +94,8 @@
             "changedGroupSearchFilter": "Enter search filter for all changed groups",
             "changedGroupSearchPageFilter": "Enter filter including sort-attribute for all changed groups",
             "groupSearchPageFilter": "Enter filter including sort-attribute (e.g. (&(objectClass=group)(gidNumber>=%s)))",
-            "enableEditingLdapUsers": "Check if managing users and groups to your DS is allowed"
+            "enableEditingLdapUsers": "Check if managing users and groups to your DS is allowed",
+            "syncEnabled": "Check if synchronize users to your DS is allowed"
         },
         "security.ldapConfig.messages": {
             "delete.success": "Successfully deleted row.",

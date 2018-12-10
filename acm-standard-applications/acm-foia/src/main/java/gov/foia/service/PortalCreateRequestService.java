@@ -27,6 +27,7 @@ package gov.foia.service;
  * #L%
  */
 
+import com.armedia.acm.auth.AcmAuthentication;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
@@ -88,7 +89,8 @@ public class PortalCreateRequestService
         String ipAddress = in.getIpAddress();
 
         MDC.put(MDCConstants.EVENT_MDC_REQUEST_USER_ID_KEY, in.getUserId());
-        Authentication auth = new UsernamePasswordAuthenticationToken(in.getUserId(), in.getUserId());
+        Authentication _auth = new UsernamePasswordAuthenticationToken(in.getUserId(), in.getUserId());
+        AcmAuthentication auth = new AcmAuthentication(_auth);
 
         SecurityContextHolder.getContext().setAuthentication(auth);
 

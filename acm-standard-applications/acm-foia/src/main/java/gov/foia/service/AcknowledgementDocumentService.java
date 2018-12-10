@@ -124,6 +124,7 @@ public class AcknowledgementDocumentService
     }
 
     private void generateAndUploadACK(Long requestId) throws DocumentGeneratorException, CorrespondenceMergeFieldVersionException
+
     {
         FOIARequest request = requestDao.find(requestId);
         FOIADocumentDescriptor documentDescriptor = documentGeneratorService.getDocumentDescriptor(request, FOIAConstants.ACK);

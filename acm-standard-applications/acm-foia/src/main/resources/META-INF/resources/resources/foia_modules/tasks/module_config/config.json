@@ -379,18 +379,18 @@
                     "columnDefs": [
                         {
                             "name": "fileName",
-                            "displayName": "tasks.comp.docsreview.table.columns.fileName",
+                            "displayName": "tasks.comp.documentsunderreview.table.columns.fileName",
                             "headerCellFilter": "translate",
                             "cellTemplate": "<div ng-bind-html='row.entity.fileName' title='{{row.entity.fileName}}' class='ui-grid-cell-contents'></div>"
                         },
                         {
                             "name": "created",
-                            "displayName": "tasks.comp.docsreview.table.columns.created",
+                            "displayName": "tasks.comp.documentsunderreview.table.columns.created",
                             "headerCellFilter": "translate"
                         },
                         {
                             "name": "creator",
-                            "displayName": "tasks.comp.docsreview.table.columns.creator",
+                            "displayName": "tasks.comp.documentsunderreview.table.columns.creator",
                             "headerCellFilter": "translate",
                             "enableCellEdit": false,
                             "fullNameField": "creator_full_name_lcs",
@@ -398,7 +398,7 @@
                         },
                         {
                             "name": "status",
-                            "displayName": "tasks.comp.docsreview.table.columns.status",
+                            "displayName": "tasks.comp.documentsunderreview.table.columns.status",
                             "headerCellFilter": "translate"
                         }
                     ]

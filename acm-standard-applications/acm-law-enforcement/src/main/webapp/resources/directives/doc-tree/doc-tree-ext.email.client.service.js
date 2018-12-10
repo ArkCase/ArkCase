@@ -127,6 +127,7 @@ angular.module('services').factory('DocTreeExt.Email',
                             controller: 'directives.DocTreeEmailDialogController',
                             animation: true,
                             size: 'lg',
+                            backdrop: 'static',
                             resolve: {
                                 params: function() {
                                     return params;

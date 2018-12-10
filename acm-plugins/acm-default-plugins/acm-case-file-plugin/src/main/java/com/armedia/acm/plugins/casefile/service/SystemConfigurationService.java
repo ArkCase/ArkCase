@@ -26,6 +26,7 @@ package com.armedia.acm.plugins.casefile.service;
  * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
  * #L%
  */
+
 import com.armedia.acm.plugins.businessprocess.model.SystemConfiguration;
 
 public class SystemConfigurationService
