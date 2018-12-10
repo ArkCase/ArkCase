@@ -75,6 +75,7 @@ angular.module('cases').controller(
                             templateUrl: 'modules/cases/views/components/case-reference-modal.client.view.html',
                             controller: 'Cases.ReferenceModalController',
                             size: 'lg',
+                            backdrop: 'static',
                             resolve: {
                                 $filter: function() {
                                     var filter = $scope.modalConfig.searchFilter + "&-id:" + $scope.objectInfo.id + "-" + ObjectService.ObjectTypes.CASE_FILE;

@@ -50,6 +50,11 @@
                     <property name="url" value="/api/{version}/service/email/send/withattachmentsandlinks/{objectType}"/>
                     <property name="requiredPrivilege" ref="acmGlobalAllowPrivilege"/>
                 </bean>
+                <bean id="emailSendMentionEmailPost" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="POST"/>
+                    <property name="url" value="/api/{version}/service/email/send/mentions"/>
+                    <property name="requiredPrivilege" ref="acmGlobalAllowPrivilege"/>
+                </bean>
 
             </list>
         </property>

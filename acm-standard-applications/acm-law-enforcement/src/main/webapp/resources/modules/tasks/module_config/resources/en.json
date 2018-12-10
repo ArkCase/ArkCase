@@ -397,5 +397,10 @@
             "btn.cancel": "Cancel",
             "btn.sign": "Sign"
         }
-    }
+    },
+    "tasks.userSearch":{
+        "cancelButton": "Cancel",
+        "confirmButton": "Confirm"
+    },
+    "tasks.coordination.pickAssignee.placeholder": "Please Pick Assignee",
 }

@@ -32,7 +32,8 @@ angular.module('complaints').controller(
                             animation: $scope.animationsEnabled,
                             templateUrl: 'modules/complaints/views/components/complaint-tags-modal.client.view.html',
                             controller: 'Complaints.TagsModalController',
-                            size: 'lg'
+                            size: 'lg',
+                            backdrop: 'static'
                         });
 
                         modalInstance.result.then(function(tags) {

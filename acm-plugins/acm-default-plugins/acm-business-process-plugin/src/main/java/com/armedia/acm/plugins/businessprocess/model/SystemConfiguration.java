@@ -26,6 +26,7 @@ package com.armedia.acm.plugins.businessprocess.model;
  * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
  * #L%
  */
+
 public class SystemConfiguration
 {
 }

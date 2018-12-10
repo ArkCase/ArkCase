@@ -32,7 +32,8 @@ angular.module('cases').controller(
                             animation: $scope.animationsEnabled,
                             templateUrl: 'modules/cases/views/components/case-tags-modal.client.view.html',
                             controller: 'Cases.TagsModalController',
-                            size: 'lg'
+                            size: 'lg',
+                            backdrop: 'static'
                         });
 
                         modalInstance.result.then(function(tags) {
