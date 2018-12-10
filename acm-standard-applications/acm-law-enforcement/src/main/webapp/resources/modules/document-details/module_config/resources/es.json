@@ -101,6 +101,13 @@
                 "save.error": "No se pudieron actualizar los metadatos del archivo"
             }
         },
+        "comp.annotationTags.modal": {
+            "title": "Add Annotation Tags and Notes",
+            "buttons": {
+                "ok": "OK",
+                "cancel": "Cancel"
+            }
+        },
         "transcribe":{
             "email": {
                 "subject": "Transcription Status",
