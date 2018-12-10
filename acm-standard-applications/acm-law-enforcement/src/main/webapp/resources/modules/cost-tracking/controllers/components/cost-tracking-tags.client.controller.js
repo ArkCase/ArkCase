@@ -32,7 +32,8 @@ angular.module('cost-tracking').controller(
                             animation: $scope.animationsEnabled,
                             templateUrl: 'modules/cost-tracking/views/components/cost-tracking-tags-modal.client.view.html',
                             controller: 'CostTracking.TagsModalController',
-                            size: 'lg'
+                            size: 'lg',
+                            backdrop: 'static'
                         });
 
                         modalInstance.result.then(function(tags) {
