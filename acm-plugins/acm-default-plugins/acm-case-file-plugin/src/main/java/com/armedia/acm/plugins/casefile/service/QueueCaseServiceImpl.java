@@ -6,22 +6,22 @@ package com.armedia.acm.plugins.casefile.service;
  * %%
  * Copyright (C) 2014 - 2018 ArkCase LLC
  * %%
- * This file is part of the ArkCase software. 
- * 
- * If the software was purchased under a paid ArkCase license, the terms of 
- * the paid license agreement will prevail.  Otherwise, the software is 
+ * This file is part of the ArkCase software.
+ *
+ * If the software was purchased under a paid ArkCase license, the terms of
+ * the paid license agreement will prevail.  Otherwise, the software is
  * provided under the following open source license terms:
- * 
+ *
  * ArkCase is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *  
+ *
  * ArkCase is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
  * #L%
@@ -31,6 +31,7 @@ import com.armedia.acm.plugins.casefile.dao.AcmQueueDao;
 import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
 import com.armedia.acm.plugins.casefile.model.AcmQueue;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
+import com.armedia.acm.plugins.casefile.model.QueuedEvent;
 import com.armedia.acm.plugins.casefile.pipeline.CaseFilePipelineContext;
 import com.armedia.acm.plugins.casefile.pipeline.postsave.CaseFileRulesHandler;
 import com.armedia.acm.services.pipeline.PipelineManager;
@@ -39,6 +40,8 @@ import com.armedia.acm.services.users.service.tracker.UserTrackerService;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -47,7 +50,7 @@ import javax.persistence.EntityNotFoundException;
 /**
  * Created by armdev on 8/26/15.
  */
-public class QueueCaseServiceImpl implements QueueCaseService
+public class QueueCaseServiceImpl implements QueueCaseService, ApplicationEventPublisherAware
 {
     private transient final Logger log = LoggerFactory.getLogger(getClass());
     private PipelineManager<CaseFile, CaseFilePipelineContext> queuePipelineManager;
@@ -55,6 +58,7 @@ public class QueueCaseServiceImpl implements QueueCaseService
     private UserTrackerService userTrackerService;
     private AcmQueueDao acmQueueDao;
     private CaseFileRulesHandler rulesHandler;
+    private ApplicationEventPublisher applicationPublisher;
 
     @Override
     @Transactional
@@ -81,8 +85,12 @@ public class QueueCaseServiceImpl implements QueueCaseService
             getCaseFileDao().getEm().persist(merged);
 
             getCaseFileDao().getEm().flush();
+
             log.debug("Case file state: {}, queue: {}", merged.getStatus(),
                     merged.getQueue() == null ? "null" : merged.getQueue().getName());
+
+            applicationPublisher.publishEvent(new QueuedEvent(merged));
+
             return merged;
         });
 
@@ -122,6 +130,8 @@ public class QueueCaseServiceImpl implements QueueCaseService
 
         log.debug("Case file state: {}, queue: {}", caseFile.getStatus(),
                 caseFile.getQueue() == null ? "null" : caseFile.getQueue().getName());
+
+        applicationPublisher.publishEvent(new QueuedEvent(caseFile));
 
         return caseFile;
     }
@@ -170,4 +180,17 @@ public class QueueCaseServiceImpl implements QueueCaseService
     {
         this.rulesHandler = rulesHandler;
     }
+
+    /*
+     * (non-Javadoc)
+     * @see org.springframework.context.ApplicationEventPublisherAware#setApplicationEventPublisher(org.springframework.
+     * context.ApplicationEventPublisher)
+     */
+
+    @Override
+    public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher)
+    {
+        this.applicationPublisher = applicationEventPublisher;
+    }
+
 }

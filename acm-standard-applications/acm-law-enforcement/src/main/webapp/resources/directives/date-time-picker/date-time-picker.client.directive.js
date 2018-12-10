@@ -1,4 +1,4 @@
-angular.module('directives').directive('dateTimePicker', ['moment', 'Util.DateService', function(moment, UtilDateService){
+angular.module('directives').directive('dateTimePicker', ['moment', 'Util.DateService', 'UtilService', function (moment, UtilDateService, UtilService) {
     return{
         restrict: 'E',
         templateUrl: 'directives/date-time-picker/date-time-picker.client.directive.html',
@@ -10,10 +10,23 @@ angular.module('directives').directive('dateTimePicker', ['moment', 'Util.DateSe
         },
         link: function ($scope, element) {
             $scope.editable = false;
-            $scope.today = moment($scope.data).format('MM/DD/YYYY HH:mm');
-            var minYear = $scope.data.getFullYear();
-            var utcDate = moment.utc(UtilDateService.dateToIso($scope.data)).format();
-            var maxYear = moment(utcDate).add(1, 'years').toDate().getFullYear();
+
+            var minYear = "";
+            var utcDate = "";
+            var maxYear = "";
+
+            if (UtilService.isEmpty($scope.data)) {
+                $scope.today = "";
+                $scope.dateInPicker = new Date();
+                minYear = $scope.dateInPicker.getFullYear();
+                utcDate = moment.utc(UtilDateService.dateToIso($scope.dateInPicker)).format();
+                maxYear = moment(utcDate).add(1, 'years').toDate().getFullYear();
+            } else {
+                $scope.dateInPicker = moment($scope.data).format('MM/DD/YYYY HH:mm');
+                minYear = $scope.data.getFullYear();
+                utcDate = moment.utc(UtilDateService.dateToIso($scope.data)).format();
+                maxYear = moment(utcDate).add(1, 'years').toDate().getFullYear();
+            }
 
             $scope.toggleEditable = function () {
                 $scope.editable = !$scope.editable;
@@ -27,25 +40,29 @@ angular.module('directives').directive('dateTimePicker', ['moment', 'Util.DateSe
                 minYear: minYear,
                 maxYear: maxYear,
                 smartDays: true,
-                value: $scope.data
+                value: $scope.dateInPicker
             });
 
             $scope.saveDate = function () {
                 $scope.toggleEditable();
                 var editedDate = $(comboField).combodate('getValue', null);
-                $scope.today = moment(editedDate).format('MM/DD/YYYY HH:mm');
-                $scope.data = moment($scope.today).toDate();
+                $scope.dateInPicker = moment(editedDate).format('MM/DD/YYYY HH:mm');
+                $scope.data = moment($scope.dateInPicker).toDate();
             };
 
             $scope.cancel = function () {
                 $scope.toggleEditable();
-                $(comboField).combodate('setValue', $scope.today);
+                $(comboField).combodate('setValue', $scope.dateInPicker);
             };
         },
         controller: function ($scope) {
             $scope.$watch('data', function(){
                 //called any time $scope.data changes
-                $scope.today = moment($scope.data).format('MM/DD/YYYY HH:mm');
+                if (UtilService.isEmpty($scope.data)) {
+                    $scope.today = "";
+                } else {
+                    $scope.today = moment($scope.data).format('MM/DD/YYYY HH:mm');
+                }
             });
         }
     }
