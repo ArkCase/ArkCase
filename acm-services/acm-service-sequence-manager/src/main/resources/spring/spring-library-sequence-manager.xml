@@ -2,15 +2,6 @@
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
 
-    <!-- <bean id="sequenceConfiguration" class="org.apache.commons.io.IOUtils" factory-method="toString">
-        <constructor-arg type="java.io.InputStream">
-            <bean class="java.io.FileInputStream" destroy-method="close">
-                <constructor-arg type="java.io.File" value="${user.home}/.arkcase/acm/acmSequenceConfiguration.json"/>
-            </bean>
-        </constructor-arg>
-        <constructor-arg value="UTF-8"/>
-    </bean> -->
-
     <bean id="sequenceConfiguration" class="java.io.File">
         <constructor-arg value="${user.home}/.arkcase/acm/acmSequenceConfiguration.json"/>
     </bean>

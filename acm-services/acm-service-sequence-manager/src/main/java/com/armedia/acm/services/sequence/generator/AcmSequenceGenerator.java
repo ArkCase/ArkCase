@@ -238,8 +238,6 @@ public class AcmSequenceGenerator implements ApplicationListener<AbstractConfigu
         sequenceEntity.setSequenceName(sequenceName);
         sequenceEntity.setSequencePartName(sequencePart.getSequencePartName());
         sequenceEntity.setSequencePartValue(sequencePart.getSequenceStartNumber() + sequencePart.getSequenceIncrementSize());
-        // getSequenceService().insertSequenceEntity(sequenceEntity);
-        // Can not make it work EclipsLink-7311
         AcmSequenceEntity saved = getSequenceService().saveSequenceEntity(sequenceEntity);
         Integer partValue = saved.getSequencePartValue();
         autoincrementPartNameToValue.put(sequencePart.getSequencePartName(), partValue);
@@ -249,21 +247,6 @@ public class AcmSequenceGenerator implements ApplicationListener<AbstractConfigu
     private Integer updateSequence(AcmSequenceEntity sequenceEntity, String sequenceName, AcmSequencePart sequencePart,
             Map<String, Integer> autoincrementPartNameToValue)
     {
-        /*
-         * sequenceEntity.setSequencePartValue(sequenceEntity.getSequencePartValue() +
-         * sequencePart.getSequenceIncrementSize());
-         * try
-         * {
-         * getSequenceDao().save(sequenceEntity);
-         * }
-         * catch (OptimisticLockException ole)
-         * {
-         * sequenceEntity = getSequenceDao().getAcmSequence(sequenceName, sequencePart.getSequencePartName());
-         * sequenceEntity.setSequencePartValue(sequenceEntity.getSequencePartValue() +
-         * sequencePart.getSequenceIncrementSize());
-         * getSequenceDao().save(sequenceEntity);
-         * }
-         */
         AcmSequenceEntity updated = getSequenceService().updateSequenceEntity(sequenceEntity, sequencePart, false);
         Integer partValue = updated.getSequencePartValue();
         autoincrementPartNameToValue.put(sequencePart.getSequencePartName(), partValue);
