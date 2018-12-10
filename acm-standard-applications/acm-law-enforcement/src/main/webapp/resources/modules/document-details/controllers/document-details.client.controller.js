@@ -2,9 +2,9 @@
 
 angular.module('document-details').controller(
         'DocumentDetailsController',
-        [ '$rootScope', '$scope', '$stateParams', '$sce', '$q', '$timeout', '$window', 'TicketService', 'ConfigService', 'LookupService', 'SnowboundService', 'Authentication', 'EcmService', 'Helper.LocaleService', 'Admin.TranscriptionManagementService', 'MessageService', 'UtilService', 'Util.TimerService',
-                'Object.LockingService', 'ObjectService', '$log', 'Dialog.BootboxService', '$translate',
-                function($rootScope, $scope, $stateParams, $sce, $q, $timeout, $window, TicketService, ConfigService, LookupService, SnowboundService, Authentication, EcmService, LocaleHelper, TranscriptionManagementService, MessageService, Util, UtilTimerService, ObjectLockingService, ObjectService, $log, DialogService, $translate) {
+        [ '$rootScope', '$scope', '$stateParams', '$sce', '$q', '$timeout', '$window', '$modal', 'TicketService', 'ConfigService', 'LookupService', 'SnowboundService', 'Authentication', 'EcmService', 'Helper.LocaleService', 'Admin.TranscriptionManagementService', 'MessageService', 'UtilService', 'Util.TimerService',
+                'Object.LockingService', 'ObjectService', '$log', 'Dialog.BootboxService', '$translate', 'ArkCaseCrossWindowMessagingService',
+                function($rootScope, $scope, $stateParams, $sce, $q, $timeout, $window, $modal, TicketService, ConfigService, LookupService, SnowboundService, Authentication, EcmService, LocaleHelper, TranscriptionManagementService, MessageService, Util, UtilTimerService, ObjectLockingService, ObjectService, $log, DialogService, $translate, ArkCaseCrossWindowMessagingService) {
 
                     new LocaleHelper.Locale({
                         scope: $scope
@@ -30,6 +30,34 @@ angular.module('document-details').controller(
                             $scope.videoAPI.toggleFullScreen();
                         }
                     };
+
+                    $scope.iframeLoaded = function() {
+                        ArkCaseCrossWindowMessagingService.addHandler('select-annotation-tags', onSelectAnnotationTags);
+                        ArkCaseCrossWindowMessagingService.start('snowbound', $scope.ecmFileProperties['ecm.viewer.snowbound']);
+                    };
+
+                    function onSelectAnnotationTags(data) {
+                        var modalInstance = $modal.open({
+                            animation: true,
+                            templateUrl: 'modules/document-details/views/components/annotation-tags-modal.client.view.html',
+                            controller: 'Document.AnnotationTagsModalController'
+                        });
+
+                        modalInstance.result.then(function(result) {
+                            var message = {
+                                source: 'arkcase',
+                                action: 'add-annotation-tags',
+                                data: {
+                                    type: data.type,
+                                    annotationTags: result.annotationTags,
+                                    annotationNotes: result.annotationNotes
+                                }
+                            };
+                            ArkCaseCrossWindowMessagingService.send(message);
+                        }, function() {
+                            // Do nothing
+                        });
+                    }
 
                     $scope.acmTicket = '';
                     $scope.userId = '';
