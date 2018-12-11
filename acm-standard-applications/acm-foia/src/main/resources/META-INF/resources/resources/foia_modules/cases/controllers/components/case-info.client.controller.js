@@ -143,6 +143,7 @@ angular.module('cases').controller(
                     templateUrl: 'modules/common/views/user-group-picker-modal.client.view.html',
                     controller: 'Common.UserGroupPickerController',
                     size: 'lg',
+                            backdrop: 'static',
                     resolve: {
                         $filter: function() {
                             return $scope.userOrGroupSearchConfig.userOrGroupSearchFilters.userOrGroupFacetFilter;
@@ -219,14 +220,9 @@ angular.module('cases').controller(
              */
             function saveCase() {
                 var promiseSaveInfo = Util.errorPromise($translate.instant("common.service.error.invalidData"));
-
-                if (!Util.isEmpty($scope.objectInfo.releasedDate)) {
-                    $scope.objectInfo.releasedDate = UtilDateService.dateToIsoDateTime($scope.objectInfo.releasedDate);
-                }
-                $scope.objectInfo.recordSearchDateFrom = UtilDateService.dateToIsoDateTime($scope.objectInfo.recordSearchDateFrom);
-                $scope.objectInfo.recordSearchDateTo = UtilDateService.dateToIsoDateTime($scope.objectInfo.recordSearchDateTo);
-
-                if (CaseInfoService.validateCaseInfo($scope.objectInfo)) {
+                        if (CaseInfoService.validateCaseInfo($scope.objectInfo)) {
+                            $scope.objectInfo.recordSearchDateFrom = UtilDateService.dateToIsoDateTime($scope.objectInfo.recordSearchDateFrom);
+                            $scope.objectInfo.recordSearchDateTo = UtilDateService.dateToIsoDateTime($scope.objectInfo.recordSearchDateTo);
                     var objectInfo = Util.omitNg($scope.objectInfo);
                     promiseSaveInfo = CaseInfoService.saveFoiaRequestInfo(objectInfo);
                     promiseSaveInfo.then(function(caseInfo) {
