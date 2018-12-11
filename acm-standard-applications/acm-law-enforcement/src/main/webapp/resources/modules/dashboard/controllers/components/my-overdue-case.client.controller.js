@@ -5,6 +5,8 @@ angular.module('dashboard.my-overdue-cases').controller('Dashboard.MyOverdueCase
 
             var vm = this;
             vm.config = null;
+            var userInfo = null;
+            var requestStatus = "Released";
 
             var paginationOptions = {
                 pageNumber: 1,
@@ -51,13 +53,20 @@ angular.module('dashboard.my-overdue-cases').controller('Dashboard.MyOverdueCase
                 vm.gridOptions.paginationPageSizes = config.paginationPageSizes;
                 vm.gridOptions.paginationPageSize = config.paginationPageSize;
                 paginationOptions.pageSize = config.paginationPageSize;
-                getPage();
 
-                return config;
+                Authentication.queryUserInfo().then(function(responseUserInfo) {
+                    userInfo = responseUserInfo;
+                    getPage();
+                    return userInfo;
+                });
+
+
             });
 
             function getPage() {
                 DashboardService.queryMyOverdueCases({
+                    userId: userInfo.userId,
+                    status: requestStatus,
                     sortBy: paginationOptions.sortBy,
                     sortDir: paginationOptions.sortDir,
                     startWith: (paginationOptions.pageNumber - 1) * paginationOptions.pageSize,
