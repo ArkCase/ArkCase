@@ -43,9 +43,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
+
+import java.util.Date;
 
 /**
  * Created by armdev on 8/26/15.
@@ -59,6 +62,8 @@ public class QueueCaseServiceImpl implements QueueCaseService, ApplicationEventP
     private AcmQueueDao acmQueueDao;
     private CaseFileRulesHandler rulesHandler;
     private ApplicationEventPublisher applicationPublisher;
+
+    String eventType = "com.armedia.acm.casefile.queued";
 
     @Override
     @Transactional
@@ -89,7 +94,7 @@ public class QueueCaseServiceImpl implements QueueCaseService, ApplicationEventP
             log.debug("Case file state: {}, queue: {}", merged.getStatus(),
                     merged.getQueue() == null ? "null" : merged.getQueue().getName());
 
-            applicationPublisher.publishEvent(new QueuedEvent(merged));
+            applicationPublisher.publishEvent(new QueuedEvent(merged, auth.getName(), eventType, new Date()));
 
             return merged;
         });
@@ -131,7 +136,9 @@ public class QueueCaseServiceImpl implements QueueCaseService, ApplicationEventP
         log.debug("Case file state: {}, queue: {}", caseFile.getStatus(),
                 caseFile.getQueue() == null ? "null" : caseFile.getQueue().getName());
 
-        applicationPublisher.publishEvent(new QueuedEvent(caseFile));
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+        applicationPublisher.publishEvent(new QueuedEvent(caseFile, auth.getName(), eventType, new Date()));
 
         return caseFile;
     }

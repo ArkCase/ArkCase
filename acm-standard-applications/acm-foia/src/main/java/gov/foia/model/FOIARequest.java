@@ -91,6 +91,7 @@ public class FOIARequest extends CaseFile implements FOIAObject
     @Column(name = "fo_release_date")
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     @Convert(converter = LocalDateTimeConverter.class)
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     private LocalDateTime releasedDate;
 
     @Column(name = "fo_billing_enter_date")
@@ -664,15 +665,11 @@ public class FOIARequest extends CaseFile implements FOIAObject
             return null;
         }
 
-        Optional<PersonAssociation> found = getPersonAssociations().stream()
-                .filter(personAssociation -> "Requester".equalsIgnoreCase(personAssociation.getPersonType())).findFirst();
+        return getPersonAssociations().stream()
+                .filter(personAssociation -> "Requester".equalsIgnoreCase(personAssociation.getPersonType()))
+                .findFirst()
+                .orElse(null);
 
-        if (found != null && found.isPresent())
-        {
-            return found.get();
-        }
-
-        return null;
     }
 
     @Override
