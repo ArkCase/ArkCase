@@ -36,10 +36,10 @@
             </div>
             <div class="row">
                 <div class="col-sm-12 form-group">
-                    <label for="subject" translate> tasks.newTask.subject.label </label>
+                    <label translate> tasks.newTask.subject.label </label>
                     <span class="required-asterisk">*</span>
-                    <input type="text" id="subject" ng-required="true" ng-model="config.data.title" name="subject"
-                            class="input-md form-control" placeholder="{{ 'tasks.newTask.subject.label'  | translate }}" id="subject">
+                    <mention-input ng-model="config.data.title" params="params"
+                            placeholder="{{ 'tasks.newTask.subject.label' | translate }}"></mention-input>
                 </div>
             </div>
 
