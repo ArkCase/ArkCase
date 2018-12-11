@@ -423,10 +423,10 @@ angular
                     getCacheKeyByNode : function(folderNode) {
                         var pageId = Util.goodValue(folderNode.data.startRow, 0);
                         var folderId = folderNode.data.objectId;
-                        var cacheKey = DocTree.getCacheKey(DocTree.isTopNode(folderNode) ? 0 : folderId, pageId, DocTree.treeConfig.nodeCacheKey);
+                        var cacheKey = DocTree.getCacheKey(DocTree.isTopNode(folderNode) ? 0 : folderId, pageId, DocTree.treeConfig.nodeCacheKeyPrefix);
                         return cacheKey;
                     },
-                    getCacheKey : function(folderId, pageId) {
+                    getCacheKey : function(folderId, pageId, keyPrefix) {
                         var setting = DocTree.Config.getSetting();
                         var key = keyPrefix ? keyPrefix + "." : "";
                         key += this.getObjType() + "." + this.getObjId();
@@ -2338,7 +2338,7 @@ angular
                                             setting.sortBy = Util.goodValue(folderList.sortBy);
                                             setting.sortDirection = Util.goodValue(folderList.sortDirection);
 
-                                            var cacheKey = DocTree.getCacheKey(folderId, pageId, DocTree.treeConfig.nodeCacheKey);
+                                            var cacheKey = DocTree.getCacheKey(folderId, pageId, DocTree.treeConfig.nodeCacheKeyPrefix);
                                             DocTree.cacheFolderList.put(cacheKey, folderList);
                                             return folderList;
                                         }
