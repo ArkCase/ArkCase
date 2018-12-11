@@ -867,7 +867,7 @@
                 },
                 "hideMenu": true,
                 "ecmAPIName": "retrieveFlatSearchResultListAdvanced",
-                "nodeCacheKey": "DUR"
+                "nodeCacheKeyPrefix": "DUR"
             }
         },
         {
