@@ -97,7 +97,11 @@ public class AcmSequenceGenerator implements ApplicationListener<AbstractConfigu
 
     public Boolean getSequenceEnabled(String sequenceName)
     {
-        return sequenceMap.get(sequenceName).getSequenceEnabled();
+        if (sequenceMap.get(sequenceName).getSequenceEnabled() != null)
+        {
+            return sequenceMap.get(sequenceName).getSequenceEnabled();
+        }
+        return Boolean.FALSE;
     }
 
     public String generateValue(String sequenceName, Object object)
