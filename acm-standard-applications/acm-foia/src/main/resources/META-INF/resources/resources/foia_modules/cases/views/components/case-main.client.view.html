@@ -23,7 +23,7 @@
                     <div>
                         <div class="input-group">
                             <input type="text" id="recordSearchDateFrom" class="form-control" name="recordSearchDateFrom"
-                                    ng-model="objectInfo.recordSearchDateFrom | date:'MM/dd/yyyy HH:mm'"
+                                    ng-model="objectInfo.recordSearchDateFrom"
                                     is-open="openedRecordSearchDateFrom.openedEnd" close-on-date-selection="true" show-button-bar="true"
                                     on-open-focus="false" close-text="Close" readonly />
                             <span class="input-group-btn">
@@ -39,7 +39,7 @@
                     <div>
                         <div class="input-group">
                             <input type="text" id="recordSearchDateTo" class="form-control" name="recordSearchDateTo"
-                                    ng-model="objectInfo.recordSearchDateTo | date:'MM/dd/yyyy HH:mm'" close-on-date-selection="true"
+                                    ng-model="objectInfo.recordSearchDateTo" close-on-date-selection="true"
                                     show-button-bar="true" on-open-focus="false" close-text="Close" readonly />
                             <span class="input-group-btn">
                     <button type="button" class="btn btn-default"
@@ -95,7 +95,7 @@
                     <div>
                         <div class="input-group">
                             <input type="text" id="releasedDate" class="form-control" name="releasedDate" readonly
-                                    ng-model="objectInfo.releasedDate | date:'MM/dd/yyyy HH:mm'" is-open="opened.openedEnd"
+                                    ng-model="objectInfo.releasedDate" is-open="opened.openedEnd"
                                     close-on-date-selection="true" show-button-bar="true" on-open-focus="false" close-text="Close" /> <span
                                 class="input-group-btn">
 
@@ -110,7 +110,7 @@
                 <div class="col-sm-3">
                     <label class="control-label" translate>cases.comp.info.category.label</label>
                     <select id="requestCategory" ng-model="objectInfo.requestCategory"
-                            ng-options="category.key as category.value for category in requestCategory"
+                            ng-options="requestCategory.key as requestCategory.value | translate for requestCategory in requestCategories"
                             class="form-control input-md" ng-disabled="true">
                     </select>
                 </div>

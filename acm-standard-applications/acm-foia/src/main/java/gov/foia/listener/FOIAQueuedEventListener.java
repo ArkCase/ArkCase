@@ -29,7 +29,7 @@ public class FOIAQueuedEventListener implements ApplicationListener<QueuedEvent>
     public void onApplicationEvent(QueuedEvent event)
     {
         CaseFile cf = (CaseFile) event.getSource();
-        if (((CaseFile) event.getSource()).getStatus().equals("Released"))
+        if ((cf.getStatus().equals("Released")))
         {
             try
             {

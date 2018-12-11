@@ -1783,3 +1783,8 @@ a.primary {
 .ui-grid-cell-wrap {
     white-space: normal !important;
 }
+
+.remove-margin-bottom-from-summernote > .panel {
+    margin-bottom: 0px;
+}
+
