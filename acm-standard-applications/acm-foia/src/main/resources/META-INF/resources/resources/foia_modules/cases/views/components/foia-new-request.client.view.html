@@ -22,11 +22,9 @@
                     <span class="required-asterisk">*</span>
                 </div>
                 <div class="col-sm-4 form-group">
-                    <input type="text"
-                           class="form-control" id="originalRequestNumber" ng-model="config.data.originalRequestNumber"
-                           placeholder="{{'cases.newRequest.originalRequestNumber.placeholder' | translate}}"
-                           name="originalRequestNumber"
-                           ng-blur="populateAppeal()" ng-click="requestInReleaseStatusSearch()" required="required">
+                    <input type="text" class="form-control" id="originalRequestNumber" ng-model="config.data.originalRequestNumber"
+                            placeholder="{{'cases.newRequest.originalRequestNumber.placeholder' | translate}}" name="originalRequestNumber"
+                            ng-blur="populateAppeal()" ng-click="requestInReleaseStatusSearch()" required="required">
                 </div>
             </div>
             <div class="panel panel-default" ng-if="isNewRequestType()" id="topSection1">
@@ -56,9 +54,8 @@
                         </div>
                         <div class="col-sm-4">
                             <input type="text" class="form-control" id="firstName" name="firstName"
-                                   ng-model="config.data.originator.person.givenName"
-                                   placeholder="{{'cases.newRequest.firstName.placeholder' | translate}}"
-                                   required="required">
+                                    ng-model="config.data.originator.person.givenName"
+                                    placeholder="{{'cases.newRequest.firstName.placeholder' | translate}}" required="required">
                             <span class="text-danger" ng-if="firstNameEmpty && formInvalid" translate>
                                 cases.newRequest.firstName.validation.error</span>
                         </div>
@@ -66,10 +63,8 @@
                             <label for="middleName" translate>cases.newRequest.middleName.label</label>
                         </div>
                         <div class="col-sm-4">
-                            <input type="text" class="form-control" id="middleName"
-                                   ng-model="config.data.originator.person.middleName"
-                                   placeholder="{{'cases.newRequest.middleName.placeholder' | translate}}"
-                                   name="middleName">
+                            <input type="text" class="form-control" id="middleName" ng-model="config.data.originator.person.middleName"
+                                    placeholder="{{'cases.newRequest.middleName.placeholder' | translate}}" name="middleName">
                         </div>
                     </div>
                     <div class="row form-group">
@@ -78,10 +73,9 @@
                             <span class="required-asterisk">*</span>
                         </div>
                         <div class="col-sm-4">
-                            <input type="text" class="form-control" id="lastName"
-                                   ng-model="config.data.originator.person.familyName"
-                                   placeholder="{{'cases.newRequest.lastName.placeholder' | translate}}" name="lastName"
-                                   required="required">
+                            <input type="text" class="form-control" id="lastName" ng-model="config.data.originator.person.familyName"
+                                    placeholder="{{'cases.newRequest.lastName.placeholder' | translate}}" name="lastName"
+                                    required="required">
                             <span class="text-danger" ng-if="lastNameEmpty && formInvalid" translate>
                                 cases.newRequest.lastName.validation.error</span>
                         </div>
@@ -89,9 +83,8 @@
                             <label for="title" translate>cases.newRequest.title.label</label>
                         </div>
                         <div class="col-sm-4">
-                            <input type="title" class="form-control" id="title"
-                                   ng-model="config.data.originator.person.position"
-                                   placeholder="{{'cases.newRequest.title.placeholder' | translate}}" name="title">
+                            <input type="title" class="form-control" id="title" ng-model="config.data.originator.person.position"
+                                    placeholder="{{'cases.newRequest.title.placeholder' | translate}}" name="title">
                         </div>
                     </div>
                     <div class="row form-group">
@@ -101,9 +94,8 @@
                         </div>
                         <div class="col-sm-4 form-group">
                             <input type="text" class="form-control" id="phone" pattern="^\d{3}[\-]\d{3}[\-]\d{4}"
-                                   ng-model="config.data.originator.person.contactMethods[0].value"
-                                   placeholder="{{'cases.newRequest.phone.placeholder' | translate}}" name="phone"
-                                   required="required">
+                                    ng-model="config.data.originator.person.contactMethods[0].value"
+                                    placeholder="{{'cases.newRequest.phone.placeholder' | translate}}" name="phone" required="required">
                             <span class="text-danger" ng-if="phoneEmpty && formInvalid" translate>
                                 cases.newRequest.phone.validation.error</span>
                             <span class="text-danger" ng-if="phoneInvalid && formInvalid && !phoneEmpty" translate>
@@ -113,10 +105,9 @@
                             <label for="organization" translate>cases.newRequest.organization.label </label>
                         </div>
                         <div class="col-sm-4 form-group">
-                            <input type="text" id="organization" ng-model="organizationValue" readonly
-                                   ng-click="searchOrganization()" class="input-md form-control"
-                                   placeholder="{{'cases.newRequest.organization.placeholder' | translate}}"
-                                   name="organization">
+                            <input type="text" id="organization" ng-model="organizationValue" readonly ng-click="searchOrganization()"
+                                    class="input-md form-control" placeholder="{{'cases.newRequest.organization.placeholder' | translate}}"
+                                    name="organization">
                         </div>
                     </div>
                     <div class="row form-group">
@@ -126,9 +117,9 @@
                         </div>
                         <div class="col-sm-4">
                             <input type="text" class="form-control" id="email"
-                                   ng-model="config.data.originator.person.contactMethods[2].value"
-                                   placeholder="{{'cases.newRequest.email.placeholder' | translate}}" name="email"
-                                   pattern="[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" required="required">
+                                    ng-model="config.data.originator.person.contactMethods[2].value"
+                                    placeholder="{{'cases.newRequest.email.placeholder' | translate}}" name="email"
+                                    pattern="[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" required="required">
                             <span class="text-danger" ng-if="emailEmpty && formInvalid" translate>
                                 cases.newRequest.email.validation.error</span>
                             <span class="text-danger" ng-if="emailInvalid && formInvalid && !emailEmpty" translate>
@@ -139,10 +130,9 @@
                             <span class="required-asterisk">*</span>
                         </div>
                         <div class="col-sm-4">
-                            <input type="text" class="form-control" id="confirmationEmail"
-                                   ng-model="confirmationEmail"
-                                   placeholder="{{'cases.newRequest.confirmationEmail.placeholder' | translate}}"
-                                   name="confirmationEmail" required="required">
+                            <input type="text" class="form-control" id="confirmationEmail" ng-model="confirmationEmail"
+                                    placeholder="{{'cases.newRequest.confirmationEmail.placeholder' | translate}}" name="confirmationEmail"
+                                    required="required">
                             <span class="text-danger" ng-if="confirmEmailInvalid && formInvalid && !confirmEmailEmpty" translate>
                                 cases.newRequest.confirmationEmail.validation.errorInvalid</span>
                             <span class="text-danger" ng-if="confirmEmailEmpty && formInvalid" translate>
@@ -157,9 +147,9 @@
                         </div>
                         <div class="col-sm-4">
                             <input type="text" class="form-control" id="address1"
-                                   ng-model="config.data.originator.person.addresses[0].streetAddress"
-                                   placeholder="{{'cases.newRequest.address.placeholder' | translate}}" name="address1"
-                                   required="required">
+                                    ng-model="config.data.originator.person.addresses[0].streetAddress"
+                                    placeholder="{{'cases.newRequest.address.placeholder' | translate}}" name="address1"
+                                    required="required">
                             <span class="text-danger" ng-if="addressEmpty && formInvalid" translate>
                                 cases.newRequest.address.validation.error</span>
                         </div>
@@ -169,9 +159,8 @@
                         </div>
                         <div class="col-sm-4">
                             <input type="text" class="form-control" id="address2"
-                                   ng-model="config.data.originator.person.addresses[0].streetAddress2"
-                                   placeholder="{{'cases.newRequest.address2.placeholder' | translate}}"
-                                   name="address2">
+                                    ng-model="config.data.originator.person.addresses[0].streetAddress2"
+                                    placeholder="{{'cases.newRequest.address2.placeholder' | translate}}" name="address2">
                         </div>
                     </div>
                     <div class="row form-group">
@@ -180,10 +169,8 @@
                             <span class="required-asterisk">*</span>
                         </div>
                         <div class="col-sm-4">
-                            <input type="text" class="form-control" id="city"
-                                   ng-model="config.data.originator.person.addresses[0].city"
-                                   placeholder="{{'cases.newRequest.city.placeholder' | translate}}" name="city"
-                                   required="required">
+                            <input type="text" class="form-control" id="city" ng-model="config.data.originator.person.addresses[0].city"
+                                    placeholder="{{'cases.newRequest.city.placeholder' | translate}}" name="city" required="required">
                             <span class="text-danger" ng-if="cityEmpty && formInvalid" translate>
                                 cases.newRequest.city.validation.error</span>
                         </div>
@@ -208,9 +195,8 @@
                         </div>
                         <div class="col-sm-4">
                             <input type="text" class="form-control" id="zip" name="zip" pattern="[0-9]{5}"
-                                   ng-model="config.data.originator.person.addresses[0].zip"
-                                   placeholder="{{'cases.newRequest.zip.placeholder' | translate}}"
-                                   required="required">
+                                    ng-model="config.data.originator.person.addresses[0].zip"
+                                    placeholder="{{'cases.newRequest.zip.placeholder' | translate}}" required="required">
                             <span class="text-danger" ng-if="zipCodeEmpty && formInvalid" translate>
                                 cases.newRequest.zip.validation.error</span>
                             <span class="text-danger" ng-if="zipCodeInvalid && formInvalid && !zipCodeEmpty" translate>
@@ -233,10 +219,8 @@
                         <span class="required-asterisk">*</span>
                     </div>
                     <div class="col-sm-9 form-group">
-                        <textarea rows=5 id="subject" name="subject"
-                                  class="form-control" ng-model="config.data.details"
-                                  placeholder="{{'cases.newRequest.subject.placeholder' | translate}}"
-                                  required="required"></textarea>
+                        <textarea rows=5 id="subject" name="subject" class="form-control" ng-model="config.data.details"
+                                placeholder="{{'cases.newRequest.subject.placeholder' | translate}}" required="required"></textarea>
                         <span class="text-danger" ng-if="subjectEmpty && formInvalid" translate>
                                 cases.newRequest.subject.validation.error</span>
                     </div>
@@ -253,18 +237,8 @@
                     </div>
                     <div class="col-sm-3 form-group">
                         <div class="input-group">
-                            <input type="text" id="recordSearchDateFrom" class="form-control"
-                                   name="recordSearchDateFrom" datepicker-popup="MM/dd/yyyy"
-                                   ng-model="config.data.recordSearchDateFrom" max-date="config.data.recordSearchDateTo.formatted"
-                                   is-open="opened.openedFrom" close-on-date-selection="true" show-button-bar="true"
-                                   on-open-focus="false" readonly ng-click="opened.openedFrom = !opened.openedFrom"
-                                   close-text="Done"/>
-                            <span class="input-group-btn">
-                                <button type="button" class="btn btn-default"
-                                        ng-click="opened.openedFrom = !opened.openedFrom">
-                                    <i class="fa fa-calendar"></i>
-                                </button>
-                            </span>
+                            <date-time-picker data="config.data.recordSearchDateFrom" property="startDate"
+                                    date-picker-id="comboDate1"></date-time-picker>
                         </div>
                     </div>
                     <div class="col-sm-3 form-group">
@@ -272,17 +246,8 @@
                     </div>
                     <div class="col-sm-3 form-group">
                         <div class="input-group">
-                            <input type="text" id="recordSearchDateTo" class="form-control" name="recordSearchDateTo"
-                                   datepicker-popup="MM/dd/yyyy" ng-model="config.data.recordSearchDateTo"
-                                   is-open="opened.openedTo" readonly ng-click="opened.openedTo = !opened.openedTo"
-                                   close-on-date-selection="true" show-button-bar="true" on-open-focus="false"
-                                   close-text="Done" min-date="config.data.recordSearchDateFrom.formatted"/>
-                            <span class="input-group-btn">
-                                <button type="button" class="btn btn-default"
-                                        ng-click="opened.openedTo = !opened.openedTo">
-                                    <i class="fa fa-calendar"></i>
-                                </button>
-                            </span>
+                            <date-time-picker data="config.data.recordSearchDateTo" property="dueDate"
+                                    date-picker-id="comboDate1"></date-time-picker>
                         </div>
                     </div>
                 </div>
@@ -368,8 +333,7 @@
                 </div>
                 <div class="row">
                     <div class="col-sm-3 form-group">
-                        <label for="deliveryMethodOfResponse"
-                               translate>cases.comp.main.deliveryMethodOfResponse.label </label>
+                        <label for="deliveryMethodOfResponse" translate>cases.comp.main.deliveryMethodOfResponse.label </label>
                     </div>
                     <div class="col-sm-5 form-group">
                         <select name="deliveryMethodOfResponse" id="deliveryMethodOfResponse"
@@ -394,20 +358,20 @@
                     </div>
                     <div class="col-sm-4 form-group">
                         <input type="checkbox" id="requestFeeWaive"
-                               placeholder="{{'cases.comp.main.requestFeeWaiveReason.placeholder' | translate}}"
-                               ng-model="config.data.feeWaiverFlag" name="requestFeeWaive" ng-change="config.data.requestFeeWaiveReason= !config.data.feeWaiverFlag ? '' : config.data.requestFeeWaiveReason">
+                                placeholder="{{'cases.comp.main.requestFeeWaiveReason.placeholder' | translate}}"
+                                ng-model="config.data.feeWaiverFlag" name="requestFeeWaive"
+                                ng-change="config.data.requestFeeWaiveReason= !config.data.feeWaiverFlag ? '' : config.data.requestFeeWaiveReason">
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-sm-3 form-group">
-                        <label for="requestFeeWaiveReason" class="control-label"
-                               translate>cases.comp.main.waiverRequestReason.label</label>
+                        <label for="requestFeeWaiveReason" class="control-label" translate>cases.comp.main.waiverRequestReason.label</label>
                     </div>
                     <div class="col-sm-7 form-group">
                          <textarea rows=5 type="requestFeeWaiveReason" class="form-control" id="requestFeeWaiveReason"
-                                   ng-model="config.data.requestFeeWaiveReason" ng-disabled="!config.data.feeWaiverFlag"
-                                   placeholder="{{'cases.comp.main.waiverRequestReason.placeholder' | translate}}"
-                                   name="requestFeeWaiveReason">
+                                 ng-model="config.data.requestFeeWaiveReason" ng-disabled="!config.data.feeWaiverFlag"
+                                 placeholder="{{'cases.comp.main.waiverRequestReason.placeholder' | translate}}"
+                                 name="requestFeeWaiveReason">
                                 </textarea>
                     </div>
                 </div>
