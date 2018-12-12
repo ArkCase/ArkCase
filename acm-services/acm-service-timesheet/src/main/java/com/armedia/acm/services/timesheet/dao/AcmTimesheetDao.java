@@ -31,6 +31,7 @@ package com.armedia.acm.services.timesheet.dao;
  */
 
 import com.armedia.acm.data.AcmAbstractDao;
+import com.armedia.acm.services.timesheet.model.AcmTime;
 import com.armedia.acm.services.timesheet.model.AcmTimesheet;
 import com.armedia.acm.services.timesheet.model.TimesheetConstants;
 
@@ -38,6 +39,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.persistence.Query;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.JoinType;
+import javax.persistence.criteria.Root;
+import javax.persistence.criteria.Subquery;
 
 import java.util.Date;
 import java.util.List;
@@ -84,34 +92,31 @@ public class AcmTimesheetDao extends AcmAbstractDao<AcmTimesheet>
 
     public List<AcmTimesheet> findByObjectIdAndType(Long objectId, String objectType, int startRow, int maxRows, String sortParams)
     {
-        String orderByQuery = "";
+        CriteriaBuilder builder = getEm().getCriteriaBuilder();
+        CriteriaQuery<AcmTimesheet> timesheetCriteriaQuery = builder.createQuery(AcmTimesheet.class);
+        Root<AcmTimesheet> acmTimesheetRoot = timesheetCriteriaQuery.from(AcmTimesheet.class);
+
+        Subquery<Long> subquery = timesheetCriteriaQuery.subquery(Long.class);
+        Root<AcmTimesheet> rootSubquery = subquery.from(AcmTimesheet.class);
+        subquery.select(rootSubquery.get("id")).distinct(true);
+        Join<AcmTimesheet, AcmTime> join = rootSubquery.join("times", JoinType.LEFT);
+        subquery.where(builder.and(builder.equal(join.get("objectId"), objectId),
+                builder.equal(join.get("type"), objectType)));
+
+        timesheetCriteriaQuery.select(acmTimesheetRoot);
+        timesheetCriteriaQuery.where(acmTimesheetRoot.<Long> get("id").in(subquery));
+
         if (sortParams != null && !"".equals(sortParams))
         {
-            orderByQuery = " ORDER BY timesheet." + sortParams;
+            timesheetCriteriaQuery.orderBy(builder.asc(acmTimesheetRoot.<String> get(sortParams)));
         }
 
-        // Use "WHERE timesheet.id IN" because DISTINCT not work with type CLOB.
-        // This query will avoid using DISTINCT with timesheet.details property which is of type CLOB
-        Query selectQuery = getEm().createQuery("SELECT timesheet "
-                + "FROM AcmTimesheet timesheet "
-                + "WHERE timesheet.id IN("
-                + "SELECT DISTINCT t.id "
-                + "FROM AcmTimesheet t "
-                + "LEFT JOIN t.times AS times "
-                + "WHERE times.objectId = :objectId "
-                + "AND times.type = :objectType"
-                + ")"
-                + orderByQuery);
-
-        selectQuery.setParameter("objectId", objectId);
-        selectQuery.setParameter("objectType", objectType);
-        selectQuery.setFirstResult(startRow);
-        selectQuery.setMaxResults(maxRows);
-
+        TypedQuery<AcmTimesheet> selectQuery = getEm().createQuery(timesheetCriteriaQuery).setFirstResult(startRow).setMaxResults(maxRows);
         @SuppressWarnings("unchecked")
         List<AcmTimesheet> timesheets = (List<AcmTimesheet>) selectQuery.getResultList();
 
         return timesheets;
+
     }
 
     @Override

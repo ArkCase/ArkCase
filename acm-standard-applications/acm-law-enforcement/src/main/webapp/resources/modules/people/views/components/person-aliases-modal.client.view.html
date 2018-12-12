@@ -39,9 +39,8 @@
 
         <div class="row">
             <div class="col-sm-12 form-group">
-                <label for="aliasDescription" translate>people.comp.aliases.modal.description</label>
-                <textarea id="aliasDescription" class="input-md form-control" ng-model="alias.description"></textarea>
-
+                <label translate>people.comp.aliases.modal.description</label>
+                <mention-textarea ng-model="alias.description" params="params"></mention-textarea>
             </div>
         </div>
 

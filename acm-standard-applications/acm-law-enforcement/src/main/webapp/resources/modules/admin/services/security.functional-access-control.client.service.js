@@ -14,7 +14,7 @@
  *
  * The Admin.FunctionalAccessControlService provides Functional Access Control REST calls functionality
  */
-angular.module('admin').service('Admin.FunctionalAccessControlService', function($http) {
+angular.module('admin').service('Admin.FunctionalAccessControlService', [ '$http', 'base64', function($http, base64) {
     return ({
         getAppRoles: getAppRoles,
         getAppRolesPaged: getAppRolesPaged,
@@ -161,7 +161,7 @@ angular.module('admin').service('Admin.FunctionalAccessControlService', function
     function addGroupsToApplicationRole(roleName, groups) {
         return $http({
             method: 'PUT',
-            url: 'api/latest/functionalaccess/' + roleName + '/groups',
+            url: 'api/latest/functionalaccess/' + base64.encode(roleName) + '/groups',
             data: groups,
             cache: false,
             headers: {
@@ -184,7 +184,7 @@ angular.module('admin').service('Admin.FunctionalAccessControlService', function
     function deleteGroupsFromApplicationRole(roleName, groups) {
         return $http({
             method: 'DELETE',
-            url: 'api/latest/functionalaccess/' + roleName + '/groups',
+            url: 'api/latest/functionalaccess/' + base64.encode(roleName) + '/groups',
             data: groups,
             cache: false,
             headers: {
@@ -209,7 +209,7 @@ angular.module('admin').service('Admin.FunctionalAccessControlService', function
     function getGroupsForRolePaged(data) {
         return $http({
             method: 'GET',
-            url: 'api/latest/functionalaccess/' + data.roleName.key + '/groups',
+            url: 'api/latest/functionalaccess/' + base64.encode(data.roleName.key) + '/groups',
             cache: false,
             params: {
                 start: (data.start ? data.start : 0),
@@ -235,7 +235,7 @@ angular.module('admin').service('Admin.FunctionalAccessControlService', function
     function getGroupsForRoleByName(data) {
         return $http({
             method: 'GET',
-            url: 'api/latest/functionalaccess/' + data.roleName.key + '/groups',
+            url: 'api/latest/functionalaccess/' + base64.encode(data.roleName.key) + '/groups',
             cache: false,
             params: {
                 start: (data.start ? data.start : 0),
@@ -245,4 +245,4 @@ angular.module('admin').service('Admin.FunctionalAccessControlService', function
             }
         });
     }
-});
+} ]);

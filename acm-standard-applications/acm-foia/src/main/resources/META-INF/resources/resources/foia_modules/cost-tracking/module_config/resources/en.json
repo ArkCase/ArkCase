@@ -85,8 +85,12 @@
             "due": "Due",
             "status": "Status",
             "priority": "Priority",
-            "created": "Created"
-        }
+            "created": "Created",
+            "fullName": "Full Name",
+            "userId":"ID"
+        },
+        "table.deadline.tooltip": "Deadline",
+        "table.overdue.tooltip": "Overdue"
     },
     "costTracking.comp.expenses": {
         "title": "Expenses",
@@ -165,5 +169,6 @@
             "nameDesc": "Sort By Costsheet Name",
             "noSort": "(No Sort)"
         }
-    }
+    },
+    "costTracking.comp.approvers.title": "Approvers"
 }

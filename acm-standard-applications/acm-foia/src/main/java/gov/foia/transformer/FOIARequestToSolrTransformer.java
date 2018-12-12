@@ -6,22 +6,22 @@ package gov.foia.transformer;
  * %%
  * Copyright (C) 2014 - 2018 ArkCase LLC
  * %%
- * This file is part of the ArkCase software. 
- * 
- * If the software was purchased under a paid ArkCase license, the terms of 
- * the paid license agreement will prevail.  Otherwise, the software is 
+ * This file is part of the ArkCase software.
+ *
+ * If the software was purchased under a paid ArkCase license, the terms of
+ * the paid license agreement will prevail.  Otherwise, the software is
  * provided under the following open source license terms:
- * 
+ *
  * ArkCase is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *  
+ *
  * ArkCase is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
  * #L%
@@ -36,6 +36,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.Map;
@@ -117,7 +118,7 @@ public class FOIARequestToSolrTransformer extends CaseFileToSolrTransformer
     {
         additionalProperties.put("object_sub_type_s", "FOIA_REQUEST");
 
-        additionalProperties.put("received_date_tdt", solrDateFromLocalDate(requestIn.getReceivedDate()));
+        additionalProperties.put("received_date_tdt", solrDateFromLocalDateTime(requestIn.getReceivedDate()));
         additionalProperties.put("final_reply_date_tdt", solrDateFromLocalDate(requestIn.getFinalReplyDate()));
         additionalProperties.put("scanned_date_tdt", solrDateFromLocalDate(requestIn.getScannedDate()));
         additionalProperties.put("expedite_flag_b", requestIn.getExpediteFlag());
@@ -157,8 +158,8 @@ public class FOIARequestToSolrTransformer extends CaseFileToSolrTransformer
 
         additionalProperties.put("queue_enter_date_tdt", solrDateFromLocalDate(requestIn.getQueueEnterDate()));
 
-        additionalProperties.put("record_search_date_from_tdt", solrDateFromLocalDate(requestIn.getRecordSearchDateFrom()));
-        additionalProperties.put("record_search_date_to_tdt", solrDateFromLocalDate(requestIn.getRecordSearchDateTo()));
+        additionalProperties.put("record_search_date_from_tdt", solrDateFromLocalDateTime(requestIn.getRecordSearchDateFrom()));
+        additionalProperties.put("record_search_date_to_tdt", solrDateFromLocalDateTime(requestIn.getRecordSearchDateTo()));
         additionalProperties.put("request_fee_waive_reason_s", requestIn.getRequestFeeWaiveReason());
         additionalProperties.put("request_expedite_reason_s", requestIn.getRequestExpediteReason());
         additionalProperties.put("pay_fee_s", requestIn.getPayFee());
@@ -168,6 +169,11 @@ public class FOIARequestToSolrTransformer extends CaseFileToSolrTransformer
     private Date solrDateFromLocalDate(LocalDate localDate)
     {
         return localDate == null ? null : Date.from(localDate.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
+    }
+
+    private Date solrDateFromLocalDateTime(LocalDateTime localDateTime)
+    {
+        return localDateTime == null ? null : Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
     }
 
 }

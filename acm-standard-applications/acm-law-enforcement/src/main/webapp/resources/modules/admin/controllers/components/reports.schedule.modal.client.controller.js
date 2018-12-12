@@ -1,7 +1,9 @@
 'use strict';
 
-angular.module('admin').controller('Admin.ReportsScheduleModalController',
-        [ '$scope', '$modalInstance', '$q', '$translate', 'LookupService', 'Admin.ScheduleReportService', 'MessageService', 'Util.DateService', 'UtilService', 'Admin.ReportsConfigService', function($scope, $modalInstance, $q, $translate, LookupService, ScheduleReportService, MessageService, UtilDateService, Util, ReportsConfigService) {
+angular.module('admin').controller(
+'Admin.ReportsScheduleModalController',
+[ '$scope', '$modalInstance', '$q', '$translate', 'LookupService', 'Admin.ScheduleReportService', 'MessageService', 'Util.DateService', 'UtilService', 'Admin.ReportsConfigService', 'params',
+        function($scope, $modalInstance, $q, $translate, LookupService, ScheduleReportService, MessageService, UtilDateService, Util, ReportsConfigService, params) {
 
             $scope.reportSchedule = {
                 reportFile: '',
@@ -14,6 +16,9 @@ angular.module('admin').controller('Admin.ReportsScheduleModalController',
                 outputFormat: '',
                 reportEmailAddresses: ''
             };
+
+            $scope.reportSchedule = angular.copy(params.reportSchedule);
+            $scope.isEdit = params.isEdit;
             // instantiate the promise to pull from acm-reports-server.config.properties
             var promiseServerConfig = LookupService.getConfig("acm-reports-server-config");
 
@@ -85,7 +90,8 @@ angular.module('admin').controller('Admin.ReportsScheduleModalController',
             $scope.saveNewScheduledReport = function() {
 
                 $modalInstance.close({
-                    reportSchedule: $scope.reportSchedule
+                    reportSchedule: $scope.reportSchedule,
+                    isEdit: $scope.isEdit
                 });
             };
 

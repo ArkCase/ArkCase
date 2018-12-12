@@ -132,6 +132,7 @@ angular.module('complaints').controller(
                             templateUrl: 'modules/complaints/views/components/complaint-close-complaint-modal.client.view.html',
                             controller: 'Complaints.CloseComplaintController',
                             size: 'lg',
+                            backdrop: 'static',
                             resolve: {
                                 modalParams: function() {
                                     return params;
@@ -147,6 +148,7 @@ angular.module('complaints').controller(
                             templateUrl: 'modules/complaints/views/components/complaint-new-complaint-modal.client.view.html',
                             controller: 'Complaints.NewComplaintController',
                             size: 'lg',
+                            backdrop: 'static',
                             resolve: {
                                 modalParams: function() {
                                     return params;

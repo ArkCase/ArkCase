@@ -110,10 +110,12 @@ public class AcmAuditRequestInterceptor extends HandlerInterceptorAdapter
         {
             eventProperties.put("QueryString", request.getQueryString());
         }
-        if (request.getRequestedSessionId() != null)
-        {
-            eventProperties.put("SessionId", request.getRequestedSessionId());
-        }
+
+        // Due to security concerns about session hijacking the sessionId should not be logged
+        // if (request.getRequestedSessionId() != null)
+        // {
+        // eventProperties.put("SessionId", request.getRequestedSessionId());
+        // }
 
         // headers
         if (isRequestsLoggingHeadersEnabled())

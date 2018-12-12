@@ -3,8 +3,8 @@
 angular.module('cases').controller(
         'Cases.NewCaseController',
         [ '$scope', '$stateParams', '$translate', '$modalInstance', 'Case.InfoService', 'Object.LookupService', 'MessageService', '$timeout', 'UtilService', '$modal', 'ConfigService', 'ObjectService', 'modalParams', 'Person.InfoService', 'Object.ModelService', 'Object.ParticipantService',
-                'Profile.UserInfoService',
-                function($scope, $stateParams, $translate, $modalInstance, CaseInfoService, ObjectLookupService, MessageService, $timeout, Util, $modal, ConfigService, ObjectService, modalParams, PersonInfoService, ObjectModelService, ObjectParticipantService, UserInfoService) {
+                'Profile.UserInfoService', 'Mentions.Service',
+                function($scope, $stateParams, $translate, $modalInstance, CaseInfoService, ObjectLookupService, MessageService, $timeout, Util, $modal, ConfigService, ObjectService, modalParams, PersonInfoService, ObjectModelService, ObjectParticipantService, UserInfoService, MentionsService) {
 
                     $scope.modalParams = modalParams;
                     $scope.loading = false;
@@ -41,6 +41,18 @@ angular.module('cases').controller(
 
                         return moduleConfig;
                     });
+
+                    // --------------  mention --------------
+                    $scope.params = {
+                        emailAddresses: [],
+                        usersMentioned: []
+                    };
+
+                    // ---------------------   mention   ---------------------------------
+                    $scope.paramsSummernote = {
+                        emailAddresses: [],
+                        usersMentioned: []
+                    };
 
                     if ($scope.isEdit) {
 
@@ -391,6 +403,8 @@ angular.module('cases').controller(
                             $scope.loadingIcon = "fa fa-circle-o-notch fa-spin";
                             CaseInfoService.saveCaseInfoNewCase(clearNotFilledElements(_.cloneDeep($scope.casefile))).then(function(objectInfo) {
                                 var objectTypeString = $translate.instant('common.objectTypes.' + ObjectService.ObjectTypes.CASE_FILE);
+                                MentionsService.sendEmailToMentionedUsers($scope.params.emailAddresses, $scope.params.usersMentioned, ObjectService.ObjectTypes.CASE_FILE, ObjectService.ObjectTypes.CASE_FILE, objectInfo.id, objectInfo.title);
+                                MentionsService.sendEmailToMentionedUsers($scope.paramsSummernote.emailAddresses, $scope.paramsSummernote.usersMentioned, ObjectService.ObjectTypes.CASE_FILE, "DETAILS", objectInfo.id, objectInfo.details);
                                 var caseCreatedMessage = $translate.instant('{{objectType}} {{caseTitle}} was created.', {
                                     objectType: objectTypeString,
                                     caseTitle: objectInfo.title
@@ -422,9 +436,11 @@ angular.module('cases').controller(
                                 promiseSaveInfo.then(function(caseInfo) {
                                     $scope.$emit("report-object-updated", caseInfo);
                                     var objectTypeString = $translate.instant('common.objectTypes.' + ObjectService.ObjectTypes.CASE_FILE);
+                                    MentionsService.sendEmailToMentionedUsers($scope.params.emailAddresses, $scope.params.usersMentioned, ObjectService.ObjectTypes.CASE_FILE, ObjectService.ObjectTypes.CASE_FILE, caseInfo.id, caseInfo.title);
+                                    MentionsService.sendEmailToMentionedUsers($scope.paramsSummernote.emailAddresses, $scope.paramsSummernote.usersMentioned, ObjectService.ObjectTypes.CASE_FILE, "DETAILS", caseInfo.id, caseInfo.details);
                                     var caseUpdatedMessage = $translate.instant('{{objectType}} {{caseTitle}} was updated.', {
                                         objectType: objectTypeString,
-                                        caseTitle: objectInfo.title
+                                        caseTitle: caseInfo.title
                                     });
                                     MessageService.info(caseUpdatedMessage);
                                     $modalInstance.dismiss();

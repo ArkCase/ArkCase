@@ -6,29 +6,29 @@ package gov.foia.model;
  * %%
  * Copyright (C) 2014 - 2018 ArkCase LLC
  * %%
- * This file is part of the ArkCase software. 
- * 
- * If the software was purchased under a paid ArkCase license, the terms of 
- * the paid license agreement will prevail.  Otherwise, the software is 
+ * This file is part of the ArkCase software.
+ *
+ * If the software was purchased under a paid ArkCase license, the terms of
+ * the paid license agreement will prevail.  Otherwise, the software is
  * provided under the following open source license terms:
- * 
+ *
  * ArkCase is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *  
+ *
  * ArkCase is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
  * #L%
  */
 
 import java.io.Serializable;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -74,9 +74,9 @@ public class PortalFOIARequest implements Serializable
 
     private String subject;
 
-    private LocalDate recordSearchDateFrom;
+    private LocalDateTime recordSearchDateFrom;
 
-    private LocalDate recordSearchDateTo;
+    private LocalDateTime recordSearchDateTo;
 
     private double processingFeeWaive;
 
@@ -375,7 +375,7 @@ public class PortalFOIARequest implements Serializable
     /**
      * @return the recordSearchDateFrom
      */
-    public LocalDate getRecordSearchDateFrom()
+    public LocalDateTime getRecordSearchDateFrom()
     {
         return recordSearchDateFrom;
     }
@@ -384,7 +384,7 @@ public class PortalFOIARequest implements Serializable
      * @param recordSearchDateFrom
      *            the recordSearchDateFrom to set
      */
-    public void setRecordSearchDateFrom(LocalDate recordSearchDateFrom)
+    public void setRecordSearchDateFrom(LocalDateTime recordSearchDateFrom)
     {
         this.recordSearchDateFrom = recordSearchDateFrom;
     }
@@ -392,7 +392,7 @@ public class PortalFOIARequest implements Serializable
     /**
      * @return the recordSearchDateTo
      */
-    public LocalDate getRecordSearchDateTo()
+    public LocalDateTime getRecordSearchDateTo()
     {
         return recordSearchDateTo;
     }
@@ -401,7 +401,7 @@ public class PortalFOIARequest implements Serializable
      * @param recordSearchDateTo
      *            the recordSearchDateTo to set
      */
-    public void setRecordSearchDateTo(LocalDate recordSearchDateTo)
+    public void setRecordSearchDateTo(LocalDateTime recordSearchDateTo)
     {
         this.recordSearchDateTo = recordSearchDateTo;
     }

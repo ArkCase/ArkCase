@@ -330,7 +330,8 @@ public class ConfigLookupDao implements LookupDao
             }
             else
             {
-                throw new AcmResourceNotModifiableException("Entries can't be reached");
+                throw new AcmResourceNotModifiableException(
+                        String.format("Entries can't be reached for key %s", protectedMainEntry.getKey()));
             }
             for (StandardLookupEntry protectedSubEntry : protectedSubEntries)
             {

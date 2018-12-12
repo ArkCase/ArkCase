@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-		http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/spring-integration.xsd"
-    xmlns:int="http://www.springframework.org/schema/integration">
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:int="http://www.springframework.org/schema/integration"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/spring-integration.xsd">
 
     <int:channel id="complaintFilteredMailChannel"/>
 
@@ -22,8 +23,31 @@
 
     <int:service-activator input-channel="complaintFilteredMailChannel" ref="complaintMailHandler" method="handle"/>
 
-    <int:chain input-channel="mailChannel" output-channel="complaintFilteredMailChannel">
+    <int:chain input-channel="mailChannelComplaint" output-channel="complaintFilteredMailChannel">
         <int:filter ref="complaintMailFilter" throw-exception-on-rejection="false" method="accept"/>
     </int:chain>
 
+
+    <!-- Create new Complaint from incoming mail -->
+    <bean id="newComplaintMailFilter" class="com.armedia.acm.services.email.filter.ComplaintFilePatternMailFilter">
+        <constructor-arg index="0" value=""/>
+        <constructor-arg index="1" value="${complaint.email.regex.object_type}"/>
+    </bean>
+
+    <bean id="newComplaintMailHandler" class="com.armedia.acm.plugins.complaint.email.NewComplaintMailHandler"
+          parent="complaintMailHandler" init-method="initBean">
+        <property name="objectTypeRegexPattern" value="${complaint.email.regex.object_type}"/>
+        <property name="saveComplaintTransaction" ref="saveComplaintTransaction"/>
+        <property name="lookupDao" ref="lookupDao"/>
+        <property name="emailReceiverPropertiesFile"
+                  value="#{ systemProperties ['user.home'] }/.arkcase/acm/acmEmailReceiver.properties"/>
+        <property name="propertyFileManager" ref="propertyFileManager"/>
+        <property name="complaintDao" ref="acmComplaintDao"/>
+    </bean>
+
+    <int:service-activator input-channel="newComplaintFilteredMailChannel" ref="newComplaintMailHandler" method="handle"/>
+
+    <int:chain input-channel="mailChannelComplaint" output-channel="newComplaintFilteredMailChannel">
+        <int:filter ref="newComplaintMailFilter" throw-exception-on-rejection="false" method="accept"/>
+    </int:chain>
 </beans>

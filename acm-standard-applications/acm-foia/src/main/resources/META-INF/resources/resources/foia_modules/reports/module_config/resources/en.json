@@ -8,6 +8,10 @@
             "label": "Report",
             "placeholder": "Select Report"
         },
+        "selectState": {
+            "label": "State",
+            "placeholder": "Select State"
+        },
         "selectType": {
             "label": "Type",
             "placeholder": "Select Type"
