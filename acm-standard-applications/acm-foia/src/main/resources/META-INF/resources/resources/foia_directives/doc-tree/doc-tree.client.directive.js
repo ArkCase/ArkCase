@@ -105,11 +105,23 @@ angular
             'Helper.LocaleService',
             'PublicFlag.Service',
             'MessageService',
+            'Object.LookupService',
             '$timeout',
             function($q, $translate, $modal, $filter, $log, $injector, Store, Util, UtilDateService, ConfigService,
-            PluginService, UserInfoService, Ecm, EmailSenderConfigurationService, LocaleHelper, PublicFlagService, MessageService, $timeout) {
+            PluginService, UserInfoService, Ecm, EmailSenderConfigurationService, LocaleHelper, PublicFlagService, MessageService, ObjectLookupService, $timeout) {
                 var cacheTree = new Store.CacheFifo();
                 var cacheFolderList = new Store.CacheFifo();
+
+                var reviewStatuses = [];
+                var redactionStatuses = [];
+
+                ObjectLookupService.getLookupByLookupName("documentReviewStatuses").then(function(documentReviewStatuses) {
+                    reviewStatuses = documentReviewStatuses;
+                });
+
+                ObjectLookupService.getLookupByLookupName("documentRedactionStatuses").then(function(documentRedactionStatuses) {
+                    redactionStatuses = documentRedactionStatuses;
+                });
 
                 var DocTree = {
                     CLIPBOARD : null
@@ -1287,6 +1299,56 @@ angular
                                                 $(element).text(Util.goodMapValue(userInfo, "fullName"));
                                             })
                                         }
+                                    }
+                                },
+                                {
+                                    name : "reviewStatus",
+                                    renderer : function(element, node, columnDef, isReadOnly) {
+                                        var $td = $("<td/>");
+                                        var $span = $("<span/>").appendTo($td);
+                                        var $select = $("<select/>").addClass('reviewstatus inline').appendTo($span);
+
+                                        if (Util.isArray(reviewStatuses)) {
+                                            for(var z = 0; z < reviewStatuses.length; z++) {
+                                                var key = reviewStatuses[z].key;
+                                                var value = $translate.instant(reviewStatuses[z].value);
+
+                                                var $option = $("<option/>").val(key).text(value).appendTo($select);
+
+                                                if (Util.goodValue(node.data.reviewStatus) == value) {
+                                                    $option.attr("selected", true);
+                                                }
+                                            }
+                                        }
+                                        $(element).replaceWith($td);
+
+                                        var jqTreeBody = DocTree.jqTree.find("tbody");
+                                        jqTreeBody.on("change", "select.reviewstatus", DocTree.onChangeReviewStatus);
+                                    }
+                                },
+                                {
+                                    name : "redactionStatus",
+                                    renderer : function(element, node, columnDef, isReadOnly) {
+                                        var $td = $("<td/>");
+                                        var $span = $("<span/>").appendTo($td);
+                                        var $select = $("<select/>").addClass('redactionstatus inline').appendTo($span);
+
+                                        if (Util.isArray(redactionStatuses)) {
+                                            for(var z = 0; z < redactionStatuses.length; z++) {
+                                                var key = redactionStatuses[z].key;
+                                                var value = $translate.instant(redactionStatuses[z].value);
+
+                                                var $option = $("<option/>").val(key).text(value).appendTo($select);
+
+                                                if (Util.goodValue(node.data.redactionStatus) == value) {
+                                                    $option.attr("selected", true);
+                                                }
+                                            }
+                                        }
+                                        $(element).replaceWith($td);
+
+                                        var jqTreeBody = DocTree.jqTree.find("tbody");
+                                        jqTreeBody.on("change", "select.redactionstatus", DocTree.onChangeRedactionStatus);
                                     }
                                 },
                                 {
@@ -3684,6 +3746,8 @@ angular
                             nodeData.data.version = Util.goodValue(fileData.version);
                             nodeData.data.lock = Util.goodValue(fileData.lock);
                             nodeData.data.modifier = Util.goodValue(fileData.modifier);
+                            nodeData.data.reviewStatus = Util.goodValue(fileData.reviewStatus);
+                            nodeData.data.redactionStatus = Util.goodValue(fileData.redactionStatus);
                             if (Util.isArray(fileData.versionList)) {
                                 nodeData.data.versionList = [];
                                 for (var i = 0; i < fileData.versionList.length; i++) {
@@ -3841,6 +3905,52 @@ angular
                     }
 
                     ,
+                    _changeDocumentReviewRedactionStatus: function(node, statusType, statusValue) {
+                        $(node.tr).find("select.reviewstatus").prop('disabled', true);
+                        $(node.tr).find("select.redactionstatus").prop('disabled', true);
+
+                        Ecm.getFile({
+                            fileId: node.data.objectId
+                        }).$promise.then(function(file) {
+                            var ecmFile = file;
+                            if(statusType === "review") {
+                                ecmFile.reviewStatus = statusValue;
+                            }
+                            else if(statusType === "redaction") {
+                                ecmFile.redactionStatus = statusValue;
+                            }
+
+                            Util.serviceCall({
+                                service: Ecm.updateFile,
+                                param: {
+                                    fileId: node.data.objectId
+                                },
+                                data: JSOG.encode(Util.omitNg(ecmFile))
+                            }).then(function(data) {
+                                MessageService.succsessAction();
+
+                                $(node.tr).find("select.reviewstatus").prop('disabled', false);
+                                $(node.tr).find("select.redactionstatus").prop('disabled', false);
+
+                                return data;
+                            }, function(error) {
+                                MessageService.errorAction();
+
+                                $(node.tr).find("select.reviewstatus").prop('disabled', false);
+                                $(node.tr).find("select.redactionstatus").prop('disabled', false);
+
+                                return error;
+                            });
+
+                        }, function (reason) {
+                            MessageService.errorAction();
+
+                            $(node.tr).find("select.reviewstatus").prop('disabled', false);
+                            $(node.tr).find("select.redactionstatus").prop('disabled', false);
+                        });
+                    }
+
+                    ,
                     onViewChangedParent : function(objType, objId) {
                         DocTree.switchObject(objType, objId);
                     }
@@ -3876,6 +3986,30 @@ angular
                     //
                     // This prevent going to detail page when user checking version drop down too fast
                     //
+                    ,
+                    onChangeReviewStatus : function (event) {
+                        var node = DocTree.tree.getActiveNode();
+                        if (node) {
+                            var currentReviewStatus = node.data.reviewStatus;
+                            var selectedReviewStatus = Ui.getSelectValue($(this));
+                            if(currentReviewStatus !== selectedReviewStatus) {
+                                DocTree._changeDocumentReviewRedactionStatus(node, "review", selectedReviewStatus);
+                            }
+                        }
+                    }
+
+                    ,
+                    onChangeRedactionStatus : function (event) {
+                        var node = DocTree.tree.getActiveNode();
+                        if (node) {
+                            var currentRedactionStatus = node.data.redactionStatus;
+                            var selectedRedactionStatus = Ui.getSelectValue($(this));
+                            if(currentRedactionStatus !== selectedRedactionStatus) {
+                                DocTree._changeDocumentReviewRedactionStatus(node, "redaction", selectedRedactionStatus);
+                            }
+                        }
+                    }
+
                     ,
                     onDblClickVersion : function(event, data) {
                         event.stopPropagation();
