@@ -496,6 +496,7 @@ angular.module('directives').directive(
                                 var modalInstance = $modal.open({
                                     scope: modalScope,
                                     animation: true,
+                                    backdrop: 'static',
                                     templateUrl: 'directives/core-people/core-people-modal.client.view.html',
                                     controller: [ '$scope', '$modalInstance', function($scope, $modalInstance) {
                                         $scope.onClickOk = function() {
@@ -535,6 +536,7 @@ angular.module('directives').directive(
                                 var modalInstance = $modal.open({
                                     scope: modalScope,
                                     animation: true,
+                                    backdrop: 'static',
                                     templateUrl: 'directives/core-people/core-people-contact-methods-modal.client.view.html',
                                     controller: [ '$scope', '$modalInstance', function($scope, $modalInstance) {
                                         $scope.onClickOk = function() {

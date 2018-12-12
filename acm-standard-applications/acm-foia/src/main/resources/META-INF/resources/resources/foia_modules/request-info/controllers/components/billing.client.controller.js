@@ -87,6 +87,7 @@ angular.module('cases').controller('RequestInfo.BillingController', ['$scope', '
                         templateUrl: 'modules/cases/views/components/case-billing-modal.client.view.html',
                         controller: 'Cases.BillingModalController',
                         size: 'lg',
+                        backdrop: 'static',
                         resolve: {
                             params: function() {
                                 return params;
