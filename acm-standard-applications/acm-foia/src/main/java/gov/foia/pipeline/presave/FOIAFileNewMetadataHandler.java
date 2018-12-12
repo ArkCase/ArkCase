@@ -119,6 +119,8 @@ public class FOIAFileNewMetadataHandler extends EcmFileNewMetadataHandler
             {
                 getArkCaseBeanUtils().copyProperties(fileMetadata, entity);
                 fileMetadata.setPublicFlag(false);
+                fileMetadata.setReviewStatus(new String());
+                fileMetadata.setRedactionStatus(new String());
             }
             catch (IllegalAccessException | InvocationTargetException e)
             {

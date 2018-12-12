@@ -890,6 +890,10 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
 
         object.setStatus(getSearchResults().extractString(doc, SearchConstants.PROPERTY_STATUS));
 
+        object.setReviewStatus(getSearchResults().extractString(doc, SearchConstants.PROPERTY_REVIEW_STATUS));
+
+        object.setRedactionStatus(getSearchResults().extractString(doc, SearchConstants.PROPERTY_REDACTION_STATUS));
+
         if (object.getObjectType().equals(EcmFileConstants.FILE))
         {
             EcmFile file = getEcmFileDao().find(object.getObjectId());

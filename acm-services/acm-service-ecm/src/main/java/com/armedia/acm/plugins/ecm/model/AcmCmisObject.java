@@ -57,6 +57,8 @@ public class AcmCmisObject implements Serializable
     private Integer pageCount;
     private AcmObjectLock lock;
     private String ext;
+    private String reviewStatus;
+    private String redactionStatus;
 
     public Long getObjectId()
     {
@@ -226,5 +228,23 @@ public class AcmCmisObject implements Serializable
     public void setExt(String ext)
     {
         this.ext = ext;
+    }
+
+    public String getReviewStatus()
+    {
+        return reviewStatus;
+    }
+
+    public void setReviewStatus(String reviewStatus)
+    {
+        this.reviewStatus = reviewStatus;
+    }
+
+    public String getRedactionStatus() {
+        return redactionStatus;
+    }
+
+    public void setRedactionStatus(String redactionStatus) {
+        this.redactionStatus = redactionStatus;
     }
 }

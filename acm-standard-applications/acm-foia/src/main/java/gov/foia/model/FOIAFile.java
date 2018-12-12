@@ -62,6 +62,12 @@ public class FOIAFile extends EcmFile
     @Convert(converter = BooleanToStringConverter.class)
     private Boolean publicFlag;
 
+    @Column(name = "fo_review_status")
+    private String reviewStatus;
+
+    @Column(name = "fo_redaction_status")
+    private String redactionStatus;
+
     /**
      * @return the exemptionCodes
      */
@@ -87,5 +93,25 @@ public class FOIAFile extends EcmFile
     public void setPublicFlag(Boolean publicFlag)
     {
         this.publicFlag = publicFlag;
+    }
+
+    public String getReviewStatus()
+    {
+        return reviewStatus;
+    }
+
+    public void setReviewStatus(String reviewStatus)
+    {
+        this.reviewStatus = reviewStatus;
+    }
+
+    public String getRedactionStatus()
+    {
+        return redactionStatus;
+    }
+
+    public void setRedactionStatus(String redactionStatus)
+    {
+        this.redactionStatus = redactionStatus;
     }
 }
