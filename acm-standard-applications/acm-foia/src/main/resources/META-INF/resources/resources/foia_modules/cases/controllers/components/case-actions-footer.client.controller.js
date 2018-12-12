@@ -130,7 +130,8 @@ angular.module('cases').controller('Cases.ActionsFooterController',
                 animation: $scope.animationsEnabled,
                 templateUrl: 'modules/cases/views/components/delete-comment-modal.client.view.html',
                 controller: 'Cases.DeleteCommentModalController',
-                size: 'lg'
+                size: 'lg',
+                backdrop: 'static'
             });
 
             modalInstance.result.then(function(deleteComment) {
@@ -156,7 +157,8 @@ angular.module('cases').controller('Cases.ActionsFooterController',
                 animation: $scope.animationsEnabled,
                 templateUrl: 'modules/cases/views/components/return-reason-modal.client.view.html',
                 controller: 'Cases.ReturnReasonModalController',
-                size: 'lg'
+                size: 'lg',
+                backdrop: 'static'
             });
 
             modalInstance.result.then(function(returnReason) {

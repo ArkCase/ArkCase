@@ -222,7 +222,8 @@ angular.module('cases').controller(
                             animation: false,
                             templateUrl: 'modules/common/views/multi-correspondence.modal.client.view.html',
                             controller: 'Common.MultiCorrespondenceModalController',
-                            size: 'lg'
+                            size: 'lg',
+                            backdrop: 'static'
                         });
 
                         modalInstance.result.then(function(modalResult) {
