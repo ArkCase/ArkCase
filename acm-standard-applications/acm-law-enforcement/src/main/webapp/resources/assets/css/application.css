@@ -1651,10 +1651,6 @@ a.primary {
 }
 
 /*Css style for scrolling issue on modal*/
-.form-overflow-scroll {
-    overflow-y: auto !important;
-}
-
 .pdfjs .toolbar {
     z-index: 1048 !important;
 }
@@ -1730,7 +1726,7 @@ a.primary {
     left: 10%;
 }
 
-.popup-move-on-left > .editable + .form-inline {
+.popup-move-on-left > .editable + .form-inline{
     right: 20%;
 }
 
@@ -1741,7 +1737,6 @@ a.primary {
 .popup-move-on-left > .editable + .form-inline:after {
     left: 50%;
 }
-
 .disabledLink {
     color: #788288 !important;
     cursor: auto;
@@ -1792,3 +1787,4 @@ a.primary {
 .remove-margin-bottom-from-summernote > .panel {
     margin-bottom: 0px;
 }
+
