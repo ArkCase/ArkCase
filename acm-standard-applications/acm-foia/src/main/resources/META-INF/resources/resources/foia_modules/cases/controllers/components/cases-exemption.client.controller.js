@@ -112,7 +112,8 @@ angular.module('cases').controller('Cases.ExemptionController',
                 $modal.open({
                     size: 'lg',
                     templateUrl: 'modules/cases/views/components/case-exemption-codes-description-modal.client.view.html',
-                    controller: 'Cases.ExemptionCodesDescriptionModalController'
+                    controller: 'Cases.ExemptionCodesDescriptionModalController',
+                    backdrop: 'static'
                 })
             }
         } ]);

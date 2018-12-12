@@ -661,7 +661,8 @@ angular.module('request-info').controller(
                             animation: $scope.animationsEnabled,
                             templateUrl: 'modules/request-info/views/components/return-reason-modal.client.view.html',
                             controller: 'RequestInfo.ReturnReasonModalController',
-                            size: 'lg'
+                            size: 'lg',
+                            backdrop: 'static'
                         });
 
                         modalInstance.result.then(function(returnReason) {
@@ -688,7 +689,8 @@ angular.module('request-info').controller(
                             animation: $scope.animationsEnabled,
                             templateUrl: 'modules/request-info/views/components/delete-comment-modal.client.view.html',
                             controller: 'RequestInfo.DeleteCommentModalController',
-                            size: 'lg'
+                            size: 'lg',
+                            backdrop: 'static'
                         });
 
                         modalInstance.result.then(function(deleteComment) {
