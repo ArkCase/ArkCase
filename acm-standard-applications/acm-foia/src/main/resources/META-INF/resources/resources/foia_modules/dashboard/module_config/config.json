@@ -255,7 +255,7 @@
                 {
                     "field": "alerts",
                     "displayName": "",
-                    "cellTemplate": "<div><a tooltip=\"{{'dashboard.widgets.myOverdueCase.table.overdue.tooltip' | translate}}\" tooltip-append-to-body=\"true\" tooltip-class=\"tooltip-overdue\"><i class=\"fa fa-exclamation-circle icon-overdue\"></i></a></div>",
+                    "cellTemplate": "<div><a tooltip=\"{{'dashboard.widgets.myOverdueCases.table.overdue.tooltip' | translate}}\" tooltip-append-to-body=\"true\" tooltip-class=\"tooltip-overdue\"><i class=\"fa fa-exclamation-circle icon-overdue\"></i></a></div>",
                     "width": 40,
                     "enableSorting": false,
                     "enableColumnMenu": false
@@ -271,7 +271,7 @@
                     "name": "object_id_s",
                     "type": "number",
                     "displayName": "dashboard.widgets.myOverdueCases.uniqueId",
-                    "cellTemplate": "<a href='#' ng-click='grid.appScope.myOverdueCase.onTopicClick(row)'>{{row.entity.object_id_s}}</a>",
+                    "cellTemplate": "<a href='#' ng-click='grid.appScope.myOverdueCases.onTopicClick(row)'>{{row.entity.object_id_s}}</a>",
                     "headerCellFilter": "translate",
                     "enableSorting": true
                 },
