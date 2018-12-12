@@ -38,6 +38,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 
 import java.util.List;
 
@@ -58,26 +61,19 @@ public class AcmCostsheetDao extends AcmAbstractDao<AcmCostsheet>
 
     public List<AcmCostsheet> findByObjectIdAndType(Long objectId, String objectType, int startRow, int maxRows, String sortParams)
     {
-        String orderByQuery = "";
+        CriteriaBuilder builder = getEm().getCriteriaBuilder();
+        CriteriaQuery<AcmCostsheet> criteriaQuery = builder.createQuery(AcmCostsheet.class);
+        Root<AcmCostsheet> costsheetRoot = criteriaQuery.from(AcmCostsheet.class);
+        criteriaQuery.select(costsheetRoot).where(
+                builder.and(
+                        builder.equal(costsheetRoot.<Long> get("parentId"), objectId),
+                        builder.equal(costsheetRoot.<Long> get("parentType"), objectType)));
         if (sortParams != null && !"".equals(sortParams))
         {
-            orderByQuery = " ORDER BY costsheet." + sortParams;
+            criteriaQuery.orderBy(builder.asc(costsheetRoot.get(sortParams)));
         }
-
-        TypedQuery<AcmCostsheet> selectQuery = getEm().createQuery("SELECT costsheet "
-                + "FROM AcmCostsheet costsheet "
-                + "WHERE costsheet.parentId = :parentId "
-                + "AND costsheet.parentType = :parentType "
-                + orderByQuery, AcmCostsheet.class);
-
-        selectQuery.setParameter("parentId", objectId);
-        selectQuery.setParameter("parentType", objectType);
-        selectQuery.setFirstResult(startRow);
-        selectQuery.setMaxResults(maxRows);
-
-        List<AcmCostsheet> costsheets = selectQuery.getResultList();
-
-        return costsheets;
+        TypedQuery<AcmCostsheet> query = getEm().createQuery(criteriaQuery);
+        return query.getResultList();
     }
 
     @Override

@@ -41,6 +41,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.Base64;
 import java.util.List;
 import java.util.Map;
 
@@ -73,6 +74,7 @@ public class SaveApplicationRolesToGroupsAPIController
     public boolean addGroupsToApplicationRole(@PathVariable(value = "roleName") String roleName, @RequestBody List<String> groups,
             Authentication auth) throws AcmEncryptionException
     {
+        roleName = new String(Base64.getUrlDecoder().decode(roleName.getBytes()));
         LOG.debug("Adding groups to an application role [{}]", roleName);
 
         boolean retval = getFunctionalAccessService().saveGroupsToApplicationRole(groups, roleName, auth);
@@ -87,6 +89,8 @@ public class SaveApplicationRolesToGroupsAPIController
     public boolean deleteGroupsFromApplicationRole(@PathVariable(value = "roleName") String roleName, @RequestBody List<String> groups,
             Authentication auth)
     {
+        roleName = new String(Base64.getUrlDecoder().decode(roleName.getBytes()));
+
         LOG.debug("Deleting groups from an application role [{}]", roleName);
 
         boolean retval = getFunctionalAccessService().removeGroupsToApplicationRole(groups, roleName, auth);

@@ -37,6 +37,8 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import com.armedia.acm.plugins.ecm.dao.AcmContainerDao;
+import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.task.exception.AcmTaskException;
 import com.armedia.acm.plugins.task.model.AcmApplicationTaskEvent;
 import com.armedia.acm.plugins.task.model.AcmTask;
@@ -118,6 +120,9 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
     private FormValue mockFormValue;
     private TaskEventPublisher mockTaskEventPublisher;
 
+    private AcmContainerDao mockAcmContainerDao;
+    private AcmContainer mockAcmContainer;
+
     @Before
     public void setUp() throws Exception
     {
@@ -147,6 +152,8 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         mockHistoricProcessInstanceQuery = createMock(HistoricProcessInstanceQuery.class);
         mockHistoricVariableInstanceQuery = createMock(HistoricVariableInstanceQuery.class);
         mockHistoricVariableInstance = createMock(HistoricVariableInstance.class);
+        mockAcmContainerDao = createMock(AcmContainerDao.class);
+        mockAcmContainer = createMock(AcmContainer.class);
         unit = new ActivitiTaskDao();
 
         Map<String, Integer> acmPriorityToActivitiPriority = new HashMap<>();
@@ -162,6 +169,9 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         unit.setPriorityLevelToNumberMap(acmPriorityToActivitiPriority);
         unit.setRequiredFieldsPerOutcomeMap(new HashMap<>());
         unit.setTaskEventPublisher(mockTaskEventPublisher);
+        unit.setContainerFolderDao(mockAcmContainerDao);
+
+        //
     }
 
     @Test
@@ -292,6 +302,8 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         String objectName = "objectName";
         String deleteReason = "CLOSED";
 
+        String objectTypeTask = "TASK";
+
         Map<String, Object> pvars = new HashMap<>();
         pvars.put("OBJECT_ID", objectId);
         pvars.put("OBJECT_TYPE", objectType);
@@ -359,6 +371,7 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         expect(mockFormValue.getId()).andReturn("formValueId").atLeastOnce();
         expect(mockFormValue.getName()).andReturn("formValueName").atLeastOnce();
         expect(mockParticipantDao.findParticipantsForObject("TASK", taskId)).andReturn(partList);
+        expect(mockAcmContainerDao.findByObjectTypeAndIdOrCreate(objectTypeTask, taskId, null, title)).andReturn(mockAcmContainer);
 
         mockDataAccessPrivilegeListener.applyAssignmentAndAccessRules(EasyMock.anyObject(AcmTask.class));
         EasyMock.expectLastCall();
@@ -400,6 +413,7 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         String objectType = "objectType";
         String deleteReason = null;
 
+        String objectTypeTask = "TASK";
         Map<String, Object> pvars = new HashMap<>();
         pvars.put("OBJECT_ID", objectId);
         pvars.put("OBJECT_TYPE", objectType);
@@ -466,6 +480,7 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         expect(mockFormValue.getId()).andReturn("formValueId").atLeastOnce();
         expect(mockFormValue.getName()).andReturn("formValueName").atLeastOnce();
         expect(mockParticipantDao.findParticipantsForObject("TASK", taskId)).andReturn(partList);
+        expect(mockAcmContainerDao.findByObjectTypeAndIdOrCreate(objectTypeTask, taskId, null, title)).andReturn(mockAcmContainer);
 
         mockDataAccessPrivilegeListener.applyAssignmentAndAccessRules(EasyMock.anyObject(AcmTask.class));
         EasyMock.expectLastCall();
@@ -506,6 +521,8 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         String objectType = "objectType";
         String objectName = "objectName";
 
+        String objectTypeTask = "TASK";
+
         Map<String, Object> pvars = new HashMap<>();
         pvars.put("OBJECT_ID", objectId);
         pvars.put("OBJECT_TYPE", objectType);
@@ -538,6 +555,7 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         expect(mockTask.getCreateTime()).andReturn(null);
         expect(mockTask.getOwner()).andReturn(user);
         expect(mockTask.getProcessInstanceId()).andReturn("250").atLeastOnce();
+        expect(mockAcmContainerDao.findByObjectTypeAndIdOrCreate(objectTypeTask, taskId, null, title)).andReturn(mockAcmContainer);
 
         // find the candidate group
         expect(mockTaskService.getIdentityLinksForTask(String.valueOf(taskId))).andReturn(new ArrayList<>());
@@ -604,6 +622,8 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         String processName = "processName";
         String candidateGroup = "grateful dead";
 
+        String objectTypeTask = "TASK";
+
         Long objectId = 250L;
         String objectType = "objectType";
         String objectName = "objectName";
@@ -662,6 +682,7 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         expect(mockFormValue.getId()).andReturn("formValueId").atLeastOnce();
         expect(mockFormValue.getName()).andReturn("formValueName").atLeastOnce();
         expect(mockParticipantDao.findParticipantsForObject("TASK", taskId)).andReturn(partList);
+        expect(mockAcmContainerDao.findByObjectTypeAndIdOrCreate(objectTypeTask, taskId, null, title)).andReturn(mockAcmContainer);
 
         replayAll();
 
@@ -861,6 +882,8 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         String processId = "processId";
         String processName = "processName";
 
+        String objectTypeTask = "TASK";
+
         Long objectId = 250L;
         String objectType = "objectType";
         String objectName = "objectName";
@@ -900,6 +923,7 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         expect(mockTask.getCreateTime()).andReturn(null);
         expect(mockTask.getOwner()).andReturn(user);
         expect(mockTask.getProcessInstanceId()).andReturn("250").atLeastOnce();
+        expect(mockAcmContainerDao.findByObjectTypeAndIdOrCreate(objectTypeTask, taskId, null, title)).andReturn(mockAcmContainer);
 
         expect(mockRepositoryService.createProcessDefinitionQuery()).andReturn(mockProcessDefinitionQuery);
         expect(mockProcessDefinitionQuery.processDefinitionId(processId)).andReturn(mockProcessDefinitionQuery);
@@ -1126,6 +1150,8 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         Map<String, Object> pVars = new HashMap<>();
         Map<String, Object> taskLocalVars = new HashMap<>();
 
+        String objectTypeTask = "TASK";
+        String title = "Test title";
         Task task = new TaskEntity(taskId.toString());
 
         pVars.put("reviewers", Arrays.asList("jerry", "bob", "mickey"));
@@ -1174,6 +1200,7 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         expect(mockFormValue.getName()).andReturn("formValueName").atLeastOnce();
         expect(mockTaskService.getIdentityLinksForTask(task.getId())).andReturn(new ArrayList<>());
         expect(mockParticipantDao.findParticipantsForObject("TASK", taskId)).andReturn(partList);
+        expect(mockAcmContainerDao.findByObjectTypeAndIdOrCreate(objectTypeTask, taskId, null, title)).andReturn(mockAcmContainer);
 
         replayAll();
 

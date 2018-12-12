@@ -19,22 +19,22 @@ package com.armedia.acm.proxy.http;
  * %%
  * Copyright (C) 2014 - 2018 ArkCase LLC
  * %%
- * This file is part of the ArkCase software. 
- * 
- * If the software was purchased under a paid ArkCase license, the terms of 
- * the paid license agreement will prevail.  Otherwise, the software is 
+ * This file is part of the ArkCase software.
+ *
+ * If the software was purchased under a paid ArkCase license, the terms of
+ * the paid license agreement will prevail.  Otherwise, the software is
  * provided under the following open source license terms:
- * 
+ *
  * ArkCase is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *  
+ *
  * ArkCase is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
  * #L%
@@ -196,19 +196,18 @@ public class ProxyServlet extends HttpServlet
     protected static final HeaderGroup hopByHopHeaders;
     protected static final BitSet asciiQueryChars;
 
-    private static final String[] headers = new String[] {
-            "Connection",
-            "Keep-Alive",
-            "Proxy-Authenticate",
-            "Proxy-Authorization",
-            "TE",
-            "Trailers",
-            "Transfer-Encoding",
-            "Upgrade" };
-
     static
     {
         hopByHopHeaders = new HeaderGroup();
+        final String[] headers = new String[] {
+                "Connection",
+                "Keep-Alive",
+                "Proxy-Authenticate",
+                "Proxy-Authorization",
+                "TE",
+                "Trailers",
+                "Transfer-Encoding",
+                "Upgrade" };
         for (final String header : headers)
         {
             hopByHopHeaders.addHeader(new BasicHeader(header, null));
@@ -219,13 +218,11 @@ public class ProxyServlet extends HttpServlet
     {
         asciiQueryChars = new BitSet(128);
 
-        "_-!.~'()*".chars().forEach(asciiQueryChars::set);
-        ",;:$&+=".chars().forEach(asciiQueryChars::set);
-        "?/[]@".chars().forEach(asciiQueryChars::set);
-
         IntStream.rangeClosed('a', 'z').forEach(asciiQueryChars::set);
         IntStream.rangeClosed('A', 'Z').forEach(asciiQueryChars::set);
         IntStream.rangeClosed('0', '9').forEach(asciiQueryChars::set);
+
+        "_-!.~'()*,;:$&+=?/[]@".chars().forEach(asciiQueryChars::set);
 
         asciiQueryChars.set('%');// leave existing percent escapes in place
     }
@@ -237,49 +234,52 @@ public class ProxyServlet extends HttpServlet
     /**
      * List containing urls which need to be matched for rewriting strings in the content.
      */
-    protected static List<String> responseUrlMatchers;
+    protected final List<String> responseUrlMatchers = new ArrayList<>();
 
     /* MISC */
     /**
      * List containing content types which needs to be skipped for processing
      */
-    protected static List<String> skipResponseContentTypes;
+    protected final List<String> skipResponseContentTypes = new ArrayList<>();
     /**
      * List containing patterns for urls which need to be skipped
      */
-    protected static List<String> skipResponseUrlMatchers = null;
+    protected final List<String> skipResponseUrlMatchers = new ArrayList<>();
     /**
      * List containing patterns and parameters for urls which need to be added
      */
-    private static List<String> appendUrlParams = null;
+    protected final List<String> appendUrlParams = new ArrayList<>();
     /**
      * List containing patterns and additional headers for urls which need to be added
      */
-    private static List<String> additionalHeaders = null;
+    protected final List<String> additionalHeaders = new ArrayList<>();
 
     // These next 3 are cached here, and should only be referred to in initialization logic. See the
     // ATTR_* parameters.
-    protected static boolean doForwardIP = true;
     /**
      * User agents shouldn't send the url fragment but what if it does?
      */
-    protected static boolean doPreserveHost = false;
-    protected static boolean doPreserveCookies = false;
+    protected final boolean doSendUrlFragment = true;
     /**
      * From the configured parameter "targetUri".
      */
-    protected static String targetUri;
-    protected static URI targetUriObj;// new URI(targetUri)
-    protected static HttpHost targetHost;// URIUtils.extractHost(targetUriObj);
     /**
      * Patterns and replacements for replacing String in the response content
      */
-    private static List<String> responseContentRewritePairs;
+    private final List<String> responseContentRewritePairs = new ArrayList<>();
     /**
      * container for compiled pattern for further reuse
      */
-    private static Map<String, Pattern> compiledPatterns = new HashMap<>();
-    private static HttpClient proxyClient;
+    private final Map<String, Pattern> compiledPatterns = new HashMap<>();
+
+    protected final Map<String, Object> mutableInstanceFields = new HashMap<>();
+
+    private void sonarProblemMapIntializer()
+    {
+        mutableInstanceFields.put("doForwardIP", true);
+        mutableInstanceFields.put("doPreserveHost", false);
+        mutableInstanceFields.put("doPreserveCookies", false);
+    }
 
     /**
      * Encodes characters in the query or fragment part of the URI.
@@ -298,7 +298,6 @@ public class ProxyServlet extends HttpServlet
     {
         // Note that I can't simply use URI.java to encode because it will escape pre-existing escaped things.
         StringBuilder outBuf = null;
-        Formatter formatter = null;
         for (int i = 0; i < in.length(); i++)
         {
             char c = in.charAt(i);
@@ -328,13 +327,15 @@ public class ProxyServlet extends HttpServlet
                 {
                     outBuf = new StringBuilder(in.length() + 5 * 3);
                     outBuf.append(in, 0, i);
-                    formatter = new Formatter(outBuf);
                 }
-                // leading %, 0 padded, width 2, capital hex
-                formatter.format("%%%02X", (int) c);// TODO
-                formatter.close();
+                try (Formatter formatter = new Formatter(outBuf))
+                {
+                    // leading %, 0 padded, width 2, capital hex
+                    formatter.format("%%%02X", (int) c);
+                }
             }
         }
+
         return outBuf != null ? outBuf : in;
     }
 
@@ -365,31 +366,32 @@ public class ProxyServlet extends HttpServlet
     @Override
     public void init() throws ServletException
     {
+        sonarProblemMapIntializer();
         String doForwardIPString = getConfigParam(P_FORWARDEDFOR);
         if (doForwardIPString != null)
         {
-            doForwardIP = Boolean.parseBoolean(doForwardIPString);
+            mutableInstanceFields.put("doForwardIP", Boolean.parseBoolean(doForwardIPString));
         }
 
         String preserveHostString = getConfigParam(P_PRESERVEHOST);
         if (preserveHostString != null)
         {
-            doPreserveHost = Boolean.parseBoolean(preserveHostString);
+            mutableInstanceFields.put("doPreserveHost", Boolean.parseBoolean(preserveHostString));
         }
 
         String preserveCookiesString = getConfigParam(P_PRESERVECOOKIES);
         if (preserveCookiesString != null)
         {
-            doPreserveCookies = Boolean.parseBoolean(preserveCookiesString);
+            mutableInstanceFields.put("doPreserveCookies", Boolean.parseBoolean(preserveCookiesString));
         }
 
         // make sure that parameters are not null
-        skipResponseContentTypes = parseCsvAsList(getConfigParam(P_SKIP_RESPONSE_CONTENT_TYPES));
-        responseContentRewritePairs = parseCsvAsList(getConfigParam(P_RESPONSE_CONTENT_REWRITE_PAIRS));
-        responseUrlMatchers = parseCsvAsList(getConfigParam(P_RESPONSE_URL_MATCHERS));
-        skipResponseUrlMatchers = parseCsvAsList(getConfigParam(P_SKIP_RESPONSE_URL_MATCHERS));
-        appendUrlParams = parseCsvAsList(getConfigParam(P_APPEND_URL_PARAMS));
-        additionalHeaders = parseCsvAsList(getConfigParam(P_SET_ADDITIONAL_HEADERS));
+        skipResponseContentTypes.addAll(parseCsvAsList(getConfigParam(P_SKIP_RESPONSE_CONTENT_TYPES)));
+        responseContentRewritePairs.addAll(parseCsvAsList(getConfigParam(P_RESPONSE_CONTENT_REWRITE_PAIRS)));
+        responseUrlMatchers.addAll(parseCsvAsList(getConfigParam(P_RESPONSE_URL_MATCHERS)));
+        skipResponseUrlMatchers.addAll(parseCsvAsList(getConfigParam(P_SKIP_RESPONSE_URL_MATCHERS)));
+        appendUrlParams.addAll(parseCsvAsList(getConfigParam(P_APPEND_URL_PARAMS)));
+        additionalHeaders.addAll(parseCsvAsList(getConfigParam(P_SET_ADDITIONAL_HEADERS)));
 
         initTarget();// sets target*
 
@@ -397,26 +399,29 @@ public class ProxyServlet extends HttpServlet
         hcParams.setParameter(ClientPNames.COOKIE_POLICY, CookiePolicy.IGNORE_COOKIES);
         hcParams.setBooleanParameter(ClientPNames.HANDLE_REDIRECTS, false); // See #70
         readConfigParam(hcParams, ClientPNames.HANDLE_REDIRECTS, Boolean.class);
-        proxyClient = createHttpClient(hcParams);
+        mutableInstanceFields.put("proxyClient", createHttpClient(hcParams));
     }
 
     protected void initTarget() throws ServletException
     {
-        targetUri = getConfigParam(P_TARGET_URI);
-        if (targetUri == null)
+        mutableInstanceFields.put("targetUri", getConfigParam(P_TARGET_URI));
+        if (mutableInstanceFields.get("targetUri") == null)
         {
             throw new ServletException(P_TARGET_URI + " is required.");
         }
         // test it's valid
+        URI targetUriObj = null;
         try
         {
-            targetUriObj = new URI(targetUri);
+            targetUriObj = new URI((String) mutableInstanceFields.get("targetUri"));
+            mutableInstanceFields.put("targetUriObj", targetUriObj);
         }
         catch (Exception e)
         {
             throw new ServletException("Trying to process targetUri init parameter: " + e, e);
         }
-        targetHost = URIUtils.extractHost(targetUriObj);
+        mutableInstanceFields.put("targetHost", URIUtils.extractHost((URI) mutableInstanceFields.get("targetUriObj")));
+
     }
 
     /**
@@ -457,16 +462,6 @@ public class ProxyServlet extends HttpServlet
     }
 
     /**
-     * The http client used.
-     *
-     * @see #createHttpClient(HttpParams)
-     */
-    protected HttpClient getProxyClient()
-    {
-        return proxyClient;
-    }
-
-    /**
      * Reads a servlet config parameter by the name {@code hcParamName} of type {@code type}, and set it in
      * {@code hcParams}.
      */
@@ -501,6 +496,7 @@ public class ProxyServlet extends HttpServlet
     public void destroy()
     {
         // As of HttpComponents v4.3, clients implement closeable
+        HttpClient proxyClient = (HttpClient) mutableInstanceFields.get("proxyClient");
         if (proxyClient instanceof Closeable)
         {// TODO AutoCloseable in Java 1.6
             try
@@ -529,11 +525,11 @@ public class ProxyServlet extends HttpServlet
         // initialize request attributes from caches if unset by a subclass by this point
         if (servletRequest.getAttribute(ATTR_TARGET_URI) == null)
         {
-            servletRequest.setAttribute(ATTR_TARGET_URI, targetUri);
+            servletRequest.setAttribute(ATTR_TARGET_URI, mutableInstanceFields.get("targetUri"));
         }
         if (servletRequest.getAttribute(ATTR_TARGET_HOST) == null)
         {
-            servletRequest.setAttribute(ATTR_TARGET_HOST, targetHost);
+            servletRequest.setAttribute(ATTR_TARGET_HOST, mutableInstanceFields.get("targetHost"));
         }
 
         // Make the Request
@@ -632,6 +628,7 @@ public class ProxyServlet extends HttpServlet
     {
         logger.debug("proxy [{} {}] -- [{}]", servletRequest.getMethod(), servletRequest.getRequestURI(),
                 proxyRequest.getRequestLine().getUri());
+        HttpClient proxyClient = (HttpClient) mutableInstanceFields.get("proxyClient");
         return proxyClient.execute(getTargetHost(servletRequest), proxyRequest);
     }
 
@@ -736,7 +733,7 @@ public class ProxyServlet extends HttpServlet
             // In case the proxy host is running multiple virtual servers,
             // rewrite the Host header to ensure that we get content from
             // the correct virtual server
-            if (!doPreserveHost && headerName.equalsIgnoreCase(HttpHeaders.HOST))
+            if (mutableInstanceFields.get("doPreserveHost").equals(false) && headerName.equalsIgnoreCase(HttpHeaders.HOST))
             {
                 HttpHost host = getTargetHost(servletRequest);
                 headerValue = host.getHostName();
@@ -745,7 +742,8 @@ public class ProxyServlet extends HttpServlet
                     headerValue += ":" + host.getPort();
                 }
             }
-            else if (!doPreserveCookies && headerName.equalsIgnoreCase(org.apache.http.cookie.SM.COOKIE))
+            else if (!(Boolean) (mutableInstanceFields.get("doPreserveCookies"))
+                    && headerName.equalsIgnoreCase(org.apache.http.cookie.SM.COOKIE))
             {
                 headerValue = getRealCookie(headerValue);
             }
@@ -760,7 +758,7 @@ public class ProxyServlet extends HttpServlet
 
     private void setXForwardedForHeader(HttpServletRequest servletRequest, HttpRequest proxyRequest)
     {
-        if (doForwardIP)
+        if ((Boolean) mutableInstanceFields.get("doForwardIP"))
         {
             String forHeaderName = "X-Forwarded-For";
             String forHeader = servletRequest.getRemoteAddr();
@@ -833,12 +831,13 @@ public class ProxyServlet extends HttpServlet
         for (HttpCookie cookie : cookies)
         {
             // set cookie name prefixed w/ a proxy value so it won't collide w/ other cookies
-            String proxyCookieName = doPreserveCookies ? cookie.getName() : getCookieNamePrefix(cookie.getName()) + cookie.getName();
+            String proxyCookieName = (Boolean) mutableInstanceFields.get("doPreserveCookies") ? cookie.getName()
+                    : getCookieNamePrefix(cookie.getName()) + cookie.getName();
             Cookie servletCookie = new Cookie(proxyCookieName, cookie.getValue());
             servletCookie.setComment(cookie.getComment());
             servletCookie.setMaxAge((int) cookie.getMaxAge());
             servletCookie.setPath(path + cookie.getPath()); // set to the path of the proxy servlet with context path as
-                                                            // prefix
+            // prefix
             // don't set cookie domain
             servletCookie.setSecure(cookie.getSecure());
             servletCookie.setVersion(cookie.getVersion());
@@ -883,6 +882,7 @@ public class ProxyServlet extends HttpServlet
     {
         return "!Proxy!" + getServletConfig().getServletName();
     }
+
     /**
      * Copy response body data (the entity) from the proxy to the servlet client.
      */
@@ -1030,7 +1030,6 @@ public class ProxyServlet extends HttpServlet
             uri.append(encodeUriQuery(queryString));
         }
 
-        boolean doSendUrlFragment = true;
         if (doSendUrlFragment && fragment != null)
         {
             uri.append('#');
@@ -1193,21 +1192,13 @@ public class ProxyServlet extends HttpServlet
     }
 
     /**
-     * The target URI as configured. Not null.
-     */
-    public String getTargetUri()
-    {
-        return targetUri;
-    }
-
-    /**
      * parse csv. Null and empty String is allowed.
      *
      * @param csv
      *            String that contains values separated with comma ","
      * @return List
      */
-    private static List<String> parseCsvAsList(String csv)
+    private List<String> parseCsvAsList(String csv)
     {
         if (StringUtils.isEmpty(csv))
         {

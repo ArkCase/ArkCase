@@ -21,6 +21,7 @@
         <div class="row">
             <div class="col-sm-12 form-group">
                 <label for="emailPattern" translate>admin.security.emailTemplates.modal.emailPattern.label</label>
+				<span class="required-asterisk">*</span>
                 <input id="emailPattern" class="input-md form-control" ng-model="template.emailPattern" required="required"
                         placeholder="{{ 'admin.security.emailTemplates.modal.emailPattern.placeholder' | translate }}"
                         title="{{ 'admin.security.emailTemplates.modal.emailPattern.description' | translate }}">
@@ -29,6 +30,7 @@
         <div class="row">
             <div class="col-sm-12 form-group">
                 <label for="templateName" translate>admin.security.emailTemplates.modal.templateName.label</label>
+				<span class="required-asterisk">*</span>
                 <input id="templateName" class="input-md form-control" ng-model="template.templateName" required="required"
                         placeholder="{{ 'admin.security.emailTemplates.modal.templateName.placeholder' | translate }}" ng-readonly="isEdit">
             </div>

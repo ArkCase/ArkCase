@@ -237,7 +237,8 @@ angular.module('admin').controller('Admin.SelectPrivilegesController', [ '$scope
                     $modalInstance.dismiss('cancel');
                 };
             },
-            size: 'md'
+            size: 'md',
+            backdrop: 'static'
         });
 
         //handle the result
