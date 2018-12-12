@@ -97,6 +97,7 @@ angular.module('dashboard').factory('Dashboard.DashboardService',
                 queryMyOverdueCases: {
                     method: 'GET',
                     url: 'api/v1/plugin/search/advancedSearch?q=object_type_s\\:CASE_FILE+' + 'AND+dueDate_tdt\\:[* TO NOW]',
+                    isArray: false,
                     data: ''
                 }
             });

@@ -53,7 +53,7 @@ angular.module('dashboard.my-overdue-cases').controller('Dashboard.MyOverdueCase
                 paginationOptions.pageSize = config.paginationPageSize;
                 getPage();
 
-            return config;
+                return config;
             });
 
             function getPage() {
