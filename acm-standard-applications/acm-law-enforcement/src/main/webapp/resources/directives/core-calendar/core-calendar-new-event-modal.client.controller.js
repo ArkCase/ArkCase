@@ -95,6 +95,7 @@ angular.module('directives').controller(
                             templateUrl: 'directives/core-calendar/core-calendar-choose-event-attendees-modal.client.view.html',
                             controller: 'Directives.CoreCalendarChooseEventAttendeesController',
                             size: 'lg',
+                            backdrop: 'static',
                             resolve: {
                                 $config: function() {
                                     return coreCalendarConfig.chooseEventAttendeesDialog.dialogUserPicker;
@@ -132,6 +133,7 @@ angular.module('directives').controller(
                             templateUrl: 'directives/core-calendar/core-calendar-set-event-recurrence-modal.client.view.html',
                             controller: 'Directives.CoreCalendarSetEventRecurrenceController',
                             size: 'lg',
+                            backdrop: 'static',
                             resolve: {
                                 $params: function() {
                                     return params;

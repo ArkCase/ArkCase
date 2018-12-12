@@ -399,6 +399,7 @@ angular.module('cases').controller(
                     templateUrl: 'modules/cases/views/components/foia-request-search.client.view.html',
                     controller: 'Cases.FoiaRequestSearchModalController',
                     size: 'lg',
+                    backdrop: 'static',
                     resolve: {
                         $filter: function () {
                             return $scope.configRequest.objectSearch.objectFacetFilter;
