@@ -42,6 +42,7 @@ import com.armedia.acm.plugins.task.model.AcmApplicationTaskEvent;
 import com.armedia.acm.plugins.task.model.AcmTask;
 import com.armedia.acm.plugins.task.service.TaskDao;
 import com.armedia.acm.plugins.task.service.TaskEventPublisher;
+import com.armedia.acm.plugins.task.service.impl.CreateAdHocTaskService;
 import com.armedia.acm.services.search.model.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -97,10 +98,13 @@ public class CreateAdHocTaskAPIControllerTest extends EasyMockSupport
         mockExecuteSolrQuery = createMock(ExecuteSolrQuery.class);
 
         unit = new CreateAdHocTaskAPIController();
-        unit.setExecuteSolrQuery(mockExecuteSolrQuery);
+        CreateAdHocTaskService createAdHocTaskService = new CreateAdHocTaskService();
+        createAdHocTaskService.setExecuteSolrQuery(mockExecuteSolrQuery);
 
-        unit.setTaskDao(mockTaskDao);
-        unit.setTaskEventPublisher(mockTaskEventPublisher);
+        createAdHocTaskService.setTaskDao(mockTaskDao);
+        createAdHocTaskService.setTaskEventPublisher(mockTaskEventPublisher);
+
+        unit.setCreateAdHocTaskService(createAdHocTaskService);
 
         mockMvc = MockMvcBuilders.standaloneSetup(unit).setHandlerExceptionResolvers(exceptionResolver).build();
     }
