@@ -280,6 +280,7 @@ angular.module('tasks').controller(
                             templateUrl: 'modules/tasks/views/components/task-user-search.client.view.html',
                             controller: 'Tasks.UserSearchController',
                             size: 'lg',
+                            backdrop: 'static',
                             resolve: {
                                 $filter: function() {
                                     return $scope.config.userOrGroupSearch.userOrGroupFacetFilter;
