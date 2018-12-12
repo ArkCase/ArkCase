@@ -66,7 +66,7 @@ public class FOIAQueuedEventListener implements ApplicationListener<QueuedEvent>
             }
             catch (Exception e)
             {
-                log.info("Status of the Request has not be changed to Released for object with objectId = [{}]", cf.getId(), e);
+                log.warn("Status of the Request has not be changed to Released for object with objectId = [{}]", cf.getId(), e);
             }
         }
     }

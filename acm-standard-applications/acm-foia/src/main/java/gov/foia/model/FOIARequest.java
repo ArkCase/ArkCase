@@ -37,8 +37,6 @@ import com.armedia.acm.data.converter.LocalDateTimeConverter;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.voodoodyne.jackson.jsog.JSOGGenerator;
 
 import org.springframework.format.annotation.DateTimeFormat;
@@ -91,7 +89,6 @@ public class FOIARequest extends CaseFile implements FOIAObject
     @Column(name = "fo_release_date")
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     @Convert(converter = LocalDateTimeConverter.class)
-    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     private LocalDateTime releasedDate;
 
     @Column(name = "fo_billing_enter_date")
@@ -151,13 +148,11 @@ public class FOIARequest extends CaseFile implements FOIAObject
     @Column(name = "fo_record_search_date_from")
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     @Convert(converter = LocalDateTimeConverter.class)
-    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     private LocalDateTime recordSearchDateFrom;
 
     @Column(name = "fo_record_search_date_to")
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     @Convert(converter = LocalDateTimeConverter.class)
-    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     private LocalDateTime recordSearchDateTo;
 
     @Column(name = "fo_processing_fee_waive")
