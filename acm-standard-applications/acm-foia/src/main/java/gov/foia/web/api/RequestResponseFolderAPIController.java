@@ -8,6 +8,7 @@ import gov.foia.service.RequestResponseFolderService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,6 +24,7 @@ public class RequestResponseFolderAPIController
 
     private RequestResponseFolderService requestResponseFolderService;
 
+    @PreAuthorize("hasPermission(#requestId, 'CASE_FILE', 'saveCase')")
     @RequestMapping(value = "/{caseId}/compressAndSendResponseFolder", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public void compressAndSendResponseFolderToPortal(@PathVariable("caseId") Long requestId, Authentication authentication) throws AcmObjectNotFoundException, AcmUserActionFailedException, ConversionException, AcmFolderException {
