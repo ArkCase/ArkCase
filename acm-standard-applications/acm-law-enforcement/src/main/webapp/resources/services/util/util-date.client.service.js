@@ -127,9 +127,11 @@ angular.module('services').factory('Util.DateService', [ '$translate', 'UtilServ
          * @Returns {String} String
          */
         ,
-        dateToIsoDateTime: function (isoDateTime) {
+        dateToIsoDateTime: function(isoDateTime) {
             if (!Util.isEmpty(isoDateTime)) {
                 return moment.utc(isoDateTime).format("YYYY-MM-DDTHH:mm:ss.sss");
+            } else {
+                return "";
             }
         }
 
