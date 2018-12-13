@@ -199,16 +199,16 @@ public class AuditDao extends AcmAbstractDao<AuditEvent>
                 "WHERE  ae.status != 'DELETE' " +
                 "AND ((ae.objectType = :objectType AND ae.objectId = :objectId) " +
                 "OR (ae.parentObjectType = :objectType AND ae.parentObjectId = :objectId)) " +
-                (eventTypes != null ? "AND ae.fullEventType IN :eventTypes " : "") +
                 "AND ae.eventResult = 'success'";
+        if (eventTypes != null && !eventTypes.isEmpty())
+        {
+            queryText += " AND ae.fullEventType IN :eventTypes ";
+        }
 
         Query query = getEm().createQuery(queryText);
         query.setParameter("objectId", objectId);
         query.setParameter("objectType", objectType);
-        if (eventTypes != null)
-        {
-            query.setParameter("eventTypes", eventTypes);
-        }
+
 
         Long count = (Long) query.getSingleResult();
 
