@@ -78,6 +78,7 @@ angular.module('tasks').controller(
                             templateUrl: "modules/tasks/views/components/task-diagram-modal.client.view.html",
                             controller: 'Tasks.DiagramModalController',
                             windowClass: 'modal-width-80',
+                            backdrop: 'static',
                             resolve: {
                                 taskId: function() {
                                     return $scope.objectInfo.taskId;
@@ -100,7 +101,8 @@ angular.module('tasks').controller(
                     $scope.sign = function() {
                         var modalInstance = $modal.open({
                             templateUrl: "modules/tasks/views/components/task-signature.dialog.html",
-                            controller: 'Tasks.SignatureDialogController'
+                            controller: 'Tasks.SignatureDialogController',
+                            backdrop: 'static'
                         });
                         modalInstance.result.then(function(result) {
                             if (result) {
@@ -157,6 +159,7 @@ angular.module('tasks').controller(
                         var modalInstance = $modal.open({
                             templateUrl: "modules/tasks/views/components/task-reject.dialog.html",
                             controller: 'Tasks.SignatureDialogController',
+                            backdrop: 'static',
                             resolve: {
                                 aValue: function() {
                                     return "some value";

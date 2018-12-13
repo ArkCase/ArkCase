@@ -150,6 +150,7 @@ angular.module('dashboard.websites-widget', [ 'adf.provider' ]).config(function(
                     templateUrl: 'modules/dashboard/views/dialogs/websites-modal.client.view.html',
                     controller: 'Dashboard.WebsiteModalController',
                     size: 'md',
+                    backdrop: 'static',
                     resolve: {
                         websiteInfo: function() {
                             return website;

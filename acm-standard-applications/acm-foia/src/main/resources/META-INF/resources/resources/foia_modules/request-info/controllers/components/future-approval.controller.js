@@ -95,6 +95,7 @@ angular.module('request-info').controller(
                             templateUrl: 'modules/request-info/views/components/user-search.client.view.html',
                             controller: 'RequestInfo.UserSearchController',
                             size: 'lg',
+                            backdrop: 'static',
                             resolve: {
                                 $filter: function() {
                                     return $scope.config.userSearch.userFacetFilter;
