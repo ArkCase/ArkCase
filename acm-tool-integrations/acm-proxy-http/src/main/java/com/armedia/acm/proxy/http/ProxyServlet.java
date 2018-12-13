@@ -274,7 +274,7 @@ public class ProxyServlet extends HttpServlet
 
     protected final Map<String, Object> mutableInstanceFields = new HashMap<>();
 
-    private void sonarProblemMapIntializer()
+    private void initMutableInstanceFields()
     {
         mutableInstanceFields.put("doForwardIP", true);
         mutableInstanceFields.put("doPreserveHost", false);
@@ -366,7 +366,7 @@ public class ProxyServlet extends HttpServlet
     @Override
     public void init() throws ServletException
     {
-        sonarProblemMapIntializer();
+        initMutableInstanceFields();
         String doForwardIPString = getConfigParam(P_FORWARDEDFOR);
         if (doForwardIPString != null)
         {
