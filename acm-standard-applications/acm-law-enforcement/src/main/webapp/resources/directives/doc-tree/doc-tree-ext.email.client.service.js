@@ -304,6 +304,7 @@ angular.module('directives').controller('directives.DocTreeEmailDialogController
             controller: 'directives.DocTreeEmailRecipientsDialogController',
             animation: true,
             size: 'lg',
+            backdrop: 'static',
             resolve: {
                 config: function() {
                     return $scope.config;
