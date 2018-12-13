@@ -144,30 +144,30 @@ angular.module('cases').controller(
 
                 $scope.config.data.payFee = $scope.payFees[0].key;
 
-                $scope.config.data.recordSearchDateFrom = UtilDateService.isoToDate($scope.config.data.recordSearchDateFrom);
-                $scope.config.data.recordSearchDateTo = UtilDateService.isoToDate($scope.config.data.recordSearchDateTo);
+                $scope.config.data.recordSearchDateFrom = UtilDateService.dateToIso($scope.config.data.recordSearchDateFrom);
+                $scope.config.data.recordSearchDateTo = UtilDateService.dateToIso($scope.config.data.recordSearchDateTo);
 
             });
             $scope.validateForm = function (requestForm) {
 
-                    $scope.formInvalid = false;
-                    $scope.prefixEmpty = false;
-                    $scope.firstNameEmpty = false;
-                    $scope.lastNameEmpty = false;
-                    $scope.phoneEmpty = false;
-                    $scope.phoneInvalid = false;
-                    $scope.emailEmpty = false;
-                    $scope.emailInvalid = false;
-                    $scope.confirmEmailEmpty = false;
-                    $scope.confirmEmailInvalid = false;
-                    $scope.addressEmpty = false;
-                    $scope.cityEmpty = false;
-                    $scope.stateEmpty = false;
-                    $scope.zipCodeEmpty = false;
-                    $scope.zipCodeInvalid = false;
-                    $scope.subjectEmpty = false;
+                $scope.formInvalid = false;
+                $scope.prefixEmpty = false;
+                $scope.firstNameEmpty = false;
+                $scope.lastNameEmpty = false;
+                $scope.phoneEmpty = false;
+                $scope.phoneInvalid = false;
+                $scope.emailEmpty = false;
+                $scope.emailInvalid = false;
+                $scope.confirmEmailEmpty = false;
+                $scope.confirmEmailInvalid = false;
+                $scope.addressEmpty = false;
+                $scope.cityEmpty = false;
+                $scope.stateEmpty = false;
+                $scope.zipCodeEmpty = false;
+                $scope.zipCodeInvalid = false;
+                $scope.subjectEmpty = false;
 
-                    if($scope.isNewRequestType()) {
+                if ($scope.isNewRequestType()) {
 
                     if (requestForm.prefix.$invalid) {
                         $scope.prefixEmpty = true;
@@ -315,6 +315,9 @@ angular.module('cases').controller(
                 $scope.loadingIcon = "fa fa-circle-o-notch fa-spin";
                 var formdata = new FormData();
 
+                $scope.config.data.recordSearchDateFrom = UtilDateService.dateToIsoDateTime(UtilDateService.dateToIso($scope.config.data.recordSearchDateFrom));
+                $scope.config.data.recordSearchDateTo = UtilDateService.dateToIsoDateTime(UtilDateService.dateToIso($scope.config.data.recordSearchDateTo));
+
                 var basicData = {};
                 for (var property in $scope.config.data) {
                     if ($scope.config.data.hasOwnProperty(property)) {
@@ -396,6 +399,7 @@ angular.module('cases').controller(
                     templateUrl: 'modules/cases/views/components/foia-request-search.client.view.html',
                     controller: 'Cases.FoiaRequestSearchModalController',
                     size: 'lg',
+                    backdrop: 'static',
                     resolve: {
                         $filter: function () {
                             return $scope.configRequest.objectSearch.objectFacetFilter;
