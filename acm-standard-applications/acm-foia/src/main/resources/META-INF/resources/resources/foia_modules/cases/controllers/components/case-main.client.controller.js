@@ -23,9 +23,12 @@ angular.module('cases').controller(
                 if (!Util.isEmpty($scope.objectInfo.releasedDate)) {
                             $scope.objectInfo.releasedDate = moment($scope.objectInfo.releasedDate).format(UtilDateService.defaultDateTimeFormat);
                 }
-                        $scope.objectInfo.recordSearchDateFrom = moment(objectInfo.recordSearchDateFrom).format(UtilDateService.defaultDateTimeFormat);
-                        $scope.objectInfo.recordSearchDateTo = moment($scope.objectInfo.recordSearchDateTo).format(UtilDateService.defaultDateTimeFormat);
-
+                        if (!Util.isEmpty($scope.objectInfo.recordSearchDateFrom)) {
+                            $scope.objectInfo.recordSearchDateFrom = moment(objectInfo.recordSearchDateFrom).format(UtilDateService.defaultDateTimeFormat);
+                        }
+                        if (!Util.isEmpty($scope.objectInfo.recordSearchDateTo)) {
+                            $scope.objectInfo.recordSearchDateTo = moment($scope.objectInfo.recordSearchDateTo).format(UtilDateService.defaultDateTimeFormat);
+                        }
 
                 ObjectLookupService.getPayFees().then(function (payFees) {
                     $scope.payFees = payFees;
