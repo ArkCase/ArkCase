@@ -203,6 +203,13 @@
         <property name="userDao" ref="userJpaDao"/>
     </bean>
 
+    <bean id="createAdHocTaskService" class="com.armedia.acm.plugins.task.service.impl.CreateAdHocTaskService">
+        <property name="taskDao" ref="acmTaskDao"/>
+        <property name="taskEventPublisher" ref="taskEventPublisher"/>
+        <property name="executeSolrQuery" ref="executeSolrQuery"/>
+        <property name="searchResults" ref="searchResults"/>
+    </bean>
+
     <task:scheduler id="dueTasksNotifierScheduler" pool-size="1"/>
     <task:scheduled-tasks scheduler="dueTasksNotifierScheduler">
         <!-- checks for upcoming tasks every day at 00:00 AM-->

@@ -100,8 +100,8 @@ public class AcmTimesheetDao extends AcmAbstractDao<AcmTimesheet>
         Root<AcmTimesheet> rootSubquery = subquery.from(AcmTimesheet.class);
         subquery.select(rootSubquery.get("id")).distinct(true);
         Join<AcmTimesheet, AcmTime> join = rootSubquery.join("times", JoinType.LEFT);
-        join.on(builder.and(builder.equal(rootSubquery.<Long> get("times").get("objectId"), objectId),
-                builder.equal(rootSubquery.<String> get("times").get("type"), objectType)));
+        subquery.where(builder.and(builder.equal(join.get("objectId"), objectId),
+                builder.equal(join.get("type"), objectType)));
 
         timesheetCriteriaQuery.select(acmTimesheetRoot);
         timesheetCriteriaQuery.where(acmTimesheetRoot.<Long> get("id").in(subquery));

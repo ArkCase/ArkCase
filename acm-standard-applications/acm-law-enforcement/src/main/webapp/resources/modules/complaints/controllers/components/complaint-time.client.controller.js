@@ -3,7 +3,7 @@
 angular.module('complaints').controller(
         'Complaints.TimeController',
         [ '$scope', '$stateParams', '$state', '$modal', '$translate', 'UtilService', 'ObjectService', 'ConfigService', 'Object.TimeService', 'Complaint.InfoService', 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'FormsType.Service', 'TimeTracking.InfoService',
-                function($scope, $stateParams, $state,  $modal, $translate, Util, ObjectService, ConfigService, ObjectTimeService, ComplaintInfoService, HelperUiGridService, HelperObjectBrowserService, FormsTypeService, TimeTrackingInfoService) {
+                function($scope, $stateParams, $state, $modal, $translate, Util, ObjectService, ConfigService, ObjectTimeService, ComplaintInfoService, HelperUiGridService, HelperObjectBrowserService, FormsTypeService, TimeTrackingInfoService) {
 
                     var componentHelper = new HelperObjectBrowserService.Component({
                         moduleId: "complaints",
@@ -14,6 +14,9 @@ angular.module('complaints').controller(
                         validateObjectInfo: ComplaintInfoService.validateComplaintInfo,
                         onConfigRetrieved: function(componentConfig) {
                             return onConfigRetrieved(componentConfig);
+                        },
+                        onObjectInfoRetrieved: function(objectInfo) {
+                            onObjectInfoRetrieved(objectInfo);
                         }
                     });
 
@@ -45,33 +48,35 @@ angular.module('complaints').controller(
                         }
                     };
 
-                    if (Util.goodPositive(componentHelper.currentObjectId, false)) {
-                        $scope.newTimesheetParamsFromObject = {
-                            _id: $scope.objectInfo.complaintId,
-                            _type: ObjectService.ObjectTypes.COMPLAINT,
-                            _number: $scope.objectInfo.complaintNumber
-                        }
-                        ObjectTimeService.queryTimesheets(ObjectService.ObjectTypes.COMPLAINT, componentHelper.currentObjectId).then(function(timesheets) {
-                            componentHelper.promiseConfig.then(function(config) {
-                                for (var i = 0; i < timesheets.length; i++) {
-                                    timesheets[i].acm$_formName = timesheets[i].title;
-                                    timesheets[i].acm$_hours = _.reduce(Util.goodArray(timesheets[i].times), function(total, n) {
-                                        return total + Util.goodValue(n.value, 0);
-                                    }, 0);
+                    var onObjectInfoRetrieved = function(objectInfo) {
+                        if (Util.goodPositive(componentHelper.currentObjectId, false)) {
+                            $scope.newTimesheetParamsFromObject = {
+                                _id: objectInfo.complaintId,
+                                _type: ObjectService.ObjectTypes.COMPLAINT,
+                                _number: objectInfo.complaintNumber
+                            }
+                            ObjectTimeService.queryTimesheets(ObjectService.ObjectTypes.COMPLAINT, componentHelper.currentObjectId).then(function(timesheets) {
+                                componentHelper.promiseConfig.then(function(config) {
+                                    for (var i = 0; i < timesheets.length; i++) {
+                                        timesheets[i].acm$_formName = timesheets[i].title;
+                                        timesheets[i].acm$_hours = _.reduce(Util.goodArray(timesheets[i].times), function(total, n) {
+                                            return total + Util.goodValue(n.value, 0);
+                                        }, 0);
 
-                                    timesheets[i].totalCost = calculateTotalCost(timesheets[i]);
-                                }
+                                        timesheets[i].totalCost = calculateTotalCost(timesheets[i]);
+                                    }
 
-                                $scope.gridOptions = $scope.gridOptions || {};
-                                $scope.gridOptions.data = timesheets;
-                                $scope.gridOptions.totalItems = Util.goodValue(timesheets.length, 0);
-                                return config;
+                                    $scope.gridOptions = $scope.gridOptions || {};
+                                    $scope.gridOptions.data = timesheets;
+                                    $scope.gridOptions.totalItems = Util.goodValue(timesheets.length, 0);
+                                    return config;
+                                });
+                                return timesheets;
                             });
-                            return timesheets;
-                        });
-                    }
+                        }
+                    };
 
-                    function calculateTotalCost(timesheet){
+                    function calculateTotalCost(timesheet) {
                         var totalCost = 0.0;
                         for (var j = 0; j < timesheet.times.length; j++) {
                             if ($scope.newTimesheetParamsFromObject._type == timesheet.times[j].type && $scope.newTimesheetParamsFromObject._number == timesheet.times[j].code) {
@@ -81,7 +86,7 @@ angular.module('complaints').controller(
                         return totalCost;
                     }
 
-                    $scope.newTimesheet = function () {
+                    $scope.newTimesheet = function() {
                         var params = {
                             isEdit: false,
                             timeType: $scope.newTimesheetParamsFromObject._type,
@@ -97,14 +102,15 @@ angular.module('complaints').controller(
                             templateUrl: 'modules/time-tracking/views/components/time-tracking-new-timesheet-modal.client.view.html',
                             controller: 'TimeTracking.NewTimesheetController',
                             size: 'lg',
+                            backdrop: 'static',
                             resolve: {
-                                modalParams: function () {
+                                modalParams: function() {
                                     return params;
                                 }
                             }
                         });
 
-                        modalInstance.result.then(function (data) {
+                        modalInstance.result.then(function(data) {
                             var addedTimesheet = data;
                             addedTimesheet.acm$_formName = addedTimesheet.title;
                             addedTimesheet.acm$_hours = _.reduce(Util.goodArray(addedTimesheet.times), function(total, n) {
@@ -112,28 +118,28 @@ angular.module('complaints').controller(
                             }, 0);
                             addedTimesheet.totalCost = calculateTotalCost(addedTimesheet);
 
-                            if(params.isEdit){
-                                _.forEach($scope.gridOptions.data, function (timesheet, i) {
+                            if (params.isEdit) {
+                                _.forEach($scope.gridOptions.data, function(timesheet, i) {
                                     if (Util.compare(timesheet.id, addedTimesheet.id)) {
                                         $scope.gridOptions.data.splice(i, 1, addedTimesheet);
                                         return false;
                                     }
                                 });
-                            }else {
+                            } else {
                                 $scope.gridOptions.data.push(addedTimesheet);
                             }
                         });
                     }
 
                     $scope.editRow = function(rowEntity) {
-                        if($scope.isFrevvoFormType){
+                        if ($scope.isFrevvoFormType) {
                             var frevvoDateFormat = $translate.instant("common.frevvo.defaultDateFormat");
                             var startDate = moment(rowEntity.startDate).format(frevvoDateFormat);
 
                             $state.go('frevvo.edit-timesheet', {
                                 period: startDate
                             });
-                        }else{
+                        } else {
                             TimeTrackingInfoService.getTimesheetInfo(rowEntity.id).then(function(timesheetInfo) {
                                 var timesheetInfo = timesheetInfo;
                                 $scope.editParams = {

@@ -13,10 +13,10 @@
                 </div>
                 <div class="row">
                     <div class="col-sm-12 form-group">
-                        <label for="complaintTitle" translate>complaints.comp.newComplaint.complaintTitle</label>
+                        <label translate>complaints.comp.newComplaint.complaintTitle</label>
                         <span class="required-asterisk">*</span>
-                        <input id="complaintTitle" type="text" ng-model="complaint.complaintTitle" class="input-md form-control"
-                                placeholder="{{ 'complaints.comp.newComplaint.complaintTitle.placeholder' | translate }}" required>
+                        <mention-input ng-model="complaint.complaintTitle" params="params"
+                                placeholder="{{ 'complaints.comp.newComplaint.complaintTitle.placeholder' | translate }}"></mention-input>
                     </div>
                 </div>
                 <div class="row">
@@ -86,8 +86,8 @@
             </div>
             <div id="collapseDesc" class="panel-collapse collapse">
                 <div class="panel-body">
-                    <div class="row form-group">
-                        <summernote id="complaintDesc" config="options" ng-model="complaint.details"></summernote>
+                    <div class="row remove-margin-bottom-from-summernote">
+                        <mention-summernote ng-model="complaint.details" params="paramsSummernote"></mention-summernote>
                     </div>
                 </div>
             </div>
