@@ -209,6 +209,10 @@ public class AuditDao extends AcmAbstractDao<AuditEvent>
         query.setParameter("objectId", objectId);
         query.setParameter("objectType", objectType);
 
+        if (eventTypes != null && !eventTypes.isEmpty())
+        {
+            query.setParameter("eventTypes", eventTypes);
+        }
 
         Long count = (Long) query.getSingleResult();
 
