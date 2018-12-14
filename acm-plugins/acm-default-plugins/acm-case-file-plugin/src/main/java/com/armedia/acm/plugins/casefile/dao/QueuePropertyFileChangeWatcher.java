@@ -110,8 +110,16 @@ public class QueuePropertyFileChangeWatcher implements ApplicationListener<Abstr
             {
                 List<AcmQueue> storedQueues = getAcmQueueDao().findAll();
 
+                // move display order values, so we don't get duplicates when setting the new values
+                storedQueues.forEach(q -> {
+                    q.setDisplayOrder(q.getDisplayOrder() + 100);
+                    getAcmQueueDao().save(q);
+                });
+                getAcmQueueDao().getEm().flush();
+
                 Map<String, AcmQueue> nameQueue = storedQueues.stream().collect(Collectors.toMap(AcmQueue::getName, Function.identity()));
 
+                // set new display order values
                 queues.stream().forEach(q -> {
 
                     if (nameQueue.containsKey(q.getName()))
