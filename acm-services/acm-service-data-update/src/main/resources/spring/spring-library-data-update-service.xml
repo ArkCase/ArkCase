@@ -30,6 +30,7 @@
                 <ref bean="triggerTimesheetSolrUpdateExecutor"/>
                 <ref bean="documentRepositoryParticipantTypesUpdateExecutor"/>
                 <ref bean="solrReindexAssignedObjectsExecutor"/>
+                <ref bean="groupAscendantsStringUpdateExecutor"/>
             </list>
         </property>
         <property name="dataUpdateService" ref="dataUpdateService"/>
@@ -91,4 +92,7 @@
         <property name="packages" value="${jpa.model.packages}"/>
     </bean>
 
+    <bean id="groupAscendantsStringUpdateExecutor" class="com.armedia.acm.services.dataupdate.service.GroupAscendantsStringUpdateExecutor">
+        <property name="groupDao" ref="groupDao"/>
+    </bean>
 </beans>
