@@ -39,6 +39,7 @@ angular.module('cases').controller('Cases.NewFutureTaskController', [ '$scope', 
             templateUrl: 'modules/cases/views/components/case-user-search.client.view.html',
             controller: 'Cases.UserSearchController',
             size: 'lg',
+            backdrop: 'static',
             resolve: {
                 $filter: function() {
                     return $scope.futureTaskConfig.userOrGroupSearch.userOrGroupFacetFilter;

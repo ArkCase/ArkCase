@@ -89,6 +89,7 @@ angular.module('complaints').controller(
                             templateUrl: 'modules/complaints/views/components/complaint-reference-modal.client.view.html',
                             controller: 'Complaints.ReferenceModalController',
                             size: 'lg',
+                            backdrop: 'static',
                             resolve: {
                                 $filter: function() {
                                     var filter = $scope.modalConfig.searchFilter + "&-id:" + $scope.objectInfo.complaintId + "-" + ObjectService.ObjectTypes.COMPLAINT;

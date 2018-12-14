@@ -134,7 +134,8 @@ angular.module('admin').controller('Admin.CMTemplatesController',
                                 $modalInstance.dismiss('cancel');
                             };
                         },
-                        size: 'lg'
+                        size: 'lg',
+                        backdrop: 'static'
                     });
                 });
             }
