@@ -46,7 +46,7 @@ public class EmailMentionsDTO extends MessageBodyFactory
     private String footer;
     private String body;
     private String textMentioned;
-    private String url;
+    private String urlPath;
     private List<String> users;
     private List<String> emailAddresses;
 
@@ -80,14 +80,14 @@ public class EmailMentionsDTO extends MessageBodyFactory
         this.textMentioned = textMentioned;
     }
 
-    public String getUrl()
+    public String getUrlPath()
     {
-        return url;
+        return urlPath;
     }
 
-    public void setUrl(String url)
+    public void setUrlPath(String urlPath)
     {
-        this.url = url;
+        this.urlPath = urlPath;
     }
 
     public List<String> getUsers()
