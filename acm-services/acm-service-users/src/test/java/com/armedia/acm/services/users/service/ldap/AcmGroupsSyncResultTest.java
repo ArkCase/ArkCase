@@ -113,13 +113,13 @@ public class AcmGroupsSyncResultTest
         assertThat("New groups should be:", syncedNewGroups.keySet(), everyItem(isIn(fromArray("A", "B", "C"))));
         assertThat("Group A should have B and C as member group", syncedNewGroups.get("A").getGroupMemberNames()
                 .collect(Collectors.toSet()), everyItem(isIn(fromArray("B", "C"))));
-        assertThat("Ascendants string for group A should be", syncedNewGroups.get("A").getAscendantsList(), is("B,C"));
+        assertThat("Ascendants string for group A should be", syncedNewGroups.get("A").getAscendantsList(), is("B||C"));
         assertThat("Group B should have A and C as member group", syncedNewGroups.get("B").getGroupMemberNames()
                 .collect(Collectors.toSet()), everyItem(isIn(fromArray("A", "C"))));
-        assertThat("Ascendants string for group B should be", syncedNewGroups.get("B").getAscendantsList(), is("A,C"));
+        assertThat("Ascendants string for group B should be", syncedNewGroups.get("B").getAscendantsList(), is("A||C"));
         assertThat("Group C should have 1 group member", syncedNewGroups.get("C").getGroupMemberNames()
                 .collect(Collectors.toSet()), everyItem(isIn(fromArray("A"))));
-        assertThat("Ascendants string for group C should be", syncedNewGroups.get("C").getAscendantsList(), is("A,B"));
+        assertThat("Ascendants string for group C should be", syncedNewGroups.get("C").getAscendantsList(), is("A||B"));
     }
 
     // @formatter:off
@@ -293,7 +293,7 @@ public class AcmGroupsSyncResultTest
                 everyItem(isIn(fromArray("A", "B", "C", "D"))));
 
         assertThat("Ascendants string for group A should be", modifiedGroupsByName.get("A").getAscendantsList(),
-                is("C,D"));
+                is("C||D"));
         assertThat("Group A should have 0 member groups", modifiedGroupsByName.get("A").getMemberGroups().size(), is(0));
         assertThat("Group A should have user members", modifiedGroupsByName.get("A")
                 .getUserMemberIds().collect(Collectors.toSet()), everyItem(isIn(fromArray("1", "2"))));
@@ -387,7 +387,7 @@ public class AcmGroupsSyncResultTest
         assertThat("Ascendants string for group A should be", modifiedGroupsByName.get("A").getAscendantsList(), is("D"));
 
         assertThat("Group C should have 0 member groups", modifiedGroupsByName.get("C").getMemberGroups().size(), is(0));
-        assertThat("Ascendants string for group C should be", modifiedGroupsByName.get("C").getAscendantsList(), is("A,D"));
+        assertThat("Ascendants string for group C should be", modifiedGroupsByName.get("C").getAscendantsList(), is("A||D"));
     }
 
     // @formatter:off
@@ -458,7 +458,7 @@ public class AcmGroupsSyncResultTest
                 .collect(Collectors.toSet()), everyItem(isIn(fromArray("D"))));
         assertThat("Group X should have 0 user members", newGroupsByName.get("X").getUserMembers().size(), is(0));
 
-        assertThat("Ascendants string for group D should be", newGroupsByName.get("D").getAscendantsList(), is("B,C,X"));
+        assertThat("Ascendants string for group D should be", newGroupsByName.get("D").getAscendantsList(), is("B||C||X"));
         assertThat("Group D should have 0 user members", newGroupsByName.get("D").getUserMembers().size(), is(0));
         assertThat("Group D should have member groups", newGroupsByName.get("D")
                 .getGroupMemberNames().collect(Collectors.toSet()), everyItem(isIn(fromArray("A"))));
@@ -469,7 +469,7 @@ public class AcmGroupsSyncResultTest
                 everyItem(isIn(fromArray("A", "B", "C", "D"))));
 
         assertThat("Ascendants string for group A should be", modifiedGroupsByName.get("A").getAscendantsList(),
-                is("B,C,D,X"));
+                is("B||C||D||X"));
         assertThat("Group A should have 0 member groups", modifiedGroupsByName.get("A").getMemberGroups().size(), is(0));
         assertThat("Group A should have user members", modifiedGroupsByName.get("A")
                 .getUserMemberIds().collect(Collectors.toSet()), everyItem(isIn(fromArray("1", "2"))));
