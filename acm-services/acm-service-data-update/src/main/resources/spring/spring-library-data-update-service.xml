@@ -94,5 +94,6 @@
 
     <bean id="groupAscendantsStringUpdateExecutor" class="com.armedia.acm.services.dataupdate.service.GroupAscendantsStringUpdateExecutor">
         <property name="groupDao" ref="groupDao"/>
+        <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
     </bean>
 </beans>
