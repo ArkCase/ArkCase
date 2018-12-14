@@ -105,4 +105,10 @@
         <property name="objectConverter" ref="objectConverter"/>
     </bean>
 
+    <bean id="dataAccessControlService" class="com.armedia.acm.services.dataaccess.service.DataAccessControlService" init-method="initBean">
+        <property name="propertiesFile" value="#{ systemProperties ['user.home'] }/.arkcase/acm/dataAccessControl.properties"/>
+        <property name="propertyFileManager" ref="propertyFileManager"/>
+    </bean>
+
+
 </beans>

@@ -10,7 +10,7 @@
  *
  * DocTree extensions for searching and adding documents.
  */
-angular.module('services').factory('DocTreeExt.SearchAndAddDocuments', [ '$q', '$modal', '$translate', 'UtilService', 'PermissionsService', 'ObjectService', function($q, $modal, $translate, Util, PermissionsService, ObjectService) {
+angular.module('services').factory('DocTreeExt.SearchAndAddDocuments', [ '$q', '$modal', '$translate', '$http', 'UtilService', 'PermissionsService', 'ObjectService', 'Admin.DocumentACLService', function($q, $modal, $translate, $http, Util, PermissionsService, ObjectService, DocumentACLService) {
 
     var Documents = {
 
@@ -47,6 +47,16 @@ angular.module('services').factory('DocTreeExt.SearchAndAddDocuments', [ '$q', '
                 onAllowCmd: function(nodes, objectInfo) {
                     if(Util.isArray(nodes) && !Util.isEmpty(nodes) && nodes.length == 1 && !Util.isEmpty(nodes[0].data) && (nodes[0].data.objectType == ObjectService.ObjectTypes.FOLDER.toLowerCase() || nodes[0].data.root == true)) {
                         objectInfo.container.folder.nodeId = nodes[0].data.objectId;
+                        var dataAccessControllProperties;
+                        var enabledDocumentAcl = 'dac.enableDocumentACL';
+                        DocumentACLService.getProperties().then(function(response) {
+                            if (!Util.isEmpty(response.data)) {
+                                dataAccessControllProperties = response.data;
+                                enabledDocumentAcl = dataAccessControllProperties[enabledDocumentAcl];
+                            }
+                        });
+
+                        if(enabledDocumentAcl === 'true')
                         return PermissionsService.getActionPermission('allowCopyingFile', objectInfo.container.folder, {
                             objectType: ObjectService.ObjectTypes.FOLDER
                         }).then(function success(enabled) {
