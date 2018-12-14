@@ -28,6 +28,7 @@ package com.armedia.acm.services.users.service.group;
  */
 
 import com.armedia.acm.services.users.model.group.AcmGroup;
+import com.armedia.acm.services.users.model.group.AcmGroupConstants;
 
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -37,6 +38,7 @@ import java.util.stream.Collectors;
 
 public class AcmGroupUtils
 {
+
     public static String buildAncestorsStringForAcmGroup(AcmGroup startNode)
     {
         String targetNode = startNode.getName();
@@ -95,6 +97,6 @@ public class AcmGroupUtils
     {
         return ascendantGroupNames.stream()
                 .sorted()
-                .collect(Collectors.joining(","));
+                .collect(Collectors.joining(AcmGroupConstants.ASCENDANTS_STRING_DELIMITER));
     }
 }
