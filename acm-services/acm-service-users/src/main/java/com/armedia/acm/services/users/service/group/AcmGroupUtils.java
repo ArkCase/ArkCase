@@ -63,7 +63,7 @@ public class AcmGroupUtils
                 .map(AcmGroup::getName)
                 .filter(node -> !node.equals(targetNode))
                 .sorted()
-                .collect(Collectors.joining(","));
+                .collect(Collectors.joining(AcmGroupConstants.ASCENDANTS_STRING_DELIMITER));
 
         return ancestorsString.isEmpty() ? null : ancestorsString;
     }
