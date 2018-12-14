@@ -1,4 +1,4 @@
-angular.module('organizations').controller('Organizations.PhonesModalController', [ '$scope', '$translate', '$modalInstance', 'Object.LookupService', 'params', function($scope, $translate, $modalInstance, ObjectLookupService, params) {
+angular.module('organizations').controller('Organizations.PhonesModalController', [ '$scope', '$translate', '$modalInstance', 'Object.LookupService', 'params', 'Mentions.Service', function($scope, $translate, $modalInstance, ObjectLookupService, params, MentionsService) {
 
     ObjectLookupService.getContactMethodTypes().then(function(contactMethodTypes) {
         $scope.phoneTypes = _.find(contactMethodTypes, {
@@ -12,6 +12,12 @@ angular.module('organizations').controller('Organizations.PhonesModalController'
     $scope.isDefault = params.isDefault;
     $scope.hideNoField = params.isDefault;
 
+    // --------------  mention --------------
+    $scope.params = {
+        emailAddresses: [],
+        usersMentioned: []
+    };
+
     $scope.onClickCancel = function() {
         $modalInstance.dismiss('Cancel');
     };
@@ -19,7 +25,9 @@ angular.module('organizations').controller('Organizations.PhonesModalController'
         $modalInstance.close({
             phone: $scope.phone,
             isDefault: $scope.isDefault,
-            isEdit: $scope.isEdit
+            isEdit: $scope.isEdit,
+            emailAddresses: $scope.params.emailAddresses,
+            usersMentioned: $scope.params.usersMentioned
         });
     };
 } ]);

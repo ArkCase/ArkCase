@@ -210,6 +210,12 @@
                         "uiIcon": "ui-icon-trash"
                     },
                     {
+                        "titleKey": "common.directive.docTree.menu.generateZip",
+                        "cmd": "generateZipFile",
+                        "uiIcon": "ui-icon-suitcase",
+                        "disabledExpression": "nodes[0].data.name !== '03 Response'"
+                    },
+                    {
                         "titleKey": "common.directive.docTree.menu.declareRecord",
                         "cmd": "declare",
                         "uiIcon": "ui-icon-locked",
@@ -400,6 +406,12 @@
                         "titleKey": "common.directive.docTree.menu.copy",
                         "cmd": "copy",
                         "uiIcon": "ui-icon-copy"
+                    },
+                    {
+                        "titleKey": "common.directive.docTree.menu.generateZip",
+                        "cmd": "generateZipFile",
+                        "uiIcon": "ui-icon-suitcase",
+                        "disabledExpression": "nodes[0].data.name !== '03 Response'"
                     },
                     {
                         "titleKey": "common.directive.docTree.menu.makeAllPublic",

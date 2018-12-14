@@ -190,7 +190,8 @@
             "targetType": "Type",
             "assignee": "Assignee",
             "modified": "Modified",
-            "status": "Status"
+            "status": "Status",
+            "parentName": "Parent Name"
         }
     },
     "complaints.comp.history": {

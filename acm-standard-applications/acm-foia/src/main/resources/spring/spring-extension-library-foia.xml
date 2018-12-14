@@ -113,6 +113,10 @@
             <beans:property name="ecmFileService" ref="ecmFileService"/>
         </beans:bean>
 
+        <beans:bean id="foiaQueuedEventListener" class="gov.foia.listener.FOIAQueuedEventListener">
+            <beans:property name="requestDao" ref="foiaRequestDao"/>
+        </beans:bean>
+
         <beans:bean id="foiaCostsheetBillingListener" class="gov.foia.listener.FOIACostsheetBillingListener">
             <beans:property name="acmCostsheetDao" ref="acmCostsheetDao"/>
             <beans:property name="billingService" ref="billingService"/>

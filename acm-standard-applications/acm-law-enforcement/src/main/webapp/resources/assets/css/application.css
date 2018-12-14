@@ -1651,10 +1651,6 @@ a.primary {
 }
 
 /*Css style for scrolling issue on modal*/
-.form-overflow-scroll {
-    overflow-y: auto !important;
-}
-
 .pdfjs .toolbar {
     z-index: 1048 !important;
 }
@@ -1787,3 +1783,8 @@ a.primary {
 .ui-grid-cell-wrap {
     white-space: normal !important;
 }
+
+.remove-margin-bottom-from-summernote > .panel {
+    margin-bottom: 0px;
+}
+

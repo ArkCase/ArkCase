@@ -74,6 +74,7 @@ angular.module('document-repository').controller(
                             templateUrl: 'modules/document-repository/views/components/document-repository-reference-modal.client.view.html',
                             controller: 'DocumentRepository.ReferenceModalController',
                             size: 'lg',
+                            backdrop: 'static',
                             resolve: {
                                 $filter: function() {
                                     var filter = $scope.modalConfig.searchFilter + "&-id:" + $scope.objectInfo.id + "-" + ObjectService.ObjectTypes.DOC_REPO;

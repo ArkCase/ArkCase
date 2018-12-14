@@ -1,4 +1,4 @@
-angular.module('people').controller('Person.AliasesModalController', [ '$scope', '$translate', '$modalInstance', 'Object.LookupService', 'params', function($scope, $translate, $modalInstance, ObjectLookupService, params) {
+angular.module('people').controller('Person.AliasesModalController', [ '$scope', '$translate', '$modalInstance', 'Object.LookupService', 'params', 'Mentions.Service', function($scope, $translate, $modalInstance, ObjectLookupService, params, MentionsService) {
     ObjectLookupService.getAliasTypes().then(function(response) {
         $scope.aliasTypes = response;
     });
@@ -8,6 +8,12 @@ angular.module('people').controller('Person.AliasesModalController', [ '$scope',
     $scope.isDefault = params.isDefault;
     $scope.hideNoField = params.isDefault;
 
+    // --------------  mention --------------
+    $scope.params = {
+        emailAddresses: [],
+        usersMentioned: []
+    };
+
     $scope.onClickCancel = function() {
         $modalInstance.dismiss('Cancel');
     };
@@ -15,7 +21,9 @@ angular.module('people').controller('Person.AliasesModalController', [ '$scope',
         $modalInstance.close({
             alias: $scope.alias,
             isDefault: $scope.isDefault,
-            isEdit: $scope.isEdit
+            isEdit: $scope.isEdit,
+            emailAddresses: $scope.params.emailAddresses,
+            usersMentioned: $scope.params.usersMentioned
         });
     };
 } ]);

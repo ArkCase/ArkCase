@@ -167,7 +167,8 @@ angular.module('admin').controller(
                                     $modalInstance.close($scope.data);
                                 };
                             } ],
-                            size: 'sm'
+                            size: 'sm',
+                            backdrop: 'static'
                         });
                     }
 
