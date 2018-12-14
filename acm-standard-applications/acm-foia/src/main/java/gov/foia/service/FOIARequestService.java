@@ -120,7 +120,12 @@ public class FOIARequestService
 
                 if (foiaRequest.getId() != null && foiaRequest.getStatus().equalsIgnoreCase("In Review") && !foiaConfigurationService.readConfiguration().getReceivedDateEnabled())
                 {
-                    in.setDueDate(getQueuesTimeToCompleteService().addWorkingDaysToDate(Date.from(foiaRequest.getReceivedDate().atZone(ZoneId.systemDefault()).toInstant()), foiaRequest.getRequestType()));
+                    if (foiaRequest.getReceivedDate() != null)
+                    {
+                        in.setDueDate(getQueuesTimeToCompleteService().addWorkingDaysToDate(
+                                Date.from(foiaRequest.getReceivedDate().atZone(ZoneId.systemDefault()).toInstant()),
+                                foiaRequest.getRequestType()));
+                    }
                 }
                 else if(foiaRequest.getId() == null && foiaConfigurationService.readConfiguration().getReceivedDateEnabled())
                 {

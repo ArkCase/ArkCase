@@ -125,7 +125,8 @@ angular.module('common').controller('Common.AddPersonModalController', [ '$scope
             animation: true,
             templateUrl: 'modules/common/views/new-person-modal.client.view.html',
             controller: 'Common.NewPersonModalController',
-            size: 'lg'
+            size: 'lg',
+            backdrop: 'static'
         });
 
         modalInstance.result.then(function(data) {

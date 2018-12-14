@@ -103,6 +103,7 @@ angular.module('cases').controller(
                             templateUrl: 'modules/cost-tracking/views/components/cost-tracking-new-costsheet-modal.client.view.html',
                             controller: 'CostTracking.NewCostsheetController',
                             size: 'lg',
+                            backdrop: 'static',
                             resolve: {
                                 modalParams: function() {
                                     return params;
