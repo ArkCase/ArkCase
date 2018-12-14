@@ -62,6 +62,7 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -435,9 +436,9 @@ public class AcmGroup implements Serializable, AcmEntity
 
     /**
      * We will use this as pre-computed list of all ascendants found by traversing the full graph of groups and their
-     * member groups trying to find path to this group. // TODO: find better separator then `,`, maybe `;` or `:`
+     * member groups trying to find path to this group.
      *
-     * @return `,` separated list of all ascendants of group
+     * @return {@value AcmGroupConstants.ASCENDANTS_STRING_DELIMITER} separated list of all ascendants of group
      */
     @JsonIgnore
     public Stream<String> getAscendantsStream()
@@ -446,14 +447,14 @@ public class AcmGroup implements Serializable, AcmEntity
         {
             return Stream.empty();
         }
-        return Arrays.stream(ascendantsList.split(",")).sorted();
+        return Arrays.stream(ascendantsList.split(Pattern.quote(AcmGroupConstants.ASCENDANTS_STRING_DELIMITER))).sorted();
     }
 
     public Set<String> getAscendants()
     {
         if (StringUtils.isBlank(ascendantsList))
             return new TreeSet<>();
-        return Arrays.stream(ascendantsList.split(","))
+        return Arrays.stream(ascendantsList.split(Pattern.quote(AcmGroupConstants.ASCENDANTS_STRING_DELIMITER)))
                 .collect(Collectors.toCollection(TreeSet::new));
     }
 
@@ -463,7 +464,7 @@ public class AcmGroup implements Serializable, AcmEntity
         ascendants.add(ascendantGroup);
         ascendantsList = ascendants.stream()
                 .sorted()
-                .collect(Collectors.joining(","));
+                .collect(Collectors.joining(AcmGroupConstants.ASCENDANTS_STRING_DELIMITER));
     }
 
     @Override
