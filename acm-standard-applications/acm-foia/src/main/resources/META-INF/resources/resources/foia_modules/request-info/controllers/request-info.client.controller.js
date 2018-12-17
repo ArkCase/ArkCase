@@ -400,7 +400,7 @@ angular.module('request-info').controller(
             function populateDispositionTypes(objectInfo) {
                 ObjectLookupService.getDispositionTypes(objectInfo.requestType).then(function (requestDispositionType) {
                     $scope.dispositionTypes = requestDispositionType;
-                    if (objectInfo.deliveryMethodOfResponse != null && objectInfo.deliveryMethodOfResponse != '') {
+                    if (objectInfo.disposition) {
                         $scope.dispositionValue = _.find($scope.dispositionTypes, function (disposition) {
                             if (disposition.key == objectInfo.disposition) {
                                 return disposition.key;
