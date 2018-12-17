@@ -57,7 +57,8 @@ angular.module('services').factory('DocTreeExt.SearchAndAddDocuments', [ '$q', '
                             }
                         });
 
-                        if(enabledDocumentAcl === 'true'){
+                        if(enabledDocumentAcl === 'true')
+                        {
                             return PermissionsService.getActionPermission('allowCopyingFile', objectInfo.container.folder, {
                                 objectType: ObjectService.ObjectTypes.FOLDER
                             }).then(function success(enabled) {
@@ -65,8 +66,14 @@ angular.module('services').factory('DocTreeExt.SearchAndAddDocuments', [ '$q', '
                             }, function error() {
                                 return 'invisible';
                             });
-                        } else {
-                            return 'invisible';
+                        }else {
+                            return PermissionsService.getActionPermission('allowCopyingFile', objectInfo, {
+                                objectType: DocTree.getObjType()
+                            }).then(function success(enabled) {
+                                return enabled ? 'visible' : 'invisible';
+                            }, function error() {
+                                return 'invisible';
+                            });
                         }
 
                     }else {
