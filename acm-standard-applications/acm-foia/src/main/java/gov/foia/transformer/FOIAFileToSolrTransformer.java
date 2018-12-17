@@ -133,7 +133,5 @@ public class FOIAFileToSolrTransformer extends EcmFileToSolrTransformer
     private void mapRequestProperties(FOIAFile file, Map<String, Object> additionalProperties)
     {
         additionalProperties.put("public_flag_b", file.getPublicFlag());
-        additionalProperties.put("review_status_s", file.getReviewStatus());
-        additionalProperties.put("redaction_status_s", file.getRedactionStatus());
     }
 }

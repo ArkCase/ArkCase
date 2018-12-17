@@ -3384,6 +3384,8 @@ angular
                                                     if (Validator.validateActiveVersion(data)) {
                                                         if (data.fileId == fileId) {
                                                             var activeVersion = data;
+
+
                                                             var folderList = DocTree.cacheFolderList.get(cacheKey);
                                                             if (Validator.validateFolderList(folderList)) {
                                                                 var idx = DocTree.findFolderItemIdx(fileId, folderList);
@@ -3411,6 +3413,14 @@ angular
                                                 .goodValue(activeVersion.fileActiveVersionMimeType);
                                             fileNode.data.modifier = Util.goodValue(activeVersion.modifier);
                                             fileNode.data.modified = Util.goodValue(activeVersion.modified);
+
+                                            for(var i = 0; i < activeVersion.versions.length; i++) {
+                                                if(activeVersion.versions[i].versionTag === fileNode.data.version) {
+                                                    fileNode.data.reviewStatus = Util.goodValue(activeVersion.versions[i].reviewStatus);
+                                                    fileNode.data.redactionStatus = Util.goodValue(activeVersion.versions[i].redactionStatus);
+                                                }
+                                            }
+
                                             DocTree.markNodeOk(fileNode);
                                             fileNode.renderTitle();
                                             dfd.resolve();
@@ -3746,8 +3756,14 @@ angular
                             nodeData.data.version = Util.goodValue(fileData.version);
                             nodeData.data.lock = Util.goodValue(fileData.lock);
                             nodeData.data.modifier = Util.goodValue(fileData.modifier);
-                            nodeData.data.reviewStatus = Util.goodValue(fileData.reviewStatus);
-                            nodeData.data.redactionStatus = Util.goodValue(fileData.redactionStatus);
+
+                            for(var versionIndex = 0; versionIndex < fileData.versionList.length; versionIndex++) {
+                                if(fileData.versionList[versionIndex].versionTag === fileData.version) {
+                                    nodeData.data.reviewStatus = Util.goodValue(fileData.versionList[versionIndex].reviewStatus);
+                                    nodeData.data.redactionStatus = Util.goodValue(fileData.versionList[versionIndex].redactionStatus);
+                                }
+                            }
+
                             if (Util.isArray(fileData.versionList)) {
                                 nodeData.data.versionList = [];
                                 for (var i = 0; i < fileData.versionList.length; i++) {
@@ -3909,23 +3925,15 @@ angular
                         $(node.tr).find("select.reviewstatus").prop('disabled', true);
                         $(node.tr).find("select.redactionstatus").prop('disabled', true);
 
-                        Ecm.getFile({
-                            fileId: node.data.objectId
-                        }).$promise.then(function(file) {
-                            var ecmFile = file;
-                            if(statusType === "review") {
-                                ecmFile.reviewStatus = statusValue;
-                            }
-                            else if(statusType === "redaction") {
-                                ecmFile.redactionStatus = statusValue;
-                            }
-
+                        if(statusType === "review") {
                             Util.serviceCall({
-                                service: Ecm.updateFile,
+                                service: Ecm.setFileReviewStatus,
                                 param: {
-                                    fileId: node.data.objectId
+                                    fileId: node.data.objectId,
+                                    fileVersion: node.data.version,
+                                    reviewStatus: statusValue
                                 },
-                                data: JSOG.encode(Util.omitNg(ecmFile))
+                                data: {}
                             }).then(function(data) {
                                 MessageService.succsessAction();
 
@@ -3941,13 +3949,32 @@ angular
 
                                 return error;
                             });
+                        }
+                        else if(statusType === "redaction") {
+                            Util.serviceCall({
+                                service: Ecm.setFileRedactionStatus,
+                                param: {
+                                    fileId: node.data.objectId,
+                                    fileVersion: node.data.version,
+                                    redactionStatus: statusValue
+                                },
+                                data: {}
+                            }).then(function(data) {
+                                MessageService.succsessAction();
 
-                        }, function (reason) {
-                            MessageService.errorAction();
+                                $(node.tr).find("select.reviewstatus").prop('disabled', false);
+                                $(node.tr).find("select.redactionstatus").prop('disabled', false);
 
-                            $(node.tr).find("select.reviewstatus").prop('disabled', false);
-                            $(node.tr).find("select.redactionstatus").prop('disabled', false);
-                        });
+                                return data;
+                            }, function(error) {
+                                MessageService.errorAction();
+
+                                $(node.tr).find("select.reviewstatus").prop('disabled', false);
+                                $(node.tr).find("select.redactionstatus").prop('disabled', false);
+
+                                return error;
+                            });
+                        }
                     }
 
                     ,
@@ -3978,6 +4005,8 @@ angular
                                     } else {
                                         DocTree.Op.setActiveVersion(node, verSelected);
                                     }
+
+                                    //markotodo
                                 }
                             } //end if (parent)
                         }

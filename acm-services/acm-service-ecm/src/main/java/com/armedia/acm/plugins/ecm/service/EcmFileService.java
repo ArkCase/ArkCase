@@ -353,4 +353,9 @@ public interface EcmFileService
      */
     boolean deleteTempFile(String uniqueFileName);
 
+    void setReviewStatus(Long fileId, String fileVersion, String reviewStatus);
+
+    void setRedactionStatus(Long fileId, String fileVersion, String redactionStatus);
+
+
 }

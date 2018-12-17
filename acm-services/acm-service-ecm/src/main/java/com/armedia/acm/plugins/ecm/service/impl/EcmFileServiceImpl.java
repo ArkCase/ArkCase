@@ -87,14 +87,7 @@ import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Properties;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Created by armdev on 5/1/14.
@@ -890,10 +883,6 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
 
         object.setStatus(getSearchResults().extractString(doc, SearchConstants.PROPERTY_STATUS));
 
-        object.setReviewStatus(getSearchResults().extractString(doc, SearchConstants.PROPERTY_REVIEW_STATUS));
-
-        object.setRedactionStatus(getSearchResults().extractString(doc, SearchConstants.PROPERTY_REDACTION_STATUS));
-
         if (object.getObjectType().equals(EcmFileConstants.FILE))
         {
             EcmFile file = getEcmFileDao().find(object.getObjectId());
@@ -1537,6 +1526,43 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     public EcmFile findById(Long fileId)
     {
         return getEcmFileDao().find(fileId);
+    }
+
+    @Override
+    public void setReviewStatus(Long fileId, String fileVersion, String reviewStatus)
+    {
+        setReviewRedactionStatus(fileId, fileVersion, reviewStatus, "review");
+    }
+
+    @Override
+    public void setRedactionStatus(Long fileId, String fileVersion, String redactionStatus)
+    {
+        setReviewRedactionStatus(fileId, fileVersion, redactionStatus, "redaction");
+    }
+
+    private void setReviewRedactionStatus(Long fileId, String fileVersion, String status, String statusType)
+    {
+        EcmFile file = findById(fileId);
+        List<EcmFileVersion> fileVersions = file.getVersions();
+
+        EcmFileVersion fileVersionToUpdate = fileVersions
+                .stream()
+                .filter(ecmFileVersion -> ecmFileVersion.getVersionTag().equals(fileVersion))
+                .findFirst()
+                .orElse(null);
+
+        if(Objects.nonNull(fileVersionToUpdate))
+        {
+            if("review".equals(statusType))
+            {
+                fileVersionToUpdate.setReviewStatus(status);
+            }
+            else if("redaction".equals(statusType))
+            {
+                fileVersionToUpdate.setRedactionStatus(status);
+            }
+            getEcmFileDao().save(file);
+        }
     }
 
     public EcmFileTransaction getEcmFileTransaction()

@@ -88,8 +88,6 @@ public interface SearchConstants
     String PROPERTY_PAGE_COUNT_I = "page_count_i";
     String PROPERTY_OBJECT_TYPE_S = "object_type_s";
     String PROPERTY_ASSIGNEE_ID = "assignee_s";
-    String PROPERTY_REVIEW_STATUS = "review_status_s";
-    String PROPERTY_REDACTION_STATUS = "redaction_status_s";
 
     String USER = "${user}";
     /**
