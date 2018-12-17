@@ -57,11 +57,11 @@ public class AcmSequenceEntity implements Serializable
     private String sequencePartName;
 
     @Column(name = "cm_sequence_part_value")
-    private Integer sequencePartValue;
+    private Long sequencePartValue;
 
     @Version
-    @Column(name = "cm_sequence_part_lock")
-    private Integer sequencePartLock;
+    @Column(name = "version")
+    private Integer version;
 
     /**
      * @return the sequenceName
@@ -100,7 +100,7 @@ public class AcmSequenceEntity implements Serializable
     /**
      * @return the sequencePartValue
      */
-    public Integer getSequencePartValue()
+    public Long getSequencePartValue()
     {
         return sequencePartValue;
     }
@@ -109,26 +109,26 @@ public class AcmSequenceEntity implements Serializable
      * @param sequencePartValue
      *            the sequencePartValue to set
      */
-    public void setSequencePartValue(Integer sequencePartValue)
+    public void setSequencePartValue(Long sequencePartValue)
     {
         this.sequencePartValue = sequencePartValue;
     }
 
     /**
-     * @return the sequencePartLock
+     * @return the version
      */
-    public Integer getSequencePartLock()
+    public Integer getVersion()
     {
-        return sequencePartLock;
+        return version;
     }
 
     /**
-     * @param sequencePartLock
-     *            the sequencePartLock to set
+     * @param version
+     *            the version to set
      */
-    public void setSequencePartLock(Integer sequencePartLock)
+    public void setSequencePartLock(Integer version)
     {
-        this.sequencePartLock = sequencePartLock;
+        this.version = version;
     }
 
 }

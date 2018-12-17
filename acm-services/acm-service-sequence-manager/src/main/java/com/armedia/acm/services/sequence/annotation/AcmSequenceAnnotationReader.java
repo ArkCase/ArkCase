@@ -52,7 +52,7 @@ public class AcmSequenceAnnotationReader
     public List<Field> getAnnotatedFields(Class<? extends Object> clazz)
     {
         List<Field> annotatedFields = new ArrayList<Field>();
-        Field[] allFields = getDeclaredFields(clazz);
+        List<Field> allFields = getDeclaredFields(clazz);
 
         for (Field field : allFields)
         {
@@ -70,7 +70,7 @@ public class AcmSequenceAnnotationReader
      *            where searching for fields
      * @return list of fields
      */
-    public static Field[] getDeclaredFields(Class clazz)
+    private static List<Field> getDeclaredFields(Class clazz)
     {
         List<Field> fields = new LinkedList<Field>();
         Field[] declaredFields = clazz.getDeclaredFields();
@@ -80,12 +80,14 @@ public class AcmSequenceAnnotationReader
 
         if (superClass != null)
         {
-            Field[] declaredFieldsOfSuper = getDeclaredFields(superClass);
-            if (declaredFieldsOfSuper.length > 0)
-                Collections.addAll(fields, declaredFieldsOfSuper);
+            List<Field> declaredFieldsOfSuper = getDeclaredFields(superClass);
+            if (!declaredFieldsOfSuper.isEmpty())
+            {
+                fields.addAll(declaredFieldsOfSuper);
+            }
         }
 
-        return fields.toArray(new Field[fields.size()]);
+        return fields;
     }
 
 }

@@ -49,7 +49,7 @@ public class AcmSequenceDatabaseRollbackChangesHandler implements ApplicationLis
 {
     private transient Logger log = LoggerFactory.getLogger(getClass());
 
-    private AcmSequenceAnnotationReader acmSequenceAnnotationReader;
+    private AcmSequenceAnnotationReader sequenceAnnotationReader;
 
     private AcmSequenceService sequenceService;
 
@@ -65,7 +65,7 @@ public class AcmSequenceDatabaseRollbackChangesHandler implements ApplicationLis
     {
         if (object instanceof AcmEntity)
         {
-            List<Field> annotatedFields = getAcmSequenceAnnotationReader().getAnnotatedFields(object.getClass());
+            List<Field> annotatedFields = getSequenceAnnotationReader().getAnnotatedFields(object.getClass());
             for (Field annotatedField : annotatedFields)
             {
                 if (annotatedField != null)
@@ -86,20 +86,20 @@ public class AcmSequenceDatabaseRollbackChangesHandler implements ApplicationLis
     }
 
     /**
-     * @return the acmSequenceAnnotationReader
+     * @return the sequenceAnnotationReader
      */
-    public AcmSequenceAnnotationReader getAcmSequenceAnnotationReader()
+    public AcmSequenceAnnotationReader getSequenceAnnotationReader()
     {
-        return acmSequenceAnnotationReader;
+        return sequenceAnnotationReader;
     }
 
     /**
-     * @param acmSequenceAnnotationReader
-     *            the acmSequenceAnnotationReader to set
+     * @param sequenceAnnotationReader
+     *            the sequenceAnnotationReader to set
      */
-    public void setAcmSequenceAnnotationReader(AcmSequenceAnnotationReader acmSequenceAnnotationReader)
+    public void setSequenceAnnotationReader(AcmSequenceAnnotationReader sequenceAnnotationReader)
     {
-        this.acmSequenceAnnotationReader = acmSequenceAnnotationReader;
+        this.sequenceAnnotationReader = sequenceAnnotationReader;
     }
 
     /**

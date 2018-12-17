@@ -34,7 +34,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.persistence.NoResultException;
-import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
 /**
@@ -81,25 +80,6 @@ public class AcmSequenceDao extends AcmAbstractDao<AcmSequenceEntity>
         }
 
         return sequenceEntity;
-    }
-
-    public Integer updateSequenceEntity(AcmSequenceEntity sequenceEntity)
-    {
-        String queryText = "UPDATE AcmSequenceEntity sequenceEntity " +
-                "SET sequenceEntity.sequenceName = :sequenceName, " +
-                "sequenceEntity.sequencePartName = :sequencePartName, " +
-                "sequenceEntity.sequencePartValue = :sequencePartValue, " +
-                "sequenceEntity.sequencePartLock = :sequencePartLock " +
-                "WHERE sequenceEntity.sequenceName = :sequenceName " +
-                "AND sequenceEntity.sequencePartName = :sequencePartName";
-
-        Query query = getEm().createQuery(queryText);
-
-        query.setParameter("sequenceName", sequenceEntity.getSequenceName());
-        query.setParameter("sequencePartName", sequenceEntity.getSequencePartName());
-        query.setParameter("sequencePartValue", sequenceEntity.getSequencePartValue());
-        query.setParameter("sequencePartLock", sequenceEntity.getSequencePartLock());
-        return query.executeUpdate();
     }
 
     @Override

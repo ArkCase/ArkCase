@@ -30,12 +30,15 @@ package com.armedia.acm.services.sequence.service;
 import com.armedia.acm.services.sequence.dao.AcmSequenceDao;
 import com.armedia.acm.services.sequence.dao.AcmSequenceRegistryDao;
 import com.armedia.acm.services.sequence.dao.AcmSequenceResetDao;
+import com.armedia.acm.services.sequence.exception.AcmSequenceException;
 import com.armedia.acm.services.sequence.model.AcmSequenceEntity;
 import com.armedia.acm.services.sequence.model.AcmSequenceEntityId;
 import com.armedia.acm.services.sequence.model.AcmSequencePart;
 import com.armedia.acm.services.sequence.model.AcmSequenceRegistry;
 import com.armedia.acm.services.sequence.model.AcmSequenceReset;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.transaction.annotation.Propagation;
@@ -51,6 +54,8 @@ import java.util.List;
  */
 public class AcmSequenceServiceImpl implements AcmSequenceService
 {
+    private final Logger log = LoggerFactory.getLogger(getClass());
+
     private AcmSequenceDao sequenceDao;
 
     private AcmSequenceRegistryDao sequenceRegistryDao;
@@ -59,9 +64,18 @@ public class AcmSequenceServiceImpl implements AcmSequenceService
 
     @Override
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public AcmSequenceEntity getSequenceEntity(String sequenceName, String sequencePartName)
+    public AcmSequenceEntity getSequenceEntity(String sequenceName, String sequencePartName) throws AcmSequenceException
     {
-        return getSequenceDao().getSequenceEntity(sequenceName, sequencePartName);
+        log.info("Getting Sequence Entity for [{}] [{}]", sequenceName, sequencePartName);
+        try
+        {
+            return getSequenceDao().getSequenceEntity(sequenceName, sequencePartName);
+        }
+        catch (Exception e)
+        {
+            throw new AcmSequenceException(
+                    String.format("Unable to get Sequence Entity for [%s] [%s]", sequenceName, sequencePartName), e);
+        }
     }
 
     @Override
@@ -76,7 +90,7 @@ public class AcmSequenceServiceImpl implements AcmSequenceService
 
         if (isReset)
         {
-            toUpdate.setSequencePartValue(sequencePart.getSequenceStartNumber() + sequencePart.getSequenceIncrementSize());
+            toUpdate.setSequencePartValue(Long.valueOf(sequencePart.getSequenceStartNumber() + sequencePart.getSequenceIncrementSize()));
         }
         else
         {
@@ -88,8 +102,19 @@ public class AcmSequenceServiceImpl implements AcmSequenceService
     @Override
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public List<AcmSequenceReset> getSequenceResetList(String sequenceName, String sequencePartName, Boolean resetExecutedFlag)
+            throws AcmSequenceException
     {
-        return getSequenceResetDao().getSequenceResetList(sequenceName, sequencePartName, resetExecutedFlag);
+        log.info("Getting Sequence Reset List for [{}] [{}]", sequenceName, sequencePartName);
+        try
+        {
+            return getSequenceResetDao().getSequenceResetList(sequenceName, sequencePartName, resetExecutedFlag);
+        }
+        catch (Exception e)
+        {
+            throw new AcmSequenceException(
+                    String.format("Unable to get Sequence Reset List for [%s] [%s]", sequenceName, sequencePartName), e);
+        }
+
     }
 
     /*
@@ -99,9 +124,20 @@ public class AcmSequenceServiceImpl implements AcmSequenceService
      */
     @Override
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public AcmSequenceReset updateSequenceReset(AcmSequenceReset sequenceReset)
+    public AcmSequenceReset updateSequenceReset(AcmSequenceReset sequenceReset) throws AcmSequenceException
     {
-        return getSequenceResetDao().save(sequenceReset);
+        log.info("Updating Sequence Reset for [{}] [{}]", sequenceReset.getSequenceName(), sequenceReset.getSequencePartName());
+        try
+        {
+            return getSequenceResetDao().save(sequenceReset);
+        }
+        catch (Exception e)
+        {
+            throw new AcmSequenceException(
+                    String.format("Unable to update Sequence Reset for [%s] [%s]", sequenceReset.getSequenceName(),
+                            sequenceReset.getSequencePartName()),
+                    e);
+        }
     }
 
     /*
@@ -112,9 +148,18 @@ public class AcmSequenceServiceImpl implements AcmSequenceService
     @Override
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public List<AcmSequenceRegistry> getSequenceRegistryList(String sequenceName, String sequencePartName,
-            Boolean sequencePartValueUsedFlag)
+            Boolean sequencePartValueUsedFlag) throws AcmSequenceException
     {
-        return getSequenceRegistryDao().getSequenceRegistryList(sequenceName, sequencePartName, sequencePartValueUsedFlag);
+        log.info("Getting Sequence Registry List for [{}] [{}]", sequenceName, sequencePartName);
+        try
+        {
+            return getSequenceRegistryDao().getSequenceRegistryList(sequenceName, sequencePartName, sequencePartValueUsedFlag);
+        }
+        catch (Exception e)
+        {
+            throw new AcmSequenceException(
+                    String.format("Unable to get Sequence Registry List for [%s] [%s]", sequenceName, sequencePartName), e);
+        }
     }
 
     /*
@@ -124,9 +169,18 @@ public class AcmSequenceServiceImpl implements AcmSequenceService
      */
     @Override
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public Integer updateSequenceRegistryAsUnused(String sequenceValue)
+    public Integer updateSequenceRegistryAsUnused(String sequenceValue) throws AcmSequenceException
     {
-        return getSequenceRegistryDao().updateSequenceRegistryAsUnused(sequenceValue);
+        log.info("Updating Sequence Registry [{}]", sequenceValue);
+        try
+        {
+            return getSequenceRegistryDao().updateSequenceRegistryAsUnused(sequenceValue);
+        }
+        catch (Exception e)
+        {
+            throw new AcmSequenceException(
+                    String.format("Unable to update Sequence Registry for [%s]", sequenceValue), e);
+        }
     }
 
     /*
@@ -136,9 +190,18 @@ public class AcmSequenceServiceImpl implements AcmSequenceService
      */
     @Override
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public Integer removeSequenceRegistry(String sequenceValue)
+    public Integer removeSequenceRegistry(String sequenceValue) throws AcmSequenceException
     {
-        return getSequenceRegistryDao().removeSequenceRegistry(sequenceValue);
+        log.info("Removing Sequence Registry for [{}]", sequenceValue);
+        try
+        {
+            return getSequenceRegistryDao().removeSequenceRegistry(sequenceValue);
+        }
+        catch (Exception e)
+        {
+            throw new AcmSequenceException(
+                    String.format("Unable to remove Sequence Registry for [%s]", sequenceValue), e);
+        }
     }
 
     /*
@@ -148,9 +211,18 @@ public class AcmSequenceServiceImpl implements AcmSequenceService
      */
     @Override
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public Integer removeSequenceRegistry(String sequenceName, String sequencePartName)
+    public Integer removeSequenceRegistry(String sequenceName, String sequencePartName) throws AcmSequenceException
     {
-        return getSequenceRegistryDao().removeSequenceRegistry(sequenceName, sequencePartName);
+        log.info("Removing Sequence Registry for [{}] [{}]", sequenceName, sequencePartName);
+        try
+        {
+            return getSequenceRegistryDao().removeSequenceRegistry(sequenceName, sequencePartName);
+        }
+        catch (Exception e)
+        {
+            throw new AcmSequenceException(
+                    String.format("Unable to remove Sequence Registry for [%s] [%s]", sequenceName, sequencePartName), e);
+        }
     }
 
     /*
@@ -161,9 +233,20 @@ public class AcmSequenceServiceImpl implements AcmSequenceService
      */
     @Override
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public AcmSequenceEntity saveSequenceEntity(AcmSequenceEntity sequenceEntity)
+    public AcmSequenceEntity saveSequenceEntity(AcmSequenceEntity sequenceEntity) throws AcmSequenceException
     {
-        return getSequenceDao().save(sequenceEntity);
+        log.info("Saving Sequence Entity for [{}] [{}]", sequenceEntity.getSequenceName(), sequenceEntity.getSequencePartName());
+        try
+        {
+            return getSequenceDao().save(sequenceEntity);
+        }
+        catch (Exception e)
+        {
+            throw new AcmSequenceException(
+                    String.format("Unable to save Sequence Entity [%s] [%s]", sequenceEntity.getSequenceName(),
+                            sequenceEntity.getSequencePartName()),
+                    e);
+        }
     }
 
     /*
@@ -174,9 +257,21 @@ public class AcmSequenceServiceImpl implements AcmSequenceService
      */
     @Override
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public AcmSequenceReset saveSequenceReset(AcmSequenceReset sequenceReset)
+    public AcmSequenceReset saveSequenceReset(AcmSequenceReset sequenceReset) throws AcmSequenceException
     {
-        return getSequenceResetDao().save(sequenceReset);
+        log.info("Saving Sequence Reset for [{}] [{}] [{}]", sequenceReset.getSequenceName(), sequenceReset.getSequencePartName(),
+                sequenceReset.getResetDate());
+        try
+        {
+            return getSequenceResetDao().save(sequenceReset);
+        }
+        catch (Exception e)
+        {
+            throw new AcmSequenceException(
+                    String.format("Unable to save Sequence Registry [%s] [%s] [%s]", sequenceReset.getSequenceName(),
+                            sequenceReset.getSequencePartName(), sequenceReset.getResetDate()),
+                    e);
+        }
     }
 
     /*
@@ -186,9 +281,21 @@ public class AcmSequenceServiceImpl implements AcmSequenceService
      */
     @Override
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public AcmSequenceRegistry saveSequenceRegistry(AcmSequenceRegistry sequenceRegistry)
+    public AcmSequenceRegistry saveSequenceRegistry(AcmSequenceRegistry sequenceRegistry) throws AcmSequenceException
     {
-        return getSequenceRegistryDao().save(sequenceRegistry);
+        log.info("Saving Sequence Registry for [{}] [{}] [{}]", sequenceRegistry.getSequenceValue(), sequenceRegistry.getSequenceName(),
+                sequenceRegistry.getSequencePartName());
+        try
+        {
+            return getSequenceRegistryDao().save(sequenceRegistry);
+        }
+        catch (Exception e)
+        {
+            throw new AcmSequenceException(
+                    String.format("Unable to save Sequence Registry [%s] [%s] [%s]", sequenceRegistry.getSequenceValue(),
+                            sequenceRegistry.getSequenceName(), sequenceRegistry.getSequencePartName()),
+                    e);
+        }
     }
 
     /**

@@ -81,7 +81,7 @@ public class AcmSequenceRegistryDao extends AcmAbstractDao<AcmSequenceRegistry>
     public Integer updateSequenceRegistryAsUnused(String sequenceValue)
     {
         String queryText = "UPDATE AcmSequenceRegistry sequenceRegistry " +
-                "SET sequenceRegistry.sequencePartValueUsedFlag = 'false' " +
+                "SET sequenceRegistry.sequencePartValueUsedFlag = false " +
                 "WHERE sequenceRegistry.sequenceValue = :sequenceValue";
 
         Query query = getEm().createQuery(queryText);

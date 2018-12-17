@@ -29,10 +29,11 @@ package com.armedia.acm.services.sequence.listener;
 
 import com.armedia.acm.data.AcmBeforeInsertListener;
 import com.armedia.acm.data.AcmEntity;
+import com.armedia.acm.data.event.AcmSequenceEvent;
 import com.armedia.acm.services.sequence.annotation.AcmSequence;
 import com.armedia.acm.services.sequence.annotation.AcmSequenceAnnotationReader;
-import com.armedia.acm.services.sequence.generator.AcmSequenceGenerator;
-import com.armedia.acm.services.sequence.model.AcmSequenceEvent;
+import com.armedia.acm.services.sequence.exception.AcmSequenceException;
+import com.armedia.acm.services.sequence.generator.AcmSequenceGeneratorManager;
 
 import org.apache.commons.beanutils.PropertyUtils;
 import org.slf4j.Logger;
@@ -40,6 +41,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 /**
@@ -50,8 +52,8 @@ public class AcmSequenceHandler implements AcmBeforeInsertListener, ApplicationL
 {
     private final Logger log = LoggerFactory.getLogger(getClass());
 
-    private AcmSequenceAnnotationReader acmSequenceAnnotationReader;
-    private AcmSequenceGenerator acmSequenceGenerator;
+    private AcmSequenceAnnotationReader sequenceAnnotationReader;
+    private AcmSequenceGeneratorManager sequenceGeneratorManager;
 
     @Override
     public void beforeInsert(Object object)
@@ -79,7 +81,7 @@ public class AcmSequenceHandler implements AcmBeforeInsertListener, ApplicationL
         {
             log.trace("Entity type [{}] is an AcmEntity, setting annotated fields", object.getClass());
 
-            List<Field> annotatedFields = getAcmSequenceAnnotationReader().getAnnotatedFields(object.getClass());
+            List<Field> annotatedFields = getSequenceAnnotationReader().getAnnotatedFields(object.getClass());
             for (Field annotatedField : annotatedFields)
             {
                 try
@@ -92,53 +94,53 @@ public class AcmSequenceHandler implements AcmBeforeInsertListener, ApplicationL
                                                     .equals(PropertyUtils.getProperty(object, annotatedField.getName()).toString())))
                     {
                         String sequenceName = annotatedField.getAnnotation(AcmSequence.class).sequenceName();
-                        if (getAcmSequenceGenerator().getSequenceEnabled(sequenceName))
+                        if (getSequenceGeneratorManager().getSequenceEnabled(sequenceName))
                         {
-                            String value = getAcmSequenceGenerator().generateValue(sequenceName, object);
+                            String value = getSequenceGeneratorManager().generateValue(sequenceName, object);
                             PropertyUtils.setProperty(object, annotatedField.getName(), value);
                         }
                     }
                 }
-                catch (Exception e)
+                catch (AcmSequenceException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e)
                 {
-                    log.error("Error getting or setting property [{}], reason [{}]", annotatedField.getName(), e.getMessage(), e);
+                    log.error("Error setting sequence on [{}]", annotatedField.getName(), e);
                 }
             }
         }
     }
 
     /**
-     * @return the acmSequenceGenerator
+     * @return the sequenceGeneratorManager
      */
-    public AcmSequenceGenerator getAcmSequenceGenerator()
+    public AcmSequenceGeneratorManager getSequenceGeneratorManager()
     {
-        return acmSequenceGenerator;
+        return sequenceGeneratorManager;
     }
 
     /**
-     * @param acmSequenceGenerator
-     *            the acmSequenceGenerator to set
+     * @param sequenceGeneratorManager
+     *            the sequenceGeneratorManager to set
      */
-    public void setAcmSequenceGenerator(AcmSequenceGenerator acmSequenceGenerator)
+    public void setSequenceGeneratorManager(AcmSequenceGeneratorManager sequenceGeneratorManager)
     {
-        this.acmSequenceGenerator = acmSequenceGenerator;
+        this.sequenceGeneratorManager = sequenceGeneratorManager;
     }
 
     /**
-     * @return the acmSequenceAnnotationReader
+     * @return the sequenceAnnotationReader
      */
-    public AcmSequenceAnnotationReader getAcmSequenceAnnotationReader()
+    public AcmSequenceAnnotationReader getSequenceAnnotationReader()
     {
-        return acmSequenceAnnotationReader;
+        return sequenceAnnotationReader;
     }
 
     /**
-     * @param acmSequenceAnnotationReader
-     *            the acmSequenceAnnotationReader to set
+     * @param sequenceAnnotationReader
+     *            the sequenceAnnotationReader to set
      */
-    public void setAcmSequenceAnnotationReader(AcmSequenceAnnotationReader acmSequenceAnnotationReader)
+    public void setSequenceAnnotationReader(AcmSequenceAnnotationReader sequenceAnnotationReader)
     {
-        this.acmSequenceAnnotationReader = acmSequenceAnnotationReader;
+        this.sequenceAnnotationReader = sequenceAnnotationReader;
     }
 
 }
