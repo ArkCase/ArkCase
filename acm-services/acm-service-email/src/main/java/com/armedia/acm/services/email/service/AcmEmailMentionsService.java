@@ -74,12 +74,19 @@ public class AcmEmailMentionsService
     private String buildObjectUrl(EmailMentionsDTO in)
     {
         String baseUrl = acmAppConfiguration.getBaseUrl();
-        String subType = !in.getSubType().isEmpty() ? in.getSubType() : in.getObjectType();
-        Optional<String> objectUrl = acmAppConfiguration.getObjectTypes().stream()
-                .filter(acmObjectType -> acmObjectType.getName().equals(in.getObjectType()))
-                .map(acmObjectType -> acmObjectType.getUrl().get(subType))
-                .collect(Collectors.toList()).stream().findFirst();
-        return objectUrl.isPresent() ? baseUrl + String.format(objectUrl.get(), in.getObjectId()) : baseUrl;
+        if (in.getUrlPath() != null)
+        {
+            return baseUrl + in.getUrlPath();
+        }
+        else
+        {
+            String subType = !in.getSubType().isEmpty() ? in.getSubType() : in.getObjectType();
+            Optional<String> objectUrl = acmAppConfiguration.getObjectTypes().stream()
+                    .filter(acmObjectType -> acmObjectType.getName().equals(in.getObjectType()))
+                    .map(acmObjectType -> acmObjectType.getUrl().get(subType))
+                    .collect(Collectors.toList()).stream().findFirst();
+            return objectUrl.isPresent() ? baseUrl + String.format(objectUrl.get(), in.getObjectId()) : baseUrl;
+        }
     }
 
     private EmailBodyBuilder<AbstractMap.SimpleImmutableEntry<String, List<String>>> buildEmailBody(EmailMentionsDTO in,

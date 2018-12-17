@@ -28,6 +28,7 @@ package com.armedia.acm.services.users.model.ldap;
  */
 
 import com.armedia.acm.services.users.model.group.AcmGroup;
+import com.armedia.acm.services.users.model.group.AcmGroupConstants;
 import com.armedia.acm.services.users.model.group.AcmGroupStatus;
 import com.armedia.acm.services.users.model.group.AcmGroupType;
 
@@ -233,7 +234,7 @@ public class LdapGroup
                 : ascendants.stream()
                         .map(LdapGroup::getName)
                         .sorted()
-                        .collect(Collectors.joining(","));
+                        .collect(Collectors.joining(AcmGroupConstants.ASCENDANTS_STRING_DELIMITER));
     }
 
     public void setAscendants(Set<LdapGroup> ascendants)
