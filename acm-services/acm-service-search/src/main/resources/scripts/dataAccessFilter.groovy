@@ -23,7 +23,7 @@ if (includeDACFilter) {
             // include records where current user is in a group on allow_group_ls
             dataAccessFilter += " OR allow_group_ls:" + groupId
         }
-        dataAccessFilter += ")) OR (public_doc_b:true OR protected_object_b:false OR not(exists(protected_object_b)) " +
+        dataAccessFilter += ")) OR (public_doc_b:true OR protected_object_b:false OR (*:* -protected_object_b:[* TO *]) " +
                 "OR parent_allow_user_ls:" + authenticatedUserId
 
         for (Long groupId : authenticatedUserGroupIds) {
