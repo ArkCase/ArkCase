@@ -1,8 +1,8 @@
-package com.armedia.acm.services.users.model.group;
+package com.armedia.acm.plugins.casefile.model;
 
 /*-
  * #%L
- * ACM Service: Users
+ * ACM Default Plugin: Case File
  * %%
  * Copyright (C) 2014 - 2018 ArkCase LLC
  * %%
@@ -27,7 +27,23 @@ package com.armedia.acm.services.users.model.group;
  * #L%
  */
 
-public interface AcmGroupConstants
+import com.armedia.acm.core.model.AcmEvent;
+
+import java.util.Date;
+
+/**
+ * @author mario.gjurcheski
+ *
+ */
+public class QueuedEvent extends AcmEvent
 {
-    String ASCENDANTS_STRING_DELIMITER = "||";
+
+    public QueuedEvent(Object source, String user, String eventType, Date eventDate)
+    {
+        super(source);
+        setUserId(user);
+        setEventType(eventType);
+        setEventDate(eventDate);
+    }
+
 }

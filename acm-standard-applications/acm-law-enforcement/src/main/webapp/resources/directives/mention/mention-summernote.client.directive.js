@@ -35,7 +35,7 @@ angular.module('directives').directive('mentionSummernote', [ 'UtilService', 'Me
                     match: /\B@(\w*)$/,
                     search: function(keyword, callback) {
                         callback($.grep($scope.people, function(item) {
-                            return item.indexOf(keyword) == 0;
+                            return item.toLowerCase().indexOf(keyword.toLowerCase()) == 0;
                         }));
                     },
                     content: function(item) {

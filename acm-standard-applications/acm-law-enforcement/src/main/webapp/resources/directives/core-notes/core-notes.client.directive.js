@@ -60,7 +60,8 @@ angular.module('directives').directive(
                         restrict: 'E',
                         scope: {
                             notesInit: '=',
-                            config: '='
+                            config: '=',
+                            mentionInfo: '='
                         },
                         link: function(scope, element, attrs) {
 
@@ -199,17 +200,20 @@ angular.module('directives').directive(
 
                                 modalInstance.result.then(function(data) {
                                     ObjectNoteService.saveNote(data.note).then(function(note) {
-                                        var noteParentType = "";
-                                        if(note.type == "REJECT_COMMENT"){
-                                            noteParentType = "TASK_REJECT_COMMENT"
-                                        }else if(note.type == "REJECT_COMMENT"){
-                                            noteParentType = "TASK_REJECT_COMMENT"
+                                        if (scope.mentionInfo) {
+                                            var url = "/home.html#!/viewer/" + scope.mentionInfo.fileId + "/" + scope.mentionInfo.containerObjectId + "/" + scope.mentionInfo.containerObjectType + "/" + encodeURIComponent(scope.mentionInfo.fileName) + "/" + scope.mentionInfo.fileId;
+                                            MentionsService.sendEmailToMentionedUsersWithUrl(scope.params.emailAddresses, scope.params.usersMentioned, scope.mentionInfo.containerObjectType, scope.mentionInfo.containerObjectId, url, note.note);
+                                        } else {
+                                            var noteParentType = "";
+                                            if (note.type == "REJECT_COMMENT") {
+                                                noteParentType = "TASK_REJECT_COMMENT"
+                                            } else if (note.type == "REJECT_COMMENT") {
+                                                noteParentType = "TASK_REJECT_COMMENT"
+                                            } else {
+                                                noteParentType = note.parentType;
+                                            }
+                                            MentionsService.sendEmailToMentionedUsers(scope.params.emailAddresses, scope.params.usersMentioned, "NOTE", noteParentType, note.parentId, note.note);
                                         }
-                                        else {
-                                            noteParentType = note.parentType;
-                                        }
-                                        MentionsService.sendEmailToMentionedUsers(scope.params.emailAddresses, scope.params.usersMentioned,
-                                            "NOTE", noteParentType, note.parentId, note.note);
                                         scope.retrieveGridData();
                                     }, function() {
                                     });
