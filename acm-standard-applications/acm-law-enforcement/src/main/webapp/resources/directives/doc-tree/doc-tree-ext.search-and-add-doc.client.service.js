@@ -47,6 +47,7 @@ angular.module('services').factory('DocTreeExt.SearchAndAddDocuments', [ '$q', '
                 onAllowCmd: function(nodes, objectInfo) {
                     if(Util.isArray(nodes) && !Util.isEmpty(nodes) && nodes.length == 1 && !Util.isEmpty(nodes[0].data) && (nodes[0].data.objectType == ObjectService.ObjectTypes.FOLDER.toLowerCase() || nodes[0].data.root == true)) {
                         objectInfo.container.folder.nodeId = nodes[0].data.objectId;
+
                         var dataAccessControllProperties;
                         var enabledDocumentAcl = 'dac.enableDocumentACL';
                         DocumentACLService.getProperties().then(function(response) {
@@ -56,14 +57,18 @@ angular.module('services').factory('DocTreeExt.SearchAndAddDocuments', [ '$q', '
                             }
                         });
 
-                        if(enabledDocumentAcl === 'true')
-                        return PermissionsService.getActionPermission('allowCopyingFile', objectInfo.container.folder, {
-                            objectType: ObjectService.ObjectTypes.FOLDER
-                        }).then(function success(enabled) {
-                            return enabled ? 'visible' : 'invisible';
-                        }, function error() {
+                        if(enabledDocumentAcl === 'true'){
+                            return PermissionsService.getActionPermission('allowCopyingFile', objectInfo.container.folder, {
+                                objectType: ObjectService.ObjectTypes.FOLDER
+                            }).then(function success(enabled) {
+                                return enabled ? 'visible' : 'invisible';
+                            }, function error() {
+                                return 'invisible';
+                            });
+                        } else {
                             return 'invisible';
-                        });
+                        }
+
                     }else {
                         return 'invisible';
                     }

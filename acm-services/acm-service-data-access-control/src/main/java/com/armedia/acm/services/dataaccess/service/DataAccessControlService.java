@@ -9,7 +9,8 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class DataAccessControlService {
+public class DataAccessControlService
+{
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
@@ -33,6 +34,7 @@ public class DataAccessControlService {
     public void  saveProperties(Map<String, String> properties)
     {
         getPropertyFileManager().storeMultiple(properties, getPropertiesFile(), true);
+        this.properties = properties;
     }
 
     public Map<String, String> loadProperties()
