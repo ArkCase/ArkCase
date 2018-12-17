@@ -52,7 +52,8 @@ angular.module('document-details').controller(
                             animation: $scope.animationsEnabled,
                             templateUrl: 'modules/document-details/views/components/tags-modal.client.view.html',
                             controller: 'Document.TagsModalController',
-                            size: 'lg'
+                            size: 'lg',
+                            backdrop: 'static'
                         });
 
                         modalInstance.result.then(function(tags) {

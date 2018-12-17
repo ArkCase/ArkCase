@@ -590,7 +590,7 @@
             },
             "auditReportNames": {
                 "all": "All",
-                "case_file": "Case",
+                "case_file": "Request",
                 "complaint": "Complaint",
                 "task": "Task",
                 "file": "File",

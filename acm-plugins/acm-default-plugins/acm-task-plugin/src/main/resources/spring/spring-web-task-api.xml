@@ -31,9 +31,7 @@
     </bean>
 
     <bean id="createAdHocTaskAPIController" class="com.armedia.acm.plugins.task.web.api.CreateAdHocTaskAPIController">
-        <property name="taskDao" ref="acmTaskDao"/>
-        <property name="taskEventPublisher" ref="taskEventPublisher"/>
-        <property name="executeSolrQuery" ref="executeSolrQuery"/>
+        <property name="createAdHocTaskService" ref="createAdHocTaskService"/>
     </bean>
 
     <bean id="createBusinessProcessTasksAPIController" class="com.armedia.acm.plugins.task.web.api.CreateBusinessProcessTasksAPIController">

@@ -104,11 +104,12 @@ angular
             'Admin.EmailSenderConfigurationService',
             'Helper.LocaleService',
             'PublicFlag.Service',
+            'RequestResponseFolder.Service',
             'MessageService',
             'Object.LookupService',
             '$timeout',
             function($q, $translate, $modal, $filter, $log, $injector, Store, Util, UtilDateService, ConfigService,
-            PluginService, UserInfoService, Ecm, EmailSenderConfigurationService, LocaleHelper, PublicFlagService, MessageService, ObjectLookupService, $timeout) {
+            PluginService, UserInfoService, Ecm, EmailSenderConfigurationService, LocaleHelper, PublicFlagService, RequestResponseFolderService, MessageService, ObjectLookupService, $timeout) {
                 var cacheTree = new Store.CacheFifo();
                 var cacheFolderList = new Store.CacheFifo();
 
@@ -1848,8 +1849,19 @@ angular
                                         }
                                         return DocTree.uploadSetting.deferSelectFile.promise;
                                     }
+                                }, {
+                                    name : "generateZipFile",
+                                    execute : function(nodes, args) {
+                                        var objectInfo = DocTree.objectInfo;
+                                        RequestResponseFolderService.compressAndSendResponseFolder(objectInfo.id).then(
+                                        function (response) {
+                                            MessageService.succsessAction();
+                                        },
+                                        function (reason){
+                                            MessageService.errorAction();
+                                        });
+                                    }
                                 }
-
                             ];
                         }
 
@@ -3384,8 +3396,6 @@ angular
                                                     if (Validator.validateActiveVersion(data)) {
                                                         if (data.fileId == fileId) {
                                                             var activeVersion = data;
-
-
                                                             var folderList = DocTree.cacheFolderList.get(cacheKey);
                                                             if (Validator.validateFolderList(folderList)) {
                                                                 var idx = DocTree.findFolderItemIdx(fileId, folderList);
@@ -4005,8 +4015,6 @@ angular
                                     } else {
                                         DocTree.Op.setActiveVersion(node, verSelected);
                                     }
-
-                                    //markotodo
                                 }
                             } //end if (parent)
                         }
