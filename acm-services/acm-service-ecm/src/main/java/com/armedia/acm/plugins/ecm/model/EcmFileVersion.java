@@ -126,6 +126,12 @@ public class EcmFileVersion implements AcmEntity, Serializable, AcmObject
     @JoinColumn(name = "cm_file_id")
     private EcmFile file;
 
+    @Column(name = "fo_review_status")
+    private String reviewStatus;
+
+    @Column(name = "fo_redaction_status")
+    private String redactionStatus;
+
     @Override
     public Date getCreated()
     {
@@ -352,4 +358,21 @@ public class EcmFileVersion implements AcmEntity, Serializable, AcmObject
         return OBJECT_TYPE;
     }
 
+    public String getReviewStatus()
+    {
+        return reviewStatus;
+    }
+
+    public void setReviewStatus(String reviewStatus)
+    {
+        this.reviewStatus = reviewStatus;
+    }
+
+    public String getRedactionStatus() {
+        return redactionStatus;
+    }
+
+    public void setRedactionStatus(String redactionStatus) {
+        this.redactionStatus = redactionStatus;
+    }
 }

@@ -84,6 +84,8 @@ public class FOIAFileNewMetadataHandler extends EcmFileNewMetadataHandler
                     pipelineContext.getMergedFileByteArray().length > 0 ? pipelineContext.getMergedFileByteArray().length
                             : pipelineContext.getFileContents() != null ? pipelineContext.getFileContents().length() : 0;
             version.setFileSizeBytes(fileSizeBytes);
+            version.setReviewStatus(new String());
+            version.setRedactionStatus(new String());
 
             // file metadata
             if (pipelineContext.getDetectedFileMetadata() != null)
@@ -119,8 +121,6 @@ public class FOIAFileNewMetadataHandler extends EcmFileNewMetadataHandler
             {
                 getArkCaseBeanUtils().copyProperties(fileMetadata, entity);
                 fileMetadata.setPublicFlag(false);
-                fileMetadata.setReviewStatus(new String());
-                fileMetadata.setRedactionStatus(new String());
             }
             catch (IllegalAccessException | InvocationTargetException e)
             {

@@ -147,4 +147,7 @@
         <property name="fileParticipantService" ref="fileParticipantService"/>
     </bean>
 
+    <bean id="setReviewRedactionStatusAPIController" class="com.armedia.acm.plugins.ecm.web.api.SetReviewRedactionStatusAPIController">
+        <property name="ecmFileService" ref="ecmFileService"/>
+    </bean>
 </beans>
