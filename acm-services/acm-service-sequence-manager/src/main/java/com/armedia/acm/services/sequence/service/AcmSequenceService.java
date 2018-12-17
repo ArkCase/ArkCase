@@ -1,5 +1,7 @@
 package com.armedia.acm.services.sequence.service;
 
+import com.armedia.acm.services.sequence.exception.AcmSequenceException;
+
 /*-
  * #%L
  * ACM Service: Sequence Manager
@@ -41,28 +43,29 @@ import java.util.List;
 public interface AcmSequenceService
 {
     // Sequence Entity
-    public AcmSequenceEntity saveSequenceEntity(AcmSequenceEntity sequenceEntity);
+    public AcmSequenceEntity saveSequenceEntity(AcmSequenceEntity sequenceEntity) throws AcmSequenceException;
 
-    public AcmSequenceEntity getSequenceEntity(String sequenceName, String sequencePartName);
+    public AcmSequenceEntity getSequenceEntity(String sequenceName, String sequencePartName) throws AcmSequenceException;
 
     public AcmSequenceEntity updateSequenceEntity(AcmSequenceEntity sequenceEntity, AcmSequencePart sequencePart, Boolean isReset);
 
     // Sequence Reset
-    public AcmSequenceReset saveSequenceReset(AcmSequenceReset sequenceReset);
+    public AcmSequenceReset saveSequenceReset(AcmSequenceReset sequenceReset) throws AcmSequenceException;
 
-    public List<AcmSequenceReset> getSequenceResetList(String sequenceName, String sequencePartName, Boolean resetExecutedFlag);
+    public List<AcmSequenceReset> getSequenceResetList(String sequenceName, String sequencePartName, Boolean resetExecutedFlag)
+            throws AcmSequenceException;
 
-    public AcmSequenceReset updateSequenceReset(AcmSequenceReset sequenceReset);
+    public AcmSequenceReset updateSequenceReset(AcmSequenceReset sequenceReset) throws AcmSequenceException;
 
     // Sequence Registry
-    public AcmSequenceRegistry saveSequenceRegistry(AcmSequenceRegistry sequenceRegistry);
+    public AcmSequenceRegistry saveSequenceRegistry(AcmSequenceRegistry sequenceRegistry) throws AcmSequenceException;
 
     public List<AcmSequenceRegistry> getSequenceRegistryList(String sequenceName, String sequencePartName,
-            Boolean sequencePartValueUsedFlag);
+            Boolean sequencePartValueUsedFlag) throws AcmSequenceException;
 
-    public Integer updateSequenceRegistryAsUnused(String sequenceValue);
+    public Integer updateSequenceRegistryAsUnused(String sequenceValue) throws AcmSequenceException;
 
-    public Integer removeSequenceRegistry(String sequenceValue);
+    public Integer removeSequenceRegistry(String sequenceValue) throws AcmSequenceException;
 
-    public Integer removeSequenceRegistry(String sequenceName, String sequencePartName);
+    public Integer removeSequenceRegistry(String sequenceName, String sequencePartName) throws AcmSequenceException;
 }

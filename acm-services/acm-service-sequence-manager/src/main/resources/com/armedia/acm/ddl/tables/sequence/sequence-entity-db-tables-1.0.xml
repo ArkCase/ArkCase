@@ -10,10 +10,10 @@
             <column name="cm_sequence_part_name" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
-            <column name="cm_sequence_part_value" type="INTEGER">
+            <column name="cm_sequence_part_value" type="${idType}">
                 <constraints nullable="false"/>
             </column>
-            <column name="cm_sequence_part_lock" type="INTEGER" defaultValue="1">
+            <column name="version" type="INTEGER" defaultValue="1">
                 <constraints nullable="false"/>
             </column>
         </createTable>
@@ -30,7 +30,7 @@
             <column name="cm_sequence_part_name" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
-            <column name="cm_sequence_part_value" type="INTEGER">
+            <column name="cm_sequence_part_value" type="${idType}">
                 <constraints nullable="false"/>
             </column>
             <column name="cm_sequence_part_value_used_flag" type="VARCHAR(10)" defaultValue="true"/>

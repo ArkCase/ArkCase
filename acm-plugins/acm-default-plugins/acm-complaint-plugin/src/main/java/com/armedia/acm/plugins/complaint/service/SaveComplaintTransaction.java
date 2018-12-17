@@ -33,12 +33,9 @@ import com.armedia.acm.plugins.complaint.model.Complaint;
 import com.armedia.acm.plugins.complaint.pipeline.ComplaintPipelineContext;
 import com.armedia.acm.services.pipeline.PipelineManager;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
-import com.armedia.acm.services.sequence.model.AcmSequenceEvent;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -50,12 +47,11 @@ import org.springframework.transaction.annotation.Transactional;
  * the browser. Also, separating transaction management (in this class) and exception handling (in the controller) is a
  * good idea in general.
  */
-public class SaveComplaintTransaction implements ApplicationEventPublisherAware
+public class SaveComplaintTransaction
 {
     private final Logger log = LoggerFactory.getLogger(getClass());
     private ComplaintDao complaintDao;
     private PipelineManager<Complaint, ComplaintPipelineContext> pipelineManager;
-    private ApplicationEventPublisher applicationEventPublisher;
 
     @Transactional
     public Complaint saveComplaint(Complaint complaint, Authentication authentication) throws PipelineProcessException
@@ -72,7 +68,6 @@ public class SaveComplaintTransaction implements ApplicationEventPublisherAware
             Complaint saved = complaintDao.save(complaint);
 
             log.info("Complaint saved '{}'", saved);
-            applicationEventPublisher.publishEvent(new AcmSequenceEvent(saved));
             return saved;
 
         });
@@ -103,14 +98,4 @@ public class SaveComplaintTransaction implements ApplicationEventPublisherAware
         return complaintDao.find(complaintId);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.springframework.context.ApplicationEventPublisherAware#setApplicationEventPublisher(org.springframework.
-     * context.ApplicationEventPublisher)
-     */
-    @Override
-    public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher)
-    {
-        this.applicationEventPublisher = applicationEventPublisher;
-    }
 }

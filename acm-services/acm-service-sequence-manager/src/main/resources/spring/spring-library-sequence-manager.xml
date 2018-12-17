@@ -7,24 +7,45 @@
     </bean>
 
     <bean id="acmSequenceHandler" class="com.armedia.acm.services.sequence.listener.AcmSequenceHandler">
-        <property name="acmSequenceAnnotationReader" ref="acmSequenceAnnotationReader"/>
-        <property name="acmSequenceGenerator" ref="acmSequenceGenerator"/>
+        <property name="sequenceAnnotationReader" ref="acmSequenceAnnotationReader"/>
+        <property name="sequenceGeneratorManager" ref="acmSequenceGeneratorManager"/>
     </bean>
 
     <bean id="acmSequenceDatabaseHandler" class="com.armedia.acm.services.sequence.listener.AcmSequenceDatabaseChangeHandler">
-        <property name="acmSequenceAnnotationReader" ref="acmSequenceAnnotationReader"/>
+        <property name="sequenceAnnotationReader" ref="acmSequenceAnnotationReader"/>
         <property name="sequenceService" ref="acmSequenceService"/>
     </bean>
 
     <bean id="acmSequenceDatabaseRollbackHandler" class="com.armedia.acm.services.sequence.listener.AcmSequenceDatabaseRollbackChangesHandler">
-        <property name="acmSequenceAnnotationReader" ref="acmSequenceAnnotationReader"/>
+        <property name="sequenceAnnotationReader" ref="acmSequenceAnnotationReader"/>
         <property name="sequenceService" ref="acmSequenceService"/>
     </bean>
 
-    <bean id="acmSequenceGenerator" class="com.armedia.acm.services.sequence.generator.AcmSequenceGenerator" init-method="initSequenceMap">
+    <bean id="acmSequenceGeneratorManager" class="com.armedia.acm.services.sequence.generator.AcmSequenceGeneratorManager" init-method="initSequenceMap">
         <property name="sequenceConfiguration" ref="sequenceConfiguration"/>
         <property name="objectConverter" ref="objectConverter"/>
         <property name="sequenceService" ref="acmSequenceService"/>
+    </bean>
+
+    <bean id="acmAutoincrementSequenceGenerator" class="com.armedia.acm.services.sequence.generator.AcmAutoincrementSequenceGenerator" init-method="init">
+        <property name="sequenceGeneratorManager" ref="acmSequenceGeneratorManager"/>
+        <property name="sequenceService" ref="acmSequenceService"/>
+    </bean>
+
+    <bean id="acmDateSequenceGenerator" class="com.armedia.acm.services.sequence.generator.AcmDateSequenceGenerator" init-method="init">
+        <property name="sequenceGeneratorManager" ref="acmSequenceGeneratorManager"/>
+    </bean>
+
+    <bean id="acmArbitraryTextSequenceGenerator" class="com.armedia.acm.services.sequence.generator.AcmArbitraryTextSequenceGenerator" init-method="init">
+        <property name="sequenceGeneratorManager" ref="acmSequenceGeneratorManager"/>
+    </bean>
+
+    <bean id="acmUUIDSequenceGenerator" class="com.armedia.acm.services.sequence.generator.AcmUUIDSequenceGenerator" init-method="init">
+        <property name="sequenceGeneratorManager" ref="acmSequenceGeneratorManager"/>
+    </bean>
+
+    <bean id="acmObjectPropertySequenceGenerator" class="com.armedia.acm.services.sequence.generator.AcmObjectPropertySequenceGenerator" init-method="init">
+        <property name="sequenceGeneratorManager" ref="acmSequenceGeneratorManager"/>
     </bean>
 
     <bean id="acmSequenceDao" class="com.armedia.acm.services.sequence.dao.AcmSequenceDao"/>

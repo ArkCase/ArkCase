@@ -1,4 +1,4 @@
-package com.armedia.acm.services.sequence.model;
+package com.armedia.acm.data.event;
 
 /*-
  * #%L
