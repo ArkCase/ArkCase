@@ -35,7 +35,7 @@ angular.module('admin').controller('Admin.CMMergeFieldsController',
             });
 
             ObjectLookupService.getCorrespondenceObjectTypes().then(function(correspondenceObject) {
-                $scope.correspondenceObjectTypescorrespondenceObjectTypes = correspondenceObject;
+                $scope.correspondenceObjectTypes = correspondenceObject;
             });
 
             $scope.changeType = function() {
