@@ -43,7 +43,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 
-public class FOIAFileNewMetadataHandler extends EcmFileNewMetadataHandler
+public class FOIAEcmFileNewMetadataHandler extends EcmFileNewMetadataHandler
 {
 
     private transient final Logger log = LoggerFactory.getLogger(getClass());
