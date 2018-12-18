@@ -127,6 +127,8 @@ angular.module('services').factory('EcmService', [ '$resource', 'UtilService', f
             method: 'POST',
             url: 'api/latest/service/ecm/file/metadata/:fileId'
         },
+
+        //FOIA changes start
         setFileReviewStatus: {
             method: 'POST',
             url: 'api/latest/service/ecm/file/:fileId/version/:fileVersion/review/:reviewStatus'
@@ -135,6 +137,8 @@ angular.module('services').factory('EcmService', [ '$resource', 'UtilService', f
             method: 'POST',
             url: 'api/latest/service/ecm/file/:fileId/version/:fileVersion/redaction/:redactionStatus'
         }
+        //FOIA changes end
+
     });
 
     Service._getFolderDocumentCounts = function(params) {
