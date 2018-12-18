@@ -1528,43 +1528,6 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         return getEcmFileDao().find(fileId);
     }
 
-    @Override
-    public void setReviewStatus(Long fileId, String fileVersion, String reviewStatus)
-    {
-        setReviewRedactionStatus(fileId, fileVersion, reviewStatus, "review");
-    }
-
-    @Override
-    public void setRedactionStatus(Long fileId, String fileVersion, String redactionStatus)
-    {
-        setReviewRedactionStatus(fileId, fileVersion, redactionStatus, "redaction");
-    }
-
-    private void setReviewRedactionStatus(Long fileId, String fileVersion, String status, String statusType)
-    {
-        EcmFile file = findById(fileId);
-        List<EcmFileVersion> fileVersions = file.getVersions();
-
-        EcmFileVersion fileVersionToUpdate = fileVersions
-                .stream()
-                .filter(ecmFileVersion -> ecmFileVersion.getVersionTag().equals(fileVersion))
-                .findFirst()
-                .orElse(null);
-
-        if(Objects.nonNull(fileVersionToUpdate))
-        {
-            if("review".equals(statusType))
-            {
-                fileVersionToUpdate.setReviewStatus(status);
-            }
-            else if("redaction".equals(statusType))
-            {
-                fileVersionToUpdate.setRedactionStatus(status);
-            }
-            getEcmFileDao().save(file);
-        }
-    }
-
     public EcmFileTransaction getEcmFileTransaction()
     {
         return ecmFileTransaction;

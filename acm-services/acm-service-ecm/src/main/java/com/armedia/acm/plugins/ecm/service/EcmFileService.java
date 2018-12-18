@@ -352,10 +352,4 @@ public interface EcmFileService
      * @return whether the delete was successful
      */
     boolean deleteTempFile(String uniqueFileName);
-
-    void setReviewStatus(Long fileId, String fileVersion, String reviewStatus);
-
-    void setRedactionStatus(Long fileId, String fileVersion, String redactionStatus);
-
-
 }
