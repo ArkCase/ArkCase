@@ -1,4 +1,4 @@
-package com.armedia.acm.plugins.ecm.web.api;
+package gov.foia.web.api;
 
 /*-
  * #%L
@@ -27,7 +27,7 @@ package com.armedia.acm.plugins.ecm.web.api;
  * #L%
  */
 
-import com.armedia.acm.plugins.ecm.service.EcmFileService;
+import gov.foia.service.FOIAEcmFileVersionService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -46,7 +46,7 @@ public class SetReviewRedactionStatusAPIController
 {
 
     private transient final Logger log = LoggerFactory.getLogger(getClass());
-    private EcmFileService ecmFileService;
+    private FOIAEcmFileVersionService foiaEcmFileVersionService;
 
     @PreAuthorize("hasPermission(#fileId, 'FILE', 'write|group-write')")
     @RequestMapping(value = "/file/{fileId}/version/{fileVersion}/review/{reviewStatus}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -57,7 +57,7 @@ public class SetReviewRedactionStatusAPIController
                                             Authentication authentication)
     {
         log.debug("Trying to set Review Status for EcmFile with Id [{}]", fileId);
-        getEcmFileService().setReviewStatus(fileId, fileVersion, reviewStatus);
+        getFoiaEcmFileVersionService().setReviewStatus(fileId, fileVersion, reviewStatus);
 
     }
 
@@ -70,17 +70,17 @@ public class SetReviewRedactionStatusAPIController
                                 Authentication authentication)
     {
         log.debug("Trying to set Redaction Status for EcmFile with Id [{}]", fileId);
-        getEcmFileService().setRedactionStatus(fileId, fileVersion, redactionStatus);
+        getFoiaEcmFileVersionService().setRedactionStatus(fileId, fileVersion, redactionStatus);
 
     }
 
-    public EcmFileService getEcmFileService()
+    public FOIAEcmFileVersionService getFoiaEcmFileVersionService()
     {
-        return ecmFileService;
+        return foiaEcmFileVersionService;
     }
 
-    public void setEcmFileService(EcmFileService ecmFileService)
+    public void setFoiaEcmFileVersionService(FOIAEcmFileVersionService foiaEcmFileVersionService)
     {
-        this.ecmFileService = ecmFileService;
+        this.foiaEcmFileVersionService = foiaEcmFileVersionService;
     }
 }

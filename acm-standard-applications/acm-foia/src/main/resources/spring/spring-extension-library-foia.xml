@@ -259,5 +259,10 @@
             <beans:property name="userDao" ref="userJpaDao"/>
             <beans:property name="foiaConfigurationService" ref="foiaConfigurationService"/>
         </beans:bean>
+
+        <beans:bean id="foiaEcmFileVersionService" class="gov.foia.service.FOIAEcmFileVersionServiceImpl">
+            <beans:property name="ecmFileDao" ref="ecmFileDao"/>
+        </beans:bean>
+
     </beans:beans>
 </beans:beans>
