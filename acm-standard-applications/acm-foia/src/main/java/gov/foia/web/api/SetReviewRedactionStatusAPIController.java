@@ -27,7 +27,7 @@ package gov.foia.web.api;
  * #L%
  */
 
-import gov.foia.service.FOIAEcmFileVersionService;
+import gov.foia.service.FOIAEcmFileService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -46,7 +46,7 @@ public class SetReviewRedactionStatusAPIController
 {
 
     private transient final Logger log = LoggerFactory.getLogger(getClass());
-    private FOIAEcmFileVersionService foiaEcmFileVersionService;
+    private FOIAEcmFileService foiaEcmFileService;
 
     @PreAuthorize("hasPermission(#fileId, 'FILE', 'write|group-write')")
     @RequestMapping(value = "/file/{fileId}/version/{fileVersion}/review/{reviewStatus}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -57,7 +57,7 @@ public class SetReviewRedactionStatusAPIController
                                             Authentication authentication)
     {
         log.debug("Trying to set Review Status for EcmFile with Id [{}]", fileId);
-        getFoiaEcmFileVersionService().setReviewStatus(fileId, fileVersion, reviewStatus);
+        getFoiaEcmFileService().setReviewStatus(fileId, fileVersion, reviewStatus);
 
     }
 
@@ -70,17 +70,17 @@ public class SetReviewRedactionStatusAPIController
                                 Authentication authentication)
     {
         log.debug("Trying to set Redaction Status for EcmFile with Id [{}]", fileId);
-        getFoiaEcmFileVersionService().setRedactionStatus(fileId, fileVersion, redactionStatus);
+        getFoiaEcmFileService().setRedactionStatus(fileId, fileVersion, redactionStatus);
 
     }
 
-    public FOIAEcmFileVersionService getFoiaEcmFileVersionService()
+    public FOIAEcmFileService getFoiaEcmFileService()
     {
-        return foiaEcmFileVersionService;
+        return foiaEcmFileService;
     }
 
-    public void setFoiaEcmFileVersionService(FOIAEcmFileVersionService foiaEcmFileVersionService)
+    public void setFoiaEcmFileService(FOIAEcmFileService foiaEcmFileService)
     {
-        this.foiaEcmFileVersionService = foiaEcmFileVersionService;
+        this.foiaEcmFileService = foiaEcmFileService;
     }
 }
