@@ -135,7 +135,17 @@
                 20,
                 50
             ],
-            "paginationPageSize": 20
+            "paginationPageSize": 20,
+            "objectTypes": [
+                {
+                    "name": "Case File",
+                    "id": "CASE_FILE"
+                },
+                {
+                    "name": "Complaint",
+                    "id": "COMPLAINT"
+                }
+            ]
         },
         {
             "id": "correspondenceManagementMergeFieldsVersions",
@@ -254,7 +264,17 @@
                 20,
                 50
             ],
-            "paginationPageSize": 20
+            "paginationPageSize": 20,
+            "objectTypes": [
+                {
+                    "name": "Case File",
+                    "id": "CASE_FILE"
+                },
+                {
+                    "name": "Complaint",
+                    "id": "COMPLAINT"
+                }
+            ]
         },
         {
             "id": "correspondenceManagementTemplateVersions",
