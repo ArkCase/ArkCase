@@ -146,4 +146,5 @@
     <bean id="fileParticipantAPIController" class="com.armedia.acm.plugins.ecm.web.api.EcmFileParticipantsAPIController">
         <property name="fileParticipantService" ref="fileParticipantService"/>
     </bean>
+
 </beans>

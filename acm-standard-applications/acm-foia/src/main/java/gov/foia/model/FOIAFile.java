@@ -88,5 +88,4 @@ public class FOIAFile extends EcmFile
     {
         this.publicFlag = publicFlag;
     }
-
 }
