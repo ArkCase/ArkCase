@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('admin').controller('Admin.CMMergeFieldsController',
-        [ '$scope', '$rootScope', '$modal', 'Admin.CMMergeFieldsService', 'Helper.UiGridService', 'MessageService', 'LookupService', 'Acm.StoreService', 'Object.LookupService', function($scope, $rootScope, $modal, correspondenceMergeFieldsService, HelperUiGridService, messageService, LookupService, Store, ObjectLookupService) {
+        [ '$scope', '$rootScope', '$modal', 'Admin.CMMergeFieldsService', 'Helper.UiGridService', 'MessageService', 'LookupService', 'Acm.StoreService', function($scope, $rootScope, $modal, correspondenceMergeFieldsService, HelperUiGridService, messageService, LookupService, Store) {
 
             var gridHelper = new HelperUiGridService.Grid({
                 scope: $scope
@@ -25,17 +25,14 @@ angular.module('admin').controller('Admin.CMMergeFieldsController',
                     gridHelper.setBasicOptions(config);
                     gridHelper.disableGridScrolling(config);
                     $scope.config = config;
-                    $scope.objectTypes = $scope.correspondenceObjectTypes;
+                    $scope.objectTypes = config.objectTypes;
+                    $scope.mergingType = $scope.objectTypes[0].id;
 
                     gridHelper.setUserNameFilterToConfig(promiseUsers, configVersions);
                     $scope.configVersions = configVersions;
 
                     ReloadGrid();
                 });
-            });
-
-            ObjectLookupService.getCorrespondenceObjectTypes().then(function(correspondenceObject) {
-                $scope.correspondenceObjectTypescorrespondenceObjectTypes = correspondenceObject;
             });
 
             $scope.changeType = function() {
