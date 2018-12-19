@@ -57,15 +57,11 @@ angular.module('admin').controller('Admin.CMTemplatesController',
                     scope: modalScope,
                     animation: true,
                     templateUrl: 'modules/admin/views/components/correspondence-management-add-edit-template.modal.client.view.html',
-                    controller: [ '$scope', '$modalInstance', 'Admin.CMTemplatesService', function($scope, $modalInstance, correspondenceService) {
+                    controller: [ '$scope', '$modalInstance', 'Admin.CMTemplatesService', 'Object.LookupService', function($scope, $modalInstance, correspondenceService, ObjectLookupService) {
 
                         $scope.objectTypes = $scope.config.objectTypes;
                         $scope.selectedFiles = [];
                         $scope.template = {};
-                        if ($scope.selectedRows.length > 0) {
-                            $scope.template.objectType = $scope.selectedRows[0].objectType;
-                            $scope.template.label = $scope.selectedRows[0].label;
-                        }
 
                         $scope.upload = function upload(files) {
                             $scope.selectedFiles = files;
@@ -99,6 +95,14 @@ angular.module('admin').controller('Admin.CMTemplatesController',
                             $modalInstance.dismiss('cancel');
                         };
 
+                        $scope.change = function(selectedName){
+                            $scope.objectType = selectedName;
+                            $scope.template.objectType = $scope.objectType.key;
+                        };
+
+                        ObjectLookupService.getCorrespondenceObjectTypes().then(function(correspondenceObject) {
+                            $scope.correspondenceObjectTypes = correspondenceObject;
+                        });
                     } ],
                     size: 'md',
                     backdrop: 'static'
