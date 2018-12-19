@@ -630,15 +630,17 @@
           "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, {object_id_s:row.entity.object_id_s, object_type_s:row.entity.object_type_s})'>{{row.entity.title_parseable}}</a>"
         },
         {
-          "name": "parent_object_id_s",
+          "name": "parent_number_lcs",
+          "cellFilter": "beautifyParentNumberToParentId",
+          "type": "number",
           "displayName": "common.dialogObjectPicker.table.columns.parentId",
           "headerCellFilter": "translate"
         },
         {
-          "name": "parent_object_type_s",
+          "name":  "parent_ref_s",
           "displayName": "common.dialogObjectPicker.table.columns.parentTitle",
           "headerCellFilter": "translate",
-          "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, {parent_object_id_s:row.entity.parent_object_id_s, object_type_s:row.entity.parent_object_type_s})'>{{row.entity.parent_object_type_s}}</a>"
+          "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, {parent_object_id_s:row.entity.parent_ref_s, object_type_s:row.entity.parent_ref_s})'>{{row.entity.parent_ref_s | beautifyParentRefToParentTitle}}</a>"
         }
       ],
       "paginationPageSizes": [
