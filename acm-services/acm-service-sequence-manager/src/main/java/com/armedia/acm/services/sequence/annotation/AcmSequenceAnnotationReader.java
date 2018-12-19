@@ -35,6 +35,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author sasko.tanaskoski
@@ -45,21 +47,29 @@ public class AcmSequenceAnnotationReader
 
     private final Logger log = LoggerFactory.getLogger(getClass());
 
+    private Map<String, List<Field>> classToSequenceAttributes = new ConcurrentHashMap<>();
+
     /**
      * @param clazz
      * @return annotated field
      */
     public List<Field> getAnnotatedFields(Class<? extends Object> clazz)
     {
-        List<Field> annotatedFields = new ArrayList<Field>();
-        List<Field> allFields = getDeclaredFields(clazz);
-
-        for (Field field : allFields)
+        if (!classToSequenceAttributes.containsKey(clazz.getName()))
         {
-            if (field.isAnnotationPresent(AcmSequence.class))
-                annotatedFields.add(field);
+            List<Field> annotatedFields = new ArrayList<Field>();
+            List<Field> allFields = getDeclaredFields(clazz);
+
+            for (Field field : allFields)
+            {
+                if (field.isAnnotationPresent(AcmSequence.class))
+                    annotatedFields.add(field);
+            }
+
+            classToSequenceAttributes.put(clazz.getName(), annotatedFields);
+            log.info("Added sequence attributes for object [{}]", clazz.getName());
         }
-        return annotatedFields;
+        return classToSequenceAttributes.get(clazz.getName());
     }
 
     /**

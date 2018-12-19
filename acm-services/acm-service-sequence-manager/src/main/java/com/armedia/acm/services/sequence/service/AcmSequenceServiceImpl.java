@@ -80,7 +80,7 @@ public class AcmSequenceServiceImpl implements AcmSequenceService
 
     @Override
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    @Retryable(maxAttempts = 3, value = OptimisticLockException.class, backoff = @Backoff(delay = 500))
+    @Retryable(maxAttempts = 20, value = OptimisticLockException.class, backoff = @Backoff(delay = 100))
     public AcmSequenceEntity updateSequenceEntity(AcmSequenceEntity sequenceEntity, AcmSequencePart sequencePart, Boolean isReset)
     {
         AcmSequenceEntityId entityId = new AcmSequenceEntityId();
