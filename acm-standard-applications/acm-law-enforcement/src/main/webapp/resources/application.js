@@ -168,9 +168,9 @@ angular.module(ApplicationConfiguration.applicationModuleName).config(
                     if (typeof GOOGLE_ANALYTICS_ENABLED === 'undefined') { // sanity check
                         // this means that "api/latest/plugin/admin/googleAnalytics/config.js" couldn't
                         // be generated (very unlikely, but possible) and we are disabling Google Analytics
-                        AnalyticsProvider.disableAnalytics(true);
+                        AnalyticsProvider.useAnalytics(false);
                     } else {
-                        AnalyticsProvider.disableAnalytics(!GOOGLE_ANALYTICS_ENABLED); // configuration toggle
+                        AnalyticsProvider.useAnalytics(GOOGLE_ANALYTICS_ENABLED); // configuration toggle
                         AnalyticsProvider.setAccount(GOOGLE_ANALYTICS_TRACKING_ID); // configuration property
                         AnalyticsProvider.enterDebugMode(GOOGLE_ANALYTICS_DEBUG); // configuration debug flag
                         AnalyticsProvider.setPageEvent('$stateChangeSuccess');

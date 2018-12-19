@@ -175,6 +175,7 @@ angular.module('common').controller(
                             templateUrl: 'modules/common/views/new-organization-modal.client.view.html',
                             controller: 'Common.NewOrganizationModalController',
                             size: 'lg',
+                            backdrop: 'static',
                             resolve: {
                                 params: function() {
                                     return params;

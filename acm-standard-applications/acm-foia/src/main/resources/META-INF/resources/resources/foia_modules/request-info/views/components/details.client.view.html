@@ -9,7 +9,7 @@
                         ng-options="requestType.id as requestType.name for requestType in requestTypes" ng-disabled="true"
                         class="form-control input-md">
                 </select>
-    
+
                 </div>
                 <div class="form-group col-sm-6">
                     <label class="control-label"><span translate> requests.comp.details.requestTrack.label</span> <span
@@ -18,7 +18,7 @@
                         ng-options="requestTrack.key as requestTrack.value | translate for requestTrack in requestTracks"
                         class="form-control input-md">
                 </select>
-    
+
                 </div>
             </div>
             <div class="row">
@@ -27,7 +27,6 @@
                     <div>
                         <div class="input-group">
                             <input type="text" id="recordSearchDateFrom" class="form-control" name="recordSearchDateFrom"
-                                    datepicker-popup="{{'common.defaultDatePickerFormat' | translate}}"
                                     ng-model="requestInfo.recordSearchDateFrom" is-open="openedRecordSearchDateFrom.openedEnd"
                                     close-on-date-selection="true" show-button-bar="true" on-open-focus="false" close-text="Close" readonly/> <span
                                 class="input-group-btn">
@@ -44,7 +43,6 @@
                     <div>
                         <div class="input-group">
                             <input type="text" id="recordSearchDateTo" class="form-control" name="recordSearchDateTo"
-                                    datepicker-popup="{{'common.defaultDatePickerFormat' | translate}}"
                                     ng-model="requestInfo.recordSearchDateTo" is-open="openedRecordSearchDateTo.openedEnd"
                                     close-on-date-selection="true" show-button-bar="true" on-open-focus="false" close-text="Close" readonly/> <span
                                 class="input-group-btn">
@@ -93,11 +91,11 @@
             </div>
             <div class="row">
                 <div class="form-group col-sm-12">
-                  <label class="control-label">
-                    <span translate> requests.comp.details.description.label</span>
-                    <span ng-if="requiredFields['description']" class="required-asterisk">*</span>
-                  </label>
-                  <textarea rows="5" ng-model="requestInfo.details" class="input-md form-control" ng-disabled="true"></textarea>
+                    <label class="control-label">
+                        <span translate> requests.comp.details.description.label</span>
+                        <span ng-if="requiredFields['description']" class="required-asterisk">*</span>
+                    </label>
+                    <textarea rows="5" ng-model="requestInfo.details" class="input-md form-control" ng-disabled="true"></textarea>
                 </div>
             </div>
             <div class="row">
@@ -105,24 +103,19 @@
                     <label class="control-label" for="releasedDate"><span translate> requests.comp.details.releasedDate.label</span> <span
                             ng-if="requiredFields['releasedDate']" class="required-asterisk">*</span></label>
                     <div>
+
                         <div class="input-group">
-                            <input type="text" id="releasedDate" class="form-control" name="releasedDate"
-                                    datepicker-popup="{{'common.defaultDatePickerFormat' | translate}}" ng-model="requestInfo.releasedDate"
-                                    ng-required="requiredFields['releasedDate']" is-open="opened.openedEnd" close-on-date-selection="true"
-                                    show-button-bar="true" on-open-focus="false" close-text="Close" /> <span class="input-group-btn">
-                            <button type="button" class="btn btn-default" ng-click="opened.openedEnd = !opened.openedEnd">
+                            <input type="text" id="releasedDate" class="form-control" name="releasedDate" ng-disabled="true"
+                                    ng-model="requestInfo.releasedDate" is-open="opened.openedEnd" close-on-date-selection="true"
+                                    show-button-bar="true" on-open-focus="false" close-text="Close" />
+                            <span class="input-group-btn">
+                            <button type="button" class="btn btn-default" ng-click="opened.openedEnd = !opened.openedEnd"
+                                    ng-disabled="true">
                                 <i class="fa fa-calendar"></i>
                             </button>
                         </span>
                         </div>
                     </div>
-                </div>
-                <div class="form-group col-sm-6">
-                    <label class="control-label" translate>cases.comp.info.category.label</label>
-                    <select id="requestCategory" ng-model="requestInfo.requestCategory"
-                            ng-options="requestCategory.key as requestCategory.value | translate for requestCategory in requestCategories"
-                            class="form-control input-md" ng-disabled="true">
-                    </select>
                 </div>
             </div>
             <div class="row">
@@ -188,7 +181,7 @@
                     <div class="checkbox">
                         <label>
                             <input type="checkbox" ng-model="objectInfo.extensionFlag" ng-click='extensionClicked($event)' ng-disabled="objectInfo.extensionFlag && !extendedDueDate"
-                                   permission="requestDueDateExtension" permission-object-type="CASE_FILE" permission-properties="objectInfo" permission-action="hide">
+                                    permission="requestDueDateExtension" permission-object-type="CASE_FILE" permission-properties="objectInfo" permission-action="hide">
                             <span translate>cases.comp.main.extensionFlag.label </span>
                         </label>
                     </div>

@@ -269,4 +269,10 @@
     <bean id="missingLabelCheckController" class="com.armedia.acm.plugins.admin.web.api.MissingLabelCheckControllerAPI">
         <property name="labelCheckService" ref="labelCheckService"/>
     </bean>
+
+    <bean id="dataAccessControlAPIController"
+        class="com.armedia.acm.plugins.admin.web.api.DataAccessControlAPIController">
+        <property name="dataAccessControlService" ref="dataAccessControlService"/>
+    </bean>
+
 </beans>

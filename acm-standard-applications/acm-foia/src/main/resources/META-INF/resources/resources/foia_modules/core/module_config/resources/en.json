@@ -590,7 +590,7 @@
             },
             "auditReportNames": {
                 "all": "All",
-                "case_file": "Case",
+                "case_file": "Request",
                 "complaint": "Complaint",
                 "task": "Task",
                 "file": "File",
@@ -655,6 +655,18 @@
                 "X7f": "Protects records or information compiled for law enforcement purposes the release of which could reasonably be expected: to endanger the life or physical safety of an individual.",
                 "X8": "Protects information that is contained in or related to examination, operating, or condition reports prepared by, on behalf of, or for the use of an agency responsible for the regulation or supervision of financial institutions.",
                 "X9": "Protects geological and geophysical information and data, including maps, concerning wells."
+            },
+            "documentReview": {
+                "statuses": {
+                    "reviewed": "Reviewed",
+                    "notReviewed": "Not Reviewed"
+                }
+            },
+            "documentRedaction": {
+                "statuses": {
+                    "partialRedacted": "Partial Redacted",
+                    "fullyRedacted": "Fully Redacted"
+                }
             }
         },
         "userInfo": {

@@ -116,6 +116,27 @@ angular.module('services').factory('Util.DateService', [ '$translate', 'UtilServ
 
         /**
          * @ngdoc method
+         * @name dateToIsoDateTime
+         * @methodOf services:Util.DateService
+         *
+         * @description
+         * Converts a date object into an ISO format string
+         *
+         * @param {String} isoDateTime ISO formatted date string YYYY-MM-DDTHH:mm:ss.sss
+         *
+         * @Returns {String} String
+         */
+        ,
+        dateToIsoDateTime: function(isoDateTime) {
+            if (!Util.isEmpty(isoDateTime)) {
+                return moment.utc(isoDateTime).format("YYYY-MM-DDTHH:mm:ss.sss");
+            } else {
+                return "";
+            }
+        }
+
+        /**
+         * @ngdoc method
          * @name goodIsoDate
          * @methodOf services:Util.DateService
          *

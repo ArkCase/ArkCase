@@ -87,6 +87,7 @@ angular.module('cases').controller('Cases.BillingController', ['$scope', '$modal
                 templateUrl: 'modules/cases/views/components/case-list-invoices-modal.client.view.html',
                 controller: 'Cases.ListInvoicesModalController',
                 size: 'lg',
+                backdrop: 'static',
                 resolve: {
                     $config: function() {
                         return $scope.listInvoiceConfig;
@@ -113,6 +114,7 @@ angular.module('cases').controller('Cases.BillingController', ['$scope', '$modal
                 templateUrl: 'modules/cases/views/components/case-billing-modal.client.view.html',
                 controller: 'Cases.BillingModalController',
                 size: 'lg',
+                backdrop: 'static',
                 resolve: {
                     params: function() {
                         return params;
