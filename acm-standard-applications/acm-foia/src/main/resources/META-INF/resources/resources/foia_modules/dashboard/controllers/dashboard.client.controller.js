@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('dashboard').controller('DashboardController', [ '$rootScope', '$scope', 'ConfigService', 'Dashboard.DashboardService', 'Helper.DashboardService', '$modal', '$state', 'Admin.FoiaConfigService', 'MessageService', function($rootScope, $scope, ConfigService, DashboardService, DashboardHelper, $modal, $state, AdminFoiaConfigService, MessageService) {
+angular.module('dashboard').controller('DashboardController', [ '$rootScope', '$scope', 'ConfigService', 'Dashboard.DashboardService', 'Helper.DashboardService', '$modal', '$state', 'FOIAConfiguration.Service', 'MessageService', function($rootScope, $scope, ConfigService, DashboardService, DashboardHelper, $modal, $state, FOIAConfigurationService, MessageService) {
 
     new DashboardHelper.Dashboard({
         scope: $scope,
@@ -25,8 +25,8 @@ angular.module('dashboard').controller('DashboardController', [ '$rootScope', '$
     var widgetsPerRoles;
     var isEditMode = false;
 
-    AdminFoiaConfigService.getFoiaConfig().then(function(response){
-        $scope.isDashboardBannerEnabled = response.data.dashboardBannerEnabled;
+    FOIAConfigurationService.isDashboardBannerEnabled().then(function(response){
+        $scope.isDashboardBannerEnabled = response.data;
     },function(err){
         MessageService.errorAction();
     });
