@@ -30,16 +30,11 @@ package gov.foia.service;
  * #L%
  */
 
-import static org.easymock.EasyMock.expect;
-import static org.hamcrest.Matchers.equalTo;
-import static org.junit.Assert.assertThat;
-
 import com.armedia.acm.compressfolder.FolderCompressor;
 import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
-
 import org.easymock.EasyMockRunner;
 import org.easymock.EasyMockSupport;
 import org.easymock.Mock;
@@ -48,6 +43,11 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
+import org.springframework.context.ApplicationEventPublisher;
+
+import static org.easymock.EasyMock.*;
+import static org.hamcrest.Matchers.equalTo;
+import static org.junit.Assert.assertThat;
 
 /**
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Sep 20, 2016
@@ -76,6 +76,8 @@ public class ResponseFolderCompressorServiceTest extends EasyMockSupport
     private AcmFolder mockedWorkingFolder;
     @Mock
     private AcmFolder mockedResponseFolder;
+    @Mock
+    private ApplicationEventPublisher mockedApplicationEventPublisher;
     private ResponseFolderCompressorService compresssorService;
 
     @Before
@@ -85,6 +87,7 @@ public class ResponseFolderCompressorServiceTest extends EasyMockSupport
         compresssorService.setCaseFileDao(mockedCaseFileDao);
         compresssorService.setCompressor(mockedCompressor);
         compresssorService.setResponseFolderService(mockedResponseFolderService);
+        compresssorService.setApplicationEventPublisher(mockedApplicationEventPublisher);
     }
 
     /**
@@ -103,6 +106,8 @@ public class ResponseFolderCompressorServiceTest extends EasyMockSupport
         expect(mockedResponseFolderService.getResponseFolder(mockedCaseFile)).andReturn(mockedResponseFolder);
         expect(mockedResponseFolder.getId()).andReturn(responseFolderId);
         expect(mockedCompressor.compressFolder(responseFolderId)).andReturn(pathToCompressedFile);
+        mockedApplicationEventPublisher.publishEvent(anyObject());
+        expectLastCall().andVoid();
 
         replayAll();
 
