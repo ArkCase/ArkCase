@@ -26,6 +26,7 @@ angular.module('admin').controller('Admin.CMMergeFieldsController',
                     gridHelper.disableGridScrolling(config);
                     $scope.config = config;
                     $scope.objectTypes = $scope.correspondenceObjectTypes;
+                    $scope.mergingType = $scope.objectTypes[0].key;
 
                     gridHelper.setUserNameFilterToConfig(promiseUsers, configVersions);
                     $scope.configVersions = configVersions;
