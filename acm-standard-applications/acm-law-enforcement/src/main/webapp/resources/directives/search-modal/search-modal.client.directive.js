@@ -33,7 +33,7 @@
  * If response contains only 1 item, then display it.
  **/
 
-angular.module('directives').directive('searchModal', [ '$q', '$translate', 'UtilService', 'SearchService', 'Search.QueryBuilderService', '$injector', 'Person.InfoService', 'Helper.UiGridService', 'ObjectService', 'MessageService', function($q, $translate, Util, SearchService, SearchQueryBuilder, $injector, PersonInfoService, HelperUiGridService, ObjectService, MessageService) {
+angular.module('directives').directive('searchModal', [ '$q', '$translate', '$filter', 'UtilService', 'SearchService', 'Search.QueryBuilderService', '$injector', 'Person.InfoService', 'Helper.UiGridService', 'ObjectService', 'MessageService', function($q, $translate, $filter, Util, SearchService, SearchQueryBuilder, $injector, PersonInfoService, HelperUiGridService, ObjectService, MessageService) {
     return {
         restrict: 'E', //match only element name
         scope: {
@@ -329,8 +329,10 @@ angular.module('directives').directive('searchModal', [ '$q', '$translate', 'Uti
                 var targetId = '';
                 if(targetType == ObjectService.ObjectTypes.FILE) {
                     targetId= Util.goodMapValue(rowEntity, "object_id_s");
-                } else if(targetType == ObjectService.ObjectTypes.CASE_FILE || targetType == ObjectService.ObjectTypes.COMPLAINT){
+                } else if(_.includes(targetType, ObjectService.ObjectTypes.CASE_FILE) || _.includes(targetType, ObjectService.ObjectTypes.COMPLAINT)){
+                    targetType = $filter('beautifyParentRefToParentTitle')(targetType);
                     targetId = Util.goodMapValue(rowEntity, "parent_object_id_s");
+                    targetId = parseInt(targetId.substring(0, targetId.indexOf('-')));
                 } else {
                     targetId = "-1";
                     MessageService.error("The target type: " + targetType + " is not supported currently. The targetId is set to: ", targetId);

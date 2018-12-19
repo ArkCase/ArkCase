@@ -78,8 +78,6 @@ public class SolrContentDocument extends SolrAdvancedSearchDocument
 
         values.put("literal.hidden_b", isHidden_b());
         values.put("literal.parent_ref_s", getParent_ref_s());
-        values.put("literal.parent_object_id_s", getParent_object_id_s());
-        values.put("literal.parent_object_type_s", getParent_object_type_s());
         values.put("literal.status_lcs", getStatus_lcs());
         values.put("literal.protected_object_b", isProtected_object_b());
         values.put("literal.public_doc_b", isPublic_doc_b());
@@ -182,8 +180,6 @@ public class SolrContentDocument extends SolrAdvancedSearchDocument
                         +
                         "&literal.hidden_b=" + isHidden_b() +
                         "&literal.parent_ref_s=" + encode(getParent_ref_s()) +
-                        "&literal.parent_object_id_s=" + encode(getParent_object_id_s()) +
-                        "&literal.parent_object_type_s=" + encode(getParent_object_type_s()) +
                         "&literal.status_lcs=" + encode(getStatus_lcs()) +
                         "&literal.protected_object_b=" + isProtected_object_b() +
                         "&literal.public_doc_b=" + isPublic_doc_b() +

@@ -237,9 +237,6 @@ public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<E
 
         solr.setHidden_b(isHidden(in));
 
-        solr.setParent_object_type_s(in.getContainer().getContainerObjectType());
-        solr.setParent_object_id_s("" + in.getContainer().getContainerObjectId());
-
         mapAdditionalProperties(in, solr.getAdditionalProperties());
 
         /** Additional properties for full names instead of ID's */
