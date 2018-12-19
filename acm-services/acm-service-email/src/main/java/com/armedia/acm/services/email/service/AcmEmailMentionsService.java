@@ -1,5 +1,32 @@
 package com.armedia.acm.services.email.service;
 
+/*-
+ * #%L
+ * ACM Service: Email
+ * %%
+ * Copyright (C) 2014 - 2018 ArkCase LLC
+ * %%
+ * This file is part of the ArkCase software. 
+ * 
+ * If the software was purchased under a paid ArkCase license, the terms of 
+ * the paid license agreement will prevail.  Otherwise, the software is 
+ * provided under the following open source license terms:
+ * 
+ * ArkCase is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * ArkCase is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
+ * #L%
+ */
+
 import com.armedia.acm.core.AcmApplication;
 import com.armedia.acm.services.email.model.EmailBodyBuilder;
 import com.armedia.acm.services.email.model.EmailBuilder;
@@ -47,12 +74,19 @@ public class AcmEmailMentionsService
     private String buildObjectUrl(EmailMentionsDTO in)
     {
         String baseUrl = acmAppConfiguration.getBaseUrl();
-        String subType = !in.getSubType().isEmpty() ? in.getSubType() : in.getObjectType();
-        Optional<String> objectUrl = acmAppConfiguration.getObjectTypes().stream()
-                .filter(acmObjectType -> acmObjectType.getName().equals(in.getObjectType()))
-                .map(acmObjectType -> acmObjectType.getUrl().get(subType))
-                .collect(Collectors.toList()).stream().findFirst();
-        return objectUrl.isPresent() ? baseUrl + String.format(objectUrl.get(), in.getObjectId()) : baseUrl;
+        if (in.getUrlPath() != null)
+        {
+            return baseUrl + in.getUrlPath();
+        }
+        else
+        {
+            String subType = !in.getSubType().isEmpty() ? in.getSubType() : in.getObjectType();
+            Optional<String> objectUrl = acmAppConfiguration.getObjectTypes().stream()
+                    .filter(acmObjectType -> acmObjectType.getName().equals(in.getObjectType()))
+                    .map(acmObjectType -> acmObjectType.getUrl().get(subType))
+                    .collect(Collectors.toList()).stream().findFirst();
+            return objectUrl.isPresent() ? baseUrl + String.format(objectUrl.get(), in.getObjectId()) : baseUrl;
+        }
     }
 
     private EmailBodyBuilder<AbstractMap.SimpleImmutableEntry<String, List<String>>> buildEmailBody(EmailMentionsDTO in,

@@ -101,16 +101,32 @@
             <beans:property name="propertiesFile" value="#{ systemProperties ['user.home'] }/.arkcase/acm/foia.properties"/>
         </beans:bean>
 
-        <beans:bean id="ecmFileNewMetadataHandler" class="gov.foia.pipeline.presave.FOIAFileNewMetadataHandler">
+        <beans:bean id="ecmFileNewMetadataHandler" class="gov.foia.pipeline.presave.FOIAEcmFileNewMetadataHandler">
             <beans:property name="ecmFileDao" ref="ecmFileDao"/>
             <beans:property name="folderDao" ref="acmFolderDao"/>
             <beans:property name="pageCountService" ref="pageCountService"/>
             <beans:property name="arkCaseBeanUtils" ref="arkCaseBeanUtils"/>
         </beans:bean>
 
+        <beans:bean id="ecmFileUpdateMetadataHandler" class="gov.foia.pipeline.presave.FOIAEcmFileUpdateMetadataHandler">
+            <beans:property name="ecmFileDao" ref="ecmFileDao"/>
+            <beans:property name="folderDao" ref="acmFolderDao"/>
+            <beans:property name="pageCountService" ref="pageCountService"/>
+        </beans:bean>
+
+        <beans:bean id="ecmFileMergedMetadataHandler" class="gov.foia.pipeline.presave.FOIAEcmFileMergedMetadataHandler">
+            <beans:property name="ecmFileDao" ref="ecmFileDao"/>
+            <beans:property name="folderDao" ref="acmFolderDao"/>
+            <beans:property name="pageCountService" ref="pageCountService"/>
+        </beans:bean>
+
         <beans:bean id="foiaFileUpdatedEventListener" class="gov.foia.listener.FOIAFileUpdatedEventListener">
             <beans:property name="foiaRequestFileBrokerClient" ref="foiaRequestFileBrokerClient"/>
             <beans:property name="ecmFileService" ref="ecmFileService"/>
+        </beans:bean>
+
+        <beans:bean id="foiaQueuedEventListener" class="gov.foia.listener.FOIAQueuedEventListener">
+            <beans:property name="requestDao" ref="foiaRequestDao"/>
         </beans:bean>
 
         <beans:bean id="foiaCostsheetBillingListener" class="gov.foia.listener.FOIACostsheetBillingListener">
@@ -255,5 +271,45 @@
             <beans:property name="userDao" ref="userJpaDao"/>
             <beans:property name="foiaConfigurationService" ref="foiaConfigurationService"/>
         </beans:bean>
+
+        <beans:bean id="ecmFileService" class="gov.foia.service.FOIAEcmFileServiceImpl">
+            <beans:property name="ecmFileTransaction" ref="ecmFileTransaction"/>
+            <beans:property name="ecmFileDao" ref="ecmFileDao"/>
+            <beans:property name="containerFolderDao" ref="acmContainerFolderDao"/>
+            <beans:property name="ecmFileServiceProperties" ref="ecmFileServiceProperties"/>
+            <beans:property name="muleContextManager" ref="muleContextManager"/>
+            <beans:property name="solrQuery" ref="executeSolrQuery"/>
+            <beans:property name="searchResults" ref="searchResults"/>
+            <beans:property name="sortParameterNameToCmisFieldName">
+                <map>
+                    <entry key="name" value="name_lcs"/>
+                    <entry key="type" value="type_s"/>
+                    <entry key="created" value="create_tdt"/>
+                    <entry key="author" value="author"/>
+                    <entry key="version" value="version_s"/>
+                    <entry key="modified" value="last_modified_tdt"/>
+                    <entry key="creator" value="author"/>
+                    <entry key="modifier" value="modifier_s"/>
+                    <entry key="category" value="category_s"/>
+                </map>
+            </beans:property>
+            <beans:property name="solrObjectTypeToAcmType">
+                <map>
+                    <entry key="FILE" value="file"/>
+                    <entry key="FOLDER" value="folder"/>
+                </map>
+            </beans:property>
+            <beans:property name="categoryMap">
+                <map>
+                    <entry key="document" value="Document"/>
+                    <entry key="correspondence" value="Correspondence"/>
+                </map>
+            </beans:property>
+            <beans:property name="folderDao" ref="acmFolderDao"/>
+            <beans:property name="folderAndFilesUtils" ref="folderAndFilesUtils"/>
+            <beans:property name="cmisConfigUtils" ref="cmisConfigUtils"/>
+            <beans:property name="fileParticipantService" ref="fileParticipantService"/>
+        </beans:bean>
+
     </beans:beans>
 </beans:beans>

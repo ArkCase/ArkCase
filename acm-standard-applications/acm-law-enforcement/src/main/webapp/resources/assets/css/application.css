@@ -29,6 +29,10 @@ h4 {
     color: rgba(0, 0, 0, 0.7);
 }
 
+.h4.font-bold {
+    font-weight: bold !important;
+}
+
 h5 {
     color: #000000;
     font-size: 16px;
@@ -1651,10 +1655,6 @@ a.primary {
 }
 
 /*Css style for scrolling issue on modal*/
-.form-overflow-scroll {
-    overflow-y: auto !important;
-}
-
 .pdfjs .toolbar {
     z-index: 1048 !important;
 }
@@ -1744,7 +1744,7 @@ a.primary {
      z-index: 2000;
 }
 
-.popup-move-on-left > .editable + .form-inline {
+.popup-move-on-left > .editable + .form-inline{
     right: 20%;
 }
 
@@ -1806,3 +1806,4 @@ a.primary {
 .remove-margin-bottom-from-summernote > .panel {
     margin-bottom: 0px;
 }
+

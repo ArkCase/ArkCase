@@ -94,7 +94,8 @@
             "makeAllPublic": "Make All Public",
             "makeNonPublic": "Make Non Public",
             "makeAllNonPublic": "Make All Non Public",
-            "searchDocument": "Search Document(s)"
+            "searchDocument": "Search Document(s)",
+            "generateZip": "Generate Zip File"
         },
         "table.columns": {
             "title": "Title",
@@ -103,6 +104,8 @@
             "created": "Created",
             "modified": "Modified",
             "modifier": "Modified By",
+            "reviewStatus": "Review Status",
+            "redactionStatus": "Redaction Status",
             "version": "Version",
             "status": "Status"
         },

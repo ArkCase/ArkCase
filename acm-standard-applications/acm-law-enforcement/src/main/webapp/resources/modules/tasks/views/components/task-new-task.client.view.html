@@ -47,16 +47,12 @@
                 <div class="col-sm-4 form-group">
                     <label translate> tasks.newTask.taskStartDate.label </label>
                     <span class="required-asterisk">*</span>
-                    <div style="margin-top: 10px;">
-                        <date-time-picker data="config.data.taskStartDate" property="startDate" date-picker-id="comboDate1" on-after-save="onComboAfterSave(dateType)"></date-time-picker>
-                    </div>
+                    <date-time-picker data="config.data.taskStartDate" property="startDate" date-picker-id="comboDate1"></date-time-picker>
                 </div>
                 <div class="col-sm-4 form-group">
                     <label translate> tasks.newTask.dueDate.label </label>
                     <span class="required-asterisk">*</span>
-                    <div style="margin-top: 10px;">
-                        <date-time-picker data="config.data.dueDate" property="dueDate" date-picker-id="comboDate2" on-after-save="onComboAfterSave(dateType)"></date-time-picker>
-                    </div>
+                    <date-time-picker data="config.data.dueDate" property="dueDate" date-picker-id="comboDate2" ></date-time-picker>
                 </div>
                 <div class="form-group col-sm-2" ng-if="taskType === 'ACM_TASK'">
                     <label class="control-label">{{ 'tasks.newTask.priority.label' | translate }}
@@ -84,7 +80,7 @@
                 </div>
             </div>
             <div class="row" ng-if="taskType === 'ACM_TASK'">
-                <div class="col-sm-12 remove-margin-bottom-from-summernote">
+                <div class="col-sm-12 form-group remove-margin-bottom-from-summernote">
                     <label translate> tasks.newTask.notes.label </label>
                     <mention-summernote ng-model="config.data.details" params="paramsSummernote"></mention-summernote>
                 </div>

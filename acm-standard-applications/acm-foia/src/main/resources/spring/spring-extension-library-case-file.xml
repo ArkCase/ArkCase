@@ -291,5 +291,12 @@
             <property name="systemConfigurationService" ref="foiaConfigurationService"/>
         </bean>
 
+        <beans:bean id="requestResponseFolderService" class="gov.foia.service.RequestResponseFolderService">
+            <beans:property name="responseFolderConverterService" ref="responseFolderConverterService"/>
+            <beans:property name="responseFolderCompressorService" ref="responseFolderCompressorService"/>
+            <beans:property name="foiaRequestFileBrokerClient" ref="foiaRequestFileBrokerClient"/>
+            <beans:property name="responseFolderNotifyService" ref="responseFolderNotifyService"/>
+        </beans:bean>
+
     </beans:beans>
 </beans:beans>

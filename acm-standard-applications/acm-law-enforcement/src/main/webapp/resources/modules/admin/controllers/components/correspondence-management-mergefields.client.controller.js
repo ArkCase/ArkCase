@@ -97,7 +97,8 @@ angular.module('admin').controller('Admin.CMMergeFieldsController',
                                 $modalInstance.dismiss('cancel');
                             };
                         },
-                        size: 'md'
+                        size: 'md',
+                        backdrop: 'static'
                     });
                 });
 

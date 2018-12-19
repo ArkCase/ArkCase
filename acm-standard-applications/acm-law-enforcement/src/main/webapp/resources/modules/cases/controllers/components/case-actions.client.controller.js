@@ -125,6 +125,7 @@ angular.module('cases').controller(
                             templateUrl: 'modules/cases/views/components/case-new-case-modal.client.view.html',
                             controller: 'Cases.NewCaseController',
                             size: 'lg',
+                            backdrop: 'static',
                             resolve: {
                                 modalParams: function() {
                                     return params;
@@ -161,6 +162,7 @@ angular.module('cases').controller(
                             templateUrl: 'modules/cases/views/components/case-change-status-modal.client.view.html',
                             controller: 'Cases.ChangeStatusController',
                             size: 'lg',
+                            backdrop: 'static',
                             resolve: {
                                 modalParams: function() {
                                     return params;
@@ -235,7 +237,8 @@ angular.module('cases').controller(
                             animation: $scope.animationsEnabled,
                             templateUrl: 'modules/cases/views/components/case-split.client.view.html',
                             controller: 'Cases.SplitController',
-                            size: 'lg'
+                            size: 'lg',
+                            backdrop: 'static'
                         });
                         modalInstance.result.then(function(caseSummary) {
                             if (caseSummary) {

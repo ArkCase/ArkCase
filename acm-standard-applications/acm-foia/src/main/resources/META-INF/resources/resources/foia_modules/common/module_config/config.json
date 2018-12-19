@@ -24,7 +24,7 @@
                 "name": "checkbox",
                 "displayName": "",
                 "headTemplate": "<input type='checkbox'/>",
-                "width": "6%",
+                "width": "5%",
                 "index": 0
             },
             {
@@ -38,7 +38,7 @@
                 "displayName": "common.directive.docTree.table.columns.title",
                 "headTemplate": "<label id='title' class='doc-tree-header' style='cursor: pointer;'></label>",
                 "icon": "<i class='fa fa-fw fa-sort-asc' data-sort='title' data-dir='DESC'></i>",
-                "width": "25%",
+                "width": "20%",
                 "index": 2
             },
             {
@@ -62,7 +62,7 @@
                 "headTemplate": "<label id='created' class='doc-tree-header' style='cursor: pointer;'></label>",
                 "icon": "<i class='fa fa-fw' data-sort='created' data-dir='ASC'></i>",
                 "__todo__cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
-                "width": "9%",
+                "width": "8%",
                 "index": 5
             },
             {
@@ -71,7 +71,7 @@
                 "headTemplate": "<label id='modified' class='doc-tree-header' style='cursor: pointer;'></label>",
                 "icon": "<i class='fa fa-fw' data-sort='modified' data-dir='ASC'></i>",
                 "__todo__cellTemplate": "<div>{{ row.entity.modified | date : ('common.defaultDateUIFormat' | translate)}}</div>",
-                "width": "9%",
+                "width": "8%",
                 "index": 6
             },
             {
@@ -82,22 +82,36 @@
                 "icon": "<i class='fa fa-fw' data-sort='modifier' data-dir='ASC'></i>",
                 "__todo__cellTemplate": "<div>{{ row.entity.modifier }}</div>",
                 "__todo__lookup": "userFullNames",
-                "width": "16%",
+                "width": "10%",
                 "index": 7
+            },
+            {
+                "name": "reviewStatus",
+                "displayName": "common.directive.docTree.table.columns.reviewStatus",
+                "__todo__cellTemplate": "<div>{{ row.entity.reviewStatus }}</div>",
+                "width": "8%",
+                "index": 8
+            },
+            {
+                "name": "redactionStatus",
+                "displayName": "common.directive.docTree.table.columns.redactionStatus ",
+                "__todo__cellTemplate": "<div>{{ row.entity.redactionStatus }}</div>",
+                "width": "8%",
+                "index": 9
             },
             {
                 "name": "version",
                 "displayName": "common.directive.docTree.table.columns.version",
                 "__todo__cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
                 "width": "6%",
-                "index": 8
+                "index": 10
             },
             {
                 "name": "status",
                 "displayName": "common.directive.docTree.table.columns.status",
                 "__todo__cellTemplate": "{{node.data.status}}",
-                "width": "8%",
-                "index": 9
+                "width": "7%",
+                "index": 11
             },
             {
                 "name": "public",
@@ -105,8 +119,8 @@
                 "headTemplate": "<label id='public' class='doc-tree-header' style='cursor: pointer;'></label>",
                 "icon": "<i class='fa fa-fw' data-sort='type' data-dir='ASC'></i>",
                 "__todo__cellTemplate": "<div>{{ row.entity.public }}</div>",
-                "width": "9%",
-                "index": 10
+                "width": "8%",
+                "index": 12
             }
         ],
         "menu": {
@@ -208,6 +222,12 @@
                         "titleKey": "common.directive.docTree.menu.delete",
                         "cmd": "remove",
                         "uiIcon": "ui-icon-trash"
+                    },
+                    {
+                        "titleKey": "common.directive.docTree.menu.generateZip",
+                        "cmd": "generateZipFile",
+                        "uiIcon": "ui-icon-suitcase",
+                        "disabledExpression": "nodes[0].data.name !== '03 Response'"
                     },
                     {
                         "titleKey": "common.directive.docTree.menu.declareRecord",
@@ -400,6 +420,12 @@
                         "titleKey": "common.directive.docTree.menu.copy",
                         "cmd": "copy",
                         "uiIcon": "ui-icon-copy"
+                    },
+                    {
+                        "titleKey": "common.directive.docTree.menu.generateZip",
+                        "cmd": "generateZipFile",
+                        "uiIcon": "ui-icon-suitcase",
+                        "disabledExpression": "nodes[0].data.name !== '03 Response'"
                     },
                     {
                         "titleKey": "common.directive.docTree.menu.makeAllPublic",
