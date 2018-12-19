@@ -352,5 +352,4 @@ public interface EcmFileService
      * @return whether the delete was successful
      */
     boolean deleteTempFile(String uniqueFileName);
-
 }

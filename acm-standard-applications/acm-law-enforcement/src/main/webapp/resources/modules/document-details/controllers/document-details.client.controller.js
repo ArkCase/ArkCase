@@ -227,9 +227,6 @@ angular.module('document-details').controller(
                             };
                             $scope.showPdfJs = true;
                             $scope.view = "modules/document-details/views/document-viewer-pdfjs.client.view.html";
-                        } else {
-                            // Opens the selected document in the snowbound viewer
-                            $scope.openSnowboundViewer();
                         }
 
                         $scope.transcriptionTabActive = $scope.showVideoPlayer && $scope.transcribeEnabled;
