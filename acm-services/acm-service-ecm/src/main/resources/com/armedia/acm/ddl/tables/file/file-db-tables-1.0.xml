@@ -637,5 +637,12 @@
         </addColumn>
     </changeSet>
 
+    <!-- Added discriminator column needed for entity extension -->
+    <changeSet id="61-add-file-version-class-name-column" author="marko.stojanoski">
+        <addColumn tableName="acm_file_version">
+            <column name="cm_class_name" type="VARCHAR(400)"/>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>
 

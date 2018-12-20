@@ -2,8 +2,8 @@
 
 angular.module('cases').controller(
     'Cases.MainController',
-    ['$scope', '$state', '$stateParams', '$translate', '$rootScope', 'Case.InfoService', 'Helper.ObjectBrowserService', 'ConfigService', 'UtilService', 'Util.DateService', 'Object.LookupService', 'LookupService', 'DueDate.Service', 'Admin.HolidayService',
-        function ($scope, $state, $stateParams, $translate, $rootScope, CaseInfoService, HelperObjectBrowserService, ConfigService, Util, UtilDateService, ObjectLookupService, LookupService, DueDateService, AdminHolidayService) {
+    ['$scope', '$state', '$stateParams', '$translate', '$rootScope', 'Case.InfoService', 'Helper.ObjectBrowserService', 'ConfigService', 'UtilService', 'Util.DateService', 'Object.LookupService', 'LookupService', 'DueDate.Service', 'Admin.HolidayService', 'Admin.FoiaConfigService',
+        function ($scope, $state, $stateParams, $translate, $rootScope, CaseInfoService, HelperObjectBrowserService, ConfigService, Util, UtilDateService, ObjectLookupService, LookupService, DueDateService, AdminHolidayService, AdminFoiaConfigService) {
 
             new HelperObjectBrowserService.Component({
                 scope: $scope,
@@ -21,14 +21,14 @@ angular.module('cases').controller(
                 $scope.objectInfo = objectInfo;
 
                 if (!Util.isEmpty($scope.objectInfo.releasedDate)) {
-                            $scope.objectInfo.releasedDate = moment($scope.objectInfo.releasedDate).format(UtilDateService.defaultDateTimeFormat);
+                    $scope.objectInfo.releasedDate = moment($scope.objectInfo.releasedDate).format(UtilDateService.defaultDateTimeFormat);
                 }
-                        if (!Util.isEmpty($scope.objectInfo.recordSearchDateFrom)) {
-                            $scope.objectInfo.recordSearchDateFrom = moment(objectInfo.recordSearchDateFrom).format(UtilDateService.defaultDateTimeFormat);
-                        }
-                        if (!Util.isEmpty($scope.objectInfo.recordSearchDateTo)) {
-                            $scope.objectInfo.recordSearchDateTo = moment($scope.objectInfo.recordSearchDateTo).format(UtilDateService.defaultDateTimeFormat);
-                        }
+                if (!Util.isEmpty($scope.objectInfo.recordSearchDateFrom)) {
+                    $scope.objectInfo.recordSearchDateFrom = moment(objectInfo.recordSearchDateFrom).format(UtilDateService.defaultDateTimeFormat);
+                }
+                if (!Util.isEmpty($scope.objectInfo.recordSearchDateTo)) {
+                    $scope.objectInfo.recordSearchDateTo = moment($scope.objectInfo.recordSearchDateTo).format(UtilDateService.defaultDateTimeFormat);
+                }
 
                 ObjectLookupService.getPayFees().then(function (payFees) {
                     $scope.payFees = payFees;
@@ -44,6 +44,7 @@ angular.module('cases').controller(
                     }
 
                 });
+
                 ObjectLookupService.getDeliveryMethodOfResponses().then(function (deliveryMethodOfResponses) {
                     $scope.deliveryMethodOfResponses = deliveryMethodOfResponses;
                     if ($scope.objectInfo.deliveryMethodOfResponse != null && $scope.objectInfo.deliveryMethodOfResponse != '' && $scope.objectInfo.deliveryMethodOfResponse != '0') {
@@ -136,10 +137,12 @@ angular.module('cases').controller(
                 }
             };
 
-            LookupService.getConfig("foia").then(function (config) {
-                $scope.extensionWorkingDays = config['request.extensionWorkingDays'];
+            AdminFoiaConfigService.getFoiaConfig().then(function (response) {
+                $scope.extensionWorkingDays = response.data.requestExtensionWorkingDays;
+                $scope.requestExtensionWorkingDaysEnabled = response.data.requestExtensionWorkingDaysEnabled;
+            }, function (err) {
+                MessageService.errorAction();
             });
-            ;
 
             $scope.extensionClicked = function ($event) {
                 if (!$event.target.checked) {

@@ -118,6 +118,10 @@
                 "defense-counsel": "Defense Counsel",
                 "forensic-scientist": "Forensic Scientist"
             },
+            "correspondence": {
+                "casefile": "Case File",
+                "complaint": "Complaint"
+            },
             "complaintPersonTypes": {
                 "initiator": "Initiator",
                 "complaintant": "Complaintant",

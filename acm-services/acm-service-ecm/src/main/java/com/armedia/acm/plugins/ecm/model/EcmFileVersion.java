@@ -31,25 +31,20 @@ import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.data.AcmEntity;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.voodoodyne.jackson.jsog.JSOGGenerator;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-import javax.persistence.TableGenerator;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.persistence.*;
 
 import java.io.Serializable;
 import java.util.Date;
 
 @Entity
 @Table(name = "acm_file_version")
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.EXISTING_PROPERTY, property = "className", defaultImpl = EcmFileVersion.class)
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "cm_class_name", discriminatorType = DiscriminatorType.STRING)
+@DiscriminatorValue("com.armedia.acm.plugins.ecm.model.EcmFileVersion")
 @JsonIdentityInfo(generator = JSOGGenerator.class)
 public class EcmFileVersion implements AcmEntity, Serializable, AcmObject
 {
@@ -120,6 +115,9 @@ public class EcmFileVersion implements AcmEntity, Serializable, AcmObject
 
     @Column(name = "cm_file_size_bytes")
     private Long fileSizeBytes;
+
+    @Column(name = "cm_class_name")
+    private String className = this.getClass().getName();
 
     @JsonIgnore
     @ManyToOne
@@ -340,6 +338,16 @@ public class EcmFileVersion implements AcmEntity, Serializable, AcmObject
         return fileSizeBytes;
     }
 
+    public String getClassName()
+    {
+        return className;
+    }
+
+    public void setClassName(String className)
+    {
+        this.className = className;
+    }
+
     public void setFileSizeBytes(Long fileSizeBytes)
     {
         this.fileSizeBytes = fileSizeBytes;
@@ -351,5 +359,4 @@ public class EcmFileVersion implements AcmEntity, Serializable, AcmObject
     {
         return OBJECT_TYPE;
     }
-
 }

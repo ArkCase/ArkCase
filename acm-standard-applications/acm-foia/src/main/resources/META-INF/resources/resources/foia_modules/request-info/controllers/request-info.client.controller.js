@@ -49,8 +49,9 @@ angular.module('request-info').controller(
         '$translate',
         'DueDate.Service',
         'Admin.HolidayService',
+        'Admin.FoiaConfigService',
         function ($scope, $log, $sce, $q, $state, $timeout, $stateParams, $modal, ConfigService, Authentication, RequestsService, WorkflowsService, GenericRequestsService, QueuesConstants, LookupService, TicketService, QueuesService, PermissionsService, CaseInfoService, ObjectService,
-                  HelperObjectBrowserService, ObjectLookupService, ObjectModelService, CaseLookupService, UtilDateService, QueuesSvc, ObjectSubscriptionService, Util, SnowboundService, EcmService, DocumentPrintingService, NotesService, UserInfoService, MessageService, $translate, DueDateService, AdminHolidayService) {
+                  HelperObjectBrowserService, ObjectLookupService, ObjectModelService, CaseLookupService, UtilDateService, QueuesSvc, ObjectSubscriptionService, Util, SnowboundService, EcmService, DocumentPrintingService, NotesService, UserInfoService, MessageService, $translate, DueDateService, AdminHolidayService, AdminFoiaConfigService) {
 
             $scope.openOtherDocuments = [];
             $scope.fileChangeEvents = [];
@@ -160,10 +161,12 @@ angular.module('request-info').controller(
                 $scope.includeWeekends = response.data.includeWeekends;
             });
 
-            LookupService.getConfig("foia").then(function (config) {
-                $scope.extensionWorkingDays = config['request.extensionWorkingDays'];
+            AdminFoiaConfigService.getFoiaConfig().then(function (response) {
+                $scope.extensionWorkingDays = response.data.requestExtensionWorkingDays;
+                $scope.requestExtensionWorkingDaysEnabled = response.data.requestExtensionWorkingDaysEnabled;
+            }, function (err) {
+                MessageService.errorAction();
             });
-            ;
 
             $scope.opened = {};
             $scope.opened.openedStart = false;
@@ -400,7 +403,7 @@ angular.module('request-info').controller(
             function populateDispositionTypes(objectInfo) {
                 ObjectLookupService.getDispositionTypes(objectInfo.requestType).then(function (requestDispositionType) {
                     $scope.dispositionTypes = requestDispositionType;
-                    if (objectInfo.deliveryMethodOfResponse != null && objectInfo.deliveryMethodOfResponse != '') {
+                    if (objectInfo.disposition) {
                         $scope.dispositionValue = _.find($scope.dispositionTypes, function (disposition) {
                             if (disposition.key == objectInfo.disposition) {
                                 return disposition.key;
