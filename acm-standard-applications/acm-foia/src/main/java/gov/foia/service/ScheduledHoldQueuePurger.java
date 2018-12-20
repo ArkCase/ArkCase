@@ -69,6 +69,12 @@ public class ScheduledHoldQueuePurger extends AbstractScheduledQueuePurger
     }
 
     @Override
+    protected String getPurgeRequestWhenInHoldEnabled()
+    {
+        return "purgeRequestEnabled";
+    }
+
+    @Override
     protected List<FOIARequest> getAllRequestsInQueueBefore(LocalDate date)
     {
         return getRequestDao().getAllRequestsInHoldBefore(LocalDate.now().minusDays(getMaxDaysInQueue()));
@@ -88,5 +94,6 @@ public class ScheduledHoldQueuePurger extends AbstractScheduledQueuePurger
     {
         return "foia-extension-delete-process";
     }
+
 
 }
