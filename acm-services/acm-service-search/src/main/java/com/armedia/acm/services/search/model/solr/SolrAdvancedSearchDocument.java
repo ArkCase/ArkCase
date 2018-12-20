@@ -176,8 +176,6 @@ public class SolrAdvancedSearchDocument extends SolrAbstractDocument implements 
     private boolean hidden_b;
 
     private Long parent_folder_id_i;
-    private String parent_object_type_s;
-    private String parent_object_id_s;
 
     @JsonIgnore
     public String getEcmFileId()
@@ -969,22 +967,6 @@ public class SolrAdvancedSearchDocument extends SolrAbstractDocument implements 
         this.parent_allow_user_ls = parent_allow_user_ls;
     }
 
-    public String getParent_object_type_s() {
-        return parent_object_type_s;
-    }
-
-    public void setParent_object_type_s(String parent_object_type_s) {
-        this.parent_object_type_s = parent_object_type_s;
-    }
-
-    public String getParent_object_id_s() {
-        return parent_object_id_s;
-    }
-
-    public void setParent_object_id_s(String parent_object_id_s) {
-        this.parent_object_id_s = parent_object_id_s;
-    }
-
     @Override
     public String toString() {
         return "SolrAdvancedSearchDocument{" +
@@ -1065,8 +1047,6 @@ public class SolrAdvancedSearchDocument extends SolrAbstractDocument implements 
                 ", parent_ref_s='" + parent_ref_s + '\'' +
                 ", hidden_b=" + hidden_b +
                 ", parent_folder_id_i=" + parent_folder_id_i +
-                ", parent_object_type_s='" + parent_object_type_s + '\'' +
-                ", parent_object_id_s='" + parent_object_id_s + '\'' +
                 '}';
     }
 }

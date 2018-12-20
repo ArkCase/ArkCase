@@ -331,7 +331,7 @@ angular.module('directives').directive('searchModal', [ '$q', '$translate', '$fi
                     targetId= Util.goodMapValue(rowEntity, "object_id_s");
                 } else if(_.includes(targetType, ObjectService.ObjectTypes.CASE_FILE) || _.includes(targetType, ObjectService.ObjectTypes.COMPLAINT)){
                     targetType = $filter('beautifyParentRefToParentTitle')(targetType);
-                    targetId = Util.goodMapValue(rowEntity, "parent_object_id_s");
+                    targetId = Util.goodMapValue(rowEntity, "parentId");
                     targetId = parseInt(targetId.substring(0, targetId.indexOf('-')));
                 } else {
                     targetId = "-1";
