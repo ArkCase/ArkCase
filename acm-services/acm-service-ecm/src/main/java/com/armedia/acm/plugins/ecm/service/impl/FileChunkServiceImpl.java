@@ -26,9 +26,10 @@ package com.armedia.acm.plugins.ecm.service.impl;
  * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
  * #L%
  */
+import static com.armedia.acm.plugins.ecm.service.impl.FileUploadProgressNotifierMessageBuilder.OBJECT_TYPE;
 
-import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
-import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
+import com.armedia.acm.data.AcmProgressEvent;
+import com.armedia.acm.data.AcmProgressIndicator;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
@@ -43,6 +44,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
@@ -51,10 +53,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.SequenceInputStream;
-import java.util.Enumeration;
-import java.util.List;
-import java.util.UUID;
-import java.util.Vector;
+import java.util.*;
 
 public class FileChunkServiceImpl implements FileChunkService {
 
@@ -63,16 +62,20 @@ public class FileChunkServiceImpl implements FileChunkService {
     private FolderAndFilesUtils folderAndFilesUtils;
     private EcmFileService ecmFileService;
     private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
+    private AcmProgressIndicator acmProgressIndicator;
+    private ApplicationEventPublisher applicationEventPublisher;
+
 
     @Override
     @Async
     @Transactional
     public void mergeAndUploadFiles(FileDetails fileDetails, AcmFolder folder, Document existingFile, Authentication authentication)
-            throws AcmUserActionFailedException, AcmCreateObjectFailedException, IOException {
+            throws IOException {
+        //initiate the counter on the entry afterwards for each phase increment by calling the calculateProgress() method
 
-        log.debug("Start merging {} file chunks", fileDetails);
-
+        //get the progressIndicator from 50% to 100%
         SequenceInputStream inputStream = mergeChunks(fileDetails);
+
         getAuditPropertyEntityAdapter().setUserId(authentication.getName());
         setRepositoryRequestUserAndId(authentication);
         String uniqueFileName = folderAndFilesUtils.createUniqueIdentificator(fileDetails.getName());
@@ -86,10 +89,28 @@ public class FileChunkServiceImpl implements FileChunkService {
 
         log.debug("Start uploading the file with name {}", uniqueFileName);
 
-        ecmFileService.upload(authentication, fileDetails.getObjectType(), fileDetails.getObjectId(), folder.getCmisFolderId(),
-                uniqueFileName, inputStream, metadata, existingFile);
+        FileUploadProgressIndicator progressIndicator = new FileUploadProgressIndicator();
+        progressIndicator.setObjectId(metadata.getId());
+        progressIndicator.setObjectType(OBJECT_TYPE);
+        progressIndicator.setUser(authentication.getName());
 
+        int uploadedSuccessfully = 0, uploadFailed= 0;
+
+        try {
+            ecmFileService.upload(authentication, fileDetails.getObjectType(), fileDetails.getObjectId(), folder.getCmisFolderId(),
+                    uniqueFileName, inputStream, metadata, existingFile);
+            progressIndicator.setProgress(++uploadedSuccessfully);
+            applicationEventPublisher.publishEvent(new AcmProgressEvent(progressIndicator));
+
+        } catch (Exception e){
+            log.warn("File was not uploadded sucessfully. TODO HANDLE EXCEPTIONS BETTER", e);
+            progressIndicator.setProgressFailed(++uploadFailed);
+            applicationEventPublisher.publishEvent(new AcmProgressEvent(progressIndicator));
+        }
         log.debug("Start deleting the temporary parts from the file {}", fileDetails.getParts());
+        //acmProgressIndicator.setProgress(calculateProgress(progressCounter, 50)); // getfrom50to100%
+        //applicationEventPublisher.publishEvent(new AcmProgressEvent(acmProgressIndicator));
+        //progressCounter++;
 
         deleteFilesQuietly(fileDetails.getParts());
 
@@ -133,6 +154,10 @@ public class FileChunkServiceImpl implements FileChunkService {
         return inputStream.elements();
     }
 
+    private int calculateProgress(int current, int total)
+    {
+        return (int) (current * 1.0 / total * 50);
+    }
 
     public FolderAndFilesUtils getFolderAndFilesUtils() {
         return folderAndFilesUtils;
@@ -156,5 +181,21 @@ public class FileChunkServiceImpl implements FileChunkService {
 
     public void setAuditPropertyEntityAdapter(AuditPropertyEntityAdapter auditPropertyEntityAdapter) {
         this.auditPropertyEntityAdapter = auditPropertyEntityAdapter;
+    }
+
+    public AcmProgressIndicator getAcmProgressIndicator() {
+        return acmProgressIndicator;
+    }
+
+    public void setAcmProgressIndicator(AcmProgressIndicator acmProgressIndicator) {
+        this.acmProgressIndicator = acmProgressIndicator;
+    }
+
+    public ApplicationEventPublisher getApplicationEventPublisher() {
+        return applicationEventPublisher;
+    }
+
+    public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher) {
+        this.applicationEventPublisher = applicationEventPublisher;
     }
 }
