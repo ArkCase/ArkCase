@@ -7,6 +7,8 @@ import com.armedia.acm.services.sequence.model.AcmSequenceRegistry;
 import com.armedia.acm.services.sequence.model.AcmSequenceReset;
 import com.armedia.acm.services.sequence.service.AcmSequenceService;
 
+import javax.persistence.FlushModeType;
+
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -38,7 +40,8 @@ public class AcmAutoincrementSequenceGenerator implements AcmSequenceGenerator
         String autoIncrementPartValue = "";
 
         Long nextValue = 0L;
-        AcmSequenceEntity sequenceEntity = getSequenceService().getSequenceEntity(sequenceName, sequencePart.getSequencePartName());
+        AcmSequenceEntity sequenceEntity = getSequenceService().getSequenceEntity(sequenceName, sequencePart.getSequencePartName(),
+                FlushModeType.COMMIT);
         // Create and use new sequence if not exists
         if (sequenceEntity == null)
         {
@@ -48,7 +51,7 @@ public class AcmAutoincrementSequenceGenerator implements AcmSequenceGenerator
         {
             // Reset and use start sequence value if reset conditions are met
             List<AcmSequenceReset> sequenceResetList = getSequenceService().getSequenceResetList(sequenceName,
-                    sequencePart.getSequencePartName(), Boolean.FALSE);
+                    sequencePart.getSequencePartName(), Boolean.FALSE, FlushModeType.COMMIT);
 
             if (sequenceResetList != null && !sequenceResetList.isEmpty())
             {
@@ -60,7 +63,7 @@ public class AcmAutoincrementSequenceGenerator implements AcmSequenceGenerator
                 if (sequencePart.getSequenceFillBlanks() != null && sequencePart.getSequenceFillBlanks())
                 {
                     List<AcmSequenceRegistry> sequenceRegistryList = getSequenceService()
-                            .getSequenceRegistryList(sequenceName, sequencePart.getSequencePartName(), Boolean.FALSE);
+                            .getSequenceRegistryList(sequenceName, sequencePart.getSequencePartName(), Boolean.FALSE, FlushModeType.COMMIT);
                     if (sequenceRegistryList != null && !sequenceRegistryList.isEmpty())
                     {
                         nextValue = getSequenceFromRegistry(sequenceRegistryList, sequencePart, autoincrementPartNameToValue);

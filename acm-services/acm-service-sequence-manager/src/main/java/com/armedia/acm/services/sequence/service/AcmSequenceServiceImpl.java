@@ -39,12 +39,10 @@ import com.armedia.acm.services.sequence.model.AcmSequenceReset;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.retry.annotation.Backoff;
-import org.springframework.retry.annotation.Retryable;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.OptimisticLockException;
+import javax.persistence.FlushModeType;
 
 import java.util.List;
 
@@ -63,13 +61,13 @@ public class AcmSequenceServiceImpl implements AcmSequenceService
     private AcmSequenceResetDao sequenceResetDao;
 
     @Override
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public AcmSequenceEntity getSequenceEntity(String sequenceName, String sequencePartName) throws AcmSequenceException
+    public AcmSequenceEntity getSequenceEntity(String sequenceName, String sequencePartName, FlushModeType flushModeType)
+            throws AcmSequenceException
     {
         log.info("Getting Sequence Entity for [{}] [{}]", sequenceName, sequencePartName);
         try
         {
-            return getSequenceDao().getSequenceEntity(sequenceName, sequencePartName);
+            return getSequenceDao().getSequenceEntity(sequenceName, sequencePartName, flushModeType);
         }
         catch (Exception e)
         {
@@ -80,34 +78,45 @@ public class AcmSequenceServiceImpl implements AcmSequenceService
 
     @Override
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    @Retryable(maxAttempts = 20, value = OptimisticLockException.class, backoff = @Backoff(delay = 100))
     public AcmSequenceEntity updateSequenceEntity(AcmSequenceEntity sequenceEntity, AcmSequencePart sequencePart, Boolean isReset)
+            throws AcmSequenceException
     {
-        AcmSequenceEntityId entityId = new AcmSequenceEntityId();
-        entityId.setSequenceName(sequenceEntity.getSequenceName());
-        entityId.setSequencePartName(sequenceEntity.getSequencePartName());
-        AcmSequenceEntity toUpdate = getSequenceDao().find(entityId);
+        try
+        {
+            AcmSequenceEntityId entityId = new AcmSequenceEntityId();
+            entityId.setSequenceName(sequenceEntity.getSequenceName());
+            entityId.setSequencePartName(sequenceEntity.getSequencePartName());
+            AcmSequenceEntity toUpdate = getSequenceDao().find(entityId);
 
-        if (isReset)
-        {
-            toUpdate.setSequencePartValue(Long.valueOf(sequencePart.getSequenceStartNumber() + sequencePart.getSequenceIncrementSize()));
+            if (isReset)
+            {
+                toUpdate.setSequencePartValue(
+                        Long.valueOf(sequencePart.getSequenceStartNumber() + sequencePart.getSequenceIncrementSize()));
+            }
+            else
+            {
+                toUpdate.setSequencePartValue(toUpdate.getSequencePartValue() + sequencePart.getSequenceIncrementSize());
+            }
+            return getSequenceDao().save(toUpdate);
         }
-        else
+        catch (Exception e)
         {
-            toUpdate.setSequencePartValue(toUpdate.getSequencePartValue() + sequencePart.getSequenceIncrementSize());
+            throw new AcmSequenceException(
+                    String.format("Unable to update Sequence Entity for [%s] [%s]", sequenceEntity.getSequenceName(),
+                            sequenceEntity.getSequencePartName()),
+                    e);
         }
-        return getSequenceDao().save(toUpdate);
     }
 
     @Override
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public List<AcmSequenceReset> getSequenceResetList(String sequenceName, String sequencePartName, Boolean resetExecutedFlag)
+    public List<AcmSequenceReset> getSequenceResetList(String sequenceName, String sequencePartName, Boolean resetExecutedFlag,
+            FlushModeType flushModeType)
             throws AcmSequenceException
     {
         log.info("Getting Sequence Reset List for [{}] [{}]", sequenceName, sequencePartName);
         try
         {
-            return getSequenceResetDao().getSequenceResetList(sequenceName, sequencePartName, resetExecutedFlag);
+            return getSequenceResetDao().getSequenceResetList(sequenceName, sequencePartName, resetExecutedFlag, flushModeType);
         }
         catch (Exception e)
         {
@@ -146,14 +155,14 @@ public class AcmSequenceServiceImpl implements AcmSequenceService
      * java.lang.String)
      */
     @Override
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public List<AcmSequenceRegistry> getSequenceRegistryList(String sequenceName, String sequencePartName,
-            Boolean sequencePartValueUsedFlag) throws AcmSequenceException
+            Boolean sequencePartValueUsedFlag, FlushModeType flushModeType) throws AcmSequenceException
     {
         log.info("Getting Sequence Registry List for [{}] [{}]", sequenceName, sequencePartName);
         try
         {
-            return getSequenceRegistryDao().getSequenceRegistryList(sequenceName, sequencePartName, sequencePartValueUsedFlag);
+            return getSequenceRegistryDao().getSequenceRegistryList(sequenceName, sequencePartName, sequencePartValueUsedFlag,
+                    flushModeType);
         }
         catch (Exception e)
         {
