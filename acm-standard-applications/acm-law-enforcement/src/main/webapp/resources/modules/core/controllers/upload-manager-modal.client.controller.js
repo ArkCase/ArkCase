@@ -114,6 +114,8 @@ angular.module('core').controller(
                 MessageService.error($translate.instant('common.directive.docTree.progressBar.failed') + ": " + error);
             }, function (progress) {
                 $scope.hashMap[uuid].partProgress = progress.loaded;
+                //here goes the upload progress to 100% without the websockets implementation,
+                //instead improvement is needed to get it to 50% and then increment until 100% from the progressIndicator java implementation
                 $scope.hashMap[uuid].currentProgress = parseInt(100.0 * (($scope.hashMap[uuid].progress + $scope.hashMap[uuid].partProgress) / $scope.hashMap[uuid].file.size));
             });
 
