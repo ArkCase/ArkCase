@@ -808,9 +808,10 @@
     "common.dialogObjectPicker": {
         "header": "Pesquisar {{objectLabel}}",
         "table.columns": {
-            "name": "Nome",
             "id": "Identidade",
-            "title": "Título"
+            "title": "Título",
+            "parentId": "PT_Parent Object ID",
+            "parentTitle": "PT_Parent Object Title"
         },
         "addDocument": "PT_Choose document to add"
     },

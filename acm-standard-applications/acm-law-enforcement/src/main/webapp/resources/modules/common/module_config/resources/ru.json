@@ -808,9 +808,10 @@
     "common.dialogObjectPicker": {
         "header": "Поиск {{МеткаОбъекта}}",
         "table.columns": {
-            "name": "Имя",
             "id": "Я БЫ",
-            "title": "Заглавие"
+            "title": "Заглавие",
+            "parentId": "RU_Parent Object ID",
+            "parentTitle": "RU_Parent Object Title"
         },
         "addDocument": "RU_Choose document to add"
     },
