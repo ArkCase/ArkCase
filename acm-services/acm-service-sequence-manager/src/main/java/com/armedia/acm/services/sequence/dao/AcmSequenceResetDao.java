@@ -32,6 +32,7 @@ import com.armedia.acm.services.sequence.model.AcmSequenceReset;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.persistence.FlushModeType;
 import javax.persistence.TypedQuery;
 
 import java.util.ArrayList;
@@ -51,7 +52,8 @@ public class AcmSequenceResetDao extends AcmAbstractDao<AcmSequenceReset>
         return AcmSequenceReset.class;
     }
 
-    public List<AcmSequenceReset> getSequenceResetList(String sequenceName, String sequencePartName, Boolean resetExecutedFlag)
+    public List<AcmSequenceReset> getSequenceResetList(String sequenceName, String sequencePartName, Boolean resetExecutedFlag,
+            FlushModeType flushModeType)
     {
 
         String queryText = "SELECT sequenceReset " +
@@ -61,6 +63,7 @@ public class AcmSequenceResetDao extends AcmAbstractDao<AcmSequenceReset>
                 "AND sequenceReset.resetExecutedFlag = :resetExecutedFlag";
 
         TypedQuery<AcmSequenceReset> query = getEm().createQuery(queryText, AcmSequenceReset.class);
+        query.setFlushMode(flushModeType);
 
         query.setParameter("sequenceName", sequenceName);
         query.setParameter("sequencePartName", sequencePartName);

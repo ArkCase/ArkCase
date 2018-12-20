@@ -33,6 +33,7 @@ import com.armedia.acm.services.sequence.model.AcmSequenceEntityId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.persistence.FlushModeType;
 import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
 
@@ -56,7 +57,7 @@ public class AcmSequenceDao extends AcmAbstractDao<AcmSequenceEntity>
         return found;
     }
 
-    public AcmSequenceEntity getSequenceEntity(String sequenceName, String sequencePartName)
+    public AcmSequenceEntity getSequenceEntity(String sequenceName, String sequencePartName, FlushModeType flushModeType)
     {
         AcmSequenceEntity sequenceEntity = null;
         String queryText = "SELECT sequenceEntity " +
@@ -65,6 +66,7 @@ public class AcmSequenceDao extends AcmAbstractDao<AcmSequenceEntity>
                 "AND sequenceEntity.sequencePartName = :sequencePartName";
 
         TypedQuery<AcmSequenceEntity> query = getEm().createQuery(queryText, AcmSequenceEntity.class);
+        query.setFlushMode(flushModeType);
 
         query.setParameter("sequenceName", sequenceName);
         query.setParameter("sequencePartName", sequencePartName);

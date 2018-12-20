@@ -32,6 +32,7 @@ import com.armedia.acm.services.sequence.model.AcmSequenceRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.persistence.FlushModeType;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
@@ -91,7 +92,7 @@ public class AcmSequenceRegistryDao extends AcmAbstractDao<AcmSequenceRegistry>
     }
 
     public List<AcmSequenceRegistry> getSequenceRegistryList(String sequenceName, String sequencePartName,
-            Boolean sequencePartValueUsedFlag)
+            Boolean sequencePartValueUsedFlag, FlushModeType flushModeType)
     {
 
         String queryText = "SELECT sequenceRegistry " +
@@ -102,6 +103,7 @@ public class AcmSequenceRegistryDao extends AcmAbstractDao<AcmSequenceRegistry>
                 "ORDER BY sequenceRegistry.sequencePartValue";
 
         TypedQuery<AcmSequenceRegistry> query = getEm().createQuery(queryText, AcmSequenceRegistry.class);
+        query.setFlushMode(flushModeType);
 
         query.setParameter("sequenceName", sequenceName);
         query.setParameter("sequencePartName", sequencePartName);
