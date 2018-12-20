@@ -329,13 +329,10 @@ angular.module('directives').directive('searchModal', [ '$q', '$translate', '$fi
                 var targetId = '';
                 if(targetType == ObjectService.ObjectTypes.FILE) {
                     targetId= Util.goodMapValue(rowEntity, "object_id_s");
-                } else if(_.includes(targetType, ObjectService.ObjectTypes.CASE_FILE) || _.includes(targetType, ObjectService.ObjectTypes.COMPLAINT)){
+                } else {
                     targetType = $filter('beautifyParentRefToParentTitle')(targetType);
                     targetId = Util.goodMapValue(rowEntity, "parentId");
                     targetId = parseInt(targetId.substring(0, targetId.indexOf('-')));
-                } else {
-                    targetId = "-1";
-                    MessageService.error("The target type: " + targetType + " is not supported currently. The targetId is set to: ", targetId);
                 }
                 gridHelper.showObject(targetType, targetId);
                 scope.onClickCancel();
