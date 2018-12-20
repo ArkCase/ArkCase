@@ -87,6 +87,7 @@
             <beans:property name="holidayConfigurationService" ref="holidayConfigurationService"/>
             <beans:property name="arkPermissionEvaluator" ref="arkPermissionEvaluator"/>
             <beans:property name="extensionWorkingDays" value="${request.extensionWorkingDays}"/>
+            <beans:property name="requestExtensionWorkingDaysEnabled" value="${requestExtensionWorkingDaysEnabled}"/>
         </beans:bean>
         <beans:bean id="foiaConfigurationHandler" class="gov.foia.pipeline.postsave.FOIAConfigurationHandler">
             <beans:property name="foiaConfigurationService" ref="foiaConfigurationService"/>

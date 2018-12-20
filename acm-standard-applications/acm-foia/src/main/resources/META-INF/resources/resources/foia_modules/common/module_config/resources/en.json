@@ -104,6 +104,8 @@
             "created": "Created",
             "modified": "Modified",
             "modifier": "Modified By",
+            "reviewStatus": "Review Status",
+            "redactionStatus": "Redaction Status",
             "version": "Version",
             "status": "Status"
         },
