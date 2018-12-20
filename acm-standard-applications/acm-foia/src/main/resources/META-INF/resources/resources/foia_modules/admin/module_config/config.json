@@ -1269,19 +1269,6 @@
                 "components": [
                     "state-of-arkcase"
                 ]
-            },
-            {
-                "type": "p/queues",
-                "label": "admin.queues.title",
-                "icon": "fa fa-wrench",
-                "components": []
-            },
-            {
-                "type": "p/queues/timeToComplete",
-                "label": "admin.queues.timeToComplete.title",
-                "components": [
-                    "time-to-complete"
-                ]
             }
         ]
     }
