@@ -863,10 +863,11 @@
                 "test.conection.success": "Conectado con éxito."
             }
         },
-        "transcription": {
-            "title": "Servicios de transcripción",
+        "mediaServices": {
+            "title": "Media Services_ES",
             "transcriptionManagement": "Gestión de la transcripción",
             "transcriptionConfigForm": {
+                "title": "Servicios de transcripción",
                 "save.button": "Salvar",
                 "automation.label": "Automatización",
                 "enableTranscription.checkbox": "Habilitar la transcripción",
@@ -890,6 +891,12 @@
                     "minOneValueErrorMsg": "El valor debe ser mayor o igual que 1",
 					"minPositiveValueErrorMsg": "El valor debe ser mayor que 0"
                 }
+            },
+            "ocrManagement": "OCR Management_ES",
+            "ocrConfigForm": {
+                "title": "OCR Services_ES",
+                "save.button": "Save_ES",
+                "enableOCR.checkbox": "Enable OCR_ES"
             }
         },
         "stateOfArkcase": {

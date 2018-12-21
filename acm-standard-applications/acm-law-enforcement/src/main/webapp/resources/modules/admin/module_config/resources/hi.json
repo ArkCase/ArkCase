@@ -863,10 +863,11 @@
 				"test.conection.success": "सफलतापूर्वक जुड़ा हुआ."
             }
         },
-        "transcription": {
-            "title": "ट्रांसक्रिप्शन सेवाएं",
+        "mediaServices": {
+            "title": "Media Services_HI",
             "transcriptionManagement": "",
             "transcriptionConfigForm": {
+                "title": "ट्रांसक्रिप्शन सेवाएं",
                 "save.button": "बचाना",
                 "automation.label": "स्वचालन",
                 "enableTranscription.checkbox": "ट्रांसक्रिप्शन सक्षम करें",
@@ -890,6 +891,12 @@
                     "minOneValueErrorMsg": "मान 1 से अधिक या बराबर होना चाहिए",
 					"minPositiveValueErrorMsg": "मान 0 से अधिक होना चाहिए"
                 }
+            },
+            "ocrManagement": "OCR Management_HI",
+            "ocrConfigForm": {
+                "title": "OCR Services_HI",
+                "save.button": "Save_HI",
+                "enableOCR.checkbox": "Enable OCR_HI"
             }
         },
         "stateOfArkcase": {
