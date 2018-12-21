@@ -577,7 +577,7 @@
             },
             "businessProcessTypes": {
                 "acmDocumentWorkflow": "ACM Document Workflow",
-                "correctiveActionPlan": "Corrective Action Plan"
+                "notDefinedWorkflow": "Not Defined Workflow"
             },
             "reportStates": {
                 "draft": "Draft",

@@ -224,8 +224,12 @@
         "groupToggle.label": "Group Task?",
         "group.placeholder": "Please select a group.",
         "documentsToReview.label": "Documents to review",
+        "documentsToReview.uploadDocuments": "Upload Documents",
         "businessProcessTypes.label": "Business Process Type",
-        "noSelectedDocsErrorMsg": "Please select at least one document to be reviewed."
+        "noSelectedReviewDocsErrorMsg": "Please select at least one document in order to use selected business process type.",
+        "noSelectedReviewDocsWorkflowErrorMsg": "Please select business process in order to upload files to task.",
+        "noSelectedDocsErrorMsg": "Please select at least one document in order to use selected business process type.",
+        "noSelectedWorkflowErrorMsg": "Please select business process in order to upload files to task."
     },
     "tasks.userOrGroupSearch": {
         "id": "userSearch",
@@ -390,17 +394,17 @@
             "noSort": "(No Sort)"
         }
     },
-    "tasks.signature":{
-        "dialog":{
+    "tasks.signature": {
+        "dialog": {
             "title": "Sign Task",
             "body": "Sign with your password:",
             "btn.cancel": "Cancel",
             "btn.sign": "Sign"
         }
     },
-    "tasks.userSearch":{
+    "tasks.userSearch": {
         "cancelButton": "Cancel",
         "confirmButton": "Confirm"
     },
-    "tasks.coordination.pickAssignee.placeholder": "Please Pick Assignee",
+    "tasks.coordination.pickAssignee.placeholder": "Please Pick Assignee"
 }

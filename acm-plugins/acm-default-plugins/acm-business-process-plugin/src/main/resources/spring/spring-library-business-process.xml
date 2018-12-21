@@ -8,4 +8,17 @@
 
     <bean id="queueService" class="com.armedia.acm.plugins.businessprocess.service.impl.DefaultQueueService"/>
 
+    <bean id="businessProcessDao" class="com.armedia.acm.plugins.businessprocess.dao.BusinessProcessDao"/>
+
+    <bean id="saveBusinessProcess" class="com.armedia.acm.plugins.businessprocess.service.impl.SaveBusinessProcessImpl">
+        <property name="businessProcessDao" ref="businessProcessDao"></property>
+    </bean>
+
+    <bean id="businessProcessToSolrTransformer"
+          class="com.armedia.acm.plugins.businessprocess.service.BusinessProcessToSolrTransformer">
+        <property name="userDao" ref="userJpaDao"/>
+        <property name="fileAclSolrUpdateHelper" ref="fileAclSolrUpdateHelper"/>
+        <property name="searchAccessControlFields" ref="searchAccessControlFields"/>
+        <property name="businessProcessDao" ref="businessProcessDao"/>
+    </bean>
 </beans>
