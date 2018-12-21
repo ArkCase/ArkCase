@@ -37,13 +37,17 @@ angular.module('tasks').controller(
                     $scope.groupTask = false;
                     $scope.chosenGroup = '';
 
+                    $scope.filesToUpload = [];
+
+                    $scope.selectedBusinessProcessType = null;
+                    ObjectLookupService.getBusinessProcessTypes().then(function(res) {
+                        $scope.businessProcessTypes = res;
+                        $scope.selectedBusinessProcessType = res[1].key;
+                    });
+
                     if ($scope.taskType === 'REVIEW_DOCUMENT') {
                         $scope.documentsToReview = $scope.modalParams.documentsToReview;
                         $scope.documentsToReviewIds = extractDocumentIds($scope.documentsToReview);
-                        $scope.selectedBusinessProcessType = null;
-                        ObjectLookupService.getBusinessProcessTypes().then(function(res) {
-                            $scope.businessProcessTypes = res;
-                        });
                     }
 
                     Authentication.queryUserInfo().then(function(userInfo) {
@@ -166,15 +170,44 @@ angular.module('tasks').controller(
                             $scope.config.data.assignee = $scope.userId;
                         }
                         var taskData = angular.copy($scope.config.data);
-                        taskData.dueDate = moment.utc(UtilDateService.dateToIso($scope.config.data.dueDate));
-                        taskData.taskStartDate = moment.utc(UtilDateService.dateToIso($scope.config.data.taskStartDate));
-                        if ($scope.taskType === 'REVIEW_DOCUMENT' && $scope.documentsToReview) {
+                        taskData.dueDate = moment.utc(UtilDateService.dateToIso($scope.config.data.dueDate)).toDate();
+                        taskData.taskStartDate = moment.utc(UtilDateService.dateToIso($scope.config.data.taskStartDate)).toDate();
+                        if ($scope.documentsToReview && $scope.selectedBusinessProcessType != 'acmDocumentTaskWorkflow') {
                             taskData.documentsToReview = processDocumentsUnderReview();
                             TaskNewTaskService.reviewDocuments(taskData, $scope.selectedBusinessProcessType).then(reviewDocumentTaskSuccessCallback, errorCallback);
-                        } else {
-                            TaskNewTaskService.saveAdHocTask(taskData).then(saveNewTaskSuccessCallback, errorCallback);
+                        }
+                        else if($scope.documentsToReview && $scope.selectedBusinessProcessType == 'acmDocumentTaskWorkflow' && $scope.filesToUpload){
+                            taskData.documentsToReview = processDocumentsUnderReview();
+                            var formData = new FormData();
+                            var data = new Blob([ angular.toJson(JSOG.encode(Util.omitNg(taskData))) ], {
+                                type: 'application/json'
+                            });
+                            formData.append('task', data);
+                            formData.append('businessProcessName',$scope.selectedBusinessProcessType);
+                            angular.forEach($scope.filesToUpload, function (value) {
+                                formData.append('files', value);
+                            });
+                            TaskNewTaskService.reviewNewDocuments(formData).then(reviewDocumentTaskSuccessCallback,errorCallback);
+                        }
+                        else if($scope.filesToUpload.length > 0 && $scope.taskType != 'REVIEW_DOCUMENT') {
+                            var formData = new FormData();
+                            var data = new Blob([ angular.toJson(JSOG.encode(Util.omitNg(taskData))) ], {
+                                type: 'application/json'
+                            });
+                            formData.append('task', data);
+                            formData.append('businessProcessName',$scope.selectedBusinessProcessType);
+                            angular.forEach($scope.filesToUpload, function (value) {
+                                formData.append('files', value);
+                            });
+                            TaskNewTaskService.reviewNewDocuments(formData).then(reviewDocumentTaskSuccessCallback,errorCallback);
+                                
+                        }
+                        else {
+                                TaskNewTaskService.saveAdHocTask(taskData).then(saveNewTaskSuccessCallback, errorCallback);
+                            
                         }
                     };
+                    
 
                     function reviewDocumentTaskSuccessCallback(data) {
                         $scope.saved = false;
@@ -272,6 +305,12 @@ angular.module('tasks').controller(
                         $scope.chosenGroup = "";
                         $scope.config.data.assignee = null;
                         $scope.userName = "";
+                    };
+
+                    $scope.onFileUpload = function(files) {
+                        angular.forEach(files, function(file) {
+                            $scope.filesToUpload.push(file)
+                        });
                     };
 
                     $scope.userOrGroupSearch = function() {

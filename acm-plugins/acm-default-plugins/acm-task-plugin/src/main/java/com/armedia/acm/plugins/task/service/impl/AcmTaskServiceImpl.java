@@ -581,8 +581,16 @@ public class AcmTaskServiceImpl implements AcmTaskService
                 pVars.put("OBJECT_TYPE", "FILE");
                 pVars.put("OBJECT_ID", documentToReview.getFileId());
                 pVars.put("OBJECT_NAME", documentToReview.getFileName());
-                pVars.put("PARENT_OBJECT_TYPE", parentObjectType);
-                pVars.put("PARENT_OBJECT_ID", parentObjectId);
+                if(documentToReview.getContainer() != null)
+                {
+                    pVars.put("PARENT_OBJECT_TYPE", documentToReview.getContainer().getContainerObjectType());
+                    pVars.put("PARENT_OBJECT_ID", documentToReview.getContainer().getContainerObjectId());
+                }
+                else 
+                {
+                    pVars.put("PARENT_OBJECT_TYPE", parentObjectType);
+                    pVars.put("PARENT_OBJECT_ID", parentObjectId);
+                }
                 pVars.put("REQUEST_TYPE", "DOCUMENT_REVIEW");
 
                 AcmTask createdAcmTask = taskDao.startBusinessProcess(pVars, businessProcessName);

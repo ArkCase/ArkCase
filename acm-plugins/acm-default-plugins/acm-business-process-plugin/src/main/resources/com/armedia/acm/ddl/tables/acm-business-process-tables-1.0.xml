@@ -1,0 +1,42 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="
+            http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="business-process-01-acm-business-process-table" author="stefan.sanevski">
+        <createTable tableName="acm_business_process">
+            <column name="cm_business_process_id" type="${idType}">
+            </column>
+            <column name="cm_business_process_created" type="${timestampType}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_business_process_creator" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_business_process_modified" type="${timestampType}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_business_process_modifier" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_object_type" type="VARCHAR(100)" defaultValue="BUSINESS_PROCESS">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_container_id" type="${fkIdType}"></column>
+            <column name="cm_business_process_restricted_flag" type="VARCHAR(32)" defaultValue="false">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="business-process-02-acm-business-process-table" author="stefan.sanevski" failOnError="false">
+        <createTable tableName="acm_business_process_id">
+            <column name="cm_seq_num" type="${idType}"/>
+            <column name="cm_seq_name" type="VARCHAR(255)"/>
+        </createTable>
+        <insert tableName="acm_business_process_id">
+            <column name="cm_seq_num" value="100"></column>
+            <column name="cm_seq_name" value="acm_business_process"></column>
+        </insert>
+    </changeSet>
+    
+</databaseChangeLog>

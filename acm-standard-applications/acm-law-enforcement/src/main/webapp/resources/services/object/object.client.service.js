@@ -28,7 +28,8 @@ angular.module('services').factory('ObjectService', [ '$state', '$window', '$log
             FOLDER: "FOLDER",
             TRANSCRIBE: "TRANSCRIBE",
             TRANSCRIBE_ITEM: "TRANSCRIBE_ITEM",
-            ASSOCIATED_TAG: "ASSOCIATED_TAG"
+            ASSOCIATED_TAG: "ASSOCIATED_TAG",
+            BUSINESS_PROCESS: "BUSINESS_PROCESS"
         }
 
         ,
