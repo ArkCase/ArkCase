@@ -6,16 +6,16 @@
                     <button class="btn btn-xs btn-link" ng-click="saveChanges()" ng-disabled="transcribeConfigurationForm.$invalid">
                         <i class="fa fa-save"></i>
                         <span translate>
-			            	admin.transcription.transcriptionConfigForm.save.button
+			            	admin.mediaServices.transcriptionConfigForm.save.button
                         </span>
                     </button>
                 </div>
             </div>
-            <panel-view header="{{'admin.transcription.title' | translate}}" collapsible="false">
+            <panel-view header="{{'admin.mediaServices.transcriptionConfigForm.title' | translate}}" collapsible="false">
                 <div class="row">
                     <div class="col-lg-12">
                         <label translate>
-                            admin.transcription.transcriptionConfigForm.automation.label
+                            admin.mediaServices.transcriptionConfigForm.automation.label
                         </label>
                     </div>
                     <div class="well-sm">
@@ -25,7 +25,7 @@
                                     <label>
                                         <input type="checkbox" ng-model="transcribeConfigDataModel.enabled">
                                         <span translate>
-                             admin.transcription.transcriptionConfigForm.enableTranscription.checkbox
+                             admin.mediaServices.transcriptionConfigForm.enableTranscription.checkbox
                             </span>
                                     </label>
                                 </div>
@@ -37,7 +37,7 @@
                                     <label>
                                         <input type="checkbox" ng-model="transcribeConfigDataModel.automaticEnabled">
                                         <span translate>
-                             admin.transcription.transcriptionConfigForm.automaticTranscription.checkbox
+                             admin.mediaServices.transcriptionConfigForm.automaticTranscription.checkbox
                             </span>
                                     </label>
                                 </div>
@@ -48,7 +48,7 @@
                 <div class="row">
                     <div class="col-lg-12">
                         <label translate>
-                            admin.transcription.transcriptionConfigForm.mediaFileAdded.label
+                            admin.mediaServices.transcriptionConfigForm.mediaFileAdded.label
                         </label>
                     </div>
                     <div class="well-sm">
@@ -56,13 +56,13 @@
                             <div class="radio">
                                 <label>
                                     <input type="radio" name="versionProperty" ng-model="transcriptionForNewVersion.value" ng-value="true">
-                                    <span translate>admin.transcription.transcriptionConfigForm.generateTranscription.radio</span>
+                                    <span translate>admin.mediaServices.transcriptionConfigForm.generateTranscription.radio</span>
                                 </label>
                             </div>
                             <div class="radio">
                                 <label>
                                     <input type="radio" name="versionProperty" ng-model="transcriptionForNewVersion.value" ng-value="false">
-                                    <span translate>admin.transcription.transcriptionConfigForm.copyTranscription.radio</span>
+                                    <span translate>admin.mediaServices.transcriptionConfigForm.copyTranscription.radio</span>
                                 </label>
                             </div>
                         </form>
@@ -71,7 +71,7 @@
                 <div class="row">
                     <div class="col-lg-3 form-group">
                         <label translate>
-                            admin.transcription.transcriptionConfigForm.provider.label
+                            admin.mediaServices.transcriptionConfigForm.provider.label
                         </label>
                         <select name="providers" class="form-control" ng-options="o as o for o in transcribeConfigDataModel.providers"
                                 ng-model="transcribeConfigDataModel.provider">
@@ -79,7 +79,7 @@
                     </div>
                     <div class="col-lg-3 form-group">
                         <label translate>
-                            admin.transcription.transcriptionConfigForm.numOfFiles.label
+                            admin.mediaServices.transcriptionConfigForm.numOfFiles.label
                         </label>
 						<span class="required-asterisk">*</span>
                         <input name="numberOfFilesForProcessing" class="form-control"
@@ -89,17 +89,17 @@
                             &nbsp;
                         </span>
                         <span ng-if="transcribeConfigurationForm.numberOfFilesForProcessing.$error.min" class="text-danger" translate>
-                                admin.transcription.transcriptionConfigForm.validation.messages.minOneValueErrorMsg
+                                admin.mediaServices.transcriptionConfigForm.validation.messages.minOneValueErrorMsg
                         </span>
                         <span ng-if="transcribeConfigurationForm.numberOfFilesForProcessing.$error.required" class="text-danger" translate>
-                                admin.transcription.transcriptionConfigForm.validation.messages.requiredErrorMsg
+                                admin.mediaServices.transcriptionConfigForm.validation.messages.requiredErrorMsg
                         </span>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-lg-3 form-group">
                         <label translate>
-                            admin.transcription.transcriptionConfigForm.wordCount.label
+                            admin.mediaServices.transcriptionConfigForm.wordCount.label
                         </label>
 						<span class="required-asterisk">*</span>
                         <input name="wordCountPerItem" class="form-control" ng-model="transcribeConfigDataModel.wordCountPerItem"
@@ -109,15 +109,15 @@
                              &nbsp;
                             </span>
                         <span ng-if="transcribeConfigurationForm.wordCountPerItem.$error.min" class="text-danger" translate>
-                            admin.transcription.transcriptionConfigForm.validation.messages.minOneValueErrorMsg
+                            admin.mediaServices.transcriptionConfigForm.validation.messages.minOneValueErrorMsg
                             </span>
                         <span ng-if="transcribeConfigurationForm.wordCountPerItem.$error.required" class="text-danger" translate>
-                                admin.transcription.transcriptionConfigForm.validation.messages.requiredErrorMsg
+                                admin.mediaServices.transcriptionConfigForm.validation.messages.requiredErrorMsg
                         </span>
                     </div>
                     <div class="col-lg-3 form-group">
                         <label translate>
-                            admin.transcription.transcriptionConfigForm.costPerSecond.label
+                            admin.mediaServices.transcriptionConfigForm.costPerSecond.label
                         </label>
 						<span class="required-asterisk">*</span>
                         <input name="cost" class="form-control" ng-model="transcribeConfigDataModel.cost" type="number" min="0" step="any"
@@ -126,17 +126,17 @@
                              &nbsp;
                             </span>
                         <span ng-if="transcribeConfigurationForm.cost.$error.min" class="text-danger" translate>
-                                admin.transcription.transcriptionConfigForm.validation.messages.minZeroValueErrorMsg
+                                admin.mediaServices.transcriptionConfigForm.validation.messages.minZeroValueErrorMsg
                             </span>
                         <span ng-if="transcribeConfigurationForm.cost.$error.required" class="text-danger" translate>
-                                admin.transcription.transcriptionConfigForm.validation.messages.requiredErrorMsg
+                                admin.mediaServices.transcriptionConfigForm.validation.messages.requiredErrorMsg
                             </span>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-lg-3 form-group">
                         <label translate>
-                            admin.transcription.transcriptionConfigForm.confidenceThreshold.label
+                            admin.mediaServices.transcriptionConfigForm.confidenceThreshold.label
                         </label>
 						<span class="required-asterisk">*</span>
                         <input name="confidence" class="form-control" ng-model="transcribeConfigDataModel.confidence" type="number" min="0"
@@ -145,43 +145,43 @@
                              &nbsp;
                             </span>
                         <span ng-if="transcribeConfigurationForm.confidence.$error.min" class="text-danger" translate>
-                                admin.transcription.transcriptionConfigForm.validation.messages.minZeroValueErrorMsg
+                                admin.mediaServices.transcriptionConfigForm.validation.messages.minZeroValueErrorMsg
                             </span>
                         <span ng-if="transcribeConfigurationForm.confidence.$error.max" class="text-danger" translate>
-                                 admin.transcription.transcriptionConfigForm.validation.messages.maxErrorMsg
+                                 admin.mediaServices.transcriptionConfigForm.validation.messages.maxErrorMsg
                             </span>
                         <span ng-if="transcribeConfigurationForm.confidence.$error.required" class="text-danger" translate>
-                                admin.transcription.transcriptionConfigForm.validation.messages.requiredErrorMsg
+                                admin.mediaServices.transcriptionConfigForm.validation.messages.requiredErrorMsg
                             </span>
                     </div>
                     <div class="col-lg-3 form-group">
                         <label translate>
-                            admin.transcription.transcriptionConfigForm.mediaDurationInSeconds.label
+                            admin.mediaServices.transcriptionConfigForm.mediaDurationInSeconds.label
                         </label>
 						<span class="required-asterisk">*</span>
                         <input name="allowedMediaDuration" class="form-control" ng-model="transcribeConfigDataModel.allowedMediaDuration"
                                 type="number" min="1" required>
                         <span ng-if="transcribeConfigurationForm.allowedMediaDuration.$error.required" class="text-danger" translate>
-                                admin.transcription.transcriptionConfigForm.validation.messages.requiredErrorMsg
+                                admin.mediaServices.transcriptionConfigForm.validation.messages.requiredErrorMsg
                             </span>
                         <span ng-if="transcribeConfigurationForm.allowedMediaDuration.$error.min" class="text-danger" translate>
-                                admin.transcription.transcriptionConfigForm.validation.messages.minPositiveValueErrorMsg
+                                admin.mediaServices.transcriptionConfigForm.validation.messages.minPositiveValueErrorMsg
                             </span>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-lg-3 form-group">
                         <label translate>
-                            admin.transcription.transcriptionConfigForm.silenceBetweenWords.label
+                            admin.mediaServices.transcriptionConfigForm.silenceBetweenWords.label
                         </label>
 						<span class="required-asterisk">*</span>
                         <input name="silentBetweenWords" class="form-control" ng-model="transcribeConfigDataModel.silentBetweenWords"
                                 type="number" step="any" min="0" required>
                         <span ng-if="transcribeConfigurationForm.silentBetweenWords.$error.required" class="text-danger" translate>
-                                admin.transcription.transcriptionConfigForm.validation.messages.requiredErrorMsg
+                                admin.mediaServices.transcriptionConfigForm.validation.messages.requiredErrorMsg
                             </span>
                         <span ng-if="transcribeConfigurationForm.silentBetweenWords.$error.min" class="text-danger" translate>
-                                admin.transcription.transcriptionConfigForm.validation.messages.minZeroValueErrorMsg
+                                admin.mediaServices.transcriptionConfigForm.validation.messages.minZeroValueErrorMsg
                             </span>
                     </div>
                 </div>
