@@ -93,7 +93,7 @@ angular.module('dashboard.my-overdue-cases').controller('Dashboard.MyOverdueCase
             }
 
             vm.onTopicClick = function(row) {
-                $state.go('request-info', {
+                $state.go('request-details', {
                     id: row.entity.request_id_lcs
                 }, true);
             }
