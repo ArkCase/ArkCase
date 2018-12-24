@@ -29,14 +29,68 @@ package com.armedia.acm.plugins.businessprocess.dao;
 
 import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.plugins.businessprocess.model.BusinessProcess;
+import com.armedia.acm.plugins.businessprocess.model.BusinessProcessConstants;
+import org.activiti.engine.RuntimeService;
+import org.activiti.engine.TaskService;
+import org.activiti.engine.runtime.ProcessInstance;
+import org.activiti.engine.task.Task;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 
 public class BusinessProcessDao extends AcmAbstractDao<BusinessProcess>
 {
+    private RuntimeService activitiRuntimeService;
+    private TaskService activitiTaskService;
+    private Logger log = LoggerFactory.getLogger(getClass());
 
     @Override
     protected Class<BusinessProcess> getPersistenceClass()
     {
         return BusinessProcess.class;
+    }
+    
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public List<Long> findTasksIdsForParentObjectIdAndParentObjectType(String parentObjectType, Long parentObjectId)
+    {
+        List<ProcessInstance> processes = getActivitiRuntimeService().createProcessInstanceQuery()
+                .variableValueEquals(BusinessProcessConstants.VARIABLE_NAME_PARENT_OBJECT_TYPE, parentObjectType)
+                .variableValueEquals(BusinessProcessConstants.VARIABLE_NAME_PARENT_OBJECT_ID, parentObjectId).list();
+
+        List<Task> activitiTasks = processes.stream()
+                .map(it -> getActivitiTaskService().createTaskQuery()
+                        .processInstanceId(it.getProcessInstanceId())
+                        .singleResult())
+                .collect(Collectors.toList());
+
+        log.debug("Found [{}] tasks for object [{}:{}]", activitiTasks.size(), parentObjectType, parentObjectId);
+        return activitiTasks.stream()
+                .map(it -> Long.valueOf(it.getId()))
+                .collect(Collectors.toList());
+    }
+
+    public RuntimeService getActivitiRuntimeService() 
+    {
+        return activitiRuntimeService;
+    }
+
+    public void setActivitiRuntimeService(RuntimeService activitiRuntimeService) 
+    {
+        this.activitiRuntimeService = activitiRuntimeService;
+    }
+
+    public TaskService getActivitiTaskService() 
+    {
+        return activitiTaskService;
+    }
+
+    public void setActivitiTaskService(TaskService activitiTaskService) 
+    {
+        this.activitiTaskService = activitiTaskService;
     }
 }

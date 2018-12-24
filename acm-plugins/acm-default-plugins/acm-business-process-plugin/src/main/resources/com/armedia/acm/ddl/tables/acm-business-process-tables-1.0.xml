@@ -25,6 +25,9 @@
             <column name="cm_business_process_restricted_flag" type="VARCHAR(32)" defaultValue="false">
                 <constraints nullable="false"/>
             </column>
+            <column name="cm_business_process_status" type="VARCHAR(4000)">
+                <constraints nullable="false"/>
+            </column>
         </createTable>
     </changeSet>
 

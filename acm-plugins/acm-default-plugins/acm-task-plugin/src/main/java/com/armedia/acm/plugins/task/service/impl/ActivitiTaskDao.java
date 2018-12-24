@@ -88,7 +88,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
@@ -567,25 +566,6 @@ public class ActivitiTaskDao implements TaskDao, AcmNotificationDao
         return retval;
     }
 
-    @Override
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public List<Long> findTasksIdsForParentObjectIdAndParentObjectType(String parentObjectType, Long parentObjectId)
-    {
-        List<ProcessInstance> processes = getActivitiRuntimeService().createProcessInstanceQuery()
-                .variableValueEquals(TaskConstants.VARIABLE_NAME_PARENT_OBJECT_TYPE, parentObjectType)
-                .variableValueEquals(TaskConstants.VARIABLE_NAME_PARENT_OBJECT_ID, parentObjectId).list();
-
-        List<Task> activitiTasks = processes.stream()
-                .map(it -> getActivitiTaskService().createTaskQuery()
-                        .processInstanceId(it.getProcessInstanceId())
-                        .singleResult())
-                .collect(Collectors.toList());
-
-        log.debug("Found [{}] tasks for object [{}:{}]", activitiTasks.size(), parentObjectType, parentObjectId);
-        return activitiTasks.stream()
-                .map(it -> Long.valueOf(it.getId()))
-                .collect(Collectors.toList());
-    }
 
     @Override
     public List<AcmTask> allTasks()

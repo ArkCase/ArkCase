@@ -12,6 +12,7 @@ import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.util.Date;
 import java.util.List;
@@ -113,7 +114,14 @@ public class BusinessProcessToSolrTransformer implements AcmObjectToSolrDocTrans
     
     @Override
     public JSONArray childrenUpdatesToSolr(BusinessProcess in) {
-        return fileAclSolrUpdateHelper.buildFileAclUpdates(in.getContainer().getId(), in);
+        JSONArray docUpdates = fileAclSolrUpdateHelper.buildFileAclUpdates(in.getContainer().getId(), in);
+        List<Long> childTasks = businessProcessDao.findTasksIdsForParentObjectIdAndParentObjectType(in.getObjectType(), in.getId());
+        childTasks.forEach(it -> {
+            JSONObject doc = searchAccessControlFields.buildParentAccessControlFieldsUpdate(in, String.format("%d-%s", it,
+                    BusinessProcessConstants.OBJECT_TYPE_TASK));
+            docUpdates.put(doc);
+        });
+        return docUpdates;
     }
 
     public SearchAccessControlFields getSearchAccessControlFields() {
