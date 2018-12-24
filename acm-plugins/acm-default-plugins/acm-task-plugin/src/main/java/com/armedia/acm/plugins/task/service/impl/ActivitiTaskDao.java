@@ -587,6 +587,19 @@ public class ActivitiTaskDao implements TaskDao, AcmNotificationDao
                 .collect(Collectors.toList());
     }
 
+    public List<AcmTask> findByVariableForObjectTypeAndId(String name, String value, String objectType, Long objectId)
+    {
+        List<Task> activitiTasks = getActivitiTaskService().createTaskQuery()
+                .includeProcessVariables()
+                .taskVariableValueEquals(TaskConstants.VARIABLE_NAME_PARENT_OBJECT_TYPE, objectType)
+                .taskVariableValueEquals(TaskConstants.VARIABLE_NAME_PARENT_OBJECT_ID, objectId)
+                .taskVariableValueEquals(name, value).list();
+
+        return activitiTasks.stream()
+                .map(it -> acmTaskFromActivitiTask(it))
+                .collect(Collectors.toList());
+    }
+
     @Override
     public List<AcmTask> allTasks()
     {
