@@ -63,9 +63,18 @@ public class SequenceConfigurationAPIController
         return getSequenceConfigurationService().getSequenceConfiguration();
     }
 
+    @RequestMapping(value = "/configuration", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public List<AcmSequenceConfiguration> addSequenceConfiguration(@RequestBody List<AcmSequenceConfiguration> sequenceConfigurationList,
+            Authentication authentication, HttpSession httpSession)
+            throws AcmSequenceException
+    {
+        return getSequenceConfigurationService().saveSequenceConfiguration(sequenceConfigurationList);
+    }
+
     @RequestMapping(value = "/configuration", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public List<AcmSequenceConfiguration> saveSequenceConfiguration(@RequestBody List<AcmSequenceConfiguration> sequenceConfigurationList,
+    public List<AcmSequenceConfiguration> updateSequenceConfiguration(@RequestBody List<AcmSequenceConfiguration> sequenceConfigurationList,
             Authentication authentication, HttpSession httpSession)
             throws AcmSequenceException
     {

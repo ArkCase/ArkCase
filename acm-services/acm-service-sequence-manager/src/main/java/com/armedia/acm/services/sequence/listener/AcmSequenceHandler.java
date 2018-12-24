@@ -39,10 +39,14 @@ import org.apache.commons.beanutils.PropertyUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;
+import org.springframework.messaging.MessageChannel;
+import org.springframework.messaging.support.MessageBuilder;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author sasko.tanaskoski
@@ -54,6 +58,7 @@ public class AcmSequenceHandler implements AcmBeforeInsertListener, ApplicationL
 
     private AcmSequenceAnnotationReader sequenceAnnotationReader;
     private AcmSequenceGeneratorManager sequenceGeneratorManager;
+    private MessageChannel genericMessagesChannel;
 
     @Override
     public void beforeInsert(Object object)
@@ -103,10 +108,21 @@ public class AcmSequenceHandler implements AcmBeforeInsertListener, ApplicationL
                 }
                 catch (AcmSequenceException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e)
                 {
-                    log.error("Error setting sequence on [{}]", annotatedField.getName(), e);
+                    log.error("Error setting sequence on [{}] [{}]", object.getClass().getSimpleName(), annotatedField.getName(), e);
+                    propagateSequenceMessage(object, annotatedField.getName());
                 }
             }
         }
+    }
+
+    private void propagateSequenceMessage(Object object, String attributeName)
+    {
+        Map<String, Object> message = new HashMap<>();
+        message.put("user", ((AcmEntity) object).getModifier());
+        message.put("eventType", "sequence-error");
+        message.put("message", String.format("Error setting sequence on [%s] [%s]", object.getClass().getSimpleName(), attributeName));
+
+        getGenericMessagesChannel().send(MessageBuilder.withPayload(message).build());
     }
 
     /**
@@ -141,6 +157,23 @@ public class AcmSequenceHandler implements AcmBeforeInsertListener, ApplicationL
     public void setSequenceAnnotationReader(AcmSequenceAnnotationReader sequenceAnnotationReader)
     {
         this.sequenceAnnotationReader = sequenceAnnotationReader;
+    }
+
+    /**
+     * @return the genericMessagesChannel
+     */
+    public MessageChannel getGenericMessagesChannel()
+    {
+        return genericMessagesChannel;
+    }
+
+    /**
+     * @param genericMessagesChannel
+     *            the genericMessagesChannel to set
+     */
+    public void setGenericMessagesChannel(MessageChannel genericMessagesChannel)
+    {
+        this.genericMessagesChannel = genericMessagesChannel;
     }
 
 }

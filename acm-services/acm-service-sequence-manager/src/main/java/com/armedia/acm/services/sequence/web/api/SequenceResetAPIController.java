@@ -38,9 +38,18 @@ public class SequenceResetAPIController
         return getSequenceService().getSequenceResetList(sequenceName, sequencePartName);
     }
 
+    @RequestMapping(value = "/reset", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public AcmSequenceReset addSequenceReset(@RequestBody AcmSequenceReset sequenceReset,
+            Authentication authentication, HttpSession httpSession)
+            throws AcmSequenceException
+    {
+        return getSequenceService().saveSequenceReset(sequenceReset);
+    }
+
     @RequestMapping(value = "/reset", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public AcmSequenceReset saveSequenceReset(@RequestBody AcmSequenceReset sequenceReset,
+    public AcmSequenceReset updateSequenceReset(@RequestBody AcmSequenceReset sequenceReset,
             Authentication authentication, HttpSession httpSession)
             throws AcmSequenceException
     {

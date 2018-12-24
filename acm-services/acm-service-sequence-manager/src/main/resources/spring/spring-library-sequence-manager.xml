@@ -9,6 +9,7 @@
     <bean id="acmSequenceHandler" class="com.armedia.acm.services.sequence.listener.AcmSequenceHandler">
         <property name="sequenceAnnotationReader" ref="acmSequenceAnnotationReader"/>
         <property name="sequenceGeneratorManager" ref="acmSequenceGeneratorManager"/>
+        <property name="genericMessagesChannel" ref="genericMessagesChannel"/>
     </bean>
 
     <bean id="acmSequenceDatabaseHandler" class="com.armedia.acm.services.sequence.listener.AcmSequenceDatabaseChangeHandler">
