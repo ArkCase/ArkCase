@@ -29,13 +29,6 @@ package com.armedia.acm.plugins.task.web.api;
 
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
-import com.armedia.acm.plugins.businessprocess.model.BusinessProcess;
-import com.armedia.acm.plugins.businessprocess.service.SaveBusinessProcess;
-import com.armedia.acm.plugins.ecm.model.AcmContainer;
-import com.armedia.acm.plugins.ecm.model.AcmFolder;
-import com.armedia.acm.plugins.ecm.model.AcmMultipartFile;
-import com.armedia.acm.plugins.ecm.model.EcmFile;
-import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.task.exception.AcmTaskException;
 import com.armedia.acm.plugins.task.model.AcmApplicationTaskEvent;
 import com.armedia.acm.plugins.task.model.AcmTask;
@@ -58,7 +51,6 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpSession;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -70,8 +62,6 @@ public class CreateBusinessProcessTasksAPIController
 {
     private TaskEventPublisher taskEventPublisher;
     private AcmTaskService taskService;
-    private EcmFileService ecmFileService;
-    private SaveBusinessProcess saveBusinessProcess;
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
@@ -109,46 +99,8 @@ public class CreateBusinessProcessTasksAPIController
         
         try
         {
-            BusinessProcess businessProcess = new BusinessProcess();
-            businessProcess = saveBusinessProcess.save(businessProcess);
-            AcmContainer container = ecmFileService.createContainerFolder(businessProcess.getObjectType(), businessProcess.getId(), "alfresco");
-            businessProcess.setContainer(container);
             
-            AcmFolder folder = container.getAttachmentFolder();
-            
-            List<EcmFile> uploadedFiles = new ArrayList<>();
-            
-            if(filesToUpload != null) 
-            {
-                
-                for (MultipartFile file :
-                        filesToUpload) {
-                    AcmMultipartFile f = new AcmMultipartFile(file.getName(), file.getOriginalFilename(),
-                            file.getContentType(), file.isEmpty(), file.getSize(), file.getBytes(),
-                            file.getInputStream(), true);
-
-                    EcmFile temp = ecmFileService.upload(file.getOriginalFilename(), "uploadFileType", "fileLang", f, authentication,
-                            folder.getCmisFolderId(), businessProcess.getObjectType(), businessProcess.getId());
-                    uploadedFiles.add(temp);
-                }
-            }
-            if(task.getDocumentsToReview() != null)
-            {
-                List<EcmFile> documentsToReview = task.getDocumentsToReview();
-                for (EcmFile file :
-                        uploadedFiles) {
-                    documentsToReview.add(file);
-                }
-                task.setDocumentsToReview(documentsToReview);
-            } 
-            else
-            {
-                task.setDocumentsToReview(uploadedFiles);
-                task.setAttachedToObjectType(businessProcess.getObjectType());
-                task.setAttachedToObjectId(businessProcess.getId());
-            }
-
-            List<AcmTask> acmTasks = getTaskService().startReviewDocumentsWorkflow(task, businessProcessType, authentication);
+            List<AcmTask> acmTasks = getTaskService().startReviewDocumentsWorkflow(task, businessProcessType, authentication, filesToUpload);
             return acmTasks;
             
         }
@@ -193,15 +145,6 @@ public class CreateBusinessProcessTasksAPIController
     public void setTaskService(AcmTaskService taskService)
     {
         this.taskService = taskService;
-    }
-    
-    public void setEcmFileService(EcmFileService ecmFileService) {
-        this.ecmFileService = ecmFileService;
-    }
-
-
-    public void setSaveBusinessProcess(SaveBusinessProcess saveBusinessProcess) {
-        this.saveBusinessProcess = saveBusinessProcess;
     }
     
 }

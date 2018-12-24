@@ -27,11 +27,11 @@ package com.armedia.acm.plugins.complaint.service;
  * #L%
  */
 
+import com.armedia.acm.plugins.businessprocess.dao.BusinessProcessDao;
 import com.armedia.acm.plugins.complaint.dao.ComplaintDao;
 import com.armedia.acm.plugins.complaint.model.Complaint;
 import com.armedia.acm.plugins.ecm.service.FileAclSolrUpdateHelper;
 import com.armedia.acm.plugins.task.model.TaskConstants;
-import com.armedia.acm.plugins.task.service.TaskDao;
 import com.armedia.acm.services.dataaccess.service.SearchAccessControlFields;
 import com.armedia.acm.services.participants.utils.ParticipantUtils;
 import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
@@ -53,9 +53,9 @@ public class ComplaintToSolrTransformer implements AcmObjectToSolrDocTransformer
 {
     private UserDao userDao;
     private ComplaintDao complaintDao;
-    private TaskDao taskDao;
     private FileAclSolrUpdateHelper fileAclSolrUpdateHelper;
     private SearchAccessControlFields searchAccessControlFields;
+    private BusinessProcessDao businessProcessDao;
 
     @Override
     public List<Complaint> getObjectsModifiedSince(Date lastModified, int start, int pageSize)
@@ -167,7 +167,7 @@ public class ComplaintToSolrTransformer implements AcmObjectToSolrDocTransformer
     public JSONArray childrenUpdatesToSolr(Complaint in)
     {
         JSONArray docUpdates = fileAclSolrUpdateHelper.buildFileAclUpdates(in.getContainer().getId(), in);
-        List<Long> childTasksIds = taskDao.findTasksIdsForParentObjectIdAndParentObjectType(in.getObjectType(), in.getId());
+        List<Long> childTasksIds = businessProcessDao.findTasksIdsForParentObjectIdAndParentObjectType(in.getObjectType(), in.getId());
         childTasksIds.forEach(it -> {
             JSONObject doc = searchAccessControlFields.buildParentAccessControlFieldsUpdate(in, String.format("%d-%s", it,
                     TaskConstants.OBJECT_TYPE));
@@ -228,13 +228,13 @@ public class ComplaintToSolrTransformer implements AcmObjectToSolrDocTransformer
         this.fileAclSolrUpdateHelper = fileAclSolrUpdateHelper;
     }
 
-    public TaskDao getTaskDao()
+    public BusinessProcessDao getBusinessProcessDao() 
     {
-        return taskDao;
+        return businessProcessDao;
     }
 
-    public void setTaskDao(TaskDao taskDao)
+    public void setBusinessProcessDao(BusinessProcessDao businessProcessDao) 
     {
-        this.taskDao = taskDao;
+        this.businessProcessDao = businessProcessDao;
     }
 }

@@ -1,30 +1,23 @@
 package com.armedia.acm.plugins.businessprocess.model;
 
 import com.armedia.acm.core.AcmObject;
+import com.armedia.acm.core.AcmStatefulEntity;
 import com.armedia.acm.data.AcmEntity;
 import com.armedia.acm.data.converter.BooleanToStringConverter;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.AcmContainerEntity;
-import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.services.participants.model.AcmAssignedObject;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.voodoodyne.jackson.jsog.JSOGGenerator;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Convert;
-import javax.persistence.DiscriminatorColumn;
-import javax.persistence.DiscriminatorType;
-import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinColumns;
 import javax.persistence.OneToMany;
@@ -33,7 +26,6 @@ import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.xml.bind.annotation.XmlRootElement;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -41,7 +33,7 @@ import java.util.List;
 @Entity
 @Table(name = "acm_business_process")
 @JsonIdentityInfo(generator = JSOGGenerator.class)
-public class BusinessProcess implements AcmEntity, AcmContainerEntity, AcmObject, AcmAssignedObject {
+public class BusinessProcess implements AcmEntity, AcmContainerEntity, AcmObject, AcmAssignedObject, AcmStatefulEntity {
     
     @Id
     @TableGenerator(name = "business_process_gen", table = "acm_business_process_id", pkColumnName = "cm_seq_name", 
@@ -79,6 +71,9 @@ public class BusinessProcess implements AcmEntity, AcmContainerEntity, AcmObject
     @Column(name = "cm_business_process_restricted_flag", nullable = false)
     @Convert(converter = BooleanToStringConverter.class)
     private Boolean restricted = Boolean.FALSE;
+
+    @Column(name = "cm_business_process_status", nullable = false)
+    private String status;
 
 
     @Override
@@ -163,5 +158,10 @@ public class BusinessProcess implements AcmEntity, AcmContainerEntity, AcmObject
     @Override
     public String getStatus() {
         return "DRAFT";
+    }
+
+    @Override
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

@@ -37,8 +37,6 @@
     <bean id="createBusinessProcessTasksAPIController" class="com.armedia.acm.plugins.task.web.api.CreateBusinessProcessTasksAPIController">
         <property name="taskEventPublisher" ref="taskEventPublisher"/>
         <property name="taskService" ref="acmTaskService"/>
-        <property name="saveBusinessProcess" ref="saveBusinessProcess"></property>
-        <property name="ecmFileService" ref="ecmFileService"></property>
     </bean>
 
     <bean id="findTaskByIdAPIController" class="com.armedia.acm.plugins.task.web.api.FindTaskByIdAPIController">

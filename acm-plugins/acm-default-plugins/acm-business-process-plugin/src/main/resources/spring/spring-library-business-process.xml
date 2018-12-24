@@ -8,7 +8,10 @@
 
     <bean id="queueService" class="com.armedia.acm.plugins.businessprocess.service.impl.DefaultQueueService"/>
 
-    <bean id="businessProcessDao" class="com.armedia.acm.plugins.businessprocess.dao.BusinessProcessDao"/>
+    <bean id="businessProcessDao" class="com.armedia.acm.plugins.businessprocess.dao.BusinessProcessDao">
+        <property name="activitiRuntimeService" ref="activitiRuntimeService"/>
+        <property name="activitiTaskService" ref="activitiTaskService"/>
+    </bean>
 
     <bean id="saveBusinessProcess" class="com.armedia.acm.plugins.businessprocess.service.impl.SaveBusinessProcessImpl">
         <property name="businessProcessDao" ref="businessProcessDao"></property>
