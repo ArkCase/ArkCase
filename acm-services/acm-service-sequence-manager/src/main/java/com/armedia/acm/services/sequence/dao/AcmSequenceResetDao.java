@@ -62,7 +62,7 @@ public class AcmSequenceResetDao extends AcmAbstractDao<AcmSequenceReset>
                 "AND sequenceReset.sequencePartName = :sequencePartName";
         if (resetExecutedFlag != null)
         {
-            queryText += "AND sequenceReset.resetExecutedFlag = :resetExecutedFlag";
+            queryText += " AND sequenceReset.resetExecutedFlag = :resetExecutedFlag";
         }
 
         TypedQuery<AcmSequenceReset> query = getEm().createQuery(queryText, AcmSequenceReset.class);
