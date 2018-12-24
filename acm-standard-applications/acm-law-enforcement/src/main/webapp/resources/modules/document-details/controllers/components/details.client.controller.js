@@ -2,8 +2,8 @@
 
 angular.module('document-details').controller(
         'Document.DetailsController',
-        [ '$scope', '$translate', '$filter', '$modal', '$q', 'Object.LookupService', 'Organization.InfoService', 'Person.InfoService', 'EcmService', 'MessageService', 'UtilService', 'LookupService', 'ConfigService', 'Helper.LocaleService',
-                function($scope, $translate, $filter, $modal, $q, ObjectLookupService, OrganizationInfoService, PersonInfoService, EcmService, MessageService, UtilService, LookupService, ConfigService, LocaleHelper) {
+        [ '$scope', '$translate', '$filter', '$modal', '$q', 'Object.LookupService', 'Organization.InfoService', 'Person.InfoService', 'EcmService', 'MessageService', 'UtilService', 'LookupService', 'ConfigService', 'Helper.LocaleService', 'Mentions.Service',
+                function($scope, $translate, $filter, $modal, $q, ObjectLookupService, OrganizationInfoService, PersonInfoService, EcmService, MessageService, UtilService, LookupService, ConfigService, LocaleHelper, MentionsService) {
 
                     new LocaleHelper.Locale({
                         scope: $scope
@@ -67,9 +67,10 @@ angular.module('document-details').controller(
                     $scope.saveButton.disabled = true;
                     $scope.saveInProgress = false;
 
-                    $scope.options = {
-                        focus: false,
-                        dialogsInBody: true
+                                        
+                    $scope.paramsSummernote = {
+                        emailAddresses: [],
+                        usersMentioned: []
                     };
 
                     $scope.get = function(object, key) {
@@ -250,6 +251,8 @@ angular.module('document-details').controller(
                             data: JSOG.encode(UtilService.omitNg($scope.details.ecmFile))
                         }).then(function(data) {
                             $scope.$broadcast('document-data', data);
+                            var url = "/home.html#!/viewer/" + data.fileId + "/" + data.container.containerObjectId + "/" + data.container.containerObjectType + "/" + encodeURIComponent(data.fileName) + "/" + data.fileId;
+                            MentionsService.sendEmailToMentionedUsersWithUrl($scope.paramsSummernote.emailAddresses, $scope.paramsSummernote.usersMentioned, data.container.containerObjectType, data.container.containerObjectId, url, data.description);
                             MessageService.info($translate.instant('documentDetails.comp.details.message.save.success'));
                             return data;
                         }, function(error) {

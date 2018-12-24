@@ -36,4 +36,6 @@ public interface FoiaConfigurationConstants
     String DASHBOARD_BANNER_ENABLED = "dashboard.banner.enable";
     String RECEIVED_DATE_ENABLED ="receivedDateEnabled";
     String NOTIFICATION_GROUPS_ENABLED= "notification.groups.enabled";
+    String REQUEST_EXTENSION_WORKING_DAYS_ENABLED = "requestExtensionWorkingDaysEnabled";
+    String PURGE_REQUEST_ENABLED = "purgeRequestEnabled";
 }

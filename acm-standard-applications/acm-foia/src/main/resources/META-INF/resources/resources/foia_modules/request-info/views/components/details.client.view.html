@@ -27,7 +27,6 @@
                     <div>
                         <div class="input-group">
                             <input type="text" id="recordSearchDateFrom" class="form-control" name="recordSearchDateFrom"
-                                    datepicker-popup="{{'common.defaultDatePickerFormat' | translate}}"
                                     ng-model="requestInfo.recordSearchDateFrom" is-open="openedRecordSearchDateFrom.openedEnd"
                                     close-on-date-selection="true" show-button-bar="true" on-open-focus="false" close-text="Close" readonly/> <span
                                 class="input-group-btn">
@@ -44,7 +43,6 @@
                     <div>
                         <div class="input-group">
                             <input type="text" id="recordSearchDateTo" class="form-control" name="recordSearchDateTo"
-                                    datepicker-popup="{{'common.defaultDatePickerFormat' | translate}}"
                                     ng-model="requestInfo.recordSearchDateTo" is-open="openedRecordSearchDateTo.openedEnd"
                                     close-on-date-selection="true" show-button-bar="true" on-open-focus="false" close-text="Close" readonly/> <span
                                 class="input-group-btn">
@@ -107,12 +105,12 @@
                     <div>
 
                         <div class="input-group">
-                            <input type="text" id="releasedDate" class="form-control" name="releasedDate" permission="editRequestData"
-                                    permission-object-type="CASE_FILE" permission-properties="objectInfo" permission-action="disabled"
-                                    datepicker-popup="{{'common.defaultDatePickerFormat' | translate}}" ng-model="requestInfo.releasedDate"
-                                    ng-required="requiredFields['releasedDate']" is-open="opened.openedEnd" close-on-date-selection="true"
-                                    show-button-bar="true" on-open-focus="false" close-text="Close" /> <span class="input-group-btn">
-                            <button type="button" class="btn btn-default" ng-click="opened.openedEnd = !opened.openedEnd">
+                            <input type="text" id="releasedDate" class="form-control" name="releasedDate" ng-disabled="true"
+                                    ng-model="requestInfo.releasedDate" is-open="opened.openedEnd" close-on-date-selection="true"
+                                    show-button-bar="true" on-open-focus="false" close-text="Close" />
+                            <span class="input-group-btn">
+                            <button type="button" class="btn btn-default" ng-click="opened.openedEnd = !opened.openedEnd"
+                                    ng-disabled="true">
                                 <i class="fa fa-calendar"></i>
                             </button>
                         </span>
@@ -182,7 +180,8 @@
                 <div class="col-sm-4">
                     <div class="checkbox">
                         <label>
-                            <input type="checkbox" ng-model="objectInfo.extensionFlag" ng-click='extensionClicked($event)' ng-disabled="objectInfo.extensionFlag && !extendedDueDate"
+                            <input type="checkbox" ng-model="objectInfo.extensionFlag" ng-click='extensionClicked($event)'
+                                    ng-disabled="(objectInfo.extensionFlag && !extendedDueDate) || !requestExtensionWorkingDaysEnabled"
                                     permission="requestDueDateExtension" permission-object-type="CASE_FILE" permission-properties="objectInfo" permission-action="hide">
                             <span translate>cases.comp.main.extensionFlag.label </span>
                         </label>

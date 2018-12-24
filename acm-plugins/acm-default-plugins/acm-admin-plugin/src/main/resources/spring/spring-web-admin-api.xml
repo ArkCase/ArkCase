@@ -256,6 +256,16 @@
         <property name="arkCaseTranscribeService" ref="arkCaseTranscribeService"/>
     </bean>
 
+    <bean id="getOCRConfigurationApiController"
+          class="com.armedia.acm.plugins.admin.web.api.GetOCRConfigurationAPIController">
+        <property name="arkCaseOCRService" ref="arkCaseOCRService"/>
+    </bean>
+
+    <bean id="saveOCRConfigurationApiController"
+          class="com.armedia.acm.plugins.admin.web.api.SaveOCRConfigurationAPIController">
+        <property name="arkCaseOCRService" ref="arkCaseOCRService"/>
+    </bean>
+
     <bean id="holidayConfigurationAPIController"
           class="com.armedia.acm.plugins.admin.web.api.HolidayConfigurationAPIController">
         <property name="holidayConfigurationService" ref="holidayConfigurationService"/>
@@ -269,4 +279,10 @@
     <bean id="missingLabelCheckController" class="com.armedia.acm.plugins.admin.web.api.MissingLabelCheckControllerAPI">
         <property name="labelCheckService" ref="labelCheckService"/>
     </bean>
+
+    <bean id="dataAccessControlAPIController"
+        class="com.armedia.acm.plugins.admin.web.api.DataAccessControlAPIController">
+        <property name="dataAccessControlService" ref="dataAccessControlService"/>
+    </bean>
+
 </beans>
