@@ -863,10 +863,11 @@
 				"test.conection.success": "接続に成功しました."
             }
         },
-        "transcription": {
-            "title": "転写サービス",
+        "mediaServices": {
+            "title": "Media Services_JA",
             "transcriptionManagement": "転写管理",
             "transcriptionConfigForm": {
+                "title": "転写サービス",
                 "save.button": "セーブ",
                 "automation.label": "オートメーション",
                 "enableTranscription.checkbox": "転写を有効にする",
@@ -890,6 +891,12 @@
                     "minOneValueErrorMsg": "値は1以上でなければなりません",
 					"minPositiveValueErrorMsg": "値は0より大きくなければなりません"
                 }
+            },
+            "ocrManagement": "OCR Management_JA",
+            "ocrConfigForm": {
+                "title": "OCR Services_JA",
+                "save.button": "Save_JA",
+                "enableOCR.checkbox": "Enable OCR_JA"
             }
         },
         "stateOfArkcase": {

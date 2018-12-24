@@ -18,7 +18,7 @@ angular.module('directives').directive('dateTimePicker', ['moment', 'Util.DateSe
             if (UtilService.isEmpty($scope.data)) {
                 $scope.today = "";
                 $scope.dateInPicker = new Date();
-                minYear = $scope.dateInPicker.getFullYear();
+                minYear = $scope.dateInPicker.getFullYear() - 50;
                 utcDate = moment.utc(UtilDateService.dateToIso($scope.dateInPicker)).format();
                 maxYear = moment(utcDate).add(1, 'years').toDate().getFullYear();
             } else {

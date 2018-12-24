@@ -144,8 +144,8 @@ angular.module('cases').controller(
 
                 $scope.config.data.payFee = $scope.payFees[0].key;
 
-                $scope.config.data.recordSearchDateFrom = UtilDateService.dateToIso($scope.config.data.recordSearchDateFrom);
-                $scope.config.data.recordSearchDateTo = UtilDateService.dateToIso($scope.config.data.recordSearchDateTo);
+                        $scope.config.data.recordSearchDateFrom = UtilDateService.dateToIsoDateTime($scope.config.data.recordSearchDateFrom);
+                        $scope.config.data.recordSearchDateTo = UtilDateService.dateToIsoDateTime($scope.config.data.recordSearchDateTo);
 
             });
             $scope.validateForm = function (requestForm) {
@@ -314,8 +314,7 @@ angular.module('cases').controller(
                 $scope.loading = true;
                 $scope.loadingIcon = "fa fa-circle-o-notch fa-spin";
                 var formdata = new FormData();
-
-                $scope.config.data.recordSearchDateFrom = UtilDateService.dateToIsoDateTime(UtilDateService.dateToIso($scope.config.data.recordSearchDateFrom));
+                        $scope.config.data.recordSearchDateFrom = UtilDateService.dateToIsoDateTime($scope.config.data.recordSearchDateFrom);
                 $scope.config.data.recordSearchDateTo = UtilDateService.dateToIsoDateTime(UtilDateService.dateToIso($scope.config.data.recordSearchDateTo));
 
                 var basicData = {};

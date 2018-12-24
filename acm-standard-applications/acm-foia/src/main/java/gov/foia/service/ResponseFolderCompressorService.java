@@ -33,11 +33,14 @@ import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.ecm.exception.AcmFolderException;
+import gov.foia.model.event.RequestResponseFolderCompressedEvent;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.ApplicationEventPublisherAware;
 
 /**
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Sep 19, 2016
  */
-public class ResponseFolderCompressorService
+public class ResponseFolderCompressorService implements ApplicationEventPublisherAware
 {
 
     private CaseFileDao caseFileDao;
@@ -46,12 +49,21 @@ public class ResponseFolderCompressorService
 
     private ResponseFolderService responseFolderService;
 
+    private ApplicationEventPublisher applicationEventPublisher;
+
     public String compressResponseFolder(Long requestId)
             throws AcmUserActionFailedException, AcmObjectNotFoundException, AcmFolderException
     {
-
         CaseFile request = caseFileDao.find(requestId);
-        return compressor.compressFolder(getResponseFolderService().getResponseFolder(request).getId());
+        String compressFileName = compressor.compressFolder(getResponseFolderService().getResponseFolder(request).getId());
+        publishResponseFolderCompressedEvent(request);
+        return compressFileName;
+    }
+
+    private void publishResponseFolderCompressedEvent(CaseFile source)
+    {
+        RequestResponseFolderCompressedEvent event = new RequestResponseFolderCompressedEvent(source);
+        applicationEventPublisher.publishEvent(event);
     }
 
     /**
@@ -97,4 +109,9 @@ public class ResponseFolderCompressorService
         this.responseFolderService = responseFolderService;
     }
 
+    @Override
+    public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher)
+    {
+        this.applicationEventPublisher = applicationEventPublisher;
+    }
 }
