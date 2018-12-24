@@ -630,9 +630,7 @@
           "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, {object_id_s:row.entity.object_id_s, object_type_s:row.entity.object_type_s})'>{{row.entity.title_parseable}}</a>"
         },
         {
-          "name": "parent_number_lcs",
-          "cellFilter": "beautifyParentNumberToParentId",
-          "type": "number",
+          "name": "parent_id_s",
           "displayName": "common.dialogObjectPicker.table.columns.parentId",
           "headerCellFilter": "translate"
         },
