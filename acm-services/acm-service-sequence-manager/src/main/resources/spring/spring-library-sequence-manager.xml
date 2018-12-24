@@ -2,7 +2,7 @@
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
 
-    <bean id="sequenceConfiguration" class="java.io.File">
+    <bean id="sequenceConfigurationFile" class="java.io.File">
         <constructor-arg value="${user.home}/.arkcase/acm/acmSequenceConfiguration.json"/>
     </bean>
 
@@ -22,9 +22,8 @@
     </bean>
 
     <bean id="acmSequenceGeneratorManager" class="com.armedia.acm.services.sequence.generator.AcmSequenceGeneratorManager" init-method="initSequenceMap">
-        <property name="sequenceConfiguration" ref="sequenceConfiguration"/>
-        <property name="objectConverter" ref="objectConverter"/>
         <property name="sequenceService" ref="acmSequenceService"/>
+        <property name="sequenceConfigurationService" ref="acmSequenceConfigurationService"/>
     </bean>
 
     <bean id="acmAutoincrementSequenceGenerator" class="com.armedia.acm.services.sequence.generator.AcmAutoincrementSequenceGenerator" init-method="init">
@@ -61,5 +60,10 @@
         <property name="sequenceRegistryDao" ref="acmSequenceRegistryDao"/>
         <property name="sequenceResetDao" ref="acmSequenceResetDao"/>
     </bean>
-    
+
+    <bean id="acmSequenceConfigurationService" class="com.armedia.acm.services.sequence.service.AcmSequenceConfigurationServiceImpl">
+        <property name="sequenceConfigurationFile" ref="sequenceConfigurationFile"/>
+        <property name="objectConverter" ref="objectConverter"/>
+    </bean>
+
 </beans>

@@ -59,15 +59,24 @@ public class AcmSequenceResetDao extends AcmAbstractDao<AcmSequenceReset>
         String queryText = "SELECT sequenceReset " +
                 "FROM AcmSequenceReset sequenceReset " +
                 "WHERE sequenceReset.sequenceName = :sequenceName " +
-                "AND sequenceReset.sequencePartName = :sequencePartName " +
-                "AND sequenceReset.resetExecutedFlag = :resetExecutedFlag";
+                "AND sequenceReset.sequencePartName = :sequencePartName";
+        if (resetExecutedFlag != null)
+        {
+            queryText += "AND sequenceReset.resetExecutedFlag = :resetExecutedFlag";
+        }
 
         TypedQuery<AcmSequenceReset> query = getEm().createQuery(queryText, AcmSequenceReset.class);
-        query.setFlushMode(flushModeType);
+        if (flushModeType != null)
+        {
+            query.setFlushMode(flushModeType);
+        }
 
         query.setParameter("sequenceName", sequenceName);
         query.setParameter("sequencePartName", sequencePartName);
-        query.setParameter("resetExecutedFlag", resetExecutedFlag);
+        if (resetExecutedFlag != null)
+        {
+            query.setParameter("resetExecutedFlag", resetExecutedFlag);
+        }
 
         List<AcmSequenceReset> sequenceResetList = query.getResultList();
         if (null == sequenceResetList)

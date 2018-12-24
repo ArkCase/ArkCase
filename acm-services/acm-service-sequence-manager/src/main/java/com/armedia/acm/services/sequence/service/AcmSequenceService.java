@@ -65,6 +65,8 @@ public interface AcmSequenceService
             FlushModeType flushModeType)
             throws AcmSequenceException;
 
+    public List<AcmSequenceReset> getSequenceResetList(String sequenceName, String sequencePartName) throws AcmSequenceException;
+
     public AcmSequenceReset updateSequenceReset(AcmSequenceReset sequenceReset) throws AcmSequenceException;
 
     // Sequence Registry
