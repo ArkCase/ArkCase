@@ -108,6 +108,17 @@ public class AcmSequenceServiceImpl implements AcmSequenceService
         }
     }
 
+    /*
+     * (non-Javadoc)
+     * @see com.armedia.acm.services.sequence.service.AcmSequenceService#getSequenceResetList(java.lang.String,
+     * java.lang.String)
+     */
+    @Override
+    public List<AcmSequenceReset> getSequenceResetList(String sequenceName, String sequencePartName) throws AcmSequenceException
+    {
+        return getSequenceResetList(sequenceName, sequencePartName, null, null);
+    }
+
     @Override
     public List<AcmSequenceReset> getSequenceResetList(String sequenceName, String sequencePartName, Boolean resetExecutedFlag,
             FlushModeType flushModeType)
@@ -142,10 +153,8 @@ public class AcmSequenceServiceImpl implements AcmSequenceService
         }
         catch (Exception e)
         {
-            throw new AcmSequenceException(
-                    String.format("Unable to update Sequence Reset for [%s] [%s]", sequenceReset.getSequenceName(),
-                            sequenceReset.getSequencePartName()),
-                    e);
+            throw new AcmSequenceException(String.format("Unable to update Sequence Reset for [%s] [%s]", sequenceReset.getSequenceName(),
+                    sequenceReset.getSequencePartName()), e);
         }
     }
 

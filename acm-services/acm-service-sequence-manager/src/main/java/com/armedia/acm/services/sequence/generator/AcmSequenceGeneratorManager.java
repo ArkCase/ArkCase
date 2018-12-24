@@ -1,49 +1,17 @@
 package com.armedia.acm.services.sequence.generator;
 
-/*-
- * #%L
- * ACM Service: Sequence Manager
- * %%
- * Copyright (C) 2014 - 2018 ArkCase LLC
- * %%
- * This file is part of the ArkCase software. 
- * 
- * If the software was purchased under a paid ArkCase license, the terms of 
- * the paid license agreement will prevail.  Otherwise, the software is 
- * provided under the following open source license terms:
- * 
- * ArkCase is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *  
- * ArkCase is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
- * 
- * You should have received a copy of the GNU Lesser General Public License
- * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
- * #L%
- */
-
-import com.armedia.acm.files.AbstractConfigurationFileEvent;
-import com.armedia.acm.files.ConfigurationFileChangedEvent;
-import com.armedia.acm.objectonverter.ObjectConverter;
+import com.armedia.acm.services.sequence.event.AcmSequenceConfigurationEvent;
 import com.armedia.acm.services.sequence.exception.AcmSequenceException;
 import com.armedia.acm.services.sequence.model.AcmSequenceConfiguration;
 import com.armedia.acm.services.sequence.model.AcmSequencePart;
 import com.armedia.acm.services.sequence.model.AcmSequenceRegistry;
+import com.armedia.acm.services.sequence.service.AcmSequenceConfigurationService;
 import com.armedia.acm.services.sequence.service.AcmSequenceService;
 
-import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ApplicationListener;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -52,7 +20,7 @@ import java.util.Map;
  * @author sasko.tanaskoski
  *
  */
-public class AcmSequenceGeneratorManager implements ApplicationListener<AbstractConfigurationFileEvent>, InitializingBean
+public class AcmSequenceGeneratorManager implements ApplicationListener<AcmSequenceConfigurationEvent>
 {
 
     private final Logger log = LoggerFactory.getLogger(getClass());
@@ -61,32 +29,13 @@ public class AcmSequenceGeneratorManager implements ApplicationListener<Abstract
 
     private Map<String, AcmSequenceGenerator> generatorsMap = new HashMap<>();
 
-    private ObjectConverter objectConverter;
-
-    private File sequenceConfiguration;
-
     private AcmSequenceService sequenceService;
 
-    public void initSequenceMap()
-    {
-        log.debug("Creating sequence configuration from [{}]", getSequenceConfiguration().getAbsolutePath());
-        try
-        {
-            Map<String, AcmSequenceConfiguration> sequenceMap = new HashMap<>();
-            List<AcmSequenceConfiguration> acmSequenceConfigurations = getObjectConverter().getJsonUnmarshaller().unmarshallCollection(
-                    FileUtils.readFileToString(getSequenceConfiguration()),
-                    List.class, AcmSequenceConfiguration.class);
+    private AcmSequenceConfigurationService sequenceConfigurationService;
 
-            for (AcmSequenceConfiguration sequenceConfiguration : acmSequenceConfigurations)
-            {
-                sequenceMap.put(sequenceConfiguration.getSequenceName(), sequenceConfiguration);
-            }
-            this.sequenceMap = sequenceMap;
-        }
-        catch (IOException e)
-        {
-            log.error("Unable to create sequence configuration from [{}]", getSequenceConfiguration().getAbsolutePath(), e);
-        }
+    public void initSequenceMap() throws AcmSequenceException
+    {
+        setSequenceConfiguration(getSequenceConfigurationService().getSequenceConfiguration());
     }
 
     public void register(String partType, AcmSequenceGenerator generator)
@@ -135,71 +84,6 @@ public class AcmSequenceGeneratorManager implements ApplicationListener<Abstract
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * @see
-     * org.springframework.context.ApplicationListener#onApplicationEvent(org.springframework.context.ApplicationEvent)
-     */
-    @Override
-    public void onApplicationEvent(AbstractConfigurationFileEvent event)
-    {
-        if (event instanceof ConfigurationFileChangedEvent && event.getConfigFile().getName().equals("acmSequenceConfiguration.json"))
-        {
-            try
-            {
-                initSequenceMap();
-            }
-            catch (Exception e)
-            {
-                log.error("Reason [{}]", e.getMessage(), e);
-            }
-        }
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see org.springframework.beans.factory.InitializingBean#afterPropertiesSet()
-     */
-    @Override
-    public void afterPropertiesSet() throws Exception
-    {
-        initSequenceMap();
-    }
-
-    /**
-     * @return the objectConverter
-     */
-    public ObjectConverter getObjectConverter()
-    {
-        return objectConverter;
-    }
-
-    /**
-     * @param objectConverter
-     *            the objectConverter to set
-     */
-    public void setObjectConverter(ObjectConverter objectConverter)
-    {
-        this.objectConverter = objectConverter;
-    }
-
-    /**
-     * @return the sequenceConfiguration
-     */
-    public File getSequenceConfiguration()
-    {
-        return sequenceConfiguration;
-    }
-
-    /**
-     * @param sequenceConfiguration
-     *            the sequenceConfiguration to set
-     */
-    public void setSequenceConfiguration(File sequenceConfiguration)
-    {
-        this.sequenceConfiguration = sequenceConfiguration;
-    }
-
     /**
      * @return the sequenceService
      */
@@ -215,6 +99,45 @@ public class AcmSequenceGeneratorManager implements ApplicationListener<Abstract
     public void setSequenceService(AcmSequenceService sequenceService)
     {
         this.sequenceService = sequenceService;
+    }
+
+    /**
+     * @return the sequenceConfigurationService
+     */
+    public AcmSequenceConfigurationService getSequenceConfigurationService()
+    {
+        return sequenceConfigurationService;
+    }
+
+    /**
+     * @param sequenceConfigurationService
+     *            the sequenceConfigurationService to set
+     */
+    public void setSequenceConfigurationService(AcmSequenceConfigurationService sequenceConfigurationService)
+    {
+        this.sequenceConfigurationService = sequenceConfigurationService;
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see
+     * org.springframework.context.ApplicationListener#onApplicationEvent(org.springframework.context.ApplicationEvent)
+     */
+    @Override
+    public void onApplicationEvent(AcmSequenceConfigurationEvent event)
+    {
+        setSequenceConfiguration(event.getSource());
+    }
+
+    private void setSequenceConfiguration(List<AcmSequenceConfiguration> sequenceConfigurationList)
+    {
+        Map<String, AcmSequenceConfiguration> sequenceMap = new HashMap<>();
+
+        for (AcmSequenceConfiguration sequenceConfiguration : sequenceConfigurationList)
+        {
+            sequenceMap.put(sequenceConfiguration.getSequenceName(), sequenceConfiguration);
+        }
+        this.sequenceMap = sequenceMap;
     }
 
 }
