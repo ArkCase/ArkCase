@@ -1290,16 +1290,23 @@
                 ]
             },
             {
-                "type": "p/transcription",
-                "label": "admin.transcription.title",
+                "type": "p/mediaServices",
+                "label": "admin.mediaServices.title",
                 "icon": "fa fa-wrench",
                 "components": []
             },
             {
-                "type": "p/transcription/transcriptionManagement",
-                "label": "admin.transcription.transcriptionManagement",
+                "type": "p/mediaServices/transcriptionManagement",
+                "label": "admin.mediaServices.transcriptionManagement",
                 "components": [
                     "transcription-management"
+                ]
+            },
+            {
+                "type": "p/mediaServices/ocrManagement",
+                "label": "admin.mediaServices.ocrManagement",
+                "components": [
+                    "ocr-management"
                 ]
             },
             {

@@ -808,9 +808,10 @@
     "common.dialogObjectPicker": {
         "header": "Buscar {{objectLabel}}",
         "table.columns": {
-            "name": "Nombre",
             "id": "CARNÉ DE IDENTIDAD",
-            "title": "Título"
+            "title": "Título",
+            "parentId": "ES_Parent Object ID",
+            "parentTitle": "ES_Parent Object Title"
         },
         "addDocument": "ES_Choose document to add"
     },

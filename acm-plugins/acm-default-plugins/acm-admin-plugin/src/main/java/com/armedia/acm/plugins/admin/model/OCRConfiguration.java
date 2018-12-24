@@ -1,8 +1,8 @@
-package gov.foia.model;
+package com.armedia.acm.plugins.admin.model;
 
 /*-
  * #%L
- * ACM Standard Application: Freedom of Information Act
+ * ACM Default Plugin: admin
  * %%
  * Copyright (C) 2014 - 2018 ArkCase LLC
  * %%
@@ -27,15 +27,31 @@ package gov.foia.model;
  * #L%
  */
 
-public interface FoiaConfigurationConstants
+import com.armedia.acm.services.transcribe.annotation.ConfigurationProperties;
+import com.armedia.acm.services.transcribe.annotation.ConfigurationProperty;
+
+@ConfigurationProperties(path = "${user.home}/.arkcase/acm/ecmFileService.properties")
+public class OCRConfiguration
 {
-    String MAX_DAYS_IN_BILLING_QUEUE = "maxDaysInBillingQueue";
-    String MAX_DAYS_IN_HOLD_QUEUE = "maxDaysInHoldQueue";
-    String HOLDED_AND_APPEALED_REQUESTS = "holdedAndAppealedRequestsDueDateUpdateEnabled";
-    String EXTENSTION_WORKING_DAYS = "request.extensionWorkingDays";
-    String DASHBOARD_BANNER_ENABLED = "dashboard.banner.enable";
-    String RECEIVED_DATE_ENABLED ="receivedDateEnabled";
-    String NOTIFICATION_GROUPS_ENABLED= "notification.groups.enabled";
-    String REQUEST_EXTENSION_WORKING_DAYS_ENABLED = "requestExtensionWorkingDaysEnabled";
-    String PURGE_REQUEST_ENABLED = "purgeRequestEnabled";
+
+    @ConfigurationProperty(key = "ecm.viewer.snowbound.enableOCR")
+    private boolean enableOCR;
+
+    public boolean isEnableOCR()
+    {
+        return enableOCR;
+    }
+
+    public void setEnableOCR(boolean enableOCR)
+    {
+        this.enableOCR = enableOCR;
+    }
+
+    @Override
+    public String toString()
+    {
+        return "OCR Configuration{" +
+                "enableOCR=" + enableOCR +
+                '}';
+    }
 }

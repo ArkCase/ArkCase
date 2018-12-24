@@ -808,9 +808,10 @@
     "common.dialogObjectPicker": {
         "header": "検索{{オブジェクトラベル}}",
         "table.columns": {
-            "name": "名前",
             "id": "識別",
-            "title": "タイトル"
+            "title": "タイトル",
+            "parentId": "JA_Parent Object ID",
+            "parentTitle": "JA_Parent Object Title"
         },
         "addDocument": "JA_Choose document to add"
     },

@@ -808,9 +808,10 @@
     "common.dialogObjectPicker": {
         "header": "खोज {{objectLabel}}",
         "table.columns": {
-            "name": "नाम",
             "id": "आईडी",
-            "title": "शीर्षक"
+            "title": "शीर्षक",
+            "parentId": "HI_Parent Object ID",
+            "parentTitle": "HI_Parent Object Title"
         },
         "addDocument": "HI_Choose document to add"
     },
