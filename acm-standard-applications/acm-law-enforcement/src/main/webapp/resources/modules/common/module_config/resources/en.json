@@ -816,9 +816,10 @@
     "common.dialogObjectPicker": {
         "header": "Search {{objectLabel}}",
         "table.columns": {
-            "name": "Name",
-            "id": "ID",
-            "title": "Title"
+            "id": "Document ID",
+            "title": "Document Title",
+            "parentId": "Parent Object ID",
+            "parentTitle": "Parent Object Title"
         },
         "addDocument": "Choose document to add"
     },
