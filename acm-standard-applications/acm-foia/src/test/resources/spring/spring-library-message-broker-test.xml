@@ -4,7 +4,7 @@
              xmlns:context="http://www.springframework.org/schema/context" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
-    <beans:beans profile="extension-foia">
+    <beans:beans>
         <!-- Configuration properties -->
         <beans:bean id="foiaRequestBrokerProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
             <beans:property name="location" value="file:#{ systemProperties ['user.home'] }/.arkcase/acm/foiaRequestBroker.properties"/>
