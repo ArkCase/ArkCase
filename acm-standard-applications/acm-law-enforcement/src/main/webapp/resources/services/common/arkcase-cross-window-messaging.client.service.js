@@ -7,7 +7,7 @@
  * @description
  * {@link https://gitlab.armedia.com/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/services/common/arkcase-snowbound-messaging.client.service.js services/common/arkcase-cross-window-messaging.client.service.js}
  *
- * The ArkCaseCrossWindowMessagingService make communication between ArkCase and Snowbound on UI level
+ * The ArkCaseCrossWindowMessagingService make communication between ArkCase and other component (iframe) on UI level
  *
  */
 angular.module('services').factory('ArkCaseCrossWindowMessagingService', ['$interval', 'UtilService', function($interval, Util) {
