@@ -30,6 +30,22 @@
             </div>
         </div>
 
+        <div class="clearfix">
+        <!-- Email logo -->
+            <div class="col-lg-6">
+                <h4 translate>admin.branding.logo.email.title</h4>
+                <img class="img-responsive thumbnail" id="imgCustomEmailLogo" src="branding/emaillogo.png" />
+                <div>
+                    <button name="emailLogo" accept="image/png" ng-disabled="uploadingInProgress" ng-model="selectedEmailFile" ngf-select
+                            class="btn btn-sm btn-default">
+                        <i class="fa fa-folder-open-o"></i>
+                        <span translate>admin.branding.logo.btn.chooseEmail</span>
+                    </button>
+                    <div>{{selectedEmailFile.name}}</div>
+                </div>
+            </div>
+        </div>
+
         <!-- Save button -->
         <div class="well-sm">
             <p class="text-danger" translate>

@@ -30,6 +30,7 @@ package com.armedia.acm.plugins.task.service.impl;
 import com.armedia.acm.core.AcmNotifiableEntity;
 import com.armedia.acm.core.exceptions.AcmAccessControlException;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
+import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.data.AcmNotificationDao;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.data.BuckslipFutureTask;
@@ -91,6 +92,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.TypedQuery;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.Principal;
@@ -102,7 +105,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class ActivitiTaskDao implements TaskDao, AcmNotificationDao
+public class ActivitiTaskDao extends AcmAbstractDao<AcmTask> implements TaskDao, AcmNotificationDao
 {
     private RuntimeService activitiRuntimeService;
     private TaskService activitiTaskService;
@@ -1871,5 +1874,47 @@ public class ActivitiTaskDao implements TaskDao, AcmNotificationDao
     public void setFileParticipantService(EcmFileParticipantService fileParticipantService)
     {
         this.fileParticipantService = fileParticipantService;
+    }
+
+    @Override
+    protected Class<AcmTask> getPersistenceClass()
+    {
+        return AcmTask.class;
+    }
+
+    @Override
+    public String getSupportedObjectType()
+    {
+        return "TASK";
+    }
+
+    @Override
+    public AcmTask find(Long id) throws AcmTaskException
+    {
+        return findById(id);
+    }
+
+    @Override
+    public List<AcmTask> findAll()
+    {
+        return allTasks();
+    }
+
+    @Override
+    public List<AcmTask> findAllOrderBy(String column)
+    {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public List<AcmTask> findModifiedSince(Date lastModified, int startRow, int pageSize)
+    {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public TypedQuery<AcmTask> getSortedQuery(String sort)
+    {
+        throw new UnsupportedOperationException();
     }
 }
