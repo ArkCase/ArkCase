@@ -1,6 +1,6 @@
 package com.armedia.acm.services.sequence.generator;
 
-import com.armedia.acm.services.sequence.event.AcmSequenceConfigurationEvent;
+import com.armedia.acm.services.sequence.event.AcmSequenceConfigurationChangedEvent;
 import com.armedia.acm.services.sequence.exception.AcmSequenceException;
 import com.armedia.acm.services.sequence.model.AcmSequenceConfiguration;
 import com.armedia.acm.services.sequence.model.AcmSequencePart;
@@ -20,7 +20,7 @@ import java.util.Map;
  * @author sasko.tanaskoski
  *
  */
-public class AcmSequenceGeneratorManager implements ApplicationListener<AcmSequenceConfigurationEvent>
+public class AcmSequenceGeneratorManager implements ApplicationListener<AcmSequenceConfigurationChangedEvent>
 {
 
     private final Logger log = LoggerFactory.getLogger(getClass());
@@ -124,7 +124,7 @@ public class AcmSequenceGeneratorManager implements ApplicationListener<AcmSeque
      * org.springframework.context.ApplicationListener#onApplicationEvent(org.springframework.context.ApplicationEvent)
      */
     @Override
-    public void onApplicationEvent(AcmSequenceConfigurationEvent event)
+    public void onApplicationEvent(AcmSequenceConfigurationChangedEvent event)
     {
         setSequenceConfiguration(event.getSource());
     }

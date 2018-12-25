@@ -12,12 +12,12 @@ import java.util.List;
  * @author sasko.tanaskoski
  *
  */
-public class AcmSequenceConfigurationEvent extends AcmEvent
+public class AcmSequenceConfigurationChangedEvent extends AcmEvent
 {
 
     private static final long serialVersionUID = -467443790265934307L;
 
-    public AcmSequenceConfigurationEvent(List<AcmSequenceConfiguration> source)
+    public AcmSequenceConfigurationChangedEvent(List<AcmSequenceConfiguration> source)
     {
         super(source);
     }
