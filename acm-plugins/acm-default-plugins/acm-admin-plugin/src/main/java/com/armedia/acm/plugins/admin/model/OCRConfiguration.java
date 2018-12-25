@@ -1,8 +1,8 @@
-package gov.foia.model;
+package com.armedia.acm.plugins.admin.model;
 
 /*-
  * #%L
- * ACM Standard Application: Freedom of Information Act
+ * ACM Default Plugin: admin
  * %%
  * Copyright (C) 2014 - 2018 ArkCase LLC
  * %%
@@ -27,42 +27,31 @@ package gov.foia.model;
  * #L%
  */
 
-import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.voodoodyne.jackson.jsog.JSOGGenerator;
+import com.armedia.acm.services.transcribe.annotation.ConfigurationProperties;
+import com.armedia.acm.services.transcribe.annotation.ConfigurationProperty;
 
-import javax.persistence.Column;
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Entity;
-
-@Entity
-@DiscriminatorValue("gov.foia.model.EcmFileVersion")
-@JsonIdentityInfo(generator = JSOGGenerator.class)
-public class FOIAEcmFileVersion extends EcmFileVersion
+@ConfigurationProperties(path = "${user.home}/.arkcase/acm/ecmFileService.properties")
+public class OCRConfiguration
 {
-    @Column(name = "fo_review_status")
-    private String reviewStatus;
 
-    @Column(name = "fo_redaction_status")
-    private String redactionStatus;
+    @ConfigurationProperty(key = "ecm.viewer.snowbound.enableOCR")
+    private boolean enableOCR;
 
-    public String getReviewStatus()
+    public boolean isEnableOCR()
     {
-        return reviewStatus;
+        return enableOCR;
     }
 
-    public void setReviewStatus(String reviewStatus)
+    public void setEnableOCR(boolean enableOCR)
     {
-        this.reviewStatus = reviewStatus;
+        this.enableOCR = enableOCR;
     }
 
-    public String getRedactionStatus()
+    @Override
+    public String toString()
     {
-        return redactionStatus;
-    }
-
-    public void setRedactionStatus(String redactionStatus)
-    {
-        this.redactionStatus = redactionStatus;
+        return "OCR Configuration{" +
+                "enableOCR=" + enableOCR +
+                '}';
     }
 }

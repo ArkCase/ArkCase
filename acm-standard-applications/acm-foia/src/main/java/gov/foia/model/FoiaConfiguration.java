@@ -38,6 +38,8 @@ public class FoiaConfiguration extends SystemConfiguration
     private Boolean dashboardBannerEnabled;
     private Boolean receivedDateEnabled;
     private Boolean notificationGroupsEnabled;
+    private Boolean requestExtensionWorkingDaysEnabled;
+    private Boolean purgeRequestWhenInHoldEnabled;
 
     public Integer getMaxDaysInBillingQueue() {
         return maxDaysInBillingQueue;
@@ -93,5 +95,25 @@ public class FoiaConfiguration extends SystemConfiguration
 
     public void setNotificationGroupsEnabled(Boolean notificationGroupsEnabled) {
         this.notificationGroupsEnabled = notificationGroupsEnabled;
+    }
+
+    public Boolean getRequestExtensionWorkingDaysEnabled()
+    {
+        return requestExtensionWorkingDaysEnabled;
+    }
+
+    public void setRequestExtensionWorkingDaysEnabled(Boolean requestExtensionWorkingDaysEnabled)
+    {
+        this.requestExtensionWorkingDaysEnabled = requestExtensionWorkingDaysEnabled;
+    }
+
+    public Boolean getPurgeRequestWhenInHoldEnabled()
+    {
+        return purgeRequestWhenInHoldEnabled;
+    }
+
+    public void setPurgeRequestWhenInHoldEnabled(Boolean purgeRequestWhenInHoldEnabled)
+    {
+        this.purgeRequestWhenInHoldEnabled = purgeRequestWhenInHoldEnabled;
     }
 }

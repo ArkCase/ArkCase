@@ -910,10 +910,11 @@
                 }
             }
         },
-        "transcription": {
-            "title": "Transcription Services",
+        "mediaServices": {
+            "title": "Media Services",
             "transcriptionManagement": "Transcription Management",
             "transcriptionConfigForm": {
+                "title": "Transcription Services",
                 "save.button": "Save",
                 "automation.label": "Automation",
                 "enableTranscription.checkbox": "Enable Transcription",
@@ -937,6 +938,12 @@
                     "minOneValueErrorMsg": "Value must be greater than or equal to 1",
                     "minPositiveValueErrorMsg": "Value must be greater than 0"
                 }
+            },
+            "ocrManagement": "OCR Management",
+            "ocrConfigForm": {
+                "title": "OCR Services",
+                "save.button": "Save",
+                "enableOCR.checkbox": "Enable OCR"
             }
         },
         "stateOfArkcase": {
