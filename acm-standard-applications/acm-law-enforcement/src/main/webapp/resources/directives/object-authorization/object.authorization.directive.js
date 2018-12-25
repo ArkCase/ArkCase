@@ -85,6 +85,10 @@ angular.module('directives').directive('objectAuthorization', [ 'Menus', 'Messag
         },
         templateUrl: 'directives/object-authorization/object.authorization.html',
         link: function(scope) {
+
+            scope.firstSelectHide = scope.data.firstSelectHide;
+            scope.hideFilter = scope.data.hideFilter;
+
             //authorize button is clicked
             scope.authorize = function() {
                 //don't do anything if array null or empty
