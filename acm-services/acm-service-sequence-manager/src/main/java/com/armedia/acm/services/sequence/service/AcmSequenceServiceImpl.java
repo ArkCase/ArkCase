@@ -36,6 +36,7 @@ import com.armedia.acm.services.sequence.model.AcmSequenceEntityId;
 import com.armedia.acm.services.sequence.model.AcmSequencePart;
 import com.armedia.acm.services.sequence.model.AcmSequenceRegistry;
 import com.armedia.acm.services.sequence.model.AcmSequenceReset;
+import com.armedia.acm.services.sequence.model.AcmSequenceResetId;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -240,6 +241,34 @@ public class AcmSequenceServiceImpl implements AcmSequenceService
         {
             throw new AcmSequenceException(
                     String.format("Unable to remove Sequence Registry for [%s] [%s]", sequenceName, sequencePartName), e);
+        }
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see com.armedia.acm.services.sequence.service.AcmSequenceService#deleteSequenceReset(com.armedia.acm.services.
+     * sequence.model.AcmSequenceReset)
+     */
+    @Override
+    @Transactional
+    public void deleteSequenceReset(AcmSequenceReset sequenceReset) throws AcmSequenceException
+    {
+        log.info("Removing Sequence Reset for [{}] [{}]", sequenceReset.getSequenceName(), sequenceReset.getSequencePartName());
+        try
+        {
+            AcmSequenceResetId resetId = new AcmSequenceResetId();
+            resetId.setSequenceName(sequenceReset.getSequenceName());
+            resetId.setSequencePartName(sequenceReset.getSequencePartName());
+            resetId.setResetDate(sequenceReset.getResetDate());
+            AcmSequenceReset toRemove = getSequenceResetDao().find(resetId);
+            getSequenceResetDao().remove(toRemove);
+        }
+        catch (Exception e)
+        {
+            throw new AcmSequenceException(
+                    String.format("Unable to remove Sequence Reset for [%s] [%s]", sequenceReset.getSequenceName(),
+                            sequenceReset.getSequencePartName()),
+                    e);
         }
     }
 

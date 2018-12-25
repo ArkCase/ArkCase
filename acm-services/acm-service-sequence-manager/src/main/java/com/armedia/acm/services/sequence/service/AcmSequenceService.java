@@ -69,6 +69,8 @@ public interface AcmSequenceService
 
     public AcmSequenceReset updateSequenceReset(AcmSequenceReset sequenceReset) throws AcmSequenceException;
 
+    public void deleteSequenceReset(AcmSequenceReset sequenceReset) throws AcmSequenceException;
+
     // Sequence Registry
     public AcmSequenceRegistry saveSequenceRegistry(AcmSequenceRegistry sequenceRegistry) throws AcmSequenceException;
 
