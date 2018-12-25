@@ -11,7 +11,7 @@ angular.module('document-details').controller('Document.AnnotationTagsModalContr
             "selectedNotAuthorized": [],
             "selectedAuthorized": []
         };
-        $scope.name = "Test";
+
         $scope.init = function () {
             $scope.data.selectedNotAuthorized = $scope.allAnnotationTags;
             $scope.data.selectedAuthorized = [];
@@ -35,7 +35,6 @@ angular.module('document-details').controller('Document.AnnotationTagsModalContr
         }
 
         $scope.onClickOk = function () {
-            // TODO: populate $scope.annotationTags and $scope.annotationNotes with selected/added values on modal UI
             $scope.annotationTags = convertToFlatArray($scope.data.selectedAuthorized);
             $scope.annotationNotes = convertToFlatArray($scope.annotationNotes);
             $modalInstance.close({annotationTags: $scope.annotationTags, annotationNotes: $scope.annotationNotes});

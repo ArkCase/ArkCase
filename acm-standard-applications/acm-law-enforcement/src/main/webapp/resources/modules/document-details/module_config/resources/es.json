@@ -102,10 +102,10 @@
             }
         },
         "comp.annotationTags.modal": {
-            "title": "Add Annotation Tags and Notes",
+            "title": "es_Add Annotation Tags and Notes",
             "buttons": {
-                "ok": "OK",
-                "cancel": "Cancel"
+                "ok": "es_OK",
+                "cancel": "es_Cancel"
             }
         },
         "transcribe":{

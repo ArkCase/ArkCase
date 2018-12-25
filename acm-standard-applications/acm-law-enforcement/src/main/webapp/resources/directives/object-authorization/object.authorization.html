@@ -1,5 +1,5 @@
 <div class="col-xs-12">
-    <div class="col-xs-3 b-r" onscroll="myFunction()" ng-hide="firstSelectHide">
+    <div class="col-xs-3 b-r" ng-hide="firstSelectHide">
         <label>{{'common.directive.objectAuthorization.choose' | translate}}&nbsp;{{objectTitle}}</label>
         <select ng-model="selectedObject" ng-change="selectObject()"
                 ng-options="d[objectDisplayName] | translate for d in data.chooseObject track by d.key" name="" size="15"
