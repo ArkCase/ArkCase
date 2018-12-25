@@ -183,7 +183,8 @@
                 <div class="col-sm-2">
                     <div class="checkbox">
                         <label>
-                            <input type="checkbox" ng-model="objectInfo.extensionFlag" ng-click='extensionClicked($event)' ng-disabled="objectInfo.extensionFlag && !extendedDueDate"
+                            <input type="checkbox" ng-model="objectInfo.extensionFlag" ng-click='extensionClicked($event)'
+                                    ng-disabled="(objectInfo.extensionFlag && !extendedDueDate) || !requestExtensionWorkingDaysEnabled"
                                     permission="requestDueDateExtension" permission-object-type="CASE_FILE"
                                     permission-properties="objectInfo" permission-action="hide">
                             <span translate>cases.comp.main.extensionFlag.label </span>

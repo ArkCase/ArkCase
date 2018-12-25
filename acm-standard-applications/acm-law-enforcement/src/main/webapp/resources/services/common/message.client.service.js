@@ -158,6 +158,6 @@ angular.module('services').factory('MessageService', [ '$injector', '$translate'
                 position: 'left',
                 classes: 'alert-danger'
             });
-        },
+        }
     };
 } ]);

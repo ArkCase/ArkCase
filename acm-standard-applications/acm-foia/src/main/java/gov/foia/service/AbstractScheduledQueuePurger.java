@@ -59,6 +59,8 @@ public abstract class AbstractScheduledQueuePurger implements AcmSchedulableBean
 {
     private int maxDaysInQueue;
 
+    private String purgeEnabled;
+
     private FOIARequestDao requestDao;
 
     private StartBusinessProcessService startBusinessProcessService;
@@ -79,6 +81,7 @@ public abstract class AbstractScheduledQueuePurger implements AcmSchedulableBean
                 billingQueuePurgerProperties.load(fis);
 
                 maxDaysInQueue = Integer.parseInt(billingQueuePurgerProperties.getProperty(getMaxDaysInQueueProperty()));
+                purgeEnabled = billingQueuePurgerProperties.getProperty(getPurgeRequestWhenInHoldEnabled());
 
             }
             catch (IOException e)
@@ -110,28 +113,36 @@ public abstract class AbstractScheduledQueuePurger implements AcmSchedulableBean
      */
     protected abstract String getMaxDaysInQueueProperty();
 
+    /**
+     * @return
+     */
+    protected abstract String getPurgeRequestWhenInHoldEnabled();
+
     @Override
     public void executeTask()
     {
-        if (maxDaysInQueue == 0)
+        if (Boolean.parseBoolean(purgeEnabled))
         {
-            return;
-        }
-        try
-        {
-            List<FOIARequest> requestsForPurging = getAllRequestsInQueueBefore(LocalDate.now().minusDays(maxDaysInQueue));
-
-            auditPropertyEntityAdapter.setUserId(getProcessUser());
-
-            for (FOIARequest request : requestsForPurging)
+            if (maxDaysInQueue == 0)
             {
-                Map<String, Object> processVariables = createProcessVariables(request);
-                startBusinessProcessService.startBusinessProcess(getBusinessProcessName(), processVariables);
+                return;
             }
-        }
-        catch (Exception e)
-        {
-            getLog().error("Error while executing task from {} bean.", getClassName(), e);
+            try
+            {
+                List<FOIARequest> requestsForPurging = getAllRequestsInQueueBefore(LocalDate.now().minusDays(maxDaysInQueue));
+
+                auditPropertyEntityAdapter.setUserId(getProcessUser());
+
+                for (FOIARequest request : requestsForPurging)
+                {
+                    Map<String, Object> processVariables = createProcessVariables(request);
+                    startBusinessProcessService.startBusinessProcess(getBusinessProcessName(), processVariables);
+                }
+            }
+            catch (Exception e)
+            {
+                getLog().error("Error while executing task from {} bean.", getClassName(), e);
+            }
         }
     }
 
@@ -194,5 +205,4 @@ public abstract class AbstractScheduledQueuePurger implements AcmSchedulableBean
     {
         this.auditPropertyEntityAdapter = auditPropertyEntityAdapter;
     }
-
 }

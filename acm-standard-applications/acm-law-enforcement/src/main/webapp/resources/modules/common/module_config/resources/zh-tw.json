@@ -808,9 +808,10 @@
     "common.dialogObjectPicker": {
         "header": "搜索{{objectLabel}}",
         "table.columns": {
-            "name": "名稱",
             "id": "識別號",
-            "title": "標題"
+            "title": "標題",
+            "parentId": "ZH_TW_Parent Object ID",
+            "parentTitle": "ZH_TW_Parent Object Title"
         },
         "addDocument": "ZH_TW_Choose document to add"
     },

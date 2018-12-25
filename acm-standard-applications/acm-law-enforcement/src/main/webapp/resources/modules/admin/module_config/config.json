@@ -1290,6 +1290,8 @@
                 ]
             },
             {
+                "type": "p/mediaServices",
+                "label": "admin.mediaServices.title",
                 "type": "p/document/fileUploader",
                 "label": "admin.documentManagement.fileUploader.title",
                 "components": [
@@ -1303,10 +1305,17 @@
                 "components": []
             },
             {
-                "type": "p/transcription/transcriptionManagement",
-                "label": "admin.transcription.transcriptionManagement",
+                "type": "p/mediaServices/transcriptionManagement",
+                "label": "admin.mediaServices.transcriptionManagement",
                 "components": [
                     "transcription-management"
+                ]
+            },
+            {
+                "type": "p/mediaServices/ocrManagement",
+                "label": "admin.mediaServices.ocrManagement",
+                "components": [
+                    "ocr-management"
                 ]
             },
             {
