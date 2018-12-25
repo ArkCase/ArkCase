@@ -24,7 +24,12 @@
             <beans:constructor-arg value="file:${user.home}/.arkcase/acm/templates/task-unassigned-assignee.html"
                 type="java.io.InputStream"/>
         </beans:bean>
-        
+
+        <beans:bean id="portal-documents-link-template" class="org.apache.commons.io.IOUtils" factory-method="toString">
+            <beans:constructor-arg value="file:${user.home}/.arkcase/acm/templates/portal-documents-link.html"
+                type="java.io.InputStream"/>
+        </beans:bean>
+
         <beans:bean id="baseNotificationSender" class="com.armedia.acm.services.notification.service.NotificationSender"
             abstract="true">
             <beans:property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
@@ -41,6 +46,7 @@
                     <entry key="requestUnassignedAssignee" value-ref="request-unassigned-assignee-template"/>
                     <entry key="taskAssignedAssignee" value-ref="task-assigned-assignee-template"/>
                     <entry key="taskUnassignedAssignee" value-ref="task-unassigned-assignee-template"/>
+                    <entry key="portalDocumentsLink" value-ref="portal-documents-link-template"/>
                 </map>
             </beans:property>
         </beans:bean>
