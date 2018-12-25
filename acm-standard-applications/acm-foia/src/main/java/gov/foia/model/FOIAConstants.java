@@ -41,7 +41,7 @@ public interface FOIAConstants
 
     public String REQ = "REQ";
     public String ACK = "ACK";
-    public String RECEIVE_ACK  = "RECEIVE_ACK";
+    public String RECEIVE_ACK = "RECEIVE_ACK";
     public String REQ_DELETE = "REQ_DELETE";
     public String DENIAL = "DENIAL";
     public String REQ_EXTENSION = "REQ_EXTENSION";
@@ -60,6 +60,8 @@ public interface FOIAConstants
     public String EMAIL_RELEASE_BODY = "Your %s with number %s has been released and the document(s) is ready for download on the portal. Please go to the check status page at this <a href=\"%s\">link</a>.";
     public String PORTAL_REQUEST_STATUS_RELATIVE_URL = "/../foia/portal/requestStatus?requestNumber=%s";
     public String NEW_REQUEST_TITLE = "NEW REQUEST";
+
+    public String EMAIL_RESPONSE_FOLDER_ZIP = "New installment of documents is now available for your FOIA Request";
 
     public static final String FOIA_PIPELINE_EXTENSION_PROPERTY_KEY = "foia_request_extension";
 }
