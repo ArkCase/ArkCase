@@ -47,6 +47,7 @@ public class CustomLogoService
     private String brandingFilesLocation;
     private String headerLogoFile;
     private String loginLogoFile;
+    private String emailLogoFile;
 
     /**
      * Return Header logo
@@ -79,8 +80,8 @@ public class CustomLogoService
     {
         try
         {
-            File headerLogo = new File(brandingFilesLocation + loginLogoFile);
-            byte[] result = FileUtils.readFileToByteArray(headerLogo);
+            File loginLogo = new File(brandingFilesLocation + loginLogoFile);
+            byte[] result = FileUtils.readFileToByteArray(loginLogo);
             return result;
         }
         catch (Exception e)
@@ -90,33 +91,52 @@ public class CustomLogoService
         }
     }
 
-    public void updateLoginLogo(InputStreamSource logoFileSource) throws AcmCustomLogoException
+    /**
+     * Return email logo
+     *
+     * @return
+     * @throws AcmCustomLogoException
+     */
+    public byte[] getEmailLogo() throws AcmCustomLogoException
     {
-        File logoFile = null;
-        try (InputStream loginLogoStream = logoFileSource.getInputStream())
+        try
         {
-            logoFile = new File(brandingFilesLocation + loginLogoFile);
-            FileUtils.copyInputStreamToFile(loginLogoStream, logoFile);
-
+            File emailLogo = new File(brandingFilesLocation + emailLogoFile);
+            byte[] result = FileUtils.readFileToByteArray(emailLogo);
+            return result;
         }
         catch (Exception e)
         {
-            throw new AcmCustomLogoException("Can't update logo file");
+            log.error("Can't get custom Email Logo file", e);
+            throw new AcmCustomLogoException("Can't get custom Email Logo file", e);
         }
     }
 
-    public void updateHeaderLogo(InputStreamSource logoStreamSource) throws AcmCustomLogoException
+    public void updateLoginLogo(InputStreamSource logoFileSource) throws AcmCustomLogoException
+    {
+        updateFile(logoFileSource, loginLogoFile);
+    }
+
+    public void updateHeaderLogo(InputStreamSource logoFileSource) throws AcmCustomLogoException
+    {
+        updateFile(logoFileSource, headerLogoFile);
+    }
+
+    public void updateEmailLogo(InputStreamSource logoFileSource) throws AcmCustomLogoException
+    {
+        updateFile(logoFileSource, emailLogoFile);
+    }
+
+    private void updateFile(InputStreamSource logoFileSource, String fileName) throws AcmCustomLogoException
     {
         File logoFile = null;
-
-        try (InputStream logoStream = logoStreamSource.getInputStream())
+        try (InputStream logoStream = logoFileSource.getInputStream())
         {
-            logoFile = new File(brandingFilesLocation + headerLogoFile);
+            logoFile = new File(brandingFilesLocation + fileName);
             FileUtils.copyInputStreamToFile(logoStream, logoFile);
-
+    
         }
         catch (Exception e)
-
         {
             throw new AcmCustomLogoException("Can't update logo file");
         }
@@ -135,5 +155,15 @@ public class CustomLogoService
     public void setLoginLogoFile(String loginLogoFile)
     {
         this.loginLogoFile = loginLogoFile;
+    }
+
+    public String getEmailLogoFile()
+    {
+        return emailLogoFile;
+    }
+
+    public void setEmailLogoFile(String emailLogoFile)
+    {
+        this.emailLogoFile = emailLogoFile;
     }
 }
