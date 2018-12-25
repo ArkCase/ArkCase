@@ -39,6 +39,7 @@ import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.*;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.ecm.service.EcmFileTransaction;
+import com.armedia.acm.plugins.ecm.service.ProgressbarExecutor;
 import com.armedia.acm.plugins.ecm.utils.CmisConfigUtils;
 import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
@@ -112,6 +113,9 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     private EcmFileParticipantService fileParticipantService;
 
     private AcmParticipantService participantService;
+
+    private ProgressbarExecutor progressbarExecutor;
+
 
     @Override
     public CmisObject findObjectByPath(String path) throws Exception
@@ -1673,5 +1677,13 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     public void setParticipantService(AcmParticipantService participantService)
     {
         this.participantService = participantService;
+    }
+
+    public ProgressbarExecutor getProgressbarExecutor() {
+        return progressbarExecutor;
+    }
+
+    public void setProgressbarExecutor(ProgressbarExecutor progressbarExecutor) {
+        this.progressbarExecutor = progressbarExecutor;
     }
 }
