@@ -38,6 +38,8 @@ import com.armedia.acm.services.pipeline.handler.PipelineHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -50,12 +52,15 @@ public class CaseFileStartBusinessProcessIfNeededHandler implements PipelineHand
     private final Logger log = LoggerFactory.getLogger(getClass());
     private CaseFileStartBusinessProcessBusinessRule startBusinessProcessBusinessRule;
     private StartBusinessProcessService startBusinessProcessService;
+    @PersistenceContext
+    private EntityManager em;
 
     @Override
     public void execute(CaseFile entity, CaseFilePipelineContext pipelineContext) throws PipelineProcessException
     {
         log.info("CaseFile entering CaseFileStartBusinessProcessIfNeededHandler : [{}]", entity);
 
+        em.flush();
         CaseFileStartBusinessProcessModel model = new CaseFileStartBusinessProcessModel();
         model.setBusinessObject(entity);
         model.setPipelineContext(pipelineContext);
