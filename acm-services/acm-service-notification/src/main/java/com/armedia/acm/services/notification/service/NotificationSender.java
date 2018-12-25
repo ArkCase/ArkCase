@@ -1,5 +1,8 @@
 package com.armedia.acm.services.notification.service;
 
+import com.armedia.acm.core.AcmObject;
+import com.armedia.acm.data.AcmAbstractDao;
+
 /*-
  * #%L
  * ACM Service: Notification
@@ -28,6 +31,7 @@ package com.armedia.acm.services.notification.service;
  */
 
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
+import com.armedia.acm.data.service.AcmDataService;
 import com.armedia.acm.files.propertymanager.PropertyFileManager;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.services.authenticationtoken.dao.AuthenticationTokenDao;
@@ -56,8 +60,12 @@ import java.io.DataInputStream;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Stream;
+
+import freemarker.template.TemplateException;
 
 /**
  * @author riste.tutureski
@@ -77,6 +85,9 @@ public abstract class NotificationSender
     protected String notificationTemplate;
     private AcmEmailSenderService emailSenderService;
     private UserDao userDao;
+    private AcmDataService dataService;
+    private TemplatingEngine templatingEngine;
+    private Map<String, String> notificationTemplates = new HashMap<>();
 
     /**
      * Sends the notification to user's email. If successful, sets the notification state to
@@ -103,15 +114,32 @@ public abstract class NotificationSender
             EmailWithAttachmentsDTO in = new EmailWithAttachmentsDTO();
             in.setHeader("");
             in.setFooter("");
-            in.setTemplate(notificationTemplate);
 
-            String notificationLink = notificationUtils.buildNotificationLink(notification.getParentType(), notification.getParentId(),
-                    notification.getRelatedObjectType(), notification.getRelatedObjectId());
+            String template = notificationTemplates.get(notification.getNote());
+            if (template == null)
+            {
+                setupDefaultTemplateAndBody(notification, in);
+            }
+            else
+            {
+                AcmAbstractDao<AcmObject> dao = getDataService().getDaoByObjectType(notification.getParentType());
+                AcmObject object = dao.find(notification.getParentId());
+                try
+                {
+                    String body = getTemplatingEngine().process(template, notification.getNote(), object);
+                    in.setBody(body);
+                    in.setTemplate(body);
+                }
+                catch (TemplateException | IOException e)
+                {
+                    // failing to send an email should not break the flow
+                    LOG.error("Unable to generate email for {} about {} with ID [{}]", Arrays.asList(notification.getUserEmail()),
+                            object.getObjectType(), object.getId(), e);
+                    setupDefaultTemplateAndBody(notification, in);
+                }
 
-            String messageBody = notificationLink != null ? String.format("%s Link: %s", notification.getNote(), notificationLink)
-                    : notification.getNote();
+            }
 
-            in.setBody(new MessageBodyFactory().buildMessageBodyFromTemplate(messageBody, "", ""));
             in.setSubject(notification.getTitle());
             in.setEmailAddresses(Arrays.asList(notification.getUserEmail()));
 
@@ -141,6 +169,18 @@ public abstract class NotificationSender
         }
 
         return notification;
+    }
+
+    private void setupDefaultTemplateAndBody(Notification notification, EmailWithAttachmentsDTO in)
+    {
+        in.setTemplate(notificationTemplate);
+        String notificationLink = notificationUtils.buildNotificationLink(notification.getParentType(), notification.getParentId(),
+                notification.getRelatedObjectType(), notification.getRelatedObjectId());
+
+        String messageBody = notificationLink != null ? String.format("%s Link: %s", notification.getNote(), notificationLink)
+                : notification.getNote();
+
+        in.setBody(new MessageBodyFactory().buildMessageBodyFromTemplate(messageBody, "", ""));
     }
 
     public abstract <T> void sendPlainEmail(Stream<T> emailsDataStream, EmailBuilder<T> emailBuilder, EmailBodyBuilder<T> emailBodyBuilder)
@@ -251,4 +291,33 @@ public abstract class NotificationSender
         this.userDao = userDao;
     }
 
+    public Map<String, String> getNotificationTemplates()
+    {
+        return notificationTemplates;
+    }
+
+    public void setNotificationTemplates(Map<String, String> notificationTemplates)
+    {
+        this.notificationTemplates = notificationTemplates;
+    }
+
+    public TemplatingEngine getTemplatingEngine()
+    {
+        return templatingEngine;
+    }
+
+    public void setTemplatingEngine(TemplatingEngine templatingEngine)
+    {
+        this.templatingEngine = templatingEngine;
+    }
+
+    public AcmDataService getDataService()
+    {
+        return dataService;
+    }
+
+    public void setDataService(AcmDataService dataService)
+    {
+        this.dataService = dataService;
+    }
 }
