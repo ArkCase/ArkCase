@@ -3,8 +3,8 @@
 angular.module('document-details').controller(
         'DocumentDetailsController',
         [ '$rootScope', '$scope', '$stateParams', '$sce', '$q', '$timeout', '$window', '$modal', 'TicketService', 'ConfigService', 'LookupService', 'SnowboundService', 'Authentication', 'EcmService', 'Helper.LocaleService', 'Admin.TranscriptionManagementService', 'MessageService', 'UtilService', 'Util.TimerService',
-                'Object.LockingService', 'ObjectService', '$log', 'Dialog.BootboxService', '$translate', 'ArkCaseCrossWindowMessagingService',
-                function($rootScope, $scope, $stateParams, $sce, $q, $timeout, $window, $modal, TicketService, ConfigService, LookupService, SnowboundService, Authentication, EcmService, LocaleHelper, TranscriptionManagementService, MessageService, Util, UtilTimerService, ObjectLockingService, ObjectService, $log, DialogService, $translate, ArkCaseCrossWindowMessagingService) {
+            'Object.LockingService', 'ObjectService', '$log', 'Dialog.BootboxService', '$translate', 'ArkCaseCrossWindowMessagingService', 'Object.LookupService',
+            function ($rootScope, $scope, $stateParams, $sce, $q, $timeout, $window, $modal, TicketService, ConfigService, LookupService, SnowboundService, Authentication, EcmService, LocaleHelper, TranscriptionManagementService, MessageService, Util, UtilTimerService, ObjectLockingService, ObjectService, $log, DialogService, $translate, ArkCaseCrossWindowMessagingService, ObjectLookupService) {
 
                     new LocaleHelper.Locale({
                         scope: $scope
@@ -32,15 +32,24 @@ angular.module('document-details').controller(
                     };
 
                     $scope.iframeLoaded = function() {
-                        ArkCaseCrossWindowMessagingService.addHandler('select-annotation-tags', onSelectAnnotationTags);
-                        ArkCaseCrossWindowMessagingService.start('snowbound', $scope.ecmFileProperties['ecm.viewer.snowbound']);
+                        ObjectLookupService.getLookupByLookupName("annotationTags").then(function (allAnnotationTags) {
+                            $scope.allAnnotationTags = allAnnotationTags;
+                            ArkCaseCrossWindowMessagingService.addHandler('select-annotation-tags', onSelectAnnotationTags);
+                            ArkCaseCrossWindowMessagingService.start('snowbound', $scope.ecmFileProperties['ecm.viewer.snowbound']);
+                        });
                     };
 
                     function onSelectAnnotationTags(data) {
+                        var params = $scope.allAnnotationTags;
                         var modalInstance = $modal.open({
                             animation: true,
                             templateUrl: 'modules/document-details/views/components/annotation-tags-modal.client.view.html',
-                            controller: 'Document.AnnotationTagsModalController'
+                            controller: 'Document.AnnotationTagsModalController',
+                            resolve: {
+                                params: function () {
+                                    return params;
+                                }
+                            }
                         });
 
                         modalInstance.result.then(function(result) {
