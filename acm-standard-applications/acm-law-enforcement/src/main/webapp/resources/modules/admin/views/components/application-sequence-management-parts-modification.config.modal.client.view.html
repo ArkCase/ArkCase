@@ -1,0 +1,58 @@
+<div class="modal-header">
+    <h3><span translate>admin.application.sequenceManagement.config.title</span></h3>
+</div>
+<div class="modal-body">
+    <form name="holidayForm">
+        <div class="row">
+            <div class="col-sm-12 form-group">
+                <label for="sequenceName" translate>admin.application.sequenceManagement.config.grid.sequenceName</label><span
+                    class="required-asterisk">*</span><br />
+                <input type="text" id="sequenceName" name="holidayName" ng-model="sequence.sequenceName" class="input-md form-control"
+                        placeholder="{{'admin.application.sequenceManagement.config.placeholder.name' | translate}}" required>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12 form-group">
+                <label for="sequenceDescription" translate>admin.application.sequenceManagement.config.grid.sequenceDescription</label><span
+                    class="required-asterisk">*</span><br />
+                <select id="sequenceDescription" class="input-md form-control" ng-model="sequence.sequenceDescription" ng-options="sequenceDescription for sequenceDescription in sequenceDescriptions track by sequenceDescription" required="required"
+                        placeholder="{{ 'admin.application.sequenceManagement.config.placeholder.description' | translate }}">
+
+                </select>
+            </div>
+        </div>
+        <div ng-if="sequence.sequenceDescription === 'AUTOINCREMENT'" class="row">
+            <div class="col-sm-12 form-group">
+                <label for="sequenceEnabled" translate>admin.application.sequenceManagement.config.modal.sequenceEnabled</label>
+                <input type="number" id="sequenceEnabled" class="input-md" ng-model="sequence.sequenceEnabled">
+            </div>
+        </div>
+        <div ng-if="sequence.sequenceDescription === admin.application.sequenceManagement.config.modal.sequenceEnabled | translate" class="row">
+            <div class="col-sm-12 form-group">
+                <label for="sequenceIncrementSize" translate>admin.application.sequenceManagement.config.modal.sequenceEnabled</label>
+                <input type="number" id="sequenceIncrementSize" class="input-md" ng-model="sequence.sequenceEnabled">
+            </div>
+        </div>
+        <div ng-if="test.AUTOINCREMENT" class="row">
+            <div class="col-sm-12 form-group">
+                <label for="sequenceNumberLength" translate>admin.application.sequenceManagement.config.modal.sequenceEnabled</label>
+                <input type="number" id="sequenceNumberLength" class="input-md" ng-model="sequence.sequenceEnabled">
+            </div>
+        </div>
+        <div ng-if="sequence.sequenceDescription === 'AUTOINCREMENT'" class="row">
+            <div class="col-sm-12 form-group">
+                <label for="sequenceReuse" translate>admin.application.sequenceManagement.config.modal.sequenceEnabled</label>
+                <input type="checkbox" id="sequenceReuse" class="input-md" ng-model="sequence.sequenceEnabled">
+            </div>
+        </div>
+    </form>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-default" ng-click="onClickCancel()" translate>
+        admin.application.holiday.cancel
+    </button>
+    <button type="button" class="btn btn-primary" ng-click="onClickOk()" ng-disabled="holidayForm.$invalid">
+        <span translate>admin.application.holiday.save</span>
+    </button>
+</div>
+

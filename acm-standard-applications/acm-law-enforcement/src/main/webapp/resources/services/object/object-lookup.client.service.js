@@ -89,6 +89,20 @@ angular.module('services').factory('Object.LookupService', [ '$q', '$resource', 
 
     /**
      * @ngdoc method
+     * @name getPriorities
+     * @methodOf services:Object.LookupService
+     *
+     * @description
+     * Query list of sequenceManagementParts
+     *
+     * @returns {Object} An array returned by $resource
+     */
+    Service.getSequenceParts = function () {
+        return Service.getLookupByLookupName("sequenceParts");
+    };
+
+    /**
+     * @ngdoc method
      * @name validatePriorities
      * @methodOf services:Object.LookupService
      *
