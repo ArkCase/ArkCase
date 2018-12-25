@@ -849,13 +849,8 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity,
     @JsonIgnore
     public String getAssigneeLdapId()
     {
-        AcmParticipant assignee = getParticipants().stream().filter(p -> CaseFileConstants.ASSIGNEE.equals(p.getParticipantType()))
-                .findFirst().orElse(null);
-        if (assignee != null)
-        {
-            return assignee.getParticipantLdapId();
-        }
-        return null;
+        return getParticipants().stream().filter(p -> CaseFileConstants.ASSIGNEE.equals(p.getParticipantType()))
+                .findFirst().map(p -> p.getParticipantLdapId()).orElse(null);
     }
 
     public LocalDate getQueueEnterDate()
