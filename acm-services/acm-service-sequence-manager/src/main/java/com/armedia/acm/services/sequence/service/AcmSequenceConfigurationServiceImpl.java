@@ -3,7 +3,7 @@ package com.armedia.acm.services.sequence.service;
 import com.armedia.acm.files.AbstractConfigurationFileEvent;
 import com.armedia.acm.files.ConfigurationFileChangedEvent;
 import com.armedia.acm.objectonverter.ObjectConverter;
-import com.armedia.acm.services.sequence.event.AcmSequenceConfigurationEvent;
+import com.armedia.acm.services.sequence.event.AcmSequenceConfigurationChangedEvent;
 import com.armedia.acm.services.sequence.exception.AcmSequenceException;
 import com.armedia.acm.services.sequence.model.AcmSequenceConfiguration;
 
@@ -109,7 +109,7 @@ public class AcmSequenceConfigurationServiceImpl
         {
             try
             {
-                applicationEventPublisher.publishEvent(new AcmSequenceConfigurationEvent(getSequenceConfiguration()));
+                applicationEventPublisher.publishEvent(new AcmSequenceConfigurationChangedEvent(getSequenceConfiguration()));
             }
             catch (Exception e)
             {
@@ -125,7 +125,7 @@ public class AcmSequenceConfigurationServiceImpl
     @Override
     public void afterPropertiesSet() throws Exception
     {
-        applicationEventPublisher.publishEvent(new AcmSequenceConfigurationEvent(getSequenceConfiguration()));
+        applicationEventPublisher.publishEvent(new AcmSequenceConfigurationChangedEvent(getSequenceConfiguration()));
     }
 
     /**
