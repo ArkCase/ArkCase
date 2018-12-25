@@ -595,6 +595,13 @@
                 "document": "Document",
                 "person": "Person",
                 "organization": "Organization"
+            },
+            "sequenceParts": {
+                "autoincrement": "AUTOINCREMENT",
+                "objectProperty": "OBJECT_PROPERTY",
+                "uuid": "UUID",
+                "date": "DATE",
+                "arbitaryText": "ARBITARY_TEXT"
             }
         },
         "userInfo": {

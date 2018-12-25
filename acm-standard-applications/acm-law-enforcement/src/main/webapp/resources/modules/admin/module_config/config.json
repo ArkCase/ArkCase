@@ -995,6 +995,70 @@
                 50
             ],
             "paginationPageSize": 20
+        },
+        {
+            "id": "sequenceManagementConfiguration",
+            "title": "admin.application.sequenceManagement.config.title",
+            "enabled": true,
+            "type": "grid",
+            "enableFiltering": false,
+            "configurable": true,
+            "columnDefs": [
+                {
+                    "name": "sequenceName",
+                    "displayName": "admin.application.sequenceManagement.config.grid.sequenceName",
+                    "visible": true,
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "sequenceDescription",
+                    "displayName": "admin.application.sequenceManagement.config.grid.sequenceDescription",
+                    "visible": true,
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "sequenceEnabled",
+                    "displayName": "admin.application.sequenceManagement.config.grid.sequenceEnabled",
+                    "visible": true,
+                    "headerCellFilter": "translate"
+                }
+            ],
+            "paginationPageSizes": [
+                5,
+                10,
+                20,
+                50
+            ],
+            "paginationPageSize": 20,
+            "sequenceManagementPartsConfig": {
+                "id": "sequenceManagementPartsConfiguration",
+                "title": "admin.application.sequenceManagement.config.title",
+                "enabled": true,
+                "type": "grid",
+                "enableFiltering": false,
+                "configurable": true,
+                "columnDefs": [
+                    {
+                        "name": "sequencePartName",
+                        "displayName": "admin.application.sequenceManagementParts.config.grid.sequenceName",
+                        "visible": true,
+                        "headerCellFilter": "translate"
+                    },
+                    {
+                        "name": "sequencePartType",
+                        "displayName": "admin.application.sequenceManagementParts.config.grid.sequenceDescription",
+                        "visible": true,
+                        "headerCellFilter": "translate"
+                    }
+                ],
+                "paginationPageSizes": [
+                    5,
+                    10,
+                    20,
+                    50
+                ],
+                "paginationPageSize": 20
+            }
         }
     ],
     "tree": {
@@ -1234,6 +1298,13 @@
                 "label": "admin.application.formsType.config.title",
                 "components": [
                     "application-forms-type.config"
+                ]
+            },
+            {
+                "type": "p/application/sequenceManagement",
+                "label": "admin.application.sequenceManagement.config.title",
+                "components": [
+                    "application-sequence-management.config"
                 ]
             },
             {

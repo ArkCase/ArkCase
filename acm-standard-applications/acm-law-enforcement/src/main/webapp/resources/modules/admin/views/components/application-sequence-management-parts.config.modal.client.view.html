@@ -1,0 +1,25 @@
+<div>
+    <div class="well-sm">
+        <div class="panel panel-success panel-grid">
+            <div class="panel-heading">
+                <div class="panel-title">
+                    <span translate>admin.application.sequenceManagementParts.config.title</span>
+                    <div class="pull-right">
+                        <button class="btn btn-default btn-xs" data-ng-click="addNew()">
+                            <i class="fa fa-lg fa-plus"></i></button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel-body">
+                <div ui-grid="gridOptions" ui-grid-resize-columns ui-grid-auto-resize ui-grid-pagination
+                        adjust-table-height="gridOptions.data.length" class="grid"></div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default" ng-click="onClickCancel()" translate>
+            admin.application.holiday.cancel
+        </button>
+    </div>
+</div>

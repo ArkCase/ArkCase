@@ -679,6 +679,29 @@
                 "modal.info": "Settings will take effect after refresh",
                 "modal.ok": "Confirm"
             },
+            "sequenceManagement.config": {
+                "title": "Sequence Configuration",
+                "grid": {
+                    "sequenceName": "Name",
+                    "sequenceDescription": "Description",
+                    "sequenceEnabled": "Enabled"
+                },
+                "placeholder": {
+                    "name": "Enter Sequence Name",
+                    "description": "Enter Sequence Description"
+                },
+                "modal": {
+                    "sequenceEnabled": "Sequence Enabled"
+                }
+            },
+            "sequenceManagementParts.config": {
+                "title": "Sequence Part",
+                "grid": {
+                    "sequenceName": "Name",
+                    "sequenceDescription": "Type"
+                },
+                "message": "The sequence you entered is not saved! Sequence name already exist!"
+            },
             "login.config": {
                 "title": "Login Configuration",
                 "idleLimit.label": "Login idle limit (in milliseconds)",
