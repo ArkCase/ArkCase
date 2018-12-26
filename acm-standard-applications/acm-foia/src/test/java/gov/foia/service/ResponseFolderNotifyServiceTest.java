@@ -50,6 +50,7 @@ import org.junit.Test;
 import java.util.Arrays;
 import java.util.List;
 
+import gov.foia.model.FOIAConstants;
 import gov.foia.model.FOIARequest;
 
 /**
@@ -58,6 +59,7 @@ import gov.foia.model.FOIARequest;
 public class ResponseFolderNotifyServiceTest extends EasyMockSupport
 
 {
+    static final String objectType = "CASE_FILE";
     static final long requestId = 101l;
     static final String emailType = "email";
     static final String emailAddress = "teng.wang@armedia.com";
@@ -119,7 +121,8 @@ public class ResponseFolderNotifyServiceTest extends EasyMockSupport
 
         expect(mockedRequest.getRequestType()).andReturn(requestType).anyTimes();
         expect(mockedRequest.getCaseNumber()).andReturn(caseNumber).anyTimes();
-        expect(mockedAcmApplication.getBaseUrl()).andReturn(baseUrl);
+        expect(mockedRequest.getObjectType()).andReturn(objectType).anyTimes();
+        expect(mockedRequest.getId()).andReturn(requestId).anyTimes();
 
         Capture<Notification> captureReleaseNotifier = Capture.newInstance();
         expect(mockedNotificationSender.send(capture(captureReleaseNotifier))).andReturn(new Notification());
@@ -129,7 +132,8 @@ public class ResponseFolderNotifyServiceTest extends EasyMockSupport
         responseFolderNotifyService.sendEmailNotification(requestId);
 
         verifyAll();
-        assertEquals(String.format("%s %s", "FOIA Request Complete", caseNumber), captureReleaseNotifier.getValue().getTitle());
+        assertEquals(String.format("%s %s", FOIAConstants.EMAIL_RESPONSE_FOLDER_ZIP, caseNumber),
+                captureReleaseNotifier.getValue().getTitle());
         assertEquals(emailAddress, captureReleaseNotifier.getValue().getUserEmail());
     }
 }
