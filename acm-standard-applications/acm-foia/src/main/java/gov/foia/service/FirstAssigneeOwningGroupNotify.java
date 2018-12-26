@@ -122,39 +122,42 @@ public class FirstAssigneeOwningGroupNotify extends AbstractEmailSenderService i
     private void sendAssigneeMailToOwningGroupMembers(CaseFile caseFile, String assigneeId, List<String> emailAddresses,
             Authentication authentication) throws Exception
     {
-        AcmUser user = getUserDao().findByUserId(assigneeId);
-
-        String assigneeFullName = user.getFullName();
-        String link = getNotificationUtils().buildNotificationLink("CASE_FILE", caseFile.getId(), "CASE_FILE", caseFile.getId());
-        String mailSubject = String.format("Request:%s assigned to %s", caseFile.getCaseNumber(), assigneeFullName);
-
-        String mailBody = null;
-        try
+        if (assigneeId != null)
         {
-            mailBody = getTemplatingEngine().process(emailBodyTemplate, "request", caseFile);
-        }
-        catch (TemplateException | IOException e)
-        {
-            // failing to send an email should not break the flow
-            LOG.error("Unable to genarate email {} for {}", user.getMail(), caseFile, e);
-            mailBody = String.format("Request:%s was assigned to %s Link: %s", caseFile.getCaseNumber(), assigneeFullName, link);
-        }
+            AcmUser user = getUserDao().findByUserId(assigneeId);
 
-        Map<String, Object> bodyModel = new HashMap<>();
+            String assigneeFullName = user.getFullName();
+            String link = getNotificationUtils().buildNotificationLink("CASE_FILE", caseFile.getId(), "CASE_FILE", caseFile.getId());
+            String mailSubject = String.format("Request:%s assigned to %s", caseFile.getCaseNumber(), assigneeFullName);
 
-        bodyModel.put("body", mailBody);
-        bodyModel.put("header", new String());
-        bodyModel.put("footer", new String());
+            String mailBody = null;
+            try
+            {
+                mailBody = getTemplatingEngine().process(emailBodyTemplate, "request", caseFile);
+            }
+            catch (TemplateException | IOException e)
+            {
+                // failing to send an email should not break the flow
+                LOG.error("Unable to genarate email {} for {}", user.getMail(), caseFile, e);
+                mailBody = String.format("Request:%s was assigned to %s Link: %s", caseFile.getCaseNumber(), assigneeFullName, link);
+            }
 
-        try
-        {
-            LOG.info("Trying to send Assignee email to owning group members");
-            sendEmailWithAttachment(emailAddresses, mailSubject, bodyModel, null, user, authentication);
-        }
-        catch (Exception e)
-        {
-            LOG.error("Could not send the Assignee email to the owning group members", e);
-            throw e;
+            Map<String, Object> bodyModel = new HashMap<>();
+
+            bodyModel.put("body", mailBody);
+            bodyModel.put("header", new String());
+            bodyModel.put("footer", new String());
+
+            try
+            {
+                LOG.info("Trying to send Assignee email to owning group members");
+                sendEmailWithAttachment(emailAddresses, mailSubject, bodyModel, null, user, authentication);
+            }
+            catch (Exception e)
+            {
+                LOG.error("Could not send the Assignee email to the owning group members", e);
+                throw e;
+            }
         }
     }
 
