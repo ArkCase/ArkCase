@@ -29,7 +29,9 @@ package gov.foia.service;
 
 import com.armedia.acm.plugins.casefile.model.CaseEvent;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
+import com.armedia.acm.services.email.model.EmailWithAttachmentsDTO;
 import com.armedia.acm.services.notification.service.NotificationUtils;
+import com.armedia.acm.services.notification.service.TemplatingEngine;
 import com.armedia.acm.services.participants.utils.ParticipantUtils;
 import com.armedia.acm.services.search.service.SearchResults;
 import com.armedia.acm.services.users.dao.UserDao;
@@ -42,8 +44,12 @@ import org.mule.api.MuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;
+import org.springframework.core.io.Resource;
 import org.springframework.security.core.Authentication;
 
+import java.io.DataInputStream;
+import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -51,6 +57,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
+import freemarker.template.TemplateException;
 
 public class FirstAssigneeOwningGroupNotify extends AbstractEmailSenderService implements ApplicationListener<CaseEvent>
 {
@@ -59,7 +66,8 @@ public class FirstAssigneeOwningGroupNotify extends AbstractEmailSenderService i
     private SearchResults searchResults;
     private UserDao userDao;
     private NotificationUtils notificationUtils;
-
+    private String emailBodyTemplate;
+    private TemplatingEngine templatingEngine;
 
     @Override
     public void onApplicationEvent(CaseEvent event)
@@ -69,55 +77,68 @@ public class FirstAssigneeOwningGroupNotify extends AbstractEmailSenderService i
             String assigneeId = ParticipantUtils.getAssigneeIdFromParticipants(event.getCaseFile().getParticipants());
             String owningGroupId = ParticipantUtils.getOwningGroupIdFromParticipants(event.getCaseFile().getParticipants());
 
-           if(Objects.nonNull(owningGroupId))
-           {
-               try
-               {
-                   Map<String, String> usersEmails = new HashMap<>();
+            if (Objects.nonNull(owningGroupId))
+            {
+                try
+                {
+                    Map<String, String> usersEmails = new HashMap<>();
 
-                   String members = groupService.getUserMembersForGroup(owningGroupId, Optional.empty(), event.getEventUser());
-                   JSONArray membersArray = getSearchResults().getDocuments(members);
-                   for(int i=0; i< membersArray.length(); i++)
-                   {
-                       JSONObject memberObject  = membersArray.getJSONObject(i);
+                    String members = groupService.getUserMembersForGroup(owningGroupId, Optional.empty(), event.getEventUser());
+                    JSONArray membersArray = getSearchResults().getDocuments(members);
+                    for (int i = 0; i < membersArray.length(); i++)
+                    {
+                        JSONObject memberObject = membersArray.getJSONObject(i);
 
-                       String userId = getSearchResults().extractString(memberObject, "object_id_s");
-                       String emailAddress = getSearchResults().extractString(memberObject, "email_lcs");
+                        String userId = getSearchResults().extractString(memberObject, "object_id_s");
+                        String emailAddress = getSearchResults().extractString(memberObject, "email_lcs");
 
-                       usersEmails.putIfAbsent(userId, emailAddress);
-                   }
+                        usersEmails.putIfAbsent(userId, emailAddress);
+                    }
 
-                   if(Objects.nonNull(assigneeId))
-                   {
-                       if(usersEmails.containsKey(assigneeId))
-                       {
-                           usersEmails.remove(assigneeId);
-                       }
-                   }
+                    if (Objects.nonNull(assigneeId))
+                    {
+                        if (usersEmails.containsKey(assigneeId))
+                        {
+                            usersEmails.remove(assigneeId);
+                        }
+                    }
 
-                   List<String> emailAddresses = new ArrayList<>(usersEmails.values());
-                   sendAssigneeMailToOwningGroupMembers(event.getCaseFile(), assigneeId, emailAddresses, event.getEventUser());
-               }
-               catch (MuleException e)
-               {
-                   LOG.error("Mule error occurred while searching for owning group members", e);
-               }
-               catch (Exception e)
-               {
-                   LOG.error("Error occurred while trying to send Assignee email to owning group members", e);
-               }
+                    List<String> emailAddresses = new ArrayList<>(usersEmails.values());
+                    sendAssigneeMailToOwningGroupMembers(event.getCaseFile(), assigneeId, emailAddresses, event.getEventUser());
+                }
+                catch (MuleException e)
+                {
+                    LOG.error("Mule error occurred while searching for owning group members", e);
+                }
+                catch (Exception e)
+                {
+                    LOG.error("Error occurred while trying to send Assignee email to owning group members", e);
+                }
 
-           }
+            }
         }
     }
 
-    private void sendAssigneeMailToOwningGroupMembers(CaseFile caseFile, String assigneeId, List<String> emailAddresses, Authentication authentication) throws Exception {
+    private void sendAssigneeMailToOwningGroupMembers(CaseFile caseFile, String assigneeId, List<String> emailAddresses,
+            Authentication authentication) throws Exception
+    {
         AcmUser user = getUserDao().findByUserId(assigneeId);
 
         String assigneeFullName = user.getFullName();
         String link = getNotificationUtils().buildNotificationLink("CASE_FILE", caseFile.getId(), "CASE_FILE", caseFile.getId());
-        String mailSubject = String.format("Request:%s assigned to %s", caseFile.getCaseNumber(),assigneeFullName);
-        String mailBody = String.format("Request:%s was assigned to %s Link: %s", caseFile.getCaseNumber(), assigneeFullName, link);
+        String mailSubject = String.format("Request:%s assigned to %s", caseFile.getCaseNumber(), assigneeFullName);
+
+        String mailBody = null;
+        try
+        {
+            mailBody = getTemplatingEngine().process(emailBodyTemplate, "request", caseFile);
+        }
+        catch (TemplateException | IOException e)
+        {
+            // failing to send an email should not break the flow
+            LOG.error("Unable to genarate email {} for {}", user.getMail(), caseFile, e);
+            mailBody = String.format("Request:%s was assigned to %s Link: %s", caseFile.getCaseNumber(), assigneeFullName, link);
+        }
 
         Map<String, Object> bodyModel = new HashMap<>();
 
@@ -135,6 +156,27 @@ public class FirstAssigneeOwningGroupNotify extends AbstractEmailSenderService i
             LOG.error("Could not send the Assignee email to the owning group members", e);
             throw e;
         }
+    }
+
+    @Override
+    public void sendEmailWithAttachment(List<String> emailAddresses,
+            String subject,
+            Map<String, Object> templateDataModel,
+            List<Long> attachmentIds,
+            AcmUser user,
+            Authentication authentication) throws Exception
+    {
+        EmailWithAttachmentsDTO emailWithAttachmentsDTO = new EmailWithAttachmentsDTO();
+        emailWithAttachmentsDTO.setSubject(subject);
+        emailWithAttachmentsDTO.setHeader("");
+        emailWithAttachmentsDTO.setFooter("");
+        emailWithAttachmentsDTO.setBody((String) templateDataModel.get("body"));
+        emailWithAttachmentsDTO.setTemplate((String) templateDataModel.get("body"));
+        emailWithAttachmentsDTO.setAttachmentIds(attachmentIds);
+        emailWithAttachmentsDTO.setEmailAddresses(emailAddresses);
+
+        LOG.info(String.format("Sending an email with subject [%s]", subject));
+        getEmailSenderService().sendEmailWithAttachments(emailWithAttachmentsDTO, authentication, user);
     }
 
     public GroupService getGroupService()
@@ -175,5 +217,30 @@ public class FirstAssigneeOwningGroupNotify extends AbstractEmailSenderService i
     public void setNotificationUtils(NotificationUtils notificationUtils)
     {
         this.notificationUtils = notificationUtils;
+    }
+
+    public String getEmailBodyTemplate()
+    {
+        return emailBodyTemplate;
+    }
+
+    public void setEmailBodyTemplate(Resource emailBodyTemplate) throws IOException
+    {
+        try (DataInputStream resourceStream = new DataInputStream(emailBodyTemplate.getInputStream()))
+        {
+            byte[] bytes = new byte[resourceStream.available()];
+            resourceStream.readFully(bytes);
+            this.emailBodyTemplate = new String(bytes, Charset.forName("UTF-8"));
+        }
+    }
+
+    public TemplatingEngine getTemplatingEngine()
+    {
+        return templatingEngine;
+    }
+
+    public void setTemplatingEngine(TemplatingEngine templatingEngine)
+    {
+        this.templatingEngine = templatingEngine;
     }
 }

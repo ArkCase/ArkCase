@@ -48,36 +48,41 @@ public class FOIAExtensionHandler implements PipelineHandler<FOIARequest, CaseFi
     private HolidayConfigurationService holidayConfigurationService;
     private ArkPermissionEvaluator arkPermissionEvaluator;
     private int extensionWorkingDays;
+    private String requestExtensionWorkingDaysEnabled;
 
     @Override
     public void execute(FOIARequest entity, CaseFilePipelineContext pipelineContext) throws PipelineProcessException
     {
         log.debug("FOIARequest extension pre save handler called for RequestId={}", entity.getId());
 
-        if (entity.getId() != null)
+        if (Boolean.parseBoolean(requestExtensionWorkingDaysEnabled))
         {
-            FOIARequest originalRequest = getFoiaRequestDao().find(entity.getId());
-
-            if (originalRequest.getExtensionFlag() && !entity.getExtensionFlag())
+            if (entity.getId() != null)
             {
-                throw new PipelineProcessException("Request extension cannot be removed!");
-            }
+                FOIARequest originalRequest = getFoiaRequestDao().find(entity.getId());
 
-            if (!originalRequest.getExtensionFlag() && entity.getExtensionFlag())
-            {
-                if (!getArkPermissionEvaluator().hasPermission(pipelineContext.getAuthentication(), entity.getId(), "CASE_FILE",
-                        "requestDueDateExtension"))
+                if (originalRequest.getExtensionFlag() && !entity.getExtensionFlag())
                 {
-                    throw new PipelineProcessException(
-                            "The user {" + pipelineContext.getAuthentication().getName() + "} is not allowed to extend request due date!");
+                    throw new PipelineProcessException("Request extension cannot be removed!");
                 }
 
-                entity.setDueDate(
-                        getHolidayConfigurationService().addWorkingDaysToDate(originalRequest.getDueDate(), extensionWorkingDays));
+                if (!originalRequest.getExtensionFlag() && entity.getExtensionFlag())
+                {
+                    if (!getArkPermissionEvaluator().hasPermission(pipelineContext.getAuthentication(), entity.getId(), "CASE_FILE",
+                            "requestDueDateExtension"))
+                    {
+                        throw new PipelineProcessException(
+                                "The user {" + pipelineContext.getAuthentication().getName()
+                                        + "} is not allowed to extend request due date!");
+                    }
 
-                // we set this property, so we can send a correspondence email to the requester in the postsave
-                // FOIAExtensionEmailHandler
-                pipelineContext.addProperty(FOIAConstants.FOIA_PIPELINE_EXTENSION_PROPERTY_KEY, Boolean.TRUE);
+                    entity.setDueDate(
+                            getHolidayConfigurationService().addWorkingDaysToDate(originalRequest.getDueDate(), extensionWorkingDays));
+
+                    // we set this property, so we can send a correspondence email to the requester in the postsave
+                    // FOIAExtensionEmailHandler
+                    pipelineContext.addProperty(FOIAConstants.FOIA_PIPELINE_EXTENSION_PROPERTY_KEY, Boolean.TRUE);
+                }
             }
         }
 
@@ -118,6 +123,16 @@ public class FOIAExtensionHandler implements PipelineHandler<FOIARequest, CaseFi
     public void setExtensionWorkingDays(int extensionWorkingDays)
     {
         this.extensionWorkingDays = extensionWorkingDays;
+    }
+
+    public String getRequestExtensionWorkingDaysEnabled()
+    {
+        return requestExtensionWorkingDaysEnabled;
+    }
+
+    public void setRequestExtensionWorkingDaysEnabled(String requestExtensionWorkingDaysEnabled)
+    {
+        this.requestExtensionWorkingDaysEnabled = requestExtensionWorkingDaysEnabled;
     }
 
     public ArkPermissionEvaluator getArkPermissionEvaluator()

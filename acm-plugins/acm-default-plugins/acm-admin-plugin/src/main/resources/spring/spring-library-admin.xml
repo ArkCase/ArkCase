@@ -57,6 +57,7 @@
         <property name="brandingFilesLocation" value="#{ systemProperties ['user.home'] }/.arkcase/acm/branding/"/>
         <property name="headerLogoFile" value="header-logo.png"/>
         <property name="loginLogoFile" value="login-logo.png"/>
+        <property name="emailLogoFile" value="email-logo.png"/>
     </bean>
 
     <bean id="moduleConfigurationService" class="com.armedia.acm.plugins.admin.service.ModuleConfigurationService">
@@ -69,6 +70,14 @@
 
     <bean id="googleAnalyticsConfigService" class="com.armedia.acm.plugins.admin.service.GoogleAnalyticsConfigService">
         <property name="configFile" ref="googleAnalyticsConfigurationFile"/>
+    </bean>
+
+    <bean id="ocrConfigurationPropertiesService" class="com.armedia.acm.plugins.admin.service.OCRConfigurationPropertiesService">
+        <property name="propertyFileManager" ref="propertyFileManager"/>
+    </bean>
+
+    <bean id="arkCaseOCRService" class="com.armedia.acm.plugins.admin.service.ArkCaseOCRServiceImpl">
+        <property name="OCRConfigurationPropertiesService" ref="ocrConfigurationPropertiesService"/>
     </bean>
 
     <bean id="angularPropertiesManagementService" class="com.armedia.acm.plugins.admin.service.JsonPropertiesManagementService">
