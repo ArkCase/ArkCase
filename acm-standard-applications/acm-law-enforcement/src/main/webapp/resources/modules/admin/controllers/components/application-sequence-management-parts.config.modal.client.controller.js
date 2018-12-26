@@ -1,140 +1,236 @@
 'use strict';
 
 angular.module('admin').controller('Admin.SequenceManagementPartsModalController',
-    [ '$scope', '$modal', 'params', 'Helper.UiGridService', 'MessageService', 'UtilService', 'Dialog.BootboxService', '$translate',
-        '$modalInstance','Object.LookupService'
-        , function($scope, $modal, params, HelperUiGridService, MessageService, Util, DialogService, $translate, $modalInstance, ObjectLookupService) {
+    ['$rootScope', '$scope', '$modal', 'params', 'Helper.UiGridService', 'MessageService', 'UtilService', 'Dialog.BootboxService', '$translate',
+        '$modalInstance', 'Object.LookupService', 'Admin.SequenceManagementService',
+        function ($rootScope, $scope, $modal, params, HelperUiGridService, MessageService, Util, DialogService, $translate,
+                  $modalInstance, ObjectLookupService, AdminSequenceManagementService) {
 
-        var gridHelper = new HelperUiGridService.Grid({
-            scope: $scope
-        });
+            var gridHelper = new HelperUiGridService.Grid({
+                scope: $scope
+            });
 
-        $scope.config = angular.copy(params.config);
+            $scope.config = angular.copy(params.config);
+            $scope.showAddPartsModalParams = angular.copy(params);
+            console.log($scope.config);
 
-        console.log($scope.config);
+            gridHelper.addButton($scope.config, "edit");
+            gridHelper.addButton($scope.config, "delete");
+            gridHelper.setColumnDefs($scope.config);
+            gridHelper.setBasicOptions($scope.config);
+            gridHelper.disableGridScrolling($scope.config);
 
-        gridHelper.addButton($scope.config, "edit");
-        gridHelper.addButton($scope.config, "delete");
-        gridHelper.setColumnDefs($scope.config);
-        gridHelper.setBasicOptions($scope.config);
-        gridHelper.disableGridScrolling($scope.config);
+            $scope.gridOptions = {
+                enableColumnResizing: true,
+                enableRowSelection: true,
+                enableRowHeaderSelection: false,
+                multiSelect: false,
+                noUnselect: false,
+                columnDefs: $scope.config.columnDefs,
+                paginationPageSizes: $scope.config.paginationPageSizes,
+                paginationPageSize: $scope.config.paginationPageSize,
+                totalItems: 0,
+                data: params.sequenceParts
+            };
 
-        $scope.gridOptions = {
-            enableColumnResizing: true,
-            enableRowSelection: true,
-            enableRowHeaderSelection: false,
-            multiSelect: false,
-            noUnselect: false,
-            columnDefs: $scope.config.columnDefs,
-            paginationPageSizes: $scope.config.paginationPageSizes,
-            paginationPageSize: $scope.config.paginationPageSize,
-            totalItems: 0,
-            data: params.sequenceParts
-        };
+            var reloadGrid = function (data) {
+                $scope.gridOptions.data = data;
+            };
 
-        /*   var reloadGrid = function(data) {
-               $scope.holidaySchedule.includeWeekends = data.includeWeekends;
-               $scope.gridOptions.data = data.holidays;
-           };
-   */
-        /*   $scope.loadPage = function() {
-               AdminSequenceManagementService.getHolidays().then(function(response) {
-                   if (!Util.isEmpty(response.data)) {
+            $scope.loadPage = function () {
+                AdminSequenceManagementService.getSequences().then(function (response) {
+                    if (!Util.isEmpty(response.data)) {
 
-                       reloadGrid(response.data);
-                   }
-               });
-           };*/
-        //     $scope.loadPage();
-        //  var deleteHoliday = function(holidayConf) {
-        //      var holidayConfiguration = {
-        //          "includeWeekends": $scope.holidaySchedule.includeWeekends,
-        //          "holidays": holidayConf
-        //      };
-        //      saveConfig(holidayConfiguration);
-        //  };
-
-        $scope.save = function() {
-
-            //saveConfig(holidayConfig);
-
-        };
-        /*   var saveConfig = function(holidayConfiguration) {
-               AdminSequenceManagementService.saveHolidays(holidayConfiguration).then(function(data) {
-                   MessageService.succsessAction();
-                   reloadGrid(data.config.data);
-               }, function() {
-                   MessageService.errorAction();
-               });
-           };*/
-
-        function showModal(sequencePart, isEdit) {
-            var params = {};
-            params.sequencePart = sequencePart;
-            params.isEdit = isEdit;
-            params.config = $scope.config;
-
-            var modalInstance = $modal.open({
-                animation: true,
-                templateUrl: 'modules/admin/views/components/application-sequence-management-parts-modification.config.modal.client.view.html',
-                controller: 'Admin.SequenceManagementPartsModalController',
-                size: 'md',
-                backdrop: 'static',
-                resolve: {
-                    params: function() {
-                        return params;
+                        reloadGrid(response.data);
                     }
-                }
-            });
-            return modalInstance.result;
-        }
+                });
+            };
+            //     $scope.loadPage();
+            //  var deleteHoliday = function(holidayConf) {
+            //      var holidayConfiguration = {
+            //          "includeWeekends": $scope.holidaySchedule.includeWeekends,
+            //          "holidays": holidayConf
+            //      };
+            //      saveConfig(holidayConfiguration);
+            //  };
 
-        $scope.addNew = function() {
-            var x = {};
-            showModal(x, false).then(function(data) {
-                console.log(data);
+            $scope.save = function (sequenceConfig, index) {
+                saveConfig(sequenceConfig, index);
 
-            });
-        };
+            };
+            var saveConfig = function (sequenceConfiguration, index) {
+                AdminSequenceManagementService.updateSequences(sequenceConfiguration).then(function (data) {
+                    MessageService.succsessAction();
+                    reloadGrid(data.data[index].sequenceParts);
+                    $rootScope.$broadcast("reloadParentConfig", data.data);
+                    //$scope.$parent.reloadGrid(data.data);
+                }, function () {
+                    MessageService.errorAction();
+                });
+            };
 
-        $scope.editRow = function(rowEntity) {
+            function showModal(selectedSequence, isEdit) {
+                var params = {};
+                //params.sequencePart = sequencePart;
+                params.isEdit = isEdit;
+                params.config = $scope.config;
+                params.selectedSequence = selectedSequence;
+                var modalInstance = $modal.open({
+                    animation: true,
+                    templateUrl: 'modules/admin/views/components/application-sequence-management-parts-modification.config.modal.client.view.html',
+                    controller: 'Admin.SequenceManagementPartsModalConfigController',
+                    size: 'md',
+                    backdrop: 'static',
+                    resolve: {
+                        params: function () {
+                            return params;
+                        }
+                    }
+                });
+                modalInstance.result.then(function (data) {
 
-            var entity = angular.copy(rowEntity);
-            showModal(entity, true).then(function(data) {
-                var element = data;
+                    return modalInstance.result;
+                })
+            }
 
-                var itemExist = _.find($scope.gridOptions.data, function(sequence) {
-                    return (element.sequencePartName === sequence.sequencePartName && element.sequencePartType === sequence.sequencePartType);
+            $scope.addNew = function () {
+                var selectedSequence = $scope.showAddPartsModalParams.selectedSequence;
+                //params.sequencePart = sequencePart;
+                var params = {};
+                params.isEdit = false;
+                params.config = $scope.config;
+                params.selectedSequence = selectedSequence;
+                var modalInstance = $modal.open({
+                    animation: true,
+                    templateUrl: 'modules/admin/views/components/application-sequence-management-parts-modification.config.modal.client.view.html',
+                    controller: 'Admin.SequenceManagementPartsModalConfigController',
+                    size: 'md',
+                    backdrop: 'static',
+                    resolve: {
+                        params: function () {
+                            return params;
+                        }
+                    }
+                });
+                modalInstance.result.then(function (selectedSequence) {
+                    var sequenceConfig = $scope.showAddPartsModalParams.sequences;
+                    var selectedSequenceName = $scope.showAddPartsModalParams.selectedSequence.sequenceName;
+                    var reqIndex;
+                    sequenceConfig.forEach(function (sequence, index) {
+                        if (sequence.sequenceName === selectedSequenceName) {
+                            reqIndex = index;
+                            return;
+                        }
+                    });
+                    var itemExist = _.find(sequenceConfig[reqIndex].sequenceParts, function (sequence) {
+                        return selectedSequence.sequencePartName === sequence.sequencePartName;
+                    });
+                    if (itemExist === undefined && reqIndex !== undefined) {
+                        sequenceConfig[reqIndex].sequenceParts.push(selectedSequence);
+                        $scope.save(sequenceConfig, reqIndex);
+                    } else {
+                        DialogService.alert($translate.instant('admin.application.sequenceManagementParts.config.message'));
+                    }
+
+                    return modalInstance.result;
+                })
+            };
+
+            $scope.editRow = function (rowEntity) {
+
+                var selectedSequence = $scope.showAddPartsModalParams.selectedSequence;
+                //params.sequencePart = sequencePart;
+                var params = {};
+                params.isEdit = true;
+                params.config = $scope.config;
+                params.selectedSequence = selectedSequence;
+                params.selectedSequencePart = angular.copy(rowEntity);
+                var modalInstance = $modal.open({
+                    animation: true,
+                    templateUrl: 'modules/admin/views/components/application-sequence-management-parts-modification.config.modal.client.view.html',
+                    controller: 'Admin.SequenceManagementPartsModalConfigController',
+                    size: 'md',
+                    backdrop: 'static',
+                    resolve: {
+                        params: function () {
+                            return params;
+                        }
+                    }
+                });
+                modalInstance.result.then(function (selectedSequence) {
+                    var sequenceConfig = $scope.showAddPartsModalParams.sequences;
+                    var selectedSequenceName = $scope.showAddPartsModalParams.selectedSequence.sequenceName;
+                    var reqIndex;
+                    sequenceConfig.forEach(function (sequence, index) {
+                        if (sequence.sequenceName === selectedSequenceName) {
+                            reqIndex = index;
+                            return;
+                        }
+                    });
+                    var itemExist = _.find(sequenceConfig[reqIndex].sequenceParts, function (sequence) {
+                        return selectedSequence.sequencePartName === sequence.sequencePartName;
+                    });
+                    if (itemExist === undefined && reqIndex !== undefined) {
+                        sequenceConfig[reqIndex].sequenceParts.push(selectedSequence);
+                        $scope.save(sequenceConfig, reqIndex);
+                    } else {
+                        DialogService.alert($translate.instant('admin.application.sequenceManagementParts.config.message'));
+                    }
+
+                    return modalInstance.result;
+                })
+            };
+
+            $scope.deleteRow = function (rowEntity) {
+                var sequenceConfigParts = $scope.showAddPartsModalParams.sequenceParts;
+                var sequenceConfig = $scope.showAddPartsModalParams.sequences;
+                var selectedSequenceName = $scope.showAddPartsModalParams.selectedSequence.sequenceName;
+                _.remove(sequenceConfigParts, function (item) {
+                    return item.sequencePartName === rowEntity.sequencePartName;
+                });
+                var reqIndex;
+                sequenceConfig.forEach(function (sequence, index) {
+                    if (sequence.sequenceName === selectedSequenceName) {
+                        reqIndex = index;
+                        return;
+                    }
                 });
 
-                if (!itemExist) {
-                    rowEntity.sequencePartName = data.sequencePartName;
-                    rowEntity.sequencePartType = data.sequencePartType;
-                    $scope.save();
-                } else {
-                    DialogService.alert($translate.instant('admin.application.sequenceManagementParts.config.message'));
-                }
-            });
-        };
+                deleteSequence(sequenceConfig, reqIndex);
+                var reqIndex;
 
-        $scope.onClickCancel = function() {
-            $modalInstance.dismiss('Cancel');
-        };
 
-        ObjectLookupService.getSequenceParts().then(function(sequenceParts) {
-            $scope.sequenceParts = sequenceParts;
-        });
+                reloadGrid(sequenceConfig[reqIndex]);
+                $rootScope.$broadcast("reloadParentConfig", sequenceConfig);
+            };
 
-        $scope.test = {};
-        $scope.test["AUTOINCREMENT"] = true;
+            var deleteSequence = function (sequenceConf, index) {
+                saveConfig(sequenceConf, index);
+            };
 
-        /*
-            $scope.deleteRow = function(rowEntity) {
-                var sequenceConfig = angular.copy($scope.gridOptions.data);
-                _.remove(sequenceConfig, function(item) {
-                    return item.sequenceName === rowEntity.sequenceName;
-                });
-                deleteSequence(sequenceConfig);
-            };*/
+            $scope.onClickCancel = function () {
+                $modalInstance.dismiss('Cancel');
+            };
 
-    } ]);
+            $scope.onClickOk = function () {
+                $modalInstance.close($scope.sequence);
+            };
+
+            $scope.sequencePartsCurrentlySelected = {};
+
+            $scope.showRequiredFields = function () {
+                $scope.sequencePartsCurrentlySelected = {};
+                $scope.sequencePartType = $scope.selectedItem.key;
+                $scope.sequencePartsCurrentlySelected[$scope.selectedItem.key] = true;
+            };
+
+            /*
+                $scope.deleteRow = function(rowEntity) {
+                    var sequenceConfig = angular.copy($scope.gridOptions.data);
+                    _.remove(sequenceConfig, function(item) {
+                        return item.sequenceName === rowEntity.sequenceName;
+                    });
+                    deleteSequence(sequenceConfig);
+                };*/
+
+        }]);

@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('admin').controller('Admin.SequenceManagement',
-    [ '$scope', '$modal', 'Helper.UiGridService', 'MessageService', 'UtilService', 'Dialog.BootboxService', '$translate', 'Admin.SequenceManagementService'
-        , function($scope, $modal, HelperUiGridService, MessageService, Util, DialogService, $translate, AdminSequenceManagementService) {
+    ['$rootScope', '$scope', '$modal', 'Helper.UiGridService', 'MessageService', 'UtilService', 'Dialog.BootboxService', '$translate', 'Admin.SequenceManagementService'
+        , function ($rootScope, $scope, $modal, HelperUiGridService, MessageService, Util, DialogService, $translate, AdminSequenceManagementService) {
 
         var gridHelper = new HelperUiGridService.Grid({
             scope: $scope
@@ -52,17 +52,12 @@ angular.module('admin').controller('Admin.SequenceManagement',
         $scope.loadPage();
 
         var deleteSequence = function(sequenceConf) {
-            var sequenceConfiguration = {
-                "sequence": sequenceConf
-            };
-            saveConfig(sequenceConfiguration);
+            saveConfig(sequenceConf);
         };
 
 
-        $scope.save = function() {
-            var sequenceConfig = {
-                "sequence": $scope.gridOptions.data
-            };
+        $scope.save = function (sequenceConfig) {
+
             saveConfig(sequenceConfig);
         };
         var saveConfig = function(sequenceConfiguration) {
@@ -95,11 +90,13 @@ angular.module('admin').controller('Admin.SequenceManagement',
         }
 
         $scope.showAddPartsModal= function(sequence) {
-            console.log(sequence);
+
 
             var params = {};
             params.config = $scope.config.sequenceManagementPartsConfig;
             params.sequenceParts = sequence.sequenceParts;
+            params.sequences = $scope.gridOptions.data;
+            params.selectedSequence = sequence;
             var modalInstance = $modal.open({
                 animation: true,
                 templateUrl: 'modules/admin/views/components/application-sequence-management-parts.config.modal.client.view.html',
@@ -119,13 +116,16 @@ angular.module('admin').controller('Admin.SequenceManagement',
             var sequence = {};
             showModal(sequence, false).then(function(data) {
                 var element = data;
+                if (element.sequenceEnabled === undefined)
+                    element.sequenceEnabled = false;
+                element.sequenceParts = [];
                 var sequenceConfig = $scope.gridOptions.data;
                 var itemExist = _.find(sequenceConfig, function (sequence) {
                     return element.sequenceName === sequence.sequenceName;
-                })
+                });
                 if(itemExist === undefined){
                     sequenceConfig.push(element);
-                    $scope.save();
+                    $scope.save(sequenceConfig);
                 } else {
                     DialogService.alert($translate.instant('admin.application.sequenceManagementParts.config.message'));
                 }
@@ -147,7 +147,7 @@ angular.module('admin').controller('Admin.SequenceManagement',
                     rowEntity.sequenceName = data.sequenceName;
                     rowEntity.sequenceDescription = data.sequenceDescription;
                     rowEntity.sequenceEnabled = data.sequenceEnabled;
-                    $scope.save();
+                    $scope.save($scope.gridOptions.data);
                 } else {
                     DialogService.alert($translate.instant('admin.application.sequenceManagementParts.config.message'));
                 }
@@ -161,5 +161,9 @@ angular.module('admin').controller('Admin.SequenceManagement',
             });
             deleteSequence(sequenceConfig);
         };
+
+        $scope.$on("reloadParentConfig", function (event, config) {
+            reloadGrid(config);
+        });
 
     } ]);
