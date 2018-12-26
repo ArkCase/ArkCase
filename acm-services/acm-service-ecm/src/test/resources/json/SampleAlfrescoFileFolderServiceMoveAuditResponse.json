@@ -1,0 +1,41 @@
+{
+    "count": 2,
+    "entries": [
+        {
+            "id": 25307,
+            "application": "AuditArkCaseMoveFrom",
+            "user": "admin",
+            "time": "2018-12-20T10:52:30.564-05:00",
+            "values": {
+                "/auditarkcasemovefrom/move/derived/source-parent-name": "folder2",
+                "/auditarkcasemovefrom/move/out/a": "FileInfo[name=New Microsoft Word Document.docx, isFolder=false, nodeRef=workspace://SpacesStore/de9236ca-1e75-4d31-b3bc-15eb30faecae]",
+                "/auditarkcasemovefrom/move/derived/target-parent-name": "folder1",
+                "/auditarkcasemovefrom/move/in/a": "workspace://SpacesStore/de9236ca-1e75-4d31-b3bc-15eb30faecae",
+                "/auditarkcasemovefrom/move/in/c": "workspace://SpacesStore/a341ac50-b60b-4bd8-b1b3-922dcd05a0a7",
+                "/auditarkcasemovefrom/move/in/b": "workspace://SpacesStore/5c133b31-dd84-42bd-841f-048bc9202dc3",
+                "/auditarkcasemovefrom/move/derived/source-node-name": "New Microsoft Word Document.docx",
+                "/auditarkcasemovefrom/move/derived/source-parent-type": "{http://www.alfresco.org/model/content/1.0}folder",
+                "/auditarkcasemovefrom/move/derived/source-node-type": "{http://www.alfresco.org/model/content/1.0}content",
+                "/auditarkcasemovefrom/move/derived/target-parent-type": "{http://www.alfresco.org/model/content/1.0}folder"
+            }
+        },
+        {
+            "id": 25306,
+            "application": "AuditArkCaseMoveFrom",
+            "user": "admin",
+            "time": "2018-12-20T10:52:02.847-05:00",
+            "values": {
+                "/auditarkcasemovefrom/move/derived/source-parent-name": "folder1",
+                "/auditarkcasemovefrom/move/out/a": "FileInfo[name=subfolder, isFolder=true, nodeRef=workspace://SpacesStore/fa3128c0-4ce6-497e-8375-7254c3efd218]",
+                "/auditarkcasemovefrom/move/derived/target-parent-name": "folder2",
+                "/auditarkcasemovefrom/move/in/a": "workspace://SpacesStore/fa3128c0-4ce6-497e-8375-7254c3efd218",
+                "/auditarkcasemovefrom/move/in/c": "workspace://SpacesStore/5c133b31-dd84-42bd-841f-048bc9202dc3",
+                "/auditarkcasemovefrom/move/in/b": "workspace://SpacesStore/a341ac50-b60b-4bd8-b1b3-922dcd05a0a7",
+                "/auditarkcasemovefrom/move/derived/source-node-name": "subfolder",
+                "/auditarkcasemovefrom/move/derived/source-parent-type": "{http://www.alfresco.org/model/content/1.0}folder",
+                "/auditarkcasemovefrom/move/derived/source-node-type": "{http://www.alfresco.org/model/content/1.0}folder",
+                "/auditarkcasemovefrom/move/derived/target-parent-type": "{http://www.alfresco.org/model/content/1.0}folder"
+            }
+        }
+    ]
+}
