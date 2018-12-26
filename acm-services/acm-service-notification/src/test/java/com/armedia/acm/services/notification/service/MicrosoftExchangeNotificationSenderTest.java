@@ -192,10 +192,11 @@ public class MicrosoftExchangeNotificationSenderTest extends EasyMockSupport
         OutlookDTO outlookDTO = new OutlookDTO();
         outlookDTO.setOutlookPassword("outlookPassword");
 
-        Capture<EmailWithAttachmentsDTO> emailWithAttachmentsDTOCapture = EasyMock.newCapture();
+        expect(mockEmailWithAttachmentsDTO.getTemplate()).andReturn("Some template");
+
         Capture<AcmUser> userCapture = EasyMock.newCapture();
-        mockOutlookService.sendEmailWithAttachments(capture(emailWithAttachmentsDTOCapture), eq(mockAuthentication), capture(userCapture));
-        mockEmailWithAttachmentsDTO.setTemplate(null);
+        mockOutlookService.sendEmailWithAttachments(eq(mockEmailWithAttachmentsDTO), eq(mockAuthentication), capture(userCapture));
+
         replayAll();
         microsoftExchangeNotificationSender.sendEmailWithAttachments(mockEmailWithAttachmentsDTO, mockAuthentication, mockAcmUser);
         verifyAll();

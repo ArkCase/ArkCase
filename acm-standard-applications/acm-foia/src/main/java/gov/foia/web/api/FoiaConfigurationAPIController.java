@@ -27,8 +27,6 @@ package gov.foia.web.api;
  * #L%
  */
 
-import gov.foia.model.FoiaConfiguration;
-import gov.foia.service.FoiaConfigurationService;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -36,9 +34,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import gov.foia.model.FoiaConfiguration;
+import gov.foia.service.FoiaConfigurationService;
+
 @Controller
-@RequestMapping({"api/v1/service/foia/configuration", "api/latest/service/foia/configuration"})
-public class FoiaConfigurationAPIController {
+@RequestMapping({ "api/v1/service/foia/configuration", "api/latest/service/foia/configuration" })
+public class FoiaConfigurationAPIController
+{
 
     private FoiaConfigurationService foiaConfigurationService;
 
@@ -49,12 +51,18 @@ public class FoiaConfigurationAPIController {
         foiaConfigurationService.writeConfiguration(foiaConfiguration);
     }
 
-
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public FoiaConfiguration getFoiaConfigurationFile()
     {
         return getFoiaConfigurationService().readConfiguration();
+    }
+
+    @RequestMapping(path = "/dashboardBannerConfiguration", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public boolean dashboardBannerConfiguration()
+    {
+        return getFoiaConfigurationService().readConfiguration().getDashboardBannerEnabled();
     }
 
     public FoiaConfigurationService getFoiaConfigurationService()

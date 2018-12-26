@@ -30,12 +30,12 @@ package gov.foia.pipeline.presave;
 import com.armedia.acm.objectonverter.ArkCaseBeanUtils;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
-import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
 import com.armedia.acm.plugins.ecm.pipeline.EcmFileTransactionPipelineContext;
 import com.armedia.acm.plugins.ecm.pipeline.presave.EcmFileNewMetadataHandler;
 import com.armedia.acm.plugins.ecm.service.impl.EcmTikaFile;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
-
+import gov.foia.model.FOIAEcmFileVersion;
+import gov.foia.model.FOIAFile;
 import org.apache.chemistry.opencmis.client.api.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,9 +43,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 
-import gov.foia.model.FOIAFile;
-
-public class FOIAFileNewMetadataHandler extends EcmFileNewMetadataHandler
+public class FOIAEcmFileNewMetadataHandler extends EcmFileNewMetadataHandler
 {
 
     private transient final Logger log = LoggerFactory.getLogger(getClass());
@@ -75,7 +73,7 @@ public class FOIAFileNewMetadataHandler extends EcmFileNewMetadataHandler
             entity.setActiveVersionTag(cmisDocument.getVersionLabel());
 
             // Sets the versioning of the file
-            EcmFileVersion version = new EcmFileVersion();
+            FOIAEcmFileVersion version = new FOIAEcmFileVersion();
             version.setCmisObjectId(cmisDocument.getId());
             version.setVersionTag(cmisDocument.getVersionLabel());
             version.setVersionMimeType(entity.getFileActiveVersionMimeType());
@@ -84,6 +82,8 @@ public class FOIAFileNewMetadataHandler extends EcmFileNewMetadataHandler
                     pipelineContext.getMergedFileByteArray().length > 0 ? pipelineContext.getMergedFileByteArray().length
                             : pipelineContext.getFileContents() != null ? pipelineContext.getFileContents().length() : 0;
             version.setFileSizeBytes(fileSizeBytes);
+            version.setReviewStatus(new String());
+            version.setRedactionStatus(new String());
 
             // file metadata
             if (pipelineContext.getDetectedFileMetadata() != null)

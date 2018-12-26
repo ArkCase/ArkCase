@@ -58,7 +58,8 @@ public class CustomLogoUploadFile
     @ResponseBody
     public String replaceFile(
             @RequestParam(value = "headerLogo", required = false) MultipartFile headerLogoFile,
-            @RequestParam(value = "loginLogo", required = false) MultipartFile loginLogoFile)
+            @RequestParam(value = "loginLogo", required = false) MultipartFile loginLogoFile,
+            @RequestParam(value = "emailLogo", required = false) MultipartFile emailLogoFile)
             throws IOException, AcmWorkflowConfigurationException
     {
 
@@ -81,6 +82,18 @@ public class CustomLogoUploadFile
                 if (loginLogoFile.getContentType().equals(MediaType.IMAGE_PNG_VALUE))
                 {
                     customLogoService.updateLoginLogo(loginLogoFile);
+                }
+                else
+                {
+                    throw new AcmCustomLogoException("Only PNG files are supported for logo");
+                }
+            }
+
+            if (emailLogoFile != null && !emailLogoFile.isEmpty())
+            {
+                if (emailLogoFile.getContentType().equals(MediaType.IMAGE_PNG_VALUE))
+                {
+                    customLogoService.updateEmailLogo(emailLogoFile);
                 }
                 else
                 {

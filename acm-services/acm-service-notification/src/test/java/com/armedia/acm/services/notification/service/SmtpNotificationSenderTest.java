@@ -223,6 +223,7 @@ public class SmtpNotificationSenderTest extends EasyMockSupport
     {
         Capture<String> templateCapture = EasyMock.newCapture();
         mockEmailWithAttachmentsDTO.setTemplate(capture(templateCapture));
+        expect(mockEmailWithAttachmentsDTO.getTemplate()).andReturn(null);
 
         mockSmtpService.sendEmailWithAttachments(mockEmailWithAttachmentsDTO, mockAuthentication, mockAcmUser);
         expectLastCall();
@@ -242,6 +243,7 @@ public class SmtpNotificationSenderTest extends EasyMockSupport
 
         Capture<String> templateCapture = EasyMock.newCapture();
         mockEmailWithAttachmentsDTO.setTemplate(capture(templateCapture));
+        expect(mockEmailWithAttachmentsDTO.getTemplate()).andReturn(null);
 
         mockSmtpService.sendEmailWithAttachments(mockEmailWithAttachmentsDTO, mockAuthentication, mockAcmUser);
         expectLastCall();

@@ -104,6 +104,8 @@
             "created": "Created",
             "modified": "Modified",
             "modifier": "Modified By",
+            "reviewStatus": "Review Status",
+            "redactionStatus": "Redaction Status",
             "version": "Version",
             "status": "Status"
         },
@@ -809,9 +811,10 @@
     "common.dialogObjectPicker": {
         "header": "Search {{objectLabel}}",
         "table.columns": {
-            "name": "Name",
-            "id": "ID",
-            "title": "Title"
+            "id": "Document ID",
+            "title": "Document Title",
+            "parentId": "Parent Object ID",
+            "parentTitle": "Parent Object Title"
         },
         "addDocument": "Choose document to add"
     },

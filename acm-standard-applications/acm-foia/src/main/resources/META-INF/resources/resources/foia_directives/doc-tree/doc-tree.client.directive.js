@@ -106,11 +106,23 @@ angular
             'PublicFlag.Service',
             'RequestResponseFolder.Service',
             'MessageService',
+            'Object.LookupService',
             '$timeout',
             function($q, $translate, $modal, $filter, $log, $injector, Store, Util, UtilDateService, ConfigService,
-            PluginService, UserInfoService, Ecm, EmailSenderConfigurationService, LocaleHelper, PublicFlagService, RequestResponseFolderService, MessageService, $timeout) {
+            PluginService, UserInfoService, Ecm, EmailSenderConfigurationService, LocaleHelper, PublicFlagService, RequestResponseFolderService, MessageService, ObjectLookupService, $timeout) {
                 var cacheTree = new Store.CacheFifo();
                 var cacheFolderList = new Store.CacheFifo();
+
+                var reviewStatuses = [];
+                var redactionStatuses = [];
+
+                ObjectLookupService.getLookupByLookupName("documentReviewStatuses").then(function(documentReviewStatuses) {
+                    reviewStatuses = documentReviewStatuses;
+                });
+
+                ObjectLookupService.getLookupByLookupName("documentRedactionStatuses").then(function(documentRedactionStatuses) {
+                    redactionStatuses = documentRedactionStatuses;
+                });
 
                 var DocTree = {
                     CLIPBOARD : null
@@ -1288,6 +1300,56 @@ angular
                                                 $(element).text(Util.goodMapValue(userInfo, "fullName"));
                                             })
                                         }
+                                    }
+                                },
+                                {
+                                    name : "reviewStatus",
+                                    renderer : function(element, node, columnDef, isReadOnly) {
+                                        var $td = $("<td/>");
+                                        var $span = $("<span/>").appendTo($td);
+                                        var $select = $("<select/>").addClass('reviewstatus inline').appendTo($span);
+
+                                        if (Util.isArray(reviewStatuses)) {
+                                            for(var z = 0; z < reviewStatuses.length; z++) {
+                                                var key = reviewStatuses[z].key;
+                                                var value = $translate.instant(reviewStatuses[z].value);
+
+                                                var $option = $("<option/>").val(key).text(value).appendTo($select);
+
+                                                if (Util.goodValue(node.data.reviewStatus) == value) {
+                                                    $option.attr("selected", true);
+                                                }
+                                            }
+                                        }
+                                        $(element).replaceWith($td);
+
+                                        var jqTreeBody = DocTree.jqTree.find("tbody");
+                                        jqTreeBody.on("change", "select.reviewstatus", DocTree.onChangeReviewStatus);
+                                    }
+                                },
+                                {
+                                    name : "redactionStatus",
+                                    renderer : function(element, node, columnDef, isReadOnly) {
+                                        var $td = $("<td/>");
+                                        var $span = $("<span/>").appendTo($td);
+                                        var $select = $("<select/>").addClass('redactionstatus inline').appendTo($span);
+
+                                        if (Util.isArray(redactionStatuses)) {
+                                            for(var z = 0; z < redactionStatuses.length; z++) {
+                                                var key = redactionStatuses[z].key;
+                                                var value = $translate.instant(redactionStatuses[z].value);
+
+                                                var $option = $("<option/>").val(key).text(value).appendTo($select);
+
+                                                if (Util.goodValue(node.data.redactionStatus) == value) {
+                                                    $option.attr("selected", true);
+                                                }
+                                            }
+                                        }
+                                        $(element).replaceWith($td);
+
+                                        var jqTreeBody = DocTree.jqTree.find("tbody");
+                                        jqTreeBody.on("change", "select.redactionstatus", DocTree.onChangeRedactionStatus);
                                     }
                                 },
                                 {
@@ -3361,6 +3423,14 @@ angular
                                                 .goodValue(activeVersion.fileActiveVersionMimeType);
                                             fileNode.data.modifier = Util.goodValue(activeVersion.modifier);
                                             fileNode.data.modified = Util.goodValue(activeVersion.modified);
+
+                                            for(var i = 0; i < activeVersion.versions.length; i++) {
+                                                if(activeVersion.versions[i].versionTag === fileNode.data.version) {
+                                                    fileNode.data.reviewStatus = Util.goodValue(activeVersion.versions[i].reviewStatus);
+                                                    fileNode.data.redactionStatus = Util.goodValue(activeVersion.versions[i].redactionStatus);
+                                                }
+                                            }
+
                                             DocTree.markNodeOk(fileNode);
                                             fileNode.renderTitle();
                                             dfd.resolve();
@@ -3696,6 +3766,14 @@ angular
                             nodeData.data.version = Util.goodValue(fileData.version);
                             nodeData.data.lock = Util.goodValue(fileData.lock);
                             nodeData.data.modifier = Util.goodValue(fileData.modifier);
+
+                            for(var versionIndex = 0; versionIndex < fileData.versionList.length; versionIndex++) {
+                                if(fileData.versionList[versionIndex].versionTag === fileData.version) {
+                                    nodeData.data.reviewStatus = Util.goodValue(fileData.versionList[versionIndex].reviewStatus);
+                                    nodeData.data.redactionStatus = Util.goodValue(fileData.versionList[versionIndex].redactionStatus);
+                                }
+                            }
+
                             if (Util.isArray(fileData.versionList)) {
                                 nodeData.data.versionList = [];
                                 for (var i = 0; i < fileData.versionList.length; i++) {
@@ -3853,6 +3931,63 @@ angular
                     }
 
                     ,
+                    _changeDocumentReviewRedactionStatus: function(node, statusType, statusValue) {
+                        $(node.tr).find("select.reviewstatus").prop('disabled', true);
+                        $(node.tr).find("select.redactionstatus").prop('disabled', true);
+
+                        if(statusType === "review") {
+                            Util.serviceCall({
+                                service: Ecm.setFileReviewStatus,
+                                param: {
+                                    fileId: node.data.objectId,
+                                    fileVersion: node.data.version,
+                                    reviewStatus: statusValue
+                                },
+                                data: {}
+                            }).then(function(data) {
+                                MessageService.succsessAction();
+
+                                $(node.tr).find("select.reviewstatus").prop('disabled', false);
+                                $(node.tr).find("select.redactionstatus").prop('disabled', false);
+
+                                return data;
+                            }, function(error) {
+                                MessageService.errorAction();
+
+                                $(node.tr).find("select.reviewstatus").prop('disabled', false);
+                                $(node.tr).find("select.redactionstatus").prop('disabled', false);
+
+                                return error;
+                            });
+                        }
+                        else if(statusType === "redaction") {
+                            Util.serviceCall({
+                                service: Ecm.setFileRedactionStatus,
+                                param: {
+                                    fileId: node.data.objectId,
+                                    fileVersion: node.data.version,
+                                    redactionStatus: statusValue
+                                },
+                                data: {}
+                            }).then(function(data) {
+                                MessageService.succsessAction();
+
+                                $(node.tr).find("select.reviewstatus").prop('disabled', false);
+                                $(node.tr).find("select.redactionstatus").prop('disabled', false);
+
+                                return data;
+                            }, function(error) {
+                                MessageService.errorAction();
+
+                                $(node.tr).find("select.reviewstatus").prop('disabled', false);
+                                $(node.tr).find("select.redactionstatus").prop('disabled', false);
+
+                                return error;
+                            });
+                        }
+                    }
+
+                    ,
                     onViewChangedParent : function(objType, objId) {
                         DocTree.switchObject(objType, objId);
                     }
@@ -3888,6 +4023,30 @@ angular
                     //
                     // This prevent going to detail page when user checking version drop down too fast
                     //
+                    ,
+                    onChangeReviewStatus : function (event) {
+                        var node = DocTree.tree.getActiveNode();
+                        if (node) {
+                            var currentReviewStatus = node.data.reviewStatus;
+                            var selectedReviewStatus = Ui.getSelectValue($(this));
+                            if(currentReviewStatus !== selectedReviewStatus) {
+                                DocTree._changeDocumentReviewRedactionStatus(node, "review", selectedReviewStatus);
+                            }
+                        }
+                    }
+
+                    ,
+                    onChangeRedactionStatus : function (event) {
+                        var node = DocTree.tree.getActiveNode();
+                        if (node) {
+                            var currentRedactionStatus = node.data.redactionStatus;
+                            var selectedRedactionStatus = Ui.getSelectValue($(this));
+                            if(currentRedactionStatus !== selectedRedactionStatus) {
+                                DocTree._changeDocumentReviewRedactionStatus(node, "redaction", selectedRedactionStatus);
+                            }
+                        }
+                    }
+
                     ,
                     onDblClickVersion : function(event, data) {
                         event.stopPropagation();
@@ -4974,8 +5133,8 @@ angular
                                 });
                             });
                         /*Get send email configuration*/
-                        EmailSenderConfigurationService.getEmailSenderConfiguration().then(function(res) {
-                            DocTree.treeConfig.emailSendConfiguration = res.data;
+                        EmailSenderConfigurationService.isEmailSenderAllowDocuments().then(function(res) {
+                            DocTree.treeConfig.emailSendConfiguration.allowDocuments = res.data;
                         });
 
                         DocTree.scope.$bus.subscribe('onFilterDocTree', function(data) {
