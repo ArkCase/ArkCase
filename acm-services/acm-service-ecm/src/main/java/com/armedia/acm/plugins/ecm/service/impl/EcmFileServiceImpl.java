@@ -1372,6 +1372,52 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     }
 
     @Override
+    @Transactional
+    @AcmAcquireAndReleaseObjectLock(acmObjectArgIndex = 3, objectType = "FOLDER", lockType = "WRITE", lockChildObjects = false, unlockChildObjects = false)
+    @AcmAcquireAndReleaseObjectLock(objectIdArgIndex = 0, objectType = "FILE", lockType = "DELETE")
+    public EcmFile moveFileInAkcase(Long fileId, Long targetObjectId, String targetObjectType, Long dstFolderId)
+            throws AcmUserActionFailedException, AcmObjectNotFoundException, AcmCreateObjectFailedException
+    {
+
+        EcmFile file = getEcmFileDao().find(fileId);
+        if (file == null)
+        {
+            throw new AcmObjectNotFoundException(EcmFileConstants.OBJECT_FILE_TYPE, fileId, "File  not found", null);
+        }
+        AcmFolder folder = getFolderDao().find(dstFolderId);
+        if (folder == null)
+        {
+            throw new AcmObjectNotFoundException(AcmFolderConstants.OBJECT_FOLDER_TYPE, dstFolderId, "Folder  not found", null);
+        }
+
+        String cmisRepositoryId = folder.getCmisRepositoryId();
+        if (cmisRepositoryId == null)
+        {
+            cmisRepositoryId = ecmFileServiceProperties.getProperty("ecm.defaultCmisId");
+        }
+
+        AcmContainer container = getOrCreateContainer(targetObjectType, targetObjectId, cmisRepositoryId);
+        EcmFile movedFile;
+
+        try
+        {
+            file.setContainer(container);
+            file.setFolder(folder);
+
+            movedFile = getEcmFileDao().save(file);
+            movedFile = getFileParticipantService().setFileParticipantsFromParentFolder(movedFile);
+
+            return movedFile;
+        }
+        catch (PersistenceException e)
+        {
+            log.error("Could not move file {} ", e.getMessage(), e);
+            throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_MOVE_FILE, EcmFileConstants.OBJECT_FILE_TYPE, file.getId(),
+                    "Could not move file", e);
+        }
+    }
+
+    @Override
     @AcmAcquireAndReleaseObjectLock(objectIdArgIndex = 0, objectType = "FILE", lockType = "DELETE")
     public void deleteFile(Long objectId) throws AcmUserActionFailedException, AcmObjectNotFoundException
     {
@@ -1484,6 +1530,30 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
             getEcmFileDao().deleteFile(objectId);
         }
         catch (MuleException | PersistenceException e)
+        {
+            log.error("Could not delete file {} ", e.getMessage(), e);
+            throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_DELETE_FILE, EcmFileConstants.OBJECT_FILE_TYPE,
+                    file.getId(), "Could not delete file", e);
+        }
+    }
+
+    @Override
+    @AcmAcquireAndReleaseObjectLock(objectIdArgIndex = 0, objectType = "FILE", lockType = "DELETE")
+    public void deleteFileInArkcase(Long objectId, Long parentId, String parentType)
+            throws AcmUserActionFailedException, AcmObjectNotFoundException
+    {
+        EcmFile file = getEcmFileDao().find(objectId);
+
+        if (file == null)
+        {
+            throw new AcmObjectNotFoundException(EcmFileConstants.OBJECT_FILE_TYPE, objectId, "File not found", null);
+        }
+
+        try
+        {
+            getEcmFileDao().deleteFile(objectId);
+        }
+        catch (PersistenceException e)
         {
             log.error("Could not delete file {} ", e.getMessage(), e);
             throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_DELETE_FILE, EcmFileConstants.OBJECT_FILE_TYPE,
