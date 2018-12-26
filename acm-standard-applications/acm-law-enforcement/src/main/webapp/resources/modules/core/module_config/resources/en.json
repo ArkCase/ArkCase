@@ -601,7 +601,7 @@
                 "objectProperty": "OBJECT_PROPERTY",
                 "uuid": "UUID",
                 "date": "DATE",
-                "arbitaryText": "ARBITARY_TEXT"
+                "arbitraryText": "ARBITRARY_TEXT"
             }
         },
         "userInfo": {

@@ -5,46 +5,86 @@
     <form name="holidayForm">
         <div class="row">
             <div class="col-sm-12 form-group">
-                <label for="sequenceName" translate>admin.application.sequenceManagement.config.grid.sequenceName</label><span
-                    class="required-asterisk">*</span><br />
-                <input type="text" id="sequenceName" name="holidayName" ng-model="sequence.sequenceName" class="input-md form-control"
+                <label for="sequenceName" translate>admin.application.sequenceManagement.config.grid.sequenceName</label>
+                <span class="required-asterisk">*</span><br />
+                <input type="text" id="sequenceName" name="holidayName" ng-model="sequencePart.sequencePartName"
+                        class="input-md form-control"
                         placeholder="{{'admin.application.sequenceManagement.config.placeholder.name' | translate}}" required>
             </div>
         </div>
         <div class="row">
             <div class="col-sm-12 form-group">
-                <label for="sequenceDescription" translate>admin.application.sequenceManagement.config.grid.sequenceDescription</label><span
-                    class="required-asterisk">*</span><br />
-                <select id="sequenceDescription" class="input-md form-control" ng-model="sequence.sequenceDescription" ng-options="sequenceDescription for sequenceDescription in sequenceDescriptions track by sequenceDescription" required="required"
+                <label for="sequenceDescription" translate>admin.application.sequenceManagement.config.grid.sequenceDescription</label>
+                <span class="required-asterisk">*</span><br />
+                <select id="sequenceDescription" class="input-md form-control" ng-model="selectedItem" ng-change="showRequiredFields()"
+                        ng-options="sequencePart.key for sequencePart in sequenceParts track by sequencePart.key" required="required"
                         placeholder="{{ 'admin.application.sequenceManagement.config.placeholder.description' | translate }}">
 
                 </select>
             </div>
         </div>
-        <div ng-if="sequence.sequenceDescription === 'AUTOINCREMENT'" class="row">
+        <div class="row" ng-if="sequencePartsCurrentlySelected['AUTOINCREMENT']">
             <div class="col-sm-12 form-group">
-                <label for="sequenceEnabled" translate>admin.application.sequenceManagement.config.modal.sequenceEnabled</label>
-                <input type="number" id="sequenceEnabled" class="input-md" ng-model="sequence.sequenceEnabled">
+                <label for="sequencePartAutoincrementStartNumber" translate>admin.application.sequenceManagementParts.config.autoincrement.startNumber</label>
+                <span class="required-asterisk">*</span><br />
+                <input type="number" id="sequencePartAutoincrementStartNumber" name="autoincrementStartNumber"
+                        ng-model="sequencePart.sequenceStartNumber" class="input-md form-control" min="0"
+                        placeholder="{{'admin.application.sequenceManagement.config.placeholder.name' | translate}}" required>
             </div>
         </div>
-        <div ng-if="sequence.sequenceDescription === admin.application.sequenceManagement.config.modal.sequenceEnabled | translate" class="row">
+
+        <div class="row" ng-if="sequencePartsCurrentlySelected['AUTOINCREMENT']">
             <div class="col-sm-12 form-group">
-                <label for="sequenceIncrementSize" translate>admin.application.sequenceManagement.config.modal.sequenceEnabled</label>
-                <input type="number" id="sequenceIncrementSize" class="input-md" ng-model="sequence.sequenceEnabled">
+                <label for="sequencePartAutoincrementIncrementSize" translate>admin.application.sequenceManagementParts.config.autoincrement.incrementSize</label>
+                <span class="required-asterisk">*</span><br />
+                <input type="number" id="sequencePartAutoincrementIncrementSize" name="autoincrementIncrementSize"
+                        ng-model="sequencePart.sequenceIncrementSize" class="input-md form-control" min="0"
+                        placeholder="{{'admin.application.sequenceManagement.config.placeholder.name' | translate}}" required>
             </div>
         </div>
-        <div ng-if="test.AUTOINCREMENT" class="row">
+
+        <div class="row" ng-if="sequencePartsCurrentlySelected['AUTOINCREMENT']">
             <div class="col-sm-12 form-group">
-                <label for="sequenceNumberLength" translate>admin.application.sequenceManagement.config.modal.sequenceEnabled</label>
-                <input type="number" id="sequenceNumberLength" class="input-md" ng-model="sequence.sequenceEnabled">
+                <label for="sequencePartAutoincrementNumberLength" translate>admin.application.sequenceManagementParts.config.autoincrement.numberLength</label>
+                <span class="required-asterisk">*</span><br />
+                <input type="number" id="sequencePartAutoincrementNumberLength" name="autoincrementNumberLength"
+                        ng-model="sequencePart.sequenceNumberLength" class="input-md form-control" min="0"
+                        placeholder="{{'admin.application.sequenceManagement.config.placeholder.name' | translate}}" required>
             </div>
         </div>
-        <div ng-if="sequence.sequenceDescription === 'AUTOINCREMENT'" class="row">
+
+        <div class="row" ng-if="sequencePartsCurrentlySelected['AUTOINCREMENT']">
             <div class="col-sm-12 form-group">
-                <label for="sequenceReuse" translate>admin.application.sequenceManagement.config.modal.sequenceEnabled</label>
-                <input type="checkbox" id="sequenceReuse" class="input-md" ng-model="sequence.sequenceEnabled">
+                <label for="sequencePartAutoincrementSequenceReuse" translate>admin.application.sequenceManagementParts.config.autoincrement.reuseSkippedSequenceValues</label>
+                <input type="checkbox" id="sequencePartAutoincrementSequenceReuse" class="input-md"
+                        ng-model="sequencePart.sequenceFillBlanks">
             </div>
         </div>
+
+        <div class="row" ng-if="sequencePartsCurrentlySelected['ARBITRARY_TEXT']">
+            <div class="col-sm-12 form-group">
+                <label for="sequencePartArbitraryText" translate>admin.application.sequenceManagementParts.config.arbitraryText.text</label>
+                <input type="text" id="sequencePartArbitraryText" class="input-md form-control"
+                        ng-model="sequencePart.sequenceArbitraryText">
+            </div>
+        </div>
+
+        <div class="row" ng-if="sequencePartsCurrentlySelected['OBJECT_PROPERTY']">
+            <div class="col-sm-12 form-group">
+                <label for="sequencePartObjectPropertyName"
+                        translate>admin.application.sequenceManagementParts.config.objectProperty.name</label>
+                <input type="text" id="sequencePartObjectPropertyName" class="input-md form-control"
+                        ng-model="sequencePart.sequenceObjectPropertyName">
+            </div>
+        </div>
+
+        <div class="row" ng-if="sequencePartsCurrentlySelected['DATE']">
+            <div class="col-sm-12 form-group">
+                <label for="sequencePartDateFormat" translate>admin.application.sequenceManagementParts.config.date.text</label>
+                <input type="date" id="sequencePartDateFormat" class="input-md form-control" ng-model="sequencePart.sequenceDateFormat">
+            </div>
+        </div>
+
     </form>
 </div>
 <div class="modal-footer">

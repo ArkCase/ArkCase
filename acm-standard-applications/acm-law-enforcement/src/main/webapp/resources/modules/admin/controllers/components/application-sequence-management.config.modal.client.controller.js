@@ -7,6 +7,7 @@ angular.module('admin').controller('Admin.SequenceManagementModalController', [ 
     $scope.sequenceName = $scope.sequence.sequenceName;
     $scope.sequenceDescription = $scope.sequence.sequenceDescription;
     $scope.sequenceEnabled = $scope.sequence.sequenceEnabled;
+    $scope.sequenceParts = [];
 
     $scope.onClickCancel = function() {
         $modalInstance.dismiss('Cancel');

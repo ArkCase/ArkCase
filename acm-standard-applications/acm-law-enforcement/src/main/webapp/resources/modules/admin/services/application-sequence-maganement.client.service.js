@@ -4,7 +4,8 @@ angular.module('admin').factory('Admin.SequenceManagementService', [ '$http', fu
 
     return ({
         getSequences: getSequences,
-        saveSequences: saveSequences
+        saveSequences: saveSequences,
+        updateSequences: updateSequences
     });
 
     function getSequences() {
@@ -23,6 +24,15 @@ angular.module('admin').factory('Admin.SequenceManagementService', [ '$http', fu
             headers: {
                 "Content-Type": "application/json"
             }
+        });
+    }
+
+    //Save and update sequence
+    function updateSequences(sequenceConfig) {
+        return $http({
+            method: 'PUT',
+            url: 'api/latest/plugin/sequence/configuration',
+            data: sequenceConfig
         });
     }
 } ]);

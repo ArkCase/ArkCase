@@ -1,24 +1,74 @@
 'use strict';
 
-angular.module('admin').controller('Admin.SequenceManagementPartsModalConfigController', [ '$scope', '$modalInstance', 'params', 'Util.DateService', '$filter', function($scope, $modalInstance, params, UtilDateService, $filter) {
+angular.module('admin').controller('Admin.SequenceManagementPartsModalConfigController', ['$scope', '$modalInstance', 'params', 'Util.DateService',
+    '$filter', 'Object.LookupService', 'Admin.SequenceManagementService', 'UtilService', function ($scope, $modalInstance, params, UtilDateService,
+                                                                                                   $filter, ObjectLookupService, AdminSequenceManagementService, Util) {
 
 
-    // $scope.sequence = params.sequence;
-    // $scope.sequenceName = $scope.sequence.sequenceName;
-    // $scope.sequenceDescription = $scope.sequence.sequenceDescription;
-    //$scope.sequenceStatus = $scope.sequence.sequenceStatus;
-    //TODO: Fix sequenceDescription
+        $scope.sequence = params.sequence;
+        $scope.sequencePart = {};
+        if (params.isEdit) {
+            $scope.sequencePart = params.selectedSequencePart;
+            $scope.sequencePart.sequencePartName = params.selectedSequencePart.sequencePartName;
+        }
+        $scope.selectedItem = {};
+        // $scope.sequenceName = $scope.sequence.sequenceName;
+        // $scope.sequenceDescription = $scope.sequence.sequenceDescription;
+        //$scope.sequenceStatus = $scope.sequence.sequenceStatus;
+        //TODO: Fix sequenceDescription
+
+        $scope.sequencePartsCurrentlySelected = {};
+        $scope.sequencePartType = {};
+        $scope.showRequiredFields = function () {
+            $scope.sequencePartsCurrentlySelected = {};
+            $scope.sequencePartType = $scope.selectedItem.key;
+            $scope.sequencePartsCurrentlySelected[$scope.selectedItem.key] = true;
+        };
+
+        $scope.onClickCancel = function () {
+            $modalInstance.dismiss('Cancel');
+        };
+
+        $scope.sequenceParts = [];
+        var promiseSequenceParts = ObjectLookupService.getSequenceParts();
+        promiseSequenceParts.then(function (sequenceParts) {
+            $scope.sequenceParts = sequenceParts;
+            if (params.isEdit) {
+                $scope.selectedItem = _.find($scope.sequenceParts, function (part) {
+                    return params.selectedSequencePart.sequencePartType === part.key;
+                });
+            }
+            $scope.sequencePartsCurrentlySelected[$scope.selectedItem.key] = true;
+        });
+
+        $scope.onClickOk = function () {
+            //$scope.holidays.holidayDate = $filter('date')($scope.holidays.holidayDate, "yyyy-MM-dd");
+            var object = {};
+            object.sequencePartType = $scope.selectedItem.key;
+            object.sequencePartName = $scope.sequencePart.sequencePartName;
+            object.sequenceStartNumber = $scope.sequencePart.sequenceStartNumber;
+            object.sequenceIncrementSize = $scope.sequencePart.sequenceIncrementSize;
+            object.sequenceNumberLength = $scope.sequencePart.sequenceNumberLength;
+            object.sequenceFillBlanks = $scope.sequencePart.sequenceFillBlanks;
+            object.sequenceArbitraryText = $scope.sequencePart.sequenceArbitraryText;
+            object.sequenceObjectPropertyName = $scope.sequencePart.sequenceObjectPropertyName;
 
 
-    $scope.onClickCancel = function() {
-        $modalInstance.dismiss('Cancel');
-    };
+            $modalInstance.close(object);
+        };
 
-    //TODO: Fix saving
-    $scope.onClickOk = function() {
-        //$scope.holidays.holidayDate = $filter('date')($scope.holidays.holidayDate, "yyyy-MM-dd");
+        var reloadGrid = function (data) {
+            $scope.gridOptions.data = data;
+        };
 
-        $modalInstance.close($scope.sequence);
-    };
+        $scope.loadPage = function () {
+            AdminSequenceManagementService.getSequences().then(function (response) {
+                if (!Util.isEmpty(response.data)) {
 
-} ]);
+                    reloadGrid(response.data);
+                }
+            });
+        };
+
+
+    }]);
