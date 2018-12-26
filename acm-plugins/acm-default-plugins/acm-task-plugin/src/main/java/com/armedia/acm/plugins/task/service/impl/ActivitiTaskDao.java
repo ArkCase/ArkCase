@@ -104,6 +104,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class ActivitiTaskDao extends AcmAbstractDao<AcmTask> implements TaskDao, AcmNotificationDao
 {
@@ -578,16 +579,21 @@ public class ActivitiTaskDao extends AcmAbstractDao<AcmTask> implements TaskDao,
                 .variableValueEquals(TaskConstants.VARIABLE_NAME_PARENT_OBJECT_TYPE, parentObjectType)
                 .variableValueEquals(TaskConstants.VARIABLE_NAME_PARENT_OBJECT_ID, parentObjectId).list();
 
-        List<Task> activitiTasks = processes.stream()
+        Stream<Task> activitiWorkflowTasksStream = processes.stream()
                 .map(it -> getActivitiTaskService().createTaskQuery()
                         .processInstanceId(it.getProcessInstanceId())
-                        .singleResult())
-                .collect(Collectors.toList());
+                        .singleResult());
 
-        log.debug("Found [{}] tasks for object [{}:{}]", activitiTasks.size(), parentObjectType, parentObjectId);
-        return activitiTasks.stream()
+        Stream<Task> adhochTasksStream = getActivitiTaskService().createTaskQuery()
+                .taskVariableValueEquals(TaskConstants.VARIABLE_NAME_PARENT_OBJECT_TYPE, parentObjectType)
+                .taskVariableValueEquals(TaskConstants.VARIABLE_NAME_PARENT_OBJECT_ID, parentObjectId)
+                .list().stream();
+
+        List<Long> taskIds = Stream.concat(activitiWorkflowTasksStream, adhochTasksStream)
                 .map(it -> Long.valueOf(it.getId()))
                 .collect(Collectors.toList());
+        log.debug("Found [{}] tasks for object [{}:{}]", taskIds.size(), parentObjectType, parentObjectId);
+        return taskIds;
     }
 
     public List<AcmTask> findByVariableForObjectTypeAndId(String name, String value, String objectType, Long objectId)
