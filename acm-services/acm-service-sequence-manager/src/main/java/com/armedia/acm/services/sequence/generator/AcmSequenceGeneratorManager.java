@@ -1,6 +1,6 @@
 package com.armedia.acm.services.sequence.generator;
 
-import com.armedia.acm.services.sequence.event.AcmSequenceConfigurationChangedEvent;
+import com.armedia.acm.services.sequence.event.AcmSequenceConfigurationUpdatedEvent;
 import com.armedia.acm.services.sequence.exception.AcmSequenceException;
 import com.armedia.acm.services.sequence.model.AcmSequenceConfiguration;
 import com.armedia.acm.services.sequence.model.AcmSequencePart;
@@ -20,7 +20,7 @@ import java.util.Map;
  * @author sasko.tanaskoski
  *
  */
-public class AcmSequenceGeneratorManager implements ApplicationListener<AcmSequenceConfigurationChangedEvent>
+public class AcmSequenceGeneratorManager implements ApplicationListener<AcmSequenceConfigurationUpdatedEvent>
 {
 
     private final Logger log = LoggerFactory.getLogger(getClass());
@@ -43,13 +43,11 @@ public class AcmSequenceGeneratorManager implements ApplicationListener<AcmSeque
         generatorsMap.put(partType, generator);
     }
 
-    public Boolean getSequenceEnabled(String sequenceName)
+    public Boolean isSequenceEnabled(String sequenceName)
     {
-        if (sequenceMap.get(sequenceName).getSequenceEnabled() != null)
-        {
-            return sequenceMap.get(sequenceName).getSequenceEnabled();
-        }
-        return Boolean.FALSE;
+        return sequenceMap.get(sequenceName) != null && sequenceMap.get(sequenceName).getSequenceEnabled() != null
+                && sequenceMap.get(sequenceName).getSequenceEnabled() && sequenceMap.get(sequenceName).getSequenceParts() != null
+                && !sequenceMap.get(sequenceName).getSequenceParts().isEmpty();
     }
 
     public String generateValue(String sequenceName, Object object) throws AcmSequenceException
@@ -57,14 +55,20 @@ public class AcmSequenceGeneratorManager implements ApplicationListener<AcmSeque
 
         String sequenceValue = "";
         List<AcmSequencePart> sequenceParts = sequenceMap.get(sequenceName).getSequenceParts();
-        Map<String, Long> autoincrementPartNameToValue = new HashMap();
+        Map<String, Long> autoincrementPartNameToValue = new HashMap<>();
         for (AcmSequencePart sequencePart : sequenceParts)
         {
-            sequenceValue += generatorsMap.get(sequencePart.getSequencePartType()).generatePartValue(sequenceName, sequencePart, object,
-                    autoincrementPartNameToValue);
+            if (sequencePart.getSequencePartType() != null)
+            {
+                sequenceValue += generatorsMap.get(sequencePart.getSequencePartType()).generatePartValue(sequenceName, sequencePart, object,
+                        autoincrementPartNameToValue);
+            }
         }
 
-        registerSequence(sequenceValue, sequenceName, autoincrementPartNameToValue);
+        if (!sequenceValue.isEmpty())
+        {
+            registerSequence(sequenceValue, sequenceName, autoincrementPartNameToValue);
+        }
 
         return sequenceValue;
     }
@@ -72,7 +76,6 @@ public class AcmSequenceGeneratorManager implements ApplicationListener<AcmSeque
     private void registerSequence(String sequenceValue, String sequenceName, Map<String, Long> autoincrementPartNameToValue)
             throws AcmSequenceException
     {
-        // Not using Lambda i.e. can not re-throw exception
         for (String partName : autoincrementPartNameToValue.keySet())
         {
             AcmSequenceRegistry sequenceRegistry = new AcmSequenceRegistry();
@@ -124,7 +127,7 @@ public class AcmSequenceGeneratorManager implements ApplicationListener<AcmSeque
      * org.springframework.context.ApplicationListener#onApplicationEvent(org.springframework.context.ApplicationEvent)
      */
     @Override
-    public void onApplicationEvent(AcmSequenceConfigurationChangedEvent event)
+    public void onApplicationEvent(AcmSequenceConfigurationUpdatedEvent event)
     {
         setSequenceConfiguration(event.getSource());
     }

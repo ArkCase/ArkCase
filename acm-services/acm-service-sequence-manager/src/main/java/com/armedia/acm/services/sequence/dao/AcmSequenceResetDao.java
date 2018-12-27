@@ -28,6 +28,7 @@ package com.armedia.acm.services.sequence.dao;
  */
 import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.services.sequence.model.AcmSequenceReset;
+import com.armedia.acm.services.sequence.model.AcmSequenceResetId;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,6 +51,17 @@ public class AcmSequenceResetDao extends AcmAbstractDao<AcmSequenceReset>
     protected Class<AcmSequenceReset> getPersistenceClass()
     {
         return AcmSequenceReset.class;
+    }
+
+    public AcmSequenceReset find(AcmSequenceResetId id)
+    {
+        AcmSequenceReset found = getEm().find(AcmSequenceReset.class, id);
+        return found;
+    }
+
+    public void remove(AcmSequenceReset sequenceReset)
+    {
+        getEm().remove(sequenceReset);
     }
 
     public List<AcmSequenceReset> getSequenceResetList(String sequenceName, String sequencePartName, Boolean resetExecutedFlag,

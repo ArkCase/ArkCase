@@ -4,7 +4,9 @@ import com.armedia.acm.services.sequence.exception.AcmSequenceException;
 import com.armedia.acm.services.sequence.model.AcmSequenceReset;
 import com.armedia.acm.services.sequence.service.AcmSequenceService;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -54,6 +56,16 @@ public class SequenceResetAPIController
             throws AcmSequenceException
     {
         return getSequenceService().saveSequenceReset(sequenceReset);
+    }
+
+    @RequestMapping(value = "/reset", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity deleteSequenceReset(@RequestBody AcmSequenceReset sequenceReset,
+            Authentication authentication, HttpSession httpSession)
+            throws AcmSequenceException
+    {
+        getSequenceService().deleteSequenceReset(sequenceReset);
+        return new ResponseEntity(HttpStatus.OK);
     }
 
     /**

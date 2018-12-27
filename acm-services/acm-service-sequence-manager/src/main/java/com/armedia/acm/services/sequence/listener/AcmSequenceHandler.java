@@ -99,10 +99,13 @@ public class AcmSequenceHandler implements AcmBeforeInsertListener, ApplicationL
                                                     .equals(PropertyUtils.getProperty(object, annotatedField.getName()).toString())))
                     {
                         String sequenceName = annotatedField.getAnnotation(AcmSequence.class).sequenceName();
-                        if (getSequenceGeneratorManager().getSequenceEnabled(sequenceName))
+                        if (getSequenceGeneratorManager().isSequenceEnabled(sequenceName))
                         {
                             String value = getSequenceGeneratorManager().generateValue(sequenceName, object);
-                            PropertyUtils.setProperty(object, annotatedField.getName(), value);
+                            if (value != null && !value.isEmpty())
+                            {
+                                PropertyUtils.setProperty(object, annotatedField.getName(), value);
+                            }
                         }
                     }
                 }
