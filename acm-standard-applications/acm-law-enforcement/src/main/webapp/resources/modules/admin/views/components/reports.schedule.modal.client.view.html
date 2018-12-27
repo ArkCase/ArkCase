@@ -21,73 +21,29 @@
                 </select>
             </div>
             <div class="form-group">
-                <label style="padding-left: 15px;" translate>admin.reports.schedule.time</label>
-                <div class="input-group" id="time">
-                    <timepicker ng-model="reportSchedule.reportTime" hour-step="1" minute-step="1" show-meridian="true"
-                            show-spinners="false"></timepicker>
-                </div>
-            </div>
-            <div class="form-group">
                 <label for="startDate" translate>admin.reports.schedule.startDate</label>
                 <span class="required-asterisk">*</span>
-                <div class="input-group" id="startDate">
-                    <input type="text" class="form-control" name="reportStartDate"
-                            datepicker-popup="{{'common.defaultDatePickerFormat' | translate}}" ng-model="reportSchedule.reportStartDate"
-                            is-open="opened.openedStart" close-on-date-selection="true" show-button-bar="true" on-open-focus="false"
-                            close-text="Close" />
-                    <span class="input-group-btn">
-                                <button type="button" class="btn btn-default" ng-click="opened.openedStart = !opened.openedStart">
-                                    <i class="fa fa-calendar"></i>
-                                </button>
-                            </span>
-                </div>
+                <date-time-picker data="reportSchedule.reportStartDate" property="reportStartDate"
+                        date-picker-id="reportStartDate"></date-time-picker>
             </div>
             <div class="form-group">
                 <label for="endDate" translate>admin.reports.schedule.endDate</label>
-                <div class="input-group" id="endDate">
-                    <input type="text" class="form-control" name="reportEndDate"
-                            datepicker-popup="{{'common.defaultDatePickerFormat' | translate}}" ng-model="reportSchedule.reportEndDate"
-                            is-open="opened.openedEnd" close-on-date-selection="true" show-button-bar="true" on-open-focus="false"
-                            close-text="Close" />
-                    <span class="input-group-btn">
-                                <button type="button" class="btn btn-default" ng-click="opened.openedEnd = !opened.openedEnd">
-                                    <i class="fa fa-calendar"></i>
-                                </button>
-                            </span>
-                </div>
+                <date-time-picker data="reportSchedule.reportEndDate" property="reportSchedule.reportEndDate"
+                        date-picker-id="reportSchedule.reportEndDate"></date-time-picker>
             </div>
         </div>
         <div class="col-lg-4">
             <div class="form-group">
                 <label for="startDate" translate>admin.reports.schedule.filterStartDate</label>
                 <span class="required-asterisk">*</span>
-                <div class="input-group" id="filterStartDate">
-                    <input type="text" class="form-control" name="filterStartDate"
-                            datepicker-popup="{{'common.defaultDatePickerFormat' | translate}}" ng-model="reportSchedule.filterStartDate"
-                            is-open="opened.openedFilterStart" close-on-date-selection="true" show-button-bar="true" on-open-focus="false"
-                            close-text="Close" />
-                    <span class="input-group-btn">
-                                <button type="button" class="btn btn-default"
-                                        ng-click="opened.openedFilterStart = !opened.openedFilterStart">
-                                    <i class="fa fa-calendar"></i>
-                                </button>
-                            </span>
-                </div>
+                <date-time-picker data="reportSchedule.filterStartDate" property="reportSchedule.filterStartDate"
+                        date-picker-id="reportSchedule.filterStartDate"></date-time-picker>
             </div>
             <div class="form-group">
                 <label for="endDate" translate>admin.reports.schedule.filterEndDate</label>
                 <span class="required-asterisk">*</span>
-                <div class="input-group" id="filterEndDate">
-                    <input type="text" class="form-control" name="filterEndDate"
-                            datepicker-popup="{{'common.defaultDatePickerFormat' | translate}}" ng-model="reportSchedule.filterEndDate"
-                            is-open="opened.openedFilterEnd" close-on-date-selection="true" show-button-bar="true" on-open-focus="false"
-                            close-text="Close" />
-                    <span class="input-group-btn">
-                                <button type="button" class="btn btn-default" ng-click="opened.openedFilterEnd = !opened.openedFilterEnd">
-                                    <i class="fa fa-calendar"></i>
-                                </button>
-                            </span>
-                </div>
+                <date-time-picker data="reportSchedule.filterEndDate" property="reportSchedule.filterEndDate"
+                        date-picker-id="reportSchedule.filterEndDate"></date-time-picker>
             </div>
             <div class="form-group">
                 <label for="outputFormat" translate>admin.reports.schedule.outputFormat</label>
