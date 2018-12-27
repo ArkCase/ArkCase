@@ -95,7 +95,6 @@ angular.module('admin').controller('Admin.SequenceManagementPartsModalController
 
             $scope.addNew = function () {
                 var selectedSequence = $scope.showAddPartsModalParams.selectedSequence;
-                //params.sequencePart = sequencePart;
                 var params = {};
                 params.isEdit = false;
                 params.config = $scope.config;
@@ -170,8 +169,10 @@ angular.module('admin').controller('Admin.SequenceManagementPartsModalController
                     var itemExist = _.find(sequenceConfig[reqIndex].sequenceParts, function (sequence) {
                         return selectedSequence.sequencePartName === sequence.sequencePartName;
                     });
-                    if (itemExist === undefined && reqIndex !== undefined) {
-                        sequenceConfig[reqIndex].sequenceParts.push(selectedSequence);
+                    var index = sequenceConfig[reqIndex].sequenceParts.indexOf(itemExist);
+
+                    if (itemExist !== undefined && reqIndex !== undefined) {
+                        sequenceConfig[reqIndex].sequenceParts[index] = selectedSequence;
                         $scope.save(sequenceConfig, reqIndex);
                     } else {
                         DialogService.alert($translate.instant('admin.application.sequenceManagementParts.config.message'));
@@ -197,9 +198,6 @@ angular.module('admin').controller('Admin.SequenceManagementPartsModalController
                 });
 
                 deleteSequence(sequenceConfig, reqIndex);
-                var reqIndex;
-
-
                 reloadGrid(sequenceConfig[reqIndex]);
                 $rootScope.$broadcast("reloadParentConfig", sequenceConfig);
             };
@@ -223,14 +221,5 @@ angular.module('admin').controller('Admin.SequenceManagementPartsModalController
                 $scope.sequencePartType = $scope.selectedItem.key;
                 $scope.sequencePartsCurrentlySelected[$scope.selectedItem.key] = true;
             };
-
-            /*
-                $scope.deleteRow = function(rowEntity) {
-                    var sequenceConfig = angular.copy($scope.gridOptions.data);
-                    _.remove(sequenceConfig, function(item) {
-                        return item.sequenceName === rowEntity.sequenceName;
-                    });
-                    deleteSequence(sequenceConfig);
-                };*/
 
         }]);

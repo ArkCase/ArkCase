@@ -7,15 +7,12 @@ angular.module('admin').controller('Admin.SequenceManagementPartsModalConfigCont
 
         $scope.sequence = params.sequence;
         $scope.sequencePart = {};
-        if (params.isEdit) {
+        $scope.isEdit = params.isEdit;
+        if ($scope.isEdit) {
             $scope.sequencePart = params.selectedSequencePart;
             $scope.sequencePart.sequencePartName = params.selectedSequencePart.sequencePartName;
         }
         $scope.selectedItem = {};
-        // $scope.sequenceName = $scope.sequence.sequenceName;
-        // $scope.sequenceDescription = $scope.sequence.sequenceDescription;
-        //$scope.sequenceStatus = $scope.sequence.sequenceStatus;
-        //TODO: Fix sequenceDescription
 
         $scope.sequencePartsCurrentlySelected = {};
         $scope.sequencePartType = {};
@@ -42,7 +39,6 @@ angular.module('admin').controller('Admin.SequenceManagementPartsModalConfigCont
         });
 
         $scope.onClickOk = function () {
-            //$scope.holidays.holidayDate = $filter('date')($scope.holidays.holidayDate, "yyyy-MM-dd");
             var object = {};
             object.sequencePartType = $scope.selectedItem.key;
             object.sequencePartName = $scope.sequencePart.sequencePartName;
@@ -52,8 +48,6 @@ angular.module('admin').controller('Admin.SequenceManagementPartsModalConfigCont
             object.sequenceFillBlanks = $scope.sequencePart.sequenceFillBlanks;
             object.sequenceArbitraryText = $scope.sequencePart.sequenceArbitraryText;
             object.sequenceObjectPropertyName = $scope.sequencePart.sequenceObjectPropertyName;
-
-
             $modalInstance.close(object);
         };
 
@@ -69,6 +63,4 @@ angular.module('admin').controller('Admin.SequenceManagementPartsModalConfigCont
                 }
             });
         };
-
-
     }]);

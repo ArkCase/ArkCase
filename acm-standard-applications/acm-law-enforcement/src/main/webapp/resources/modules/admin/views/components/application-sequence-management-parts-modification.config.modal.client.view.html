@@ -1,24 +1,26 @@
 <div class="modal-header">
-    <h3><span translate>admin.application.sequenceManagement.config.title</span></h3>
+    <h3><span translate>admin.application.sequenceManagementParts.config.modal.title</span></h3>
 </div>
 <div class="modal-body">
-    <form name="holidayForm">
+    <form name="sequenceManagementPartForm">
         <div class="row">
             <div class="col-sm-12 form-group">
-                <label for="sequenceName" translate>admin.application.sequenceManagement.config.grid.sequenceName</label>
+                <label for="sequenceName" translate>admin.application.sequenceManagementParts.config.modal.sequencePartName</label>
                 <span class="required-asterisk">*</span><br />
-                <input type="text" id="sequenceName" name="holidayName" ng-model="sequencePart.sequencePartName"
+                <input type="text" id="sequenceName" name="sequencePartName" ng-model="sequencePart.sequencePartName"
+                        ng-disabled="{{isEdit}}"
                         class="input-md form-control"
-                        placeholder="{{'admin.application.sequenceManagement.config.placeholder.name' | translate}}" required>
+                        placeholder="{{'admin.application.sequenceManagementParts.config.modal.placeholders.sequencePartName' | translate}}"
+                        required>
             </div>
         </div>
         <div class="row">
             <div class="col-sm-12 form-group">
-                <label for="sequenceDescription" translate>admin.application.sequenceManagement.config.grid.sequenceDescription</label>
+                <label for="sequenceDescription" translate>admin.application.sequenceManagementParts.config.modal.sequencePartType</label>
                 <span class="required-asterisk">*</span><br />
                 <select id="sequenceDescription" class="input-md form-control" ng-model="selectedItem" ng-change="showRequiredFields()"
                         ng-options="sequencePart.key for sequencePart in sequenceParts track by sequencePart.key" required="required"
-                        placeholder="{{ 'admin.application.sequenceManagement.config.placeholder.description' | translate }}">
+                        placeholder="{{ 'admin.application.sequenceManagementParts.config.modal.placeholders.sequencePartType' | translate }}">
 
                 </select>
             </div>
@@ -29,7 +31,8 @@
                 <span class="required-asterisk">*</span><br />
                 <input type="number" id="sequencePartAutoincrementStartNumber" name="autoincrementStartNumber"
                         ng-model="sequencePart.sequenceStartNumber" class="input-md form-control" min="0"
-                        placeholder="{{'admin.application.sequenceManagement.config.placeholder.name' | translate}}" required>
+                        placeholder="{{'admin.application.sequenceManagementParts.config.modal.placeholders.autoincrement.startNumber' | translate}}"
+                        required>
             </div>
         </div>
 
@@ -39,7 +42,8 @@
                 <span class="required-asterisk">*</span><br />
                 <input type="number" id="sequencePartAutoincrementIncrementSize" name="autoincrementIncrementSize"
                         ng-model="sequencePart.sequenceIncrementSize" class="input-md form-control" min="0"
-                        placeholder="{{'admin.application.sequenceManagement.config.placeholder.name' | translate}}" required>
+                        placeholder="{{'admin.application.sequenceManagementParts.config.modal.placeholders.autoincrement.incrementSize' | translate}}"
+                        required>
             </div>
         </div>
 
@@ -49,7 +53,8 @@
                 <span class="required-asterisk">*</span><br />
                 <input type="number" id="sequencePartAutoincrementNumberLength" name="autoincrementNumberLength"
                         ng-model="sequencePart.sequenceNumberLength" class="input-md form-control" min="0"
-                        placeholder="{{'admin.application.sequenceManagement.config.placeholder.name' | translate}}" required>
+                        placeholder="{{'admin.application.sequenceManagementParts.config.modal.placeholders.autoincrement.numberLength' | translate}}"
+                        required>
             </div>
         </div>
 
@@ -65,7 +70,8 @@
             <div class="col-sm-12 form-group">
                 <label for="sequencePartArbitraryText" translate>admin.application.sequenceManagementParts.config.arbitraryText.text</label>
                 <input type="text" id="sequencePartArbitraryText" class="input-md form-control"
-                        ng-model="sequencePart.sequenceArbitraryText">
+                        ng-model="sequencePart.sequenceArbitraryText"
+                        placeholder="{{'admin.application.sequenceManagementParts.config.modal.placeholders.arbitraryText' | translate}}">
             </div>
         </div>
 
@@ -74,14 +80,17 @@
                 <label for="sequencePartObjectPropertyName"
                         translate>admin.application.sequenceManagementParts.config.objectProperty.name</label>
                 <input type="text" id="sequencePartObjectPropertyName" class="input-md form-control"
-                        ng-model="sequencePart.sequenceObjectPropertyName">
+                        ng-model="sequencePart.sequenceObjectPropertyName"
+                        placeholder="{{'admin.application.sequenceManagementParts.config.modal.placeholders.objectProperty' | translate}}">
             </div>
         </div>
 
         <div class="row" ng-if="sequencePartsCurrentlySelected['DATE']">
             <div class="col-sm-12 form-group">
                 <label for="sequencePartDateFormat" translate>admin.application.sequenceManagementParts.config.date.text</label>
-                <input type="date" id="sequencePartDateFormat" class="input-md form-control" ng-model="sequencePart.sequenceDateFormat">
+                <input type="text" id="sequencePartDateFormat" class="input-md form-control" ng-model="sequencePart.sequenceDateFormat"
+                        placeholder="{{'admin.application.sequenceManagementParts.config.modal.placeholders.date' | translate}}"
+                        ng-change="isValidDate(sequencePart.sequenceDateFormat)">
             </div>
         </div>
 
@@ -89,10 +98,10 @@
 </div>
 <div class="modal-footer">
     <button type="button" class="btn btn-default" ng-click="onClickCancel()" translate>
-        admin.application.holiday.cancel
+        admin.application.sequenceManagementParts.config.modal.cancel
     </button>
-    <button type="button" class="btn btn-primary" ng-click="onClickOk()" ng-disabled="holidayForm.$invalid">
-        <span translate>admin.application.holiday.save</span>
+    <button type="button" class="btn btn-primary" ng-click="onClickOk()" ng-disabled="sequenceManagementPartForm.$invalid">
+        <span> admin.application.sequenceManagementParts.config.modal.save</span>
     </button>
 </div>
 

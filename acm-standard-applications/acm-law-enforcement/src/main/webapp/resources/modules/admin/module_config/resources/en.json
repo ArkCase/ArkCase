@@ -691,7 +691,12 @@
                     "description": "Enter Sequence Description"
                 },
                 "modal": {
-                    "sequenceEnabled": "Sequence Enabled"
+                    "title": "Add/Edit Sequence",
+                    "sequenceName": "Sequence Name",
+                    "sequenceDescription": "Sequence Description",
+                    "sequenceEnabled": "Sequence Enabled",
+                    "cancel": "Cancel",
+                    "save": "Save"
                 }
             },
             "sequenceManagementParts.config": {
@@ -711,10 +716,29 @@
                     "name": "Object property name"
                 },
                 "date": {
-                    "text": "Select date"
+                    "text": "Date Format (ex: ddMMyyyHHmmss)"
                 },
                 "arbitraryText": {
-                    "text": "Enter arbitrary text"
+                    "text": "Arbitrary text"
+                },
+                "modal": {
+                    "title": "Add/Edit Sequence Part",
+                    "sequencePartName": "Sequence Part Name",
+                    "sequencePartType": "Sequence Part Type",
+                    "cancel": "Cancel",
+                    "save": "Save",
+                    "placeholders": {
+                        "autoincrement": {
+                            "startNumber": "Select or enter start number",
+                            "incrementSize": "Select or enter increment size",
+                            "numberLength": "Select or enter number length"
+                        },
+                        "arbitraryText": "Enter arbitrary text",
+                        "objectProperty": "Enter object property",
+                        "date": "Enter Date Format (ex: ddMMyyyHHmmss)",
+                        "sequencePartName": "Enter sequence part name",
+                        "sequencePartType": "Select part type"
+                    }
                 }
             },
             "login.config": {

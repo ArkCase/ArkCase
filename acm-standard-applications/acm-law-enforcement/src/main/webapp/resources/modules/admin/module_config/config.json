@@ -1008,7 +1008,8 @@
                     "name": "sequenceName",
                     "displayName": "admin.application.sequenceManagement.config.grid.sequenceName",
                     "visible": true,
-                    "headerCellFilter": "translate"
+                    "headerCellFilter": "translate",
+                    "cellClass": "ui-grid-cell-contents-auto"
                 },
                 {
                     "name": "sequenceDescription",
