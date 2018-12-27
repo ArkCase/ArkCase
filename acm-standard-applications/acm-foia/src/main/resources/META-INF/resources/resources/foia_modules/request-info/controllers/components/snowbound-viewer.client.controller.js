@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('request-info').controller('RequestInfo.SnowBoundViewer', [ '$rootScope', '$scope', '$sce', '$timeout', '$interval', 'UtilService', 'LookupService', 'ArkCaseCrossWindowMessagingService', function($rootScope, $scope, $sce, $timeout, $interval, Util, LookupService, ArkCaseSnowboundMessagingService) {
+angular.module('request-info').controller('RequestInfo.SnowBoundViewer', [ '$rootScope', '$scope', '$sce', '$timeout', '$interval', 'UtilService', 'LookupService', 'ArkCaseCrossWindowMessagingService', function($rootScope, $scope, $sce, $timeout, $interval, Util, LookupService, ArkCaseCrossWindowMessagingService) {
     var SNOWBOUND_TIMEOUT = 100; // This delay prevents multiple snowboud requests
 
     $scope.$on('change-viewer-document', showDocument);
