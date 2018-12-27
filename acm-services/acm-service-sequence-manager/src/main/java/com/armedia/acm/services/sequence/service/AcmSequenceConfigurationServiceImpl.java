@@ -3,7 +3,7 @@ package com.armedia.acm.services.sequence.service;
 import com.armedia.acm.files.AbstractConfigurationFileEvent;
 import com.armedia.acm.files.ConfigurationFileChangedEvent;
 import com.armedia.acm.objectonverter.ObjectConverter;
-import com.armedia.acm.services.sequence.event.AcmSequenceConfigurationChangedEvent;
+import com.armedia.acm.services.sequence.event.AcmSequenceEventPublisher;
 import com.armedia.acm.services.sequence.exception.AcmSequenceException;
 import com.armedia.acm.services.sequence.model.AcmSequenceConfiguration;
 
@@ -11,8 +11,6 @@ import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.context.ApplicationListener;
 
 import java.io.File;
@@ -30,19 +28,18 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  *
  */
 public class AcmSequenceConfigurationServiceImpl
-        implements AcmSequenceConfigurationService, ApplicationListener<AbstractConfigurationFileEvent>, InitializingBean,
-        ApplicationEventPublisherAware
+        implements AcmSequenceConfigurationService, ApplicationListener<AbstractConfigurationFileEvent>, InitializingBean
 {
 
     private final Logger log = LoggerFactory.getLogger(getClass());
-
-    private ApplicationEventPublisher applicationEventPublisher;
 
     private ObjectConverter objectConverter;
 
     private File sequenceConfigurationFile;
 
     private ReadWriteLock lock = new ReentrantReadWriteLock();
+
+    private AcmSequenceEventPublisher sequenceEventPublisher;
 
     /*
      * (non-Javadoc)
@@ -109,7 +106,7 @@ public class AcmSequenceConfigurationServiceImpl
         {
             try
             {
-                applicationEventPublisher.publishEvent(new AcmSequenceConfigurationChangedEvent(getSequenceConfiguration()));
+                getSequenceEventPublisher().publishSequenceConfigurationUpdatedEvent(getSequenceConfiguration());
             }
             catch (Exception e)
             {
@@ -125,7 +122,7 @@ public class AcmSequenceConfigurationServiceImpl
     @Override
     public void afterPropertiesSet() throws Exception
     {
-        applicationEventPublisher.publishEvent(new AcmSequenceConfigurationChangedEvent(getSequenceConfiguration()));
+        getSequenceEventPublisher().publishSequenceConfigurationUpdatedEvent(getSequenceConfiguration());
     }
 
     /**
@@ -162,16 +159,21 @@ public class AcmSequenceConfigurationServiceImpl
         this.sequenceConfigurationFile = sequenceConfigurationFile;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.springframework.context.ApplicationEventPublisherAware#setApplicationEventPublisher(org.springframework.
-     * context.ApplicationEventPublisher)
+    /**
+     * @return the sequenceEventPublisher
      */
-    @Override
-    public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher)
+    public AcmSequenceEventPublisher getSequenceEventPublisher()
     {
-        this.applicationEventPublisher = applicationEventPublisher;
+        return sequenceEventPublisher;
+    }
 
+    /**
+     * @param sequenceEventPublisher
+     *            the sequenceEventPublisher to set
+     */
+    public void setSequenceEventPublisher(AcmSequenceEventPublisher sequenceEventPublisher)
+    {
+        this.sequenceEventPublisher = sequenceEventPublisher;
     }
 
 }
