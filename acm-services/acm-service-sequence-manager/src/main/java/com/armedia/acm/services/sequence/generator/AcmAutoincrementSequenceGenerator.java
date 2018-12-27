@@ -127,12 +127,13 @@ public class AcmAutoincrementSequenceGenerator implements AcmSequenceGenerator
             Map<String, Long> autoincrementPartNameToValue) throws AcmSequenceException
     {
 
+        boolean resetFlag = false;
         for (AcmSequenceReset sequenceReset : sequenceResetList)
         {
             LocalDateTime currentDateTime = LocalDateTime.now();
             if (currentDateTime.isAfter(sequenceReset.getResetDate()))
             {
-
+                resetFlag = true;
                 // Remove unused sequences from registry, not needed anymore since we reset the respective sequence
                 getSequenceService().removeSequenceRegistry(sequenceReset.getSequenceName(), sequenceReset.getSequencePartName());
 
@@ -156,7 +157,7 @@ public class AcmAutoincrementSequenceGenerator implements AcmSequenceGenerator
         }
 
         // Save sequence entity with reset value
-        AcmSequenceEntity savedSequenceEntity = getSequenceService().updateSequenceEntity(sequenceEntity, sequencePart, true);
+        AcmSequenceEntity savedSequenceEntity = getSequenceService().updateSequenceEntity(sequenceEntity, sequencePart, resetFlag);
 
         autoincrementPartNameToValue.put(sequencePart.getSequencePartName(), savedSequenceEntity.getSequencePartValue());
         return savedSequenceEntity.getSequencePartValue();

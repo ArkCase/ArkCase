@@ -65,6 +65,9 @@
     <bean id="acmSequenceConfigurationService" class="com.armedia.acm.services.sequence.service.AcmSequenceConfigurationServiceImpl">
         <property name="sequenceConfigurationFile" ref="sequenceConfigurationFile"/>
         <property name="objectConverter" ref="objectConverter"/>
+        <property name="sequenceEventPublisher" ref="acmSequenceEventPublisher"/>
     </bean>
+    
+    <bean id="acmSequenceEventPublisher" class="com.armedia.acm.services.sequence.event.AcmSequenceEventPublisher"/>
 
 </beans>
