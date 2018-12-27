@@ -90,8 +90,6 @@ angular.module('admin').controller('Admin.SequenceManagement',
         }
 
         $scope.showAddPartsModal= function(sequence) {
-
-
             var params = {};
             params.config = $scope.config.sequenceManagementPartsConfig;
             params.sequenceParts = sequence.sequenceParts;
@@ -136,17 +134,19 @@ angular.module('admin').controller('Admin.SequenceManagement',
 
             var entity = angular.copy(rowEntity);
             showModal(entity, true).then(function(data) {
-                var element = data;
-
-                var itemExist = _.find($scope.gridOptions.data, function(sequence) {
-                    return (element.sequenceName === sequence.sequenceName && element.sequenceDescription === element.sequenceDescription
-                        && element.sequenceEnabled === sequence.sequenceEnabled);
+                var itemExist = _.find($scope.gridOptions.data, function (sequence) {
+                    return entity.sequenceName === sequence.sequenceName;
                 });
 
-                if (!itemExist) {
-                    rowEntity.sequenceName = data.sequenceName;
-                    rowEntity.sequenceDescription = data.sequenceDescription;
-                    rowEntity.sequenceEnabled = data.sequenceEnabled;
+                var index = $scope.gridOptions.data.indexOf(itemExist);
+                var invalidName = false;
+                for (var i = 0; i < $scope.gridOptions.data.length; i++) {
+                    if ($scope.gridOptions.data[i].sequenceName === rowEntity.sequenceName && index !== i) {
+                        invalidName = true;
+                    }
+                }
+                if (!invalidName) {
+                    $scope.gridOptions.data[index] = data;
                     $scope.save($scope.gridOptions.data);
                 } else {
                     DialogService.alert($translate.instant('admin.application.sequenceManagementParts.config.message'));
