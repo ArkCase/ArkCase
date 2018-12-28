@@ -95,6 +95,7 @@ angular.module('admin').controller('Admin.SequenceManagement',
             params.sequenceParts = sequence.sequenceParts;
             params.sequences = $scope.gridOptions.data;
             params.selectedSequence = sequence;
+            params.sequenceName = sequence.sequenceName;
             var modalInstance = $modal.open({
                 animation: true,
                 templateUrl: 'modules/admin/views/components/application-sequence-management-parts.config.modal.client.view.html',

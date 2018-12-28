@@ -2,9 +2,9 @@
 
 angular.module('admin').controller('Admin.SequenceManagementPartsModalController',
     ['$rootScope', '$scope', '$modal', 'params', 'Helper.UiGridService', 'MessageService', 'UtilService', 'Dialog.BootboxService', '$translate',
-        '$modalInstance', 'Object.LookupService', 'Admin.SequenceManagementService',
+        '$modalInstance', 'Object.LookupService', 'Admin.SequenceManagementService', 'Admin.SequenceManagementResetService',
         function ($rootScope, $scope, $modal, params, HelperUiGridService, MessageService, Util, DialogService, $translate,
-                  $modalInstance, ObjectLookupService, AdminSequenceManagementService) {
+                  $modalInstance, ObjectLookupService, AdminSequenceManagementService, SequenceManagementResetService) {
 
             var gridHelper = new HelperUiGridService.Grid({
                 scope: $scope
@@ -12,8 +12,11 @@ angular.module('admin').controller('Admin.SequenceManagementPartsModalController
 
             $scope.config = angular.copy(params.config);
             $scope.showAddPartsModalParams = angular.copy(params);
+            $scope.sequenceName = angular.copy(params.sequenceName);
+
             gridHelper.addButton($scope.config, "edit");
             gridHelper.addButton($scope.config, "delete");
+            gridHelper.addButton($scope.config, "reset", "fa fa-cog", "resetSequencePart","isResetDisabled");
             gridHelper.setColumnDefs($scope.config);
             gridHelper.setBasicOptions($scope.config);
             gridHelper.disableGridScrolling($scope.config);
@@ -209,6 +212,30 @@ angular.module('admin').controller('Admin.SequenceManagementPartsModalController
                 $scope.sequencePartsCurrentlySelected = {};
                 $scope.sequencePartType = $scope.selectedItem.key;
                 $scope.sequencePartsCurrentlySelected[$scope.selectedItem.key] = true;
+            };
+
+            $scope.isResetDisabled = function(rowEntity){
+                return rowEntity.sequencePartType !== "AUTOINCREMENT";
+            };
+
+            $scope.resetSequencePart = function(rowEntity) {
+                var params = {};
+                params.sequenceName = $scope.sequenceName;
+                params.sequencePartName = rowEntity.sequencePartName;
+                params.config = $scope.config.sequenceManagementResetConfig;
+                var modalInstance = $modal.open({
+                    animation: true,
+                    templateUrl: 'modules/admin/views/components/application-sequence-management-reset.modal.client.view.html',
+                    controller: 'Admin.SequenceManagementResetController',
+                    size: 'lg',
+                    backdrop: 'static',
+                    resolve: {
+                        params: function() {
+                            return params;
+                        }
+                    }
+                });
+                return modalInstance.result;
             };
 
         }]);
