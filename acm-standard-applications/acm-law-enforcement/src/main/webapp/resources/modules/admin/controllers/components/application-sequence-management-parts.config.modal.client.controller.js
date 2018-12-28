@@ -12,8 +12,6 @@ angular.module('admin').controller('Admin.SequenceManagementPartsModalController
 
             $scope.config = angular.copy(params.config);
             $scope.showAddPartsModalParams = angular.copy(params);
-            console.log($scope.config);
-
             gridHelper.addButton($scope.config, "edit");
             gridHelper.addButton($scope.config, "delete");
             gridHelper.setColumnDefs($scope.config);
@@ -45,15 +43,6 @@ angular.module('admin').controller('Admin.SequenceManagementPartsModalController
                     }
                 });
             };
-            //     $scope.loadPage();
-            //  var deleteHoliday = function(holidayConf) {
-            //      var holidayConfiguration = {
-            //          "includeWeekends": $scope.holidaySchedule.includeWeekends,
-            //          "holidays": holidayConf
-            //      };
-            //      saveConfig(holidayConfiguration);
-            //  };
-
             $scope.save = function (sequenceConfig, index) {
                 saveConfig(sequenceConfig, index);
 

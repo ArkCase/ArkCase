@@ -7,7 +7,8 @@
             <div class="col-sm-12 form-group">
                 <label for="sequenceName" translate>admin.application.sequenceManagement.config.modal.sequenceName</label><span
                     class="required-asterisk">*</span><br />
-                <input type="text" id="sequenceName" name="sequenceName" ng-model="sequence.sequenceName" class="input-md form-control"
+                <input type="text" id="sequenceName" name="sequenceName" ng-model="sequence.sequenceName" ng-disabled="{{isEdit}}"
+                        class="input-md form-control"
                         placeholder="{{'admin.application.sequenceManagement.config.placeholder.name' | translate}}" required>
             </div>
         </div>

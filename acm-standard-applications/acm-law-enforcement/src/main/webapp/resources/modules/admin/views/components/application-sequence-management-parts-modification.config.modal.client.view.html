@@ -25,12 +25,12 @@
                 </select>
             </div>
         </div>
-        <div class="row" ng-if="sequencePartsCurrentlySelected['AUTOINCREMENT']">
+        <div class="row" ng-if="sequencePartsCurrentlySelected['AUTOINCREMENT']" ng-pattern="allNumbersExceptZero">
             <div class="col-sm-12 form-group">
                 <label for="sequencePartAutoincrementStartNumber" translate>admin.application.sequenceManagementParts.config.autoincrement.startNumber</label>
                 <span class="required-asterisk">*</span><br />
                 <input type="number" id="sequencePartAutoincrementStartNumber" name="autoincrementStartNumber"
-                        ng-model="sequencePart.sequenceStartNumber" class="input-md form-control" min="0"
+                        ng-model="sequencePart.sequenceStartNumber" class="input-md form-control" ng-pattern="allNumbersExceptZero"
                         placeholder="{{'admin.application.sequenceManagementParts.config.modal.placeholders.autoincrement.startNumber' | translate}}"
                         required>
             </div>
@@ -41,7 +41,7 @@
                 <label for="sequencePartAutoincrementIncrementSize" translate>admin.application.sequenceManagementParts.config.autoincrement.incrementSize</label>
                 <span class="required-asterisk">*</span><br />
                 <input type="number" id="sequencePartAutoincrementIncrementSize" name="autoincrementIncrementSize"
-                        ng-model="sequencePart.sequenceIncrementSize" class="input-md form-control" min="0"
+                        ng-model="sequencePart.sequenceIncrementSize" ng-pattern="allNumbersExceptZero" class="input-md form-control"
                         placeholder="{{'admin.application.sequenceManagementParts.config.modal.placeholders.autoincrement.incrementSize' | translate}}"
                         required>
             </div>
@@ -52,7 +52,7 @@
                 <label for="sequencePartAutoincrementNumberLength" translate>admin.application.sequenceManagementParts.config.autoincrement.numberLength</label>
                 <span class="required-asterisk">*</span><br />
                 <input type="number" id="sequencePartAutoincrementNumberLength" name="autoincrementNumberLength"
-                        ng-model="sequencePart.sequenceNumberLength" class="input-md form-control" min="0"
+                        ng-model="sequencePart.sequenceNumberLength" ng-pattern="allNumbersExceptZero" class="input-md form-control"
                         placeholder="{{'admin.application.sequenceManagementParts.config.modal.placeholders.autoincrement.numberLength' | translate}}"
                         required>
             </div>
@@ -97,11 +97,11 @@
     </form>
 </div>
 <div class="modal-footer">
-    <button type="button" class="btn btn-default" ng-click="onClickCancel()" translate>
-        admin.application.sequenceManagementParts.config.modal.cancel
+    <button type="button" class="btn btn-default" ng-click="onClickCancel()">
+        <span translate>admin.application.sequenceManagementParts.config.modal.cancel </span>
     </button>
     <button type="button" class="btn btn-primary" ng-click="onClickOk()" ng-disabled="sequenceManagementPartForm.$invalid">
-        <span> admin.application.sequenceManagementParts.config.modal.save</span>
+        <span translate> admin.application.sequenceManagementParts.config.modal.save</span>
     </button>
 </div>
 
