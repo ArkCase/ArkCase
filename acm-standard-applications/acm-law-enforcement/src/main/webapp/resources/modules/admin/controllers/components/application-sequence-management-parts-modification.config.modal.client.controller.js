@@ -63,4 +63,6 @@ angular.module('admin').controller('Admin.SequenceManagementPartsModalConfigCont
                 }
             });
         };
+
+        $scope.allNumbersExceptZero = '^(?!-?0)[-]?\\d{1,4}$';
     }]);
