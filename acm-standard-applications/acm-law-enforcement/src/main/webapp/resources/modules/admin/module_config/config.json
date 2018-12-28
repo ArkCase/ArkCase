@@ -1022,6 +1022,13 @@
                     "displayName": "admin.application.sequenceManagement.config.grid.sequenceEnabled",
                     "visible": true,
                     "headerCellFilter": "translate"
+                },
+                {
+                    "name": "act",
+                    "cellEditableCondition": false,
+                    "width": "70",
+                    "headerCellTemplate": "<span></span>",
+                    "cellTemplate": ""
                 }
             ],
             "paginationPageSizes": [
@@ -1050,6 +1057,13 @@
                         "displayName": "admin.application.sequenceManagementParts.config.grid.sequenceDescription",
                         "visible": true,
                         "headerCellFilter": "translate"
+                    },
+                    {
+                        "name": "act",
+                        "cellEditableCondition": false,
+                        "width": "70",
+                        "headerCellTemplate": "<span></span>",
+                        "cellTemplate": ""
                     }
                 ],
                 "paginationPageSizes": [
@@ -1090,6 +1104,13 @@
                             "displayName": "admin.application.sequenceManagementReset.grid.repeatPeriod",
                             "visible": true,
                             "headerCellFilter": "translate"
+                        },
+                        {
+                            "name": "act",
+                            "cellEditableCondition": false,
+                            "width": "70",
+                            "headerCellTemplate": "<span></span>",
+                            "cellTemplate": ""
                         }
                     ],
                     "paginationPageSizes": [
