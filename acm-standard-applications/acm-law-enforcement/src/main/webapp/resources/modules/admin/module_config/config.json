@@ -1058,7 +1058,48 @@
                     20,
                     50
                 ],
-                "paginationPageSize": 20
+                "paginationPageSize": 20,
+                "sequenceManagementResetConfig": {
+                    "id": "sequenceManagementResetConfig",
+                    "title": "admin.application.sequenceManagementReset.title",
+                    "type": "grid",
+                    "enableFiltering": false,
+                    "configurable": true,
+                    "columnDefs": [
+                        {
+                            "name": "resetDate",
+                            "displayName": "admin.application.sequenceManagementReset.grid.startResetDate",
+                            "visible": true,
+                            "headerCellFilter": "translate"
+                        },
+                        {
+                            "name": "resetExecutedDate",
+                            "displayName": "admin.application.sequenceManagementReset.grid.executedDate",
+                            "visible": true,
+                            "headerCellFilter": "translate"
+                        },
+                        {
+                            "name": "resetRepeatableFlag",
+                            "displayName": "admin.application.sequenceManagementReset.grid.repeat",
+                            "visible": true,
+                            "headerCellFilter": "translate",
+                            "cellTemplate": "<span align='center'>{{row.entity.resetRepeatableFlag ? 'Enabled' : 'Disabled'}}</span>"
+                        },
+                        {
+                            "name": "resetRepeatablePeriod",
+                            "displayName": "admin.application.sequenceManagementReset.grid.repeatPeriod",
+                            "visible": true,
+                            "headerCellFilter": "translate"
+                        }
+                    ],
+                    "paginationPageSizes": [
+                        5,
+                        10,
+                        20,
+                        50
+                    ],
+                    "paginationPageSize": 20
+                }
             }
         }
     ],
