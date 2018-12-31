@@ -63,12 +63,7 @@
             "enableEditingLdapUsers": "Enable managing users and groups",
             "syncEnabled": "Enable synchronize users",
             "cancel": "Cancel",
-            "ok": "Save",
-            "confirmAuthUserPassword": "Confirm Auth User Password",
-            "groupControlGroup": "Group Control Group",
-            "id.validationMessage": "The ID can only consist of letters, numbers or dots.",
-            "userControlGroup": "User Control Group",
-            "userPrefix": "Username Prefix"
+            "ok": "Save"
         },
         "menus": {
             "leftnav.item": "Admin"
@@ -101,11 +96,7 @@
             "changedGroupSearchPageFilter": "Enter filter including sort-attribute for all changed groups",
             "groupSearchPageFilter": "Enter filter including sort-attribute (e.g. (&(objectClass=group)(gidNumber>=%s)))",
             "enableEditingLdapUsers": "Check if managing users and groups to your DS is allowed",
-            "syncEnabled": "Check if synchronize users to your DS is allowed",
-            "confirmAuthUserPassword": "Confirm password for authentication user",
-            "groupControlGroup": "Fill in the group control group for SAML environment.",
-            "userControlGroup": "Fill in the user control group for SAML environment.",
-            "userPrefix": "Fill in the username prefix for SAML environment."
+            "syncEnabled": "Check if synchronize users to your DS is allowed"
         },
         "security.ldapConfig.messages": {
             "delete.success": "Successfully deleted row.",
