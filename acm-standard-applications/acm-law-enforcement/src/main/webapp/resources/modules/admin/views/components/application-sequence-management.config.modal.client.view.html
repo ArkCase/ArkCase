@@ -1,0 +1,40 @@
+<div class="modal-header">
+    <h3><span translate>admin.application.sequenceManagement.config.modal.title</span></h3>
+</div>
+<div class="modal-body">
+    <form name="sequenceManagementForm">
+        <div class="row">
+            <div class="col-sm-12 form-group">
+                <label for="sequenceName" translate>admin.application.sequenceManagement.config.modal.sequenceName</label><span
+                    class="required-asterisk">*</span><br />
+                <input type="text" id="sequenceName" name="sequenceName" ng-model="sequence.sequenceName" ng-disabled="{{isEdit}}"
+                        class="input-md form-control"
+                        placeholder="{{'admin.application.sequenceManagement.config.placeholder.name' | translate}}" required>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12 form-group">
+                <label for="sequenceDescription"
+                        translate>admin.application.sequenceManagement.config.modal.sequenceDescription</label><span
+                    class="required-asterisk">*</span><br />
+                <input type="text" id="sequenceDescription" class="input-md form-control" ng-model="sequence.sequenceDescription"
+                        placeholder="{{ 'admin.application.sequenceManagement.config.placeholder.description' | translate }}" required>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12 form-group">
+                <label for="sequenceEnabled" translate>admin.application.sequenceManagement.config.modal.sequenceEnabled</label>
+                <input type="checkbox" id="sequenceEnabled" class="input-md" ng-model="sequence.sequenceEnabled">
+            </div>
+        </div>
+    </form>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-default" ng-click="onClickCancel()" translate>
+        admin.application.sequenceManagement.config.modal.cancel
+    </button>
+    <button type="button" class="btn btn-primary" ng-click="onClickOk()" ng-disabled="sequenceManagementForm.$invalid">
+        <span translate>admin.application.sequenceManagement.config.modal.save</span>
+    </button>
+</div>
+
