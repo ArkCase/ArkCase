@@ -32,7 +32,6 @@ import com.armedia.acm.data.AcmEntity;
 import com.armedia.acm.data.event.AcmSequenceEvent;
 import com.armedia.acm.services.sequence.annotation.AcmSequence;
 import com.armedia.acm.services.sequence.annotation.AcmSequenceAnnotationReader;
-import com.armedia.acm.services.sequence.exception.AcmSequenceException;
 import com.armedia.acm.services.sequence.generator.AcmSequenceGeneratorManager;
 
 import org.apache.commons.beanutils.PropertyUtils;
@@ -43,7 +42,6 @@ import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.support.MessageBuilder;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -109,7 +107,7 @@ public class AcmSequenceHandler implements AcmBeforeInsertListener, ApplicationL
                         }
                     }
                 }
-                catch (AcmSequenceException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e)
+                catch (Exception e)
                 {
                     log.error("Error setting sequence on [{}] [{}]", object.getClass().getSimpleName(), annotatedField.getName(), e);
                     propagateSequenceMessage(object, annotatedField.getName());
