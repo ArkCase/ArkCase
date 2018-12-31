@@ -31,12 +31,14 @@
             "addNewDirectory": "Add New Directory",
             "editRecord": "Edit Record",
             "id": "ID",
+            "id.validationMessage": "The ID can only consist of letters, numbers or dots.",
             "directoryType": "Select directory server",
             "ldapUrl": "LDAP Url",
             "base": "Base",
             "directoryName": "Directory Name",
             "authUserDn": "Auth User Dn",
             "authUserPassword": "Auth User Password",
+            "confirmAuthUserPassword": "Confirm Auth User Password",
             "userSearchBase": "Users Search Base",
             "userSearchFilter": "User Search Filter",
             "allUsersFilter": "All Users Filter",
@@ -49,6 +51,9 @@
             "userIdAttributeName": "User Id Attribute Name",
             "userDomain": "User domain",
             "userDomainNote": "(Note: Fill in the user domain for SSO scenario. For LDAP authentication leave it blank)",
+            "userPrefix": "Username Prefix",
+            "userControlGroup": "User Control Group",
+            "groupControlGroup": "Group Control Group",
             "syncPageSize": "Sync Page Size",
             "groupSearchFilter": "Group Search Filter",
             "changedGroupSearchFilter": "Changed Group Search Filter",
@@ -58,13 +63,12 @@
             "enableEditingLdapUsers": "Enable managing users and groups",
             "syncEnabled": "Enable synchronize users",
             "cancel": "Cancel",
-            "ok": "OK",
+            "ok": "Save",
             "confirmAuthUserPassword": "Confirm Auth User Password",
             "groupControlGroup": "Group Control Group",
             "id.validationMessage": "The ID can only consist of letters, numbers or dots.",
             "userControlGroup": "User Control Group",
             "userPrefix": "Username Prefix"
-
         },
         "menus": {
             "leftnav.item": "Admin"
@@ -75,6 +79,7 @@
             "base": "Enter base domain component (e.g. dc=example,dc=com)",
             "authUserDn": "Enter user DN for authentication (e.g. cn=John Doe,ou=users,dc=example,dc=com)",
             "authUserPassword": "Enter password for authentication user",
+            "confirmAuthUserPassword": "Confirm password for authentication user",
             "userSearchBase": "Enter users search base (e.g. ou=users)",
             "userSearchFilter": "Enter search filter for single user (e.g. (&(objectClass=person)(uid=%s))",
             "allUsersFilter": "Enter search filter for all users (e.g. (objectClass=person))",
@@ -86,6 +91,9 @@
             "groupSearchFilterForUser": "Enter search filter for user in group (e.g. (&(objectClass=group)(member=%s)))",
             "userIdAttributeName": "Enter attribute used for user id (e.g. 'uid')",
             "userDomain": "Enter user domain",
+            "userPrefix": "Fill in the username prefix for SAML environment.",
+            "userControlGroup": "Fill in the user control group for SAML environment.",
+            "groupControlGroup": "Fill in the group control group for SAML environment.",
             "syncPageSize": "Enter paging size",
             "groupSearchFilter": "Enter search filter for groups (e.g. (objectClass=group))",
             "groupsSortingAttribute": "Enter attribute for sorting groups (e.g. 'gidNumber')",
@@ -111,7 +119,7 @@
         },
         "security.ldapConfig.dialog": {
             "cancel": "Cancel",
-            "ok": "OK",
+            "ok": "Save",
             "confirm.delete": {
                 "deleteBtn": "Delete",
                 "cancelBtn": "Cancel",
@@ -369,7 +377,7 @@
             }
         },
         "security.emailTemplates": {
-            "title": "Email Templates",
+            "title": "Email Configuration",
             "table.title": "Email Templates",
             "settings": {
                 "emailCaseFile.label": "Email Receiver CaseFile",
@@ -513,6 +521,10 @@
                     "success": "Schedule deleted successfully",
                     "error": "Failed to delete schedule"
                 },
+                "update": {
+                    "success": "Schedule updated successfully",
+                    "error": "Failed to update schedule"
+                },
                 "createScheduleSuccess": "Schedule created successfully",
                 "createScheduleFailure": "Failed to create schedule",
                 "enterFutureDate": "Enter a start time in the future",
@@ -523,12 +535,8 @@
                 "filterStartDate": "Result Filter Start Date",
                 "filterEndDate": "Result Filter End Date",
                 "outputFormat": "Select Output Format",
-                "cancel": "Cancel",
                 "submit": "Submit",
-                "update": {
-                    "error": "Failed to update schedule.",
-                    "success": "Schedule updated successfully"
-                }
+                "cancel": "Cancel"
             }
         },
         "forms.title": "Forms",
@@ -649,10 +657,10 @@
                 "delete.success": "Lookup is successfully deleted",
                 "delete.error": "Lookup can't be deleted",
                 "lookupExists.error": "Lookup with this name already exists",
-                "dialog":{
-                    "deleteEntryConfirm" :"Delete Entry",
-                    "deleteLookupConfirm" : "Delete Lookup",
-                    "cancel" : "Cancel"
+                "dialog": {
+                    "deleteEntryConfirm": "Delete Entry",
+                    "deleteLookupConfirm": "Delete Lookup",
+                    "cancel": "Cancel"
                 }
             },
             "module.config": {
@@ -668,7 +676,7 @@
                 "apply": "Apply",
                 "modal.title": "Information",
                 "modal.info": "Settings will take effect after refresh",
-                "modal.ok": "OK"
+                "modal.ok": "Confirm"
             },
             "formsType.config": {
                 "title": "Forms Type Configuration",
@@ -677,7 +685,7 @@
                 "apply": "Apply",
                 "modal.title": "Information",
                 "modal.info": "Settings will take effect after refresh",
-                "modal.ok": "OK"
+                "modal.ok": "Confirm"
             },
             "login.config": {
                 "title": "Login Configuration",
@@ -693,7 +701,9 @@
                 "historyDays.label": "Keep Audit and Notification events (in days)",
                 "inform": "Setting successfully saved",
                 "apply.label": "Apply",
-                "dialog.OKBtn": "Confirm"
+                "dialog": {
+                    "OKBtn": "Confirm"
+                }
             },
             "holiday": {
                 "title": "Holiday Schedule",
@@ -736,10 +746,12 @@
         },
         "branding.logo.header.title": "Header",
         "branding.logo.login.title": "Login Page",
+        "branding.logo.email.title": "Email",
         "branding.logo.warningMessage": "Only PNG format is allowed. Recommended ratio is 1 to 4. Minimum height is 50px.",
         "branding.logo.btn": {
             "chooseHeader": "Choose Header logo",
             "chooseLogin": "Choose Login logo",
+            "chooseEmail": "Choose Email logo",
             "saveFiles": "Save"
         },
         "branding": {
@@ -792,7 +804,7 @@
                 "btnOk.text": "Upload Template"
             },
             "templates.version.modal": {
-                "btnOk.text": "OK"
+                "btnOk.text": "Confirm"
             },
             "mergefields": "Merge Fields Configuration",
             "mergefields.saveMergeFields": "Save",
@@ -835,7 +847,7 @@
                 "dialog": {
                     "testConnection": "Test Connection",
                     "cancel": "Cancel",
-                    "ok": "OK"
+                    "ok": "Save Configuration"
                 },
                 "guidelineMessage": {
                     "repositoryId": "For Alfresco: leave cmis.repositoryId blank. For Documentum: set cmis.repositoryId to the docbase name."
@@ -949,11 +961,11 @@
             }
         },
         "stateOfArkcase": {
-            "title": "State of Arkcase",
+            "title": "State of ArkCase",
             "pickDate": "Pick Date",
             "btn.download": "Download",
             "datePicker": {
-                "clear": "clear",
+                "clear": "Clear",
                 "current": "Current day",
                 "close": "Close"
             }
