@@ -29,6 +29,7 @@ angular.module('request-info').config([ '$stateProvider', function($stateProvide
         resolve: {
             translatePartialLoader: [ '$translate', '$translatePartialLoader', function($translate, $translatePartialLoader) {
                 $translatePartialLoader.addPart('common');
+                $translatePartialLoader.addPart('core');
                 $translatePartialLoader.addPart('request-info');
                 $translatePartialLoader.addPart('requests');
                 $translatePartialLoader.addPart('cases');
