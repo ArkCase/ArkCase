@@ -4880,6 +4880,7 @@ angular
                             });
                         /*Get send email configuration*/
                         EmailSenderConfigurationService.isEmailSenderAllowDocuments().then(function(res) {
+                            DocTree.treeConfig.emailSendConfiguration = {};
                             DocTree.treeConfig.emailSendConfiguration.allowDocuments = res.data;
                         });
 

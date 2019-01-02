@@ -57,6 +57,7 @@ public interface FOIAConstants
     public String EMAIL_FOOTER_ATTACHMENT = "Powered by ArkCase, Enterprise Case Management platform, http://www.arkcase.com";
 
     public String EMAIL_RELEASE_SUBJECT = "FOIA Request Complete";
+    public String EMAIL_RESPONSE_FOLDER_INSTALLMENT_SUBJECT = "A new installment of documents is now available for Request";
     public String EMAIL_RELEASE_BODY = "Your %s with number %s has been released and the document(s) is ready for download on the portal. Please go to the check status page at this <a href=\"%s\">link</a>.";
     public String PORTAL_REQUEST_STATUS_RELATIVE_URL = "/../foia/portal/requestStatus?requestNumber=%s";
     public String NEW_REQUEST_TITLE = "NEW REQUEST";

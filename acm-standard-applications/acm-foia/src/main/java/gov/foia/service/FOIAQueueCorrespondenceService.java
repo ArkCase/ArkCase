@@ -206,7 +206,7 @@ public class FOIAQueueCorrespondenceService
                 documentGeneratorService.getReportSubstitutions(request));
     }
 
-    private void emailCorrespondenceLetter(FOIARequest request, FOIAFile letter) throws Exception
+    public void emailCorrespondenceLetter(FOIARequest request, FOIAFile letter) throws Exception
     {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String emailAddress = extractRequestorEmailAddress(request.getOriginator().getPerson());
