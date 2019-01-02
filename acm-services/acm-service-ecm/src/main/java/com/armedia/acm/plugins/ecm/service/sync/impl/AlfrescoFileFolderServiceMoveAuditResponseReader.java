@@ -58,10 +58,10 @@ public class AlfrescoFileFolderServiceMoveAuditResponseReader implements EcmAudi
     protected final List<String> typesToIncludeInResults = Arrays.asList(EcmFileConstants.ECM_SYNC_NODE_TYPE_DOCUMENT);
 
     @Override
-    public EcmEvent buildEcmEvent(JSONObject createEvent)
+    public EcmEvent buildEcmEvent(JSONObject moveEvent)
     {
         // this reader only cares about documents
-        JSONObject values = createEvent.getJSONObject("values");
+        JSONObject values = moveEvent.getJSONObject("values");
 
         String alfrescoContentType = values.getString("/auditarkcasemovefrom/move/derived/source-node-type");
         String arkcaseContentType = alfrescoTypeToArkCaseType.get(alfrescoContentType);
@@ -69,11 +69,11 @@ public class AlfrescoFileFolderServiceMoveAuditResponseReader implements EcmAudi
 
         if (includeThisNode)
         {
-            EcmEvent retval = new EcmEvent(createEvent);
+            EcmEvent retval = new EcmEvent(moveEvent);
             retval.setEcmEventType(EcmEventType.MOVE);
-            retval.setUserId(createEvent.getString("user"));
+            retval.setUserId(moveEvent.getString("user"));
 
-            long auditId = createEvent.getLong("id");
+            long auditId = moveEvent.getLong("id");
             retval.setAuditId(auditId);
 
             retval.setNodeType(alfrescoTypeToArkCaseType.get(alfrescoContentType));
