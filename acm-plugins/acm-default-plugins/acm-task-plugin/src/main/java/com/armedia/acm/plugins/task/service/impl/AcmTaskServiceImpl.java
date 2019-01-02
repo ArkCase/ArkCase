@@ -610,6 +610,7 @@ public class AcmTaskServiceImpl implements AcmTaskService
         }
     }
     @Override
+    @Transactional
     public List<AcmTask> startReviewDocumentsWorkflow(AcmTask task, String businessProcessName, Authentication authentication, List<MultipartFile> filesToUpload)
             throws AcmTaskException, IOException, AcmCreateObjectFailedException, AcmUserActionFailedException
     {
@@ -627,11 +628,8 @@ public class AcmTaskServiceImpl implements AcmTaskService
         {
 
             for (MultipartFile file : filesToUpload) {
-                AcmMultipartFile f = new AcmMultipartFile(file.getName(), file.getOriginalFilename(),
-                        file.getContentType(), file.isEmpty(), file.getSize(), file.getBytes(),
-                        file.getInputStream(), true);
 
-                EcmFile temp = ecmFileService.upload(file.getOriginalFilename(), "uploadFileType", "fileLang", f, authentication,
+                EcmFile temp = ecmFileService.upload(file.getOriginalFilename(), "Other", file, authentication,
                         folder.getCmisFolderId(), businessProcess.getObjectType(), businessProcess.getId());
                 uploadedFiles.add(temp);
             }
