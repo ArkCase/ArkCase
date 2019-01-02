@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('admin').controller('Admin.SequenceManagementResetController', [ '$scope', '$rootScope', '$modal', '$modalInstance', 'params', 'Helper.UiGridService', 'Admin.SequenceManagementResetService', 'MessageService', function($scope, $rootScope, $modal, $modalInstance, params, HelperUiGridService, SequenceManagementResetService, MessageService) {
+angular.module('admin').controller('Admin.SequenceManagementResetController', [ '$scope', '$rootScope', '$modal', '$modalInstance', 'params', 'Helper.UiGridService', 'Admin.SequenceManagementResetService', 'MessageService', 'Util.DateService', function($scope, $rootScope, $modal, $modalInstance, params, HelperUiGridService, SequenceManagementResetService, MessageService, UtilDateService) {
 
     var gridHelper = new HelperUiGridService.Grid({
         scope: $scope
@@ -17,7 +17,13 @@ angular.module('admin').controller('Admin.SequenceManagementResetController', [ 
 
     function reloadGrid() {
         SequenceManagementResetService.getSequenceReset(params.sequenceName, params.sequencePartName).then(function(response){
-            $scope.gridOptions.data = response.data;
+            var resetList = [];
+            _.forEach(response.data, function (item) {
+               item.resetDate = item.resetDate ? moment.utc(item.resetDate).local().format(UtilDateService.defaultDateLongTimeFormat) : "";
+               item.resetExecutedDate = item.resetExecutedDate ? moment.utc(item.resetExecutedDate).local().format(UtilDateService.defaultDateLongTimeFormat) : "";
+               resetList.push(item);
+            });
+            $scope.gridOptions.data = resetList;
         });
     };
 
