@@ -8,7 +8,6 @@
                 <label for="reportFile" translate>admin.reports.schedule.selectReportType</label>
                 <select ng-model="reportSchedule.reportFile" ng-options="item.value as item.label for item in reportTypesList" size="10"
                         class="form-control" id="reportFile">
-
                 </select>
             </div>
         </div>
@@ -23,8 +22,8 @@
             <div class="form-group">
                 <label for="startDate" translate>admin.reports.schedule.startDate</label>
                 <span class="required-asterisk">*</span>
-                <date-time-picker data="reportSchedule.reportStartDate" property="reportStartDate"
-                        date-picker-id="reportStartDate"></date-time-picker>
+                <date-time-picker data="reportSchedule.reportStartDate" property="reportSchedule.reportStartDate"
+                        date-picker-id="reportSchedule.reportStartDate"></date-time-picker>
             </div>
             <div class="form-group">
                 <label for="endDate" translate>admin.reports.schedule.endDate</label>
@@ -37,13 +36,13 @@
                 <label for="startDate" translate>admin.reports.schedule.filterStartDate</label>
                 <span class="required-asterisk">*</span>
                 <date-time-picker data="reportSchedule.filterStartDate" property="reportSchedule.filterStartDate"
-                        date-picker-id="reportSchedule.filterStartDate"></date-time-picker>
+                        date-picker-id="reportSchedule.filterStartDate" time-format-disabled="true"></date-time-picker>
             </div>
             <div class="form-group">
                 <label for="endDate" translate>admin.reports.schedule.filterEndDate</label>
                 <span class="required-asterisk">*</span>
                 <date-time-picker data="reportSchedule.filterEndDate" property="reportSchedule.filterEndDate"
-                        date-picker-id="reportSchedule.filterEndDate"></date-time-picker>
+                        date-picker-id="reportSchedule.filterEndDate" time-format-disabled="true"></date-time-picker>
             </div>
             <div class="form-group">
                 <label for="outputFormat" translate>admin.reports.schedule.outputFormat</label>

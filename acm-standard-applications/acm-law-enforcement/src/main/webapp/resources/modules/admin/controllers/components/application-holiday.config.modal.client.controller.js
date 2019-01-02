@@ -1,10 +1,14 @@
 'use strict';
 
-angular.module('admin').controller('Admin.HolidayModalController', [ '$scope', '$modalInstance', 'params', 'Util.DateService', '$filter', function($scope, $modalInstance, params, UtilDateService, $filter) {
+angular.module('admin').controller('Admin.HolidayModalController', ['$scope', '$modalInstance', 'params', 'Util.DateService', '$filter', 'UtilService', function ($scope, $modalInstance, params, UtilDateService, $filter, UtilService) {
 
         
     $scope.holidays = params.holidays;
-    $scope.holidays.holidayDate = new Date($scope.holidays.holidayDate);
+    if (!UtilService.isEmpty($scope.holidays.holidayDate)) {
+        $scope.holidays.holidayDate = new Date($scope.holidays.holidayDate);
+    } else {
+        $scope.holidays.holidayDate = new Date();
+    }
     $scope.onClickCancel = function() {
         $modalInstance.dismiss('Cancel');
     };
