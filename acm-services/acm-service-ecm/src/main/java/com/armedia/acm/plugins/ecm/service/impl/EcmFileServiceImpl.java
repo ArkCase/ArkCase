@@ -87,7 +87,14 @@ import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Properties;
+import java.util.UUID;
 
 /**
  * Created by armdev on 5/1/14.
@@ -1368,7 +1375,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     @Transactional
     @AcmAcquireAndReleaseObjectLock(acmObjectArgIndex = 3, objectType = "FOLDER", lockType = "WRITE", lockChildObjects = false, unlockChildObjects = false)
     @AcmAcquireAndReleaseObjectLock(objectIdArgIndex = 0, objectType = "FILE", lockType = "DELETE")
-    public EcmFile moveFileInAkcase(Long fileId, Long targetObjectId, String targetObjectType, Long dstFolderId)
+    public EcmFile moveFileInArkcase(Long fileId, Long targetObjectId, String targetObjectType, Long dstFolderId)
             throws AcmUserActionFailedException, AcmObjectNotFoundException, AcmCreateObjectFailedException
     {
 
@@ -1532,7 +1539,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
 
     @Override
     @AcmAcquireAndReleaseObjectLock(objectIdArgIndex = 0, objectType = "FILE", lockType = "DELETE")
-    public void deleteFileInArkcase(Long objectId, Long parentId, String parentType)
+    public void deleteFileInArkcase(Long objectId)
             throws AcmUserActionFailedException, AcmObjectNotFoundException
     {
         EcmFile file = getEcmFileDao().find(objectId);
@@ -1548,7 +1555,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         }
         catch (PersistenceException e)
         {
-            log.error("Could not delete file {} ", e.getMessage(), e);
+            log.error("Could not delete file with id [{}], {} ", file.getId(), e.getMessage(), e);
             throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_DELETE_FILE, EcmFileConstants.OBJECT_FILE_TYPE,
                     file.getId(), "Could not delete file", e);
         }

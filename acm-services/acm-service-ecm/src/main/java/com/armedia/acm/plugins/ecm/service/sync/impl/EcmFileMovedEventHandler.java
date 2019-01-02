@@ -62,8 +62,7 @@ public class EcmFileMovedEventHandler implements ApplicationListener<EcmEvent>
                     EcmFile arkCaseFile = lookupArkCaseFile(ecmEvent.getNodeId(), sourceParentFolder.getId());
                     if (arkCaseFile != null)
                     {
-                        getFileService().deleteFileInArkcase(arkCaseFile.getId(), sourceParentFolder.getId(),
-                                sourceParentFolder.getObjectType());
+                        getFileService().deleteFileInArkcase(arkCaseFile.getId());
                         log.info("Deleted file with CMIS ID [{}]", ecmEvent.getNodeId());
                     }
                 }
@@ -85,14 +84,12 @@ public class EcmFileMovedEventHandler implements ApplicationListener<EcmEvent>
                 if (container == null)
                 {
                     log.debug("Can't find container for the new file with id {}, exiting.", ecmEvent.getNodeId());
-                    // return;
                 }
                 String cmisRepositoryId = getFolderService().getCmisRepositoryId(targetParentFolder);
                 Document cmisDocument = lookupCmisDocument(cmisRepositoryId, ecmEvent.getNodeId());
                 if (cmisDocument == null)
                 {
                     log.error("No document to be loaded - exiting.");
-                    // return;
                 }
                 EcmFile addedToArkCase = null;
                 try
@@ -132,7 +129,7 @@ public class EcmFileMovedEventHandler implements ApplicationListener<EcmEvent>
                 Long targetObjectId = targetParentFolder.getId();
                 Long dstFolderId = targetParentFolder.getId();
 
-                EcmFile movedFile = getFileService().moveFileInAkcase(fileId, targetObjectId, ecmEvent.getTargetParentNodeType(),
+                EcmFile movedFile = getFileService().moveFileInArkcase(fileId, targetObjectId, ecmEvent.getTargetParentNodeType(),
                         dstFolderId);
                 log.info("Moved file to ArkCase with CMIS ID [{}] and ArkCase ID [{}]", ecmEvent.getNodeId(), movedFile.getId());
                 return movedFile;
@@ -172,7 +169,7 @@ public class EcmFileMovedEventHandler implements ApplicationListener<EcmEvent>
         }
         catch (Exception e)
         {
-            log.error("Could not lookup CMIS document for node with id {}", nodeId);
+            log.warn("Could not lookup CMIS document for node with id {}", nodeId);
             return null;
         }
     }
@@ -187,7 +184,7 @@ public class EcmFileMovedEventHandler implements ApplicationListener<EcmEvent>
         }
         catch (AcmObjectNotFoundException e)
         {
-            log.debug("No container in ArkCase for folder: {}", parentFolderId);
+            log.warn("No container in ArkCase for folder: {}", parentFolderId);
             return null;
         }
     }
@@ -202,7 +199,7 @@ public class EcmFileMovedEventHandler implements ApplicationListener<EcmEvent>
         }
         catch (NoResultException e)
         {
-            log.debug("No such file in ArkCase: {}", nodeId);
+            log.warn("No such file in ArkCase: {}", nodeId);
             return null;
         }
     }
@@ -217,7 +214,7 @@ public class EcmFileMovedEventHandler implements ApplicationListener<EcmEvent>
         }
         catch (NoResultException e)
         {
-            log.debug("No such folder in ArkCase: {}", folderCmisId);
+            log.warn("No such folder in ArkCase: {}", folderCmisId);
             return null;
         }
     }

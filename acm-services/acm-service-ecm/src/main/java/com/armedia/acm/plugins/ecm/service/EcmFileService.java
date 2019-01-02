@@ -305,7 +305,7 @@ public interface EcmFileService
     EcmFile moveFile(Long fileId, Long targetObjectId, String targetObjectType, AcmFolder folder)
             throws AcmUserActionFailedException, AcmObjectNotFoundException, AcmCreateObjectFailedException;
 
-    EcmFile moveFileInAkcase(Long fileId, Long targetObjectId, String targetObjectType, Long dstFolderId)
+    EcmFile moveFileInArkcase(Long fileId, Long targetObjectId, String targetObjectType, Long dstFolderId)
             throws AcmUserActionFailedException, AcmObjectNotFoundException, AcmCreateObjectFailedException;
 
     void deleteFile(Long fileId) throws AcmUserActionFailedException, AcmObjectNotFoundException;
@@ -316,7 +316,7 @@ public interface EcmFileService
 
     void deleteFile(Long fileId, Long parentId, String parentType) throws AcmUserActionFailedException, AcmObjectNotFoundException;
 
-    void deleteFileInArkcase(Long fileId, Long parentId, String parentType) throws AcmUserActionFailedException, AcmObjectNotFoundException;
+    void deleteFileInArkcase(Long fileId) throws AcmUserActionFailedException, AcmObjectNotFoundException;
 
     EcmFile renameFile(Long fileId, String newFileName) throws AcmUserActionFailedException, AcmObjectNotFoundException;
 
