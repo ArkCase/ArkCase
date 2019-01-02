@@ -8,7 +8,7 @@ angular.module('admin').controller('Admin.SequenceManagementResetDetailsControll
     if($scope.data.newReset){
         $scope.resetStartDate = "";
     }else{
-        var date = $scope.data.resetDate ? moment($scope.data.resetDate).format(UtilDateService.defaultDateTimeFormat) : "";
+        var date = $scope.data.resetDate ? moment($scope.data.resetDate).format(UtilDateService.defaultDateLongTimeFormat) : "";
         $scope.resetStartDate = new Date(date);    
     }
     

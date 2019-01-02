@@ -2,7 +2,7 @@ package com.armedia.acm.services.sequence.exception;
 
 /*-
  * #%L
- * ACM Service: Billing
+ * ACM Service: Sequence Manager
  * %%
  * Copyright (C) 2014 - 2018 ArkCase LLC
  * %%
