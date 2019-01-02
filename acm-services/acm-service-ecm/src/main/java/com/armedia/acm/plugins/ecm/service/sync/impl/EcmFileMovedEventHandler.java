@@ -15,15 +15,19 @@ import com.armedia.acm.plugins.ecm.model.sync.EcmEventType;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
+import com.armedia.acm.web.api.MDCConstants;
 
 import org.apache.chemistry.opencmis.client.api.CmisObject;
 import org.apache.chemistry.opencmis.client.api.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 import org.springframework.context.ApplicationListener;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 
 import javax.persistence.NoResultException;
+
+import java.util.UUID;
 
 /**
  * @author ivana.shekerova on 12/21/2018.
@@ -44,81 +48,111 @@ public class EcmFileMovedEventHandler implements ApplicationListener<EcmEvent>
 
         getAuditPropertyEntityAdapter().setUserId(ecmEvent.getUserId());
 
-        AcmFolder sourceParentFolder = lookupArkCaseFolder(ecmEvent.getSourceParentNodeId());
-        // source parent folder is in arkcase
-        if (sourceParentFolder != null)
-        {
-            AcmFolder targetParentFolder = lookupArkCaseFolder(ecmEvent.getTargetParentNodeId());
-            // check if target folder is in arkcase
-            if (targetParentFolder != null)
-            {
-                return moveFileIfTargetParentFolderIsInArkcase(ecmEvent, sourceParentFolder, targetParentFolder);
-            }
-            else
-            {
-                // delete the file, since target folder is not in arkcase
-                try
-                {
-                    EcmFile arkCaseFile = lookupArkCaseFile(ecmEvent.getNodeId(), sourceParentFolder.getId());
-                    if (arkCaseFile != null)
-                    {
-                        getFileService().deleteFileInArkcase(arkCaseFile.getId());
-                        log.info("Deleted file with CMIS ID [{}]", ecmEvent.getNodeId());
-                    }
-                }
-                catch (AcmUserActionFailedException | AcmObjectNotFoundException e)
-                {
-                    log.error("Could not delete file with CMIS ID [{}] to ArkCase: {}", ecmEvent.getNodeId(), e.getMessage(), e);
-                }
-            }
+        MDC.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, ecmEvent.getUserId());
+        MDC.put(MDCConstants.EVENT_MDC_REQUEST_ID_KEY, UUID.randomUUID().toString());
 
-        }
-        else
+        // AcmFolder sourceParentFolder = lookupArkCaseFolder(ecmEvent.getSourceParentNodeId());
+        // // source parent folder is in arkcase
+        // if (sourceParentFolder != null)
+        // {
+        // AcmFolder targetParentFolder = lookupArkCaseFolder(ecmEvent.getTargetParentNodeId());
+        // // check if target folder is in arkcase
+        // if (targetParentFolder != null)
+        // {
+        // return moveFile(ecmEvent, sourceParentFolder, targetParentFolder);
+        // }
+        // else
+        // {
+        // deleteFile(ecmEvent, sourceParentFolder);
+        //
+        // }
+        //
+        // }
+        // else
+        // {
+        // // source parent folder is not in arkcase
+        // // check if target folder is in arkcase, if it is then upload file
+        // AcmFolder targetParentFolder = lookupArkCaseFolder(ecmEvent.getTargetParentNodeId());
+        // if (targetParentFolder != null)
+        // {
+        // return uploadFile(ecmEvent, targetParentFolder);
+        // }
+        // }
+
+        AcmFolder sourceParentFolder = lookupArkCaseFolder(ecmEvent.getSourceParentNodeId());
+        AcmFolder targetParentFolder = lookupArkCaseFolder(ecmEvent.getTargetParentNodeId());
+
+        if (sourceParentFolder != null && targetParentFolder != null)
         {
-            // source parent folder is not in arkcase
-            // check if target folder is in arkcase, if it is then upload file
-            AcmFolder targetParentFolder = lookupArkCaseFolder(ecmEvent.getTargetParentNodeId());
-            if (targetParentFolder != null)
-            {
-                AcmContainer container = lookupArkCaseContainer(targetParentFolder.getId());
-                if (container == null)
-                {
-                    log.debug("Can't find container for the new file with id {}, exiting.", ecmEvent.getNodeId());
-                }
-                String cmisRepositoryId = getFolderService().getCmisRepositoryId(targetParentFolder);
-                Document cmisDocument = lookupCmisDocument(cmisRepositoryId, ecmEvent.getNodeId());
-                if (cmisDocument == null)
-                {
-                    log.error("No document to be loaded - exiting.");
-                }
-                EcmFile addedToArkCase = null;
-                try
-                {
-                    addedToArkCase = getFileService().upload(
-                            ecmEvent.getNodeName(),
-                            findFileType(cmisDocument),
-                            "Document",
-                            cmisDocument.getContentStream().getStream(),
-                            cmisDocument.getContentStreamMimeType(),
-                            ecmEvent.getNodeName(),
-                            new UsernamePasswordAuthenticationToken(ecmEvent.getUserId(), ecmEvent.getUserId()),
-                            targetParentFolder.getCmisFolderId(),
-                            container.getContainerObjectType(),
-                            container.getContainerObjectId(),
-                            targetParentFolder.getCmisRepositoryId(),
-                            cmisDocument);
-                }
-                catch (AcmCreateObjectFailedException | AcmUserActionFailedException e)
-                {
-                    log.error("Could not add file with CMIS ID [{}] to ArkCase: {}", ecmEvent.getNodeId(), e.getMessage(), e);
-                }
-                return addedToArkCase;
-            }
+            return moveFile(ecmEvent, sourceParentFolder, targetParentFolder);
+        }
+        else if (sourceParentFolder != null && targetParentFolder == null)
+        {
+            deleteFile(ecmEvent, sourceParentFolder);
+        }
+        else if (sourceParentFolder == null && targetParentFolder != null)
+        {
+            return uploadFile(ecmEvent, targetParentFolder);
         }
         return null;
     }
 
-    private EcmFile moveFileIfTargetParentFolderIsInArkcase(EcmEvent ecmEvent, AcmFolder sourceParentFolder, AcmFolder targetParentFolder)
+    private EcmFile uploadFile(EcmEvent ecmEvent, AcmFolder targetParentFolder)
+    {
+        AcmContainer container = lookupArkCaseContainer(targetParentFolder.getId());
+        if (container == null)
+        {
+            log.debug("Can't find container for the new file with id {}, exiting.", ecmEvent.getNodeId());
+        }
+        String cmisRepositoryId = getFolderService().getCmisRepositoryId(targetParentFolder);
+        Document cmisDocument = lookupCmisDocument(cmisRepositoryId, ecmEvent.getNodeId());
+        if (cmisDocument == null)
+        {
+            log.error("No document to be loaded - exiting.");
+        }
+        EcmFile addedToArkCase = null;
+        try
+        {
+            addedToArkCase = getFileService().upload(
+                    ecmEvent.getNodeName(),
+                    findFileType(cmisDocument),
+                    "Document",
+                    cmisDocument.getContentStream().getStream(),
+                    cmisDocument.getContentStreamMimeType(),
+                    ecmEvent.getNodeName(),
+                    new UsernamePasswordAuthenticationToken(ecmEvent.getUserId(), ecmEvent.getUserId()),
+                    targetParentFolder.getCmisFolderId(),
+                    container.getContainerObjectType(),
+                    container.getContainerObjectId(),
+                    targetParentFolder.getCmisRepositoryId(),
+                    cmisDocument);
+        }
+        catch (AcmCreateObjectFailedException | AcmUserActionFailedException e)
+        {
+            log.error("Could not add file with CMIS ID [{}] to ArkCase: {}", ecmEvent.getNodeId(), e.getMessage(), e);
+        }
+        return addedToArkCase;
+    }
+
+    private void deleteFile(EcmEvent ecmEvent, AcmFolder sourceParentFolder)
+    {
+        // delete the file, since target folder is not in arkcase
+        try
+        {
+            EcmFile arkCaseFile = lookupArkCaseFile(ecmEvent.getNodeId(), sourceParentFolder.getId());
+            if (arkCaseFile != null)
+            {
+                getFileService().deleteFileInArkcase(arkCaseFile.getId());
+                log.info("Deleted file with CMIS ID [{}]", ecmEvent.getNodeId());
+            }
+        }
+        catch (AcmUserActionFailedException | AcmObjectNotFoundException e)
+        {
+            log.error("Could not delete file with CMIS ID [{}] to ArkCase: {}", ecmEvent.getNodeId(), e.getMessage(), e);
+        }
+    }
+
+    private EcmFile moveFile(EcmEvent ecmEvent, AcmFolder sourceParentFolder, AcmFolder targetParentFolder)
     {
         EcmFile arkCaseFile = lookupArkCaseFile(ecmEvent.getNodeId(), sourceParentFolder.getId());
         if (arkCaseFile != null)
