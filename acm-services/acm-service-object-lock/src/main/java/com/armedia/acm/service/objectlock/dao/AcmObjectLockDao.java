@@ -30,6 +30,9 @@ package com.armedia.acm.service.objectlock.dao;
 import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.service.objectlock.model.AcmObjectLock;
 
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
 import javax.persistence.TemporalType;
@@ -56,6 +59,7 @@ public class AcmObjectLockDao extends AcmAbstractDao<AcmObjectLock>
         return AcmObjectLock.class;
     }
 
+    @Transactional(readOnly = true, propagation = Propagation.REQUIRES_NEW)
     public AcmObjectLock findLock(Long objectId, String objectType)
     {
         String queryText = "SELECT ol " +
