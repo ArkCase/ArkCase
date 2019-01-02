@@ -31,7 +31,7 @@
         </createTable>
     </changeSet>
 
-    <changeSet id="business-process-02-acm-business-process-table" author="stefan.sanevski" failOnError="false">
+    <changeSet id="business-process-02-acm-business-process-table" author="stefan.sanevski">
         <createTable tableName="acm_business_process_id">
             <column name="cm_seq_num" type="${idType}"/>
             <column name="cm_seq_name" type="VARCHAR(255)"/>
