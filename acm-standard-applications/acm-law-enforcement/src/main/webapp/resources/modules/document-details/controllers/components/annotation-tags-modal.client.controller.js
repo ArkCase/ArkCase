@@ -46,7 +46,7 @@ angular.module('document-details').controller('Document.AnnotationTagsModalContr
         function convertToKeyName(array) {
             if (!Utils.isArrayEmpty(array)) {
                 return array.map(function (item) {
-                    return {"key": item["key"], "name": item["value"]};
+                    return {"key": item["key"], "name": item["key"]};
                 });
             }
 
