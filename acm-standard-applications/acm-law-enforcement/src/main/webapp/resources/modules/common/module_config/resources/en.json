@@ -19,6 +19,7 @@
         "defaultDateFormat": "MM/DD/YYYY",
         "defaultTimeFormat": "hh:mm:ss",
         "defaultDateTimeFormat": "MM/DD/YYYY hh:mm",
+        "defaultDateLongTimeFormat": "MM/DD/YYYY HH:mm",
         "defaultDatePickerFormat": "MM/dd/yyyy",
         "defaultDateUIFormat": "MM/dd/yyyy",
         "defaultDateTimeUIFormat": "MM/dd/yyyy HH:mm"

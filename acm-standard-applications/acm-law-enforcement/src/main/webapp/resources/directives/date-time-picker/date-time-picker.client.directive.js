@@ -22,7 +22,7 @@ angular.module('directives').directive('dateTimePicker', ['moment', 'Util.DateSe
                 utcDate = moment.utc(UtilDateService.dateToIso($scope.dateInPicker)).format();
                 maxYear = moment(utcDate).add(1, 'years').toDate().getFullYear();
             } else {
-                $scope.dateInPicker = moment($scope.data).format(UtilDateService.defaultDateTimeFormat);
+                $scope.dateInPicker = moment($scope.data).format(UtilDateService.defaultDateLongTimeFormat);
                 minYear = $scope.data.getFullYear();
                 utcDate = moment.utc(UtilDateService.dateToIso($scope.data)).format();
                 maxYear = moment(utcDate).add(1, 'years').toDate().getFullYear();
@@ -46,7 +46,7 @@ angular.module('directives').directive('dateTimePicker', ['moment', 'Util.DateSe
             $scope.saveDate = function () {
                 $scope.toggleEditable();
                 var editedDate = $(comboField).combodate('getValue', null);
-                $scope.dateInPicker = moment(editedDate).format(UtilDateService.defaultDateTimeFormat);
+                $scope.dateInPicker = moment(editedDate).format(UtilDateService.defaultDateLongTimeFormat);
                 $scope.data = moment($scope.dateInPicker).toDate();
             };
 
@@ -61,7 +61,7 @@ angular.module('directives').directive('dateTimePicker', ['moment', 'Util.DateSe
                 if (UtilService.isEmpty($scope.data)) {
                     $scope.today = "";
                 } else {
-                    $scope.today = moment($scope.data).format(UtilDateService.defaultDateTimeFormat);
+                    $scope.today = moment($scope.data).format(UtilDateService.defaultDateLongTimeFormat);
                 }
             });
         }
