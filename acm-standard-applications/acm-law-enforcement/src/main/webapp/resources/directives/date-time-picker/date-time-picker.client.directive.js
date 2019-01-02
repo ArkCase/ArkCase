@@ -5,6 +5,7 @@ angular.module('directives').directive('dateTimePicker', ['moment', 'Util.DateSe
         scope: {
             data: '=',
             property: '@',
+            timeFormatDisabled: '@',
             datePickerId: '@',
             afterSave : '&onAfterSave'
         },
@@ -22,8 +23,12 @@ angular.module('directives').directive('dateTimePicker', ['moment', 'Util.DateSe
                 utcDate = moment.utc(UtilDateService.dateToIso($scope.dateInPicker)).format();
                 maxYear = moment(utcDate).add(1, 'years').toDate().getFullYear();
             } else {
-                $scope.dateInPicker = moment($scope.data).format(UtilDateService.defaultDateTimeFormat);
-                minYear = $scope.data.getFullYear();
+                if ($scope.timeFormatDisabled === "true") {
+                    $scope.dateInPicker = moment($scope.data).format(UtilDateService.defaultDateFormat);
+                } else {
+                    $scope.dateInPicker = moment($scope.data).format(UtilDateService.defaultDateTimeFormat);
+                }
+                minYear = $scope.data.getFullYear() - 50;
                 utcDate = moment.utc(UtilDateService.dateToIso($scope.data)).format();
                 maxYear = moment(utcDate).add(1, 'years').toDate().getFullYear();
             }
@@ -33,20 +38,36 @@ angular.module('directives').directive('dateTimePicker', ['moment', 'Util.DateSe
             };
 
             var comboField = element[0].children[1].firstElementChild;
-            $(comboField).combodate({
-                format: 'MM/DD/YYYY HH:mm',
-                template: 'MMM / DD / YYYY HH:mm',
-                minuteStep: 1,
-                minYear: minYear,
-                maxYear: maxYear,
-                smartDays: true,
-                value: $scope.dateInPicker
-            });
+            if ($scope.timeFormatDisabled === "true") {
+                $(comboField).combodate({
+                    format: 'MM/DD/YYYY',
+                    template: 'MMM / DD / YYYY',
+                    minuteStep: 1,
+                    minYear: minYear,
+                    maxYear: maxYear,
+                    smartDays: true,
+                    value: $scope.dateInPicker
+                });
+            } else {
+                $(comboField).combodate({
+                    format: 'MM/DD/YYYY HH:mm',
+                    template: 'MMM / DD / YYYY HH:mm',
+                    minuteStep: 1,
+                    minYear: minYear,
+                    maxYear: maxYear,
+                    smartDays: true,
+                    value: $scope.dateInPicker
+                });
+            }
 
             $scope.saveDate = function () {
                 $scope.toggleEditable();
                 var editedDate = $(comboField).combodate('getValue', null);
-                $scope.dateInPicker = moment(editedDate).format(UtilDateService.defaultDateTimeFormat);
+                if ($scope.timeFormatDisabled === "true") {
+                    $scope.dateInPicker = moment(editedDate).format(UtilDateService.defaultDateFormat);
+                } else {
+                    $scope.dateInPicker = moment(editedDate).format(UtilDateService.defaultDateTimeFormat);
+                }
                 $scope.data = moment($scope.dateInPicker).toDate();
             };
 
@@ -61,7 +82,11 @@ angular.module('directives').directive('dateTimePicker', ['moment', 'Util.DateSe
                 if (UtilService.isEmpty($scope.data)) {
                     $scope.today = "";
                 } else {
-                    $scope.today = moment($scope.data).format(UtilDateService.defaultDateTimeFormat);
+                    if ($scope.timeFormatDisabled === "true") {
+                        $scope.today = moment($scope.data).format(UtilDateService.defaultDateFormat)
+                    } else {
+                        $scope.today = moment($scope.data).format(UtilDateService.defaultDateTimeFormat);
+                    }
                 }
             });
         }
