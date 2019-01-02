@@ -40,12 +40,11 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Read Alfresco audit records from the Alfresco FileFolderService <code>move</code> method. Alfresco uses the
- * FileFolderService move method to move content files (but NOT to create folders, or thumbnails).
+ * Read Alfresco audit records from the Alfresco FileFolderService <code>moveFrom</code> method. Alfresco uses the
+ * FileFolderService move method to move content files (but NOT to move folders, or thumbnails).
  * <p>
  * For now, from the file/folder service we are interested only in moved content files. This reader ignores all other
- * new
- * content types.
+ * new content types.
  *
  * @author ivana.shekerova on 12/14/2018.
  */
@@ -78,8 +77,6 @@ public class AlfrescoFileFolderServiceMoveAuditResponseReader implements EcmAudi
 
             retval.setNodeType(alfrescoTypeToArkCaseType.get(alfrescoContentType));
 
-            // FileInfo[name=ArkCase - Infrastructure Team - Scrum - 2017-05-05.docx, isFolder=false,
-            // nodeRef=workspace:\/\/SpacesStore\/0af7fe58-885d-4f01-a9e6-0ebf994abb3f]
             String nodeInfo = values.getString("/auditarkcasemovefrom/move/out/a");
 
             String nodeId = extractNodeId(nodeInfo);
@@ -107,21 +104,5 @@ public class AlfrescoFileFolderServiceMoveAuditResponseReader implements EcmAudi
 
         return null;
 
-    }
-
-    private String extractNodeName(String nodeInfo)
-    {
-        int nameIdx = nodeInfo.indexOf("name=");
-        int startIdx = nameIdx + "name=".length();
-        int endIdx = nodeInfo.lastIndexOf(", isFolder");
-        return nodeInfo.substring(startIdx, endIdx);
-    }
-
-    private String extractNodeId(String nodeInfo)
-    {
-        int nodeRefIdx = nodeInfo.lastIndexOf("nodeRef=");
-        int startIdx = nodeRefIdx + "nodeRef=".length();
-        int endIdx = nodeInfo.lastIndexOf("]");
-        return nodeInfo.substring(startIdx, endIdx);
     }
 }
