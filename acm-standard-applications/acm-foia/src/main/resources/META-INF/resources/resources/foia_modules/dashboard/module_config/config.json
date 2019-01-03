@@ -241,8 +241,8 @@
             ]
         },
         {
-            "id": "myOverdueCases",
-            "title": "dashboard.widgets.myOverdueCases.title",
+            "id": "myOverdueRequests",
+            "title": "dashboard.widgets.myOverdueRequests.title",
             "configurable": true,
             "enableFiltering": false,
             "paginationPageSizes": [
@@ -255,14 +255,14 @@
                 {
                     "field": "alerts",
                     "displayName": "",
-                    "cellTemplate": "<div><a tooltip=\"{{'dashboard.widgets.myOverdueCases.table.overdue.tooltip' | translate}}\" tooltip-append-to-body=\"true\" tooltip-class=\"tooltip-overdue\"><i class=\"fa fa-exclamation-circle icon-overdue\"></i></a></div>",
+                    "cellTemplate": "<div><a tooltip=\"{{'dashboard.widgets.myOverdueRequests.table.overdue.tooltip' | translate}}\" tooltip-append-to-body=\"true\" tooltip-class=\"tooltip-overdue\"><i class=\"fa fa-exclamation-circle icon-overdue\"></i></a></div>",
                     "width": 40,
                     "enableSorting": false,
                     "enableColumnMenu": false
                 },
                 {
                     "name": "numDays",
-                    "displayName": "dashboard.widgets.myOverdueCases.numDays",
+                    "displayName": "dashboard.widgets.myOverdueRequests.numDays",
                     "headerCellFilter": "translate",
                     "width": 70,
                     "enableSorting": true
@@ -270,27 +270,27 @@
                 {
                     "name": "object_id_s",
                     "type": "number",
-                    "displayName": "dashboard.widgets.myOverdueCases.uniqueId",
-                    "cellTemplate": "<a href='#' ng-click='grid.appScope.myOverdueCases.onTopicClick(row)'>{{row.entity.object_id_s}}</a>",
+                    "displayName": "dashboard.widgets.myOverdueRequests.uniqueId",
+                    "cellTemplate": "<a href='#' ng-click='grid.appScope.myOverdueRequests.onTopicClick(row)'>{{row.entity.object_id_s}}</a>",
                     "headerCellFilter": "translate",
                     "enableSorting": true
                 },
                 {
                     "name": "title_parseable_lcs",
                     "type": "number",
-                    "displayName": "dashboard.widgets.myOverdueCases.topic",
-                    "cellTemplate": "<a href='#' ng-click='grid.appScope.myOverdueCases.onTopicClick(row)'>{{row.entity.title_parseable_lcs}}</a>",
+                    "displayName": "dashboard.widgets.myOverdueRequests.topic",
+                    "cellTemplate": "<a href='#' ng-click='grid.appScope.myOverdueRequests.onTopicClick(row)'>{{row.entity.title_parseable_lcs}}</a>",
                     "headerCellFilter": "translate"
                 },
                 {
                     "name": "request_status_lcs",
-                    "displayName": "dashboard.widgets.myOverdueCases.status",
+                    "displayName": "dashboard.widgets.myOverdueRequests.status",
                     "headerCellFilter": "translate",
                     "enableSorting": true
                 },
                 {
                     "name": "priority_lcs",
-                    "displayName": "dashboard.widgets.myOverdueCases.priority",
+                    "displayName": "dashboard.widgets.myOverdueRequests.priority",
                     "headerCellFilter": "translate",
                     "enableSorting": true
                 }
