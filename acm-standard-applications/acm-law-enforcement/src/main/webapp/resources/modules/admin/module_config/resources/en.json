@@ -681,10 +681,12 @@
             },
             "sequenceManagement.config": {
                 "title": "Sequence Configuration",
+                "sequenceEnabled": "Enabled",
+                "sequenceDisabled": "Disabled",
                 "grid": {
                     "sequenceName": "Name",
                     "sequenceDescription": "Description",
-                    "sequenceEnabled": "Enabled"
+                    "sequenceStatus": "Status"
                 },
                 "placeholder": {
                     "name": "Enter Sequence Name",
