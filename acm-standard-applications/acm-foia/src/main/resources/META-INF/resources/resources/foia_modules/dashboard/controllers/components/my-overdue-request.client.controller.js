@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('dashboard.my-overdue-cases').controller('Dashboard.MyOverdueCasesController',
+angular.module('dashboard.my-overdue-requests').controller('Dashboard.MyOverdueRequestsController',
         [ '$scope', '$translate', 'Authentication', 'Dashboard.DashboardService', '$state', 'ConfigService', 'DueDate.Service', 'Admin.HolidayService', function($scope, $translate, Authentication, DashboardService, $state, ConfigService, DueDateService, AdminHolidayService) {
 
             var vm = this;
@@ -45,7 +45,7 @@ angular.module('dashboard.my-overdue-cases').controller('Dashboard.MyOverdueCase
                 }
             };
 
-            ConfigService.getComponentConfig("dashboard", "myOverdueCases").then(function(config) {
+            ConfigService.getComponentConfig("dashboard", "myOverdueRequests").then(function(config) {
 
                 vm.config = config;
                 vm.gridOptions.columnDefs = config.columnDefs;
@@ -64,7 +64,7 @@ angular.module('dashboard.my-overdue-cases').controller('Dashboard.MyOverdueCase
             });
 
             function getPage() {
-                DashboardService.queryMyOverdueCases({
+                DashboardService.queryMyOverdueRequests({
                     userId: userInfo.userId,
                     status: requestStatus,
                     sortBy: paginationOptions.sortBy,
