@@ -1,32 +1,13 @@
-<div ng-controller="Reports.DatepickersController" ng-cloak>
-
+<div>
     <div ng-show="data.dateSearchType=='DATE_RANGE'">
         <label for="dateFromReports" translate>reports.startDate.label</label> <span class="required-asterisk">*</span>
-        <p class="input-group">
-            <input id="dateFromReports" type="text" class="form-control" datepicker-popup="{{locale.DATETIME_FORMATS.shortDate}}"
-                ng-model="data.startDate" is-open="opened.openedStart" close-on-date-selection="true" show-button-bar="true"
-                on-open-focus="false" ng-blur="startDateChanged()" close-text="{{'reports.datepicker.close' | translate}}"
-                current-text="{{'reports.datepicker.current' | translate}}" clear-text="{{'reports.datepicker.clear' | translate}}" /> <span
-                class="input-group-btn">
-                <button type="button" class="btn btn-default" ng-click="opened.openedStart = !opened.openedStart">
-                    <i class="fa fa-calendar"></i>
-                </button>
-            </span>
-        </p>
+        <date-time-picker data="data.startDate" property="data.startDate" date-picker-id="data.startDate"
+                time-format-disabled="true"></date-time-picker>
 
         <label for="dateToReports" translate>reports.endDate.label</label> <span class="required-asterisk">*</span>
+        <date-time-picker data="data.endDate" property="data.endDate" date-picker-id="data.endDate"
+                time-format-disabled="true"></date-time-picker>
 
-        <p class="input-group">
-            <input id="dateToReports" type="text" class="form-control" datepicker-popup="{{locale.DATETIME_FORMATS.shortDate}}"
-                ng-model="data.endDate" is-open="opened.openedEnd" close-on-date-selection="true" show-button-bar="true"
-                on-open-focus="false" ng-blur="endDateChanged()" close-text="{{'reports.datepicker.close' | translate}}"
-                current-text="{{'reports.datepicker.current' | translate}}" clear-text="{{'reports.datepicker.clear' | translate}}" /> <span
-                class="input-group-btn">
-                <button type="button" class="btn btn-default" ng-click="opened.openedEnd = !opened.openedEnd">
-                    <i class="fa fa-calendar"></i>
-                </button>
-            </span>
-        </p>
     </div>
     <div ng-show="data.dateSearchType=='FISCAL_YEAR'">
         <label for="selectionReports" translate>reports.fiscalYear.label</label> <span class="required-asterisk">*</span>

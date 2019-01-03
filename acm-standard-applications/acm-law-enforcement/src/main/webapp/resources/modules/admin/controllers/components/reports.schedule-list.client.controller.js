@@ -125,7 +125,7 @@ angular.module('admin').controller('Admin.ReportsScheduleListController',
                         jobName: data.reportSchedule.reportFile,
                         reportFile: data.reportSchedule.reportFile,
                         uiPassParam: data.reportSchedule.reportRecurrence,
-                        startTime: moment(data.reportSchedule.reportTime).format("YYYY-MM-DDTHH:mm:ss.SSSZ"),
+                        startTime: moment(data.reportSchedule.reportStartDate).format("YYYY-MM-DDTHH:mm:ss.SSSZ"),
                         endTime: data.reportSchedule.reportEndDate ? moment(data.reportSchedule.reportEndDate).format("YYYY-MM-DDTHH:mm:ss.SSSZ") : "", // schedule end date is optional
                         outputFileType: data.reportSchedule.outputFormat,
                         emails: data.reportSchedule.reportEmailAddresses,
