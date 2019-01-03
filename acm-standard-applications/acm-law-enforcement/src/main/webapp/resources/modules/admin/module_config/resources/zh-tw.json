@@ -682,7 +682,7 @@
                     "name": "Object property name"
                 },
                 "date": {
-                    "text": "Date Format (ex: ddMMyyyHHmmss)"
+                    "text": "Date Format (ex: ddMMyyyyHHmmssSSS)"
                 },
                 "arbitraryText": {
                     "text": "Arbitrary text"
@@ -701,7 +701,7 @@
                         },
                         "arbitraryText": "Enter arbitrary text",
                         "objectProperty": "Enter object property",
-                        "date": "Enter Date Format (ex: ddMMyyyHHmmss)",
+                        "date": "Enter Date Format (ex: ddMMyyyyHHmmssSSS)",
                         "sequencePartName": "Enter sequence part name",
                         "sequencePartType": "Select part type"
                     }
