@@ -48,6 +48,7 @@ angular.module('admin').controller('Admin.SequenceManagementPartsModalConfigCont
             object.sequenceFillBlanks = $scope.sequencePart.sequenceFillBlanks;
             object.sequenceArbitraryText = $scope.sequencePart.sequenceArbitraryText;
             object.sequenceObjectPropertyName = $scope.sequencePart.sequenceObjectPropertyName;
+            object.sequenceDateFormat = $scope.sequencePart.sequenceDateFormat;
             $modalInstance.close(object);
         };
 
