@@ -1019,9 +1019,10 @@
                 },
                 {
                     "name": "sequenceEnabled",
-                    "displayName": "admin.application.sequenceManagement.config.grid.sequenceEnabled",
+                    "displayName": "admin.application.sequenceManagement.config.grid.sequenceStatus",
                     "visible": true,
-                    "headerCellFilter": "translate"
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<span align='center'>{{row.entity.sequenceEnabled ? ('admin.application.sequenceManagement.config.sequenceEnabled' | translate) : ('admin.application.sequenceManagement.config.sequenceDisabled' | translate)}}</span>"
                 },
                 {
                     "name": "act",
