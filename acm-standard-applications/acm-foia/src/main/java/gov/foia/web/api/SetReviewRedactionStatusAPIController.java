@@ -57,6 +57,12 @@ public class SetReviewRedactionStatusAPIController
                                             Authentication authentication)
     {
         log.debug("Trying to set Review Status for EcmFile with Id [{}]", fileId);
+
+        if(reviewStatus.equals("none"))
+        {
+            reviewStatus = new String();
+        }
+
         getFoiaEcmFileService().setReviewStatus(fileId, fileVersion, reviewStatus);
 
     }
@@ -70,6 +76,12 @@ public class SetReviewRedactionStatusAPIController
                                 Authentication authentication)
     {
         log.debug("Trying to set Redaction Status for EcmFile with Id [{}]", fileId);
+
+        if(redactionStatus.equals("none"))
+        {
+            redactionStatus = new String();
+        }
+
         getFoiaEcmFileService().setRedactionStatus(fileId, fileVersion, redactionStatus);
 
     }
