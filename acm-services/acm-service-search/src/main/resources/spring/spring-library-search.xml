@@ -125,6 +125,7 @@
         <property name="objectConverter" ref="objectConverter"/>
         <property name="enableDocumentACL" value="${dac.enableDocumentACL}"/>
         <property name="includeDenyAccessFilter" value="${dac.includeDenyAccessFilter}"/>
+        <property name="sendDocumentsToSolr" ref="sendDocumentsToSolr"/>
     </bean>
 
     <!-- event publishers -->
