@@ -3949,6 +3949,7 @@ angular
 
                                 $(node.tr).find("select.reviewstatus").prop('disabled', false);
                                 $(node.tr).find("select.redactionstatus").prop('disabled', false);
+                                node.data.reviewStatus = statusValue;
 
                                 return data;
                             }, function(error) {
@@ -3974,6 +3975,7 @@ angular
 
                                 $(node.tr).find("select.reviewstatus").prop('disabled', false);
                                 $(node.tr).find("select.redactionstatus").prop('disabled', false);
+                                node.data.redactionStatus = statusValue;
 
                                 return data;
                             }, function(error) {
