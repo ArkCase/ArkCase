@@ -54,6 +54,7 @@ public class AcmEmailMentionsService
     private AcmApplication acmAppConfiguration;
     private String mentionsEmailSubject;
     private String mentionsEmailBodyTemplate;
+    private TemplatingEngine templatingEngine;
 
     private String buildEmailSubject(EmailMentionsDTO in, String userFullName)
     {
@@ -103,6 +104,8 @@ public class AcmEmailMentionsService
 
     public void sendMentionsEmail(EmailMentionsDTO in, String userFullName) throws AcmEmailServiceException
     {
+        in.setTemplatingEngine(getTemplatingEngine());
+
         EmailBuilder<AbstractMap.SimpleImmutableEntry<String, List<String>>> emailBuilder = buildEmail(in, userFullName);
         EmailBodyBuilder<AbstractMap.SimpleImmutableEntry<String, List<String>>> emailBodyBuilder = buildEmailBody(in, userFullName);
 
@@ -148,5 +151,15 @@ public class AcmEmailMentionsService
     public void setMentionsEmailBodyTemplate(String mentionsEmailBodyTemplate)
     {
         this.mentionsEmailBodyTemplate = mentionsEmailBodyTemplate;
+    }
+
+    public TemplatingEngine getTemplatingEngine()
+    {
+        return templatingEngine;
+    }
+
+    public void setTemplatingEngine(TemplatingEngine templatingEngine)
+    {
+        this.templatingEngine = templatingEngine;
     }
 }

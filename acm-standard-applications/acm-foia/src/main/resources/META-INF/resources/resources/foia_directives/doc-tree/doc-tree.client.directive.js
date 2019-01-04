@@ -5133,9 +5133,15 @@ angular
                                 });
                             });
                         /*Get send email configuration*/
+                        DocTree.treeConfig.emailSendConfiguration = {};
                         EmailSenderConfigurationService.isEmailSenderAllowDocuments().then(function(res) {
-                            DocTree.treeConfig.emailSendConfiguration = {};
                             DocTree.treeConfig.emailSendConfiguration.allowDocuments = res.data;
+                        });
+                        EmailSenderConfigurationService.isEmailSenderAllowAttachments().then(function(res) {
+                            DocTree.treeConfig.emailSendConfiguration.allowAttachments = res.data;
+                        });
+                        EmailSenderConfigurationService.isEmailSenderAllowHyperlinks().then(function(res) {
+                            DocTree.treeConfig.emailSendConfiguration.allowHyperlinks = res.data;
                         });
 
                         DocTree.scope.$bus.subscribe('onFilterDocTree', function(data) {
