@@ -85,9 +85,11 @@ angular.module('admin').controller('Admin.SequenceManagementResetController', [ 
     $scope.deleteReset = function(rowEntity) {
         var sequenceReset = {};
         var resetDate = moment(rowEntity.resetDate).toDate();
-        var executeDate = moment(rowEntity.resetExecutedDate).toDate();
         sequenceReset.resetDate = UtilDateService.dateToIsoDateTime(resetDate);
-        sequenceReset.resetExecutedDate = UtilDateService.dateToIsoDateTime(executeDate);
+        if (rowEntity.resetExecutedDate) {
+            var executeDate = moment(rowEntity.resetExecutedDate).toDate();
+            sequenceReset.resetExecutedDate = UtilDateService.dateToIsoDateTime(executeDate);
+        }
         sequenceReset.resetExecutedFlag = rowEntity.resetExecutedFlag;
         sequenceReset.resetRepeatableFlag = rowEntity.resetRepeatableFlag;
         sequenceReset.resetRepeatablePeriod = rowEntity.resetRepeatablePeriod;
