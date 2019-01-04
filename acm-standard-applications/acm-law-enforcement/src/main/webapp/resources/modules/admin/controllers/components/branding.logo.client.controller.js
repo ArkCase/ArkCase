@@ -1,20 +1,24 @@
 'use strict';
 
-angular.module('admin').controller('Admin.BrandingLogoController', [ '$scope', 'Admin.BrandingLogoService', '$translate', 'MessageService', function($scope, brandingLogoService, $translate, messageService) {
+angular.module('admin').controller('Admin.BrandingLogoController', [ '$scope', 'Admin.BrandingLogoService', '$translate', 'MessageService', 'UtilService', function($scope, brandingLogoService, $translate, messageService, Util) {
     $scope.uploadingInProgress = false;
     $scope.loadingProgress = 0;
     $scope.selectedHeaderFile = null;
     $scope.selectedLoginFile = null;
+    $scope.selectedEmailFile = null;
 
     $scope.isFileTypeValid = function() {
-        var headerLogoType, loginLogoType;
+        var headerLogoType, loginLogoType, emailLogoType;
         if (!Util.isEmpty($scope.selectedLoginFile)) {
             loginLogoType = $scope.selectedLoginFile.name.match(/\.png$/i);
         }
         if (!Util.isEmpty($scope.selectedHeaderFile)) {
             headerLogoType = $scope.selectedHeaderFile.name.match(/\.png$/i);
         }
-        if (headerLogoType === null || loginLogoType === null || (typeof (headerLogoType) == 'undefined' && typeof (loginLogoType) == 'undefined')) {
+        if (!Util.isEmpty($scope.selectedEmailFile)) {
+            emailLogoType = $scope.selectedEmailFile.name.match(/\.png$/i);
+        }
+        if (headerLogoType === null || loginLogoType === null || emailLogoType === null || (typeof (headerLogoType) == 'undefined' && typeof (loginLogoType) == 'undefined' && typeof (emailLogoType) == 'undefined')) {
             return null;
         } else {
             return true;
@@ -33,10 +37,14 @@ angular.module('admin').controller('Admin.BrandingLogoController', [ '$scope', '
             files.push($scope.selectedLoginFile);
             formNames.push('loginLogo');
         }
+        if ($scope.selectedEmailFile) {
+            files.push($scope.selectedEmailFile);
+            formNames.push('emailLogo');
+        }
 
         brandingLogoService.uploadLogo(files, formNames).success(function() {
 
-            if ($scope.selectedLoginFile === null && $scope.selectedHeaderFile === null) {
+            if ($scope.selectedLoginFile === null && $scope.selectedHeaderFile === null && $scope.selectedEmailFile === null) {
                 messageService.error($translate.instant('admin.branding.logo.messages.upload.error'));
             } else {
                 messageService.info($translate.instant('admin.branding.logo.messages.upload.success'));
@@ -45,6 +53,7 @@ angular.module('admin').controller('Admin.BrandingLogoController', [ '$scope', '
             $scope.uploadingInProgress = false;
             $scope.selectedHeaderFile = null;
             $scope.selectedLoginFile = null;
+            $scope.selectedEmailFile = null;
         }).error(function() {
             $scope.uploadingInProgress = false;
             messageService.error($translate.instant('admin.branding.logo.messages.upload.error'));

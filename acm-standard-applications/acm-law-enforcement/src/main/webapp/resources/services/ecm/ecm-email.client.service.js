@@ -25,7 +25,8 @@ angular.module('services').factory('Ecm.EmailService', [ '$resource', '$translat
          */
         _sendEmail: {
             method: 'POST',
-            url: 'api/latest/service/email/send/withembeddedlinks/:objectType'
+            url: 'api/latest/service/email/send/withembeddedlinks/:objectType',
+            isArray: true
         }
 
         /**
@@ -254,12 +255,10 @@ angular.module('services').factory('Ecm.EmailService', [ '$resource', '$translat
             return true;
         }
 
-        if (Util.isEmpty(data.state)) {
+        if (Util.isEmpty(data.state) && !data.state) {
             return false;
         }
-        if (Util.isEmpty(data.userEmail)) {
-            return false;
-        }
+        
         return true;
     };
 

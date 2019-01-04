@@ -77,6 +77,20 @@ public class CustomLogoRetrieveFile
         }
     }
 
+    @RequestMapping(value = "/emaillogo.png", method = RequestMethod.GET)
+    public void retrieveEmailLogo(HttpServletResponse response)
+    {
+        try
+        {
+            byte[] logo = customLogoService.getEmailLogo();
+            writeImageToResponse(logo, response);
+        }
+        catch (AcmCustomLogoException e)
+        {
+            log.error("Can not get email logo", e);
+        }
+    }
+
     private void writeImageToResponse(byte[] image, HttpServletResponse response)
     {
         try

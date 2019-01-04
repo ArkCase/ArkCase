@@ -51,7 +51,7 @@
         <exchange-web-services.version>2.0</exchange-web-services.version>
         <fasterxml-jackson-core.version>2.7.2</fasterxml-jackson-core.version>
         <fop.version>2.0</fop.version>
-        <freemarker.version>2.3.22</freemarker.version>
+        <freemarker.version>2.3.28</freemarker.version>
         <frevvo.forms.version>6.3</frevvo.forms.version>
         <google-collections.version>1.0</google-collections.version>
         <gps.pointlocations.version>4.1</gps.pointlocations.version>
@@ -1522,6 +1522,12 @@
                 <version>${amazon.sdk.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
+            </dependency>
+            <!-- Freemarker -->
+            <dependency>
+                <groupId>org.freemarker</groupId>
+                <artifactId>freemarker</artifactId>
+                <version>${freemarker.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
