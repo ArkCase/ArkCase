@@ -93,12 +93,6 @@ angular.module('dashboard').factory('Dashboard.DashboardService',
                     method: 'POST',
                     url: 'api/v1/plugin/dashboard/widgets/site',
                     cache: false
-                },
-                queryMyOverdueCases: {
-                    method: 'GET',
-                    url: 'api/v1/plugin/search/advancedSearch?q=object_type_s\\:CASE_FILE+' + 'AND+dueDate_tdt\\:[* TO NOW]',
-                    isArray: false,
-                    data: ''
                 }
             });
 

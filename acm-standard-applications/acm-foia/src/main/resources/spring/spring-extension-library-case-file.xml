@@ -164,6 +164,8 @@
             <beans:property name="userDao" ref="userJpaDao"/>
             <beans:property name="foiaConfigurationService" ref="foiaConfigurationService"/>
             <beans:property name="foiaQueueCorrespondenceService" ref="foiaQueueCorrespondenceService"/>
+            <beans:property name="templatingEngine" ref="templatingEngine"/>
+            <beans:property name="emailBodyTemplate" value="file:${user.home}/.arkcase/acm/templates/request-document-attached.html"/>
         </beans:bean>
 
         <beans:bean id="documentGeneratorService" class="gov.foia.service.FOIADocumentGeneratorService">
@@ -238,6 +240,8 @@
             <beans:property name="documentGenerator" ref="correspondenceDocumentGenerator"/>
             <beans:property name="documentGeneratorService" ref="documentGeneratorService"/>
             <beans:property name="foiaConfigurationService" ref="foiaConfigurationService"/>
+            <beans:property name="templatingEngine" ref="templatingEngine"/>
+            <beans:property name="emailBodyTemplate" value="file:${user.home}/.arkcase/acm/templates/request-document-attached.html"/>
         </beans:bean>
 
         <beans:bean id="foiaFileService" class="gov.foia.service.FOIAFileService">

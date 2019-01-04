@@ -37,15 +37,21 @@ import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.services.email.model.EmailWithAttachmentsDTO;
 import com.armedia.acm.services.notification.service.NotificationSender;
+import com.armedia.acm.services.notification.service.TemplatingEngine;
 import com.armedia.acm.services.users.dao.UserDao;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.io.Resource;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
+import java.io.DataInputStream;
+import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.Arrays;
 
+import freemarker.template.TemplateException;
 import gov.foia.dao.FOIARequestDao;
 import gov.foia.model.FOIAConstants;
 import gov.foia.model.FOIADocumentDescriptor;
@@ -65,6 +71,8 @@ public class AcknowledgementDocumentService
     private DocumentGenerator documentGenerator;
     private FoiaConfigurationService foiaConfigurationService;
     private FOIAQueueCorrespondenceService foiaQueueCorrespondenceService;
+    private String emailBodyTemplate;
+    private TemplatingEngine templatingEngine;
 
     public void emailAcknowledgement(Long requestId)
     {
@@ -79,7 +87,18 @@ public class AcknowledgementDocumentService
 
                 emailData.setSubject(String.format("%s %s", request.getRequestType(), request.getCaseNumber()));
                 emailData.setHeader(EMAIL_HEADER_ATTACHMENT);
-                emailData.setBody(EMAIL_BODY_ATTACHMENT);
+                try
+                {
+                    String body = getTemplatingEngine().process(emailBodyTemplate, "request", request);
+                    emailData.setBody(body);
+                    emailData.setTemplate(body);
+                }
+                catch (TemplateException | IOException e)
+                {
+                    // failing to send an email should not break the flow
+                    log.error("Unable to generate email for {} about {} with ID [{}]", emailAddress, request.getObjectType(), requestId, e);
+                    emailData.setBody(EMAIL_BODY_ATTACHMENT);
+                }
                 emailData.setFooter(EMAIL_FOOTER_ATTACHMENT);
 
                 FOIADocumentDescriptor documentDescriptor = documentGeneratorService.getDocumentDescriptor(request, FOIAConstants.ACK);
@@ -214,5 +233,30 @@ public class AcknowledgementDocumentService
     public void setFoiaQueueCorrespondenceService(FOIAQueueCorrespondenceService foiaQueueCorrespondenceService)
     {
         this.foiaQueueCorrespondenceService = foiaQueueCorrespondenceService;
+    }
+
+    public String getEmailBodyTemplate()
+    {
+        return emailBodyTemplate;
+    }
+
+    public void setEmailBodyTemplate(Resource emailBodyTemplate) throws IOException
+    {
+        try (DataInputStream resourceStream = new DataInputStream(emailBodyTemplate.getInputStream()))
+        {
+            byte[] bytes = new byte[resourceStream.available()];
+            resourceStream.readFully(bytes);
+            this.emailBodyTemplate = new String(bytes, Charset.forName("UTF-8"));
+        }
+    }
+
+    public TemplatingEngine getTemplatingEngine()
+    {
+        return templatingEngine;
+    }
+
+    public void setTemplatingEngine(TemplatingEngine templatingEngine)
+    {
+        this.templatingEngine = templatingEngine;
     }
 }

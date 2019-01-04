@@ -55,16 +55,8 @@ if (includeDenyAccessFilter) {
     message.setInboundProperty("denyAccessFilter", "")
 }
 
-
-boolean filterParentRef = message.getInboundProperty("filterParentRef")
-
-if (filterParentRef && includeDACFilter) {
-    message.setInboundProperty("childObjectDacFilter", URLEncoder.encode(childObjectDacFilter, StandardCharsets.UTF_8.displayName()));
-    message.setInboundProperty("childObjectFilterQuery", URLEncoder.encode(childObjectFilterQuery, StandardCharsets.UTF_8.displayName()));
-} else {
-    message.setInboundProperty("childObjectDacFilter", "")
-    message.setInboundProperty("childObjectFilterQuery", "")
-}
+message.setInboundProperty("childObjectDacFilter", "")
+message.setInboundProperty("childObjectFilterQuery", "")
 
 String subscribedFilter = "{!join from=id to=related_subscription_ref_s}object_type_s:SUBSCRIPTION"
 boolean filterSubscriptionEvents = message.getInboundProperty("filterSubscriptionEvents")

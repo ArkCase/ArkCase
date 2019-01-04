@@ -30,7 +30,7 @@ package com.armedia.acm.plugins.task.exception;
 /**
  * Created by armdev on 6/3/14.
  */
-public class AcmTaskException extends Exception
+public class AcmTaskException extends RuntimeException
 {
 
     public AcmTaskException()

@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('admin').controller('Admin.ReportsScheduleListController',
-        [ '$scope', '$modal', '$q', '$translate', '$filter', 'LookupService', 'Util.DateService', 'Admin.ScheduleReportService', 'MessageService', 'Helper.UiGridService',
-                function($scope, $modal, $q, $translate, $filter, LookupService, UtilDateService, ScheduleReportService, MessageService, HelperUiGridService) {
+    ['$scope', '$modal', '$q', '$translate', '$filter', 'LookupService', 'Util.DateService', 'Admin.ScheduleReportService', 'MessageService', 'Helper.UiGridService',
+        function ($scope, $modal, $q, $translate, $filter, LookupService, UtilDateService, ScheduleReportService, MessageService, HelperUiGridService) {
 
             $scope.$on('new-report-schedule', onCreatedReportSchedule);
 
@@ -90,11 +90,11 @@ angular.module('admin').controller('Admin.ReportsScheduleListController',
                 var report = {
                     reportFile: rowEntity.jobName,
                     reportRecurrence: rowEntity.jobTrigger.uiPassParam,
-                    reportStartDate: moment(rowEntity.jobTrigger.startTime).format(UtilDateService.defaultDateFormat),
+                    reportStartDate: UtilDateService.isoToDate(rowEntity.jobTrigger.startTime),
                     reportTime: rowEntity.jobTrigger.startTime,
-                    reportEndDate: rowEntity.jobTrigger.endTime ? moment(rowEntity.jobTrigger.endTime).format(UtilDateService.defaultDateFormat) : "",
-                    filterStartDate: startDate.value,
-                    filterEndDate: endDate.value,
+                    reportEndDate: rowEntity.jobTrigger.endTime ? UtilDateService.isoToDate(rowEntity.jobTrigger.endTime) : "",
+                    filterStartDate: UtilDateService.isoToDate(startDate.value),
+                    filterEndDate: UtilDateService.isoToDate(endDate.value),
                     outputFormat: '',
                     reportEmailAddresses: emailAddresses ? emailAddresses.value : "",
                     jobId: rowEntity.jobId
@@ -125,7 +125,7 @@ angular.module('admin').controller('Admin.ReportsScheduleListController',
                         jobName: data.reportSchedule.reportFile,
                         reportFile: data.reportSchedule.reportFile,
                         uiPassParam: data.reportSchedule.reportRecurrence,
-                        startTime: moment(data.reportSchedule.reportTime).format("YYYY-MM-DDTHH:mm:ss.SSSZ"),
+                        startTime: moment(data.reportSchedule.reportStartDate).format("YYYY-MM-DDTHH:mm:ss.SSSZ"),
                         endTime: data.reportSchedule.reportEndDate ? moment(data.reportSchedule.reportEndDate).format("YYYY-MM-DDTHH:mm:ss.SSSZ") : "", // schedule end date is optional
                         outputFileType: data.reportSchedule.outputFormat,
                         emails: data.reportSchedule.reportEmailAddresses,

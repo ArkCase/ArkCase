@@ -46,6 +46,25 @@ angular.module('admin').factory('Admin.EmailSenderConfigurationService', [ '$htt
                 url: 'api/latest/plugin/admin/email/configuration'
             });
         },
+        
+        /**
+         * @ngdoc method
+         * @name getEmailSenderAllowDocuments
+         * @methodOf admin.service:Admin.EmailSenderConfigurationService
+         *
+         * @description
+         * Gets the current email sender configuration.
+         *
+         *
+         * @returns {Object} http promise
+         */
+        isEmailSenderAllowDocuments: function() {
+            return $http({
+                method: 'GET',
+                url: 'api/latest/plugin/admin/email/sender/allowdocuments'
+            });
+        },
+        
         /**
          * @ngdoc method
          * @name validateSmtpConfiguration

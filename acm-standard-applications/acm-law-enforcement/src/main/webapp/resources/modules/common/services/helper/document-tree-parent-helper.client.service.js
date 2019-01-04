@@ -214,8 +214,8 @@ angular.module('common')
 
                             Service.DocumentTreeComponent.prototype.enableSendEmailButton = function() {
                                 var that = this;
-                                EmailSenderConfigurationService.getEmailSenderConfiguration().then(function(emailData) {
-                                    that.scope.enableEmailButton = emailData.data.allowDocuments;
+                                EmailSenderConfigurationService.isEmailSenderAllowDocuments().then(function(emailData) {
+                                    that.scope.enableEmailButton = emailData.data;
                                 });
                                 this.scope.sendEmail = that.arg.sendEmail || function() {
                                     var nodes = that.scope.treeControl.getSelectedNodes();

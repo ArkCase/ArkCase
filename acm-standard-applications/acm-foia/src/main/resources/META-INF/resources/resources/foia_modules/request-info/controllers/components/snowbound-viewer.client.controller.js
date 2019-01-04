@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('request-info').controller('RequestInfo.SnowBoundViewer', [ '$rootScope', '$scope', '$sce', '$timeout', '$interval', 'UtilService', 'LookupService', function($rootScope, $scope, $sce, $timeout, $interval, Util, LookupService) {
+angular.module('request-info').controller('RequestInfo.SnowBoundViewer', [ '$rootScope', '$scope', '$sce', '$timeout', '$interval', '$modal', 'UtilService', 'LookupService', 'ArkCaseCrossWindowMessagingService', 'Object.LookupService', function($rootScope, $scope, $sce, $timeout, $interval, $modal, Util, LookupService, ArkCaseCrossWindowMessagingService, ObjectLookupService) {
     var SNOWBOUND_TIMEOUT = 100; // This delay prevents multiple snowboud requests
 
     $scope.$on('change-viewer-document', showDocument);
@@ -28,70 +28,49 @@ angular.module('request-info').controller('RequestInfo.SnowBoundViewer', [ '$roo
     }
 
     $scope.iframeLoaded = function() {
-        startInitSnowboundMessaging();
+        ArkCaseCrossWindowMessagingService.addHandler('close-document', onCloseDocument);
+        ArkCaseCrossWindowMessagingService.start();
+
+        ObjectLookupService.getLookupByLookupName("annotationTags").then(function (allAnnotationTags) {
+            $scope.allAnnotationTags = allAnnotationTags;
+            ArkCaseCrossWindowMessagingService.addHandler('select-annotation-tags', onSelectAnnotationTags);
+            ArkCaseCrossWindowMessagingService.start('snowbound', $scope.ecmFileProperties['ecm.viewer.snowbound']);
+        });
     };
 
-    var initSnowboundMessagingPromise;
-
-    function startInitSnowboundMessaging() {
-        stopInitSnowboundMessaging();
-        initSnowboundMessagingPromise = $interval(initSnowboundMessaging, 250);
+    function onCloseDocument(data){
+        $scope.$bus.publish('remove-from-opened-documents-list', {id: data.id, version: data.version});
     }
+    
 
-    function stopInitSnowboundMessaging() {
-        $interval.cancel(initSnowboundMessagingPromise);
-    }
-
-    function initSnowboundMessaging() {
-        var snowboundIframe = getSnowboundIframe();
-        if (!Util.isEmpty(snowboundIframe)) {
-            stopInitSnowboundMessaging();
-            if (Util.isEmpty($rootScope.snowboundMessaging)) {
-                $rootScope.snowboundMessaging = {};
-                $rootScope.snowboundMessaging.receiver = snowboundIframe;
-                $rootScope.snowboundMessaging.send = function send(message) {
-                    if (!Util.isEmpty($rootScope.snowboundMessaging.receiver)) {
-                        var targetOrigin = getTargetOrigin();
-                        $rootScope.snowboundMessaging.receiver.postMessage(message, targetOrigin);
-                    }
-                };
-                $rootScope.snowboundMessaging.receive = function receive(e) {
-                    if (!Util.isEmpty(e) && !Util.isEmpty(e.data) && !Util.isEmpty(e.data.source) && e.data.source == "snowbound" && !Util.isEmpty(e.data.action)) {
-                        // Do actions sent from Frevvo
-                        if (e.data.action == "close-document") {
-                            onCloseDocument(e.data.data.id, e.data.data.version);
-                        }
-                    }
-                };
-
-                window.addEventListener("message", $rootScope.snowboundMessaging.receive);
-            } else {
-                $rootScope.snowboundMessaging.receiver = snowboundIframe;
+    function onSelectAnnotationTags(data) {
+        var params = $scope.allAnnotationTags;
+        var modalInstance = $modal.open({
+            animation: true,
+            moduleName: 'document-details',
+            templateUrl: 'modules/document-details/views/components/annotation-tags-modal.client.view.html',
+            controller: 'Document.AnnotationTagsModalController',
+            resolve: {
+                params: function () {
+                    return params;
+                }
             }
-        }
-    }
+        });
 
-    function getTargetOrigin() {
-        var host = $scope.ecmFileProperties['ecm.viewer.snowbound'];
-        var targetOrigin = '*';
-        if (host) {
-            targetOrigin = host;
-        }
-        return targetOrigin;
-    }
-
-    function getSnowboundIframe() {
-        if (!Util.isEmpty(document) && !Util.isEmpty(document.getElementById('snowboundIframe')) && !Util.isEmpty(document.getElementById('snowboundIframe').contentWindow) && !Util.isEmpty(document.getElementById('snowboundIframe').contentWindow.document)
-            && !Util.isEmpty(document.getElementById('snowboundIframe').contentWindow.document.getElementsByTagName('iframe')) && document.getElementById('snowboundIframe').contentWindow.document.getElementsByTagName('iframe').length > 0
-            && !Util.isEmpty(document.getElementById('snowboundIframe').contentWindow.document.getElementsByTagName('iframe')[0]) && !Util.isEmpty(document.getElementById('snowboundIframe').contentWindow.document.getElementsByTagName('iframe')[0].contentWindow)) {
-            return document.getElementById('snowboundIframe').contentWindow.document.getElementsByTagName('iframe')[0].contentWindow;
-        }
-
-        return null;
-    }
-
-    function onCloseDocument(id, version){
-        $scope.$bus.publish('remove-from-opened-documents-list', {id: id, version: version});
+        modalInstance.result.then(function(result) {
+            var message = {
+                source: 'arkcase',
+                action: 'add-annotation-tags',
+                data: {
+                    type: data.type,
+                    annotationTags: result.annotationTags,
+                    annotationNotes: result.annotationNotes
+                }
+            };
+            ArkCaseCrossWindowMessagingService.send(message);
+        }, function() {
+            // Do nothing
+        });
     }
 
 } ]);

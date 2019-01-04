@@ -98,6 +98,8 @@
         <property name="notificationUtils" ref="notificationUtils"/>
         <property name="notificationTemplate" value="file:${notification.email.template.path}"/>
         <property name="userDao" ref="userJpaDao"/>
+        <property name="dataService" ref="acmDataService"/>
+        <property name="templatingEngine" ref="templatingEngine"/>
     </bean>
 
     <bean id="smtpNotificationSender" class="com.armedia.acm.services.notification.service.SmtpNotificationSender"
@@ -128,4 +130,7 @@
         <property name="acmDataService" ref="acmDataService"/>
     </bean>
 
+    <bean id="templatingEngine" class="com.armedia.acm.services.notification.service.TemplatingEngine">
+        <property name="acmApplication" ref="acmApplication"/>
+    </bean>
 </beans>
