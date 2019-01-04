@@ -67,12 +67,14 @@ public class EcmFileMovedEventHandler implements ApplicationListener<EcmEvent>
         if (container == null)
         {
             log.debug("Can't find container for the new file with id {}, exiting.", ecmEvent.getNodeId());
+            return null;
         }
         String cmisRepositoryId = getFolderService().getCmisRepositoryId(targetParentFolder);
         Document cmisDocument = lookupCmisDocument(cmisRepositoryId, ecmEvent.getNodeId());
         if (cmisDocument == null)
         {
             log.error("No document to be loaded - exiting.");
+            return null;
         }
         EcmFile addedToArkCase = null;
         try
