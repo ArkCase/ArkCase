@@ -161,7 +161,7 @@ public class EnqueueCaseFileServiceImpl implements EnqueueCaseFileService
         return nextPossibleQueuesModel.getNextPossibleQueues();
     }
 
-    private List<String> verifyNextConditions(CaseFilePipelineContext context, CaseFile caseFile)
+    public List<String> verifyNextConditions(CaseFilePipelineContext context, CaseFile caseFile)
     {
         EnterQueueModel<CaseFile, CaseFilePipelineContext> enterModel = new EnterQueueModel<>();
         enterModel.setBusinessObject(caseFile);

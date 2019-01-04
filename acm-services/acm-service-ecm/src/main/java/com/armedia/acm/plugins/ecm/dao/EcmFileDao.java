@@ -211,7 +211,7 @@ public class EcmFileDao extends AcmAbstractDao<EcmFile>
         {
             LOG.debug(
                     "Cannot find single EcmFile for containerObjectType=[{}], containerObjectId=[{}], cmisRepositoryId=[{}] and fileType=[{}]",
-                    parentObjectType, parentObjectId, targetFolderCmisId, fileType, e);
+                    parentObjectType, parentObjectId, targetFolderCmisId, fileType);
         }
 
         return file;

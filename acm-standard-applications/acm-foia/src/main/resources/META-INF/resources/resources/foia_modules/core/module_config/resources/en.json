@@ -617,6 +617,9 @@
                 "duplicate-request": "Duplicate Request",
                 "other": "Other"
             },
+            "correspondence": {
+                "request": "Request"
+            },
             "appealDispositionSubType": {
                 "no-record": "No Record",
                 "records-referred": "Records Referred at Initial Request Level",

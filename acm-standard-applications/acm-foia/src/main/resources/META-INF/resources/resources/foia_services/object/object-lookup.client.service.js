@@ -566,6 +566,20 @@ angular.module('services').factory('Object.LookupService', [ '$q', '$resource', 
 
     /**
      * @ngdoc method
+     * @name getCorrespondenceObjectTypes
+     * @methodOf services:Object.LookupService
+     *
+     * @description
+     * Query list of correspondence object types
+     *
+     * @returns {Object} An array returned by $resource
+     */
+    Service.getCorrespondenceObjectTypes = function() {
+        return Service.getLookupByLookupName("correspondenceObjectTypes");
+    };
+
+    /**
+     * @ngdoc method
      * @name getOrganizationIdTypes
      * @methodOf services:Object.LookupService
      *
@@ -1250,6 +1264,10 @@ angular.module('services').factory('Object.LookupService', [ '$q', '$resource', 
         }
 
         return LookupService.saveLookup(lookupDef, lookupTosave);
+    };
+
+    Service.getObjectTypeValue = function(objectType) {
+        return((objectType == 'CASE_FILE') ? 'REQUEST' : '');
     };
 
     return Service;

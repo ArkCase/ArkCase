@@ -807,10 +807,12 @@
         },
         "branding.logo.header.title": "Header",
         "branding.logo.login.title": "Login Page",
+        "branding.logo.email.title": "Email",
         "branding.logo.warningMessage": "Only PNG format is allowed. Recommended ratio is 1 to 4. Minimum height is 50px.",
         "branding.logo.btn": {
             "chooseHeader": "Choose Header logo",
             "chooseLogin": "Choose Login logo",
+            "chooseEmail": "Choose Email logo",
             "saveFiles": "Save"
         },
         "branding": {

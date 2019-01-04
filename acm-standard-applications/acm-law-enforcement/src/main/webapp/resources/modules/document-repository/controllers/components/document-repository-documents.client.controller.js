@@ -32,8 +32,8 @@ angular.module('document-repository').controller(
                         return userInfo;
                     });
 
-                    EmailSenderConfigurationService.getEmailSenderConfiguration().then(function(emailData) {
-                        $scope.sendEmailEnabled = emailData.data.allowDocuments;
+                    EmailSenderConfigurationService.isEmailSenderAllowDocuments().then(function(emailData) {
+                        $scope.sendEmailEnabled = emailData.data;
                     });
 
                     $scope.uploadForm = function(type, folderId, onCloseForm) {

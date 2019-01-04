@@ -59,7 +59,7 @@ public class AcmObjectBrokerClient<E> extends DefaultMessageListenerContainer
 {
     private static final Logger LOG = LogManager.getLogger(AcmObjectBrokerClient.class);
 
-    private final Class<E> entityClass;
+    private Class entityClass;
 
     private final Queue outboundQueue;
     private final Queue inboundQueue;
@@ -72,11 +72,10 @@ public class AcmObjectBrokerClient<E> extends DefaultMessageListenerContainer
     private AcmObjectBrokerClientHandler<E> handler;
     private JmsTemplate producerTemplate;
 
-    public AcmObjectBrokerClient(ConnectionFactory connectionFactory, String outboundQueue, String inboundQueue, Class<E> entityClass)
+    public AcmObjectBrokerClient(ConnectionFactory connectionFactory, String outboundQueue, String inboundQueue)
     {
         this.outboundQueue = outboundQueue != null ? getQueue(outboundQueue) : null;
         this.inboundQueue = inboundQueue != null ? getQueue(inboundQueue) : null;
-        this.entityClass = entityClass;
 
         setConnectionFactory(connectionFactory);
         setMessageListener(new AcmObjectBrokerClientListener<E>(this));
@@ -174,6 +173,7 @@ public class AcmObjectBrokerClient<E> extends DefaultMessageListenerContainer
      */
     public Class<E> getEntityClass()
     {
+        this.entityClass = getEntity() != null ? getEntity().getClass() : null;
         return entityClass;
     }
 
@@ -250,6 +250,13 @@ public class AcmObjectBrokerClient<E> extends DefaultMessageListenerContainer
                 return queueName;
             }
         };
+    }
+
+    // Dynamically get the necessary entity define in spring-extension-library-message-broker.xml
+    // through <beans:bean id="portalEntity" class="gov.foia.model.PortalFOIARequest"/>
+    public E getEntity()
+    {
+        return null;
     }
 
 }

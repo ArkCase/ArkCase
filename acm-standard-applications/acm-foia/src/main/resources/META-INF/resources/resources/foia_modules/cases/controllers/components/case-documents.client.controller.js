@@ -38,8 +38,8 @@ angular.module('cases').controller(
                         return userInfo;
                     });
 
-                    EmailSenderConfigurationService.getEmailSenderConfiguration().then(function(emailData) {
-                        $scope.sendEmailEnabled = emailData.data.allowDocuments;
+                    EmailSenderConfigurationService.isEmailSenderAllowDocuments().then(function(emailData) {
+                        $scope.sendEmailEnabled = emailData.data;
                     });
 
                     var componentHelper = new HelperObjectBrowserService.Component({
