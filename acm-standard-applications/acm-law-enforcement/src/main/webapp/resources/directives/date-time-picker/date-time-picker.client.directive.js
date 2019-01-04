@@ -26,7 +26,7 @@ angular.module('directives').directive('dateTimePicker', ['moment', 'Util.DateSe
                 if ($scope.timeFormatDisabled === "true") {
                     $scope.dateInPicker = moment($scope.data).format(UtilDateService.defaultDateFormat);
                 } else {
-                    $scope.dateInPicker = moment($scope.data).format(UtilDateService.defaultDateTimeFormat);
+                    $scope.dateInPicker = moment($scope.data).format(UtilDateService.defaultDateLongTimeFormat);
                 }
                 minYear = $scope.data.getFullYear() - 50;
                 utcDate = moment.utc(UtilDateService.dateToIso($scope.data)).local().format();
@@ -66,7 +66,7 @@ angular.module('directives').directive('dateTimePicker', ['moment', 'Util.DateSe
                 if ($scope.timeFormatDisabled === "true") {
                     $scope.dateInPicker = moment(editedDate).format(UtilDateService.defaultDateFormat);
                 } else {
-                    $scope.dateInPicker = moment(editedDate).format(UtilDateService.defaultDateTimeFormat);
+                    $scope.dateInPicker = moment(editedDate).format(UtilDateService.defaultDateLongTimeFormat);
                 }
                 $scope.data = moment($scope.dateInPicker).toDate();
             };
@@ -85,7 +85,7 @@ angular.module('directives').directive('dateTimePicker', ['moment', 'Util.DateSe
                     if ($scope.timeFormatDisabled === "true") {
                         $scope.today = moment($scope.data).format(UtilDateService.defaultDateFormat)
                     } else {
-                        $scope.today = moment($scope.data).format(UtilDateService.defaultDateTimeFormat);
+                        $scope.today = moment($scope.data).format(UtilDateService.defaultDateLongTimeFormat);
                     }
                 }
             });
