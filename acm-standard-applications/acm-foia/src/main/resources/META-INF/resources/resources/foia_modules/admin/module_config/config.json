@@ -1083,6 +1083,13 @@
                 ]
             },
             {
+                "type": "p/reports/schedule",
+                "label": "admin.reports.schedule.title",
+                "components": [
+                    "reports.schedule"
+                ]
+            },
+            {
                 "type": "p/forms",
                 "label": "admin.forms.title",
                 "icon": "fa fa-wrench",
