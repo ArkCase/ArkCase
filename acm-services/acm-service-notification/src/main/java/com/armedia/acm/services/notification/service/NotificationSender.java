@@ -45,6 +45,7 @@ import com.armedia.acm.services.email.model.EmailWithEmbeddedLinksResultDTO;
 import com.armedia.acm.services.email.model.MessageBodyFactory;
 import com.armedia.acm.services.email.sender.model.EmailSenderConfigurationConstants;
 import com.armedia.acm.services.email.service.AcmEmailSenderService;
+import com.armedia.acm.services.email.service.TemplatingEngine;
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.model.NotificationConstants;
 import com.armedia.acm.services.users.dao.UserDao;
