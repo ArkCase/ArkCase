@@ -16,6 +16,7 @@ angular.module('admin').controller('Admin.SequenceManagementResetDetailsControll
     $scope.resetRepeatablePeriod = $scope.data.resetRepeatablePeriod;
     
     $scope.viewMode = $scope.data.resetExecutedDate ? true : false;
+    $scope.isEdit = params.isEdit;
 
     $scope.onClickSave = function(){
         var sequenceReset = {};
