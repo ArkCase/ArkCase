@@ -1,6 +1,7 @@
 package com.armedia.acm.plugins.ecm.service.sync.impl;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
@@ -116,7 +117,7 @@ public class EcmFileMovedEventHandlerTest {
         returnFile.setContainer(container);
         returnFile.setFolder(targetParentFolder);
 
-        when(ecmFileService.moveFileInArkcase(file.getFileId(), targetParentFolder.getId(), fileMovedEvent.getTargetParentNodeType(), targetParentFolder.getId())).thenReturn(returnFile);
+        when(ecmFileService.moveFileInArkcase(file, targetParentFolder, fileMovedEvent.getTargetParentNodeType())).thenReturn(returnFile);
 
         EcmFile movedFile = unit.onEcmFileMoved(fileMovedEvent);
 
@@ -153,7 +154,7 @@ public class EcmFileMovedEventHandlerTest {
 
         verify(acmFolderDao, times(2)).findByCmisFolderId(anyString());
         verify(ecmFileDao, times(1)).findByCmisFileIdAndFolderId(anyString(), anyLong());
-        verify(spyEcmFileService, times(1)).deleteFileInArkcase(anyLong());
+        verify(spyEcmFileService, times(1)).deleteFileInArkcase(any(EcmFile.class));
     }
 
     @Test
