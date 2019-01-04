@@ -27,7 +27,7 @@ angular.module('admin').controller('Admin.SequenceManagementResetController', [ 
         });
     };
 
-    gridHelper.addButton($scope.config, "edit", null, "autoIncrementReset", "isButtonDisabled");
+    gridHelper.addButton($scope.config, "edit", null, "editRow", "isButtonDisabled");
     gridHelper.addButton($scope.config, "delete", null, "deleteReset", "isButtonDisabled");
     gridHelper.addButton($scope.config, "view", "fa fa-eye", "autoIncrementReset", "isViewDisabled");
     gridHelper.setColumnDefs($scope.config);
@@ -56,11 +56,12 @@ angular.module('admin').controller('Admin.SequenceManagementResetController', [ 
         return rowEntity.resetExecutedDate ? false : true;
     }
 
-    $scope.autoIncrementReset = function(rowEntity) {
+    $scope.autoIncrementReset = function(rowEntity, isEdit) {
         var params = {};
         params.row = rowEntity;
         params.sequenceName = $scope.sequenceName;
         params.sequencePartName = $scope.sequencePart;
+        params.isEdit = isEdit;
         var modalInstance = $modal.open({
             animation: true,
             templateUrl: 'modules/admin/views/components/application-sequence-management-reset-details.modal.client.view.html',
@@ -74,12 +75,16 @@ angular.module('admin').controller('Admin.SequenceManagementResetController', [ 
             }
         });
         return modalInstance.result;
-    }
+    };
+    
+    $scope.editRow = function(rowEntity) {
+        $scope.autoIncrementReset(rowEntity,true);
+    };
 
     $scope.addNew = function(){
         var reset = {};
         reset.newReset = true;
-        $scope.autoIncrementReset(reset);
+        $scope.autoIncrementReset(reset, false);
     };
 
     $scope.deleteReset = function(rowEntity) {

@@ -12,8 +12,10 @@
         <fieldset ng-disabled="viewMode">
              <div class="row" style="margin: 15px;">
                 <div class="form-group">
+                    <fieldset ng-disabled="isEdit">
                     <label translate>admin.application.sequenceManagementReset.detailsModal.resetStartDate</label>
-                    <date-time-picker data="resetStartDate" date-picker-id="resetStartDate"></date-time-picker>
+                    <date-time-picker data="resetStartDate" date-picker-id="resetStartDate" ></date-time-picker>
+                    </fieldset>
                 </div>
                 <div class="form-group">
                     <input type="checkbox" ng-model="resetRepeatableFlag">
