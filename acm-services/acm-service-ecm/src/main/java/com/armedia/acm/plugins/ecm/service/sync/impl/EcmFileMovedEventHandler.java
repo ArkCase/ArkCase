@@ -15,19 +15,15 @@ import com.armedia.acm.plugins.ecm.model.sync.EcmEventType;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
-import com.armedia.acm.web.api.MDCConstants;
 
 import org.apache.chemistry.opencmis.client.api.CmisObject;
 import org.apache.chemistry.opencmis.client.api.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.slf4j.MDC;
 import org.springframework.context.ApplicationListener;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 
 import javax.persistence.NoResultException;
-
-import java.util.UUID;
 
 /**
  * @author ivana.shekerova on 12/21/2018.
@@ -45,39 +41,7 @@ public class EcmFileMovedEventHandler implements ApplicationListener<EcmEvent>
 
     public EcmFile onEcmFileMoved(EcmEvent ecmEvent)
     {
-
         getAuditPropertyEntityAdapter().setUserId(ecmEvent.getUserId());
-
-        MDC.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, ecmEvent.getUserId());
-        MDC.put(MDCConstants.EVENT_MDC_REQUEST_ID_KEY, UUID.randomUUID().toString());
-
-        // AcmFolder sourceParentFolder = lookupArkCaseFolder(ecmEvent.getSourceParentNodeId());
-        // // source parent folder is in arkcase
-        // if (sourceParentFolder != null)
-        // {
-        // AcmFolder targetParentFolder = lookupArkCaseFolder(ecmEvent.getTargetParentNodeId());
-        // // check if target folder is in arkcase
-        // if (targetParentFolder != null)
-        // {
-        // return moveFile(ecmEvent, sourceParentFolder, targetParentFolder);
-        // }
-        // else
-        // {
-        // deleteFile(ecmEvent, sourceParentFolder);
-        //
-        // }
-        //
-        // }
-        // else
-        // {
-        // // source parent folder is not in arkcase
-        // // check if target folder is in arkcase, if it is then upload file
-        // AcmFolder targetParentFolder = lookupArkCaseFolder(ecmEvent.getTargetParentNodeId());
-        // if (targetParentFolder != null)
-        // {
-        // return uploadFile(ecmEvent, targetParentFolder);
-        // }
-        // }
 
         AcmFolder sourceParentFolder = lookupArkCaseFolder(ecmEvent.getSourceParentNodeId());
         AcmFolder targetParentFolder = lookupArkCaseFolder(ecmEvent.getTargetParentNodeId());
@@ -142,7 +106,7 @@ public class EcmFileMovedEventHandler implements ApplicationListener<EcmEvent>
             EcmFile arkCaseFile = lookupArkCaseFile(ecmEvent.getNodeId(), sourceParentFolder.getId());
             if (arkCaseFile != null)
             {
-                getFileService().deleteFileInArkcase(arkCaseFile.getId());
+                getFileService().deleteFileInArkcase(arkCaseFile);
                 log.info("Deleted file with CMIS ID [{}]", ecmEvent.getNodeId());
             }
         }
@@ -159,12 +123,7 @@ public class EcmFileMovedEventHandler implements ApplicationListener<EcmEvent>
         {
             try
             {
-                Long fileId = arkCaseFile.getId();
-                Long targetObjectId = targetParentFolder.getId();
-                Long dstFolderId = targetParentFolder.getId();
-
-                EcmFile movedFile = getFileService().moveFileInArkcase(fileId, targetObjectId, ecmEvent.getTargetParentNodeType(),
-                        dstFolderId);
+                EcmFile movedFile = getFileService().moveFileInArkcase(arkCaseFile, targetParentFolder, ecmEvent.getTargetParentNodeType());
                 log.info("Moved file to ArkCase with CMIS ID [{}] and ArkCase ID [{}]", ecmEvent.getNodeId(), movedFile.getId());
                 return movedFile;
             }

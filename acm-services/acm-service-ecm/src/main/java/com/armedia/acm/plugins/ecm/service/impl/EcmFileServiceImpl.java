@@ -1373,36 +1373,24 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
 
     @Override
     @Transactional
-    @AcmAcquireAndReleaseObjectLock(acmObjectArgIndex = 3, objectType = "FOLDER", lockType = "WRITE", lockChildObjects = false, unlockChildObjects = false)
-    @AcmAcquireAndReleaseObjectLock(objectIdArgIndex = 0, objectType = "FILE", lockType = "DELETE")
-    public EcmFile moveFileInArkcase(Long fileId, Long targetObjectId, String targetObjectType, Long dstFolderId)
+    @AcmAcquireAndReleaseObjectLock(acmObjectArgIndex = 1, objectType = "FOLDER", lockType = "WRITE", lockChildObjects = false, unlockChildObjects = false)
+    @AcmAcquireAndReleaseObjectLock(acmObjectArgIndex = 0, objectType = "FILE", lockType = "DELETE")
+    public EcmFile moveFileInArkcase(EcmFile file, AcmFolder targetParentFolder, String targetObjectType)
             throws AcmUserActionFailedException, AcmObjectNotFoundException, AcmCreateObjectFailedException
     {
-
-        EcmFile file = getEcmFileDao().find(fileId);
-        if (file == null)
-        {
-            throw new AcmObjectNotFoundException(EcmFileConstants.OBJECT_FILE_TYPE, fileId, "File  not found", null);
-        }
-        AcmFolder folder = getFolderDao().find(dstFolderId);
-        if (folder == null)
-        {
-            throw new AcmObjectNotFoundException(AcmFolderConstants.OBJECT_FOLDER_TYPE, dstFolderId, "Folder  not found", null);
-        }
-
-        String cmisRepositoryId = folder.getCmisRepositoryId();
+        String cmisRepositoryId = targetParentFolder.getCmisRepositoryId();
         if (cmisRepositoryId == null)
         {
             cmisRepositoryId = ecmFileServiceProperties.getProperty("ecm.defaultCmisId");
         }
 
-        AcmContainer container = getOrCreateContainer(targetObjectType, targetObjectId, cmisRepositoryId);
+        AcmContainer container = getOrCreateContainer(targetObjectType, targetParentFolder.getId(), cmisRepositoryId);
         EcmFile movedFile;
 
         try
         {
             file.setContainer(container);
-            file.setFolder(folder);
+            file.setFolder(targetParentFolder);
 
             movedFile = getEcmFileDao().save(file);
             movedFile = getFileParticipantService().setFileParticipantsFromParentFolder(movedFile);
@@ -1539,19 +1527,17 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
 
     @Override
     @AcmAcquireAndReleaseObjectLock(objectIdArgIndex = 0, objectType = "FILE", lockType = "DELETE")
-    public void deleteFileInArkcase(Long objectId)
+    public void deleteFileInArkcase(EcmFile file)
             throws AcmUserActionFailedException, AcmObjectNotFoundException
     {
-        EcmFile file = getEcmFileDao().find(objectId);
-
         if (file == null)
         {
-            throw new AcmObjectNotFoundException(EcmFileConstants.OBJECT_FILE_TYPE, objectId, "File not found", null);
+            throw new AcmObjectNotFoundException(EcmFileConstants.OBJECT_FILE_TYPE, file.getId(), "File not found", null);
         }
 
         try
         {
-            getEcmFileDao().deleteFile(objectId);
+            getEcmFileDao().deleteFile(file.getId());
         }
         catch (PersistenceException e)
         {
