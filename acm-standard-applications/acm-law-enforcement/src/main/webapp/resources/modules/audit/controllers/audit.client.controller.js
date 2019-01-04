@@ -22,8 +22,8 @@ angular.module('audit').controller(
 
                     $scope.objectType = null;
                     $scope.objectId = null;
-                    $scope.dateFrom = null;
-                    $scope.dateTo = null;
+                    $scope.dateFrom = new Date();
+                    $scope.dateTo = new Date();
                     $scope.isDateValid = false;
                     $scope.startDate = null;
                     $scope.dueDate = null;
