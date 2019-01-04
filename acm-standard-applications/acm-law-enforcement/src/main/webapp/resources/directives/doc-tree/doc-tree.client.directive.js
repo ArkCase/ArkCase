@@ -4879,8 +4879,9 @@ angular
                                 });
                             });
                         /*Get send email configuration*/
-                        EmailSenderConfigurationService.getEmailSenderConfiguration().then(function(res) {
-                            DocTree.treeConfig.emailSendConfiguration = res.data;
+                        EmailSenderConfigurationService.isEmailSenderAllowDocuments().then(function(res) {
+                            DocTree.treeConfig.emailSendConfiguration = {};
+                            DocTree.treeConfig.emailSendConfiguration.allowDocuments = res.data;
                         });
 
                         DocTree.scope.$bus.subscribe('onFilterDocTree', function(data) {

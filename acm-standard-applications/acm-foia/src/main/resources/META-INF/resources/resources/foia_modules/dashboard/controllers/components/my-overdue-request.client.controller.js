@@ -1,10 +1,12 @@
 'use strict';
 
-angular.module('dashboard.my-overdue-cases').controller('Dashboard.MyOverdueCasesController',
+angular.module('dashboard.my-overdue-requests').controller('Dashboard.MyOverdueRequestsController',
         [ '$scope', '$translate', 'Authentication', 'Dashboard.DashboardService', '$state', 'ConfigService', 'DueDate.Service', 'Admin.HolidayService', function($scope, $translate, Authentication, DashboardService, $state, ConfigService, DueDateService, AdminHolidayService) {
 
             var vm = this;
             vm.config = null;
+            var userInfo = null;
+            var requestStatus = "Released";
 
             var paginationOptions = {
                 pageNumber: 1,
@@ -43,7 +45,7 @@ angular.module('dashboard.my-overdue-cases').controller('Dashboard.MyOverdueCase
                 }
             };
 
-            ConfigService.getComponentConfig("dashboard", "myOverdueCases").then(function(config) {
+            ConfigService.getComponentConfig("dashboard", "myOverdueRequests").then(function(config) {
 
                 vm.config = config;
                 vm.gridOptions.columnDefs = config.columnDefs;
@@ -51,13 +53,20 @@ angular.module('dashboard.my-overdue-cases').controller('Dashboard.MyOverdueCase
                 vm.gridOptions.paginationPageSizes = config.paginationPageSizes;
                 vm.gridOptions.paginationPageSize = config.paginationPageSize;
                 paginationOptions.pageSize = config.paginationPageSize;
-                getPage();
+                
+                Authentication.queryUserInfo().then(function (responseUserInfo) { 
+                    userInfo = responseUserInfo;
+                    getPage();
+                    return userInfo;
+                });
+                
 
-                return config;
             });
 
             function getPage() {
-                DashboardService.queryMyOverdueCases({
+                DashboardService.queryMyOverdueRequests({
+                    userId: userInfo.userId,
+                    status: requestStatus,
                     sortBy: paginationOptions.sortBy,
                     sortDir: paginationOptions.sortDir,
                     startWith: (paginationOptions.pageNumber - 1) * paginationOptions.pageSize,
@@ -84,7 +93,7 @@ angular.module('dashboard.my-overdue-cases').controller('Dashboard.MyOverdueCase
             }
 
             vm.onTopicClick = function(row) {
-                $state.go('request-info', {
+                $state.go('request-details', {
                     id: row.entity.request_id_lcs
                 }, true);
             }

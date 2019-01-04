@@ -721,10 +721,12 @@
         },
         "branding.logo.header.title": "Header",
         "branding.logo.login.title": "Login Page",
+        "branding.logo.email.title": "Email",
         "branding.logo.warningMessage": "Only PNG format is allowed. Recommended ratio is 1 to 4. Minimum height is 50px.",
         "branding.logo.btn": {
             "chooseHeader": "Choose Header logo",
             "chooseLogin": "Choose Login logo",
+            "chooseEmail": "Choose Email logo",
             "saveFiles": "Save"
         },
         "branding": {
@@ -900,10 +902,11 @@
                 "test.conection.success": "Successfully connected."
             }
         },
-        "transcription": {
-            "title": "Transcription Services",
+        "mediaServices": {
+            "title": "Media Services",
             "transcriptionManagement": "Transcription Management",
             "transcriptionConfigForm": {
+                "title": "Transcription Services",
                 "save.button": "Save",
                 "automation.label": "Automation",
                 "enableTranscription.checkbox": "Enable Transcription",
@@ -927,6 +930,12 @@
                     "minOneValueErrorMsg": "Value must be greater than or equal to 1",
                     "minPositiveValueErrorMsg": "Value must be greater than 0"
                 }
+            },
+            "ocrManagement": "OCR Management",
+            "ocrConfigForm": {
+                "title": "OCR Services",
+                "save.button": "Save",
+                "enableOCR.checkbox": "Enable OCR"
             }
         },
         "stateOfArkcase": {

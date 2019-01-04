@@ -31,6 +31,7 @@ package gov.foia.service;
  */
 
 import static org.easymock.EasyMock.anyObject;
+import static org.easymock.EasyMock.anyString;
 import static org.easymock.EasyMock.capture;
 import static org.easymock.EasyMock.expect;
 import static org.junit.Assert.assertEquals;
@@ -46,6 +47,7 @@ import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
 import com.armedia.acm.services.email.model.EmailWithAttachmentsDTO;
 import com.armedia.acm.services.notification.service.NotificationSender;
+import com.armedia.acm.services.notification.service.TemplatingEngine;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 
@@ -104,6 +106,7 @@ public class AcknowledgementDocumentServiceTest extends EasyMockSupport
     private FOIADocumentGeneratorService mockDocumentGeneratorService;
     private FoiaConfigurationService mockedFoiaConfigurationService;
     private FoiaConfiguration mockedFoiaConfiguration;
+    private TemplatingEngine mockedTemplatingEngine;
 
     @Before
     public void setUp()
@@ -130,6 +133,7 @@ public class AcknowledgementDocumentServiceTest extends EasyMockSupport
         mockDocumentGeneratorService = createMock(FOIADocumentGeneratorService.class);
         mockedFoiaConfigurationService = createMock(FoiaConfigurationService.class);
         mockedFoiaConfiguration = createMock(FoiaConfiguration.class);
+        mockedTemplatingEngine = createMock(TemplatingEngine.class);
 
         acknowledgementService.setRequestDao(mockedFOIARequestFileDao);
         acknowledgementService.setEcmFileDao(mockedFileDao);
@@ -137,6 +141,7 @@ public class AcknowledgementDocumentServiceTest extends EasyMockSupport
         acknowledgementService.setNotificationSender(mockedNotificationSender);
         acknowledgementService.setDocumentGeneratorService(mockDocumentGeneratorService);
         acknowledgementService.setFoiaConfigurationService(mockedFoiaConfigurationService);
+        acknowledgementService.setTemplatingEngine(mockedTemplatingEngine);
 
         mockedContactMethods = Arrays.asList(mockedContactMethod);
     }
@@ -192,6 +197,8 @@ public class AcknowledgementDocumentServiceTest extends EasyMockSupport
         expect(mockedRequest.getCreator()).andReturn(userId);
         expect(mockedRequest.isExternal()).andReturn(true);
 
+        expect(mockedTemplatingEngine.process(anyString(), anyString(), anyObject())).andReturn("body text");
+
         Capture<EmailWithAttachmentsDTO> captureEmailWithAttachmentsDTO = Capture.newInstance();
         Capture<Authentication> capturedAuthentication = Capture.newInstance();
         Capture<String> capturedUserId = Capture.newInstance();
@@ -219,6 +226,8 @@ public class AcknowledgementDocumentServiceTest extends EasyMockSupport
         AcmUser internalUser = new AcmUser();
         internalUser.setUserId(userId);
         expect(mockedUserDao.findByUserId(userId)).andReturn(internalUser);
+
+        expect(mockedTemplatingEngine.process(anyString(), anyString(), anyObject())).andReturn("body text");
 
         Capture<EmailWithAttachmentsDTO> capturedEmailWithAttachmentsDTO = Capture.newInstance();
         Capture<Authentication> capturedAuthentication = Capture.newInstance();

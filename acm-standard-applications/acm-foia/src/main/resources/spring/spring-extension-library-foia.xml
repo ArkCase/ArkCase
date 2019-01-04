@@ -263,6 +263,8 @@
             <beans:property name="searchResults" ref="searchResults"/>
             <beans:property name="userDao" ref="userJpaDao"/>
             <beans:property name="notificationUtils" ref="notificationUtils"/>
+            <beans:property name="templatingEngine" ref="templatingEngine"/>
+            <beans:property name="emailBodyTemplate" value="file:${user.home}/.arkcase/acm/templates/request-assigned.html"/>
         </beans:bean>
 
         <beans:bean id="foiaExecutiveGroupNotificationService" class="gov.foia.service.FOIAExecutiveGroupNotificationService">
