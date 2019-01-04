@@ -1,4 +1,4 @@
-package com.armedia.acm.services.notification.service;
+package com.armedia.acm.services.email.service;
 
 /*-
  * #%L
