@@ -20,7 +20,7 @@ angular.module('directives').directive('dateTimePicker', ['moment', 'Util.DateSe
                 $scope.today = "";
                 $scope.dateInPicker = new Date();
                 minYear = $scope.dateInPicker.getFullYear() - 50;
-                utcDate = moment.utc(UtilDateService.dateToIso($scope.dateInPicker)).format();
+                utcDate = moment.utc(UtilDateService.dateToIso($scope.dateInPicker)).local().format();
                 maxYear = moment(utcDate).add(1, 'years').toDate().getFullYear();
             } else {
                 if ($scope.timeFormatDisabled === "true") {
@@ -29,7 +29,7 @@ angular.module('directives').directive('dateTimePicker', ['moment', 'Util.DateSe
                     $scope.dateInPicker = moment($scope.data).format(UtilDateService.defaultDateLongTimeFormat);
                 }
                 minYear = $scope.data.getFullYear() - 50;
-                utcDate = moment.utc(UtilDateService.dateToIso($scope.data)).format();
+                utcDate = moment.utc(UtilDateService.dateToIso($scope.data)).local().format();
                 maxYear = moment(utcDate).add(1, 'years').toDate().getFullYear();
             }
 
