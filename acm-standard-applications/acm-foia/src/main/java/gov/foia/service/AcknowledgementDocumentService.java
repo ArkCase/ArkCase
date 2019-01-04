@@ -36,8 +36,8 @@ import com.armedia.acm.core.exceptions.CorrespondenceMergeFieldVersionException;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.services.email.model.EmailWithAttachmentsDTO;
+import com.armedia.acm.services.email.service.TemplatingEngine;
 import com.armedia.acm.services.notification.service.NotificationSender;
-import com.armedia.acm.services.notification.service.TemplatingEngine;
 import com.armedia.acm.services.users.dao.UserDao;
 
 import org.slf4j.Logger;
