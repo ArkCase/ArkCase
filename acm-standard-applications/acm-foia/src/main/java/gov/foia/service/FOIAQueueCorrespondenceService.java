@@ -195,7 +195,7 @@ public class FOIAQueueCorrespondenceService
         }
     }
 
-    private EcmFile generateCorrespondenceLetter(FOIARequest request, FOIADocumentDescriptor documentDescriptor)
+    public EcmFile generateCorrespondenceLetter(FOIARequest request, FOIADocumentDescriptor documentDescriptor)
             throws AcmObjectNotFoundException, DocumentGeneratorException, AcmFolderException, AcmUserActionFailedException,
             CorrespondenceMergeFieldVersionException
     {
