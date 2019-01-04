@@ -262,6 +262,7 @@ public class SmtpNotificationSenderTest extends EasyMockSupport
     {
         Capture<String> templateCapture = EasyMock.newCapture();
         mockEmailWithAttachmentsAndLinksDTO.setTemplate(capture(templateCapture));
+        expect(mockEmailWithAttachmentsAndLinksDTO.getTemplate()).andReturn(null);
 
         mockSmtpService.sendEmailWithAttachmentsAndLinks(mockEmailWithAttachmentsAndLinksDTO, mockAuthentication, mockAcmUser);
         expectLastCall();
