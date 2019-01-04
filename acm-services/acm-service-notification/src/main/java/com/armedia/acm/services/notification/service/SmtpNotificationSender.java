@@ -80,7 +80,10 @@ public class SmtpNotificationSender extends NotificationSender
     public List<EmailWithEmbeddedLinksResultDTO> sendEmailWithEmbeddedLinks(EmailWithEmbeddedLinksDTO in, Authentication authentication,
             AcmUser user) throws Exception
     {
-        in.setTemplate(notificationTemplate);
+        if (in.getTemplate() == null)
+        {
+            in.setTemplate(notificationTemplate);
+        }
         return getEmailSenderService().sendEmailWithEmbeddedLinks(in, authentication, user);
     }
 
