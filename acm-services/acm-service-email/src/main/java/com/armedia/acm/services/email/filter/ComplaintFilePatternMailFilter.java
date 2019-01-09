@@ -55,9 +55,9 @@ public class ComplaintFilePatternMailFilter extends AcmObjectPatternMailFilter
     @Override
     public boolean accept(Message message) throws MessagingException, IOException
     {
+        boolean matchesFilter = false;
         if(enableCreatingObject)
         {
-            boolean matchesFilter = false;
             Pattern pattern = Pattern.compile(String.format("%s", objectTypeRegexPattern));
 
             String subject = message.getSubject();
@@ -73,7 +73,7 @@ public class ComplaintFilePatternMailFilter extends AcmObjectPatternMailFilter
         }
         else
         {
-            return false;
+            return matchesFilter;
         }
         
     }
