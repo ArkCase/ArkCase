@@ -365,7 +365,8 @@
                     "cancel": "Cancel",
                     "name": "Site Name",
                     "url": "URL"
-                }
+                },
+                "url.title": "URL must be valid."
             },
             "savePromptModal": {
                 "title": "Save dashboard",
