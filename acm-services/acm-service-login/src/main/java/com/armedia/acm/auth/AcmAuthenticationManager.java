@@ -157,7 +157,7 @@ public class AcmAuthenticationManager implements AuthenticationManager
 
     public AcmAuthentication getAcmAuthentication(Authentication providerAuthentication)
     {
-
+        log.info("Checking the authenticated user: [{}] in system", providerAuthentication.getName());
         AcmUser user = getUserDao().findByUserId(providerAuthentication.getName());
 
         if (user == null)
