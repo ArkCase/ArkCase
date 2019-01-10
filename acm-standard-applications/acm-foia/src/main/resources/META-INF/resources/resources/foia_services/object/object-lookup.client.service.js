@@ -1267,7 +1267,7 @@ angular.module('services').factory('Object.LookupService', [ '$q', '$resource', 
     };
 
     Service.getObjectTypeValue = function(objectType) {
-        return((objectType == 'CASE_FILE') ? 'REQUEST' : '');
+        return 'REQUEST';
     };
 
     return Service;
