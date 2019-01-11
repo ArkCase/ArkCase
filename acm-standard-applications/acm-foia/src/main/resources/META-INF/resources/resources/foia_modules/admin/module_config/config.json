@@ -1266,7 +1266,7 @@
             },
             {
                 "type": "p/transcription",
-                "label": "admin.transcription.title",
+                "label": "admin.mediaServices.title",
                 "icon": "fa fa-wrench",
                 "components": []
             },
