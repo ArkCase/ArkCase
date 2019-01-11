@@ -129,8 +129,4 @@
         <property name="notificationProperties" ref="notificationProperties"/>
         <property name="acmDataService" ref="acmDataService"/>
     </bean>
-
-    <bean id="templatingEngine" class="com.armedia.acm.services.notification.service.TemplatingEngine">
-        <property name="acmApplication" ref="acmApplication"/>
-    </bean>
 </beans>

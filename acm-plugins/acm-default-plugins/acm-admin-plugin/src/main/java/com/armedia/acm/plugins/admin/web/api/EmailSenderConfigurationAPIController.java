@@ -64,9 +64,25 @@ public class EmailSenderConfigurationAPIController
 
     @RequestMapping(value = "/email/sender/allowdocuments", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public boolean getSenderAllowDocuments() throws AcmEncryptionException
+    public boolean getSenderAllowDocuments()
     {
         return emailSenderConfigurationService.readConfiguration().isAllowDocuments();
+
+    }
+
+    @RequestMapping(value = "/email/sender/allowattachments", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public boolean getSenderAllowAttachments()
+    {
+        return emailSenderConfigurationService.readConfiguration().isAllowAttachments();
+
+    }
+
+    @RequestMapping(value = "/email/sender/allowhyperlinks", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public boolean getSenderAllowHyperlinks()
+    {
+        return emailSenderConfigurationService.readConfiguration().isAllowHyperlinks();
 
     }
 
