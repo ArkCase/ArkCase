@@ -31,6 +31,7 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.voodoodyne.jackson.jsog.JSOGGenerator;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @JsonIdentityInfo(generator = JSOGGenerator.class)
@@ -51,6 +52,9 @@ public class EmailWithEmbeddedLinksDTO extends MessageBodyFactory
 
     @JsonIgnore
     private List<String> fileNames;
+
+    @JsonIgnore
+    private List<String> tokens = new ArrayList<>();
 
     private String baseUrl;
 
@@ -156,5 +160,15 @@ public class EmailWithEmbeddedLinksDTO extends MessageBodyFactory
     public void setBody(String body)
     {
         this.body = body;
+    }
+
+    public List<String> getTokens()
+    {
+        return tokens;
+    }
+
+    public void setTokens(List<String> tokens)
+    {
+        this.tokens = tokens;
     }
 }

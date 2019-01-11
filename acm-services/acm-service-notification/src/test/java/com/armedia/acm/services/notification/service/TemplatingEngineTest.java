@@ -37,7 +37,9 @@ import org.junit.Test;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 import freemarker.template.TemplateException;
 
@@ -65,6 +67,7 @@ public class TemplatingEngineTest
         private LocalDateTime nullDateTime;
         private Long id;
         private boolean test;
+        private List<String> stringList;
 
         public Date getDate()
         {
@@ -145,6 +148,16 @@ public class TemplatingEngineTest
         {
             this.id = id;
         }
+
+        public List<String> getStringList()
+        {
+            return stringList;
+        }
+
+        public void setStringList(List<String> stringList)
+        {
+            this.stringList = stringList;
+        }
     }
 
     @Test
@@ -154,6 +167,7 @@ public class TemplatingEngineTest
         model.setDate(new Date());
         model.setDateTime(LocalDateTime.now());
         model.setId(1111l);
+        model.setStringList(Arrays.asList("string1", "string2"));
 
         String template = "dateAsDateTime: ${model.date?datetime}\n" +
                 "dateAsDate: ${model.date?date}\n" +
@@ -166,7 +180,8 @@ public class TemplatingEngineTest
                 "nullField: ${model.nullField}\n" +
                 "number: ${model.id}\n" +
                 "not formatted number: ${model.id?c}\n" +
-                "test: <#if model.test>Fail<#else>Success</#if>" +
+                "test: <#if model.test>Fail<#else>Success</#if>\n" +
+                "stringList: ${model.stringList?join(\", \")}\n" +
                 "baseURL: ${baseURL}";
 
         String result = null;

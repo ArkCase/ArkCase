@@ -164,7 +164,7 @@ public class AcmMailServiceAPIController
             List<String> emailAddresses = in.getEmailAddresses();
             for (String emailAddress : emailAddresses)
             {
-                List<String> templates = loadTemplates(objectType, emailAddress, Arrays.asList("sendAsAttachments", "sendAsLinks"));
+                List<String> templates = loadTemplates(objectType, emailAddress, Arrays.asList("sendAsAttachmentsAndLinks"));
                 for (String template : templates)
                 {
                     in.setTemplate(template);
