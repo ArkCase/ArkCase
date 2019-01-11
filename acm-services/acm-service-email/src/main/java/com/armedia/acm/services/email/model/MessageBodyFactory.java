@@ -1,5 +1,9 @@
 package com.armedia.acm.services.email.model;
 
+import com.armedia.acm.services.email.service.TemplatingEngine;
+
+import java.io.IOException;
+
 /*-
  * #%L
  * ACM Service: Email
@@ -27,9 +31,10 @@ package com.armedia.acm.services.email.model;
  * #L%
  */
 
-
 import java.util.HashMap;
 import java.util.Map;
+
+import freemarker.template.TemplateException;
 
 /**
  * Template factory for email notifications
@@ -43,6 +48,11 @@ public class MessageBodyFactory
     private static final String DEFAULT_TEMPLATE = "${model.header} \n\n ${model.body} \n\n\n ${model.footer}";
 
     private String template;
+    private String parentType;
+    private String parentNumber;
+    private String modelReferenceName;
+
+    private TemplatingEngine templatingEngine;
 
     public MessageBodyFactory()
     {
@@ -75,7 +85,22 @@ public class MessageBodyFactory
         model.put("header", header);
         model.put("body", body);
         model.put("footer", footer);
-        return buildMessageBodyFromTemplate(model);
+        if (getTemplatingEngine() == null || this.template.contains("${body}"))
+        {
+            return buildMessageBodyFromTemplate(model);
+        }
+        else
+        {
+            // New FreeMarker template
+            try
+            {
+                return templatingEngine.process(this.template, this.modelReferenceName, this);
+            }
+            catch (TemplateException | IOException e)
+            {
+                return buildMessageBodyFromTemplate(model);
+            }
+        }
     }
 
     /**
@@ -106,6 +131,46 @@ public class MessageBodyFactory
             template = template.replace("${model." + entry.getKey() + "}", entry.getValue() != null ? entry.getValue().toString() : "");
         }
         return template;
+    }
+
+    public TemplatingEngine getTemplatingEngine()
+    {
+        return templatingEngine;
+    }
+
+    public void setTemplatingEngine(TemplatingEngine templatingEngine)
+    {
+        this.templatingEngine = templatingEngine;
+    }
+
+    public String getParentNumber()
+    {
+        return parentNumber;
+    }
+
+    public void setParentNumber(String parentNumber)
+    {
+        this.parentNumber = parentNumber;
+    }
+
+    public String getParentType()
+    {
+        return parentType;
+    }
+
+    public void setParentType(String parentType)
+    {
+        this.parentType = parentType;
+    }
+
+    public String getModelReferenceName()
+    {
+        return modelReferenceName;
+    }
+
+    public void setModelReferenceName(String modelReferenceName)
+    {
+        this.modelReferenceName = modelReferenceName;
     }
 
 }

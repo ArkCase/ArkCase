@@ -661,12 +661,14 @@
             },
             "documentReview": {
                 "statuses": {
+                    "selectReviewStatus": "Select Status",
                     "reviewed": "Reviewed",
                     "notReviewed": "Not Reviewed"
                 }
             },
             "documentRedaction": {
                 "statuses": {
+                    "selectRedactionStatus": "Select Status",
                     "partialRedacted": "Partial Redacted",
                     "fullyRedacted": "Fully Redacted"
                 }
