@@ -53,7 +53,7 @@ public interface FOIAConstants
 
     public String EMAIL_HEADER_SUBJECT = "FOIA Extension Notification";
     public String EMAIL_HEADER_ATTACHMENT = "Hello,";
-    public String EMAIL_BODY_ATTACHMENT = "Please find attached the documents sent to you from ArkCase";
+    public String EMAIL_BODY_ATTACHMENT = "Please find the attached document(s) for your review.";
     public String EMAIL_FOOTER_ATTACHMENT = "Powered by ArkCase, Enterprise Case Management platform, http://www.arkcase.com";
 
     public String EMAIL_RELEASE_SUBJECT = "FOIA Request Complete";
