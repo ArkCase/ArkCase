@@ -77,7 +77,7 @@ public class LdapGroupService
             return createLdapSubgroup(group, ldapSyncConfig.getGroupControlGroup(), directoryName);
         }
 
-        String groupName = MapperUtils.buildGroupName(group.getName(), ldapSyncConfig.getUserDomain());
+        String groupName = MapperUtils.buildGroupName(group.getName(), ldapSyncConfig);
 
         AcmGroup existingGroup = groupService.findByName(groupName);
         if (existingGroup != null && existingGroup.getStatus() == AcmGroupStatus.ACTIVE)
@@ -113,7 +113,7 @@ public class LdapGroupService
         Set<String> memberOfGroups = new HashSet<>();
 
         String givenName = group.getName();
-        String groupName = MapperUtils.buildGroupName(givenName, ldapSyncConfig.getUserDomain());
+        String groupName = MapperUtils.buildGroupName(givenName, ldapSyncConfig);
 
         AcmGroup existingGroup = groupService.findByName(groupName);
         if (existingGroup != null && existingGroup.getStatus() == AcmGroupStatus.ACTIVE)
