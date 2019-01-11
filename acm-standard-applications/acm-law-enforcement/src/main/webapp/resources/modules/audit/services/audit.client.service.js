@@ -53,7 +53,7 @@ angular.module('audit').factory(
                             }
 
                             var reportUrl = pentahoHost + amendedPentahoPort + auditReportUri + "?startDate=" + UtilDateService.goodIsoDate(startDate) + "&endDate=" + UtilDateService.goodIsoDate(endDate) + "&objectType=" + objectType + "&objectId=" + objectId + "&dateFormat="
-                                    + encodeURIComponent(UtilDateService.defaultDateFormat) + "&timeZone=" + encodeURIComponent(UtilDateService.getTimeZoneOffset());
+                                + encodeURIComponent(UtilDateService.defaultDateFormat) + "&timeZone=" + encodeURIComponent(UtilDateService.getTimeZoneOffsetTime());
                             if (useUrl) {
                                 var absUrl = $location.absUrl();
                                 var baseHref = $browser.baseHref();
