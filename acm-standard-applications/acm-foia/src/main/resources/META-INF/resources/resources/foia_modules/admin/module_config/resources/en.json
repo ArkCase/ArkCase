@@ -922,7 +922,7 @@
                 "enableResponseFolderConversion.checkbox": "Convert to PDF the documents in the Response Folder"
             }
         },
-        "transcription": {
+        "mediaServices": {
             "title": "Transcription Services",
             "transcriptionManagement": "Transcription Management",
             "transcriptionConfigForm": {
