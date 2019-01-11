@@ -272,8 +272,8 @@
             "description": ""
         },
         "header-for-email-with-links": {
-            "value": "Please follow the links below to view the document(s). Links expire in 3 days.",
-            "defaultValue": "Please follow the links below to view the document(s). Links expire in 3 days.",
+            "value": "Please click the 'Open Document(s)' button to browse to the link. Links expire in 3 days.",
+            "defaultValue": "Please click the 'Open Document(s)' button to browse to the link. Links expire in 3 days.",
             "description": ""
         },
         "footer-for-email-with-links": {
@@ -292,8 +292,8 @@
             "description": ""
         },
         "body-for-email-with-attachment": {
-            "value": "Please find attached the documents sent to you from ArkCase.",
-            "defaultValue": "Please find attached the documents sent to you from ArkCase",
+            "value": "Please find the attached document(s) for your review.",
+            "defaultValue": "Please find the attached document(s) for your review.",
             "description": ""
         },
         "footer-for-email-with-attachment": {
