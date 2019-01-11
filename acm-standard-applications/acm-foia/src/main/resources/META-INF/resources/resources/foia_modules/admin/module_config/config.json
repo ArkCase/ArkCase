@@ -1272,7 +1272,7 @@
             },
             {
                 "type": "p/transcription/transcriptionManagement",
-                "label": "admin.transcription.transcriptionManagement",
+                "label": "admin.mediaServices.transcriptionManagement",
                 "components": [
                     "transcription-management"
                 ]
