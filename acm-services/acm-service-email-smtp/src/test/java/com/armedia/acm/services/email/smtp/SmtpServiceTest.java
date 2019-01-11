@@ -412,7 +412,7 @@ public class SmtpServiceTest
         inputDTO.setFileIds(fileIds);
         inputDTO.setFooter(footer);
         List<Long> attachmentIds = new ArrayList<>();
-        attachmentIds.add(new Long(999));
+        attachmentIds.add(new Long(fileId));
         inputDTO.setAttachmentIds(attachmentIds);
 
         List<String> filePaths = new ArrayList<>();
@@ -492,7 +492,7 @@ public class SmtpServiceTest
         inputDTO.setFileIds(fileIds);
         inputDTO.setFooter(footer);
         List<Long> attachmentIds = new ArrayList<>();
-        attachmentIds.add(new Long(999));
+        attachmentIds.add(new Long(fileId));
         inputDTO.setAttachmentIds(attachmentIds);
 
         List<String> filePaths = new ArrayList<>();
