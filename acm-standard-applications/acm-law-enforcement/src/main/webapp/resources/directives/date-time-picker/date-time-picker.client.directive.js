@@ -38,27 +38,31 @@ angular.module('directives').directive('dateTimePicker', ['moment', 'Util.DateSe
             };
 
             var comboField = element[0].children[1].firstElementChild;
-            if ($scope.timeFormatDisabled === "true") {
-                $(comboField).combodate({
-                    format: 'MM/DD/YYYY',
-                    template: 'MMM / DD / YYYY',
-                    minuteStep: 1,
-                    minYear: minYear,
-                    maxYear: maxYear,
-                    smartDays: true,
-                    value: $scope.dateInPicker
-                });
-            } else {
-                $(comboField).combodate({
-                    format: 'MM/DD/YYYY HH:mm',
-                    template: 'MMM / DD / YYYY HH:mm',
-                    minuteStep: 1,
-                    minYear: minYear,
-                    maxYear: maxYear,
-                    smartDays: true,
-                    value: $scope.dateInPicker
-                });
-            }
+            $scope.$watch('timeFormatDisabled', function () {
+                if ($scope.timeFormatDisabled === "true") {
+                    $(comboField).combodate({
+                        format: 'MM/DD/YYYY',
+                        template: 'MMM / DD / YYYY',
+                        minuteStep: 1,
+                        minYear: minYear,
+                        maxYear: maxYear,
+                        smartDays: true,
+                        value: $scope.dateInPicker
+                    });
+                    $scope.today = moment($scope.data).format(UtilDateService.defaultDateFormat);
+                } else {
+                    $(comboField).combodate({
+                        format: 'MM/DD/YYYY HH:mm',
+                        template: 'MMM / DD / YYYY HH:mm',
+                        minuteStep: 1,
+                        minYear: minYear,
+                        maxYear: maxYear,
+                        smartDays: true,
+                        value: $scope.dateInPicker
+                    });
+                    $scope.today = moment($scope.data).format(UtilDateService.defaultDateLongTimeFormat);
+                }
+            });
 
             $scope.saveDate = function () {
                 $scope.toggleEditable();

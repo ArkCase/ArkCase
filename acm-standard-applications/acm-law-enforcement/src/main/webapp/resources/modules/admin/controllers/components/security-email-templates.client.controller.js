@@ -147,6 +147,8 @@ angular.module('admin').controller('Admin.SecurityEmailTemplatesController',
                 $scope.newEmailReceiverConfiguration.password = $scope.emailReceiverConfiguration.pass;
                 $scope.newEmailReceiverConfiguration.user_complaint = $scope.emailReceiverConfiguration.user_complaint.replace('@', '%40');
                 $scope.newEmailReceiverConfiguration.password_complaint = $scope.emailReceiverConfiguration.pass_complaint;
+                $scope.newEmailReceiverConfiguration.enableCase = $scope.emailReceiverConfiguration.enableCase;
+                $scope.newEmailReceiverConfiguration.enableComplaint = $scope.emailReceiverConfiguration.enableComplaint;
                 emailTemplatesService.saveEmailReceiverConfiguration($scope.newEmailReceiverConfiguration).then(function(value) {
                     MessageService.succsessAction();
                 }, function(err) {

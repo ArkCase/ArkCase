@@ -99,6 +99,8 @@ public class EmailReceiverConfigurationServiceImpl implements EmailReceiverConfi
             emailReceiverProperties.put(EmailReceiverConfigurationConstants.PASSWORD_COMPLAINT,
                     acmEncryptablePropertyUtils.encryptPropertyValue(emailReceiverConfiguration.getPassword_complaint()));
         }
+        emailReceiverProperties.put(EmailReceiverConfigurationConstants.ENABLE_CREATING_CASE, Boolean.toString(emailReceiverConfiguration.getEnableCase()));
+        emailReceiverProperties.put(EmailReceiverConfigurationConstants.ENABLE_CREATING_COMPLAINT, Boolean.toString(emailReceiverConfiguration.getEnableComplaint()));
 
         Lock writeLock = lock.writeLock();
         writeLock.lock();
@@ -172,6 +174,13 @@ public class EmailReceiverConfigurationServiceImpl implements EmailReceiverConfi
                 break;
             case EmailReceiverConfigurationConstants.PASSWORD_COMPLAINT:
                 emailReceiverConfiguration.setPassword_complaint(propertyValue);
+                break;
+            case EmailReceiverConfigurationConstants.ENABLE_CREATING_CASE:
+                emailReceiverConfiguration.setEnableCase(Boolean.valueOf(propertyValue));
+                break;
+            case EmailReceiverConfigurationConstants.ENABLE_CREATING_COMPLAINT:
+                emailReceiverConfiguration.setEnableComplaint(Boolean.valueOf(propertyValue));
+                break;
             }
         }
 
