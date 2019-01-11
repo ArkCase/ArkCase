@@ -63,8 +63,8 @@
         "moreItemsTooltip": "Load more items",
         "moreItemsBegin": "More items...",
         "email": {
-            "defaultBodyLinks": "Please follow the links below to view the document(s). Links expire in 3 days.",
-            "defaultBodyAttachments": "Please find attached the documents sent to you from ArkCase.",
+            "defaultBodyLinks": "Please click the 'Open Document(s)' button to browse to the link. Links expire in 3 days.",
+            "defaultBodyAttachments": "Please find the attached document(s) for your review.",
             "defaultFooter": "Powered by ArkCase, Enterprise Case Management platform, http://www.arkcase.com",
             "successMessage": "The email was sent successfully",
             "noEmailAddress": "There is no entered email for this "
