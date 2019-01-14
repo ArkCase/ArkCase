@@ -27,15 +27,41 @@ package com.armedia.acm.plugins.ecm.service;
  * #L%
  */
 
+
+import com.armedia.acm.plugins.ecm.model.ProgressbarDetails;
+import org.apache.commons.io.input.CountingInputStream;
+import org.springframework.jms.core.JmsTemplate;
+
+import javax.jms.ConnectionFactory;
 import java.util.HashMap;
-import java.util.Map;
 
-public class ProgressIndicatorService {
+public class ProgressIndicatorService
+{
+    private HashMap<String, ProgressbarExecutor> progressBars = new HashMap<>();
+    private JmsTemplate jmsTemplate;
+    private ConnectionFactory activeMQConnectionFactory;
 
-    Map<String, Object> progressBars = new HashMap<>();
+    public void start(CountingInputStream inputStream, long size, Long id, String type, String name, String username, ProgressbarDetails progressbarDetails){
+        String _id = type + "_" + id + "_" + name;
+        ProgressbarExecutor executor = new ProgressbarExecutor(_id, username, activeMQConnectionFactory, jmsTemplate);
+        executor.startProgress(inputStream, size, type, id, name, progressbarDetails);
+        progressBars.put(_id, executor);
+    }
 
-    public HashMap<String, Object> get()
-    {
-        return null;
+    public void end(Long id, String type, String name, boolean successful){
+        String _id = type + "_" + id + "_" + name;
+        ProgressbarExecutor executor = progressBars.get(_id);
+        if (executor != null) {
+            executor.stopProgress(type, id, name, successful);
+            progressBars.remove(_id);
+        }
+    }
+
+    public void setJmsTemplate(JmsTemplate jmsTemplate) {
+        this.jmsTemplate = jmsTemplate;
+    }
+
+    public void setActiveMQConnectionFactory(ConnectionFactory activeMQConnectionFactory) {
+        this.activeMQConnectionFactory = activeMQConnectionFactory;
     }
 }

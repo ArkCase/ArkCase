@@ -39,6 +39,7 @@ import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.*;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.ecm.service.EcmFileTransaction;
+import com.armedia.acm.plugins.ecm.service.ProgressIndicatorService;
 import com.armedia.acm.plugins.ecm.service.ProgressbarExecutor;
 import com.armedia.acm.plugins.ecm.utils.CmisConfigUtils;
 import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
@@ -53,6 +54,7 @@ import com.armedia.acm.services.search.service.SearchResults;
 import org.apache.chemistry.opencmis.client.api.CmisObject;
 import org.apache.chemistry.opencmis.client.api.Document;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.input.CountingInputStream;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.mule.api.MuleException;
@@ -114,7 +116,9 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
 
     private AcmParticipantService participantService;
 
-    private ProgressbarExecutor progressbarExecutor;
+    private ProgressIndicatorService progressIndicatorService;
+
+    private ProgressbarDetails progressbarDetails;
 
 
     @Override
@@ -253,6 +257,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
 
         try
         {
+
             String cmisRepositoryId = metadata.getCmisRepositoryId() == null ? ecmFileServiceProperties.getProperty("ecm.defaultCmisId")
                     : metadata.getCmisRepositoryId();
             metadata.setCmisRepositoryId(cmisRepositoryId);
@@ -295,22 +300,31 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         try (InputStream fileInputStream = file.getInputStream())
         {
 
+            //this reports progress on file system. Also should store info for the broker, for which part of the progress it is loading for the filesystem or the activity upload from 50% to 59%
+            CountingInputStream c = new CountingInputStream(fileInputStream);
+            progressbarDetails.setProgressbar(true);
+            progressbarDetails.setStage(2);
+            progressIndicatorService.start(c, file.getSize(), parentObjectId, parentObjectType, file.getOriginalFilename(), authentication.getName(), progressbarDetails);
+
             String cmisRepositoryId = metadata.getCmisRepositoryId() == null ? ecmFileServiceProperties.getProperty("ecm.defaultCmisId")
                     : metadata.getCmisRepositoryId();
             metadata.setCmisRepositoryId(cmisRepositoryId);
             EcmFile uploaded = getEcmFileTransaction().addFileTransaction(authentication, file.getOriginalFilename(), container,
-                    targetCmisFolderId, fileInputStream, metadata);
+                    targetCmisFolderId, c, metadata);
 
             event = new EcmFileAddedEvent(uploaded, authentication);
             event.setUserId(authentication.getName());
             event.setSucceeded(true);
             applicationEventPublisher.publishEvent(event);
 
+            //stop the progressbar executor
+            progressIndicatorService.end(parentObjectId, parentObjectType, file.getOriginalFilename(), true);
             return uploaded;
         }
         catch (IOException | MuleException e)
         {
             log.error("Could not upload file: " + e.getMessage(), e);
+            progressIndicatorService.end(parentObjectId, parentObjectType, file.getOriginalFilename(), true);
             throw new AcmCreateObjectFailedException(file.getOriginalFilename(), e.getMessage(), e);
         }
     }
@@ -1679,11 +1693,19 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         this.participantService = participantService;
     }
 
-    public ProgressbarExecutor getProgressbarExecutor() {
-        return progressbarExecutor;
+    public ProgressIndicatorService getProgressIndicatorService() {
+        return progressIndicatorService;
     }
 
-    public void setProgressbarExecutor(ProgressbarExecutor progressbarExecutor) {
-        this.progressbarExecutor = progressbarExecutor;
+    public void setProgressIndicatorService(ProgressIndicatorService progressIndicatorService) {
+        this.progressIndicatorService = progressIndicatorService;
+    }
+
+    public ProgressbarDetails getProgressbarDetails() {
+        return progressbarDetails;
+    }
+
+    public void setProgressbarDetails(ProgressbarDetails progressbarDetails) {
+        this.progressbarDetails = progressbarDetails;
     }
 }

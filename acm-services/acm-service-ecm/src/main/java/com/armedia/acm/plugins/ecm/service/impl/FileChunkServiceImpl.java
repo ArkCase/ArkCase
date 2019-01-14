@@ -30,15 +30,13 @@ package com.armedia.acm.plugins.ecm.service.impl;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
-import com.armedia.acm.plugins.ecm.model.AcmFolder;
-import com.armedia.acm.plugins.ecm.model.EcmFile;
-import com.armedia.acm.plugins.ecm.model.FileChunkDetails;
-import com.armedia.acm.plugins.ecm.model.FileDetails;
+import com.armedia.acm.plugins.ecm.model.*;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.ecm.service.FileChunkService;
 import com.armedia.acm.plugins.ecm.service.ProgressbarExecutor;
 import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
 import com.armedia.acm.web.api.MDCConstants;
+import javafx.util.Pair;
 import org.apache.chemistry.opencmis.client.api.Document;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -47,6 +45,7 @@ import org.slf4j.MDC;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
@@ -67,10 +66,7 @@ public class FileChunkServiceImpl implements FileChunkService {
     @Transactional
     public void mergeAndUploadFiles(FileDetails fileDetails, AcmFolder folder, Document existingFile, Authentication authentication)
             throws IOException, AcmUserActionFailedException, AcmCreateObjectFailedException {
-        //initiate the counter on the entry afterwards for each phase increment by calling the calculateProgress() method
-
-        //get the progressIndicator from 50% to 100%
-        SequenceInputStream inputStream = mergeChunks(fileDetails);
+        SequenceInputStreamHolder holder = mergeChunks(fileDetails);
 
         getAuditPropertyEntityAdapter().setUserId(authentication.getName());
         setRepositoryRequestUserAndId(authentication);
@@ -85,8 +81,15 @@ public class FileChunkServiceImpl implements FileChunkService {
 
         log.debug("Start uploading the file with name {}", uniqueFileName);
 
-        ecmFileService.upload(authentication, fileDetails.getObjectType(), fileDetails.getObjectId(), folder.getCmisFolderId(),
-                uniqueFileName, inputStream, metadata, existingFile);
+        if (existingFile != null) {
+            //depricated upload method being called, find another solution. So far not implemented in upload large files
+            ecmFileService.upload(authentication, fileDetails.getObjectType(), fileDetails.getObjectId(), folder.getCmisFolderId(),
+                    uniqueFileName, holder.getStream(), metadata, existingFile);
+        } else {
+            AcmMultipartFile multipartFile = new AcmMultipartFile(fileDetails.getName(), fileDetails.getName(), fileDetails.getMimeType(), false, holder.getSize(), new byte[0], holder.getStream(), false);
+            ecmFileService.upload(authentication, multipartFile, folder.getCmisFolderId(), fileDetails.getObjectType(),
+                    fileDetails.getObjectId(), metadata);
+        }
         log.debug("Start deleting the temporary parts from the file {}", fileDetails.getParts());
 
         deleteFilesQuietly(fileDetails.getParts());
@@ -94,13 +97,20 @@ public class FileChunkServiceImpl implements FileChunkService {
     }
 
     @Override
-    public SequenceInputStream mergeChunks(FileDetails fileDetails)
+    public SequenceInputStreamHolder mergeChunks(FileDetails fileDetails)
             throws IOException {
+        SequenceInputStreamHolder holder = new SequenceInputStreamHolder();
         SequenceInputStream inputStream = null;
+        Long size = 0L;
         if (fileDetails != null && fileDetails.getParts() != null && !fileDetails.getParts().isEmpty()) {
-            inputStream = new SequenceInputStream(getInputStreams(fileDetails.getParts()));
+            Pair pair = getInputStreamsAndSize(fileDetails.getParts());
+            inputStream = new SequenceInputStream((Enumeration<? extends InputStream>) pair.getKey());
+            size = (Long)pair.getValue();
         }
-        return inputStream;
+
+        holder.setStream(inputStream);
+        holder.setSize(size);
+        return holder;
     }
 
     private void setRepositoryRequestUserAndId(Authentication authentication) {
@@ -121,14 +131,19 @@ public class FileChunkServiceImpl implements FileChunkService {
         }
     }
 
-    private Enumeration<InputStream> getInputStreams(List<FileChunkDetails> parts) throws IOException {
+    private Pair<Enumeration<InputStream>, Long> getInputStreamsAndSize(List<FileChunkDetails> parts) throws IOException {
         String dirPath = System.getProperty("java.io.tmpdir");
         Vector<InputStream> inputStream = new Vector<>();
+        Long size = 0L;
         for (FileChunkDetails part : parts) {
-            InputStream stream = org.mule.util.FileUtils.openInputStream(new File(dirPath + "/" + part.getFileName()));
+            File file = new File(dirPath + "/" + part.getFileName());
+            InputStream stream = org.mule.util.FileUtils.openInputStream(file);
             inputStream.addElement(stream);
+            size += file.length();
         }
-        return inputStream.elements();
+
+        Pair pair = new Pair(inputStream.elements(), size);
+        return pair;
     }
 
     public FolderAndFilesUtils getFolderAndFilesUtils() {

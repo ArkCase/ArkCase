@@ -2,7 +2,7 @@
 
 angular.module('core').controller(
     'UploadManagerModalController',
-    ['$scope', '$modalInstance', '$http', '$translate', 'Upload', 'MessageService', 'ObjectService', 'UtilService', 'params', function ($scope, $modalInstance, $http, $translate, Upload, MessageService, ObjectService, Util, params) {
+    ['$scope', '$rootScope', '$modalInstance', '$http', '$translate', 'Upload', 'MessageService', 'ObjectService', 'UtilService', 'params', function ($scope, $rootScope, $modalInstance, $http, $translate, Upload, MessageService, ObjectService, Util, params) {
         $scope.hashMap = {};
 
         var uploadFileSizeLimit = params.uploadFileSizeLimit;
@@ -114,9 +114,13 @@ angular.module('core').controller(
                 MessageService.error($translate.instant('common.directive.docTree.progressBar.failed') + ": " + error);
             }, function (progress) {
                 $scope.hashMap[uuid].partProgress = progress.loaded;
-                //here goes the upload progress to 100% without the websockets implementation,
-                //instead improvement is needed to get it to 50% and then increment until 100% from the progressIndicator java implementation
-                $scope.hashMap[uuid].currentProgress = parseInt(100.0 * (($scope.hashMap[uuid].progress + $scope.hashMap[uuid].partProgress) / $scope.hashMap[uuid].file.size));
+                $scope.hashMap[uuid].currentProgress = parseInt(50.0 * (($scope.hashMap[uuid].progress + $scope.hashMap[uuid].partProgress) / $scope.hashMap[uuid].file.size));
+
+                $rootScope.$bus.subscribe('progressbar-current-progress-updated', function(message) {
+                    $scope.$apply(function(){
+                        $scope.hashMap[uuid].currentProgress = parseInt(message.currentProgress);
+                    });
+                });
             });
 
         }
@@ -140,6 +144,7 @@ angular.module('core').controller(
                 details.currentProgress = 0;
                 details.parentObjectNumber = fileDetails.parentObjectNumber;
                 details.lang = fileDetails.lang;
+                details.stage = 1;
 
                 var uuid = Date.now();
                 details.uuid = uuid;
