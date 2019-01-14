@@ -109,6 +109,11 @@ iframe {
 span.fancytree-title {
     margin-left: 0px !important;
     padding-right: 0px !important;
+    display:inline-block;
+    white-space: nowrap;
+    overflow:hidden !important;
+    text-overflow: ellipsis;
+    width:200px;
 }
 
 .fancytree-container {
