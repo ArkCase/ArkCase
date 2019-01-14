@@ -377,7 +377,9 @@
                 "password.label": "Password",
                 "email.placeholder": "Enter Email address",
                 "password.placeholder": "Enter Password",
-                "btnSave": "Save"
+                "btnSave": "Save",
+                "enableCase": "Enable creating Case Files from incoming mail",
+                "enableComplaint": "Enable creating Complaints from incoming mail"
             },
             "table.columns": {
                 "templateName": "Template Name",

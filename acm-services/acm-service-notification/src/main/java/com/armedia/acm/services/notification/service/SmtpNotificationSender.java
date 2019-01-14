@@ -72,7 +72,10 @@ public class SmtpNotificationSender extends NotificationSender
     public void sendEmailWithAttachmentsAndLinks(EmailWithAttachmentsAndLinksDTO in, Authentication authentication, AcmUser user)
             throws Exception
     {
-        in.setTemplate(notificationTemplate);
+        if (in.getTemplate() == null)
+        {
+            in.setTemplate(notificationTemplate);
+        }
         getEmailSenderService().sendEmailWithAttachmentsAndLinks(in, authentication, user);
     }
 

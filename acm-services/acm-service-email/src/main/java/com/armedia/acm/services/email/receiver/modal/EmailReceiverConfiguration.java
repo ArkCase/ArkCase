@@ -63,6 +63,10 @@ public class EmailReceiverConfiguration
 
     @JsonIgnore
     private String password_complaint;
+    
+    private Boolean enableCase;
+    
+    private Boolean enableComplaint;
 
     /**
      * @return the email
@@ -287,5 +291,21 @@ public class EmailReceiverConfiguration
     public void setPassword_complaint(String password_complaint)
     {
         this.password_complaint = password_complaint;
+    }
+
+    public Boolean getEnableCase() {
+        return enableCase;
+    }
+
+    public void setEnableCase(Boolean enableCase) {
+        this.enableCase = enableCase;
+    }
+
+    public Boolean getEnableComplaint() {
+        return enableComplaint;
+    }
+
+    public void setEnableComplaint(Boolean enableComplaint) {
+        this.enableComplaint = enableComplaint;
     }
 }

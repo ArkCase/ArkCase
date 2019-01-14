@@ -164,6 +164,7 @@ public class FOIARequestToSolrTransformer extends CaseFileToSolrTransformer
         additionalProperties.put("request_expedite_reason_s", requestIn.getRequestExpediteReason());
         additionalProperties.put("pay_fee_s", requestIn.getPayFee());
         additionalProperties.put("processing_fee_waive_s", Double.toString(requestIn.getProcessingFeeWaive()));
+        additionalProperties.put("request_agency_s", requestIn.getComponentAgency());
     }
 
     private Date solrDateFromLocalDate(LocalDate localDate)

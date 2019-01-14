@@ -31,19 +31,8 @@
             </div>
             <div class="col-sm-6 form-group">
                 <label for="identificationYearIssued" translate>organizations.comp.ids.modal.yearIssued.label</label>
-                <p class="input-group">
-                    <input id="identificationYearIssued" type="text" class="form-control"
-                            placeholder="{{'organizations.comp.ids.modal.yearIssued.placeholder' | translate}}"
-                            datepicker-popup="{{'common.defaultDatePickerFormat' | translate}}" datepicker-append-to-body="false"
-                            ng-model="identification.identificationYearIssued" is-open="opened" close-on-date-selection="true"
-                            show-button-bar="true" on-open-focus="false"
-                            close-text="{{'organizations.comp.ids.modal.yearIssued.close.button' | translate}}" />
-                    <span class="input-group-btn">
-                                    <button type="button" class="btn btn-default" ng-click="opened = !opened">
-                                        <i class="fa fa-calendar"></i>
-                                    </button>
-                                </span>
-                </p>
+                <date-time-picker data="identification.identificationYearIssued" property="identification.identificationYearIssued"
+                        date-picker-id="identification.identificationYearIssued" time-format-disabled="true"></date-time-picker>
             </div>
         </div>
         <div class="row">

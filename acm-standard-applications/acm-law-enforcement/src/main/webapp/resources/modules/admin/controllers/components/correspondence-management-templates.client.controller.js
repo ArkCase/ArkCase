@@ -124,10 +124,6 @@ angular.module('admin').controller('Admin.CMTemplatesController',
                             angular.forEach(templateVersionData.data, function(row, index) {
                                 row.downloadFileName = correspondenceService.downloadByFilename(row.templateFilename);
                             });
-                            angular.forEach(templateVersionData.data, function(row, index) {
-                                row.objectType = ObjectLookupService.getObjectTypeValue(templateVersionData.data[objectTypeIndex].objectType);
-                                objectTypeIndex++;
-                            });
                             $scope.gridOptions = {
                                 enableColumnResizing: true,
                                 enableRowSelection: true,
@@ -136,6 +132,10 @@ angular.module('admin').controller('Admin.CMTemplatesController',
                                 paginationPageSize: $scope.config.paginationPageSize,
                                 data: templateVersionData.data
                             };
+                            angular.forEach($scope.gridOptions.data, function(row, index) {
+                                row.objectType = ObjectLookupService.getObjectTypeValue(templateVersionData.data[objectTypeIndex].objectType);
+                                objectTypeIndex++;
+                            });
                             $scope.onClickOk = function() {
                                 $modalInstance.dismiss('cancel');
                             };
@@ -190,11 +190,11 @@ angular.module('admin').controller('Admin.CMTemplatesController',
                     angular.forEach(templates.data, function(row, index) {
                         row.downloadFileName = correspondenceService.downloadByFilename(row.templateFilename);
                     });
-                    angular.forEach(templates.data, function(row, index) {
+                    $scope.gridOptions.data = templates.data;
+                    angular.forEach($scope.gridOptions.data, function(row, index) {
                         row.objectType = ObjectLookupService.getObjectTypeValue(templates.data[objectTypeIndex].objectType);
                         objectTypeIndex++;
                     });
-                    $scope.gridOptions.data = templates.data;
                     $scope.selectedRows = [];
                 });
             }
