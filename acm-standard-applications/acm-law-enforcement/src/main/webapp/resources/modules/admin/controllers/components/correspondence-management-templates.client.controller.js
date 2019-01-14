@@ -113,7 +113,6 @@ angular.module('admin').controller('Admin.CMTemplatesController',
                 var modalScope = $scope.$new();
                 modalScope.config = $scope.configVersions;
                 var templateVersionsPromise = correspondenceService.getTemplateVersionData($scope.selectedRows[0].templateId);
-                var objectTypeIndex = 0;
                 templateVersionsPromise.then(function(templateVersionData) {
                     var modalInstance = $modal.open({
                         scope: modalScope,
@@ -132,10 +131,6 @@ angular.module('admin').controller('Admin.CMTemplatesController',
                                 paginationPageSize: $scope.config.paginationPageSize,
                                 data: templateVersionData.data
                             };
-                            angular.forEach($scope.gridOptions.data, function(row, index) {
-                                row.objectType = ObjectLookupService.getObjectTypeValue(templateVersionData.data[objectTypeIndex].objectType);
-                                objectTypeIndex++;
-                            });
                             $scope.onClickOk = function() {
                                 $modalInstance.dismiss('cancel');
                             };
@@ -185,16 +180,11 @@ angular.module('admin').controller('Admin.CMTemplatesController',
 
             function ReloadGrid() {
                 var templatesPromise = correspondenceService.retrieveActiveVersionTemplatesList();
-                var objectTypeIndex = 0;
                 templatesPromise.then(function(templates) {
                     angular.forEach(templates.data, function(row, index) {
                         row.downloadFileName = correspondenceService.downloadByFilename(row.templateFilename);
                     });
                     $scope.gridOptions.data = templates.data;
-                    angular.forEach($scope.gridOptions.data, function(row, index) {
-                        row.objectType = ObjectLookupService.getObjectTypeValue(templates.data[objectTypeIndex].objectType);
-                        objectTypeIndex++;
-                    });
                     $scope.selectedRows = [];
                 });
             }
