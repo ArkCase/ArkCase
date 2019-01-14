@@ -3725,6 +3725,14 @@ angular
                         }, 5000);
 
                     },
+                    truncateString : function(str, num) {
+                        var truncateString = '';
+                        if (str.length && str.length > num) {
+                            truncateString = str.slice(0, num - 1) + '...';
+                            return truncateString;
+                        }
+                        return str;
+                    },
                     _folderDataToNodeData : function(folderData, nodeData) {
                         if (folderData && nodeData) {
                             if (!nodeData.data) {
@@ -3750,7 +3758,7 @@ angular
                                 nodeData.data = {};
                             }
                             nodeData.key = Util.goodValue(fileData.objectId, 0);
-                            nodeData.title = Util.goodValue(fileData.name);
+                            nodeData.title = Util.goodValue(DocTree.truncateString(fileData.name, 12));
                             nodeData.tooltip = Util.goodValue(fileData.name);
                             nodeData.data.name = Util.goodValue(fileData.name);
                             nodeData.data.ext = Util.goodValue(fileData.ext);
@@ -3949,6 +3957,7 @@ angular
 
                                 $(node.tr).find("select.reviewstatus").prop('disabled', false);
                                 $(node.tr).find("select.redactionstatus").prop('disabled', false);
+                                node.data.reviewStatus = statusValue;
 
                                 return data;
                             }, function(error) {
@@ -3974,6 +3983,7 @@ angular
 
                                 $(node.tr).find("select.reviewstatus").prop('disabled', false);
                                 $(node.tr).find("select.redactionstatus").prop('disabled', false);
+                                node.data.redactionStatus = statusValue;
 
                                 return data;
                             }, function(error) {
@@ -5133,9 +5143,15 @@ angular
                                 });
                             });
                         /*Get send email configuration*/
+                        DocTree.treeConfig.emailSendConfiguration = {};
                         EmailSenderConfigurationService.isEmailSenderAllowDocuments().then(function(res) {
-                            DocTree.treeConfig.emailSendConfiguration = {};
                             DocTree.treeConfig.emailSendConfiguration.allowDocuments = res.data;
+                        });
+                        EmailSenderConfigurationService.isEmailSenderAllowAttachments().then(function(res) {
+                            DocTree.treeConfig.emailSendConfiguration.allowAttachments = res.data;
+                        });
+                        EmailSenderConfigurationService.isEmailSenderAllowHyperlinks().then(function(res) {
+                            DocTree.treeConfig.emailSendConfiguration.allowHyperlinks = res.data;
                         });
 
                         DocTree.scope.$bus.subscribe('onFilterDocTree', function(data) {

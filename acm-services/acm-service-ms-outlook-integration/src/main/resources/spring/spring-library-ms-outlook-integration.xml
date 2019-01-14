@@ -37,6 +37,7 @@
         <property name="outlookPasswordDao" ref="outlookPasswordDao"/>
         <property name="acmEmailContentGeneratorService" ref="acmEmailContentGeneratorService"/>
         <property name="folderCreatorDao" ref="outlookFolderCreatorDao"/>
+        <property name="templatingEngine" ref="templatingEngine"/>
     </bean>
 
     <bean id="outlookCacheManager" class="org.springframework.cache.ehcache.EhCacheCacheManager">

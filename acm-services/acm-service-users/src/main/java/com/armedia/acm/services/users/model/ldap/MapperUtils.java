@@ -174,6 +174,17 @@ public class MapperUtils
                 .toUpperCase();
     }
 
+    public static String buildGroupName(String name, AcmLdapSyncConfig ldapSyncConfig)
+    {
+        String groupPrefix = ldapSyncConfig.getGroupPrefix();
+        if (StringUtils.isNotBlank(groupPrefix) && !name.startsWith(groupPrefix))
+        {
+            String groupName = String.format("%s.%s", groupPrefix, name);
+            return buildGroupName(groupName, ldapSyncConfig.getUserDomain());
+        }
+        return buildGroupName(name, ldapSyncConfig.getUserDomain());
+    }
+
     public static String buildUserId(String userId, String domain)
     {
 

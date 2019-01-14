@@ -1265,6 +1265,19 @@
                 ]
             },
             {
+                "type": "p/transcription",
+                "label": "admin.mediaServices.title",
+                "icon": "fa fa-wrench",
+                "components": []
+            },
+            {
+                "type": "p/transcription/transcriptionManagement",
+                "label": "admin.mediaServices.transcriptionManagement",
+                "components": [
+                    "transcription-management"
+                ]
+            },
+            {
                 "type": "p/stateOfArkcase",
                 "label": "admin.stateOfArkcase.title",
                 "icon": "fa fa-wrench",

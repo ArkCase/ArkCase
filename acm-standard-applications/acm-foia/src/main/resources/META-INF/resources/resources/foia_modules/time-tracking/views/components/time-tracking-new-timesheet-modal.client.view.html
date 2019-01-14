@@ -33,19 +33,8 @@
             </div>
             <div class="col-sm-4 form-group">
                 <label translate>timeTracking.comp.newTimesheet.time.date</label>
-                <p class="input-group">
-                    <input type="text" class="form-control"
-                            placeholder="{{'timeTracking.comp.newTimesheet.time.date.placeholder' | translate}}"
-                            datepicker-popup="{{'common.defaultDatePickerFormat' | translate}}" datepicker-append-to-body="false"
-                            ng-model="selectedDate" is-open="defaultOpened" close-on-date-selection="true" show-button-bar="true"
-                            on-open-focus="false" close-text="{{'timeTracking.comp.newTimesheet.time.date.close.button' | translate}}"
-                            required />
-                    <span class="input-group-btn">
-                            <button type="button" class="btn btn-default" ng-click="defaultOpened = !defaultOpened">
-                                <i class="fa fa-calendar"></i>
-                            </button>
-                        </span>
-                </p>
+                <date-time-picker data="selectedDate" property="selectedDate" date-picker-id="selectedDate"
+                        time-format-disabled="true"></date-time-picker>
             </div>
             <div class="col-sm-2 form-group">
                 <label>&nbsp;</label><br />

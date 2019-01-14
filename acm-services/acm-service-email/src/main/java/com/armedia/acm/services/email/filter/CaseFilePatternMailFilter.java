@@ -44,32 +44,40 @@ public class CaseFilePatternMailFilter extends AcmObjectPatternMailFilter
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
     private String objectTypeRegexPattern;
+    private Boolean enableCreatingObject;
 
-    public CaseFilePatternMailFilter(String objectIdRegexPattern, String objectTypeRegexPattern)
+    public CaseFilePatternMailFilter(String objectIdRegexPattern, String objectTypeRegexPattern, Boolean enableCreatingObject)
     {
 
         super(objectIdRegexPattern, objectTypeRegexPattern);
         this.objectTypeRegexPattern = objectTypeRegexPattern;
+        this.enableCreatingObject = enableCreatingObject;
 
     }
 
     @Override
     public boolean accept(Message message) throws MessagingException, IOException
     {
-
         boolean matchesFilter = false;
-        Pattern pattern = Pattern.compile(String.format("%s", objectTypeRegexPattern));
-
-        String subject = message.getSubject();
-        if (!StringUtils.isEmpty(subject))
+        if(enableCreatingObject)
         {
-            Matcher matcher = pattern.matcher(subject);
-            matchesFilter = matcher.find();
+            Pattern pattern = Pattern.compile(String.format("%s", objectTypeRegexPattern));
 
-            log.debug("Message with subject '{}' matches required pattern: '{}'", message.getSubject(), matchesFilter);
+            String subject = message.getSubject();
+            if (!StringUtils.isEmpty(subject))
+            {
+                Matcher matcher = pattern.matcher(subject);
+                matchesFilter = matcher.find();
+
+                log.debug("Message with subject '{}' matches required pattern: '{}'", message.getSubject(), matchesFilter);
+            }
+
+            return matchesFilter;
         }
-
-        return matchesFilter;
+        else 
+        {
+            return matchesFilter;
+        }
 
     }
 }

@@ -40,9 +40,12 @@ public class AcmEmailContentGeneratorService
 {
     private AuthenticationTokenService authenticationTokenService;
     private AuthenticationTokenDao authenticationTokenDao;
+    private TemplatingEngine templatingEngine;
 
     public String generateEmailBody(EmailWithEmbeddedLinksDTO emailDTO, String emailAddress, Authentication authentication)
     {
+        emailDTO.setTemplatingEngine(getTemplatingEngine());
+
         StringBuilder body = new StringBuilder();
         body.append(emailDTO.getBody() != null ? emailDTO.getBody() : "").append("<br/>");
 
@@ -52,6 +55,7 @@ public class AcmEmailContentGeneratorService
             {
                 String token = authenticationTokenService.generateAndSaveAuthenticationToken(fileId, emailAddress, authentication);
                 body.append(emailDTO.getBaseUrl()).append(fileId).append("&acm_email_ticket=").append(token).append("<br/>");
+                emailDTO.getTokens().add(token);
             }
         }
 
@@ -76,5 +80,15 @@ public class AcmEmailContentGeneratorService
     public void setAuthenticationTokenDao(AuthenticationTokenDao authenticationTokenDao)
     {
         this.authenticationTokenDao = authenticationTokenDao;
+    }
+
+    public TemplatingEngine getTemplatingEngine()
+    {
+        return templatingEngine;
+    }
+
+    public void setTemplatingEngine(TemplatingEngine templatingEngine)
+    {
+        this.templatingEngine = templatingEngine;
     }
 }

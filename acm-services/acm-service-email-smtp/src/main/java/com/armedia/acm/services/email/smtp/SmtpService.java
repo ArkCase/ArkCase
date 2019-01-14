@@ -33,11 +33,19 @@ import com.armedia.acm.files.propertymanager.PropertyFileManager;
 import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
-import com.armedia.acm.services.email.model.*;
+import com.armedia.acm.services.email.model.AttachmentsProcessableDTO;
+import com.armedia.acm.services.email.model.EmailBodyBuilder;
+import com.armedia.acm.services.email.model.EmailBuilder;
+import com.armedia.acm.services.email.model.EmailWithAttachmentsAndLinksDTO;
+import com.armedia.acm.services.email.model.EmailWithAttachmentsDTO;
+import com.armedia.acm.services.email.model.EmailWithEmbeddedLinksDTO;
+import com.armedia.acm.services.email.model.EmailWithEmbeddedLinksResultDTO;
 import com.armedia.acm.services.email.sender.model.EmailSenderConfigurationConstants;
 import com.armedia.acm.services.email.service.AcmEmailContentGeneratorService;
 import com.armedia.acm.services.email.service.AcmEmailSenderService;
+import com.armedia.acm.services.email.service.TemplatingEngine;
 import com.armedia.acm.services.users.model.AcmUser;
+
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.slf4j.Logger;
@@ -47,11 +55,16 @@ import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.security.core.Authentication;
 
 import javax.activation.DataHandler;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Stream;
 
 /**
@@ -75,6 +88,8 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
     private String flow;
 
     private AcmEmailContentGeneratorService acmEmailContentGeneratorService;
+
+    private TemplatingEngine templatingEngine;
 
     @Override
     public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher)
@@ -123,6 +138,8 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
     @Override
     public void sendEmailWithAttachments(EmailWithAttachmentsDTO in, Authentication authentication, AcmUser user) throws Exception
     {
+        in.setTemplatingEngine(getTemplatingEngine());
+
         Exception exception = null;
         Map<String, Object> messageProps = loadSmtpAndOriginatingProperties();
         messageProps.put("subject", in.getSubject());
@@ -179,6 +196,8 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
     {
         Exception exception = null;
 
+        setFilenames(in);
+
         Map<String, Object> messageProps = loadSmtpAndOriginatingProperties();
         messageProps.put("subject", in.getSubject());
         List<SmtpEventSentEvent> sentEvents = new ArrayList<>();
@@ -208,6 +227,25 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
         }
     }
 
+    private Long setFilenames(EmailWithEmbeddedLinksDTO in)
+    {
+        EcmFile ecmFile = null;
+        List<String> fileNames = new ArrayList<String>();
+
+        if (Objects.nonNull(in.getFileIds()) && in.getFileIds().size() > 0)
+        {
+            for (int i = 0; i < in.getFileIds().size(); i++)
+            {
+                ecmFile = ecmFileService.findById(in.getFileIds().get(i));
+                fileNames.add(ecmFile.getFileName() + ecmFile.getFileActiveVersionNameExtension());
+            }
+            in.setFileNames(fileNames);
+            return ecmFile.getParentObjectId();
+        }
+
+        return null;
+    }
+
     /**
      * @param in
      * @param user
@@ -224,7 +262,7 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
         Map<String, DataHandler> attachments = new HashMap<>();
         if (in.getAttachmentIds() != null && !in.getAttachmentIds().isEmpty())
         {
-            //add index to make sure the fileKey is unique for AFDP- 5713
+            // add index to make sure the fileKey is unique for AFDP- 5713
             int idx = 1;
             for (Long attachmentId : in.getAttachmentIds())
             {
@@ -291,6 +329,8 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
         List<EmailWithEmbeddedLinksResultDTO> emailResultList = new ArrayList<>();
         Exception exception = null;
 
+        Long parentId = setFilenames(in);
+
         Map<String, Object> messageProps = loadSmtpAndOriginatingProperties();
         messageProps.put("subject", in.getSubject());
         for (String emailAddress : in.getEmailAddresses())
@@ -316,27 +356,12 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
                 emailResultList.add(new EmailWithEmbeddedLinksResultDTO(emailAddress, true));
             }
 
+            SmtpSentEventHyperlink event = new SmtpSentEventHyperlink(in, user.getUserId(), parentId, in.getParentType());
+
+            boolean success = (exception == null);
+            event.setSucceeded(success);
+            eventPublisher.publishEvent(event);
         }
-
-        EcmFile ecmFile = null;
-        List<String> fileNames = new ArrayList<String>();
-
-        if(Objects.nonNull(in.getFileIds()) && in.getFileIds().size() > 0)
-        {
-            for (int i = 0; i < in.getFileIds().size(); i++)
-            {
-                ecmFile = ecmFileService.findById(in.getFileIds().get(i));
-                fileNames.add(ecmFile.getFileName() + ecmFile.getFileActiveVersionNameExtension());
-            }
-            in.setFileNames(fileNames);
-        }
-
-        SmtpSentEventHyperlink event = new SmtpSentEventHyperlink(in, user.getUserId(),
-                ecmFile != null ? ecmFile.getParentObjectId() : null,
-                ecmFile != null ? ecmFile.getParentObjectType() : null);
-        boolean success = (exception == null);
-        event.setSucceeded(success);
-        eventPublisher.publishEvent(event);
 
         return emailResultList;
     }
@@ -427,6 +452,16 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
     public void setFlow(String flow)
     {
         this.flow = flow;
+    }
+
+    public TemplatingEngine getTemplatingEngine()
+    {
+        return templatingEngine;
+    }
+
+    public void setTemplatingEngine(TemplatingEngine templatingEngine)
+    {
+        this.templatingEngine = templatingEngine;
     }
 
 }
