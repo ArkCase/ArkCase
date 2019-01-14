@@ -39,6 +39,7 @@
                 "headTemplate": "<label id='title' class='doc-tree-header' style='cursor: pointer;'></label>",
                 "icon": "<i class='fa fa-fw fa-sort-asc' data-sort='title' data-dir='DESC'></i>",
                 "width": "20%",
+                "cellTemplate": "<div style='display:inline-block; white-space: nowrap; overflow:hidden !important; text-overflow: ellipsis;'></div>",
                 "index": 2
             },
             {
