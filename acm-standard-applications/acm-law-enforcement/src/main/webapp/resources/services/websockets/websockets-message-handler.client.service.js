@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('services').factory('Websockets.MessageHandler', [ '$q', '$rootScope', 'Acm.StoreService', 'Object.AuditService', 'TimeTracking.InfoService', 'ObjectService', function($q, $rootScope, Store, ObjectAuditService, TimeTrackingInfoService, ObjectService) {
+angular.module('services').factory('Websockets.MessageHandler', [ '$q', '$rootScope', 'Acm.StoreService', 'Object.AuditService', 'TimeTracking.InfoService', 'ObjectService', 'UtilService', function($q, $rootScope, Store, ObjectAuditService, TimeTrackingInfoService, ObjectService, Util) {
     var Service = {};
 
     Service.handleMessage = handleMessage;
@@ -22,8 +22,12 @@ angular.module('services').factory('Websockets.MessageHandler', [ '$q', '$rootSc
     }
 
     function handleGenericMessage(message) {
+        if(!Util.isEmpty(message.progressbar)){
+            $rootScope.$bus.publish('progressbar-current-progress-updated', message);
+        }
         var eventName = message.eventType;
         $rootScope.$bus.publish(eventName, message);
+
     }
 
     function handleCache(message) {

@@ -37,6 +37,7 @@ import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.pipeline.EcmFileTransactionPipelineContext;
 import com.armedia.acm.plugins.ecm.service.EcmFileTransaction;
 import com.armedia.acm.plugins.ecm.service.FileEventPublisher;
+import com.armedia.acm.plugins.ecm.service.ProgressIndicatorService;
 import com.armedia.acm.plugins.ecm.utils.CmisConfigUtils;
 import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
 import com.armedia.acm.services.pipeline.PipelineManager;
@@ -46,6 +47,7 @@ import org.apache.chemistry.opencmis.client.api.Document;
 import org.apache.chemistry.opencmis.commons.data.ContentStream;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.io.input.CountingInputStream;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.tika.exception.TikaException;
@@ -114,9 +116,11 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
         File tempFileContents = null;
         try
         {
+
             tempFileContents = File.createTempFile("arkcase-upload-temp-file-", null);
             FileUtils.copyInputStreamToFile(fileContents, tempFileContents);
 
+// start progress
             EcmTikaFile detectedMetadata = null;
 
             try
@@ -635,4 +639,5 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
     public void setMimeTypesByTika(Map<String, List<String>> mimeTypesByTika) {
         this.mimeTypesByTika = mimeTypesByTika;
     }
+
 }

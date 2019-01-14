@@ -27,23 +27,120 @@ package com.armedia.acm.plugins.ecm.service;
  * #L%
  */
 
-import java.io.InputStream;
+import com.armedia.acm.plugins.ecm.model.ProgressbarDetails;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
+import org.apache.activemq.command.ActiveMQTopic;
+import org.apache.commons.io.input.CountingInputStream;
+import org.springframework.jms.core.JmsTemplate;
+import org.springframework.jms.core.MessageCreator;
+
+import javax.jms.*;
 import java.util.Timer;
+import java.util.TimerTask;
 
 public class ProgressbarExecutor {
 
-    public int startProgress(InputStream fileInputStream, long size, String containerObjectType, Long containerObjectId, String fileName){
-        //broadcast with sockets to ui, that the progress is increased
-        //make timer increase size
-        if(size <=0){
-            return 0;
-        }
-        return 1;
-    };
+    private String ID;
+    private String username;
+    private Timer timer;
+    private int currentProgress;
+    private long partProgress;
+    private JmsTemplate jmsTemplate;
+    private ConnectionFactory activeMQConnectionFactory;
 
-    public int stopProgress(String containerObjectType, Long containerObjectId, String fileName){
+
+
+    public ProgressbarExecutor(String ID, String username, ConnectionFactory activeMQConnectionFactory, JmsTemplate jmsTemplate) {
+        this.ID = ID;
+        this.username = username;
+        this.activeMQConnectionFactory = activeMQConnectionFactory;
+        this.jmsTemplate = jmsTemplate;
+    }
+
+    public void send(ProgressbarDetails message, String destination)
+    {
+        ActiveMQTopic topic = new ActiveMQTopic(destination);
+        jmsTemplate.setDeliveryMode(DeliveryMode.PERSISTENT);
+        jmsTemplate.send(topic, new MessageCreator() {
+            public Message createMessage(Session inJmsSession) throws JMSException {
+                ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+                String jsonMessageObj = "";
+                try {
+                    jsonMessageObj = ow.writeValueAsString(message);
+                } catch (JsonProcessingException e) {
+                    // Print error
+                }
+
+                TextMessage theTextMessage = inJmsSession.createTextMessage(jsonMessageObj);
+                return theTextMessage;
+            }
+        });
+    }
+
+    public void startProgress(CountingInputStream fileInputStream, long size, String containerObjectType, Long containerObjectId, String fileName, ProgressbarDetails progressbarDetails){
+        timer = new Timer();
+        timer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                if(progressbarDetails.getStage() == 2){
+                    partProgress = fileInputStream.getByteCount();
+
+                    if(partProgress<size) {
+                        currentProgress = 50 + Math.round(10 * (float) partProgress / size);
+                        progressbarDetails.setCurrentProgress(currentProgress);
+                        send(progressbarDetails, "VirtualTopic.UploadFileManager:" + username.replaceAll("\\.", "_DOT_").replaceAll("@", "_AT_"));
+                    }
+
+                }
+                else if(progressbarDetails.getStage() == 3) {
+                    partProgress = fileInputStream.getByteCount();
+
+                    if(partProgress<size) {
+                        currentProgress = 60 + Math.round(40 * (float) partProgress / size);
+                        progressbarDetails.setCurrentProgress(currentProgress);
+                        send(progressbarDetails, "VirtualTopic.UploadFileManager:" + username.replaceAll("\\.", "_DOT_").replaceAll("@", "_AT_"));
+                    }
+                }
+
+            }
+        }, 1000, 1000);
+    }
+
+
+    public void stopProgress(String containerObjectType, Long containerObjectId, String fileName, boolean successfull){
         //broadcast with sockets to ui, that the progress has finished
         //make timer stop
-        return 1;
-    };
+        //send and event
+
+        if(timer != null) {
+            timer.cancel();
+        }
+
+    }
+
+    public String getID() {
+        return ID;
+    }
+
+    public ConnectionFactory getActiveMQConnectionFactory() {
+        return activeMQConnectionFactory;
+    }
+
+    public void setActiveMQConnectionFactory(ConnectionFactory activeMQConnectionFactory) {
+        this.activeMQConnectionFactory = activeMQConnectionFactory;
+    }
+
+    public JmsTemplate getJmsTemplate() {
+        return jmsTemplate;
+    }
+
+    public void setJmsTemplate(JmsTemplate jmsTemplate) {
+        this.jmsTemplate = jmsTemplate;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
 }

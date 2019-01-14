@@ -31,6 +31,7 @@ import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.FileDetails;
+import com.armedia.acm.plugins.ecm.model.SequenceInputStreamHolder;
 import org.apache.chemistry.opencmis.client.api.Document;
 import org.springframework.security.core.Authentication;
 
@@ -42,6 +43,6 @@ public interface FileChunkService {
     void mergeAndUploadFiles(FileDetails fileDetails, AcmFolder folder, Document existingFile, Authentication authentication)
             throws AcmUserActionFailedException, AcmCreateObjectFailedException, IOException;
 
-    SequenceInputStream mergeChunks(FileDetails fileDetails)
+    SequenceInputStreamHolder mergeChunks(FileDetails fileDetails)
             throws AcmUserActionFailedException, AcmCreateObjectFailedException, IOException;
 }
