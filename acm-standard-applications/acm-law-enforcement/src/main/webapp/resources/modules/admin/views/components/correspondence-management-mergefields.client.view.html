@@ -1,7 +1,7 @@
 <div ng-controller="Admin.CMMergeFieldsController">
     <div class="pull-right well">
         <select ng-model="mergingType" ng-options="objectType.key as objectType.value | translate for objectType in correspondenceObjectTypes"
-                ng-change="changeType()"
+                ng-change="changeType()" ng-init="init()"
                 required>
         </select>
         <div class="btn-group">

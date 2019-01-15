@@ -25,8 +25,6 @@ angular.module('admin').controller('Admin.CMMergeFieldsController',
                     gridHelper.setBasicOptions(config);
                     gridHelper.disableGridScrolling(config);
                     $scope.config = config;
-                    $scope.objectTypes = $scope.correspondenceObjectTypes;
-                    $scope.mergingType = $scope.objectTypes[0].key;
 
                     gridHelper.setUserNameFilterToConfig(promiseUsers, configVersions);
                     $scope.configVersions = configVersions;
@@ -35,9 +33,13 @@ angular.module('admin').controller('Admin.CMMergeFieldsController',
                 });
             });
 
-            ObjectLookupService.getCorrespondenceObjectTypes().then(function(correspondenceObject) {
-                $scope.correspondenceObjectTypes = correspondenceObject;
-            });
+            $scope.init = function() {
+                ObjectLookupService.getCorrespondenceObjectTypes().then(function(correspondenceObject) {
+                    $scope.correspondenceObjectTypes = correspondenceObject;
+                    $scope.mergingType =$scope.correspondenceObjectTypes[0].key;
+                    ReloadGrid();
+                });
+            }
 
             $scope.changeType = function() {
                 ReloadGrid();
