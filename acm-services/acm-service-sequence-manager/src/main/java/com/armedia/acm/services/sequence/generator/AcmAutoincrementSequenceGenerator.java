@@ -27,6 +27,7 @@ package com.armedia.acm.services.sequence.generator;
  * #L%
  */
 import com.armedia.acm.services.sequence.exception.AcmSequenceException;
+import com.armedia.acm.services.sequence.model.AcmSequenceConstants;
 import com.armedia.acm.services.sequence.model.AcmSequenceEntity;
 import com.armedia.acm.services.sequence.model.AcmSequencePart;
 import com.armedia.acm.services.sequence.model.AcmSequenceRegistry;
@@ -177,7 +178,20 @@ public class AcmAutoincrementSequenceGenerator implements AcmSequenceGenerator
                     newSequenceReset.setSequencePartName(sequenceReset.getSequencePartName());
                     newSequenceReset.setResetRepeatableFlag(sequenceReset.getResetRepeatableFlag());
                     newSequenceReset.setResetRepeatablePeriod(sequenceReset.getResetRepeatablePeriod());
-                    newSequenceReset.setResetDate(sequenceReset.getResetDate().plusDays(sequenceReset.getResetRepeatablePeriod()));
+                    switch (sequenceReset.getResetRepeatablePeriod())
+                    {
+                    case AcmSequenceConstants.SEQUENCE_RESET_YEARLY:
+                        newSequenceReset.setResetDate(sequenceReset.getResetDate().plusYears(1));
+                        break;
+                    case AcmSequenceConstants.SEQUENCE_RESET_MONTHLY:
+                        newSequenceReset.setResetDate(sequenceReset.getResetDate().plusMonths(1));
+                        break;
+                    case AcmSequenceConstants.SEQUENCE_RESET_WEEKLY:
+                        newSequenceReset.setResetDate(sequenceReset.getResetDate().plusWeeks(1));
+                        break;
+                    default:
+                        newSequenceReset.setResetDate(sequenceReset.getResetDate().plusDays(sequenceReset.getResetRepeatablePeriod()));
+                    }
                     getSequenceService().saveSequenceReset(newSequenceReset);
                 }
             }
