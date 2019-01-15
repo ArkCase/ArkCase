@@ -36,4 +36,8 @@ public interface AcmSequenceConstants
     String SEQUENCE_RESET_UPDATED_EVENT = "com.armedia.acm.sequence.reset.updated";
     String SEQUENCE_RESET_REMOVED_EVENT = "com.armedia.acm.sequence.reset.removed";
     String SEQUENCE_CONFIGURATION_UPDATED_EVENT = "com.armedia.acm.sequence.configuration.updated";
+
+    public static final int SEQUENCE_RESET_YEARLY = -3;
+    public static final int SEQUENCE_RESET_MONTHLY = -2;
+    public static final int SEQUENCE_RESET_WEEKLY = -1;
 }

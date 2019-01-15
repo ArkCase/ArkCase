@@ -49,7 +49,7 @@ angular.module('directives').directive('dateTimePicker', ['moment', 'Util.DateSe
                         smartDays: true,
                         value: $scope.dateInPicker
                     });
-                    $scope.today = moment($scope.data).format(UtilDateService.defaultDateFormat);
+                    $scope.today = !UtilService.isEmpty($scope.data) ? moment($scope.data).format(UtilDateService.defaultDateFormat) : "";
                 } else {
                     $(comboField).combodate({
                         format: 'MM/DD/YYYY HH:mm',
@@ -60,7 +60,7 @@ angular.module('directives').directive('dateTimePicker', ['moment', 'Util.DateSe
                         smartDays: true,
                         value: $scope.dateInPicker
                     });
-                    $scope.today = moment($scope.data).format(UtilDateService.defaultDateLongTimeFormat);
+                    $scope.today = !UtilService.isEmpty($scope.data) ? moment($scope.data).format(UtilDateService.defaultDateLongTimeFormat) : "";
                 }
             });
 
