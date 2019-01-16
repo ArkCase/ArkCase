@@ -911,7 +911,14 @@ public class ActivitiTaskDao extends AcmAbstractDao<AcmTask> implements TaskDao,
         {
             return TaskConstants.STATE_DELETE;
         }
-        return historicTaskInstance.getEndTime() == null ? TaskConstants.STATE_ACTIVE : TaskConstants.STATE_CLOSED;
+        if (historicTaskInstance.getEndTime() == null)
+        {
+            return historicTaskInstance.getAssignee() == null ? TaskConstants.STATE_UNCLAIMED : TaskConstants.STATE_ACTIVE;
+        }
+        else
+        {
+            return TaskConstants.STATE_CLOSED;
+        }
     }
 
     private boolean isTaskTerminated(HistoricTaskInstance historicTaskInstance)
@@ -963,7 +970,14 @@ public class ActivitiTaskDao extends AcmAbstractDao<AcmTask> implements TaskDao,
         {
             return TaskConstants.STATE_TERMINATED;
         }
-        return historicTaskInstance.getEndTime() == null ? TaskConstants.STATE_ACTIVE : TaskConstants.STATE_DELETE;
+        if (historicTaskInstance.getEndTime() == null)
+        {
+            return historicTaskInstance.getAssignee() == null ? TaskConstants.STATE_UNCLAIMED : TaskConstants.STATE_ACTIVE;
+        }
+        else
+        {
+            return TaskConstants.STATE_DELETE;
+        }
     }
 
     private String findTaskStatus(Task task)
