@@ -27,6 +27,7 @@ package com.armedia.acm.calendar.config.service;
  * #L%
  */
 
+import com.armedia.acm.auth.AuthenticationUtils;
 import com.armedia.acm.calendar.config.service.CalendarConfiguration.CalendarPropertyKeys;
 import com.armedia.acm.calendar.config.service.CalendarConfiguration.PurgeOptions;
 import com.armedia.acm.core.exceptions.AcmEncryptionException;
@@ -211,7 +212,8 @@ public class PropertyFileCalendarAdminService implements CalendarAdminService, I
         {
             writeLock.unlock();
         }
-        applicationEventPublisher.publishEvent(new CalendarConfigurationEvent(configurations, CALENDAR_CONFIG_SERVICE_USER_ID));
+        applicationEventPublisher.publishEvent(
+                new CalendarConfigurationEvent(configurations, CALENDAR_CONFIG_SERVICE_USER_ID, AuthenticationUtils.getUserIpAddress()));
     }
 
     /*

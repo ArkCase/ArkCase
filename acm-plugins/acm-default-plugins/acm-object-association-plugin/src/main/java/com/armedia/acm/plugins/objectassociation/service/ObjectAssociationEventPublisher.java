@@ -27,6 +27,8 @@ package com.armedia.acm.plugins.objectassociation.service;
  * #L%
  */
 
+import com.armedia.acm.auth.AcmAuthenticationDetails;
+import com.armedia.acm.auth.AuthenticationUtils;
 import com.armedia.acm.core.model.AcmEvent;
 import com.armedia.acm.plugins.objectassociation.model.AddReferenceEvent;
 import com.armedia.acm.plugins.objectassociation.model.DeleteReferenceEvent;
@@ -57,26 +59,29 @@ public class ObjectAssociationEventPublisher implements ApplicationEventPublishe
 
     public void publishAddReferenceEvent(ObjectAssociation source, Authentication authentication, boolean succeeded)
     {
-        AddReferenceEvent event = new AddReferenceEvent(source);
+        String ipAddress = ((AcmAuthenticationDetails) authentication.getDetails()).getRemoteAddress();
+        AddReferenceEvent event = new AddReferenceEvent(source, ipAddress);
         publishEvent(event, authentication, succeeded);
     }
 
     public void publishUpdateReferenceEvent(ObjectAssociation source, Authentication authentication, boolean succeeded)
     {
-        UpdateReferenceEvent event = new UpdateReferenceEvent(source);
+        String ipAddress = ((AcmAuthenticationDetails) authentication.getDetails()).getRemoteAddress();
+        UpdateReferenceEvent event = new UpdateReferenceEvent(source, ipAddress);
         publishEvent(event, authentication, succeeded);
     }
 
     public void publishDeleteReferenceEvent(ObjectAssociation source, Authentication authentication, boolean succeeded)
     {
-        DeleteReferenceEvent event = new DeleteReferenceEvent(source);
+        String ipAddress = ((AcmAuthenticationDetails) authentication.getDetails()).getRemoteAddress();
+        DeleteReferenceEvent event = new DeleteReferenceEvent(source, ipAddress);
         publishEvent(event, authentication, succeeded);
     }
 
     public void publishObjectAssociationEvent(ObjectAssociation source, Authentication authentication, boolean succeeded,
             String objectAssociationState)
     {
-        ObjectAssociationEvent event = new ObjectAssociationEvent(source);
+        ObjectAssociationEvent event = new ObjectAssociationEvent(source, AuthenticationUtils.getUserIpAddress());
         event.setAuthentication(authentication);
         event.setObjectAssociationState(ObjectAssociationEvent.ObjectAssociationState.valueOf(objectAssociationState));
         publishEvent(event, authentication, succeeded);

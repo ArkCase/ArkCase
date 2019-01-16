@@ -35,9 +35,10 @@ public class AcmSubscriptionEventCreatedEvent extends AcmSubscriptionEventPersis
 
     private static final String EVENT_TYPE = "com.armedia.acm.subscriptionevent.created";
 
-    public AcmSubscriptionEventCreatedEvent(AcmSubscriptionEvent source)
+    public AcmSubscriptionEventCreatedEvent(AcmSubscriptionEvent source, String ipAddress)
     {
         super(source);
+        setIpAddress(ipAddress);
     }
 
     @Override

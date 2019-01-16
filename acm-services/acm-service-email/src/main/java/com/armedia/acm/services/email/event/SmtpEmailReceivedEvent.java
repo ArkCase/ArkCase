@@ -38,13 +38,14 @@ public class SmtpEmailReceivedEvent extends AcmEvent
 {
     private static final String EVENT_TYPE = "com.armedia.acm.smtp.event.received";
 
-    public SmtpEmailReceivedEvent(Object source, String userId, Long objectId, String objectType)
+    public SmtpEmailReceivedEvent(Object source, String userId, Long objectId, String objectType, String ipAddress)
     {
         super(source);
         setUserId(userId);
         setEventDate(new Date());
         setObjectId(objectId);
         setObjectType(objectType);
+        setIpAddress(ipAddress);
 
     }
 
