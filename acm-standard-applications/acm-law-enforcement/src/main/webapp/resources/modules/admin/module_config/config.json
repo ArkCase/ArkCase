@@ -220,6 +220,7 @@
                     "name": "objectType",
                     "displayName": "admin.correspondenceManagement.templates.grid.objectType",
                     "visible": true,
+                    "cellTemplate": "<div class='ui-grid-cell-contents'>{{ grid.appScope.utils.getLookupValue(grid.appScope.correspondenceObjectTypes, row.entity.objectType) | translate }}</div>",
                     "headerCellFilter": "translate",
                     "width": 120
                 },

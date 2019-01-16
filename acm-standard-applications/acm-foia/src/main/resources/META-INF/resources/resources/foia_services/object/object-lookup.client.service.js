@@ -1266,9 +1266,5 @@ angular.module('services').factory('Object.LookupService', [ '$q', '$resource', 
         return LookupService.saveLookup(lookupDef, lookupTosave);
     };
 
-    Service.getObjectTypeValue = function(objectType) {
-        return((objectType == 'CASE_FILE' || objectType == 'REQUEST') ? 'REQUEST' : '');
-    };
-
     return Service;
 } ]);

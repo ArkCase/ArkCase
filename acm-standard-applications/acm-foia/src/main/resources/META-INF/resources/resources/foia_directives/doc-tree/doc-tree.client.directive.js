@@ -3725,14 +3725,6 @@ angular
                         }, 5000);
 
                     },
-                    truncateString : function(str, num) {
-                        var truncateString = '';
-                        if (str.length && str.length > num) {
-                            truncateString = str.slice(0, num - 1) + '...';
-                            return truncateString;
-                        }
-                        return str;
-                    },
                     _folderDataToNodeData : function(folderData, nodeData) {
                         if (folderData && nodeData) {
                             if (!nodeData.data) {
@@ -3758,7 +3750,7 @@ angular
                                 nodeData.data = {};
                             }
                             nodeData.key = Util.goodValue(fileData.objectId, 0);
-                            nodeData.title = Util.goodValue(DocTree.truncateString(fileData.name, 12));
+                            nodeData.title = Util.goodValue(fileData.name);
                             nodeData.tooltip = Util.goodValue(fileData.name);
                             nodeData.data.name = Util.goodValue(fileData.name);
                             nodeData.data.ext = Util.goodValue(fileData.ext);
