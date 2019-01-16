@@ -36,7 +36,7 @@ public class DeleteReferenceEvent extends AcmEvent
 
     private static final String EVENT_TYPE = "com.armedia.acm.objectassociation.reference.deleted";
 
-    public DeleteReferenceEvent(ObjectAssociation source)
+    public DeleteReferenceEvent(ObjectAssociation source, String ipAddress)
     {
 
         super(source);
@@ -45,6 +45,7 @@ public class DeleteReferenceEvent extends AcmEvent
         setObjectType(source.getTargetType());
         setParentObjectType(source.getParentType());
         setParentObjectId(source.getParentId());
+        setIpAddress(ipAddress);
     }
 
     @Override

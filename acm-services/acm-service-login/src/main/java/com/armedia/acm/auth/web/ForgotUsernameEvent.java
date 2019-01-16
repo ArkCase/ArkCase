@@ -38,7 +38,7 @@ public class ForgotUsernameEvent extends AcmEvent
 {
     private static final String EVENT_TYPE = "com.armedia.acm.forgotusername";
 
-    public ForgotUsernameEvent(AbstractMap.SimpleImmutableEntry<String, List<String>> emailToUserAccounts)
+    public ForgotUsernameEvent(AbstractMap.SimpleImmutableEntry<String, List<String>> emailToUserAccounts, String ipAddress)
     {
         super(emailToUserAccounts);
         setUserId(emailToUserAccounts.getValue().get(0));

@@ -74,8 +74,10 @@ public class OrganizationAssociationEventPublisher implements ApplicationEventPu
         log.debug("Publishing a organization event.");
 
         OrganizationAssociationPersistenceEvent organizationAssociationPersistenceEvent = newOrganizationAssociation
-                ? new OrganizationAssociationAddEvent(source, source.getParentType(), source.getParentId())
-                : new OrganizationAssociationUpdatedEvent(source, source.getParentType(), source.getParentId());
+                ? new OrganizationAssociationAddEvent(source, source.getParentType(), source.getParentId(),
+                        AuthenticationUtils.getUserIpAddress())
+                : new OrganizationAssociationUpdatedEvent(source, source.getParentType(), source.getParentId(),
+                        AuthenticationUtils.getUserIpAddress());
         organizationAssociationPersistenceEvent.setSucceeded(succeeded);
 
         eventPublisher.publishEvent(organizationAssociationPersistenceEvent);
@@ -225,7 +227,7 @@ public class OrganizationAssociationEventPublisher implements ApplicationEventPu
     public void publishOrganizationAssociationDeletedEvent(OrganizationAssociation source)
     {
         OrganizationAssociationDeletedEvent event = new OrganizationAssociationDeletedEvent(source, source.getParentType(),
-                source.getParentId());
+                source.getParentId(), AuthenticationUtils.getUserIpAddress());
         event.setSucceeded(true);
         eventPublisher.publishEvent(event);
     }

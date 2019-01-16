@@ -31,12 +31,13 @@ public class OrganizationAssociationAddEvent extends OrganizationAssociationPers
 {
     private static final String EVENT_TYPE = "com.armedia.acm.organizationAssociation.created";
 
-    public OrganizationAssociationAddEvent(OrganizationAssociation source, String parentType, Long parentId)
+    public OrganizationAssociationAddEvent(OrganizationAssociation source, String parentType, Long parentId, String ipAddress)
     {
         super(source);
         setParentObjectId(parentId);
         setParentObjectType(parentType);
         setEventDescription("Organization created (" + source.getOrganization().getOrganizationValue() + ")");
+        setIpAddress(ipAddress);
     }
 
     @Override
