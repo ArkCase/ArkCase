@@ -50,11 +50,9 @@
         <div class="row" ng-if="sequencePartsCurrentlySelected['AUTOINCREMENT']">
             <div class="col-sm-12 form-group">
                 <label for="sequencePartAutoincrementNumberLength" translate>admin.application.sequenceManagementParts.config.autoincrement.numberLength</label>
-                <span class="required-asterisk">*</span><br />
                 <input type="number" id="sequencePartAutoincrementNumberLength" name="autoincrementNumberLength"
                         ng-model="sequencePart.sequenceNumberLength" ng-pattern="allNumbersExceptZero" class="input-md form-control"
-                        placeholder="{{'admin.application.sequenceManagementParts.config.modal.placeholders.autoincrement.numberLength' | translate}}"
-                        required>
+                        placeholder="{{'admin.application.sequenceManagementParts.config.modal.placeholders.autoincrement.numberLength' | translate}}">
             </div>
         </div>
 
