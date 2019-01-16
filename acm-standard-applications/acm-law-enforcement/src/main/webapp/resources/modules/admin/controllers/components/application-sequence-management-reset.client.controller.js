@@ -21,6 +21,13 @@ angular.module('admin').controller('Admin.SequenceManagementResetController', [ 
             _.forEach(response.data, function (item) {
                item.resetDate = item.resetDate ? moment.utc(item.resetDate).local().format(UtilDateService.defaultDateLongTimeFormat) : "";
                item.resetExecutedDate = item.resetExecutedDate ? moment.utc(item.resetExecutedDate).local().format(UtilDateService.defaultDateLongTimeFormat) : "";
+               if(item.resetRepeatablePeriod == -1){
+                   item.resetRepeatablePeriod = 'WEEKLY';
+               }else if(item.resetRepeatablePeriod == -2){
+                   item.resetRepeatablePeriod = 'MONTHLY';
+               }else if(item.resetRepeatablePeriod == -3){
+                   item.resetRepeatablePeriod = 'YEARLY';
+               }
                resetList.push(item);
             });
             $scope.gridOptions.data = resetList;
@@ -97,7 +104,15 @@ angular.module('admin').controller('Admin.SequenceManagementResetController', [ 
         }
         sequenceReset.resetExecutedFlag = rowEntity.resetExecutedFlag;
         sequenceReset.resetRepeatableFlag = rowEntity.resetRepeatableFlag;
-        sequenceReset.resetRepeatablePeriod = rowEntity.resetRepeatablePeriod;
+        if(rowEntity.resetRepeatablePeriod == 'YEARLY'){
+            sequenceReset.resetRepeatablePeriod = -3;
+        }else if(rowEntity.resetRepeatablePeriod == 'MONTHLY'){
+            sequenceReset.resetRepeatablePeriod = -2;
+        }else if(rowEntity.resetRepeatablePeriod == 'WEEKLY'){
+            sequenceReset.resetRepeatablePeriod = -1;
+        }else{
+            sequenceReset.resetRepeatablePeriod = rowEntity.resetRepeatablePeriod;
+        }
         sequenceReset.sequenceName = rowEntity.sequenceName;
         sequenceReset.sequencePartName = rowEntity.sequencePartName;
 
