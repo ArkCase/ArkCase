@@ -27,7 +27,8 @@ package com.armedia.acm.auth;
  * #L%
  */
 
-import org.apache.commons.lang3.StringUtils;
+import com.armedia.acm.services.users.model.ldap.MapperUtils;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
@@ -48,16 +49,10 @@ public class AcmSamlAuthenticationProvider extends SAMLAuthenticationProvider
         ExpiringUsernameAuthenticationToken token = (ExpiringUsernameAuthenticationToken) super.authenticate(authentication);
         String principal = token.getName();
 
-        if (StringUtils.isNotBlank(userDomain) || StringUtils.isNotBlank(userPrefix))
+        String acmPrincipal = MapperUtils.buildPrincipalName(principal, userPrefix, userDomain);
+
+        if (!acmPrincipal.equals(principal))
         {
-            if (!StringUtils.substringAfterLast(principal, "@").equals(userDomain))
-            {
-                principal = String.format("%s@%s", principal, userDomain);
-            }
-            if (!StringUtils.startsWith(principal, userPrefix))
-            {
-                principal = String.format("%s.%s", userPrefix, principal);
-            }
             log.info("Authenticated principal with configured prefix [{}] and domain [{}] is [{}]", userPrefix, userDomain,
                     principal);
             ExpiringUsernameAuthenticationToken result = new ExpiringUsernameAuthenticationToken(token.getTokenExpiration(),
