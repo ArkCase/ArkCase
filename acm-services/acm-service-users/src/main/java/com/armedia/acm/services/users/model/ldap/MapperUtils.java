@@ -35,9 +35,10 @@ import org.springframework.ldap.BadLdapGrammarException;
 import org.springframework.ldap.core.DirContextAdapter;
 import org.springframework.ldap.core.DistinguishedName;
 
+import javax.annotation.Nullable;
 import javax.naming.directory.BasicAttribute;
 
-import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -97,16 +98,9 @@ public class MapperUtils
     private static Logger log = LoggerFactory.getLogger(MapperUtils.class);
     public static final Function<String, BasicAttribute> activeDirectoryPasswordToAttribute = password -> {
         final byte[] passwordBytes;
-        try
-        {
-            passwordBytes = MapperUtils.encodeUTF16LE(password);
-            return new BasicAttribute("unicodePwd", passwordBytes);
-        }
-        catch (UnsupportedEncodingException e)
-        {
-            log.warn("UnsupportedEncodingException", e);
-            throw new RuntimeException(e);
-        }
+        passwordBytes = MapperUtils.encodeUTF16LE(password);
+        return new BasicAttribute("unicodePwd", passwordBytes);
+
     };
 
     public static Function<String, String> getRdnMappingFunction(final String key)
@@ -187,8 +181,10 @@ public class MapperUtils
 
     public static String buildUserId(String userId, String domain)
     {
-
-        return String.format("%s@%s", userId, domain).toLowerCase();
+        Optional<String> optionalDomain = Optional.of(domain);
+        return String.format("%s%s", userId, optionalDomain.map(it -> String.format("@%s", it))
+                .orElse(""))
+                .toLowerCase();
     }
 
     public static String buildUserId(String userId, AcmLdapSyncConfig ldapSyncConfig)
@@ -206,9 +202,9 @@ public class MapperUtils
 
     }
 
-    public static byte[] encodeUTF16LE(String str) throws UnsupportedEncodingException
+    public static byte[] encodeUTF16LE(String str)
     {
-        return String.format("\"%s\"", str).getBytes("UTF-16LE");
+        return String.format("\"%s\"", str).getBytes(StandardCharsets.UTF_16LE);
     }
 
     public static String generatePassword(int minLength)
@@ -218,5 +214,32 @@ public class MapperUtils
         String ucsPart = RandomStringUtils.random(2, "ABCDEFGHIJKLMNOPQRSTUVWXYZ");
         String digitChar = RandomStringUtils.random(2, "0123456789");
         return String.format("%s%s%s%s", specialChar, lcsPart, ucsPart, digitChar);
+    }
+
+    public static String buildPrincipalName(String principal, @Nullable String userPrefix, @Nullable String userDomain)
+    {
+        boolean userDomainIncluded = StringUtils.substringAfterLast(principal, "@").equals(userDomain);
+
+        if (StringUtils.isNotBlank(userPrefix) && !StringUtils.startsWith(principal, userPrefix))
+        {
+            principal = String.format("%s.%s", userPrefix, principal);
+            if (userDomainIncluded)
+            {
+                String userIdDomainTruncated = StringUtils.substringBeforeLast(principal, "@");
+                principal = StringUtils.left(userIdDomainTruncated, 20);
+                principal = String.format("%s@%s", principal, userDomain);
+            }
+            else
+            {
+                principal = StringUtils.left(principal, 20);
+            }
+        }
+
+        if (StringUtils.isNotBlank(userDomain) && !userDomainIncluded)
+        {
+            principal = String.format("%s@%s", principal, userDomain);
+        }
+
+        return principal;
     }
 }
