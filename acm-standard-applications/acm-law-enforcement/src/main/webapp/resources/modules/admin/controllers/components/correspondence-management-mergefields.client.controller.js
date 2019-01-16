@@ -19,27 +19,26 @@ angular.module('admin').controller('Admin.CMMergeFieldsController',
                 var config = _.find(config.components, {
                     id: 'correspondenceManagementMergeFields'
                 });
-                promiseUsers.then(function(data) {
-                    gridHelper.setUserNameFilterToConfig(promiseUsers, config);
-                    gridHelper.setColumnDefs(config);
-                    gridHelper.setBasicOptions(config);
-                    gridHelper.disableGridScrolling(config);
-                    $scope.config = config;
+                var promiseCorrespondenceObjectTypes = ObjectLookupService.getCorrespondenceObjectTypes();
+                promiseCorrespondenceObjectTypes.then(function(correspondenceObject) {
+                    $scope.correspondenceObjectTypes = correspondenceObject;
 
-                    gridHelper.setUserNameFilterToConfig(promiseUsers, configVersions);
-                    $scope.configVersions = configVersions;
+                    promiseUsers.then(function(data) {
+                        gridHelper.setUserNameFilterToConfig(promiseUsers, config);
+                        gridHelper.setColumnDefs(config);
+                        gridHelper.setBasicOptions(config);
+                        gridHelper.disableGridScrolling(config);
+                        $scope.config = config;
+                        $scope.objectTypes = $scope.correspondenceObjectTypes;
+                        $scope.mergingType = $scope.objectTypes[0].key;
 
-                    ReloadGrid();
+                        gridHelper.setUserNameFilterToConfig(promiseUsers, configVersions);
+                        $scope.configVersions = configVersions;
+
+                        ReloadGrid();
+                    });
                 });
             });
-
-            $scope.init = function() {
-                ObjectLookupService.getCorrespondenceObjectTypes().then(function(correspondenceObject) {
-                    $scope.correspondenceObjectTypes = correspondenceObject;
-                    $scope.mergingType =$scope.correspondenceObjectTypes[0].key;
-                    ReloadGrid();
-                });
-            }
 
             $scope.changeType = function() {
                 ReloadGrid();
