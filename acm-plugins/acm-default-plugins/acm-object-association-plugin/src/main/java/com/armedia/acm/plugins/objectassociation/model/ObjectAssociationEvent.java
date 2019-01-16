@@ -39,12 +39,13 @@ public class ObjectAssociationEvent extends AcmEvent
     private ObjectAssociationState objectAssociationState;
     private Authentication authentication;
 
-    public ObjectAssociationEvent(ObjectAssociation source)
+    public ObjectAssociationEvent(ObjectAssociation source, String ipAddress)
     {
         super(source);
         setObjectId(source.getParentId());
         setObjectType(source.getParentType());
         setEventDate(new Date());
+        setIpAddress(ipAddress);
     }
 
     @Override

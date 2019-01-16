@@ -36,11 +36,12 @@ public class ForgotPasswordEvent extends AcmEvent
 {
     private static final String EVENT_TYPE = "com.armedia.acm.forgotpassword";
 
-    public ForgotPasswordEvent(AcmUser acmUser)
+    public ForgotPasswordEvent(AcmUser acmUser, String ipAddress)
     {
         super(acmUser);
         setUserId(acmUser.getUserId());
         setEventDate(new Date());
+        setIpAddress(ipAddress);
     }
 
     @Override

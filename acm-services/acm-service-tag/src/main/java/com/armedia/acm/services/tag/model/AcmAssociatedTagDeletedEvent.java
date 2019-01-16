@@ -31,7 +31,7 @@ public class AcmAssociatedTagDeletedEvent extends AcmAssociatedTagPersistentEven
 {
     private static final String EVENT_TYPE = "com.armedia.acm.associatedtag.deleted";
 
-    public AcmAssociatedTagDeletedEvent(AcmAssociatedTag source, String userId)
+    public AcmAssociatedTagDeletedEvent(AcmAssociatedTag source, String userId, String ipAddress)
     {
         super(source, userId);
     }

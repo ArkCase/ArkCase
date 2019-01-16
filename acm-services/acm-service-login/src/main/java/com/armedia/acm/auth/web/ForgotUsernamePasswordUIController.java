@@ -27,6 +27,7 @@ package com.armedia.acm.auth.web;
  * #L%
  */
 
+import com.armedia.acm.auth.AuthenticationUtils;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.AcmUserState;
@@ -70,7 +71,7 @@ public class ForgotUsernamePasswordUIController implements ApplicationEventPubli
             AbstractMap.SimpleImmutableEntry<String, List<String>> emailToUserAccount = new AbstractMap.SimpleImmutableEntry<>(email,
                     userAccounts);
 
-            ForgotUsernameEvent forgotUsernameEvent = new ForgotUsernameEvent(emailToUserAccount);
+            ForgotUsernameEvent forgotUsernameEvent = new ForgotUsernameEvent(emailToUserAccount, AuthenticationUtils.getUserIpAddress());
             forgotUsernameEvent.setSucceeded(true);
             eventPublisher.publishEvent(forgotUsernameEvent);
         }
@@ -87,7 +88,7 @@ public class ForgotUsernamePasswordUIController implements ApplicationEventPubli
         }
         else
         {
-            ForgotPasswordEvent forgotPasswordEvent = new ForgotPasswordEvent(user);
+            ForgotPasswordEvent forgotPasswordEvent = new ForgotPasswordEvent(user, AuthenticationUtils.getUserIpAddress());
             forgotPasswordEvent.setSucceeded(true);
             eventPublisher.publishEvent(forgotPasswordEvent);
         }
