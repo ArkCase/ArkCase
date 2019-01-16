@@ -14,14 +14,20 @@
                 <div class="form-group">
                     <fieldset ng-disabled="isEdit">
                     <label translate>admin.application.sequenceManagementReset.detailsModal.resetStartDate</label>
-                    <date-time-picker data="resetStartDate" date-picker-id="resetStartDate" ></date-time-picker>
+                    <date-time-picker data="resetStartDate" date-picker-id="resetStartDate" ng-click="dateSelected()" on-after-save="dateSelected()"></date-time-picker>
                     </fieldset>
                 </div>
                 <div class="form-group">
-                    <input type="checkbox" ng-model="resetRepeatableFlag">
+                    <input type="checkbox" ng-model="resetRepeatableFlag" ng-change="showRepeatablePeriod()">
                     <label translate>admin.application.sequenceManagementReset.detailsModal.repeatReset</label>
                 </div>
                 <div class="form-group">
+                     <select id="resetRepeatPeriod" ng-model="resetRepeatPeriod"
+                             ng-options="resetRepeatPeriod.key as resetRepeatPeriod.value | translate for resetRepeatPeriod in resetRepeatPeriods"
+                             ng-change="showRepeatResetPeriod()"
+                             ng-hide="!enableRepeatPeriod"></select>
+                </div> 
+                <div class="form-group" ng-if="showDaily == '0' && enableRepeatPeriod">
                     <label translate>admin.application.sequenceManagementReset.detailsModal.repeatResetPeriod</label>
                     <input type="number" ng-model="resetRepeatablePeriod">
                 </div>
@@ -29,7 +35,7 @@
         </fieldset>
     </div>
     <div class="modal-footer">
-        <button class="btn btn-primary" ng-click="onClickSave()" ng-hide="viewMode">
+        <button class="btn btn-primary" ng-click="onClickSave()" ng-hide="viewMode" ng-disabled="enableSave">
             <span translate>admin.application.sequenceManagementReset.saveBtn</span>
         </button>
         <button class="btn btn-secondary" ng-click="onClickCancel()" ng-hide="viewMode">

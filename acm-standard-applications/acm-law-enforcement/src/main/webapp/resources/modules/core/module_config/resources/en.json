@@ -602,6 +602,12 @@
                 "uuid": "UUID",
                 "date": "DATE",
                 "arbitraryText": "ARBITRARY_TEXT"
+            },
+            "sequenceResetPeriod": {
+                "daily": "Daily",
+                "weekly": "Weekly",
+                "monthly": "Monthly",
+                "yearly": "Yearly"
             }
         },
         "userInfo": {
