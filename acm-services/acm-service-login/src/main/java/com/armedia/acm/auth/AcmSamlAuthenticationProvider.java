@@ -54,9 +54,9 @@ public class AcmSamlAuthenticationProvider extends SAMLAuthenticationProvider
         if (!acmPrincipal.equals(principal))
         {
             log.info("Authenticated principal with configured prefix [{}] and domain [{}] is [{}]", userPrefix, userDomain,
-                    principal);
+                    acmPrincipal);
             ExpiringUsernameAuthenticationToken result = new ExpiringUsernameAuthenticationToken(token.getTokenExpiration(),
-                    principal, token.getCredentials(), token.getAuthorities());
+                    acmPrincipal, token.getCredentials(), token.getAuthorities());
             result.setDetails(token.getDetails());
             return result;
         }
