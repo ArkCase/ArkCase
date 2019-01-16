@@ -257,7 +257,6 @@ angular.module('tasks').controller(
                     };
 
                     $scope.inputClear = function() {
-                        $scope.config.data.attachedToObjectName = "";
                         $scope.config.data.attachedToObjectId = "";
                     };
 
