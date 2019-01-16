@@ -95,8 +95,8 @@
             <artifactId>mule-module-spring-config</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.mule.transports</groupId>
-            <artifactId>mule-transport-http</artifactId>
+            <groupId>org.mule.modules</groupId>
+            <artifactId>mule-module-http</artifactId>
         </dependency>
         <dependency>
             <groupId>org.mule.transports</groupId>
@@ -113,6 +113,10 @@
         <dependency>
             <groupId>org.mule.transports</groupId>
             <artifactId>mule-transport-vm</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.mule.transports</groupId>
+            <artifactId>mule-transport-http</artifactId>
         </dependency>
 
         <!-- expression language -->

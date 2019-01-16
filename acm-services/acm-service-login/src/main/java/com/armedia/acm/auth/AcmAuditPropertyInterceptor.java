@@ -62,7 +62,7 @@ public class AcmAuditPropertyInterceptor extends HandlerInterceptorAdapter
         }
 
         String userid = (String) session.getAttribute("acm_username");
-        log.debug("audit interceptor was called: user id is: '" + userid + "'");
+        log.debug("audit interceptor was called: user id is: [{}]", userid);
 
         getEntityAdapter().setUserId(userid);
 

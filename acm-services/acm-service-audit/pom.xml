@@ -77,11 +77,6 @@
 
         <!-- mule -->
         <dependency>
-            <groupId>org.mule.transports</groupId>
-            <artifactId>mule-transport-http</artifactId>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
             <groupId>org.mule.modules</groupId>
             <artifactId>mule-module-scripting</artifactId>
             <scope>compile</scope>
