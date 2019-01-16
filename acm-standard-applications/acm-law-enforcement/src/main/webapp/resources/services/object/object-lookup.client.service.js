@@ -73,6 +73,12 @@ angular.module('services').factory('Object.LookupService', [ '$q', '$resource', 
         return Service.getLookupByLookupName("auditReportNames");
     };
 
+    
+    Service.getResetRepeatPeriod = function() {
+        return Service.getLookupByLookupName("sequenceResetPeriod");
+    };
+    
+
     /**
      * @ngdoc method
      * @name getPriorities
