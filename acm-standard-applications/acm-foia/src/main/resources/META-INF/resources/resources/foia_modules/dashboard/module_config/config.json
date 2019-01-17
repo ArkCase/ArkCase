@@ -127,7 +127,7 @@
                     "width": 100
                 },
                 {
-                    "name": "parent_number_lcs",
+                    "name": "parent_id_s",
                     "displayName": "dashboard.widgets.myTasks.table.header.caseId",
                     "headerCellFilter": "translate",
                     "cellTemplate": "<a data-ui-sref=\"cases.main({id: row.entity.parent_id_s})\">{{COL_FIELD}}<\/a>",
