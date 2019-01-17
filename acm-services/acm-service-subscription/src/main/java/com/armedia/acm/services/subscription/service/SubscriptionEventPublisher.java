@@ -28,6 +28,7 @@ package com.armedia.acm.services.subscription.service;
  */
 
 import com.armedia.acm.auth.AcmAuthenticationDetails;
+import com.armedia.acm.auth.AuthenticationUtils;
 import com.armedia.acm.data.AcmDatabaseChangesEvent;
 import com.armedia.acm.data.AcmObjectChangelist;
 import com.armedia.acm.services.subscription.model.AcmSubscription;
@@ -60,7 +61,8 @@ public class SubscriptionEventPublisher implements ApplicationEventPublisherAwar
     public void publishSubscriptionCreatedEvent(AcmSubscription source, Authentication auth, boolean succeeded)
     {
         log.debug("Publishing a subscription event.");
-        SubscriptionCreatedEvent subscriptionPersistenceEvent = new SubscriptionCreatedEvent(source);
+        SubscriptionCreatedEvent subscriptionPersistenceEvent = new SubscriptionCreatedEvent(source,
+                AuthenticationUtils.getUserIpAddress());
         if (auth.getDetails() != null && auth.getDetails() instanceof AcmAuthenticationDetails)
         {
             subscriptionPersistenceEvent.setIpAddress(((AcmAuthenticationDetails) auth.getDetails()).getRemoteAddress());
@@ -82,7 +84,8 @@ public class SubscriptionEventPublisher implements ApplicationEventPublisherAwar
     public void publishAcmSubscriptionEventCreatedEvent(AcmSubscriptionEvent source, boolean succeeded)
     {
         log.debug("Publishing a AcmSubscriptionEvent created event.");
-        AcmSubscriptionEventCreatedEvent acmSubscriptionEventPersistenceEvent = new AcmSubscriptionEventCreatedEvent(source);
+        AcmSubscriptionEventCreatedEvent acmSubscriptionEventPersistenceEvent = new AcmSubscriptionEventCreatedEvent(source,
+                AuthenticationUtils.getUserIpAddress());
         acmSubscriptionEventPersistenceEvent.setSucceeded(succeeded);
 
         eventPublisher.publishEvent(acmSubscriptionEventPersistenceEvent);

@@ -47,7 +47,7 @@ public class AcmLoginFailureEventListener implements ApplicationEventPublisherAw
     {
         Authentication auth = authenticationFailureEvent.getAuthentication();
         log.debug("got a failed login event for username: [{}]", auth.getName());
-        AcmEvent loginEvent = new LoginEvent(auth);
+        AcmEvent loginEvent = new LoginEvent(auth, AuthenticationUtils.getUserIpAddress());
         loginEvent.setSucceeded(false);
         getApplicationEventPublisher().publishEvent(loginEvent);
     }

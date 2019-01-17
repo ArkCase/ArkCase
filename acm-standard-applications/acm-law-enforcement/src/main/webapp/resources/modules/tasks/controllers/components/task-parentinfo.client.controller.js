@@ -51,6 +51,10 @@ angular.module('tasks').controller(
                         }
 
                         if (ObjectService.ObjectTypes.CASE_FILE == $scope.objectInfo.parentObjectType) {
+                            var caseInfo = {
+                                id: $scope.objectInfo.parentObjectId
+                            };
+                            CaseInfoService.resetCaseInfo(caseInfo);
                             CaseInfoService.getCaseInfo($scope.objectInfo.parentObjectId).then(function(caseInfo) {
                                 $scope.parentCaseInfo = caseInfo;
                                 $scope.owningGroup = ObjectModelService.getGroup(caseInfo);

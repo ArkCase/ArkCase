@@ -644,5 +644,12 @@
         </addColumn>
     </changeSet>
 
+    <changeSet id="62-update-ecm-file-class-name-where-null" author="ivana.shekerova">
+        <update tableName="acm_file_version">
+            <column name="cm_class_name" value="com.armedia.acm.plugins.ecm.model.EcmFileVersion"/>
+            <where>cm_class_name is null</where>
+        </update>
+    </changeSet>
+
 </databaseChangeLog>
 

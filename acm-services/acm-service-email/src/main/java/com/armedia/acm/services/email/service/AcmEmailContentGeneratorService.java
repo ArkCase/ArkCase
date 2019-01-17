@@ -55,6 +55,7 @@ public class AcmEmailContentGeneratorService
             {
                 String token = authenticationTokenService.generateAndSaveAuthenticationToken(fileId, emailAddress, authentication);
                 body.append(emailDTO.getBaseUrl()).append(fileId).append("&acm_email_ticket=").append(token).append("<br/>");
+                emailDTO.getTokens().add(token);
             }
         }
 

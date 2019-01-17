@@ -28,6 +28,7 @@ package com.armedia.acm.services.tag.service;
  */
 
 import com.armedia.acm.auth.AcmAuthenticationDetails;
+import com.armedia.acm.auth.AuthenticationUtils;
 import com.armedia.acm.services.tag.model.AcmTag;
 import com.armedia.acm.services.tag.model.AcmTagCreatedEvent;
 import com.armedia.acm.services.tag.model.AcmTagDeletedEvent;
@@ -60,7 +61,7 @@ public class TagEventPublisher implements ApplicationEventPublisherAware
         {
             log.debug("Publishing a tag event.");
         }
-        AcmTagCreatedEvent tagPersistenceEvent = new AcmTagCreatedEvent(source, auth.getName());
+        AcmTagCreatedEvent tagPersistenceEvent = new AcmTagCreatedEvent(source, auth.getName(), AuthenticationUtils.getUserIpAddress());
         if (auth.getDetails() != null && auth.getDetails() instanceof AcmAuthenticationDetails)
         {
             tagPersistenceEvent.setIpAddress(((AcmAuthenticationDetails) auth.getDetails()).getRemoteAddress());

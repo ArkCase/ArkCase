@@ -2,6 +2,9 @@ package com.armedia.acm.services.email.model;
 
 import com.armedia.acm.services.email.service.TemplatingEngine;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 
 /*-
@@ -44,6 +47,7 @@ import freemarker.template.TemplateException;
  */
 public class MessageBodyFactory
 {
+    private final Logger LOG = LoggerFactory.getLogger(getClass());
 
     private static final String DEFAULT_TEMPLATE = "${model.header} \n\n ${model.body} \n\n\n ${model.footer}";
 
@@ -98,6 +102,7 @@ public class MessageBodyFactory
             }
             catch (TemplateException | IOException e)
             {
+                LOG.error("Failed to process template!", e);
                 return buildMessageBodyFromTemplate(model);
             }
         }

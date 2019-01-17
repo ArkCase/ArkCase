@@ -45,5 +45,8 @@ public interface EmailReceiverConfigurationConstants
 
     String EMAIL_COMPLAINT = "email.COMPLAINT.user";
     String PASSWORD_COMPLAINT = "email.COMPLAINT.password";
+    
+    String ENABLE_CREATING_CASE = "email.create.case.enabled";
+    String ENABLE_CREATING_COMPLAINT = "email.create.complaint.enabled";
 
 }

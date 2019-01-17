@@ -109,6 +109,11 @@ iframe {
 span.fancytree-title {
     margin-left: 0px !important;
     padding-right: 0px !important;
+    display:inline-block;
+    white-space: nowrap;
+    overflow:hidden !important;
+    text-overflow: ellipsis;
+    width:200px;
 }
 
 .fancytree-container {
@@ -983,6 +988,7 @@ a.editable.editable-click {
 
 .fancytree-container.fancytree-ext-table.fancytree-ext-gridnav.fancytree-ext-edit.ui-draggable-handle {
     margin: 0px;
+    width: 99.99%;
 }
 
 .fancytree-container .fancytree-checkbox {
@@ -1806,4 +1812,8 @@ a.primary {
     position:absolute;
     top:0;
     right:5px
+}
+
+.ui-grid .ui-grid-render-container-body .ui-grid-viewport {
+    overflow-x: auto !important;
 }

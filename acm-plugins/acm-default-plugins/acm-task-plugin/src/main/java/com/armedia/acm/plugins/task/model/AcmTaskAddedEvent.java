@@ -37,11 +37,12 @@ public class AcmTaskAddedEvent extends AcmEvent
 
     private static final String EVENT_TYPE = "com.armedia.acm.task.added";
 
-    public AcmTaskAddedEvent(AcmTask source, Long objectId, String objectType)
+    public AcmTaskAddedEvent(AcmTask source, Long objectId, String objectType, String ipAddress)
     {
         super(source);
         setObjectId(objectId);
         setObjectType(objectType);
+        setIpAddress(ipAddress);
     }
 
     @Override
