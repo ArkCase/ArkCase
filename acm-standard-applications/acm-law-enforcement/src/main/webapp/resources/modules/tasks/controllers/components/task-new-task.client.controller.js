@@ -257,7 +257,10 @@ angular.module('tasks').controller(
                     };
 
                     $scope.inputClear = function() {
-                        $scope.config.data.attachedToObjectId = "";
+                        if(Util.isEmpty($scope.modalParams.parentType)){
+                            $scope.config.data.attachedToObjectName = "";
+                            $scope.config.data.attachedToObjectId = "";
+                        }
                     };
 
                     //groupChange function
