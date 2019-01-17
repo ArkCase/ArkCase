@@ -48,6 +48,8 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.TransactionTemplate;
 
+import javax.persistence.EntityManager;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -71,6 +73,9 @@ public class QueuePropertyFileChangeWatcherTest extends EasyMockSupport
     private AcmQueueDao acmQueueDaoMock;
 
     @Mock
+    private EntityManager entityManager;
+
+    @Mock
     private TransactionStatus mockedTransactionStatus;
 
     @Test
@@ -85,6 +90,10 @@ public class QueuePropertyFileChangeWatcherTest extends EasyMockSupport
         auditPropertyEntityAdapterMock.setUserId("SYSTEM_USER");
         expectLastCall();
 
+        expect(acmQueueDaoMock.getEm()).andReturn(entityManager);
+        entityManager.flush();
+        expectLastCall();
+
         expect(acmQueueDaoMock.findAll()).andReturn(createStoredQueues());
         TransactionTemplate transactionTemplate = new TransactionTemplate(txManagerMock);
         PowerMock.expectNew(TransactionTemplate.class, txManagerMock).andReturn(transactionTemplate);
@@ -94,7 +103,7 @@ public class QueuePropertyFileChangeWatcherTest extends EasyMockSupport
 
         Capture<AcmQueue> capturedArgs = Capture.newInstance(CaptureType.ALL);
 
-        expect(acmQueueDaoMock.save(capture(capturedArgs))).andReturn(null).times(3);
+        expect(acmQueueDaoMock.save(capture(capturedArgs))).andReturn(null).anyTimes();
 
         replayAll();
 

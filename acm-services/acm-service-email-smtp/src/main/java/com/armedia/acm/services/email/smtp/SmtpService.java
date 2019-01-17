@@ -27,6 +27,7 @@ package com.armedia.acm.services.email.smtp;
  * #L%
  */
 
+import com.armedia.acm.auth.AuthenticationUtils;
 import com.armedia.acm.core.exceptions.AcmEncryptionException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.files.propertymanager.PropertyFileManager;
@@ -196,6 +197,8 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
     {
         Exception exception = null;
 
+        setFilenames(in);
+
         Map<String, Object> messageProps = loadSmtpAndOriginatingProperties();
         messageProps.put("subject", in.getSubject());
         List<SmtpEventSentEvent> sentEvents = new ArrayList<>();
@@ -223,6 +226,25 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
             event.setSucceeded(success);
             eventPublisher.publishEvent(event);
         }
+    }
+
+    private Long setFilenames(EmailWithEmbeddedLinksDTO in)
+    {
+        EcmFile ecmFile = null;
+        List<String> fileNames = new ArrayList<>();
+
+        if (Objects.nonNull(in.getFileIds()) && in.getFileIds().size() > 0)
+        {
+            for (int i = 0; i < in.getFileIds().size(); i++)
+            {
+                ecmFile = ecmFileService.findById(in.getFileIds().get(i));
+                fileNames.add(ecmFile.getFileName() + ecmFile.getFileActiveVersionNameExtension());
+            }
+            in.setFileNames(fileNames);
+            return ecmFile.getParentObjectId();
+        }
+
+        return null;
     }
 
     /**
@@ -263,10 +285,12 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
                     fileName = fileName + ecmFile.getFileActiveVersionNameExtension();
                 }
                 attachments.put(fileKey, new DataHandler(new InputStreamDataSource(contents, fileName)));
+                String ipAddress = AuthenticationUtils.getUserIpAddress();
 
                 sentEvents
-                        .add(new SmtpEventSentEvent(ecmFile, user.getUserId(), ecmFile.getParentObjectId(), ecmFile.getParentObjectType()));
-                sentEvents.add(new SmtpEventSentEvent(ecmFile, user.getUserId(), ecmFile.getId(), ecmFile.getObjectType()));
+                        .add(new SmtpEventSentEvent(ecmFile, user.getUserId(), ecmFile.getParentObjectId(), ecmFile.getParentObjectType(),
+                                ipAddress));
+                sentEvents.add(new SmtpEventSentEvent(ecmFile, user.getUserId(), ecmFile.getId(), ecmFile.getObjectType(), ipAddress));
             }
         }
         // Adding non ecmFile(s) as attachments
@@ -308,6 +332,8 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
         List<EmailWithEmbeddedLinksResultDTO> emailResultList = new ArrayList<>();
         Exception exception = null;
 
+        Long parentId = setFilenames(in);
+
         Map<String, Object> messageProps = loadSmtpAndOriginatingProperties();
         messageProps.put("subject", in.getSubject());
         for (String emailAddress : in.getEmailAddresses())
@@ -333,27 +359,12 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
                 emailResultList.add(new EmailWithEmbeddedLinksResultDTO(emailAddress, true));
             }
 
+            SmtpSentEventHyperlink event = new SmtpSentEventHyperlink(in, user.getUserId(), parentId, in.getParentType());
+
+            boolean success = (exception == null);
+            event.setSucceeded(success);
+            eventPublisher.publishEvent(event);
         }
-
-        EcmFile ecmFile = null;
-        List<String> fileNames = new ArrayList<String>();
-
-        if (Objects.nonNull(in.getFileIds()) && in.getFileIds().size() > 0)
-        {
-            for (int i = 0; i < in.getFileIds().size(); i++)
-            {
-                ecmFile = ecmFileService.findById(in.getFileIds().get(i));
-                fileNames.add(ecmFile.getFileName() + ecmFile.getFileActiveVersionNameExtension());
-            }
-            in.setFileNames(fileNames);
-        }
-
-        SmtpSentEventHyperlink event = new SmtpSentEventHyperlink(in, user.getUserId(),
-                ecmFile != null ? ecmFile.getParentObjectId() : null,
-                ecmFile != null ? ecmFile.getParentObjectType() : null);
-        boolean success = (exception == null);
-        event.setSucceeded(success);
-        eventPublisher.publishEvent(event);
 
         return emailResultList;
     }

@@ -32,11 +32,12 @@ public class AcmParticipantDeletedEvent extends AcmParticipantPersistenceEvent
 
     private static final String EVENT_TYPE = "com.armedia.acm.participant.deleted";
 
-    public AcmParticipantDeletedEvent(AcmParticipant source, String userId)
+    public AcmParticipantDeletedEvent(AcmParticipant source, String userId, String ipAddress)
     {
         super(source, userId);
         setParentObjectId(source.getObjectId());
         setParentObjectType(source.getObjectType());
+        setIpAddress(ipAddress);
     }
 
     @Override

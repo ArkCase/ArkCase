@@ -35,9 +35,10 @@ public class WidgetCreatedEvent extends WidgetPersistenceEvent
 
     private static final String EVENT_TYPE = "com.armedia.acm.widget.created";
 
-    public WidgetCreatedEvent(Widget source)
+    public WidgetCreatedEvent(Widget source, String ipAddress)
     {
         super(source);
+        setIpAddress(ipAddress);
     }
 
     @Override

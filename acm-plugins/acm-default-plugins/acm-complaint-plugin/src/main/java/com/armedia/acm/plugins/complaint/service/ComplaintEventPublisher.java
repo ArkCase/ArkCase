@@ -28,6 +28,7 @@ package com.armedia.acm.plugins.complaint.service;
  */
 
 import com.armedia.acm.auth.AcmAuthenticationDetails;
+import com.armedia.acm.auth.AuthenticationUtils;
 import com.armedia.acm.objectdiff.model.AcmDiff;
 import com.armedia.acm.objectdiff.service.AcmDiffService;
 import com.armedia.acm.plugins.complaint.model.Complaint;
@@ -140,7 +141,7 @@ public class ComplaintEventPublisher implements ApplicationEventPublisherAware
     public void publishComplaintFileAddedEvent(Complaint source, String userId, boolean succeeded)
     {
 
-        ComplaintFileAddedEvent event = new ComplaintFileAddedEvent(source);
+        ComplaintFileAddedEvent event = new ComplaintFileAddedEvent(source, AuthenticationUtils.getUserIpAddress());
         event.setSucceeded(succeeded);
         event.setUserId(userId);
         eventPublisher.publishEvent(event);

@@ -75,8 +75,10 @@ public class PersonAssociationEventPublisher implements ApplicationEventPublishe
         log.debug("Publishing a person event.");
 
         PersonAssociationPersistenceEvent personAssociationPersistenceEvent = newPersonAssociation
-                ? new PersonAssociationAddEvent(source, source.getParentType(), source.getParentId())
-                : new PersonAssociationUpdatedEvent(source, source.getParentType(), source.getParentId());
+                ? new PersonAssociationAddEvent(source, source.getParentType(), source.getParentId(),
+                        AuthenticationUtils.getUserIpAddress())
+                : new PersonAssociationUpdatedEvent(source, source.getParentType(), source.getParentId(),
+                        AuthenticationUtils.getUserIpAddress());
         personAssociationPersistenceEvent.setSucceeded(succeeded);
 
         eventPublisher.publishEvent(personAssociationPersistenceEvent);
@@ -301,7 +303,8 @@ public class PersonAssociationEventPublisher implements ApplicationEventPublishe
     @Async
     public void publishPersonAssociationDeletedEvent(PersonAssociation source)
     {
-        PersonAssociationDeletedEvent event = new PersonAssociationDeletedEvent(source, source.getParentType(), source.getParentId());
+        PersonAssociationDeletedEvent event = new PersonAssociationDeletedEvent(source, source.getParentType(), source.getParentId(),
+                AuthenticationUtils.getUserIpAddress());
         event.setSucceeded(true);
         eventPublisher.publishEvent(event);
     }

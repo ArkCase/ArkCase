@@ -25,6 +25,12 @@
     <panel-view header="Email Settings" collapsible="false">
         <div class="well-sm">
             <div class="row">
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" id="enableCaseFromEmail" ng-model="emailReceiverConfiguration.enableCase">
+                        <span translate>admin.security.emailTemplates.settings.enableCase</span>
+                    </label>
+                </div>
                 <div class="col-lg-4 form-group">
                     <label for="emailCaseFile" translate>
                         admin.security.emailTemplates.settings.emailCaseFile.label
@@ -42,6 +48,12 @@
                 </div>
             </div>
             <div class="row">
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" id="enableComplaintFromEmail" ng-model="emailReceiverConfiguration.enableComplaint">
+                        <span translate>admin.security.emailTemplates.settings.enableComplaint</span>
+                    </label>
+                </div>
                 <div class="col-lg-4 form-group">
                     <label for="emailComplaint" translate>
                         admin.security.emailTemplates.settings.emailComplaint.label

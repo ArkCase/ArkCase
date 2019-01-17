@@ -113,7 +113,6 @@ angular.module('admin').controller('Admin.CMTemplatesController',
                 var modalScope = $scope.$new();
                 modalScope.config = $scope.configVersions;
                 var templateVersionsPromise = correspondenceService.getTemplateVersionData($scope.selectedRows[0].templateId);
-                var objectTypeIndex = 0;
                 templateVersionsPromise.then(function(templateVersionData) {
                     var modalInstance = $modal.open({
                         scope: modalScope,
@@ -123,10 +122,6 @@ angular.module('admin').controller('Admin.CMTemplatesController',
 
                             angular.forEach(templateVersionData.data, function(row, index) {
                                 row.downloadFileName = correspondenceService.downloadByFilename(row.templateFilename);
-                            });
-                            angular.forEach(templateVersionData.data, function(row, index) {
-                                row.objectType = ObjectLookupService.getObjectTypeValue(templateVersionData.data[objectTypeIndex].objectType);
-                                objectTypeIndex++;
                             });
                             $scope.gridOptions = {
                                 enableColumnResizing: true,
@@ -185,14 +180,9 @@ angular.module('admin').controller('Admin.CMTemplatesController',
 
             function ReloadGrid() {
                 var templatesPromise = correspondenceService.retrieveActiveVersionTemplatesList();
-                var objectTypeIndex = 0;
                 templatesPromise.then(function(templates) {
                     angular.forEach(templates.data, function(row, index) {
                         row.downloadFileName = correspondenceService.downloadByFilename(row.templateFilename);
-                    });
-                    angular.forEach(templates.data, function(row, index) {
-                        row.objectType = ObjectLookupService.getObjectTypeValue(templates.data[objectTypeIndex].objectType);
-                        objectTypeIndex++;
                     });
                     $scope.gridOptions.data = templates.data;
                     $scope.selectedRows = [];
