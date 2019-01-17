@@ -48,6 +48,14 @@ public class EcmEvent extends ApplicationEvent
 
     private String parentNodeType;
 
+    private String sourceParentNodeId;
+
+    private String sourceParentNodeType;
+
+    private String targetParentNodeId;
+
+    private String targetParentNodeType;
+
     private EcmEventType ecmEventType;
 
     private long auditId;
@@ -137,6 +145,46 @@ public class EcmEvent extends ApplicationEvent
         this.auditId = auditId;
     }
 
+    public String getSourceParentNodeId()
+    {
+        return sourceParentNodeId;
+    }
+
+    public void setSourceParentNodeId(String sourceParentNodeId)
+    {
+        this.sourceParentNodeId = sourceParentNodeId;
+    }
+
+    public String getSourceParentNodeType()
+    {
+        return sourceParentNodeType;
+    }
+
+    public void setSourceParentNodeType(String sourceParentNodeType)
+    {
+        this.sourceParentNodeType = sourceParentNodeType;
+    }
+
+    public String getTargetParentNodeId()
+    {
+        return targetParentNodeId;
+    }
+
+    public void setTargetParentNodeId(String targetParentNodeId)
+    {
+        this.targetParentNodeId = targetParentNodeId;
+    }
+
+    public String getTargetParentNodeType()
+    {
+        return targetParentNodeType;
+    }
+
+    public void setTargetParentNodeType(String targetParentNodeType)
+    {
+        this.targetParentNodeType = targetParentNodeType;
+    }
+
     @Override
     public String toString()
     {
@@ -147,6 +195,10 @@ public class EcmEvent extends ApplicationEvent
                 ", nodeType='" + nodeType + '\'' +
                 ", parentNodeId='" + parentNodeId + '\'' +
                 ", parentNodeType='" + parentNodeType + '\'' +
+                ", sourceParentNodeId='" + sourceParentNodeId + '\'' +
+                ", sourceParentNodeType='" + sourceParentNodeType + '\'' +
+                ", targetParentNodeId='" + targetParentNodeId + '\'' +
+                ", targetParentNodeType='" + targetParentNodeType + '\'' +
                 ", ecmEventType=" + ecmEventType +
                 ", auditId=" + auditId +
                 '}';
