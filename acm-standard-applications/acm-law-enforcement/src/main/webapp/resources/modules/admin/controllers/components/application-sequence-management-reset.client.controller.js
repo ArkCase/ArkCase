@@ -85,6 +85,15 @@ angular.module('admin').controller('Admin.SequenceManagementResetController', [ 
     };
     
     $scope.editRow = function(rowEntity) {
+        if(rowEntity.resetRepeatablePeriod == 'YEARLY'){
+            rowEntity.resetRepeatPeriodOption = "-3";
+        }else if(rowEntity.resetRepeatablePeriod == 'MONTHLY'){
+            rowEntity.resetRepeatPeriodOption = "-2";
+        }else if(rowEntity.resetRepeatablePeriod == 'WEEKLY'){
+            rowEntity.resetRepeatPeriodOption = "-1";
+        }else if(rowEntity.resetRepeatablePeriod == 'DAILY'){
+            rowEntity.resetRepeatPeriodOption = "0";
+        }
         $scope.autoIncrementReset(rowEntity,true);
     };
 
