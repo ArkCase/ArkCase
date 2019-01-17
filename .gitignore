@@ -35,3 +35,4 @@ rebel.xml
 .factorypath
 launch.test.json
 *.code-workspace
+.vscode/settings.json
