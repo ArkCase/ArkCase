@@ -40,8 +40,8 @@ import java.io.InputStream;
 /**
  * @author ivana.shekerova on 12/21/2018.
  */
-public class EcmFileMovedEventHandlerTest {
-
+public class EcmFileMovedEventHandlerTest
+{
     private EcmFileMovedEventHandler unit;
 
     private AcmFolderDao acmFolderDao = mock(AcmFolderDao.class);
@@ -127,7 +127,8 @@ public class EcmFileMovedEventHandlerTest {
     }
 
     @Test
-    public void onEcmFileMoved_ifSourceFolderIsArkcaseFolder_And_TargetFolderIsNotArkcaseFolder_deleteFile() throws Exception {
+    public void onEcmFileMoved_ifSourceFolderIsArkcaseFolder_And_TargetFolderIsNotArkcaseFolder_deleteFile() throws Exception
+    {
         unit.setFileService(spyEcmFileService);
 
         AcmFolder sourceParentFolder = new AcmFolder();
