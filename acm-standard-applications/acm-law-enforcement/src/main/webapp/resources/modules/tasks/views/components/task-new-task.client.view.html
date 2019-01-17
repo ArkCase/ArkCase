@@ -24,14 +24,14 @@
                     </label>
                     <select ng-model="config.data.attachedToObjectType" ng-change="updateAssocParentType()"
                             ng-options="attachedToObjectType.id as attachedToObjectType.name for attachedToObjectType in config.attachedToObjectType"
-                            class="form-control input-md" ng-click="inputClear()">
+                            class="form-control input-md" ng-click="inputClear()" ng-disabled="modalParams.parentType">
                     </select>
                 </div>
                 <div class="col-sm-4 form-group">
                     <label for="associateNumber" translate> tasks.newTask.associateNumber.label </label>
                     <input type="text" id="associateNumber" ng-required="isAssocType" ng-model="config.data.attachedToObjectName"
                             class="input-md form-control" placeholder="{{ 'tasks.newTask.associateNumber.placeholder' | translate }}"
-                            id="complaintId" ng-disabled="config.data.attachedToObjectType==='' " ng-click="objectSearch()">
+                            id="complaintId" ng-disabled="config.data.attachedToObjectType==='' || modalParams.parentObject" ng-click="objectSearch()">
                 </div>
             </div>
             <div class="row">
