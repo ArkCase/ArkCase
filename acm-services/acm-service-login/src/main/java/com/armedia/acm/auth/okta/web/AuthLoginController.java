@@ -29,6 +29,7 @@ package com.armedia.acm.auth.okta.web;
 
 import com.armedia.acm.auth.AcmAuthentication;
 import com.armedia.acm.auth.AcmGrantedAuthority;
+import com.armedia.acm.auth.AuthenticationUtils;
 import com.armedia.acm.auth.LoginEvent;
 import com.armedia.acm.auth.okta.auth.AcmMultiFactorConfig;
 import com.armedia.acm.auth.okta.auth.OktaAuthenticationDetails;
@@ -494,7 +495,7 @@ public class AuthLoginController implements ApplicationEventPublisherAware
                 contextAuth.isAuthenticated(), contextAuth.getName(), dbUser.getIdentifier());
         SecurityContextHolder.getContext().setAuthentication(acmAuthentication);
         // Publish login event on second factor auth success
-        LoginEvent event = new LoginEvent(acmAuthentication);
+        LoginEvent event = new LoginEvent(acmAuthentication, AuthenticationUtils.getUserIpAddress());
         event.setSucceeded(true);
         getApplicationEventPublisher().publishEvent(event);
 

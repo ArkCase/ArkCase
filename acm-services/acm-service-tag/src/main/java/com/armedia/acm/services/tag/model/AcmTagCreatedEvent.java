@@ -32,9 +32,10 @@ public class AcmTagCreatedEvent extends AcmTagPersistenceEvent
 
     private static final String EVENT_TYPE = "com.armedia.acm.tag.created";
 
-    public AcmTagCreatedEvent(AcmTag source, String userId)
+    public AcmTagCreatedEvent(AcmTag source, String userId, String ipAddress)
     {
         super(source, userId);
+        setIpAddress(ipAddress);
     }
 
     @Override

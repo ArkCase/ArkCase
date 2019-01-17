@@ -28,6 +28,7 @@ package com.armedia.acm.plugins.complaint.email;
  */
 
 import com.armedia.acm.auth.AcmAuthentication;
+import com.armedia.acm.auth.AuthenticationUtils;
 import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.data.AcmNameDao;
 import com.armedia.acm.files.ConfigurationFileChangedEvent;
@@ -230,7 +231,8 @@ public class NewComplaintMailHandler extends AcmObjectMailHandler implements App
                 uploadAttachments(message, complaint, userId);
             }
 
-            SmtpEmailReceivedEvent event = new SmtpEmailReceivedEvent(message, userId, complaint.getId(), complaint.getObjectType());
+            SmtpEmailReceivedEvent event = new SmtpEmailReceivedEvent(message, userId, complaint.getId(), complaint.getObjectType(),
+                    AuthenticationUtils.getUserIpAddress());
             boolean success = (exception == null);
             event.setSucceeded(success);
             getEventPublisher().publishEvent(event);

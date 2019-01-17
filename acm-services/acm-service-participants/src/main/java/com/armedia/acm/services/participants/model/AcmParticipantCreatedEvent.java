@@ -32,11 +32,12 @@ public class AcmParticipantCreatedEvent extends AcmParticipantPersistenceEvent
 
     private static final String EVENT_TYPE = "com.armedia.acm.participant.created";
 
-    public AcmParticipantCreatedEvent(AcmParticipant source, String userId)
+    public AcmParticipantCreatedEvent(AcmParticipant source, String userId, String ipAddress)
     {
         super(source, userId);
         setParentObjectId(source.getObjectId());
         setParentObjectType(source.getObjectType());
+        setIpAddress(ipAddress);
     }
 
     @Override

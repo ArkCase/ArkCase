@@ -32,9 +32,10 @@ public class PersonAddEvent extends PersonPersistenceEvent
 {
     private static final String EVENT_TYPE = "com.armedia.acm.person.created";
 
-    public PersonAddEvent(Person source)
+    public PersonAddEvent(Person source, String ipAddress)
     {
         super(source);
+        setIpAddress(ipAddress);
     }
 
     @Override
