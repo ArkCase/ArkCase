@@ -1316,7 +1316,7 @@
             ],
             "attachedToObjectType": [
                 {
-                    "name": "FOIA Request",
+                    "name": "Request",
                     "id": "CASE_FILE"
                 }
             ],
