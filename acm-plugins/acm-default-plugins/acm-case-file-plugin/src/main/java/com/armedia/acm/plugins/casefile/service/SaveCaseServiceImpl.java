@@ -127,6 +127,7 @@ public class SaveCaseServiceImpl implements SaveCaseService
             CaseFile saved = caseFileDao.save(in);
 
             log.info("Case saved '{}'", saved);
+
             return saved;
 
         });

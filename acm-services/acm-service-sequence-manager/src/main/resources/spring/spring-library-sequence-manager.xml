@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
+
+    <bean id="sequenceConfigurationFile" class="java.io.File">
+        <constructor-arg value="${user.home}/.arkcase/acm/acmSequenceConfiguration.json"/>
+    </bean>
+
+    <bean id="acmSequenceHandler" class="com.armedia.acm.services.sequence.listener.AcmSequenceHandler">
+        <property name="sequenceAnnotationReader" ref="acmSequenceAnnotationReader"/>
+        <property name="sequenceGeneratorManager" ref="acmSequenceGeneratorManager"/>
+        <property name="genericMessagesChannel" ref="genericMessagesChannel"/>
+    </bean>
+
+    <bean id="acmSequenceDatabaseHandler" class="com.armedia.acm.services.sequence.listener.AcmSequenceDatabaseChangeHandler">
+        <property name="sequenceAnnotationReader" ref="acmSequenceAnnotationReader"/>
+        <property name="sequenceService" ref="acmSequenceService"/>
+    </bean>
+
+    <bean id="acmSequenceDatabaseRollbackHandler" class="com.armedia.acm.services.sequence.listener.AcmSequenceDatabaseRollbackChangesHandler">
+        <property name="sequenceAnnotationReader" ref="acmSequenceAnnotationReader"/>
+        <property name="sequenceService" ref="acmSequenceService"/>
+    </bean>
+
+    <bean id="acmSequenceGeneratorManager" class="com.armedia.acm.services.sequence.generator.AcmSequenceGeneratorManager" init-method="initSequenceMap">
+        <property name="sequenceService" ref="acmSequenceService"/>
+        <property name="sequenceConfigurationService" ref="acmSequenceConfigurationService"/>
+    </bean>
+
+    <bean id="acmAutoincrementSequenceGenerator" class="com.armedia.acm.services.sequence.generator.AcmAutoincrementSequenceGenerator" init-method="init">
+        <property name="sequenceGeneratorManager" ref="acmSequenceGeneratorManager"/>
+        <property name="sequenceService" ref="acmSequenceService"/>
+    </bean>
+
+    <bean id="acmDateSequenceGenerator" class="com.armedia.acm.services.sequence.generator.AcmDateSequenceGenerator" init-method="init">
+        <property name="sequenceGeneratorManager" ref="acmSequenceGeneratorManager"/>
+    </bean>
+
+    <bean id="acmArbitraryTextSequenceGenerator" class="com.armedia.acm.services.sequence.generator.AcmArbitraryTextSequenceGenerator" init-method="init">
+        <property name="sequenceGeneratorManager" ref="acmSequenceGeneratorManager"/>
+    </bean>
+
+    <bean id="acmUUIDSequenceGenerator" class="com.armedia.acm.services.sequence.generator.AcmUUIDSequenceGenerator" init-method="init">
+        <property name="sequenceGeneratorManager" ref="acmSequenceGeneratorManager"/>
+    </bean>
+
+    <bean id="acmObjectPropertySequenceGenerator" class="com.armedia.acm.services.sequence.generator.AcmObjectPropertySequenceGenerator" init-method="init">
+        <property name="sequenceGeneratorManager" ref="acmSequenceGeneratorManager"/>
+    </bean>
+
+    <bean id="acmSequenceDao" class="com.armedia.acm.services.sequence.dao.AcmSequenceDao"/>
+    
+    <bean id="acmSequenceRegistryDao" class="com.armedia.acm.services.sequence.dao.AcmSequenceRegistryDao"/>
+    
+    <bean id="acmSequenceResetDao" class="com.armedia.acm.services.sequence.dao.AcmSequenceResetDao"/>
+    
+    <bean id="acmSequenceAnnotationReader" class="com.armedia.acm.services.sequence.annotation.AcmSequenceAnnotationReader"/>
+    
+    <bean id="acmSequenceService" class="com.armedia.acm.services.sequence.service.AcmSequenceServiceImpl">
+        <property name="sequenceDao" ref="acmSequenceDao"/>
+        <property name="sequenceRegistryDao" ref="acmSequenceRegistryDao"/>
+        <property name="sequenceResetDao" ref="acmSequenceResetDao"/>
+    </bean>
+
+    <bean id="acmSequenceConfigurationService" class="com.armedia.acm.services.sequence.service.AcmSequenceConfigurationServiceImpl">
+        <property name="sequenceConfigurationFile" ref="sequenceConfigurationFile"/>
+        <property name="objectConverter" ref="objectConverter"/>
+        <property name="sequenceEventPublisher" ref="acmSequenceEventPublisher"/>
+    </bean>
+    
+    <bean id="acmSequenceEventPublisher" class="com.armedia.acm.services.sequence.event.AcmSequenceEventPublisher"/>
+
+</beans>

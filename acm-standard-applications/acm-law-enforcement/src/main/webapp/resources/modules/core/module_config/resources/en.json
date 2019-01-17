@@ -595,6 +595,19 @@
                 "document": "Document",
                 "person": "Person",
                 "organization": "Organization"
+            },
+            "sequenceParts": {
+                "autoincrement": "AUTOINCREMENT",
+                "objectProperty": "OBJECT_PROPERTY",
+                "uuid": "UUID",
+                "date": "DATE",
+                "arbitraryText": "ARBITRARY_TEXT"
+            },
+            "sequenceResetPeriod": {
+                "daily": "Daily",
+                "weekly": "Weekly",
+                "monthly": "Monthly",
+                "yearly": "Yearly"
             }
         },
         "userInfo": {

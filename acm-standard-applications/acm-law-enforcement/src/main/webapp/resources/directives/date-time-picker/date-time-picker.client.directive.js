@@ -86,6 +86,7 @@ angular.module('directives').directive('dateTimePicker', ['moment', 'Util.DateSe
                 if (UtilService.isEmpty($scope.data)) {
                     $scope.today = "";
                 } else {
+                    $scope.today = moment($scope.data).format(UtilDateService.defaultDateLongTimeFormat);
                     if ($scope.timeFormatDisabled === "true") {
                         $scope.today = moment($scope.data).format(UtilDateService.defaultDateFormat)
                     } else {
