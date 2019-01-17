@@ -36,7 +36,7 @@ public class UpdateReferenceEvent extends AcmEvent
 
     private static final String EVENT_TYPE = "com.armedia.acm.objectassociation.reference.updated";
 
-    public UpdateReferenceEvent(ObjectAssociation source)
+    public UpdateReferenceEvent(ObjectAssociation source, String ipAddress)
     {
         super(source);
         setEventDate(new Date());

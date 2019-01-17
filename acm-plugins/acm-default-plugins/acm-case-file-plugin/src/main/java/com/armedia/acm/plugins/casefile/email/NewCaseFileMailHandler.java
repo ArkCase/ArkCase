@@ -28,6 +28,7 @@ package com.armedia.acm.plugins.casefile.email;
  */
 
 import com.armedia.acm.auth.AcmAuthentication;
+import com.armedia.acm.auth.AuthenticationUtils;
 import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.data.AcmNameDao;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
@@ -241,7 +242,8 @@ public class NewCaseFileMailHandler extends AcmObjectMailHandler
                 uploadAttachments(message, caseFile, userId);
             }
 
-            SmtpEmailReceivedEvent event = new SmtpEmailReceivedEvent(message, userId, caseFile.getId(), caseFile.getObjectType());
+            SmtpEmailReceivedEvent event = new SmtpEmailReceivedEvent(message, userId, caseFile.getId(), caseFile.getObjectType(),
+                    AuthenticationUtils.getUserIpAddress());
             boolean success = (exception == null);
             event.setSucceeded(success);
             getEventPublisher().publishEvent(event);

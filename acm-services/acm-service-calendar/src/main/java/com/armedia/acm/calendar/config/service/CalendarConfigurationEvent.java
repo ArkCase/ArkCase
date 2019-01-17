@@ -44,10 +44,11 @@ public class CalendarConfigurationEvent extends AcmEvent
      * @param source
      * @param source
      */
-    public CalendarConfigurationEvent(CalendarConfigurationsByObjectType source, String user)
+    public CalendarConfigurationEvent(CalendarConfigurationsByObjectType source, String user, String ipAddress)
     {
         super(source);
         setUserId(user);
+        setIpAddress(ipAddress);
     }
 
     /*

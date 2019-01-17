@@ -31,11 +31,12 @@ public class OrganizationAssociationUpdatedEvent extends OrganizationAssociation
 {
     private static final String EVENT_TYPE = "com.armedia.acm.organizationAssociation.updated";
 
-    public OrganizationAssociationUpdatedEvent(OrganizationAssociation source, String parentType, Long parentId)
+    public OrganizationAssociationUpdatedEvent(OrganizationAssociation source, String parentType, Long parentId, String ipAddress)
     {
         super(source);
         setParentObjectId(parentId);
         setParentObjectType(parentType);
+        setIpAddress(ipAddress);
     }
 
     @Override

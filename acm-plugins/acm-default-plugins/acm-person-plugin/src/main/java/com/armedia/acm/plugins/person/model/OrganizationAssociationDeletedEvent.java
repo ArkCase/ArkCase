@@ -31,12 +31,13 @@ public class OrganizationAssociationDeletedEvent extends OrganizationAssociation
 {
     private static final String EVENT_TYPE = "com.armedia.acm.organizationAssociation.deleted";
 
-    public OrganizationAssociationDeletedEvent(OrganizationAssociation source, String parentType, Long parentId)
+    public OrganizationAssociationDeletedEvent(OrganizationAssociation source, String parentType, Long parentId, String ipAddress)
     {
         super(source);
         setParentObjectId(parentId);
         setParentObjectType(parentType);
         setEventDescription("Organization deleted (" + source.getOrganization().getOrganizationValue() + ")");
+        setIpAddress(ipAddress);
     }
 
     @Override

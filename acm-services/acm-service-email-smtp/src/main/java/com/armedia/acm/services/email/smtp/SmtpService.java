@@ -27,6 +27,7 @@ package com.armedia.acm.services.email.smtp;
  * #L%
  */
 
+import com.armedia.acm.auth.AuthenticationUtils;
 import com.armedia.acm.core.exceptions.AcmEncryptionException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.files.propertymanager.PropertyFileManager;
@@ -230,7 +231,7 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
     private Long setFilenames(EmailWithEmbeddedLinksDTO in)
     {
         EcmFile ecmFile = null;
-        List<String> fileNames = new ArrayList<String>();
+        List<String> fileNames = new ArrayList<>();
 
         if (Objects.nonNull(in.getFileIds()) && in.getFileIds().size() > 0)
         {
@@ -284,10 +285,12 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
                     fileName = fileName + ecmFile.getFileActiveVersionNameExtension();
                 }
                 attachments.put(fileKey, new DataHandler(new InputStreamDataSource(contents, fileName)));
+                String ipAddress = AuthenticationUtils.getUserIpAddress();
 
                 sentEvents
-                        .add(new SmtpEventSentEvent(ecmFile, user.getUserId(), ecmFile.getParentObjectId(), ecmFile.getParentObjectType()));
-                sentEvents.add(new SmtpEventSentEvent(ecmFile, user.getUserId(), ecmFile.getId(), ecmFile.getObjectType()));
+                        .add(new SmtpEventSentEvent(ecmFile, user.getUserId(), ecmFile.getParentObjectId(), ecmFile.getParentObjectType(),
+                                ipAddress));
+                sentEvents.add(new SmtpEventSentEvent(ecmFile, user.getUserId(), ecmFile.getId(), ecmFile.getObjectType(), ipAddress));
             }
         }
         // Adding non ecmFile(s) as attachments
