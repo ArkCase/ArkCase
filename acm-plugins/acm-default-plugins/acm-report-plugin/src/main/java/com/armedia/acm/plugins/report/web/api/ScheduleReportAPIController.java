@@ -33,9 +33,12 @@ import com.armedia.acm.plugins.report.model.PentahoScheduleRequest;
 import com.armedia.acm.plugins.report.model.ScheduleReportException;
 import com.armedia.acm.plugins.report.service.ScheduleReportService;
 
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -61,31 +64,40 @@ public class ScheduleReportAPIController
 
     @RequestMapping(value = "/schedule", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public void processReportSchedule(@RequestBody PentahoReportSchedule pentahoReportSchedule)
+    public ResponseEntity<String> processReportSchedule(@RequestBody PentahoReportSchedule pentahoReportSchedule)
             throws ScheduleReportException
     {
 
+        JSONObject retval = new JSONObject();
+
         if (pentahoReportSchedule == null || pentahoReportSchedule.getUiPassParam() == null)
         {
-            throw new ScheduleReportException("Invalid input given or missing schedule type: DAILY, WEEKLY, etc.");
+            LOGGER.error("Invalid input given or missing schedule type: DAILY, WEEKLY, etc.");
+            retval.put("error", "invalidScheduleTime");
+            return new ResponseEntity<>(retval.toString(), HttpStatus.BAD_REQUEST);
         }
 
         try
         {
-            Date startTime = convertTime(pentahoReportSchedule.getStartTime());
-            Date endTime = convertTime(pentahoReportSchedule.getEndTime());
-            if (startTime.after(endTime))
+            if (pentahoReportSchedule.getEndTime() != "")
             {
-                throw new ScheduleReportException(pentahoReportSchedule.getEndTime() + "(End time) cannot be before "
-                        + pentahoReportSchedule.getStartTime() + "(Start time)");
+                Date startTime = convertTime(pentahoReportSchedule.getStartTime());
+                Date endTime = convertTime(pentahoReportSchedule.getEndTime());
+                if (startTime.after(endTime))
+                {
+                    LOGGER.error(pentahoReportSchedule.getEndTime() + "(End time) cannot be before "
+                            + pentahoReportSchedule.getStartTime() + "(Start time)");
+                    retval.put("error", "beforeTimeError");
+                    return new ResponseEntity<>(retval.toString(), HttpStatus.BAD_REQUEST);
+                }
             }
         }
         catch (ParseException e)
         {
             LOGGER.error("Error due parsing the start or end time (" + pentahoReportSchedule.getStartTime() + ", " +
                     pentahoReportSchedule.getEndTime() + ")", e);
-            throw new ScheduleReportException("Error due parsing the start or end time (" + pentahoReportSchedule.getStartTime() + ", " +
-                    pentahoReportSchedule.getEndTime() + ")");
+            retval.put("error", "parsingError");
+            return new ResponseEntity<>(retval.toString(), HttpStatus.BAD_REQUEST);
         }
 
         PentahoScheduleRequest pentahoScheduleRequest = new PentahoScheduleRequest(pentahoReportSchedule.getUiPassParam(),
@@ -97,6 +109,7 @@ public class ScheduleReportAPIController
 
         LOGGER.debug(pentahoReportSchedule.toString());
         LOGGER.debug(pentahoScheduleRequest.toJSONSting());
+        return new ResponseEntity<>(retval.toString(), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/schedule", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
