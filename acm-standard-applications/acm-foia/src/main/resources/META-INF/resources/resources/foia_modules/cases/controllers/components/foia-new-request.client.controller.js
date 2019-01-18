@@ -339,7 +339,6 @@ angular.module('cases').controller(
 
                 for (var property in $scope.uploadFilesDescription) {
                     if ($scope.uploadFilesDescription.hasOwnProperty(property)) {
-                        //filesMapData[property] = $scope.uploadFilesDescription[property];
                         angular.forEach($scope.uploadFilesDescription[property], function(value){
                             formdata.append(property, value);
                         });
