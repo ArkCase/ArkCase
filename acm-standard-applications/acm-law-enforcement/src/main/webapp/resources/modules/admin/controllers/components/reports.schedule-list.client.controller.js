@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('admin').controller('Admin.ReportsScheduleListController',
-    ['$scope', '$modal', '$q', '$translate', '$filter', 'LookupService', 'Util.DateService', 'Admin.ScheduleReportService', 'MessageService', 'Helper.UiGridService',
-        function ($scope, $modal, $q, $translate, $filter, LookupService, UtilDateService, ScheduleReportService, MessageService, HelperUiGridService) {
+    ['$scope', '$modal', '$q', '$translate', '$filter', 'LookupService', 'Util.DateService', 'Admin.ScheduleReportService', 'MessageService', 'Helper.UiGridService', 'UtilService',
+        function ($scope, $modal, $q, $translate, $filter, LookupService, UtilDateService, ScheduleReportService, MessageService, HelperUiGridService, UtilService) {
 
             $scope.$on('new-report-schedule', onCreatedReportSchedule);
 
@@ -47,7 +47,7 @@ angular.module('admin').controller('Admin.ReportsScheduleListController',
                         return ('PentahoSystemVersionCheck' === reportSchedule.jobName);
                     });
                     $scope.gridOptions.data = data.job;
-                    $scope.gridOptions.totalItems = data.job.length;
+                    $scope.gridOptions.totalItems = !UtilService.isEmpty(data.job) ? data.job.length : [];
                 });
             }
 
@@ -141,7 +141,7 @@ angular.module('admin').controller('Admin.ReportsScheduleListController',
                             MessageService.info($translate.instant("admin.reports.schedule.createScheduleSuccess"));
                             $scope.$emit('created-report-schedule', data);
                         }, function(error) {
-                            MessageService.error($translate.instant("admin.reports.schedule.createScheduleFailure"));
+                            MessageService.error($translate.instant(!UtilService.isEmpty(error.data.error) ? "admin.reports.schedule." + error.data.error : "admin.reports.schedule.createScheduleFailure"));
                         });
 
                     } else {
@@ -151,10 +151,10 @@ angular.module('admin').controller('Admin.ReportsScheduleListController',
                                 $scope.$emit('created-report-schedule', data);
                                 MessageService.info($translate.instant("admin.reports.schedule.update.success"));
                             }, function(error) {
-                                MessageService.error($translate.instant("admin.reports.schedule.update.error"));
+                                MessageService.error($translate.instant(!UtilService.isEmpty(error.data.error) ? "admin.reports.schedule." + error.data.error : "admin.reports.schedule.createScheduleFailure"));
                             })
                         }, function(errorData) {
-                            MessageService.error($translate.instant("admin.reports.schedule.update.error"));
+                            MessageService.error($translate.instant(!UtilService.isEmpty(errorData.data.error) ? "admin.reports.schedule." + errorData.data.error : "admin.reports.schedule.createScheduleFailure"));
                         });
                     }
                 });
