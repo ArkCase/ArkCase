@@ -38,7 +38,7 @@
             {
                 "desc": "cases.tree.filters.released",
                 "name": "all-released-cases",
-                "value": "fq=assignee_s:${user}&fq=status_s:Released"
+                "value": "fq=status_s:Released"
             },
             {
                 "desc": "cases.tree.filters.iHaveCreated",
