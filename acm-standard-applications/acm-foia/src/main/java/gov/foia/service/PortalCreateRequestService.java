@@ -55,9 +55,7 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.List;
+import java.util.*;
 
 public class PortalCreateRequestService
 {
@@ -87,20 +85,21 @@ public class PortalCreateRequestService
 
         FOIARequest request = populateRequest(in);
 
-        List<MultipartFile> files = new ArrayList<>();
-        for (PortalFOIARequestFile requestFile : in.getFiles())
-        {
-            try
-            {
-                files.add(portalRequestFileToMultipartFile(requestFile));
+
+        Map<String, List<MultipartFile>> filesMap = new HashMap<>();
+        for (Map.Entry<String, List<PortalFOIARequestFile>> entry : in.getFiles().entrySet()) {
+            List<MultipartFile> files = new ArrayList<>();
+            for (PortalFOIARequestFile requestFile : entry.getValue()) {
+                try {
+                    files.add(portalRequestFileToMultipartFile(requestFile));
+                } catch (IOException e) {
+                    log.error("Failed to receive file {}", requestFile.getFileName());
+                }
             }
-            catch (IOException e)
-            {
-                log.error("Failed to receive file {}", requestFile.getFileName());
-            }
+            filesMap.put(entry.getKey(), files);
         }
 
-        FOIARequest saved = (FOIARequest) getSaveFOIARequestService().savePortalRequest(request, files, auth, ipAddress);
+        FOIARequest saved = (FOIARequest) getSaveFOIARequestService().savePortalRequest(request, filesMap, auth, ipAddress);
 
         log.debug("FOIA Request: {}", saved);
 

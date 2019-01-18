@@ -35,19 +35,25 @@ import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.casefile.model.SaveCaseServiceCaller;
 import com.armedia.acm.plugins.casefile.pipeline.CaseFilePipelineContext;
+import com.armedia.acm.plugins.ecm.model.AcmMultipartFile;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.services.pipeline.PipelineManager;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 
+import org.apache.xpath.operations.Mult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Stream;
 
 /**
  * Created by armdev on 8/29/14.
@@ -78,7 +84,7 @@ public class SaveCaseServiceImpl implements SaveCaseService
 
     @Override
     @Transactional
-    public CaseFile saveCase(CaseFile caseFile, List<MultipartFile> files, Authentication authentication, String ipAddress)
+    public CaseFile saveCase(CaseFile caseFile, Map<String, List<MultipartFile>> filesMap, Authentication authentication, String ipAddress)
             throws AcmUserActionFailedException,
             AcmCreateObjectFailedException, AcmUpdateObjectFailedException, AcmObjectNotFoundException, PipelineProcessException,
             IOException
@@ -88,6 +94,26 @@ public class SaveCaseServiceImpl implements SaveCaseService
         pipelineContext.setNewCase(caseFile.getId() == null);
         pipelineContext.setAuthentication(authentication);
         pipelineContext.setIpAddress(ipAddress);
+
+        List<AcmMultipartFile> files = new ArrayList<>();
+
+
+        for ( Map.Entry<String, List<MultipartFile>> file : filesMap.entrySet()) {
+            String fileType = file.getKey();
+            file.getValue().stream().forEach(item -> {
+                    try {
+                        AcmMultipartFile acmMultipartFile = new AcmMultipartFile(item.getName(), item.getOriginalFilename(), item.getContentType(),
+                                item.isEmpty() , item.getSize(), item.getBytes(), item.getInputStream(), false);
+                        String fieldName = ((CommonsMultipartFile) item).getFileItem().getFieldName();
+                        acmMultipartFile.setType(fileType);
+                        files.add(acmMultipartFile);
+                    }
+                    catch (IOException e) {
+                        log.error("Could not read properties from [{}] file.", item.getOriginalFilename());
+                    }
+            });
+        }
+
         if (Objects.nonNull(files))
         {
             pipelineContext.addProperty("attachmentFiles", files);

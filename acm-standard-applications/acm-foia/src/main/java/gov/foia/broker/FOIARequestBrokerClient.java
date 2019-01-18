@@ -86,6 +86,7 @@ public class FOIARequestBrokerClient extends AcmObjectBrokerClient<PortalFOIAReq
                 if (isExternalEnable())
                 {
                     entity.setUserId(getExternalUserId());
+                    //TODO
                     getCreateRequestService().createFOIARequest(entity);
                     result = true;
                 }
