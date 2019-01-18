@@ -957,6 +957,134 @@
                     "id": "Appeal"
                 }
             ]
+        },
+        {
+            "id": "sequenceManagementConfiguration",
+            "title": "admin.application.sequenceManagement.config.title",
+            "enabled": true,
+            "type": "grid",
+            "enableFiltering": false,
+            "configurable": true,
+            "columnDefs": [
+                {
+                    "name": "sequenceName",
+                    "displayName": "admin.application.sequenceManagement.config.grid.sequenceName",
+                    "visible": true,
+                    "headerCellFilter": "translate",
+                    "cellClass": "ui-grid-cell-contents-auto"
+                },
+                {
+                    "name": "sequenceDescription",
+                    "displayName": "admin.application.sequenceManagement.config.grid.sequenceDescription",
+                    "visible": true,
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "sequenceEnabled",
+                    "displayName": "admin.application.sequenceManagement.config.grid.sequenceStatus",
+                    "visible": true,
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<span align='center'>{{row.entity.sequenceEnabled ? ('admin.application.sequenceManagement.config.sequenceEnabled' | translate) : ('admin.application.sequenceManagement.config.sequenceDisabled' | translate)}}</span>"
+                },
+                {
+                    "name": "act",
+                    "cellEditableCondition": false,
+                    "width": "70",
+                    "headerCellTemplate": "<span></span>",
+                    "cellTemplate": ""
+                }
+            ],
+            "paginationPageSizes": [
+                5,
+                10,
+                20,
+                50
+            ],
+            "paginationPageSize": 20,
+            "sequenceManagementPartsConfig": {
+                "id": "sequenceManagementPartsConfiguration",
+                "title": "admin.application.sequenceManagement.config.title",
+                "enabled": true,
+                "type": "grid",
+                "enableFiltering": false,
+                "configurable": true,
+                "columnDefs": [
+                    {
+                        "name": "sequencePartName",
+                        "displayName": "admin.application.sequenceManagementParts.config.grid.sequenceName",
+                        "visible": true,
+                        "headerCellFilter": "translate"
+                    },
+                    {
+                        "name": "sequencePartType",
+                        "displayName": "admin.application.sequenceManagementParts.config.grid.sequenceDescription",
+                        "visible": true,
+                        "headerCellFilter": "translate"
+                    },
+                    {
+                        "name": "act",
+                        "cellEditableCondition": false,
+                        "width": "70",
+                        "headerCellTemplate": "<span></span>",
+                        "cellTemplate": ""
+                    }
+                ],
+                "paginationPageSizes": [
+                    5,
+                    10,
+                    20,
+                    50
+                ],
+                "paginationPageSize": 20,
+                "sequenceManagementResetConfig": {
+                    "id": "sequenceManagementResetConfig",
+                    "title": "admin.application.sequenceManagementReset.title",
+                    "type": "grid",
+                    "enableFiltering": false,
+                    "configurable": true,
+                    "columnDefs": [
+                        {
+                            "name": "resetDate",
+                            "displayName": "admin.application.sequenceManagementReset.grid.startResetDate",
+                            "visible": true,
+                            "headerCellFilter": "translate"
+                        },
+                        {
+                            "name": "resetExecutedDate",
+                            "displayName": "admin.application.sequenceManagementReset.grid.executedDate",
+                            "visible": true,
+                            "headerCellFilter": "translate"
+                        },
+                        {
+                            "name": "resetRepeatableFlag",
+                            "displayName": "admin.application.sequenceManagementReset.grid.repeat",
+                            "visible": true,
+                            "headerCellFilter": "translate",
+                            "cellTemplate": "<span align='center'>{{row.entity.resetRepeatableFlag ? 'Enabled' : 'Disabled'}}</span>"
+                        },
+                        {
+                            "name": "resetRepeatablePeriod",
+                            "displayName": "admin.application.sequenceManagementReset.grid.repeatPeriod",
+                            "visible": true,
+                            "headerCellFilter": "translate"
+                        },
+                        {
+                            "name": "act",
+                            "cellEditableCondition": false,
+                            "width": "70",
+                            "headerCellTemplate": "<span></span>",
+                            "cellTemplate": ""
+                        }
+                    ],
+                    "paginationPageSizes": [
+                        5,
+                        10,
+                        20,
+                        50
+                    ],
+                    "paginationPageSize": 20
+                }
+            }
         }
     ],
     "tree": {
@@ -1196,6 +1324,13 @@
                 "label": "admin.application.formsType.config.title",
                 "components": [
                     "application-forms-type.config"
+                ]
+            },
+            {
+                "type": "p/application/sequenceManagement",
+                "label": "admin.application.sequenceManagement.config.title",
+                "components": [
+                    "application-sequence-management.config"
                 ]
             },
             {
