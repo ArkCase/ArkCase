@@ -237,6 +237,7 @@
             "expandFacetList": "Expand Facet List"
         },
         "facet": {
+            "blankValue": "Unspecified",
             "names.modifyUser%": "Modify User",
             "names.taskPriority%": "Task Priority",
             "fields.taskPriority.medium%": "Medium",
