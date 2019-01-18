@@ -678,6 +678,92 @@
                 "modal.info": "Settings will take effect after refresh",
                 "modal.ok": "Confirm"
             },
+            "sequenceManagement.config": {
+                "title": "Sequence Configuration",
+                "sequenceEnabled": "Enabled",
+                "sequenceDisabled": "Disabled",
+                "grid": {
+                    "sequenceName": "Name",
+                    "sequenceDescription": "Description",
+                    "sequenceStatus": "Status"
+                },
+                "placeholder": {
+                    "name": "Enter Sequence Name",
+                    "description": "Enter Sequence Description"
+                },
+                "modal": {
+                    "title": "Add/Edit Sequence",
+                    "sequenceName": "Sequence Name",
+                    "sequenceDescription": "Sequence Description",
+                    "sequenceEnabled": "Sequence Enabled",
+                    "cancel": "Cancel",
+                    "save": "Save"
+                }
+            },
+            "sequenceManagementParts.config": {
+                "title": "Sequence Part",
+                "grid": {
+                    "sequenceName": "Name",
+                    "sequenceDescription": "Type"
+                },
+                "message": "The sequence you entered is not saved! Sequence name already exist!",
+                "autoincrement": {
+                    "startNumber": "Start number",
+                    "incrementSize": "Increment size",
+                    "numberLength": "Number length",
+                    "reuseSkippedSequenceValues": "Reuse skipped sequence values"
+                },
+                "objectProperty": {
+                    "name": "Object property name"
+                },
+                "date": {
+                    "text": "Date Format (ex: ddMMyyyyHHmmssSSS)"
+                },
+                "arbitraryText": {
+                    "text": "Arbitrary text"
+                },
+                "modal": {
+                    "title": "Add/Edit Sequence Part",
+                    "sequencePartName": "Sequence Part Name",
+                    "sequencePartType": "Sequence Part Type",
+                    "cancel": "Cancel",
+                    "save": "Save",
+                    "placeholders": {
+                        "autoincrement": {
+                            "startNumber": "Select or enter start number",
+                            "incrementSize": "Select or enter increment size",
+                            "numberLength": "Select or enter number length"
+                        },
+                        "arbitraryText": "Enter arbitrary text",
+                        "objectProperty": "Enter object property",
+                        "date": "Enter Date Format (ex: ddMMyyyyHHmmssSSS)",
+                        "sequencePartName": "Enter sequence part name",
+                        "sequencePartType": "Select part type"
+                    }
+                }
+            },
+            "sequenceManagementReset": {
+                "title": "Reset List",
+                "editBtn": "Edit",
+                "viewBtn": "View",
+                "removeBtn": "Remove",
+                "cancelBtn": "Cancel",
+                "saveBtn": "Save",
+                "grid": {
+                    "startResetDate": "Start Reset Date",
+                    "executedDate": "Executed Date",
+                    "repeat": "Repeat",
+                    "repeatPeriod": "Repeat Period"
+                },
+                "detailsModal": {
+                    "title": "Autoincrement Reset",
+                    "addTitle": "Add Autoincrement Reset",
+                    "editTitle": "Edit Autoincrement Reset",
+                    "resetStartDate": "Reset Start Date",
+                    "repeatReset": "Repeat reset",
+                    "repeatResetPeriod": "Repeat reset period (days)"
+                }
+            },
             "login.config": {
                 "title": "Login Configuration",
                 "idleLimit.label": "Login idle limit (in milliseconds)",
