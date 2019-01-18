@@ -33,7 +33,7 @@
             {
                 "desc": "cases.tree.filters.opened",
                 "name": "all-open-cases",
-                "value": "fq=-status_s:COMPLETE AND -status_s:DELETE AND -status_s:CLOSED"
+                "value": "fq=-status_s:COMPLETE AND -status_s:DELETE AND -status_s:CLOSED AND -status_s:Released"
             },
             {
                 "desc": "cases.tree.filters.released",
@@ -43,7 +43,7 @@
             {
                 "desc": "cases.tree.filters.iHaveCreated",
                 "name": "my-created-cases",
-                "value": "fq=author_s:${user}"
+                "value": "fq=author:${user}"
             },
             {
                 "desc": "cases.tree.filters.iAmAssigned",
