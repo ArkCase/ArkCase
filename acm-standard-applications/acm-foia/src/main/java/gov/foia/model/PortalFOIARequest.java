@@ -30,6 +30,7 @@ package gov.foia.model;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 /**
  * This class represents an HTML form request from an external port site. The HTML form fields must have the same names
@@ -90,7 +91,7 @@ public class PortalFOIARequest implements Serializable
 
     private String requestExpediteReason;
 
-    private List<PortalFOIARequestFile> files;
+    private Map<String, List<PortalFOIARequestFile>> files;
 
     private String ipAddress;
 
@@ -508,20 +509,11 @@ public class PortalFOIARequest implements Serializable
         this.requestExpediteReason = requestExpediteReason;
     }
 
-    /**
-     * @return the files
-     */
-    public List<PortalFOIARequestFile> getFiles()
-    {
+    public Map<String, List<PortalFOIARequestFile>> getFiles() {
         return files;
     }
 
-    /**
-     * @param files
-     *            the files to set
-     */
-    public void setFiles(List<PortalFOIARequestFile> files)
-    {
+    public void setFiles(Map<String, List<PortalFOIARequestFile>> files) {
         this.files = files;
     }
 
