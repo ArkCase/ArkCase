@@ -171,7 +171,7 @@ public class TemplatingEngineTest
 
         String template = "dateAsDateTime: ${model.date?datetime}\n" +
                 "dateAsDate: ${model.date?date}\n" +
-                "localDateTime: ${formatDateTime(model.dateTime,'MM/dd/yyyy HH:MM')}\n" +
+                "localDateTime: ${formatDateTime(model.dateTime,'MM/dd/yyyy HH:mm')}\n" +
                 "nullDate: ${model.nullDate?has_content?then(model.nullDate?datetime,'')}\n" +
                 "default nullDate: ${model.nullDate?has_content?then(model.nullDate?datetime,'not set')}\n" +
                 "nullDateTime: ${formatDateTime(model.nullDateTime,'MM/dd/yyyy HH:MM')}\n" +

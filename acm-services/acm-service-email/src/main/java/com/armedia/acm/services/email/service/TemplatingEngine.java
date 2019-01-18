@@ -51,7 +51,7 @@ public class TemplatingEngine
         cfg.setObjectWrapper(new DefaultObjectWrapper(Configuration.VERSION_2_3_22));
         cfg.setClassicCompatible(true); // does't throw error on null values
         cfg.setDateFormat("MM/dd/yyyy");
-        cfg.setDateTimeFormat("MM/dd/yyyy HH:MM");
+        cfg.setDateTimeFormat("MM/dd/yyyy HH:mm");
 
         Map<String, Object> templatingModel = new HashMap<>();
         templatingModel.put(modelReferenceName, model);
