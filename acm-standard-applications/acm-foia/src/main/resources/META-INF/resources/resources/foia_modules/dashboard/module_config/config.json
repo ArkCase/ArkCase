@@ -45,7 +45,7 @@
                     "headerCellFilter": "translate",
                     "enableSorting": true,
                     "type": "number",
-                    "cellTemplate": "<div class='ui-grid-cell-contents'><a ui-sref='order-info({orderId: row.entity.object_id_s})'>{{COL_FIELD CUSTOM_FILTERS}}</a></div>",
+                    "cellTemplate": "<div class='ui-grid-cell-contents'><a data-ui-sref=\"cases.main({id: row.entity.object_id_s})\">{{COL_FIELD CUSTOM_FILTERS}}</a></div>",
                     "width": 130
                 },
                 {
