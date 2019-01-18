@@ -98,19 +98,22 @@ public class SaveCaseServiceImpl implements SaveCaseService
         List<AcmMultipartFile> files = new ArrayList<>();
 
 
-        for ( Map.Entry<String, List<MultipartFile>> file : filesMap.entrySet()) {
+        for (Map.Entry<String, List<MultipartFile>> file : filesMap.entrySet())
+        {
             String fileType = file.getKey();
             file.getValue().stream().forEach(item -> {
-                    try {
-                        AcmMultipartFile acmMultipartFile = new AcmMultipartFile(item.getName(), item.getOriginalFilename(), item.getContentType(),
-                                item.isEmpty() , item.getSize(), item.getBytes(), item.getInputStream(), false);
-                        String fieldName = ((CommonsMultipartFile) item).getFileItem().getFieldName();
-                        acmMultipartFile.setType(fileType);
-                        files.add(acmMultipartFile);
-                    }
-                    catch (IOException e) {
-                        log.error("Could not read properties from [{}] file.", item.getOriginalFilename());
-                    }
+                try
+                {
+                    AcmMultipartFile acmMultipartFile = new AcmMultipartFile(item.getName(), item.getOriginalFilename(), item.getContentType(),
+                            item.isEmpty(), item.getSize(), item.getBytes(), item.getInputStream(), false);
+                    String fieldName = ((CommonsMultipartFile) item).getFileItem().getFieldName();
+                    acmMultipartFile.setType(fileType);
+                    files.add(acmMultipartFile);
+                }
+                catch (IOException e)
+                {
+                    log.error("Could not read properties from {} file. Exception {}", item.getOriginalFilename(), e.getMessage());
+                }
             });
         }
 

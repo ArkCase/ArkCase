@@ -87,13 +87,18 @@ public class PortalCreateRequestService
 
 
         Map<String, List<MultipartFile>> filesMap = new HashMap<>();
-        for (Map.Entry<String, List<PortalFOIARequestFile>> entry : in.getFiles().entrySet()) {
+        for (Map.Entry<String, List<PortalFOIARequestFile>> entry : in.getFiles().entrySet())
+        {
             List<MultipartFile> files = new ArrayList<>();
-            for (PortalFOIARequestFile requestFile : entry.getValue()) {
-                try {
+            for (PortalFOIARequestFile requestFile : entry.getValue())
+            {
+                try
+                {
                     files.add(portalRequestFileToMultipartFile(requestFile));
-                } catch (IOException e) {
-                    log.error("Failed to receive file {}", requestFile.getFileName());
+                }
+                catch (IOException e)
+                {
+                    log.error("Failed to receive file {}, {}", requestFile.getFileName(), e.getMessage());
                 }
             }
             filesMap.put(entry.getKey(), files);

@@ -80,7 +80,7 @@ public class SaveCaseFileAPIController
             throws AcmCreateObjectFailedException, AcmUpdateObjectFailedException, AcmUserActionFailedException, AcmObjectNotFoundException,
             IOException
     {
-        return saveCase(in,null, session, auth);
+        return saveCase(in, null, session, auth);
     }
 
     @PreAuthorize("#in.id == null or hasPermission(#in.id, 'CASE_FILE', 'saveCase')")
@@ -91,7 +91,8 @@ public class SaveCaseFileAPIController
             throws AcmCreateObjectFailedException, AcmUpdateObjectFailedException, AcmUserActionFailedException, AcmObjectNotFoundException,
             IOException
     {
-        for ( Map.Entry<String, List<MultipartFile>> file : filesMap.entrySet()) {
+        for ( Map.Entry<String, List<MultipartFile>> file : filesMap.entrySet())
+        {
             String fileType = file.getKey();
         }
         return saveCase(in, filesMap, session, auth);
