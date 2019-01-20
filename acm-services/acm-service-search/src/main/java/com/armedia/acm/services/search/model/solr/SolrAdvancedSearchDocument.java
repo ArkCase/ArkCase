@@ -45,6 +45,7 @@ public class SolrAdvancedSearchDocument extends SolrAbstractDocument implements 
     ///////////////////// fields for all documents ///////////////////////////
     private String id;
     private String object_id_s;
+    private Long object_id_i;
     private String object_display_name_s;
     private String object_type_s;
     private String object_sub_type_s;
@@ -972,6 +973,7 @@ public class SolrAdvancedSearchDocument extends SolrAbstractDocument implements 
         return "SolrAdvancedSearchDocument{" +
                 "id='" + id + '\'' +
                 ", object_id_s='" + object_id_s + '\'' +
+                ", object_id_i='" + object_id_i + '\'' +
                 ", object_display_name_s='" + object_display_name_s + '\'' +
                 ", object_type_s='" + object_type_s + '\'' +
                 ", object_sub_type_s='" + object_sub_type_s + '\'' +
@@ -1048,5 +1050,13 @@ public class SolrAdvancedSearchDocument extends SolrAbstractDocument implements 
                 ", hidden_b=" + hidden_b +
                 ", parent_folder_id_i=" + parent_folder_id_i +
                 '}';
+    }
+
+    public Long getObject_id_i() {
+        return object_id_i;
+    }
+
+    public void setObject_id_i(Long object_id_i) {
+        this.object_id_i = object_id_i;
     }
 }

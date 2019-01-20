@@ -52,6 +52,7 @@ public class SolrDocument extends SolrAbstractDocument implements Serializable
     private String title_t;
     private String name;
     private String object_id_s;
+    private Long object_id_i;
     private String object_display_name_s;
     private String owner_s;
     private String object_type_s;
@@ -718,6 +719,14 @@ public class SolrDocument extends SolrAbstractDocument implements Serializable
         this.parent_deny_group_ls = parent_deny_group_ls;
     }
 
+    public Long getObject_id_i() {
+        return object_id_i;
+    }
+
+    public void setObject_id_i(Long object_id_i) {
+        this.object_id_i = object_id_i;
+    }
+
     @Override
     public String toString()
     {
@@ -732,6 +741,7 @@ public class SolrDocument extends SolrAbstractDocument implements Serializable
                 + ", title_t='" + title_t + '\''
                 + ", name='" + name + '\''
                 + ", object_id_s='" + object_id_s + '\''
+                + ", object_id_i='" + object_id_i + '\''
                 + ", object_display_name_s='" + object_display_name_s + '\''
                 + ", owner_s='" + owner_s + '\''
                 + ", object_type_s='" + object_type_s + '\''
