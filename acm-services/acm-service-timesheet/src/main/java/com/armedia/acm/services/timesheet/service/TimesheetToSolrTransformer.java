@@ -61,6 +61,7 @@ public class TimesheetToSolrTransformer implements AcmObjectToSolrDocTransformer
 
         solr.setId(in.getId() + "-" + TimesheetConstants.OBJECT_TYPE);
         solr.setObject_id_s(Long.toString(in.getId()));
+        solr.setObject_id_i(in.getId());
         solr.setObject_type_s(TimesheetConstants.OBJECT_TYPE);
         solr.setTitle_parseable(in.getTitle());
         solr.setDescription_no_html_tags_parseable(in.getDetails());
@@ -85,6 +86,7 @@ public class TimesheetToSolrTransformer implements AcmObjectToSolrDocTransformer
         solr.setName(in.getTimesheetNumber());
         solr.setTitle_parseable(in.getTitle());
         solr.setObject_id_s(Long.toString(in.getId()));
+        solr.setObject_id_i(in.getId());
         solr.setObject_type_s(TimesheetConstants.OBJECT_TYPE);
         solr.setAuthor_s(in.getUser().getUserId());
         solr.setStartDate_s(in.getStartDate());

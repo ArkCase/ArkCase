@@ -72,6 +72,7 @@ public class CaseFileToSolrTransformer implements AcmObjectToSolrDocTransformer<
 
         solr.setId(in.getId() + "-CASE_FILE");
         solr.setObject_id_s(in.getId() + "");
+        solr.setObject_id_i(in.getId());
         solr.setObject_type_s("CASE_FILE");
         solr.setTitle_parseable(in.getTitle());
         solr.setDescription_no_html_tags_parseable(in.getDetails());
@@ -138,6 +139,7 @@ public class CaseFileToSolrTransformer implements AcmObjectToSolrDocTransformer<
 
         solr.setName(in.getCaseNumber());
         solr.setObject_id_s(in.getId() + "");
+        solr.setObject_id_i(in.getId());
         solr.setObject_type_s("CASE_FILE");
         solr.setId(in.getId() + "-CASE_FILE");
 
