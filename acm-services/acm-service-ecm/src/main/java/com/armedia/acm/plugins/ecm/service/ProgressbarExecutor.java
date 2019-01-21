@@ -49,8 +49,7 @@ public class ProgressbarExecutor {
     private long partProgress;
     private JmsTemplate jmsTemplate;
     private ConnectionFactory activeMQConnectionFactory;
-
-
+    private ProgressbarDetails progressbarDetails;
 
     public ProgressbarExecutor(String ID, String username, ConnectionFactory activeMQConnectionFactory, JmsTemplate jmsTemplate) {
         this.ID = ID;
@@ -79,7 +78,7 @@ public class ProgressbarExecutor {
         });
     }
 
-    public void startProgress(CountingInputStream fileInputStream, long size, String containerObjectType, Long containerObjectId, String fileName, ProgressbarDetails progressbarDetails){
+    public void startProgress(CountingInputStream fileInputStream, long size, String containerObjectType, Long containerObjectId, String fileName){
         timer = new Timer();
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
@@ -87,37 +86,39 @@ public class ProgressbarExecutor {
                 if(progressbarDetails.getStage() == 2){
                     partProgress = fileInputStream.getByteCount();
 
-                    if(partProgress<size) {
-                        currentProgress = 50 + Math.round(10 * (float) partProgress / size);
-                        progressbarDetails.setCurrentProgress(currentProgress);
-                        send(progressbarDetails, "VirtualTopic.UploadFileManager:" + username.replaceAll("\\.", "_DOT_").replaceAll("@", "_AT_"));
+                    if(partProgress > size) {
+                        partProgress = size;
                     }
-
+                    currentProgress = 50 + Math.round(10 * (float) partProgress / size);
+                    progressbarDetails.setCurrentProgress(currentProgress);
+                    progressbarDetails.setSuccess(true);
+                    send(progressbarDetails, "VirtualTopic.UploadFileManager:" + username.replaceAll("\\.", "_DOT_").replaceAll("@", "_AT_"));
                 }
                 else if(progressbarDetails.getStage() == 3) {
                     partProgress = fileInputStream.getByteCount();
 
-                    if(partProgress<size) {
-                        currentProgress = 60 + Math.round(40 * (float) partProgress / size);
-                        progressbarDetails.setCurrentProgress(currentProgress);
-                        send(progressbarDetails, "VirtualTopic.UploadFileManager:" + username.replaceAll("\\.", "_DOT_").replaceAll("@", "_AT_"));
+                    if(partProgress > size) {
+                        partProgress = size;
                     }
+                    currentProgress = 60 + Math.round(40 * (float) partProgress / size);
+                    progressbarDetails.setCurrentProgress(currentProgress);
+                    progressbarDetails.setSuccess(true);
+                    send(progressbarDetails, "VirtualTopic.UploadFileManager:" + username.replaceAll("\\.", "_DOT_").replaceAll("@", "_AT_"));
                 }
 
             }
-        }, 1000, 1000);
+        }, 1000, 2000);
     }
 
 
-    public void stopProgress(String containerObjectType, Long containerObjectId, String fileName, boolean successfull){
-        //broadcast with sockets to ui, that the progress has finished
-        //make timer stop
-        //send and event
-
+    public void stopProgress(boolean successfull){
         if(timer != null) {
             timer.cancel();
         }
 
+        progressbarDetails.setCurrentProgress(currentProgress);
+        progressbarDetails.setSuccess(successfull);
+        send(progressbarDetails, "VirtualTopic.UploadFileManager:" + username.replaceAll("\\.", "_DOT_").replaceAll("@", "_AT_"));
     }
 
     public String getID() {
@@ -142,5 +143,13 @@ public class ProgressbarExecutor {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public ProgressbarDetails getProgressbarDetails() {
+        return progressbarDetails;
+    }
+
+    public void setProgressbarDetails(ProgressbarDetails progressbarDetails) {
+        this.progressbarDetails = progressbarDetails;
     }
 }

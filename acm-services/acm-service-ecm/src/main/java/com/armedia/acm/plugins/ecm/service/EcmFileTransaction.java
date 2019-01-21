@@ -44,10 +44,10 @@ public interface EcmFileTransaction
 {
     EcmFile addFileTransaction(Authentication authentication, String ecmUniqueFilename, AcmContainer container,
             String targetCmisFolderId, InputStream fileContents, EcmFile metadata,
-            Document existingCmisDocument) throws MuleException, IOException;
+            Document existingCmisDocument, Object... args) throws MuleException, IOException;
 
     EcmFile addFileTransaction(Authentication authentication, String ecmUniqueFilename, AcmContainer container,
-            String targetCmisFolderId, InputStream fileContents, EcmFile metadata)
+            String targetCmisFolderId, InputStream fileContents, EcmFile metadata, Object... args)
             throws MuleException, IOException;
 
     @Deprecated

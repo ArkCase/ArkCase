@@ -34,10 +34,12 @@ import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
+import com.armedia.acm.plugins.ecm.model.ProgressbarDetails;
 import com.armedia.acm.plugins.ecm.pipeline.EcmFileTransactionPipelineContext;
 import com.armedia.acm.plugins.ecm.service.EcmFileTransaction;
 import com.armedia.acm.plugins.ecm.service.FileEventPublisher;
 import com.armedia.acm.plugins.ecm.service.ProgressIndicatorService;
+import com.armedia.acm.plugins.ecm.service.ProgressbarExecutor;
 import com.armedia.acm.plugins.ecm.utils.CmisConfigUtils;
 import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
 import com.armedia.acm.services.pipeline.PipelineManager;
@@ -59,8 +61,10 @@ import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.multipart.MultipartFile;
 import org.xml.sax.SAXException;
 
+import javax.mail.Multipart;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -87,6 +91,7 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
     private CmisConfigUtils cmisConfigUtils;
     private Logger log = LoggerFactory.getLogger(getClass());
     private Map<String, List<String>> mimeTypesByTika;
+    private ProgressIndicatorService progressIndicatorService;
 
     public static List<String> getAllTikaMimeTypesForFile(Map<String, List<String>> mimeTypesByTika, String value)
     {
@@ -108,7 +113,7 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
     @Override
     public EcmFile addFileTransaction(Authentication authentication, String ecmUniqueFilename, AcmContainer container,
             String targetCmisFolderId, InputStream fileContents, EcmFile metadata,
-            Document existingCmisDocument) throws MuleException, IOException
+            Document existingCmisDocument, Object... args) throws MuleException, IOException
     {
 
         log.debug("Creating ecm file pipeline context");
@@ -116,9 +121,24 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
         File tempFileContents = null;
         try
         {
-
+            CountingInputStream c = new CountingInputStream(fileContents);
+//this reports progress on file system. Also should store info for the broker, for which part of the progress it is loading for the filesystem or the activity upload from 50% to 59%
+            if (metadata.getUuid() != null && args != null && args.length > 0 && args[0] instanceof MultipartFile)
+            {
+                MultipartFile file = (MultipartFile) args[0];
+                ProgressbarDetails progressbarDetails = new ProgressbarDetails();
+                progressbarDetails.setProgressbar(true);
+                progressbarDetails.setStage(2);
+                progressbarDetails.setUuid(metadata.getUuid());
+                progressbarDetails.setObjectId(container.getContainerObjectId());
+                progressbarDetails.setObjectType(container.getContainerObjectType());
+                progressbarDetails.setFileName(metadata.getFileName());
+                progressbarDetails.setObjectNumber(container.getContainerObjectTitle());
+                log.debug("Start stage two for file {}. The file will be written to file system", metadata.getFileName());
+                progressIndicatorService.start(c, file.getSize(), container.getContainerObjectId(), container.getContainerObjectType(), file.getOriginalFilename(), authentication.getName(), progressbarDetails);
+            }
             tempFileContents = File.createTempFile("arkcase-upload-temp-file-", null);
-            FileUtils.copyInputStreamToFile(fileContents, tempFileContents);
+            FileUtils.copyInputStreamToFile(c, tempFileContents);
 
 // start progress
             EcmTikaFile detectedMetadata = null;
@@ -165,6 +185,12 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
                 metadata.setFileActiveVersionMimeType(finalMimeType);
                 metadata.setFileActiveVersionNameExtension(finalExtension);
 
+                //stop the progressbar executor
+                if (metadata.getUuid() != null) {
+                    log.debug("Stop progressbar executor in stage 2, for file {} and set file upload success to {}", metadata.getUuid(), false);
+                    progressIndicatorService.end(metadata.getUuid(), true);
+                }
+
                 try
                 {
                     log.debug("Calling pipeline manager handlers");
@@ -189,21 +215,31 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
                         + " is not compatible. " + metadata.getFileType());
             }
         }
+        catch (Exception e)
+        {
+            //stop the progressbar executor
+            ProgressbarExecutor progressbarExecutor = progressIndicatorService.getExecutor(metadata.getUuid());
+            if (metadata.getUuid() != null && progressbarExecutor != null && progressbarExecutor.getProgressbarDetails().getStage() == 2) {
+                log.debug("Stop progressbar executor in stage 2, for file {} and set file upload success to {}", metadata.getUuid(), false);
+                progressIndicatorService.end(metadata.getUuid(), false);
+            }
+        }
         finally
         {
             FileUtils.deleteQuietly(tempFileContents);
         }
 
+        return metadata;
     }
 
     @Override
     public EcmFile addFileTransaction(Authentication authentication, String ecmUniqueFilename, AcmContainer container,
-            String targetCmisFolderId, InputStream fileContents, EcmFile metadata)
+            String targetCmisFolderId, InputStream fileContents, EcmFile metadata, Object... args)
             throws MuleException, IOException
     {
         Document existingCmisDocument = null;
         return addFileTransaction(authentication, ecmUniqueFilename, container, targetCmisFolderId, fileContents,
-                metadata, existingCmisDocument);
+                metadata, existingCmisDocument, args);
     }
 
     @Override
@@ -640,4 +676,11 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
         this.mimeTypesByTika = mimeTypesByTika;
     }
 
+    public ProgressIndicatorService getProgressIndicatorService() {
+        return progressIndicatorService;
+    }
+
+    public void setProgressIndicatorService(ProgressIndicatorService progressIndicatorService) {
+        this.progressIndicatorService = progressIndicatorService;
+    }
 }

@@ -2,8 +2,8 @@
 
 angular.module('core').controller(
     'UploadManagerController',
-    [ '$scope', '$q', '$state', '$translate', '$modal', '$http', '$timeout', '$document', 'Upload', 'MessageService', 'UtilService', 'Admin.ApplicationSettingsService',
-        function($scope, $q, $state, $translate, $modal, $http, $timeout, $document, Upload, MessageService, Util, ApplicationSettingsService) {
+    [ '$scope', '$rootScope', '$q', '$state', '$translate', '$modal', '$http', '$timeout', '$document', 'Upload', 'MessageService', 'UtilService', 'Admin.ApplicationSettingsService', 'ObjectService',
+        function($scope, $rootScope, $q, $state, $translate, $modal, $http, $timeout, $document, Upload, MessageService, Util, ApplicationSettingsService, ObjectService) {
 
         $scope.hideUploadSnackbar = true;
 
@@ -79,6 +79,41 @@ angular.module('core').controller(
         function startUploadChunkFile(fileDetails) {
             if (!Util.isEmpty(fileDetails)) {
                 $scope.$bus.publish('start-upload-chunk-file', fileDetails);
+            }
+        }
+
+        $rootScope.$bus.subscribe('progressbar-current-progress-updated', function(message) {
+            var status = ObjectService.UploadFileStatus.IN_PROGRESS;
+            message.status = status;
+
+            updateCurrentProgress(message);
+        });
+
+        $rootScope.$bus.subscribe('progressbar-current-progress-finished', function(message) {
+            var status = message.success ? ObjectService.UploadFileStatus.FINISHED : ObjectService.UploadFileStatus.FAILED;
+            message.status = status;
+
+            updateCurrentProgress(message);
+        });
+
+        function updateCurrentProgress(message)
+        {
+            if(modalInstance === null){
+                var fileDetails = {};
+                fileDetails.files = [];
+                fileDetails.files.push({name: message.fileName, currentProgress: message.currentProgress});
+                fileDetails.originObjectId = message.objectId;
+                fileDetails.originObjectType = message.objectType;
+                fileDetails.parentObjectNumber = message.objectNumber;
+                fileDetails.uuid = message.uuid;
+                fileDetails.status = message.status;
+                $scope.$bus.publish('upload-chunk-file', fileDetails);
+            }else {
+                if (message.status === ObjectService.UploadFileStatus.IN_PROGRESS) {
+                    $rootScope.$bus.publish('notify-modal-progressbar-current-progress-updated', message);
+                } else {
+                    $rootScope.$bus.publish('notify-modal-progressbar-current-progress-finished', message);
+                }
             }
         }
 } ]);

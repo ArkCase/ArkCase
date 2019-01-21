@@ -30,6 +30,8 @@ package com.armedia.acm.plugins.ecm.service;
 
 import com.armedia.acm.plugins.ecm.model.ProgressbarDetails;
 import org.apache.commons.io.input.CountingInputStream;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.jms.core.JmsTemplate;
 
 import javax.jms.ConnectionFactory;
@@ -37,24 +39,36 @@ import java.util.HashMap;
 
 public class ProgressIndicatorService
 {
+    private Logger LOG = LoggerFactory.getLogger(getClass());
+
     private HashMap<String, ProgressbarExecutor> progressBars = new HashMap<>();
     private JmsTemplate jmsTemplate;
     private ConnectionFactory activeMQConnectionFactory;
 
     public void start(CountingInputStream inputStream, long size, Long id, String type, String name, String username, ProgressbarDetails progressbarDetails){
-        String _id = type + "_" + id + "_" + name;
-        ProgressbarExecutor executor = new ProgressbarExecutor(_id, username, activeMQConnectionFactory, jmsTemplate);
-        executor.startProgress(inputStream, size, type, id, name, progressbarDetails);
-        progressBars.put(_id, executor);
+        LOG.debug("Setup progressbar executor for file {}", name);
+        ProgressbarExecutor executor = new ProgressbarExecutor(progressbarDetails.getUuid(), username, activeMQConnectionFactory, jmsTemplate);
+
+        LOG.debug("Setup all progressbar details needed, which later will be displayed on UI");
+        executor.setProgressbarDetails(progressbarDetails);
+
+        LOG.debug("Start the progressbar executor for file {}", name);
+        executor.startProgress(inputStream, size, type, id, name);
+        progressBars.put(executor.getID(), executor);
     }
 
-    public void end(Long id, String type, String name, boolean successful){
-        String _id = type + "_" + id + "_" + name;
-        ProgressbarExecutor executor = progressBars.get(_id);
+    public void end(String uuid, boolean successful){
+        LOG.debug("Stop ProgressbarExecutor for the progressbar {}", progressBars.get(uuid));
+        ProgressbarExecutor executor = progressBars.get(uuid);
         if (executor != null) {
-            executor.stopProgress(type, id, name, successful);
-            progressBars.remove(_id);
+            executor.stopProgress(successful);
+            progressBars.remove(uuid);
         }
+    }
+
+    public ProgressbarExecutor getExecutor(String uuid)
+    {
+        return progressBars.get(uuid);
     }
 
     public void setJmsTemplate(JmsTemplate jmsTemplate) {

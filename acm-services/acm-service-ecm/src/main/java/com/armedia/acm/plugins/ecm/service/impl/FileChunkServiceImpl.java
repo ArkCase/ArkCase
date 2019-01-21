@@ -33,6 +33,7 @@ import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.plugins.ecm.model.*;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.ecm.service.FileChunkService;
+import com.armedia.acm.plugins.ecm.service.ProgressIndicatorService;
 import com.armedia.acm.plugins.ecm.service.ProgressbarExecutor;
 import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
 import com.armedia.acm.web.api.MDCConstants;
@@ -78,6 +79,7 @@ public class FileChunkServiceImpl implements FileChunkService {
         metadata.setFileActiveVersionMimeType(fileDetails.getMimeType());
         metadata.setFileName(fileDetails.getName());
         metadata.setCmisRepositoryId(folder.getCmisRepositoryId());
+        metadata.setUuid(fileDetails.getUuid());
 
         log.debug("Start uploading the file with name {}", uniqueFileName);
 
@@ -86,7 +88,7 @@ public class FileChunkServiceImpl implements FileChunkService {
             ecmFileService.upload(authentication, fileDetails.getObjectType(), fileDetails.getObjectId(), folder.getCmisFolderId(),
                     uniqueFileName, holder.getStream(), metadata, existingFile);
         } else {
-            AcmMultipartFile multipartFile = new AcmMultipartFile(fileDetails.getName(), fileDetails.getName(), fileDetails.getMimeType(), false, holder.getSize(), new byte[0], holder.getStream(), false);
+            AcmMultipartFile multipartFile = new AcmMultipartFile(uniqueFileName, fileDetails.getName(), fileDetails.getMimeType(), false, holder.getSize(), new byte[0], holder.getStream(), true);
             ecmFileService.upload(authentication, multipartFile, folder.getCmisFolderId(), fileDetails.getObjectType(),
                     fileDetails.getObjectId(), metadata);
         }

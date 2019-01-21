@@ -2,7 +2,7 @@
 
 angular.module('core').controller(
     'UploadManagerModalController',
-    ['$scope', '$rootScope', '$modalInstance', '$http', '$translate', 'Upload', 'MessageService', 'ObjectService', 'UtilService', 'params', function ($scope, $rootScope, $modalInstance, $http, $translate, Upload, MessageService, ObjectService, Util, params) {
+    ['$scope', '$rootScope', '$modalInstance', '$http', '$translate', '$timeout', 'Upload', 'MessageService', 'ObjectService', 'UtilService', 'params', function ($scope, $rootScope, $modalInstance, $http, $translate, $timeout, Upload, MessageService, ObjectService, Util, params) {
         $scope.hashMap = {};
 
         var uploadFileSizeLimit = params.uploadFileSizeLimit;
@@ -43,8 +43,28 @@ angular.module('core').controller(
             return file;
         }
 
-        function startUpload(uuid) {
-            uploadPart(uuid);
+        function startUpload() {
+            if (!Util.isEmpty($scope.hashMap))
+            {
+                var foundInProgress = false;
+                var foundReady = null;
+
+                for (var key in $scope.hashMap) {
+                    var fileDetails = $scope.hashMap[key];
+                    if (fileDetails.status == ObjectService.UploadFileStatus.IN_PROGRESS){
+                        foundInProgress = true;
+                        break;
+                    }
+                    if ((Util.isEmpty(foundReady) || foundReady.date > fileDetails.date) && fileDetails.status == ObjectService.UploadFileStatus.READY){
+                        foundReady = fileDetails;
+                    }
+                }
+
+                if (!foundInProgress && !Util.isEmpty(foundReady))
+                {
+                    uploadPart(foundReady.uuid);
+                }
+            }
         };
 
         function uploadPart(uuid) {
@@ -85,7 +105,9 @@ angular.module('core').controller(
                     $scope.hashMap[_uuid].progress = $scope.hashMap[_uuid].progress + $scope.hashMap[_uuid].partProgress;
                     uploadPart(_uuid);
                 } else {
+/*
                     $scope.hashMap[_uuid].status = ObjectService.UploadFileStatus.FINISHED;
+*/
                     if ($scope.hashMap[_uuid].file.size > $scope.hashMap[_uuid].partBytes) {
                         var data = {};
                         data.name = $scope.hashMap[_uuid].file.name;
@@ -115,14 +137,23 @@ angular.module('core').controller(
             }, function (progress) {
                 $scope.hashMap[uuid].partProgress = progress.loaded;
                 $scope.hashMap[uuid].currentProgress = parseInt(50.0 * (($scope.hashMap[uuid].progress + $scope.hashMap[uuid].partProgress) / $scope.hashMap[uuid].file.size));
-
-                $rootScope.$bus.subscribe('progressbar-current-progress-updated', function(message) {
-                    $scope.$apply(function(){
-                        $scope.hashMap[uuid].currentProgress = parseInt(message.currentProgress);
-                    });
-                });
             });
 
+        }
+
+        $rootScope.$bus.subscribe('notify-modal-progressbar-current-progress-updated', function(message) {
+            $scope.$apply(function(){
+                var status = ObjectService.UploadFileStatus.IN_PROGRESS;
+                message.status = status;
+
+                updateCurrentProgress(message);
+            });
+        });
+
+        function updateCurrentProgress(message)
+        {
+            $scope.hashMap[message.uuid].status = message.status;
+            $scope.hashMap[message.uuid].currentProgress = message.currentProgress;
         }
 
         $scope.$bus.subscribe('start-upload-chunk-file', function (fileDetails) {
@@ -135,24 +166,33 @@ angular.module('core').controller(
                 details.partProgress = 0;
                 details.startByte = 0;
                 details.endByte = 0;
-                details.file = fileDetails.files[i];
-                details.status = ObjectService.UploadFileStatus.READY;
+                details.file = fileDetails.name[i];
+                details.status = Util.isEmpty(fileDetails.status) ? ObjectService.UploadFileStatus.READY : fileDetails.status;
                 details.objectId = fileDetails.originObjectId;
                 details.objectType = fileDetails.originObjectType;
                 details.folderId = fileDetails.folderId;
                 details.fileType = fileDetails.fileType;
-                details.currentProgress = 0;
+                details.currentProgress = Util.isEmpty(fileDetails.files[i].currentProgress) ? 0 : fileDetails.files[i].currentProgress;
                 details.parentObjectNumber = fileDetails.parentObjectNumber;
                 details.lang = fileDetails.lang;
-                details.stage = 1;
+                details.date = Date.now();
 
-                var uuid = Date.now();
+                var uuid = Util.isEmpty(fileDetails.uuid) ? Date.now().toString() + i.toString() : fileDetails.uuid;
                 details.uuid = uuid;
 
                 $scope.hashMap[uuid] = details;
-
-                startUpload(uuid);
             }
+            startUpload();
+        });
+
+        $rootScope.$bus.subscribe('notify-modal-progressbar-current-progress-finished', function(message) {
+            $scope.$apply(function(){
+                var status = message.success ? ObjectService.UploadFileStatus.FINISHED : ObjectService.UploadFileStatus.FAILED;
+                message.status = status;
+
+                updateCurrentProgress(message);
+                startUpload();
+            });
         });
     }
     ]);

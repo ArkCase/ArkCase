@@ -7,7 +7,7 @@
             <div class="text-left"><strong>{{ element.objectType }}</strong> / <strong>{{ element.parentObjectNumber }}</strong> / <strong>{{ element.file.name }}</strong></div>
             <div class="col-sm-9">
                 <div class="progress">
-                    <div class="progress-bar" role="progressbar" aria-valuenow="{{ element.currentProgress }}" aria-valuemin="0" aria-valuemax="100" ng-style="{width: element.currentProgress + '%'}">
+                    <div ng-class="!element.success ? 'progress-bar' : 'progress-bar-danger'" role="progressbar" aria-valuenow="{{ element.currentProgress }}" aria-valuemin="0" aria-valuemax="100" ng-style="{width: element.currentProgress + '%'}">
                         {{element.currentProgress + ' %'}}
                     </div>
                 </div>

@@ -299,32 +299,22 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         EcmFileAddedEvent event = null;
         try (InputStream fileInputStream = file.getInputStream())
         {
-
-            //this reports progress on file system. Also should store info for the broker, for which part of the progress it is loading for the filesystem or the activity upload from 50% to 59%
-            CountingInputStream c = new CountingInputStream(fileInputStream);
-            progressbarDetails.setProgressbar(true);
-            progressbarDetails.setStage(2);
-            progressIndicatorService.start(c, file.getSize(), parentObjectId, parentObjectType, file.getOriginalFilename(), authentication.getName(), progressbarDetails);
-
             String cmisRepositoryId = metadata.getCmisRepositoryId() == null ? ecmFileServiceProperties.getProperty("ecm.defaultCmisId")
                     : metadata.getCmisRepositoryId();
             metadata.setCmisRepositoryId(cmisRepositoryId);
             EcmFile uploaded = getEcmFileTransaction().addFileTransaction(authentication, file.getOriginalFilename(), container,
-                    targetCmisFolderId, c, metadata);
+                    targetCmisFolderId, fileInputStream, metadata, file);
 
             event = new EcmFileAddedEvent(uploaded, authentication);
             event.setUserId(authentication.getName());
             event.setSucceeded(true);
             applicationEventPublisher.publishEvent(event);
 
-            //stop the progressbar executor
-            progressIndicatorService.end(parentObjectId, parentObjectType, file.getOriginalFilename(), true);
             return uploaded;
         }
         catch (IOException | MuleException e)
         {
             log.error("Could not upload file: " + e.getMessage(), e);
-            progressIndicatorService.end(parentObjectId, parentObjectType, file.getOriginalFilename(), true);
             throw new AcmCreateObjectFailedException(file.getOriginalFilename(), e.getMessage(), e);
         }
     }
