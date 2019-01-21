@@ -91,10 +91,6 @@ public class SaveCaseFileAPIController
             throws AcmCreateObjectFailedException, AcmUpdateObjectFailedException, AcmUserActionFailedException, AcmObjectNotFoundException,
             IOException
     {
-        for ( Map.Entry<String, List<MultipartFile>> file : filesMap.entrySet())
-        {
-            String fileType = file.getKey();
-        }
         return saveCase(in, filesMap, session, auth);
     }
 
