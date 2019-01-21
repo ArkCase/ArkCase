@@ -36,6 +36,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -45,9 +46,13 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpSession;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import gov.foia.service.SaveFOIARequestService;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 /**
  * @author sasko.tanaskoski
@@ -76,9 +81,22 @@ public class SaveFOIARequestAPIController
     @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseBody
     public CaseFile saveFOIARequestMultipart(@RequestPart(name = "casefile") CaseFile in,
-            @RequestPart(name = "files") List<MultipartFile> files, HttpSession session, Authentication auth)
+                                             MultipartHttpServletRequest request, HttpSession session, Authentication auth)
             throws AcmCreateObjectFailedException
     {
+
+        Map<String, List<MultipartFile>> files = new HashMap<>();
+        MultiValueMap<String, MultipartFile> attachments = request.getMultiFileMap();
+
+        for (Map.Entry<String, List<MultipartFile>> entry : attachments.entrySet()) {
+            String type = entry.getKey();
+            if (!"casefile".equalsIgnoreCase(type)){
+                final List<MultipartFile> attachmentsList = entry.getValue();
+
+                files.put(type, attachmentsList);
+            }
+        }
+
         return getSaveFOIARequestService().saveFOIARequest(in, files, session, auth);
     }
 

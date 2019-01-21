@@ -262,7 +262,7 @@
                     </div>
                 </div>
                 <div class="row">
-                    <ul ng-repeat="file in uploadFilesDescription">
+                    <ul ng-repeat="file in uploadFilesDescription['Description Document']">
                         <li>
                             {{file.name}}
                             <button type="button" class="btn btn-link" ng-click="removeFileDescription($index)">
@@ -282,7 +282,7 @@
                     </div>
                 </div>
                 <div class="row">
-                    <ul ng-repeat="file in uploadFilesConsent">
+                    <ul ng-repeat="file in uploadFilesDescription['Consent']">
                         <li>
                             {{file.name}}
                             <button type="button" class="btn btn-link" ng-click="removeFileConsent($index)">
@@ -302,7 +302,7 @@
                     </div>
                 </div>
                 <div class="row">
-                    <ul ng-repeat="file in uploadFilesProofOfIdentity">
+                    <ul ng-repeat="file in uploadFilesDescription['Proof of Identity']">
                         <li>
                             {{file.name}}
                             <button type="button" class="btn btn-link" ng-click="removeFileProofOfIdentity($index)">
