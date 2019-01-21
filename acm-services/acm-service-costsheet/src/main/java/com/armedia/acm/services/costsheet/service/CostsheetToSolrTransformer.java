@@ -61,6 +61,7 @@ public class CostsheetToSolrTransformer implements AcmObjectToSolrDocTransformer
 
         solr.setId(in.getId() + "-" + CostsheetConstants.OBJECT_TYPE);
         solr.setObject_id_s(Long.toString(in.getId()));
+        solr.setObject_id_i(in.getId());
         solr.setObject_type_s(CostsheetConstants.OBJECT_TYPE);
         solr.setTitle_parseable(in.getTitle());
         solr.setDescription_no_html_tags_parseable(in.getDetails());
@@ -87,6 +88,7 @@ public class CostsheetToSolrTransformer implements AcmObjectToSolrDocTransformer
         solr.setName(in.getCostsheetNumber());
         solr.setTitle_parseable(in.getTitle());
         solr.setObject_id_s(Long.toString(in.getId()));
+        solr.setObject_id_i(in.getId());
         solr.setObject_type_s(CostsheetConstants.OBJECT_TYPE);
         solr.setParent_object_id_s(Long.toString(in.getParentId()));
         solr.setParent_object_type_s(in.getParentType());

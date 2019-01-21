@@ -116,12 +116,12 @@
                     "width": 75
                 },
                 {
-                    "name": "object_id_s",
+                    "name": "object_id_i",
                     "displayName": "dashboard.widgets.myTasks.table.header.taskId",
                     "headerCellFilter": "translate",
                     "enableSorting": true,
                     "type": "number",
-                    "cellTemplate": "<a data-ui-sref=\"tasks.main({id: row.entity.object_id_s})\">{{COL_FIELD}}<\/a>",
+                    "cellTemplate": "<a data-ui-sref=\"tasks.main({id: row.entity.object_id_i})\">{{COL_FIELD}}<\/a>",
                     "width": 75
                 },
                 {
