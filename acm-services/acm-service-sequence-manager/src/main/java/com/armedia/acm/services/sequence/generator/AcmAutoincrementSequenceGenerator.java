@@ -178,19 +178,9 @@ public class AcmAutoincrementSequenceGenerator implements AcmSequenceGenerator
                     newSequenceReset.setSequencePartName(sequenceReset.getSequencePartName());
                     newSequenceReset.setResetRepeatableFlag(sequenceReset.getResetRepeatableFlag());
                     newSequenceReset.setResetRepeatablePeriod(sequenceReset.getResetRepeatablePeriod());
-                    switch (sequenceReset.getResetRepeatablePeriod())
+                    if (sequenceReset.getResetRepeatablePeriod() != null)
                     {
-                    case AcmSequenceConstants.SEQUENCE_RESET_YEARLY:
-                        newSequenceReset.setResetDate(sequenceReset.getResetDate().plusYears(1));
-                        break;
-                    case AcmSequenceConstants.SEQUENCE_RESET_MONTHLY:
-                        newSequenceReset.setResetDate(sequenceReset.getResetDate().plusMonths(1));
-                        break;
-                    case AcmSequenceConstants.SEQUENCE_RESET_WEEKLY:
-                        newSequenceReset.setResetDate(sequenceReset.getResetDate().plusWeeks(1));
-                        break;
-                    default:
-                        newSequenceReset.setResetDate(sequenceReset.getResetDate().plusDays(sequenceReset.getResetRepeatablePeriod()));
+                        newSequenceReset.setResetDate(calculateNewResetDateTime(sequenceReset, currentDateTime));
                     }
                     getSequenceService().saveSequenceReset(newSequenceReset);
                 }
@@ -202,6 +192,45 @@ public class AcmAutoincrementSequenceGenerator implements AcmSequenceGenerator
 
         autoincrementPartNameToValue.put(sequencePart.getSequencePartName(), savedSequenceEntity.getSequencePartValue());
         return savedSequenceEntity.getSequencePartValue();
+    }
+
+    private LocalDateTime calculateNewResetDateTime(AcmSequenceReset sequenceReset, LocalDateTime currentDateTime)
+    {
+        LocalDateTime newResetDateTime = null;
+        switch (sequenceReset.getResetRepeatablePeriod())
+        {
+        case AcmSequenceConstants.SEQUENCE_RESET_YEARLY:
+            newResetDateTime = sequenceReset.getResetDate().plusYears(1);
+            while (currentDateTime.isAfter(newResetDateTime))
+            {
+                newResetDateTime = newResetDateTime.plusYears(1);
+            }
+            break;
+        case AcmSequenceConstants.SEQUENCE_RESET_MONTHLY:
+            newResetDateTime = sequenceReset.getResetDate().plusMonths(1);
+            while (currentDateTime.isAfter(newResetDateTime))
+            {
+                newResetDateTime = newResetDateTime.plusMonths(1);
+            }
+            break;
+        case AcmSequenceConstants.SEQUENCE_RESET_WEEKLY:
+            newResetDateTime = sequenceReset.getResetDate().plusWeeks(1);
+            while (currentDateTime.isAfter(newResetDateTime))
+            {
+                newResetDateTime = newResetDateTime.plusWeeks(1);
+            }
+            break;
+        default:
+            if (sequenceReset.getResetRepeatablePeriod() > 0)
+            {
+                newResetDateTime = sequenceReset.getResetDate().plusDays(sequenceReset.getResetRepeatablePeriod());
+                while (currentDateTime.isAfter(newResetDateTime))
+                {
+                    newResetDateTime = newResetDateTime.plusDays(sequenceReset.getResetRepeatablePeriod());
+                }
+            }
+        }
+        return newResetDateTime;
     }
 
     /**
