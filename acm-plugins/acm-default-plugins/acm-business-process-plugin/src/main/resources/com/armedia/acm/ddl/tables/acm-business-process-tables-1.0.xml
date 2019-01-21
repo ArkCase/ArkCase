@@ -5,6 +5,7 @@
     <changeSet id="business-process-01-acm-business-process-table" author="stefan.sanevski">
         <createTable tableName="acm_business_process">
             <column name="cm_business_process_id" type="${idType}">
+                <constraints primaryKey="true" primaryKeyName="pk_business_process"/>
             </column>
             <column name="cm_business_process_created" type="${timestampType}">
                 <constraints nullable="false"/>

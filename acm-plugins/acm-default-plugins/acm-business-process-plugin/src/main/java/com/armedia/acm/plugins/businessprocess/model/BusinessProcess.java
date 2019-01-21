@@ -14,6 +14,9 @@ import com.voodoodyne.jackson.jsog.JSOGGenerator;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Convert;
+import javax.persistence.DiscriminatorColumn;
+import javax.persistence.DiscriminatorType;
+import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -26,6 +29,7 @@ import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -33,15 +37,17 @@ import java.util.List;
 @Entity
 @Table(name = "acm_business_process")
 @JsonIdentityInfo(generator = JSOGGenerator.class)
-public class BusinessProcess implements AcmEntity, AcmContainerEntity, AcmObject, AcmAssignedObject, AcmStatefulEntity {
-    
+@DiscriminatorColumn(name = "cm_class_name", discriminatorType = DiscriminatorType.STRING)
+@DiscriminatorValue("com.armedia.acm.plugins.businessProcess.model.BusinessProcess")
+public class BusinessProcess implements AcmEntity, AcmContainerEntity, AcmObject, AcmAssignedObject, AcmStatefulEntity
+{
+
     @Id
-    @TableGenerator(name = "business_process_gen", table = "acm_business_process_id", pkColumnName = "cm_seq_name", 
-            valueColumnName = "cm_seq_num", pkColumnValue = "acm_business_process", initialValue = 100, allocationSize = 1)
+    @TableGenerator(name = "business_process_gen", table = "acm_business_process_id", pkColumnName = "cm_seq_name", valueColumnName = "cm_seq_num", pkColumnValue = "acm_business_process", initialValue = 100, allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "business_process_gen")
     @Column(name = "cm_business_process_id")
     Long id;
-    
+
     @Column(name = "cm_business_process_created", nullable = false, insertable = true, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date created;
@@ -75,93 +81,110 @@ public class BusinessProcess implements AcmEntity, AcmContainerEntity, AcmObject
     @Column(name = "cm_business_process_status", nullable = false)
     private String status;
 
-
     @Override
-    public String getCreator() {
+    public String getCreator()
+    {
         return creator;
     }
 
     @Override
-    public void setCreator(String creator) {
+    public void setCreator(String creator)
+    {
         this.creator = creator;
     }
 
     @Override
-    public String getModifier() {
+    public String getModifier()
+    {
         return modifier;
     }
 
     @Override
-    public void setModifier(String modifier) {
+    public void setModifier(String modifier)
+    {
         this.modifier = modifier;
     }
 
     @Override
-    public Date getCreated() {
+    public Date getCreated()
+    {
         return created;
     }
 
     @Override
-    public void setCreated(Date created) {
+    public void setCreated(Date created)
+    {
         this.created = created;
     }
 
     @Override
-    public Date getModified() {
+    public Date getModified()
+    {
         return modified;
     }
 
     @Override
-    public void setModified(Date modified) {
+    public void setModified(Date modified)
+    {
         this.modified = modified;
     }
 
     @Override
-    public AcmContainer getContainer() {
+    public AcmContainer getContainer()
+    {
         return container;
     }
 
     @Override
-    public void setContainer(AcmContainer container) {
+    public void setContainer(AcmContainer container)
+    {
         this.container = container;
     }
 
     @Override
-    public String getObjectType() {
+    public String getObjectType()
+    {
         return objectType;
     }
 
     @Override
-    public Long getId() {
+    public Long getId()
+    {
         return id;
     }
 
     @Override
-    public List<AcmParticipant> getParticipants() {
+    public List<AcmParticipant> getParticipants()
+    {
         return participants;
     }
 
     @Override
-    public void setParticipants(List<AcmParticipant> newParticipants) {
+    public void setParticipants(List<AcmParticipant> newParticipants)
+    {
         this.participants = newParticipants;
     }
 
     @Override
-    public Boolean getRestricted() {
+    public Boolean getRestricted()
+    {
         return restricted;
     }
 
-    public void setRestricted(Boolean restricted) {
+    public void setRestricted(Boolean restricted)
+    {
         this.restricted = restricted;
     }
 
     @Override
-    public String getStatus() {
+    public String getStatus()
+    {
         return "DRAFT";
     }
 
     @Override
-    public void setStatus(String status) {
+    public void setStatus(String status)
+    {
         this.status = status;
     }
 }

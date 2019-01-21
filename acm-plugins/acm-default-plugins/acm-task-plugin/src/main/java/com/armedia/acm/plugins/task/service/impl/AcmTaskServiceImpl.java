@@ -45,6 +45,7 @@ import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.AcmMultipartFile;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
+import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
@@ -617,7 +618,7 @@ public class AcmTaskServiceImpl implements AcmTaskService
         BusinessProcess businessProcess = new BusinessProcess();
         businessProcess.setStatus("DRAFT");
         businessProcess = saveBusinessProcess.save(businessProcess);
-        AcmContainer container = ecmFileService.createContainerFolder(businessProcess.getObjectType(), businessProcess.getId(), "alfresco");
+        AcmContainer container = ecmFileService.createContainerFolder(businessProcess.getObjectType(), businessProcess.getId(), EcmFileConstants.DEFAULT_CMIS_REPOSITORY_ID);
         businessProcess.setContainer(container);
 
         AcmFolder folder = container.getAttachmentFolder();

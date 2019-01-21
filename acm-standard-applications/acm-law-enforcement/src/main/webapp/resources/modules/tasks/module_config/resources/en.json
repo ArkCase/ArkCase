@@ -203,7 +203,7 @@
         "assignee.label": "Assign To",
         "assignee.placeholder": "Please choose assignee ",
         "assigneeOrGroup.placeholder": "Please choose assignee or group ",
-        "candidateGroups.label": "Owning group",
+        "candidateGroups.label": "Owning Group",
         "priority.placeholder": "Select Priority",
         "priority.label": "Priority",
         "status.placeholder": "Select Status",
@@ -223,13 +223,13 @@
         "deadline.tooltip": "Deadline is Approaching",
         "groupToggle.label": "Group Task?",
         "group.placeholder": "Please select a group.",
-        "documentsToReview.label": "Documents to review",
+        "documentsToReview.label": "Documents to Review",
         "documentsToReview.uploadDocuments": "Upload Documents",
         "businessProcessTypes.label": "Business Process Type",
-        "noSelectedReviewDocsErrorMsg": "Please select at least one document in order to use selected business process type.",
-        "noSelectedReviewDocsWorkflowErrorMsg": "Please select business process in order to upload files to task.",
+        "noSelectedReviewDocsErrorMsg": "Please select at least one document in order to use the selected business process type.",
+        "noSelectedReviewDocsWorkflowErrorMsg": "Please select a business process in order to upload files to a task.",
         "noSelectedDocsErrorMsg": "Please select at least one document in order to use selected business process type.",
-        "noSelectedWorkflowErrorMsg": "Please select business process in order to upload files to task."
+        "noSelectedWorkflowErrorMsg": "Please select a workflow in order to create a task."
     },
     "tasks.userOrGroupSearch": {
         "id": "userSearch",

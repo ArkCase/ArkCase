@@ -577,7 +577,7 @@
             },
             "businessProcessTypes": {
                 "acmDocumentWorkflow": "ACM Document Workflow",
-                "notDefinedWorkflow": "Not Defined Workflow"
+                "notDefinedWorkflow": "Ad-Hoc Task"
             },
             "reportStates": {
                 "draft": "Draft",

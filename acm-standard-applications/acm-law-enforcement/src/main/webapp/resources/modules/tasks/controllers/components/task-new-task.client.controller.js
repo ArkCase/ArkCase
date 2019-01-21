@@ -174,6 +174,7 @@ angular.module('tasks').controller(
                         taskData.taskStartDate = moment.utc(UtilDateService.dateToIso($scope.config.data.taskStartDate)).toDate();
                         if ($scope.documentsToReview && $scope.selectedBusinessProcessType != 'acmDocumentTaskWorkflow') {
                             taskData.documentsToReview = processDocumentsUnderReview();
+                            $scope.selectedBusinessProcessType = "acmDocumentTaskWorkflow";
                             TaskNewTaskService.reviewDocuments(taskData, $scope.selectedBusinessProcessType).then(reviewDocumentTaskSuccessCallback, errorCallback);
                         }
                         else if($scope.documentsToReview && $scope.selectedBusinessProcessType == 'acmDocumentTaskWorkflow' && $scope.filesToUpload){
