@@ -14,7 +14,7 @@
     </bean>
 
     <bean id="saveBusinessProcess" class="com.armedia.acm.plugins.businessprocess.service.impl.SaveBusinessProcessImpl">
-        <property name="businessProcessDao" ref="businessProcessDao"></property>
+        <property name="businessProcessDao" ref="businessProcessDao"/>
     </bean>
 
     <bean id="businessProcessToSolrTransformer"

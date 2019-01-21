@@ -72,7 +72,6 @@ public class CreateBusinessProcessTasksAPIController
             Authentication authentication, HttpSession httpSession)
             throws AcmCreateObjectFailedException
     {
-        businessProcessName = businessProcessName != "acmDocumentTaskWorkflow" ? "acmDocumentTaskWorkflow" : businessProcessName;
         try
         {
             List<AcmTask> acmTasks = getTaskService().startReviewDocumentsWorkflow(in, businessProcessName, authentication);

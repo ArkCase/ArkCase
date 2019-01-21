@@ -11,13 +11,15 @@ import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.Date;
 import java.util.List;
 
-public class BusinessProcessToSolrTransformer implements AcmObjectToSolrDocTransformer<BusinessProcess> {
+public class BusinessProcessToSolrTransformer implements AcmObjectToSolrDocTransformer<BusinessProcess>
+{
 
     private UserDao userDao;
     private FileAclSolrUpdateHelper fileAclSolrUpdateHelper;
@@ -31,8 +33,9 @@ public class BusinessProcessToSolrTransformer implements AcmObjectToSolrDocTrans
     }
 
     @Override
-    public SolrAdvancedSearchDocument toSolrAdvancedSearch(BusinessProcess in) {
-        
+    public SolrAdvancedSearchDocument toSolrAdvancedSearch(BusinessProcess in)
+    {
+
         SolrAdvancedSearchDocument solr = new SolrAdvancedSearchDocument();
 
         getSearchAccessControlFields().setAccessControlFields(solr, in);
@@ -74,12 +77,13 @@ public class BusinessProcessToSolrTransformer implements AcmObjectToSolrDocTrans
 
         String participantsListJson = ParticipantUtils.createParticipantsListJson(in.getParticipants());
         solr.setAdditionalProperty("acm_participants_lcs", participantsListJson);
-        
+
         return solr;
     }
 
     @Override
-    public SolrDocument toSolrQuickSearch(BusinessProcess in) {
+    public SolrDocument toSolrQuickSearch(BusinessProcess in)
+    {
 
         SolrDocument solr = new SolrDocument();
 
@@ -98,22 +102,25 @@ public class BusinessProcessToSolrTransformer implements AcmObjectToSolrDocTrans
 
         String assigneeUserId = ParticipantUtils.getOwnerIdFromParticipants(in.getParticipants());
         solr.setAssignee_s(assigneeUserId);
-        
+
         return solr;
     }
 
     @Override
-    public boolean isAcmObjectTypeSupported(Class acmObjectType) {
+    public boolean isAcmObjectTypeSupported(Class acmObjectType)
+    {
         return BusinessProcess.class.equals(acmObjectType);
     }
 
     @Override
-    public Class<?> getAcmObjectTypeSupported() {
+    public Class<?> getAcmObjectTypeSupported()
+    {
         return BusinessProcess.class;
     }
-    
+
     @Override
-    public JSONArray childrenUpdatesToSolr(BusinessProcess in) {
+    public JSONArray childrenUpdatesToSolr(BusinessProcess in)
+    {
         JSONArray docUpdates = fileAclSolrUpdateHelper.buildFileAclUpdates(in.getContainer().getId(), in);
         List<Long> childTasks = businessProcessDao.findTasksIdsForParentObjectIdAndParentObjectType(in.getObjectType(), in.getId());
         childTasks.forEach(it -> {
@@ -124,35 +131,43 @@ public class BusinessProcessToSolrTransformer implements AcmObjectToSolrDocTrans
         return docUpdates;
     }
 
-    public SearchAccessControlFields getSearchAccessControlFields() {
+    public SearchAccessControlFields getSearchAccessControlFields()
+    {
         return searchAccessControlFields;
     }
 
-    public void setSearchAccessControlFields(SearchAccessControlFields searchAccessControlFields) {
+    public void setSearchAccessControlFields(SearchAccessControlFields searchAccessControlFields)
+    {
         this.searchAccessControlFields = searchAccessControlFields;
     }
 
-    public UserDao getUserDao() {
+    public UserDao getUserDao()
+    {
         return userDao;
     }
 
-    public void setUserDao(UserDao userDao) {
+    public void setUserDao(UserDao userDao)
+    {
         this.userDao = userDao;
     }
 
-    public FileAclSolrUpdateHelper getFileAclSolrUpdateHelper() {
+    public FileAclSolrUpdateHelper getFileAclSolrUpdateHelper()
+    {
         return fileAclSolrUpdateHelper;
     }
 
-    public void setFileAclSolrUpdateHelper(FileAclSolrUpdateHelper fileAclSolrUpdateHelper) {
+    public void setFileAclSolrUpdateHelper(FileAclSolrUpdateHelper fileAclSolrUpdateHelper)
+    {
         this.fileAclSolrUpdateHelper = fileAclSolrUpdateHelper;
     }
 
-    public BusinessProcessDao getBusinessProcessDao() {
+    public BusinessProcessDao getBusinessProcessDao()
+    {
         return businessProcessDao;
     }
 
-    public void setBusinessProcessDao(BusinessProcessDao businessProcessDao) {
+    public void setBusinessProcessDao(BusinessProcessDao businessProcessDao)
+    {
         this.businessProcessDao = businessProcessDao;
     }
 }
