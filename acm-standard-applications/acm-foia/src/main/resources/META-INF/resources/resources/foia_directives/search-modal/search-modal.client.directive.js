@@ -343,7 +343,7 @@ angular.module('directives').directive('searchModal',
                         scope.modalInstance.dismiss('cancel')
                     };
 
-                    scope.onClickObjLink = function(event, rowEntity) {
+                    scope.onClickObjLink = function(event, rowEntity, keepModal) {
                         event.preventDefault();
                         var targetType = Util.goodMapValue(rowEntity, "object_type_s");
                         var targetId = '';
@@ -355,7 +355,9 @@ angular.module('directives').directive('searchModal',
                             targetId = parseInt(targetId.substring(0, targetId.indexOf('-')));
                         }
                         gridHelper.showObject(targetType, targetId);
-                        scope.onClickCancel();
+                        if(!keepModal) {
+                            scope.onClickCancel();
+                        }
                     };
 
                     //prepare the UI-grid
