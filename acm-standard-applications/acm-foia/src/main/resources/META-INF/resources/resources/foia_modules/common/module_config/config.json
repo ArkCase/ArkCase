@@ -750,7 +750,7 @@
                     "name": "title_parseable",
                     "displayName": "common.dialogObjectPicker.table.columns.title",
                     "headerCellFilter": "translate",
-                    "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, {object_id_s:row.entity.object_id_s, object_type_s:row.entity.object_type_s})'>{{row.entity.title_parseable}}</a>"
+                    "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, {object_id_s:row.entity.object_id_s, object_type_s:row.entity.object_type_s}, true)'>{{row.entity.title_parseable}}</a>"
                 },
                 {
                     "name": "parent_ref_s",
