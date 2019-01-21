@@ -23,7 +23,11 @@ angular.module('services').factory('Websockets.MessageHandler', [ '$q', '$rootSc
 
     function handleGenericMessage(message) {
         if(!Util.isEmpty(message.progressbar)){
-            $rootScope.$bus.publish('progressbar-current-progress-updated', message);
+            if (message.success === false || message.currentProgress === 100) {
+                $rootScope.$bus.publish('progressbar-current-progress-finished', message);
+            }else{
+                $rootScope.$bus.publish('progressbar-current-progress-updated', message);
+            }
         }
         var eventName = message.eventType;
         $rootScope.$bus.publish(eventName, message);
