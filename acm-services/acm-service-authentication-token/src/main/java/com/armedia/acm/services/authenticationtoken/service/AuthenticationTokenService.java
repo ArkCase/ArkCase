@@ -130,7 +130,7 @@ public class AuthenticationTokenService
 
     public String generateAndSaveAuthenticationToken(Long fileId, String emailAddress, Authentication authentication)
     {
-        log.debug("Generation authentication token per user [{}] for email address [{}]", authentication.getName(), emailAddress);
+        log.debug("Generation authentication token for email address [{}]", emailAddress);
         String token = getUncachedTokenForAuthentication(authentication);
         AuthenticationToken authenticationToken = new AuthenticationToken();
         authenticationToken.setKey(token);
