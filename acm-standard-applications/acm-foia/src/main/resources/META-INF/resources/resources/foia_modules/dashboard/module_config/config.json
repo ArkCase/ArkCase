@@ -17,7 +17,7 @@
             "id": "news",
             "title": "dashboard.comp.news.title",
             "configurable": true,
-            "url": "https:\/\/query.yahooapis.com\/v1\/public\/yql",
+            "url": "\/\/api.rss2json.com\/v1\/api.json?callback=JSON_CALLBACK&rss_url=",
             "query": "select * from xml where url = '$1'",
             "format": "json"
         },
