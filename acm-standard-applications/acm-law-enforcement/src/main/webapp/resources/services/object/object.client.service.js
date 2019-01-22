@@ -96,7 +96,7 @@ angular.module('services').factory('ObjectService', [ '$state', '$window', '$log
                         type: objType
                     };
                     if (newTab === true) {
-                        $window.open($state.href('tasks.main', params, {relative: true})
+                        $window.open($state.href(found.state, params, {relative: true})
                             , '_blank');
                     } else {
                         $state.transitionTo(found.state, params, {
