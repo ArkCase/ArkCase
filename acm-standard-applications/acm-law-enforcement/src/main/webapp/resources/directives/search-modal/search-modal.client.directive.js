@@ -323,7 +323,7 @@ angular.module('directives').directive('searchModal', [ '$q', '$translate', '$fi
                 scope.modalInstance.dismiss('cancel')
             };
 
-            scope.onClickObjLink = function(event, rowEntity) {
+            scope.onClickObjLink = function(event, rowEntity, keepModal) {
                 event.preventDefault();
                 var targetType = Util.goodMapValue(rowEntity, "object_type_s");
                 var targetId = '';
@@ -335,7 +335,9 @@ angular.module('directives').directive('searchModal', [ '$q', '$translate', '$fi
                     targetId = parseInt(targetId.substring(0, targetId.indexOf('-')));
                 }
                 gridHelper.showObject(targetType, targetId);
-                scope.onClickCancel();
+                if(!keepModal) {
+                    scope.onClickCancel();
+                }
             };
 
             //prepare the UI-grid
@@ -411,8 +413,8 @@ angular.module('directives').directive('searchModal', [ '$q', '$translate', '$fi
                                     scope.groupNotValid = scope.disableSearchButton;
                                 } else {
                                     scope.groupNotValid = scope.disableSearchButton = false;
-                                    }
                                 }
+                            }
                         });
 
                         gridApi.selection.on.rowSelectionChangedBatch(scope, function(rows) {
