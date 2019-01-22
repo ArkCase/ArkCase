@@ -827,8 +827,8 @@
         "sorters": {
             "dateAsc": "Sort Date Asc",
             "dateDesc": "Sort Date Desc",
-            "idAsc": "Sort Case ID Asc",
-            "idDesc": "Sort Case ID Desc",
+            "idAsc": "Sort Request ID Asc",
+            "idDesc": "Sort Request ID Desc",
             "nameAsc": "Sort By Request Name",
             "noSort": "(No Sort)"
         }
