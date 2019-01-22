@@ -65,13 +65,20 @@ public interface SaveCaseService
      * @return CaseFile saved casefile
      */
     @Transactional
+    CaseFile saveCase(CaseFile casefile, List<MultipartFile> files, Authentication authentication, String ipAddress)
+            throws AcmUserActionFailedException,
+            AcmCreateObjectFailedException, AcmUpdateObjectFailedException, AcmObjectNotFoundException, PipelineProcessException,
+            IOException;
+
+    @Transactional
     CaseFile saveCase(CaseFile casefile, Map<String, List<MultipartFile>> filesMap, Authentication authentication, String ipAddress)
             throws AcmUserActionFailedException,
             AcmCreateObjectFailedException, AcmUpdateObjectFailedException, AcmObjectNotFoundException, PipelineProcessException,
             IOException;
 
     @Transactional
-    default CaseFile saveCase(CaseFile in, Authentication auth, String ipAddress, SaveCaseServiceCaller caller) throws PipelineProcessException
+    default CaseFile saveCase(CaseFile in, Authentication auth, String ipAddress, SaveCaseServiceCaller caller)
+            throws PipelineProcessException
     {
         return null;
     }

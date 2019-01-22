@@ -40,20 +40,17 @@ import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.services.pipeline.PipelineManager;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 
-import org.apache.xpath.operations.Mult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.stream.Stream;
 
 /**
  * Created by armdev on 8/29/14.
@@ -72,7 +69,7 @@ public class SaveCaseServiceImpl implements SaveCaseService
         CaseFile saved = null;
         try
         {
-            saved = saveCase(in, null, auth, ipAddress);
+            saved = saveCase(in, new ArrayList<>(), auth, ipAddress);
         }
         catch (AcmUserActionFailedException | AcmCreateObjectFailedException | AcmUpdateObjectFailedException | AcmObjectNotFoundException
                 | IOException e)
@@ -80,6 +77,42 @@ public class SaveCaseServiceImpl implements SaveCaseService
             log.error("Error in saving Case File");
         }
         return saved;
+    }
+
+    @Override
+    @Transactional
+    public CaseFile saveCase(CaseFile caseFile, List<MultipartFile> files, Authentication authentication, String ipAddress)
+            throws AcmUserActionFailedException,
+            AcmCreateObjectFailedException, AcmUpdateObjectFailedException, AcmObjectNotFoundException, PipelineProcessException,
+            IOException
+    {
+        CaseFilePipelineContext pipelineContext = new CaseFilePipelineContext();
+        // populate the context
+        pipelineContext.setNewCase(caseFile.getId() == null);
+        pipelineContext.setAuthentication(authentication);
+        pipelineContext.setIpAddress(ipAddress);
+
+        if (files != null && !files.isEmpty())
+        {
+            pipelineContext.addProperty("attachmentFiles", files);
+        }
+
+        return pipelineManager.executeOperation(caseFile, pipelineContext, () -> {
+
+            CaseFile saved = null;
+            try
+            {
+                saved = caseFileDao.save(caseFile);
+                log.info("Case saved '{}'", saved);
+            }
+            catch (Exception e)
+            {
+                log.error("Case not saved", e);
+            }
+
+            return saved;
+
+        });
     }
 
     @Override
@@ -97,16 +130,15 @@ public class SaveCaseServiceImpl implements SaveCaseService
 
         List<AcmMultipartFile> files = new ArrayList<>();
 
-
         for (Map.Entry<String, List<MultipartFile>> file : filesMap.entrySet())
         {
             String fileType = file.getKey();
             file.getValue().stream().forEach(item -> {
                 try
                 {
-                    AcmMultipartFile acmMultipartFile = new AcmMultipartFile(item.getName(), item.getOriginalFilename(), item.getContentType(),
+                    AcmMultipartFile acmMultipartFile = new AcmMultipartFile(item.getName(), item.getOriginalFilename(),
+                            item.getContentType(),
                             item.isEmpty(), item.getSize(), item.getBytes(), item.getInputStream(), false);
-                    String fieldName = ((CommonsMultipartFile) item).getFileItem().getFieldName();
                     acmMultipartFile.setType(fileType);
                     files.add(acmMultipartFile);
                 }
