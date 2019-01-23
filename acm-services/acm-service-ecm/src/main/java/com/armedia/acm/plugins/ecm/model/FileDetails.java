@@ -39,6 +39,7 @@ public class FileDetails {
     private String fileType;
     private String uuid;
     private Long existingFileId;
+    private String lang;
 
 
     public String getName() {
@@ -111,5 +112,13 @@ public class FileDetails {
 
     public void setExistingFileId(Long existingFileId) {
         this.existingFileId = existingFileId;
+    }
+
+    public String getLang() {
+        return lang;
+    }
+
+    public void setLang(String lang) {
+        this.lang = lang;
     }
 }

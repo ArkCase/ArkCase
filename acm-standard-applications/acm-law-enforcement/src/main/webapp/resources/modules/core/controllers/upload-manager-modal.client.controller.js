@@ -105,9 +105,6 @@ angular.module('core').controller(
                     $scope.hashMap[_uuid].progress = $scope.hashMap[_uuid].progress + $scope.hashMap[_uuid].partProgress;
                     uploadPart(_uuid);
                 } else {
-/*
-                    $scope.hashMap[_uuid].status = ObjectService.UploadFileStatus.FINISHED;
-*/
                     if ($scope.hashMap[_uuid].file.size > $scope.hashMap[_uuid].partBytes) {
                         var data = {};
                         data.name = $scope.hashMap[_uuid].file.name;
@@ -117,6 +114,7 @@ angular.module('core').controller(
                         data.folderId = $scope.hashMap[_uuid].folderId;
                         data.parts = $scope.hashMap[_uuid].parts;
                         data.fileType = $scope.hashMap[_uuid].fileType;
+                        data.fileLang = $scope.hashMap[_uuid].fileLang;
                         data.uuid = _uuid;
                         $http({
                             method: "POST",
@@ -166,7 +164,8 @@ angular.module('core').controller(
                 details.partProgress = 0;
                 details.startByte = 0;
                 details.endByte = 0;
-                details.file = fileDetails.name[i];
+                details.fileName = fileDetails.files[i].name;
+                details.file = fileDetails.files[i];
                 details.status = Util.isEmpty(fileDetails.status) ? ObjectService.UploadFileStatus.READY : fileDetails.status;
                 details.objectId = fileDetails.originObjectId;
                 details.objectType = fileDetails.originObjectType;
@@ -174,7 +173,7 @@ angular.module('core').controller(
                 details.fileType = fileDetails.fileType;
                 details.currentProgress = Util.isEmpty(fileDetails.files[i].currentProgress) ? 0 : fileDetails.files[i].currentProgress;
                 details.parentObjectNumber = fileDetails.parentObjectNumber;
-                details.lang = fileDetails.lang;
+                details.fileLang = Util.isEmpty(fileDetails.lang) ? "en" : fileDetails.lang;
                 details.date = Date.now();
 
                 var uuid = Util.isEmpty(fileDetails.uuid) ? Date.now().toString() + i.toString() : fileDetails.uuid;
