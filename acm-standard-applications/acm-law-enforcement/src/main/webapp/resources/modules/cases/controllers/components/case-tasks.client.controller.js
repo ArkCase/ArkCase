@@ -2,8 +2,8 @@
 
 angular.module('cases').controller(
         'Cases.TasksController',
-        [ '$scope', '$state', '$stateParams', '$q', '$translate', 'UtilService', 'ConfigService', 'ObjectService', 'Object.TaskService', 'Task.WorkflowService', 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'Case.InfoService', 'Task.AlertsService', 'ModalDialogService',
-                function($scope, $state, $stateParams, $q, $translate, Util, ConfigService, ObjectService, ObjectTaskService, TaskWorkflowService, HelperUiGridService, HelperObjectBrowserService, CaseInfoService, TaskAlertsService, ModalDialogService) {
+        [ '$scope', '$state', '$stateParams', '$q', '$translate', 'UtilService', 'ConfigService', 'ObjectService', 'Object.TaskService', 'Task.WorkflowService', 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'Case.InfoService', 'Task.AlertsService', 'ModalDialogService', 'PermissionsService',
+                function($scope, $state, $stateParams, $q, $translate, Util, ConfigService, ObjectService, ObjectTaskService, TaskWorkflowService, HelperUiGridService, HelperObjectBrowserService, CaseInfoService, TaskAlertsService, ModalDialogService, PermissionsService) {
 
                     var componentHelper = new HelperObjectBrowserService.Component({
                         scope: $scope,
@@ -49,6 +49,11 @@ angular.module('cases').controller(
                     var onObjectInfoRetrieved = function(objectInfo) {
                         $scope.objectInfo = objectInfo;
                         retrieveGridData();
+                        PermissionsService.getActionPermission('addTasksToCase', objectInfo, {
+                            objectType: ObjectService.ObjectTypes.CASE_FILE
+                        }).then(function(result) {
+                            $scope.isReadOnly = !result;
+                        });
                     };
 
                     var retrieveGridData = function() {
@@ -57,9 +62,9 @@ angular.module('cases').controller(
                             ObjectTaskService.queryChildTasks(ObjectService.ObjectTypes.CASE_FILE, currentObjectId, Util.goodValue($scope.start, 0), Util.goodValue($scope.pageSize, 10), Util.goodMapValue($scope.sort, "by"), Util.goodMapValue($scope.sort, "dir")).then(function(data) {
                                 var tasks = data.response.docs;
                                 angular.forEach(tasks, function(task) {
-                                    //calculate to show alert icons if task is in overdue or deadline is approaching
-                                    task.isOverdue = TaskAlertsService.calculateOverdue(new Date(task.due_tdt));
-                                    task.isDeadline = TaskAlertsService.calculateDeadline(new Date(task.due_tdt));
+                                    //calculate to show alert icons if task is in overdue or deadline is approaching if the status of the task is in different state than CLOSED.
+                                    task.isOverdue = TaskAlertsService.calculateOverdue(new Date(task.due_tdt)) && !(task.status_s === "CLOSED");
+                                    task.isDeadline = TaskAlertsService.calculateDeadline(new Date(task.due_tdt)) && !(task.status_s === "CLOSED");
                                 });
                                 $scope.gridOptions = $scope.gridOptions || {};
                                 $scope.gridOptions.data = tasks;

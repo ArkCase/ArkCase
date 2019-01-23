@@ -37,13 +37,16 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Created by armdev on 9/4/14.
@@ -108,45 +111,82 @@ public class AuditDao extends AcmAbstractDao<AuditEvent>
             direction = "DESC";
         }
 
-        String sortBy;
-        switch (sort)
-        {
-        case "eventType":
-            sortBy = "COALESCE(lu.cm_value, al.cm_audit_activity)";
-            break;
-        case "userId":
-            sortBy = "al.cm_audit_user";
-            break;
-        default:
-            sortBy = "al.cm_audit_datetime";
-            break;
-        }
-
         /*
          * we need to create native query because of nesting queries.
          * Because of MySQL "late row lookup" problem for slow performance when using order by and limit
          * we need to use this trick to increase performance when there are lot of rows.
          */
+        String eventTypeClause = "";
+        if ( eventTypes != null && !eventTypes.isEmpty() )
+        {
+            StringBuilder builder = new StringBuilder(" AND ae.cm_audit_activity IN ( ");
+            int paramIndex = 3;
+            boolean first = true;
+            for ( String eventType : eventTypes )
+            {
+                if ( first )
+                {
+                    first = false;
+                }
+                else
+                {
+                    builder.append(", ");
+                }
+                builder.append("?").append(paramIndex);
+                paramIndex++;
+            }
+            builder.append(") ");
+            eventTypeClause = builder.toString();
+        }
         String queryText = "SELECT al.* " +
-                "FROM (SELECT ae.cm_audit_id AS id" +
-                " FROM acm_audit_log ae" +
-                " WHERE ae.cm_audit_status != 'DELETE'" +
-                " AND ((ae.cm_object_type = ?2 AND ae.cm_object_id = ?1) OR" +
-                " (ae.cm_parent_object_type = ?2 AND ae.cm_parent_object_id = ?1))" +
-                (eventTypes != null && eventTypes.size() > 0 ? "      AND ae.cm_audit_activity IN ("
-                        + eventTypes.stream().map(et -> "'" + et + "'").collect(Collectors.joining(",")) + ")" : "")
-                +
-                "      AND ae.cm_audit_activity_result = 'success'" +
-                "  ) tmp" +
-                " JOIN acm_audit_log al" +
-                "    ON al.cm_audit_id = tmp.id" +
-                "  LEFT OUTER JOIN acm_audit_event_type_lu lu ON al.cm_audit_activity = lu.cm_key" +
-                " ORDER BY " + sortBy + " " + direction + ", al.cm_audit_id " + direction;
+            "FROM (SELECT ae.cm_audit_id AS id" +
+            " FROM acm_audit_log ae" +
+            " WHERE ae.cm_audit_status != 'DELETE'" +
+            " AND ((ae.cm_object_type = ?2 AND ae.cm_object_id = ?1) OR" +
+            " (ae.cm_parent_object_type = ?2 AND ae.cm_parent_object_id = ?1))" +
+            eventTypeClause + 
+            "      AND ae.cm_audit_activity_result = 'success'" +
+            "  ) tmp" +
+            " JOIN acm_audit_log al" +
+            "    ON al.cm_audit_id = tmp.id" +
+            "  LEFT OUTER JOIN acm_audit_event_type_lu lu ON al.cm_audit_activity = lu.cm_key";
+
+        switch (sort)
+        {
+        case "eventType":
+            queryText += " ORDER BY COALESCE(lu.cm_value, al.cm_audit_activity) ";
+            break;
+        case "userId":
+            queryText += " ORDER BY al.cm_audit_user ";
+            break;
+        default:
+            queryText += " ORDER BY al.cm_audit_datetime ";
+            break;
+        }
+
+        if ( "DESC".equals(direction) )
+        {
+            queryText += " DESC, al.cm_audit_id DESC";
+        }
+        else
+        {
+            queryText += " ASC, al.cm_audit_id ASC";
+        }
+
         Query query = getEm().createNativeQuery(queryText, AuditEvent.class);
         query.setFirstResult(startRow);
         query.setMaxResults(maxRows);
         query.setParameter(1, objectId);
         query.setParameter(2, objectType);
+        if ( eventTypes != null && !eventTypes.isEmpty() )
+        {
+            int paramIndex = 3;
+            for ( String event : eventTypes )
+            {
+                query.setParameter(paramIndex, event);
+                paramIndex++;
+            }
+        }
 
         List<AuditEvent> results = query.getResultList();
         return results;
@@ -159,13 +199,17 @@ public class AuditDao extends AcmAbstractDao<AuditEvent>
                 "WHERE  ae.status != 'DELETE' " +
                 "AND ((ae.objectType = :objectType AND ae.objectId = :objectId) " +
                 "OR (ae.parentObjectType = :objectType AND ae.parentObjectId = :objectId)) " +
-                (eventTypes != null ? "AND ae.fullEventType IN :eventTypes " : "") +
                 "AND ae.eventResult = 'success'";
+        if (eventTypes != null && !eventTypes.isEmpty())
+        {
+            queryText += " AND ae.fullEventType IN :eventTypes ";
+        }
 
         Query query = getEm().createQuery(queryText);
         query.setParameter("objectId", objectId);
         query.setParameter("objectType", objectType);
-        if (eventTypes != null)
+
+        if (eventTypes != null && !eventTypes.isEmpty())
         {
             query.setParameter("eventTypes", eventTypes);
         }
@@ -177,11 +221,25 @@ public class AuditDao extends AcmAbstractDao<AuditEvent>
 
     public List<AuditEvent> findPage(int startRow, int maxRows, String sortBy, String sort)
     {
-        String queryText = "SELECT ae " +
-                "FROM   AuditEvent ae " +
-                "WHERE ae.status != 'DELETE' " +
-                "ORDER BY ae." + sortBy + " " + sort + ", ae.id " + sort;
-        Query query = getEm().createQuery(queryText);
+        CriteriaBuilder builder = em.getCriteriaBuilder();
+        CriteriaQuery<AuditEvent> criteriaQuery = builder.createQuery(AuditEvent.class);
+        Root<AuditEvent> auditEvent = criteriaQuery.from(AuditEvent.class);
+
+        criteriaQuery.where(builder.notEqual(auditEvent.<Long> get("status"), "DELETE"));
+
+        if (sort.toUpperCase().equals("ASC"))
+        {
+            criteriaQuery.orderBy(builder.asc(auditEvent.get(sortBy)));
+            criteriaQuery.orderBy(builder.asc(auditEvent.<Long> get("id")));
+        }
+        else
+        {
+            criteriaQuery.orderBy(builder.desc(auditEvent.get(sortBy)));
+            criteriaQuery.orderBy(builder.desc(auditEvent.<Long> get("id")));
+        }
+
+        TypedQuery<AuditEvent> query = getEm().createQuery(criteriaQuery);
+
         query.setFirstResult(startRow);
         query.setMaxResults(maxRows);
 

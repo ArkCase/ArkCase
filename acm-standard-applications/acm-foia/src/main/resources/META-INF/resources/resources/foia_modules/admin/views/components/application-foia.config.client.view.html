@@ -1,0 +1,115 @@
+<div ng-controller="Admin.FoiaConfigController">
+    <ng-form name="foiaConfigurationForm">
+        <div class="panel panel-success panel-grid">
+            <div class="pull-right well">
+                <div class="btn-group">
+                    <button class="btn btn-xs btn-link" ng-click="saveChanges()" ng-disabled="foiaConfigurationForm.$invalid">
+                        <i class="fa fa-save"></i>
+                        <span translate>
+			            	admin.application.foia.config.save.btn
+                        </span>
+                    </button>
+                </div>
+            </div>
+
+            <panel-view header="{{'admin.application.foia.config.title' | translate}}" collapsible="false">
+                <div class="row">
+                    <div class="col-lg-4">
+                    </div>
+                    <div class="col-lg-4">
+                        <label translate>admin.application.foia.config.labels.requestExtensionWorkingDays</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-4">
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" ng-model="configDataModel.requestExtensionWorkingDaysEnabled"
+                                        ng-change="configDataModel.requestExtensionWorkingDays= !configDataModel.requestExtensionWorkingDaysEnabled ? configDataModel.requestExtensionWorkingDays : configDataModel.requestExtensionWorkingDays">
+                                <span translate>
+                                    admin.application.foia.config.labels.requestExtensionEnabled
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <input type="number" min="1" ng-model="configDataModel.requestExtensionWorkingDays"
+                                ng-disabled="!configDataModel.requestExtensionWorkingDaysEnabled" class="form-control">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-4"></div>
+                    <div class="col-lg-4">
+                        <label translate>admin.application.foia.config.labels.maxDaysHoldQueue</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-4">
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" ng-model="configDataModel.purgeRequestWhenInHoldEnabled"
+                                        ng-change="configDataModel.maxDaysInHoldQueue= !configDataModel.purgeRequestWhenInHoldEnabled ? configDataModel.maxDaysInHoldQueue : configDataModel.maxDaysInHoldQueue">
+                                <span translate>
+                                    admin.application.foia.config.labels.purgeRequestEnabled
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <input type="number" min="1" ng-model="configDataModel.maxDaysInHoldQueue"
+                                ng-disabled="!configDataModel.purgeRequestWhenInHoldEnabled" class="form-control">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" ng-model="configDataModel.holdedAndAppealedRequestsDueDateUpdateEnabled" title="{{'admin.application.foia.config.labels.holdedAndAppealedRequestsDueDateUpdateEnabled.title' | translate}}">
+                                <span translate>
+                                    admin.application.foia.config.labels.holdedAndAppealedRequestsDueDateUpdateEnabled
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" ng-model="configDataModel.dashboardBannerEnabled">
+                                <span translate>
+                                    admin.application.foia.config.labels.dashboardBannerEnable
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" ng-model="configDataModel.receivedDateEnabled">
+                                <span translate>
+                                    admin.application.foia.config.labels.receivedDateEnabled
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" ng-model="configDataModel.notificationGroupsEnabled">
+                                <span translate>
+                                    admin.application.foia.config.labels.notificationGroupsEnable
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </panel-view>
+        </div>
+    </ng-form>
+</div>
+<div ng-include="'modules/admin/views/components/time-to-complete.client.view.html'"></div>

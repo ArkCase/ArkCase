@@ -44,7 +44,7 @@ angular.module('time-tracking').controller('TimeTracking.ActionsController',
                 isEdit: true,
                 timesheet: $scope.objectInfo
             };
-            showModal($scope.editParams, true);
+                        showModal($scope.editParams);
         };
 
         function showModal(params) {
@@ -53,6 +53,7 @@ angular.module('time-tracking').controller('TimeTracking.ActionsController',
                 templateUrl: 'modules/time-tracking/views/components/time-tracking-new-timesheet-modal.client.view.html',
                 controller: 'TimeTracking.NewTimesheetController',
                 size: 'lg',
+                backdrop: 'static',
                 resolve: {
                     modalParams: function () {
                         return params;

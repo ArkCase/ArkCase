@@ -40,7 +40,10 @@ public class ObjectChangesBySessionAccumulator extends DescriptorEventAdapter
 {
     private Logger log = LoggerFactory.getLogger(getClass());
 
-    private Map<String, AcmObjectChangelist> changesBySession = Collections.synchronizedMap(new HashMap<String, AcmObjectChangelist>());
+    private Map<String, AcmObjectChangelist> changesBySession = Collections.synchronizedMap(new HashMap<>());
+
+    private Map<String, AcmObjectRollbacklist> rollbackChangesBySession = Collections
+            .synchronizedMap(new HashMap<String, AcmObjectRollbacklist>());
 
     @Override
     public void postInsert(DescriptorEvent event)
@@ -65,10 +68,6 @@ public class ObjectChangesBySessionAccumulator extends DescriptorEventAdapter
             if (getChangesBySession() == null)
             {
                 nullPart = "getChangesBySession";
-            }
-            else if (event == null)
-            {
-                nullPart = "event";
             }
             else if (event.getSession() == null)
             {
@@ -117,10 +116,6 @@ public class ObjectChangesBySessionAccumulator extends DescriptorEventAdapter
             if (getChangesBySession() == null)
             {
                 nullPart = "getChangesBySession";
-            }
-            else if (event == null)
-            {
-                nullPart = "event";
             }
             else if (event.getSession() == null)
             {
@@ -171,10 +166,6 @@ public class ObjectChangesBySessionAccumulator extends DescriptorEventAdapter
             {
                 nullPart = "getChangesBySession";
             }
-            else if (event == null)
-            {
-                nullPart = "event";
-            }
             else if (event.getSession() == null)
             {
                 nullPart = "event.getSession";
@@ -200,6 +191,58 @@ public class ObjectChangesBySessionAccumulator extends DescriptorEventAdapter
 
     }
 
+    @Override
+    public void preInsert(DescriptorEvent event)
+    {
+        super.preInsert(event);
+        log.trace("Before insert: {}", event.getObject().getClass().getName());
+
+        try
+        {
+            String sessionName = event.getSession().getName();
+            // inherited objects notify listeners for the object and parent object class
+            // we filter out these duplicate events.
+            // See implementation of {@link DescriptorEventManager#notifyListeners(DescriptorEvent)}
+            if (!getRollbackChangesBySession().get(sessionName).getPreInsertObjects().contains(event.getObject()))
+            {
+                getRollbackChangesBySession().get(sessionName).getPreInsertObjects().add(event.getObject());
+            }
+        }
+        catch (NullPointerException npe)
+        {
+            String nullPart = "[???]";
+            if (getRollbackChangesBySession() == null)
+            {
+                nullPart = "getRollbackChangesBySession";
+            }
+            else if (event == null)
+            {
+                nullPart = "event";
+            }
+            else if (event.getSession() == null)
+            {
+                nullPart = "event.getSession";
+            }
+            else if (event.getSession().getName() == null)
+            {
+                nullPart = "event.getSession().getName()";
+            }
+            else if (getRollbackChangesBySession().get(event.getSession().getName()) == null)
+            {
+                nullPart = "getRollbackChangesBySession().get(event.getSession().getName())";
+            }
+            else if (event.getObject() == null)
+            {
+                nullPart = "event.getObject()";
+            }
+            else if (getRollbackChangesBySession().get(event.getSession().getName()).getPreInsertObjects() == null)
+            {
+                nullPart = "getRollbackChangesBySession().get(event.getSession().getName()).getPreInsertObjects()";
+            }
+            log.error("Mystery Null Pointer Exception: Null part is... " + nullPart);
+        }
+    }
+
     public Map<String, AcmObjectChangelist> getChangesBySession()
     {
         return changesBySession;
@@ -208,5 +251,22 @@ public class ObjectChangesBySessionAccumulator extends DescriptorEventAdapter
     public void setChangesBySession(Map<String, AcmObjectChangelist> changesBySession)
     {
         this.changesBySession = changesBySession;
+    }
+
+    /**
+     * @return the rollbackChangesBySession
+     */
+    public Map<String, AcmObjectRollbacklist> getRollbackChangesBySession()
+    {
+        return rollbackChangesBySession;
+    }
+
+    /**
+     * @param rollbackChangesBySession
+     *            the rollbackChangesBySession to set
+     */
+    public void setRollbackChangesBySession(Map<String, AcmObjectRollbacklist> rollbackChangesBySession)
+    {
+        this.rollbackChangesBySession = rollbackChangesBySession;
     }
 }

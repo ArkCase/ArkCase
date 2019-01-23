@@ -159,6 +159,7 @@ public class UserOrgServiceImpl implements UserOrgService
     }
 
     @Override
+    @Transactional
     public ProfileDTO getProfileInfo(String userId, Authentication authentication)
     {
         UserOrg userOrg = getUserOrgForUserId(userId);
@@ -184,6 +185,7 @@ public class UserOrgServiceImpl implements UserOrgService
     }
 
     @Override
+    @Transactional
     public ProfileDTO saveUserOrgInfo(ProfileDTO profile, Authentication authentication)
     {
         String userId = authentication.getName();

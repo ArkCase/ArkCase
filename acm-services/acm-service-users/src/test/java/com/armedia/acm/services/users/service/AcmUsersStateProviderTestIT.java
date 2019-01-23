@@ -27,7 +27,9 @@ package com.armedia.acm.services.users.service;
  * #L%
  */
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import com.armedia.acm.services.users.state.AcmUsersState;
 import com.armedia.acm.services.users.state.AcmUsersStateProvider;

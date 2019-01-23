@@ -46,6 +46,61 @@ angular.module('admin').factory('Admin.EmailSenderConfigurationService', [ '$htt
                 url: 'api/latest/plugin/admin/email/configuration'
             });
         },
+        
+        /**
+         * @ngdoc method
+         * @name getEmailSenderAllowDocuments
+         * @methodOf admin.service:Admin.EmailSenderConfigurationService
+         *
+         * @description
+         * Gets the current email sender configuration.
+         *
+         *
+         * @returns {Object} http promise
+         */
+        isEmailSenderAllowDocuments: function() {
+            return $http({
+                method: 'GET',
+                url: 'api/latest/plugin/admin/email/sender/allowdocuments'
+            });
+        },
+        
+        /**
+         * @ngdoc method
+         * @name getEmailSenderAllowDocuments
+         * @methodOf admin.service:Admin.EmailSenderConfigurationService
+         *
+         * @description
+         * Gets the current email sender configuration.
+         *
+         *
+         * @returns {Object} http promise
+         */
+        isEmailSenderAllowAttachments: function() {
+            return $http({
+                method: 'GET',
+                url: 'api/latest/plugin/admin/email/sender/allowattachments'
+            });
+        },
+        
+        /**
+         * @ngdoc method
+         * @name getEmailSenderAllowDocuments
+         * @methodOf admin.service:Admin.EmailSenderConfigurationService
+         *
+         * @description
+         * Gets the current email sender configuration.
+         *
+         *
+         * @returns {Object} http promise
+         */
+        isEmailSenderAllowHyperlinks: function() {
+            return $http({
+                method: 'GET',
+                url: 'api/latest/plugin/admin/email/sender/allowhyperlinks'
+            });
+        },
+        
         /**
          * @ngdoc method
          * @name validateSmtpConfiguration

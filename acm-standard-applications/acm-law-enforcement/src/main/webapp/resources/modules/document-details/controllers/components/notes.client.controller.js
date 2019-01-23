@@ -9,6 +9,12 @@ angular.module('document-details').controller('Document.NotesController', [ '$sc
         if (documentDetails.activeVersionTag) {
             $scope.activeVersion = documentDetails.activeVersionTag;
         }
+        $scope.mentionInfo = {
+            fileId: documentDetails.fileId,
+            fileName: documentDetails.fileName,
+            containerObjectId: documentDetails.container.containerObjectId,
+            containerObjectType: documentDetails.container.containerObjectType
+        };
     }
 
     $scope.$watchCollection('activeVersion', function(newValue, oldValue) {
@@ -18,6 +24,7 @@ angular.module('document-details').controller('Document.NotesController', [ '$sc
                 currentObjectId: $stateParams.id,
                 tag: $scope.activeVersion
             };
+
             $scope.config = config;
             return config;
         });

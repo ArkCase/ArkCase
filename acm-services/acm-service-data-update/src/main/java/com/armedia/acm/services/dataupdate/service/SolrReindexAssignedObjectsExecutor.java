@@ -48,7 +48,7 @@ public class SolrReindexAssignedObjectsExecutor implements AcmDataUpdateExecutor
     @Override
     public String getUpdateId()
     {
-        return "solr-assigned-objects-reindex";
+        return "solr-assigned-objects-reindex-1";
     }
 
     @Override

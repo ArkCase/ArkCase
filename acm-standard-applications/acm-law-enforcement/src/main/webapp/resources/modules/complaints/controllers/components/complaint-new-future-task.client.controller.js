@@ -39,6 +39,7 @@ angular.module('cases').controller('Complaint.NewFutureTaskController', [ '$scop
             templateUrl: 'modules/complaints/views/components/complaint-user-search.client.view.html',
             controller: 'Complaints.UserSearchController',
             size: 'lg',
+            backdrop: 'static',
             resolve: {
                 $filter: function() {
                     return $scope.futureTaskConfig.userOrGroupSearch.userOrGroupFacetFilter;

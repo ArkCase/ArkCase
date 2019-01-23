@@ -40,6 +40,7 @@ import javax.servlet.http.HttpSession;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author sasko.tanaskoski
@@ -52,19 +53,20 @@ public class SaveFOIARequestService
     private FOIARequestService foiaRequestService;
     private CaseFileEventUtility caseFileEventUtility;
 
-    public CaseFile saveFOIARequest(CaseFile in, List<MultipartFile> files, HttpSession session, Authentication auth)
+    public CaseFile saveFOIARequest(CaseFile in, Map<String, List<MultipartFile>> filesMap, HttpSession session, Authentication auth)
             throws AcmCreateObjectFailedException
     {
+
         String ipAddress = (String) session.getAttribute("acm_ip_address");
-        CaseFile saved = getFoiaRequestService().saveRequest(in, files, auth, ipAddress);
+        CaseFile saved = getFoiaRequestService().saveRequest(in, filesMap, auth, ipAddress);
         raiseCaseEvent(in.getId() == null, saved, auth, ipAddress);
         return saved;
     }
 
-    public CaseFile savePortalRequest(CaseFile in, List<MultipartFile> files, Authentication auth, String ipAddress)
+    public CaseFile savePortalRequest(CaseFile in, Map<String, List<MultipartFile>> filesMap, Authentication auth, String ipAddress)
             throws AcmCreateObjectFailedException
     {
-        CaseFile saved = getFoiaRequestService().saveRequest(in, files, auth, ipAddress);
+        CaseFile saved = getFoiaRequestService().saveRequest(in, filesMap, auth, ipAddress);
         raiseCaseEvent(in.getId() == null, saved, auth, ipAddress);
         return saved;
     }

@@ -34,9 +34,10 @@ public class LoginEvent extends AcmAbstractAuthenticationEvent
 
     private static final String EVENT_TYPE = "com.armedia.acm.login";
 
-    public LoginEvent(Authentication authentication)
+    public LoginEvent(Authentication authentication, String ipAddress)
     {
         super(authentication);
+        setIpAddress(ipAddress);
     }
 
     @Override

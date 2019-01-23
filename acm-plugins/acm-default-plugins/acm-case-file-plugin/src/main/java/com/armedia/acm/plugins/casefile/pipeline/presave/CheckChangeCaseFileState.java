@@ -51,7 +51,7 @@ public class CheckChangeCaseFileState implements PipelineHandler<ChangeCaseStatu
 
         if (form == null)
         {
-            message = "Cannot unmarshall Close Case Form.";
+            throw new PipelineProcessException("Cannot unmarshall Close Case Form.");
         }
 
         // Get CaseFile depends on the CaseFile ID
@@ -59,7 +59,7 @@ public class CheckChangeCaseFileState implements PipelineHandler<ChangeCaseStatu
 
         if (caseFile == null)
         {
-            message = String.format("Cannot find case file by given caseId=%d", form.getCaseId());
+            throw new PipelineProcessException(String.format("Cannot find case file by given caseId=%d", form.getCaseId()));
         }
 
         // Skip if the case is already closed or in "in approval" and if it's not edit mode

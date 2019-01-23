@@ -2,8 +2,8 @@
 
 angular.module('organizations').controller(
         'Organization.DBAsController',
-        [ '$scope', '$stateParams', '$translate', 'UtilService', 'ConfigService', 'Organization.InfoService', 'MessageService', 'Helper.ObjectBrowserService', 'Helper.UiGridService', 'Authentication', '$modal', 'PermissionsService', 'ObjectService', 'Object.LookupService', 'Object.ModelService',
-                function($scope, $stateParams, $translate, Util, ConfigService, OrganizationInfoService, MessageService, HelperObjectBrowserService, HelperUiGridService, Authentication, $modal, PermissionsService, ObjectService, ObjectLookupService, ObjectModelService) {
+        [ '$scope', '$stateParams', '$translate', 'UtilService', 'ConfigService', 'Organization.InfoService', 'MessageService', 'Helper.ObjectBrowserService', 'Helper.UiGridService', 'Authentication', '$modal', 'PermissionsService', 'ObjectService', 'Object.LookupService', 'Mentions.Service',
+                function($scope, $stateParams, $translate, Util, ConfigService, OrganizationInfoService, MessageService, HelperObjectBrowserService, HelperUiGridService, Authentication, $modal, PermissionsService, ObjectService, ObjectLookupService, MentionsService) {
 
                     new HelperObjectBrowserService.Component({
                         scope: $scope,
@@ -144,6 +144,10 @@ angular.module('organizations').controller(
                             if (data.isDefault || $scope.objectInfo.organizationDBAs.length == 1) {
                                 $scope.objectInfo.defaultDBA = dba;
                             }
+
+                            $scope.objectInfo.emailAddresses = data.emailAddresses;
+                            $scope.objectInfo.usersMentioned = data.usersMentioned;
+                            $scope.objectInfo.textMentioned = data.dba.description;
                             saveObjectInfoAndRefresh();
                         });
                     }
@@ -154,6 +158,8 @@ angular.module('organizations').controller(
                             var objectInfo = Util.omitNg($scope.objectInfo);
                             promiseSaveInfo = OrganizationInfoService.saveOrganizationInfo(objectInfo);
                             promiseSaveInfo.then(function(objectInfo) {
+                                MentionsService.sendEmailToMentionedUsers($scope.objectInfo.emailAddresses, $scope.objectInfo.usersMentioned,
+                                    ObjectService.ObjectTypes.ORGANIZATION, "DBA", objectInfo.organizationId, $scope.objectInfo.textMentioned);
                                 $scope.$emit("report-object-updated", objectInfo);
                                 return objectInfo;
                             }, function(error) {

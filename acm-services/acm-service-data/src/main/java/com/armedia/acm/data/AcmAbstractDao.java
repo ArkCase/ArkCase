@@ -1,5 +1,10 @@
 package com.armedia.acm.data;
 
+import com.armedia.acm.data.event.AcmSequenceEvent;
+
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.ApplicationEventPublisherAware;
+
 /*-
  * #%L
  * ACM Service: Data Tools
@@ -42,15 +47,18 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public abstract class AcmAbstractDao<T>
+public abstract class AcmAbstractDao<T> implements ApplicationEventPublisherAware
 {
     @PersistenceContext
     private EntityManager em;
+
+    private ApplicationEventPublisher applicationEventPublisher;
 
     @Transactional(propagation = Propagation.REQUIRED)
     public T save(T toSave)
     {
         T saved = em.merge(toSave);
+        applicationEventPublisher.publishEvent(new AcmSequenceEvent(saved));
         return saved;
     }
 
@@ -79,10 +87,13 @@ public abstract class AcmAbstractDao<T>
     @Transactional(propagation = Propagation.SUPPORTS)
     public List<T> findAllOrderBy(String column)
     {
-        TypedQuery<T> allRecords = em.createQuery("SELECT e FROM " + getPersistenceClass().getSimpleName() + " e order by e." + column,
-                getPersistenceClass());
-        List<T> retval = allRecords.getResultList();
-        return retval;
+        CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
+        CriteriaQuery<T> allRecords = criteriaBuilder.createQuery(getPersistenceClass());
+        Root<T> entityRoot = allRecords.from(getPersistenceClass());
+        allRecords.select(entityRoot);
+        allRecords.orderBy(criteriaBuilder.asc(entityRoot.get(column)));
+
+        return em.createQuery(allRecords).getResultList();
     }
 
     @Transactional(propagation = Propagation.SUPPORTS)
@@ -157,4 +168,16 @@ public abstract class AcmAbstractDao<T>
     {
         return em;
     }
+
+    /*
+     * (non-Javadoc)
+     * @see org.springframework.context.ApplicationEventPublisherAware#setApplicationEventPublisher(org.springframework.
+     * context.ApplicationEventPublisher)
+     */
+    @Override
+    public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher)
+    {
+        this.applicationEventPublisher = applicationEventPublisher;
+    }
+
 }

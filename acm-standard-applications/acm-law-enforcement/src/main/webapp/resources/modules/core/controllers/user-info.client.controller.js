@@ -28,5 +28,9 @@ angular.module('core').controller('UserInfoController', [ '$scope', 'Profile.Use
     $scope.$bus.subscribe('sync-progress', function(data) {
         MessageService.info(data.message);
     });
+    
+    $scope.$bus.subscribe('sequence-error', function(data) {
+        MessageService.error(data.message);
+    });
 
 } ]);

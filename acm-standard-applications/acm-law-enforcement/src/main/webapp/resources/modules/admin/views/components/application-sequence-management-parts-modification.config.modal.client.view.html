@@ -1,0 +1,104 @@
+<div class="modal-header">
+    <h3><span translate>admin.application.sequenceManagementParts.config.modal.title</span></h3>
+</div>
+<div class="modal-body">
+    <form name="sequenceManagementPartForm">
+        <div class="row">
+            <div class="col-sm-12 form-group">
+                <label for="sequenceName" translate>admin.application.sequenceManagementParts.config.modal.sequencePartName</label>
+                <span class="required-asterisk">*</span><br />
+                <input type="text" id="sequenceName" name="sequencePartName" ng-model="sequencePart.sequencePartName"
+                        ng-disabled="{{isEdit}}"
+                        class="input-md form-control"
+                        placeholder="{{'admin.application.sequenceManagementParts.config.modal.placeholders.sequencePartName' | translate}}"
+                        required>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12 form-group">
+                <label for="sequenceDescription" translate>admin.application.sequenceManagementParts.config.modal.sequencePartType</label>
+                <span class="required-asterisk">*</span><br />
+                <select id="sequenceDescription" class="input-md form-control" ng-model="selectedItem" ng-change="showRequiredFields()"
+                        ng-options="sequencePart.key for sequencePart in sequenceParts track by sequencePart.key" required="required"
+                        placeholder="{{ 'admin.application.sequenceManagementParts.config.modal.placeholders.sequencePartType' | translate }}">
+
+                </select>
+            </div>
+        </div>
+        <div class="row" ng-if="sequencePartsCurrentlySelected['AUTOINCREMENT']" ng-pattern="allNumbersExceptZero">
+            <div class="col-sm-12 form-group">
+                <label for="sequencePartAutoincrementStartNumber" translate>admin.application.sequenceManagementParts.config.autoincrement.startNumber</label>
+                <span class="required-asterisk">*</span><br />
+                <input type="number" id="sequencePartAutoincrementStartNumber" name="autoincrementStartNumber"
+                        ng-model="sequencePart.sequenceStartNumber" class="input-md form-control" ng-pattern="allNumbersExceptZero"
+                        placeholder="{{'admin.application.sequenceManagementParts.config.modal.placeholders.autoincrement.startNumber' | translate}}"
+                        required>
+            </div>
+        </div>
+
+        <div class="row" ng-if="sequencePartsCurrentlySelected['AUTOINCREMENT']">
+            <div class="col-sm-12 form-group">
+                <label for="sequencePartAutoincrementIncrementSize" translate>admin.application.sequenceManagementParts.config.autoincrement.incrementSize</label>
+                <span class="required-asterisk">*</span><br />
+                <input type="number" id="sequencePartAutoincrementIncrementSize" name="autoincrementIncrementSize"
+                        ng-model="sequencePart.sequenceIncrementSize" ng-pattern="allNumbersExceptZero" class="input-md form-control"
+                        placeholder="{{'admin.application.sequenceManagementParts.config.modal.placeholders.autoincrement.incrementSize' | translate}}"
+                        required>
+            </div>
+        </div>
+
+        <div class="row" ng-if="sequencePartsCurrentlySelected['AUTOINCREMENT']">
+            <div class="col-sm-12 form-group">
+                <label for="sequencePartAutoincrementNumberLength" translate>admin.application.sequenceManagementParts.config.autoincrement.numberLength</label>
+                <input type="number" id="sequencePartAutoincrementNumberLength" name="autoincrementNumberLength"
+                        ng-model="sequencePart.sequenceNumberLength" ng-pattern="allNumbersExceptZero" class="input-md form-control"
+                        placeholder="{{'admin.application.sequenceManagementParts.config.modal.placeholders.autoincrement.numberLength' | translate}}">
+            </div>
+        </div>
+
+        <div class="row" ng-if="sequencePartsCurrentlySelected['AUTOINCREMENT']">
+            <div class="col-sm-12 form-group">
+                <label for="sequencePartAutoincrementSequenceReuse" translate>admin.application.sequenceManagementParts.config.autoincrement.reuseSkippedSequenceValues</label>
+                <input type="checkbox" id="sequencePartAutoincrementSequenceReuse" class="input-md"
+                        ng-model="sequencePart.sequenceFillBlanks">
+            </div>
+        </div>
+
+        <div class="row" ng-if="sequencePartsCurrentlySelected['ARBITRARY_TEXT']">
+            <div class="col-sm-12 form-group">
+                <label for="sequencePartArbitraryText" translate>admin.application.sequenceManagementParts.config.arbitraryText.text</label>
+                <input type="text" id="sequencePartArbitraryText" class="input-md form-control"
+                        ng-model="sequencePart.sequenceArbitraryText"
+                        placeholder="{{'admin.application.sequenceManagementParts.config.modal.placeholders.arbitraryText' | translate}}">
+            </div>
+        </div>
+
+        <div class="row" ng-if="sequencePartsCurrentlySelected['OBJECT_PROPERTY']">
+            <div class="col-sm-12 form-group">
+                <label for="sequencePartObjectPropertyName"
+                        translate>admin.application.sequenceManagementParts.config.objectProperty.name</label>
+                <input type="text" id="sequencePartObjectPropertyName" class="input-md form-control"
+                        ng-model="sequencePart.sequenceObjectPropertyName"
+                        placeholder="{{'admin.application.sequenceManagementParts.config.modal.placeholders.objectProperty' | translate}}">
+            </div>
+        </div>
+
+        <div class="row" ng-if="sequencePartsCurrentlySelected['DATE']">
+            <div class="col-sm-12 form-group">
+                <label for="sequencePartDateFormat" translate>admin.application.sequenceManagementParts.config.date.text</label>
+                <input type="text" id="sequencePartDateFormat" class="input-md form-control" ng-model="sequencePart.sequenceDateFormat"
+                        placeholder="{{'admin.application.sequenceManagementParts.config.modal.placeholders.date' | translate}}">
+            </div>
+        </div>
+
+    </form>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-default" ng-click="onClickCancel()">
+        <span translate>admin.application.sequenceManagementParts.config.modal.cancel </span>
+    </button>
+    <button type="button" class="btn btn-primary" ng-click="onClickOk()" ng-disabled="sequenceManagementPartForm.$invalid">
+        <span translate> admin.application.sequenceManagementParts.config.modal.save</span>
+    </button>
+</div>
+

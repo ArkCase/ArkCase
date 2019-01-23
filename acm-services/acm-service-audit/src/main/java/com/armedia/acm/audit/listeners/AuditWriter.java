@@ -152,6 +152,10 @@ public class AuditWriter implements ApplicationListener<ApplicationEvent>
             log.trace("[{}] at [{}] executed [{}] [{}]", acmEvent.getUserId(), acmEvent.getEventDate(), acmEvent.getEventType(),
                     (acmEvent.isSucceeded() ? "" : "un") + "successfully.");
         }
+        else
+        {
+            return;
+        }
 
         if (isAuditable(acmEvent))
         {

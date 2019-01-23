@@ -34,7 +34,6 @@ import com.armedia.acm.services.email.sender.service.EmailSenderConfigurationSer
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -60,6 +59,30 @@ public class EmailSenderConfigurationAPIController
     public EmailSenderConfiguration getConfiguration() throws AcmEncryptionException
     {
         return emailSenderConfigurationService.readConfiguration();
+
+    }
+
+    @RequestMapping(value = "/email/sender/allowdocuments", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public boolean getSenderAllowDocuments()
+    {
+        return emailSenderConfigurationService.readConfiguration().isAllowDocuments();
+
+    }
+
+    @RequestMapping(value = "/email/sender/allowattachments", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public boolean getSenderAllowAttachments()
+    {
+        return emailSenderConfigurationService.readConfiguration().isAllowAttachments();
+
+    }
+
+    @RequestMapping(value = "/email/sender/allowhyperlinks", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public boolean getSenderAllowHyperlinks()
+    {
+        return emailSenderConfigurationService.readConfiguration().isAllowHyperlinks();
 
     }
 

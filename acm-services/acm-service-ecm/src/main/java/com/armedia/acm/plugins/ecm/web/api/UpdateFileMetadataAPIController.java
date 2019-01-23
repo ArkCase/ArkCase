@@ -65,7 +65,7 @@ public class UpdateFileMetadataAPIController
     {
         if (file == null || file.getFileId() == null || fileId == null || !fileId.equals(file.getFileId()))
         {
-            log.error("Invalid incoming file [{}]", file.toString());
+            log.error("Invalid incoming file [{}]", file == null ? "unknown" : file.toString());
             throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_UPDATE_FILE, EcmFileConstants.OBJECT_FILE_TYPE, null,
                     "Invalid incoming file", null);
         }

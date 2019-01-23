@@ -2,8 +2,8 @@
 
 angular.module('organizations').controller(
         'Organizations.FaxesController',
-        [ '$scope', '$q', '$stateParams', '$translate', '$modal', 'UtilService', 'ObjectService', 'Organization.InfoService', 'Authentication', 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'PermissionsService', 'Object.LookupService', 'Object.ModelService',
-                function($scope, $q, $stateParams, $translate, $modal, Util, ObjectService, OrganizationInfoService, Authentication, HelperUiGridService, HelperObjectBrowserService, PermissionsService, ObjectLookupService, ObjectModelService) {
+        [ '$scope', '$q', '$stateParams', '$translate', '$modal', 'UtilService', 'ObjectService', 'Organization.InfoService', 'Authentication', 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'PermissionsService', 'Object.LookupService', 'Mentions.Service',
+                function($scope, $q, $stateParams, $translate, $modal, Util, ObjectService, OrganizationInfoService, Authentication, HelperUiGridService, HelperObjectBrowserService, PermissionsService, ObjectLookupService, MentionsService) {
 
                     Authentication.queryUserInfo().then(function(userInfo) {
                         $scope.userId = userInfo.userId;
@@ -146,6 +146,9 @@ angular.module('organizations').controller(
                                 $scope.objectInfo.defaultFax = fax;
                             }
 
+                            $scope.objectInfo.emailAddresses = data.emailAddresses;
+                            $scope.objectInfo.usersMentioned = data.usersMentioned;
+                            $scope.objectInfo.textMentioned = data.fax.description;
                             saveObjectInfoAndRefresh();
                         });
                     }
@@ -156,6 +159,8 @@ angular.module('organizations').controller(
                             var objectInfo = Util.omitNg($scope.objectInfo);
                             promiseSaveInfo = OrganizationInfoService.saveOrganizationInfo(objectInfo);
                             promiseSaveInfo.then(function(objectInfo) {
+                                MentionsService.sendEmailToMentionedUsers($scope.objectInfo.emailAddresses, $scope.objectInfo.usersMentioned,
+                                    ObjectService.ObjectTypes.ORGANIZATION, "FAX", objectInfo.organizationId, $scope.objectInfo.textMentioned);
                                 $scope.$emit("report-object-updated", objectInfo);
                                 return objectInfo;
                             }, function(error) {

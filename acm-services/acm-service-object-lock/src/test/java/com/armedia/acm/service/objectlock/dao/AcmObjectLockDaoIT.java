@@ -82,7 +82,7 @@ public class AcmObjectLockDaoIT
         String objectType = "COMPLAINT";
         acmObjectLockDao.save(new AcmObjectLock(objectId, objectType));
 
-        assertNotNull(acmObjectLockDao.findLock(objectId, objectType));
+        assertNotNull(acmObjectLockDao.findLockUntransactional(objectId, objectType));
     }
 
     @Test

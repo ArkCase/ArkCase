@@ -64,7 +64,7 @@ public class SpringLdapGroupDao
 
         for (String groupDn : groupDns)
         {
-            log.debug("Remove Member [{}] with DN [{}] from Group [{}] with DN [{}] in LDAP", memberDn, groupDn);
+            log.debug("Remove Member with DN [{}] from Group with DN [{}] in LDAP", memberDn, groupDn);
             try
             {
                 removeMemberFromGroup(memberDn, groupDn, ldapSyncConfig);
@@ -76,7 +76,7 @@ public class SpringLdapGroupDao
                 updatedGroupDns.forEach(updatedGroupDn -> {
                     try
                     {
-                        log.debug("Rollback changes for Group [{}] with DN [{}]", updatedGroupDn);
+                        log.debug("Rollback changes for Group with DN [{}]", updatedGroupDn);
                         addMemberToGroup(memberDn, updatedGroupDn, ldapSyncConfig);
                     }
                     catch (Exception e1)
@@ -108,7 +108,7 @@ public class SpringLdapGroupDao
                 updatedGroupDns.forEach(updatedGroupDn -> {
                     try
                     {
-                        log.debug("Rollback changes for Group [{}] with DN [{}]", updatedGroupDn);
+                        log.debug("Rollback changes for Group with DN [{}]", updatedGroupDn);
                         removeMemberFromGroup(memberDn, updatedGroupDn, ldapSyncConfig);
                     }
                     catch (Exception e1)

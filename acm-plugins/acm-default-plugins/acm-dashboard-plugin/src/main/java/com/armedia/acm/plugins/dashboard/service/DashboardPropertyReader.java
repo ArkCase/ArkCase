@@ -114,8 +114,8 @@ public class DashboardPropertyReader
         if (isWidgetTableEmpty)
         {
             initWidgetTable();
-            initWidgetRolesTable();
         }
+        initWidgetRolesTable();
         try
         {
             this.dashboardWidgetsOnly = getDashboardWidgets();

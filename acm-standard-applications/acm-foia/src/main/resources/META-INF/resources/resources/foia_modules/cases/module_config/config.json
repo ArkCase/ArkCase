@@ -33,17 +33,17 @@
             {
                 "desc": "cases.tree.filters.opened",
                 "name": "all-open-cases",
-                "value": "fq=-status_s:COMPLETE AND -status_s:DELETE AND -status_s:CLOSED"
+                "value": "fq=-status_s:COMPLETE AND -status_s:DELETE AND -status_s:CLOSED AND -status_s:Released"
             },
             {
                 "desc": "cases.tree.filters.released",
                 "name": "all-released-cases",
-                "value": "fq=assignee_s:${user}&fq=status_s:Released"
+                "value": "fq=status_s:Released"
             },
             {
                 "desc": "cases.tree.filters.iHaveCreated",
                 "name": "my-created-cases",
-                "value": "fq=author_s:${user}"
+                "value": "fq=author:${user}"
             },
             {
                 "desc": "cases.tree.filters.iAmAssigned",
@@ -112,15 +112,15 @@
                     "organizations",
                     "documents",
                     "participants",
+                    "notes",
                     "tasks",
                     "references",
-                    "exemption",
-                    "tags",
-                    "notes",
                     "history",
                     "time",
                     "cost",
+                    "tags",
                     "calendar",
+                    "exemption",
                     "billing"
                 ]
             },
@@ -223,7 +223,7 @@
             {
                 "type": "p/CASE_FILE/exemption",
                 "label": "cases.tree.nodeTypes.exemptionCodes.label",
-                "icon": "fa fa-comments",
+                "icon": "fa fa-code",
                 "components": [
                     "exemption"
                 ]
@@ -733,7 +733,7 @@
                     "sortField": "title_parseable_lcs",
                     "displayName": "cases.comp.tasks.table.columns.title",
                     "headerCellFilter": "translate",
-                    "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity)'>{{row.entity.title_parseable}}</a>"
+                    "cellTemplate": "<a href='#' title='{{row.entity.title_parseable}}' ng-click='grid.appScope.onClickObjLink($event, row.entity)'>{{row.entity.title_parseable}}</a>"
                 },
                 {
                     "name": "assignee",
@@ -830,7 +830,7 @@
         {
             "id": "exemption",
             "title": "cases.comp.exemption.title",
-            "icon": "fa fa-comments",
+            "icon": "fa fa-code",
             "enabled": true,
             "type": "grid",
             "enableFiltering": true,
@@ -1421,6 +1421,27 @@
                     "enableColumnMenu": false
                 }
 
+            ]
+        },
+        {
+            "id": "exemptionCodesDescription",
+            "enabled": "true",
+            "title": "cases.comp.exemption.exemptionCodesDescription",
+            "type": "grid",
+            "columnDefs": [
+                {
+                    "name": "key",
+                    "displayName": "cases.comp.exemption.table.columns.exemptionCode",
+                    "headerCellFilter": "translate",
+                    "width": 150
+                },
+                {
+                    "name": "value",
+                    "displayName": "cases.comp.exemption.description",
+                    "headerCellFilter": "translate",
+                    "cellFilter": "translate",
+                    "cellTemplate": "<div class='ui-grid-cell-wrap' translate>{{row.entity.value}}</div>"
+                }
             ]
         }
     ]

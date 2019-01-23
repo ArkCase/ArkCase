@@ -114,7 +114,7 @@
                 "components": [
                     "details",
                     "reworkdetails",
-                    "documentsunderrreview",
+                    "documentsunderreview",
                     "parentdocs",
                     "attachments",
                     "notes",
@@ -219,6 +219,7 @@
                 "components": [
                     "details",
                     "rejcomments",
+                    "documentsunderreview",
                     "parentdocs",
                     "attachments",
                     "notes",
@@ -243,6 +244,14 @@
                 "icon": "fa fa-hand-stop-o",
                 "components": [
                     "rejcomments"
+                ]
+            },
+            {
+                "type": "p/ADHOC/docrev",
+                "label": "tasks.tree.nodeTypes.docReview.label",
+                "icon": "fa fa-search-plus",
+                "components": [
+                    "documentsunderreview"
                 ]
             },
             {
@@ -857,7 +866,8 @@
                     "objectNumberRegexGroup": 2
                 },
                 "hideMenu": true,
-                "ecmAPIName": "retrieveFlatSearchResultListAdvanced"
+                "ecmAPIName": "retrieveFlatSearchResultListAdvanced",
+                "nodeCacheKeyPrefix": "DUR"
             }
         },
         {

@@ -92,6 +92,7 @@ angular.module('tasks').controller(
                             templateUrl: 'modules/tasks/views/components/task-reference-modal.client.view.html',
                             controller: 'Tasks.ReferenceModalController',
                             size: 'lg',
+                            backdrop: 'static',
                             resolve: {
                                 $filter: function() {
                                     var filter = $scope.modalConfig.searchFilter + "&-id:" + $scope.objectInfo.taskId + "-" + ObjectService.ObjectTypes.TASK;

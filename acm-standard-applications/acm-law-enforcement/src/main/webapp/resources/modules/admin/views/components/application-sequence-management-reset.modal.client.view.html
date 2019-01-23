@@ -1,0 +1,20 @@
+<div>
+    <div class="modal-header">
+        <div class="modal-title">
+            <span translate>admin.application.sequenceManagementReset.title</span>
+            <div class="pull-right">
+                <button class="btn btn-default btn-xs" data-ng-click="addNew()">
+                    <i class="fa fa-lg fa-plus"></i></button>
+            </div>
+        </div>
+    </div>
+    <div class="modal-body">
+        <div ui-grid="gridOptions" ui-grid-resize-columns ui-grid-auto-resize ui-grid-pagination
+                adjust-table-height="gridOptions.data.length" class="grid"></div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-secondary" ng-click="onClickCancel()">
+            <span translate>admin.application.sequenceManagementReset.cancelBtn</span>
+        </button>
+    </div>
+</div>

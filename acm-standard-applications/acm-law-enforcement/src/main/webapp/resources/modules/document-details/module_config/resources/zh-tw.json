@@ -101,6 +101,13 @@
                 "save.error": "無法更新文件元數據"
             }
         },
+        "comp.annotationTags.modal": {
+            "title": "Add Annotation Tags and Notes",
+            "buttons": {
+                "ok": "OK",
+                "cancel": "Cancel"
+            }
+        },
         "transcribe":{
             "email": {
                 "subject": "Transcription Status",

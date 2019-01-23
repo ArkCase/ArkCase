@@ -14,18 +14,10 @@
                     <div class="row form-group">
                         <div class="col-sm-6">
                             <label translate>complaints.comp.closeComplaint.information.close.date</label>
-                            <p class="input-group">
-                                <input type="text" class="form-control" ng-model="closeComplaintRequest.disposition.closeDate"
-                                        datepicker-popup="{{'common.defaultDatePickerFormat' | translate}}"
-                                        datepicker-append-to-body="false" is-open="defaultOpened" close-on-date-selection="true"
-                                        show-button-bar="true" on-open-focus="false"
-                                        close-text="{{'complaints.comp.newComplaint.incidentDate.close.button' | translate}}" />
-                                <span class="input-group-btn">
-                                     <button type="button" class="btn btn-default" ng-click="defaultOpened = !defaultOpened">
-                                             <i class="fa fa-calendar"></i>
-                                     </button>
-                                </span>
-                            </p>
+                            <date-time-picker data="closeComplaintRequest.disposition.closeDate"
+                                    property="closeComplaintRequest.disposition.closeDate"
+                                    date-picker-id="closeComplaintRequest.disposition.closeDate"
+                                    time-format-disabled="true"></date-time-picker>
                         </div>
                         <div class="col-sm-6">
                             <label translate>complaints.comp.closeComplaint.information.complaint.number</label>
@@ -35,6 +27,7 @@
                     <div class="row form-group">
                         <div class="col-sm-6">
                             <label translate>complaints.comp.closeComplaint.information.complaint.disposition</label>
+							<span class="required-asterisk">*</span>
                             <p class="input-group">
                                 <select ng-model="closeComplaintRequest.disposition.dispositionType" ng-change="dispositionTypeChanged()"
                                         class="form-control input-md" required>
@@ -110,7 +103,7 @@
             </div>
             <div id="collapseReferExternal" class="panel-collapse collapse in">
                 <div class="panel-body">
-                    <div class="row form-group">
+                    <div class="row">
                         <div class="col-sm-4">
                             <label translate>complaints.comp.closeComplaint.refer.external.name <span
                                     class="required-asterisk">*</span></label>
@@ -119,18 +112,10 @@
                         </div>
                         <div class="col-sm-4">
                             <label translate>complaints.comp.closeComplaint.refer.external.date</label>
-                            <p class="input-group">
-                                <input type="text" class="form-control" datepicker-popup="{{'common.defaultDatePickerFormat' | translate}}"
-                                        datepicker-append-to-body="false" ng-model="closeComplaintRequest.disposition.referExternalDate"
-                                        is-open="defaultOpened"
-                                        close-on-date-selection="true" show-button-bar="true" on-open-focus="false"
-                                        close-text="{{'complaints.comp.newComplaint.incidentDate.close.button' | translate}}" />
-                                <span class="input-group-btn">
-                                     <button type="button" class="btn btn-default" ng-click="defaultOpened = !defaultOpened">
-                                             <i class="fa fa-calendar"></i>
-                                     </button>
-                                </span>
-                            </p>
+                            <date-time-picker data="closeComplaintRequest.disposition.referExternalDate"
+                                    property="closeComplaintRequest.disposition.referExternalDate"
+                                    date-picker-id="closeComplaintRequest.disposition.referExternalDate"
+                                    time-format-disabled="true"></date-time-picker>
                         </div>
                         <div class="col-sm-4">
                             <label translate>complaints.comp.closeComplaint.refer.external.contact.name <span
@@ -186,6 +171,7 @@
                     <div class="row">
                         <div class="col-sm-6 form-group">
                             <label class="control-label">&nbsp;</label>
+                            <span class="required-asterisk">*</span>
                             <input type="text" ng-model="approverName" class="input-md form-control"
                                    placeholder="{{'complaints.comp.closeComplaint.approver.placeholder' | translate}}"
                                    ng-click="userOrGroupSearch()" readonly required>

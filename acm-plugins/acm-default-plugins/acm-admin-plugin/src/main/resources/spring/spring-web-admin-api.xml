@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.springframework.org/schema/beans"
-    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
 
     <bean id="addCorrespondenceTemplate" class="com.armedia.acm.plugins.admin.web.api.AddCorrespondenceTemplatesAPI"></bean>
 
@@ -62,17 +62,17 @@
 
     <!-- Application properties management-->
     <bean id="angularPropertiesManagementRetrieveProperties"
-        class="com.armedia.acm.plugins.admin.web.api.AngularPropertiesManagementRetrieveProperties">
+          class="com.armedia.acm.plugins.admin.web.api.AngularPropertiesManagementRetrieveProperties">
         <property name="jsonPropertiesManagementService" ref="angularPropertiesManagementService"/>
     </bean>
 
     <bean id="angularPropertiesManagementRetrieveProperty"
-        class="com.armedia.acm.plugins.admin.web.api.AngularPropertiesManagementRetrieveProperty">
+          class="com.armedia.acm.plugins.admin.web.api.AngularPropertiesManagementRetrieveProperty">
         <property name="jsonPropertiesManagementService" ref="angularPropertiesManagementService"/>
     </bean>
 
     <bean id="angularPropertiesManagementUpdateProperty"
-        class="com.armedia.acm.plugins.admin.web.api.AngularPropertiesManagementUpdateProperty">
+          class="com.armedia.acm.plugins.admin.web.api.AngularPropertiesManagementUpdateProperty">
         <property name="jsonPropertiesManagementService" ref="angularPropertiesManagementService"/>
     </bean>
 
@@ -122,7 +122,7 @@
     </bean>
 
     <bean id="rolesPrivilegesRetrieveRolesByPrivilege"
-        class="com.armedia.acm.plugins.admin.web.api.RolesPrivilegesRetrieveRolesByPrivilege">
+          class="com.armedia.acm.plugins.admin.web.api.RolesPrivilegesRetrieveRolesByPrivilege">
         <property name="rolesPrivilegesService" ref="rolesPrivilegesService"/>
     </bean>
 
@@ -153,14 +153,14 @@
     </bean>
 
     <bean id="workflowConfigurationDiagramAPIController"
-        class="com.armedia.acm.plugins.admin.web.api.WorkflowConfigurationDiagramAPIController">
+          class="com.armedia.acm.plugins.admin.web.api.WorkflowConfigurationDiagramAPIController">
         <property name="acmBpmnService" ref="processDefinitionManagementService"/>
     </bean>
 
     <!-- Link forms Workflows -->
 
     <bean id="linkFormsWorkflowsRetrieveConfiguration"
-        class="com.armedia.acm.plugins.admin.web.api.LinkFormsWorkflowsRetrieveConfiguration">
+          class="com.armedia.acm.plugins.admin.web.api.LinkFormsWorkflowsRetrieveConfiguration">
         <property name="linkFormsWorkflowsService" ref="linkFormsWorkflowsService"/>
     </bean>
 
@@ -237,22 +237,37 @@
         <property name="emailSenderConfigurationService" ref="emailSenderConfigurationService"/>
     </bean>
 
+    <bean id="emailReceiverConfigurationAPIController"
+          class="com.armedia.acm.plugins.admin.web.api.EmailReceiverConfigurationAPIController">
+        <property name="emailReceiverConfigurationService" ref="emailReceiverConfigurationService"/>
+    </bean>
+
     <bean id="cmisConfigurationUrlValidation" class="com.armedia.acm.plugins.admin.web.api.CmisConfigurationUrlValidation">
         <property name="cmisConfigurationService" ref="cmisConfigurationService"/>
     </bean>
 
     <bean id="getTranscribeConfigurationApiController"
-        class="com.armedia.acm.plugins.admin.web.api.GetTranscribeConfigurationAPIController">
+          class="com.armedia.acm.plugins.admin.web.api.GetTranscribeConfigurationAPIController">
         <property name="arkCaseTranscribeService" ref="arkCaseTranscribeService"/>
     </bean>
 
     <bean id="saveTranscribeConfigurationApiController"
-        class="com.armedia.acm.plugins.admin.web.api.SaveTranscribeConfigurationAPIController">
+          class="com.armedia.acm.plugins.admin.web.api.SaveTranscribeConfigurationAPIController">
         <property name="arkCaseTranscribeService" ref="arkCaseTranscribeService"/>
     </bean>
 
+    <bean id="getOCRConfigurationApiController"
+          class="com.armedia.acm.plugins.admin.web.api.GetOCRConfigurationAPIController">
+        <property name="arkCaseOCRService" ref="arkCaseOCRService"/>
+    </bean>
+
+    <bean id="saveOCRConfigurationApiController"
+          class="com.armedia.acm.plugins.admin.web.api.SaveOCRConfigurationAPIController">
+        <property name="arkCaseOCRService" ref="arkCaseOCRService"/>
+    </bean>
+
     <bean id="holidayConfigurationAPIController"
-        class="com.armedia.acm.plugins.admin.web.api.HolidayConfigurationAPIController">
+          class="com.armedia.acm.plugins.admin.web.api.HolidayConfigurationAPIController">
         <property name="holidayConfigurationService" ref="holidayConfigurationService"/>
     </bean>
 
@@ -260,4 +275,14 @@
           class="com.armedia.acm.plugins.admin.web.api.PDFConversionConfigurationAPIController">
         <property name="pdfConversionConfigurationService" ref="pdfConversionConfigurationService"/>
     </bean>
+
+    <bean id="missingLabelCheckController" class="com.armedia.acm.plugins.admin.web.api.MissingLabelCheckControllerAPI">
+        <property name="labelCheckService" ref="labelCheckService"/>
+    </bean>
+
+    <bean id="dataAccessControlAPIController"
+        class="com.armedia.acm.plugins.admin.web.api.DataAccessControlAPIController">
+        <property name="dataAccessControlService" ref="dataAccessControlService"/>
+    </bean>
+
 </beans>

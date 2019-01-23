@@ -74,7 +74,7 @@ public class AcmAuditRequestInterceptorTest extends EasyMockSupport
     final String headerValue2 = "keep-alive";
     final String headerName3 = "Accept";
     final String headerValue3 = "text/plain";
-    final Enumeration<String> headerNames = new Vector<String>(Arrays.asList(headerName1, headerName2, headerName3)).elements();
+    final Enumeration<String> headerNames = new Vector<>(Arrays.asList(headerName1, headerName2, headerName3)).elements();
     final String cookieName1 = "userId";
     final String cookieValue1 = "ann-acm";
     final String cookieName2 = "JSESSIONID";
@@ -127,7 +127,6 @@ public class AcmAuditRequestInterceptorTest extends EasyMockSupport
         expect(mockRequest.getProtocol()).andReturn(protocol);
         expect(mockRequest.getRequestURI()).andReturn(uri);
         expect(mockRequest.getQueryString()).andReturn(queryString).anyTimes();
-        expect(mockRequest.getRequestedSessionId()).andReturn(sessionId).anyTimes();
         Capture<AuditEvent> capturedAuditEvent = newCapture();
         mockAuditService.audit(capture(capturedAuditEvent));
         expectLastCall();
@@ -149,7 +148,6 @@ public class AcmAuditRequestInterceptorTest extends EasyMockSupport
         assertEquals(protocol, auditEvent.getEventProperties().get("Protocol"));
         assertEquals(uri, auditEvent.getEventProperties().get("URI"));
         assertEquals(queryString, auditEvent.getEventProperties().get("QueryString"));
-        assertEquals(sessionId, auditEvent.getEventProperties().get("SessionId"));
         assertNull(auditEvent.getEventProperties().get("Headers"));
 
         verifyAll();
@@ -168,7 +166,6 @@ public class AcmAuditRequestInterceptorTest extends EasyMockSupport
         expect(mockRequest.getProtocol()).andReturn(protocol);
         expect(mockRequest.getRequestURI()).andReturn(uri);
         expect(mockRequest.getQueryString()).andReturn(queryString).anyTimes();
-        expect(mockRequest.getRequestedSessionId()).andReturn(sessionId).anyTimes();
         expect(mockRequest.getHeaderNames()).andReturn(headerNames);
         expect(mockRequest.getHeader(headerName1)).andReturn(headerValue1);
         expect(mockRequest.getHeader(headerName2)).andReturn(headerValue2);
@@ -194,7 +191,6 @@ public class AcmAuditRequestInterceptorTest extends EasyMockSupport
         assertEquals(protocol, auditEvent.getEventProperties().get("Protocol"));
         assertEquals(uri, auditEvent.getEventProperties().get("URI"));
         assertEquals(queryString, auditEvent.getEventProperties().get("QueryString"));
-        assertEquals(sessionId, auditEvent.getEventProperties().get("SessionId"));
         assertEquals(headerName1 + "=" + headerValue1 + ";" + headerName2 + "=" + headerValue2 + ";" + headerName3 + "=" + headerValue3,
                 auditEvent.getEventProperties().get("Headers"));
         assertNull(auditEvent.getEventProperties().get("Cookies"));
@@ -215,7 +211,6 @@ public class AcmAuditRequestInterceptorTest extends EasyMockSupport
         expect(mockRequest.getProtocol()).andReturn(protocol);
         expect(mockRequest.getRequestURI()).andReturn(uri);
         expect(mockRequest.getQueryString()).andReturn(queryString).anyTimes();
-        expect(mockRequest.getRequestedSessionId()).andReturn(sessionId).anyTimes();
         expect(mockRequest.getHeaderNames()).andReturn(headerNames);
         expect(mockRequest.getHeader(headerName1)).andReturn(headerValue1);
         expect(mockRequest.getHeader(headerName2)).andReturn(headerValue2);
@@ -242,7 +237,6 @@ public class AcmAuditRequestInterceptorTest extends EasyMockSupport
         assertEquals(protocol, auditEvent.getEventProperties().get("Protocol"));
         assertEquals(uri, auditEvent.getEventProperties().get("URI"));
         assertEquals(queryString, auditEvent.getEventProperties().get("QueryString"));
-        assertEquals(sessionId, auditEvent.getEventProperties().get("SessionId"));
         assertEquals(headerName1 + "=" + headerValue1 + ";" + headerName2 + "=" + headerValue2 + ";" + headerName3 + "=" + headerValue3,
                 auditEvent.getEventProperties().get("Headers"));
         assertEquals(cookieName1 + "=" + cookieValue1 + ";" + cookieName2 + "=" + cookieValue2,
@@ -265,7 +259,6 @@ public class AcmAuditRequestInterceptorTest extends EasyMockSupport
         expect(mockRequest.getProtocol()).andReturn(protocol);
         expect(mockRequest.getRequestURI()).andReturn(uri);
         expect(mockRequest.getQueryString()).andReturn(queryString).anyTimes();
-        expect(mockRequest.getRequestedSessionId()).andReturn(sessionId).anyTimes();
         expect(mockRequest.getHeaderNames()).andReturn(headerNames);
         expect(mockRequest.getHeader(headerName1)).andReturn(headerValue1);
         expect(mockRequest.getHeader(headerName2)).andReturn(headerValue2);
@@ -295,7 +288,6 @@ public class AcmAuditRequestInterceptorTest extends EasyMockSupport
         assertEquals(protocol, auditEvent.getEventProperties().get("Protocol"));
         assertEquals(uri, auditEvent.getEventProperties().get("URI"));
         assertEquals(queryString, auditEvent.getEventProperties().get("QueryString"));
-        assertEquals(sessionId, auditEvent.getEventProperties().get("SessionId"));
         assertEquals(headerName1 + "=" + headerValue1 + ";" + headerName2 + "=" + headerValue2 + ";" + headerName3 + "=" + headerValue3,
                 auditEvent.getEventProperties().get("Headers"));
         assertEquals(cookieName1 + "=" + cookieValue1 + ";" + cookieName2 + "=" + cookieValue2,
@@ -317,7 +309,6 @@ public class AcmAuditRequestInterceptorTest extends EasyMockSupport
         expect(mockRequest.getProtocol()).andReturn(protocol);
         expect(mockRequest.getRequestURI()).andReturn(uri);
         expect(mockRequest.getQueryString()).andReturn(queryString).anyTimes();
-        expect(mockRequest.getRequestedSessionId()).andReturn(sessionId).anyTimes();
         expect(mockRequest.getHeaderNames()).andReturn(headerNames);
         expect(mockRequest.getHeader(headerName1)).andReturn(headerValue1);
         expect(mockRequest.getHeader(headerName2)).andReturn(headerValue2);
@@ -344,7 +335,6 @@ public class AcmAuditRequestInterceptorTest extends EasyMockSupport
         assertEquals(protocol, auditEvent.getEventProperties().get("Protocol"));
         assertEquals(uri, auditEvent.getEventProperties().get("URI"));
         assertEquals(queryString, auditEvent.getEventProperties().get("QueryString"));
-        assertEquals(sessionId, auditEvent.getEventProperties().get("SessionId"));
         assertEquals(headerName1 + "=" + headerValue1 + ";" + headerName2 + "=" + headerValue2 + ";" + headerName3 + "=" + headerValue3,
                 auditEvent.getEventProperties().get("Headers"));
         assertEquals(cookieName1 + "=" + cookieValue1 + ";" + cookieName2 + "=" + cookieValue2,

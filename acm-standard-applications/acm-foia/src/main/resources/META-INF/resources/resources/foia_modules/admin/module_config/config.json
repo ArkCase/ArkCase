@@ -226,6 +226,7 @@
                     "name": "objectType",
                     "displayName": "admin.correspondenceManagement.templates.grid.objectType",
                     "visible": true,
+                    "cellTemplate": "<div class='ui-grid-cell-contents'>{{ grid.appScope.utils.getLookupValue(grid.appScope.correspondenceObjectTypes, row.entity.objectType) | translate }}</div>",
                     "headerCellFilter": "translate",
                     "width": 120
                 },
@@ -956,6 +957,134 @@
                     "id": "Appeal"
                 }
             ]
+        },
+        {
+            "id": "sequenceManagementConfiguration",
+            "title": "admin.application.sequenceManagement.config.title",
+            "enabled": true,
+            "type": "grid",
+            "enableFiltering": false,
+            "configurable": true,
+            "columnDefs": [
+                {
+                    "name": "sequenceName",
+                    "displayName": "admin.application.sequenceManagement.config.grid.sequenceName",
+                    "visible": true,
+                    "headerCellFilter": "translate",
+                    "cellClass": "ui-grid-cell-contents-auto"
+                },
+                {
+                    "name": "sequenceDescription",
+                    "displayName": "admin.application.sequenceManagement.config.grid.sequenceDescription",
+                    "visible": true,
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "sequenceEnabled",
+                    "displayName": "admin.application.sequenceManagement.config.grid.sequenceStatus",
+                    "visible": true,
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<span align='center'>{{row.entity.sequenceEnabled ? ('admin.application.sequenceManagement.config.sequenceEnabled' | translate) : ('admin.application.sequenceManagement.config.sequenceDisabled' | translate)}}</span>"
+                },
+                {
+                    "name": "act",
+                    "cellEditableCondition": false,
+                    "width": "70",
+                    "headerCellTemplate": "<span></span>",
+                    "cellTemplate": ""
+                }
+            ],
+            "paginationPageSizes": [
+                5,
+                10,
+                20,
+                50
+            ],
+            "paginationPageSize": 20,
+            "sequenceManagementPartsConfig": {
+                "id": "sequenceManagementPartsConfiguration",
+                "title": "admin.application.sequenceManagement.config.title",
+                "enabled": true,
+                "type": "grid",
+                "enableFiltering": false,
+                "configurable": true,
+                "columnDefs": [
+                    {
+                        "name": "sequencePartName",
+                        "displayName": "admin.application.sequenceManagementParts.config.grid.sequenceName",
+                        "visible": true,
+                        "headerCellFilter": "translate"
+                    },
+                    {
+                        "name": "sequencePartType",
+                        "displayName": "admin.application.sequenceManagementParts.config.grid.sequenceDescription",
+                        "visible": true,
+                        "headerCellFilter": "translate"
+                    },
+                    {
+                        "name": "act",
+                        "cellEditableCondition": false,
+                        "width": "70",
+                        "headerCellTemplate": "<span></span>",
+                        "cellTemplate": ""
+                    }
+                ],
+                "paginationPageSizes": [
+                    5,
+                    10,
+                    20,
+                    50
+                ],
+                "paginationPageSize": 20,
+                "sequenceManagementResetConfig": {
+                    "id": "sequenceManagementResetConfig",
+                    "title": "admin.application.sequenceManagementReset.title",
+                    "type": "grid",
+                    "enableFiltering": false,
+                    "configurable": true,
+                    "columnDefs": [
+                        {
+                            "name": "resetDate",
+                            "displayName": "admin.application.sequenceManagementReset.grid.startResetDate",
+                            "visible": true,
+                            "headerCellFilter": "translate"
+                        },
+                        {
+                            "name": "resetExecutedDate",
+                            "displayName": "admin.application.sequenceManagementReset.grid.executedDate",
+                            "visible": true,
+                            "headerCellFilter": "translate"
+                        },
+                        {
+                            "name": "resetRepeatableFlag",
+                            "displayName": "admin.application.sequenceManagementReset.grid.repeat",
+                            "visible": true,
+                            "headerCellFilter": "translate",
+                            "cellTemplate": "<span align='center'>{{row.entity.resetRepeatableFlag ? 'Enabled' : 'Disabled'}}</span>"
+                        },
+                        {
+                            "name": "resetRepeatablePeriod",
+                            "displayName": "admin.application.sequenceManagementReset.grid.repeatPeriod",
+                            "visible": true,
+                            "headerCellFilter": "translate"
+                        },
+                        {
+                            "name": "act",
+                            "cellEditableCondition": false,
+                            "width": "70",
+                            "headerCellTemplate": "<span></span>",
+                            "cellTemplate": ""
+                        }
+                    ],
+                    "paginationPageSizes": [
+                        5,
+                        10,
+                        20,
+                        50
+                    ],
+                    "paginationPageSize": 20
+                }
+            }
         }
     ],
     "tree": {
@@ -1083,6 +1212,13 @@
                 ]
             },
             {
+                "type": "p/reports/schedule",
+                "label": "admin.reports.schedule.title",
+                "components": [
+                    "reports.schedule"
+                ]
+            },
+            {
                 "type": "p/forms",
                 "label": "admin.forms.title",
                 "icon": "fa fa-wrench",
@@ -1191,6 +1327,20 @@
                 ]
             },
             {
+                "type": "p/application/sequenceManagement",
+                "label": "admin.application.sequenceManagement.config.title",
+                "components": [
+                    "application-sequence-management.config"
+                ]
+            },
+            {
+                "type": "p/application/foiaConfig",
+                "label": "admin.application.foia.config.title",
+                "components": [
+                    "application-foia.config"
+                ]
+            },
+            {
                 "type": "p/branding",
                 "label": "admin.branding.title",
                 "icon": "fa fa-wrench",
@@ -1251,6 +1401,19 @@
                 ]
             },
             {
+                "type": "p/transcription",
+                "label": "admin.mediaServices.title",
+                "icon": "fa fa-wrench",
+                "components": []
+            },
+            {
+                "type": "p/transcription/transcriptionManagement",
+                "label": "admin.mediaServices.transcriptionManagement",
+                "components": [
+                    "transcription-management"
+                ]
+            },
+            {
                 "type": "p/stateOfArkcase",
                 "label": "admin.stateOfArkcase.title",
                 "icon": "fa fa-wrench",
@@ -1261,19 +1424,6 @@
                 "label": "admin.stateOfArkcase.title",
                 "components": [
                     "state-of-arkcase"
-                ]
-            },
-            {
-                "type": "p/queues",
-                "label": "admin.queues.title",
-                "icon": "fa fa-wrench",
-                "components": []
-            },
-            {
-                "type": "p/queues/timeToComplete",
-                "label": "admin.queues.timeToComplete.title",
-                "components": [
-                    "time-to-complete"
                 ]
             }
         ]

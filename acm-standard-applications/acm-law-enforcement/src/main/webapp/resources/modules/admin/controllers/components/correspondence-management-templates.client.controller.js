@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('admin').controller('Admin.CMTemplatesController',
-        [ '$scope', '$modal', 'Admin.CMTemplatesService', 'Helper.UiGridService', 'MessageService', 'LookupService', 'Acm.StoreService', function($scope, $modal, correspondenceService, HelperUiGridService, messageService, LookupService, Store) {
+        [ '$scope', '$modal', 'Admin.CMTemplatesService', 'Helper.UiGridService', 'MessageService', 'LookupService', 'Acm.StoreService', 'Object.LookupService', function($scope, $modal, correspondenceService, HelperUiGridService, messageService, LookupService, Store, ObjectLookupService) {
 
             var gridHelper = new HelperUiGridService.Grid({
                 scope: $scope
@@ -36,6 +36,9 @@ angular.module('admin').controller('Admin.CMTemplatesController',
                 var config = _.find(config.components, {
                     id: 'correspondenceManagementTemplates'
                 });
+                ObjectLookupService.getCorrespondenceObjectTypes().then(function(correspondenceObject) {
+                    $scope.correspondenceObjectTypes = correspondenceObject;
+                });
                 promiseUsers.then(function(data) {
                     gridHelper.setUserNameFilterToConfig(promiseUsers, config);
                     $scope.config = config;
@@ -62,10 +65,6 @@ angular.module('admin').controller('Admin.CMTemplatesController',
                         $scope.objectTypes = $scope.config.objectTypes;
                         $scope.selectedFiles = [];
                         $scope.template = {};
-                        if ($scope.selectedRows.length > 0) {
-                            $scope.template.objectType = $scope.selectedRows[0].objectType;
-                            $scope.template.label = $scope.selectedRows[0].label;
-                        }
 
                         $scope.upload = function upload(files) {
                             $scope.selectedFiles = files;
@@ -99,6 +98,10 @@ angular.module('admin').controller('Admin.CMTemplatesController',
                             $modalInstance.dismiss('cancel');
                         };
 
+                        $scope.change = function(selectedName){
+                            $scope.objectType = selectedName;
+                            $scope.template.objectType = $scope.objectType.key;
+                        };
                     } ],
                     size: 'md',
                     backdrop: 'static'
@@ -110,7 +113,6 @@ angular.module('admin').controller('Admin.CMTemplatesController',
                 var modalScope = $scope.$new();
                 modalScope.config = $scope.configVersions;
                 var templateVersionsPromise = correspondenceService.getTemplateVersionData($scope.selectedRows[0].templateId);
-
                 templateVersionsPromise.then(function(templateVersionData) {
                     var modalInstance = $modal.open({
                         scope: modalScope,
@@ -121,7 +123,6 @@ angular.module('admin').controller('Admin.CMTemplatesController',
                             angular.forEach(templateVersionData.data, function(row, index) {
                                 row.downloadFileName = correspondenceService.downloadByFilename(row.templateFilename);
                             });
-
                             $scope.gridOptions = {
                                 enableColumnResizing: true,
                                 enableRowSelection: true,
@@ -134,7 +135,8 @@ angular.module('admin').controller('Admin.CMTemplatesController',
                                 $modalInstance.dismiss('cancel');
                             };
                         },
-                        size: 'lg'
+                        size: 'lg',
+                        backdrop: 'static'
                     });
                 });
             }

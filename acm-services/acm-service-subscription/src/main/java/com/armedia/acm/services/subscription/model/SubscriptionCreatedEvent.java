@@ -35,9 +35,10 @@ public class SubscriptionCreatedEvent extends SubscriptionPersistenceEvent
 
     private static final String EVENT_TYPE = "com.armedia.acm.subscription.created";
 
-    public SubscriptionCreatedEvent(AcmSubscription source)
+    public SubscriptionCreatedEvent(AcmSubscription source, String ipAddress)
     {
         super(source);
+        setIpAddress(ipAddress);
     }
 
     @Override

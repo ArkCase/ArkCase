@@ -13,10 +13,10 @@
                 </div>
                 <div class="row">
                     <div class="col-sm-12 form-group">
-                        <label for="complaintTitle" translate>complaints.comp.newComplaint.complaintTitle</label>
+                        <label translate>complaints.comp.newComplaint.complaintTitle</label>
                         <span class="required-asterisk">*</span>
-                        <input id="complaintTitle" type="text" ng-model="complaint.complaintTitle" class="input-md form-control"
-                                placeholder="{{ 'complaints.comp.newComplaint.complaintTitle.placeholder' | translate }}" required>
+                        <mention-input ng-model="complaint.complaintTitle" params="params"
+                                placeholder="{{ 'complaints.comp.newComplaint.complaintTitle.placeholder' | translate }}"></mention-input>
                     </div>
                 </div>
                 <div class="row">
@@ -48,19 +48,8 @@
                     </div>
                     <div class="col-sm-4">
                         <label translate>complaints.comp.newComplaint.incidentDate</label>
-                        <p class="input-group">
-                            <input type="text" class="form-control"
-                                    placeholder="{{'complaints.comp.newComplaint.incidentDate.placeholder' | translate}}"
-                                    datepicker-popup="{{'common.defaultDatePickerFormat' | translate}}" datepicker-append-to-body="false"
-                                    ng-model="complaint.incidentDate" is-open="defaultOpened" close-on-date-selection="true"
-                                    show-button-bar="true" on-open-focus="false"
-                                    close-text="{{'complaints.comp.newComplaint.incidentDate.close.button' | translate}}" />
-                            <span class="input-group-btn">
-                         <button type="button" class="btn btn-default" ng-click="defaultOpened = !defaultOpened">
-                                 <i class="fa fa-calendar"></i>
-                         </button>
-                    </span>
-                        </p>
+                        <date-time-picker data="complaint.incidentDate" property="complaint.incidentDate"
+                                date-picker-id="complaint.incidentDate" time-format-disabled="true"></date-time-picker>
                     </div>
                     <div class="col-sm-4">
                         <label translate>complaints.comp.newComplaint.complaintTag</label>
@@ -86,8 +75,8 @@
             </div>
             <div id="collapseDesc" class="panel-collapse collapse">
                 <div class="panel-body">
-                    <div class="row form-group">
-                        <summernote id="complaintDesc" config="options" ng-model="complaint.details"></summernote>
+                    <div class="row remove-margin-bottom-from-summernote">
+                        <mention-summernote ng-model="complaint.details" params="paramsSummernote"></mention-summernote>
                     </div>
                 </div>
             </div>
@@ -113,18 +102,21 @@
                     <div class="row form-group">
                         <div class="col-sm-4">
                             <label translate>complaints.comp.newComplaint.location.streetAddress</label>
+                            <span class="required-asterisk" ng-show="isAddressTypeSelected">*</span>
                             <input type="text" ng-model="complaint.defaultAddress.streetAddress" class="input-md form-control"
                                     placeholder="{{ 'complaints.comp.newComplaint.location.streetAddress.placeholder' | translate }}"
                                     ng-required="isAddressTypeSelected">
                         </div>
                         <div class="col-sm-4">
                             <label translate>complaints.comp.newComplaint.location.city</label>
+                            <span class="required-asterisk" ng-show="isAddressTypeSelected">*</span>
                             <input type="text" ng-model="complaint.defaultAddress.city" class="input-md form-control"
                                     placeholder="{{ 'complaints.comp.newComplaint.location.city.placeholder' | translate }}"
                                     ng-required="isAddressTypeSelected">
                         </div>
                         <div class="col-sm-4">
                             <label translate>complaints.comp.newComplaint.location.state</label>
+                            <span class="required-asterisk" ng-show="isAddressTypeSelected">*</span>
                             <select ng-model="complaint.defaultAddress.state" class="form-control input-md" ng-required="isAddressTypeSelected">
                                 <option ng-repeat="option in states" value="{{option.key}}">
                                     {{option.value | translate}}
@@ -135,25 +127,15 @@
                     <div class="row">
                         <div class="col-sm-4">
                             <label translate>complaints.comp.newComplaint.location.zip</label>
+                            <span class="required-asterisk" ng-show="isAddressTypeSelected">*</span>
                             <input type="text" ng-model="complaint.defaultAddress.zip" class="input-md form-control"
                                     placeholder="{{ 'complaints.comp.newComplaint.location.zip.placeholder' | translate }}"
                                     ng-required="isAddressTypeSelected">
                         </div>
                         <div class="col-sm-4">
                             <label translate>complaints.comp.newComplaint.location.dateCreated</label>
-                            <p class="input-group">
-                                <input type="text" class="form-control" placeholder="{{'Select Incident Date' | translate}}"
-                                        datepicker-popup="{{'common.defaultDatePickerFormat' | translate}}"
-                                        datepicker-append-to-body="false" ng-model="complaint.defaultAddress.created" is-open="opened"
-                                        close-on-date-selection="true" show-button-bar="true" on-open-focus="false"
-                                        close-text="{{'common.newPerson.identification.identificationYearIssued.close.button' | translate}}"
-                                        ng-required="isAddressTypeSelected" />
-                                <span class="input-group-btn">
-                                         <button type="button" class="btn btn-default" ng-click="opened = !opened">
-                                                 <i class="fa fa-calendar"></i>
-                                         </button>
-                                    </span>
-                            </p>
+                            <date-time-picker data="complaint.defaultAddress.created" property="complaint.defaultAddress.created"
+                                    date-picker-id="complaint.defaultAddress.created" time-format-disabled="true"></date-time-picker>
                         </div>
                         <div class="col-sm-4">
                             <label translate>complaints.comp.newComplaint.location.creator</label>

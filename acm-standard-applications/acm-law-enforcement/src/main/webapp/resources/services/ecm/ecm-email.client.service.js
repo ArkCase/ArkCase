@@ -25,7 +25,8 @@ angular.module('services').factory('Ecm.EmailService', [ '$resource', '$translat
          */
         _sendEmail: {
             method: 'POST',
-            url: 'api/latest/service/email/send/withembeddedlinks/:objectType'
+            url: 'api/latest/service/email/send/withembeddedlinks/:objectType',
+            isArray: true
         }
 
         /**
@@ -57,6 +58,22 @@ angular.module('services').factory('Ecm.EmailService', [ '$resource', '$translat
         _sendEmailWithAttachmentsAndLinks: {
             method: 'POST',
             url: 'api/latest/service/email/send/withattachmentsandlinks/:objectType'
+        }
+
+        /**
+         * @ngdoc method
+         * @name _sendMentionsEmail
+         * @methodOf services:Ecm.EmailService
+         *
+         * @description
+         * Send email when a user is mentioned
+         *
+         * @returns {Object} Object returned by $resource
+         */
+        ,
+        _sendMentionsEmail: {
+            method: 'POST',
+            url: 'api/latest/service/email/send/mentions'
         }
     });
 
@@ -167,6 +184,34 @@ angular.module('services').factory('Ecm.EmailService', [ '$resource', '$translat
 
     /**
      * @ngdoc method
+     * @name sendMentionsEmail
+     * @methodOf services:Ecm.EmailService
+     *
+     * @description
+     * Send email when a user is mentioned
+     *
+     * @param {Object} emailData Email data
+     *
+     * @returns {Object} Object returned by $resource
+     */
+    Service.sendMentionsEmail = function(emailData) {
+        return Util.serviceCall({
+            service: Service._sendMentionsEmail,
+            data: emailData,
+            onSuccess: function(data) {
+                MessageService.info($translate.instant("common.directive.docTree.email.successMessage"));
+                if (Service.validateSentEmail(data)) {
+                    return data;
+                }
+            },
+            onInvalid: function(data) {
+                return data;
+            }
+        });
+    };
+
+    /**
+     * @ngdoc method
      * @name validateSentEmails
      * @methodOf services:Ecm.EmailService
      *
@@ -210,12 +255,10 @@ angular.module('services').factory('Ecm.EmailService', [ '$resource', '$translat
             return true;
         }
 
-        if (Util.isEmpty(data.state)) {
+        if (Util.isEmpty(data.state) && !data.state) {
             return false;
         }
-        if (Util.isEmpty(data.userEmail)) {
-            return false;
-        }
+        
         return true;
     };
 

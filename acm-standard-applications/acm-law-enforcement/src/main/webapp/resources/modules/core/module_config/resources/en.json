@@ -118,6 +118,10 @@
                 "defense-counsel": "Defense Counsel",
                 "forensic-scientist": "Forensic Scientist"
             },
+            "correspondence": {
+                "casefile": "Case File",
+                "complaint": "Complaint"
+            },
             "complaintPersonTypes": {
                 "initiator": "Initiator",
                 "complaintant": "Complaintant",
@@ -178,6 +182,7 @@
                 "extortion": "Extortion",
                 "fraud": "Fraud",
                 "government": "Government",
+                "generatedFromEmail": "Generated from Email",
                 "investorComplaint": "Investor Complaint",
                 "laborRacketeering": "Labor Racketeering",
                 "local": "Local",
@@ -590,6 +595,19 @@
                 "document": "Document",
                 "person": "Person",
                 "organization": "Organization"
+            },
+            "sequenceParts": {
+                "autoincrement": "AUTOINCREMENT",
+                "objectProperty": "OBJECT_PROPERTY",
+                "uuid": "UUID",
+                "date": "DATE",
+                "arbitraryText": "ARBITRARY_TEXT"
+            },
+            "sequenceResetPeriod": {
+                "daily": "Daily",
+                "weekly": "Weekly",
+                "monthly": "Monthly",
+                "yearly": "Yearly"
             }
         },
         "userInfo": {

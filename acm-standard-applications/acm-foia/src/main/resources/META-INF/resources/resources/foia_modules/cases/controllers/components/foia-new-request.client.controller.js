@@ -12,7 +12,15 @@ angular.module('cases').controller(
             $scope.loadingIcon = "fa fa-floppy-o";
             $scope.formInvalid = false;
 
-            $scope.uploadFilesDescription = [];
+            var descriptionDocumentType = "Description Document";
+            var consentDocumentType = "Consent";
+            var proofOfIdentityDocumentType = "Proof of Identity";
+
+            $scope.uploadFilesDescription = {};
+            $scope.uploadFilesDescription[descriptionDocumentType] = [];
+            $scope.uploadFilesDescription[consentDocumentType] = [];
+            $scope.uploadFilesDescription[proofOfIdentityDocumentType] = [];
+
             $scope.uploadFilesConsent = [];
             $scope.uploadFilesProofOfIdentity = [];
             $scope.requestExpedite = false;
@@ -34,8 +42,8 @@ angular.module('cases').controller(
             $scope.addFileDescription = function (file) {
                 if (file && file.length > 0) {
                     for (var i = 0; i < file.length; i++) {
-                        if (fileArrayContainsFile($scope.uploadFilesDescription, file[i]) == false) {
-                            $scope.uploadFilesDescription.push(file[i]);
+                        if (fileArrayContainsFile($scope.uploadFilesDescription[descriptionDocumentType], file[i]) == false) {
+                            $scope.uploadFilesDescription[descriptionDocumentType].push(file[i]);
                         }
                     }
                 }
@@ -48,8 +56,8 @@ angular.module('cases').controller(
             $scope.addFileConsent = function (file) {
                 if (file && file.length > 0) {
                     for (var i = 0; i < file.length; i++) {
-                        if (fileArrayContainsFile($scope.uploadFilesConsent, file[i]) == false) {
-                            $scope.uploadFilesConsent.push(file[i]);
+                        if (fileArrayContainsFile($scope.uploadFilesDescription[consentDocumentType], file[i]) == false) {
+                            $scope.uploadFilesDescription[consentDocumentType].push(file[i]);
                         }
                     }
                 }
@@ -62,8 +70,8 @@ angular.module('cases').controller(
             $scope.addFileProofOfIdentity = function (file) {
                 if (file && file.length > 0) {
                     for (var i = 0; i < file.length; i++) {
-                        if (fileArrayContainsFile($scope.uploadFilesProofOfIdentity, file[i]) == false) {
-                            $scope.uploadFilesProofOfIdentity.push(file[i]);
+                        if (fileArrayContainsFile($scope.uploadFilesDescription[proofOfIdentityDocumentType], file[i]) == false) {
+                            $scope.uploadFilesDescription[proofOfIdentityDocumentType].push(file[i]);
                         }
                     }
                 }
@@ -144,30 +152,30 @@ angular.module('cases').controller(
 
                 $scope.config.data.payFee = $scope.payFees[0].key;
 
-                $scope.config.data.recordSearchDateFrom = UtilDateService.isoToDate($scope.config.data.recordSearchDateFrom);
-                $scope.config.data.recordSearchDateTo = UtilDateService.isoToDate($scope.config.data.recordSearchDateTo);
+                        $scope.config.data.recordSearchDateFrom = UtilDateService.dateToIsoDateTime($scope.config.data.recordSearchDateFrom);
+                        $scope.config.data.recordSearchDateTo = UtilDateService.dateToIsoDateTime($scope.config.data.recordSearchDateTo);
 
             });
             $scope.validateForm = function (requestForm) {
 
-                    $scope.formInvalid = false;
-                    $scope.prefixEmpty = false;
-                    $scope.firstNameEmpty = false;
-                    $scope.lastNameEmpty = false;
-                    $scope.phoneEmpty = false;
-                    $scope.phoneInvalid = false;
-                    $scope.emailEmpty = false;
-                    $scope.emailInvalid = false;
-                    $scope.confirmEmailEmpty = false;
-                    $scope.confirmEmailInvalid = false;
-                    $scope.addressEmpty = false;
-                    $scope.cityEmpty = false;
-                    $scope.stateEmpty = false;
-                    $scope.zipCodeEmpty = false;
-                    $scope.zipCodeInvalid = false;
-                    $scope.subjectEmpty = false;
+                $scope.formInvalid = false;
+                $scope.prefixEmpty = false;
+                $scope.firstNameEmpty = false;
+                $scope.lastNameEmpty = false;
+                $scope.phoneEmpty = false;
+                $scope.phoneInvalid = false;
+                $scope.emailEmpty = false;
+                $scope.emailInvalid = false;
+                $scope.confirmEmailEmpty = false;
+                $scope.confirmEmailInvalid = false;
+                $scope.addressEmpty = false;
+                $scope.cityEmpty = false;
+                $scope.stateEmpty = false;
+                $scope.zipCodeEmpty = false;
+                $scope.zipCodeInvalid = false;
+                $scope.subjectEmpty = false;
 
-                    if($scope.isNewRequestType()) {
+                if ($scope.isNewRequestType()) {
 
                     if (requestForm.prefix.$invalid) {
                         $scope.prefixEmpty = true;
@@ -314,6 +322,8 @@ angular.module('cases').controller(
                 $scope.loading = true;
                 $scope.loadingIcon = "fa fa-circle-o-notch fa-spin";
                 var formdata = new FormData();
+                        $scope.config.data.recordSearchDateFrom = UtilDateService.dateToIsoDateTime($scope.config.data.recordSearchDateFrom);
+                $scope.config.data.recordSearchDateTo = UtilDateService.dateToIsoDateTime(UtilDateService.dateToIso($scope.config.data.recordSearchDateTo));
 
                 var basicData = {};
                 for (var property in $scope.config.data) {
@@ -327,17 +337,13 @@ angular.module('cases').controller(
                 });
                 formdata.append('casefile', data);
 
-                angular.forEach($scope.uploadFilesDescription, function (value, key) {
-                    formdata.append('files', value);
-                });
-
-                angular.forEach($scope.uploadFilesConsent, function (value, key) {
-                    formdata.append('files', value);
-                });
-
-                angular.forEach($scope.uploadFilesProofOfIdentity, function (value, key) {
-                    formdata.append('files', value);
-                });
+                for (var property in $scope.uploadFilesDescription) {
+                    if ($scope.uploadFilesDescription.hasOwnProperty(property)) {
+                        angular.forEach($scope.uploadFilesDescription[property], function(value){
+                            formdata.append(property, value);
+                        });
+                    }
+                }
 
                 if ($scope.isNewRequestType()) {
                     saveRequestInfoWithFiles(formdata);
@@ -396,6 +402,7 @@ angular.module('cases').controller(
                     templateUrl: 'modules/cases/views/components/foia-request-search.client.view.html',
                     controller: 'Cases.FoiaRequestSearchModalController',
                     size: 'lg',
+                    backdrop: 'static',
                     resolve: {
                         $filter: function () {
                             return $scope.configRequest.objectSearch.objectFacetFilter;

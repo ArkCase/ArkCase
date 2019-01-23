@@ -57,8 +57,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import gov.foia.broker.FOIARequestFileBrokerClient;
 import gov.foia.dao.FOIARequestDao;
@@ -84,9 +86,10 @@ public class FOIARequestService
     private String originalRequestFolderNameFormat;
     private String appealTitleFormat;
     private QueuesTimeToCompleteService queuesTimeToCompleteService;
+    private FoiaConfigurationService foiaConfigurationService;
 
     @Transactional
-    public CaseFile saveRequest(CaseFile in, List<MultipartFile> files, Authentication auth, String ipAddress)
+    public CaseFile saveRequest(CaseFile in, Map<String, List<MultipartFile>> filesMap, Authentication auth, String ipAddress)
             throws AcmCreateObjectFailedException
     {
         log.trace("Saving FOIARequest with Request Number: [{}], Request title: [{}], Request ID: [{}]", in.getCaseNumber(), in.getTitle(),
@@ -116,7 +119,16 @@ public class FOIARequestService
                     }
                 }
 
-                if (foiaRequest.getId() == null)
+                if (foiaRequest.getId() != null && foiaRequest.getStatus().equalsIgnoreCase("In Review") && !foiaConfigurationService.readConfiguration().getReceivedDateEnabled())
+                {
+                    if (foiaRequest.getReceivedDate() != null)
+                    {
+                        in.setDueDate(getQueuesTimeToCompleteService().addWorkingDaysToDate(
+                                Date.from(foiaRequest.getReceivedDate().atZone(ZoneId.systemDefault()).toInstant()),
+                                foiaRequest.getRequestType()));
+                    }
+                }
+                else if(foiaRequest.getId() == null && foiaConfigurationService.readConfiguration().getReceivedDateEnabled())
                 {
                     // calculate due date from time to complete configuration
                     // override if any due date is set from UI
@@ -134,14 +146,14 @@ public class FOIARequestService
                     {
                         in = populateAppealFromOriginalRequest(in, originalRequest);
                         in = createReference(in, originalRequest);
-                        saved = getSaveCaseService().saveCase(in, files, auth, ipAddress);
+                        saved = getSaveCaseService().saveCase(in, filesMap, auth, ipAddress);
                         copyOriginalRequestFiles(saved, originalRequest, auth);
                     }
                 }
                 else
                 {
                     setDefaultPhoneAndEmailIfAny(in);
-                    saved = getSaveCaseService().saveCase(in, files, auth, ipAddress);
+                    saved = getSaveCaseService().saveCase(in, filesMap, auth, ipAddress);
 
                 }
             }
@@ -457,4 +469,11 @@ public class FOIARequestService
         return queuesTimeToCompleteService;
     }
 
+    public FoiaConfigurationService getFoiaConfigurationService() {
+        return foiaConfigurationService;
+    }
+
+    public void setFoiaConfigurationService(FoiaConfigurationService foiaConfigurationService) {
+        this.foiaConfigurationService = foiaConfigurationService;
+    }
 }

@@ -90,7 +90,7 @@ public class HolidayConfigurationService
         for (int i = 0; i < workingDays;)
         {
             returnDate = returnDate.plusDays(1);
-            if (!isHoliday(returnDate.plusDays(1)) && !isWeekendNonWorkingDay(returnDate.plusDays(1)))
+            if (!isHoliday(returnDate) && !isWeekendNonWorkingDay(returnDate))
             {
                 i++;
             }

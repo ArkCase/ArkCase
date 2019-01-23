@@ -503,13 +503,14 @@ angular.module('services').factory(
                          * @param {String} objTypeKey Lookup key for an ArkCase Object type. Typically, lookup key is of format
                          * "OBJECT_TYPE" or "OBJECT_TYPE.SUB_TYPE"
                          * @param {String} objId ArkCase Object ID
+                         * @param {Boolean} newTab Optional flag for opening the Object in a new tab
                          *
                          * @description
                          * Go to a page state that show the specified ArkCase Object (Case, Complaint, Document, etc.)
                          */
                         ,
-                        showObject: function(objTypeKey, objId) {
-                            return ObjectService.showObject(objTypeKey, objId);
+                        showObject: function (objTypeKey, objId, newTab) {
+                            return ObjectService.showObject(objTypeKey, objId, newTab);
 
                         }
 

@@ -30,6 +30,7 @@ package com.armedia.acm.plugins.task.service.impl;
 import com.armedia.acm.core.AcmNotifiableEntity;
 import com.armedia.acm.core.exceptions.AcmAccessControlException;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
+import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.data.AcmNotificationDao;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.data.BuckslipFutureTask;
@@ -91,6 +92,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.TypedQuery;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.Principal;
@@ -101,8 +104,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-public class ActivitiTaskDao implements TaskDao, AcmNotificationDao
+public class ActivitiTaskDao extends AcmAbstractDao<AcmTask> implements TaskDao, AcmNotificationDao
 {
     private RuntimeService activitiRuntimeService;
     private TaskService activitiTaskService;
@@ -575,15 +579,33 @@ public class ActivitiTaskDao implements TaskDao, AcmNotificationDao
                 .variableValueEquals(TaskConstants.VARIABLE_NAME_PARENT_OBJECT_TYPE, parentObjectType)
                 .variableValueEquals(TaskConstants.VARIABLE_NAME_PARENT_OBJECT_ID, parentObjectId).list();
 
-        List<Task> activitiTasks = processes.stream()
+        Stream<Task> activitiWorkflowTasksStream = processes.stream()
                 .map(it -> getActivitiTaskService().createTaskQuery()
                         .processInstanceId(it.getProcessInstanceId())
-                        .singleResult())
-                .collect(Collectors.toList());
+                        .singleResult());
 
-        log.debug("Found [{}] tasks for object [{}:{}]", activitiTasks.size(), parentObjectType, parentObjectId);
-        return activitiTasks.stream()
+        Stream<Task> adhochTasksStream = getActivitiTaskService().createTaskQuery()
+                .taskVariableValueEquals(TaskConstants.VARIABLE_NAME_PARENT_OBJECT_TYPE, parentObjectType)
+                .taskVariableValueEquals(TaskConstants.VARIABLE_NAME_PARENT_OBJECT_ID, parentObjectId)
+                .list().stream();
+
+        List<Long> taskIds = Stream.concat(activitiWorkflowTasksStream, adhochTasksStream)
                 .map(it -> Long.valueOf(it.getId()))
+                .collect(Collectors.toList());
+        log.debug("Found [{}] tasks for object [{}:{}]", taskIds.size(), parentObjectType, parentObjectId);
+        return taskIds;
+    }
+
+    public List<AcmTask> findByVariableForObjectTypeAndId(String name, String value, String objectType, Long objectId)
+    {
+        List<Task> activitiTasks = getActivitiTaskService().createTaskQuery()
+                .includeProcessVariables()
+                .taskVariableValueEquals(TaskConstants.VARIABLE_NAME_PARENT_OBJECT_TYPE, objectType)
+                .taskVariableValueEquals(TaskConstants.VARIABLE_NAME_PARENT_OBJECT_ID, objectId)
+                .taskVariableValueEquals(name, value).list();
+
+        return activitiTasks.stream()
+                .map(it -> acmTaskFromActivitiTask(it))
                 .collect(Collectors.toList());
     }
 
@@ -889,7 +911,14 @@ public class ActivitiTaskDao implements TaskDao, AcmNotificationDao
         {
             return TaskConstants.STATE_DELETE;
         }
-        return historicTaskInstance.getEndTime() == null ? TaskConstants.STATE_ACTIVE : TaskConstants.STATE_CLOSED;
+        if (historicTaskInstance.getEndTime() == null)
+        {
+            return historicTaskInstance.getAssignee() == null ? TaskConstants.STATE_UNCLAIMED : TaskConstants.STATE_ACTIVE;
+        }
+        else
+        {
+            return TaskConstants.STATE_CLOSED;
+        }
     }
 
     private boolean isTaskTerminated(HistoricTaskInstance historicTaskInstance)
@@ -941,7 +970,14 @@ public class ActivitiTaskDao implements TaskDao, AcmNotificationDao
         {
             return TaskConstants.STATE_TERMINATED;
         }
-        return historicTaskInstance.getEndTime() == null ? TaskConstants.STATE_ACTIVE : TaskConstants.STATE_DELETE;
+        if (historicTaskInstance.getEndTime() == null)
+        {
+            return historicTaskInstance.getAssignee() == null ? TaskConstants.STATE_UNCLAIMED : TaskConstants.STATE_ACTIVE;
+        }
+        else
+        {
+            return TaskConstants.STATE_DELETE;
+        }
     }
 
     private String findTaskStatus(Task task)
@@ -1350,6 +1386,8 @@ public class ActivitiTaskDao implements TaskDao, AcmNotificationDao
         acmTask.setAssignee(activitiTask.getAssignee());
         acmTask.setCreateDate(activitiTask.getCreateTime());
         acmTask.setOwner(activitiTask.getOwner());
+        acmTask.setContainer(getContainerFolderDao().findByObjectTypeAndIdOrCreate(TaskConstants.OBJECT_TYPE, acmTask.getTaskId(), null,
+                acmTask.getTitle()));
 
         extractProcessVariables(processVariables, acmTask);
 
@@ -1856,5 +1894,47 @@ public class ActivitiTaskDao implements TaskDao, AcmNotificationDao
     public void setFileParticipantService(EcmFileParticipantService fileParticipantService)
     {
         this.fileParticipantService = fileParticipantService;
+    }
+
+    @Override
+    protected Class<AcmTask> getPersistenceClass()
+    {
+        return AcmTask.class;
+    }
+
+    @Override
+    public String getSupportedObjectType()
+    {
+        return "TASK";
+    }
+
+    @Override
+    public AcmTask find(Long id) throws AcmTaskException
+    {
+        return findById(id);
+    }
+
+    @Override
+    public List<AcmTask> findAll()
+    {
+        return allTasks();
+    }
+
+    @Override
+    public List<AcmTask> findAllOrderBy(String column)
+    {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public List<AcmTask> findModifiedSince(Date lastModified, int startRow, int pageSize)
+    {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public TypedQuery<AcmTask> getSortedQuery(String sort)
+    {
+        throw new UnsupportedOperationException();
     }
 }

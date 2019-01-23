@@ -74,12 +74,12 @@ public class BuckslipTaskHelper implements ApplicationEventPublisherAware
         {
             JSONObject past = pastApproversJson.getJSONObject(i);
             String pastApproverId = past.getString("approverId");
-            String pastApproverFullName = past.getString("approverFullName");
+            String pastApproverFullName = past.optString("approverFullName", pastApproverId);
             String pastTaskName = past.getString("taskName");
             String pastGroupName = past.getString("groupName");
             String pastDetails = past.getString("details");
             String pastAddedBy = past.getString("addedBy");
-            String pastAddedByFullName = past.getString("addedByFullName");
+            String pastAddedByFullName = past.optString("addedByFullName", pastAddedBy);
             int maxTaskDurationInDays = past.getInt("maxTaskDurationInDays");
             // account for possibly many withdrawal cycles; suppose the same tasks have already been recorded more
             // than once (e.g. Ann has completed her original task, then completed the same task after the first

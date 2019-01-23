@@ -243,6 +243,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     }
 
     @Override
+    @Transactional
     public EcmFile upload(Authentication authentication, String parentObjectType, Long parentObjectId, String targetCmisFolderId,
             String arkcaseFileName, InputStream fileContents, EcmFile metadata)
             throws AcmCreateObjectFailedException, AcmUserActionFailedException
@@ -251,6 +252,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     }
 
     @Override
+    @Transactional
     public EcmFile upload(Authentication authentication, String parentObjectType, Long parentObjectId, String targetCmisFolderId,
             String arkcaseFileName, InputStream fileContents, EcmFile metadata, Document existingCmisDocument)
             throws AcmCreateObjectFailedException, AcmUserActionFailedException
@@ -291,6 +293,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     }
 
     @Override
+    @Transactional
     public EcmFile upload(Authentication authentication, MultipartFile file, String targetCmisFolderId, String parentObjectType,
             Long parentObjectId, EcmFile metadata) throws AcmCreateObjectFailedException, AcmUserActionFailedException
     {
@@ -628,13 +631,12 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
                     || frevvoFile.getFileType().equals("timesheet_xml") && frevvoFile.getFileName().equals("form_timesheet")
                     || frevvoFile.getFileType().equals("costsheet_xml") && frevvoFile.getFileName().equals("form_costsheet"))
             {
-                for (EcmFileVersion frevvoFileVersion : frevvoFile.getVersions())
+                if (!frevvoFile.getVersions().isEmpty())
                 {
                     frevvoFile.setActiveVersionTag(versionTag);
-                    frevvoFile.setFileActiveVersionMimeType(frevvoFileVersion.getVersionMimeType());
-                    frevvoFile.setFileActiveVersionNameExtension(frevvoFileVersion.getVersionFileNameExtension());
+                    frevvoFile.setFileActiveVersionMimeType(frevvoFile.getVersions().get(0).getVersionMimeType());
+                    frevvoFile.setFileActiveVersionNameExtension(frevvoFile.getVersions().get(0).getVersionFileNameExtension());
                     getEcmFileDao().save(frevvoFile);
-                    break;
                 }
             }
         }
@@ -759,6 +761,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     }
 
     @Override
+    @Transactional
     @PreAuthorize("hasPermission(#folderId, 'FOLDER', 'read|group-read|write|group-write')")
     @AcmAcquireAndReleaseObjectLock(objectIdArgIndex = 0, objectType = "FOLDER", lockType = "WRITE")
     public void declareFolderAsRecord(Long folderId, Authentication authentication, String parentObjectType, Long parentObjectId)
@@ -913,6 +916,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     }
 
     @Override
+    @Transactional
     @AcmAcquireAndReleaseObjectLock(objectIdArgIndex = 0, objectType = "FILE", lockType = "READ")
     @AcmAcquireAndReleaseObjectLock(objectIdArgIndex = 3, objectType = "FOLDER", lockType = "WRITE", lockChildObjects = false, unlockChildObjects = false)
     public EcmFile copyFile(Long fileId, Long targetObjectId, String targetObjectType, Long dstFolderId)
@@ -1280,7 +1284,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         if (elements != null)
         {
             Optional<String> reduced = elements.stream().reduce((x, y) -> x + " " + operator + " " + y);
-            if (reduced != null && reduced.isPresent())
+            if (reduced.isPresent())
             {
                 query = reduced.get();
 
@@ -1295,6 +1299,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     }
 
     @Override
+    @Transactional
     @AcmAcquireAndReleaseObjectLock(objectIdArgIndex = 3, objectType = "FOLDER", lockType = "WRITE", lockChildObjects = false, unlockChildObjects = false)
     @AcmAcquireAndReleaseObjectLock(objectIdArgIndex = 0, objectType = "FILE", lockType = "DELETE")
     public EcmFile moveFile(Long fileId, Long targetObjectId, String targetObjectType, Long dstFolderId)
@@ -1310,6 +1315,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     }
 
     @Override
+    @Transactional
     @AcmAcquireAndReleaseObjectLock(acmObjectArgIndex = 3, objectType = "FOLDER", lockType = "WRITE", lockChildObjects = false, unlockChildObjects = false)
     @AcmAcquireAndReleaseObjectLock(objectIdArgIndex = 0, objectType = "FILE", lockType = "DELETE")
     public EcmFile moveFile(Long fileId, Long targetObjectId, String targetObjectType, AcmFolder folder)
@@ -1358,6 +1364,40 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
             return movedFile;
         }
         catch (PersistenceException | MuleException e)
+        {
+            log.error("Could not move file {} ", e.getMessage(), e);
+            throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_MOVE_FILE, EcmFileConstants.OBJECT_FILE_TYPE, file.getId(),
+                    "Could not move file", e);
+        }
+    }
+
+    @Override
+    @Transactional
+    @AcmAcquireAndReleaseObjectLock(acmObjectArgIndex = 1, objectType = "FOLDER", lockType = "WRITE", lockChildObjects = false, unlockChildObjects = false)
+    @AcmAcquireAndReleaseObjectLock(acmObjectArgIndex = 0, objectType = "FILE", lockType = "DELETE")
+    public EcmFile moveFileInArkcase(EcmFile file, AcmFolder targetParentFolder, String targetObjectType)
+            throws AcmUserActionFailedException, AcmObjectNotFoundException, AcmCreateObjectFailedException
+    {
+        String cmisRepositoryId = targetParentFolder.getCmisRepositoryId();
+        if (cmisRepositoryId == null)
+        {
+            cmisRepositoryId = ecmFileServiceProperties.getProperty("ecm.defaultCmisId");
+        }
+
+        AcmContainer container = getOrCreateContainer(targetObjectType, targetParentFolder.getId(), cmisRepositoryId);
+        EcmFile movedFile;
+
+        try
+        {
+            file.setContainer(container);
+            file.setFolder(targetParentFolder);
+
+            movedFile = getEcmFileDao().save(file);
+            movedFile = getFileParticipantService().setFileParticipantsFromParentFolder(movedFile);
+
+            return movedFile;
+        }
+        catch (PersistenceException e)
         {
             log.error("Could not move file {} ", e.getMessage(), e);
             throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_MOVE_FILE, EcmFileConstants.OBJECT_FILE_TYPE, file.getId(),
@@ -1480,6 +1520,28 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         catch (MuleException | PersistenceException e)
         {
             log.error("Could not delete file {} ", e.getMessage(), e);
+            throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_DELETE_FILE, EcmFileConstants.OBJECT_FILE_TYPE,
+                    file.getId(), "Could not delete file", e);
+        }
+    }
+
+    @Override
+    @AcmAcquireAndReleaseObjectLock(objectIdArgIndex = 0, objectType = "FILE", lockType = "DELETE")
+    public void deleteFileInArkcase(EcmFile file)
+            throws AcmUserActionFailedException, AcmObjectNotFoundException
+    {
+        if (file == null)
+        {
+            throw new AcmObjectNotFoundException(EcmFileConstants.OBJECT_FILE_TYPE, file.getId(), "File not found", null);
+        }
+
+        try
+        {
+            getEcmFileDao().deleteFile(file.getId());
+        }
+        catch (PersistenceException e)
+        {
+            log.error("Could not delete file with id [{}], {} ", file.getId(), e.getMessage(), e);
             throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_DELETE_FILE, EcmFileConstants.OBJECT_FILE_TYPE,
                     file.getId(), "Could not delete file", e);
         }

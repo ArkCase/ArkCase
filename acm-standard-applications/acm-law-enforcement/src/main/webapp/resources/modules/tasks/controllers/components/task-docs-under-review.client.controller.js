@@ -32,8 +32,8 @@ angular.module('tasks').controller(
                         return userInfo;
                     });
 
-                    EmailSenderConfigurationService.getEmailSenderConfiguration().then(function(emailData) {
-                        $scope.sendEmailEnabled = emailData.data.allowDocuments;
+                    EmailSenderConfigurationService.isEmailSenderAllowDocuments().then(function(emailData) {
+                        $scope.sendEmailEnabled = emailData.data;
                     });
 
                     var componentHelper = new HelperObjectBrowserService.Component({
@@ -101,6 +101,7 @@ angular.module('tasks').controller(
                         DocTreeExtCheckin.handleCheckin(treeControl, $scope);
                         DocTreeExtCheckin.handleCancelEditing(treeControl, $scope);
                         DocTreeExtWebDAV.handleEditWithWebDAV(treeControl, $scope);
+                        $scope.config.docTree.nodeCacheKeyPrefix = $scope.config.docTree.nodeCacheKeyPrefix ? $scope.config.docTree.nodeCacheKeyPrefix + $scope.objectId : "" + $scope.objectId;
                         $scope.treeControl.getDocTreeObject().treeConfig.fqFilter = $scope.fqFilter;
                     };
 

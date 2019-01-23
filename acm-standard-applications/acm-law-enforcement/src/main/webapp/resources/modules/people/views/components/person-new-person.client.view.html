@@ -43,6 +43,7 @@
                             </div>
                             <div class="col-sm-4 form-group">
                                 <label translate>people.comp.editPerson.identification.identificationType</label>
+								<span ng-show="person.defaultIdentification.identificationNumber" class="required-asterisk">*</span>
                                 <select class="form-control" ng-required="person.defaultIdentification.identificationNumber"
                                         ng-disabled="!person.defaultIdentification.identificationNumber"
                                         ng-model="person.defaultIdentification.identificationType">
@@ -63,20 +64,10 @@
                             <div class="col-sm-4 form-group">
                                 <label translate>
                                     people.comp.editPerson.identification.identificationYearIssued</label>
-                                <p class="input-group">
-                                    <input type="text" class="input-md form-control"
-                                            placeholder="{{'people.comp.editPerson.identification.identificationYearIssued.placeholder' | translate}}"
-                                            datepicker-popup="{{'common.defaultDatePickerFormat' | translate}}"
-                                            datepicker-append-to-body="false"
-                                            ng-model="person.defaultIdentification.identificationYearIssued" is-open="defaultOpened"
-                                            close-on-date-selection="true" show-button-bar="true" on-open-focus="false"
-                                            close-text="{{'people.comp.editPerson.identification.identificationYearIssued.close.button' | translate}}" />
-                                    <span class="input-group-btn">
-                                       <button type="button" class="btn btn-default" ng-click="defaultOpened = !defaultOpened">
-                                               <i class="fa fa-calendar"></i>
-                                       </button>
-                                </span>
-                                </p>
+                                <date-time-picker data="person.defaultIdentification.identificationYearIssued"
+                                        property="person.defaultIdentification.identificationYearIssued"
+                                        date-picker-id="person.defaultIdentification.identificationYearIssued"
+                                        time-format-disabled="true"></date-time-picker>
                             </div>
                             <div class="col-sm-4 form-group">
                                 <div class="pull-left">
@@ -94,6 +85,7 @@
                                 <div class="col-sm-4 form-group">
                                     <label translate>
                                         people.comp.editPerson.identification.identificationNumber</label>
+                                    <span class="required-asterisk">*</span>
                                     <input type="text" ng-model="identification.identificationNumber" class="input-md form-control"
                                             required="required"
                                             placeholder="{{ 'people.comp.editPerson.identification.identificationNumber.placeholder' | translate }}">
@@ -101,6 +93,7 @@
                                 <div class="col-sm-4 form-group">
                                     <label translate>
                                         people.comp.editPerson.identification.identificationType</label>
+									<span class="required-asterisk">*</span>
                                     <select class="form-control" required="required" ng-disabled="!identification.identificationNumber"
                                             ng-model="identification.identificationType">
                                         <option ng-repeat="option in identificationTypes" value="{{option.key}}">
@@ -120,21 +113,10 @@
                                     <div>
                                         <label translate>
                                             people.comp.editPerson.identification.identificationYearIssued</label>
-                                        <p class="input-group">
-                                            <input type="text" class="input-md form-control"
-                                                    placeholder="{{'people.comp.editPerson.identification.identificationYearIssued.placeholder' | translate}}"
-                                                    datepicker-popup="{{'common.defaultDatePickerFormat' | translate}}"
-                                                    datepicker-append-to-body="false" ng-model="identification.identificationYearIssued"
-                                                    is-open="identification.opened" close-on-date-selection="true" show-button-bar="true"
-                                                    on-open-focus="false"
-                                                    close-text="{{'people.comp.editPerson.identification.identificationYearIssued.close.button' | translate}}" />
-                                            <span class="input-group-btn">
-                                       <button type="button" class="btn btn-default"
-                                               ng-click="identification.opened = !identification.opened">
-                                               <i class="fa fa-calendar"></i>
-                                       </button>
-                                </span>
-                                        </p>
+                                        <date-time-picker data="identification.identificationYearIssued"
+                                                property="identification.identificationYearIssued"
+                                                date-picker-id="identification.identificationYearIssued"
+                                                time-format-disabled="true"></date-time-picker>
                                     </div>
                                 </div>
                                 <div class="col-sm-4 form-group">
@@ -402,6 +384,7 @@
                                 <label>
                                     {{'people.comp.editPerson.communicationAccounts.' + caType |
                                     translate}} </label>
+                                <span class="required-asterisk" ng-show="person['default'+capitalizeFirstLetter(caType)].value">*</span>
                                 <input type="{{caType}}" ng-model="person['default'+capitalizeFirstLetter(caType)].value"
                                         class="input-md form-control"
                                         placeholder="{{ 'people.comp.editPerson.communicationAccounts.' + caType + '.placeholder' | translate }}"
@@ -411,6 +394,7 @@
                             <div class="col-sm-4">
                                 <label for="defaultPhoneSubType" class="control-label">{{'people.comp.editPerson.communicationAccounts.'
                                     + caType + 'Type' | translate}}</label>
+                                <span class="required-asterisk" ng-show="person['default'+capitalizeFirstLetter(caType)].value">*</span>
                                 <select id="defaultPhoneSubType" class="form-control"
                                         ng-required="person['default'+capitalizeFirstLetter(caType)].value"
                                         ng-disabled="!person['default'+capitalizeFirstLetter(caType)].value"
@@ -435,12 +419,14 @@
                                 <label>
                                     {{'people.comp.editPerson.communicationAccounts.' + caType |
                                     translate}} {{contactMethod.input_type}} </label>
+								<span class="required-asterisk">*</span>	
                                 <input type="{{contactMethod.type}}" ng-model="contactMethod.value" required="required" class="input-md form-control"
                                         placeholder="{{ 'people.comp.editPerson.communicationAccounts.'+ caType +'.placeholder' | translate }}">
                             </div>
                             <div class="col-sm-4">
                                 <label class="control-label">{{'people.comp.editPerson.communicationAccounts.' +
                                     caType + 'Type' | translate}}</label>
+								<span class="required-asterisk">*</span>
                                 <select ng-model="contactMethod.subType" required="required" ng-disabled="!contactMethod.value"
                                         class="form-control">
                                     <option ng-repeat="option in cmTypes[caType].subLookup" value="{{option.key}}">
@@ -475,8 +461,8 @@
                 </h4>
             </div>
             <div id="collapseDetails" class="panel-collapse collapse">
-                <div class="panel-body">
-                    <summernote config="options" id="details" ng-model="person.details"></summernote>
+                <div class="panel-body remove-margin-bottom-from-summernote">
+                    <mention-summernote ng-model="person.details" params="paramsSummernote"></mention-summernote>
                 </div>
             </div>
         </div>
