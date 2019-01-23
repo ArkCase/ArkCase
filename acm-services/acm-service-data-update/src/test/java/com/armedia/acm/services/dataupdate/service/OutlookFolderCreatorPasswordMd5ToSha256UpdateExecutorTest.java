@@ -38,6 +38,7 @@ import com.armedia.acm.service.outlook.model.AcmOutlookFolderCreator;
 
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,6 +50,7 @@ import java.util.Arrays;
 import java.util.Base64;
 import java.util.List;
 
+@Ignore
 public class OutlookFolderCreatorPasswordMd5ToSha256UpdateExecutorTest extends EasyMockSupport
 {
 
