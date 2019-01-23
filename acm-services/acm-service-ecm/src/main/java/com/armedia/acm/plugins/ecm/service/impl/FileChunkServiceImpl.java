@@ -80,6 +80,7 @@ public class FileChunkServiceImpl implements FileChunkService {
         metadata.setFileName(fileDetails.getName());
         metadata.setCmisRepositoryId(folder.getCmisRepositoryId());
         metadata.setUuid(fileDetails.getUuid());
+        metadata.setFileLang(fileDetails.getLang());
 
         log.debug("Start uploading the file with name {}", uniqueFileName);
 
