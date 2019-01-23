@@ -36,6 +36,10 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
+import javax.persistence.criteria.Subquery;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,24 +70,69 @@ public class AcmBpmnDao
 
     public List<AcmProcessDefinition> list(String orderBy, boolean isAsc)
     {
-        String queryText = "SELECT apd FROM AcmProcessDefinition apd WHERE apd.id in (SELECT MIN(apdid.id) FROM AcmProcessDefinition apdid GROUP BY apdid.key)   ORDER BY apd."
-                + orderBy + (isAsc ? " ASC" : " DESC");
-        TypedQuery<AcmProcessDefinition> query = getEm().createQuery(queryText, AcmProcessDefinition.class);
+        CriteriaBuilder builder = em.getCriteriaBuilder();
+
+        CriteriaQuery<AcmProcessDefinition> criteriaQuery = builder.createQuery(AcmProcessDefinition.class);
+        Root<AcmProcessDefinition> processDefinition = criteriaQuery.from(AcmProcessDefinition.class);
+        Subquery subquery = criteriaQuery.subquery(AcmProcessDefinition.class);
+        Root<AcmProcessDefinition> processDefinitionSubquery = subquery.from(AcmProcessDefinition.class);
+
+        criteriaQuery.select(processDefinition);
+        subquery.select(builder.min(processDefinitionSubquery.<Long> get("id")));
+        subquery.groupBy(processDefinitionSubquery.<String> get("key")).select(processDefinitionSubquery.<String> get("key"));
+
+        criteriaQuery.where(processDefinition.<Long> get("id").in(subquery.getSelection()));
+        if (isAsc)
+        {
+            criteriaQuery.orderBy(builder.asc(processDefinition.get(orderBy)));
+        }
+        else
+        {
+            criteriaQuery.orderBy(builder.desc(processDefinition.get(orderBy)));
+        }
+        TypedQuery<AcmProcessDefinition> query = getEm().createQuery(criteriaQuery);
         return query.getResultList();
     }
 
     @Transactional
     public List<AcmProcessDefinition> listPage(int start, int length, String orderBy, boolean isAsc)
     {
-        String queryMaxText = "SELECT apd FROM AcmProcessDefinition apd WHERE apd.id in (SELECT MAX(apdid.id) FROM AcmProcessDefinition apdid GROUP BY apdid.key)   ORDER BY apd."
-                + orderBy + (isAsc ? " ASC" : " DESC");
-        TypedQuery<AcmProcessDefinition> queryMax = getEm().createQuery(queryMaxText, AcmProcessDefinition.class).setFirstResult(start)
-                .setMaxResults(length);
+
+        CriteriaBuilder builder = em.getCriteriaBuilder();
+        CriteriaQuery<AcmProcessDefinition> criteriaQuery = builder.createQuery(AcmProcessDefinition.class);
+        Root<AcmProcessDefinition> processDefinition = criteriaQuery.from(AcmProcessDefinition.class);
+
+        Subquery<Long> subquery = criteriaQuery.subquery(Long.class);
+        Root<AcmProcessDefinition> processDefinitionSubquery = subquery.from(AcmProcessDefinition.class);
+        subquery.select(builder.max(processDefinitionSubquery.get("id")))
+                .groupBy(processDefinitionSubquery.<String> get("key"));
+
+        criteriaQuery.where(processDefinition.<Long> get("id").in(subquery));
+        if (isAsc)
+        {
+            criteriaQuery.orderBy(builder.asc(processDefinition.get(orderBy)));
+        }
+        else
+        {
+            criteriaQuery.orderBy(builder.desc(processDefinition.get(orderBy)));
+        }
+        TypedQuery<AcmProcessDefinition> queryMax = getEm().createQuery(criteriaQuery);
         List<AcmProcessDefinition> maxList = queryMax.getResultList();
 
-        String queryActiveText = "SELECT apd FROM AcmProcessDefinition apd WHERE apd.id in (SELECT apdid.id FROM AcmProcessDefinition apdid WHERE apd.key = apdid.key AND apdid.active = 1)   ORDER BY apd."
-                + orderBy + (isAsc ? " ASC" : " DESC");
-        TypedQuery<AcmProcessDefinition> queryActive = getEm().createQuery(queryActiveText, AcmProcessDefinition.class)
+        CriteriaQuery<AcmProcessDefinition> criteriaQuery_2 = builder.createQuery(AcmProcessDefinition.class);
+        Root<AcmProcessDefinition> processDefinition_2 = criteriaQuery.from(AcmProcessDefinition.class);
+        Root<AcmProcessDefinition> processDefinitionSubquery_2 = subquery.from(AcmProcessDefinition.class);
+        subquery.select(builder.min(processDefinitionSubquery_2.get("id")))
+                .groupBy(processDefinitionSubquery_2.<String> get("key"));
+        if (isAsc)
+        {
+            criteriaQuery_2.orderBy(builder.asc(processDefinition_2.get(orderBy)));
+        }
+        else
+        {
+            criteriaQuery_2.orderBy(builder.desc(processDefinition_2.get(orderBy)));
+        }
+        TypedQuery<AcmProcessDefinition> queryActive = getEm().createQuery(criteriaQuery_2)
                 .setFirstResult(start).setMaxResults(length);
         List<AcmProcessDefinition> activeList = queryActive.getResultList();
 

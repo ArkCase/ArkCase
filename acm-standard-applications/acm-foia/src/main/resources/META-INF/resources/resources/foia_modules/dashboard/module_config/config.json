@@ -17,7 +17,7 @@
             "id": "news",
             "title": "dashboard.comp.news.title",
             "configurable": true,
-            "url": "https:\/\/query.yahooapis.com\/v1\/public\/yql",
+            "url": "\/\/api.rss2json.com\/v1\/api.json?callback=JSON_CALLBACK&rss_url=",
             "query": "select * from xml where url = '$1'",
             "format": "json"
         },
@@ -45,7 +45,7 @@
                     "headerCellFilter": "translate",
                     "enableSorting": true,
                     "type": "number",
-                    "cellTemplate": "<div class='ui-grid-cell-contents'><a ui-sref='order-info({orderId: row.entity.object_id_s})'>{{COL_FIELD CUSTOM_FILTERS}}</a></div>",
+                    "cellTemplate": "<div class='ui-grid-cell-contents'><a data-ui-sref=\"cases.main({id: row.entity.object_id_s})\">{{COL_FIELD CUSTOM_FILTERS}}</a></div>",
                     "width": 130
                 },
                 {
@@ -93,12 +93,12 @@
                     "enableColumnMenu": false
                 },
                 {
-                    "name": "object_id_s",
+                    "name": "object_id_i",
                     "displayName": "dashboard.widgets.myTasks.table.header.taskId",
                     "headerCellFilter": "translate",
                     "enableSorting": true,
                     "type": "number",
-                    "cellTemplate": "<a data-ui-sref=\"tasks.main({id: row.entity.object_id_s})\">{{COL_FIELD}}</a>",
+                    "cellTemplate": "<a data-ui-sref=\"tasks.main({id: row.entity.object_id_i})\">{{COL_FIELD}}</a>",
                     "width": 75
                 },
                 {
@@ -127,7 +127,7 @@
                     "width": 100
                 },
                 {
-                    "name": "parent_number_lcs",
+                    "name": "parent_id_s",
                     "displayName": "dashboard.widgets.myTasks.table.header.caseId",
                     "headerCellFilter": "translate",
                     "cellTemplate": "<a data-ui-sref=\"cases.main({id: row.entity.parent_id_s})\">{{COL_FIELD}}<\/a>",
@@ -237,6 +237,62 @@
                     "headerCellFilter": "translate",
                     "enableSorting": true,
                     "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity)'>{{row.entity.url}}</a>"
+                }
+            ]
+        },
+        {
+            "id": "myOverdueRequests",
+            "title": "dashboard.widgets.myOverdueRequests.title",
+            "configurable": true,
+            "enableFiltering": false,
+            "paginationPageSizes": [
+                5,
+                10,
+                25
+            ],
+            "paginationPageSize": 5,
+            "columnDefs": [
+                {
+                    "field": "alerts",
+                    "displayName": "",
+                    "cellTemplate": "<div><a tooltip=\"{{'dashboard.widgets.myOverdueRequests.table.overdue.tooltip' | translate}}\" tooltip-append-to-body=\"true\" tooltip-class=\"tooltip-overdue\"><i class=\"fa fa-exclamation-circle icon-overdue\"></i></a></div>",
+                    "width": 40,
+                    "enableSorting": false,
+                    "enableColumnMenu": false
+                },
+                {
+                    "name": "numDays",
+                    "displayName": "dashboard.widgets.myOverdueRequests.numDays",
+                    "headerCellFilter": "translate",
+                    "width": 70,
+                    "enableSorting": true
+                },
+                {
+                    "name": "object_id_s",
+                    "type": "number",
+                    "displayName": "dashboard.widgets.myOverdueRequests.uniqueId",
+                    "cellTemplate": "<a href='#' ng-click='grid.appScope.myOverdueRequests.onTopicClick(row)'>{{row.entity.object_id_s}}</a>",
+                    "headerCellFilter": "translate",
+                    "enableSorting": true
+                },
+                {
+                    "name": "title_parseable_lcs",
+                    "type": "number",
+                    "displayName": "dashboard.widgets.myOverdueRequests.topic",
+                    "cellTemplate": "<a href='#' ng-click='grid.appScope.myOverdueRequests.onTopicClick(row)'>{{row.entity.title_parseable_lcs}}</a>",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "request_status_lcs",
+                    "displayName": "dashboard.widgets.myOverdueRequests.status",
+                    "headerCellFilter": "translate",
+                    "enableSorting": true
+                },
+                {
+                    "name": "priority_lcs",
+                    "displayName": "dashboard.widgets.myOverdueRequests.priority",
+                    "headerCellFilter": "translate",
+                    "enableSorting": true
                 }
             ]
         }

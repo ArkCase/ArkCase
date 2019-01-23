@@ -27,7 +27,6 @@ package com.armedia.acm.plugins.complaint.model;
  * #L%
  */
 
-
 import com.armedia.acm.core.AcmNotifiableEntity;
 import com.armedia.acm.core.AcmNotificationReceiver;
 import com.armedia.acm.core.AcmStatefulEntity;
@@ -45,6 +44,7 @@ import com.armedia.acm.plugins.person.model.OrganizationAssociation;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
 import com.armedia.acm.services.participants.model.AcmAssignedObject;
 import com.armedia.acm.services.participants.model.AcmParticipant;
+import com.armedia.acm.services.sequence.annotation.AcmSequence;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
@@ -115,6 +115,7 @@ public class Complaint implements Serializable, AcmAssignedObject, AcmEntity, Ac
     private Long complaintId;
 
     @Column(name = "cm_complaint_number", insertable = true, updatable = false)
+    @AcmSequence(sequenceName = "complaintNumberSequence")
     private String complaintNumber;
 
     @Column(name = "cm_complaint_type")
@@ -457,7 +458,7 @@ public class Complaint implements Serializable, AcmAssignedObject, AcmEntity, Ac
         Optional<PersonAssociation> found = getPersonAssociations().stream()
                 .filter(personAssociation -> "Initiator".equalsIgnoreCase(personAssociation.getPersonType())).findFirst();
 
-        if (found != null && found.isPresent())
+        if (found.isPresent())
         {
             originator = found.get();
         }
@@ -480,7 +481,7 @@ public class Complaint implements Serializable, AcmAssignedObject, AcmEntity, Ac
             Optional<PersonAssociation> found = getPersonAssociations().stream()
                     .filter(personAssociation -> "Initiator".equalsIgnoreCase(personAssociation.getPersonType())).findFirst();
 
-            if (found == null || !found.isPresent())
+            if (!found.isPresent())
             {
                 getPersonAssociations().add(originator);
             }

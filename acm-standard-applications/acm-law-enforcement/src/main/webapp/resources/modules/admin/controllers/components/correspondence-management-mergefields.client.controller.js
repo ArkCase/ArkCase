@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('admin').controller('Admin.CMMergeFieldsController',
-        [ '$scope', '$rootScope', '$modal', 'Admin.CMMergeFieldsService', 'Helper.UiGridService', 'MessageService', 'LookupService', 'Acm.StoreService', function($scope, $rootScope, $modal, correspondenceMergeFieldsService, HelperUiGridService, messageService, LookupService, Store) {
+        [ '$scope', '$rootScope', '$modal', 'Admin.CMMergeFieldsService', 'Helper.UiGridService', 'MessageService', 'LookupService', 'Acm.StoreService', 'Object.LookupService', function($scope, $rootScope, $modal, correspondenceMergeFieldsService, HelperUiGridService, messageService, LookupService, Store, ObjectLookupService) {
 
             var gridHelper = new HelperUiGridService.Grid({
                 scope: $scope
@@ -19,19 +19,24 @@ angular.module('admin').controller('Admin.CMMergeFieldsController',
                 var config = _.find(config.components, {
                     id: 'correspondenceManagementMergeFields'
                 });
-                promiseUsers.then(function(data) {
-                    gridHelper.setUserNameFilterToConfig(promiseUsers, config);
-                    gridHelper.setColumnDefs(config);
-                    gridHelper.setBasicOptions(config);
-                    gridHelper.disableGridScrolling(config);
-                    $scope.config = config;
-                    $scope.objectTypes = config.objectTypes;
-                    $scope.mergingType = $scope.objectTypes[0].id;
+                var promiseCorrespondenceObjectTypes = ObjectLookupService.getCorrespondenceObjectTypes();
+                promiseCorrespondenceObjectTypes.then(function(correspondenceObject) {
+                    $scope.correspondenceObjectTypes = correspondenceObject;
 
-                    gridHelper.setUserNameFilterToConfig(promiseUsers, configVersions);
-                    $scope.configVersions = configVersions;
+                    promiseUsers.then(function(data) {
+                        gridHelper.setUserNameFilterToConfig(promiseUsers, config);
+                        gridHelper.setColumnDefs(config);
+                        gridHelper.setBasicOptions(config);
+                        gridHelper.disableGridScrolling(config);
+                        $scope.config = config;
+                        $scope.objectTypes = $scope.correspondenceObjectTypes;
+                        $scope.mergingType = $scope.objectTypes[0].key;
 
-                    ReloadGrid();
+                        gridHelper.setUserNameFilterToConfig(promiseUsers, configVersions);
+                        $scope.configVersions = configVersions;
+
+                        ReloadGrid();
+                    });
                 });
             });
 
@@ -97,7 +102,8 @@ angular.module('admin').controller('Admin.CMMergeFieldsController',
                                 $modalInstance.dismiss('cancel');
                             };
                         },
-                        size: 'md'
+                        size: 'md',
+                        backdrop: 'static'
                     });
                 });
 

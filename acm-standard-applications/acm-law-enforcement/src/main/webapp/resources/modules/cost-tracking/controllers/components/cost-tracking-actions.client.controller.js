@@ -51,7 +51,7 @@ angular.module('cost-tracking').controller(
                             isEdit: true,
                             costsheet: $scope.objectInfo
                         };
-                        showModal($scope.editCaseParams, true);
+                        showModal($scope.editCaseParams);
                     };
 
                     function showModal(params) {
@@ -60,6 +60,7 @@ angular.module('cost-tracking').controller(
                             templateUrl: 'modules/cost-tracking/views/components/cost-tracking-new-costsheet-modal.client.view.html',
                             controller: 'CostTracking.NewCostsheetController',
                             size: 'lg',
+                            backdrop: 'static',
                             resolve: {
                                 modalParams: function() {
                                     return params;

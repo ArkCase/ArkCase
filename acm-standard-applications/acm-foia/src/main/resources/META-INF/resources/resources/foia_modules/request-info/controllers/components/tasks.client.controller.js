@@ -2,8 +2,8 @@
 
 angular.module('request-info').controller(
         'RequestInfo.TasksController',
-        [ '$scope', '$state', '$stateParams', '$q', '$translate', '$timeout', 'UtilService', 'ConfigService', 'ObjectService', 'Object.TaskService', 'Task.WorkflowService', 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'Case.InfoService', 'ModalDialogService',
-                function($scope, $state, $stateParams, $q, $translate, $timeout, Util, ConfigService, ObjectService, ObjectTaskService, TaskWorkflowService, HelperUiGridService, HelperObjectBrowserService, CaseInfoService, ModalDialogService) {
+    ['$scope', '$state', '$stateParams', '$q', '$translate', '$timeout', 'UtilService', 'ConfigService', 'ObjectService', 'Object.TaskService', 'Task.WorkflowService', 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'Case.InfoService', 'ModalDialogService',
+        function ($scope, $state, $stateParams, $q, $translate, $timeout, Util, ConfigService, ObjectService, ObjectTaskService, TaskWorkflowService, HelperUiGridService, HelperObjectBrowserService, CaseInfoService, ModalDialogService) {
 
                     var componentHelper = new HelperObjectBrowserService.Component({
                         scope: $scope,
@@ -87,6 +87,6 @@ angular.module('request-info').controller(
                         var targetType = (Util.goodMapValue(rowEntity, "adhocTask_b", false)) ? ObjectService.ObjectTypes.ADHOC_TASK : ObjectService.ObjectTypes.TASK;
                         //var targetType = Util.goodMapValue(rowEntity, "object_type_s");
                         var targetId = Util.goodMapValue(rowEntity, "object_id_s");
-                        gridHelper.showObject(targetType, targetId);
+                        gridHelper.showObject(targetType, targetId, true);
                     };
                 } ]);

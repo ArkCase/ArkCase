@@ -66,6 +66,7 @@ import com.armedia.acm.services.email.model.EmailWithAttachmentsDTO;
 import com.armedia.acm.services.email.model.EmailWithEmbeddedLinksDTO;
 import com.armedia.acm.services.email.model.EmailWithEmbeddedLinksResultDTO;
 import com.armedia.acm.services.email.service.AcmEmailContentGeneratorService;
+import com.armedia.acm.services.email.service.TemplatingEngine;
 import com.armedia.acm.services.users.model.AcmUser;
 
 import org.apache.commons.codec.digest.DigestUtils;
@@ -121,6 +122,7 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
     private AcmOutlookFolderCreatorDao folderCreatorDao;
     private EcmFileService ecmFileService;
     private AcmContainerDao acmContainerDao;
+    private TemplatingEngine templatingEngine;
 
     private OutlookEventPublisher outlookEventPublisher;
 
@@ -381,7 +383,7 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
         }
         else
         {
-            OutlookDTO outlookDTO = retrieveOutlookPassword(authentication);
+            OutlookDTO outlookDTO = retrieveOutlookPasswordInternal(authentication);
             outlookUser = new AcmOutlookUser(authentication.getName(), user.getMail(), outlookDTO.getOutlookPassword());
         }
 
@@ -391,7 +393,7 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
     @Override
     public void sendEmail(EmailWithAttachmentsDTO emailWithAttachmentsDTO, Authentication authentication, AcmUser user) throws Exception
     {
-        OutlookDTO outlookDTO = retrieveOutlookPassword(authentication);
+        OutlookDTO outlookDTO = retrieveOutlookPasswordInternal(authentication);
         AcmOutlookUser outlookUser = new AcmOutlookUser(authentication.getName(), user.getMail(), outlookDTO.getOutlookPassword());
 
         sendEmail(emailWithAttachmentsDTO, authentication, outlookUser);
@@ -406,6 +408,8 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
     private void sendEmail(EmailWithAttachmentsDTO emailWithAttachmentsDTO, Authentication authentication, AcmOutlookUser outlookUser)
             throws Exception
     {
+        emailWithAttachmentsDTO.setTemplatingEngine(getTemplatingEngine());
+
         ExchangeService service = connect(outlookUser);
         EmailMessage emailMessage = new EmailMessage(service);
         emailMessage.setSubject(emailWithAttachmentsDTO.getSubject());
@@ -465,7 +469,7 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
         }
         else
         {
-            OutlookDTO outlookDTO = retrieveOutlookPassword(authentication);
+            OutlookDTO outlookDTO = retrieveOutlookPasswordInternal(authentication);
             outlookUser = new AcmOutlookUser(authentication.getName(), user.getMail(), outlookDTO.getOutlookPassword());
         }
 
@@ -476,7 +480,7 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
     public void sendEmail(EmailWithAttachmentsAndLinksDTO emailWithAttachmentsAndLinksDTO, Authentication authentication, AcmUser user)
             throws Exception
     {
-        OutlookDTO outlookDTO = retrieveOutlookPassword(authentication);
+        OutlookDTO outlookDTO = retrieveOutlookPasswordInternal(authentication);
         AcmOutlookUser outlookUser = new AcmOutlookUser(authentication.getName(), user.getMail(), outlookDTO.getOutlookPassword());
 
         sendEmail(emailWithAttachmentsAndLinksDTO, authentication, outlookUser);
@@ -550,7 +554,7 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
             Authentication authentication, AcmUser user) throws Exception
     {
 
-        OutlookDTO outlookDTO = retrieveOutlookPassword(authentication);
+        OutlookDTO outlookDTO = retrieveOutlookPasswordInternal(authentication);
         AcmOutlookUser outlookUser = new AcmOutlookUser(authentication.getName(), user.getMail(), outlookDTO.getOutlookPassword());
 
         if (getSendFromSystemUser())
@@ -664,7 +668,7 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
             else
             {
                 log.error(String.format("Unexpected number of containers=%d returned for calendarFolderId=%d", containers.size(),
-                        calendarItem.getFolderId()));
+                        Integer.parseInt(calendarItem.getFolderId())));
             }
 
         }
@@ -1103,7 +1107,11 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public OutlookDTO retrieveOutlookPassword(Authentication authentication) throws AcmEncryptionException
     {
+        return retrieveOutlookPasswordInternal(authentication);
+    }
 
+    private OutlookDTO retrieveOutlookPasswordInternal(Authentication authentication) throws AcmEncryptionException
+    {
         OutlookDTO retval = getOutlookPasswordDao().retrieveOutlookPassword(authentication);
 
         // decrypt password and decode it from BASE64
@@ -1163,5 +1171,15 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
     public void setAcmEmailContentGeneratorService(AcmEmailContentGeneratorService acmEmailContentGeneratorService)
     {
         this.acmEmailContentGeneratorService = acmEmailContentGeneratorService;
+    }
+
+    public TemplatingEngine getTemplatingEngine()
+    {
+        return templatingEngine;
+    }
+
+    public void setTemplatingEngine(TemplatingEngine templatingEngine)
+    {
+        this.templatingEngine = templatingEngine;
     }
 }

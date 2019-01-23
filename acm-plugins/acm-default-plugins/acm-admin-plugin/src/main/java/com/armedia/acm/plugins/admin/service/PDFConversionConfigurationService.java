@@ -63,7 +63,7 @@ public class PDFConversionConfigurationService implements ApplicationListener<Co
     @Override
     public void onApplicationEvent(ConfigurationFileChangedEvent configurationFileChangedEvent)
     {
-        if(configurationFileChangedEvent.getConfigFile().getAbsolutePath().equals(propertiesFile))
+        if(configurationFileChangedEvent.getConfigFile().getName().equals(propertiesFile.substring(propertiesFile.lastIndexOf("/") + 1)))
         {
             initBean();
         }

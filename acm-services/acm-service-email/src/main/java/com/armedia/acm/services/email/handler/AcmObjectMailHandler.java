@@ -27,10 +27,11 @@ package com.armedia.acm.services.email.handler;
  * #L%
  */
 
-
+import com.armedia.acm.auth.AuthenticationUtils;
 import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.data.AcmNameDao;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
+import com.armedia.acm.plugins.ecm.model.AcmContainerEntity;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
@@ -47,13 +48,17 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.mail.BodyPart;
 import javax.mail.Message;
 import javax.mail.MessagingException;
+import javax.mail.Multipart;
+import javax.mail.Part;
 import javax.persistence.EntityNotFoundException;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
@@ -95,7 +100,7 @@ public class AcmObjectMailHandler implements ApplicationEventPublisherAware
 
     @Transactional
     public void handle(Message message) throws MessagingException, IllegalAccessException, IllegalArgumentException,
-            InvocationTargetException, NoSuchMethodException, SecurityException
+            InvocationTargetException, NoSuchMethodException, SecurityException, IOException
     {
         if (!enabled)
         {
@@ -149,7 +154,13 @@ public class AcmObjectMailHandler implements ApplicationEventPublisherAware
             exception = e;
         }
 
-        SmtpEmailReceivedEvent event = new SmtpEmailReceivedEvent(message, userId, entity.getId(), entity.getObjectType());
+        if (message.getContent() instanceof Multipart)
+        {
+            uploadAttachments(message, entity, userId);
+        }
+
+        SmtpEmailReceivedEvent event = new SmtpEmailReceivedEvent(message, userId, entity.getId(), entity.getObjectType(),
+                AuthenticationUtils.getUserIpAddress());
         boolean success = (exception == null);
         event.setSucceeded(success);
         eventPublisher.publishEvent(event);
@@ -163,7 +174,7 @@ public class AcmObjectMailHandler implements ApplicationEventPublisherAware
      * @return
      * @throws MessagingException
      */
-    private String extractIdFromSubject(Message message) throws MessagingException
+    public String extractIdFromSubject(Message message) throws MessagingException
     {
         String result = null;
         String subject = message.getSubject();
@@ -180,19 +191,49 @@ public class AcmObjectMailHandler implements ApplicationEventPublisherAware
         return result;
     }
 
-    public void setEcmFileService(EcmFileService ecmFileService)
+    public void uploadAttachments(Message message, AcmObject entity, String userId)
     {
-        this.ecmFileService = ecmFileService;
-    }
+        if (message != null && entity != null)
+        {
+            try
+            {
 
-    public void setAcmFolderService(AcmFolderService acmFolderService)
-    {
-        this.acmFolderService = acmFolderService;
-    }
+                Multipart multipart = (Multipart) message.getContent();
 
-    public void setAuditPropertyEntityAdapter(AuditPropertyEntityAdapter auditPropertyEntityAdapter)
-    {
-        this.auditPropertyEntityAdapter = auditPropertyEntityAdapter;
+                for (int i = 0; i < multipart.getCount(); i++)
+                {
+                    BodyPart bodyPart = multipart.getBodyPart(i);
+                    if (!Part.ATTACHMENT.equalsIgnoreCase(bodyPart.getDisposition()) && StringUtils.isBlank(bodyPart.getFileName()))
+                    {
+                        continue;
+                    }
+
+                    try
+                    {
+                        AcmContainerEntity containerEntity = (AcmContainerEntity) entity;
+                        AcmFolder folder = containerEntity.getContainer().getAttachmentFolder();
+                        try (InputStream is = bodyPart.getInputStream())
+                        {
+                            Authentication auth = new UsernamePasswordAuthenticationToken(userId, "");
+                            getEcmFileService().upload(bodyPart.getFileName(), "attachment", "Document", is, bodyPart.getContentType(),
+                                    bodyPart.getFileName(), auth,
+                                    folder.getCmisFolderId(), entity.getObjectType(), entity.getId());
+
+                        }
+
+                    }
+                    catch (Exception e)
+                    {
+                        log.error("Error processing attachment with name '{}'. Exception msg: '{}' ", bodyPart.getFileName(),
+                                e.getMessage());
+                    }
+                }
+            }
+            catch (IOException | MessagingException e)
+            {
+                log.error("Error processing Multipart message. Exception msg: '{}' ", e.getMessage());
+            }
+        }
     }
 
     public void setObjectIdRegexPattern(String objectIdRegexPattern)
@@ -200,9 +241,49 @@ public class AcmObjectMailHandler implements ApplicationEventPublisherAware
         this.objectIdRegexPattern = objectIdRegexPattern;
     }
 
-    public void setMailDirectory(String mailDirectory)
+    public AcmNameDao getEntityDao()
     {
-        this.mailDirectory = mailDirectory;
+        return entityDao;
+    }
+
+    public EcmFileService getEcmFileService()
+    {
+        return ecmFileService;
+    }
+
+    public void setEcmFileService(EcmFileService ecmFileService)
+    {
+        this.ecmFileService = ecmFileService;
+    }
+
+    public AcmFolderService getAcmFolderService()
+    {
+        return acmFolderService;
+    }
+
+    public void setAcmFolderService(AcmFolderService acmFolderService)
+    {
+        this.acmFolderService = acmFolderService;
+    }
+
+    public AuditPropertyEntityAdapter getAuditPropertyEntityAdapter()
+    {
+        return auditPropertyEntityAdapter;
+    }
+
+    public void setAuditPropertyEntityAdapter(AuditPropertyEntityAdapter auditPropertyEntityAdapter)
+    {
+        this.auditPropertyEntityAdapter = auditPropertyEntityAdapter;
+    }
+
+    public ApplicationEventPublisher getEventPublisher()
+    {
+        return eventPublisher;
+    }
+
+    public boolean isEnabled()
+    {
+        return enabled;
     }
 
     public void setEnabled(boolean enabled)
@@ -210,4 +291,13 @@ public class AcmObjectMailHandler implements ApplicationEventPublisherAware
         this.enabled = enabled;
     }
 
+    public String getMailDirectory()
+    {
+        return mailDirectory;
+    }
+
+    public void setMailDirectory(String mailDirectory)
+    {
+        this.mailDirectory = mailDirectory;
+    }
 }

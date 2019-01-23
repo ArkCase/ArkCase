@@ -55,7 +55,10 @@ import gov.foia.model.FOIARequest;
  * Created by dmiller on 8/9/16.
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = { "classpath:/spring/spring-library-foia-activiti-test.xml" })
+@ContextConfiguration(locations = {
+        "classpath:/spring/spring-library-foia-activiti-test.xml",
+        "classpath:/spring/spring-library-notification-test.xml"
+})
 public class GeneralCounselBusinessProcessIT
 {
     private final String processName = "foia-extension-generalcounsel-process";

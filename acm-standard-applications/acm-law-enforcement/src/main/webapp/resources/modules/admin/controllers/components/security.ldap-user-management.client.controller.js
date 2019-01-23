@@ -69,7 +69,6 @@ angular.module('admin').controller(
                         if (!_.isEmpty($scope.userData.chooseObject)) {
                             var data = {};
                             data.member = selectedObject;
-                            $scope.lastSelectedUser = {};
                             $scope.lastSelectedUser = selectedObject;
                             selectedUser = selectedObject;
                             currentAuthGroups = [];
@@ -168,7 +167,8 @@ angular.module('admin').controller(
                                     $modalInstance.close($scope.data);
                                 };
                             } ],
-                            size: 'sm'
+                            size: 'sm',
+                            backdrop: 'static'
                         });
                     }
 

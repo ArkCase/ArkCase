@@ -305,6 +305,9 @@ public interface EcmFileService
     EcmFile moveFile(Long fileId, Long targetObjectId, String targetObjectType, AcmFolder folder)
             throws AcmUserActionFailedException, AcmObjectNotFoundException, AcmCreateObjectFailedException;
 
+    EcmFile moveFileInArkcase(EcmFile file, AcmFolder targetParentFolder, String targetObjectType)
+            throws AcmUserActionFailedException, AcmObjectNotFoundException, AcmCreateObjectFailedException;
+
     void deleteFile(Long fileId) throws AcmUserActionFailedException, AcmObjectNotFoundException;
 
     void deleteFile(Long fileId, Boolean allVersions) throws AcmUserActionFailedException, AcmObjectNotFoundException;
@@ -312,6 +315,8 @@ public interface EcmFileService
     void deleteCmisObject(CmisObject cmisObject, String cmisRepositoryId) throws Exception;
 
     void deleteFile(Long fileId, Long parentId, String parentType) throws AcmUserActionFailedException, AcmObjectNotFoundException;
+
+    void deleteFileInArkcase(EcmFile file) throws AcmUserActionFailedException, AcmObjectNotFoundException;
 
     EcmFile renameFile(Long fileId, String newFileName) throws AcmUserActionFailedException, AcmObjectNotFoundException;
 
@@ -352,5 +357,4 @@ public interface EcmFileService
      * @return whether the delete was successful
      */
     boolean deleteTempFile(String uniqueFileName);
-
 }

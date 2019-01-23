@@ -2,8 +2,21 @@
 
 angular.module('cases').controller(
         'RequestInfo.ReferencesController',
-        [ '$scope', '$stateParams', '$modal', '$timeout', 'UtilService', 'ConfigService', 'Case.InfoService', 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'ObjectAssociation.Service', 'MessageService',
-                function($scope, $stateParams, $modal, $timeout, Util, ConfigService, CaseInfoService, HelperUiGridService, HelperObjectBrowserService, ObjectAssociationService, MessageService) {
+        [
+                '$scope',
+                '$stateParams',
+                '$modal',
+                '$timeout',
+                'UtilService',
+                'ConfigService',
+                'Case.InfoService',
+                'Helper.UiGridService',
+                'Helper.ObjectBrowserService',
+                'ObjectAssociation.Service',
+                'MessageService',
+                'ObjectService',
+                'Object.LookupService',
+                function($scope, $stateParams, $modal, $timeout, Util, ConfigService, CaseInfoService, HelperUiGridService, HelperObjectBrowserService, ObjectAssociationService, MessageService, ObjectService, ObjectLookupService) {
 
                     new HelperObjectBrowserService.Component({
                         scope: $scope,
@@ -79,6 +92,7 @@ angular.module('cases').controller(
                             templateUrl: 'modules/request-info/views/components/reference-modal.client.view.html',
                             controller: 'RequestInfo.ReferenceModalController',
                             size: 'lg',
+                            backdrop: 'static',
                             resolve: {
                                 $filter: function() {
                                     var filter = $scope.modalConfig.searchFilter + "&-id:" + $scope.objectInfo.id + "-CASE_FILE";
@@ -99,27 +113,40 @@ angular.module('cases').controller(
                         modalInstance.result.then(function(chosenReference) {
                             var parent = $scope.objectInfo;
                             if (chosenReference) {
-                                var association = ObjectAssociationService.createAssociationInfo(parent.id, 'CASE_FILE', parent.title, parent.caseNumber, chosenReference.object_id_s, chosenReference.object_type_s, chosenReference.title_parseable, chosenReference.name, 'REFERENCE', 'REFERENCE');
+                                if (chosenReference.object_type_s == "REQUEST") {
+                                    chosenReference.object_type_s = ObjectService.ObjectTypes.CASE_FILE;
+                                }
+                                var association = ObjectAssociationService.createAssociationInfo(parent.id, ObjectService.ObjectTypes.CASE_FILE, parent.title, parent.caseNumber, chosenReference.object_id_s, chosenReference.object_type_s, chosenReference.title_parseable, chosenReference.name,
+                                        'REFERENCE', 'REFERENCE');
                                 ObjectAssociationService.saveObjectAssociation(association).then(function(payload) {
                                     //success
+                                    $timeout(function() {
+                                        refresh();
+                                    }, 2000);
                                     //append new entity as last item in the grid
-                                    var rowEntity = {
-                                        object_id_s: payload.associationId,
-                                        target_object: {
-                                            name: chosenReference.name,
-                                            title_parseable: chosenReference.title_parseable,
-                                            parent_ref_s: chosenReference.parent_ref_s,
-                                            modified_date_tdt: chosenReference.modified_date_tdt,
-                                            assignee_full_name_lcs: chosenReference.assignee_full_name_lcs,
-                                            object_type_s: chosenReference.object_type_s,
-                                            status_lcs: chosenReference.status_lcs
-                                        },
-                                        target_type_s: payload.targetType,
-                                        target_id_s: payload.targetId
-                                    };
-
-                                    $scope.gridOptions.data.push(rowEntity);
-
+                                    ObjectLookupService.getObjectTypes().then(function(value) {
+                                        var referenceType = _.find(value, {
+                                            key: "CASE_FILE"
+                                        });
+                                        if (chosenReference.object_type_s == ObjectService.ObjectTypes.CASE_FILE) {
+                                            chosenReference.object_type_s = referenceType.description.toUpperCase();
+                                        }
+                                        var rowEntity = {
+                                            object_id_s: payload.associationId,
+                                            target_object: {
+                                                name: chosenReference.name,
+                                                title_parseable: chosenReference.title_parseable,
+                                                parent_ref_s: chosenReference.parent_ref_s,
+                                                modified_date_tdt: chosenReference.modified_date_tdt,
+                                                assignee_full_name_lcs: chosenReference.assignee_full_name_lcs,
+                                                object_type_s: chosenReference.object_type_s,
+                                                status_lcs: chosenReference.status_lcs
+                                            },
+                                            target_type_s: payload.targetType,
+                                            target_id_s: payload.targetId
+                                        };
+                                        $scope.gridOptions.data.push(rowEntity);
+                                    });
                                 }, function(errorResponse) {
                                     MessageService.error(errorResponse.data);
                                 });
@@ -132,8 +159,20 @@ angular.module('cases').controller(
                     };
 
                     function refreshGridData(objectId) {
-                        ObjectAssociationService.getObjectAssociations(objectId, 'CASE_FILE', null).then(function(response) {
-                            $scope.gridOptions.data = response.response.docs;
+                        ObjectAssociationService.getObjectAssociations(objectId, ObjectService.ObjectTypes.CASE_FILE, null).then(function(response) {
+                            ObjectLookupService.getObjectTypes().then(function(value) {
+                                var referenceType = _.find(value, {
+                                    key: "CASE_FILE"
+                                });
+                                $scope.refType = referenceType;
+                                response.response.docs = response.response.docs.map(function(item) {
+                                    if (item.target_object.object_type_s == "CASE_FILE") {
+                                        item.target_object.object_type_s = $scope.refType.description.toUpperCase();
+                                    }
+                                    return item;
+                                });
+                                $scope.gridOptions.data = response.response.docs;
+                            });
                         });
                     }
 
@@ -141,11 +180,18 @@ angular.module('cases').controller(
                         var id = Util.goodMapValue(rowEntity, "object_id_s", 0);
                         ObjectAssociationService.deleteAssociationInfo(id).then(function(data) {
                             //success
+                            $timeout(function() {
+                                refresh();
+                            }, 2000);
                             //remove it from the grid
                             _.remove($scope.gridOptions.data, function(row) {
                                 return row === rowEntity;
                             });
                         });
+                    };
+
+                    var refresh = function() {
+                        $scope.$emit('report-object-refreshed', $scope.objectInfo.id ? $scope.objectInfo.id : $stateParams.id);
                     };
 
                 } ]);

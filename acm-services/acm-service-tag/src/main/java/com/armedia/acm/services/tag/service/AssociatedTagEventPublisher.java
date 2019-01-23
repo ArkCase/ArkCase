@@ -28,6 +28,7 @@ package com.armedia.acm.services.tag.service;
  */
 
 import com.armedia.acm.auth.AcmAuthenticationDetails;
+import com.armedia.acm.auth.AuthenticationUtils;
 import com.armedia.acm.services.tag.model.AcmAssociatedTag;
 import com.armedia.acm.services.tag.model.AcmAssociatedTagCreatedEvent;
 import com.armedia.acm.services.tag.model.AcmAssociatedTagDeletedEvent;
@@ -71,7 +72,8 @@ public class AssociatedTagEventPublisher implements ApplicationEventPublisherAwa
         {
             log.debug("Publishing an associated tag deleted event.");
         }
-        AcmAssociatedTagDeletedEvent associatedTagDeletedEvent = new AcmAssociatedTagDeletedEvent(source, auth.getName());
+        AcmAssociatedTagDeletedEvent associatedTagDeletedEvent = new AcmAssociatedTagDeletedEvent(source, auth.getName(),
+                AuthenticationUtils.getUserIpAddress());
         associatedTagDeletedEvent.setSucceeded(succeeded);
 
         eventPublisher.publishEvent(associatedTagDeletedEvent);

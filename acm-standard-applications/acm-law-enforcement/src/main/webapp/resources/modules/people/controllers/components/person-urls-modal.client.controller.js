@@ -1,4 +1,4 @@
-angular.module('people').controller('People.UrlsModalController', [ '$scope', '$translate', '$modalInstance', 'Object.LookupService', 'params', function($scope, $translate, $modalInstance, ObjectLookupService, params) {
+angular.module('people').controller('People.UrlsModalController', [ '$scope', '$translate', '$modalInstance', 'Object.LookupService', 'params', 'Mentions.Service', function($scope, $translate, $modalInstance, ObjectLookupService, params, MentionsService) {
 
     ObjectLookupService.getContactMethodTypes().then(function(contactMethodTypes) {
         $scope.urlTypes = _.find(contactMethodTypes, {
@@ -12,6 +12,12 @@ angular.module('people').controller('People.UrlsModalController', [ '$scope', '$
     $scope.isDefault = params.isDefault;
     $scope.hideNoField = params.isDefault;
 
+    // --------------  mention --------------
+    $scope.params = {
+        emailAddresses: [],
+        usersMentioned: []
+    };
+
     $scope.onClickCancel = function() {
         $modalInstance.dismiss('Cancel');
     };
@@ -20,7 +26,9 @@ angular.module('people').controller('People.UrlsModalController', [ '$scope', '$
         $modalInstance.close({
             url: $scope.url,
             isDefault: $scope.isDefault,
-            isEdit: $scope.isEdit
+            isEdit: $scope.isEdit,
+            emailAddresses: $scope.params.emailAddresses,
+            usersMentioned: $scope.params.usersMentioned
         });
     }
 

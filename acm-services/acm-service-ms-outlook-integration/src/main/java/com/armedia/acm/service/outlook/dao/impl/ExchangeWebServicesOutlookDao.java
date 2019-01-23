@@ -139,12 +139,11 @@ public class ExchangeWebServicesOutlookDao implements OutlookDao, ApplicationLis
             return (ExchangeService) found.get();
         }
 
-        ExchangeService service = new ExchangeService(getExchangeVersion());
         ExchangeCredentials credentials = new WebCredentials(user.getEmailAddress(), user.getOutlookPassword());
-        service.setCredentials(credentials);
 
-        try
+        try (ExchangeService service = new ExchangeService(getExchangeVersion()))
         {
+            service.setCredentials(credentials);
             if (isAutodiscoveryEnabled())
             {
                 service.autodiscoverUrl(user.getEmailAddress(), redirectionUrl -> true);

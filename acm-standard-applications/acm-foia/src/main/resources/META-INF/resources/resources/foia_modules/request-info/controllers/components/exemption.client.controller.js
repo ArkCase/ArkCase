@@ -109,4 +109,13 @@ angular.module('request-info').controller('RequestInfo.ExemptionController',
                     });
                 });
             }
+
+            $scope.checkCodesDescription = function(){
+                $modal.open({
+                    size: 'lg',
+                    templateUrl: 'modules/cases/views/components/case-exemption-codes-description-modal.client.view.html',
+                    controller: 'Cases.ExemptionCodesDescriptionModalController',
+                    backdrop: 'static'
+                })
+            }
         } ]);

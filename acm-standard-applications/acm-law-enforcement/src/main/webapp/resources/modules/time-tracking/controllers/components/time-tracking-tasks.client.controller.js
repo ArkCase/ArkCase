@@ -40,6 +40,12 @@ angular.module('time-tracking').controller(
                             gridHelper.addButton(updatedConfig, "delete", null, null, "isDeleteDisabled");
                         });
 
+                        //default (init) sorting of tasks grid
+                        $scope.sort = {
+                            by: "create_tdt",
+                            dir: "desc"
+                        };
+                        
                         componentHelper.doneConfig(config);
                     };
 
@@ -54,9 +60,9 @@ angular.module('time-tracking').controller(
                             ObjectTaskService.queryChildTasks(ObjectService.ObjectTypes.TIMESHEET, currentObjectId, Util.goodValue($scope.start, 0), Util.goodValue($scope.pageSize, 10), Util.goodValue($scope.sort.by), Util.goodValue($scope.sort.dir)).then(function(data) {
                                 var tasks = data.response.docs;
                                 angular.forEach(tasks, function(task) {
-                                    //calculate to show alert icons if task is in overdue or deadline is approaching
-                                    task.isOverdue = TaskAlertsService.calculateOverdue(new Date(task.due_tdt));
-                                    task.isDeadline = TaskAlertsService.calculateDeadline(new Date(task.due_tdt));
+                                    //calculate to show alert icons if task is in overdue or deadline is approaching if the status of the task is in different state than CLOSED.
+                                    task.isOverdue = TaskAlertsService.calculateOverdue(new Date(task.due_tdt)) && !(task.status_s === "CLOSED");
+                                    task.isDeadline = TaskAlertsService.calculateDeadline(new Date(task.due_tdt)) && !(task.status_s === "CLOSED");
                                 });
                                 $scope.gridOptions = $scope.gridOptions || {};
                                 $scope.gridOptions.data = tasks;

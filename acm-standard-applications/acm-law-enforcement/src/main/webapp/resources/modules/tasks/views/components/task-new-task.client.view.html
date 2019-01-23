@@ -24,22 +24,22 @@
                     </label>
                     <select ng-model="config.data.attachedToObjectType" ng-change="updateAssocParentType()"
                             ng-options="attachedToObjectType.id as attachedToObjectType.name for attachedToObjectType in config.attachedToObjectType"
-                            class="form-control input-md" ng-click="inputClear()">
+                            class="form-control input-md" ng-click="inputClear()" ng-disabled="modalParams.parentType">
                     </select>
                 </div>
                 <div class="col-sm-4 form-group">
                     <label for="associateNumber" translate> tasks.newTask.associateNumber.label </label>
                     <input type="text" id="associateNumber" ng-required="isAssocType" ng-model="config.data.attachedToObjectName"
                             class="input-md form-control" placeholder="{{ 'tasks.newTask.associateNumber.placeholder' | translate }}"
-                            id="complaintId" ng-disabled="config.data.attachedToObjectType==='' " ng-click="objectSearch()">
+                            id="complaintId" ng-disabled="config.data.attachedToObjectType==='' || modalParams.parentObject" ng-click="objectSearch()">
                 </div>
             </div>
             <div class="row">
                 <div class="col-sm-12 form-group">
-                    <label for="subject" translate> tasks.newTask.subject.label </label>
+                    <label translate> tasks.newTask.subject.label </label>
                     <span class="required-asterisk">*</span>
-                    <input type="text" id="subject" ng-required="true" ng-model="config.data.title" name="subject"
-                            class="input-md form-control" placeholder="{{ 'tasks.newTask.subject.label'  | translate }}" id="subject">
+                    <mention-input ng-model="config.data.title" params="params"
+                            placeholder="{{ 'tasks.newTask.subject.label' | translate }}"></mention-input>
                 </div>
             </div>
 
@@ -47,16 +47,12 @@
                 <div class="col-sm-4 form-group">
                     <label translate> tasks.newTask.taskStartDate.label </label>
                     <span class="required-asterisk">*</span>
-                    <div style="margin-top: 10px;">
-                        <date-time-picker data="config.data.taskStartDate" property="startDate" date-picker-id="comboDate1" on-after-save="onComboAfterSave(dateType)"></date-time-picker>
-                    </div>
+                    <date-time-picker data="config.data.taskStartDate" property="startDate" date-picker-id="comboDate1"></date-time-picker>
                 </div>
                 <div class="col-sm-4 form-group">
                     <label translate> tasks.newTask.dueDate.label </label>
                     <span class="required-asterisk">*</span>
-                    <div style="margin-top: 10px;">
-                        <date-time-picker data="config.data.dueDate" property="dueDate" date-picker-id="comboDate2" on-after-save="onComboAfterSave(dateType)"></date-time-picker>
-                    </div>
+                    <date-time-picker data="config.data.dueDate" property="dueDate" date-picker-id="comboDate2" ></date-time-picker>
                 </div>
                 <div class="form-group col-sm-2" ng-if="taskType === 'ACM_TASK'">
                     <label class="control-label">{{ 'tasks.newTask.priority.label' | translate }}
@@ -84,9 +80,9 @@
                 </div>
             </div>
             <div class="row" ng-if="taskType === 'ACM_TASK'">
-                <div class="col-sm-12 form-group">
+                <div class="col-sm-12 form-group remove-margin-bottom-from-summernote">
                     <label translate> tasks.newTask.notes.label </label>
-                    <summernote config="options" ng-model="config.data.details"></summernote>
+                    <mention-summernote ng-model="config.data.details" params="paramsSummernote"></mention-summernote>
                 </div>
             </div>
             <div class="row" ng-if="taskType === 'REVIEW_DOCUMENT' && documentsToReview">

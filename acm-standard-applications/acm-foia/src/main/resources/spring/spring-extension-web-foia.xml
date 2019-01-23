@@ -31,6 +31,10 @@
             <beans:property name="queuesTimeToCompleteService" ref="queuesTimeToCompleteService"/>
         </beans:bean>
 
+        <beans:bean id="foiaConfigurationAPIController" class="gov.foia.web.api.FoiaConfigurationAPIController">
+            <beans:property name="foiaConfigurationService" ref="foiaConfigurationService"/>
+        </beans:bean>
+
         <beans:bean id="billingInvoiceEmailSenderAPIController" class="gov.foia.web.api.BillingInvoiceEmailSenderAPIController">
             <beans:property name="billingInvoiceEmailSenderService" ref="billingInvoiceEmailSenderService"/>
         </beans:bean>
@@ -41,6 +45,14 @@
 
         <beans:bean id="notificationGroupEmailSenderAPIController" class="gov.foia.web.api.NotificationGroupEmailSenderAPIController">
             <beans:property name="notificationGroupEmailSenderService" ref="notificationGroupEmailSenderService"/>
+        </beans:bean>
+
+        <beans:bean id="requestResponseFolderAPIController" class="gov.foia.web.api.RequestResponseFolderAPIController">
+            <beans:property name="requestResponseFolderService" ref="requestResponseFolderService"/>
+        </beans:bean>
+
+        <beans:bean id="setReviewRedactionStatusAPIController" class="gov.foia.web.api.SetReviewRedactionStatusAPIController">
+            <beans:property name="foiaEcmFileService" ref="ecmFileService"/>
         </beans:bean>
     </beans:beans>
 </beans:beans>

@@ -160,5 +160,32 @@ angular.module('admin').factory('Admin.EmailTemplatesService', [ '$resource', 'U
         });
     };
 
+    /**
+     * @ngdoc method
+     * @name saveEmailReceiverConfiguration
+     * @methodOf services:Admin.EmailTemplatesService
+     *
+     * @description
+     * Performs saving of the email receiver configuration.
+     *
+     * @param {Object} emailConf - the configuration that should be saved
+     *
+     * @returns {Object} http promise
+     */
+    Service.saveEmailReceiverConfiguration = function(emailConf) {
+        return $http({
+            url: 'api/latest/plugin/admin/email/receiver/configuration',
+            method: 'PUT',
+            data: emailConf
+        });
+    };
+
+    Service.getEmailReceiverConfiguration = function() {
+        return $http({
+            url: 'api/latest/plugin/admin/email/receiver/configuration',
+            method: 'GET',
+        });
+    };
+
     return Service;
 } ]);

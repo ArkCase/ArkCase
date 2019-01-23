@@ -458,5 +458,46 @@ LANGUAGE plpgsql;
             constraintName="fk_foia_file_exemption_code_id" referencedTableName="acm_file" referencedColumnNames="cm_file_id"
             deferrable="${deferrable}" initiallyDeferred="${initially.deferred}"/>
     </changeSet>
+
+    <changeSet id="24-foia-file-version-review-status-column" author="marko.stojanoski" dbms="oracle,mssql,postgres"
+               logicalFilePath="/ddl/tables/foia-request-db-tables-1.0.xml">
+        <addColumn tableName="acm_file_version">
+            <column name="fo_review_status" type="VARCHAR(512)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet id="24-foia-file-version-review-status-column" author="marko.stojanoski" dbms="mysql"
+               logicalFilePath="/ddl/tables/foia-request-db-tables-1.0.xml">
+        <addColumn tableName="acm_file_version">
+            <column name="fo_review_status" type="TEXT"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="25-foia-file-version-redaction-status-column" author="marko.stojanoski" dbms="oracle,mssql,postgres"
+               logicalFilePath="/ddl/tables/foia-request-db-tables-1.0.xml">
+        <addColumn tableName="acm_file_version">
+            <column name="fo_redaction_status" type="VARCHAR(512)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet id="25-foia-file-version-redaction-status-column" author="marko.stojanoski" dbms="mysql"
+               logicalFilePath="/ddl/tables/foia-request-db-tables-1.0.xml">
+        <addColumn tableName="acm_file_version">
+            <column name="fo_redaction_status" type="TEXT"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="26-update-ecm-file-class-name-corrected" author="marko.stojanoski"
+               logicalFilePath="/ddl/tables/foia-request-db-tables-1.0.xml">
+        <update tableName="acm_file_version">
+            <column name="cm_class_name" value="gov.foia.model.FOIAEcmFileVersion"/>
+            <where>cm_class_name = 'gov.foia.model.EcmFileVersion'</where>
+        </update>
+    </changeSet>
+    <changeSet id="27-update-ecm-file-class-name-where-null" author="marko.stojanoski"
+               logicalFilePath="/ddl/tables/foia-request-db-tables-1.0.xml">
+        <update tableName="acm_file_version">
+            <column name="cm_class_name" value="gov.foia.model.FOIAEcmFileVersion"/>
+            <where>cm_class_name is null</where>
+        </update>
+    </changeSet>
 </databaseChangeLog>
 

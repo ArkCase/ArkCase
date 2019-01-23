@@ -32,8 +32,7 @@ import com.armedia.acm.core.AcmUserAuthorityContext;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 
-import java.util.Collection;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class AcmAuthentication implements Authentication, AcmUserAuthorityContext
@@ -45,6 +44,19 @@ public class AcmAuthentication implements Authentication, AcmUserAuthorityContex
     private final String name;
     private Object details;
     private boolean authenticated;
+
+    public AcmAuthentication(Authentication authentication)
+    {
+        AcmGrantedAuthoritiesMapper acmGrantedAuthoritiesMapper = new AcmGrantedAuthoritiesMapper();
+        acmGrantedAuthoritiesMapper.setActiveMapping(new HashMap<String, List<String>>());
+        this.authorities = acmGrantedAuthoritiesMapper.mapAuthorities(authentication.getAuthorities());
+        this.credentials = authentication.getCredentials();
+        this.principal = authentication.getPrincipal();
+        this.name = authentication.getName();
+        this.details = authentication.getDetails();
+        this.authenticated = authentication.isAuthenticated();
+        this.userIdentifier = 0L;
+    }
 
     public AcmAuthentication(Collection<AcmGrantedAuthority> authorities,
             Object credentials,

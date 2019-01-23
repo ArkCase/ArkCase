@@ -2,7 +2,7 @@
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-    <import resource="file:${user.home}/.arkcase/acm/spring/spring-config-armedia-ldap.xml"/>
+    <import resource="file:${user.home}/.arkcase/acm/spring/spring-config-arkcase-ldap.xml"/>
 
     <import resource="file:${user.home}/.arkcase/acm/encryption/spring-properties-encryption.xml"/>
 

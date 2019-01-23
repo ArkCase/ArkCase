@@ -83,7 +83,9 @@
             "priority": "Priority",
             "due": "Due Date",
             "status": "Status"
-        }
+        },
+        "table.deadline.tooltip": "Deadline",
+        "table.overdue.tooltip": "Overdue"
     },
     "timeTracking.comp.newTimesheet": {
         "title": "Time Tracking",

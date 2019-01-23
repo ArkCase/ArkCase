@@ -16,6 +16,7 @@ angular.module('services').factory('Util.DateService', [ '$translate', 'UtilServ
         defaultDateFormat: $translate.instant("common.defaultDateFormat"),
         defaultTimeFormat: $translate.instant("common.defaultTimeFormat"),
         defaultDateTimeFormat: $translate.instant("common.defaultDateTimeFormat"),
+        defaultDateLongTimeFormat: $translate.instant("common.defaultDateLongTimeFormat"),
         defaultDatePickerFormat: $translate.instant("common.defaultDatePickerFormat"),
         defaultDateUIFormat: $translate.instant("common.defaultDateUIFormat")
 
@@ -66,12 +67,29 @@ angular.module('services').factory('Util.DateService', [ '$translate', 'UtilServ
                 return replacedWith;
             }
         }
-        //, dateToIso: function(d, replacement) {
-        //    if (Util.isEmpty(d)) {
-        //        return Util.goodValue(d, replacement);
-        //    }
-        //    return moment(d).format("YYYY-MM-DDTHH:mm:ss.SSSZZ");
-        //}
+        ,
+        /**
+         * @ngdoc method
+         * @name dateTimeToIso
+         * @methodOf services:Util.DateService
+         *
+         * @description
+         * Converts a date object into an DateTimeFormat.ISO.DATE_TIME format string
+         *
+         * @param {Date} date object
+         * @param {Object} replacement (Optional)Object or value used if 'val' is empty. If not provided, it defaults to ""
+         *
+         * @Returns {String} ISO formatted date string YYYY-MM-DDTHH:mm:ss
+         */
+        dateTimeToIso: function(date, replacement) {
+            var replacedWith = (undefined === replacement) ? "" : replacement;
+
+            if (date && date instanceof Date) {
+                return moment(date).format("YYYY-MM-DDTHH:mm:ss");
+            } else {
+                return replacedWith;
+            }
+        }
 
         /**
          * @ngdoc method
@@ -94,6 +112,48 @@ angular.module('services').factory('Util.DateService', [ '$translate', 'UtilServ
                 return moment(isoDateTime).toDate();
             } else {
                 return replacedWith;
+            }
+        }
+
+        /**
+         * @ngdoc method
+         * @name dateToIsoDateTime
+         * @methodOf services:Util.DateService
+         *
+         * @description
+         * Converts a date object into an ISO format string
+         *
+         * @param {String} isoDateTime ISO formatted date string YYYY-MM-DDTHH:mm:ss.sss
+         *
+         * @Returns {String} String
+         */
+        ,
+        dateToIsoDateTime: function(isoDateTime) {
+            if (!Util.isEmpty(isoDateTime)) {
+                return moment.utc(isoDateTime).format("YYYY-MM-DDTHH:mm:ss.sss");
+            } else {
+                return "";
+            }
+        }
+
+        /**
+         * @ngdoc method
+         * @name isoToLocalDateTime
+         * @methodOf services:Util.DateService
+         *
+         * @description
+         * Converts a ISO format string to LocalDateTime
+         *
+         * @param {String} isoDateTime ISO formatted date string YYYY-MM-DDTHH:mm:ss
+         *
+         * @Returns {String} String
+         */
+        ,
+        isoToLocalDateTime: function (isoDateTime) {
+            if (!Util.isEmpty(isoDateTime)) {
+                return moment.utc(isoDateTime).local().format("YYYY-MM-DDTHH:mm:ss");
+            } else {
+                return "";
             }
         }
 
@@ -189,6 +249,37 @@ angular.module('services').factory('Util.DateService', [ '$translate', 'UtilServ
             currentTimeZoneOffsetInMinutes = Math.abs(currentTimeZoneOffsetInMinutes % 60);
             var currentTimeZoneOffset = "UTC" + currentTimeZoneOffsetInHours + ":" + currentTimeZoneOffsetInMinutes;
             return currentTimeZoneOffset;
+        }
+
+        /**
+         * @ngdoc method
+         * @name getTimeZoneOffsetTime
+         * @methodOf services:Util.DateService
+         *
+         * @description
+         * Get user's time difference between UTC time and local time
+         *
+         * @Returns {String} (eg: -02:00)
+         */
+        ,
+        getTimeZoneOffsetTime: function () {
+            var currentTimeZoneOffsetInMinutes = new Date().getTimezoneOffset();
+            var currentTimeZoneOffsetInHours = Math.floor(currentTimeZoneOffsetInMinutes / 60);
+            currentTimeZoneOffsetInMinutes = Math.abs(currentTimeZoneOffsetInMinutes % 60);
+            if (currentTimeZoneOffsetInMinutes < 10) {
+                currentTimeZoneOffsetInMinutes += "0";
+            }
+            if (currentTimeZoneOffsetInHours > 0 && currentTimeZoneOffsetInHours < 10) {
+                currentTimeZoneOffsetInHours = "-0" + currentTimeZoneOffsetInHours;
+            }
+            else if (currentTimeZoneOffsetInHours > 0 && currentTimeZoneOffsetInHours > 10 || currentTimeZoneOffsetInHours < -10) {
+                currentTimeZoneOffsetInHours *= -1;
+            }
+            else if (currentTimeZoneOffsetInHours < 0 && currentTimeZoneOffsetInHours > -10) {
+                currentTimeZoneOffsetInHours = "+0" + currentTimeZoneOffsetInHours * -1;
+            }
+            var currentTimeZoneOffsetTime = currentTimeZoneOffsetInHours + ":" + currentTimeZoneOffsetInMinutes;
+            return currentTimeZoneOffsetTime;
         }
 
         /**

@@ -91,8 +91,18 @@ public class EcmFileDao extends AcmAbstractDao<EcmFile>
     {
         if (excludeDocumentTypes == null)
             excludeDocumentTypes = new LinkedList<>();
-        String jpql = "UPDATE EcmFile e SET e.container=:containerTo, e.modified=:modifiedDate " +
-                "WHERE e.container = :containerFrom" + (excludeDocumentTypes.isEmpty() ? "" : " AND e.fileType NOT IN :fileTypes");
+        String jpql;
+        if (excludeDocumentTypes.isEmpty())
+        {
+            jpql = "UPDATE EcmFile e SET e.container=:containerTo, e.modified=:modifiedDate " +
+                    "WHERE e.container = :containerFrom";
+        }
+        else
+        {
+            jpql = "UPDATE EcmFile e SET e.container=:containerTo, e.modified=:modifiedDate " +
+                    "WHERE e.container = :containerFrom" +
+                    " AND e.fileType NOT IN :fileTypes";
+        }
         Query query = getEm().createQuery(jpql);
         query.setParameter("containerFrom", containerFrom);
         query.setParameter("containerTo", containerTo);
@@ -201,7 +211,7 @@ public class EcmFileDao extends AcmAbstractDao<EcmFile>
         {
             LOG.debug(
                     "Cannot find single EcmFile for containerObjectType=[{}], containerObjectId=[{}], cmisRepositoryId=[{}] and fileType=[{}]",
-                    parentObjectType, parentObjectId, targetFolderCmisId, fileType, e);
+                    parentObjectType, parentObjectId, targetFolderCmisId, fileType);
         }
 
         return file;

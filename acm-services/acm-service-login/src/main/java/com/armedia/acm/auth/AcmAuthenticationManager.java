@@ -40,6 +40,7 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DefaultAuthenticationEventPublisher;
+import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.authentication.ProviderNotFoundException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -61,90 +62,102 @@ public class AcmAuthenticationManager implements AuthenticationManager
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException
     {
-        String principal = authentication.getName();
-
-        Map<String, AuthenticationProvider> providerMap = getSpringContextHolder().getAllBeansOfType(AuthenticationProvider.class);
-        Authentication providerAuthentication = null;
-        Exception lastException = null;
-        for (Map.Entry<String, AuthenticationProvider> providerEntry : providerMap.entrySet())
+        try
         {
-            try
+            String principal = authentication.getName();
+
+            Map<String, AuthenticationProvider> providerMap = getSpringContextHolder().getAllBeansOfType(AuthenticationProvider.class);
+            Authentication providerAuthentication = null;
+            Exception lastException = null;
+            for (Map.Entry<String, AuthenticationProvider> providerEntry : providerMap.entrySet())
             {
-                if (providerEntry.getValue() instanceof AcmLdapAuthenticationProvider)
+                try
                 {
-                    if (principal.isEmpty())
+                    if (providerEntry.getValue() instanceof AcmLdapAuthenticationProvider)
                     {
-                        throw new BadCredentialsException("Empty Username");
+                        if (principal.isEmpty())
+                        {
+                            throw new BadCredentialsException("Empty Username");
+                        }
+                        AcmLdapAuthenticationProvider provider = (AcmLdapAuthenticationProvider) providerEntry.getValue();
+                        String userDomain = provider.getLdapSyncService().getLdapSyncConfig().getUserDomain();
+                        if (principal.endsWith(userDomain))
+                        {
+                            providerAuthentication = provider.authenticate(authentication);
+                        }
                     }
-                    AcmLdapAuthenticationProvider provider = (AcmLdapAuthenticationProvider) providerEntry.getValue();
-                    String userDomain = provider.getLdapSyncService().getLdapSyncConfig().getUserDomain();
-                    if (principal.endsWith(userDomain))
+                    else
                     {
-                        providerAuthentication = provider.authenticate(authentication);
+                        providerAuthentication = providerEntry.getValue().authenticate(authentication);
+                    }
+
+                    if (providerAuthentication != null)
+                    {
+                        break;
                     }
                 }
+                catch (Exception ae)
+                {
+                    lastException = ae;
+                }
+            }
+
+            if (providerAuthentication != null)
+            {
+                // Spring Security publishes an authentication success event all by itself, so we do not have to raise
+                // one here.
+                return getAcmAuthentication(providerAuthentication);
+            }
+            if (lastException != null)
+            {
+                AuthenticationException ae;
+                if (lastException instanceof ProviderNotFoundException)
+                {
+                    ae = new NoProviderFoundException("Authentication problem. Please contact your administrator.");
+                }
+                else if (lastException instanceof BadCredentialsException)
+                {
+                    if (getUserDao().isUserPasswordExpired(authentication.getName()))
+                    {
+                        ae = new AuthenticationServiceException(
+                                "Your password has expired! An email with reset password link was sent to you.", lastException);
+                    }
+                    else
+                    {
+                        ae = new AuthenticationServiceException(ExceptionUtils.getRootCauseMessage(lastException), lastException);
+                    }
+
+                }
+
                 else
                 {
-                    providerAuthentication = providerEntry.getValue().authenticate(authentication);
+                    ae = ExceptionUtils.getRootCauseMessage(lastException).contains("UnknownHostException")
+                            ? new AuthenticationServiceException(
+                                    "There was an unknown error in connecting with the authentication services!", lastException)
+                            : new AuthenticationServiceException(ExceptionUtils.getRootCauseMessage(lastException),
+                                    lastException);
                 }
-
-                if (providerAuthentication != null)
-                {
-                    break;
-                }
-            }
-            catch (Exception ae)
-            {
-                lastException = ae;
+                getAuthenticationEventPublisher().publishAuthenticationFailure(ae, authentication);
+                log.debug("Detailed exception: ", lastException);
+                throw ae;
             }
         }
-
-        if (providerAuthentication != null)
+        catch (RuntimeException e)
         {
-            // Spring Security publishes an authentication success event all by itself, so we do not have to raise
-            // one here.
-            return getAcmAuthentication(providerAuthentication);
+            if (e instanceof NoProviderFoundException)
+                throw e;
+            throw new InternalAuthenticationServiceException("Unknown server error", e);
         }
-        if (lastException != null)
-        {
-            AuthenticationException ae;
-            if (lastException instanceof ProviderNotFoundException)
-            {
-                ae = new NoProviderFoundException("Authentication problem. Please contact your administrator.");
-            }
-            else if (lastException instanceof BadCredentialsException)
-            {
-                if (getUserDao().isUserPasswordExpired(authentication.getName()))
-                {
-                    ae = new AuthenticationServiceException(
-                            "Your password has expired! An email with reset password link was sent to you.", lastException);
-                }
-                else
-                {
-                    ae = new AuthenticationServiceException(ExceptionUtils.getRootCauseMessage(lastException), lastException);
-                }
-
-            }
-            else
-            {
-                ae = ExceptionUtils.getRootCauseMessage(lastException).contains("UnknownHostException")
-                        ? new AuthenticationServiceException(
-                                "There was an unknown error in connecting with the authentication services!", lastException)
-                        : new AuthenticationServiceException(ExceptionUtils.getRootCauseMessage(lastException), lastException);
-            }
-            getAuthenticationEventPublisher().publishAuthenticationFailure(ae, authentication);
-            log.debug("Detailed exception: ", lastException);
-            throw ae;
-        }
-
-        // didn't get an exception, or an authentication either, so we can throw a provider not found exception, since
+        // didn't get an exception, or an authentication either, so we can throw a provider not found exception,
+        // since
         // either there are no providers, or no providers can handle the incoming authentication
-
         throw new NoProviderFoundException("Authentication problem. Please contact your administrator.");
+
     }
 
     public AcmAuthentication getAcmAuthentication(Authentication providerAuthentication)
     {
+        log.info("Checking the authenticated user: [{}] in system", providerAuthentication.getName());
         AcmUser user = getUserDao().findByUserId(providerAuthentication.getName());
 
         if (user == null)

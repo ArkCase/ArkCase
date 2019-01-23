@@ -41,6 +41,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by armdev on 4/8/15.
@@ -70,7 +71,14 @@ public interface SaveCaseService
             IOException;
 
     @Transactional
-    default CaseFile saveCase(CaseFile in, Authentication auth, String ipAddress, SaveCaseServiceCaller caller) throws PipelineProcessException
+    CaseFile saveCase(CaseFile casefile, Map<String, List<MultipartFile>> filesMap, Authentication authentication, String ipAddress)
+            throws AcmUserActionFailedException,
+            AcmCreateObjectFailedException, AcmUpdateObjectFailedException, AcmObjectNotFoundException, PipelineProcessException,
+            IOException;
+
+    @Transactional
+    default CaseFile saveCase(CaseFile in, Authentication auth, String ipAddress, SaveCaseServiceCaller caller)
+            throws PipelineProcessException
     {
         return null;
     }

@@ -28,8 +28,8 @@ package com.armedia.acm.auth;
  */
 
 import com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig;
-
 import com.armedia.acm.services.users.model.ldap.AcmUserContextMapper;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.ldap.core.DirContextOperations;

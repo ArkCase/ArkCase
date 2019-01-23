@@ -32,11 +32,12 @@ public class PersonAssociationUpdatedEvent extends PersonAssociationPersistenceE
 {
     private static final String EVENT_TYPE = "com.armedia.acm.personAssociation.updated";
 
-    public PersonAssociationUpdatedEvent(PersonAssociation source, String parentType, Long parentId)
+    public PersonAssociationUpdatedEvent(PersonAssociation source, String parentType, Long parentId, String ipAddress)
     {
         super(source);
         setParentObjectId(parentId);
         setParentObjectType(parentType);
+        setIpAddress(ipAddress);
     }
 
     @Override

@@ -29,6 +29,10 @@ h4 {
     color: rgba(0, 0, 0, 0.7);
 }
 
+.h4.font-bold {
+    font-weight: bold !important;
+}
+
 h5 {
     color: #000000;
     font-size: 16px;
@@ -105,6 +109,11 @@ iframe {
 span.fancytree-title {
     margin-left: 0px !important;
     padding-right: 0px !important;
+    display:inline-block;
+    white-space: nowrap;
+    overflow:hidden !important;
+    text-overflow: ellipsis;
+    width:200px;
 }
 
 .fancytree-container {
@@ -979,6 +988,7 @@ a.editable.editable-click {
 
 .fancytree-container.fancytree-ext-table.fancytree-ext-gridnav.fancytree-ext-edit.ui-draggable-handle {
     margin: 0px;
+    width: 99.99%;
 }
 
 .fancytree-container .fancytree-checkbox {
@@ -1651,24 +1661,20 @@ a.primary {
 }
 
 /*Css style for scrolling issue on modal*/
-.form-overflow-scroll {
-    overflow-y: auto !important;
-}
-
 .pdfjs .toolbar {
-	z-index: 1048 !important;
+    z-index: 1048 !important;
 }
 
 .pdfjs .findbar, .pdfjs .secondaryToolbar {
-	z-index: 1049 !important;
+    z-index: 1049 !important;
 }
 
 .pdfjs #thumbnailView {
-	width: inherit !important; 
+    width: inherit !important;
 }
 
 .thumbnailSelectionRing {
-	padding: 0px !important;
+    padding: 0px !important;
 }
 
 /*billing item amount field css*/
@@ -1740,4 +1746,74 @@ a.primary {
 
 .popup-move-on-left > .editable + .form-inline:after {
     left: 50%;
+}
+.disabledLink {
+    color: #788288 !important;
+    cursor: auto;
+    border-bottom: none !important;
+}
+
+.timesheetModalselectedWeekLabel {
+    text-align: center;
+    padding-top: 15px;
+}
+
+.timesheetModalprevNextWeekButton {
+    background-color: #fcfcfd;
+    border: 1px solid #d2dae1;
+    width: 100%;
+}
+
+.chargeCodeDetailsGrid {
+    padding: 0px 15px;
+}
+
+.timeSheetModalCodeDetailsBorder {
+    border: 1px solid #ccc;
+    border-radius: 9px;
+    padding: 10px 0px 0px 10px;
+    margin-bottom: 7px;
+}
+
+.timeTrackingPanel {
+    padding-right: 0px;
+}
+
+.timeTrackingExpandableRow {
+    padding: 0px;
+}
+
+.newTimeSheetSelectType {
+    padding: 7px 12px;
+    font-size: 14px;
+    margin: 0px 15px;
+}
+
+/* wrap large text in ui grid cell template*/
+.ui-grid-cell-wrap {
+    white-space: normal !important;
+}
+
+.remove-margin-bottom-from-summernote > .panel {
+    margin-bottom: 0px;
+}
+
+/* Wrapping required asterisk for confirm email label */
+.required-asterisk-delivery-method {
+    color: #dd1144;
+    position:absolute;
+    bottom:5px;
+    right:105px
+}
+
+/* Wrapping required asterisk for delivery method of response label */
+.required-asterisk-confirm-email {
+    color: #dd1144;
+    position:absolute;
+    top:0;
+    right:5px
+}
+
+.ui-grid .ui-grid-render-container-body .ui-grid-viewport {
+    overflow-x: auto !important;
 }

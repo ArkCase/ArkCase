@@ -73,6 +73,10 @@ angular.module('services').factory('Object.LookupService', [ '$q', '$resource', 
         return Service.getLookupByLookupName("auditReportNames");
     };
 
+    Service.getResetRepeatPeriod = function() {
+        return Service.getLookupByLookupName("sequenceResetPeriod");
+    };
+    
     /**
      * @ngdoc method
      * @name getPriorities
@@ -87,6 +91,20 @@ angular.module('services').factory('Object.LookupService', [ '$q', '$resource', 
         return Service.getLookupByLookupName("priorities");
     };
 
+    /**
+     * @ngdoc method
+     * @name getPriorities
+     * @methodOf services:Object.LookupService
+     *
+     * @description
+     * Query list of sequenceManagementParts
+     *
+     * @returns {Object} An array returned by $resource
+     */
+    Service.getSequenceParts = function () {
+        return Service.getLookupByLookupName("sequenceParts");
+    };
+    
     /**
      * @ngdoc method
      * @name validatePriorities
@@ -566,6 +584,20 @@ angular.module('services').factory('Object.LookupService', [ '$q', '$resource', 
 
     /**
      * @ngdoc method
+     * @name getCorrespondenceObjectTypes
+     * @methodOf services:Object.LookupService
+     *
+     * @description
+     * Query list of correspondence object types
+     *
+     * @returns {Object} An array returned by $resource
+     */
+    Service.getCorrespondenceObjectTypes = function() {
+        return Service.getLookupByLookupName("correspondenceObjectTypes");
+    };
+
+    /**
+     * @ngdoc method
      * @name getOrganizationIdTypes
      * @methodOf services:Object.LookupService
      *
@@ -909,6 +941,23 @@ angular.module('services').factory('Object.LookupService', [ '$q', '$resource', 
 
     Service.getPayFees = function() {
         return Service.getLookupByLookupName('payFees');
+
+    };
+
+
+    /**
+     * @ngdoc method
+     * @name getAnnotationTags
+     * @methodOf services:Object.LookupService
+     *
+     * @description
+     * Query list of all annotationTags
+     *
+     * @returns {Object} An array returned by $resource
+     */
+
+    Service.getAnnotationTags = function() {
+        return Service.getLookupByLookupName('annotationTags');
 
     };
 

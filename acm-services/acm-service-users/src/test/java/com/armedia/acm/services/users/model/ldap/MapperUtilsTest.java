@@ -28,8 +28,8 @@ package com.armedia.acm.services.users.model.ldap;
  */
 
 import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.hamcrest.Matchers.lessThanOrEqualTo;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertThat;
 
 import org.junit.Test;
@@ -130,4 +130,43 @@ public class MapperUtilsTest
         assertEquals("veryyyyyylongusername@armedia.com",userId);
     }
 
+    @Test
+    public void testPrincipalPrefixAndDomainIncluded()
+    {
+        String principal = "100.***REMOVED***";
+
+        String result = MapperUtils.buildPrincipalName(principal, "100", "armedia.com");
+
+        assertEquals(principal, result);
+    }
+
+    @Test
+    public void testPrincipalPrefixIncluded()
+    {
+        String principal = "100.ann-acm";
+
+        String result = MapperUtils.buildPrincipalName(principal, "100", "armedia.com");
+
+        assertEquals("100.***REMOVED***", result);
+    }
+
+    @Test
+    public void testLongPrincipalPrefixNotIncludedShouldTruncateTo20Chars()
+    {
+        String principal = "ann-acmloooooooooong";
+
+        String result = MapperUtils.buildPrincipalName(principal, "100", "armedia.com");
+
+        assertEquals("100.ann-acmloooooooo@armedia.com", result);
+    }
+
+    @Test
+    public void testLongPrincipalPrefixNotIncludedDomainIncluded()
+    {
+        String principal = "ann-acmloooooooooong@armedia.com";
+
+        String result = MapperUtils.buildPrincipalName(principal, "100", "armedia.com");
+
+        assertEquals("100.ann-acmloooooooo@armedia.com", result);
+    }
 }

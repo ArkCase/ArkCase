@@ -32,7 +32,8 @@ angular.module('time-tracking').controller(
                             animation: $scope.animationsEnabled,
                             templateUrl: 'modules/time-tracking/views/components/time-tracking-tags-modal.client.view.html',
                             controller: 'TimeTracking.TagsModalController',
-                            size: 'lg'
+                            size: 'lg',
+                            backdrop: 'static'
                         });
 
                         modalInstance.result.then(function(tags) {

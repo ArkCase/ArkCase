@@ -103,9 +103,10 @@ angular
             'EcmService',
             'Admin.EmailSenderConfigurationService',
             'Helper.LocaleService',
+            'LookupService',
             '$timeout',
             function($q, $translate, $modal, $filter, $log, $injector, Store, Util, UtilDateService, ConfigService,
-                     PluginService, UserInfoService, Ecm, EmailSenderConfigurationService, LocaleHelper, $timeout) {
+                     PluginService, UserInfoService, Ecm, EmailSenderConfigurationService, LocaleHelper, LookupService, $timeout) {
                 var cacheTree = new Store.CacheFifo();
                 var cacheFolderList = new Store.CacheFifo();
 
@@ -422,12 +423,13 @@ angular
                     getCacheKeyByNode : function(folderNode) {
                         var pageId = Util.goodValue(folderNode.data.startRow, 0);
                         var folderId = folderNode.data.objectId;
-                        var cacheKey = DocTree.getCacheKey(DocTree.isTopNode(folderNode) ? 0 : folderId, pageId);
+                        var cacheKey = DocTree.getCacheKey(DocTree.isTopNode(folderNode) ? 0 : folderId, pageId, DocTree.treeConfig.nodeCacheKeyPrefix);
                         return cacheKey;
                     },
-                    getCacheKey : function(folderId, pageId) {
+                    getCacheKey : function(folderId, pageId, keyPrefix) {
                         var setting = DocTree.Config.getSetting();
-                        var key = this.getObjType() + "." + this.getObjId();
+                        var key = keyPrefix ? keyPrefix + "." : "";
+                        key += this.getObjType() + "." + this.getObjId();
                         key += "." + Util.goodValue(folderId, 0); //for root folder, folderId is 0 or undefined
                         key += "." + Util.goodValue(pageId, 0);
                         key += "." + DocTree.Config.getSortBy();
@@ -1230,10 +1232,9 @@ angular
                                     renderer : function(element, node, columnDef, isReadOnly) {
                                         var versionUser = Util.goodValue(node.data.modifier);
                                         if (versionUser) {
-                                            //UserInfoService.getUserInfoByIdQuietly(versionUser).then(function (userInfo) {
-                                            UserInfoService.getUserInfoById(versionUser).then(function(userInfo) {
-                                                $(element).text(Util.goodMapValue(userInfo, "fullName"));
-                                            })
+                                            LookupService.getUserFullName(versionUser).then(function (userName) {
+                                                $(element).text(userName);
+                                            });
                                         }
                                     }
                                 },
@@ -2047,7 +2048,7 @@ angular
                                         item.disabled = true;
                                     } else {
                                         if (item.disabledExpression) {
-                                            item.disabled = eval(item.disabledExpression);
+                                                item.disabled = item.disabledExpression;
                                         } else {
                                             item.disabled = false;
                                         }
@@ -2337,7 +2338,7 @@ angular
                                             setting.sortBy = Util.goodValue(folderList.sortBy);
                                             setting.sortDirection = Util.goodValue(folderList.sortDirection);
 
-                                            var cacheKey = DocTree.getCacheKey(folderId, pageId);
+                                            var cacheKey = DocTree.getCacheKey(folderId, pageId, DocTree.treeConfig.nodeCacheKeyPrefix);
                                             DocTree.cacheFolderList.put(cacheKey, folderList);
                                             return folderList;
                                         }
@@ -4878,8 +4879,15 @@ angular
                                 });
                             });
                         /*Get send email configuration*/
-                        EmailSenderConfigurationService.getEmailSenderConfiguration().then(function(res) {
-                            DocTree.treeConfig.emailSendConfiguration = res.data;
+                        DocTree.treeConfig.emailSendConfiguration = {};
+                        EmailSenderConfigurationService.isEmailSenderAllowDocuments().then(function(res) {
+                            DocTree.treeConfig.emailSendConfiguration.allowDocuments = res.data;
+                        });
+                        EmailSenderConfigurationService.isEmailSenderAllowAttachments().then(function(res) {
+                            DocTree.treeConfig.emailSendConfiguration.allowAttachments = res.data;
+                        });
+                        EmailSenderConfigurationService.isEmailSenderAllowHyperlinks().then(function(res) {
+                            DocTree.treeConfig.emailSendConfiguration.allowHyperlinks = res.data;
                         });
 
                         DocTree.scope.$bus.subscribe('onFilterDocTree', function(data) {

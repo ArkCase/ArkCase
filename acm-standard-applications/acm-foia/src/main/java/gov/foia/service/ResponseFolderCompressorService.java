@@ -33,11 +33,15 @@ import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.ecm.exception.AcmFolderException;
+import com.armedia.acm.plugins.ecm.service.AcmFolderService;
+import gov.foia.model.event.RequestResponseFolderCompressedEvent;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.ApplicationEventPublisherAware;
 
 /**
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Sep 19, 2016
  */
-public class ResponseFolderCompressorService
+public class ResponseFolderCompressorService implements ApplicationEventPublisherAware
 {
 
     private CaseFileDao caseFileDao;
@@ -46,12 +50,30 @@ public class ResponseFolderCompressorService
 
     private ResponseFolderService responseFolderService;
 
+    private ApplicationEventPublisher applicationEventPublisher;
+
+    private AcmFolderService acmFolderService;
+
     public String compressResponseFolder(Long requestId)
             throws AcmUserActionFailedException, AcmObjectNotFoundException, AcmFolderException
     {
-
         CaseFile request = caseFileDao.find(requestId);
-        return compressor.compressFolder(getResponseFolderService().getResponseFolder(request).getId());
+        String compressFileName = "";
+
+        if(getAcmFolderService().getFolderChildren(getResponseFolderService().getResponseFolder(request).getId()).size() <= 0)
+        {
+            return compressFileName;
+        }
+
+        compressFileName = compressor.compressFolder(getResponseFolderService().getResponseFolder(request).getId());
+        publishResponseFolderCompressedEvent(request);
+        return compressFileName;
+    }
+
+    private void publishResponseFolderCompressedEvent(CaseFile source)
+    {
+        RequestResponseFolderCompressedEvent event = new RequestResponseFolderCompressedEvent(source);
+        applicationEventPublisher.publishEvent(event);
     }
 
     /**
@@ -97,4 +119,19 @@ public class ResponseFolderCompressorService
         this.responseFolderService = responseFolderService;
     }
 
+    @Override
+    public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher)
+    {
+        this.applicationEventPublisher = applicationEventPublisher;
+    }
+
+    public AcmFolderService getAcmFolderService()
+    {
+        return acmFolderService;
+    }
+
+    public void setAcmFolderService(AcmFolderService acmFolderService)
+    {
+        this.acmFolderService = acmFolderService;
+    }
 }

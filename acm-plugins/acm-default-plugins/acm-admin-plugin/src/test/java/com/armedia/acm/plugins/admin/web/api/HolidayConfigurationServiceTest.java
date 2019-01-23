@@ -84,10 +84,10 @@ public class HolidayConfigurationServiceTest extends EasyMockSupport {
         holidayConfigurationService.setHolidayFile(new FileSystemResource(holidayConfigurationFilePath));
 
 
-        LocalDate actualResult = holidayConfigurationService.addWorkingDaysToDate(LocalDate.parse("20181119", DateTimeFormatter.BASIC_ISO_DATE),
+        LocalDate actualResult = holidayConfigurationService.addWorkingDaysToDate(LocalDate.parse("20181122", DateTimeFormatter.BASIC_ISO_DATE),
                 6);
 
-        LocalDate expectedResult = LocalDate.parse("20181128", DateTimeFormatter.BASIC_ISO_DATE);
+        LocalDate expectedResult = LocalDate.parse("20181130", DateTimeFormatter.BASIC_ISO_DATE);
         assertEquals(actualResult, expectedResult);
 
     }
@@ -118,7 +118,7 @@ public class HolidayConfigurationServiceTest extends EasyMockSupport {
         LocalDate actualResult = holidayConfigurationService.addWorkingDaysToDate(LocalDate.parse("20181224", DateTimeFormatter.BASIC_ISO_DATE),
                 6);
 
-        LocalDate expectedResult = LocalDate.parse("20181230", DateTimeFormatter.BASIC_ISO_DATE);
+        LocalDate expectedResult = LocalDate.parse("20181231", DateTimeFormatter.BASIC_ISO_DATE);
         assertEquals(actualResult, expectedResult);
 
     }

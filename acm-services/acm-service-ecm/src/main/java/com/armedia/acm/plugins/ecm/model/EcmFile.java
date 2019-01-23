@@ -272,6 +272,7 @@ public class EcmFile implements AcmEntity, Serializable, AcmObject, AcmStatefulE
         return participants;
     }
 
+    @Override
     public void setParticipants(List<AcmParticipant> participants)
     {
         this.participants = participants;
@@ -501,12 +502,7 @@ public class EcmFile implements AcmEntity, Serializable, AcmObject, AcmStatefulE
     @Override
     public String getObjectType()
     {
-        return OBJECT_TYPE;
-    }
-
-    public void setObjectType(String objectType)
-    {
-        this.objectType = objectType;
+        return objectType;
     }
 
     @JsonIgnore

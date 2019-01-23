@@ -94,7 +94,8 @@
             "changedGroupSearchFilter": "Enter search filter for all changed groups",
             "changedGroupSearchPageFilter": "Enter filter including sort-attribute for all changed groups",
             "groupSearchPageFilter": "Enter filter including sort-attribute (e.g. (&(objectClass=group)(gidNumber>=%s)))",
-            "enableEditingLdapUsers": "Check if managing users and groups to your DS is allowed"
+            "enableEditingLdapUsers": "Check if managing users and groups to your DS is allowed",
+            "syncEnabled": "Check if synchronize users to your DS is allowed"
         },
         "security.ldapConfig.messages": {
             "delete.success": "Successfully deleted row.",
@@ -269,7 +270,7 @@
             "deleteUserBtn": "Delete User",
             "deleteUserMsg": "Are you sure you want to delete this user?",
             "user": "User",
-            "cancelBtn" : "Cancel"
+            "cancelBtn": "Cancel"
         },
         "security.group.management": {
             "title": "Group Management",
@@ -368,7 +369,18 @@
             }
         },
         "security.emailTemplates": {
-            "title": "Email Templates",
+            "title": "Email Configuration",
+            "table.title": "Email Templates",
+            "settings": {
+                "emailCaseFile.label": "Email Receiver CaseFile",
+                "emailComplaint.label": "Email Receiver Complaint",
+                "password.label": "Password",
+                "email.placeholder": "Enter Email address",
+                "password.placeholder": "Enter Password",
+                "btnSave": "Save",
+                "enableCase": "Enable creating Case Files from incoming mail",
+                "enableComplaint": "Enable creating Complaints from incoming mail"
+            },
             "table.columns": {
                 "templateName": "Template Name",
                 "emailPattern": "Email Pattern",
@@ -503,8 +515,15 @@
                     "success": "Schedule deleted successfully",
                     "error": "Failed to delete schedule"
                 },
+                "update": {
+                    "success": "Schedule updated successfully",
+                    "error": "Failed to update schedule"
+                },
                 "createScheduleSuccess": "Schedule created successfully",
                 "createScheduleFailure": "Failed to create schedule",
+                "invalidScheduleTime": "Invalid input given or missing schedule type: DAILY, WEEKLY, etc.",
+                "beforeTimeError": "End time cannot be before the start time",
+                "parsingError": "Error due parsing the start or end time",
                 "enterFutureDate": "Enter a start time in the future",
                 "recurrence": "Recurrence (Enter future time)",
                 "time": "Time",
@@ -635,10 +654,10 @@
                 "delete.success": "Lookup is successfully deleted",
                 "delete.error": "Lookup can't be deleted",
                 "lookupExists.error": "Lookup with this name already exists",
-                "dialog":{
-                    "deleteEntryConfirm" :"Delete Entry",
-                    "deleteLookupConfirm" : "Delete Lookup",
-                    "cancel" : "Cancel"
+                "dialog": {
+                    "deleteEntryConfirm": "Delete Entry",
+                    "deleteLookupConfirm": "Delete Lookup",
+                    "cancel": "Cancel"
                 }
             },
             "module.config": {
@@ -665,12 +684,98 @@
                 "modal.info": "Settings will take effect after refresh",
                 "modal.ok": "Confirm"
             },
+            "sequenceManagement.config": {
+                "title": "Sequence Configuration",
+                "sequenceEnabled": "Enabled",
+                "sequenceDisabled": "Disabled",
+                "grid": {
+                    "sequenceName": "Name",
+                    "sequenceDescription": "Description",
+                    "sequenceStatus": "Status"
+                },
+                "placeholder": {
+                    "name": "Enter Sequence Name",
+                    "description": "Enter Sequence Description"
+                },
+                "modal": {
+                    "title": "Add/Edit Sequence",
+                    "sequenceName": "Sequence Name",
+                    "sequenceDescription": "Sequence Description",
+                    "sequenceEnabled": "Sequence Enabled",
+                    "cancel": "Cancel",
+                    "save": "Save"
+                }
+            },
+            "sequenceManagementParts.config": {
+                "title": "Sequence Part",
+                "grid": {
+                    "sequenceName": "Name",
+                    "sequenceDescription": "Type"
+                },
+                "message": "The sequence you entered is not saved! Sequence name already exist!",
+                "autoincrement": {
+                    "startNumber": "Start number",
+                    "incrementSize": "Increment size",
+                    "numberLength": "Number length",
+                    "reuseSkippedSequenceValues": "Reuse skipped sequence values"
+                },
+                "objectProperty": {
+                    "name": "Object property name"
+                },
+                "date": {
+                    "text": "Date Format (ex: ddMMyyyyHHmmssSSS)"
+                },
+                "arbitraryText": {
+                    "text": "Arbitrary text"
+                },
+                "modal": {
+                    "title": "Add/Edit Sequence Part",
+                    "sequencePartName": "Sequence Part Name",
+                    "sequencePartType": "Sequence Part Type",
+                    "cancel": "Cancel",
+                    "save": "Save",
+                    "placeholders": {
+                        "autoincrement": {
+                            "startNumber": "Select or enter start number",
+                            "incrementSize": "Select or enter increment size",
+                            "numberLength": "Select or enter number length"
+                        },
+                        "arbitraryText": "Enter arbitrary text",
+                        "objectProperty": "Enter object property",
+                        "date": "Enter Date Format (ex: ddMMyyyyHHmmssSSS)",
+                        "sequencePartName": "Enter sequence part name",
+                        "sequencePartType": "Select part type"
+                    }
+                }
+            },
+            "sequenceManagementReset": {
+                "title": "Reset List",
+                "editBtn": "Edit",
+                "viewBtn": "View",
+                "removeBtn": "Remove",
+                "cancelBtn": "Cancel",
+                "saveBtn": "Save",
+                "grid": {
+                    "startResetDate": "Start Reset Date",
+                    "executedDate": "Executed Date",
+                    "repeat": "Repeat",
+                    "repeatPeriod": "Repeat Period"
+                },
+                "detailsModal": {
+                    "title": "Autoincrement Reset",
+                    "addTitle": "Add Autoincrement Reset",
+                    "editTitle": "Edit Autoincrement Reset",
+                    "resetStartDate": "Reset Start Date",
+                    "repeatReset": "Repeat reset",
+                    "repeatResetPeriod": "Repeat reset period (days)"
+                }
+            },
             "login.config": {
                 "title": "Login Configuration",
                 "idleLimit.label": "Login idle limit (in milliseconds)",
                 "inform": "Settings will take effect for all new user sessions",
                 "apply.label": "Apply",
-                "dialog" : {
+                "dialog": {
                     "OKBtn": "Confirm"
                 }
             },
@@ -679,7 +784,7 @@
                 "historyDays.label": "Keep Audit and Notification events (in days)",
                 "inform": "Setting successfully saved",
                 "apply.label": "Apply",
-                "dialog" : {
+                "dialog": {
                     "OKBtn": "Confirm"
                 }
             },
@@ -707,10 +812,12 @@
         },
         "branding.logo.header.title": "Header",
         "branding.logo.login.title": "Login Page",
+        "branding.logo.email.title": "Email",
         "branding.logo.warningMessage": "Only PNG format is allowed. Recommended ratio is 1 to 4. Minimum height is 50px.",
         "branding.logo.btn": {
             "chooseHeader": "Choose Header logo",
             "chooseLogin": "Choose Login logo",
+            "chooseEmail": "Choose Email logo",
             "saveFiles": "Save"
         },
         "branding": {
@@ -886,10 +993,11 @@
                 "test.conection.success": "Successfully connected."
             }
         },
-        "transcription": {
-            "title": "Transcription Services",
+        "mediaServices": {
+            "title": "Media Services",
             "transcriptionManagement": "Transcription Management",
             "transcriptionConfigForm": {
+                "title": "Transcription Services",
                 "save.button": "Save",
                 "automation.label": "Automation",
                 "enableTranscription.checkbox": "Enable Transcription",
@@ -913,6 +1021,12 @@
                     "minOneValueErrorMsg": "Value must be greater than or equal to 1",
                     "minPositiveValueErrorMsg": "Value must be greater than 0"
                 }
+            },
+            "ocrManagement": "OCR Management",
+            "ocrConfigForm": {
+                "title": "OCR Services",
+                "save.button": "Save",
+                "enableOCR.checkbox": "Enable OCR"
             }
         },
         "stateOfArkcase": {

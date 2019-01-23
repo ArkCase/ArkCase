@@ -61,7 +61,10 @@ public class SmtpNotificationSender extends NotificationSender
     @Override
     public void sendEmailWithAttachments(EmailWithAttachmentsDTO in, Authentication authentication, AcmUser user) throws Exception
     {
-        in.setTemplate(notificationTemplate);
+        if (in.getTemplate() == null)
+        {
+            in.setTemplate(notificationTemplate);
+        }
         getEmailSenderService().sendEmailWithAttachments(in, authentication, user);
     }
 
@@ -69,7 +72,10 @@ public class SmtpNotificationSender extends NotificationSender
     public void sendEmailWithAttachmentsAndLinks(EmailWithAttachmentsAndLinksDTO in, Authentication authentication, AcmUser user)
             throws Exception
     {
-        in.setTemplate(notificationTemplate);
+        if (in.getTemplate() == null)
+        {
+            in.setTemplate(notificationTemplate);
+        }
         getEmailSenderService().sendEmailWithAttachmentsAndLinks(in, authentication, user);
     }
 
@@ -77,7 +83,10 @@ public class SmtpNotificationSender extends NotificationSender
     public List<EmailWithEmbeddedLinksResultDTO> sendEmailWithEmbeddedLinks(EmailWithEmbeddedLinksDTO in, Authentication authentication,
             AcmUser user) throws Exception
     {
-        in.setTemplate(notificationTemplate);
+        if (in.getTemplate() == null)
+        {
+            in.setTemplate(notificationTemplate);
+        }
         return getEmailSenderService().sendEmailWithEmbeddedLinks(in, authentication, user);
     }
 

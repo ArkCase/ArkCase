@@ -35,9 +35,11 @@ import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.casefile.model.SaveCaseServiceCaller;
 import com.armedia.acm.plugins.casefile.pipeline.CaseFilePipelineContext;
+import com.armedia.acm.plugins.ecm.model.AcmMultipartFile;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.services.pipeline.PipelineManager;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
@@ -45,7 +47,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -65,13 +69,14 @@ public class SaveCaseServiceImpl implements SaveCaseService
         CaseFile saved = null;
         try
         {
-            saved = saveCase(in, null, auth, ipAddress);
+            saved = saveCase(in, new ArrayList<>(), auth, ipAddress);
         }
-        catch (AcmUserActionFailedException | AcmCreateObjectFailedException |AcmUpdateObjectFailedException | AcmObjectNotFoundException | IOException e)
+        catch (AcmUserActionFailedException | AcmCreateObjectFailedException | AcmUpdateObjectFailedException | AcmObjectNotFoundException
+                | IOException e)
         {
             log.error("Error in saving Case File");
         }
-        return  saved;
+        return saved;
     }
 
     @Override
@@ -86,23 +91,93 @@ public class SaveCaseServiceImpl implements SaveCaseService
         pipelineContext.setNewCase(caseFile.getId() == null);
         pipelineContext.setAuthentication(authentication);
         pipelineContext.setIpAddress(ipAddress);
-        if(Objects.nonNull(files))
+
+        if (files != null && !files.isEmpty())
         {
             pipelineContext.addProperty("attachmentFiles", files);
         }
 
         return pipelineManager.executeOperation(caseFile, pipelineContext, () -> {
 
-            CaseFile saved = caseFileDao.save(caseFile);
+            CaseFile saved = null;
+            try
+            {
+                saved = caseFileDao.save(caseFile);
+                log.info("Case saved '{}'", saved);
+            }
+            catch (Exception e)
+            {
+                log.error("Case not saved", e);
+            }
 
-            log.info("Case saved '{}'", saved);
             return saved;
 
         });
     }
 
     @Override
-    public CaseFile saveCase(CaseFile in, Authentication auth, String ipAddress, SaveCaseServiceCaller caller) throws PipelineProcessException
+    @Transactional
+    public CaseFile saveCase(CaseFile caseFile, Map<String, List<MultipartFile>> filesMap, Authentication authentication, String ipAddress)
+            throws AcmUserActionFailedException,
+            AcmCreateObjectFailedException, AcmUpdateObjectFailedException, AcmObjectNotFoundException, PipelineProcessException,
+            IOException
+    {
+        CaseFilePipelineContext pipelineContext = new CaseFilePipelineContext();
+        // populate the context
+        pipelineContext.setNewCase(caseFile.getId() == null);
+        pipelineContext.setAuthentication(authentication);
+        pipelineContext.setIpAddress(ipAddress);
+
+        List<AcmMultipartFile> files = new ArrayList<>();
+
+        if(Objects.nonNull(filesMap))
+        {
+            for (Map.Entry<String, List<MultipartFile>> file : filesMap.entrySet())
+            {
+                String fileType = file.getKey();
+                file.getValue().stream().forEach(item -> {
+                    try
+                    {
+                        AcmMultipartFile acmMultipartFile = new AcmMultipartFile(item.getName(), item.getOriginalFilename(),
+                                item.getContentType(),
+                                item.isEmpty(), item.getSize(), item.getBytes(), item.getInputStream(), false);
+                        acmMultipartFile.setType(fileType);
+                        files.add(acmMultipartFile);
+                    }
+                    catch (IOException e)
+                    {
+                        log.error("Could not read properties from {} file. Exception {}", item.getOriginalFilename(), e.getMessage());
+                    }
+                });
+            }
+        }
+
+        if (Objects.nonNull(files))
+        {
+            pipelineContext.addProperty("attachmentFiles", files);
+        }
+
+        return pipelineManager.executeOperation(caseFile, pipelineContext, () -> {
+
+            CaseFile saved = null;
+            try
+            {
+                saved = caseFileDao.save(caseFile);
+                log.info("Case saved '{}'", saved);
+            }
+            catch (Exception e)
+            {
+                log.error("Case not saved", e);
+            }
+
+            return saved;
+
+        });
+    }
+
+    @Override
+    public CaseFile saveCase(CaseFile in, Authentication auth, String ipAddress, SaveCaseServiceCaller caller)
+            throws PipelineProcessException
     {
         CaseFilePipelineContext pipelineContext = new CaseFilePipelineContext();
         // populate the context
@@ -116,6 +191,7 @@ public class SaveCaseServiceImpl implements SaveCaseService
             CaseFile saved = caseFileDao.save(in);
 
             log.info("Case saved '{}'", saved);
+
             return saved;
 
         });

@@ -150,6 +150,7 @@ angular.module('dashboard.websites-widget', [ 'adf.provider' ]).config(function(
                     templateUrl: 'modules/dashboard/views/dialogs/websites-modal.client.view.html',
                     controller: 'Dashboard.WebsiteModalController',
                     size: 'md',
+                    backdrop: 'static',
                     resolve: {
                         websiteInfo: function() {
                             return website;
@@ -186,6 +187,10 @@ angular.module('dashboard.websites-widget', [ 'adf.provider' ]).config(function(
 
             $scope.onClickObjLink = function(event, rowEntity) {
                 event.preventDefault();
-                $window.open('//' + rowEntity.url);
+                var url = rowEntity.url;
+                if (!url.match(/^https?:\/\//i)) {
+                    url = 'http://' + url;
+                }
+                $window.open(url);
             }
         } ]);

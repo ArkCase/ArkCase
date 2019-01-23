@@ -30,6 +30,7 @@ package com.armedia.acm.services.authenticationtoken.service;
 import com.armedia.acm.services.authenticationtoken.dao.AuthenticationTokenDao;
 import com.armedia.acm.services.authenticationtoken.model.AuthenticationToken;
 import com.armedia.acm.services.authenticationtoken.model.AuthenticationTokenConstants;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cache.Cache;
@@ -129,7 +130,7 @@ public class AuthenticationTokenService
 
     public String generateAndSaveAuthenticationToken(Long fileId, String emailAddress, Authentication authentication)
     {
-        log.debug("Generation authentication token per user [{}] for email address [{}]", authentication.getName(), emailAddress);
+        log.debug("Generation authentication token for email address [{}]", emailAddress);
         String token = getUncachedTokenForAuthentication(authentication);
         AuthenticationToken authenticationToken = new AuthenticationToken();
         authenticationToken.setKey(token);

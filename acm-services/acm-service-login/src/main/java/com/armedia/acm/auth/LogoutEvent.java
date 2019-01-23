@@ -33,10 +33,10 @@ public class LogoutEvent extends AcmAbstractAuthenticationEvent
 {
     private static final String EVENT_TYPE = "com.armedia.acm.logout";
 
-    public LogoutEvent(Authentication authentication)
+    public LogoutEvent(Authentication authentication, String ipAddress)
     {
         super(authentication);
-
+        setIpAddress(ipAddress);
         setSucceeded(true);
 
     }

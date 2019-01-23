@@ -72,6 +72,7 @@ public class ComplaintToSolrTransformer implements AcmObjectToSolrDocTransformer
 
         solr.setId(in.getComplaintId() + "-COMPLAINT");
         solr.setObject_id_s(in.getComplaintId() + "");
+        solr.setObject_id_i(in.getComplaintId());
         solr.setObject_type_s("COMPLAINT");
         solr.setTitle_parseable(in.getComplaintTitle());
         solr.setDescription_no_html_tags_parseable(in.getDetails());
@@ -137,6 +138,7 @@ public class ComplaintToSolrTransformer implements AcmObjectToSolrDocTransformer
 
         solr.setName(in.getComplaintNumber());
         solr.setObject_id_s(in.getComplaintId() + "");
+        solr.setObject_id_i(in.getId());
         solr.setObject_type_s("COMPLAINT");
         solr.setId(in.getComplaintId() + "-COMPLAINT");
 

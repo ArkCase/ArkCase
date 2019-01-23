@@ -31,12 +31,13 @@ public class PersonAssociationDeletedEvent extends PersonAssociationPersistenceE
 {
     private static final String EVENT_TYPE = "com.armedia.acm.personAssociation.deleted";
 
-    public PersonAssociationDeletedEvent(PersonAssociation source, String parentType, Long parentId)
+    public PersonAssociationDeletedEvent(PersonAssociation source, String parentType, Long parentId, String ipAddress)
     {
         super(source);
         setParentObjectId(parentId);
         setParentObjectType(parentType);
         setEventDescription("Person deleted (" + source.getPerson().getFullName() + ")");
+        setIpAddress(ipAddress);
     }
 
     @Override

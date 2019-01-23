@@ -2,9 +2,9 @@
 
 angular.module('document-details').controller(
         'DocumentDetailsController',
-        [ '$rootScope', '$scope', '$stateParams', '$sce', '$q', '$timeout', '$window', 'TicketService', 'ConfigService', 'LookupService', 'SnowboundService', 'Authentication', 'EcmService', 'Helper.LocaleService', 'Admin.TranscriptionManagementService', 'MessageService', 'UtilService', 'Util.TimerService',
-                'Object.LockingService', 'ObjectService', '$log', 'Dialog.BootboxService', '$translate',
-                function($rootScope, $scope, $stateParams, $sce, $q, $timeout, $window, TicketService, ConfigService, LookupService, SnowboundService, Authentication, EcmService, LocaleHelper, TranscriptionManagementService, MessageService, Util, UtilTimerService, ObjectLockingService, ObjectService, $log, DialogService, $translate) {
+        [ '$rootScope', '$scope', '$stateParams', '$sce', '$q', '$timeout', '$window', '$modal', 'TicketService', 'ConfigService', 'LookupService', 'SnowboundService', 'Authentication', 'EcmService', 'Helper.LocaleService', 'Admin.TranscriptionManagementService', 'MessageService', 'UtilService', 'Util.TimerService',
+            'Object.LockingService', 'ObjectService', '$log', 'Dialog.BootboxService', '$translate', 'ArkCaseCrossWindowMessagingService', 'Object.LookupService',
+            function ($rootScope, $scope, $stateParams, $sce, $q, $timeout, $window, $modal, TicketService, ConfigService, LookupService, SnowboundService, Authentication, EcmService, LocaleHelper, TranscriptionManagementService, MessageService, Util, UtilTimerService, ObjectLockingService, ObjectService, $log, DialogService, $translate, ArkCaseCrossWindowMessagingService, ObjectLookupService) {
 
                     new LocaleHelper.Locale({
                         scope: $scope
@@ -30,6 +30,43 @@ angular.module('document-details').controller(
                             $scope.videoAPI.toggleFullScreen();
                         }
                     };
+
+                    $scope.iframeLoaded = function() {
+                        ObjectLookupService.getLookupByLookupName("annotationTags").then(function (allAnnotationTags) {
+                            $scope.allAnnotationTags = allAnnotationTags;
+                            ArkCaseCrossWindowMessagingService.addHandler('select-annotation-tags', onSelectAnnotationTags);
+                            ArkCaseCrossWindowMessagingService.start('snowbound', $scope.ecmFileProperties['ecm.viewer.snowbound']);
+                        });
+                    };
+
+                    function onSelectAnnotationTags(data) {
+                        var params = $scope.allAnnotationTags;
+                        var modalInstance = $modal.open({
+                            animation: true,
+                            templateUrl: 'modules/document-details/views/components/annotation-tags-modal.client.view.html',
+                            controller: 'Document.AnnotationTagsModalController',
+                            resolve: {
+                                params: function () {
+                                    return params;
+                                }
+                            }
+                        });
+
+                        modalInstance.result.then(function(result) {
+                            var message = {
+                                source: 'arkcase',
+                                action: 'add-annotation-tags',
+                                data: {
+                                    type: data.type,
+                                    annotationTags: result.annotationTags,
+                                    annotationNotes: result.annotationNotes
+                                }
+                            };
+                            ArkCaseCrossWindowMessagingService.send(message);
+                        }, function() {
+                            // Do nothing
+                        });
+                    }
 
                     $scope.acmTicket = '';
                     $scope.userId = '';
@@ -227,9 +264,6 @@ angular.module('document-details').controller(
                             };
                             $scope.showPdfJs = true;
                             $scope.view = "modules/document-details/views/document-viewer-pdfjs.client.view.html";
-                        } else {
-                            // Opens the selected document in the snowbound viewer
-                            $scope.openSnowboundViewer();
                         }
 
                         $scope.transcriptionTabActive = $scope.showVideoPlayer && $scope.transcribeEnabled;

@@ -27,9 +27,7 @@ package gov.foia.service;
  * #L%
  */
 
-import static gov.foia.model.FOIAConstants.EMAIL_RELEASE_BODY;
-import static gov.foia.model.FOIAConstants.EMAIL_RELEASE_SUBJECT;
-import static gov.foia.model.FOIAConstants.PORTAL_REQUEST_STATUS_RELATIVE_URL;
+import static gov.foia.model.FOIAConstants.EMAIL_RESPONSE_FOLDER_ZIP;
 import static gov.foia.model.FOIARequestUtils.extractRequestorEmailAddress;
 
 import com.armedia.acm.compressfolder.FolderCompressor;
@@ -80,14 +78,13 @@ public class ResponseFolderNotifyService
         String emailAddress = extractRequestorEmailAddress(request.getOriginator().getPerson());
         if (emailAddress != null)
         {
-            Notification releaseNotifier = new Notification();
-            releaseNotifier.setUserEmail(emailAddress);
-            releaseNotifier.setTitle(String.format("%s %s", EMAIL_RELEASE_SUBJECT, request.getCaseNumber()));
-            String link = String.format(PORTAL_REQUEST_STATUS_RELATIVE_URL, request.getCaseNumber());
-            releaseNotifier.setNote(
-                    String.format(EMAIL_RELEASE_BODY, request.getRequestType(), request.getCaseNumber(),
-                            getAcmAppConfiguration().getBaseUrl() + link));
-            getNotificationSender().send(releaseNotifier);
+            Notification responseFolderNotifier = new Notification();
+            responseFolderNotifier.setUserEmail(emailAddress);
+            responseFolderNotifier.setTitle(String.format("%s %s", EMAIL_RESPONSE_FOLDER_ZIP, request.getCaseNumber()));
+            responseFolderNotifier.setNote("portalDocumentsLink");
+            responseFolderNotifier.setParentType(request.getObjectType());
+            responseFolderNotifier.setParentId(request.getId());
+            getNotificationSender().send(responseFolderNotifier);
         }
     }
 

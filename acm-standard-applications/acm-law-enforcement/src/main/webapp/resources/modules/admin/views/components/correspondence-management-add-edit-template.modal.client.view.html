@@ -26,9 +26,11 @@
             <div class="row">
                 <label class="control-label">{{ 'admin.correspondenceManagement.templates.modal.objectTypes.label' |
                     translate}}
-                    <select ng-model="template.objectType" ng-disabled="selectedRows.length > 0"
-                            ng-options="objectType.id as objectType.name for objectType in objectTypes" class="form-control input-md"
-                            required>
+                    <span class="required-asterisk">*</span>
+                    <select ng-model="selectedName" ng-required="true"
+                            ng-options="objectType.value | translate for objectType in correspondenceObjectTypes"
+                            ng-change="change(selectedName)" class="form-control input-md">
+                        required>
                     </select>
                 </label>
             </div>

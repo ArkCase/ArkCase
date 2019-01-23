@@ -326,7 +326,11 @@ angular.module('directives').directive(
                                 _.each(facets, function(facet) {
                                     facet.nameTranslated = $translate.data(facet.name, "common.directive.search.facet.names");
                                     _.each(facet.fields, function(field) {
-                                        field.name.nameTranslated = $translate.data(field.name.nameFiltered, "common.directive.search.facet.fields." + facet.fieldCategory);
+                                        if(field.name.nameFiltered == ""){
+                                            field.name.nameTranslated = $translate.instant("common.directive.search.facet.blankValue");
+                                        }else{
+                                            field.name.nameTranslated = $translate.data(field.name.nameFiltered, "common.directive.search.facet.fields." + facet.fieldCategory);
+                                        }
                                     });
                                 });
                             };

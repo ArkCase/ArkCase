@@ -51,6 +51,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import javax.persistence.FlushModeType;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -198,10 +199,13 @@ public class GroupServiceImpl implements GroupService
     public String getAdHocMemberGroups(Authentication auth, Integer startRow, Integer maxRows, String sortBy, String sortDirection,
             Boolean authorized, String groupId, String groupType) throws MuleException
     {
-        String query = "object_type_s:GROUP AND -object_id_s:" + groupId + " AND status_lcs:ACTIVE AND object_sub_type_s:"
+        groupId = groupId.replace("\\", "\\\\");
+        String query = "object_type_s:GROUP AND -object_id_s:" + groupId
+                + " AND status_lcs:ACTIVE AND object_sub_type_s:"
                 + groupType
                 + (authorized ? " AND groups_member_of_id_ss:" + groupId
-                        : " AND -groups_member_of_id_ss:" + groupId + " AND -child_id_ss:" + groupId);
+                        : " AND -groups_member_of_id_ss:" + groupId + " AND -child_id_ss:"
+                                + groupId);
 
         log.debug("User [{}] is searching for [{}]", auth.getName(), query);
 
@@ -269,7 +273,6 @@ public class GroupServiceImpl implements GroupService
     }
 
     @Override
-    @Transactional
     public List<AcmGroup> findByUserMember(AcmUser user)
     {
         return groupDao.findByUserMember(user);
