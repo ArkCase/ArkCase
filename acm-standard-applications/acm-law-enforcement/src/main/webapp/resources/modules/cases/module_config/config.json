@@ -880,7 +880,7 @@
                     "sortField": "title_parseable_lcs",
                     "displayName": "cases.comp.tasks.table.columns.title",
                     "headerCellFilter": "translate",
-                    "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity)'>{{row.entity.title_parseable}}</a>"
+                    "cellTemplate": "<a href='#' title='{{row.entity.title_parseable}}' ng-click='grid.appScope.onClickObjLink($event, row.entity)'>{{row.entity.title_parseable}}</a>"
                 },
                 {
                     "name": "assignee",
