@@ -62,6 +62,11 @@ public class AcmObjectLockDao extends AcmAbstractDao<AcmObjectLock>
     @Transactional(readOnly = true, propagation = Propagation.REQUIRES_NEW)
     public AcmObjectLock findLock(Long objectId, String objectType)
     {
+        return findLockUntransactional(objectId, objectType);
+    }
+
+    protected AcmObjectLock findLockUntransactional(Long objectId, String objectType)
+    {
         String queryText = "SELECT ol " +
                 "FROM AcmObjectLock ol " +
                 "WHERE " +
