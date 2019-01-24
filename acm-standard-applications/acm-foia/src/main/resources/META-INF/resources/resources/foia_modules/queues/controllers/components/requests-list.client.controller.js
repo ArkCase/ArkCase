@@ -27,8 +27,8 @@ angular.module('queues').controller(
                     var paginationOptions = {
                         pageNumber: 1,
                         pageSize: 25,
-                        sortBy: 'received_date_tdt',
-                        sortDir: 'asc',
+                        sortBy: 'create_date_tdt',
+                        sortDir: 'desc',
                         filters: []
                     };
 
