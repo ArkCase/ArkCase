@@ -190,6 +190,9 @@ angular.module('services').factory('PermissionsService', [ '$q', '$http', '$log'
                                 }
                             }
                         });
+                        if (isUserParticipant) {
+                            return false;
+                        }
                     });
                     isEnabled = isEnabled && isUserParticipant;
                 }
