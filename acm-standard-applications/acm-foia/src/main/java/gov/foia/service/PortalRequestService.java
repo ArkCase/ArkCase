@@ -120,7 +120,7 @@ public class PortalRequestService
         query += "&fl=object_id_s,title_parseable,ext_s,parent_ref_s,modified_date_tdt";
 
         String results = getExecuteSolrQuery().getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, query, 0, 99999, "", true, "",
-                false, false, "content");
+                false, false, "catch_all");
 
         SearchResults searchResults = new SearchResults();
         JSONArray docFiles = searchResults.getDocuments(results);
