@@ -21,8 +21,6 @@ angular.module('cases').controller(
             $scope.uploadFilesDescription[consentDocumentType] = [];
             $scope.uploadFilesDescription[proofOfIdentityDocumentType] = [];
 
-            $scope.uploadFilesConsent = [];
-            $scope.uploadFilesProofOfIdentity = [];
             $scope.requestExpedite = false;
             $scope.config = null;
 
@@ -50,7 +48,7 @@ angular.module('cases').controller(
             };
 
             $scope.removeFileDescription = function (index) {
-                $scope.uploadFilesDescription.splice(index, 1);
+                $scope.uploadFilesDescription['Description Document'].splice(index, 1);
             };
 
             $scope.addFileConsent = function (file) {
@@ -64,7 +62,7 @@ angular.module('cases').controller(
             };
 
             $scope.removeFileConsent = function (index) {
-                $scope.uploadFilesConsent.splice(index, 1);
+                $scope.uploadFilesDescription['Consent'].splice(index, 1);
             };
 
             $scope.addFileProofOfIdentity = function (file) {
@@ -78,7 +76,7 @@ angular.module('cases').controller(
             };
 
             $scope.removeFileProofOfIdentity = function (index) {
-                $scope.uploadFilesProofOfIdentity.splice(index, 1);
+                $scope.uploadFilesDescription['Proof of Identity'].splice(index, 1);
             };
             var stateRequest = ObjectLookupService.getStates();
 
