@@ -214,6 +214,14 @@ angular.module('cases').controller(
             $scope.openedRecordSearchDateTo = {};
             $scope.openedRecordSearchDateTo.openedStart = false;
             $scope.openedRecordSearchDateTo.openedEnd = false;
+            
+            $scope.handleTextArea = function (checkbox, textarea) {
+                var txt = document.getElementById(textarea);
+                var chk = document.getElementById(checkbox);
+                if(chk.checked == false){
+                    txt.value = '';
+                }
+            }
         }
 
     ]);

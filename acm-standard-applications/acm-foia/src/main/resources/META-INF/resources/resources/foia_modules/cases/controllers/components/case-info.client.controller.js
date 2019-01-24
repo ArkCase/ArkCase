@@ -127,6 +127,8 @@ angular.module('cases').controller(
                         $scope.receivedDateDisabledLink = false;
                     }
                 });
+                
+                $scope.isAmendmentAdded = data.amendmentFlag;
 
             };
             $scope.userOrGroupSearch = function() {
