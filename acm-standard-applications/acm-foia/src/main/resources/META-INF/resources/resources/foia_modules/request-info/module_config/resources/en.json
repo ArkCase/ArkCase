@@ -546,6 +546,9 @@
                 "placeholder": "Enter Expedite",
                 "label": "Expedite"
             },
+            "amendmentFlag": {
+                "label": "Amendment"
+            },
             "litigationFlag": {
                 "placeholder": "Enter Litigation",
                 "label": "Litigation"
@@ -581,6 +584,10 @@
             "requestExpediteReason": {
                 "placeholder": "Enter Reason for Expedite Request",
                 "label": "Reason for Expedite Request"
+            },
+            "requestAmendmentDetails": {
+                "label": "Amendment Details",
+                "placeholder": "Enter Amendment Details"
             },
             "payFee": {
                 "placeholder": "Select Amount Willing to Pay",

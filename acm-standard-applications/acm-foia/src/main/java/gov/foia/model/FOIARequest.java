@@ -105,6 +105,10 @@ public class FOIARequest extends CaseFile implements FOIAObject
     @Convert(converter = BooleanToStringConverter.class)
     private Boolean expediteFlag;
 
+    @Column(name = "fo_amendment_flag")
+    @Convert(converter = BooleanToStringConverter.class)
+    private Boolean amendmentFlag;
+
     @Column(name = "fo_fee_waiver_flag")
     @Convert(converter = BooleanToStringConverter.class)
     private Boolean feeWaiverFlag;
@@ -166,6 +170,9 @@ public class FOIARequest extends CaseFile implements FOIAObject
 
     @Column(name = "fo_request_expedite_reason")
     private String requestExpediteReason;
+
+    @Column(name = "fo_request_amendment_details")
+    private String requestAmendmentDetails;
 
     @Column(name = "fo_request_track")
     private String requestTrack;
@@ -652,6 +659,26 @@ public class FOIARequest extends CaseFile implements FOIAObject
         this.foiaConfiguration = foiaConfiguration;
     }
 
+    public Boolean getAmendmentFlag() 
+    {
+        return amendmentFlag;
+    }
+
+    public void setAmendmentFlag(Boolean amendmentFlag) 
+    {
+        this.amendmentFlag = amendmentFlag;
+    }
+
+    public String getRequestAmendmentDetails() 
+    {
+        return requestAmendmentDetails;
+    }
+
+    public void setRequestAmendmentDetails(String requestAmendmentDetails) 
+    {
+        this.requestAmendmentDetails = requestAmendmentDetails;
+    }
+
     @Override
     public PersonAssociation getOriginator()
     {
@@ -715,6 +742,7 @@ public class FOIARequest extends CaseFile implements FOIAObject
                 + ", paidFlag=" + paidFlag + ", publicFlag=" + publicFlag + ", deliveryMethodOfResponse=" + deliveryMethodOfResponse
                 + ", recordSearchDateFrom=" + recordSearchDateFrom + ", recordSearchDateTo=" + recordSearchDateTo + ", processingFeeWaive="
                 + processingFeeWaive + ", requestFeeWaiveReason=" + requestFeeWaiveReason + ", payFee=" + payFee
-                + ", requestExpediteReason=" + requestExpediteReason + ", extensionFlag=" + extensionFlag + "} " + super.toString();
+                + ", requestExpediteReason=" + requestExpediteReason + ", extensionFlag=" + extensionFlag + ", amendmentFlag=" + amendmentFlag 
+                + ", requestAmendmentDetails=" + requestAmendmentDetails + "} " + super.toString();
     }
 }
