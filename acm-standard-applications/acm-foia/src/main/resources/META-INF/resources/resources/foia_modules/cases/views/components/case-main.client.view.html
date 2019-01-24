@@ -21,31 +21,20 @@
                 <div class="col-sm-3">
                     <label for="recordSearchDateFrom" translate> cases.comp.main.recordSearchDateFrom.label </label>
                     <div>
-                        <div class="input-group">
-                            <input type="text" id="recordSearchDateFrom" class="form-control" name="recordSearchDateFrom"
-                                    ng-model="objectInfo.recordSearchDateFrom"
-                                    is-open="openedRecordSearchDateFrom.openedEnd" close-on-date-selection="true" show-button-bar="true"
-                                    on-open-focus="false" close-text="Close" readonly />
-                            <span class="input-group-btn">
-                    <button type="button" class="btn btn-default"
-                            ng-click="openedRecordSearchDateFrom.openedEnd = !openedRecordSearchDateFrom.openedEnd" ng-disabled="true"><i
-                            class="fa fa-calendar"></i></button>
-                </span>
+                        <div class="form-group">
+                            <date-time-picker data="objectInfo.recordSearchDateFrom" property="startDate"
+                                              date-picker-id="comboDate1"></date-time-picker>
+
                         </div>
                     </div>
                 </div>
                 <div class="col-sm-3">
                     <label for="recordSearchDateTo" translate> cases.comp.main.recordSearchDateTo.label </label>
                     <div>
-                        <div class="input-group">
-                            <input type="text" id="recordSearchDateTo" class="form-control" name="recordSearchDateTo"
-                                    ng-model="objectInfo.recordSearchDateTo" close-on-date-selection="true"
-                                    show-button-bar="true" on-open-focus="false" close-text="Close" readonly />
-                            <span class="input-group-btn">
-                    <button type="button" class="btn btn-default"
-                            ng-click="openedRecordSearchDateTo.openedEnd = !openedRecordSearchDateTo.openedEnd" ng-disabled="true"><i
-                            class="fa fa-calendar"></i></button>
-                </span>
+                        <div class="form-group">
+                            <date-time-picker data="objectInfo.recordSearchDateTo" property="startDate"
+                                              date-picker-id="comboDate1"></date-time-picker>
+
                         </div>
                     </div>
                 </div>
@@ -93,17 +82,10 @@
                 <div class="col-sm-3">
                     <label for="releasedDate" translate> cases.comp.main.releasedDate.label</label>
                     <div>
-                        <div class="input-group">
-                            <input type="text" id="releasedDate" class="form-control" name="releasedDate" readonly
-                                    ng-model="objectInfo.releasedDate" is-open="opened.openedEnd"
-                                    close-on-date-selection="true" show-button-bar="true" on-open-focus="false" close-text="Close" /> <span
-                                class="input-group-btn">
+                        <div class="form-group">
+                            <date-time-picker data="objectInfo.releasedDate" property="startDate"
+                                              date-picker-id="comboDate1"></date-time-picker>
 
-                            <button type="button" class="btn btn-default" ng-click="opened.openedEnd = !opened.openedEnd"
-                                    ng-disabled="true">
-                                <i class="fa fa-calendar"></i>
-                            </button>
-                        </span>
                         </div>
                     </div>
                 </div>
