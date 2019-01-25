@@ -151,9 +151,9 @@
                 <div class="col-sm-3">
                     <div class="checkbox">
                         <label>
-                            <input type="checkbox" ng-model="objectInfo.amendmentFlag" ng-change="objectInfo.requestAmendmentReason= !objectInfo.amendmentFlag ? '' : objectInfo.amendmentFlag"
+                            <input type="checkbox" ng-model="objectInfo.amendmentFlag" ng-change="objectInfo.requestAmendmentDetails= !objectInfo.amendmentFlag ? '' : objectInfo.requestAmendmentDetails"
                                     permission="editRequestData" permission-object-type="CASE_FILE" permission-properties="objectInfo"
-                                    permission-action="disable" id="amendmentFlag" ng-click="handleTextArea('amendmentFlag', 'requestAmendmentDetails')">
+                                    permission-action="disable" id="amendmentFlag">
                             <span translate>cases.comp.main.amendmentFlag.label </span>
                         </label>
                     </div>

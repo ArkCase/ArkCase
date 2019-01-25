@@ -500,22 +500,13 @@ LANGUAGE plpgsql;
         </update>
     </changeSet>
 
-    <changeSet id="28-add-fields-to-foia-requset" author="stefan.sanevski" dbms="oracle,mssql,postgres"
+    <changeSet id="28-add-fields-to-foia-request" author="stefan.sanevski" 
                logicalFilePath="/ddl/tables/foia-request-db-tables-1.0.xml">
         <addColumn tableName="acm_case_file">
-            <column name="fo_request_amendment_details" type="VARCHAR(512)"/>
+            <column name="fo_request_amendment_details" type="CLOB"/>
         </addColumn>
         <addColumn tableName="acm_case_file">
             <column name="fo_amendment_flag" type="VARCHAR(10)" defaultValue="false"/>
-        </addColumn>
-    </changeSet>
-    <changeSet id="28-add-fields-to-foia-requset" author="stefan.sanevski" dbms="mysql"
-               logicalFilePath="/ddl/tables/foia-request-db-tables-1.0.xml">
-        <addColumn tableName="acm_case_file">
-            <column name="fo_request_amendment_details" type="TEXT"/>
-        </addColumn>
-        <addColumn tableName="acm_case_file">
-            <column name="fo_amendment_flag" type="TEXT"/>
         </addColumn>
     </changeSet>
 </databaseChangeLog>
