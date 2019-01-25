@@ -675,7 +675,7 @@
             "documentReview": {
                 "statuses": {
                     "selectReviewStatus": "Select Status",
-                    "reviewed": "Reviewed Complete",
+                    "reviewed": "Review Complete",
                     "notReviewed": "Not Reviewed"
                 }
             },
