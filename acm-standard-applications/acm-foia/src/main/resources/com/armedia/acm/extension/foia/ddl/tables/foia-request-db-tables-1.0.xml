@@ -499,5 +499,15 @@ LANGUAGE plpgsql;
             <where>cm_class_name is null</where>
         </update>
     </changeSet>
+
+    <changeSet id="28-add-fields-to-foia-request" author="stefan.sanevski" 
+               logicalFilePath="/ddl/tables/foia-request-db-tables-1.0.xml">
+        <addColumn tableName="acm_case_file">
+            <column name="fo_request_amendment_details" type="CLOB"/>
+        </addColumn>
+        <addColumn tableName="acm_case_file">
+            <column name="fo_amendment_flag" type="VARCHAR(10)" defaultValue="false"/>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>
 

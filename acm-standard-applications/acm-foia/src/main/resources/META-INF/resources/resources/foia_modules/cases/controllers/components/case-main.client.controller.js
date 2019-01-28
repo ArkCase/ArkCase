@@ -205,6 +205,7 @@ angular.module('cases').controller(
             $scope.openedRecordSearchDateTo = {};
             $scope.openedRecordSearchDateTo.openedStart = false;
             $scope.openedRecordSearchDateTo.openedEnd = false;
+            
         }
 
     ]);
