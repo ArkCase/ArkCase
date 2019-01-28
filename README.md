@@ -13,7 +13,7 @@ This section documents how developers can build and run ArkCase.
 * Vagrant
 * Tomcat 9
 * git
-* nodejs 8+
+* nodejs; for MacOS you must use Node 6.  Node 8 and Node 11 do not work.
 * npm 
 * yarn
 
