@@ -100,12 +100,15 @@ Create the file `bin/setenv.sh`, mark it executable, and set the contents as the
 ```bash
 #!/bin/sh
 
+### MacOS X note: replace file:{user.home} with the actual path to your home folder, e.g. /Users/dmiller
 export JAVA_OPTS="-Djava.net.preferIPv4Stack=true -Djavax.net.ssl.keyStorePassword=password -Djavax.net.ssl.trustStorePassword=password -Djavax.net.ssl.keyStore=file:${user.home}/.arkcase/acm/private/arkcase.ks -Djavax.net.ssl.trustStore=file:${user.home}/.arkcase/acm/private/arkcase.ts -Dspring.profiles.active=ldap -Xms1024M -Xmx1024M"
 
 export NODE_ENV=development
 
 export CATALINA_PID=$CATALINA_HOME/temp/catalina.pid
 ```
+On MacOS X, you have to replace `file:${user.home}` in the above script, with the actual full path to your home folder.
+
 Now you should be able to start Tomcat: `bin/startup.sh`.  To shutdown Tomcat: `bin/shutdown.sh -force`.
 
 ## Trusting the self-signed ArkCase certificate
