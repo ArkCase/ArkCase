@@ -60,6 +60,7 @@
             <bean class="com.armedia.acm.services.search.service.SearchResults"/>
         </property>
         <property name="applicationRolesProperties" ref="acm-roles-properties"/>
+        <property name="userRoleService" ref="userRoleService"/>
     </bean>
 
     <bean id="uploadReportService" class="com.armedia.acm.plugins.report.service.PentahoUploadGeneratedReportService">
