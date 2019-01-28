@@ -75,7 +75,7 @@ angular.module('tasks').factory('Task.InfoService', ['$resource', '$translate', 
      */
     Service.resetTaskInfo = function (taskInfo) {
 
-        if (!Util.isObjectEmpty(taskInfo) && !Util.isEmpty(taskInfo.taskId)) {
+        if (taskInfo !== null && !Util.isObjectEmpty(taskInfo) && !Util.isEmpty(taskInfo.taskId)) {
             taskCache.remove(taskGetUrl + taskInfo.taskId);
         }
     };
