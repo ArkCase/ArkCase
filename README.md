@@ -13,6 +13,9 @@ This section documents how developers can build and run ArkCase.
 * Vagrant
 * Tomcat 9
 * git
+* nodejs 8+
+* npm 
+* yarn
 
 ### Install the Vagrant VM
 ArkCase uses a set of services including Solr, ActiveMQ, MySQL, Alfresco, and Pentaho.  Install a pre-build Vagrant box with all these services already installed.
