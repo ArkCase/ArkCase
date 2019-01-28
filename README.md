@@ -118,5 +118,10 @@ MacOS: A good guide is here, https://www.accuweaver.com/2014/09/19/make-chrome-a
 
 ArkCase is a Maven project with a standard Maven folder layout.  You can load it into your chosen IDE or editor in whichever way is supported by your editor; if your IDE supports starting and launching a war file, this should work in the normal way.  In this guide we can't provide specific guidance for each editor and IDE.
 
+## Manual war file deployment
 
+Ideally, as you develop ArkCase you will use automated support from your IDE to launch and deploy, as described above.  However, this section shows how to deploy the war file manually, for situations where you want to try ArkCase without IDE integration.
 
+Rename the file `ArkCase/acm-standard-applications/acm-law-enforcement/target/acm-law-enforcement-3.3.0.war` (which the Maven build created a few sections ago) to `arkcase.war`.  Note, the `3.3.0` in the filename will change depending on which version of ArkCase you are building.
+
+Move the file `arkcase.war` to the Tomcat `webapps` folder, then watch the Tomcat `logs/catalina.out` folder.  After a few minutes, the ArkCase webapp should start.
