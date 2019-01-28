@@ -73,6 +73,44 @@ scp vagrant@arkcase-ce.local:/opt/common/arkcase.ts .
 
 The password for the `vagrant` user is `vagrant`, as per the Vagrant box guidelines.
 
+## Configure Tomcat
+
+In your Tomcat 9 installationm, edit the `conf/server.xml` file, and add the following connector, below the existing connector for port 8080:
+
+```xml
+ <Connector port="8843"
+	       protocol="org.apache.coyote.http11.Http11Nio2Protocol"
+	       sslImplementationName="org.apache.tomcat.util.net.jsse.JSSEImplementation"
+	       scheme="https"
+	       secure="true"
+	       SSLEnabled="true"
+	       keystoreFile="${user.home}/.arkcase/acm/private/arkcase.ks"
+	       keystorePass="password"
+	       truststoreFile="${user.home}/.arkcase/acm/private/arkcase.ts"
+	       truststorePass="password"
+	       sslProtocol="TLSv1.2"
+	       />
+```
+
+Create the file `bin/setenv.sh`, mark it executable, and set the contents as the following:
+
+```bash
+#!/bin/sh
+
+export JAVA_OPTS="-Djava.net.preferIPv4Stack=true -Djavax.net.ssl.keyStorePassword=password -Djavax.net.ssl.trustStorePassword=password -Djavax.net.ssl.keyStore=file:${user.home}/.arkcase/acm/private/arkcase.ks -Djavax.net.ssl.trustStore=file:${user.home}/.arkcase/acm/private/arkcase.ts -Dspring.profiles.active=ldap -Xms1024M -Xmx1024M"
+
+export NODE_ENV=development
+
+export CATALINA_PID=$CATALINA_HOME/temp/catalina.pid
+```
+Now you should be able to start Tomcat: `bin/startup.sh`.  To shutdown Tomcat: `bin/shutdown.sh -force`.
+
+## Trusting the self-signed ArkCase certificate
+
+When you open ArkCase in your browser, you will have to trust the self-signed cert.  The cert is signed by a self-signed ArkCase certificate authority.  Follow the right procedure for your operating system to trust this certificate.
+
+MacOS: A good guide is here, https://www.accuweaver.com/2014/09/19/make-chrome-accept-a-self-signed-certificate-on-osx/
+
 ## IDE Integration
 
 ArkCase is a Maven project with a standard Maven folder layout.  You can load it into your chosen IDE or editor in whichever way is supported by your editor; if your IDE supports starting and launching a war file, this should work in the normal way.  In this guide we can't provide specific guidance for each editor and IDE.
