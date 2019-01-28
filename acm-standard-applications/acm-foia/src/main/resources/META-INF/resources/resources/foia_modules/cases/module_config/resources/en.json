@@ -47,7 +47,8 @@
         "notificationGroup": "Executive Group",
         "modified": "Last Modified Date and Time",
         "modifier": "Last Modified By",
-        "receivedDate.label": "Received Date and Time"
+        "receivedDate.label": "Received Date and Time",
+        "amendmentAdded.label":"Amendment Added"
     },
     "cases.comp.actions": {
         "title": "Actions",
@@ -423,6 +424,9 @@
             "placeholder": "Enter Expedite",
             "label": "Expedite"
         },
+        "amendmentFlag": {
+            "label": "Amendment"
+        },
         "litigationFlag": {
             "placeholder": "Enter Litigation",
             "label": "Litigation"
@@ -494,6 +498,10 @@
         "requestExpediteReason": {
             "label": "Check to Request an Expedite",
             "placeholder": "Enter a Reason for Expedite Request"
+        },
+        "requestAmendmentDetails": {
+            "label": "Amendment Details",
+            "placeholder": "Enter Amendment Details"
         }
     },
     "cases.comp.returnReason": {

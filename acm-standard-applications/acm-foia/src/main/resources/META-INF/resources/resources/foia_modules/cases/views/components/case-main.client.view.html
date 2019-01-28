@@ -130,6 +130,16 @@
                         </label>
                     </div>
                 </div>
+                <div class="col-sm-3">
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" ng-model="objectInfo.amendmentFlag" ng-change="objectInfo.requestAmendmentDetails= !objectInfo.amendmentFlag ? '' : objectInfo.requestAmendmentDetails"
+                                    permission="editRequestData" permission-object-type="CASE_FILE" permission-properties="objectInfo"
+                                    permission-action="disable" id="amendmentFlag">
+                            <span translate>cases.comp.main.amendmentFlag.label </span>
+                        </label>
+                    </div>
+                </div>
                 <div class="col-sm-2">
                     <div class="checkbox">
                         <label>
@@ -139,7 +149,7 @@
                         </label>
                     </div>
                 </div>
-                <div class="col-sm-2">
+                <div class="col-sm-1">
                     <div class="checkbox">
                         <label>
                             <input type="checkbox" ng-model="objectInfo.paidFlag" permission="editRequestData" permission-object-type="CASE_FILE" permission-properties="objectInfo"
@@ -161,6 +171,13 @@
                     <textarea rows=5 id="requestExpediteReason" ng-model="objectInfo.requestExpediteReason" name="requestExpediteReason"
                             class="input-md form-control" ng-disabled="!objectInfo.expediteFlag"
                             placeholder="{{ 'cases.comp.main.requestExpediteReason.placeholder'  | translate }}"></textarea>
+                </div>
+                <div class="col-sm-3">
+                    <label for="requestExpediteReason" translate> cases.comp.main.requestAmendmentDetails.label </label>
+                    <textarea rows=5 id="requestAmendmentDetails" ng-model="objectInfo.requestAmendmentDetails" name="requestAmendmentDetails"
+                            class="input-md form-control" ng-disabled="!objectInfo.amendmentFlag"
+                            placeholder="{{ 'cases.comp.main.requestAmendmentDetails.placeholder'  | translate }}"
+                            ng-required="objectInfo.amendmentFlag"></textarea>
                 </div>
                 <div class="col-sm-2">
                     <div class="checkbox">
