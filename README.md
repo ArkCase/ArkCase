@@ -11,6 +11,8 @@ This section documents how developers can build and run ArkCase.
 * Maven 3.5+
 * VirtualBox
 * Vagrant
+* Tomcat 9
+* git
 
 ### Install the Vagrant VM
 ArkCase uses a set of services including Solr, ActiveMQ, MySQL, Alfresco, and Pentaho.  Install a pre-build Vagrant box with all these services already installed.
@@ -45,4 +47,11 @@ https://arkcase-ce.local/share
 https://arkcase-ce.local/pentaho
 
 https://arkcase-ce.local/VirtualViewerJavaHTML5 (expect a 503 error from this URL)
+
+## Clone the repository and build the war file
+
+Clone this repository to a folder of your choice.
+
+`cd` to the root folder; `mvn -DskipITs clean install`.  This will run the unit tests and build the war file.  It should take a few minutes.
+
 
