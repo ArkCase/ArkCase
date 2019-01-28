@@ -936,9 +936,6 @@ angular
 
                     ,
                     onDblClick : function(event, data) {
-                        if (DocTree.readOnly) {
-                            return;
-                        }
                         var setting = DocTree.Config.getSetting();
                         if (DocTree.isFolderNode(data.node) && setting.search.enabled) {
                             DocTree.Op.removeSearchFilter();
