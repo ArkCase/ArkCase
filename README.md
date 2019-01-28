@@ -54,4 +54,28 @@ Clone this repository to a folder of your choice.
 
 `cd` to the root folder; `mvn -DskipITs clean install`.  This will run the unit tests and build the war file.  It should take a few minutes.
 
+## Clone the configuration folder
+
+ArkCase requires a configuration folder which is housed in another GitHub repository: https://github.com/ArkCase/.arkcase.  Clone this repository into your home folder.  *This repository must be cloned to your home folder.* . ArkCase will not work without a .arkcase folder in your home folder.
+
+## Copy TLS keys and certificates from the Vagrant box
+
+You need to copy the self-signed keys, certifications, key stores, and trust stores from the Vagrant box to the configuration folder.
+
+```
+cd ~/.arkcase/acm/private
+scp vagrant@arkcase-ce.local:/etc/ssl/ca/arkcase-ca.crt .
+scp vagrant@arkcase-ce.local:/etc/ssl/private/acm-arkcase.rsa.pem .
+scp vagrant@arkcase-ce.local:/etc/ssl/crt/acm-arkcase.crt .
+scp vagrant@arkcase-ce.local:/opt/common/arkcase.ks .
+scp vagrant@arkcase-ce.local:/opt/common/arkcase.ts .
+```
+
+The password for the `vagrant` user is `vagrant`, as per the Vagrant box guidelines.
+
+## IDE Integration
+
+ArkCase is a Maven project with a standard Maven folder layout.  You can load it into your chosen IDE or editor in whichever way is supported by your editor; if your IDE supports starting and launching a war file, this should work in the normal way.  In this guide we can't provide specific guidance for each editor and IDE.
+
+
 
