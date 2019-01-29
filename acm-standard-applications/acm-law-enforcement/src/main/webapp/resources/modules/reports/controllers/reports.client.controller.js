@@ -87,21 +87,6 @@ angular.module('reports').controller('ReportsController',
                     $scope.showReportParameters = false;
                     return;
                 }
-
-                var reportParameters = _.find($scope.reportsParameters, {
-                    "reportName": $scope.data.reportSelected
-                });
-
-                // reset start and end date
-                $scope.data.startDate = new Date();
-                $scope.data.endDate = new Date();
-
-                if (!reportParameters) {
-                    $scope.data.dateSearchType = 'DATE_RANGE'; // by default DATE_RANGE is used
-                } else {
-                    $scope.data.dateSearchType = reportParameters.dateSearchType;
-                }
-
                 var reportUrl = $scope.data.reports[$scope.data.reportSelected];
                 // show report parameters only on prpt reports
                 if (reportUrl.indexOf('prpt/viewer', reportUrl.length - 'prpt/viewer'.length) !== -1) {

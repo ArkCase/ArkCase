@@ -11,9 +11,9 @@
 
                     <div ng-include="'modules/reports/views/components/reports-selection.client.view.html'"></div>
                     <div ng-include="'modules/reports/views/components/reports-type.client.view.html'"></div>
-                    <div ng-include="'modules/reports/views/components/reports-datepickers.client.view.html'"></div>
+                    <div ng-show="showReportParameters" ng-include="'modules/reports/views/components/reports-datepickers.client.view.html'"></div>
 
-                    <div class="checkbox">
+                    <div ng-show="showReportParameters" class="checkbox">
                         <label>
                             <input type="checkbox" ng-model="showXmlReport">
                             <span translate>
@@ -23,7 +23,7 @@
                     </div>
 
                     <div>
-                        <button class="btn btn-sm btn-default left-block" ng-click="generateReport()" ng-disabled="!data.reportSelected">
+                        <button class="btn btn-sm" ng-show="showReportParameters" ng-click="generateReport()" ng-disabled="!data.reportSelected">
                             <span translate>reports.btn.generateReport</span>
                         </button>
                     </div>
