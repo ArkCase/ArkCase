@@ -144,6 +144,7 @@
         <property name="acmParticipantDao" ref="acmParticipantDao"/>
         <property name="objectConverter" ref="objectConverter"/>
         <property name="authenticationManager" ref="acmAuthenticationManager"/>
+        <property name="saveBusinessProcess" ref="saveBusinessProcess"/>
     </bean>
 
     <bean id="acmApplicationTaskEventHandler" class="com.armedia.acm.plugins.task.service.impl.AcmApplicationTaskEventHandler">

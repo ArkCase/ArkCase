@@ -571,31 +571,6 @@ public class ActivitiTaskDao extends AcmAbstractDao<AcmTask> implements TaskDao,
         return retval;
     }
 
-    @Override
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public List<Long> findTasksIdsForParentObjectIdAndParentObjectType(String parentObjectType, Long parentObjectId)
-    {
-        List<ProcessInstance> processes = getActivitiRuntimeService().createProcessInstanceQuery()
-                .variableValueEquals(TaskConstants.VARIABLE_NAME_PARENT_OBJECT_TYPE, parentObjectType)
-                .variableValueEquals(TaskConstants.VARIABLE_NAME_PARENT_OBJECT_ID, parentObjectId).list();
-
-        Stream<Task> activitiWorkflowTasksStream = processes.stream()
-                .map(it -> getActivitiTaskService().createTaskQuery()
-                        .processInstanceId(it.getProcessInstanceId())
-                        .singleResult());
-
-        Stream<Task> adhochTasksStream = getActivitiTaskService().createTaskQuery()
-                .taskVariableValueEquals(TaskConstants.VARIABLE_NAME_PARENT_OBJECT_TYPE, parentObjectType)
-                .taskVariableValueEquals(TaskConstants.VARIABLE_NAME_PARENT_OBJECT_ID, parentObjectId)
-                .list().stream();
-
-        List<Long> taskIds = Stream.concat(activitiWorkflowTasksStream, adhochTasksStream)
-                .map(it -> Long.valueOf(it.getId()))
-                .collect(Collectors.toList());
-        log.debug("Found [{}] tasks for object [{}:{}]", taskIds.size(), parentObjectType, parentObjectId);
-        return taskIds;
-    }
-
     public List<AcmTask> findByVariableForObjectTypeAndId(String name, String value, String objectType, Long objectId)
     {
         List<Task> activitiTasks = getActivitiTaskService().createTaskQuery()

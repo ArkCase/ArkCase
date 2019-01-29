@@ -59,6 +59,18 @@ angular.module('tasks').factory('Task.NewTaskService', [ '$http', '$httpParamSer
             cache: false
         });
     };
+    
+    Service.reviewNewDocuments = function(formData) {
+       
+        return $http({
+            method: 'POST',
+            url: 'api/latest/plugin/tasks/newdocuments/review',
+            data: formData,
+            headers: {
+                'Content-Type': undefined
+            }
+        });
+    };
 
     return Service;
 } ]);
