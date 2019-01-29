@@ -117,7 +117,6 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
     }
 
     @Override
-    @PreAuthorize("hasPermission(#parentId, #parentType, 'editAttachments')")
     @AcmAcquireAndReleaseObjectLock(objectIdArgIndex = 0, objectType = "FOLDER", lockType = "WRITE", lockChildObjects = false, unlockChildObjects = false)
     public AcmFolder addNewFolder(Long parentFolderId, String newFolderName, Long parentId, String parentType)
             throws AcmCreateObjectFailedException, AcmUserActionFailedException, AcmObjectNotFoundException
