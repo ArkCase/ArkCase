@@ -35,13 +35,17 @@ import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.data.BuckslipFutureTask;
 import com.armedia.acm.objectonverter.ObjectConverter;
+import com.armedia.acm.plugins.businessprocess.model.BusinessProcess;
+import com.armedia.acm.plugins.businessprocess.service.SaveBusinessProcess;
 import com.armedia.acm.plugins.ecm.dao.AcmContainerDao;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.exception.AcmFolderException;
 import com.armedia.acm.plugins.ecm.model.AcmCmisObjectList;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
+import com.armedia.acm.plugins.ecm.model.AcmMultipartFile;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
+import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
@@ -67,6 +71,7 @@ import com.google.common.collect.ImmutableMap;
 import org.activiti.engine.ActivitiException;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.mule.api.MuleException;
@@ -78,7 +83,9 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -111,6 +118,7 @@ public class AcmTaskServiceImpl implements AcmTaskService
     private ObjectAssociationService objectAssociationService;
     private ObjectConverter objectConverter;
     private AcmAuthenticationManager authenticationManager;
+    private SaveBusinessProcess saveBusinessProcess;
 
     @Override
     public List<BuckslipProcess> getBuckslipProcessesForObject(String objectType, Long objectId)
@@ -556,7 +564,8 @@ public class AcmTaskServiceImpl implements AcmTaskService
         reviewers.add(task.getAssignee());
         List<AcmTask> createdAcmTasks = new ArrayList<>();
         Long parentObjectId = task.getAttachedToObjectId();
-        String parentObjectType = (task.getAttachedToObjectType().equals("")) ? null : task.getAttachedToObjectType();
+        String parentObjectType = (StringUtils.isNotBlank(task.getAttachedToObjectType())) ? 
+                task.getAttachedToObjectType() : null;
 
         if (task.getDocumentsToReview() == null || task.getDocumentsToReview().isEmpty())
         {
@@ -581,8 +590,16 @@ public class AcmTaskServiceImpl implements AcmTaskService
                 pVars.put("OBJECT_TYPE", "FILE");
                 pVars.put("OBJECT_ID", documentToReview.getFileId());
                 pVars.put("OBJECT_NAME", documentToReview.getFileName());
-                pVars.put("PARENT_OBJECT_TYPE", parentObjectType);
-                pVars.put("PARENT_OBJECT_ID", parentObjectId);
+                if(documentToReview.getContainer() != null)
+                {
+                    pVars.put("PARENT_OBJECT_TYPE", documentToReview.getContainer().getContainerObjectType());
+                    pVars.put("PARENT_OBJECT_ID", documentToReview.getContainer().getContainerObjectId());
+                }
+                else 
+                {
+                    pVars.put("PARENT_OBJECT_TYPE", parentObjectType);
+                    pVars.put("PARENT_OBJECT_ID", parentObjectId);
+                }
                 pVars.put("REQUEST_TYPE", "DOCUMENT_REVIEW");
 
                 AcmTask createdAcmTask = taskDao.startBusinessProcess(pVars, businessProcessName);
@@ -592,6 +609,45 @@ public class AcmTaskServiceImpl implements AcmTaskService
 
             return createdAcmTasks;
         }
+    }
+    @Override
+    @Transactional
+    public List<AcmTask> startReviewDocumentsWorkflow(AcmTask task, String businessProcessName, Authentication authentication, List<MultipartFile> filesToUpload)
+            throws AcmTaskException, IOException, AcmCreateObjectFailedException, AcmUserActionFailedException
+    {
+        BusinessProcess businessProcess = new BusinessProcess();
+        businessProcess.setStatus("DRAFT");
+        businessProcess = saveBusinessProcess.save(businessProcess);
+        AcmContainer container = ecmFileService.createContainerFolder(businessProcess.getObjectType(), businessProcess.getId(), EcmFileConstants.DEFAULT_CMIS_REPOSITORY_ID);
+        businessProcess.setContainer(container);
+
+        AcmFolder folder = container.getAttachmentFolder();
+
+        List<EcmFile> uploadedFiles = new ArrayList<>();
+
+        if(filesToUpload != null)
+        {
+
+            for (MultipartFile file : filesToUpload) {
+
+                EcmFile temp = ecmFileService.upload(file.getOriginalFilename(), "Other", file, authentication,
+                        folder.getCmisFolderId(), businessProcess.getObjectType(), businessProcess.getId());
+                uploadedFiles.add(temp);
+            }
+        }
+        List<EcmFile> documentsToReview = task.getDocumentsToReview();
+        if(documentsToReview != null)
+        {
+            documentsToReview.addAll(uploadedFiles);
+            task.setDocumentsToReview(documentsToReview);
+        }
+        else
+        {
+            task.setDocumentsToReview(uploadedFiles);
+            task.setAttachedToObjectType(businessProcess.getObjectType());
+            task.setAttachedToObjectId(businessProcess.getId());
+        }
+        return startReviewDocumentsWorkflow(task, businessProcessName, authentication);
     }
 
     private Long getBusinessProcessIdFromSolr(String objectType, Long objectId, Authentication authentication)
@@ -713,5 +769,10 @@ public class AcmTaskServiceImpl implements AcmTaskService
     public void setAuthenticationManager(AcmAuthenticationManager authenticationManager)
     {
         this.authenticationManager = authenticationManager;
+    }
+
+    public void setSaveBusinessProcess(SaveBusinessProcess saveBusinessProcess) 
+    {
+        this.saveBusinessProcess = saveBusinessProcess;
     }
 }

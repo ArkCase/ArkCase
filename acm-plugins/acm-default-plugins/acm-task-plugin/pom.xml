@@ -273,7 +273,12 @@
             <artifactId>jmimemagic</artifactId>
             <scope>test</scope>
         </dependency>
-
+        <dependency>
+            <groupId>com.armedia.acm.acm-plugins.acm-default-plugins</groupId>
+            <artifactId>acm-business-process-plugin</artifactId>
+            <version>${acm.version}</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
 
 </project>
