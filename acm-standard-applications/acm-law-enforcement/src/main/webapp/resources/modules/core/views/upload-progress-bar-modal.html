@@ -3,7 +3,7 @@
         <h3 translate>core.progressBar.header</h3>
     </div>
     <div class="modal-body">
-        <div class="row" ng-repeat="element in hashMap">
+        <div class="row" ng-repeat="element in hashMapOfAllFiles">
             <div class="text-left"><strong>{{ element.objectType }}</strong> / <strong>{{ element.parentObjectNumber }}</strong> / <strong>{{ element.fileName }}</strong></div>
             <div class="col-sm-9">
                 <div class="progress">
@@ -19,9 +19,10 @@
         <!--<button class="btn btn-secondary" ng-click="onClickAddMoreFiles()">
             <span translate>core.progressBar.addMoreFiles</span>
         </button>-->
+        <!--this stays out until we have requirement close/cancel modal button.
         <button class="btn btn-secondary" ng-click="onClickClose()">
             <span translate>core.progressBar.close</span>
-        </button>
+        </button>-->
         <button class="btn btn-primary" ng-click="onClickHideModal()">
             <span translate>core.progressBar.hide</span>
         </button>

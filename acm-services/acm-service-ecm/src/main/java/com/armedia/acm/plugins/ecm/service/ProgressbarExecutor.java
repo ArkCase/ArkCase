@@ -45,7 +45,7 @@ public class ProgressbarExecutor {
     private String ID;
     private String username;
     private Timer timer;
-    private int currentProgress;
+    private int currentProgress = 0;
     private long partProgress;
     private JmsTemplate jmsTemplate;
     private ConnectionFactory activeMQConnectionFactory;
@@ -83,16 +83,21 @@ public class ProgressbarExecutor {
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
+                int _currentProgress = 0;
                 if(progressbarDetails.getStage() == 2){
+
                     partProgress = fileInputStream.getByteCount();
 
                     if(partProgress > size) {
                         partProgress = size;
                     }
-                    currentProgress = 50 + Math.round(10 * (float) partProgress / size);
-                    progressbarDetails.setCurrentProgress(currentProgress);
-                    progressbarDetails.setSuccess(true);
-                    send(progressbarDetails, "VirtualTopic.UploadFileManager:" + username.replaceAll("\\.", "_DOT_").replaceAll("@", "_AT_"));
+                    _currentProgress = 50 + Math.round(10 * (float) partProgress / size);
+                    if(_currentProgress != currentProgress ) {
+                        currentProgress = _currentProgress;
+                        progressbarDetails.setCurrentProgress(currentProgress);
+                        progressbarDetails.setSuccess(true);
+                        send(progressbarDetails, "VirtualTopic.UploadFileManager:" + username.replaceAll("\\.", "_DOT_").replaceAll("@", "_AT_"));
+                    }
                 }
                 else if(progressbarDetails.getStage() == 3) {
                     partProgress = fileInputStream.getByteCount();
@@ -100,10 +105,13 @@ public class ProgressbarExecutor {
                     if(partProgress > size) {
                         partProgress = size;
                     }
-                    currentProgress = 60 + Math.round(40 * (float) partProgress / size);
-                    progressbarDetails.setCurrentProgress(currentProgress);
-                    progressbarDetails.setSuccess(true);
-                    send(progressbarDetails, "VirtualTopic.UploadFileManager:" + username.replaceAll("\\.", "_DOT_").replaceAll("@", "_AT_"));
+                    _currentProgress = 60 + Math.round(40 * (float) partProgress / size);
+                    if(_currentProgress != currentProgress ) {
+                        currentProgress = _currentProgress;
+                        progressbarDetails.setCurrentProgress(currentProgress);
+                        progressbarDetails.setSuccess(true);
+                        send(progressbarDetails, "VirtualTopic.UploadFileManager:" + username.replaceAll("\\.", "_DOT_").replaceAll("@", "_AT_"));
+                    }
                 }
 
             }
