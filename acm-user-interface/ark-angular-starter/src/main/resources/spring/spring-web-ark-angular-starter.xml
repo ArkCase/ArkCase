@@ -28,7 +28,7 @@
         <property name="deployFolderPath" value="#{ systemProperties ['user.home'] }/.arkcase/custom"/>
         <property name="frontEndCommandsToBeExecuted">
             <list>
-                <value>${frontEndCommandPrefix}yarn --no-progress --non-interactive install</value>
+                <value>${frontEndCommandPrefix}yarn --ignore-engines --no-progress --non-interactive install</value>
                 <value>${frontEndCommandPrefix}${frontEndCommandPath}grunt${frontEndCommandSuffix} --no-color</value>
             </list>
         </property>
