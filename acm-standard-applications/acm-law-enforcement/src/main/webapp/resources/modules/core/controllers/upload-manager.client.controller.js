@@ -53,9 +53,13 @@ angular.module('core').controller(
                     startUploadChunkFile(fileDetails);
                 });
 
-                modalInstance.hide = function () {
+                modalInstance.hide = function (hideSnackbar) {
                     $('.uploadManagerComponent').hide();
-                    $scope.hideUploadSnackbar = false;
+                    if(hideSnackbar){
+                        $scope.hideUploadSnackbar = true;
+                    } else {
+                        $scope.hideUploadSnackbar = false;
+                    }
                 };
 
                 modalInstance.show = function () {
@@ -64,7 +68,10 @@ angular.module('core').controller(
                 };
 
                 $scope.$bus.subscribe('upload-manager-show', modalInstance.show);
-                $scope.$bus.subscribe('upload-manager-hide', modalInstance.hide);
+                $scope.$bus.subscribe('upload-manager-hide', function() {
+                    var hideSnackbar = false;
+                    modalInstance.hide(hideSnackbar);
+                });
             } else {
                 modalInstance.show();
                 startUploadChunkFile(fileDetails);
@@ -116,4 +123,9 @@ angular.module('core').controller(
                 }
             }
         }
+
+        $scope.$bus.subscribe('notify-snackbar-all-files-were-uploaded', function(uploadedSuccessfully){
+            var hideUploadSnackbar = uploadedSuccessfully;
+            modalInstance.hide(hideUploadSnackbar);
+        })
 } ]);

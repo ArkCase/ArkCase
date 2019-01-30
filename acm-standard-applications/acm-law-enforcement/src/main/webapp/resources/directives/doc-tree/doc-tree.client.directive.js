@@ -1678,7 +1678,7 @@ angular
                                 }, {
                                     name : "selectFiles/",
                                     execute : function(nodes, args) {
-                                        if (DocTree.uploadSetting) {
+                                        if (!Util.isEmpty(DocTree.uploadSetting) && !DocTree.uploadSetting.uploadFileNew) {
                                             $log.warn("Warning: Trying to upload file before previous upload");
                                         }
                                         var node = nodes[0];
@@ -2065,7 +2065,7 @@ angular
                                         item.disabled = true;
                                     } else {
                                         if (item.disabledExpression) {
-                                                item.disabled = item.disabledExpression;
+                                            item.disabled = item.disabledExpression;
                                         } else {
                                             item.disabled = false;
                                         }
