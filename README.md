@@ -7,6 +7,8 @@ ArkCase aims to be the leading open source case management and IT modernization 
 This section documents how developers can build and run ArkCase.
 
 ### Prerequisites
+* at least 16 GB RAM
+* at least 50 GB disk space (the Vagrant VM is 11G)
 * Java 8 (AdoptOpenJDK JVM works well).  Note, ArkCase is not tested on Java 9, Java 10, or Java 11.
 * Maven 3.5+
 * VirtualBox
