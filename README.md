@@ -117,7 +117,7 @@ Also, search for the text `Listener className="org.apache.catalina.core.AprLifec
 <Listener className="org.apache.catalina.core.AprLifecycleListener" SSLEngine="on" useAprConnector="true"/>
 ``` 
 
-Create the file `bin/setenv.sh`, mark it executable, and set the contents as the following:
+Create the file `bin/setenv.sh`, mark it executable, and set the contents as the following, *being careful to set the correct path to the Tomcat native library*:
 
 ```bash
 #!/bin/sh
@@ -127,11 +127,14 @@ export JAVA_OPTS="-Djava.net.preferIPv4Stack=true -Djavax.net.ssl.keyStorePasswo
 
 export NODE_ENV=development
 
+export CATALINA_OPTS="$CATALINA_OPTS -Djava.library.path=(PATH TO THE TOMCAT NATIVE LIBRARY)
+# MacOS Example: export CATALINA_OPTS=/usr/local/opt/tomcat-native/lib"
+
 export CATALINA_PID=$CATALINA_HOME/temp/catalina.pid
 ```
 On MacOS X, you have to replace `file:${user.home}` in the above script, with the actual full path to your home folder.
 
-Now you should be able to start Tomcat: `bin/startup.sh`.  To shutdown Tomcat: `bin/shutdown.sh -force`.
+Now you should be able to start Tomcat: `$TOMCAT_HOME/bin/startup.sh`.  To shutdown Tomcat: `$TOMCAT_HOME/bin/shutdown.sh -force`.
 
 ## Trusting the self-signed ArkCase certificate
 
