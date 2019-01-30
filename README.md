@@ -13,7 +13,7 @@ This section documents how developers can build and run ArkCase.
 * Vagrant
 * Tomcat 9
 * git
-* nodejs; for MacOS you must use Node 6.  Node 8 and Node 11 do not work.
+* nodejs; for MacOS you must use Node 6.  Node 8 and Node 11 do not work on MacOS.  For Windows and Linux, use Node 8 or above.
 * npm 
 * yarn
 
@@ -40,6 +40,19 @@ end
 ```
 
 Next, inside this folder, run the command `vagrant up`.  The box file is 6G; the download may take a few minutes.
+
+Windows note: sometimes the `vagrant-hostsupdater` plugin doesn't trigger a UAC prompt to allow non-admin users to edit the hosts file.  If you see an error that the hosts file could not be updated, then edit the Vagrantfile to appear as follows, and manually update your `C:\Windows\system32\drivers\etc\hosts` file to include the line `192.168.56.15 arkcase-ce.local`.
+
+```
+# this Vagrantfile is for Windows hosts where the Vagrant hosts-updater plugin is not able to update the hosts file.
+Vagrant.configure("2") do |config|
+  config.vm.box = "davidocmiller/arkcase-ce-for-devs"
+  config.vm.box_version = "0.0.1"
+  config.vm.network "private_network", ip: "192.168.56.15"
+  #config.vm.hostname = "arkcase-ce.local"
+  #config.hostsupdater.remove_on_suspend = false
+end
+```
 
 After the box is up, the following URLs should work from your browser; although you will have to accept the self-signed ArkCase certificate.
 
@@ -78,30 +91,39 @@ The password for the `vagrant` user is `vagrant`, as per the Vagrant box guideli
 
 ## Configure Tomcat
 
-In your Tomcat 9 installationm, edit the `conf/server.xml` file, and add the following connector, below the existing connector for port 8080:
+Make sure the Tomcat native connector library is being used.  MacOS: open terminal, issue the command `brew install tomcat-native`, and follow any directions you see at the end.  Windows: download from https://tomcat.apache.org/download-native.cgi.  Linux: Information on building for Linux is available from the same URL (https://tomcat.apache.org/download-native.cgi).
+
+In your Tomcat 9 installation, edit the `conf/server.xml` file, and add the following connector, below the existing connector for port 8080:
 
 ```xml
- <Connector port="8843"
-	       protocol="org.apache.coyote.http11.Http11Nio2Protocol"
-	       sslImplementationName="org.apache.tomcat.util.net.jsse.JSSEImplementation"
-	       scheme="https"
-	       secure="true"
-	       SSLEnabled="true"
-	       keystoreFile="${user.home}/.arkcase/acm/private/arkcase.ks"
-	       keystorePass="password"
-	       truststoreFile="${user.home}/.arkcase/acm/private/arkcase.ts"
-	       truststorePass="password"
-	       sslProtocol="TLSv1.2"
-	       />
+    <Connector port="8843"
+           maxThreads="150" SSLEnabled="true" secure="true" scheme="https"
+           maxHttpHeaderSize="32768"
+           connectionTimeout="40000"
+           useBodyEncodingForURI="true"
+           address="0.0.0.0">
+      <UpgradeProtocol className="org.apache.coyote.http2.Http2Protocol" />
+      <SSLHostConfig protocols="TLSv1.2" certificateVerification="none">
+        <Certificate certificateFile="${user.home}/.arkcase/acm/private/acm-arkcase.crt"
+                    certificateKeyFile="${user.home}/.arkcase/acm/private/acm-arkcase.rsa.pem"
+                    certificateChainFile="${user.home}/.arkcase/acm/private/arkcase-ca.crt"
+                    type="RSA" />
+      </SSLHostConfig>
+    </Connector>
 ```
+Also, search for the text `Listener className="org.apache.catalina.core.AprLifecycleListener"`, and make sure to add the `useAprConnector="true"` attribute, so it ends like this:
+
+```xml
+<Listener className="org.apache.catalina.core.AprLifecycleListener" SSLEngine="on" useAprConnector="true"/>
+``` 
 
 Create the file `bin/setenv.sh`, mark it executable, and set the contents as the following:
 
 ```bash
 #!/bin/sh
 
-### MacOS X note: replace file:{user.home} with the actual path to your home folder, e.g. /Users/dmiller
-export JAVA_OPTS="-Djava.net.preferIPv4Stack=true -Djavax.net.ssl.keyStorePassword=password -Djavax.net.ssl.trustStorePassword=password -Djavax.net.ssl.keyStore=file:${user.home}/.arkcase/acm/private/arkcase.ks -Djavax.net.ssl.trustStore=file:${user.home}/.arkcase/acm/private/arkcase.ts -Dspring.profiles.active=ldap -Xms1024M -Xmx1024M"
+### MacOS X note: replace {user.home} with the actual path to your home folder, e.g. /Users/dmiller
+export JAVA_OPTS="-Djava.net.preferIPv4Stack=true -Djavax.net.ssl.keyStorePassword=password -Djavax.net.ssl.trustStorePassword=password -Djavax.net.ssl.keyStore=${user.home}/.arkcase/acm/private/arkcase.ks -Djavax.net.ssl.trustStore=${user.home}/.arkcase/acm/private/arkcase.ts -Dspring.profiles.active=ldap -Xms1024M -Xmx1024M"
 
 export NODE_ENV=development
 
