@@ -146,7 +146,7 @@ angular.module('directives').directive('searchModal', [ '$q', '$translate', '$fi
                     if (scope.findGroups) {
                         query = SearchQueryBuilder.buildSafeFqFacetedSearchQuerySorted('*', scope.filters, scope.pageSize, scope.start, scope.sort);
                     } else {
-                        query = SearchQueryBuilder.buildSafeFqFacetedSearchQuerySorted(scope.searchQuery + '*', scope.filters, scope.pageSize, scope.start, scope.sort);
+                        query = SearchQueryBuilder.buildSafeFqFacetedSearchQuerySorted(scope.searchQuery + '*', scope.filters, scope.pageSize, scope.start, scope.sort, scope.config().parentDocument);
                     }
 
                     if (query) {
