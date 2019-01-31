@@ -72,14 +72,6 @@
         <property name="configFile" ref="googleAnalyticsConfigurationFile"/>
     </bean>
 
-    <bean id="ocrConfigurationPropertiesService" class="com.armedia.acm.plugins.admin.service.OCRConfigurationPropertiesService">
-        <property name="propertyFileManager" ref="propertyFileManager"/>
-    </bean>
-
-    <bean id="arkCaseOCRService" class="com.armedia.acm.plugins.admin.service.ArkCaseOCRServiceImpl">
-        <property name="OCRConfigurationPropertiesService" ref="ocrConfigurationPropertiesService"/>
-    </bean>
-
     <bean id="angularPropertiesManagementService" class="com.armedia.acm.plugins.admin.service.JsonPropertiesManagementService">
         <property name="propertiesFileLocation" value="#{ systemProperties ['user.home'] }/.arkcase/acm/app-properties/properties.json"/>
     </bean>

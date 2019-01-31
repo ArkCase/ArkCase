@@ -963,6 +963,15 @@
                 "enableOCR.checkbox": "Enable OCR_JA"
             }
         },
+        "ocr": {
+            "title": "OCR Services_JA",
+            "ocrManagement": "OCR Management_JA",
+            "ocrConfigForm": {
+                "save.button": "Save_JA",
+                "enableOCR.label": "OCR Configuration_JA",
+                "enableOCR.checkbox": "Enable OCR_JA"
+            }
+        },
         "stateOfArkcase": {
             "title": "Arkcaseの状態",
             "pickDate": "ピック・デート",
