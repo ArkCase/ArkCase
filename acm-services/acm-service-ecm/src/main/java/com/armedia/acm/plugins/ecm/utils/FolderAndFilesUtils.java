@@ -32,9 +32,16 @@ import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.pdfbox.cos.COSName;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.PDResources;
+import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -222,6 +229,37 @@ public class FolderAndFilesUtils
         {
             return "";
         }
+    }
+
+    public boolean isSearchablePDF(File file, String finalMimeType)
+    {
+        if (finalMimeType.startsWith("application/pdf"))
+        {
+            PDDocument doc = null;
+            try
+            {
+                doc = PDDocument.load(file);
+                for (int i = 0; i < doc.getNumberOfPages(); ++i)
+                {
+                    PDPage page = doc.getPage(i);
+                    PDResources res = page.getResources();
+                    for (COSName fontName : res.getFontNames())
+                    {
+                        PDFont font = res.getFont(fontName);
+                        if (font != null)
+                        {
+                            return true;
+                        }
+                    }
+                }
+            }
+            catch (IOException e)
+            {
+                LOG.error("Unable to load pdf document: {}", e.getMessage(), e);
+            }
+            return false;
+        }
+        return false;
     }
 
 }
