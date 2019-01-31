@@ -35,6 +35,8 @@ import com.armedia.acm.services.search.service.FacetedSearchService;
 import com.armedia.acm.spring.SpringContextHolder;
 
 import org.apache.commons.lang3.StringUtils;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.mule.api.MuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -90,6 +92,8 @@ public class FacetedSearchAPIControllerV2
             @RequestParam(value = "unescapedQuery", required = false, defaultValue = "") String unescapedQuery,
             //Add time-zone param for AFDP-5769
             @RequestParam(value = "timeZone", required = false,defaultValue = "") Integer timeZoneOffsetinMinutes ,
+            // Add parent document, for retrieving parentDocument.title_parseable on ticket AFDP-5936
+            @RequestParam(value = "getParentDocument", required = false, defaultValue = "false") boolean getParentDocument,
 
             Authentication authentication) throws MuleException, UnsupportedEncodingException
     {
@@ -182,6 +186,44 @@ public class FacetedSearchAPIControllerV2
                 log.error(String.format("Bean of type: %sReportGenerator is not defined", export.toLowerCase()));
                 throw new IllegalStateException(String.format("Can not export to %s!", export));
             }
+        }
+
+        if (getParentDocument)
+        {
+            JSONObject solrResponse = new JSONObject(res);
+            if (solrResponse.getJSONObject("response").getLong("numFound") > 0)
+            {
+                JSONArray docs = solrResponse.getJSONObject("response").getJSONArray("docs");
+                for (int i = 0; i < docs.length(); i++)
+                {
+                    String parentId = "";
+                    String parentType = "";
+                    if (docs.getJSONObject(i).has("parent_ref_s"))
+                    {
+                        String[] splitArray = docs.getJSONObject(i).getString("parent_ref_s").split("-");
+                        if (splitArray.length >= 2)
+                        {
+                            parentId = splitArray[0];
+
+                            for (int j = 1; j < splitArray.length; j++)
+                            {
+                                parentType += splitArray[j];
+                            }
+                        }
+                    }
+
+                    if (StringUtils.isNotEmpty(parentId) && StringUtils.isNotEmpty(parentType)) {
+                        String parentResult = getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.QUICK_SEARCH, "object_id_s:" + parentId + " AND object_type_s:" + parentType, 0,
+                                1, "create_date_tdt DESC");
+                        JSONObject parentResponse = new JSONObject(parentResult);
+                        if (parentResponse.getJSONObject("response").getLong("numFound") == 1) {
+                            docs.getJSONObject(i).put("parent_document", parentResponse.getJSONObject("response").getJSONArray("docs").getJSONObject(0));
+                        }
+                    }
+                }
+            }
+
+            res = solrResponse.toString();
         }
 
         return new ResponseEntity<>(res, headers, HttpStatus.OK);

@@ -641,7 +641,7 @@
           "field":  "parent_ref_s",
           "displayName": "common.dialogObjectPicker.table.columns.parentTitle",
           "headerCellFilter": "translate",
-          "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, {parentId:row.entity.parent_ref_s, object_type_s:row.entity.parent_ref_s})'>{{row.entity.parent_ref_s | beautifyParentRefToParentTitle}}</a>"
+          "cellTemplate": "<a ng-if='row.entity.parent_document.title_parseable' href='#' ng-click='grid.appScope.onClickObjLink($event, {parentId:row.entity.parent_ref_s, object_type_s:row.entity.parent_ref_s})'>{{row.entity.parent_document.title_parseable}}</a>"
         }
       ],
       "paginationPageSizes": [
@@ -651,7 +651,8 @@
         50
       ],
       "paginationPageSize": 10,
-      "start": 0
+      "start": 0,
+      "parentDocument": true
     },
     "fileExtensionRegex": "\\.(doc|dot|docx|dotx|docm|dotm|docb|pdf|xlsx|xls|ppt)$",
     "disabledFileCommandsOnLock": {
@@ -818,7 +819,8 @@
       50
     ],
     "paginationPageSize": 10,
-    "start": 0
+    "start": 0,
+    "parentDocument": true
   },
   "objectHistoryGrid": {
     "id": "objectHistoryModalGrid",
