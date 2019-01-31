@@ -1,8 +1,8 @@
-package com.armedia.acm.plugins.admin.service;
+package com.armedia.acm.ocr.model;
 
 /*-
  * #%L
- * ACM Default Plugin: admin
+ * ACM Service: OCR
  * %%
  * Copyright (C) 2014 - 2018 ArkCase LLC
  * %%
@@ -27,15 +27,19 @@ package com.armedia.acm.plugins.admin.service;
  * #L%
  */
 
-import com.armedia.acm.plugins.admin.model.OCRConfiguration;
-import com.armedia.acm.services.transcribe.exception.GetConfigurationException;
-import com.armedia.acm.services.transcribe.exception.SaveConfigurationException;
-
-public interface ArkCaseOCRService
+/**
+ * Created by Vladimir Cherepnalkovski
+ */
+public class OCRCompiledEvent extends OCREvent
 {
-    public OCRConfiguration getConfiguration() throws GetConfigurationException;
+    public OCRCompiledEvent(OCR source)
+    {
+        super(source);
+    }
 
-    public void saveConfiguration(OCRConfiguration configuration) throws SaveConfigurationException;
-
-    public void verifyOCR(OCRConfiguration configuration) throws SaveConfigurationException;
+    @Override
+    public String getEventType()
+    {
+        return OCRConstants.OCR_COMPILED_EVENT;
+    }
 }

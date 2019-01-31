@@ -1,8 +1,8 @@
-package com.armedia.acm.plugins.admin.model;
+package com.armedia.acm.ocr.rules;
 
 /*-
  * #%L
- * ACM Default Plugin: admin
+ * ACM Service: OCR
  * %%
  * Copyright (C) 2014 - 2018 ArkCase LLC
  * %%
@@ -27,31 +27,12 @@ package com.armedia.acm.plugins.admin.model;
  * #L%
  */
 
-import com.armedia.acm.services.transcribe.annotation.ConfigurationProperties;
-import com.armedia.acm.services.transcribe.annotation.ConfigurationProperty;
+import com.armedia.acm.drools.SimpleStatelessSingleObjectRuleManager;
+import com.armedia.acm.ocr.model.OCR;
 
-@ConfigurationProperties(path = "${user.home}/.arkcase/acm/ecmFileService.properties")
-public class OCRConfiguration
+/**
+ * Created by Vladimir Cherepnalkovski
+ */
+public class OCRBusinessRulesExecutor extends SimpleStatelessSingleObjectRuleManager<OCR>
 {
-
-    @ConfigurationProperty(key = "ecm.viewer.snowbound.enableOCR")
-    private boolean enableOCR;
-
-    public boolean isEnableOCR()
-    {
-        return enableOCR;
-    }
-
-    public void setEnableOCR(boolean enableOCR)
-    {
-        this.enableOCR = enableOCR;
-    }
-
-    @Override
-    public String toString()
-    {
-        return "OCR Configuration{" +
-                "enableOCR=" + enableOCR +
-                '}';
-    }
 }
