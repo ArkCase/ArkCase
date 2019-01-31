@@ -316,7 +316,7 @@ public class ArkCaseOCRServiceImpl implements ArkCaseOCRService
     @Override
     public void notifyMultiple(List<Long> ids, String action)
     {
-        throw new NotImplementedException();
+        LOG.warn("Not implemented");
     }
 
     @Override

@@ -159,7 +159,7 @@
         <property name="ecmFileUploadPipelineManager" ref="ecmFileUploadPipelineManager"/>
         <property name="ecmFileUpdatePipelineManager" ref="ecmFileUpdatePipelineManager"/>
         <property name="cmisConfigUtils" ref="cmisConfigUtils"/>
-        <property name="ocrEnabled" value="${ecm.viewer.snowbound.ocrEnabled}"/>
+        <property name="ocrEnabled" value="${ecm.viewer.snowbound.enableOCR}"/>
         <property name="mimeTypesByTika">
             <map>
                 <entry key="text/plain">
