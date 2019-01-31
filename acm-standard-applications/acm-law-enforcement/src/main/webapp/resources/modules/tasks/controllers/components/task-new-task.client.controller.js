@@ -309,6 +309,15 @@ angular.module('tasks').controller(
                         $scope.config.data.assignee = null;
                         $scope.userName = "";
                     };
+                    
+                    $scope.onSelectAttachment = function(file){
+                        if($scope.opened.isFileAllowed){
+                            $scope.filesToUpload.push(file);
+                        }else{
+                            var index = $scope.filesToUpload.indexOf(file);
+                            $scope.filesToUpload.splice(index, 1);
+                        }
+                    };
 
                     $scope.onFileUpload = function(files) {
                         angular.forEach(files, function(file) {
