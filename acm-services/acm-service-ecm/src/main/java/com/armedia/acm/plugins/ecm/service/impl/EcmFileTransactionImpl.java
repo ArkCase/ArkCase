@@ -85,10 +85,11 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
     private CmisConfigUtils cmisConfigUtils;
     private Logger log = LoggerFactory.getLogger(getClass());
     private Map<String, List<String>> mimeTypesByTika;
+    private boolean ocrEnabled;
 
     public static List<String> getAllTikaMimeTypesForFile(Map<String, List<String>> mimeTypesByTika, String value)
     {
-        if(value.contains(";"))
+        if (value.contains(";"))
         {
             value = value.split(";")[0];
         }
@@ -129,20 +130,20 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
             }
 
             String activeVersionMimeType = metadata.getFileActiveVersionMimeType();
-            if (activeVersionMimeType == null && detectedMetadata != null )
+            if (activeVersionMimeType == null && detectedMetadata != null)
             {
                 activeVersionMimeType = detectedMetadata.getContentType();
             }
 
-            if(activeVersionMimeType != null && activeVersionMimeType.contains(";"))
+            if (activeVersionMimeType != null && activeVersionMimeType.contains(";"))
             {
                 activeVersionMimeType = metadata.getFileActiveVersionMimeType().split(";")[0];
             }
 
             if (activeVersionMimeType != null && detectedMetadata != null
                     && ((detectedMetadata.getContentType().equals(activeVersionMimeType)) ||
-                    (getAllTikaMimeTypesForFile(mimeTypesByTika, activeVersionMimeType)
-                            .contains(detectedMetadata.getContentType()))))
+                            (getAllTikaMimeTypesForFile(mimeTypesByTika, activeVersionMimeType)
+                                    .contains(detectedMetadata.getContentType()))))
             {
 
                 Pair<String, String> mimeTypeAndExtension = buildMimeTypeAndExtension(detectedMetadata, ecmUniqueFilename,
@@ -155,6 +156,13 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
                 EcmFileTransactionPipelineContext pipelineContext = buildEcmFileTransactionPipelineContext(authentication,
                         tempFileContents, targetCmisFolderId, container, metadata.getFileName(), existingCmisDocument,
                         detectedMetadata, ecmUniqueFilename);
+
+                boolean searchablePDF = false;
+                if (ocrEnabled)
+                {
+                    searchablePDF = folderAndFilesUtils.isSearchablePDF(tempFileContents, finalMimeType);
+                }
+                pipelineContext.setSearchablePDF(searchablePDF);
 
                 String fileName = getFolderAndFilesUtils().getBaseFileName(metadata.getFileName(), finalExtension);
                 metadata.setFileName(fileName);
@@ -189,7 +197,6 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
         {
             FileUtils.deleteQuietly(tempFileContents);
         }
-
     }
 
     @Override
@@ -410,6 +417,13 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
             }
             ecmFile.setFileActiveVersionNameExtension(ecmTikaFile.getNameExtension());
 
+            boolean searchablePDF = false;
+            if (ocrEnabled)
+            {
+                searchablePDF = folderAndFilesUtils.isSearchablePDF(file, ecmFile.getFileActiveVersionMimeType());
+            }
+            pipelineContext.setSearchablePDF(searchablePDF);
+
             try
             {
                 log.debug("Calling pipeline manager handlers");
@@ -628,11 +642,23 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
         this.cmisConfigUtils = cmisConfigUtils;
     }
 
-    public Map<String, List<String>> getMimeTypesByTika() {
+    public Map<String, List<String>> getMimeTypesByTika()
+    {
         return mimeTypesByTika;
     }
 
-    public void setMimeTypesByTika(Map<String, List<String>> mimeTypesByTika) {
+    public void setMimeTypesByTika(Map<String, List<String>> mimeTypesByTika)
+    {
         this.mimeTypesByTika = mimeTypesByTika;
+    }
+
+    public boolean isOcrEnabled()
+    {
+        return ocrEnabled;
+    }
+
+    public void setOcrEnabled(boolean ocrEnabled)
+    {
+        this.ocrEnabled = ocrEnabled;
     }
 }

@@ -997,7 +997,6 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
             fileCopy.setLegacySystemId(file.getLegacySystemId());
             fileCopy.setPageCount(file.getPageCount());
             fileCopy.setSecurityField(file.getSecurityField());
-
             EcmFileVersion fileCopyVersion = new EcmFileVersion();
             fileCopyVersion.setVersionMimeType(file.getFileActiveVersionMimeType());
             fileCopyVersion.setVersionFileNameExtension(file.getFileActiveVersionNameExtension());
@@ -1092,6 +1091,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
             fileCopyVersion.setDeviceMake(activeVersion.getDeviceMake());
             fileCopyVersion.setDeviceModel(activeVersion.getDeviceModel());
             fileCopyVersion.setDurationSeconds(activeVersion.getDurationSeconds());
+            fileCopyVersion.setSearchablePDF(activeVersion.isSearchablePDF());
         }
     }
 

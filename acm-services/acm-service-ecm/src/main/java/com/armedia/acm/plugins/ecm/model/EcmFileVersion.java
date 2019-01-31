@@ -29,12 +29,29 @@ package com.armedia.acm.plugins.ecm.model;
 
 import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.data.AcmEntity;
+import com.armedia.acm.data.converter.BooleanToStringConverter;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.voodoodyne.jackson.jsog.JSOGGenerator;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Convert;
+import javax.persistence.DiscriminatorColumn;
+import javax.persistence.DiscriminatorType;
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.TableGenerator;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -79,6 +96,10 @@ public class EcmFileVersion implements AcmEntity, Serializable, AcmObject
 
     @Column(name = "cm_file_version_mime_type")
     private String versionMimeType;
+
+    @Column(name = "cm_file_version_searchable_pdf")
+    @Convert(converter = BooleanToStringConverter.class)
+    private boolean searchablePDF;
 
     @Column(name = "cm_file_version_name_extension")
     private String versionFileNameExtension;
@@ -351,6 +372,16 @@ public class EcmFileVersion implements AcmEntity, Serializable, AcmObject
     public void setFileSizeBytes(Long fileSizeBytes)
     {
         this.fileSizeBytes = fileSizeBytes;
+    }
+
+    public boolean isSearchablePDF()
+    {
+        return searchablePDF;
+    }
+
+    public void setSearchablePDF(boolean searchablePDF)
+    {
+        this.searchablePDF = searchablePDF;
     }
 
     @JsonIgnore

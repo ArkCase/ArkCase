@@ -1,0 +1,57 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="
+            http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="1-create-ocr-table" author="vladimir.cherepnalkovski">
+        <createTable tableName="acm_ocr">
+            <column name="cm_ocr_id" type="${idType}">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_ocr"/>
+            </column>
+            <column name="cm_ocr_remote_id" type="VARCHAR(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="cm_ocr_type" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_ocr_language" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_ocr_file_version_id" type="${idType}">
+                <constraints nullable="false" unique="true" uniqueConstraintName="uk_ocr_file_version_id"/>
+            </column>
+            <column name="cm_ocr_status" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_ocr_process_id" type="VARCHAR(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="cm_ocr_creator" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_ocr_created" type="${timestampType}" defaultValueComputed="${timestampFunction}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_ocr_modifier" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_ocr_modified" type="${timestampType}" defaultValueComputed="${timestampFunction}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_ocr_class_name" type="VARCHAR(400)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="2-create-ocr-id-table" author="vladimir.cherepnalkovski">
+        <createTable tableName="acm_ocr_id">
+            <column name="cm_seq_num" type="${idType}"/>
+            <column name="cm_seq_name" type="VARCHAR(255)"/>
+        </createTable>
+        <insert tableName="acm_ocr_id">
+            <column name="cm_seq_num" value="100"></column>
+            <column name="cm_seq_name" value="acm_ocr"></column>
+        </insert>
+    </changeSet>
+
+</databaseChangeLog>
