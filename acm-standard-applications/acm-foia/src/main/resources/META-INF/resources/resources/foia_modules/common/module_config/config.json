@@ -241,12 +241,12 @@
                     {
                         "titleKey": "common.directive.docTree.menu.makeAllPublic",
                         "cmd": "makeAllPublic",
-                        "disabledExpression": "DocTree.objectInfo.queue.name !== 'Release'"
+                        "disabledExpression": "DocTree.objectInfo.queue.name !== 'Release' || DocTree.objectInfo.queue.name === 'Release' && !DocTree.isNodeInResponseFolder(nodes[0])"
                     },
                     {
                         "titleKey": "common.directive.docTree.menu.makeAllNonPublic",
                         "cmd": "makeAllNonPublic",
-                        "disabledExpression": "DocTree.objectInfo.queue.name !== 'Release'"
+                        "disabledExpression": "DocTree.objectInfo.queue.name !== 'Release' || DocTree.objectInfo.queue.name === 'Release' && !DocTree.isNodeInResponseFolder(nodes[0])"
                     }
                 ],
                 "file": [
@@ -391,12 +391,12 @@
                     {
                         "titleKey": "common.directive.docTree.menu.makePublic",
                         "cmd": "makePublic",
-                        "disabledExpression": "DocTree.objectInfo.queue.name !== 'Release'"
+                        "disabledExpression": "DocTree.objectInfo.queue.name !== 'Release' || DocTree.objectInfo.queue.name === 'Release' && !DocTree.isNodeInResponseFolder(nodes[0])"
                     },
                     {
                         "titleKey": "common.directive.docTree.menu.makeNonPublic",
                         "cmd": "makeNonPublic",
-                        "disabledExpression": "DocTree.objectInfo.queue.name !== 'Release'"
+                        "disabledExpression": "DocTree.objectInfo.queue.name !== 'Release' || DocTree.objectInfo.queue.name === 'Release' && !DocTree.isNodeInResponseFolder(nodes[0])"
                     }
                 ]
             },
@@ -430,12 +430,12 @@
                     {
                         "titleKey": "common.directive.docTree.menu.makeAllPublic",
                         "cmd": "makeAllPublic",
-                        "disabledExpression": "DocTree.objectInfo.queue.name !== 'Release'"
+                        "disabledExpression": "DocTree.objectInfo.queue.name !== 'Release' || DocTree.objectInfo.queue.name === 'Release' && !DocTree.isNodeInResponseFolder(nodes[0])"
                     },
                     {
                         "titleKey": "common.directive.docTree.menu.makeAllNonPublic",
                         "cmd": "makeAllNonPublic",
-                        "disabledExpression": "DocTree.objectInfo.queue.name !== 'Release'"
+                        "disabledExpression": "DocTree.objectInfo.queue.name !== 'Release' || DocTree.objectInfo.queue.name === 'Release' && !DocTree.isNodeInResponseFolder(nodes[0])"
                     }
                 ],
                 "file": [
@@ -482,12 +482,12 @@
                     {
                         "titleKey": "common.directive.docTree.menu.makePublic",
                         "cmd": "makePublic",
-                        "disabledExpression": "DocTree.objectInfo.queue.name !== 'Release'"
+                        "disabledExpression": "DocTree.objectInfo.queue.name !== 'Release' || DocTree.objectInfo.queue.name === 'Release' && !DocTree.isNodeInResponseFolder(nodes[0])"
                     },
                     {
                         "titleKey": "common.directive.docTree.menu.makeNonPublic",
                         "cmd": "makeNonPublic",
-                        "disabledExpression": "DocTree.objectInfo.queue.name !== 'Release'"
+                        "disabledExpression": "DocTree.objectInfo.queue.name !== 'Release' || DocTree.objectInfo.queue.name === 'Release' && !DocTree.isNodeInResponseFolder(nodes[0])"
                     }
                 ]
             },
@@ -531,12 +531,12 @@
                     {
                         "titleKey": "common.directive.docTree.menu.makeAllPublic",
                         "cmd": "makeAllPublic",
-                        "disabledExpression": "DocTree.objectInfo.queue.name !== 'Release'"
+                        "disabledExpression": "DocTree.objectInfo.queue.name !== 'Release' || DocTree.objectInfo.queue.name === 'Release' && !DocTree.isNodeInResponseFolder(nodes[0])"
                     },
                     {
                         "titleKey": "common.directive.docTree.menu.makeAllNonPublic",
                         "cmd": "makeAllNonPublic",
-                        "disabledExpression": "DocTree.objectInfo.queue.name !== 'Release'"
+                        "disabledExpression": "DocTree.objectInfo.queue.name !== 'Release' || DocTree.objectInfo.queue.name === 'Release' && !DocTree.isNodeInResponseFolder(nodes[0])"
                     }
                 ],
                 "folders": [
@@ -570,12 +570,12 @@
                     {
                         "titleKey": "common.directive.docTree.menu.makeAllPublic",
                         "cmd": "makeAllPublic",
-                        "disabledExpression": "DocTree.objectInfo.queue.name !== 'Release'"
+                        "disabledExpression": "DocTree.objectInfo.queue.name !== 'Release' || DocTree.objectInfo.queue.name === 'Release' && !DocTree.isNodeInResponseFolder(nodes[0])"
                     },
                     {
                         "titleKey": "common.directive.docTree.menu.makeAllNonPublic",
                         "cmd": "makeAllNonPublic",
-                        "disabledExpression": "DocTree.objectInfo.queue.name !== 'Release'"
+                        "disabledExpression": "DocTree.objectInfo.queue.name !== 'Release' || DocTree.objectInfo.queue.name === 'Release' && !DocTree.isNodeInResponseFolder(nodes[0])"
                     }
                 ],
                 "filesAndFolders": [
@@ -609,12 +609,12 @@
                     {
                         "titleKey": "common.directive.docTree.menu.makeAllPublic",
                         "cmd": "makeAllPublic",
-                        "disabledExpression": "DocTree.objectInfo.queue.name !== 'Release'"
+                        "disabledExpression": "DocTree.objectInfo.queue.name !== 'Release' || DocTree.objectInfo.queue.name === 'Release' && !DocTree.isNodeInResponseFolder(nodes[0])"
                     },
                     {
                         "titleKey": "common.directive.docTree.menu.makeAllNonPublic",
                         "cmd": "makeAllNonPublic",
-                        "disabledExpression": "DocTree.objectInfo.queue.name !== 'Release'"
+                        "disabledExpression": "DocTree.objectInfo.queue.name !== 'Release' || DocTree.objectInfo.queue.name === 'Release' && !DocTree.isNodeInResponseFolder(nodes[0])"
                     }
                 ],
                 "filesOrFoldersRecord": [
@@ -639,12 +639,12 @@
                     {
                         "titleKey": "common.directive.docTree.menu.makeAllPublic",
                         "cmd": "makeAllPublic",
-                        "disabledExpression": "DocTree.objectInfo.queue.name !== 'Release'"
+                        "disabledExpression": "DocTree.objectInfo.queue.name !== 'Release' || DocTree.objectInfo.queue.name === 'Release' && !DocTree.isNodeInResponseFolder(nodes[0])"
                     },
                     {
                         "titleKey": "common.directive.docTree.menu.makeAllNonPublic",
                         "cmd": "makeAllNonPublic",
-                        "disabledExpression": "DocTree.objectInfo.queue.name !== 'Release'"
+                        "disabledExpression": "DocTree.objectInfo.queue.name !== 'Release' || DocTree.objectInfo.queue.name === 'Release' && !DocTree.isNodeInResponseFolder(nodes[0])"
                     }
                 ]
             },
