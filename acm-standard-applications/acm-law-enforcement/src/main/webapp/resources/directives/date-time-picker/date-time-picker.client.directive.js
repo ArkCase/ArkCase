@@ -11,7 +11,16 @@ angular.module('directives').directive('dateTimePicker', ['moment', 'Util.DateSe
         },
         link: function ($scope, element) {
             $scope.editable = false;
-
+            var dateInput = element[0].children[0].firstElementChild;
+            if (dateInput) {
+                dateInput.addEventListener("keydown",function(e){
+                    // if you haven't already:
+                    e = e || window.event;
+                    // to cancel the event:
+                    if( e.preventDefault) e.preventDefault();
+                    return false;
+                });
+            }
             var minYear = "";
             var utcDate = "";
             var maxYear = "";
