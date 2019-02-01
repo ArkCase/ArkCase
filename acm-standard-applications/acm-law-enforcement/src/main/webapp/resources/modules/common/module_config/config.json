@@ -627,7 +627,7 @@
           "name": "title_parseable",
           "displayName": "common.dialogObjectPicker.table.columns.title",
           "headerCellFilter": "translate",
-          "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, {object_id_s:row.entity.object_id_s, object_type_s:row.entity.object_type_s}, true)'>{{row.entity.title_parseable}}</a>"
+          "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickOpenFile($event, row.entity, true)'>{{row.entity.title_parseable}}</a>"
         },
         {
           "name": "parent_ref_s",
@@ -641,7 +641,7 @@
           "field":  "parent_ref_s",
           "displayName": "common.dialogObjectPicker.table.columns.parentTitle",
           "headerCellFilter": "translate",
-          "cellTemplate": "<a ng-if='row.entity.parent_document.title_parseable' href='#' ng-click='grid.appScope.onClickObjLink($event, {parentId:row.entity.parent_ref_s, object_type_s:row.entity.parent_ref_s})'>{{row.entity.parent_document.title_parseable}}</a>"
+          "cellTemplate": "<a ng-if='row.entity.parent_document.title_parseable' ng-href='#' ng-click='grid.appScope.onClickObjLink($event, {parentId:row.entity.parent_ref_s, object_type_s:row.entity.parent_ref_s}, true, true)'>{{row.entity.parent_document.title_parseable}}</a>"
         }
       ],
       "paginationPageSizes": [
