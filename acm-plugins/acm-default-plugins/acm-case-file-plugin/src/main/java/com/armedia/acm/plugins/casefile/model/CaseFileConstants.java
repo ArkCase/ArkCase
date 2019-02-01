@@ -67,4 +67,7 @@ public interface CaseFileConstants
     String CASEFILE_DOCUMENT = "CASE_FILE";
     String CASEFILE_FILENAMEFORMAT = "Casefile.pdf";
 
+    String NEXT_QUEUE_ACTION_COMPLETE = "Complete";
+    String NEXT_QUEUE_ACTION_NEXT = "Next";
+
 }

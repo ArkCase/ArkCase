@@ -30,6 +30,9 @@ package gov.foia.service;
 import com.armedia.acm.auth.AuthenticationUtils;
 import com.armedia.acm.plugins.casefile.service.SaveCaseService;
 import com.armedia.acm.services.participants.utils.ParticipantUtils;
+import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
+import com.armedia.acm.services.users.model.AcmUser;
+import com.armedia.acm.services.users.model.group.AcmGroup;
 import com.armedia.acm.services.users.service.group.GroupService;
 
 import org.slf4j.Logger;
@@ -79,7 +82,7 @@ public class RequestAssignmentService
         return null;
     }
 
-    private FOIARequest assignRequestToUser(FOIARequest request, Authentication auth, HttpSession session)
+    public FOIARequest assignRequestToUser(FOIARequest request, Authentication auth, HttpSession session)
     {
         request.getParticipants().stream().filter(p -> "assignee".equals(p.getParticipantType())).forEach(p -> {
             p.setParticipantLdapId(auth.getName());
@@ -111,6 +114,21 @@ public class RequestAssignmentService
             }
         }
         return null;
+    }
+
+    public FOIARequest assignUserGroupToRequest(FOIARequest request, HttpSession session, Authentication auth)
+            throws PipelineProcessException
+    {
+        AcmUser user = (AcmUser) session.getAttribute("acm_user");
+        String ipAddress = (String) session.getAttribute("acm_ip_address");
+
+        List<AcmGroup> groups = groupService.findByUserMember(user);
+
+        request.getParticipants().stream().filter(p -> "owning group".equals(p.getParticipantType())).forEach(p -> {
+            p.setParticipantLdapId(groups.get(0).getName());
+        });
+
+        return (FOIARequest) getSaveCaseService().saveCase(request, auth, ipAddress);
     }
 
     public FOIARequestDao getRequestDao()

@@ -17,6 +17,7 @@
         <beans:bean id="startWorkingOnRequestAPIController" class="gov.foia.web.api.StartWorkingOnRequestAPIController">
             <beans:property name="requestAssignmentService" ref="requestAssignmentService"/>
             <beans:property name="caseFileEventUtility" ref="caseFileEventUtility"/>
+            <beans:property name="requestService" ref="foiaRequestService"/>
         </beans:bean>
 
         <beans:bean id="portalRequestAPIController" class="gov.foia.web.api.PortalRequestAPIController">
