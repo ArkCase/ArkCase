@@ -45,6 +45,7 @@
         "daysToComplete.label": "days remaining",
         "daysOverdue.label": "Days overdue",
         "notificationGroup": "Executive Group",
+        "selectNotificationGroup": "Please Select the Notification Group",
         "modified": "Last Modified Date and Time",
         "modifier": "Last Modified By",
         "receivedDate.label": "Received Date and Time",
