@@ -110,7 +110,7 @@ public class ParticipantsNotified implements UsersNotified
                 AcmGroup group = getGroupDao().findByName(participant.getReceiverLdapId());
                 if (group != null)
                 {
-                    receivers.addAll(group.getUserMembers());
+                    receivers.addAll(group.getUserMembers(true));
                 }
 
             }
