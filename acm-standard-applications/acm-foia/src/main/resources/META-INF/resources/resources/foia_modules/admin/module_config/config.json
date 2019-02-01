@@ -1401,6 +1401,12 @@
                 ]
             },
             {
+                "type": "p/mediaServices",
+                "label": "admin.mediaServices.title",
+                "icon": "fa fa-wrench",
+                "components": []
+            },
+            {
                 "type": "p/mediaServices/transcriptionManagement",
                 "label": "admin.mediaServices.transcriptionManagement",
                 "components": [
