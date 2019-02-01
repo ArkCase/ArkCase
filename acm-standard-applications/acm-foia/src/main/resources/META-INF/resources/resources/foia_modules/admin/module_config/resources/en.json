@@ -1047,6 +1047,15 @@
                 "enableOCR.checkbox": "Enable OCR"
             }
         },
+        "ocr": {
+            "title": "OCR Services",
+            "ocrManagement": "OCR Management",
+            "ocrConfigForm": {
+                "save.button": "Save",
+                "enableOCR.label": "OCR Configuration",
+                "enableOCR.checkbox": "Enable OCR"
+            }
+        },
         "stateOfArkcase": {
             "title": "State of ArkCase",
             "pickDate": "Pick Date",
