@@ -378,7 +378,7 @@ public class LdapUserService implements ApplicationEventPublisherAware
             // INVALID or DELETED user, remove current group membership
             // we have to do this, otherwise new user will be associated with new groups,
             // but also existing ones (which we do not want)
-            existing.getGroups().forEach(group -> group.getUserMembers().remove(existing));
+            existing.getGroups().forEach(group -> group.getUserMembers(false).remove(existing));
             existing.setGroups(new HashSet<>());
         }
         return existing;

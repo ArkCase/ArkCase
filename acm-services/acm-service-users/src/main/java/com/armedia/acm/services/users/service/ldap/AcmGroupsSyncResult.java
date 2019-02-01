@@ -340,8 +340,8 @@ public class AcmGroupsSyncResult
     private void removeDeletedGroupsUserMembership(List<AcmGroup> deletedGroups)
     {
         deletedGroups.forEach(group -> {
-            log.debug("Found [{}] users to remove from deleted group [{}]", group.getUserMembers().size(), group.getName());
-            group.getUserMembers().clear();
+            log.debug("Found [{}] users to remove from deleted group [{}]", group.getUserMembers(false).size(), group.getName());
+            group.getUserMembers(false).clear();
         });
     }
 
