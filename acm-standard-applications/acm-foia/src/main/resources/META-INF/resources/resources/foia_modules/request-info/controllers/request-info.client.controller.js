@@ -76,6 +76,10 @@ angular.module('request-info').controller(
                 }
             };
 
+            $scope.$on('notificationGroupSaved', function () {
+                $scope.onClickNextQueue($scope.nameButton, "true");
+            });
+
             new HelperObjectBrowserService.Content({
                 scope: $scope,
                 state: $state,
@@ -330,7 +334,7 @@ angular.module('request-info').controller(
                     availableQueues = availableQueues.map(function (item) {
                         var tmpObj = {};
                         tmpObj.name = item;
-                        if (item != 'Complete') {
+                        if (item != 'Complete' && item != 'Next') {
                             tmpObj.disabled = true;
                         }
                         return tmpObj;
@@ -786,7 +790,11 @@ angular.module('request-info').controller(
                             if (!errorMessage && data.reason) {
                                 errorMessage = data.reason;
                             }
-                            showErrorDialog(errorMessage);
+                            if (errorMessage === "Executive Group is required") {
+                                showNotificationGroupDialog($scope.requestId);
+                            } else {
+                                showErrorDialog(errorMessage);
+                            }
                         }
                     });
                 });
@@ -1118,6 +1126,22 @@ angular.module('request-info').controller(
                     }
                 });
             }
+
+            function showNotificationGroupDialog() {
+                $modal.open({
+                    scope: $scope,
+                    animation: true,
+                    templateUrl: 'modules/request-info/views/components/request-info.notification-info.client.view.html',
+                    controller: 'RequestInfo.NotificationGroupClientController',
+                    backdrop: 'static',
+                    resolve: {
+                        errorMessage: function () {
+
+                        }
+                    }
+                });
+            }
+
 
             UserInfoService.getUserInfo().then(function (infoData) {
                 $scope.currentUserProfile = infoData;
