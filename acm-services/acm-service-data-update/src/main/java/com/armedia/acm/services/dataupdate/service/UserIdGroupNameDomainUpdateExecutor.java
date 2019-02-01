@@ -233,9 +233,9 @@ public class UserIdGroupNameDomainUpdateExecutor implements AcmDataUpdateExecuto
 
         log.debug("Updating user members for 'ADHOC' groups");
         adHocGroups.stream()
-                .filter(group -> !group.getUserMembers().isEmpty())
+                .filter(group -> !group.getUserMembers(true).isEmpty())
                 .forEach(group -> {
-                    Set<AcmUser> userMembers = new HashSet<>(group.getUserMembers());
+                    Set<AcmUser> userMembers = new HashSet<>(group.getUserMembers(true));
                     Predicate<AcmUser> userIsUpdated = user -> userHolderByOldId.containsKey(user.getUserId());
                     userMembers.stream()
                             .filter(userIsUpdated)
@@ -244,7 +244,7 @@ public class UserIdGroupNameDomainUpdateExecutor implements AcmDataUpdateExecuto
                                 group.addUserMember(userUpdateHolder.getNewUser());
                                 log.debug("Add [{}] user to [{}] group", userUpdateHolder.getNewUser().getUserId(), group.getName());
                             });
-                    boolean isUpdated = group.getUserMembers().removeIf(userIsUpdated);
+                    boolean isUpdated = group.getUserMembers(true).removeIf(userIsUpdated);
                     if (isUpdated)
                     {
                         groupDao.save(group);
