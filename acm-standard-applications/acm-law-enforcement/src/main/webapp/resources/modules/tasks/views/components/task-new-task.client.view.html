@@ -60,12 +60,14 @@
                                 on-after-save="onComboAfterSave(dateType)"></date-time-picker>
                     </div>
                 </div>
-                <div class="form-group col-sm-2">
+                <div class="form-group col-sm-4">
                     <label class="control-label">{{ 'tasks.newTask.priority.label' | translate }}
                     </label>
+                    <div style="margin-top: 10px;">
                     <select ng-model="config.data.priority" ng-options="priority.id as priority.name for priority in config.priority"
                             class="form-control input-md">
                     </select>
+                    </div>
                 </div>
             </div>
             <div class="row">
@@ -80,7 +82,7 @@
                     <span class="required-asterisk">*</span>
                     <select ng-model="selectedBusinessProcessType" ng-change="updateBusinessProcessType(selectedBusinessProcessType)"
                             ng-options="businessProcessType.key as businessProcessType.value | translate for businessProcessType in businessProcessTypes"
-                            class="form-control input-md">
+                            class="form-control input-md" ng-disabled="taskType === 'ACM_TASK' && filesToUpload.length <= 0">
                     </select>
                 </div>
             </div>
@@ -89,18 +91,6 @@
                     <label for="docsToReview">
                         <span translate>tasks.newTask.documentsToReview.label</span>
                     </label>
-                    <div ng-if="taskType === 'ACM_TASK'">
-                        <fieldset id="uploadDocs">
-                            <a href="#" ngf-select="onFileUpload($files)" multiple>
-                                <span translate>tasks.newTask.documentsToReview.uploadDocuments</span>
-                            </a>
-                            <label ng-repeat="file in filesToUpload">
-                                <ul>
-                                    <li>{{filesToUpload[$index].name}}</li>
-                                </ul>
-                            </label>
-                        </fieldset>
-                    </div>
                     <div ng-if="taskType === 'REVIEW_DOCUMENT' && documentsToReview">
                         <fieldset id="docsToReview" class="well-sm">
                             <label ng-repeat="node in documentsToReview" class="checkbox-inline">
@@ -111,21 +101,22 @@
                           </span>
                             </label>
                         </fieldset>
+                    </div>
                         <fieldset id="uploadDocs_docsToReview">
                             <a href="#" ngf-select="onFileUpload($files)" multiple>
                                 <span translate>tasks.newTask.documentsToReview.uploadDocuments</span>
                             </a>
                             <label ng-repeat="file in filesToUpload">
                                 <ul>
-                                    <li>{{filesToUpload[$index].name}}</li>
+                                    <li><input type="checkbox" value="{{file.name}}" ng-click="onSelectAttachment(file)"
+                                               ng-checked="true" ng-model="opened.isFileAllowed">{{filesToUpload[$index].name}}</li>
                                 </ul>
                             </label>
                         </fieldset>
-                    </div>
                     <span ng-if="taskType === 'REVIEW_DOCUMENT' && documentsToReviewIds.length === 0 && selectedBusinessProcessType == 'acmDocumentTaskWorkflow' " class="text-danger" translate>
                       tasks.newTask.noSelectedReviewDocsErrorMsg
                     </span>
-                    <span ng-if="taskType === 'REVIEW_DOCUMENT' && filesToUpload.length > 0 && selectedBusinessProcessType != 'acmDocumentTaskWorkflow' " class="text-danger" translate>
+                    <span ng-if="taskType === 'REVIEW_DOCUMENT' && filesToUpload.length > 0 && selectedBusinessProcessType != 'acmDocumentTaskWorkflow' && documentsToReviewIds.length === 0" class="text-danger" translate>
                       tasks.newTask.noSelectedReviewDocsWorkflowErrorMsg
                     </span>
                     <span ng-if="(taskType != 'REVIEW_DOCUMENT' && filesToUpload.length === 0 && selectedBusinessProcessType == 'acmDocumentTaskWorkflow')" class="text-danger" translate>
