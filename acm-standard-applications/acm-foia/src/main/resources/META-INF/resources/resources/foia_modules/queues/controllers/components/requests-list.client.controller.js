@@ -2,8 +2,8 @@
 
 angular.module('queues').controller(
         'Queues.RequestsListController',
-        [ '$scope', '$state', '$stateParams', '$timeout', 'uiGridConstants', 'Queues.QueuesConstants', 'Queues.QueuesService', 'Admin.QueuesTimeToCompleteService', 'Task.AlertsService', 'DueDate.Service', 'Admin.HolidayService', '$filter', '$q',
-                function($scope, $state, $stateParams, $timeout, uiGridConstants, QueuesConstants, QueuesService, AdminQueuesTimeToCompleteService, TaskAlertsService, DueDateService, AdminHolidayService, $filter, $q) {
+    ['$scope', '$state', '$stateParams', '$timeout', 'uiGridConstants', 'Queues.QueuesConstants', 'Queues.QueuesService', 'Admin.QueuesTimeToCompleteService', 'Task.AlertsService', 'DueDate.Service', 'Admin.HolidayService', '$filter', '$q', '$translate', 'MessageService',
+        function ($scope, $state, $stateParams, $timeout, uiGridConstants, QueuesConstants, QueuesService, AdminQueuesTimeToCompleteService, TaskAlertsService, DueDateService, AdminHolidayService, $filter, $q, $translate, MessageService) {
                     $scope.$on('component-config', applyConfig);
                     $scope.$on('queue-selected', queueSelected);
                     $scope.$on('update-requests-list', update);
@@ -289,10 +289,15 @@ angular.module('queues').controller(
                     function openRequestInfoPage(requestId) {
                         //remove this request from the sorted list for picking next request to avoid to be picked twice
                         QueuesService.removeRequestFromSortedList(requestId);
-
-                        $state.go('request-info', {
-                            id: requestId
-                        }, true);
+                        var requestPromise = QueuesService.startWorkingOnRequestFromQueues(requestId);
+                        requestPromise.then(function (request) {
+                            $scope.$emit("report-object-updated", request);
+                            $state.go('request-info', {
+                                id: requestId
+                            }, true);
+                        }, function () {
+                            MessageService.info($translate.instant("queues.startWorking.noRequestToAssign"));
+                        });
                     }
 
                     function update() {
