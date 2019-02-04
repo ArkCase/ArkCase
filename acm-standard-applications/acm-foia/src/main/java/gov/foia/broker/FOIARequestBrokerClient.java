@@ -58,7 +58,7 @@ public class FOIARequestBrokerClient extends AcmObjectBrokerClient<PortalFOIAReq
 
     public FOIARequestBrokerClient(ActiveMQConnectionFactory connectionFactory, String outboundQueue, String inboundQueue)
     {
-        super(connectionFactory, outboundQueue, inboundQueue, PortalFOIARequest.class);
+        super(connectionFactory, outboundQueue, inboundQueue);
         setUpHandler();
         start();
     }

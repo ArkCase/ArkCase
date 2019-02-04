@@ -493,7 +493,7 @@ public class GroupServiceImpl implements GroupService
             throw new AcmObjectNotFoundException("GROUP", null, "Group " + groupId + " was not found");
         }
 
-        Optional<AcmUser> foundUser = group.getUserMembers().stream().filter(u -> u.getUserId().equals(user.getUserId())).findFirst();
+        Optional<AcmUser> foundUser = group.getUserMembers(true).stream().filter(u -> u.getUserId().equals(user.getUserId())).findFirst();
         if (foundUser.isPresent())
         {
             log.debug("User [{}] is already a member to the Group [{}]", user.getUserId(), group.getName());

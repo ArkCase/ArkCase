@@ -27,6 +27,7 @@ package com.armedia.acm.services.dataaccess.service;
  * #L%
  */
 
+import com.armedia.acm.auth.AuthenticationUtils;
 import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.services.dataaccess.model.AcmEntityParticipantsChangedEvent;
 import com.armedia.acm.services.participants.model.AcmParticipant;
@@ -48,7 +49,8 @@ public class EntityParticipantsChangedEventPublisher implements ApplicationEvent
     {
         LOG.debug("Publishing EntityParticipantsChangedEvent event.");
 
-        AcmEntityParticipantsChangedEvent event = new AcmEntityParticipantsChangedEvent(source, originalParticipants);
+        AcmEntityParticipantsChangedEvent event = new AcmEntityParticipantsChangedEvent(source, originalParticipants,
+                AuthenticationUtils.getUserIpAddress());
 
         getApplicationEventPublisher().publishEvent(event);
     }

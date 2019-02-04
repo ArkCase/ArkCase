@@ -16,6 +16,7 @@ angular.module('services').factory('Util.DateService', [ '$translate', 'UtilServ
         defaultDateFormat: $translate.instant("common.defaultDateFormat"),
         defaultTimeFormat: $translate.instant("common.defaultTimeFormat"),
         defaultDateTimeFormat: $translate.instant("common.defaultDateTimeFormat"),
+        defaultDateLongTimeFormat: $translate.instant("common.defaultDateLongTimeFormat"),
         defaultDatePickerFormat: $translate.instant("common.defaultDatePickerFormat"),
         defaultDateUIFormat: $translate.instant("common.defaultDateUIFormat")
 
@@ -137,6 +138,27 @@ angular.module('services').factory('Util.DateService', [ '$translate', 'UtilServ
 
         /**
          * @ngdoc method
+         * @name isoToLocalDateTime
+         * @methodOf services:Util.DateService
+         *
+         * @description
+         * Converts a ISO format string to LocalDateTime
+         *
+         * @param {String} isoDateTime ISO formatted date string YYYY-MM-DDTHH:mm:ss
+         *
+         * @Returns {String} String
+         */
+        ,
+        isoToLocalDateTime: function (isoDateTime) {
+            if (!Util.isEmpty(isoDateTime)) {
+                return moment.utc(isoDateTime).local().format("YYYY-MM-DDTHH:mm:ss");
+            } else {
+                return "";
+            }
+        }
+
+        /**
+         * @ngdoc method
          * @name goodIsoDate
          * @methodOf services:Util.DateService
          *
@@ -227,6 +249,37 @@ angular.module('services').factory('Util.DateService', [ '$translate', 'UtilServ
             currentTimeZoneOffsetInMinutes = Math.abs(currentTimeZoneOffsetInMinutes % 60);
             var currentTimeZoneOffset = "UTC" + currentTimeZoneOffsetInHours + ":" + currentTimeZoneOffsetInMinutes;
             return currentTimeZoneOffset;
+        }
+
+        /**
+         * @ngdoc method
+         * @name getTimeZoneOffsetTime
+         * @methodOf services:Util.DateService
+         *
+         * @description
+         * Get user's time difference between UTC time and local time
+         *
+         * @Returns {String} (eg: -02:00)
+         */
+        ,
+        getTimeZoneOffsetTime: function () {
+            var currentTimeZoneOffsetInMinutes = new Date().getTimezoneOffset();
+            var currentTimeZoneOffsetInHours = Math.floor(currentTimeZoneOffsetInMinutes / 60);
+            currentTimeZoneOffsetInMinutes = Math.abs(currentTimeZoneOffsetInMinutes % 60);
+            if (currentTimeZoneOffsetInMinutes < 10) {
+                currentTimeZoneOffsetInMinutes += "0";
+            }
+            if (currentTimeZoneOffsetInHours > 0 && currentTimeZoneOffsetInHours < 10) {
+                currentTimeZoneOffsetInHours = "-0" + currentTimeZoneOffsetInHours;
+            }
+            else if (currentTimeZoneOffsetInHours > 0 && currentTimeZoneOffsetInHours > 10 || currentTimeZoneOffsetInHours < -10) {
+                currentTimeZoneOffsetInHours *= -1;
+            }
+            else if (currentTimeZoneOffsetInHours < 0 && currentTimeZoneOffsetInHours > -10) {
+                currentTimeZoneOffsetInHours = "+0" + currentTimeZoneOffsetInHours * -1;
+            }
+            var currentTimeZoneOffsetTime = currentTimeZoneOffsetInHours + ":" + currentTimeZoneOffsetInMinutes;
+            return currentTimeZoneOffsetTime;
         }
 
         /**

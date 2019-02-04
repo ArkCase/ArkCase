@@ -35,6 +35,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import com.armedia.acm.pluginmanager.service.AcmPluginManager;
 import com.armedia.acm.services.functionalaccess.service.FunctionalAccessService;
 import com.armedia.acm.services.users.model.AcmUser;
+import com.armedia.acm.services.users.model.AcmUserState;
 import com.armedia.acm.services.users.model.group.AcmGroup;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -120,9 +121,11 @@ public class GetUsersByPrivilegeAndGroupAPIControllerTest extends EasyMockSuppor
 
         AcmUser user3 = new AcmUser();
         user3.setUserId("user3");
+        user3.setUserState(AcmUserState.VALID);
 
         AcmUser user4 = new AcmUser();
         user4.setUserId("user4");
+        user4.setUserState(AcmUserState.VALID);
 
         membersGroup2.addAll(Arrays.asList(user3, user4));
 
@@ -145,7 +148,7 @@ public class GetUsersByPrivilegeAndGroupAPIControllerTest extends EasyMockSuppor
         // ensure it is working correctly.
         expect(mockFunctionalAccessService.getApplicationRolesToGroups()).andReturn(rolesToGroups);
         expect(mockFunctionalAccessService.getUsersByRolesAndGroups(rolesForPrivilege, rolesToGroups, null, null))
-                .andReturn(group2.getUserMembers());
+                .andReturn(group2.getUserMembers(true));
 
         replayAll();
 
@@ -167,7 +170,7 @@ public class GetUsersByPrivilegeAndGroupAPIControllerTest extends EasyMockSuppor
         });
 
         assertEquals(HttpStatus.OK.value(), result.getResponse().getStatus());
-        assertEquals(group2.getUserMembers().size(), resultUserList.size());
+        assertEquals(group2.getUserMembers(true).size(), resultUserList.size());
 
     }
 
@@ -184,9 +187,11 @@ public class GetUsersByPrivilegeAndGroupAPIControllerTest extends EasyMockSuppor
 
         AcmUser user1 = new AcmUser();
         user1.setUserId("user1");
+        user1.setUserState(AcmUserState.VALID);
 
         AcmUser user2 = new AcmUser();
         user2.setUserId("user2");
+        user2.setUserState(AcmUserState.VALID);
 
         membersGroup1.addAll(Arrays.asList(user1, user2));
 
@@ -221,7 +226,7 @@ public class GetUsersByPrivilegeAndGroupAPIControllerTest extends EasyMockSuppor
 
         expect(mockFunctionalAccessService.getApplicationRolesToGroups()).andReturn(rolesToGroups);
         expect(mockFunctionalAccessService.getUsersByRolesAndGroups(rolesForPrivilege, rolesToGroups, group1.getName(), null))
-                .andReturn(group1.getUserMembers());
+                .andReturn(group1.getUserMembers(true));
 
         replayAll();
 

@@ -153,12 +153,12 @@
         <property name="preSaveHandlers">
             <list value-type="com.armedia.acm.services.pipeline.handler.PipelineHandler">
                 <ref bean="complaintSetCreatorHandler"/>
-                <ref bean="complaintContainerHandler"/>
             </list>
         </property>
         <property name="postSaveHandlers">
             <list value-type="com.armedia.acm.services.pipeline.handler.PipelineHandler">
                 <ref bean="complaintRulesHandler"/>
+                <ref bean="complaintContainerHandler"/>
                 <ref bean="complaintEcmFolderHandler"/>
                 <ref bean="complaintOutlookHandler"/>
                 <ref bean="complaintDocumentHandler"/>
@@ -179,7 +179,7 @@
     <bean id="complaintToSolrTransformer" class="com.armedia.acm.plugins.complaint.service.ComplaintToSolrTransformer">
         <property name="userDao" ref="userJpaDao"/>
         <property name="complaintDao" ref="acmComplaintDao"/>
-        <property name="taskDao" ref="acmTaskDao"/>
+        <property name="businessProcessDao" ref="businessProcessDao"/>
         <property name="searchAccessControlFields" ref="searchAccessControlFields"/>
         <property name="fileAclSolrUpdateHelper" ref="fileAclSolrUpdateHelper"/>
     </bean>

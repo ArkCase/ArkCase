@@ -3,7 +3,7 @@
     <parent>
         <artifactId>acm</artifactId>
         <groupId>com.armedia</groupId>
-        <version>3.2.18-SNAPSHOT</version>
+        <version>3.3.1-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -62,6 +62,8 @@
         <module>acm-service-arkcase-identifier</module>
         <module>acm-service-convert-folder</module>
         <module>acm-service-billing</module>
+        <module>acm-service-sequence-manager</module>
+        <module>acm-service-ocr</module>
     </modules>
 
 </project>

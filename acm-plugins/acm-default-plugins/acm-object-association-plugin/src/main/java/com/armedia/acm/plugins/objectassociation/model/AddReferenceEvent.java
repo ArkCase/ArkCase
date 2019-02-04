@@ -43,7 +43,7 @@ public class AddReferenceEvent extends AcmEvent
     private static final long serialVersionUID = 6217892527760951563L;
     private static final String EVENT_TYPE = "com.armedia.acm.objectassociation.reference.added";
 
-    public AddReferenceEvent(ObjectAssociation source)
+    public AddReferenceEvent(ObjectAssociation source, String ipAddress)
     {
 
         super(source);
@@ -52,6 +52,7 @@ public class AddReferenceEvent extends AcmEvent
         setObjectType(source.getTargetType());
         setParentObjectType(source.getParentType());
         setParentObjectId(source.getParentId());
+        setIpAddress(ipAddress);
     }
 
     @Override

@@ -58,6 +58,7 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping({ "/api/v1/plugin/casefile", "/api/latest/plugin/casefile" })
@@ -86,14 +87,14 @@ public class SaveCaseFileAPIController
     @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseBody
     public CaseFile createCaseFileMutipart(@RequestPart(name = "casefile") CaseFile in,
-            @RequestPart(name = "files") List<MultipartFile> files, HttpSession session, Authentication auth)
+            @RequestPart(name = "files")Map<String, List<MultipartFile>> filesMap, HttpSession session, Authentication auth)
             throws AcmCreateObjectFailedException, AcmUpdateObjectFailedException, AcmUserActionFailedException, AcmObjectNotFoundException,
             IOException
     {
-        return saveCase(in, files, session, auth);
+        return saveCase(in, filesMap, session, auth);
     }
 
-    private CaseFile saveCase(CaseFile in, List<MultipartFile> files, HttpSession session, Authentication auth)
+    private CaseFile saveCase(CaseFile in, Map<String, List<MultipartFile>> filesMap, HttpSession session, Authentication auth)
             throws AcmCreateObjectFailedException, AcmUpdateObjectFailedException, AcmUserActionFailedException, AcmObjectNotFoundException,
             IOException
     {
@@ -111,7 +112,7 @@ public class SaveCaseFileAPIController
             in.setModifier(AuthenticationUtils.getUsername());
             in.setModified(new Date());
 
-            CaseFile saved = getSaveCaseService().saveCase(in, files, auth, ipAddress);
+            CaseFile saved = getSaveCaseService().saveCase(in, filesMap, auth, ipAddress);
 
             // since the approver list is not persisted to the database, we want to send them back to the caller...
             // the approver list is only here to send to the Activiti engine. After the workflow is started the

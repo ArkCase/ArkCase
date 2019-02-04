@@ -874,9 +874,6 @@ angular
 
                     ,
                     onDblClick : function(event, data) {
-                        if (DocTree.readOnly) {
-                            return;
-                        }
                         var setting = DocTree.Config.getSetting();
                         if (DocTree.isFolderNode(data.node) && setting.search.enabled) {
                             DocTree.Op.removeSearchFilter();
@@ -4919,8 +4916,15 @@ angular
                                 });
                             });
                         /*Get send email configuration*/
-                        EmailSenderConfigurationService.getEmailSenderConfiguration().then(function(res) {
-                            DocTree.treeConfig.emailSendConfiguration = res.data;
+                        DocTree.treeConfig.emailSendConfiguration = {};
+                        EmailSenderConfigurationService.isEmailSenderAllowDocuments().then(function(res) {
+                            DocTree.treeConfig.emailSendConfiguration.allowDocuments = res.data;
+                        });
+                        EmailSenderConfigurationService.isEmailSenderAllowAttachments().then(function(res) {
+                            DocTree.treeConfig.emailSendConfiguration.allowAttachments = res.data;
+                        });
+                        EmailSenderConfigurationService.isEmailSenderAllowHyperlinks().then(function(res) {
+                            DocTree.treeConfig.emailSendConfiguration.allowHyperlinks = res.data;
                         });
 
                         DocTree.scope.$bus.subscribe('onFilterDocTree', function(data) {

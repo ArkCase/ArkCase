@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.armedia</groupId>
     <artifactId>acm</artifactId>
-    <version>3.2.18-SNAPSHOT</version>
+    <version>3.3.1-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>ArkCase Case Management System</name>
     <description>Cloud-based case management system with a very nice UI</description>
@@ -43,6 +43,8 @@
         <castor-xml.version>1.3.3</castor-xml.version>
         <chemistry.version>0.9.0</chemistry.version>
         <com.google.guava.version>18.0</com.google.guava.version>
+        <docx4j.core>3.3.7</docx4j.core>
+        <docx4j.export.fo>3.3.6</docx4j.export.fo>
         <drools.version>6.1.0.Final</drools.version>
         <easymock.version>3.3.1</easymock.version>
         <easymock-extension.version>3.2</easymock-extension.version>
@@ -51,7 +53,7 @@
         <exchange-web-services.version>2.0</exchange-web-services.version>
         <fasterxml-jackson-core.version>2.7.2</fasterxml-jackson-core.version>
         <fop.version>2.0</fop.version>
-        <freemarker.version>2.3.22</freemarker.version>
+        <freemarker.version>2.3.28</freemarker.version>
         <frevvo.forms.version>6.3</frevvo.forms.version>
         <google-collections.version>1.0</google-collections.version>
         <gps.pointlocations.version>4.1</gps.pointlocations.version>
@@ -77,12 +79,13 @@
         <liquibase.version>3.1.1</liquibase.version>
         <log4j.version>2.11.0</log4j.version>
         <magic.matcher.version>0.1.2</magic.matcher.version>
+        <mariadb.jdbc.version>2.2.6</mariadb.jdbc.version>
         <maven.checkstyle.plugin.version>2.15</maven.checkstyle.plugin.version>
         <maven-jgitflow-plugin.version>1.0-m5.1</maven-jgitflow-plugin.version>
         <milton.version>2.7.3.5</milton.version>
         <mockito.version>1.10.19</mockito.version>
         <mule-cmis-connector.version>1.14.1</mule-cmis-connector.version>
-        <mule.version>3.7.0</mule.version>
+        <mule.version>3.9.0</mule.version>
         <mysql.version>5.1.35</mysql.version>
         <netty.version>4.1.7.Final</netty.version>
         <!-- by default spring.security.saml2.core uses opensaml version 2.6.1, which uses bouncycastle version 1.46, but we require version
@@ -116,8 +119,6 @@
         <xmlgraphics.version>2.0.1</xmlgraphics.version>
         <xmlunit.version>2.5.1</xmlunit.version>
         <zt-exec.version>1.8</zt-exec.version>
-        <docx4j.core>3.3.7</docx4j.core>
-        <docx4j.export.fo>3.3.6</docx4j.export.fo>
     </properties>
     <organization>
         <name>ArkCase LLC</name>
@@ -256,6 +257,11 @@
     </pluginRepositories>
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.zeroturnaround</groupId>
+                <artifactId>jrebel-maven-plugin</artifactId>
+                <version>1.1.8</version>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
@@ -429,6 +435,32 @@
     </build>
     <dependencyManagement>
         <dependencies>
+            <!-- databases.  The JDBC drivers should be here to run the integration tests. -->
+            <dependency>
+                <groupId>mysql</groupId>
+                <artifactId>mysql-connector-java</artifactId>
+                <version>${mysql.version}</version>
+                <scope>runtime</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.postgresql</groupId>
+                <artifactId>postgresql</artifactId>
+                <version>${postgresql.version}</version>
+                <scope>runtime</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.mariadb.jdbc</groupId>
+                <artifactId>mariadb-java-client</artifactId>
+                <version>${mariadb.jdbc.version}</version>
+                <scope>runtime</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.microsoft.sqlserver</groupId>
+                <artifactId>sqljdbc4</artifactId>
+                <version>${sqlserver.version}</version>
+                <scope>runtime</scope>
+            </dependency>
+
             <!-- swagger -->
             <dependency>
                 <groupId>io.springfox</groupId>
@@ -1522,6 +1554,12 @@
                 <version>${amazon.sdk.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
+            </dependency>
+            <!-- Freemarker -->
+            <dependency>
+                <groupId>org.freemarker</groupId>
+                <artifactId>freemarker</artifactId>
+                <version>${freemarker.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

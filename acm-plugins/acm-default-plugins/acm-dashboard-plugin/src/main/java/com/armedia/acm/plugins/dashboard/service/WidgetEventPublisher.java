@@ -28,6 +28,7 @@ package com.armedia.acm.plugins.dashboard.service;
  */
 
 import com.armedia.acm.auth.AcmAuthenticationDetails;
+import com.armedia.acm.auth.AuthenticationUtils;
 import com.armedia.acm.plugins.dashboard.model.widget.GetRolesByWidgetsEvent;
 import com.armedia.acm.plugins.dashboard.model.widget.GetWidgetsByUserRolesEvent;
 import com.armedia.acm.plugins.dashboard.model.widget.RolesGroupByWidgetDto;
@@ -68,7 +69,8 @@ public class WidgetEventPublisher implements ApplicationEventPublisherAware
     {
 
         log.debug("Publishing a widget event.");
-        WidgetPersistenceEvent widgetPersistenceEvent = newWidget ? new WidgetCreatedEvent(source) : new WidgetUpdatedEvent(source);
+        WidgetPersistenceEvent widgetPersistenceEvent = newWidget ? new WidgetCreatedEvent(source, AuthenticationUtils.getUserIpAddress())
+                : new WidgetUpdatedEvent(source);
         widgetPersistenceEvent.setSucceeded(succeeded);
         if (authentication.getDetails() != null && authentication.getDetails() instanceof AcmAuthenticationDetails)
         {

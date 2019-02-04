@@ -34,7 +34,7 @@
  **/
 
 angular.module('directives').directive('searchModal',
-        [ '$q', '$translate', 'UtilService', 'SearchService', 'Search.QueryBuilderService', '$injector', 'Person.InfoService', 'Object.LookupService', function($q, $translate, Util, SearchService, SearchQueryBuilder, $injector, PersonInfoService, ObjectLookupService) {
+        [ '$q', '$translate', '$filter', 'UtilService', 'SearchService', 'Search.QueryBuilderService', '$injector', 'Person.InfoService', 'Object.LookupService', 'Helper.UiGridService', 'ObjectService', function($q, $translate, $filter, Util, SearchService, SearchQueryBuilder, $injector, PersonInfoService, ObjectLookupService, HelperUiGridService, ObjectService) {
             return {
                 restrict: 'E', //match only element name
                 scope: {
@@ -131,6 +131,11 @@ angular.module('directives').directive('searchModal',
                     scope.currentFacetSelection = [];
                     scope.selectedItem = null;
                     scope.selectedItems = [];
+
+                    var gridHelper = new HelperUiGridService.Grid({
+                        scope: scope
+                    });
+
                     var filterInitialValue = scope.filter;
                     scope.queryExistingItems = function() {
                         if (!Util.isEmpty(scope.searchQuery)) {
@@ -336,6 +341,23 @@ angular.module('directives').directive('searchModal',
 
                     scope.onClickCancel = function() {
                         scope.modalInstance.dismiss('cancel')
+                    };
+
+                    scope.onClickObjLink = function(event, rowEntity, keepModal) {
+                        event.preventDefault();
+                        var targetType = Util.goodMapValue(rowEntity, "object_type_s");
+                        var targetId = '';
+                        if(targetType == ObjectService.ObjectTypes.FILE) {
+                            targetId= Util.goodMapValue(rowEntity, "object_id_s");
+                        } else {
+                            targetType = $filter('beautifyParentRefToParentTitle')(targetType);
+                            targetId = Util.goodMapValue(rowEntity, "parentId");
+                            targetId = parseInt(targetId.substring(0, targetId.indexOf('-')));
+                        }
+                        gridHelper.showObject(targetType, targetId);
+                        if(!keepModal) {
+                            scope.onClickCancel();
+                        }
                     };
 
                     //prepare the UI-grid

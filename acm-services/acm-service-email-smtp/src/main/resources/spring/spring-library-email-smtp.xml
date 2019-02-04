@@ -9,6 +9,7 @@
         <property name="muleContextManager" ref="muleContextManager"/>
         <property name="flow" value="vm://sendEmailViaSmtp.in"/>
         <property name="acmEmailContentGeneratorService" ref="acmEmailContentGeneratorService"/>
+        <property name="templatingEngine" ref="templatingEngine"/>
     </bean>
 
 </beans>

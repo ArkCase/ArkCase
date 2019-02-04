@@ -73,10 +73,15 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 import java.io.IOException;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Properties;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(name = "spring", locations = {
@@ -233,6 +238,8 @@ public class MergeCaseFileServiceIT
         // and then we added two in this test.
         assertEquals(3, sourceFiles.size());
 
+        List<Long> sourceIdBeforeMerge = sourceFiles.stream().map(EcmFile::getId).collect(Collectors.toList());
+
         List<EcmFile> targetFiles = ecmFileDao.findForContainer(targetSaved.getContainer().getId());
         // target case file also got a PDF file, from the pipeline.
         assertEquals(1, targetFiles.size());
@@ -240,10 +247,31 @@ public class MergeCaseFileServiceIT
         mergeCaseService.mergeCases(auth, ipAddress, mergeCaseOptions);
 
         sourceFiles = ecmFileDao.findForContainer(sourceSaved.getContainer().getId());
-        assertEquals(0, sourceFiles.size());
+        if ( !sourceFiles.isEmpty() )
+        {
+            // any files left in the original case file must have a file type from
+            // the exclude file types list
+            Properties p = new Properties();
+            try ( InputStream pis = new FileInputStream(new File(System.getProperty("user.home") + "/.arkcase/acm/caseFilePlugin.properties")))
+            {
+                p.load(pis);
+                String excluded = p.getProperty("casefile.merge.exclude_document_types");
+                List<String> excludedTypes = Arrays.asList(excluded.trim().replaceAll(",[\\s]*", ",").split(","));
+                for ( EcmFile sourceFile : sourceFiles )
+                {
+                    String found = excludedTypes.stream().filter(et -> et.equalsIgnoreCase(sourceFile.getFileType())).findFirst().orElse(null);
+                    assertNotNull("File remaining in source case has type [" + sourceFile.getFileType() + "] " +
+                                  "which is not in the list of excluded types [" + excluded + "]",
+                                  found);
+                }
+            }
+        }
 
         targetFiles = ecmFileDao.findForContainer(targetSaved.getContainer().getId());
-        assertEquals(4, targetFiles.size());
+        // any files that were kept in the source case should not have been moved to the target.
+        // so, the target starts with 1, then it gets all files from the source, except for
+        // the ones with excluded file types.
+        assertEquals(1 + sourceIdBeforeMerge.size() - sourceFiles.size(), targetFiles.size());
 
         CaseFile sourceCase = caseFileDao.find(sourceId);
         CaseFile targetCase = caseFileDao.find(targetId);

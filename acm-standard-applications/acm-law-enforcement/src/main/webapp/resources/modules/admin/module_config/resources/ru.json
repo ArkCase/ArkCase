@@ -645,6 +645,70 @@
                 "modal.info": "Настройки вступят в силу после обновления",
                 "modal.ok": "OK"
             },
+            "sequenceManagement.config": {
+                "title": "Sequence Configuration",
+                "sequenceEnabled": "Enabled",
+                "sequenceDisabled": "Disabled",
+                "grid": {
+                    "sequenceName": "Name",
+                    "sequenceDescription": "Description",
+                    "sequenceStatus": "Status"
+                },
+                "placeholder": {
+                    "name": "Enter Sequence Name",
+                    "description": "Enter Sequence Description"
+                },
+                "modal": {
+                    "title": "Add/Edit Sequence",
+                    "sequenceName": "Sequence Name",
+                    "sequenceDescription": "Sequence Description",
+                    "sequenceEnabled": "Sequence Enabled",
+                    "cancel": "Cancel",
+                    "save": "Save"
+                }
+            },
+            "sequenceManagementParts.config": {
+                "title": "Sequence Part",
+                "grid": {
+                    "sequenceName": "Name",
+                    "sequenceDescription": "Type"
+                },
+                "message": "The sequence you entered is not saved! Sequence name already exist!",
+                "autoincrement": {
+                    "startNumber": "Start number",
+                    "incrementSize": "Increment size",
+                    "numberLength": "Number length",
+                    "reuseSkippedSequenceValues": "Reuse skipped sequence values"
+                },
+                "objectProperty": {
+                    "name": "Object property name"
+                },
+                "date": {
+                    "text": "Date Format (ex: ddMMyyyyHHmmssSSS)"
+                },
+                "arbitraryText": {
+                    "text": "Arbitrary text"
+                },
+                "modal": {
+                    "title": "Add/Edit Sequence Part",
+                    "sequencePartName": "Sequence Part Name",
+                    "sequencePartType": "Sequence Part Type",
+                    "cancel": "Cancel",
+                    "save": "Save",
+                    "placeholders": {
+                        "autoincrement": {
+                            "startNumber": "Select or enter start number",
+                            "incrementSize": "Select or enter increment size",
+                            "numberLength": "Select or enter number length"
+                        },
+                        "arbitraryText": "Enter arbitrary text",
+                        "objectProperty": "Enter object property",
+                        "date": "Enter Date Format (ex: ddMMyyyyHHmmssSSS)",
+                        "sequencePartName": "Enter sequence part name",
+                        "sequencePartType": "Select part type"
+                    }
+                }
+            },
             "login.config": {
                 "title": "Конфигурация входа",
                 "idleLimit.label": "Предел простоя входа (в миллисекундах)",
@@ -896,6 +960,15 @@
             "ocrConfigForm": {
                 "title": "OCR Services_RU",
                 "save.button": "Save_RU",
+                "enableOCR.checkbox": "Enable OCR_RU"
+            }
+        },
+        "ocr": {
+            "title": "OCR Services_RU",
+            "ocrManagement": "OCR Management_RU",
+            "ocrConfigForm": {
+                "save.button": "Save_RU",
+                "enableOCR.label": "OCR Configuration_RU",
                 "enableOCR.checkbox": "Enable OCR_RU"
             }
         },

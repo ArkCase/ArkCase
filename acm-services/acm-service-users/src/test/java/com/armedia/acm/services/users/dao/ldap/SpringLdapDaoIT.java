@@ -143,7 +143,7 @@ public class SpringLdapDaoIT
     {
         LdapTemplate ldapTemplate = springLdapDao.buildLdapTemplate(acmSyncLdapConfig);
 
-        String userName = "ann-acm";
+        String userName = "arkcase-admin";
         long start = System.currentTimeMillis();
         LdapUser ldapUser = springLdapUserDao.findUser(userName, ldapTemplate, acmSyncLdapConfig,
                 acmSyncLdapConfig.getUserSyncAttributes());
@@ -157,7 +157,12 @@ public class SpringLdapDaoIT
     {
         LdapTemplate ldapTemplate = springLdapDao.buildLdapTemplate(acmSyncLdapConfig);
 
-        String dn = "uid=ann-acm,ou=Users,dc=armedia,dc=com";
+        String userName = "arkcase-admin";
+        LdapUser testUser = springLdapUserDao.findUser(userName, ldapTemplate, acmSyncLdapConfig,
+                acmSyncLdapConfig.getUserSyncAttributes());
+        
+        String dn = testUser.getDistinguishedName();
+        
         long start = System.currentTimeMillis();
         LdapUser ldapUser = springLdapUserDao.findUserByLookup(dn, ldapTemplate, acmSyncLdapConfig);
         long time = System.currentTimeMillis() - start;

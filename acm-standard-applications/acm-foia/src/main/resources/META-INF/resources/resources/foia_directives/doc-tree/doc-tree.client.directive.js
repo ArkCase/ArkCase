@@ -449,39 +449,39 @@ angular
 
                         if(objectInfo.hasOwnProperty("caseNumber") && objectInfo.hasOwnProperty("queue")) {
 
-                         var publicFiles = {
-                            fileIds : [],
-                            folderIds : []
-                        };
-                        var nonResponseFiles = [];
+                            var publicFiles = {
+                                fileIds : [],
+                                folderIds : []
+                            };
+                            var nonResponseFiles = [];
 
-                        for(var i=0; i< nodes.length; i++) {
-                            if(DocTree.isNodeInResponseFolder(nodes[i])) {
-                                if(nodes[i].folder == true) {
-                                    publicFiles.folderIds.push(nodes[i].data.objectId);
+                            for(var i=0; i< nodes.length; i++) {
+                                if(DocTree.isNodeInResponseFolder(nodes[i])) {
+                                    if(nodes[i].folder == true) {
+                                        publicFiles.folderIds.push(nodes[i].data.objectId);
+                                    }
+                                    else if(nodes[i].folder == false) {
+                                        publicFiles.fileIds.push(nodes[i].data.objectId);
+                                    }
                                 }
-                                else if(nodes[i].folder == false) {
-                                    publicFiles.fileIds.push(nodes[i].data.objectId);
+                                else {
+                                    nonResponseFiles.push(nodes[i]);
                                 }
                             }
-                            else {
-                                nonResponseFiles.push(nodes[i]);
+
+                            if(nonResponseFiles.length > 0 && publicFiles.fileIds.length == 0 && publicFiles.folderIds.length == 0) {
+                                MessageService.error($translate.instant("common.directive.docTree.error.nonResponseNodesSelected"));
+                                return;
                             }
-                        }
 
-                        if(nonResponseFiles.length > 0 && publicFiles.fileIds.length == 0 && publicFiles.folderIds.length == 0) {
-                            MessageService.error($translate.instant("common.directive.docTree.error.nonResponseNodesSelected"));
-                            return;
-                        }
-
-                        PublicFlagService.updatePublicFlag(publicFiles, publicStatus).then(
-                            function (result){
-                                MessageService.succsessAction();
-                                DocTree.refreshTree();
-                            },
-                            function (reason){
-                                MessageService.errorAction();
-                            });
+                            PublicFlagService.updatePublicFlag(publicFiles, publicStatus).then(
+                                function (result){
+                                    MessageService.succsessAction();
+                                    DocTree.refreshTree();
+                                },
+                                function (reason){
+                                    MessageService.errorAction();
+                                });
                         }
                     },
                     getCacheKeyByNode : function(folderNode) {
@@ -936,9 +936,6 @@ angular
 
                     ,
                     onDblClick : function(event, data) {
-                        if (DocTree.readOnly) {
-                            return;
-                        }
                         var setting = DocTree.Config.getSetting();
                         if (DocTree.isFolderNode(data.node) && setting.search.enabled) {
                             DocTree.Op.removeSearchFilter();
@@ -1387,15 +1384,15 @@ angular
                                     }
                                 },
                                 {
-                                 name : "public",
-                                 renderer : function(element, node, columnDef, isReadOnly) {
-                                     Ecm.getFile({
-                                        fileId: node.data.objectId
+                                    name : "public",
+                                    renderer : function(element, node, columnDef, isReadOnly) {
+                                        Ecm.getFile({
+                                            fileId: node.data.objectId
                                         }).$promise.then(function(file) {
                                             if(file.publicFlag === true){
                                                 $(element).text("PUBLIC");
                                             }
-                                       });
+                                        });
                                     }
                                 }];
                         }
@@ -3949,6 +3946,7 @@ angular
 
                                 $(node.tr).find("select.reviewstatus").prop('disabled', false);
                                 $(node.tr).find("select.redactionstatus").prop('disabled', false);
+                                node.data.reviewStatus = statusValue;
 
                                 return data;
                             }, function(error) {
@@ -3974,6 +3972,7 @@ angular
 
                                 $(node.tr).find("select.reviewstatus").prop('disabled', false);
                                 $(node.tr).find("select.redactionstatus").prop('disabled', false);
+                                node.data.redactionStatus = statusValue;
 
                                 return data;
                             }, function(error) {
@@ -5133,8 +5132,15 @@ angular
                                 });
                             });
                         /*Get send email configuration*/
-                        EmailSenderConfigurationService.getEmailSenderConfiguration().then(function(res) {
-                            DocTree.treeConfig.emailSendConfiguration = res.data;
+                        DocTree.treeConfig.emailSendConfiguration = {};
+                        EmailSenderConfigurationService.isEmailSenderAllowDocuments().then(function(res) {
+                            DocTree.treeConfig.emailSendConfiguration.allowDocuments = res.data;
+                        });
+                        EmailSenderConfigurationService.isEmailSenderAllowAttachments().then(function(res) {
+                            DocTree.treeConfig.emailSendConfiguration.allowAttachments = res.data;
+                        });
+                        EmailSenderConfigurationService.isEmailSenderAllowHyperlinks().then(function(res) {
+                            DocTree.treeConfig.emailSendConfiguration.allowHyperlinks = res.data;
                         });
 
                         DocTree.scope.$bus.subscribe('onFilterDocTree', function(data) {

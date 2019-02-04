@@ -416,7 +416,7 @@ public class FunctionalAccessServiceImpl implements FunctionalAccessService, App
                 AcmGroup acmGroup = getAcmGroupDao().findByName(groupName);
                 if (acmGroup != null)
                 {
-                    retval.addAll(acmGroup.getUserMembers());
+                    retval.addAll(acmGroup.getUserMembers(true));
                 }
             }
         }
@@ -485,6 +485,11 @@ public class FunctionalAccessServiceImpl implements FunctionalAccessService, App
                     queryGroupNames += "\"" + groupNames.get(i) + "\"" + " OR ";
                 }
             }
+        }
+
+        if (queryGroupNames.equals(""))
+        {
+            queryGroupNames = "no group names";
         }
 
         String query = "object_id_s:(" + queryGroupNames

@@ -27,6 +27,7 @@ package com.armedia.acm.services.participants.service;
  * #L%
  */
 
+import com.armedia.acm.auth.AuthenticationUtils;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.participants.model.AcmParticipantCreatedEvent;
 import com.armedia.acm.services.participants.model.AcmParticipantDeletedEvent;
@@ -59,7 +60,7 @@ public class AcmParticipantEventPublisher implements ApplicationEventPublisherAw
             log.debug("Publishing a participant event.");
         }
         AcmParticipantCreatedEvent participantCreatedEvent = new AcmParticipantCreatedEvent(source,
-                MDC.get(MDCConstants.EVENT_MDC_REQUEST_USER_ID_KEY));
+                MDC.get(MDCConstants.EVENT_MDC_REQUEST_USER_ID_KEY), AuthenticationUtils.getUserIpAddress());
         participantCreatedEvent.setIpAddress(MDC.get(MDCConstants.EVENT_MDC_REQUEST_REMOTE_ADDRESS_KEY));
 
         participantCreatedEvent.setSucceeded(succeeded);
@@ -74,7 +75,7 @@ public class AcmParticipantEventPublisher implements ApplicationEventPublisherAw
             log.debug("Publishing a Participant deleted event.");
         }
         AcmParticipantDeletedEvent participantDeletedEvent = new AcmParticipantDeletedEvent(source,
-                MDC.get(MDCConstants.EVENT_MDC_REQUEST_USER_ID_KEY));
+                MDC.get(MDCConstants.EVENT_MDC_REQUEST_USER_ID_KEY), AuthenticationUtils.getUserIpAddress());
         participantDeletedEvent.setSucceeded(succeeded);
 
         eventPublisher.publishEvent(participantDeletedEvent);
@@ -87,7 +88,7 @@ public class AcmParticipantEventPublisher implements ApplicationEventPublisherAw
             log.debug("Publishing a Participant updated event.");
         }
         AcmParticipantUpdatedEvent participantUpdatedEvent = new AcmParticipantUpdatedEvent(source,
-                MDC.get(MDCConstants.EVENT_MDC_REQUEST_USER_ID_KEY));
+                MDC.get(MDCConstants.EVENT_MDC_REQUEST_USER_ID_KEY), AuthenticationUtils.getUserIpAddress());
 
         participantUpdatedEvent.setSucceeded(succeeded);
 

@@ -116,7 +116,7 @@ public class AcmGroupDao extends AcmAbstractDao<AcmGroup>
         {
             membersToRemove.forEach(member -> member.getGroups().remove(group));
 
-            Set<AcmUser> userMembers = group.getUserMembers();
+            Set<AcmUser> userMembers = group.getUserMembers(false);
             userMembers.removeAll(membersToRemove);
         }
         return group;

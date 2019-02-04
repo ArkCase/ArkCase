@@ -20,15 +20,9 @@ angular.module('cases').controller(
             var onObjectInfoRetrieved = function (objectInfo) {
                 $scope.objectInfo = objectInfo;
 
-                if (!Util.isEmpty($scope.objectInfo.releasedDate)) {
-                    $scope.objectInfo.releasedDate = moment($scope.objectInfo.releasedDate).format(UtilDateService.defaultDateTimeFormat);
-                }
-                if (!Util.isEmpty($scope.objectInfo.recordSearchDateFrom)) {
-                    $scope.objectInfo.recordSearchDateFrom = moment(objectInfo.recordSearchDateFrom).format(UtilDateService.defaultDateTimeFormat);
-                }
-                if (!Util.isEmpty($scope.objectInfo.recordSearchDateTo)) {
-                    $scope.objectInfo.recordSearchDateTo = moment($scope.objectInfo.recordSearchDateTo).format(UtilDateService.defaultDateTimeFormat);
-                }
+                ObjectLookupService.getRequestCategories().then(function (requestCategories) {
+                    $scope.requestCategories = requestCategories;
+                });
 
                 ObjectLookupService.getPayFees().then(function (payFees) {
                     $scope.payFees = payFees;
@@ -70,7 +64,6 @@ angular.module('cases').controller(
                     id: "requests"
                 });
                 $scope.requestTypes = config.requestTypes;
-                $scope.categories = config.categories;
             });
 
             AdminHolidayService.getHolidays().then(function (response) {
@@ -171,6 +164,7 @@ angular.module('cases').controller(
 
                     objectInfo.recordSearchDateFrom = UtilDateService.dateToIsoDateTime($scope.objectInfo.recordSearchDateFrom);
                     objectInfo.recordSearchDateTo = UtilDateService.dateToIsoDateTime($scope.objectInfo.recordSearchDateTo);
+                    objectInfo.releasedDate = UtilDateService.dateToIsoDateTime($scope.objectInfo.releasedDate);
 
                     $scope.originalDueDate = objectInfo.dueDate;
                     $scope.extendedDueDate = undefined;
@@ -211,6 +205,7 @@ angular.module('cases').controller(
             $scope.openedRecordSearchDateTo = {};
             $scope.openedRecordSearchDateTo.openedStart = false;
             $scope.openedRecordSearchDateTo.openedEnd = false;
+            
         }
 
     ]);

@@ -101,6 +101,13 @@
                 "save.error": "फ़ाइल मेटाडेटा को अपडेट करने में असमर्थ"
             }
         },
+        "comp.annotationTags.modal": {
+            "title": "Add Annotation Tags and Notes",
+            "buttons": {
+                "ok": "OK",
+                "cancel": "Cancel"
+            }
+        },
         "transcribe":{
             "email": {
                 "subject": "Transcription Status",

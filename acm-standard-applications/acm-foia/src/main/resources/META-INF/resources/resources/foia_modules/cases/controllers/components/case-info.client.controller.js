@@ -81,7 +81,7 @@ angular.module('cases').controller(
                     $scope.owningGroup = ObjectModelService.getGroup(data);
                     $scope.assignee = ObjectModelService.getAssignee(data);
                     $scope.objectInfo.dueDate = UtilDateService.dateToIso(UtilDateService.isoToDate($scope.objectInfo.dueDate));
-                    $scope.objectInfo.receivedDate = UtilDateService.dateTimeToIso(UtilDateService.isoToDate($scope.objectInfo.receivedDate));
+                    $scope.objectInfo.receivedDate = UtilDateService.isoToLocalDateTime($scope.objectInfo.receivedDate);
                     if (!$scope.includeWeekends) {
                         $scope.daysLeft = DueDateService.daysLeft($scope.holidays, $scope.objectInfo.dueDate);
                         $scope.calculateOverdueObj = DueDateService.calculateOverdueDays(new Date($scope.objectInfo.dueDate), $scope.daysLeft, $scope.holidays);
@@ -127,6 +127,8 @@ angular.module('cases').controller(
                         $scope.receivedDateDisabledLink = false;
                     }
                 });
+                
+                $scope.isAmendmentAdded = data.amendmentFlag;
 
             };
             $scope.userOrGroupSearch = function() {

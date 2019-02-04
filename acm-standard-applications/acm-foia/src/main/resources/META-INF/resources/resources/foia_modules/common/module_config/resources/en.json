@@ -7,6 +7,7 @@
         "defaultTimeFormat": "hh:mm:ss",
         "defaultDateTimeFormat": "MM/DD/YYYY hh:mm",
         "defaultDatePickerFormat": "MM/dd/yyyy",
+        "defaultDateLongTimeFormat": "MM/DD/YYYY HH:mm",
         "defaultDateUIFormat": "MM/dd/yyyy",
         "defaultDateTimeUIFormat": "MM/dd/yyyy HH:mm",
         "defaultQueueDateFormat": "yyyy-MM-dd"
@@ -62,8 +63,8 @@
         "moreItemsTooltip": "Load more items",
         "moreItemsBegin": "More items...",
         "email": {
-            "defaultBodyLinks": "Please follow the links below to view the document(s). Links expire in 3 days.",
-            "defaultBodyAttachments": "Please find attached the documents sent to you from ArkCase.",
+            "defaultBodyLinks": "Please click the 'Open Document(s)' button to browse to the link. Links expire in 3 days.",
+            "defaultBodyAttachments": "Please find the attached document(s) for your review.",
             "defaultFooter": "Powered by ArkCase, Enterprise Case Management platform, http://www.arkcase.com",
             "successMessage": "The email was sent successfully",
             "noEmailAddress": "There is no entered email for this "
@@ -236,6 +237,7 @@
             "expandFacetList": "Expand Facet List"
         },
         "facet": {
+            "blankValue": "Unspecified",
             "names.modifyUser%": "Modify User",
             "names.taskPriority%": "Task Priority",
             "fields.taskPriority.medium%": "Medium",
@@ -811,9 +813,10 @@
     "common.dialogObjectPicker": {
         "header": "Search {{objectLabel}}",
         "table.columns": {
-            "name": "Name",
-            "id": "ID",
-            "title": "Title"
+            "id": "Document ID",
+            "title": "Document Title",
+            "parentId": "Parent Object ID",
+            "parentTitle": "Parent Object Title"
         },
         "addDocument": "Choose document to add"
     },

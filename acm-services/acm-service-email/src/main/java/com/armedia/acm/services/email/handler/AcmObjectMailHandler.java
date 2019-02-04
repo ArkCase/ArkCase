@@ -27,6 +27,7 @@ package com.armedia.acm.services.email.handler;
  * #L%
  */
 
+import com.armedia.acm.auth.AuthenticationUtils;
 import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.data.AcmNameDao;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
@@ -158,7 +159,8 @@ public class AcmObjectMailHandler implements ApplicationEventPublisherAware
             uploadAttachments(message, entity, userId);
         }
 
-        SmtpEmailReceivedEvent event = new SmtpEmailReceivedEvent(message, userId, entity.getId(), entity.getObjectType());
+        SmtpEmailReceivedEvent event = new SmtpEmailReceivedEvent(message, userId, entity.getId(), entity.getObjectType(),
+                AuthenticationUtils.getUserIpAddress());
         boolean success = (exception == null);
         event.setSucceeded(success);
         eventPublisher.publishEvent(event);

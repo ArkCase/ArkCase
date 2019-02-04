@@ -33,17 +33,17 @@
             {
                 "desc": "cases.tree.filters.opened",
                 "name": "all-open-cases",
-                "value": "fq=-status_s:COMPLETE AND -status_s:DELETE AND -status_s:CLOSED"
+                "value": "fq=-status_s:COMPLETE AND -status_s:DELETE AND -status_s:CLOSED AND -status_s:Released"
             },
             {
                 "desc": "cases.tree.filters.released",
                 "name": "all-released-cases",
-                "value": "fq=assignee_s:${user}&fq=status_s:Released"
+                "value": "fq=status_s:Released"
             },
             {
                 "desc": "cases.tree.filters.iHaveCreated",
                 "name": "my-created-cases",
-                "value": "fq=author_s:${user}"
+                "value": "fq={!field f=author}${user}"
             },
             {
                 "desc": "cases.tree.filters.iAmAssigned",
@@ -733,7 +733,7 @@
                     "sortField": "title_parseable_lcs",
                     "displayName": "cases.comp.tasks.table.columns.title",
                     "headerCellFilter": "translate",
-                    "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity)'>{{row.entity.title_parseable}}</a>"
+                    "cellTemplate": "<a href='#' title='{{row.entity.title_parseable}}' ng-click='grid.appScope.onClickObjLink($event, row.entity)'>{{row.entity.title_parseable}}</a>"
                 },
                 {
                     "name": "assignee",

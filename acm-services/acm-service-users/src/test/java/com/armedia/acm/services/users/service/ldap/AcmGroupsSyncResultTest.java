@@ -226,7 +226,7 @@ public class AcmGroupsSyncResultTest
         AcmGroup actualGroupA = unit.getModifiedGroups().get(0);
         assertThat(unit.getModifiedGroups().size(), is(1));
         assertThat("Changed group should be:", actualGroupA.getName(), is("A"));
-        assertThat("Changed group A should have user members", actualGroupA.getUserMembers(),
+        assertThat("Changed group A should have user members", actualGroupA.getUserMembers(false),
                 everyItem(isIn(userSet(u4, u1))));
         assertThat("Ascendants string for C should be null", actualGroupA.getAscendantsList(), nullValue());
     }
@@ -307,11 +307,11 @@ public class AcmGroupsSyncResultTest
 
         assertThat("Group C should have member groups", modifiedGroupsByName.get("C")
                 .getGroupMemberNames().collect(Collectors.toSet()), everyItem(isIn(fromArray("A", "D"))));
-        assertThat("Group C should have 0 user members", modifiedGroupsByName.get("C").getUserMembers().size(), is(0));
+        assertThat("Group C should have 0 user members", modifiedGroupsByName.get("C").getUserMembers(false).size(), is(0));
         assertThat("Ascendants string for group C should be", modifiedGroupsByName.get("C").getAscendantsList(), nullValue());
 
         assertThat("Ascendants string for group D should be", modifiedGroupsByName.get("D").getAscendantsList(), is("C"));
-        assertThat("Group D should have 0 user members", modifiedGroupsByName.get("D").getUserMembers().size(), is(0));
+        assertThat("Group D should have 0 user members", modifiedGroupsByName.get("D").getUserMembers(false).size(), is(0));
         assertThat("Group D should have member groups", modifiedGroupsByName.get("D")
                 .getGroupMemberNames().collect(Collectors.toSet()), everyItem(isIn(fromArray("A"))));
     }
@@ -369,7 +369,7 @@ public class AcmGroupsSyncResultTest
         assertThat(unit.getDeletedGroups(), everyItem(isIn(groupSet(acmGroupB))));
         AcmGroup actualDeletedGroup = unit.getDeletedGroups().get(0);
         assertThat("Group B should have 0 member groups", actualDeletedGroup.getMemberGroups().size(), is(0));
-        assertThat("Group B should have 0 user groups", actualDeletedGroup.getUserMembers().size(), is(0));
+        assertThat("Group B should have 0 user groups", actualDeletedGroup.getUserMembers(false).size(), is(0));
         assertThat("Ascendants string for group B should be", actualDeletedGroup.getAscendantsList(), nullValue());
         assertThat("Group B should have status inactive", actualDeletedGroup.getStatus(), equalTo(AcmGroupStatus.INACTIVE));
 
@@ -456,10 +456,10 @@ public class AcmGroupsSyncResultTest
                 is("B"));
         assertThat("Group X should have member groups", newGroupsByName.get("X").getGroupMemberNames()
                 .collect(Collectors.toSet()), everyItem(isIn(fromArray("D"))));
-        assertThat("Group X should have 0 user members", newGroupsByName.get("X").getUserMembers().size(), is(0));
+        assertThat("Group X should have 0 user members", newGroupsByName.get("X").getUserMembers(false).size(), is(0));
 
         assertThat("Ascendants string for group D should be", newGroupsByName.get("D").getAscendantsList(), is("B||C||X"));
-        assertThat("Group D should have 0 user members", newGroupsByName.get("D").getUserMembers().size(), is(0));
+        assertThat("Group D should have 0 user members", newGroupsByName.get("D").getUserMembers(false).size(), is(0));
         assertThat("Group D should have member groups", newGroupsByName.get("D")
                 .getGroupMemberNames().collect(Collectors.toSet()), everyItem(isIn(fromArray("A"))));
 
@@ -483,7 +483,7 @@ public class AcmGroupsSyncResultTest
 
         assertThat("Group C should have member groups", modifiedGroupsByName.get("C")
                 .getGroupMemberNames().collect(Collectors.toSet()), everyItem(isIn(fromArray("A", "D"))));
-        assertThat("Group C should have 0 user members", modifiedGroupsByName.get("C").getUserMembers().size(), is(0));
+        assertThat("Group C should have 0 user members", modifiedGroupsByName.get("C").getUserMembers(false).size(), is(0));
         assertThat("Ascendants string for group C should be", modifiedGroupsByName.get("C").getAscendantsList(), nullValue());
     }
 

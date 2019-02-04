@@ -48,7 +48,7 @@ public class AcmLoginSuccessEventListener
     {
         Authentication auth = authenticationSuccessEvent.getAuthentication();
 
-        AcmEvent loginEvent = new LoginEvent(auth);
+        AcmEvent loginEvent = new LoginEvent(auth, AuthenticationUtils.getUserIpAddress());
         loginEvent.setSucceeded(true);
         getApplicationEventPublisher().publishEvent(loginEvent);
     }

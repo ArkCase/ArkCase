@@ -365,7 +365,8 @@
                     "cancel": "Cancel",
                     "name": "Site Name",
                     "url": "URL"
-                }
+                },
+                "url.title": "URL must be valid."
             },
             "savePromptModal": {
                 "title": "Save dashboard",
@@ -374,7 +375,7 @@
                 "doNotSave": "Do not save",
                 "cancel": "Cancel"
             },
-            "myOverdueCases": {
+            "myOverdueRequests": {
                 "title": "My Overdue Requests",
                 "description": "Displays Overdue Requests",
                 "table": {

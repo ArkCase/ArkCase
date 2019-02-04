@@ -59,7 +59,8 @@ import gov.foia.service.ResponseFolderNotifyService;
  * Created by dmiller on 8/9/16.
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = { "classpath:/spring/spring-library-foia-activiti-test.xml" })
+@ContextConfiguration(locations = { "classpath:/spring/spring-library-foia-activiti-test.xml",
+        "classpath:/spring/spring-library-notification-test.xml" })
 public class ReleaseBusinessProcessIT
 {
     private final String processName = "foia-extension-release-process";
@@ -80,7 +81,7 @@ public class ReleaseBusinessProcessIT
     @Autowired
     @Qualifier("responseFolderConverterService")
     private ResponseFolderConverterService responseFolderConverterService;
-    
+
     @Autowired
     @Qualifier("responseFolderCompressorService")
     private ResponseFolderCompressorService responseFolderCompressorService;
@@ -120,6 +121,7 @@ public class ReleaseBusinessProcessIT
         changeObjectStatusService.change(foiaId, objectType, "Released");
         expect(queueCaseService.enqueue(foiaId, "Release")).andReturn(new FOIARequest());
         expect(responseFolderCompressorService.compressResponseFolder(foiaId)).andReturn("temp-file-name.zip");
+
         foiaRequestFileBrokerClient.sendReleaseFile(foiaId);
         responseFolderNotifyService.sendEmailNotification(foiaId);
 

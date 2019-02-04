@@ -1,9 +1,12 @@
 <p class="news">
-    <div class="alert" ng-if="!dashboardNews.feed"><p class="text-center">
+    <div class="alert" ng-if="!feed"><p class="text-center">
     <span translate>dashboard.widgets.news.label.insertUrl</span>
-</p></div><p><h4><a ng-href="{{dashboardNews.feed.link}}" target="_blank"> {{dashboardNews.feed.title}}</a></h4>
+    </div>
+</p><p><h4>
+    <a ng-href="{{feed.link}}" target="_blank"> {{feed.title}}</a>
+</h4>
 <ul>
-    <li ng-repeat="entry in dashboardNews.feed.item"><a ng-href="{{entry.link}}" target="_blank">
-        {{entry.title}}</a>
+    <li ng-repeat="entry in feed">
+        <a ng-href="{{entry.link}}" target="_blank"> {{entry.title}} </a>
     </li>
-</ul></p></div>
+</ul></p>
