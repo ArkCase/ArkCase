@@ -3,19 +3,9 @@
         <form name="stateForm">
                 <span class="row">
                         <label><span translate>admin.stateOfArkcase.pickDate</span>
-                            <span class="input-group col-md-2">
-                                <input type="text" class="form-control" ng-required="true" id="dateStateOfArkcase"
-                                       datepicker-popup="{{locale.DATETIME_FORMATS.shortDate}}" ng-model="date"
-                                       is-open="opened"
-                                       close-on-date-selection="true" show-button-bar="true" on-open-focus="true"
-                                       close-text="{{'admin.stateOfArkcase.datePicker.close' | translate}}"
-                                       current-text="{{'admin.stateOfArkcase.datePicker.current' | translate}}"
-                                       clear-text="{{'admin.stateOfArkcase.datePicker.clear' | translate}}"/>
-                                <span class="input-group-btn">
-                                    <button type="button" class="btn btn-default" ng-click="opened = !opened">
-                                        <i class="fa fa-calendar"></i>
-                                    </button>
-                                </span>
+                            <span class="input-group col-md-12">
+                                <date-time-picker data="date" property="date" date-picker-id="date"
+                                        time-format-disabled="true"></date-time-picker>
                             </span>
                         </label>
                     <span class="input-group col-md-2">

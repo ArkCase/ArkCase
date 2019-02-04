@@ -109,7 +109,7 @@ public class GroupRemoveUUIDExecutor implements AcmDataUpdateExecutor
                     newGroup.setDisplayName(name);
                     newGroup.setCreator(group.getCreator());
                     newGroup.setCreated(group.getCreated());
-                    newGroup.setUserMembers(new HashSet<>(group.getUserMembers()));
+                    newGroup.setUserMembers(new HashSet<>(group.getUserMembers(true)));
                     return newGroup;
                 })
                 .collect(Collectors.toSet());
@@ -140,7 +140,7 @@ public class GroupRemoveUUIDExecutor implements AcmDataUpdateExecutor
             group.setModified(new Date());
             group.getMemberGroups().clear();
             group.getMemberOfGroups().clear();
-            group.getUserMembers().clear();
+            group.getUserMembers(false).clear();
             group.setAscendantsList(null);
             group.setStatus(AcmGroupStatus.INACTIVE);
             group.setDistinguishedName(null);

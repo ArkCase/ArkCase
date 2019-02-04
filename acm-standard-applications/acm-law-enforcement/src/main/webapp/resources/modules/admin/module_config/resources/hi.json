@@ -645,6 +645,70 @@
                 "modal.info": "ताज़ा करने के बाद सेटिंग्स प्रभावी हो जाएंगी",
                 "modal.ok": "ठीक"
             },
+            "sequenceManagement.config": {
+                "title": "Sequence Configuration",
+                "sequenceEnabled": "Enabled",
+                "sequenceDisabled": "Disabled",
+                "grid": {
+                    "sequenceName": "Name",
+                    "sequenceDescription": "Description",
+                    "sequenceStatus": "Status"
+                },
+                "placeholder": {
+                    "name": "Enter Sequence Name",
+                    "description": "Enter Sequence Description"
+                },
+                "modal": {
+                    "title": "Add/Edit Sequence",
+                    "sequenceName": "Sequence Name",
+                    "sequenceDescription": "Sequence Description",
+                    "sequenceEnabled": "Sequence Enabled",
+                    "cancel": "Cancel",
+                    "save": "Save"
+                }
+            },
+            "sequenceManagementParts.config": {
+                "title": "Sequence Part",
+                "grid": {
+                    "sequenceName": "Name",
+                    "sequenceDescription": "Type"
+                },
+                "message": "The sequence you entered is not saved! Sequence name already exist!",
+                "autoincrement": {
+                    "startNumber": "Start number",
+                    "incrementSize": "Increment size",
+                    "numberLength": "Number length",
+                    "reuseSkippedSequenceValues": "Reuse skipped sequence values"
+                },
+                "objectProperty": {
+                    "name": "Object property name"
+                },
+                "date": {
+                    "text": "Date Format (ex: ddMMyyyyHHmmssSSS)"
+                },
+                "arbitraryText": {
+                    "text": "Arbitrary text"
+                },
+                "modal": {
+                    "title": "Add/Edit Sequence Part",
+                    "sequencePartName": "Sequence Part Name",
+                    "sequencePartType": "Sequence Part Type",
+                    "cancel": "Cancel",
+                    "save": "Save",
+                    "placeholders": {
+                        "autoincrement": {
+                            "startNumber": "Select or enter start number",
+                            "incrementSize": "Select or enter increment size",
+                            "numberLength": "Select or enter number length"
+                        },
+                        "arbitraryText": "Enter arbitrary text",
+                        "objectProperty": "Enter object property",
+                        "date": "Enter Date Format (ex: ddMMyyyyHHmmssSSS)",
+                        "sequencePartName": "Enter sequence part name",
+                        "sequencePartType": "Select part type"
+                    }
+                }
+            },
             "login.config": {
                 "title": "लॉग इन कॉन्फ़िगरेशन",
                 "idleLimit.label": "निष्क्रिय सीमा लॉगिन करें (मिलीसेकंड में)",
@@ -896,6 +960,15 @@
             "ocrConfigForm": {
                 "title": "OCR Services_HI",
                 "save.button": "Save_HI",
+                "enableOCR.checkbox": "Enable OCR_HI"
+            }
+        },
+        "ocr": {
+            "title": "OCR Services_HI",
+            "ocrManagement": "OCR Management_HI",
+            "ocrConfigForm": {
+                "save.button": "Save_HI",
+                "enableOCR.label": "OCR Configuration_HI",
                 "enableOCR.checkbox": "Enable OCR_HI"
             }
         },

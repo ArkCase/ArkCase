@@ -50,6 +50,8 @@
                     - NOTE: Use '**' to recurse into sub-packages.
                  -->
                 <prop key="jpa.model.packages">com.armedia.**</prop>
+                <!-- Add Tomcat JDBC interceptors (SlowQueryReport, QueryTimeoutInterceptor, etc) -->
+                <prop key="acm.jdbcInterceptors"></prop>
 
             </props>
         </property>
@@ -90,6 +92,7 @@
         <property name="removeAbandonedTimeout" value="${acm.abandonedTimeoutInSeconds}"/>
         <property name="timeBetweenEvictionRunsMillis" value="3000"/>
         <property name="testOnConnect" value="true"/>
+        <property name="jdbcInterceptors" value="${acm.jdbcInterceptors}"/>
     </bean>
 
     <bean id="converterScanPostProcessor" class="com.armedia.acm.data.converter.ConverterScanPostProcessor">

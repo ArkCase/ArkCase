@@ -32,6 +32,7 @@
     <bean id="newComplaintMailFilter" class="com.armedia.acm.services.email.filter.ComplaintFilePatternMailFilter">
         <constructor-arg index="0" value=""/>
         <constructor-arg index="1" value="${complaint.email.regex.object_type}"/>
+        <constructor-arg index="2" value="${email.create.complaint.enabled}"/>
     </bean>
 
     <bean id="newComplaintMailHandler" class="com.armedia.acm.plugins.complaint.email.NewComplaintMailHandler"

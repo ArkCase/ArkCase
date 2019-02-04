@@ -36,7 +36,7 @@ import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 
 @Entity
-@DiscriminatorValue("gov.foia.model.EcmFileVersion")
+@DiscriminatorValue("gov.foia.model.FOIAEcmFileVersion")
 @JsonIdentityInfo(generator = JSOGGenerator.class)
 public class FOIAEcmFileVersion extends EcmFileVersion
 {

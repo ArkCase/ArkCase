@@ -44,4 +44,5 @@ public interface DateFormats
      * The date format SOLR expects. Any other date format causes SOLR to throw an exception.
      */
     public final String DEFAULT_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'";
+    public final String DEFAULT_DATE_TIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";
 }

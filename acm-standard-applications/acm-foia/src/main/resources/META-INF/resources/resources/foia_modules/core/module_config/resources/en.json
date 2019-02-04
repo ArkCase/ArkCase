@@ -598,6 +598,19 @@
                 "person": "Person",
                 "organization": "Organization"
             },
+            "sequenceParts": {
+                "autoincrement": "AUTOINCREMENT",
+                "objectProperty": "OBJECT_PROPERTY",
+                "uuid": "UUID",
+                "date": "DATE",
+                "arbitraryText": "ARBITRARY_TEXT"
+            },
+            "sequenceResetPeriod": {
+                "daily": "Daily",
+                "weekly": "Weekly",
+                "monthly": "Monthly",
+                "yearly": "Yearly"
+            },
             "requestDispositionType": {
                 "partial-denial": "Partial Denial",
                 "full-denial": "Full Denial"
@@ -616,6 +629,9 @@
                 "no-agency-record": "No Agency Record",
                 "duplicate-request": "Duplicate Request",
                 "other": "Other"
+            },
+            "correspondence": {
+                "request": "Request"
             },
             "appealDispositionSubType": {
                 "no-record": "No Record",
@@ -658,12 +674,14 @@
             },
             "documentReview": {
                 "statuses": {
-                    "reviewed": "Reviewed",
+                    "selectReviewStatus": "Select Status",
+                    "reviewed": "Review Complete",
                     "notReviewed": "Not Reviewed"
                 }
             },
             "documentRedaction": {
                 "statuses": {
+                    "selectRedactionStatus": "Select Status",
                     "partialRedacted": "Partial Redacted",
                     "fullyRedacted": "Fully Redacted"
                 }

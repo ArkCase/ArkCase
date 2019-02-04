@@ -12,9 +12,15 @@ angular.module('cases').controller(
             $scope.loadingIcon = "fa fa-floppy-o";
             $scope.formInvalid = false;
 
-            $scope.uploadFilesDescription = [];
-            $scope.uploadFilesConsent = [];
-            $scope.uploadFilesProofOfIdentity = [];
+            var descriptionDocumentType = "Description Document";
+            var consentDocumentType = "Consent";
+            var proofOfIdentityDocumentType = "Proof of Identity";
+
+            $scope.uploadFilesDescription = {};
+            $scope.uploadFilesDescription[descriptionDocumentType] = [];
+            $scope.uploadFilesDescription[consentDocumentType] = [];
+            $scope.uploadFilesDescription[proofOfIdentityDocumentType] = [];
+
             $scope.requestExpedite = false;
             $scope.config = null;
 
@@ -34,43 +40,43 @@ angular.module('cases').controller(
             $scope.addFileDescription = function (file) {
                 if (file && file.length > 0) {
                     for (var i = 0; i < file.length; i++) {
-                        if (fileArrayContainsFile($scope.uploadFilesDescription, file[i]) == false) {
-                            $scope.uploadFilesDescription.push(file[i]);
+                        if (fileArrayContainsFile($scope.uploadFilesDescription[descriptionDocumentType], file[i]) == false) {
+                            $scope.uploadFilesDescription[descriptionDocumentType].push(file[i]);
                         }
                     }
                 }
             };
 
             $scope.removeFileDescription = function (index) {
-                $scope.uploadFilesDescription.splice(index, 1);
+                $scope.uploadFilesDescription['Description Document'].splice(index, 1);
             };
 
             $scope.addFileConsent = function (file) {
                 if (file && file.length > 0) {
                     for (var i = 0; i < file.length; i++) {
-                        if (fileArrayContainsFile($scope.uploadFilesConsent, file[i]) == false) {
-                            $scope.uploadFilesConsent.push(file[i]);
+                        if (fileArrayContainsFile($scope.uploadFilesDescription[consentDocumentType], file[i]) == false) {
+                            $scope.uploadFilesDescription[consentDocumentType].push(file[i]);
                         }
                     }
                 }
             };
 
             $scope.removeFileConsent = function (index) {
-                $scope.uploadFilesConsent.splice(index, 1);
+                $scope.uploadFilesDescription['Consent'].splice(index, 1);
             };
 
             $scope.addFileProofOfIdentity = function (file) {
                 if (file && file.length > 0) {
                     for (var i = 0; i < file.length; i++) {
-                        if (fileArrayContainsFile($scope.uploadFilesProofOfIdentity, file[i]) == false) {
-                            $scope.uploadFilesProofOfIdentity.push(file[i]);
+                        if (fileArrayContainsFile($scope.uploadFilesDescription[proofOfIdentityDocumentType], file[i]) == false) {
+                            $scope.uploadFilesDescription[proofOfIdentityDocumentType].push(file[i]);
                         }
                     }
                 }
             };
 
             $scope.removeFileProofOfIdentity = function (index) {
-                $scope.uploadFilesProofOfIdentity.splice(index, 1);
+                $scope.uploadFilesDescription['Proof of Identity'].splice(index, 1);
             };
             var stateRequest = ObjectLookupService.getStates();
 
@@ -329,17 +335,13 @@ angular.module('cases').controller(
                 });
                 formdata.append('casefile', data);
 
-                angular.forEach($scope.uploadFilesDescription, function (value, key) {
-                    formdata.append('files', value);
-                });
-
-                angular.forEach($scope.uploadFilesConsent, function (value, key) {
-                    formdata.append('files', value);
-                });
-
-                angular.forEach($scope.uploadFilesProofOfIdentity, function (value, key) {
-                    formdata.append('files', value);
-                });
+                for (var property in $scope.uploadFilesDescription) {
+                    if ($scope.uploadFilesDescription.hasOwnProperty(property)) {
+                        angular.forEach($scope.uploadFilesDescription[property], function(value){
+                            formdata.append(property, value);
+                        });
+                    }
+                }
 
                 if ($scope.isNewRequestType()) {
                     saveRequestInfoWithFiles(formdata);

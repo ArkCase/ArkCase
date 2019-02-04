@@ -99,20 +99,4 @@ public class AlfrescoFileFolderServiceCreateAuditResponseReader implements EcmAu
         return null;
 
     }
-
-    private String extractNodeName(String nodeInfo)
-    {
-        int nameIdx = nodeInfo.indexOf("name=");
-        int startIdx = nameIdx + "name=".length();
-        int endIdx = nodeInfo.lastIndexOf(", isFolder");
-        return nodeInfo.substring(startIdx, endIdx);
-    }
-
-    private String extractNodeId(String nodeInfo)
-    {
-        int nodeRefIdx = nodeInfo.lastIndexOf("nodeRef=");
-        int startIdx = nodeRefIdx + "nodeRef=".length();
-        int endIdx = nodeInfo.lastIndexOf("]");
-        return nodeInfo.substring(startIdx, endIdx);
-    }
 }

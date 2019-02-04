@@ -31,12 +31,12 @@ import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.casefile.pipeline.CaseFilePipelineContext;
+import com.armedia.acm.plugins.ecm.model.AcmMultipartFile;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.pipeline.handler.PipelineHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
@@ -49,16 +49,16 @@ public class CaseFileUploadAttachmentsHandler implements PipelineHandler<CaseFil
     @Override
     public void execute(CaseFile entity, CaseFilePipelineContext pipelineContext) throws PipelineProcessException
     {
-        List<MultipartFile> files = null;
+        List<AcmMultipartFile> files = null;
 
         if(pipelineContext.hasProperty("attachmentFiles"))
         {
-            files = (List<MultipartFile>)pipelineContext.getPropertyValue("attachmentFiles");
+            files = (List<AcmMultipartFile>)pipelineContext.getPropertyValue("attachmentFiles");
         }
 
         if (files != null)
         {
-            for (MultipartFile file : files)
+            for (AcmMultipartFile file : files)
             {
                 if (file != null)
                 {
@@ -71,7 +71,7 @@ public class CaseFileUploadAttachmentsHandler implements PipelineHandler<CaseFil
 
                     try
                     {
-                        getEcmFileService().upload(file.getOriginalFilename(), "other", "Document", file.getInputStream(), file.getContentType(),
+                        getEcmFileService().upload(file.getOriginalFilename(), file.getType(), "Document", file.getInputStream(), file.getContentType(),
                                 file.getOriginalFilename(), pipelineContext.getAuthentication(),
                                 folderId, entity.getObjectType(), entity.getId());
                     }

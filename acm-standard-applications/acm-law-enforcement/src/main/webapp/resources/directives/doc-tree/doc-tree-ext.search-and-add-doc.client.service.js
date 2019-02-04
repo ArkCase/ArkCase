@@ -105,6 +105,7 @@ angular.module('services').factory('DocTreeExt.SearchAndAddDocuments', [ '$q', '
                 animation: true,
                 size: 'lg',
                 backdrop: 'static',
+                keyboard: false,
                 resolve: {
                     params: function() {
                         return params;

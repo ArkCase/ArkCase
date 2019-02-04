@@ -13,10 +13,8 @@
         </div>
         <div class="row">
             <div class="col-sm-12 form-group">
-                <label for="holidayDate" translate>admin.application.holiday.grid.holidayDate</label><span
-                    class="required-asterisk">*</span><br />
-                <input type="date" id="holidayDate" class="input-md form-control" ng-model="holidays.holidayDate" required="required"
-                        pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}" placeholder="{{ 'admin.application.holiday.placeholder.date' | translate }}">
+                <date-time-picker data="holidays.holidayDate" property="holidays.holidayDate" date-picker-id="holidays.holidayDate"
+                        time-format-disabled="true"></date-time-picker>
             </div>
         </div>
     </form>

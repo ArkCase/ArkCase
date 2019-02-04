@@ -29,9 +29,11 @@ angular.module('request-info').config([ '$stateProvider', function($stateProvide
         resolve: {
             translatePartialLoader: [ '$translate', '$translatePartialLoader', function($translate, $translatePartialLoader) {
                 $translatePartialLoader.addPart('common');
+                $translatePartialLoader.addPart('core');
                 $translatePartialLoader.addPart('request-info');
                 $translatePartialLoader.addPart('requests');
                 $translatePartialLoader.addPart('cases');
+                $translatePartialLoader.addPart('document-details');
                 return $translate.refresh();
             } ]
         },
@@ -49,6 +51,16 @@ angular.module('request-info').config([ '$stateProvider', function($stateProvide
         }
     }).state('request-viewer', {
         url: '/viewer/:fileId/:id/:containerType/:name/:selectedIds',
+        templateUrl: 'modules/request-info/views/request-info.client.view.html',
+        resolve: {
+            translatePartialLoader: [ '$translate', '$translatePartialLoader', function($translate, $translatePartialLoader) {
+                $translatePartialLoader.addPart('request-info');
+                $translatePartialLoader.addPart('common');
+                return $translate.refresh();
+            } ]
+        }
+    }).state('request-details', {
+        url: '/requests/:id',
         templateUrl: 'modules/request-info/views/request-info.client.view.html',
         resolve: {
             translatePartialLoader: [ '$translate', '$translatePartialLoader', function($translate, $translatePartialLoader) {

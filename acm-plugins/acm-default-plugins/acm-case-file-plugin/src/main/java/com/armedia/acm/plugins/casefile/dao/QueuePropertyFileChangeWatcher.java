@@ -44,6 +44,7 @@ import org.springframework.transaction.support.TransactionTemplate;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -110,8 +111,24 @@ public class QueuePropertyFileChangeWatcher implements ApplicationListener<Abstr
             {
                 List<AcmQueue> storedQueues = getAcmQueueDao().findAll();
 
+                // move display order values, so we don't get duplicates when setting the new values
+                if (!storedQueues.isEmpty())
+                {
+                    int largestDisplayOrder = storedQueues.stream().max(Comparator.comparingInt(AcmQueue::getDisplayOrder)).get()
+                            .getDisplayOrder();
+                    for (int i = 0; i < storedQueues.size(); i++)
+                    {
+                        AcmQueue queue = storedQueues.get(i);
+                        // hopefully won't have negative numbers
+                        queue.setDisplayOrder(largestDisplayOrder + i + 1);
+                        getAcmQueueDao().save(queue);
+                    }
+                    getAcmQueueDao().getEm().flush();
+                }
+
                 Map<String, AcmQueue> nameQueue = storedQueues.stream().collect(Collectors.toMap(AcmQueue::getName, Function.identity()));
 
+                // set new display order values
                 queues.stream().forEach(q -> {
 
                     if (nameQueue.containsKey(q.getName()))

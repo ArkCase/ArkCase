@@ -35,6 +35,7 @@ import com.armedia.acm.plugins.report.model.Report;
 import com.armedia.acm.plugins.report.model.Reports;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.search.service.SearchResults;
+import com.armedia.acm.services.users.service.AcmUserRoleService;
 
 import org.apache.commons.lang3.StringUtils;
 import org.mule.api.MuleException;
@@ -66,6 +67,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Properties;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class ReportServiceImpl implements ReportService
@@ -93,6 +95,7 @@ public class ReportServiceImpl implements ReportService
     private ExecuteSolrQuery executeSolrQuery;
     private SearchResults searchResults;
     private Properties applicationRolesProperties;
+    private AcmUserRoleService userRoleService;
 
     @Override
     public List<Report> getPentahoReports() throws Exception
@@ -208,6 +211,8 @@ public class ReportServiceImpl implements ReportService
     {
         boolean authorized = false;
 
+        Set<String> userRoles = userRoleService.getUserRoles(userId);
+
         Map<String, List<String>> reportsToRolesMap = getReportToRolesMap();
 
         if (report != null && reportsToRolesMap != null && !reportsToRolesMap.isEmpty())
@@ -215,12 +220,11 @@ public class ReportServiceImpl implements ReportService
             if (reportsToRolesMap.containsKey(report.getPropertyName()))
             {
                 List<String> reportToRoles = reportsToRolesMap.get(report.getPropertyName());
-                List<String> userRoles = getApplicationRoles();
                 if (reportToRoles != null && userRoles != null)
                 {
                     try
                     {
-                        Optional<String> optional = reportToRoles.stream().filter(reportRoles -> userRoles.contains(reportRoles))
+                        Optional<String> optional = reportToRoles.stream().filter(reportRole -> userRoles.contains(reportRole))
                                 .findAny();
 
                         authorized = optional.isPresent();
@@ -623,5 +627,15 @@ public class ReportServiceImpl implements ReportService
     public void setApplicationRolesProperties(Properties applicationRolesProperties)
     {
         this.applicationRolesProperties = applicationRolesProperties;
+    }
+
+    public AcmUserRoleService getUserRoleService()
+    {
+        return userRoleService;
+    }
+
+    public void setUserRoleService(AcmUserRoleService userRoleService)
+    {
+        this.userRoleService = userRoleService;
     }
 }

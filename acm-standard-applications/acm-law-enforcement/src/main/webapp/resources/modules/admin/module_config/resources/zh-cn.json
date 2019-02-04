@@ -645,6 +645,70 @@
                 "modal.info": "设置将在刷新后生效",
                 "modal.ok": "好"
             },
+            "sequenceManagement.config": {
+                "title": "Sequence Configuration",
+                "sequenceEnabled": "Enabled",
+                "sequenceDisabled": "Disabled",
+                "grid": {
+                    "sequenceName": "Name",
+                    "sequenceDescription": "Description",
+                    "sequenceStatus": "Status"
+                },
+                "placeholder": {
+                    "name": "Enter Sequence Name",
+                    "description": "Enter Sequence Description"
+                },
+                "modal": {
+                    "title": "Add/Edit Sequence",
+                    "sequenceName": "Sequence Name",
+                    "sequenceDescription": "Sequence Description",
+                    "sequenceEnabled": "Sequence Enabled",
+                    "cancel": "Cancel",
+                    "save": "Save"
+                }
+            },
+            "sequenceManagementParts.config": {
+                "title": "Sequence Part",
+                "grid": {
+                    "sequenceName": "Name",
+                    "sequenceDescription": "Type"
+                },
+                "message": "The sequence you entered is not saved! Sequence name already exist!",
+                "autoincrement": {
+                    "startNumber": "Start number",
+                    "incrementSize": "Increment size",
+                    "numberLength": "Number length",
+                    "reuseSkippedSequenceValues": "Reuse skipped sequence values"
+                },
+                "objectProperty": {
+                    "name": "Object property name"
+                },
+                "date": {
+                    "text": "Date Format (ex: ddMMyyyyHHmmssSSS)"
+                },
+                "arbitraryText": {
+                    "text": "Arbitrary text"
+                },
+                "modal": {
+                    "title": "Add/Edit Sequence Part",
+                    "sequencePartName": "Sequence Part Name",
+                    "sequencePartType": "Sequence Part Type",
+                    "cancel": "Cancel",
+                    "save": "Save",
+                    "placeholders": {
+                        "autoincrement": {
+                            "startNumber": "Select or enter start number",
+                            "incrementSize": "Select or enter increment size",
+                            "numberLength": "Select or enter number length"
+                        },
+                        "arbitraryText": "Enter arbitrary text",
+                        "objectProperty": "Enter object property",
+                        "date": "Enter Date Format (ex: ddMMyyyyHHmmssSSS)",
+                        "sequencePartName": "Enter sequence part name",
+                        "sequencePartType": "Select part type"
+                    }
+                }
+            },
             "login.config": {
                 "title": "登录配置",
                 "idleLimit.label": "登录空闲限制（以毫秒为单位）",
@@ -896,6 +960,15 @@
             "ocrConfigForm": {
                 "title": "OCR Services_ZH_CN",
                 "save.button": "Save_ZH_CN",
+                "enableOCR.checkbox": "Enable OCR_ZH_CN"
+            }
+        },
+        "ocr": {
+            "title": "OCR Services_ZH_CN",
+            "ocrManagement": "OCR Management_ZH_CN",
+            "ocrConfigForm": {
+                "save.button": "Save_ZH_CN",
+                "enableOCR.label": "OCR Configuration_ZH_CN",
                 "enableOCR.checkbox": "Enable OCR_ZH_CN"
             }
         },

@@ -28,7 +28,8 @@ angular.module('services').factory('ObjectService', [ '$state', '$window', '$log
             FOLDER: "FOLDER",
             TRANSCRIBE: "TRANSCRIBE",
             TRANSCRIBE_ITEM: "TRANSCRIBE_ITEM",
-            ASSOCIATED_TAG: "ASSOCIATED_TAG"
+            ASSOCIATED_TAG: "ASSOCIATED_TAG",
+            BUSINESS_PROCESS: "BUSINESS_PROCESS"
         }
 
         ,
@@ -85,13 +86,14 @@ angular.module('services').factory('ObjectService', [ '$state', '$window', '$log
          *
          * @param {String} objTypeKey ArkCase Object type
          * @param {String} objId ArkCase Object ID
+         * @param {Boolean} newTab Optional flag for opening the Object in a new tab
          *
          * @description
          * Go to a page to show an object. If the view page is angular page, use state configuration (Case, Complaint, etc.);
          * else if the view page is non Angular page, use URL in configuration (Document, File, etc.)
          */
         ,
-        showObject: function(objTypeKey, objId) {
+        showObject: function (objTypeKey, objId, newTab) {
             ObjectLookupService.getObjectTypes().then(function(objectTypes) {
                 var found = _.find(objectTypes, {
                     key: objTypeKey
@@ -102,11 +104,15 @@ angular.module('services').factory('ObjectService', [ '$state', '$window', '$log
                         id: objId,
                         type: objType
                     };
-                    $state.transitionTo(found.state, params, {
-                        reload: true,
-                        notify: true
-                    });
-
+                    if (newTab === true) {
+                        $window.open($state.href(found.state, params, {relative: true})
+                            , '_blank');
+                    } else {
+                        $state.transitionTo(found.state, params, {
+                            reload: true,
+                            notify: true
+                        });
+                    }
                 } else if (Util.goodMapValue(found, "url", false)) {
                     var url = found.url;
                     url = url.replace(":id", objId);

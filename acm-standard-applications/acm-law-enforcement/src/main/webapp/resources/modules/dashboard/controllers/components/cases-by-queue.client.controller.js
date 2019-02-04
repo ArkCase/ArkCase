@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('dashboard.cases-by-queue').controller('Dashboard.CasesByQueueController',
-        [ '$scope', 'config', '$state', '$translate', 'Dashboard.DashboardService', 'ConfigService', 'params', 'UtilService', function($scope, config, $state, $translate, DashboardService, ConfigService, params, Util) {
+        [ '$scope', 'config', '$state', '$translate', 'Dashboard.DashboardService', 'ConfigService', 'params', 'UtilService', 'Menus', function($scope, config, $state, $translate, DashboardService, ConfigService, params, Util, Menus) {
 
             var vm = this;
 
@@ -44,9 +44,12 @@ angular.module('dashboard.cases-by-queue').controller('Dashboard.CasesByQueueCon
                 if (config.redirectSettings && bars.length > 0) {
                     var label = bars[0].label;
                     var redirectObject = config.redirectSettings[label];
-                    if (redirectObject) {
-                        $state.go(redirectObject.state, redirectObject.params)
-                    }
+                    var dataModules = Menus.getMenu('leftnav');
+                    angular.forEach(dataModules.items, function(item, i){
+                        if(redirectObject && item.link == "queues"){
+                            $state.go(redirectObject.state, redirectObject.params)
+                        }
+                    });
                 }
             }
         } ]);

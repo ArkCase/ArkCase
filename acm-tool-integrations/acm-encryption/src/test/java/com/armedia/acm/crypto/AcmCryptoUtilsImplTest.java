@@ -37,12 +37,14 @@ import com.armedia.acm.core.exceptions.AcmEncryptionBadKeyOrDataException;
 
 import org.apache.commons.codec.digest.DigestUtils;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 
 import java.io.IOException;
 
+@Ignore
 public class AcmCryptoUtilsImplTest
 {
 

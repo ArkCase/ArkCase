@@ -46,6 +46,7 @@
     <bean id="acmEmailContentGeneratorService" class="com.armedia.acm.services.email.service.AcmEmailContentGeneratorService">
         <property name="authenticationTokenService" ref="authenticationTokenService"/>
         <property name="authenticationTokenDao" ref="authenticationTokenDao"/>
+        <property name="templatingEngine" ref="templatingEngine"/>
     </bean>
 
     <bean id="onLoginCheckPasswordExpiration" class="com.armedia.acm.services.email.service.OnLoginCheckPasswordExpiration">
@@ -71,16 +72,10 @@
     <bean id="resetPasswordService" class="com.armedia.acm.services.email.service.ResetPasswordService">
         <property name="userDao" ref="userJpaDao"/>
         <property name="emailSenderService" ref="configurableEmailSenderService"/>
-        <property name="acmAppConfiguration" ref="acmApplication"/>
         <property name="acmSpringActiveProfile" ref="acmSpringActiveProfile"/>
-        <property name="passwordResetEmailBodyTemplate" value="${upcoming.password.notification.body.template}"/>
+        <property name="passwordResetEmailBodyTemplate" value="file:${user.home}/.arkcase/acm/templates/change-password.html"/>
         <property name="passwordResetEmailSubject" value="${upcoming.password.notification.subject}"/>
-        <property name="passwordResetLink" value="${upcoming.password.notification.resetPasswordLink}"/>
-        <property name="passwordResetTemplateContent" ref="passwordResetTemplateContent"/>
-    </bean>
-
-    <bean id="passwordResetTemplateContent" class="org.apache.commons.io.IOUtils" factory-method="toString">
-        <constructor-arg value="file:${upcoming.password.notification.template.path}" type="java.io.InputStream"/>
+        <property name="templatingEngine" ref="templatingEngine"/>
     </bean>
 
     <bean id="acmEmailMentionsService" class="com.armedia.acm.services.email.service.AcmEmailMentionsService">
@@ -88,5 +83,10 @@
         <property name="acmAppConfiguration" ref="acmApplication"/>
         <property name="mentionsEmailBodyTemplate" value="${mentions.email.body.template}"/>
         <property name="mentionsEmailSubject" value="${mentions.email.subject}"/>
+        <property name="templatingEngine" ref="templatingEngine"/>
+    </bean>
+
+    <bean id="templatingEngine" class="com.armedia.acm.services.email.service.TemplatingEngine">
+        <property name="acmApplication" ref="acmApplication"/>
     </bean>
 </beans>

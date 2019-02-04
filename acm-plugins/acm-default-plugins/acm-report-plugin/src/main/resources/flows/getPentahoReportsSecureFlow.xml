@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <mule xmlns:vm="http://www.mulesoft.org/schema/mule/vm" xmlns="http://www.mulesoft.org/schema/mule/core"
-    xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:https="http://www.mulesoft.org/schema/mule/https" version="CE-3.7.0"
+    xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:https="http://www.mulesoft.org/schema/mule/https" version="CE-3.9.0"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
 http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/3.5/mule.xsd
 http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/3.5/mule-vm.xsd

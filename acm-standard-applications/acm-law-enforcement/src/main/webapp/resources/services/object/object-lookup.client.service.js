@@ -73,6 +73,12 @@ angular.module('services').factory('Object.LookupService', [ '$q', '$resource', 
         return Service.getLookupByLookupName("auditReportNames");
     };
 
+    
+    Service.getResetRepeatPeriod = function() {
+        return Service.getLookupByLookupName("sequenceResetPeriod");
+    };
+    
+
     /**
      * @ngdoc method
      * @name getPriorities
@@ -85,6 +91,20 @@ angular.module('services').factory('Object.LookupService', [ '$q', '$resource', 
      */
     Service.getPriorities = function() {
         return Service.getLookupByLookupName("priorities");
+    };
+
+    /**
+     * @ngdoc method
+     * @name getPriorities
+     * @methodOf services:Object.LookupService
+     *
+     * @description
+     * Query list of sequenceManagementParts
+     *
+     * @returns {Object} An array returned by $resource
+     */
+    Service.getSequenceParts = function () {
+        return Service.getLookupByLookupName("sequenceParts");
     };
 
     /**

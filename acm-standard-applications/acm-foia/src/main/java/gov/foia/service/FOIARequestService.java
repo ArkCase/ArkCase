@@ -60,6 +60,7 @@ import java.io.IOException;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import gov.foia.broker.FOIARequestFileBrokerClient;
 import gov.foia.dao.FOIARequestDao;
@@ -88,7 +89,7 @@ public class FOIARequestService
     private FoiaConfigurationService foiaConfigurationService;
 
     @Transactional
-    public CaseFile saveRequest(CaseFile in, List<MultipartFile> files, Authentication auth, String ipAddress)
+    public CaseFile saveRequest(CaseFile in, Map<String, List<MultipartFile>> filesMap, Authentication auth, String ipAddress)
             throws AcmCreateObjectFailedException
     {
         log.trace("Saving FOIARequest with Request Number: [{}], Request title: [{}], Request ID: [{}]", in.getCaseNumber(), in.getTitle(),
@@ -145,14 +146,14 @@ public class FOIARequestService
                     {
                         in = populateAppealFromOriginalRequest(in, originalRequest);
                         in = createReference(in, originalRequest);
-                        saved = getSaveCaseService().saveCase(in, files, auth, ipAddress);
+                        saved = getSaveCaseService().saveCase(in, filesMap, auth, ipAddress);
                         copyOriginalRequestFiles(saved, originalRequest, auth);
                     }
                 }
                 else
                 {
                     setDefaultPhoneAndEmailIfAny(in);
-                    saved = getSaveCaseService().saveCase(in, files, auth, ipAddress);
+                    saved = getSaveCaseService().saveCase(in, filesMap, auth, ipAddress);
 
                 }
             }
@@ -474,5 +475,10 @@ public class FOIARequestService
 
     public void setFoiaConfigurationService(FoiaConfigurationService foiaConfigurationService) {
         this.foiaConfigurationService = foiaConfigurationService;
+    }
+
+    public FOIARequest getFoiaRequestById(Long requestId)
+    {
+        return foiaRequestDao.find(requestId);
     }
 }

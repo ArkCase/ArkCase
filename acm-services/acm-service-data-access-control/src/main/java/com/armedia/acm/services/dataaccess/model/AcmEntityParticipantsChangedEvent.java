@@ -43,7 +43,7 @@ public class AcmEntityParticipantsChangedEvent extends AcmEvent
     private static final long serialVersionUID = 1L;
     private List<AcmParticipant> originalParticipants;
 
-    public AcmEntityParticipantsChangedEvent(AcmObject source, List<AcmParticipant> originalParticipants)
+    public AcmEntityParticipantsChangedEvent(AcmObject source, List<AcmParticipant> originalParticipants, String ipAddress)
     {
         super(source);
         setObjectId(source.getId());
@@ -54,6 +54,7 @@ public class AcmEntityParticipantsChangedEvent extends AcmEvent
         setEventDate(new Date());
         setEventType(EVENT_TYPE);
         setOriginalParticipants(originalParticipants);
+        setIpAddress(ipAddress);
     }
 
     public List<AcmParticipant> getOriginalParticipants()

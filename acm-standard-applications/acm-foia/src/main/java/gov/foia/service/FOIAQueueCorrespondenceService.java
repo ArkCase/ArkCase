@@ -39,19 +39,24 @@ import com.armedia.acm.plugins.ecm.exception.AcmFolderException;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.services.email.model.EmailWithAttachmentsDTO;
+import com.armedia.acm.services.email.service.TemplatingEngine;
 import com.armedia.acm.services.notification.service.NotificationSender;
 import com.armedia.acm.services.users.dao.UserDao;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
+import org.springframework.core.io.Resource;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
-import java.time.LocalDate;
+import java.io.DataInputStream;
+import java.io.IOException;
+import java.nio.charset.Charset;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 
+import freemarker.template.TemplateException;
 import gov.foia.dao.FOIARequestDao;
 import gov.foia.model.FOIAConstants;
 import gov.foia.model.FOIADocumentDescriptor;
@@ -75,6 +80,8 @@ public class FOIAQueueCorrespondenceService
     private FOIADocumentGeneratorService documentGeneratorService;
     private FOIARequestDao requestDao;
     private FoiaConfigurationService foiaConfigurationService;
+    private String emailBodyTemplate;
+    private TemplatingEngine templatingEngine;
 
     public void handleApproveCorrespondence(Long requestId)
     {
@@ -158,7 +165,8 @@ public class FOIAQueueCorrespondenceService
         FOIARequest request = requestDao.find(requestId);
         LocalDateTime receivedDate = request.getReceivedDate();
         if (request.getQueue().getName().equals("Fulfill") && request.getPreviousQueue().getName().equals("Intake")
-                && receivedDate != null && foiaConfigurationService.readConfiguration().getReceivedDateEnabled() == false) {
+                && receivedDate != null && foiaConfigurationService.readConfiguration().getReceivedDateEnabled() == false)
+        {
             handleRequestReceivedAcknowledgementLetter(requestId);
         }
 
@@ -167,25 +175,27 @@ public class FOIAQueueCorrespondenceService
     public void handleRequestReceivedAcknowledgementLetter(Long requestId)
     {
         FOIARequest request = requestDao.find(requestId);
-            try {
-                FOIADocumentDescriptor documentDescriptor = documentGeneratorService.getDocumentDescriptor(request, FOIAConstants.RECEIVE_ACK );
+        try
+        {
+            FOIADocumentDescriptor documentDescriptor = documentGeneratorService.getDocumentDescriptor(request, FOIAConstants.RECEIVE_ACK);
 
-                String arkcaseFilename = String.format(documentDescriptor.getFilenameFormat(), request.getId());
-                String targetFolderId = request.getContainer().getAttachmentFolder() == null
-                        ? request.getContainer().getFolder().getCmisFolderId()
-                        : request.getContainer().getAttachmentFolder().getCmisFolderId();
+            String arkcaseFilename = String.format(documentDescriptor.getFilenameFormat(), request.getId());
+            String targetFolderId = request.getContainer().getAttachmentFolder() == null
+                    ? request.getContainer().getFolder().getCmisFolderId()
+                    : request.getContainer().getAttachmentFolder().getCmisFolderId();
 
-                FOIAFile letter =  (FOIAFile) documentGenerator.generateAndUpload(documentDescriptor, request,
-                        targetFolderId, arkcaseFilename, documentGeneratorService.getReportSubstitutions(request));
+            FOIAFile letter = (FOIAFile) documentGenerator.generateAndUpload(documentDescriptor, request,
+                    targetFolderId, arkcaseFilename, documentGeneratorService.getReportSubstitutions(request));
 
-                emailCorrespondenceLetter(request, letter);
-            }
-            catch (Exception e) {
-                log.error("Unable to generate and email Correspondence Letter for {} [{}]", request.getRequestType(), request.getId(), e);
-            }
+            emailCorrespondenceLetter(request, letter);
+        }
+        catch (Exception e)
+        {
+            log.error("Unable to generate and email Correspondence Letter for {} [{}]", request.getRequestType(), request.getId(), e);
+        }
     }
 
-    private EcmFile generateCorrespondenceLetter(FOIARequest request, FOIADocumentDescriptor documentDescriptor)
+    public EcmFile generateCorrespondenceLetter(FOIARequest request, FOIADocumentDescriptor documentDescriptor)
             throws AcmObjectNotFoundException, DocumentGeneratorException, AcmFolderException, AcmUserActionFailedException,
             CorrespondenceMergeFieldVersionException
     {
@@ -196,7 +206,7 @@ public class FOIAQueueCorrespondenceService
                 documentGeneratorService.getReportSubstitutions(request));
     }
 
-    private void emailCorrespondenceLetter(FOIARequest request, FOIAFile letter) throws Exception
+    public void emailCorrespondenceLetter(FOIARequest request, FOIAFile letter) throws Exception
     {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String emailAddress = extractRequestorEmailAddress(request.getOriginator().getPerson());
@@ -207,7 +217,20 @@ public class FOIAQueueCorrespondenceService
 
             emailData.setSubject(String.format("%s %s", request.getRequestType(), request.getCaseNumber()));
             emailData.setHeader(EMAIL_HEADER_ATTACHMENT);
-            emailData.setBody(EMAIL_BODY_ATTACHMENT);
+            try
+            {
+                String body = getTemplatingEngine().process(emailBodyTemplate, "request", request);
+                emailData.setBody(body);
+                emailData.setTemplate(body);
+            }
+            catch (TemplateException | IOException e)
+            {
+                // failing to send an email should not break the flow
+                log.error("Unable to generate email for {} about {} with ID [{}]", emailAddress, request.getObjectType(), request.getId(),
+                        e);
+                emailData.setBody(EMAIL_BODY_ATTACHMENT);
+            }
+
             emailData.setFooter(EMAIL_FOOTER_ATTACHMENT);
             emailData.setAttachmentIds(Arrays.asList(letter.getFileId()));
 
@@ -315,11 +338,38 @@ public class FOIAQueueCorrespondenceService
         this.requestDao = requestDao;
     }
 
-    public FoiaConfigurationService getFoiaConfigurationService() {
+    public FoiaConfigurationService getFoiaConfigurationService()
+    {
         return foiaConfigurationService;
     }
 
-    public void setFoiaConfigurationService(FoiaConfigurationService foiaConfigurationService) {
+    public void setFoiaConfigurationService(FoiaConfigurationService foiaConfigurationService)
+    {
         this.foiaConfigurationService = foiaConfigurationService;
+    }
+
+    public String getEmailBodyTemplate()
+    {
+        return emailBodyTemplate;
+    }
+
+    public void setEmailBodyTemplate(Resource emailBodyTemplate) throws IOException
+    {
+        try (DataInputStream resourceStream = new DataInputStream(emailBodyTemplate.getInputStream()))
+        {
+            byte[] bytes = new byte[resourceStream.available()];
+            resourceStream.readFully(bytes);
+            this.emailBodyTemplate = new String(bytes, Charset.forName("UTF-8"));
+        }
+    }
+
+    public TemplatingEngine getTemplatingEngine()
+    {
+        return templatingEngine;
+    }
+
+    public void setTemplatingEngine(TemplatingEngine templatingEngine)
+    {
+        this.templatingEngine = templatingEngine;
     }
 }

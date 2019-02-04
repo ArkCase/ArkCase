@@ -27,11 +27,11 @@ package com.armedia.acm.plugins.casefile.service;
  * #L%
  */
 
+import com.armedia.acm.plugins.businessprocess.dao.BusinessProcessDao;
 import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.ecm.service.FileAclSolrUpdateHelper;
 import com.armedia.acm.plugins.task.model.TaskConstants;
-import com.armedia.acm.plugins.task.service.TaskDao;
 import com.armedia.acm.services.dataaccess.service.SearchAccessControlFields;
 import com.armedia.acm.services.participants.utils.ParticipantUtils;
 import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
@@ -53,9 +53,9 @@ public class CaseFileToSolrTransformer implements AcmObjectToSolrDocTransformer<
 {
     private UserDao userDao;
     private CaseFileDao caseFileDao;
-    private TaskDao taskDao;
     private FileAclSolrUpdateHelper fileAclSolrUpdateHelper;
     private SearchAccessControlFields searchAccessControlFields;
+    private BusinessProcessDao businessProcessDao;
 
     @Override
     public List<CaseFile> getObjectsModifiedSince(Date lastModified, int start, int pageSize)
@@ -72,6 +72,7 @@ public class CaseFileToSolrTransformer implements AcmObjectToSolrDocTransformer<
 
         solr.setId(in.getId() + "-CASE_FILE");
         solr.setObject_id_s(in.getId() + "");
+        solr.setObject_id_i(in.getId());
         solr.setObject_type_s("CASE_FILE");
         solr.setTitle_parseable(in.getTitle());
         solr.setDescription_no_html_tags_parseable(in.getDetails());
@@ -138,6 +139,7 @@ public class CaseFileToSolrTransformer implements AcmObjectToSolrDocTransformer<
 
         solr.setName(in.getCaseNumber());
         solr.setObject_id_s(in.getId() + "");
+        solr.setObject_id_i(in.getId());
         solr.setObject_type_s("CASE_FILE");
         solr.setId(in.getId() + "-CASE_FILE");
 
@@ -164,7 +166,7 @@ public class CaseFileToSolrTransformer implements AcmObjectToSolrDocTransformer<
     public JSONArray childrenUpdatesToSolr(CaseFile in)
     {
         JSONArray docUpdates = fileAclSolrUpdateHelper.buildFileAclUpdates(in.getContainer().getId(), in);
-        List<Long> childTasks = taskDao.findTasksIdsForParentObjectIdAndParentObjectType(in.getObjectType(), in.getId());
+        List<Long> childTasks = businessProcessDao.findTasksIdsForParentObjectIdAndParentObjectType(in.getObjectType(), in.getId());
         childTasks.forEach(it -> {
             JSONObject doc = searchAccessControlFields.buildParentAccessControlFieldsUpdate(in, String.format("%d-%s", it,
                     TaskConstants.OBJECT_TYPE));
@@ -225,13 +227,13 @@ public class CaseFileToSolrTransformer implements AcmObjectToSolrDocTransformer<
         this.fileAclSolrUpdateHelper = fileAclSolrUpdateHelper;
     }
 
-    public TaskDao getTaskDao()
+    public BusinessProcessDao getBusinessProcessDao() 
     {
-        return taskDao;
+        return businessProcessDao;
     }
 
-    public void setTaskDao(TaskDao taskDao)
+    public void setBusinessProcessDao(BusinessProcessDao businessProcessDao) 
     {
-        this.taskDao = taskDao;
+        this.businessProcessDao = businessProcessDao;
     }
 }

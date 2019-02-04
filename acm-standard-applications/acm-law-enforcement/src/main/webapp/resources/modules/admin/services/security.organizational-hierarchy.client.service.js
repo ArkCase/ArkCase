@@ -218,7 +218,10 @@ angular.module('admin').service('Admin.OrganizationalHierarchyService', [ '$http
     function getSubGroupsForGroup(group) {
         return $http({
             method: 'GET',
-            url: 'api/latest/users/group/' + base64.urlencode(group) + '/get/subgroups/'
+            url: 'api/latest/users/group/' + base64.urlencode(group) + '/get/subgroups/',
+            params: {
+                n: 10000
+            }
         });
     }
 

@@ -1,0 +1,45 @@
+<div>
+    <div class="modal-header">
+        <div class="panel-title">
+            <span translate>admin.application.sequenceManagementReset.title</span>
+            <div class="pull-right">
+                <button class="btn btn-default btn-xs" data-ng-click="onClickCancel()">
+                    <i class="fa fa-lg fa-close"></i></button>
+            </div>
+        </div>
+    </div>
+    <div class="model-body">
+        <fieldset ng-disabled="viewMode">
+             <div class="row" style="margin: 15px;">
+                <div class="form-group">
+                    <fieldset ng-disabled="isEdit">
+                    <label translate>admin.application.sequenceManagementReset.detailsModal.resetStartDate</label>
+                    <date-time-picker data="sequenceReset.resetStartDate" date-picker-id="resetStartDate" ng-click="dateSelected()" on-after-save="dateSelected()"></date-time-picker>
+                    </fieldset>
+                </div>
+                <div class="form-group">
+                    <input type="checkbox" ng-model="sequenceReset.resetRepeatableFlag" ng-change="showRepeatablePeriod()">
+                    <label translate>admin.application.sequenceManagementReset.detailsModal.repeatReset</label>
+                </div>
+                <div class="form-group">
+                     <select id="resetRepeatPeriod" ng-model="sequenceReset.resetRepeatPeriodOption"
+                             ng-options="resetRepeatPeriod.key as resetRepeatPeriod.value | translate for resetRepeatPeriod in resetRepeatPeriods"
+                             ng-change="showRepeatResetPeriod()"
+                             ng-hide="!enableRepeatPeriod"></select>
+                </div> 
+                <div class="form-group" ng-if="showDaily == '0' && enableRepeatPeriod">
+                    <label translate>admin.application.sequenceManagementReset.detailsModal.repeatResetPeriod</label>
+                    <input type="number" ng-model="sequenceReset.resetRepeatablePeriod" onkeypress="return event.charCode > 48" min="1">
+                </div>
+            </div>
+        </fieldset>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary" ng-click="onClickSave()" ng-hide="viewMode" ng-disabled="enableSave || ( showDaily == '0' && sequenceReset.resetRepeatablePeriod == '' )">
+            <span translate>admin.application.sequenceManagementReset.saveBtn</span>
+        </button>
+        <button class="btn btn-secondary" ng-click="onClickCancel()" ng-hide="viewMode">
+            <span translate>admin.application.sequenceManagementReset.cancelBtn</span>
+        </button>
+    </div>
+</div>

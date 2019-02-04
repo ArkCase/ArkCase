@@ -34,12 +34,14 @@ import com.armedia.acm.services.search.model.SearchConstants;
 import com.armedia.acm.services.search.model.SolrCore;
 import com.armedia.acm.services.search.model.solr.SolrDeleteDocumentsByQueryRequest;
 import com.armedia.acm.services.search.model.solr.SolrDocumentsQuery;
+import com.armedia.acm.web.api.MDCConstants;
 
 import org.apache.commons.lang3.StringUtils;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.core.Authentication;
 
@@ -399,9 +401,26 @@ public class ExecuteSolrQuery
         headers.put("df", defaultField);
         headers.put("includeDACFilter", includeDACFilter);
 
+        /* AFDP-7210 The Mule HTTP transport somehow clears the MDC context.  This send() call 
+           is the only use of Mule HTTP transport in ArkCase.  I fix the issue by saving and then 
+           restoring the MDC variables.  If we were going to keep Mule I would find a better 
+           solution.  But seeing this code will remind us to remove Mule from our solution.
+         */
+        String alfrescoUser = MDC.get(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY);
+        String requestId = MDC.get(MDCConstants.EVENT_MDC_REQUEST_ID_KEY);
+        String pentahoUser = MDC.get(MDCConstants.EVENT_MDC_REQUEST_PENTAHO_USER_ID_KEY);
+        String remoteAddress = MDC.get(MDCConstants.EVENT_MDC_REQUEST_REMOTE_ADDRESS_KEY);
+        String userId = MDC.get(MDCConstants.EVENT_MDC_REQUEST_USER_ID_KEY);
+
         MuleMessage response = getMuleContextManager().send(core.getMuleEndpointUrl(), "", headers);
 
-        log.debug("Response type: {}", response.getPayload().getClass());
+        MDC.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, alfrescoUser);
+        MDC.put(MDCConstants.EVENT_MDC_REQUEST_ID_KEY, requestId);
+        MDC.put(MDCConstants.EVENT_MDC_REQUEST_PENTAHO_USER_ID_KEY, pentahoUser);
+        MDC.put(MDCConstants.EVENT_MDC_REQUEST_REMOTE_ADDRESS_KEY, remoteAddress);
+        MDC.put(MDCConstants.EVENT_MDC_REQUEST_USER_ID_KEY, userId);
+
+        log.trace("Response type: {}", response.getPayload().getClass());
 
         if (response.getPayload() instanceof String)
         {

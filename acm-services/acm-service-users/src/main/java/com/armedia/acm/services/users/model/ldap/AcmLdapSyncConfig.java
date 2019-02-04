@@ -34,6 +34,7 @@ public class AcmLdapSyncConfig extends AcmLdapConfig
     private String auditUserId = AcmLdapConstants.DEFAULT_AUDIT_USER;
     private String userDomain;
     private String userPrefix;
+    private String groupPrefix;
     private String userControlGroup;
     private String groupControlGroup;
     private String userSearchBase;
@@ -99,6 +100,16 @@ public class AcmLdapSyncConfig extends AcmLdapConfig
     public void setUserPrefix(String userPrefix)
     {
         this.userPrefix = userPrefix;
+    }
+
+    public String getGroupPrefix()
+    {
+        return groupPrefix;
+    }
+
+    public void setGroupPrefix(String groupPrefix)
+    {
+        this.groupPrefix = groupPrefix;
     }
 
     public String getUserControlGroup()

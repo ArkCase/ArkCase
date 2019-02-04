@@ -97,6 +97,8 @@ public interface TaskDao
      */
     List<AcmTask> tasksForUser(String user);
 
+    List<Long> findTasksIdsForParentObjectIdAndParentObjectType(String parentObjectType, Long parentObjectId);
+
     /**
      * List of all open tasks assigned to all users, sorted by descending due date.
      *
@@ -154,8 +156,6 @@ public interface TaskDao
             throws AcmTaskException;
 
     AcmTask findById(Long taskId) throws AcmTaskException;
-
-    List<Long> findTasksIdsForParentObjectIdAndParentObjectType(String parentObjectType, Long parentObjectId);
 
     AcmTask save(AcmTask in) throws AcmTaskException;
 
