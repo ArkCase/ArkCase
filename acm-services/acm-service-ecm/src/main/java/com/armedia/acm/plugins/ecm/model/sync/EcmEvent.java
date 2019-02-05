@@ -30,6 +30,8 @@ package com.armedia.acm.plugins.ecm.model.sync;
 import org.json.JSONObject;
 import org.springframework.context.ApplicationEvent;
 
+import java.util.Map;
+
 /**
  * Created by dmiller on 5/12/17.
  */
@@ -60,6 +62,12 @@ public class EcmEvent extends ApplicationEvent
      * when event type is COPY
      */
     private String sourceOfCopyNodeId;
+
+    /**
+     * properties that are updated for the node (metadata),
+     * when event type is UPDATE
+     */
+    private Map<String, String> properties;
 
     private EcmEventType ecmEventType;
 
@@ -198,6 +206,16 @@ public class EcmEvent extends ApplicationEvent
     public void setSourceOfCopyNodeId(String sourceOfCopyNodeId)
     {
         this.sourceOfCopyNodeId = sourceOfCopyNodeId;
+    }
+
+    public Map<String, String> getProperties()
+    {
+        return properties;
+    }
+
+    public void setProperties(Map<String, String> properties)
+    {
+        this.properties = properties;
     }
 
     @Override
