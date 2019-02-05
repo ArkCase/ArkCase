@@ -43,9 +43,12 @@ angular.module('reports').factory(
                          */
                         getUrl: function (params, xmlReport) {
 
-                            var reportUrl = params.reportsHost + (params.reportsPort ? ":" + params.reportsPort : "") + params.reports[params.reportSelected] + "?startDate=" + UtilDateService.goodIsoDate(params.startDate) + "&endDate=" + UtilDateService.goodIsoDate(params.endDate) + "&dateFormat="
-                                + encodeURIComponent(UtilDateService.defaultDateFormat) + "&timeZone=" + encodeURIComponent(UtilDateService.getTimeZoneOffset());
-
+                            var reportUrl = "?startDate=" + UtilDateService.goodIsoDate(params.startDate) 
+                            + "&endDate=" + UtilDateService.goodIsoDate(params.endDate) 
+                            + "&dateFormat=" + encodeURIComponent(UtilDateService.defaultDateFormat) 
+                            + "&timeZone=" + encodeURIComponent(UtilDateService.getTimeZoneOffset())
+                            + "&timestamp=" + new Date();
+                            
                             if (params.typeSelected) {
                                 reportUrl += "&foiaType=" + params.typeSelected;
                             }
