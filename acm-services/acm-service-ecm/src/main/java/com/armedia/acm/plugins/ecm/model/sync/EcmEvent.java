@@ -55,6 +55,11 @@ public class EcmEvent extends ApplicationEvent
     private String targetParentNodeId;
 
     private String targetParentNodeType;
+    /**
+     * node id for the node reference used as the source of the copy,
+     * when event type is COPY
+     */
+    private String sourceOfCopyNodeId;
 
     private EcmEventType ecmEventType;
 
@@ -183,6 +188,16 @@ public class EcmEvent extends ApplicationEvent
     public void setTargetParentNodeType(String targetParentNodeType)
     {
         this.targetParentNodeType = targetParentNodeType;
+    }
+
+    public String getSourceOfCopyNodeId()
+    {
+        return sourceOfCopyNodeId;
+    }
+
+    public void setSourceOfCopyNodeId(String sourceOfCopyNodeId)
+    {
+        this.sourceOfCopyNodeId = sourceOfCopyNodeId;
     }
 
     @Override

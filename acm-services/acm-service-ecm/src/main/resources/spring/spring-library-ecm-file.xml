@@ -352,7 +352,12 @@
         <property name="fileParticipantService" ref="fileParticipantService"/>
     </bean>
 
-    <bean id="folderAndFilesUtils" class="com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils"/>
+    <bean id="folderAndFilesUtils" class="com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils">
+        <property name="folderService" ref="acmFolderService"/>
+        <property name="folderDao" ref="acmFolderDao"/>
+        <property name="fileDao" ref="ecmFileDao"/>
+        <property name="fileService" ref="ecmFileService"/>
+    </bean>
 
     <bean id="fileEventPublisher" class="com.armedia.acm.plugins.ecm.service.FileEventPublisher"/>
 

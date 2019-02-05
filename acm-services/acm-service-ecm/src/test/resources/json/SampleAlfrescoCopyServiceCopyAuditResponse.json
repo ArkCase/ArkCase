@@ -1,0 +1,39 @@
+{
+    "count": 2,
+    "entries": [
+        {
+            "id": 26627,
+            "application": "AuditArkCaseCopy",
+            "user": "admin",
+            "time": "2019-01-04T01:18:38.443-05:00",
+            "values": {
+                "/auditarkcasecopy/copy/derived/target-parent-name": "folder1",
+                "/auditarkcasecopy/copy/derived/source-node-type": "{http://www.alfresco.org/model/content/1.0}folder",
+                "/auditarkcasecopy/copy/out/a": "workspace://SpacesStore/c78612c1-6fbd-4123-a51a-775890d91e9b",
+                "/auditarkcasecopy/copy/in/e": "true",
+                "/auditarkcasecopy/copy/in/a": "workspace://SpacesStore/fa3128c0-4ce6-497e-8375-7254c3efd218",
+                "/auditarkcasecopy/copy/in/c": "{http://www.alfresco.org/model/content/1.0}contains",
+                "/auditarkcasecopy/copy/in/b": "workspace://SpacesStore/a341ac50-b60b-4bd8-b1b3-922dcd05a0a7",
+                "/auditarkcasecopy/copy/derived/target-parent-type": "{http://www.alfresco.org/model/content/1.0}folder",
+                "/auditarkcasecopy/copy/derived/source-node-name": "subfolder"
+            }
+        },
+        {
+            "id": 26624,
+            "application": "AuditArkCaseCopy",
+            "user": "admin",
+            "time": "2019-01-04T01:03:30.839-05:00",
+            "values": {
+                "/auditarkcasecopy/copy/derived/target-parent-name": "folder1",
+                "/auditarkcasecopy/copy/derived/source-node-type": "{http://www.alfresco.org/model/content/1.0}content",
+                "/auditarkcasecopy/copy/out/a": "workspace://SpacesStore/3d887e96-3166-4404-a428-2fd12d6c4a81",
+                "/auditarkcasecopy/copy/in/e": "false",
+                "/auditarkcasecopy/copy/in/a": "workspace://SpacesStore/0a053e13-abee-41eb-8187-e59759590f73",
+                "/auditarkcasecopy/copy/in/c": "{http://www.alfresco.org/model/content/1.0}contains",
+                "/auditarkcasecopy/copy/in/b": "workspace://SpacesStore/a341ac50-b60b-4bd8-b1b3-922dcd05a0a7",
+                "/auditarkcasecopy/copy/derived/target-parent-type": "{http://www.alfresco.org/model/content/1.0}folder",
+                "/auditarkcasecopy/copy/derived/source-node-name": "doc.txt"
+            }
+        }
+    ]
+}
