@@ -86,7 +86,7 @@ angular.module('search').factory(
                  * @param {String} n Total row count
                  * @param {String} start Starting row count
                  * @param {String} sort Sorting specification(sortBy + " " + direction)
-                 * @param {String} getParentDocument retrieving parent document data is set to true
+                 * @param {boolean} getParentDocument retrieving data from parent document
                  * @returns {HttpPromise} Future info about cancel status
                  */
                 buildSafeFqFacetedSearchQuerySorted: function(input, filters, n, start, sort, getParentDocument) {

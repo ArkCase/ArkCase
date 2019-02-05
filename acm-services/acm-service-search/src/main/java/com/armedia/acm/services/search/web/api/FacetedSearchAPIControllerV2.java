@@ -190,44 +190,13 @@ public class FacetedSearchAPIControllerV2
 
         if (getParentDocument)
         {
-            JSONObject solrResponse = new JSONObject(res);
-            if (solrResponse.getJSONObject("response").getLong("numFound") > 0)
-            {
-                JSONArray docs = solrResponse.getJSONObject("response").getJSONArray("docs");
-                for (int i = 0; i < docs.length(); i++)
-                {
-                    String parentId = "";
-                    String parentType = "";
-                    if (docs.getJSONObject(i).has("parent_ref_s"))
-                    {
-                        String[] splitArray = docs.getJSONObject(i).getString("parent_ref_s").split("-");
-                        if (splitArray.length >= 2)
-                        {
-                            parentId = splitArray[0];
-
-                            for (int j = 1; j < splitArray.length; j++)
-                            {
-                                parentType += splitArray[j];
-                            }
-                        }
-                    }
-
-                    if (StringUtils.isNotEmpty(parentId) && StringUtils.isNotEmpty(parentType)) {
-                        String parentResult = getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.QUICK_SEARCH, "object_id_s:" + parentId + " AND object_type_s:" + parentType, 0,
-                                1, "create_date_tdt DESC");
-                        JSONObject parentResponse = new JSONObject(parentResult);
-                        if (parentResponse.getJSONObject("response").getLong("numFound") == 1) {
-                            docs.getJSONObject(i).put("parent_document", parentResponse.getJSONObject("response").getJSONArray("docs").getJSONObject(0));
-                        }
-                    }
-                }
-            }
-
+            JSONObject solrResponse = getFacetedSearchService().getParentDocumentJsonObject(authentication, res);
             res = solrResponse.toString();
         }
 
         return new ResponseEntity<>(res, headers, HttpStatus.OK);
     }
+
 
     public ExecuteSolrQuery getExecuteSolrQuery()
     {
