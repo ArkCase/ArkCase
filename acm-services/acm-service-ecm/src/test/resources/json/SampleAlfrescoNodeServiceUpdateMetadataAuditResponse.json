@@ -1,0 +1,41 @@
+{
+    "count": 3,
+    "entries": [
+        {
+            "id": 27345,
+            "application": "AuditArkCaseMetadata",
+            "user": "admin",
+            "time": "2019-01-20T19:03:59.213-05:00",
+            "values": {
+                "/auditarkcasemetadata/update/derived/node-name": "docNew3.txt",
+                "/auditarkcasemetadata/update/in/b": "{{http://www.alfresco.org/model/content/1.0}title=, {http://www.alfresco.org/model/content/1.0}taggable=null, {http://www.alfresco.org/model/content/1.0}description=opiiiiiis}",
+                "/auditarkcasemetadata/update/derived/node-type": "{http://www.alfresco.org/model/content/1.0}content",
+                "/auditarkcasemetadata/update/in/a": "workspace://SpacesStore/a4069180-39fa-4ef5-a94e-3ead1e20fa99"
+            }
+        },
+        {
+            "id": 27340,
+            "application": "AuditArkCaseMetadata",
+            "user": "admin",
+            "time": "2019-01-18T00:28:24.290-05:00",
+            "values": {
+                "/auditarkcasemetadata/update/derived/node-name": "Casefile",
+                "/auditarkcasemetadata/update/in/b": "{{http://www.alfresco.org/model/content/1.0}title=Title for the case, {http://www.alfresco.org/model/content/1.0}taggable=null, {http://www.alfresco.org/model/content/1.0}description=opppppiiiiiissss}",
+                "/auditarkcasemetadata/update/derived/node-type": "{http://www.alfresco.org/model/content/1.0}content",
+                "/auditarkcasemetadata/update/in/a": "workspace://SpacesStore/8f8ba21d-b027-48d7-9b95-0ac2cdbdfac3"
+            }
+        },
+        {
+            "id": 27718,
+            "application": "AuditArkCaseMetadata",
+            "user": "admin",
+            "time": "2019-01-23T13:43:31.052-05:00",
+            "values": {
+                "/auditarkcasemetadata/update/derived/node-name": "pictures",
+                "/auditarkcasemetadata/update/in/b": "{{http://www.alfresco.org/model/content/1.0}title=, {http://www.alfresco.org/model/content/1.0}taggable=null, {http://www.alfresco.org/model/content/1.0}description=contains pictures related to the Casefile}",
+                "/auditarkcasemetadata/update/derived/node-type": "{http://www.alfresco.org/model/content/1.0}folder",
+                "/auditarkcasemetadata/update/in/a": "workspace://SpacesStore/93dfae54-498d-4cb6-a2f9-a4c4caa44029"
+            }
+        }
+    ]
+}

@@ -32,7 +32,7 @@ import static org.junit.Assert.assertNotNull;
 
 import com.armedia.acm.plugins.ecm.model.sync.EcmEvent;
 import com.armedia.acm.plugins.ecm.model.sync.EcmEventType;
-import com.armedia.acm.plugins.ecm.service.sync.impl.AlfrescoCopyServiceCopyAuditResponseReader;
+import com.armedia.acm.plugins.ecm.service.sync.impl.AlfrescoFileFolderServiceRenameAuditResponseReader;
 
 import org.apache.commons.io.FileUtils;
 import org.json.JSONObject;
@@ -44,50 +44,49 @@ import org.springframework.core.io.Resource;
 import java.util.List;
 
 /**
- * @author ivana.shekerova on 1/4/2019.
+ * @author ivana.shekerova on 1/16/2019.
  */
-public class AlfrescoCopyServiceCopyAuditResponseReaderTest
+public class AlfrescoFileFolderServiceRenameAuditResponseReaderTest
 {
 
-    private JSONObject copyServiceCopyAuditResponseJson;
-    private EcmAuditResponseReader unit = new AlfrescoCopyServiceCopyAuditResponseReader();
+    private JSONObject fileFolderServiceRenameAuditResponseJson;
+    private EcmAuditResponseReader unit = new AlfrescoFileFolderServiceRenameAuditResponseReader();
 
     @Before
     public void setUp() throws Exception
     {
-        final Resource copyServiceCopyAuditResponseResource = new ClassPathResource(
-                "json/SampleAlfrescoCopyServiceCopyAuditResponse.json");
-        String copyServiceCopyAuditResponseString = FileUtils
-                .readFileToString(copyServiceCopyAuditResponseResource.getFile());
-        copyServiceCopyAuditResponseJson = new JSONObject(copyServiceCopyAuditResponseString);
+        final Resource fileFolderServiceRenameAuditResponseResource = new ClassPathResource(
+                "json/SampleAlfrescoFileFolderServiceRenameAuditResponse.json");
+        String fileFolderServiceRenameAuditResponseString = FileUtils
+                .readFileToString(fileFolderServiceRenameAuditResponseResource.getFile());
+        fileFolderServiceRenameAuditResponseJson = new JSONObject(fileFolderServiceRenameAuditResponseString);
     }
 
     @Test
     public void readResponse()
     {
-        List<EcmEvent> copyEvents = unit.read(copyServiceCopyAuditResponseJson);
+        List<EcmEvent> moveEvents = unit.read(fileFolderServiceRenameAuditResponseJson);
 
-        assertNotNull(copyEvents);
-        assertEquals(1, copyEvents.size());
+        assertNotNull(moveEvents);
+        assertEquals(2, moveEvents.size());
 
         Object[][] expectedData = {
-                // event type, auditId, userid, parent node type, parent node id, node type, node id, file name
-                { EcmEventType.COPY, 26624L, "admin", "folder", "workspace://SpacesStore/a341ac50-b60b-4bd8-b1b3-922dcd05a0a7",
-                        "document", "workspace://SpacesStore/3d887e96-3166-4404-a428-2fd12d6c4a81",
-                        "doc.txt" }
+                // event type, auditId, userid, node type, node id,  file name
+                { EcmEventType.RENAME, 27229L, "admin", "folder", "workspace://SpacesStore/93dfae54-498d-4cb6-a2f9-a4c4caa44029",
+                        "pictures" },
+                { EcmEventType.RENAME, 27228L, "admin", "document", "workspace://SpacesStore/a8b179d5-e1e8-46fd-9d87-c53c5f7d1535",
+                        "word.docx" }
         };
 
         int index = 0;
-        for (EcmEvent ece : copyEvents)
+        for (EcmEvent ece : moveEvents)
         {
             assertEquals("Event type #" + index, expectedData[index][0], ece.getEcmEventType());
             assertEquals("Audit ID #" + index, expectedData[index][1], ece.getAuditId());
             assertEquals("User #" + index, expectedData[index][2], ece.getUserId());
-            assertEquals("ParentNodeType #" + index, expectedData[index][3], ece.getParentNodeType());
-            assertEquals("ParentNodeId #" + index, expectedData[index][4], ece.getParentNodeId());
-            assertEquals("NodeType #" + index, expectedData[index][5], ece.getNodeType());
-            assertEquals("NodeId #" + index, expectedData[index][6], ece.getNodeId());
-            assertEquals("NodeName #" + index, expectedData[index][7], ece.getNodeName());
+            assertEquals("NodeType #" + index, expectedData[index][3], ece.getNodeType());
+            assertEquals("NodeId #" + index, expectedData[index][4], ece.getNodeId());
+            assertEquals("NodeName #" + index, expectedData[index][5], ece.getNodeName());
 
             ++index;
         }

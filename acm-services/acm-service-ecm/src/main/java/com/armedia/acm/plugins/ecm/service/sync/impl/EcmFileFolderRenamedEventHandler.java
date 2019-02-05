@@ -27,14 +27,16 @@ package com.armedia.acm.plugins.ecm.service.sync.impl;
  * #L%
  */
 
+import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
-import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
+import com.armedia.acm.plugins.ecm.exception.AcmFolderException;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.model.sync.EcmEvent;
 import com.armedia.acm.plugins.ecm.model.sync.EcmEventType;
+import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
 
@@ -42,80 +44,73 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;
 
-import java.util.List;
-
 /**
- * @author ivana.shekerova on 1/4/2019.
+ * @author ivana.shekerova on 1/16/2019.
  */
-public class EcmFileCopiedEventHandler implements ApplicationListener<EcmEvent>
+public class EcmFileFolderRenamedEventHandler implements ApplicationListener<EcmEvent>
 {
 
     private transient final Logger log = LoggerFactory.getLogger(getClass());
     private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
-    private EcmFileDao fileDao;
+    private AcmFolderService folderService;
     private EcmFileService fileService;
     private FolderAndFilesUtils folderAndFilesUtils;
 
-    public EcmFile onEcmFileCopied(EcmEvent ecmEvent)
+    public void onEcmFileFolderRenamed(EcmEvent ecmEvent)
+            throws AcmUserActionFailedException, AcmObjectNotFoundException, AcmFolderException
     {
         getAuditPropertyEntityAdapter().setUserId(ecmEvent.getUserId());
 
-        // if the copied file's folder ID is not an ArkCase folder, then the file was copied to a
-        // non-ArkCase destination, and no further work is needed
-        AcmFolder targetParentFolder = getFolderAndFilesUtils().lookupArkCaseFolder(ecmEvent.getParentNodeId());
-        if (targetParentFolder == null)
+        if (ecmEvent.getNodeType().equals(EcmFileConstants.ECM_SYNC_NODE_TYPE_FOLDER))
         {
-            log.debug("Can't find folder for the copied file with id {}, no further action.", ecmEvent.getNodeId());
-            return null;
-        }
-
-        // If it already exists, the copy has already been done in ArkCase, and no further work is needed
-        EcmFile arkCaseFile = getFolderAndFilesUtils().lookupArkCaseFile(ecmEvent.getNodeId(), targetParentFolder.getId());
-        if (targetParentFolder != null && arkCaseFile == null)
-        {
-            List<EcmFile> listFiles = getFileDao().findByCmisFileId(ecmEvent.getSourceOfCopyNodeId());
-            if (listFiles.isEmpty())
+            AcmFolder folder = getFolderAndFilesUtils().lookupArkCaseFolder(ecmEvent.getNodeId());
+            if (folder != null && !folder.getName().equals(ecmEvent.getNodeName()))
             {
-                // not in arkcase, so the folder that the file was copied from is not an Arkcase folder
-                return getFolderAndFilesUtils().uploadFile(ecmEvent, targetParentFolder);
-            }
-            else
-            {
-                // in arkcase, so the folder that the file was copied from is Arkcase folder
-                return copyFile(ecmEvent, targetParentFolder, listFiles);
+                getFolderService().renameFolder(folder.getId(), ecmEvent.getNodeName());
             }
         }
-
-        return null;
+        else if (ecmEvent.getNodeType().equals(EcmFileConstants.ECM_SYNC_NODE_TYPE_DOCUMENT))
+        {
+            EcmFile file = getFolderAndFilesUtils().lookupArkCaseFile(ecmEvent.getNodeId());
+            if (file != null)
+            {
+                String fileName = getFileName(ecmEvent, file);
+                if (!fileName.equals(ecmEvent.getNodeName()))
+                {
+                    getFileService().renameFileInArkcase(file, ecmEvent.getNodeName());
+                }
+            }
+        }
     }
 
-    private EcmFile copyFile(EcmEvent ecmEvent, AcmFolder targetParentFolder, List<EcmFile> listFiles)
+    private String getFileName(EcmEvent ecmEvent, EcmFile file)
     {
-        EcmFile originalFile = listFiles.get(0);
-        EcmFile copiedFile = null;
-        try
+        String fileName = file.getFileName();
+        if (ecmEvent.getNodeName().contains("."))
         {
-            copiedFile = getFileService().copyFileInArkcase(originalFile, ecmEvent.getNodeId(), targetParentFolder);
+            fileName = file.getFileName().concat(file.getFileActiveVersionNameExtension());
         }
-        catch (AcmUserActionFailedException e)
-        {
-            log.error("Could not copy file with CMIS ID [{}] to ArkCase: {}", ecmEvent.getNodeId(), e.getMessage(), e);
-        }
-        return copiedFile;
+        return fileName;
     }
 
-    protected boolean isCopyFileEvent(EcmEvent ecmEvent)
+    protected boolean isRenameFileFolderEvent(EcmEvent ecmEvent)
     {
-        return EcmEventType.COPY.equals(ecmEvent.getEcmEventType()) &&
-                EcmFileConstants.ECM_SYNC_NODE_TYPE_DOCUMENT.equals(ecmEvent.getNodeType());
+        return EcmEventType.RENAME.equals(ecmEvent.getEcmEventType());
     }
 
     @Override
     public void onApplicationEvent(EcmEvent ecmEvent)
     {
-        if (isCopyFileEvent(ecmEvent))
+        if (isRenameFileFolderEvent(ecmEvent))
         {
-            onEcmFileCopied(ecmEvent);
+            try
+            {
+                onEcmFileFolderRenamed(ecmEvent);
+            }
+            catch (AcmUserActionFailedException | AcmObjectNotFoundException | AcmFolderException e)
+            {
+                log.error("{} with cmis id {} can not be renamed {}", ecmEvent.getNodeType(), ecmEvent.getNodeId(), e.getMessage());
+            }
         }
     }
 
@@ -129,14 +124,14 @@ public class EcmFileCopiedEventHandler implements ApplicationListener<EcmEvent>
         this.auditPropertyEntityAdapter = auditPropertyEntityAdapter;
     }
 
-    public EcmFileDao getFileDao()
+    public AcmFolderService getFolderService()
     {
-        return fileDao;
+        return folderService;
     }
 
-    public void setFileDao(EcmFileDao fileDao)
+    public void setFolderService(AcmFolderService folderService)
     {
-        this.fileDao = fileDao;
+        this.folderService = folderService;
     }
 
     public EcmFileService getFileService()

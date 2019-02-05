@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.armedia.acm.frevvo.config;
+package com.armedia.acm.plugins.ecm.utils;
 
 /*-
  * #%L
@@ -36,7 +36,7 @@ import java.lang.reflect.Field;
  * @author riste.tutureski
  *
  */
-public class FrevvoFormUtils
+public class ReflectionMethodsUtils
 {
 
     /**
