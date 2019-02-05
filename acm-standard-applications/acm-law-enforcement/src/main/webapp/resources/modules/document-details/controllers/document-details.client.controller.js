@@ -45,6 +45,7 @@ angular.module('document-details').controller(
                             animation: true,
                             templateUrl: 'modules/document-details/views/components/annotation-tags-modal.client.view.html',
                             controller: 'Document.AnnotationTagsModalController',
+                            backdrop: 'static',
                             resolve: {
                                 params: function () {
                                     return params;
