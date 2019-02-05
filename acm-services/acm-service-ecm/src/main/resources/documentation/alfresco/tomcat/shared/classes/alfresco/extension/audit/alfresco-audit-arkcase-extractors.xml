@@ -23,6 +23,8 @@
         <PathMap source="/alfresco-api/post/FileFolderService/create" target="/auditarkcasecreate"/>
         <!-- Audit the FileFolderService.moveFrom method.  The share webapp uses this method to move files.  -->
         <PathMap source="/alfresco-api/post/FileFolderService/moveFrom" target="/auditarkcasemovefrom"/>
+        <!-- Audit the CopyService.copyAndRename method.  The share webapp uses this method to copy and rename files.  -->
+        <PathMap source="/alfresco-api/post/CopyService/copyAndRename" target="/auditarkcasecopy"/>
     </PathMappings>
 
     <!-- Audit the FileFolderService.create method.  The share webapp uses this method to upload files.  -->
@@ -141,4 +143,39 @@
         </AuditPath>
     </Application>
 
+    <!-- Audit the CopyService.copyAndRename method.  The share webapp uses this method to copy and rename files.  -->
+    <Application name="AuditArkCaseCopy" key="auditarkcasecopy">
+        <AuditPath key="copy">
+            <AuditPath key="in">
+                <RecordValue key="a" dataExtractor="simpleValue" dataSource="/auditarkcasecopy/args/sourceNodeRef"
+                             dataTrigger="/auditarkcasecopy/no-error"/>
+                <RecordValue key="b" dataExtractor="simpleValue" dataSource="/auditarkcasecopy/args/targetParentNodeRef"
+                             dataTrigger="/auditarkcasecopy/no-error"/>
+                <RecordValue key="c" dataExtractor="simpleValue" dataSource="/auditarkcasecopy/args/assocTypeQName"
+                             dataTrigger="/auditarkcasecopy/no-error"/>
+                <RecordValue key="d" dataExtractor="simpleValue" dataSource="/auditarkcasecopy/args/assocQName"
+                             dataTrigger="/auditarkcasecopy/no-error"/>
+                <RecordValue key="e" dataExtractor="simpleValue" dataSource="/auditarkcasecopy/args/copyChildren"
+                             dataTrigger="/auditarkcasecopy/no-error"/>
+            </AuditPath>
+            <AuditPath key="out">
+                <RecordValue key="a" dataExtractor="simpleValue" dataSource="/auditarkcasecopy/result"
+                             dataTrigger="/auditarkcasecopy/no-error"/>
+            </AuditPath>
+            <AuditPath key="derived">
+                <RecordValue key="source-node-null" dataExtractor="nullValue" dataSource="/auditarkcasecopy/args/sourceNodeRef"
+                             dataTrigger="/auditarkcasecopy/no-error"/>
+                <RecordValue key="source-node-name" dataExtractor="nodeNameValue" dataSource="/auditarkcasecopy/args/sourceNodeRef"
+                             dataTrigger="/auditarkcasecopy/no-error"/>
+                <RecordValue key="source-node-type" dataExtractor="nodeTypeValue" dataSource="/auditarkcasecopy/args/sourceNodeRef"
+                             dataTrigger="/auditarkcasecopy/no-error"/>
+                <RecordValue key="target-parent-null" dataExtractor="nullValue" dataSource="/auditarkcasecopy/args/targetParentNodeRef"
+                             dataTrigger="/auditarkcasecopy/no-error"/>
+                <RecordValue key="target-parent-name" dataExtractor="nodeNameValue" dataSource="/auditarkcasecopy/args/targetParentNodeRef"
+                             dataTrigger="/auditarkcasecopy/no-error"/>
+                <RecordValue key="target-parent-type" dataExtractor="nodeTypeValue" dataSource="/auditarkcasecopy/args/targetParentNodeRef"
+                             dataTrigger="/auditarkcasecopy/no-error"/>
+            </AuditPath>
+        </AuditPath>
+    </Application>
 </Audit>

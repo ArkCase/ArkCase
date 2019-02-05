@@ -330,6 +330,9 @@ public interface EcmFileService
     EcmFile copyFile(Long documentId, AcmFolder targetFolder, AcmContainer targetContainer)
             throws AcmUserActionFailedException, AcmObjectNotFoundException;
 
+    EcmFile copyFileInArkcase(EcmFile originalFile, String copiedFileNodeId, AcmFolder targetFolder)
+            throws AcmUserActionFailedException;
+
     EcmFile updateFileType(Long fileId, String fileType) throws AcmObjectNotFoundException;
 
     @Transactional
