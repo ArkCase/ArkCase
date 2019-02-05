@@ -148,7 +148,7 @@ public class PortalRequestService
 
         String query = "object_type_s:CASE_FILE+AND+id:" + parent_ref;
 
-        query += "&fl=name,title_parseable";
+        query += "&fl=name,title_parseable,description_no_html_tags_parseable";
 
         String results = getExecuteSolrQuery().getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, query, 0, 99999, "", true,
                 "", false, false, "");
@@ -158,6 +158,7 @@ public class PortalRequestService
         JSONObject docRequest = docRequests.getJSONObject(0);
         portalReadingRoom.setRequestId(docRequest.getString("name"));
         portalReadingRoom.setRequestTitle(docRequest.getString("title_parseable"));
+        portalReadingRoom.setDescription(docRequest.getString("description_no_html_tags_parseable"));
     }
 
     /**
