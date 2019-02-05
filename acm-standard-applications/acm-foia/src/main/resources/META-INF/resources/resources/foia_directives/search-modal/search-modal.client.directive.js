@@ -343,6 +343,19 @@ angular.module('directives').directive('searchModal',
                         scope.modalInstance.dismiss('cancel')
                     };
 
+                    /**
+                     * @ngdoc method
+                     * @name onClickObjLink
+                     * @methodOf global.directive:searchModal
+                     *
+                     * @param {String} event
+                     * @param {String} rowEntity data
+                     * @param {Boolean} keepModal Optional flag for keeping open modal active
+                     * @param {Boolean} newTab Optional flag for opening the Object in a new tab
+                     *
+                     * @description
+                     * Go to a page state that show the specified ArkCase Object (Case, Complaint, Document, etc.)
+                     */
                     scope.onClickObjLink = function(event, rowEntity, keepModal, newTab) {
                         event.preventDefault();
                         var targetType = Util.goodMapValue(rowEntity, "object_type_s");
@@ -360,6 +373,18 @@ angular.module('directives').directive('searchModal',
                         }
                     };
 
+                    /**
+                     * @ngdoc method
+                     * @name onClickOpenFile
+                     * @methodOf global.directive:searchModal
+                     *
+                     * @param {String} event
+                     * @param {String} rowEntity data
+                     * @param {Boolean} keepModal Optional flag for keeping open modal active
+                     *
+                     * @description
+                     * Go to a page state that show the specified ArkCase File viewer of the selected item
+                     */
                     scope.onClickOpenFile = function (event, rowEntity, keepModal){
                         event.preventDefault();
 

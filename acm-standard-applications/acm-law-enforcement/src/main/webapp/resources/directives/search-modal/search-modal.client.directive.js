@@ -146,7 +146,7 @@ angular.module('directives').directive('searchModal', [ '$q', '$translate', '$fi
                     if (scope.findGroups) {
                         query = SearchQueryBuilder.buildSafeFqFacetedSearchQuerySorted('*', scope.filters, scope.pageSize, scope.start, scope.sort);
                     } else {
-                        query = SearchQueryBuilder.buildSafeFqFacetedSearchQuerySorted(scope.searchQuery + '*', scope.filters, scope.pageSize, scope.start, scope.sort, scope.config().parentDocument);
+                        query = SearchQueryBuilder.buildSafeFqFacetedSearchQuerySorted(scope.searchQuery + '*', scope.filters, scope.pageSize, scope.start, scope.sort, !Util.isEmpty(scope.config().parentDocument));
                     }
 
                     if (query) {
@@ -323,8 +323,22 @@ angular.module('directives').directive('searchModal', [ '$q', '$translate', '$fi
                 scope.modalInstance.dismiss('cancel')
             };
 
+            /**
+             * @ngdoc method
+             * @name onClickObjLink
+             * @methodOf global.directive:searchModal
+             *
+             * @param {String} event
+             * @param {String} rowEntity data
+             * @param {Boolean} keepModal Optional flag for keeping open modal active
+             * @param {Boolean} newTab Optional flag for opening the Object in a new tab
+             *
+             * @description
+             * Go to a page state that show the specified ArkCase Object (Case, Complaint, Document, etc.)
+             */
             scope.onClickObjLink = function(event, rowEntity, keepModal, newTab) {
                 event.preventDefault();
+
                 var targetType = Util.goodMapValue(rowEntity, "object_type_s");
                 var targetId = '';
                 if(targetType == ObjectService.ObjectTypes.FILE) {
@@ -340,6 +354,18 @@ angular.module('directives').directive('searchModal', [ '$q', '$translate', '$fi
                 }
             };
 
+            /**
+             * @ngdoc method
+             * @name onClickOpenFile
+             * @methodOf global.directive:searchModal
+             *
+             * @param {String} event
+             * @param {String} rowEntity data
+             * @param {Boolean} keepModal Optional flag for keeping open modal active
+             *
+             * @description
+             * Go to a page state that show the specified ArkCase File viewer of the selected item
+             */
             scope.onClickOpenFile = function (event, rowEntity, keepModal){
                 event.preventDefault();
 

@@ -30,11 +30,14 @@ package com.armedia.acm.services.search.service;
 import com.armedia.acm.pluginmanager.model.AcmPlugin;
 import com.armedia.acm.services.search.model.SearchConstants;
 
+import com.armedia.acm.services.search.model.SolrCore;
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.mule.api.MuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.core.Authentication;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -56,6 +59,8 @@ public class FacetedSearchService
     private transient final Logger log = LoggerFactory.getLogger(this.getClass());
     private AcmPlugin pluginSearch;
     private AcmPlugin pluginEventType;
+    private ExecuteSolrQuery executeSolrQuery;
+
     /**
      * Pattern for matching words separated by white space, and also words which are quoted containing whitespace.
      * Example: 'Lorem ipsum dolor sit "amet sollicitudin" id' -> Lorem, ipsum, dolor, sit, "amet sollicitudin", id
@@ -604,6 +609,14 @@ public class FacetedSearchService
         this.pluginEventType = pluginEventType;
     }
 
+    public ExecuteSolrQuery getExecuteSolrQuery() {
+        return executeSolrQuery;
+    }
+
+    public void setExecuteSolrQuery(ExecuteSolrQuery executeSolrQuery) {
+        this.executeSolrQuery = executeSolrQuery;
+    }
+
     /**
      *
      * splits by whitespace search terms and escapes each term with double quotes.
@@ -647,5 +660,37 @@ public class FacetedSearchService
             terms.add(m.group(1));
         }
         return terms;
+    }
+
+    public JSONObject getParentDocumentJsonObject(Authentication authentication, String res) throws MuleException {
+        JSONObject solrResponse = new JSONObject(res);
+        if (solrResponse.getJSONObject("response").getLong("numFound") > 0)
+        {
+            JSONArray docs = solrResponse.getJSONObject("response").getJSONArray("docs");
+            for (int i = 0; i < docs.length(); i++)
+            {
+                String parentId = "";
+                String parentType = "";
+                if (docs.getJSONObject(i).has("parent_ref_s"))
+                {
+                    String[] splitArray = docs.getJSONObject(i).getString("parent_ref_s").split("-");
+                    if (splitArray.length >= 2)
+                    {
+                        parentId = splitArray[0];
+                        parentType = splitArray[1];
+                    }
+                }
+
+                if (StringUtils.isNotEmpty(parentId) && StringUtils.isNotEmpty(parentType)) {
+                    String parentResult = getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.QUICK_SEARCH, "object_id_s:" + parentId + " AND object_type_s:" + parentType, 0,
+                            1, "create_date_tdt DESC");
+                    JSONObject parentResponse = new JSONObject(parentResult);
+                    if (parentResponse.getJSONObject("response").getLong("numFound") == 1) {
+                        docs.getJSONObject(i).put("parent_document", parentResponse.getJSONObject("response").getJSONArray("docs").getJSONObject(0));
+                    }
+                }
+            }
+        }
+        return solrResponse;
     }
 }
