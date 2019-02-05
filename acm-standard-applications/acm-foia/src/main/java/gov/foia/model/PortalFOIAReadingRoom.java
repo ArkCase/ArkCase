@@ -90,6 +90,8 @@ public class PortalFOIAReadingRoom
 
     private File file;
 
+    private String description;
+
 
     @JsonSerialize(using = JsonDateSerializer.class)
     private Date publishedDate;
@@ -170,4 +172,13 @@ public class PortalFOIAReadingRoom
         this.publishedDate = publishedDate;
     }
 
+    public String getDescription()
+    {
+        return description;
+    }
+
+    public void setDescription(String description)
+    {
+        this.description = description;
+    }
 }
