@@ -34,7 +34,7 @@ import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUpdateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
-import com.armedia.acm.frevvo.config.FrevvoFormUtils;
+import com.armedia.acm.plugins.ecm.utils.ReflectionMethodsUtils;
 import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.plugins.addressable.exceptions.AcmContactMethodValidationException;
 import com.armedia.acm.plugins.addressable.service.ContactMethodsUtil;
@@ -170,7 +170,7 @@ public class PersonServiceImpl implements PersonService
         {
             for (String key : keys)
             {
-                String value = FrevvoFormUtils.get(person, key);
+                String value = ReflectionMethodsUtils.get(person, key);
 
                 Person personFromDatabase = new Person();
                 if (person.getId() != null)
@@ -198,7 +198,7 @@ public class PersonServiceImpl implements PersonService
                     String key = identification.getIdentificationType();
                     String value = identification.getIdentificationNumber();
 
-                    person = (Person) FrevvoFormUtils.set(person, key, value);
+                    person = (Person) ReflectionMethodsUtils.set(person, key, value);
                 }
                 catch (Exception e)
                 {

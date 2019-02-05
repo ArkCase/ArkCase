@@ -1639,6 +1639,15 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     }
 
     @Override
+    @AcmAcquireAndReleaseObjectLock(acmObjectArgIndex = 0, objectType = "FILE", lockType = "DELETE")
+    public EcmFile renameFileInArkcase(EcmFile file, String newFileName)
+    {
+        newFileName = getFolderAndFilesUtils().getBaseFileName(newFileName);
+        file.setFileName(newFileName);
+        return getEcmFileDao().save(file);
+    }
+
+    @Override
     public EcmFile findById(Long fileId)
     {
         return getEcmFileDao().find(fileId);

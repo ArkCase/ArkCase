@@ -320,6 +320,8 @@ public interface EcmFileService
 
     EcmFile renameFile(Long fileId, String newFileName) throws AcmUserActionFailedException, AcmObjectNotFoundException;
 
+    EcmFile renameFileInArkcase(EcmFile file, String newFileName);
+
     EcmFile findById(Long fileId);
 
     AcmCmisObjectList listAllSubFolderChildren(String category, Authentication auth, AcmContainer container, Long folderId, int startRow,

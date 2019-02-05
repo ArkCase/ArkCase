@@ -351,6 +351,26 @@ public class FolderAndFilesUtils
         }
     }
 
+    public EcmFile lookupArkCaseFile(String fileCmisId)
+    {
+        try
+        {
+            List<EcmFile> fileList = getFileDao().findByCmisFileId(fileCmisId);
+            if (!fileList.isEmpty())
+            {
+                EcmFile ecmFile = fileList.get(0);
+                log.debug("ArkCase has file with CMIS ID {}: file id is {}", fileCmisId, ecmFile.getId());
+                return ecmFile;
+            }
+            return null;
+        }
+        catch (NoResultException e)
+        {
+            log.warn("No such file in ArkCase: {}", fileCmisId);
+            return null;
+        }
+    }
+
     public AcmFolder lookupArkCaseFolder(String folderCmisId)
     {
         try

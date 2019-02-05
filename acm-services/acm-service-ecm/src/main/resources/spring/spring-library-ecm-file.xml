@@ -419,4 +419,13 @@
         <property name="enableDocumentACL" value="${dac.enableDocumentACL}"/>
         <property name="searchAccessControlFields" ref="searchAccessControlFields"/>
     </bean>
+
+    <bean id="metadataUpdateProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+        <!-- note: must leave "file:" at the start of the file name for spring
+        to be able to read the file; otherwise it will try to read from the
+        classpath -->
+        <property name="location" value="file:${user.home}/.arkcase/acm/alfrescoUpdateMetadata.properties"/>
+        <property name="ignoreResourceNotFound" value="true"/>
+        <property name="localOverride" value="false"/>
+    </bean>
 </beans>
