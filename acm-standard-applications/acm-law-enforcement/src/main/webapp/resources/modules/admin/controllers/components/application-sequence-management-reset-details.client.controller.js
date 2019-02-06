@@ -44,7 +44,7 @@ angular.module('admin').controller('Admin.SequenceManagementResetDetailsControll
     
     $scope.onClickSave = function(){
 
-        $scope.sequenceReset.resetDate = UtilDateService.dateToIsoDateTime($scope.sequenceReset.resetStartDate);
+        $scope.sequenceReset.resetDate =$scope.sequenceReset.resetStartDate;
         $scope.sequenceReset.resetRepeatablePeriod = $scope.sequenceReset.resetRepeatPeriodOption == "0" ? $scope.sequenceReset.resetRepeatablePeriod : $scope.resetRepeatPeriodOption;
 
         SequenceManagementResetService.saveSequenceReset($scope.sequenceReset).success(function () {
