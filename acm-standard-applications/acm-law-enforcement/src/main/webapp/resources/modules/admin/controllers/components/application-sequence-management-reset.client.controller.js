@@ -106,10 +106,10 @@ angular.module('admin').controller('Admin.SequenceManagementResetController', [ 
     $scope.deleteReset = function(rowEntity) {
         var sequenceReset = {};
         var resetDate = moment(rowEntity.resetDate).toDate();
-        sequenceReset.resetDate = UtilDateService.dateToIsoDateTime(resetDate);
+        sequenceReset.resetDate = resetDate;
         if (rowEntity.resetExecutedDate) {
             var executeDate = moment(rowEntity.resetExecutedDate).toDate();
-            sequenceReset.resetExecutedDate = UtilDateService.dateToIsoDateTime(executeDate);
+            sequenceReset.resetExecutedDate = executeDate;
         }
         sequenceReset.resetExecutedFlag = rowEntity.resetExecutedFlag;
         sequenceReset.resetRepeatableFlag = rowEntity.resetRepeatableFlag;
