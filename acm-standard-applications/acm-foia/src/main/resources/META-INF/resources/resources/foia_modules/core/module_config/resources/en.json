@@ -46,6 +46,8 @@
                 "dba": "DBA"
             },
             "fileTypes": {
+                "audio": "Audio",
+                "video": "Video",
                 "ev": "eDelivery",
                 "gr": "General Release",
                 "mr": "Medical Release",
