@@ -1086,13 +1086,15 @@
                             "name": "resetDate",
                             "displayName": "admin.application.sequenceManagementReset.grid.startResetDate",
                             "visible": true,
-                            "headerCellFilter": "translate"
+                            "headerCellFilter": "translate",
+                            "cellTemplate": "<div>{{ (row.entity.resetDate + 'Z' | date: ('common.defaultDateTimeUIFormat' | translate)) }}</div>"
                         },
                         {
                             "name": "resetExecutedDate",
                             "displayName": "admin.application.sequenceManagementReset.grid.executedDate",
                             "visible": true,
-                            "headerCellFilter": "translate"
+                            "headerCellFilter": "translate",
+                            "cellTemplate": "<div>{{ row.entity.resetExecutedDate ? (row.entity.resetExecutedDate + 'Z' | date: ('common.defaultDateTimeUIFormat' | translate)) : ''}}</div>"
                         },
                         {
                             "name": "resetRepeatableFlag",
