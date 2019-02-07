@@ -136,6 +136,10 @@ export CATALINA_PID=$CATALINA_HOME/temp/catalina.pid
 ```
 On MacOS X, you have to replace `file:${user.home}` in the above script, with the actual full path to your home folder.
 
+To avoid issues with the dates handling, you need to set the ArkCase environments to work in UTC time zone. You need to keep all dates on the Arkcase backend servers in UTC time zone, so any usage of new Date(), LocalDate.now(), Calendar.getInstance() should return a date time instance in UTC (GMT) zone.
+
+To do this, you need to add -Duser.timezone=GMT VM argument in the Tomcat runtime configuration on your local development machine.
+
 Now you should be able to start Tomcat: `$TOMCAT_HOME/bin/startup.sh`.  To shutdown Tomcat: `$TOMCAT_HOME/bin/shutdown.sh -force`.
 
 ## Trusting the self-signed ArkCase certificate
