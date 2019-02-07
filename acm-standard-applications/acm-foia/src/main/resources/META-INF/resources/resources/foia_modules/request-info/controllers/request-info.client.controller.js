@@ -637,19 +637,19 @@ angular.module('request-info').controller(
                 $scope.transcriptionTabActive = $scope.showVideoPlayer && $scope.transcribeEnabled;
 
 
-                // WorkflowsService.getSubscribers({
-                //     userId: $scope.userId,
-                //     requestId: $stateParams['id']
-                // }).then(function (subscribers) {
-                //     if (subscribers && subscribers.data) {
-                //         if (_.find(subscribers.data, {
-                //             creator: $scope.userId
-                //         })) {
-                //             $scope.requestSubscribed = true;
-                //         }
-                //     }
-                //     $scope.subscribeEnabled = true;
-                // });
+                WorkflowsService.getSubscribers({
+                    userId: $scope.userId,
+                    requestId: $stateParams['id']
+                }).then(function (subscribers) {
+                    if (subscribers && subscribers.data) {
+                        if (_.find(subscribers.data, {
+                            creator: $scope.userId
+                        })) {
+                            $scope.requestSubscribed = true;
+                        }
+                    }
+                    $scope.subscribeEnabled = true;
+                });
 
                 if ($scope.openOtherDocuments && $scope.openOtherDocuments.length === 0) {
                     if ($stateParams.fileId) {
