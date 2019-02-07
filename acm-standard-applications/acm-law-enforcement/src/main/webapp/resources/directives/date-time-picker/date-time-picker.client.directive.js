@@ -32,11 +32,10 @@ angular.module('directives').directive('dateTimePicker', ['moment', 'Util.DateSe
                 } else {
                     if ($scope.timeFormatDisabled === "true") {
                         $scope.today = UtilDateService.isoToDate(date);
-                        $scope.dateInPicker = $scope.today;
                     } else {
-                        $scope.today = UtilDateService.isoToLocalDateTime(date);
-                        $scope.dateInPicker = $scope.today;
+                        $scope.today = UtilDateService.isoToLocalDateTime(date);                        
                     }
+                    $scope.dateInPicker = $scope.today;
                 }
                 $scope.minYear = moment.utc($scope.dateInPicker).year() - 50;
                 $scope.maxYear = moment.utc($scope.dateInPicker).year() + 1;
@@ -61,6 +60,7 @@ angular.module('directives').directive('dateTimePicker', ['moment', 'Util.DateSe
                         value: $scope.dateInPicker
                     });
                     $scope.today = !UtilService.isEmpty($scope.data) ? UtilDateService.isoToDate($scope.data) : "";
+                    $scope.dateInPicker = !UtilService.isEmpty($scope.data) ? UtilDateService.isoToDate($scope.data) : new Date();
                 } else {
                     $(comboField).combodate({
                         format: 'MM/DD/YYYY HH:mm',
@@ -81,7 +81,7 @@ angular.module('directives').directive('dateTimePicker', ['moment', 'Util.DateSe
                 var editedDate = $(comboField).combodate('getValue', null);
                 if ($scope.timeFormatDisabled === "true") {
                     $scope.dateInPicker = moment(editedDate);
-                    $scope.data = UtilDateService.localDateToIso($scope.dateInPicker);
+                    $scope.data = UtilDateService.localDateToIso($scope.dateInPicker.toDate());
                 } else {
                     $scope.dateInPicker = moment(editedDate);
                     $scope.data = UtilDateService.dateToIsoDateTime($scope.dateInPicker);
