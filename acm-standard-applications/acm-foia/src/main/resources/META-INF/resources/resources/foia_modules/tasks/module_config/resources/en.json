@@ -225,8 +225,12 @@
         "groupToggle.label": "Group Task?",
         "group.placeholder": "Please select a group.",
         "documentsToReview.label": "Documents to review",
+        "documentsToReview.uploadDocuments": "Upload Documents",
         "businessProcessTypes.label": "Business Process Type",
-        "noSelectedDocsErrorMsg": "Please select at least one document to be reviewed."
+        "noSelectedReviewDocsErrorMsg": "Please select at least one document in order to use the selected business process type.",
+        "noSelectedReviewDocsWorkflowErrorMsg": "Please select a business process in order to upload files to a task.",
+        "noSelectedDocsErrorMsg": "Please select at least one document in order to use selected business process type.",
+        "noSelectedWorkflowErrorMsg": "Please select a workflow in order to create a task."
     },
     "tasks.userOrGroupSearch": {
         "id": "userSearch",
