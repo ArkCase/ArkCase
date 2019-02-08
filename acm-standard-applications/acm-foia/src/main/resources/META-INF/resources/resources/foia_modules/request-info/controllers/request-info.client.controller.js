@@ -53,13 +53,17 @@ angular.module('request-info').controller(
         'Admin.FoiaConfigService',
         'Admin.TranscriptionManagementService',
         '$window',
+        'ArkCaseCrossWindowMessagingService',
+        'Object.LockingService',
+        'Util.TimerService',
+        'Dialog.BootboxService',
         function ($rootScope, $scope, $log, $sce, $q, $state, $timeout, $stateParams, $modal, ConfigService, Authentication, RequestsService, WorkflowsService, GenericRequestsService, QueuesConstants, LookupService, TicketService, QueuesService, PermissionsService, CaseInfoService, ObjectService,
-                  HelperObjectBrowserService, ObjectLookupService, ObjectModelService, CaseLookupService, UtilDateService, QueuesSvc, ObjectSubscriptionService, Util, SnowboundService, EcmService, DocumentPrintingService, NotesService, UserInfoService, MessageService, $translate, DueDateService, AdminHolidayService, AdminFoiaConfigService, TranscriptionManagementService, $window) {
+                  HelperObjectBrowserService, ObjectLookupService, ObjectModelService, CaseLookupService, UtilDateService, QueuesSvc, ObjectSubscriptionService, Util, SnowboundService, EcmService, DocumentPrintingService, NotesService, UserInfoService, MessageService, $translate, DueDateService, AdminHolidayService, AdminFoiaConfigService, TranscriptionManagementService, $window, ArkCaseCrossWindowMessagingService, ObjectLockingService, UtilTimerService, DialogService) {
 
-            $scope.openOtherDocuments = [];
-            $scope.fileChangeEvents = [];
-            $scope.fileChangeDate = null;
-            $scope.versionChangeRequest = false;
+            // $scope.openOtherDocuments = [];
+            // $scope.fileChangeEvents = [];
+            // $scope.fileChangeDate = null;
+            // $scope.versionChangeRequest = false;
 
             $scope.loading = false;
             $scope.loadingIcon = "fa fa-check";
@@ -87,14 +91,43 @@ angular.module('request-info').controller(
                     $scope.videoAPI.toggleFullScreen();
                 }
             };
-            $scope.showVideoPlayer = false;
 
-            $scope.onPlayerReady = function(API) {
-                $scope.videoAPI = API;
+            $scope.iframeLoaded = function() {
+                ObjectLookupService.getLookupByLookupName("annotationTags").then(function (allAnnotationTags) {
+                    $scope.allAnnotationTags = allAnnotationTags;
+                    ArkCaseCrossWindowMessagingService.addHandler('select-annotation-tags', onSelectAnnotationTags);
+                    ArkCaseCrossWindowMessagingService.start('snowbound', $scope.ecmFileProperties['ecm.viewer.snowbound']);
+                });
             };
+            function onSelectAnnotationTags(data) {
+                var params = $scope.allAnnotationTags;
+                var modalInstance = $modal.open({
+                    animation: true,
+                    templateUrl: 'modules/document-details/views/components/annotation-tags-modal.client.view.html',
+                    controller: 'Document.AnnotationTagsModalController',
+                    backdrop: 'static',
+                    resolve: {
+                        params: function () {
+                            return params;
+                        }
+                    }
+                });
 
-
-            $scope.transcriptionTabActive = false;
+                modalInstance.result.then(function(result) {
+                    var message = {
+                        source: 'arkcase',
+                        action: 'add-annotation-tags',
+                        data: {
+                            type: data.type,
+                            annotationTags: result.annotationTags,
+                            annotationNotes: result.annotationNotes
+                        }
+                    };
+                    ArkCaseCrossWindowMessagingService.send(message);
+                }, function() {
+                    // Do nothing
+                });
+            }
 
             var transcriptionConfigurationPromise = TranscriptionManagementService.getTranscribeConfiguration();
 
@@ -175,15 +208,6 @@ angular.module('request-info').controller(
                     videoElement.play();
                 }
             }
-
-            /**
-             * Builds the snowbound url based on the parameters passed into the controller state and opens the specified document in
-             * an iframe which points to snowbound
-             */
-            $scope.openSnowboundViewer = function() {
-                var viewerUrl = SnowboundService.buildSnowboundUrl($scope.ecmFileProperties, $scope.acmTicket, $scope.userId, $scope.userFullName, $scope.fileInfo, !$scope.editingMode);
-                $scope.documentViewerUrl = $sce.trustAsResourceUrl(viewerUrl);
-            };
 
             $scope.$bus.subscribe('update-viewer-opened-versions', function(openedVersions) {
                 $scope.fileInfo.selectedIds = openedVersions.map(function(openedVersion, index) {
@@ -330,38 +354,56 @@ angular.module('request-info').controller(
 
             $scope.printEnabled = false;
 
-            $scope.acmTicket = '';
-            $scope.userId = '';
-            $scope.userFullName = '';
-            $scope.ecmFileConfig = {};
 
             $scope.readOnly = true;
             $scope.assignedPerson = null;
             $scope.expandPreview = expandPreview;
 
-            // Obtains the currently logged in user
-            var promiseUserInfo = Authentication.queryUserInfo();
+            $scope.acmTicket = '';
+            $scope.userId = '';
+            $scope.userFullName = '';
+            $scope.ecmFileProperties = {};
+            $scope.snowboundUrl = '';
+            $scope.ecmFileEvents = [];
+            $scope.ecmFileParticipants = [];
+            $scope.userList = [];
+            $scope.caseInfo = {};
+            $scope.fileInfo = {
+                id: $stateParams['id'],
+                containerId: $stateParams['containerId'],
+                containerType: $stateParams['containerType'],
+                name: $stateParams['name'],
+                selectedIds: $stateParams['selectedIds']
+            };
+            $scope.showVideoPlayer = false;
+            $scope.showPdfJs = false;
+            $scope.transcriptionTabActive = false;
 
-            // Obtains a list of all users in ArkCase
-            var totalUserInfo = LookupService.getUsers();
-
-            var promiseFileTypes = LookupService.getConfig('acm-forms');
-
-            // Retrieves the metadata for the file which is being opened in the viewer
-            var ecmFileNameInfo = EcmService.getFile({
-                fileId: $stateParams['fileId']
-            });
-
-            // Obtains list of all documents within the request
-            var documentInfo = GenericRequestsService.queryDocument({
-                requestId: requestId
-            });
 
             // Obtains authentication token for ArkCase
             var ticketInfo = TicketService.getArkCaseTicket();
 
+            // Obtains the currently logged in user
+            var userInfo = Authentication.queryUserInfo();
+
+            // Obtains a list of all users in ArkCase
+            var totalUserInfo = LookupService.getUsers();
+
             // Retrieves the properties from the ecmFileService.properties file (including Snowbound configuration)
-            var ecmFileInfo = LookupService.getConfig('ecmFileService');
+            var ecmFileConfig = LookupService.getConfig("ecmFileService");
+
+            var formsConfig = LookupService.getConfig("acm-forms");
+
+            // Retrieves the metadata for the file which is being opened in the viewer
+            var ecmFileInfo = EcmService.getFile({
+                fileId: $stateParams['id']
+            });
+            var ecmFileEvents = EcmService.getFileEvents({
+                fileId: $stateParams['id']
+            });
+            var ecmFileParticipants = EcmService.getFileParticipants({
+                fileId: $stateParams['id']
+            });
 
             // Be sure that request info is loaded before we check lock permission
             var requestLockDeferred = $q.defer();
@@ -581,16 +623,19 @@ angular.module('request-info').controller(
                 }
             };
 
-            $q.all([promiseUserInfo, documentInfo.$promise, ticketInfo, ecmFileInfo, requestLockDeferred.promise, totalUserInfo, ecmFileNameInfo, promiseFileTypes, transcriptionConfigurationPromise ]).then(function (data) {
-                var userInfo = data[0];
-                var documentInfo = data[1];
-                $scope.acmTicket = data[2].data;
-                $scope.ecmFileConfig = data[3];
-                $scope.requestLockInfo = data[4];
-                $scope.userList = data[5];
-                $scope.ecmFile = data[6];
-                $scope.fileTypes = data[7];
+            $q.all([ ticketInfo, userInfo, totalUserInfo, ecmFileConfig, ecmFileInfo.$promise, ecmFileEvents.$promise, ecmFileParticipants.$promise, formsConfig, transcriptionConfigurationPromise ]).then(function(data) {
+                $scope.acmTicket = data[0].data;
+                $scope.userId = data[1].userId;
+                $scope.userFullName = data[1].fullName;
+                $scope.userList = data[2];
+                $scope.ecmFileProperties = data[3];
+                $scope.editingMode = !$scope.ecmFileProperties['ecm.viewer.snowbound.readonly.initialState'];
+                $scope.ecmFile = data[4];
+                $scope.ecmFileEvents = data[5];
+                $scope.ecmFileParticipants = data[6];
+                $scope.formsConfig = data[7];
                 $scope.transcriptionConfiguration = data[8];
+                $scope.fileInfo = buildFileInfo($scope.ecmFile, $scope.ecmFile.container.id);
 
                 // default view == snowbound
                 $scope.view = "modules/document-details/views/document-viewer-snowbound.client.view.html";
@@ -600,42 +645,6 @@ angular.module('request-info').controller(
                 $timeout(function() {
                     $scope.$broadcast('document-data', $scope.ecmFile);
                 }, 1000);
-
-                var key = $scope.ecmFile.fileType + ".name";
-                // Search for descriptive file type in acm-forms.properties
-                $scope.fileType = $scope.fileTypes[key];
-                if ($scope.fileType === undefined) {
-                    // If descriptive file type does not exist, fallback to previous raw file type
-                    $scope.fileType = $scope.ecmFile.fileType;
-                }
-
-                $scope.mediaType = $scope.ecmFile.fileActiveVersionMimeType.indexOf("video") === 0 ? "video"
-                    : ($scope.ecmFile.fileActiveVersionMimeType.indexOf("audio") === 0 ? "audio" : "other");
-
-                if ($scope.mediaType === "video" || $scope.mediaType === "audio") {
-                    $scope.config = {
-                        sources: [ {
-                            src: $sce.trustAsResourceUrl('api/latest/plugin/ecm/stream/' + $scope.ecmFile.fileId),
-                            type: $scope.ecmFile.fileActiveVersionMimeType
-                        } ],
-                        theme: "node_modules/@bower_components/videogular-themes-default/videogular.css",
-                        plugins: {
-                            poster: "branding/loginlogo.png"
-                        },
-                        autoPlay: false
-                    };
-                    $scope.showVideoPlayer = true;
-                    $scope.view = "modules/document-details/views/document-viewer-videogular.client.view.html";
-                } else if ($scope.mediaType === "pdf" && "pdfjs" === $scope.ecmFileProperties['ecm.viewer.pdfViewer']) {
-                    $scope.config = {
-                        src: $sce.trustAsResourceUrl('api/latest/plugin/ecm/stream/' + $scope.ecmFile.fileId)
-                    };
-                    $scope.showPdfJs = true;
-                    $scope.view = "modules/document-details/views/document-viewer-pdfjs.client.view.html";
-                }
-
-                $scope.transcriptionTabActive = $scope.showVideoPlayer && $scope.transcribeEnabled;
-
 
                 WorkflowsService.getSubscribers({
                     userId: $scope.userId,
@@ -673,7 +682,52 @@ angular.module('request-info').controller(
                         });
                     }
                 }
+
+                var key = $scope.ecmFile.fileType + ".name";
+                // Search for descriptive file type in acm-forms.properties
+                $scope.fileType = $scope.formsConfig[key];
+                if ($scope.fileType === undefined) {
+                    // If descriptive file type does not exist, fallback to previous raw file type
+                    $scope.fileType = $scope.ecmFile.fileType;
+                }
+
+                $scope.mediaType = $scope.ecmFile.fileActiveVersionMimeType.indexOf("video") === 0 ? "video"
+                    : ($scope.ecmFile.fileActiveVersionMimeType.indexOf("audio") === 0 ? "audio" : "other");
+
+                if ($scope.mediaType === "video" || $scope.mediaType === "audio") {
+                    $scope.config = {
+                        sources: [ {
+                            src: $sce.trustAsResourceUrl('api/latest/plugin/ecm/stream/' + $scope.ecmFile.fileId),
+                            type: $scope.ecmFile.fileActiveVersionMimeType
+                        } ],
+                        theme: "node_modules/@bower_components/videogular-themes-default/videogular.css",
+                        plugins: {
+                            poster: "branding/loginlogo.png"
+                        },
+                        autoPlay: false
+                    };
+                    $scope.showVideoPlayer = true;
+                    $scope.view = "modules/document-details/views/document-viewer-videogular.client.view.html";
+                } else if ($scope.mediaType === "pdf" && "pdfjs" === $scope.ecmFileProperties['ecm.viewer.pdfViewer']) {
+                    $scope.config = {
+                        src: $sce.trustAsResourceUrl('api/latest/plugin/ecm/stream/' + $scope.ecmFile.fileId)
+                    };
+                    $scope.showPdfJs = true;
+                    $scope.view = "modules/document-details/views/document-viewer-pdfjs.client.view.html";
+                }
+                 else {
+                    $scope.openSnowboundViewer();
+                }
+
+                $scope.transcriptionTabActive = $scope.showVideoPlayer && $scope.transcribeEnabled;
+
+
+
             });
+            $scope.onPlayerReady = function(API) {
+                $scope.videoAPI = API;
+            }
+
             $scope.enableEditing = function() {
                 ObjectLockingService.lockObject($scope.ecmFile.fileId, ObjectService.ObjectTypes.FILE, ObjectService.LockTypes.WRITE, true).then(function(lockedFile) {
                     $scope.editingMode = true;
@@ -758,7 +812,14 @@ angular.module('request-info').controller(
                     $scope.loadViewerIframe('about:blank');
                 }
             }
-
+            /**
+             * Builds the snowbound url based on the parameters passed into the controller state and opens the specified document in
+             * an iframe which points to snowbound
+             */
+            $scope.openSnowboundViewer = function() {
+                var viewerUrl = SnowboundService.buildSnowboundUrl($scope.ecmFileProperties, $scope.acmTicket, $scope.userId, $scope.userFullName, $scope.fileInfo, !$scope.editingMode);
+                $scope.documentViewerUrl = $sce.trustAsResourceUrl(viewerUrl);
+            };
             /**
              * @ngdoc method
              * @name registerFileChangeEvents
@@ -1293,23 +1354,23 @@ angular.module('request-info').controller(
             }
 
             function buildViewerUrlMultiple(ecmFileProperties, acmTicket, userId, userFullName, files) {
-                var viewerUrl = '';
+                            var viewerUrl = '';
 
-                if (files && files.length > 0) {
+                            if (files && files.length > 0) {
 
-                    if (files[0]) {
-                        // Adds the list of additional documents to load to the viewer url
-                        files[0].selectedIds = buildOpenDocumentIdString(files);
-                        if (!_.includes(files[0].id, ':')) {
-                            files[0].id = files[0].id + ":" + files[0].versionTag;
+                                if (files[0]) {
+                                    // Adds the list of additional documents to load to the viewer url
+                                    files[0].selectedIds = buildOpenDocumentIdString(files);
+                                    if (!_.includes(files[0].id, ':')) {
+                                        files[0].id = files[0].id + ":" + files[0].versionTag;
+                                    }
+
+                                    // Generates the viewer url with the first document as the primary document
+                                    viewerUrl = SnowboundService.buildSnowboundUrl(ecmFileProperties, acmTicket, userId, userFullName, files[0]);
+                                }
+                            }
+                            return viewerUrl;
                         }
-
-                        // Generates the viewer url with the first document as the primary document
-                        viewerUrl = SnowboundService.buildSnowboundUrl(ecmFileProperties, acmTicket, userId, userFullName, files[0]);
-                    }
-                }
-                return viewerUrl;
-            }
 
             function showErrorDialog(error) {
                 $modal.open({
@@ -1391,3 +1452,19 @@ angular.module('request-info').controller(
                 });
             });
         }]);
+/**
+ * 2018-06-01 David Miller. This block is needed to tell the PDF.js angular module, where the PDF.js library is. Without this, on minified
+ * systems the PDF.js viewer will not work. I copied this from the project web page,
+ * https://github.com/legalthings/angular-pdfjs-viewer#advanced-configuration.
+ *
+ * @param pdfjsViewerConfigProvider
+ * @returns
+ */
+angular.module('document-details').config(function(pdfjsViewerConfigProvider) {
+    pdfjsViewerConfigProvider.setWorkerSrc("node_modules/@bower_components/pdf.js-viewer/pdf.worker.js");
+    pdfjsViewerConfigProvider.setCmapDir("node_modules/@bower_components/pdf.js-viewer/cmaps");
+    pdfjsViewerConfigProvider.setImageDir("node_modules/@bower_components/pdf.js-viewer/images");
+
+    // pdfjsViewerConfigProvider.disableWorker();
+    pdfjsViewerConfigProvider.setVerbosity("infos"); // "errors", "warnings" or "infos"
+});
