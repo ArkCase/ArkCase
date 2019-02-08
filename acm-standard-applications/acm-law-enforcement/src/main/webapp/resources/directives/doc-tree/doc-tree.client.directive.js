@@ -2045,7 +2045,7 @@ angular
                                         item.disabled = true;
                                     } else {
                                         if (item.disabledExpression) {
-                                                item.disabled = item.disabledExpression;
+                                                item.disabled = eval(item.disabledExpression);
                                         } else {
                                             item.disabled = false;
                                         }
