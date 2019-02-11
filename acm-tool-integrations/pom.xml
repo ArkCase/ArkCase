@@ -38,7 +38,9 @@
         <module>acm-spring-data-source</module>
         <module>acm-reload-properties</module>
         <module>acm-websockets</module>
-        <module>acm-configuration</module>
+        <module>acm-media-engine</module>
+        <module>acm-ocr-tool</module>
+        <module>acm-transcribe-tool</module>
     </modules>
 
 </project>

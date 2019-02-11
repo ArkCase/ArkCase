@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
+
+
+    <bean id="awsTranscribeService" class="com.armedia.acm.tool.transcribe.service.AWSTranscribeServiceImpl" init-method="init">
+        <property name="awsTranscribeConfigurationPropertiesService" ref="transcribeToolConfigurationPropertiesService"/>
+        <property name="muleContextManager" ref="muleContextManager"/>
+        <property name="credentialConfigurationFileLocation" value="${user.home}/.arkcase/acm/aws/credentials.properties"/>
+        <property name="mediaEngineIntegrationEventPublisher" ref="mediaEngineIntegrationEventPublisher"/>
+    </bean>
+
+    <bean id="transcribeProviderFactory" class="com.armedia.acm.tool.transcribe.factory.TranscribeProviderFactory">
+        <property name="providers" ref="transcribeProviders"/>
+    </bean>
+
+    <bean id="transcribeProviders" class="java.util.HashMap">
+        <constructor-arg>
+            <map key-type="java.lang.String" value-type="com.armedia.acm.tool.transcribe.service.TranscribeIntegrationService">
+                <entry key="AWS" value-ref="awsTranscribeService"/>
+            </map>
+        </constructor-arg>
+    </bean>
+
+    <bean id="transcribeToolConfigurationPropertiesService"
+          class="com.armedia.acm.tool.transcribe.service.AWSTranscribeConfigurationPropertiesService">
+        <property name="propertyFileManager" ref="propertyFileManager"/>
+    </bean>
+
+</beans>
