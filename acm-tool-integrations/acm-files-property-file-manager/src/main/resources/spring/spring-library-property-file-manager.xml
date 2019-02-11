@@ -19,6 +19,7 @@
                 <value>file:${user.home}/.arkcase/acm/spring/spring-config-kerberos.properties</value>
                 <value>file:${user.home}/.arkcase/acm/spring/spring-config-saml.properties</value>
                 <value>file:${user.home}/.arkcase/acm/spring-security/sessionControl.properties</value>
+                <value>file:${user.home}/.arkcase/acm/ocr.properties</value>
             </list>
         </property>
     </bean>

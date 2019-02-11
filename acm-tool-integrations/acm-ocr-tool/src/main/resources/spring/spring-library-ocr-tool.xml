@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
+
+
+    <bean id="tesseractService" class="com.armedia.acm.tool.ocr.service.TesseractServiceImpl">
+        <property name="activitiRuntimeService" ref="activitiRuntimeService"/>
+    </bean>
+
+    <bean id="ocrProviderFactory" class="com.armedia.acm.tool.ocr.factory.OCRProviderFactory">
+        <property name="providers" ref="ocrProviders"/>
+    </bean>
+
+    <bean id="ocrProviders" class="java.util.HashMap">
+        <constructor-arg>
+            <map key-type="java.lang.String" value-type="com.armedia.acm.tool.ocr.service.OCRIntegrationService">
+                <entry key="TESSERACT" value-ref="tesseractService"/>
+            </map>
+        </constructor-arg>
+    </bean>
+
+</beans>

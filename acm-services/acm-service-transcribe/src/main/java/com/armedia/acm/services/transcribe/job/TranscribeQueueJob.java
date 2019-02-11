@@ -29,19 +29,27 @@ package com.armedia.acm.services.transcribe.job;
 
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.scheduler.AcmSchedulableBean;
-import com.armedia.acm.services.transcribe.exception.CreateTranscribeException;
-import com.armedia.acm.services.transcribe.exception.GetConfigurationException;
-import com.armedia.acm.services.transcribe.exception.GetTranscribeException;
-import com.armedia.acm.services.transcribe.exception.TranscribeServiceProviderNotFoundException;
-import com.armedia.acm.services.transcribe.model.Transcribe;
-import com.armedia.acm.services.transcribe.model.TranscribeActionType;
-import com.armedia.acm.services.transcribe.model.TranscribeBusinessProcessVariableKey;
-import com.armedia.acm.services.transcribe.model.TranscribeConfiguration;
-import com.armedia.acm.services.transcribe.model.TranscribeProcessInstanceCreatedDateComparator;
-import com.armedia.acm.services.transcribe.model.TranscribeStatusType;
-import com.armedia.acm.services.transcribe.model.TranscribeType;
+import com.armedia.acm.service.objectlock.model.AcmObjectLock;
+import com.armedia.acm.service.objectlock.service.AcmObjectLockService;
+import com.armedia.acm.service.objectlock.service.AcmObjectLockingManager;
+import com.armedia.acm.services.mediaengine.exception.GetConfigurationException;
+import com.armedia.acm.services.mediaengine.exception.GetMediaEngineException;
+import com.armedia.acm.services.mediaengine.mapper.MediaEngineMapper;
+import com.armedia.acm.services.mediaengine.model.MediaEngine;
+import com.armedia.acm.services.mediaengine.model.MediaEngineActionType;
+import com.armedia.acm.services.mediaengine.model.MediaEngineBusinessProcessVariableKey;
+import com.armedia.acm.services.mediaengine.model.MediaEngineConfiguration;
+import com.armedia.acm.services.mediaengine.model.MediaEngineConstants;
+import com.armedia.acm.services.mediaengine.model.MediaEngineProcessInstanceCreatedDateComparator;
+import com.armedia.acm.services.mediaengine.model.MediaEngineStatusType;
+import com.armedia.acm.services.mediaengine.model.MediaEngineType;
+import com.armedia.acm.services.transcribe.model.TranscribeConstants;
 import com.armedia.acm.services.transcribe.service.ArkCaseTranscribeService;
+import com.armedia.acm.services.transcribe.service.TranscribeConfigurationPropertiesService;
 import com.armedia.acm.services.transcribe.utils.TranscribeUtils;
+import com.armedia.acm.tool.mediaengine.exception.CreateMediaEngineToolException;
+import com.armedia.acm.tool.mediaengine.model.MediaEngineDTO;
+import com.armedia.acm.tool.mediaengine.service.MediaEngineIntegrationService;
 
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.runtime.ProcessInstance;
@@ -60,6 +68,11 @@ public class TranscribeQueueJob implements AcmSchedulableBean
     private ArkCaseTranscribeService arkCaseTranscribeService;
     private RuntimeService activitiRuntimeService;
     private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
+    private MediaEngineIntegrationService mediaEngineIntegrationService;
+    private TranscribeConfigurationPropertiesService transcribeConfigurationPropertiesService;
+    private MediaEngineMapper mediaEngineMapper;
+    private AcmObjectLockService objectLockService;
+    private AcmObjectLockingManager objectLockingManager;
 
     @Override
     public void executeTask()
@@ -68,46 +81,71 @@ public class TranscribeQueueJob implements AcmSchedulableBean
         {
             getAuditPropertyEntityAdapter().setUserId("TRANSCRIBE_SERVICE");
 
-            TranscribeConfiguration configuration = getArkCaseTranscribeService().getConfiguration();
-            List<Transcribe> processingTranscribeObjects = getArkCaseTranscribeService()
-                    .getAllByStatus(TranscribeStatusType.PROCESSING.toString());
-            List<Transcribe> processingTranscribeAutomaticObjects = processingTranscribeObjects.stream()
-                    .filter(t -> TranscribeType.AUTOMATIC.toString().equalsIgnoreCase(t.getType())).collect(Collectors.toList());
-            List<Transcribe> processingTranscribeObjectsDistinctByProcessId = processingTranscribeAutomaticObjects.stream()
-                    .filter(TranscribeUtils.distinctByProperty(Transcribe::getProcessId)).collect(Collectors.toList());
+            MediaEngineConfiguration configuration = getTranscribeConfigurationPropertiesService().get();
+            List<MediaEngine> processingTranscribeObjects = getArkCaseTranscribeService()
+                    .getAllByStatus(MediaEngineStatusType.PROCESSING.toString());
+            List<MediaEngine> processingTranscribeAutomaticObjects = processingTranscribeObjects.stream()
+                    .filter(t -> MediaEngineType.AUTOMATIC.toString().equalsIgnoreCase(t.getType())).collect(Collectors.toList());
+            List<MediaEngine> processingTranscribeObjectsDistinctByProcessId = processingTranscribeAutomaticObjects.stream()
+                    .filter(TranscribeUtils.distinctByProperty(MediaEngine::getProcessId)).collect(Collectors.toList());
 
+            List<ProcessInstance> processInstances = null;
             if (configuration.getNumberOfFilesForProcessing() > processingTranscribeObjectsDistinctByProcessId.size())
             {
-                String key = TranscribeBusinessProcessVariableKey.STATUS.toString();
-                String value = TranscribeStatusType.QUEUED.toString();
-                List<ProcessInstance> processInstances = getActivitiRuntimeService().createProcessInstanceQuery().includeProcessVariables()
-                        .variableValueEqualsIgnoreCase(key, value).list();
+                processInstances = getProcessInstances();
+            }
 
-                if (processInstances != null && processInstances.size() > 0)
-                {
-                    processInstances.sort(new TranscribeProcessInstanceCreatedDateComparator());
-                    ProcessInstance processInstance = processInstances.get(0);
-                    List<Long> ids = (List<Long>) processInstance.getProcessVariables().get("IDS");
+            List<Long> ids = null;
+            ProcessInstance processInstance = null;
+            if (processInstances != null && !processInstances.isEmpty())
+            {
+                processInstances.sort(new MediaEngineProcessInstanceCreatedDateComparator());
+                processInstance = processInstances.get(0);
+                ids = (List<Long>) processInstance.getProcessVariables().get("IDS");
+            }
 
-                    if (ids != null && ids.size() > 0)
-                    {
-                        Transcribe transcribe = getArkCaseTranscribeService().get(ids.get(0));
-                        if (transcribe != null)
-                        {
-                            getArkCaseTranscribeService().getTranscribeServiceFactory().getService(configuration.getProvider())
-                                    .create(transcribe);
-                            getArkCaseTranscribeService().signal(processInstance, TranscribeStatusType.PROCESSING.toString(),
-                                    TranscribeActionType.PROCESSING.toString());
-                        }
-                    }
-                }
+            MediaEngine mediaEngine = null;
+            if (ids != null && !ids.isEmpty())
+            {
+                mediaEngine = getArkCaseTranscribeService().get(ids.get(0));
+            }
+
+            AcmObjectLock lock = getObjectLockService().findLock(mediaEngine.getMediaEcmFileVersion().getFile().getId(),
+                    MediaEngineConstants.OBJECT_TYPE_FILE);
+            if (mediaEngine != null && (lock == null || lock.getCreator().equalsIgnoreCase(TranscribeConstants.TRANSCRIBE_SYSTEM_USER)))
+            {
+                getObjectLockingManager().acquireObjectLock(mediaEngine.getMediaEcmFileVersion().getFile().getId(),
+                        MediaEngineConstants.OBJECT_TYPE_FILE,
+                        MediaEngineConstants.LOCK_TYPE_WRITE, null, true, TranscribeConstants.TRANSCRIBE_SYSTEM_USER);
+
+                MediaEngineDTO mediaEngineDTO = getMediaEngineDTO(mediaEngine);
+                getMediaEngineIntegrationService().create(mediaEngineDTO);
+                getArkCaseTranscribeService().signal(processInstance, MediaEngineStatusType.PROCESSING.toString(),
+                        MediaEngineActionType.PROCESSING.toString());
             }
         }
-        catch (GetConfigurationException | GetTranscribeException | CreateTranscribeException
-                | TranscribeServiceProviderNotFoundException e)
+        catch (GetConfigurationException | GetMediaEngineException | CreateMediaEngineToolException e)
         {
             LOG.error("Could not move Transcribe from the queue. REASON=[{}]", e.getMessage(), e);
         }
+    }
+
+    private MediaEngineDTO getMediaEngineDTO(MediaEngine mediaEngine) throws GetConfigurationException
+    {
+        MediaEngineConfiguration configuration = getTranscribeConfigurationPropertiesService().get();
+        MediaEngineDTO mediaEngineDTO = getMediaEngineMapper().MediaEngineToDTO(mediaEngine);
+
+        mediaEngineDTO.setProviderName(configuration.getProvider());
+        mediaEngineDTO.setServiceName(configuration.getService().toString());
+        return mediaEngineDTO;
+    }
+
+    private List<ProcessInstance> getProcessInstances()
+    {
+        String key = MediaEngineBusinessProcessVariableKey.STATUS.toString();
+        String value = MediaEngineStatusType.QUEUED.toString();
+        return getActivitiRuntimeService().createProcessInstanceQuery().includeProcessVariables()
+                .variableValueEqualsIgnoreCase(key, value).list();
     }
 
     public ArkCaseTranscribeService getArkCaseTranscribeService()
@@ -138,5 +176,56 @@ public class TranscribeQueueJob implements AcmSchedulableBean
     public void setAuditPropertyEntityAdapter(AuditPropertyEntityAdapter auditPropertyEntityAdapter)
     {
         this.auditPropertyEntityAdapter = auditPropertyEntityAdapter;
+    }
+
+    public MediaEngineIntegrationService getMediaEngineIntegrationService()
+    {
+        return mediaEngineIntegrationService;
+    }
+
+    public void setMediaEngineIntegrationService(MediaEngineIntegrationService mediaEngineIntegrationService)
+    {
+        this.mediaEngineIntegrationService = mediaEngineIntegrationService;
+    }
+
+    public TranscribeConfigurationPropertiesService getTranscribeConfigurationPropertiesService()
+    {
+        return transcribeConfigurationPropertiesService;
+    }
+
+    public void setTranscribeConfigurationPropertiesService(
+            TranscribeConfigurationPropertiesService transcribeConfigurationPropertiesService)
+    {
+        this.transcribeConfigurationPropertiesService = transcribeConfigurationPropertiesService;
+    }
+
+    public MediaEngineMapper getMediaEngineMapper()
+    {
+        return mediaEngineMapper;
+    }
+
+    public void setMediaEngineMapper(MediaEngineMapper mediaEngineMapper)
+    {
+        this.mediaEngineMapper = mediaEngineMapper;
+    }
+
+    public AcmObjectLockService getObjectLockService()
+    {
+        return objectLockService;
+    }
+
+    public void setObjectLockService(AcmObjectLockService objectLockService)
+    {
+        this.objectLockService = objectLockService;
+    }
+
+    public AcmObjectLockingManager getObjectLockingManager()
+    {
+        return objectLockingManager;
+    }
+
+    public void setObjectLockingManager(AcmObjectLockingManager objectLockingManager)
+    {
+        this.objectLockingManager = objectLockingManager;
     }
 }

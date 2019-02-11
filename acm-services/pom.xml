@@ -64,6 +64,7 @@
         <module>acm-service-billing</module>
         <module>acm-service-sequence-manager</module>
         <module>acm-service-ocr</module>
+        <module>acm-service-media-engine</module>
     </modules>
 
 </project>

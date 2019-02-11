@@ -35,9 +35,8 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
-import com.armedia.acm.services.transcribe.exception.SaveConfigurationException;
+import com.armedia.acm.services.mediaengine.exception.SaveConfigurationException;
 import com.armedia.acm.services.transcribe.model.TranscribeConfiguration;
-import com.armedia.acm.services.transcribe.model.TranscribeServiceProvider;
 import com.armedia.acm.services.transcribe.service.ArkCaseTranscribeService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -58,7 +57,6 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.math.BigDecimal;
-import java.util.Arrays;
 
 /**
  * Created by Riste Tutureski <riste.tutureski@armedia.com> on 02/28/2018
@@ -93,14 +91,13 @@ public class SaveTranscribeConfigurationAPIControllerTest extends EasyMockSuppor
         TranscribeConfiguration configuration = new TranscribeConfiguration();
         configuration.setEnabled(true);
         configuration.setAutomaticEnabled(true);
-        configuration.setNewTranscriptionForNewVersion(false);
-        configuration.setCopyTranscriptionForNewVersion(true);
+        configuration.setNewMediaEngineForNewVersion(false);
+        configuration.setCopyMediaEngineForNewVersion(true);
         configuration.setCost(new BigDecimal("0.001"));
         configuration.setConfidence(80);
         configuration.setNumberOfFilesForProcessing(10);
         configuration.setWordCountPerItem(30);
-        configuration.setProvider(TranscribeServiceProvider.AWS);
-        configuration.setProviders(Arrays.asList(TranscribeServiceProvider.AWS));
+        configuration.setProvider("AWS");
 
         ObjectMapper objectMapper = new ObjectMapper();
 
@@ -134,14 +131,13 @@ public class SaveTranscribeConfigurationAPIControllerTest extends EasyMockSuppor
         TranscribeConfiguration configuration = new TranscribeConfiguration();
         configuration.setEnabled(true);
         configuration.setAutomaticEnabled(true);
-        configuration.setNewTranscriptionForNewVersion(false);
-        configuration.setCopyTranscriptionForNewVersion(true);
+        configuration.setNewMediaEngineForNewVersion(false);
+        configuration.setCopyMediaEngineForNewVersion(true);
         configuration.setCost(new BigDecimal("0.001"));
         configuration.setConfidence(80);
         configuration.setNumberOfFilesForProcessing(10);
         configuration.setWordCountPerItem(30);
-        configuration.setProvider(TranscribeServiceProvider.AWS);
-        configuration.setProviders(Arrays.asList(TranscribeServiceProvider.AWS));
+        configuration.setProvider("AWS");
 
         ObjectMapper objectMapper = new ObjectMapper();
 

@@ -27,7 +27,7 @@ package com.armedia.acm.plugins.admin.web.api;
  * #L%
  */
 
-import com.armedia.acm.services.transcribe.exception.SaveConfigurationException;
+import com.armedia.acm.services.mediaengine.exception.SaveConfigurationException;
 import com.armedia.acm.services.transcribe.model.TranscribeConfiguration;
 import com.armedia.acm.services.transcribe.service.ArkCaseTranscribeService;
 
