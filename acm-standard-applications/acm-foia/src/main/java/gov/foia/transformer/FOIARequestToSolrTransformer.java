@@ -157,7 +157,7 @@ public class FOIARequestToSolrTransformer extends CaseFileToSolrTransformer
             additionalProperties.put("requester_name_s", "");
         }
 
-        additionalProperties.put("queue_enter_date_tdt", solrDateFromLocalDate(requestIn.getQueueEnterDate()));
+        additionalProperties.put("queue_enter_date_tdt", solrDateFromLocalDateTime(requestIn.getQueueEnterDate()));
 
         additionalProperties.put("record_search_date_from_tdt", solrDateFromLocalDateTime(requestIn.getRecordSearchDateFrom()));
         additionalProperties.put("record_search_date_to_tdt", solrDateFromLocalDateTime(requestIn.getRecordSearchDateTo()));
