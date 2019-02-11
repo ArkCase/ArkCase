@@ -396,13 +396,13 @@ angular.module('request-info').controller(
 
             // Retrieves the metadata for the file which is being opened in the viewer
             var ecmFileInfo = EcmService.getFile({
-                fileId: $stateParams['id']
+                fileId: $stateParams['fileId']
             });
             var ecmFileEvents = EcmService.getFileEvents({
-                fileId: $stateParams['id']
+                fileId: $stateParams['fileId']
             });
             var ecmFileParticipants = EcmService.getFileParticipants({
-                fileId: $stateParams['id']
+                fileId: $stateParams['fileId']
             });
 
             // Be sure that request info is loaded before we check lock permission
