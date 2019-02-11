@@ -35,6 +35,7 @@ import com.armedia.acm.data.AcmEntity;
 import com.armedia.acm.data.AcmLegacySystemEntity;
 import com.armedia.acm.data.converter.BooleanToStringConverter;
 import com.armedia.acm.data.converter.LocalDateConverter;
+import com.armedia.acm.data.converter.LocalDateTimeConverter;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.AcmContainerEntity;
 import com.armedia.acm.plugins.objectassociation.model.AcmChildObjectEntity;
@@ -87,6 +88,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -252,8 +254,8 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity,
 
     @Column(name = "cm_queue_enter_date")
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-    @Convert(converter = LocalDateConverter.class)
-    private LocalDate queueEnterDate;
+    @Convert(converter = LocalDateTimeConverter.class)
+    private LocalDateTime queueEnterDate;
 
     @Column(name = "cm_response_due_date")
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
@@ -855,12 +857,12 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity,
                 .findFirst().map(p -> p.getParticipantLdapId()).orElse(null);
     }
 
-    public LocalDate getQueueEnterDate()
+    public LocalDateTime getQueueEnterDate()
     {
         return queueEnterDate;
     }
 
-    public void setQueueEnterDate(LocalDate queueEnterDate)
+    public void setQueueEnterDate(LocalDateTime queueEnterDate)
     {
         this.queueEnterDate = queueEnterDate;
     }
