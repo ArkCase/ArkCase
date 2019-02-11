@@ -39,6 +39,11 @@
             <artifactId>acm-service-labels</artifactId>
             <version>${acm.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.armedia.acm.acm-services</groupId>
+            <artifactId>acm-service-media-engine</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
 
         <!-- logging -->
         <dependency>
@@ -70,6 +75,11 @@
             <artifactId>javax.el-api</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>${mockito.core.version}</version>
+        </dependency>
 
         <!-- AMAZON -->
         <!-- Amazon Core -->
@@ -90,6 +100,12 @@
         <dependency>
             <groupId>com.armedia.acm.acm-services</groupId>
             <artifactId>acm-service-notification</artifactId>
+            <version>${acm.version}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.armedia.acm.acm-tool-integrations</groupId>
+            <artifactId>acm-transcribe-tool</artifactId>
             <version>${acm.version}</version>
             <scope>compile</scope>
         </dependency>
