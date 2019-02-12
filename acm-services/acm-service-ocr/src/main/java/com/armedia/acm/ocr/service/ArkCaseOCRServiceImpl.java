@@ -59,11 +59,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by Vladimir Cherepnalkovski
@@ -81,6 +77,7 @@ public class ArkCaseOCRServiceImpl implements ArkCaseOCRService
     private ArkCaseBeanUtils ocrArkCaseBeanUtils;
     private OCRBusinessProcessRulesExecutor ocrBusinessProcessRulesExecutor;
     private OCRServiceFactory ocrServiceFactory;
+    private Properties ecmFileServiceProperties;
 
     @Override
     public OCR create(Long versionId, OCRType type) throws CreateOCRException
@@ -653,6 +650,11 @@ public class ArkCaseOCRServiceImpl implements ArkCaseOCRService
         throw new NotImplementedException();
     }
 
+    public boolean isExcludedFileTypes(String fileType)
+    {
+        return Arrays.asList(getEcmFileServiceProperties().getProperty("ocr.excludedFileTypes").split(",")).contains(fileType);
+    }
+
     // <editor-fold desc="getters and setters">
     public void setOcrConfigurationPropertiesService(OCRConfigurationPropertiesService ocrConfigurationPropertiesService)
     {
@@ -732,6 +734,16 @@ public class ArkCaseOCRServiceImpl implements ArkCaseOCRService
     public void setOcrBusinessProcessRulesExecutor(OCRBusinessProcessRulesExecutor ocrBusinessProcessRulesExecutor)
     {
         this.ocrBusinessProcessRulesExecutor = ocrBusinessProcessRulesExecutor;
+    }
+
+    public Properties getEcmFileServiceProperties()
+    {
+        return ecmFileServiceProperties;
+    }
+
+    public void setEcmFileServiceProperties(Properties ecmFileServiceProperties)
+    {
+        this.ecmFileServiceProperties = ecmFileServiceProperties;
     }
 
     @Override
