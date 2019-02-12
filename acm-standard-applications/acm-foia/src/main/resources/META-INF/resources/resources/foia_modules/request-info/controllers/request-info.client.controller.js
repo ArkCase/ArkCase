@@ -1326,7 +1326,7 @@ angular.module('request-info').controller(
                             id: file.fileId,
                             containerId: containerId,
                             containerType: 'CASE_FILE',
-                            name: file.fileName + " : " + file.activeVersionTag,
+                            name: file.fileName,
                             mimeType: file.fileActiveVersionMimeType,
                             selectedIds: '',
                             versionTag: file.activeVersionTag
