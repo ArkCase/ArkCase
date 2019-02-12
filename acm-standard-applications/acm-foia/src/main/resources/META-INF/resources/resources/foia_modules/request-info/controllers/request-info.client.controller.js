@@ -56,9 +56,9 @@ angular.module('request-info').controller(
                 'Object.LockingService',
                 'Util.TimerService',
                 'Dialog.BootboxService',
-                function($rootScope, $scope, $log, $sce, $q, $state, $timeout, $stateParams, $modal, ConfigService, Authentication, RequestsService, WorkflowsService, GenericRequestsService, QueuesConstants, LookupService, TicketService, QueuesService, PermissionsService, CaseInfoService,
-                        ObjectService, HelperObjectBrowserService, ObjectLookupService, ObjectModelService, CaseLookupService, UtilDateService, QueuesSvc, ObjectSubscriptionService, Util, SnowboundService, EcmService, DocumentPrintingService, NotesService, UserInfoService, MessageService,
-                        $translate, DueDateService, AdminHolidayService, AdminFoiaConfigService, TranscriptionManagementService, $window, ArkCaseCrossWindowMessagingService, ObjectLockingService, UtilTimerService, DialogService) {
+                function($rootScope, $scope, $log, $sce, $q, $state, $timeout, $stateParams, $modal, ConfigService, Authentication, RequestsService, WorkflowsService, GenericRequestsService, LookupService, TicketService, QueuesService, PermissionsService, CaseInfoService, ObjectService,
+                         HelperObjectBrowserService, ObjectLookupService, ObjectModelService, CaseLookupService, UtilDateService, QueuesSvc, ObjectSubscriptionService, Util, SnowboundService, EcmService, DocumentPrintingService, NotesService, UserInfoService, MessageService, $translate,
+                         DueDateService, AdminHolidayService, AdminFoiaConfigService, TranscriptionManagementService, $window, ArkCaseCrossWindowMessagingService, ObjectLockingService, UtilTimerService, DialogService) {
 
                     // $scope.openOtherDocuments = [];
                     // $scope.fileChangeEvents = [];
@@ -1326,7 +1326,7 @@ angular.module('request-info').controller(
                             id: file.fileId,
                             containerId: containerId,
                             containerType: 'CASE_FILE',
-                            name: file.fileName,
+                            name: file.fileName + " : " + file.activeVersionTag,
                             mimeType: file.fileActiveVersionMimeType,
                             selectedIds: '',
                             versionTag: file.activeVersionTag
