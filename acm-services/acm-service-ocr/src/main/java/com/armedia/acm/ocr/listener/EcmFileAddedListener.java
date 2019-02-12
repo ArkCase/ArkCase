@@ -32,6 +32,7 @@ import com.armedia.acm.ocr.exception.CreateOCRException;
 import com.armedia.acm.ocr.model.OCRConstants;
 import com.armedia.acm.ocr.model.OCRType;
 import com.armedia.acm.ocr.service.ArkCaseOCRService;
+import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileAddedEvent;
 import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
 import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
@@ -56,21 +57,25 @@ public class EcmFileAddedListener implements ApplicationListener<EcmFileAddedEve
     {
         if (event != null && event.isSucceeded())
         {
-            EcmFileVersion ecmFileVersion = getFolderAndFilesUtils().getVersion(event.getSource(), event.getSource().getActiveVersionTag());
-
-            if (arkCaseOCRService.isOCREnabled() && arkCaseOCRService.isFileVersionOCRable(ecmFileVersion))
+            EcmFile file = (EcmFile) event.getSource();
+            if(arkCaseOCRService.isExcludedFileTypes(file.getFileType()))
             {
-                try
-                {
-                    objectLockingManager.acquireObjectLock(ecmFileVersion.getFile().getId(), "FILE", "WRITE", null, true,
-                            OCRConstants.OCR_SYSTEM_USER);
+                EcmFileVersion ecmFileVersion = getFolderAndFilesUtils().getVersion(event.getSource(), event.getSource().getActiveVersionTag());
 
-                    getArkCaseOCRService().create(ecmFileVersion, OCRType.AUTOMATIC);
-                }
-                catch (CreateOCRException | AcmObjectLockException e)
+                if (arkCaseOCRService.isOCREnabled() && arkCaseOCRService.isFileVersionOCRable(ecmFileVersion))
                 {
-                    LOG.error("Creating OCR for MEDIA_FILE_VERSION_ID=[{}] was not executed. REASON=[{}]",
-                            ecmFileVersion.getId(), e.getMessage(), e);
+                    try
+                    {
+                        objectLockingManager.acquireObjectLock(ecmFileVersion.getFile().getId(), "FILE", "WRITE", null, true,
+                                OCRConstants.OCR_SYSTEM_USER);
+
+                        getArkCaseOCRService().create(ecmFileVersion, OCRType.AUTOMATIC);
+                    }
+                    catch (CreateOCRException | AcmObjectLockException e)
+                    {
+                        LOG.error("Creating OCR for MEDIA_FILE_VERSION_ID=[{}] was not executed. REASON=[{}]",
+                                ecmFileVersion.getId(), e.getMessage(), e);
+                    }
                 }
             }
         }
