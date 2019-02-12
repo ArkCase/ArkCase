@@ -61,21 +61,27 @@ public class EcmFileCopiedListener implements ApplicationListener<EcmFileCopiedE
             EcmFile copy = (EcmFile) event.getSource();
             EcmFile original = event.getOriginal();
 
-            if (arkCaseOCRService.isExcludedFileTypes(copy.getFileType())) {
+            if (!arkCaseOCRService.isExcludedFileTypes(copy.getFileType()))
+            {
 
                 // I've saw that we are coping only active version, no other versions for the file, so copy OCR
                 // object only for active version
                 EcmFileVersion copyActiveVersion = getFolderAndFilesUtils().getVersion(copy, copy.getActiveVersionTag());
                 EcmFileVersion originalActiveVersion = getFolderAndFilesUtils().getVersion(original, original.getActiveVersionTag());
-                if (originalActiveVersion != null) {
-                    try {
+                if (originalActiveVersion != null)
+                {
+                    try
+                    {
                         OCR ocr = getArkCaseOCRService().getByMediaVersionId(originalActiveVersion.getId());
-                        if (ocr != null) {
+                        if (ocr != null)
+                        {
                             objectLockingManager.acquireObjectLock(originalActiveVersion.getFile().getId(), "FILE", "WRITE", null, true,
                                     OCRConstants.OCR_SYSTEM_USER);
                             getArkCaseOCRService().copy(ocr, copyActiveVersion);
                         }
-                    } catch (GetOCRException | CreateOCRException | AcmObjectLockException e) {
+                    }
+                    catch (GetOCRException | CreateOCRException | AcmObjectLockException e)
+                    {
                         LOG.error("Could not copy OCR for EcmFile ID=[{}]. REASON=[{}]", copy.getId(),
                                 e.getMessage(), e);
                     }

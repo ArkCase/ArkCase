@@ -652,15 +652,7 @@ public class ArkCaseOCRServiceImpl implements ArkCaseOCRService
 
     public boolean isExcludedFileTypes(String fileType)
     {
-        Boolean excludedFileTypeType = Arrays.asList(getEcmFileServiceProperties().getProperty("ocr.excludedFileTypes").split(",")).contains(fileType);
-
-        if(excludedFileTypeType)
-        {
-            return false;
-        }
-        else {
-            return true;
-        }
+        return Arrays.asList(getEcmFileServiceProperties().getProperty("ocr.excludedFileTypes").split(",")).contains(fileType);
     }
 
     // <editor-fold desc="getters and setters">

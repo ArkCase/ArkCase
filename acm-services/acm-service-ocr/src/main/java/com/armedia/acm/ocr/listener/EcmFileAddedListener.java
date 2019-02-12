@@ -58,7 +58,7 @@ public class EcmFileAddedListener implements ApplicationListener<EcmFileAddedEve
         if (event != null && event.isSucceeded())
         {
             EcmFile file = (EcmFile) event.getSource();
-            if(arkCaseOCRService.isExcludedFileTypes(file.getFileType()))
+            if(!arkCaseOCRService.isExcludedFileTypes(file.getFileType()))
             {
                 EcmFileVersion ecmFileVersion = getFolderAndFilesUtils().getVersion(event.getSource(), event.getSource().getActiveVersionTag());
 
