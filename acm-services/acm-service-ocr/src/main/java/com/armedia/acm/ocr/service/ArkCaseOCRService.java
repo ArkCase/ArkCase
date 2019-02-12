@@ -284,4 +284,11 @@ public interface ArkCaseOCRService extends OCRService
      * @return OCRServiceFactory object
      */
     public OCRServiceFactory getOCRServiceFactory();
+    /**
+     * This method will return true if file type contains in ocr.excludedFileTypes
+     * in .arkcase/acm/ecmFileService.properties
+     *
+     * @return OCRServiceFactory object
+     */
+    public boolean isExcludedFileTypes(String fileType);
 }

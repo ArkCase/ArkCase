@@ -95,6 +95,7 @@
         <property name="ocrArkCaseBeanUtils" ref="ocrArkCaseBeanUtils"/>
         <property name="ocrBusinessProcessRulesExecutor" ref="ocrBusinessProcessRulesExecutor"/>
         <property name="OCRServiceFactory" ref="ocrServiceFactory"/>
+        <property name="ecmFileServiceProperties" ref="ecmFileServiceProperties"/>
     </bean>
 
     <bean id="ocrProcessDelegate" class="com.armedia.acm.ocr.delegate.OCRProcessDelegate">
