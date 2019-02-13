@@ -314,7 +314,7 @@ angular.module('document-details').controller(
                     // Release editing lock on window unload, if acquired
                     $window.addEventListener('beforeunload', function() {
                         if ($scope.editingMode) {
-                            ObjectLockingService.unlockObject($scope.ecmFile.fileId, ObjectService.ObjectTypes.FILE, ObjectService.LockTypes.WRITE);
+                            ObjectLockingService.unlockObject($scope.ecmFile.fileId, ObjectService.ObjectTypes.FILE, ObjectService.LockTypes.WRITE, true);
                         }
                     });
 

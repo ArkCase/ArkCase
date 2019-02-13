@@ -37,7 +37,7 @@ angular.module('services').factory('Object.LockingService', [ '$resource', '$tra
          * @methodOf services:Object.LockingService
          *
          * @description
-         * Lock the object.
+         * Unlock the object.
          *
          * @param {String} params.objectType  Object type
          * @param {Number} params.objectId  Object ID
@@ -50,6 +50,27 @@ angular.module('services').factory('Object.LockingService', [ '$resource', '$tra
             transformResponse: function(value) {
                 return value;
             }
+        },
+        /**
+         * @ngdoc method
+         * @name _unlockObject
+         * @methodOf services:Object.LockingService
+         *
+         * @description
+         * Unlock the object synchronously.
+         *
+         * @param {String} params.objectType  Object type
+         * @param {Number} params.objectId  Object ID
+         *
+         * @returns {Object} Object returned by $resource
+         */
+        _unlockObjectSync: {
+            method: 'DELETE',
+            url: 'api/v1/plugin/:objectType/:objectId/lock',
+            transformResponse: function(value) {
+                return value;
+            },
+            async: false
         }
     });
 
@@ -103,10 +124,10 @@ angular.module('services').factory('Object.LockingService', [ '$resource', '$tra
      *
      * @returns {Object} Object returned by $resource
      */
-    Service.unlockObject = function(objectId, objectType, lockType) {
+    Service.unlockObject = function(objectId, objectType, lockType, sync) {
 
         return Util.serviceCall({
-            service: Service._unlockObject,
+            service: sync ? Service._unlockObjectSync : Service._unlockObject,
             param: {
                 objectId: objectId,
                 objectType: objectType,
