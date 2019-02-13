@@ -124,10 +124,10 @@ angular.module('services').factory('Object.LockingService', [ '$resource', '$tra
      *
      * @returns {Object} Object returned by $resource
      */
-    Service.unlockObject = function(objectId, objectType, lockType, async) {
+    Service.unlockObject = function(objectId, objectType, lockType, sync) {
 
         return Util.serviceCall({
-            service: async ? Service._unlockObjectSync : Service._unlockObject,
+            service: sync ? Service._unlockObjectSync : Service._unlockObject,
             param: {
                 objectId: objectId,
                 objectType: objectType,
