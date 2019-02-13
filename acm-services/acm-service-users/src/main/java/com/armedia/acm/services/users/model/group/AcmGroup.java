@@ -232,6 +232,12 @@ public class AcmGroup implements Serializable, AcmEntity
         memberGroups.clear();
     }
 
+    public void removeUserMembers()
+    {
+        userMembers.forEach(user -> user.setModified(new Date()));
+        this.setUserMembers(new HashSet<>());
+    }
+
     public void addToGroup(AcmGroup group)
     {
         memberOfGroups.add(group);
