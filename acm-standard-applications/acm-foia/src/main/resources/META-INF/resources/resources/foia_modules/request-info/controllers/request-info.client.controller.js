@@ -1323,12 +1323,12 @@ angular.module('request-info').controller(
 
                     function buildFileInfo(file, containerId) {
                         return {
-                            id: file.fileId,
+                            id: file.fileId + ':' + file.activeVersionTag,
                             containerId: containerId,
                             containerType: 'CASE_FILE',
                             name: file.fileName,
                             mimeType: file.fileActiveVersionMimeType,
-                            selectedIds: '',
+                            selectedIds: file.fileId + ':' + file.activeVersionTag,
                             versionTag: file.activeVersionTag
                         };
                     }
@@ -1437,9 +1437,18 @@ angular.module('request-info').controller(
                     });
 
                     $rootScope.$bus.subscribe("object.changed/FILE/" + $stateParams.fileId, function() {
-                        DialogService.alert($translate.instant("documentDetails.fileChangedAlert")).then(function() {
-                            $scope.openSnowboundViewer();
+                        var ecmFile = EcmService.getFile({
+                            fileId: $scope.ecmFile.fileId
                         });
+                        ecmFile.$promise.then(function(file) {
+                            $scope.ecmFile = file;
+                            $scope.fileInfo.id= file.fileId + ':' + file.activeVersionTag;
+                            $scope.fileInfo.selectedIds= file.fileId + ':' + file.activeVersionTag;
+                            $scope.fileInfo.versionTag= file.activeVersionTag;
+                            DialogService.alert($translate.instant("documentDetails.fileChangedAlert")).then(function() {
+                                $scope.openSnowboundViewer();
+                            });
+                        }); 
                     });
                 } ]);
 /**
