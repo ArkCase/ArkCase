@@ -1436,7 +1436,7 @@ angular.module('request-info').controller(
                         }
                     });
 
-                    $rootScope.$bus.subscribe("object.changed/FILE/" + $stateParams.id, function() {
+                    $rootScope.$bus.subscribe("object.changed/FILE/" + $stateParams.fileId, function() {
                         DialogService.alert($translate.instant("documentDetails.fileChangedAlert")).then(function() {
                             $scope.openSnowboundViewer();
                         });
