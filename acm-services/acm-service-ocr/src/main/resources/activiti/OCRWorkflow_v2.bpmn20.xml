@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.activiti.org/processdef" xmlns:modeler="http://activiti.com/modeler" modeler:version="1.0ev" modeler:exportDateTime="20181224130118" modeler:modelId="1055080" modeler:modelVersion="2" modeler:modelLastUpdated="1545656443278">
-  <process id="OCRWrokflow" name="OCRWrokflow" isExecutable="true">
+  <process id="OCRWorkflow" name="OCRWorkflow" isExecutable="true">
     <startEvent id="start" name="Start">
       <extensionElements>
         <modeler:editor-resource-id><![CDATA[start]]></modeler:editor-resource-id>
@@ -296,8 +296,8 @@
       </extensionElements>
     </sequenceFlow>
   </process>
-  <bpmndi:BPMNDiagram id="BPMNDiagram_OCRWrokflow">
-    <bpmndi:BPMNPlane bpmnElement="OCRWrokflow" id="BPMNPlane_OCRWrokflow">
+  <bpmndi:BPMNDiagram id="BPMNDiagram_OCRWorkflow">
+    <bpmndi:BPMNPlane bpmnElement="OCRWorkflow" id="BPMNPlane_OCRWorkflow">
       <bpmndi:BPMNShape bpmnElement="start" id="BPMNShape_start">
         <omgdc:Bounds height="30.0" width="30.0" x="120.0" y="403.0"/>
       </bpmndi:BPMNShape>
