@@ -27,6 +27,7 @@ package com.armedia.acm.plugins.task.service.impl;
  * #L%
  */
 
+import static org.easymock.EasyMock.anyString;
 import static org.easymock.EasyMock.capture;
 import static org.easymock.EasyMock.eq;
 import static org.easymock.EasyMock.expect;
@@ -58,6 +59,7 @@ import org.activiti.engine.HistoryService;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
+import org.activiti.engine.history.HistoricIdentityLink;
 import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.history.HistoricProcessInstanceQuery;
 import org.activiti.engine.history.HistoricTaskInstance;
@@ -111,6 +113,7 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
     private AcmParticipantDao mockParticipantDao;
     private DataAccessPrivilegeListener mockDataAccessPrivilegeListener;
     private IdentityLink mockCandidateGroup;
+    private HistoricIdentityLink mockCandidateGroup2;
 
     private ActivitiTaskDao unit;
     private BpmnModel mockBpmnModel;
@@ -147,6 +150,7 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         mockParticipantDao = createMock(AcmParticipantDao.class);
         mockDataAccessPrivilegeListener = createMock(DataAccessPrivilegeListener.class);
         mockCandidateGroup = createMock(IdentityLink.class);
+        mockCandidateGroup2 = createMock(HistoricIdentityLink.class);
         mockTaskEventPublisher = createMock(TaskEventPublisher.class);
         mockHistoricProcessInstance = createMock(HistoricProcessInstance.class);
         mockHistoricProcessInstanceQuery = createMock(HistoricProcessInstanceQuery.class);
@@ -718,6 +722,8 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
     public void findById_completedTask() throws Exception
     {
         String user = "user";
+        List<String> candidateGroup = new ArrayList<>();
+        candidateGroup.add("candidate group");
         Long taskId = 500L;
         Date dueDate = new Date();
         String acmPriority = "Medium";
@@ -805,7 +811,11 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         expect(mockFormValue.getId()).andReturn("formValueId").atLeastOnce();
         expect(mockFormValue.getName()).andReturn("formValueName").atLeastOnce();
         expect(mockParticipantDao.findParticipantsForObject("TASK", taskId)).andReturn(partList);
+        expect(mockHistoricTaskInstance.getId()).andReturn(taskId.toString());
 
+        expect(mockHistoryService.getHistoricIdentityLinksForTask(taskId.toString())).andReturn(Arrays.asList(mockCandidateGroup2));
+        expect(mockCandidateGroup2.getType()).andReturn(TaskConstants.IDENTITY_LINK_TYPE_CANDIDATE);
+        expect(mockCandidateGroup2.getGroupId()).andReturn("candidate group").atLeastOnce();
         replayAll();
 
         AcmTask task = unit.findById(taskId);
@@ -820,6 +830,7 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         assertEquals(objectType, task.getAttachedToObjectType());
         assertEquals(objectName, task.getAttachedToObjectName());
         assertEquals(user, task.getAssignee());
+        assertEquals(candidateGroup, task.getCandidateGroups());
         assertEquals(processName, task.getBusinessProcessName());
         assertFalse(task.isAdhocTask());
         assertTrue(task.isCompleted());
@@ -1036,6 +1047,8 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         long taskDuration = 9876543L;
         String deleteReason = "TERMINATED";
         String assignee = "assignee";
+        List<String> candidateGroup = new ArrayList<>();
+        candidateGroup.add("candidate group");
         int activitiPriority = 50;
         String title = "task Title";
         String userId = "userId";
@@ -1129,6 +1142,11 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         expect(mockFormValue.getId()).andReturn("formValueId").atLeastOnce();
         expect(mockFormValue.getName()).andReturn("formValueName").atLeastOnce();
         expect(mockParticipantDao.findParticipantsForObject("TASK", taskId)).andReturn(partList);
+
+        expect(mockHistoricTaskInstance.getId()).andReturn(taskId.toString());
+        expect(mockHistoryService.getHistoricIdentityLinksForTask(taskId.toString())).andReturn(Arrays.asList(mockCandidateGroup2));
+        expect(mockCandidateGroup2.getType()).andReturn(TaskConstants.IDENTITY_LINK_TYPE_CANDIDATE);
+        expect(mockCandidateGroup2.getGroupId()).andReturn("candidate group").atLeastOnce();
 
         replayAll();
 
