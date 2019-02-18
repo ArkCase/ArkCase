@@ -43,6 +43,7 @@
                 <value>services</value>
                 <value>templates</value>
                 <value>filters</value>
+                <value>lib</value>
             </list>
         </property>
         <property name="customResourceSourcesToCopyFromArchive">
@@ -52,6 +53,7 @@
                 <value>directives</value>
                 <value>modules</value>
                 <value>services</value>
+                <value>lib</value>
             </list>
         </property>
         <property name="assembledFoldersToCopyToDeployment">
@@ -63,6 +65,7 @@
                 <value>modules_config</value>
                 <value>services</value>
                 <value>filters</value>
+                <value>lib</value>
             </list>
         </property>
         <property name="filesToCopyFromArchive">
