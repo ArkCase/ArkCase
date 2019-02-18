@@ -1,0 +1,14 @@
+[
+    {
+        "op": "replace",
+        "path": "/fullScreenPathExpressions",
+        "value": [
+            {
+                "expression": "/viewer/"
+            },
+            {
+                "expression": "/request-info/"
+            }
+        ]
+    }
+]

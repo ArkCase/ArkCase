@@ -1,4 +1,10 @@
 'use strict';
+/*
+Bellow is the link for creating patch file from two config.json files ,and the link for viewing  newly created .json
+file from existing json and patch.
+https://json8.github.io/patch/demos/diff/
+https://json8.github.io/patch/demos/apply/
+*/
 
 var nunjucks = require('nunjucks'), glob = require('glob'), fs = require('fs-extra'), os = require('os'), path = require('path'), _ = require('lodash'), homedir = require('homedir');
 
@@ -179,9 +185,9 @@ module.exports = function(grunt) {
             modules = JSON.parse(fs.readFileSync(cfg.modulesConfigFile));
         }
 
-        // Get config from modules and _config_modules diectrories
+        // Get config from modules and _config_modules directories
         var modulesConfigFolders = glob.sync(config.modules.defaultModulesFolder + '*/module_config/').concat(
-                glob.sync(config.modules.customModulesDir + '*/module_config/'));
+            glob.sync(config.modules.customModulesDir + '*/module_config/'));
 
         var allModules = [];
         var newModules = [];
@@ -213,6 +219,52 @@ module.exports = function(grunt) {
                     newModules.push(moduleObj);
                 }
                 allModules.push(moduleObj);
+                var ooPatch = require('./lib/acm-json8-patch/apply');
+                var clone = require("./lib/json8/lib/clone");
+                var patchFile = fileName.replace("config.json", "config-patch.json");
+                var location = "modules_config/config/modules/" + moduleId + "/config.json";
+                var locationTmp = "modules/" + moduleId + "/module_config/config.json";
+                var inputData = fs.readFileSync(fileName);
+                var inputObj = JSON.parse(inputData);
+                if (fs.existsSync(patchFile)) {
+                    var patchData = fs.readFileSync(patchFile);
+                    var patchObj = JSON.parse(patchData);
+
+                    var doc = clone(inputObj);
+                    doc = ooPatch(doc, patchObj).doc;
+
+                    fs.writeFileSync(location, JSON.stringify(doc, null, 2));
+                    fs.writeFileSync(locationTmp, JSON.stringify(doc, null, 2));
+                    fs.unlink(patchFile);
+                }
+                else {
+                    fs.writeFileSync(location, JSON.stringify(inputObj, null, 2));
+                }
+
+                var resourceLocation = folderName + "resources";
+                var resourceModuleConfig = "modules_config/config/modules/" + moduleId + "/resources";
+                var resourceModules = "modules/" + moduleId + "/module_config/resources";
+                fs.readdirSync(resourceLocation).forEach(function (file) {
+                    inputData = fs.readFileSync(resourceLocation + "/" + file);
+                    inputObj = JSON.parse(inputData)
+                    var labelPatchFile = file.replace(".json", "-patch.json");
+                    if (fs.existsSync(resourceLocation + "/" + labelPatchFile)) {
+                        var patchLocation = resourceLocation + "/" + labelPatchFile;
+                        patchData = fs.readFileSync(patchLocation);
+                        patchObj = JSON.parse(patchData);
+
+                        var doc = clone(inputObj);
+                        doc = ooPatch(doc, patchObj).doc;
+
+                        fs.writeFileSync(resourceModuleConfig + "/" + file, JSON.stringify(doc, null, 2));
+                        fs.writeFileSync(resourceModules + "/" + file, JSON.stringify(doc, null, 2));
+                        fs.unlink(patchLocation);
+                    }
+                    else {
+                        fs.writeFileSync(resourceModuleConfig + "/" + file, JSON.stringify(inputObj, null, 2));
+                    }
+                });
+
             }
         });
 

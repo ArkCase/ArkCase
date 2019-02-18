@@ -299,7 +299,7 @@
         },
         {
             "id": "userWebsites",
-            "title": "Websites Widget",
+            "title": "dashboard.widgets.userWebsites.title",
             "enableFiltering": false,
             "paginationPageSizes": [
                 5,
