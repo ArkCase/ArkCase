@@ -33,7 +33,7 @@ angular.module('directives').directive('dateTimePicker', ['moment', 'Util.DateSe
                     if ($scope.timeFormatDisabled === "true") {
                         $scope.today = UtilDateService.isoToDate(date);
                     } else {
-                        $scope.today = UtilDateService.isoToLocalDateTime(date);                        
+                        $scope.today = UtilDateService.isoToLocalDateTime(date);
                     }
                     $scope.dateInPicker = $scope.today;
                 }
@@ -94,7 +94,7 @@ angular.module('directives').directive('dateTimePicker', ['moment', 'Util.DateSe
             };
         },
         controller: function ($scope) {
-            $scope.$watch('data', function() {
+            $scope.$watch('data', function () {
                 //called any time $scope.data changes
                 $scope.setDate($scope.data);
             });

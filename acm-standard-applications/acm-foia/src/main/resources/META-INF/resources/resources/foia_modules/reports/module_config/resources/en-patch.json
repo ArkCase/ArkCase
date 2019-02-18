@@ -1,0 +1,10 @@
+[
+    {
+        "op": "add",
+        "path": "/reports/selectType",
+        "value": {
+            "label": "Type",
+            "placeholder": "Select Type"
+        }
+    }
+]
