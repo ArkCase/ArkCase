@@ -1,0 +1,50 @@
+[
+    {
+        "op": "replace",
+        "path": "/menus/?@.id=='topbar'/position",
+        "value": 30
+    },
+    {
+        "op": "remove",
+        "path": "/tree/filters/?@.desc=='people.tree.filters.iHaveCreatedActive'"
+    },
+    {
+        "op": "remove",
+        "path": "/tree/filters/?@.desc=='people.tree.filters.active'"
+    },
+    {
+        "op": "remove",
+        "path": "/tree/filters/?@.desc=='people.tree.filters.inActive'"
+    },
+    {
+        "op": "replace",
+        "path": "/tree/nodeTypes/?@.type=='p/PERSON'/components",
+        "value": [
+            "details",
+            "addresses",
+            "phones",
+            "faxes",
+            "emails",
+            "urls",
+            "participants",
+            "dbas",
+            "people",
+            "ids",
+            "cases",
+            "related",
+            "history"
+        ]
+    },
+    {
+        "op": "remove",
+        "path": "/tree/nodeTypes/?@.id=='person/com'"
+    },
+    {
+        "op": "remove",
+        "path": "/components/?@.id=='main'/widgets/?@.id=='complaints'"
+    },
+    {
+        "op": "remove",
+        "path": "/components/?@.id=='complaints'"
+    }
+]
