@@ -58,7 +58,7 @@
                 <a editable-combodate="today" e-date="today"
                    e-min-year="{{receivedDateMinYear}}" e-max-year="{{receivedDateMaxYear}}" e-minute-step="1" e-template="MMM/DD/YYYY HH:mm"
                    onaftersave="setReceivedDate($data, objectInfo.receivedDate)" edit-disabled="receivedDateDisabledLink" ng-class="{'disabledLink': receivedDateDisabledLink}">
-                    {{ objectInfo.receivedDate ? (objectInfo.receivedDate  + 'Z' | date: ('common.defaultDateTimeUIFormat' | translate)) : ('common.value.unknown' | translate) }}</a>
+                    {{ objectInfo.receivedDate ? (objectInfo.receivedDate | date: ('common.defaultDateTimeUIFormat' | translate)) : ('common.value.unknown' | translate) }}</a>
                 </div>
                 <small class="text-muted"><span translate>cases.comp.info.receivedDate.label</span></small>
             </div>

@@ -272,8 +272,7 @@ angular.module('cases').controller(
             };
             $scope.setReceivedDate = function(data){
                 if (!Util.isEmpty(data)) {
-                    var receivedDate = data.slice(0, -1);
-                    $scope.objectInfo.receivedDate = receivedDate;
+                    $scope.objectInfo.receivedDate = data;
                     $scope.saveCase();
                 } else {
                 }
