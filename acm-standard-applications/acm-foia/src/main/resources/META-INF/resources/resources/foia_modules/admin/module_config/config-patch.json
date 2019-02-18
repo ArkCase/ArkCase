@@ -72,10 +72,6 @@
         }
     },
     {
-        "path": "/tree/nodeTypes/?@.label=='admin.security.group.management.title'",
-        "op": "remove"
-    },
-    {
         "path": "/tree/nodeTypes/",
         "op": "add",
         "value": {
