@@ -1092,11 +1092,8 @@ public class ActivitiTaskDao extends AcmAbstractDao<AcmTask> implements TaskDao,
         retval.setAssignee(hti.getAssignee());
 
         // set Candidate Groups if there are any
-        if (retval.getAssignee() == null)
-        {
-            List<String> candidateGroups = findHistoricCandidateGroups(hti.getId());
-            retval.setCandidateGroups(candidateGroups);
-        }
+        List<String> candidateGroups = findHistoricCandidateGroups(hti.getId());
+        retval.setCandidateGroups(candidateGroups);
 
         if (hti.getProcessVariables() != null)
         {

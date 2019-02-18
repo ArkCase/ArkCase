@@ -134,6 +134,11 @@
                     placeholder="{{ 'admin.security.ldapConfig.data.placeholders.userPrefix' | translate }}">
         </div>
         <div class="form-group">
+            <label>{{ 'admin.security.ldapConfig.data.groupPrefix' | translate }}</label>
+            <input class="form-control" type="text" ng-model="dir.groupPrefix"
+                    placeholder="{{ 'admin.security.ldapConfig.data.placeholders.groupPrefix' | translate }}">
+        </div>
+        <div class="form-group">
             <label>{{ 'admin.security.ldapConfig.data.userControlGroup' | translate }}</label>
             <input class="form-control" type="text" ng-model="dir.userControlGroup"
                     placeholder="{{ 'admin.security.ldapConfig.data.placeholders.userControlGroup' | translate }}">

@@ -42,6 +42,7 @@ public interface EmailReceiverConfigurationConstants
     String HOST = "email.host";
     String PORT = "email.port";
     String DEBUG = "email.debug";
+    String USER_ID = "email.userId";
 
     String EMAIL_COMPLAINT = "email.COMPLAINT.user";
     String PASSWORD_COMPLAINT = "email.COMPLAINT.password";

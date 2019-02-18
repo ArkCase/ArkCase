@@ -1,0 +1,250 @@
+[
+    {
+        "op": "add",
+        "path": "/components/",
+        "value": {
+            "id": "weather",
+            "title": "Weather Widget",
+            "APPID": "672e193bbf022bdc749986f7be4c0364",
+            "units": "imperial"
+        }
+    },
+    {
+        "op": "remove",
+        "path": "/components/?@.id=='myCases'/columnDefs/?@.field=='alerts'"
+    },
+    {
+        "op": "replace",
+        "path": "/components/?@.id=='myCases'/columnDefs/?@.displayName=='dashboard.widgets.myCases.table.header.caseId'/name",
+        "value": "object_id_s"
+    },
+    {
+        "op": "replace",
+        "path": "/components/?@.id=='myCases'/columnDefs/?@.displayName=='dashboard.widgets.myCases.table.header.caseId'/cellTemplate",
+        "value": "<div class='ui-grid-cell-contents'><a data-ui-sref=\"cases.main({id: row.entity.object_id_s})\">{{COL_FIELD CUSTOM_FILTERS}}</a></div>"
+    },
+    {
+        "op": "add",
+        "path": "/components/?@.id=='myCases'/columnDefs/?@.displayName=='dashboard.widgets.myCases.table.header.caseId'/type",
+        "value": "number"
+    },
+    {
+        "op": "add",
+        "path": "/components/?@.id=='myCases'/columnDefs/?@.displayName=='dashboard.widgets.myCases.table.header.caseId'/width",
+        "value": 130
+    },
+    {
+        "op": "replace",
+        "path": "/components/?@.id=='myCases'/columnDefs/?@.name=='title_parseable'/dipslayName",
+        "value": "dashboard.widgets.myCases.table.header.topic"
+    },
+    {
+        "op": "replace",
+        "path": "/components/?@.id=='myCases'/columnDefs/?@.displayName=='dashboard.widgets.myCases.table.header.status'/name",
+        "value": "request_status_lcs"
+    },
+    {
+        "op": "remove",
+        "path": "/components/?@.id=='myCases'/columnDefs/?@.name=='assignee_id_lcs'"
+    },
+    {
+        "op": "remove",
+        "path": "/components/?@.id=='myCases'/columnDefs/?@.name=='dueDate_tdt'"
+    },
+    {
+        "op": "remove",
+        "path": "/components/?@.id=='myCases'/columnDefs/?@.name=='modified_date_tdt'"
+    },
+    {
+        "op": "replace",
+        "path": "/components/?@.id=='myTasks'/columnDefs/?@.name=='dueDate_tdt'/cellTemplate",
+        "value": "<div>{{ row.entity.dueDate_tdt | date : ('common.defaultDateUIFormat' | translate)}}</div>"
+    },
+    {
+        "op": "replace",
+        "path": "/components/?@.id=='myTasks'/columnDefs/?@.name=='parent_id_s'/displayName",
+        "value": "dashboard.widgets.myTasks.table.header.objectId"
+    },
+    {
+        "op": "replace",
+        "path": "/components/?@.id=='myTasks'/columnDefs/?@.name=='parent_id_s'/cellTemplate",
+        "value": "<a data-ui-sref=\"cases.main({id: row.entity.parent_id_s})\">{{COL_FIELD}}<\/a>"
+    },
+    {
+        "op": "replace",
+        "path": "/components/?@.id=='myComplaints'",
+        "value": "<a data-ui-sref=\"cases.main({id: row.entity.parent_id_s})\">{{COL_FIELD}}<\/a>"
+    },
+    {
+        "op": "add",
+        "path": "/components/?@.id=='casesByQueue'/redirectSettings/Intake",
+        "value": {
+            "title": "dashboard.queues.intake",
+            "state": "queues.queue",
+            "params": {
+                "name": "Intake"
+            }
+        }
+    },
+    {
+        "op": "add",
+        "path": "/components/?@.id=='casesByQueue'/redirectSettings/Fulfill",
+        "value": {
+            "title": "dashboard.queues.fulfill",
+            "state": "queues.queue",
+            "params": {
+                "name": "Fulfill"
+            }
+        }
+    },
+    {
+        "op": "add",
+        "path": "/components/?@.id=='casesByQueue'/redirectSettings/Approve",
+        "value": {
+            "title": "dashboard.queues.approve",
+            "state": "queues.queue",
+            "params": {
+                "name": "Approve"
+            }
+        }
+    },
+    {
+        "op": "add",
+        "path": "/components/?@.id=='casesByQueue'/redirectSettings/General Counsel",
+        "value": {
+            "title": "dashboard.queues.generalCounsel",
+            "state": "queues.queue",
+            "params": {
+                "name": "General Counsel"
+            }
+        }
+    },
+    {
+        "op": "add",
+        "path": "/components/?@.id=='casesByQueue'/redirectSettings/Billing",
+        "value": {
+            "title": "dashboard.queues.billing",
+            "state": "queues.queue",
+            "params": {
+                "name": "Billing"
+            }
+        }
+    },
+    {
+        "op": "add",
+        "path": "/components/?@.id=='casesByQueue'/redirectSettings/Release",
+        "value": {
+            "title": "dashboard.queues.release",
+            "state": "queues.queue",
+            "params": {
+                "name": "Release"
+            }
+        }
+    },
+    {
+        "op": "add",
+        "path": "/components/?@.id=='casesByQueue'/redirectSettings/Suspend",
+        "value": {
+            "title": "dashboard.queues.suspend",
+            "state": "queues.queue",
+            "params": {
+                "name": "Suspend"
+            }
+        }
+    },
+    {
+        "op": "add",
+        "path": "/components/?@.id=='casesByQueue'/redirectSettings/Hold",
+        "value": {
+            "title": "dashboard.queues.hold",
+            "state": "queues.queue",
+            "params": {
+                "name": "Hold"
+            }
+        }
+    },
+    {
+        "op": "add",
+        "path": "/components/?@.id=='casesByQueue'/redirectSettings/Appeal",
+        "value": {
+            "title": "dashboard.queues.appeal",
+            "state": "queues.queue",
+            "params": {
+                "name": "Appeal"
+            }
+        }
+    },
+    {
+        "op": "remove",
+        "path": "/components/?@.id=='teamWorkload'"
+    },
+    {
+        "op": "remove",
+        "path": "/components/?@.id=='casesByStatus'"
+    },
+    {
+        "op": "add",
+        "path": "/components/",
+        "value": {
+            "id": "myOverdueRequests",
+            "title": "dashboard.widgets.myOverdueRequests.title",
+            "configurable": true,
+            "enableFiltering": false,
+            "paginationPageSizes": [
+                5,
+                10,
+                25
+            ],
+            "paginationPageSize": 5,
+            "columnDefs": [
+                {
+                    "field": "alerts",
+                    "displayName": "",
+                    "cellTemplate": "<div><a tooltip=\"{{'dashboard.widgets.myOverdueRequests.table.overdue.tooltip' | translate}}\" tooltip-append-to-body=\"true\" tooltip-class=\"tooltip-overdue\"><i class=\"fa fa-exclamation-circle icon-overdue\"></i></a></div>",
+                    "width": 40,
+                    "enableSorting": false,
+                    "enableColumnMenu": false
+                },
+                {
+                    "name": "numDays",
+                    "displayName": "dashboard.widgets.myOverdueRequests.numDays",
+                    "headerCellFilter": "translate",
+                    "width": 70,
+                    "enableSorting": true
+                },
+                {
+                    "name": "object_id_s",
+                    "type": "number",
+                    "displayName": "dashboard.widgets.myOverdueRequests.uniqueId",
+                    "cellTemplate": "<a href='#' ng-click='grid.appScope.myOverdueRequests.onTopicClick(row)'>{{row.entity.object_id_s}}</a>",
+                    "headerCellFilter": "translate",
+                    "enableSorting": true
+                },
+                {
+                    "name": "title_parseable_lcs",
+                    "type": "number",
+                    "displayName": "dashboard.widgets.myOverdueRequests.topic",
+                    "cellTemplate": "<a href='#' ng-click='grid.appScope.myOverdueRequests.onTopicClick(row)'>{{row.entity.title_parseable_lcs}}</a>",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "request_status_lcs",
+                    "displayName": "dashboard.widgets.myOverdueRequests.status",
+                    "headerCellFilter": "translate",
+                    "enableSorting": true
+                },
+                {
+                    "name": "priority_lcs",
+                    "displayName": "dashboard.widgets.myOverdueRequests.priority",
+                    "headerCellFilter": "translate",
+                    "enableSorting": true
+                }
+            ]
+        }
+    },
+    {
+        "op": "replace",
+        "path": "/modules/?@.configName=='MY_DOC_REPO'/name",
+        "value": "DOC_REPO"
+    }
+]
