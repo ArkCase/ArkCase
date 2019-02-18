@@ -20,11 +20,78 @@
         <property name="targetObject" ref="sourceObjectMapper"/>
         <property name="targetMethod" value="findAndRegisterModules"/>
     </bean>
-    <bean id="dateFormat" class="com.fasterxml.jackson.databind.util.ISO8601DateFormat"/>
+
+    <bean id="dateTimeSerializerFormatter" class="java.time.format.DateTimeFormatter" factory-method="ofPattern">
+        <constructor-arg value="yyyy-MM-dd'T'HH:mm:ss.SSS'Z'" />
+    </bean>
+
+    <bean id="localDateTimeSerializer" class="com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer">
+        <constructor-arg ref="dateTimeSerializerFormatter" />
+    </bean>
+
+    <bean id="dateSerializerFormatter" class="java.text.SimpleDateFormat">
+        <constructor-arg value="yyyy-MM-dd'T'HH:mm:ss.SSS'Z'" />
+    </bean>
+
+    <bean id="dateSerializer" class="com.fasterxml.jackson.databind.ser.std.DateSerializer">
+        <constructor-arg value="false" />
+        <constructor-arg ref="dateSerializerFormatter" />
+    </bean>
+
+    <bean id="objectConverterFactory" class="com.armedia.acm.objectonverter.ObjectConverter"/>
+    <bean id="dateTimeDeserializerFormatter" class="java.time.format.DateTimeFormatter" factory-bean="objectConverterFactory" factory-method="getISODateTimeFormatter" />
+
+    <bean id="localDateTimeDeserializer" class="com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer">
+        <constructor-arg ref="dateTimeDeserializerFormatter" />
+    </bean>
+
+    <bean id="javaTimeModule" class="com.fasterxml.jackson.datatype.jsr310.JavaTimeModule"/>
+
+    <bean id="localDateTimeClass" class="java.lang.Class" factory-method="forName">
+        <constructor-arg value="java.time.LocalDateTime"/>
+    </bean>
+
+    <bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+        <property name="targetObject" ref="javaTimeModule"/>
+        <property name="targetMethod" value="addSerializer"/>
+        <property name="arguments">
+            <list>
+                <ref bean="localDateTimeClass"/>
+                <ref bean="localDateTimeSerializer"/>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="dateClass" class="java.lang.Class" factory-method="forName">
+        <constructor-arg value="java.util.Date"/>
+    </bean>
+
+    <bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+        <property name="targetObject" ref="javaTimeModule"/>
+        <property name="targetMethod" value="addSerializer"/>
+        <property name="arguments">
+            <list>
+                <ref bean="dateClass"/>
+                <ref bean="dateSerializer"/>
+            </list>
+        </property>
+    </bean>
+
+    <bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+        <property name="targetObject" ref="javaTimeModule"/>
+        <property name="targetMethod" value="addDeserializer"/>
+        <property name="arguments">
+            <list>
+                <ref bean="localDateTimeClass"/>
+                <ref bean="localDateTimeDeserializer"/>
+            </list>
+        </property>
+    </bean>
+
     <bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
         <property name="targetObject" ref="sourceObjectMapper"/>
-        <property name="targetMethod" value="setDateFormat"/>
-        <property name="arguments" ref="dateFormat"/>
+        <property name="targetMethod" value="registerModule"/>
+        <property name="arguments" ref="javaTimeModule"/>
     </bean>
 
     <bean id="jsonMarshaller" class="com.armedia.acm.objectonverter.json.JSONMarshaller">
