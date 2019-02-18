@@ -36,8 +36,12 @@ import com.armedia.acm.objectonverter.xml.XMLUnmarshaller;
 import org.apache.commons.lang3.time.DateUtils;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
@@ -72,6 +76,8 @@ public class ObjectConverterTest extends EasyMockSupport
         String hours = String.valueOf(date.getHours());
         String minutes = String.valueOf(date.getMinutes());
         String seconds = String.valueOf(date.getSeconds());
+        int n = (int) (date.getTime() % 1000);
+        String millis = String.valueOf(n<0 ? n+1000 : n);
         ObjectWithDateField objectWithDateField = new ObjectWithDateField();
         objectWithDateField.theDate = date;
 
@@ -80,7 +86,7 @@ public class ObjectConverterTest extends EasyMockSupport
 
         // then
         assertTrue(json.equals("{\"theDate\":\"" + year + "-" + prependZeros(month, 2) + "-" + prependZeros(day, 2) + "T"
-                + prependZeros(hours, 2) + ":" + prependZeros(minutes, 2) + ":" + prependZeros(seconds, 2) + "Z\"}"));
+                + prependZeros(hours, 2) + ":" + prependZeros(minutes, 2) + ":" + prependZeros(seconds, 2) + "." + prependZeros(millis, 3) + "Z\"}"));
     }
 
     private String prependZeros(String text, int len)
@@ -113,7 +119,7 @@ public class ObjectConverterTest extends EasyMockSupport
     public void testJSONDateUnmarshallingMarshallingProducesSameDate()
     {
         // given
-        String json = "{\"theDate\":\"2017-08-26T10:28:33Z\"}";
+        String json = "{\"theDate\":\"2017-08-26T10:28:33.000Z\"}";
 
         // when
         ObjectWithDateField unmarshalled = objectConverter.getJsonUnmarshaller().unmarshall(json, ObjectWithDateField.class);
@@ -188,5 +194,73 @@ public class ObjectConverterTest extends EasyMockSupport
         {
             this.theDate = theDate;
         }
+    }
+
+    @Test
+    public void dateTests()
+    {
+        System.setProperty("user.timezone", "GMT");
+        TimeZone.setDefault(TimeZone.getTimeZone("GMT"));
+
+        ObjectConverter objectConverter = ObjectConverter.createObjectConverterForTests();
+        // ---------------- marshal ------------
+        String marshalledLocalDateTime = objectConverter.getJsonMarshaller().marshal(LocalDateTime.now());
+        marshalledLocalDateTime = marshalledLocalDateTime.substring(1, marshalledLocalDateTime.length() - 1);
+        System.out.println("Serialize java.time.LocalDateTime: " + marshalledLocalDateTime);
+        assertEquals(24, marshalledLocalDateTime.length());
+        assertTrue(marshalledLocalDateTime.contains("T"));
+        assertTrue(marshalledLocalDateTime.endsWith("Z"));
+
+        System.out.println("Serialize java.time.LocalDate: " + objectConverter.getJsonMarshaller().marshal(LocalDate.now()));
+
+        marshalledLocalDateTime = objectConverter.getJsonMarshaller().marshal(ZonedDateTime.now());
+        marshalledLocalDateTime = marshalledLocalDateTime.substring(1, marshalledLocalDateTime.length() - 1);
+        System.out.println("Serialize java.time.ZonedDateTime: " + marshalledLocalDateTime);
+        assertEquals(24, marshalledLocalDateTime.length());
+        assertTrue(marshalledLocalDateTime.contains("T"));
+        assertTrue(marshalledLocalDateTime.endsWith("Z"));
+
+        marshalledLocalDateTime = objectConverter.getJsonMarshaller().marshal(new Date());
+        marshalledLocalDateTime = marshalledLocalDateTime.substring(1, marshalledLocalDateTime.length() - 1);
+        System.out.println("Serialize java.util.Date: " + marshalledLocalDateTime);
+        assertEquals(24, marshalledLocalDateTime.length());
+        assertTrue(marshalledLocalDateTime.contains("T"));
+        assertTrue(marshalledLocalDateTime.endsWith("Z"));
+
+        // ---------------- unmarshal ----------
+        String dateTime = "\"2019-02-12T12:58:34.576Z\"";
+        LocalDateTime unmarshalledLocalDateTime = objectConverter.getJsonUnmarshaller().unmarshall(dateTime, LocalDateTime.class);
+        System.out.println("Deserialize Z java.time.LocalDateTime: " + unmarshalledLocalDateTime);
+        assertEquals(unmarshalledLocalDateTime.getHour(), 12);
+
+        System.out.println("Deserialize Z java.time.LocalDate: " + objectConverter.getJsonUnmarshaller().unmarshall(dateTime, LocalDate.class));
+
+        ZonedDateTime unmarshalledLocalZonedDateTime = objectConverter.getJsonUnmarshaller().unmarshall(dateTime, ZonedDateTime.class);
+        System.out.println("Deserialize Z java.time.ZonedDateTime: " + unmarshalledLocalZonedDateTime);
+        assertEquals(unmarshalledLocalZonedDateTime.getHour(), 12);
+
+        System.out.println("Deserialize Z java.util.Date: " + objectConverter.getJsonUnmarshaller().unmarshall(dateTime, Date.class));
+
+        dateTime = "\"2019-02-12T12:58:34.576+00:00\"";
+        unmarshalledLocalDateTime = objectConverter.getJsonUnmarshaller().unmarshall(dateTime, LocalDateTime.class);
+        System.out.println("Deserialize +00:00 java.time.LocalDateTime: " + unmarshalledLocalDateTime);
+        assertEquals(unmarshalledLocalDateTime.getHour(), 12);
+
+
+        unmarshalledLocalZonedDateTime = objectConverter.getJsonUnmarshaller().unmarshall(dateTime, ZonedDateTime.class);
+        System.out.println("Deserialize +00:00 java.time.ZonedDateTime: " + unmarshalledLocalZonedDateTime);
+        assertEquals(unmarshalledLocalZonedDateTime.getHour(), 12);
+
+        Date unmarshalledLocalDate = objectConverter.getJsonUnmarshaller().unmarshall(dateTime, Date.class);
+        System.out.println("Deserialize +00:00 java.util.Date: " + unmarshalledLocalDate);
+
+        dateTime = "\"2019-02-12T12:58:34.576\"";
+        unmarshalledLocalDateTime = objectConverter.getJsonUnmarshaller().unmarshall(dateTime, LocalDateTime.class);
+        System.out.println("Deserialize java.time.LocalDateTime: " + unmarshalledLocalDateTime);
+        assertEquals(unmarshalledLocalDateTime.getHour(), 12);
+
+        System.out.println("Deserialize java.time.LocalDate: " + objectConverter.getJsonUnmarshaller().unmarshall(dateTime, LocalDate.class));
+
+        System.out.println("Deserialize java.util.Date: " + objectConverter.getJsonUnmarshaller().unmarshall(dateTime, Date.class));
     }
 }
