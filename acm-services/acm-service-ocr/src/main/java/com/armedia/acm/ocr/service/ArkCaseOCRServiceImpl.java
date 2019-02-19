@@ -6,27 +6,28 @@ package com.armedia.acm.ocr.service;
  * %%
  * Copyright (C) 2014 - 2018 ArkCase LLC
  * %%
- * This file is part of the ArkCase software. 
- * 
- * If the software was purchased under a paid ArkCase license, the terms of 
- * the paid license agreement will prevail.  Otherwise, the software is 
+ * This file is part of the ArkCase software.
+ *
+ * If the software was purchased under a paid ArkCase license, the terms of
+ * the paid license agreement will prevail.  Otherwise, the software is
  * provided under the following open source license terms:
- * 
+ *
  * ArkCase is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *  
+ *
  * ArkCase is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
  * #L%
  */
 
+import com.armedia.acm.core.model.AcmEvent;
 import com.armedia.acm.objectonverter.ArkCaseBeanUtils;
 import com.armedia.acm.ocr.dao.OCRDao;
 import com.armedia.acm.ocr.exception.CreateOCRException;
@@ -48,6 +49,7 @@ import com.armedia.acm.ocr.rules.OCRBusinessProcessRulesExecutor;
 import com.armedia.acm.plugins.ecm.dao.EcmFileVersionDao;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
+import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
 import com.armedia.acm.services.pipeline.PipelineManager;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 
@@ -57,9 +59,16 @@ import org.apache.commons.lang.NotImplementedException;
 import org.mule.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
 
 /**
  * Created by Vladimir Cherepnalkovski
@@ -78,8 +87,23 @@ public class ArkCaseOCRServiceImpl implements ArkCaseOCRService
     private OCRBusinessProcessRulesExecutor ocrBusinessProcessRulesExecutor;
     private OCRServiceFactory ocrServiceFactory;
     private Properties ecmFileServiceProperties;
+    private FolderAndFilesUtils folderAndFilesUtils;
 
     @Override
+    @Transactional
+    public void create(AcmEvent event) throws CreateOCRException
+    {
+        EcmFile ecmFile = (EcmFile) event.getSource();
+        EcmFileVersion ecmFileVersion = getFolderAndFilesUtils().getVersion(ecmFile, ecmFile.getActiveVersionTag());
+
+        if (!isExcludedFileTypes(ecmFile.getFileType()) && isOCREnabled() && isFileVersionOCRable(ecmFileVersion))
+        {
+            create(ecmFileVersion, OCRType.AUTOMATIC);
+        }
+    }
+
+    @Override
+    @Transactional
     public OCR create(Long versionId, OCRType type) throws CreateOCRException
     {
         EcmFileVersion ecmFileVersion = getEcmFileVersionDao().find(versionId);
@@ -88,6 +112,7 @@ public class ArkCaseOCRServiceImpl implements ArkCaseOCRService
     }
 
     @Override
+    @Transactional
     public OCR create(EcmFileVersion ecmFileVersion, OCRType type) throws CreateOCRException
     {
         OCR ocr = new OCR();
@@ -106,6 +131,18 @@ public class ArkCaseOCRServiceImpl implements ArkCaseOCRService
     public OCR getByMediaVersionId(Long mediaVersionId) throws GetOCRException
     {
         return getOcrDao().findByMediaVersionId(mediaVersionId);
+    }
+
+    @Override
+    public OCR getByFileId(Long fileId) throws GetOCRException
+    {
+        return getOcrDao().findByFileId(fileId);
+    }
+
+    @Override
+    public OCR getByFileIdAndStatus(Long fileId, OCRStatusType statusType) throws GetOCRException
+    {
+        return getOcrDao().findByFileIdAndStatus(fileId, statusType);
     }
 
     @Override
@@ -551,6 +588,7 @@ public class ArkCaseOCRServiceImpl implements ArkCaseOCRService
     }
 
     @Override
+    @Transactional
     public OCR create(OCR ocr) throws CreateOCRException
     {
         // Here we need OCR without id - new OCR
@@ -562,7 +600,7 @@ public class ArkCaseOCRServiceImpl implements ArkCaseOCRService
         OCR existingOCR = null;
         try
         {
-            existingOCR = getByMediaVersionId(ocr.getEcmFileVersion().getId());
+            existingOCR = getByFileIdAndStatus(ocr.getEcmFileVersion().getFile().getId(), OCRStatusType.QUEUED);
         }
         catch (GetOCRException e)
         {
@@ -572,9 +610,7 @@ public class ArkCaseOCRServiceImpl implements ArkCaseOCRService
         if (existingOCR != null && (OCRStatusType.QUEUED.toString().equalsIgnoreCase(existingOCR.getStatus()) ||
                 OCRStatusType.PROCESSING.toString().equalsIgnoreCase(existingOCR.getStatus())))
         {
-            throw new CreateOCRException(
-                    String.format("Creating OCR job is aborted. There is already OCR object for ECM_FILE_VERSION_ID=[%d]",
-                            ocr.getEcmFileVersion().getId()));
+            existingOCR.setEcmFileVersion(ocr.getEcmFileVersion());
         }
 
         OCRPipelineContext context = new OCRPipelineContext();
@@ -584,11 +620,6 @@ public class ArkCaseOCRServiceImpl implements ArkCaseOCRService
         try
         {
             OCR ocrForProcessing = existingOCR != null ? existingOCR : ocr;
-            if (ocrForProcessing.getId() != null)
-            {
-                // Reset 'remoteId' for existing OCR's that we want to be OCRed again
-                ocrForProcessing.setRemoteId(null);
-            }
 
             return getPipelineManager().executeOperation(ocrForProcessing, context, () -> {
                 try
@@ -650,6 +681,7 @@ public class ArkCaseOCRServiceImpl implements ArkCaseOCRService
         throw new NotImplementedException();
     }
 
+    @Override
     public boolean isExcludedFileTypes(String fileType)
     {
         return Arrays.asList(getEcmFileServiceProperties().getProperty("ocr.excludedFileTypes").split(",")).contains(fileType);
@@ -755,6 +787,16 @@ public class ArkCaseOCRServiceImpl implements ArkCaseOCRService
     public void setOCRServiceFactory(OCRServiceFactory ocrServiceFactory)
     {
         this.ocrServiceFactory = ocrServiceFactory;
+    }
+
+    public FolderAndFilesUtils getFolderAndFilesUtils()
+    {
+        return folderAndFilesUtils;
+    }
+
+    public void setFolderAndFilesUtils(FolderAndFilesUtils folderAndFilesUtils)
+    {
+        this.folderAndFilesUtils = folderAndFilesUtils;
     }
 
     // </editor-fold>

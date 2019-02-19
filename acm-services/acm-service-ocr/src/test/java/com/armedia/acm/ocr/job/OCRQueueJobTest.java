@@ -27,6 +27,10 @@ package com.armedia.acm.ocr.job;
  * #L%
  */
 
+import static org.easymock.EasyMock.createMock;
+import static org.easymock.EasyMock.eq;
+import static org.easymock.EasyMock.expect;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -37,10 +41,16 @@ import com.armedia.acm.ocr.model.OCR;
 import com.armedia.acm.ocr.model.OCRActionType;
 import com.armedia.acm.ocr.model.OCRBusinessProcessVariableKey;
 import com.armedia.acm.ocr.model.OCRConfiguration;
+import com.armedia.acm.ocr.model.OCRConstants;
 import com.armedia.acm.ocr.model.OCRServiceProvider;
 import com.armedia.acm.ocr.model.OCRStatusType;
 import com.armedia.acm.ocr.service.ArkCaseOCRServiceImpl;
 import com.armedia.acm.ocr.service.OCRService;
+import com.armedia.acm.plugins.ecm.model.EcmFile;
+import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
+import com.armedia.acm.service.objectlock.model.AcmObjectLock;
+import com.armedia.acm.service.objectlock.service.AcmObjectLockService;
+import com.armedia.acm.service.objectlock.service.AcmObjectLockingManager;
 
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.runtime.ProcessInstance;
@@ -81,6 +91,12 @@ public class OCRQueueJobTest
     @Mock
     private OCRService ocrService;
 
+    @Mock
+    private AcmObjectLockService objectLockService;
+
+    @Mock
+    private AcmObjectLockingManager acmObjectLockingManager;
+
     private Map<String, Object> processVariables1;
     private Map<String, Object> processVariables2;
     private Map<String, Object> processVariables3;
@@ -92,10 +108,14 @@ public class OCRQueueJobTest
     {
         arkCaseOCRService.setOCRServiceFactory(ocrServiceFactory);
 
+        acmObjectLockingManager = createMock(AcmObjectLockingManager.class);
+
         ocrQueueJob = new OCRQueueJob();
         ocrQueueJob.setArkCaseOCRService(arkCaseOCRService);
         ocrQueueJob.setActivitiRuntimeService(activitiRuntimeService);
         ocrQueueJob.setAuditPropertyEntityAdapter(auditPropertyEntityAdapter);
+        ocrQueueJob.setObjectLockService(objectLockService);
+        ocrQueueJob.setObjectLockingManager(acmObjectLockingManager);
 
         Calendar calendar1 = Calendar.getInstance();
         calendar1.set(2018, 3, 1);
@@ -136,30 +156,42 @@ public class OCRQueueJobTest
         configuration.setNumberOfFilesForProcessing(10);
         configuration.setProvider(OCRServiceProvider.TESSERACT);
 
+        AcmObjectLock lock = new AcmObjectLock();
+        lock.setCreator(OCRConstants.OCR_SYSTEM_USER);
+
         OCR serviceProviderOCR = new OCR();
         serviceProviderOCR.setStatus(OCRStatusType.PROCESSING.toString());
+
+        EcmFile file = new EcmFile();
+        file.setFileId(1L);
+
+        EcmFileVersion version = new EcmFileVersion();
+        version.setFile(file);
+        version.setId(1L);
+
+        EcmFileVersion version1 = new EcmFileVersion();
+        version1.setFile(file);
+        version1.setId(2L);
+
+        List<EcmFileVersion> versions = new ArrayList<>();
+        versions.add(version);
+        versions.add(version1);
+
+        file.setVersions(versions);
 
         OCR ocr = new OCR();
         ocr.setProcessId("123");
         ocr.setStatus(OCRStatusType.PROCESSING.toString());
+        ocr.setEcmFileVersion(version);
 
         OCR ocr1 = new OCR();
         ocr1.setProcessId("456");
         ocr1.setStatus(OCRStatusType.PROCESSING.toString());
-
-        OCR ocr2 = new OCR();
-        ocr2.setProcessId("789");
-        ocr2.setStatus(OCRStatusType.PROCESSING.toString());
-
-        OCR ocr3 = new OCR();
-        ocr3.setProcessId("789");
-        ocr3.setStatus(OCRStatusType.PROCESSING.toString());
+        ocr1.setEcmFileVersion(version1);
 
         List<OCR> ocrs = new ArrayList<>();
         ocrs.add(ocr);
         ocrs.add(ocr1);
-        ocrs.add(ocr2);
-        ocrs.add(ocr3);
 
         String variableKey = OCRBusinessProcessVariableKey.STATUS.toString();
         String variableValue = OCRStatusType.QUEUED.toString();
@@ -189,7 +221,20 @@ public class OCRQueueJobTest
         when(ocrService.create(ocr)).thenReturn(serviceProviderOCR);
         doNothing().when(arkCaseOCRService).signal(processInstance1, OCRStatusType.PROCESSING.toString(),
                 OCRActionType.PROCESSING.toString());
-        doNothing().when(auditPropertyEntityAdapter).setUserId("OCR_SERVICE");
+        doNothing().when(auditPropertyEntityAdapter).setUserId(OCRConstants.OCR_SYSTEM_USER);
+        when(ocrQueueJob.getObjectLockService().findLock(any(), any())).thenReturn(lock);
+
+        expect(acmObjectLockingManager.acquireObjectLock(eq(1L), eq("FILE"), eq(OCRConstants.OCR_SYSTEM_USER), eq(null), eq(true),
+                eq(OCRConstants.OCR_SYSTEM_USER)))
+                        .andAnswer(() -> {
+                            AcmObjectLock lock1 = new AcmObjectLock();
+                            lock.setCreator(OCRConstants.OCR_SYSTEM_USER);
+                            lock.setId(1l);
+                            lock.setObjectId(1L);
+                            lock.setObjectType("FILE");
+                            lock.setExpiry(null);
+                            return lock;
+                        });
 
         ocrQueueJob.executeTask();
 
@@ -204,6 +249,6 @@ public class OCRQueueJobTest
         verify(ocrService).create(ocr);
         verify(arkCaseOCRService).signal(processInstance1, OCRStatusType.PROCESSING.toString(),
                 OCRActionType.PROCESSING.toString());
-        verify(auditPropertyEntityAdapter).setUserId("OCR_SERVICE");
+        verify(auditPropertyEntityAdapter).setUserId(OCRConstants.OCR_SYSTEM_USER);
     }
 }

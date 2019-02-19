@@ -31,6 +31,7 @@ import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.ocr.exception.GetOCRException;
 import com.armedia.acm.ocr.model.OCR;
 import com.armedia.acm.ocr.model.OCRConstants;
+import com.armedia.acm.ocr.model.OCRStatusType;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -100,6 +101,95 @@ public class OCRDao extends AcmAbstractDao<OCR>
             throw new GetOCRException(String
                     .format("OCR objects with STATUS=[%s] was not retrieved successfully. REASON=[%s]", status, e.getMessage()));
         }
+    }
+
+    /**
+     *
+     * @param fileId
+     * @returs the last modified OCR object for given fileId. We need the last one, because the file can have more then
+     *         one
+     *         OCR objects associated with it. The last is the active one or recently finished OCR process.
+     * @throws GetOCRException
+     */
+    public OCR findByFileId(Long fileId) throws GetOCRException
+    {
+        String queryString = "SELECT o FROM OCR o WHERE o.ecmFileVersion.id IN " +
+                "(SELECT version.id from EcmFileVersion version WHERE version.file.fileId=:fileId)" +
+                "ORDER BY o.modified desc ";
+
+        TypedQuery<OCR> query = getEm().createQuery(queryString, OCR.class);
+        query.setParameter("fileId", fileId);
+
+        String reason;
+
+        try
+        {
+            List<OCR> resultList = query.getResultList();
+            if (!resultList.isEmpty())
+            {
+                return resultList.get(0);
+            }
+            else
+                throw new NoResultException();
+        }
+        catch (NoResultException e)
+        {
+            LOGGER.warn("There is no OCR for FILE_ID=[{}]. REASON=[{}]", fileId, e.getMessage());
+            return null;
+        }
+        catch (Exception e)
+        {
+            reason = String.format("Error while retrieving OCR with FILE_ID=[%d]", fileId);
+            LOGGER.error(reason, e);
+        }
+        throw new GetOCRException(
+                String.format("OCR for FILE_ID=[%d] was not retrieved successfully. REASON=[%s]", fileId,
+                        reason));
+    }
+
+    /**
+     *
+     * @param fileId
+     * @param statusType
+     *            ocr process status
+     * @return QUEUED OCR process, if there is none return null so new ocr process will be created. We need this that so
+     *         we can update existing process from queue instead of creating new one for every new file version.
+     * @throws GetOCRException
+     */
+    public OCR findByFileIdAndStatus(Long fileId, OCRStatusType statusType) throws GetOCRException
+    {
+        String queryString = "SELECT o FROM OCR o WHERE o.ecmFileVersion.id IN " +
+                "(SELECT version.id from EcmFileVersion version WHERE version.file.fileId=:fileId)" +
+                "AND o.status=:statusType";
+
+        TypedQuery<OCR> query = getEm().createQuery(queryString, OCR.class);
+        query.setParameter("fileId", fileId);
+        if (statusType == null)
+        {
+            throw new GetOCRException(
+                    String.format("OCR status type for FILE_ID=[%d] cannot be null. OCR was not retrieved successfully.", fileId));
+        }
+        query.setParameter("statusType", statusType.toString());
+
+        String reason;
+
+        try
+        {
+            return query.getSingleResult();
+        }
+        catch (NoResultException e)
+        {
+            LOGGER.warn("There is no OCR for FILE_ID=[{}] and STATUS=[{}]. REASON=[{}]", fileId, statusType, e.getMessage());
+            return null;
+        }
+        catch (Exception e)
+        {
+            reason = String.format("Error while retrieving OCR with FILE_ID=[%d] and STATUS=[%d]", fileId, statusType);
+            LOGGER.error(reason, e);
+        }
+        throw new GetOCRException(
+                String.format("OCR for FILE_ID=[%d] and STATUS=[%d] was not retrieved successfully. REASON=[%s] ", fileId, statusType,
+                        reason));
     }
 
     @Override

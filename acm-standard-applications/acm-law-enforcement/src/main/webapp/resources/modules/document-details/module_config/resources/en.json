@@ -43,6 +43,10 @@
                 "compile.title": "This action will override existing file. Do you want to proceed?"
             }
         },
+        "comp.ocr": {
+            "readyForOCR": "Ready for OCR",
+            "ocrStatus": "OCR Status"
+        },
         "comp.eventHistory": {
             "title": "History",
             "table.columns": {
