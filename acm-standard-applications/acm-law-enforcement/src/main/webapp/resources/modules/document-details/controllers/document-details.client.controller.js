@@ -88,6 +88,15 @@ angular.module('document-details').controller(
                     $scope.showVideoPlayer = false;
                     $scope.showPdfJs = false;
                     $scope.transcriptionTabActive = false;
+                    $scope.ocrInfoActive = false;
+
+                    var scopeToColor =
+                        {
+                            "QUEUED": "#dcce22" ,
+                            "PROCESSING": "orange" ,
+                            "COMPLETED": "#05a205" ,
+                            "FAILED": "red"
+                        };
 
                     var transcriptionConfigurationPromise = TranscriptionManagementService.getTranscribeConfiguration();
 
@@ -122,25 +131,20 @@ angular.module('document-details').controller(
                         });
 
                         // color the status
-                        $scope.colorTranscribeStatus = function() {
-                            switch ($scope.transcribeObjectModel.status) {
-                            case 'QUEUED':
-                                return '#dcce22';
-                            case 'PROCESSING':
-                                return 'orange';
-                            case 'COMPLETED':
-                                return '#05a205';
-                            case 'FAILED':
-                                return 'red';
-                            }
-                        };
+                        $scope.colorTranscribeStatus = scopeToColor[$scope.transcribeObjectModel.status];
 
                         if (!Util.isEmpty($stateParams.seconds)) {
                             $scope.playAt($stateParams.seconds);
                         }
                     });
 
-                    var addCue = function(track, value) {
+                $scope.$on('ocr-data-model', function(event, ocrObj) {
+                    $scope.ocrObjectModel = ocrObj;
+                    $scope.ocrInfoActive = $scope.ocrObjectModel.status != null;
+                    $scope.colorOcrStatus = scopeToColor[$scope.ocrObjectModel.status];
+                });
+
+                var addCue = function(track, value) {
                         var cueAdded = false;
                         try {
                             track.addCue(new VTTCue(value.startTime, value.endTime, value.text));
@@ -321,7 +325,8 @@ angular.module('document-details').controller(
                     $rootScope.$bus.subscribe("object.changed/FILE/" + $stateParams.id, function() {
                         DialogService.alert($translate.instant("documentDetails.fileChangedAlert")).then(function() {
                             $scope.openSnowboundViewer();
-                        }); 
+                            $scope.$broadcast('refresh-ocr');
+                        });
                     });
                 } ]);
 

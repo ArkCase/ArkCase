@@ -41,6 +41,9 @@ import com.armedia.acm.ocr.model.OCRStatusType;
 import com.armedia.acm.ocr.model.OCRType;
 import com.armedia.acm.ocr.service.ArkCaseOCRService;
 import com.armedia.acm.ocr.utils.OCRUtils;
+import com.armedia.acm.service.objectlock.model.AcmObjectLock;
+import com.armedia.acm.service.objectlock.service.AcmObjectLockService;
+import com.armedia.acm.service.objectlock.service.AcmObjectLockingManager;
 
 import org.activiti.engine.delegate.DelegateExecution;
 import org.activiti.engine.delegate.JavaDelegate;
@@ -58,6 +61,8 @@ public class OCRProcessDelegate implements JavaDelegate
     private final Logger LOG = LoggerFactory.getLogger(getClass());
     private ArkCaseOCRService arkCaseOCRService;
     private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
+    private AcmObjectLockService objectLockService;
+    private AcmObjectLockingManager objectLockingManager;
 
     @Override
     public void execute(DelegateExecution delegateExecution) throws Exception
@@ -90,6 +95,19 @@ public class OCRProcessDelegate implements JavaDelegate
                     {
                         try
                         {
+                            AcmObjectLock lock = objectLockService.findLock(ocr.getEcmFileVersion().getFile().getId(), "FILE");
+                            if (lock == null || lock.getCreator().equalsIgnoreCase(OCRConstants.OCR_SYSTEM_USER))
+                            {
+                                objectLockingManager.acquireObjectLock(ocr.getEcmFileVersion().getFile().getId(), "FILE", "WRITE",
+                                        null,
+                                        true,
+                                        OCRConstants.OCR_SYSTEM_USER);
+                            }
+                            else
+                            {
+                                return;
+                            }
+
                             if (ocr.getProcessId() == null)
                             {
                                 ocr.setProcessId(delegateExecution.getProcessInstanceId());
@@ -136,5 +154,25 @@ public class OCRProcessDelegate implements JavaDelegate
     public void setAuditPropertyEntityAdapter(AuditPropertyEntityAdapter auditPropertyEntityAdapter)
     {
         this.auditPropertyEntityAdapter = auditPropertyEntityAdapter;
+    }
+
+    public AcmObjectLockService getObjectLockService()
+    {
+        return objectLockService;
+    }
+
+    public void setObjectLockService(AcmObjectLockService objectLockService)
+    {
+        this.objectLockService = objectLockService;
+    }
+
+    public AcmObjectLockingManager getObjectLockingManager()
+    {
+        return objectLockingManager;
+    }
+
+    public void setObjectLockingManager(AcmObjectLockingManager objectLockingManager)
+    {
+        this.objectLockingManager = objectLockingManager;
     }
 }
