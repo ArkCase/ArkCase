@@ -74,9 +74,11 @@
     <bean id="ocrEventPublisher" class="com.armedia.acm.ocr.service.OCREventPublisher"/>
 
     <bean id="ecmFileAddedListenerOCR" class="com.armedia.acm.ocr.listener.EcmFileAddedListener">
-        <property name="folderAndFilesUtils" ref="folderAndFilesUtils"/>
         <property name="arkCaseOCRService" ref="arkCaseOCRService"/>
-        <property name="objectLockingManager" ref="acmObjectLockingManager"/>
+    </bean>
+
+    <bean id="ecmFileUpdateListenerOCR" class="com.armedia.acm.ocr.listener.EcmFileUpdateListener">
+        <property name="arkCaseOCRService" ref="arkCaseOCRService"/>
     </bean>
 
     <bean id="ecmFileCopiedListenerOCR" class="com.armedia.acm.ocr.listener.EcmFileCopiedListener">
@@ -96,11 +98,14 @@
         <property name="ocrBusinessProcessRulesExecutor" ref="ocrBusinessProcessRulesExecutor"/>
         <property name="OCRServiceFactory" ref="ocrServiceFactory"/>
         <property name="ecmFileServiceProperties" ref="ecmFileServiceProperties"/>
+        <property name="folderAndFilesUtils" ref="folderAndFilesUtils"/>
     </bean>
 
     <bean id="ocrProcessDelegate" class="com.armedia.acm.ocr.delegate.OCRProcessDelegate">
         <property name="arkCaseOCRService" ref="arkCaseOCRService"/>
         <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
+        <property name="objectLockService" ref="objectLockService"/>
+        <property name="objectLockingManager" ref="acmObjectLockingManager"/>
     </bean>
 
     <bean id="ocrCheckStatusDelegate" class="com.armedia.acm.ocr.delegate.OCRCheckStatusDelegate">
@@ -125,5 +130,7 @@
         <property name="arkCaseOCRService" ref="arkCaseOCRService"/>
         <property name="activitiRuntimeService" ref="activitiRuntimeService"/>
         <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
+        <property name="objectLockService" ref="objectLockService"/>
+        <property name="objectLockingManager" ref="acmObjectLockingManager"/>
     </bean>
 </beans>
