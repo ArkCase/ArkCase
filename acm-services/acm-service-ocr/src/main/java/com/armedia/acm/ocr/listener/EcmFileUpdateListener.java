@@ -2,9 +2,9 @@ package com.armedia.acm.ocr.listener;
 
 /*-
  * #%L
- * acm-ocr
+ * ACM Services: Optical character recognition via Tesseract
  * %%
- * Copyright (C) 2014 - 2018 ArkCase LLC
+ * Copyright (C) 2014 - 2019 ArkCase LLC
  * %%
  * This file is part of the ArkCase software. 
  * 
@@ -29,7 +29,8 @@ package com.armedia.acm.ocr.listener;
 
 import com.armedia.acm.ocr.exception.CreateOCRException;
 import com.armedia.acm.ocr.service.ArkCaseOCRService;
-import com.armedia.acm.plugins.ecm.model.EcmFileAddedEvent;
+import com.armedia.acm.plugins.ecm.model.EcmFile;
+import com.armedia.acm.plugins.ecm.model.event.EcmFileReplacedEvent;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,13 +39,13 @@ import org.springframework.context.ApplicationListener;
 /**
  * Created by Vladimir Cherepnalkovski
  */
-public class EcmFileAddedListener implements ApplicationListener<EcmFileAddedEvent>
+public class EcmFileUpdateListener implements ApplicationListener<EcmFileReplacedEvent>
 {
     private final Logger LOG = LoggerFactory.getLogger(getClass());
     private ArkCaseOCRService arkCaseOCRService;
 
     @Override
-    public void onApplicationEvent(EcmFileAddedEvent event)
+    public void onApplicationEvent(EcmFileReplacedEvent event)
     {
         if (event != null && event.isSucceeded())
         {
@@ -55,7 +56,7 @@ public class EcmFileAddedListener implements ApplicationListener<EcmFileAddedEve
             catch (CreateOCRException e)
             {
                 LOG.warn("Creating OCR for file with ID=[{}] and VERSION_ID=[{}] is not executed. REASON=[{}]",
-                        event.getSource().getFileId(), event.getSource().getActiveVersionTag(), e.getMessage());
+                        ((EcmFile) event.getSource()).getFileId(), e.getMessage());
             }
         }
     }
