@@ -10,6 +10,8 @@
         <property name="flow" value="vm://sendEmailViaSmtp.in"/>
         <property name="acmEmailContentGeneratorService" ref="acmEmailContentGeneratorService"/>
         <property name="templatingEngine" ref="templatingEngine"/>
+        <property name="emailSenderConfigurationService" ref="emailSenderConfigurationService"/>
+        <property name="defaultFolderAndFileConverter" ref="folderConverter"/>
     </bean>
 
 </beans>
