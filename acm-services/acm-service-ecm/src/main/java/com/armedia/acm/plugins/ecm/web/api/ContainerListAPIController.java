@@ -32,6 +32,7 @@ import com.armedia.acm.core.exceptions.AcmListObjectsFailedException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.ecm.model.AcmCmisObjectList;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
+import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 
 import org.slf4j.Logger;
@@ -77,6 +78,21 @@ public class ContainerListAPIController
         AcmCmisObjectList retval = getEcmFileService().allFilesForContainer(auth, container);
 
         return retval;
+    }
+
+    @RequestMapping(value = "/container/file/{containerId}/{fileType}", method = RequestMethod.GET)
+    @ResponseBody
+    public EcmFile findFileByContainerAndFileType(@PathVariable("containerId") Long containerId,
+            @PathVariable("fileType") String fileType)
+    {
+
+        EcmFile ecmFile = getEcmFileService().findFileByContainerId(containerId, fileType);
+        if (ecmFile == null)
+        {
+            throw new IllegalStateException("Container '" + containerId + "' does not have a file of type " + fileType + "!");
+        }
+
+        return ecmFile;
     }
 
     public EcmFileService getEcmFileService()
