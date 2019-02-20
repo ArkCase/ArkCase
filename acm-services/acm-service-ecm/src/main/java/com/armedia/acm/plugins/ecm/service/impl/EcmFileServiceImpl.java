@@ -1653,6 +1653,12 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         return getEcmFileDao().find(fileId);
     }
 
+    @Override
+    public EcmFile findFileByContainerId(Long containerId, String fileType)
+    {
+        return getEcmFileDao().findForContainerAndFileType(containerId, fileType);
+    }
+
     public EcmFileTransaction getEcmFileTransaction()
     {
         return ecmFileTransaction;

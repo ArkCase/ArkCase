@@ -136,8 +136,12 @@ angular.module('services').factory('EcmService', [ '$resource', 'UtilService', f
         setFileRedactionStatus: {
             method: 'POST',
             url: 'api/latest/service/ecm/file/:fileId/version/:fileVersion/redaction/:redactionStatus'
-        }
+        },
         //FOIA changes end
+        findFileByContainerId: {
+            method: 'GET',
+            url: 'api/latest/service/ecm/container/file/:containerId/:fileType'
+        }
 
     });
 
