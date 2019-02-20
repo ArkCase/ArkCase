@@ -18,14 +18,18 @@
         "value": false
     },
     {
+        "path": "/menus/?@.menuItemURL=='frevvo.new-case'",
+        "op": "remove"
+    },
+    {
         "op": "replace",
         "path": "/menus/?@.menuId=='topbar'/menuItemURL",
         "value": "new-foia-request"
     },
     {
         "op": "replace",
-        "path": "/menus/?@.menuId=='topbar'/modalDialog/templateUrl",
-        "value": "modules/cases/views/components/modules/cases/views/components/foia-new-request.client.view.html"
+        "path": "/menus/?@.menuItemTitle=='cases.menus.topbar.item'/modalDialog/templateUrl",
+        "value": "modules/cases/views/components/foia-new-request.client.view.html"
     },
     {
         "op": "replace",
@@ -34,27 +38,13 @@
     },
     {
         "op": "replace",
-        "path": "/menus/?@.menuId=='topbar'/modalDialog/position",
+        "path": "/menus/?@.menuId=='topbar'/position",
         "value": 10
     },
     {
         "op": "replace",
-        "path": "/menus/iconClass",
+        "path": "/menus/?@.menuId=='topbar'/iconClass",
         "value": "fa fa-star"
-    },
-    {
-        "op": "remove",
-        "path": "/menus/menuItemURL=='newCase'",
-        "value": "fa fa-star"
-    },
-    {
-        "op": "replace",
-        "path": "/menus/position",
-        "value": "10"
-    },
-    {
-        "op": "remove",
-        "path": "/menus/formsType"
     },
     {
         "op": "replace",
@@ -109,12 +99,8 @@
         ]
     },
     {
-        "op": "replace",
-        "path": "/nodeTypes/?@.type=='p/CASE_FILE/det'"
-    },
-    {
         "op": "add",
-        "path": "/nodeTypes/",
+        "path": "/tree/nodeTypes/",
         "value": {
             "type": "p/CASE_FILE/exemption",
             "label": "cases.tree.nodeTypes.exemptionCodes.label",
@@ -126,15 +112,15 @@
     },
     {
         "op": "remove",
-        "path": "/nodeTypes/?@.type=='p/CASE_FILE/apr'"
+        "path": "/tree/nodeTypes/?@.type=='p/CASE_FILE/apr'"
     },
     {
         "op": "remove",
-        "path": "/nodeTypes/?@.type=='p/ERROR'"
+        "path": "/tree/nodeTypes/?@.type=='p/ERROR'"
     },
     {
         "op": "add",
-        "path": "/nodeTypes/",
+        "path": "/tree/nodeTypes/",
         "value": {
             "type": "p/CASE_FILE/billing",
             "label": "cases.tree.nodeTypes.billing.label",
@@ -459,17 +445,17 @@
     },
     {
         "op": "replace",
-        "path": "/components/?@.id=='documents'/doctree/email/emailSubject",
+        "path": "/components/?@.id=='documents'/docTree/email/emailSubject",
         "value": "Request $caseNumber"
     },
     {
         "op": "remove",
-        "path": "/components/?@.id=='documents'/doctree/allowParentOwnerToCancel",
+        "path": "/components/?@.id=='documents'/docTree/allowParentOwnerToCancel",
         "value": "Request $caseNumber"
     },
     {
         "op": "remove",
-        "path": "/components/?@.id=='documents'/doctree/menu"
+        "path": "/components/?@.id=='documents'/docTree/menu"
     },
     {
         "op": "remove",
@@ -695,7 +681,7 @@
     },
     {
         "op": "remove",
-        "path": "/components/?@.id=='people'/columnDefs/?@.name=='participantType'/cellTemplate"
+        "path": "/components/?@.id=='participants'/columnDefs/?@.name=='participantType'/cellTemplate"
     },
     {
         "op": "remove",
@@ -706,8 +692,8 @@
         "path": "/components/?@.id=='tasks'/configurable"
     },
     {
-        "op": "replace",
-        "path": "/components/?@.id=='people'/columnDefs/?@.name=='assignee'",
+        "op": "add",
+        "path": "/components/?@.id=='references'/columnDefs/",
         "value": {
             "name": "parentName",
             "displayName": "cases.comp.references.table.columns.parentName",
@@ -794,13 +780,13 @@
         "path": "/components/?@.id=='pastapprovals'/configurable"
     },
     {
-        "op": "replace",
-        "path": "/components/?@.id=='pastapprovals'/columnDefs/?@.name=='approverId'/displayName",
-        "value": "cases.comp.pastApprovals.table.columns.approverId"
-    },
-    {
-        "op": "replace",
-        "path": "/components/?@.id=='pastapprovals'/columnDefs/?@.name=='approverId'/name",
-        "value": "approverId"
+        "op": "add",
+        "path": "/components/?@.id=='pastapprovals'/columnDefs/",
+        "value": {
+            "name": "approverId",
+            "displayName": "cases.comp.pastApprovals.table.columns.approverId",
+            "headerCellFilter": "translate",
+            "cellEditableCondition": false
+        }
     }
 ]
