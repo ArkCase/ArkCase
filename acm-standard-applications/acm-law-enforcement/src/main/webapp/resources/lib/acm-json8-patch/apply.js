@@ -1,9 +1,9 @@
 "use strict";
 
-const decode = require("../pointer").decode;
-const buildRevertPatch = require("./buildRevertPatch");
+var decode = require("../pointer").decode;
+var buildRevertPatch = require("./buildRevertPatch");
 
-const operations = Object.create(null);
+var operations = Object.create(null);
 operations.add = require("./add");
 operations.copy = require("./copy");
 operations.move = require("./move");
@@ -25,8 +25,8 @@ operations.test = require("./test");
  * @return {Any}
  */
 function run(doc, patch) {
-    const pathTokens = typeof patch.path === "string" ? decode(patch.path) : null;
-    const fromTokens = typeof patch.from === "string" ? decode(patch.from) : null;
+    var pathTokens = typeof patch.path === "string" ? decode(patch.path) : null;
+    var fromTokens = typeof patch.from === "string" ? decode(patch.from) : null;
 
     switch (patch.op) {
         case "add":
@@ -58,11 +58,11 @@ function apply(doc, patch, options) {
     if (!Array.isArray(patch))
         throw new Error("Invalid argument, patch must be an array");
 
-    const done = [];
+    var done = [];
 
-    for (let i = 0, len = patch.length; i < len; i++) {
-        const p = patch[i];
-        let r;
+    for (var i = 0, len = patch.length; i < len; i++) {
+        var p = patch[i];
+        var r;
 
         try {
             r = run(doc, p);
@@ -81,7 +81,7 @@ function apply(doc, patch, options) {
         done.push([p, r.previous, r.idx]);
     }
 
-    const result = {doc: doc};
+    var result = {doc: doc};
 
     if (options && typeof options === "object" && options.reversible === true)
         result.revert = done;
