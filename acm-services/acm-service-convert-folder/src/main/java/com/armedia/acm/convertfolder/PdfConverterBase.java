@@ -71,6 +71,17 @@ public abstract class PdfConverterBase implements FileConverter
     @Override
     public void convert(EcmFile file, String username) throws ConversionException
     {
+        convertFile(file, username, false);
+    }
+
+    @Override
+    public File convert(EcmFile file) throws ConversionException
+    {
+        return convertFile(file, new String(), true);
+    }
+
+    private File convertFile(EcmFile file, String username, Boolean skipUploadAndReturnConvertedFile) throws ConversionException
+    {
         String tempUploadFolderPath = FileUtils.getTempDirectoryPath();
         String fileName = file.getFileName() + "." + file.getFileExtension();
         log.debug("Converting file [{}].", fileName);
@@ -91,6 +102,11 @@ public abstract class PdfConverterBase implements FileConverter
         File tempPdfFile = new File(tempUploadFolderPath + File.separator + createFileName(file));
 
         performConversion(file, tempOriginFile, tempPdfFile);
+
+        if(skipUploadAndReturnConvertedFile)
+        {
+            return tempPdfFile;
+        }
 
         try (FileInputStream fis = new FileInputStream(tempPdfFile))
         {
@@ -119,6 +135,7 @@ public abstract class PdfConverterBase implements FileConverter
             FileUtils.deleteQuietly(tempPdfFile);
         }
 
+        return null;
     }
 
     /**

@@ -46,5 +46,6 @@ public interface EmailSenderConfigurationConstants
     String ALLOW_DOCUMENTS = "email.sender.allowDocuments";
     String ALLOW_ATTACHMENTS = "email.sender.allowAttachments";
     String ALLOW_HYPERLINKS = "email.sender.allowHyperlinks";
+    String CONVERT_DOCUMENTS_TO_PDF = "email.sender.convertDocumentsToPdf";
 
 }
