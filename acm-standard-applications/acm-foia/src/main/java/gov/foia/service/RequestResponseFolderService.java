@@ -56,7 +56,7 @@ public class RequestResponseFolderService
         getFoiaRequestFileBrokerClient().sendReleaseFile(requestId);
 
         log.debug("Sending Email notification Response folder zip completed for the request [{}]", requestId);
-        getResponseFolderNotifyService().sendEmailNotification(requestId);
+        getResponseFolderNotifyService().sendEmailResponseCompressNotification(requestId);
 
     }
 
