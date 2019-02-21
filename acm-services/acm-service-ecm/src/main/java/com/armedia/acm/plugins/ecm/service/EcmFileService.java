@@ -337,7 +337,7 @@ public interface EcmFileService
 
     EcmFile updateFileType(Long fileId, String fileType) throws AcmObjectNotFoundException;
 
-    EcmFile findFileByContainerId(Long containerId, String fileType);
+    EcmFile findFileByContainerAndFileType(Long containerId, String fileType);
 
     @Transactional
     EcmFile updateFile(EcmFile file) throws AcmObjectNotFoundException;

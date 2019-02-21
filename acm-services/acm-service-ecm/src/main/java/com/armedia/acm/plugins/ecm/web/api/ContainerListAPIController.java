@@ -86,7 +86,7 @@ public class ContainerListAPIController
             @PathVariable("fileType") String fileType)
     {
 
-        EcmFile ecmFile = getEcmFileService().findFileByContainerId(containerId, fileType);
+        EcmFile ecmFile = getEcmFileService().findFileByContainerAndFileType(containerId, fileType);
         if (ecmFile == null)
         {
             throw new IllegalStateException("Container '" + containerId + "' does not have a file of type " + fileType + "!");

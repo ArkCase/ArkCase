@@ -284,7 +284,7 @@ angular.module('queues').controller(
                     }
 
                     function getFileId(repositoryInfo) {
-                        return EcmService.findFileByContainerId({
+                        return EcmService.findFileByContainerAndFileType({
                             containerId: repositoryInfo,
                             fileType: 'Request Form'
                         });
@@ -293,24 +293,21 @@ angular.module('queues').controller(
                     function openRequestInfoPage(requestId) {
 
                         var newTabWindow = $window.open('', '_blank');
-
                         //remove this request from the sorted list for picking next request to avoid to be picked twice
                         QueuesService.removeRequestFromSortedList(requestId);
-
                         var requestPromise = QueuesService.startWorkingOnRequestFromQueues(requestId);
                         var fileInfo = getDocumentQuery(requestId);
                         $q.all([ requestPromise, fileInfo ]).then(function(request) {
-                            getFileId(request[0].container.id).$promise.then(function(fileId) {
+                            getFileId(request[0].container.id).$promise.then(function(fileInfo) {
                                 var url = $state.href('request-info', {
                                     id: requestId,
-                                    fileId: fileId.fileId
+                                    fileId: fileInfo.fileId
                                 }, {
                                     absolute: true
-                                })
+                                });
+                                
                                 newTabWindow.location.href = url;
-
                                 $scope.$emit("report-object-updated", request);
-
                             }, function() {
                                 MessageService.info($translate.instant("queues.startWorking.noRequestToAssign"));
                             });
