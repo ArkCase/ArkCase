@@ -82,6 +82,10 @@ public class AngularResourceCopier implements ServletContextAware
 
     private String tempFolderPath;
     private String deployFolderPath;
+    private String mergeConfigFrontendTask;
+    private String yarnInstallCommand;
+    private String gruntDefaultCommand;
+    private String copyToModulesConfig;
     private List<String> resourceFoldersToCopyFromArchive;
     private List<String> assembledFoldersToCopyToDeployment;
     private List<String> filesToCopyFromArchive;
@@ -107,6 +111,8 @@ public class AngularResourceCopier implements ServletContextAware
             Resource modulesRoot = resolver.getResource(AngularResourceConstants.WAR_ANGULAR_RESOURCE_PATH);
             log.debug("modulesRoot: [{}]", modulesRoot);
             String rootPath = modulesRoot.getFile().getCanonicalPath();
+            String libFolderPath = tmpDir.getCanonicalPath() + File.separator + "lib";
+            log.info("lib folder path: {}", libFolderPath);
 
             List<String> copiedFiles = new ArrayList<>();
 
@@ -122,16 +128,43 @@ public class AngularResourceCopier implements ServletContextAware
                 copiedFiles.add(copied);
             }
 
+            // yarn install
+            runFrontEndBuildCommand(tmpDir, yarnInstallCommand);
             // add 'customer' as specific profile, so if any customer resources are present will come
             // on top of core and extension resources
+
             List<String> activeProfiles = springActiveProfile.getExtensionActiveProfile()
                     .map(it -> Arrays.asList(it, "custom"))
                     .orElse(Collections.singletonList("custom"));
 
+            copiedFiles.add(createProfilesJsFileInDir(activeProfiles, tmpDir));
+
             for (String profile : activeProfiles)
             {
-                copyFilesAndExecuteCommands(profile, resolver, rootPath, tmpDir, copiedFiles, activeProfiles);
+                copyFilesAndExecuteCommands(profile, resolver, rootPath, tmpDir, copiedFiles, activeProfiles, libFolderPath);
             }
+
+            runFrontEndBuildCommand(tmpDir, gruntDefaultCommand);
+            List<String> tmpFilesFound = findAllFilesInFolder(tmpDir);
+            log.debug("Found {} files in tmp folder", tmpFilesFound.size());
+
+            // delete all files that exist in the tmp dir, but we didn't copy them there; such files must have been
+            // removed from the project. Exceptions are files managed by yarn and grunt: lib folder, node_modules
+            // folder, bower_components folder, yarn.lock
+            List<File> oldFilesInTmpFolder = tmpFilesFound.stream()
+                    .filter(p -> !p.contains("node_modules"))
+                    .filter(p -> !p.contains("bower_components"))
+                    .filter(p -> !p.endsWith("yarn.lock"))
+                    .filter(p -> !p.startsWith(libFolderPath))
+                    .filter(p -> !copiedFiles.contains(p))
+                    .map(File::new)
+                    .collect(Collectors.toList());
+            log.debug("Found {} files to be removed from tmp folder", oldFilesInTmpFolder.size());
+            oldFilesInTmpFolder.stream()
+                    .peek(f -> log.debug("Removing tmp file [{}]", f.toPath()))
+                    .forEach(File::delete);
+
+            runFrontEndBuildCommand(tmpDir, copyToModulesConfig);
 
             File deployFolder = new File(getDeployFolderPath());
             createFolderStructure(deployFolder);
@@ -146,7 +179,7 @@ public class AngularResourceCopier implements ServletContextAware
             }
 
         }
-        catch (Exception e)
+        catch (IOException e)
         {
             log.error("Could not copy Angular resources", e);
             // make sure the webapp does not start... if it did start it wouldn't work right. So better to make sure
@@ -156,7 +189,7 @@ public class AngularResourceCopier implements ServletContextAware
     }
 
     private void copyFilesAndExecuteCommands(String profile, ServletContextResourcePatternResolver resolver, String rootPath,
-            File tmpDir, List<String> copiedFiles, List<String> activeProfiles)
+            File tmpDir, List<String> copiedFiles, List<String> activeProfiles, String libFolderPath)
             throws IOException
     {
 
@@ -166,37 +199,8 @@ public class AngularResourceCopier implements ServletContextAware
             String moduleRoot = String.format("%s_%s", profile, folder);
             copiedFiles.addAll(copyResources(resolver, rootPath, tmpDir, moduleRoot, folder));
         }
-
-        // delete all files that exist in the tmp dir, but we didn't copy them there; such files must have been
-        // removed from the project. Exceptions are files managed by yarn and grunt: lib folder, node_modules
-        // folder, bower_components folder, yarn.lock
-        String libFolderPath = tmpDir.getCanonicalPath() + File.separator + "lib";
-
-        copiedFiles.add(createProfilesJsFileInDir(activeProfiles, tmpDir));
-        log.info("lib folder path: {}", libFolderPath);
-
-        List<String> tmpFilesFound = findAllFilesInFolder(tmpDir);
-        log.debug("Found {} files in tmp folder", tmpFilesFound.size());
-
-        List<File> oldFilesInTmpFolder = tmpFilesFound.stream()
-                .filter(p -> !p.contains("node_modules"))
-                .filter(p -> !p.contains("bower_components"))
-                .filter(p -> !p.endsWith("yarn.lock"))
-                .filter(p -> !p.startsWith(libFolderPath))
-                .filter(p -> !copiedFiles.contains(p))
-                .map(File::new)
-                .collect(Collectors.toList());
-        log.debug("Found {} files to be removed from tmp folder", oldFilesInTmpFolder.size());
-        oldFilesInTmpFolder.stream()
-                .peek(f -> log.debug("Removing tmp file [{}]", f.toPath()))
-                .forEach(File::delete);
-
-        for (String frontEndCommand : getFrontEndCommandsToBeExecuted())
-        {
-            runFrontEndBuildCommand(tmpDir, frontEndCommand);
-        }
+        runFrontEndBuildCommand(tmpDir, mergeConfigFrontendTask);
     }
-
     private String createProfilesJsFileInDir(List<String> profiles, File parentDir) throws IOException
     {
         String exportProfiles = String.format("module.exports = %s", profiles.stream()
@@ -553,5 +557,45 @@ public class AngularResourceCopier implements ServletContextAware
     public void setSpringActiveProfile(AcmSpringActiveProfile springActiveProfile)
     {
         this.springActiveProfile = springActiveProfile;
+    }
+
+    public String getMergeConfigFrontendTask()
+    {
+        return mergeConfigFrontendTask;
+    }
+
+    public void setMergeConfigFrontendTask(String mergeConfigFrontendTask)
+    {
+        this.mergeConfigFrontendTask = mergeConfigFrontendTask;
+    }
+
+    public String getYarnInstallCommand()
+    {
+        return yarnInstallCommand;
+    }
+
+    public void setYarnInstallCommand(String yarnInstallCommand)
+    {
+        this.yarnInstallCommand = yarnInstallCommand;
+    }
+
+    public String getGruntDefaultCommand()
+    {
+        return gruntDefaultCommand;
+    }
+
+    public void setGruntDefaultCommand(String gruntDefaultCommand)
+    {
+        this.gruntDefaultCommand = gruntDefaultCommand;
+    }
+
+    public String getCopyToModulesConfig()
+    {
+        return copyToModulesConfig;
+    }
+
+    public void setCopyToModulesConfig(String copyToModulesConfig)
+    {
+        this.copyToModulesConfig = copyToModulesConfig;
     }
 }

@@ -1,11 +1,6 @@
 [
     {
         "op": "remove",
-        "path": "/test/?@.type=='p/error'/id"
-    },
-
-    {
-        "op": "remove",
         "path": "/components/?@.id=='securityCalendarConfig'/configurableObjectTypes/?@.id=='COMPLAINT'"
     },
     {
