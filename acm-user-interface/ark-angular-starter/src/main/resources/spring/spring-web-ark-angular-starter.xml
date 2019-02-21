@@ -24,13 +24,19 @@
 
     <bean id="angularResourceCopier" class="com.armedia.acm.userinterface.angular.AngularResourceCopier">
         <property name="springActiveProfile" ref="acmSpringActiveProfile"/>
+        <property name="mergeConfigFrontendTask">
+            <value>${frontEndCommandPrefix}${frontEndCommandPath}grunt${frontEndCommandSuffix} updateModulesConfig --no-color</value>
+        </property>
         <property name="tempFolderPath" value="#{ systemProperties ['user.home'] }/.arkcase/tmp"/>
         <property name="deployFolderPath" value="#{ systemProperties ['user.home'] }/.arkcase/custom"/>
-        <property name="frontEndCommandsToBeExecuted">
-            <list>
-                <value>${frontEndCommandPrefix}yarn --no-progress --non-interactive install</value>
-                <value>${frontEndCommandPrefix}${frontEndCommandPath}grunt${frontEndCommandSuffix} --no-color</value>
-            </list>
+        <property name="yarnInstallCommand">
+            <value>${frontEndCommandPrefix}yarn --no-progress --non-interactive install</value>
+        </property>
+        <property name="gruntDefaultCommand">
+            <value>${frontEndCommandPrefix}${frontEndCommandPath}grunt${frontEndCommandSuffix} --no-color</value>
+        </property>
+        <property name="copyToModulesConfig">
+            <value>${frontEndCommandPrefix}${frontEndCommandPath}grunt${frontEndCommandSuffix} configMerge --no-color</value>
         </property>
         <property name="resourceFoldersToCopyFromArchive">
             <list>

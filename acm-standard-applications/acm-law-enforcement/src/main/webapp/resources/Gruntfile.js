@@ -195,7 +195,6 @@ module.exports = function(grunt) {
         // Add missed modules
         _.forEach(modulesConfigFolders, function(folderName) {
             var fileName = path.join(folderName, 'config.json');
-
             // This works only for modules that have config.json file
             // other modules ingnored
             if (fs.existsSync(fileName)) {
@@ -222,7 +221,6 @@ module.exports = function(grunt) {
                 var ooPatch = require('./lib/acm-json8-patch/apply');
                 var clone = require("./lib/json8/lib/clone");
                 var patchFile = fileName.replace("config.json", "config-patch.json");
-                var location = "modules_config/config/modules/" + moduleId + "/config.json";
                 var locationTmp = "modules/" + moduleId + "/module_config/config.json";
                 var inputData = fs.readFileSync(fileName);
                 var inputObj = JSON.parse(inputData);
@@ -233,16 +231,14 @@ module.exports = function(grunt) {
                     var doc = clone(inputObj);
                     doc = ooPatch(doc, patchObj).doc;
 
-                    fs.writeFileSync(location, JSON.stringify(doc, null, 2));
                     fs.writeFileSync(locationTmp, JSON.stringify(doc, null, 2));
                     fs.unlink(patchFile);
                 }
                 else {
-                    fs.writeFileSync(location, JSON.stringify(inputObj, null, 2));
+                    fs.writeFileSync(locationTmp, JSON.stringify(inputObj, null, 2));
                 }
 
                 var resourceLocation = folderName + "resources";
-                var resourceModuleConfig = "modules_config/config/modules/" + moduleId + "/resources";
                 var resourceModules = "modules/" + moduleId + "/module_config/resources";
                 fs.readdirSync(resourceLocation).forEach(function (file) {
                     inputData = fs.readFileSync(resourceLocation + "/" + file);
@@ -256,12 +252,11 @@ module.exports = function(grunt) {
                         var doc = clone(inputObj);
                         doc = ooPatch(doc, patchObj).doc;
 
-                        fs.writeFileSync(resourceModuleConfig + "/" + file, JSON.stringify(doc, null, 2));
                         fs.writeFileSync(resourceModules + "/" + file, JSON.stringify(doc, null, 2));
                         fs.unlink(patchLocation);
                     }
                     else {
-                        fs.writeFileSync(resourceModuleConfig + "/" + file, JSON.stringify(inputObj, null, 2));
+                        fs.writeFileSync(resourceModules + "/" + file, JSON.stringify(inputObj, null, 2));
                     }
                 });
 
@@ -284,12 +279,93 @@ module.exports = function(grunt) {
                 id : item.id
             });
         });
-
         // Save modules config file
         fs.writeFileSync(cfg.modulesConfigFile, JSON.stringify(modules, null, 2));
 
         // Copy new modules configuration to the modules folder
         _.forEach(newModulesFolders, function(module) {
+            // Create module folder if required
+            var moduleFolder = path.join(cfg.modulesConfigFolder, 'modules', module.id);
+            fs.mkdirsSync(moduleFolder);
+            // Copy module config  folder
+            fs.copySync(module.folder, moduleFolder);
+        });
+
+        // Remove excess modules files
+        _.forEach(removedModules, function(module) {
+            var moduleFolder = path.join(cfg.modulesConfigFolder, 'modules', module.id);
+            fs.removeSync(moduleFolder);
+        });
+    });
+
+
+    grunt.registerTask('copyToModulesConfigFolder', 'Update Modules config files', function () {
+        var cfg = config.config;
+
+        var modules = [];
+        if (fs.existsSync(cfg.modulesConfigFile)) {
+            modules = JSON.parse(fs.readFileSync(cfg.modulesConfigFile));
+        }
+        // Get config from modules and _config_modules diectrories
+        var modulesConfigFolders = glob.sync(config.modules.defaultModulesFolder + '*/module_config/').concat(
+            glob.sync(config.modules.customModulesDir + '*/module_config/'));
+
+        var allModules = [];
+        var newModules = [];
+        var newModulesFolders = [];
+        // Add missed modules
+        _.forEach(modulesConfigFolders, function (folderName) {
+            var fileName = path.join(folderName, 'config.json');
+
+            // This works only for modules that have config.json file
+            // other modules ingnored
+            if (fs.existsSync(fileName)) {
+                var moduleData = fs.readFileSync(fileName);
+                var moduleObj = JSON.parse(moduleData);
+                var moduleId = moduleObj.id;
+
+                // Check if module is not present in modules.json. Add if required
+                if (!_.find(modules, {
+                    id: moduleId
+                })) {
+                    newModulesFolders.push({
+                        id: moduleId,
+                        folder: folderName
+                    });
+                    modules.push({
+                        'id': moduleId,
+                        'title': moduleObj.title,
+                        'configurable': moduleObj.configurable
+                    });
+                    newModules.push(moduleObj);
+                }
+                allModules.push(moduleObj);
+            }
+        });
+
+        var removedModules = [];
+        // Remove missed modules info from config
+        _.forEach(modules, function (module) {
+            if (!_.find(allModules, {
+                id: module.id
+            })) {
+                // remove modules
+                removedModules.push(module);
+            }
+        });
+
+        modules = _.reject(modules, function (item) {
+            return _.find(removedModules, {
+                id: item.id
+            });
+        });
+
+
+        // Save modules config file
+        fs.writeFileSync(cfg.modulesConfigFile, JSON.stringify(modules, null, 2));
+
+        // Copy new modules configuration to the modules folder
+        _.forEach(newModulesFolders, function (module) {
             // Create module folder if required
             var moduleFolder = path.join(cfg.modulesConfigFolder, 'modules', module.id);
             fs.mkdirsSync(moduleFolder);
@@ -300,20 +376,23 @@ module.exports = function(grunt) {
         });
 
         // Remove excess modules files
-        _.forEach(removedModules, function(module) {
+        _.forEach(removedModules, function (module) {
             var moduleFolder = path.join(cfg.modulesConfigFolder, 'modules', module.id);
             fs.removeSync(moduleFolder);
             console.log('Removed module config folder: ' + moduleFolder);
         });
     });
 
+
     // Lint task.
-    grunt.registerTask('lint', [ 'jshint', 'csslint' ]);
+    grunt.registerTask('lint', ['jshint', 'csslint']);
 
     // Build task.
     //grunt.registerTask('build', ['renderHome', 'sass', 'lint', 'loadConfig', 'ngAnnotate', 'uglify', 'cssmin']);
-    grunt.registerTask('default', [ 'loadConfig', 'ngAnnotate', 'uglify', 'concat', 'cssmin', 'renderHome', 'updateModulesConfig' ]);
+    grunt.registerTask('default', ['loadConfig', 'ngAnnotate', 'uglify', 'concat', 'cssmin', 'renderHome']);
+
+    grunt.registerTask('configMerge', ['renderHome', 'copyToModulesConfigFolder'])
 
     // Task syncs current folder with $user/.arkcase/custom/ folder
-    grunt.registerTask('sync-dev', [ 'concurrent:default' ])
+    grunt.registerTask('sync-dev', ['concurrent:default'])
 };
