@@ -88,7 +88,6 @@ public class StartWorkingOnRequestAPIController
         {
             requestAssignmentService.assignUserGroupToRequest(request, session);
             requestAssignmentService.assignRequestToUser(request, auth, session);
-
         }
         else
             throw new AcmUserActionFailedException("start-work on request", "Request", requestId,
