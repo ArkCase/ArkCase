@@ -112,6 +112,7 @@ public class AngularResourceCopier implements ServletContextAware
             log.debug("modulesRoot: [{}]", modulesRoot);
             String rootPath = modulesRoot.getFile().getCanonicalPath();
             String libFolderPath = tmpDir.getCanonicalPath() + File.separator + "lib";
+            log.info("lib folder path: {}", libFolderPath);
 
             List<String> copiedFiles = new ArrayList<>();
 
@@ -131,7 +132,6 @@ public class AngularResourceCopier implements ServletContextAware
             runFrontEndBuildCommand(tmpDir, yarnInstallCommand);
             // add 'customer' as specific profile, so if any customer resources are present will come
             // on top of core and extension resources
-            // execute grunt default task
 
             List<String> activeProfiles = springActiveProfile.getExtensionActiveProfile()
                     .map(it -> Arrays.asList(it, "custom"))
@@ -144,9 +144,9 @@ public class AngularResourceCopier implements ServletContextAware
                 copyFilesAndExecuteCommands(profile, resolver, rootPath, tmpDir, copiedFiles, activeProfiles, libFolderPath);
             }
 
+            runFrontEndBuildCommand(tmpDir, gruntDefaultCommand);
             List<String> tmpFilesFound = findAllFilesInFolder(tmpDir);
             log.debug("Found {} files in tmp folder", tmpFilesFound.size());
-            runFrontEndBuildCommand(tmpDir, gruntDefaultCommand);
 
             // delete all files that exist in the tmp dir, but we didn't copy them there; such files must have been
             // removed from the project. Exceptions are files managed by yarn and grunt: lib folder, node_modules
@@ -199,7 +199,6 @@ public class AngularResourceCopier implements ServletContextAware
             String moduleRoot = String.format("%s_%s", profile, folder);
             copiedFiles.addAll(copyResources(resolver, rootPath, tmpDir, moduleRoot, folder));
         }
-        log.info("lib folder path: {}", libFolderPath);
         runFrontEndBuildCommand(tmpDir, mergeConfigFrontendTask);
     }
     private String createProfilesJsFileInDir(List<String> profiles, File parentDir) throws IOException

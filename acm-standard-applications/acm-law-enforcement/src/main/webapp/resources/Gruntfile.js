@@ -389,7 +389,7 @@ module.exports = function(grunt) {
 
     // Build task.
     //grunt.registerTask('build', ['renderHome', 'sass', 'lint', 'loadConfig', 'ngAnnotate', 'uglify', 'cssmin']);
-    grunt.registerTask('default', ['loadConfig', 'ngAnnotate', 'uglify', 'concat', 'cssmin', 'renderHome']);
+    grunt.registerTask('default', ['loadConfig', 'ngAnnotate', 'uglify', 'concat', 'cssmin']);
 
     grunt.registerTask('configMerge', ['renderHome', 'copyToModulesConfigFolder'])
 
