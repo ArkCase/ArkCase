@@ -167,7 +167,6 @@ module.exports = function(grunt) {
             jsFiles : jsFiles,
             cssFiles : cssFiles
         });
-
         fs.writeFileSync(config.homePage.target, html);
     });
 
@@ -242,7 +241,7 @@ module.exports = function(grunt) {
                 var resourceModules = "modules/" + moduleId + "/module_config/resources";
                 fs.readdirSync(resourceLocation).forEach(function (file) {
                     inputData = fs.readFileSync(resourceLocation + "/" + file);
-                    inputObj = JSON.parse(inputData)
+                    inputObj = JSON.parse(inputData);
                     var labelPatchFile = file.replace(".json", "-patch.json");
                     if (fs.existsSync(resourceLocation + "/" + labelPatchFile)) {
                         var patchLocation = resourceLocation + "/" + labelPatchFile;
