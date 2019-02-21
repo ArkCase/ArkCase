@@ -54,6 +54,11 @@
             <artifactId>hamcrest-all</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>com.armedia.acm.acm-services</groupId>
+            <artifactId>acm-service-convert-folder</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
 
     </dependencies>
 
