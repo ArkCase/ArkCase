@@ -69,7 +69,8 @@ public class EcmFileNewContentHandler implements PipelineHandler<EcmFile, EcmFil
 
             try (InputStream fileInputStream = new FileInputStream(pipelineContext.getFileContents()))
             {
-                CountingInputStream c = new CountingInputStream(fileInputStream);
+                log.debug("Putting fileInputStream in a decorator stream so that the number of bytes can be counted");
+                CountingInputStream countingInputStream = new CountingInputStream(fileInputStream);
                 if (entity.getUuid() != null) {
                     ProgressbarDetails progressbarDetails = new ProgressbarDetails();
                     progressbarDetails.setProgressbar(true);
@@ -80,21 +81,18 @@ public class EcmFileNewContentHandler implements PipelineHandler<EcmFile, EcmFil
                     progressbarDetails.setFileName(entity.getFileName());
                     progressbarDetails.setObjectNumber(pipelineContext.getContainer().getContainerObjectTitle());
                     log.debug("Start stage three for file {}. The file will be written to Alfresco", entity.getFileName());
-                    progressIndicatorService.start(c, pipelineContext.getFileContents().length(), pipelineContext.getContainer().getContainerObjectId(), pipelineContext.getContainer().getContainerObjectType(), pipelineContext.getFileContents().getName(), pipelineContext.getAuthentication().getName(), progressbarDetails);
+                    progressIndicatorService.start(countingInputStream, pipelineContext.getFileContents().length(), pipelineContext.getContainer().getContainerObjectId(), pipelineContext.getContainer().getContainerObjectType(), pipelineContext.getFileContents().getName(), pipelineContext.getAuthentication().getName(), progressbarDetails);
                 }
                 // Adds the file to the ECM content repository as a new document... using the context filename
                 // as the filename for the repository.
                 String arkcaseFilename = entity.getFileName();
                 entity.setFileName(pipelineContext.getOriginalFileName());
                 Document newDocument = ecmFileMuleUtils.addFile(entity, pipelineContext.getCmisFolderId(),
-                        c);
+                        countingInputStream);
                 // now, restore the ArkCase file name
                 entity.setFileName(arkcaseFilename);
                 pipelineContext.setCmisDocument(newDocument);
-                if (entity.getUuid() != null) {
-                    log.debug("Stop progressbar executor in stage 3, for file {} and set file upload success to {}", entity.getUuid(), true);
-                    progressIndicatorService.end(entity.getUuid(), true);
-                }
+
             }
             catch (Exception e)
             {

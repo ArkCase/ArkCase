@@ -6,26 +6,21 @@ angular.module('core').controller(
         function($scope, $rootScope, $q, $state, $translate, $modal, $http, $timeout, $document, Upload, MessageService, Util, ApplicationSettingsService, ObjectService) {
 
         $scope.hideUploadSnackbar = true;
+        $scope.hideUploadSnackbarIcon = true;
 
         ApplicationSettingsService.getProperty(ApplicationSettingsService.PROPERTIES.UPLOAD_FILE_SIZE_LIMIT).then(function(response) {
-            var defaultLimit = 52428800; //50mb
-            var uploadFileSizeLimitInBytes = Util.goodValue(response.data[ApplicationSettingsService.PROPERTIES.UPLOAD_FILE_SIZE_LIMIT], defaultLimit);
+            var uploadFileSizeLimitInBytes = response.data[ApplicationSettingsService.PROPERTIES.UPLOAD_FILE_SIZE_LIMIT];
             $scope.uploadFileSizeLimit = uploadFileSizeLimitInBytes;
         });
 
         ApplicationSettingsService.getProperty(ApplicationSettingsService.PROPERTIES.SINGLE_CHUNK_FILE_SIZE_LIMIT).then(function(response) {
-            var defaultChunkLimit = 10485760; //10mb
-            var singleChunkFileSizeLimitInBytes = Util.goodValue(response.data[ApplicationSettingsService.PROPERTIES.SINGLE_CHUNK_FILE_SIZE_LIMIT], defaultChunkLimit);
+            var singleChunkFileSizeLimitInBytes = response.data[ApplicationSettingsService.PROPERTIES.SINGLE_CHUNK_FILE_SIZE_LIMIT];
             $scope.singleChunkFileSizeLimit = singleChunkFileSizeLimitInBytes;
         });
 
-
-        $scope.$bus.subscribe('upload-file-size-limit-changed', function(newUploadFileSizeLimit){
-            $scope.uploadFileSizeLimit = newUploadFileSizeLimit;
-        });
-
-        $scope.$bus.subscribe('singe-chunk-file-size-limit-changed', function(newSingleChunkFileSizeLimit){
-            $scope.singleChunkFileSizeLimit = newSingleChunkFileSizeLimit;
+        ApplicationSettingsService.getProperty(ApplicationSettingsService.PROPERTIES.ENABLE_FILE_CHUNK).then(function(response) {
+            var enableFileChunkUpload = response.data[ApplicationSettingsService.PROPERTIES.ENABLE_FILE_CHUNK];
+            $scope.enableFileChunkUpload = enableFileChunkUpload;
         });
 
         var modalInstance = null;
@@ -44,7 +39,8 @@ angular.module('core').controller(
                     resolve: {
                         params:{
                             uploadFileSizeLimit: $scope.uploadFileSizeLimit,
-                            singleChunkFileSizeLimit: $scope.singleChunkFileSizeLimit
+                            singleChunkFileSizeLimit: $scope.singleChunkFileSizeLimit,
+                            enableFileChunkUpload: $scope.enableFileChunkUpload
                         }
                     }
                 });
@@ -53,13 +49,9 @@ angular.module('core').controller(
                     startUploadChunkFile(fileDetails);
                 });
 
-                modalInstance.hide = function (hideSnackbar) {
+                modalInstance.hide = function () {
                     $('.uploadManagerComponent').hide();
-                    if(hideSnackbar){
-                        $scope.hideUploadSnackbar = true;
-                    } else {
-                        $scope.hideUploadSnackbar = false;
-                    }
+                    $scope.hideUploadSnackbar = false;
                 };
 
                 modalInstance.show = function () {
@@ -69,8 +61,7 @@ angular.module('core').controller(
 
                 $scope.$bus.subscribe('upload-manager-show', modalInstance.show);
                 $scope.$bus.subscribe('upload-manager-hide', function() {
-                    var hideSnackbar = false;
-                    modalInstance.hide(hideSnackbar);
+                    modalInstance.hide();
                 });
             } else {
                 modalInstance.show();
@@ -89,14 +80,14 @@ angular.module('core').controller(
             }
         }
 
-        $rootScope.$bus.subscribe('progressbar-current-progress-updated', function(message) {
+            $scope.$bus.subscribe('progressbar-current-progress-updated', function(message) {
             var status = ObjectService.UploadFileStatus.IN_PROGRESS;
             message.status = status;
 
             updateCurrentProgress(message);
         });
 
-        $rootScope.$bus.subscribe('progressbar-current-progress-finished', function(message) {
+            $scope.$bus.subscribe('progressbar-current-progress-finished', function(message) {
             var status = message.success ? ObjectService.UploadFileStatus.FINISHED : ObjectService.UploadFileStatus.FAILED;
             message.status = status;
 
@@ -117,15 +108,14 @@ angular.module('core').controller(
                 $scope.$bus.publish('upload-chunk-file', fileDetails);
             }else {
                 if (message.status === ObjectService.UploadFileStatus.IN_PROGRESS) {
-                    $rootScope.$bus.publish('notify-modal-progressbar-current-progress-updated', message);
+                    $scope.$bus.publish('notify-modal-progressbar-current-progress-updated', message);
                 } else {
-                    $rootScope.$bus.publish('notify-modal-progressbar-current-progress-finished', message);
+                    $scope.$bus.publish('notify-modal-progressbar-current-progress-finished', message);
                 }
             }
         }
 
-        $scope.$bus.subscribe('notify-snackbar-all-files-were-uploaded', function(uploadedSuccessfully){
-            var hideUploadSnackbar = uploadedSuccessfully;
-            modalInstance.hide(hideUploadSnackbar);
+            $scope.$bus.subscribe('notify-snackbar-upload-status', function(iconDisplayStatus){
+            $scope.hideUploadSnackbarIcon = iconDisplayStatus.hide;
         })
 } ]);

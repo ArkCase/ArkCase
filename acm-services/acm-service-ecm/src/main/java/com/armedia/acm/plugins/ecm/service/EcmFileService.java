@@ -302,6 +302,8 @@ public interface EcmFileService {
 
     EcmFile renameFile(Long fileId, String newFileName) throws AcmUserActionFailedException, AcmObjectNotFoundException;
 
+    EcmFile renameFileInArkcase(EcmFile file, String newFileName);
+
     EcmFile findById(Long fileId);
 
     AcmCmisObjectList listAllSubFolderChildren(String category, Authentication auth, AcmContainer container, Long folderId, int startRow,
@@ -311,6 +313,9 @@ public interface EcmFileService {
 
     EcmFile copyFile(Long documentId, AcmFolder targetFolder, AcmContainer targetContainer)
             throws AcmUserActionFailedException, AcmObjectNotFoundException;
+
+    EcmFile copyFileInArkcase(EcmFile originalFile, String copiedFileNodeId, AcmFolder targetFolder)
+            throws AcmUserActionFailedException;
 
     EcmFile updateFileType(Long fileId, String fileType) throws AcmObjectNotFoundException;
 

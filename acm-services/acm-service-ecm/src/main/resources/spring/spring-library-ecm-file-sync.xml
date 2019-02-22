@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+    xmlns:task="http://www.springframework.org/schema/task"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd">
 
-    <!-- simple logging handler -->
+<!-- simple logging handler -->
     <bean id="ecmEventHandler" class="com.armedia.acm.plugins.ecm.service.sync.impl.EcmEventHandler"/>
 
     <bean id="ecmFolderCreatedEventHandler" class="com.armedia.acm.plugins.ecm.service.sync.impl.EcmFolderCreatedEventHandler">
@@ -48,4 +49,18 @@
         <property name="folderAndFilesUtils" ref="folderAndFilesUtils"/>
         <property name="metadataUpdateProperties" ref="metadataUpdateProperties"/>
     </bean>
+
+    <bean id="removeExpiredFilesJob"
+        class="com.armedia.acm.plugins.ecm.job.RemoveExpiredFilesJob">
+        <property name="fileChunkService" ref="fileChunkService"/>
+        <property name="ecmFileService" ref="ecmFileService"/>
+        <property name="ecmFileServiceProperties" ref="ecmFileServiceProperties"/>
+    </bean>
+
+    <task:scheduler id="deleteExpiredFilesScheduler" pool-size="1"/>
+
+    <!-- Check for old, expired files once a day. -->
+    <task:scheduled-tasks scheduler="deleteExpiredFilesScheduler">
+        <task:scheduled ref="removeExpiredFilesJob" method="deleteExpiredFiles" cron="* * 23 * * *"/>
+    </task:scheduled-tasks>
 </beans>

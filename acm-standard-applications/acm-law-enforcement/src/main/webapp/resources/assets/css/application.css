@@ -1832,3 +1832,12 @@ a.primary {
 .ui-grid .ui-grid-render-container-body .ui-grid-viewport {
     overflow-x: auto !important;
 }
+
+/* Upload snackbar properties*/
+.uploadingSnackbarStatus {
+    margin: 34px;
+}
+
+.btn .btn-secondary .custom-color {
+    color: #000000
+}

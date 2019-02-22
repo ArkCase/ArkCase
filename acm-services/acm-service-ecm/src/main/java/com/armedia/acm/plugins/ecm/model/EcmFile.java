@@ -186,8 +186,6 @@ public class EcmFile implements AcmEntity, Serializable, AcmObject, AcmStatefulE
      */
     @Transient
     private String uuid;
-    @Transient
-    private Long size;
 
     @PrePersist
     protected void beforeInsert()

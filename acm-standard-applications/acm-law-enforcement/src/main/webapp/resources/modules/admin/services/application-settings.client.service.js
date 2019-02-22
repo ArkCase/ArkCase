@@ -19,7 +19,27 @@ angular.module('admin').factory('Admin.ApplicationSettingsService', [ '$http', f
             IDLE_CONFIRM: 'idleConfirm',
             HISTORY_DAYS: 'historyDays',
             UPLOAD_FILE_SIZE_LIMIT: 'uploadFileSizeLimit',
-            SINGLE_CHUNK_FILE_SIZE_LIMIT: 'singleChunkFileSizeLimit'
+            SINGLE_CHUNK_FILE_SIZE_LIMIT: 'singleChunkFileSizeLimit',
+            ENABLE_FILE_CHUNK: 'enableFileChunkUpload'
+        },
+
+        /**
+         * @ngdoc method
+         * @name setSettings
+         * @methodOf admin.service:Admin.ApplicationSettingsService
+         *
+         * @description
+         * Performs retrieving all application settings
+         *
+         *
+         * @returns {Object} Application seting structure
+         */
+        setSettings: function(data) {
+            return $http({
+                method: 'PUT',
+                url: 'api/latest/plugin/admin/app-properties',
+                data: data
+            });
         },
 
         /**
@@ -36,7 +56,7 @@ angular.module('admin').factory('Admin.ApplicationSettingsService', [ '$http', f
         getSettings: function() {
             return $http({
                 method: 'GET',
-                url: 'api/latest/plugin/admin/app-properties'
+                url: 'api/latest/plugin/admin/app-properties',
             });
         },
 

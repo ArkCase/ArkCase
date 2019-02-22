@@ -627,7 +627,7 @@
         },
         "progressBar": {
             "header": "Uploading Details...",
-            "viewDetails": "View details",
+            "viewDetails": "View Upload Details",
             "addMoreFiles": "Add more files",
             "currentFileProgress": "Current File Progress",
             "totalProgress": "Total Progress",
@@ -635,7 +635,8 @@
             "footer": "File Upload Completed",
             "done": "Done",
             "close": "Close",
-            "failed": "File upload failed!"
+            "failed": "File upload failed!",
+            "uploading": "Uploading..."
         },
         "loginWarning": {
             "btnOK.text": "OK",

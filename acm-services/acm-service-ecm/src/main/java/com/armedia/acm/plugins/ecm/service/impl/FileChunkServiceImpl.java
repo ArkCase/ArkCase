@@ -33,8 +33,6 @@ import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.plugins.ecm.model.*;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.ecm.service.FileChunkService;
-import com.armedia.acm.plugins.ecm.service.ProgressIndicatorService;
-import com.armedia.acm.plugins.ecm.service.ProgressbarExecutor;
 import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
 import com.armedia.acm.web.api.MDCConstants;
 import javafx.util.Pair;
@@ -46,7 +44,6 @@ import org.slf4j.MDC;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
@@ -61,6 +58,7 @@ public class FileChunkServiceImpl implements FileChunkService {
     private FolderAndFilesUtils folderAndFilesUtils;
     private EcmFileService ecmFileService;
     private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
+    private Properties ecmFileServiceProperties;
 
     @Override
     @Async
@@ -127,19 +125,21 @@ public class FileChunkServiceImpl implements FileChunkService {
         MDC.put(MDCConstants.EVENT_MDC_REQUEST_ID_KEY, UUID.randomUUID().toString());
     }
 
-    private void deleteFilesQuietly(List<FileChunkDetails> parts) {
+    public void deleteFilesQuietly(List<FileChunkDetails> parts) {
         String dirPath = System.getProperty("java.io.tmpdir");
+        String uniqueArkCaseHashFileIdentifier = ecmFileServiceProperties.getProperty("ecm.arkcase.hash.file.identifier");
         for (FileChunkDetails part : parts) {
-            org.mule.util.FileUtils.deleteQuietly(new File(dirPath + "/" + part.getFileName()));
+            org.mule.util.FileUtils.deleteQuietly(new File(dirPath + File.separator + uniqueArkCaseHashFileIdentifier + "-" + part.getFileName()));
         }
     }
 
     private Pair<Enumeration<InputStream>, Long> getInputStreamsAndSize(List<FileChunkDetails> parts) throws IOException {
         String dirPath = System.getProperty("java.io.tmpdir");
+        String uniqueArkCaseHashFileIdentifier = ecmFileServiceProperties.getProperty("ecm.arkcase.hash.file.identifier");
         Vector<InputStream> inputStream = new Vector<>();
         Long size = 0L;
         for (FileChunkDetails part : parts) {
-            File file = new File(dirPath + "/" + part.getFileName());
+            File file = new File(dirPath + File.separator + uniqueArkCaseHashFileIdentifier + "-" + part.getFileName());
             InputStream stream = org.mule.util.FileUtils.openInputStream(file);
             inputStream.addElement(stream);
             size += file.length();
@@ -171,5 +171,13 @@ public class FileChunkServiceImpl implements FileChunkService {
 
     public void setAuditPropertyEntityAdapter(AuditPropertyEntityAdapter auditPropertyEntityAdapter) {
         this.auditPropertyEntityAdapter = auditPropertyEntityAdapter;
+    }
+
+    public Properties getEcmFileServiceProperties() {
+        return ecmFileServiceProperties;
+    }
+
+    public void setEcmFileServiceProperties(Properties ecmFileServiceProperties) {
+        this.ecmFileServiceProperties = ecmFileServiceProperties;
     }
 }

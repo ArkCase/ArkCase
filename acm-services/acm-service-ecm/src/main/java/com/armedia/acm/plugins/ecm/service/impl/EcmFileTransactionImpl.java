@@ -122,8 +122,9 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
         File tempFileContents = null;
         try
         {
-            CountingInputStream c = new CountingInputStream(fileContents);
-//this reports progress on file system. Also should store info for the broker, for which part of the progress it is loading for the filesystem or the activity upload from 50% to 59%
+            log.debug("Putting fileInputStream in a decorator stream so that the number of bytes can be counted");
+            CountingInputStream countingInputStream = new CountingInputStream(fileContents);
+            //this reports progress on file system. Also should store info for the broker, for which part of the progress it is loading for the filesystem or the activity upload from 50% to 59%
             if (metadata.getUuid() != null && args != null && args.length > 0 && args[0] instanceof MultipartFile)
             {
                 MultipartFile file = (MultipartFile) args[0];
@@ -136,12 +137,12 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
                 progressbarDetails.setFileName(metadata.getFileName());
                 progressbarDetails.setObjectNumber(container.getContainerObjectTitle());
                 log.debug("Start stage two for file {}. The file will be written to file system", metadata.getFileName());
-                progressIndicatorService.start(c, file.getSize(), container.getContainerObjectId(), container.getContainerObjectType(), file.getOriginalFilename(), authentication.getName(), progressbarDetails);
+                progressIndicatorService.start(countingInputStream, file.getSize(), container.getContainerObjectId(), container.getContainerObjectType(), file.getOriginalFilename(), authentication.getName(), progressbarDetails);
             }
             tempFileContents = File.createTempFile("arkcase-upload-temp-file-", null);
-            FileUtils.copyInputStreamToFile(c, tempFileContents);
+            FileUtils.copyInputStreamToFile(countingInputStream, tempFileContents);
 
-// start progress
+            // start progress
             EcmTikaFile detectedMetadata = null;
 
             try
