@@ -35,9 +35,6 @@
         <property name="gruntDefaultCommand">
             <value>${frontEndCommandPrefix}${frontEndCommandPath}grunt${frontEndCommandSuffix} --no-color</value>
         </property>
-        <property name="copyToModulesConfig">
-            <value>${frontEndCommandPrefix}${frontEndCommandPath}grunt${frontEndCommandSuffix} configMerge --no-color</value>
-        </property>
         <property name="resourceFoldersToCopyFromArchive">
             <list>
                 <value>assets</value>

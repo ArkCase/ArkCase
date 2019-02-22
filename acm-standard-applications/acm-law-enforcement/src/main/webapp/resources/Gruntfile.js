@@ -388,9 +388,7 @@ module.exports = function(grunt) {
 
     // Build task.
     //grunt.registerTask('build', ['renderHome', 'sass', 'lint', 'loadConfig', 'ngAnnotate', 'uglify', 'cssmin']);
-    grunt.registerTask('default', ['loadConfig', 'ngAnnotate', 'uglify', 'concat', 'cssmin']);
-
-    grunt.registerTask('configMerge', ['renderHome', 'copyToModulesConfigFolder'])
+    grunt.registerTask('default', ['loadConfig', 'ngAnnotate', 'uglify', 'concat', 'cssmin', 'renderHome', 'copyToModulesConfigFolder']);
 
     // Task syncs current folder with $user/.arkcase/custom/ folder
     grunt.registerTask('sync-dev', ['concurrent:default'])
