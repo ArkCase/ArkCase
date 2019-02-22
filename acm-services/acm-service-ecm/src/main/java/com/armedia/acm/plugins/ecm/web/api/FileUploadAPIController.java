@@ -65,13 +65,11 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RequestMapping({"/api/v1/service/ecm", "/api/latest/service/ecm"})
-public class FileUploadAPIController implements ApplicationEventPublisherAware {
+public class FileUploadAPIController implements ApplicationEventPublisherAware
+{
     private final String uploadFileType = "attachment";
     private Logger log = LoggerFactory.getLogger(getClass());
     private EcmFileService ecmFileService;
@@ -80,6 +78,7 @@ public class FileUploadAPIController implements ApplicationEventPublisherAware {
     private ArkPermissionEvaluator arkPermissionEvaluator;
     private ApplicationEventPublisher applicationEventPublisher;
     private FileChunkService fileChunkService;
+    private Properties ecmFileServiceProperties;
 
     // #parentObjectType == 'USER_ORG' applies to uploading profile picture
     @PreAuthorize("hasPermission(#parentObjectId, #parentObjectType, 'uploadOrReplaceFile') or #parentObjectType == 'USER_ORG'")
@@ -157,8 +156,13 @@ public class FileUploadAPIController implements ApplicationEventPublisherAware {
                                 attachment.getContentType(), attachment.isEmpty(), attachment.getSize(), attachment.getBytes(),
                                 attachment.getInputStream(), true);
 
-                        EcmFile temp = getEcmFileService().upload(attachment.getOriginalFilename(), fileType, fileLang, f, authentication,
-                                folderCmisId, parentObjectType, parentObjectId);
+                        EcmFile metadata = new EcmFile();
+                        metadata.setFileType(fileType);
+                        metadata.setFileLang(fileLang);
+                        metadata.setFileName(attachment.getOriginalFilename());
+                        metadata.setFileActiveVersionMimeType(f.getContentType());
+                        metadata.setUuid(request.getParameter("uuid"));
+                        EcmFile temp = getEcmFileService().upload(authentication, f, folderCmisId, parentObjectType, parentObjectId, metadata);
                         uploadedFiles.add(temp);
 
                         applicationEventPublisher.publishEvent(new EcmFilePostUploadEvent(temp, authentication.getName()));
@@ -220,6 +224,7 @@ public class FileUploadAPIController implements ApplicationEventPublisherAware {
         log.debug("Starting a file upload by user {}", authentication.getName());
 
         String fileName = "";
+        String uniqueArkCaseHashFileIdentifier = ecmFileServiceProperties.getProperty("ecm.arkcase.hash.file.identifier");
 
         if (!Boolean.parseBoolean(request.getParameter("isFileChunk"))) {
             String parentObjectType = request.getParameter("parentObjectType");
@@ -249,37 +254,42 @@ public class FileUploadAPIController implements ApplicationEventPublisherAware {
             }
         } else {
 
-            String dirPath = System.getProperty("java.io.tmpdir");
-            try {
-                MultipartHttpServletRequest multipartHttpServletRequest = (MultipartHttpServletRequest) request;
-                MultiValueMap<String, MultipartFile> attachments = multipartHttpServletRequest.getMultiFileMap();
-                if (attachments != null) {
-                    for (Map.Entry<String, List<MultipartFile>> entry : attachments.entrySet()) {
-
-                        final List<MultipartFile> attachmentsList = entry.getValue();
-
-                        if (attachmentsList != null && !attachmentsList.isEmpty()) {
-
-                            for (final MultipartFile attachment : attachmentsList) {
-                                fileName = attachment.getOriginalFilename();
-                                File dir = new File(dirPath);
-                                if (dir.exists()) {
-                                    File file = new File(dirPath + "/" + fileName);
-                                    attachment.transferTo(file);
-                                }
-                            }
-                        }
-                    }
-                }
-            } catch (Exception e) {
-                log.error("File upload was unsuccessful.", e);
-            }
+            fileName = uploadFileChunk((MultipartHttpServletRequest) request, fileName, uniqueArkCaseHashFileIdentifier);
         }
 
         FileChunkDetails filechunkdetails = new FileChunkDetails();
         filechunkdetails.setFileName(fileName);
         filechunkdetails.setUuid(request.getParameter("uuid"));
         return filechunkdetails;
+    }
+
+    private String uploadFileChunk(MultipartHttpServletRequest request, String fileName, String uniqueArkCaseHashFileIdentifier) {
+        String dirPath = System.getProperty("java.io.tmpdir");
+        try {
+            MultipartHttpServletRequest multipartHttpServletRequest = request;
+            MultiValueMap<String, MultipartFile> attachments = multipartHttpServletRequest.getMultiFileMap();
+            if (attachments != null) {
+                for (Map.Entry<String, List<MultipartFile>> entry : attachments.entrySet()) {
+
+                    final List<MultipartFile> attachmentsList = entry.getValue();
+
+                    if (attachmentsList != null && !attachmentsList.isEmpty()) {
+
+                        for (final MultipartFile attachment : attachmentsList) {
+                            fileName = attachment.getOriginalFilename();
+                            File dir = new File(dirPath);
+                            if (dir.exists()) {
+                                File file = new File(dirPath + File.separator + uniqueArkCaseHashFileIdentifier + "-" + fileName);
+                                attachment.transferTo(file);
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            log.error("File upload was unsuccessful.", e);
+        }
+        return fileName;
     }
 
     @RequestMapping(value = "/mergeChunks", method = RequestMethod.POST, produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE})
@@ -342,5 +352,13 @@ public class FileUploadAPIController implements ApplicationEventPublisherAware {
 
     public void setFileChunkService(FileChunkService fileChunkService) {
         this.fileChunkService = fileChunkService;
+    }
+
+    public Properties getEcmFileServiceProperties() {
+        return ecmFileServiceProperties;
+    }
+
+    public void setEcmFileServiceProperties(Properties ecmFileServiceProperties) {
+        this.ecmFileServiceProperties = ecmFileServiceProperties;
     }
 }

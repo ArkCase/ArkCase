@@ -36,12 +36,13 @@ import org.springframework.jms.core.JmsTemplate;
 
 import javax.jms.ConnectionFactory;
 import java.util.HashMap;
+import java.util.Map;
 
 public class ProgressIndicatorService
 {
     private Logger LOG = LoggerFactory.getLogger(getClass());
 
-    private HashMap<String, ProgressbarExecutor> progressBars = new HashMap<>();
+    private Map<String, ProgressbarExecutor> progressBars = new HashMap<>();
     private JmsTemplate jmsTemplate;
     private ConnectionFactory activeMQConnectionFactory;
 

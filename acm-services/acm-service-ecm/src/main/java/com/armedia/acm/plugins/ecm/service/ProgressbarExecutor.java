@@ -34,13 +34,13 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 import org.apache.activemq.command.ActiveMQTopic;
 import org.apache.commons.io.input.CountingInputStream;
 import org.springframework.jms.core.JmsTemplate;
-import org.springframework.jms.core.MessageCreator;
 
 import javax.jms.*;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class ProgressbarExecutor {
+public class ProgressbarExecutor
+{
 
     private String ID;
     private String username;
@@ -62,19 +62,17 @@ public class ProgressbarExecutor {
     {
         ActiveMQTopic topic = new ActiveMQTopic(destination);
         jmsTemplate.setDeliveryMode(DeliveryMode.PERSISTENT);
-        jmsTemplate.send(topic, new MessageCreator() {
-            public Message createMessage(Session inJmsSession) throws JMSException {
-                ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
-                String jsonMessageObj = "";
-                try {
-                    jsonMessageObj = ow.writeValueAsString(message);
-                } catch (JsonProcessingException e) {
-                    // Print error
-                }
-
-                TextMessage theTextMessage = inJmsSession.createTextMessage(jsonMessageObj);
-                return theTextMessage;
+        jmsTemplate.send(topic, inJmsSession -> {
+            ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+            String jsonMessageObj = "";
+            try {
+                jsonMessageObj = ow.writeValueAsString(message);
+            } catch (JsonProcessingException e) {
+                // Print error
             }
+
+            TextMessage theTextMessage = inJmsSession.createTextMessage(jsonMessageObj);
+            return theTextMessage;
         });
     }
 
@@ -133,6 +131,10 @@ public class ProgressbarExecutor {
         return ID;
     }
 
+    public void setID(String ID) {
+        this.ID = ID;
+    }
+
     public ConnectionFactory getActiveMQConnectionFactory() {
         return activeMQConnectionFactory;
     }
@@ -149,6 +151,10 @@ public class ProgressbarExecutor {
         this.jmsTemplate = jmsTemplate;
     }
 
+    public String getUsername() {
+        return username;
+    }
+
     public void setUsername(String username) {
         this.username = username;
     }
@@ -160,4 +166,5 @@ public class ProgressbarExecutor {
     public void setProgressbarDetails(ProgressbarDetails progressbarDetails) {
         this.progressbarDetails = progressbarDetails;
     }
+
 }

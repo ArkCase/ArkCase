@@ -5,15 +5,9 @@ angular.module('core').controller(
     ['$scope', '$rootScope', '$modalInstance', '$http', '$translate', '$timeout', 'Upload', 'MessageService', 'ObjectService', 'UtilService', 'params', function ($scope, $rootScope, $modalInstance, $http, $translate, $timeout, Upload, MessageService, ObjectService, Util, params) {
         $scope.hashMapOfAllFiles = {};
 
-        var uploadFileSizeLimit = params.uploadFileSizeLimit;
-        $scope.$bus.subscribe('upload-file-size-limit-changed', function(newUploadFileSizeLimit){
-            uploadFileSizeLimit = newUploadFileSizeLimit;
-        });
-
-        var singleChunkFileSizeLimit = params.singleChunkFileSizeLimit;
-        $scope.$bus.subscribe('singe-chunk-file-size-limit-changed', function(newSingleChunkFileSizeLimit){
-            singleChunkFileSizeLimit = newSingleChunkFileSizeLimit;
-        });
+        $scope.uploadFileSizeLimit = params.uploadFileSizeLimit;
+        $scope.singleChunkFileSizeLimit = params.singleChunkFileSizeLimit;
+        $scope.enableFileChunkUpload = params.enableFileChunkUpload;
 
         $scope.onClickHideModal = function () {
             $scope.$bus.publish('upload-manager-hide');
@@ -24,9 +18,12 @@ angular.module('core').controller(
         };
 
         function notifySnackbarUploadFinished(){
-            var uploadedSuccessfully = true;
+            var uploadIcon = {
+                hide: true
+            };
+            $scope.activeUploadFileProcess = false;
             $timeout(function() {
-                $scope.$bus.publish('notify-snackbar-all-files-were-uploaded', uploadedSuccessfully);
+                $scope.$bus.publish('notify-snackbar-upload-status', uploadIcon);
             }, 5000);
         }
 
@@ -70,6 +67,10 @@ angular.module('core').controller(
                 {
                     uploadPart(foundReady.uuid);
                 }
+                else
+                {
+                    notifySnackbarUploadFinished();
+                }
             }
         };
 
@@ -99,6 +100,13 @@ angular.module('core').controller(
 
         function uploadChunks(file, uuid) {
             $scope.hashMapOfAllFiles[uuid].status = ObjectService.UploadFileStatus.IN_PROGRESS;
+            $scope.activeUploadFileProcess = true;
+            var uploadIcon = {
+                hide: false
+            };
+            $scope.$bus.publish('notify-snackbar-upload-status', uploadIcon);
+
+            //if(enableFileChunkUpload){} else {call old funtion()}
             Upload.upload({
                 url: 'api/latest/service/ecm/uploadChunks',
                 params: getParams(uuid),
@@ -130,10 +138,9 @@ angular.module('core').controller(
                         });
                     }
                 }
-                //this stays out until we have requirement close/cancel modal button.
-                /*$scope.onClickClose = function () {
+                $scope.onClickCloseModal = function () {
                     $modalInstance.dismiss('close');
-                };*/
+                };
 
             }, function (error) {
                 $scope.hashMapOfAllFiles[uuid].status = ObjectService.UploadFileStatus.FAILED;
@@ -144,24 +151,29 @@ angular.module('core').controller(
                 // The calculation for total is introduced because ng-file-upload makes discrepancy in the multipart file size.
                 // When parameters are send to the request for upload, total size gets bigger then the actual file size
                 var total = 0;
-                if($scope.hashMapOfAllFiles[uuid].file.size>uploadFileSizeLimit) {
+                if($scope.hashMapOfAllFiles[uuid].file.size>$scope.uploadFileSizeLimit) {
                     total = currentProgress < $scope.hashMapOfAllFiles[uuid].file.size ? $scope.hashMapOfAllFiles[uuid].file.size : currentProgress;
-                    $scope.hashMapOfAllFiles[uuid].currentProgress = parseInt(50.0 * (currentProgress / total));
+                    $scope.hashMapOfAllFiles[uuid].currentProgress = parseInt(50.0 * (currentProgress / total)) == 0 ? 50.0 : parseInt(50.0 * (currentProgress / total));
                 } else {
                     total = progress.total;
-                    $scope.hashMapOfAllFiles[uuid].currentProgress = parseInt(100.0 * (currentProgress / total));
-                    if($scope.hashMapOfAllFiles[uuid].currentProgress == 100){
-                        var status = ObjectService.UploadFileStatus.FINISHED;
-                        $scope.hashMapOfAllFiles[uuid].status = status;
-                        startUpload();
-                        notifySnackbarUploadFinished();
+                    $scope.hashMapOfAllFiles[uuid].currentProgress = parseInt(50.0 * (currentProgress / total)) == 0 ? 50.0 : parseInt(50.0 * (currentProgress / total));
+                    if($scope.hashMapOfAllFiles[uuid].currentProgress == 100 && $scope.hashMapOfAllFiles[uuid].status != ObjectService.UploadFileStatus.FINISHED){
+                        $scope.hashMapOfAllFiles[uuid].status = ObjectService.UploadFileStatus.FINISHED;
+                        var message = {};
+                        message.objectId = $scope.hashMapOfAllFiles[uuid].objectId;
+                        message.objectType = $scope.hashMapOfAllFiles[uuid].objectType;
+                        message.success = true;
+                        message.currentProgress = $scope.hashMapOfAllFiles[uuid].currentProgress;
+                        message.status = ObjectService.UploadFileStatus.FINISHED;
+                        message.uuid = uuid;
+
+                        $scope.$bus.publish('notify-modal-progressbar-current-progress-finished', message);
                     }
                 }
             });
-
         }
 
-        $rootScope.$bus.subscribe('notify-modal-progressbar-current-progress-updated', function(message) {
+        $scope.$bus.subscribe('notify-modal-progressbar-current-progress-updated', function(message) {
             $scope.$apply(function(){
                 var status = ObjectService.UploadFileStatus.IN_PROGRESS;
                 message.status = status;
@@ -181,7 +193,7 @@ angular.module('core').controller(
                 var currentFileDetails = {};
                 currentFileDetails.parts = [];
                 currentFileDetails.part = 0;
-                currentFileDetails.partBytes = uploadFileSizeLimit;
+                currentFileDetails.partBytes = $scope.uploadFileSizeLimit;
                 currentFileDetails.progress = 0;
                 currentFileDetails.partProgress = 0;
                 currentFileDetails.startByte = 0;
@@ -202,17 +214,17 @@ angular.module('core').controller(
                 currentFileDetails.uuid = uuid;
 
                 $scope.hashMapOfAllFiles[uuid] = currentFileDetails;
+
             }
             startUpload();
         });
 
-        $rootScope.$bus.subscribe('notify-modal-progressbar-current-progress-finished', function(message) {
-                var status = message.success ? ObjectService.UploadFileStatus.FINISHED : ObjectService.UploadFileStatus.FAILED;
-                message.status = status;
+        $scope.$bus.subscribe('notify-modal-progressbar-current-progress-finished', function(message) {
+            var status = message.success ? ObjectService.UploadFileStatus.FINISHED : ObjectService.UploadFileStatus.FAILED;
+            message.status = status;
 
-                updateCurrentProgress(message);
-                startUpload();
-                notifySnackbarUploadFinished();
+            updateCurrentProgress(message);
+            startUpload();
         });
 
     }

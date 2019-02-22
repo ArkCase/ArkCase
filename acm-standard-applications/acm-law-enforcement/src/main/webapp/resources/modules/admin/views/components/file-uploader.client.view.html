@@ -14,6 +14,12 @@
                 <input ng-model="singleChunkFileSizeLimit" class="form-control input-sm" id="singleChunkFileSizeLimit" />
             </div>
             <br />
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" ng-model="enableFileChunkUpload">
+                    <span translate>admin.documentManagement.fileUploader.enableFileChunkUpload.label</span>
+                </label>
+            </div>
 
             <div class="form-group">
                 <button ng-click="applyChanges()" class="btn btn-sm btn-primary" translate>

@@ -296,6 +296,8 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         log.info("File size: {}; content type: {}", file.getSize(), file.getContentType());
 
         AcmContainer container = getOrCreateContainer(parentObjectType, parentObjectId);
+        //makes a problem when trying to upload file to a children node folder
+
         // TODO: disgusting hack here. getOrCreateContainer is transactional, and may update the container or the
         // container folder, e.g. by adding participants. If it does, the object we get back won't have those changes,
         // so we could get a unique constraint violation later on. Hence the need to update the object
@@ -311,6 +313,11 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
             metadata.setCmisRepositoryId(cmisRepositoryId);
             EcmFile uploaded = getEcmFileTransaction().addFileTransaction(authentication, file.getOriginalFilename(), container,
                     targetCmisFolderId, fileInputStream, metadata, file);
+
+            if (uploaded.getUuid() != null) {
+                log.debug("Stop progressbar executor in stage 3, for file {} and set file upload success to {}", uploaded.getUuid(), true);
+                progressIndicatorService.end(uploaded.getUuid(), true);
+            }
 
             event = new EcmFileAddedEvent(uploaded, authentication);
             event.setUserId(authentication.getName());

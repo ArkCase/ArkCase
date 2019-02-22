@@ -29,7 +29,8 @@ package com.armedia.acm.plugins.ecm.model;
 
 import java.util.List;
 
-public class FileDetails {
+public class FileDetails
+{
     private String name;
     private String mimeType;
     private Long objectId;
