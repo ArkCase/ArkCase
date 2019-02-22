@@ -85,7 +85,6 @@ public class AngularResourceCopier implements ServletContextAware
     private String mergeConfigFrontendTask;
     private String yarnInstallCommand;
     private String gruntDefaultCommand;
-    private String copyToModulesConfig;
     private List<String> resourceFoldersToCopyFromArchive;
     private List<String> assembledFoldersToCopyToDeployment;
     private List<String> filesToCopyFromArchive;
@@ -144,9 +143,11 @@ public class AngularResourceCopier implements ServletContextAware
                 copyFilesAndExecuteCommands(profile, resolver, rootPath, tmpDir, copiedFiles, activeProfiles, libFolderPath);
             }
 
-            runFrontEndBuildCommand(tmpDir, gruntDefaultCommand);
+
             List<String> tmpFilesFound = findAllFilesInFolder(tmpDir);
+
             log.debug("Found {} files in tmp folder", tmpFilesFound.size());
+
 
             // delete all files that exist in the tmp dir, but we didn't copy them there; such files must have been
             // removed from the project. Exceptions are files managed by yarn and grunt: lib folder, node_modules
@@ -164,7 +165,7 @@ public class AngularResourceCopier implements ServletContextAware
                     .peek(f -> log.debug("Removing tmp file [{}]", f.toPath()))
                     .forEach(File::delete);
 
-            runFrontEndBuildCommand(tmpDir, copyToModulesConfig);
+            runFrontEndBuildCommand(tmpDir, gruntDefaultCommand);
 
             File deployFolder = new File(getDeployFolderPath());
             createFolderStructure(deployFolder);
@@ -587,15 +588,5 @@ public class AngularResourceCopier implements ServletContextAware
     public void setGruntDefaultCommand(String gruntDefaultCommand)
     {
         this.gruntDefaultCommand = gruntDefaultCommand;
-    }
-
-    public String getCopyToModulesConfig()
-    {
-        return copyToModulesConfig;
-    }
-
-    public void setCopyToModulesConfig(String copyToModulesConfig)
-    {
-        this.copyToModulesConfig = copyToModulesConfig;
     }
 }
