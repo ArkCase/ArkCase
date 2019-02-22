@@ -34,6 +34,7 @@ import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.spy;
 
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
@@ -47,6 +48,7 @@ import com.armedia.acm.plugins.ecm.model.sync.EcmEvent;
 import com.armedia.acm.plugins.ecm.model.sync.EcmEventType;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
+import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
 
 import org.apache.chemistry.opencmis.client.api.Document;
 import org.apache.chemistry.opencmis.commons.data.ContentStream;
@@ -70,6 +72,7 @@ public class EcmFileCreatedEventHandlerTest
     private AcmFolderDao acmFolderDao = createMock(AcmFolderDao.class);
     private AcmFolderService acmFolderService = createMock(AcmFolderService.class);
     private EcmFileDao ecmFileDao = createMock(EcmFileDao.class);
+    private FolderAndFilesUtils spyFolderAndFilesUtils = spy(FolderAndFilesUtils.class);
     private AuditPropertyEntityAdapter auditPropertyEntityAdapter = createMock(AuditPropertyEntityAdapter.class);
     private EcmFileService ecmFileService = createMock(EcmFileService.class);
     private Document cmisDocument = createMock(Document.class);
@@ -87,9 +90,12 @@ public class EcmFileCreatedEventHandlerTest
 
         unit.setFolderService(acmFolderService);
         unit.setAuditPropertyEntityAdapter(auditPropertyEntityAdapter);
-        unit.setFolderDao(acmFolderDao);
-        unit.setFileDao(ecmFileDao);
         unit.setFileService(ecmFileService);
+        spyFolderAndFilesUtils.setFileDao(ecmFileDao);
+        spyFolderAndFilesUtils.setFileService(ecmFileService);
+        spyFolderAndFilesUtils.setFolderDao(acmFolderDao);
+        spyFolderAndFilesUtils.setFolderService(acmFolderService);
+        unit.setFolderAndFilesUtils(spyFolderAndFilesUtils);
 
         fileCreated = new EcmEvent(new JSONObject());
         fileCreated.setEcmEventType(EcmEventType.CREATE);

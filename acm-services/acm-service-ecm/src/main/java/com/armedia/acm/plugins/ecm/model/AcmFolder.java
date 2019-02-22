@@ -213,6 +213,11 @@ public class AcmFolder implements AcmEntity, Serializable, AcmObject, AcmAssigne
         return objectType;
     }
 
+    public void setObjectType(String objectType)
+    {
+        this.objectType = objectType;
+    }
+
     @Override
     public Long getId()
     {
@@ -280,6 +285,7 @@ public class AcmFolder implements AcmEntity, Serializable, AcmObject, AcmAssigne
         return participants;
     }
 
+    @Override
     public void setParticipants(List<AcmParticipant> participants)
     {
         this.participants = participants;

@@ -27,10 +27,22 @@ package com.armedia.acm.plugins.ecm.utils;
  * #L%
  */
 
+import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
+import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
+import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
+import com.armedia.acm.plugins.ecm.dao.AcmFolderDao;
+import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
+import com.armedia.acm.plugins.ecm.model.AcmContainer;
+import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
+import com.armedia.acm.plugins.ecm.model.sync.EcmEvent;
+import com.armedia.acm.plugins.ecm.service.AcmFolderService;
+import com.armedia.acm.plugins.ecm.service.EcmFileService;
 
+import org.apache.chemistry.opencmis.client.api.CmisObject;
+import org.apache.chemistry.opencmis.client.api.Document;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.pdfbox.cos.COSName;
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -39,6 +51,9 @@ import org.apache.pdfbox.pdmodel.PDResources;
 import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+
+import javax.persistence.NoResultException;
 
 import java.io.File;
 import java.io.IOException;
@@ -52,7 +67,11 @@ import java.util.List;
 public class FolderAndFilesUtils
 {
 
-    private Logger LOG = LoggerFactory.getLogger(getClass());
+    private Logger log = LoggerFactory.getLogger(getClass());
+    private AcmFolderDao folderDao;
+    private EcmFileDao fileDao;
+    private AcmFolderService folderService;
+    private EcmFileService fileService;
 
     /**
      * Replace all not allowed characters in folder name with underscore
@@ -165,7 +184,7 @@ public class FolderAndFilesUtils
         }
         catch (Exception e)
         {
-            LOG.error("Cannot convert String representation of folderId=" + folderId + " to Long", e);
+            log.error("Cannot convert String representation of folderId=" + folderId + " to Long", e);
         }
 
         return null;
@@ -231,6 +250,190 @@ public class FolderAndFilesUtils
         }
     }
 
+    public EcmFile uploadFile(EcmEvent ecmEvent, AcmFolder targetParentFolder)
+    {
+        AcmContainer container = lookupArkCaseContainer(targetParentFolder.getId());
+        if (container == null)
+        {
+            log.debug("Can't find container for the new file with id {}, exiting.", ecmEvent.getNodeId());
+            return null;
+        }
+        String cmisRepositoryId = getFolderService().getCmisRepositoryId(targetParentFolder);
+        Document cmisDocument = lookupCmisDocument(cmisRepositoryId, ecmEvent.getNodeId());
+        if (cmisDocument == null)
+        {
+            log.error("No document to be loaded - exiting.");
+            return null;
+        }
+        EcmFile addedToArkCase = null;
+        try
+        {
+            addedToArkCase = getFileService().upload(
+                    ecmEvent.getNodeName(),
+                    findFileType(cmisDocument),
+                    "Document",
+                    cmisDocument.getContentStream().getStream(),
+                    cmisDocument.getContentStreamMimeType(),
+                    ecmEvent.getNodeName(),
+                    new UsernamePasswordAuthenticationToken(ecmEvent.getUserId(), ecmEvent.getUserId()),
+                    targetParentFolder.getCmisFolderId(),
+                    container.getContainerObjectType(),
+                    container.getContainerObjectId(),
+                    targetParentFolder.getCmisRepositoryId(),
+                    cmisDocument);
+        }
+        catch (AcmCreateObjectFailedException | AcmUserActionFailedException e)
+        {
+            log.error("Could not add file with CMIS ID [{}] to ArkCase: {}", ecmEvent.getNodeId(), e.getMessage(), e);
+        }
+        return addedToArkCase;
+    }
+
+    /**
+     * So subtypes can set the file type as needed.
+     *
+     * @param cmisDocument
+     * @return
+     */
+    public String findFileType(Document cmisDocument)
+    {
+        return "other";
+    }
+
+    public Document lookupCmisDocument(String cmisRepositoryId, String nodeId)
+    {
+        try
+        {
+            CmisObject object = getFileService().findObjectById(cmisRepositoryId, nodeId);
+            if (object != null && object instanceof Document)
+            {
+                return (Document) object;
+            }
+            else
+            {
+                return null;
+            }
+        }
+        catch (Exception e)
+        {
+            log.warn("Could not lookup CMIS document for node with id {}", nodeId);
+            return null;
+        }
+    }
+
+    public AcmContainer lookupArkCaseContainer(Long parentFolderId)
+    {
+        try
+        {
+            AcmContainer found = getFolderService().findContainerByFolderId(parentFolderId);
+            log.debug("ArkCase has container for folder with id {}", parentFolderId);
+            return found;
+        }
+        catch (AcmObjectNotFoundException e)
+        {
+            log.warn("No container in ArkCase for folder: {}", parentFolderId);
+            return null;
+        }
+    }
+
+    public EcmFile lookupArkCaseFile(String nodeId, Long parentFolderId)
+    {
+        try
+        {
+            EcmFile found = getFileDao().findByCmisFileIdAndFolderId(nodeId, parentFolderId);
+            log.debug("ArkCase has file with CMIS ID {}: folder id is {}", nodeId, found.getId());
+            return found;
+        }
+        catch (NoResultException e)
+        {
+            log.warn("No such file in ArkCase: {}", nodeId);
+            return null;
+        }
+    }
+
+    public EcmFile lookupArkCaseFile(String fileCmisId)
+    {
+        try
+        {
+            List<EcmFile> fileList = getFileDao().findByCmisFileId(fileCmisId);
+            if (!fileList.isEmpty())
+            {
+                EcmFile ecmFile = fileList.get(0);
+                log.debug("ArkCase has file with CMIS ID {}: file id is {}", fileCmisId, ecmFile.getId());
+                return ecmFile;
+            }
+            return null;
+        }
+        catch (NoResultException e)
+        {
+            log.warn("No such file in ArkCase: {}", fileCmisId);
+            return null;
+        }
+    }
+
+    public AcmFolder lookupArkCaseFolder(String folderCmisId)
+    {
+        try
+        {
+            AcmFolder found = getFolderDao().findByCmisFolderId(folderCmisId);
+            if (found != null)
+            {
+                log.debug("ArkCase has folder with CMIS ID {}: folder id is {}", folderCmisId, found.getId());
+            }
+            else
+            {
+                log.debug("ArkCase does not have folder with CMIS ID {}", folderCmisId);
+            }
+
+            return found;
+        }
+        catch (NoResultException e)
+        {
+            log.warn("No such folder in ArkCase: {}", folderCmisId);
+            return null;
+        }
+    }
+
+    public AcmFolderDao getFolderDao()
+    {
+        return folderDao;
+    }
+
+    public void setFolderDao(AcmFolderDao folderDao)
+    {
+        this.folderDao = folderDao;
+    }
+
+    public EcmFileDao getFileDao()
+    {
+        return fileDao;
+    }
+
+    public void setFileDao(EcmFileDao fileDao)
+    {
+        this.fileDao = fileDao;
+    }
+
+    public AcmFolderService getFolderService()
+    {
+        return folderService;
+    }
+
+    public void setFolderService(AcmFolderService folderService)
+    {
+        this.folderService = folderService;
+    }
+
+    public EcmFileService getFileService()
+    {
+        return fileService;
+    }
+
+    public void setFileService(EcmFileService fileService)
+    {
+        this.fileService = fileService;
+    }
+
     public boolean isSearchablePDF(File file, String finalMimeType)
     {
         if (finalMimeType.startsWith("application/pdf"))
@@ -255,11 +458,10 @@ public class FolderAndFilesUtils
             }
             catch (IOException e)
             {
-                LOG.error("Unable to load pdf document: {}", e.getMessage(), e);
+                log.error("Unable to load pdf document: {}", e.getMessage(), e);
             }
             return false;
         }
         return false;
     }
-
 }
