@@ -10,23 +10,42 @@
         <property name="folderDao" ref="acmFolderDao"/>
         <property name="folderService" ref="acmFolderService"/>
         <property name="fileParticipantService" ref="fileParticipantService"/>
+        <property name="folderAndFilesUtils" ref="folderAndFilesUtils"/>
     </bean>
 
     <bean id="ecmFileCreatedEventHandler" class="com.armedia.acm.plugins.ecm.service.sync.impl.EcmFileCreatedEventHandler">
-        <property name="folderService" ref="acmFolderService"/>
-        <property name="folderDao" ref="acmFolderDao"/>
         <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
-        <property name="fileDao" ref="ecmFileDao"/>
+        <property name="folderService" ref="acmFolderService"/>
         <property name="fileService" ref="ecmFileService"/>
+        <property name="folderAndFilesUtils" ref="folderAndFilesUtils"/>
     </bean>
 
     <bean id="ecmFileMovedEventHandler" class="com.armedia.acm.plugins.ecm.service.sync.impl.EcmFileMovedEventHandler">
-        <property name="folderService" ref="acmFolderService"/>
-        <property name="folderDao" ref="acmFolderDao"/>
+        <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
+        <property name="fileService" ref="ecmFileService"/>
+        <property name="folderAndFilesUtils" ref="folderAndFilesUtils"/>
+    </bean>
+
+    <bean id="ecmFileCopiedEventHandler" class="com.armedia.acm.plugins.ecm.service.sync.impl.EcmFileCopiedEventHandler">
         <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
         <property name="fileDao" ref="ecmFileDao"/>
         <property name="fileService" ref="ecmFileService"/>
         <property name="folderAndFilesUtils" ref="folderAndFilesUtils"/>
     </bean>
 
+    <bean id="ecmFileFolderRenamedEventHandler" class="com.armedia.acm.plugins.ecm.service.sync.impl.EcmFileFolderRenamedEventHandler">
+        <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
+        <property name="folderService" ref="acmFolderService"/>
+        <property name="fileService" ref="ecmFileService"/>
+        <property name="folderAndFilesUtils" ref="folderAndFilesUtils"/>
+    </bean>
+
+    <bean id="ecmFileFolderMetadataUpdatedEventHandler"
+          class="com.armedia.acm.plugins.ecm.service.sync.impl.EcmFileFolderMetadataUpdatedEventHandler">
+        <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
+        <property name="folderDao" ref="acmFolderDao"/>
+        <property name="fileDao" ref="ecmFileDao"/>
+        <property name="folderAndFilesUtils" ref="folderAndFilesUtils"/>
+        <property name="metadataUpdateProperties" ref="metadataUpdateProperties"/>
+    </bean>
 </beans>

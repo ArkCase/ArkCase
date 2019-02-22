@@ -29,11 +29,15 @@ package gov.foia.service;
 
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
-import com.armedia.acm.plugins.ecm.model.*;
+import com.armedia.acm.plugins.ecm.model.AcmContainer;
+import com.armedia.acm.plugins.ecm.model.AcmFolder;
+import com.armedia.acm.plugins.ecm.model.EcmFile;
+import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
+import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
 import com.armedia.acm.plugins.ecm.service.impl.EcmFileServiceImpl;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import com.armedia.acm.service.objectlock.annotation.AcmAcquireAndReleaseObjectLock;
-import gov.foia.model.FOIAEcmFileVersion;
+
 import org.apache.chemistry.opencmis.client.api.Document;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
@@ -41,10 +45,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.persistence.PersistenceException;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+
+import gov.foia.model.FOIAEcmFileVersion;
 
 public class FOIAEcmFileServiceImpl extends EcmFileServiceImpl implements FOIAEcmFileService
 {
@@ -110,10 +117,7 @@ public class FOIAEcmFileServiceImpl extends EcmFileServiceImpl implements FOIAEc
             fileCopy.setSecurityField(file.getSecurityField());
 
             FOIAEcmFileVersion fileCopyVersion = new FOIAEcmFileVersion();
-            fileCopyVersion.setVersionMimeType(file.getFileActiveVersionMimeType());
-            fileCopyVersion.setVersionFileNameExtension(file.getFileActiveVersionNameExtension());
             fileCopyVersion.setCmisObjectId(cmisObject.getId());
-            fileCopyVersion.setFile(file);
             fileCopyVersion.setVersionTag(cmisObject.getVersionLabel());
             fileCopyVersion.setReviewStatus(new String());
             fileCopyVersion.setRedactionStatus(new String());

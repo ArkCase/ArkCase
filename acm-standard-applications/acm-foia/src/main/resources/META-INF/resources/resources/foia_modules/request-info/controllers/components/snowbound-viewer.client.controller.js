@@ -50,6 +50,7 @@ angular.module('request-info').controller('RequestInfo.SnowBoundViewer', [ '$roo
             moduleName: 'document-details',
             templateUrl: 'modules/document-details/views/components/annotation-tags-modal.client.view.html',
             controller: 'Document.AnnotationTagsModalController',
+            backdrop: 'static',
             resolve: {
                 params: function () {
                     return params;

@@ -82,7 +82,6 @@
         class="com.armedia.acm.plugins.ecm.pipeline.presave.EcmFileMergeContentHandler">
         <property name="ecmFileMuleUtils" ref="ecmFileMuleUtils"/>
     </bean>
-
     <bean id="ecmFileNewContentHandler" class="com.armedia.acm.plugins.ecm.pipeline.presave.EcmFileNewContentHandler">
         <property name="ecmFileMuleUtils" ref="ecmFileMuleUtils"/>
         <property name="progressIndicatorService" ref="progressIndicatorService"/>
@@ -368,7 +367,12 @@
         <property name="fileParticipantService" ref="fileParticipantService"/>
     </bean>
 
-    <bean id="folderAndFilesUtils" class="com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils"/>
+    <bean id="folderAndFilesUtils" class="com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils">
+        <property name="folderService" ref="acmFolderService"/>
+        <property name="folderDao" ref="acmFolderDao"/>
+        <property name="fileDao" ref="ecmFileDao"/>
+        <property name="fileService" ref="ecmFileService"/>
+    </bean>
 
     <bean id="fileEventPublisher" class="com.armedia.acm.plugins.ecm.service.FileEventPublisher"/>
 
@@ -429,6 +433,15 @@
         <property name="ecmFileDao" ref="ecmFileDao"/>
         <property name="enableDocumentACL" value="${dac.enableDocumentACL}"/>
         <property name="searchAccessControlFields" ref="searchAccessControlFields"/>
+    </bean>
+
+    <bean id="metadataUpdateProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+        <!-- note: must leave "file:" at the start of the file name for spring
+        to be able to read the file; otherwise it will try to read from the
+        classpath -->
+        <property name="location" value="file:${user.home}/.arkcase/acm/alfrescoUpdateMetadata.properties"/>
+        <property name="ignoreResourceNotFound" value="true"/>
+        <property name="localOverride" value="false"/>
     </bean>
 
     <bean id="fileChunkService" class="com.armedia.acm.plugins.ecm.service.impl.FileChunkServiceImpl">
