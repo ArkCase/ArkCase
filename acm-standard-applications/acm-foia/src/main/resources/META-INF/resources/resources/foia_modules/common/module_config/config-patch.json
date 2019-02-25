@@ -46,7 +46,7 @@
     },
     {
         "op": "add",
-        "path": "/docTree/columnDefs/reviewStatus",
+        "path": "/docTree/columnDefs/",
         "value": {
             "name": "reviewStatus",
             "displayName": "common.directive.docTree.table.columns.reviewStatus",
@@ -57,7 +57,7 @@
     },
     {
         "op": "add",
-        "path": "/docTree/columnDefs/redactionStatus",
+        "path": "/docTree/columnDefs/",
         "value": {
             "name": "redactionStatus",
             "displayName": "common.directive.docTree.table.columns.redactionStatus ",
@@ -88,7 +88,7 @@
     },
     {
         "op": "add",
-        "path": "/docTree/columnDefs/public",
+        "path": "/docTree/columnDefs/",
         "value": {
             "name": "public",
             "displayName": "common.directive.docTree.table.columns.public",
