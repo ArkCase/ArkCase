@@ -68,9 +68,9 @@ import java.io.InputStream;
 /**
  * @author ivana.shekerova on 12/21/2018.
  */
-public class EcmFileMovedEventHandlerTest
+public class EcmFileFolderMovedEventHandlerTest
 {
-    private EcmFileMovedEventHandler unit;
+    private EcmFileFolderMovedEventHandler unit;
 
     private AcmFolderDao acmFolderDao = mock(AcmFolderDao.class);
     private AcmFolderService acmFolderService = mock(AcmFolderService.class);
@@ -87,7 +87,7 @@ public class EcmFileMovedEventHandlerTest
     @Before
     public void setUp() throws Exception
     {
-        unit = new EcmFileMovedEventHandler();
+        unit = new EcmFileFolderMovedEventHandler();
 
         unit.setAuditPropertyEntityAdapter(auditPropertyEntityAdapter);
         unit.setFileService(ecmFileService);
@@ -150,9 +150,8 @@ public class EcmFileMovedEventHandlerTest
 
         when(ecmFileService.moveFileInArkcase(file, targetParentFolder, fileMovedEvent.getTargetParentNodeType())).thenReturn(returnFile);
 
-        EcmFile movedFile = unit.onEcmFileMoved(fileMovedEvent);
+        unit.onEcmFileMoved(fileMovedEvent);
 
-        assertEquals(movedFile.getFolder().getCmisFolderId(), fileMovedEvent.getTargetParentNodeId());
         verify(acmFolderDao, times(2)).findByCmisFolderId(anyString());
         verify(ecmFileDao, times(1)).findByCmisFileIdAndFolderId(anyString(), anyLong());
     }

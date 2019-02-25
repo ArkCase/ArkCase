@@ -68,10 +68,13 @@ public class AlfrescoCopyServiceCopyAuditResponseReaderTest
         List<EcmEvent> copyEvents = unit.read(copyServiceCopyAuditResponseJson);
 
         assertNotNull(copyEvents);
-        assertEquals(1, copyEvents.size());
+        assertEquals(2, copyEvents.size());
 
         Object[][] expectedData = {
                 // event type, auditId, userid, parent node type, parent node id, node type, node id, file name
+                { EcmEventType.COPY, 26627L, "admin", "folder", "workspace://SpacesStore/a341ac50-b60b-4bd8-b1b3-922dcd05a0a7",
+                        "folder", "workspace://SpacesStore/c78612c1-6fbd-4123-a51a-775890d91e9b",
+                        "subfolder" },
                 { EcmEventType.COPY, 26624L, "admin", "folder", "workspace://SpacesStore/a341ac50-b60b-4bd8-b1b3-922dcd05a0a7",
                         "document", "workspace://SpacesStore/3d887e96-3166-4404-a428-2fd12d6c4a81",
                         "doc.txt" }

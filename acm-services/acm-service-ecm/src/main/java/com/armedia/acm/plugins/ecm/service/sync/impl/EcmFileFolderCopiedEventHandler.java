@@ -27,6 +27,8 @@ package com.armedia.acm.plugins.ecm.service.sync.impl;
  * #L%
  */
 
+import com.armedia.acm.core.AcmObject;
+import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
@@ -35,6 +37,7 @@ import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.model.sync.EcmEvent;
 import com.armedia.acm.plugins.ecm.model.sync.EcmEventType;
+import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
 
@@ -47,16 +50,17 @@ import java.util.List;
 /**
  * @author ivana.shekerova on 1/4/2019.
  */
-public class EcmFileCopiedEventHandler implements ApplicationListener<EcmEvent>
+public class EcmFileFolderCopiedEventHandler implements ApplicationListener<EcmEvent>
 {
 
     private transient final Logger log = LoggerFactory.getLogger(getClass());
     private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
     private EcmFileDao fileDao;
     private EcmFileService fileService;
+    private AcmFolderService folderService;
     private FolderAndFilesUtils folderAndFilesUtils;
 
-    public EcmFile onEcmFileCopied(EcmEvent ecmEvent)
+    public void onEcmFileCopied(EcmEvent ecmEvent)
     {
         getAuditPropertyEntityAdapter().setUserId(ecmEvent.getUserId());
 
@@ -66,27 +70,65 @@ public class EcmFileCopiedEventHandler implements ApplicationListener<EcmEvent>
         if (targetParentFolder == null)
         {
             log.debug("Can't find folder for the copied file with id {}, no further action.", ecmEvent.getNodeId());
-            return null;
+            return;
         }
 
-        // If it already exists, the copy has already been done in ArkCase, and no further work is needed
-        EcmFile arkCaseFile = getFolderAndFilesUtils().lookupArkCaseFile(ecmEvent.getNodeId(), targetParentFolder.getId());
-        if (targetParentFolder != null && arkCaseFile == null)
+        if (ecmEvent.getNodeType().equals(EcmFileConstants.ECM_SYNC_NODE_TYPE_DOCUMENT))
         {
-            List<EcmFile> listFiles = getFileDao().findByCmisFileId(ecmEvent.getSourceOfCopyNodeId());
-            if (listFiles.isEmpty())
+            // If it already exists, the copy has already been done in ArkCase, and no further work is needed
+            EcmFile arkCaseFile = getFolderAndFilesUtils().lookupArkCaseFile(ecmEvent.getNodeId(), targetParentFolder.getId());
+            if (targetParentFolder != null && arkCaseFile == null)
             {
-                // not in arkcase, so the folder that the file was copied from is not an Arkcase folder
-                return getFolderAndFilesUtils().uploadFile(ecmEvent, targetParentFolder);
-            }
-            else
-            {
-                // in arkcase, so the folder that the file was copied from is Arkcase folder
-                return copyFile(ecmEvent, targetParentFolder, listFiles);
+                List<EcmFile> listFiles = getFileDao().findByCmisFileId(ecmEvent.getSourceOfCopyNodeId());
+                if (listFiles.isEmpty())
+                {
+                    // not in arkcase, so the folder that the file was copied from is not an Arkcase folder
+                    getFolderAndFilesUtils().uploadFile(ecmEvent, targetParentFolder);
+                }
+                else
+                {
+                    // in arkcase, so the folder that the file was copied from is Arkcase folder
+                    copyFile(ecmEvent, targetParentFolder, listFiles);
+                }
             }
         }
+        else if (ecmEvent.getNodeType().equals(EcmFileConstants.ECM_SYNC_NODE_TYPE_FOLDER))
+        {
+            // If it already exists, the copy has already been done in ArkCase, and no further work is needed
+            AcmFolder arkCaseFolder = getFolderAndFilesUtils().lookupArkCaseFolder(ecmEvent.getNodeId());
+            if (targetParentFolder != null && arkCaseFolder == null)
+            {
+                    AcmFolder created = getFolderService().createFolder(targetParentFolder, ecmEvent.getNodeId(), ecmEvent.getNodeName());
+                    try
+                    {
+                    getFolderService().createFolderChildrenInArkcase(created, ecmEvent.getUserId());
+                    }
+                    catch (AcmUserActionFailedException | AcmObjectNotFoundException e)
+                    {
+                        log.debug("Can not create folder children for folder with id: {} and name: {} ", created.getId(),
+                                created.getName());
+                    }
 
-        return null;
+                    log.debug("Finished creating new folder with node id {}, ArkCase id {}", created.getCmisFolderId(), created.getId());
+            }
+            else if (targetParentFolder != null && arkCaseFolder != null)
+            {
+                try
+                {
+                    List<AcmObject> acmObjects = getFolderService().getFolderChildren(arkCaseFolder.getId());
+                    if (acmObjects.isEmpty())
+                    {
+                        getFolderService().createFolderChildrenInArkcase(arkCaseFolder, ecmEvent.getUserId());
+                    }
+                }
+                catch (AcmUserActionFailedException | AcmObjectNotFoundException e)
+                {
+                    log.error("Could not create children in folder with CMIS ID [{}] to ArkCase: {}", ecmEvent.getNodeId(), e.getMessage(),
+                            e);
+                }
+
+            }
+        }
     }
 
     private EcmFile copyFile(EcmEvent ecmEvent, AcmFolder targetParentFolder, List<EcmFile> listFiles)
@@ -106,8 +148,7 @@ public class EcmFileCopiedEventHandler implements ApplicationListener<EcmEvent>
 
     protected boolean isCopyFileEvent(EcmEvent ecmEvent)
     {
-        return EcmEventType.COPY.equals(ecmEvent.getEcmEventType()) &&
-                EcmFileConstants.ECM_SYNC_NODE_TYPE_DOCUMENT.equals(ecmEvent.getNodeType());
+        return EcmEventType.COPY.equals(ecmEvent.getEcmEventType());
     }
 
     @Override
@@ -149,6 +190,16 @@ public class EcmFileCopiedEventHandler implements ApplicationListener<EcmEvent>
         this.fileService = fileService;
     }
 
+    public AcmFolderService getFolderService()
+    {
+        return folderService;
+    }
+
+    public void setFolderService(AcmFolderService folderService)
+    {
+        this.folderService = folderService;
+    }
+
     public FolderAndFilesUtils getFolderAndFilesUtils()
     {
         return folderAndFilesUtils;
@@ -158,4 +209,5 @@ public class EcmFileCopiedEventHandler implements ApplicationListener<EcmEvent>
     {
         this.folderAndFilesUtils = folderAndFilesUtils;
     }
+
 }

@@ -306,7 +306,7 @@ public interface EcmFileService
             throws AcmUserActionFailedException, AcmObjectNotFoundException, AcmCreateObjectFailedException;
 
     EcmFile moveFileInArkcase(EcmFile file, AcmFolder targetParentFolder, String targetObjectType)
-            throws AcmUserActionFailedException, AcmObjectNotFoundException, AcmCreateObjectFailedException;
+            throws AcmUserActionFailedException, AcmCreateObjectFailedException;
 
     void deleteFile(Long fileId) throws AcmUserActionFailedException, AcmObjectNotFoundException;
 

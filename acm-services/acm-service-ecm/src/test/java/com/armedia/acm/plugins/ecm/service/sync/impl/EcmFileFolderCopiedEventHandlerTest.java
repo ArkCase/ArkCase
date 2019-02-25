@@ -72,10 +72,10 @@ import java.util.Properties;
 /**
  * @author ivana.shekerova on 1/8/2019.
  */
-public class EcmFileCopiedEventHandlerTest
+public class EcmFileFolderCopiedEventHandlerTest
 {
 
-    private EcmFileCopiedEventHandler unit;
+    private EcmFileFolderCopiedEventHandler unit;
 
     private AcmFolderDao acmFolderDao = mock(AcmFolderDao.class);
     private AcmFolderService acmFolderService = mock(AcmFolderService.class);
@@ -95,7 +95,7 @@ public class EcmFileCopiedEventHandlerTest
     @Before
     public void setUp() throws Exception
     {
-        unit = new EcmFileCopiedEventHandler();
+        unit = new EcmFileFolderCopiedEventHandler();
 
         unit.setAuditPropertyEntityAdapter(auditPropertyEntityAdapter);
         unit.setFileDao(ecmFileDao);
@@ -127,9 +127,8 @@ public class EcmFileCopiedEventHandlerTest
         // target folder not in arkcase
         when(acmFolderDao.findByCmisFolderId(fileCopiedEvent.getParentNodeId())).thenThrow(new NoResultException());
 
-        EcmFile movedFile = unit.onEcmFileCopied(fileCopiedEvent);
+        unit.onEcmFileCopied(fileCopiedEvent);
 
-        assertEquals(movedFile, null);
         verify(acmFolderDao, times(1)).findByCmisFolderId(anyString());
     }
 
@@ -153,9 +152,8 @@ public class EcmFileCopiedEventHandlerTest
         // the file is already in ArkCase
         when(ecmFileDao.findByCmisFileIdAndFolderId(fileCopiedEvent.getNodeId(), targetFolder.getId())).thenReturn(file);
 
-        EcmFile movedFile = unit.onEcmFileCopied(fileCopiedEvent);
+        unit.onEcmFileCopied(fileCopiedEvent);
 
-        assertEquals(movedFile, null);
         verify(acmFolderDao, times(1)).findByCmisFolderId(anyString());
         verify(ecmFileDao, times(1)).findByCmisFileIdAndFolderId(anyString(), anyLong());
     }
@@ -269,9 +267,7 @@ public class EcmFileCopiedEventHandlerTest
         when(ecmFileDao.save(any(EcmFile.class))).thenReturn(originalFile);
         when(ecmFileParticipantService.setFileParticipantsFromParentFolder(any(EcmFile.class))).thenReturn(originalFile);
 
-        EcmFile copiedFile = unit.onEcmFileCopied(fileCopiedEvent);
-
-        assertEquals(originalFile.getFileName(), copiedFile.getFileName());
+        unit.onEcmFileCopied(fileCopiedEvent);
 
         verify(acmFolderDao, times(1)).findByCmisFolderId(anyString());
         verify(ecmFileDao, times(1)).findByCmisFileIdAndFolderId(anyString(), anyLong());

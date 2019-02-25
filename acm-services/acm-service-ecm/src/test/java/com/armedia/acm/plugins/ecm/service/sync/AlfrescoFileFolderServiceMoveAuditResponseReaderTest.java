@@ -68,14 +68,18 @@ public class AlfrescoFileFolderServiceMoveAuditResponseReaderTest
         List<EcmEvent> moveEvents = unit.read(fileFolderServiceMoveAuditResponseJson);
 
         assertNotNull(moveEvents);
-        assertEquals(1, moveEvents.size());
+        assertEquals(2, moveEvents.size());
 
         Object[][] expectedData = {
                 // event type, auditId, userid, parent node type, parent node id, node type, node id, file name
                 { EcmEventType.MOVE, 25307L, "admin", "folder", "workspace://SpacesStore/5c133b31-dd84-42bd-841f-048bc9202dc3",
                         "folder", "workspace://SpacesStore/a341ac50-b60b-4bd8-b1b3-922dcd05a0a7",
                         "document", "workspace://SpacesStore/de9236ca-1e75-4d31-b3bc-15eb30faecae",
-                        "New Microsoft Word Document.docx" }
+                        "New Microsoft Word Document.docx" },
+                { EcmEventType.MOVE, 25306L, "admin", "folder", "workspace://SpacesStore/a341ac50-b60b-4bd8-b1b3-922dcd05a0a7",
+                        "folder", "workspace://SpacesStore/5c133b31-dd84-42bd-841f-048bc9202dc3",
+                        "folder", "workspace://SpacesStore/fa3128c0-4ce6-497e-8375-7254c3efd218",
+                        "subfolder" }
         };
 
         int index = 0;
