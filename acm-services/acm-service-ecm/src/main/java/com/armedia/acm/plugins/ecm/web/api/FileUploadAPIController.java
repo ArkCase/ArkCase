@@ -63,7 +63,6 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
@@ -220,27 +219,21 @@ public class FileUploadAPIController implements ApplicationEventPublisherAware
 
     @RequestMapping(value = "/uploadChunks", method = RequestMethod.POST, produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE})
     @ResponseBody
-    public FileChunkDetails uploadChunks(HttpServletRequest request, Authentication authentication, HttpSession session) throws Exception {
+    public FileChunkDetails uploadChunks(@RequestParam("isFileChunk") boolean isFileChunk,
+                                         @RequestParam(value = "parentObjectType", required = false) String parentObjectType,
+                                         @RequestParam(value = "parentObjectId", required = false) Long parentObjectId,
+                                         @RequestParam(value = "folderId", required = false) Long folderId,
+                                         @RequestParam(value = "fileType", required = false) String fileType,
+                                         @RequestParam(value = "fileLang", required = false) String fileLang,
+                                         HttpServletRequest request, Authentication authentication, HttpSession session) throws Exception {
+
+
         log.debug("Starting a file upload by user {}", authentication.getName());
 
         String fileName = "";
         String uniqueArkCaseHashFileIdentifier = ecmFileServiceProperties.getProperty("ecm.arkcase.hash.file.identifier");
 
-        if (!Boolean.parseBoolean(request.getParameter("isFileChunk"))) {
-            String parentObjectType = request.getParameter("parentObjectType");
-            String parentObjectIdString = request.getParameter("parentObjectId");
-            Long parentObjectId = null;
-            if (StringUtils.isNotEmpty(parentObjectIdString)) {
-                parentObjectId = Long.parseLong(parentObjectIdString);
-            }
-            String folderIdString = request.getParameter("folderId");
-            Long folderId = null;
-            if (StringUtils.isNotEmpty(folderIdString)) {
-                folderId = Long.parseLong(folderIdString);
-            }
-            String fileType =  request.getParameter("fileType");
-            String fileLang = request.getParameter("fileLang");
-
+        if (!isFileChunk) {
             AcmFolder folder = getParentFolder(parentObjectType, parentObjectId, folderId);
 
             if (!getArkPermissionEvaluator().hasPermission(authentication, folder.getId(), "FOLDER", "write|group-write")) {
@@ -254,7 +247,7 @@ public class FileUploadAPIController implements ApplicationEventPublisherAware
             }
         } else {
 
-            fileName = uploadFileChunk((MultipartHttpServletRequest) request, fileName, uniqueArkCaseHashFileIdentifier);
+            fileName = getEcmFileService().uploadFileChunk((MultipartHttpServletRequest) request, fileName, uniqueArkCaseHashFileIdentifier);
         }
 
         FileChunkDetails filechunkdetails = new FileChunkDetails();
@@ -263,34 +256,6 @@ public class FileUploadAPIController implements ApplicationEventPublisherAware
         return filechunkdetails;
     }
 
-    private String uploadFileChunk(MultipartHttpServletRequest request, String fileName, String uniqueArkCaseHashFileIdentifier) {
-        String dirPath = System.getProperty("java.io.tmpdir");
-        try {
-            MultipartHttpServletRequest multipartHttpServletRequest = request;
-            MultiValueMap<String, MultipartFile> attachments = multipartHttpServletRequest.getMultiFileMap();
-            if (attachments != null) {
-                for (Map.Entry<String, List<MultipartFile>> entry : attachments.entrySet()) {
-
-                    final List<MultipartFile> attachmentsList = entry.getValue();
-
-                    if (attachmentsList != null && !attachmentsList.isEmpty()) {
-
-                        for (final MultipartFile attachment : attachmentsList) {
-                            fileName = attachment.getOriginalFilename();
-                            File dir = new File(dirPath);
-                            if (dir.exists()) {
-                                File file = new File(dirPath + File.separator + uniqueArkCaseHashFileIdentifier + "-" + fileName);
-                                attachment.transferTo(file);
-                            }
-                        }
-                    }
-                }
-            }
-        } catch (Exception e) {
-            log.error("File upload was unsuccessful.", e);
-        }
-        return fileName;
-    }
 
     @RequestMapping(value = "/mergeChunks", method = RequestMethod.POST, produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE})
     @ResponseBody

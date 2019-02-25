@@ -41,6 +41,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.persistence.PersistenceException;
 import java.io.InputStream;
@@ -49,7 +50,8 @@ import java.util.List;
 /**
  * Created by armdev on 5/1/14.
  */
-public interface EcmFileService {
+public interface EcmFileService
+{
     CmisObject findObjectByPath(String path) throws Exception;
 
     CmisObject findObjectById(String cmisRepositoryId, String cmisId) throws Exception;
@@ -342,4 +344,6 @@ public interface EcmFileService {
      * @return whether the delete was successful
      */
     boolean deleteTempFile(String uniqueFileName);
+
+    String uploadFileChunk(MultipartHttpServletRequest request, String fileName, String uniqueArkCaseHashFileIdentifier);
 }
