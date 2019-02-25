@@ -53,7 +53,6 @@ import org.springframework.util.Assert;
 import javax.persistence.FlushModeType;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -305,7 +304,7 @@ public class GroupServiceImpl implements GroupService
 
         acmGroup.removeMembers();
 
-        acmGroup.setUserMembers(new HashSet<>());
+        acmGroup.removeUserMembers();
 
         groupDao.deleteGroup(acmGroup);
 
@@ -493,7 +492,7 @@ public class GroupServiceImpl implements GroupService
             throw new AcmObjectNotFoundException("GROUP", null, "Group " + groupId + " was not found");
         }
 
-        Optional<AcmUser> foundUser = group.getUserMembers().stream().filter(u -> u.getUserId().equals(user.getUserId())).findFirst();
+        Optional<AcmUser> foundUser = group.getUserMembers(true).stream().filter(u -> u.getUserId().equals(user.getUserId())).findFirst();
         if (foundUser.isPresent())
         {
             log.debug("User [{}] is already a member to the Group [{}]", user.getUserId(), group.getName());

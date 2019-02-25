@@ -162,10 +162,6 @@ angular.module('cases').controller(
                 if (CaseInfoService.validateCaseInfo($scope.objectInfo)) {
                     var objectInfo = Util.omitNg($scope.objectInfo);
 
-                    objectInfo.recordSearchDateFrom = UtilDateService.dateToIsoDateTime($scope.objectInfo.recordSearchDateFrom);
-                    objectInfo.recordSearchDateTo = UtilDateService.dateToIsoDateTime($scope.objectInfo.recordSearchDateTo);
-                    objectInfo.releasedDate = UtilDateService.dateToIsoDateTime($scope.objectInfo.releasedDate);
-
                     $scope.originalDueDate = objectInfo.dueDate;
                     $scope.extendedDueDate = undefined;
 

@@ -35,6 +35,8 @@ import com.armedia.acm.core.exceptions.AcmOutlookFindItemsFailedException;
 import com.armedia.acm.core.exceptions.AcmOutlookItemNotFoundException;
 import com.armedia.acm.core.exceptions.AcmOutlookListItemsFailedException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
+import com.armedia.acm.convertfolder.ConversionException;
+import com.armedia.acm.convertfolder.DefaultFolderAndFileConverter;
 import com.armedia.acm.crypto.AcmCryptoUtils;
 import com.armedia.acm.plugins.ecm.dao.AcmContainerDao;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
@@ -44,47 +46,15 @@ import com.armedia.acm.service.outlook.dao.AcmOutlookFolderCreatorDao;
 import com.armedia.acm.service.outlook.dao.AcmOutlookFolderCreatorDaoException;
 import com.armedia.acm.service.outlook.dao.OutlookDao;
 import com.armedia.acm.service.outlook.dao.OutlookPasswordDao;
-import com.armedia.acm.service.outlook.model.AcmOutlookFolderCreator;
-import com.armedia.acm.service.outlook.model.AcmOutlookUser;
-import com.armedia.acm.service.outlook.model.OutlookCalendarItem;
-import com.armedia.acm.service.outlook.model.OutlookContactItem;
-import com.armedia.acm.service.outlook.model.OutlookDTO;
-import com.armedia.acm.service.outlook.model.OutlookFolder;
-import com.armedia.acm.service.outlook.model.OutlookFolderPermission;
-import com.armedia.acm.service.outlook.model.OutlookItem;
-import com.armedia.acm.service.outlook.model.OutlookMailItem;
-import com.armedia.acm.service.outlook.model.OutlookPassword;
-import com.armedia.acm.service.outlook.model.OutlookResults;
-import com.armedia.acm.service.outlook.model.OutlookTaskItem;
+import com.armedia.acm.service.outlook.model.*;
 import com.armedia.acm.service.outlook.service.OutlookEventPublisher;
 import com.armedia.acm.service.outlook.service.OutlookFolderService;
 import com.armedia.acm.service.outlook.service.OutlookService;
-import com.armedia.acm.services.email.model.EmailBodyBuilder;
-import com.armedia.acm.services.email.model.EmailBuilder;
-import com.armedia.acm.services.email.model.EmailWithAttachmentsAndLinksDTO;
-import com.armedia.acm.services.email.model.EmailWithAttachmentsDTO;
-import com.armedia.acm.services.email.model.EmailWithEmbeddedLinksDTO;
-import com.armedia.acm.services.email.model.EmailWithEmbeddedLinksResultDTO;
+import com.armedia.acm.services.email.model.*;
+import com.armedia.acm.services.email.sender.service.EmailSenderConfigurationServiceImpl;
 import com.armedia.acm.services.email.service.AcmEmailContentGeneratorService;
 import com.armedia.acm.services.email.service.TemplatingEngine;
 import com.armedia.acm.services.users.model.AcmUser;
-
-import org.apache.commons.codec.digest.DigestUtils;
-import org.mule.api.MuleException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.security.core.Authentication;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
 import microsoft.exchange.webservices.data.core.ExchangeService;
 import microsoft.exchange.webservices.data.core.PropertySet;
 import microsoft.exchange.webservices.data.core.enumeration.property.BodyType;
@@ -94,22 +64,27 @@ import microsoft.exchange.webservices.data.core.enumeration.property.WellKnownFo
 import microsoft.exchange.webservices.data.core.enumeration.service.DeleteMode;
 import microsoft.exchange.webservices.data.core.exception.service.local.ServiceLocalException;
 import microsoft.exchange.webservices.data.core.service.folder.Folder;
-import microsoft.exchange.webservices.data.core.service.item.Appointment;
-import microsoft.exchange.webservices.data.core.service.item.Contact;
-import microsoft.exchange.webservices.data.core.service.item.EmailMessage;
-import microsoft.exchange.webservices.data.core.service.item.Item;
-import microsoft.exchange.webservices.data.core.service.item.Task;
-import microsoft.exchange.webservices.data.core.service.schema.AppointmentSchema;
-import microsoft.exchange.webservices.data.core.service.schema.ContactSchema;
-import microsoft.exchange.webservices.data.core.service.schema.EmailMessageSchema;
-import microsoft.exchange.webservices.data.core.service.schema.ItemSchema;
-import microsoft.exchange.webservices.data.core.service.schema.TaskSchema;
+import microsoft.exchange.webservices.data.core.service.item.*;
+import microsoft.exchange.webservices.data.core.service.schema.*;
 import microsoft.exchange.webservices.data.property.complex.FolderId;
 import microsoft.exchange.webservices.data.property.complex.FolderPermission;
 import microsoft.exchange.webservices.data.property.complex.MessageBody;
 import microsoft.exchange.webservices.data.property.definition.ExtendedPropertyDefinition;
 import microsoft.exchange.webservices.data.search.FindItemsResults;
 import microsoft.exchange.webservices.data.search.filter.SearchFilter;
+import org.apache.commons.codec.digest.DigestUtils;
+import org.mule.api.MuleException;
+import org.mule.util.FileUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.security.core.Authentication;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.io.*;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Created by armdev on 4/20/15.
@@ -134,6 +109,9 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
     private AcmEmailContentGeneratorService acmEmailContentGeneratorService;
     private AcmCryptoUtils acmCryptoUtils;
     private OutlookPasswordDao outlookPasswordDao;
+
+    private EmailSenderConfigurationServiceImpl emailSenderConfigurationService;
+    private DefaultFolderAndFileConverter defaultFolderAndFileConverter;
 
     @Override
     public OutlookResults<OutlookMailItem> findMailItems(AcmOutlookUser user, int start, int maxItems, String sortField,
@@ -426,23 +404,8 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
         }
 
         List<EcmFile> attachedFiles = new ArrayList<>();
-        if (emailWithAttachmentsDTO.getAttachmentIds() != null && !emailWithAttachmentsDTO.getAttachmentIds().isEmpty())
-        {
-            for (Long attachmentId : emailWithAttachmentsDTO.getAttachmentIds())
-            {
-                InputStream contents = getEcmFileService().downloadAsInputStream(attachmentId);
-                EcmFile ecmFile = getEcmFileService().findById(attachmentId);
-                String fileName = ecmFile.getFileName();
-                if (ecmFile.getFileActiveVersionNameExtension() != null)
-                {
-                    fileName = fileName + ecmFile.getFileActiveVersionNameExtension();
-                }
-                emailMessage.getAttachments().addFileAttachment(fileName, contents);
-                attachedFiles.add(ecmFile);
-            }
-        }
 
-        emailMessage.sendAndSaveCopy();
+        addAttachmentsAndSend(emailWithAttachmentsDTO.getAttachmentIds(), emailMessage, attachedFiles);
 
         // use the first method if you don't require a copy
         // use the second if a copy of the sent email is needed
@@ -511,9 +474,7 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
                     emailMessage.getBody().setBodyType(BodyType.HTML);
 
                     List<EcmFile> attachedFiles = new ArrayList<>();
-                    addAttachments(emailWithAttachmentsAndLinksDTO, emailMessage, attachedFiles);
-
-                    emailMessage.sendAndSaveCopy();
+                    addAttachmentsAndSend(emailWithAttachmentsAndLinksDTO.getAttachmentIds(), emailMessage, attachedFiles);
 
                     /*
                      * // Fires an audit event for each successfully emailed file for (EcmFile emailedFile :
@@ -529,24 +490,71 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
         }
     }
 
-    private void addAttachments(EmailWithAttachmentsAndLinksDTO emailWithAttachmentsAndLinksDTO, EmailMessage emailMessage,
-            List<EcmFile> attachedFiles) throws MuleException, AcmUserActionFailedException, ServiceLocalException
+    private void addAttachmentsAndSend(List<Long> attachmentIds, EmailMessage emailMessage,
+            List<EcmFile> attachedFiles) throws Exception
     {
-        if (emailWithAttachmentsAndLinksDTO.getAttachmentIds() != null && !emailWithAttachmentsAndLinksDTO.getAttachmentIds().isEmpty())
+
+        List<File> tmpFiles = new ArrayList<>();
+        List<InputStream> tmpFilesInputStream = new ArrayList<>();
+
+        if (Objects.nonNull(attachmentIds) && !attachmentIds.isEmpty())
         {
-            for (Long attachmentId : emailWithAttachmentsAndLinksDTO.getAttachmentIds())
+            for (Long attachmentId : attachmentIds)
             {
                 InputStream contents = getEcmFileService().downloadAsInputStream(attachmentId);
                 EcmFile ecmFile = getEcmFileService().findById(attachmentId);
                 String fileName = ecmFile.getFileName();
+                String fileKey = fileName;
+
+                File pdfConvertedFile = null;
+                InputStream pdfConvertedFileInputStream = null;
+
                 if (ecmFile.getFileActiveVersionNameExtension() != null)
                 {
                     fileName = fileName + ecmFile.getFileActiveVersionNameExtension();
                 }
+
+                if(getEmailSenderConfigurationService().readConfiguration().isConvertDocumentsToPdf() &&
+                        Objects.nonNull(ecmFile) && !".pdf".equals(ecmFile.getFileActiveVersionNameExtension()))
+                {
+                    try
+                    {
+                        pdfConvertedFile = getDefaultFolderAndFileConverter().convert(ecmFile);
+                        pdfConvertedFileInputStream = new FileInputStream(pdfConvertedFile);
+                        contents = pdfConvertedFileInputStream;
+                        fileName = fileKey.concat(".pdf");
+
+                        tmpFiles.add(pdfConvertedFile);
+                        tmpFilesInputStream.add(pdfConvertedFileInputStream);
+                    }
+                    catch (ConversionException | FileNotFoundException e)
+                    {
+                        log.error("Could not convert attached document [{}] to PDF", fileName);
+                    }
+                }
+
                 emailMessage.getAttachments().addFileAttachment(fileName, contents);
                 attachedFiles.add(ecmFile);
             }
         }
+        emailMessage.sendAndSaveCopy();
+
+        //CLEAN TEMP FILES AND INPUT STREAMS
+
+        tmpFilesInputStream.forEach(inputStream -> {
+            try
+            {
+                inputStream.close();
+            }
+            catch (IOException e)
+            {
+               log.warn("Could not close input stream", e);
+            }
+        });
+
+        tmpFiles.forEach(FileUtils::deleteQuietly);
+
+        ///
     }
 
     @Override
@@ -1181,5 +1189,23 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
     public void setTemplatingEngine(TemplatingEngine templatingEngine)
     {
         this.templatingEngine = templatingEngine;
+    }
+
+    public EmailSenderConfigurationServiceImpl getEmailSenderConfigurationService()
+    {
+        return emailSenderConfigurationService;
+    }
+
+    public void setEmailSenderConfigurationService(EmailSenderConfigurationServiceImpl emailSenderConfigurationService)
+    {
+        this.emailSenderConfigurationService = emailSenderConfigurationService;
+    }
+
+    public DefaultFolderAndFileConverter getDefaultFolderAndFileConverter() {
+        return defaultFolderAndFileConverter;
+    }
+
+    public void setDefaultFolderAndFileConverter(DefaultFolderAndFileConverter defaultFolderAndFileConverter) {
+        this.defaultFolderAndFileConverter = defaultFolderAndFileConverter;
     }
 }

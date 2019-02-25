@@ -336,6 +336,7 @@
                 "enableDocumentEmail.checkbox": "Documents can be emailed",
                 "enableDocumentAttach.checkbox": "Documents can be attached to emails",
                 "enableDocumentHyperlink.checkbox": "Documents can be sent as hyperlinks",
+                "documentsAsPdf.checkbox": "Send documents as PDFs",
                 "serverSettings.label": "Server Settings",
                 "serverType.label": "Server Type",
                 "serverType.placeholder": "Choose Email Server Type",
@@ -1026,6 +1027,15 @@
             "ocrConfigForm": {
                 "title": "OCR Services",
                 "save.button": "Save",
+                "enableOCR.checkbox": "Enable OCR"
+            }
+        },
+        "ocr": {
+            "title": "OCR Services",
+            "ocrManagement": "OCR Management",
+            "ocrConfigForm": {
+                "save.button": "Save",
+                "enableOCR.label": "OCR Configuration",
                 "enableOCR.checkbox": "Enable OCR"
             }
         },

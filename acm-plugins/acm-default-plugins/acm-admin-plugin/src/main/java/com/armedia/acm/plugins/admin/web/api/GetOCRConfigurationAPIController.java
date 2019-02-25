@@ -27,9 +27,9 @@ package com.armedia.acm.plugins.admin.web.api;
  * #L%
  */
 
-import com.armedia.acm.plugins.admin.model.OCRConfiguration;
-import com.armedia.acm.plugins.admin.service.ArkCaseOCRService;
-import com.armedia.acm.services.transcribe.exception.GetConfigurationException;
+import com.armedia.acm.ocr.exception.GetConfigurationException;
+import com.armedia.acm.ocr.model.OCRConfiguration;
+import com.armedia.acm.ocr.service.ArkCaseOCRService;
 
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;

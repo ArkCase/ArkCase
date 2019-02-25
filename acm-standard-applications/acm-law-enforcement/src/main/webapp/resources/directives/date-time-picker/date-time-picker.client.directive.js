@@ -11,27 +11,37 @@ angular.module('directives').directive('dateTimePicker', ['moment', 'Util.DateSe
         },
         link: function ($scope, element) {
             $scope.editable = false;
-
-            var minYear = "";
-            var utcDate = "";
-            var maxYear = "";
-
-            if (UtilService.isEmpty($scope.data)) {
-                $scope.today = "";
-                $scope.dateInPicker = new Date();
-                minYear = $scope.dateInPicker.getFullYear() - 50;
-                utcDate = moment.utc(UtilDateService.dateToIso($scope.dateInPicker)).local().format();
-                maxYear = moment(utcDate).add(1, 'years').toDate().getFullYear();
-            } else {
-                if ($scope.timeFormatDisabled === "true") {
-                    $scope.dateInPicker = moment($scope.data).format(UtilDateService.defaultDateFormat);
-                } else {
-                    $scope.dateInPicker = moment($scope.data).format(UtilDateService.defaultDateLongTimeFormat);
-                }
-                minYear = $scope.data.getFullYear() - 50;
-                utcDate = moment.utc(UtilDateService.dateToIso($scope.data)).local().format();
-                maxYear = moment(utcDate).add(1, 'years').toDate().getFullYear();
+            var dateInput = element[0].children[0].firstElementChild;
+            if (dateInput) {
+                dateInput.addEventListener("keydown",function(e){
+                    // if you haven't already:
+                    e = e || window.event;
+                    // to cancel the event:
+                    if( e.preventDefault) e.preventDefault();
+                    return false;
+                });
             }
+            $scope.minYear = "";
+            $scope.utcDate = "";
+            $scope.maxYear = "";
+
+            $scope.setDate = function (date) {
+                if (UtilService.isEmpty(date)) {
+                    $scope.today = "";
+                    $scope.dateInPicker = new Date();
+                } else {
+                    if ($scope.timeFormatDisabled === "true") {
+                        $scope.today = UtilDateService.isoToDate(date);
+                    } else {
+                        $scope.today = UtilDateService.isoToLocalDateTime(date);
+                    }
+                    $scope.dateInPicker = $scope.today;
+                }
+                $scope.minYear = moment.utc($scope.dateInPicker).year() - 50;
+                $scope.maxYear = moment.utc($scope.dateInPicker).year() + 1;
+            }
+
+            $scope.setDate($scope.data);
 
             $scope.toggleEditable = function () {
                 $scope.editable = !$scope.editable;
@@ -44,23 +54,25 @@ angular.module('directives').directive('dateTimePicker', ['moment', 'Util.DateSe
                         format: 'MM/DD/YYYY',
                         template: 'MMM / DD / YYYY',
                         minuteStep: 1,
-                        minYear: minYear,
-                        maxYear: maxYear,
+                        minYear: $scope.minYear,
+                        maxYear: $scope.maxYear,
                         smartDays: true,
                         value: $scope.dateInPicker
                     });
-                    $scope.today = !UtilService.isEmpty($scope.data) ? moment($scope.data).format(UtilDateService.defaultDateFormat) : "";
+                    $scope.today = !UtilService.isEmpty($scope.data) ? UtilDateService.isoToDate($scope.data) : "";
+                    $scope.dateInPicker = !UtilService.isEmpty($scope.data) ? UtilDateService.isoToDate($scope.data) : new Date();
                 } else {
                     $(comboField).combodate({
                         format: 'MM/DD/YYYY HH:mm',
                         template: 'MMM / DD / YYYY HH:mm',
                         minuteStep: 1,
-                        minYear: minYear,
-                        maxYear: maxYear,
+                        minYear: $scope.minYear,
+                        maxYear: $scope.maxYear,
                         smartDays: true,
                         value: $scope.dateInPicker
                     });
-                    $scope.today = !UtilService.isEmpty($scope.data) ? moment($scope.data).format(UtilDateService.defaultDateLongTimeFormat) : "";
+                    $scope.today = !UtilService.isEmpty($scope.data) ? UtilDateService.isoToLocalDateTime($scope.data) : "";
+                    $scope.dateInPicker = !UtilService.isEmpty($scope.data) ? UtilDateService.isoToLocalDateTime($scope.data) : new Date();
                 }
             });
 
@@ -68,11 +80,12 @@ angular.module('directives').directive('dateTimePicker', ['moment', 'Util.DateSe
                 $scope.toggleEditable();
                 var editedDate = $(comboField).combodate('getValue', null);
                 if ($scope.timeFormatDisabled === "true") {
-                    $scope.dateInPicker = moment(editedDate).format(UtilDateService.defaultDateFormat);
+                    $scope.dateInPicker = moment(editedDate);
+                    $scope.data = UtilDateService.localDateToIso($scope.dateInPicker.toDate());
                 } else {
-                    $scope.dateInPicker = moment(editedDate).format(UtilDateService.defaultDateLongTimeFormat);
+                    $scope.dateInPicker = moment(editedDate);
+                    $scope.data = UtilDateService.dateToIsoDateTime($scope.dateInPicker);
                 }
-                $scope.data = moment($scope.dateInPicker).toDate();
             };
 
             $scope.cancel = function () {
@@ -81,18 +94,9 @@ angular.module('directives').directive('dateTimePicker', ['moment', 'Util.DateSe
             };
         },
         controller: function ($scope) {
-            $scope.$watch('data', function(){
+            $scope.$watch('data', function () {
                 //called any time $scope.data changes
-                if (UtilService.isEmpty($scope.data)) {
-                    $scope.today = "";
-                } else {
-                    $scope.today = moment($scope.data).format(UtilDateService.defaultDateLongTimeFormat);
-                    if ($scope.timeFormatDisabled === "true") {
-                        $scope.today = moment($scope.data).format(UtilDateService.defaultDateFormat)
-                    } else {
-                        $scope.today = moment($scope.data).format(UtilDateService.defaultDateLongTimeFormat);
-                    }
-                }
+                $scope.setDate($scope.data);
             });
         }
     }

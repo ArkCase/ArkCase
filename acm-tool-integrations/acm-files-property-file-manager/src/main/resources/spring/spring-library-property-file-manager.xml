@@ -59,6 +59,7 @@
                 <value>file:${user.home}/.arkcase/acm/spring-security/sessionControl.properties</value>
                 <value>file:${user.home}/.arkcase/acm/foia.properties</value>
                 <value>file:${user.home}/.arkcase/acm/mentionsSendEmail.properties</value>
+                <value>file:${user.home}/.arkcase/acm/alfrescoUpdateMetadata.properties</value>
             </list>
         </property>
     </bean>

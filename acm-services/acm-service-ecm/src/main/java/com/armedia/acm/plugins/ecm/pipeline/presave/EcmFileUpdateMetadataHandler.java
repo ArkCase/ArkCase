@@ -87,6 +87,8 @@ public class EcmFileUpdateMetadataHandler implements PipelineHandler<EcmFile, Ec
                             : pipelineContext.getFileContents() != null ? pipelineContext.getFileContents().length() : 0;
             version.setFileSizeBytes(fileSizeBytes);
 
+            version.setSearchablePDF(pipelineContext.isSearchablePDF());
+
             // file metadata
             if (pipelineContext.getDetectedFileMetadata() != null)
             {

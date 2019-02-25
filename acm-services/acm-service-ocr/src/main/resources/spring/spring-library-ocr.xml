@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
+
+    <bean id="ocrArkCaseBeanUtils" class="com.armedia.acm.objectonverter.ArkCaseBeanUtils">
+        <property name="excludeFields">
+            <list value-type="java.lang.String">
+                <value>id</value>
+                <value>ecmFileVersion</value>
+                <value>className</value>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="ocrDao" class="com.armedia.acm.ocr.dao.OCRDao"/>
+
+    <bean id="ocrConfigurationPropertiesService" class="com.armedia.acm.ocr.service.OCRConfigurationPropertiesService">
+        <property name="propertyFileManager" ref="propertyFileManager"/>
+    </bean>
+
+    <bean id="ocrBusinessRulesExecutor" class="com.armedia.acm.ocr.rules.OCRBusinessRulesExecutor"
+          parent="simpleStatelessSingleObjectRuleManager">
+        <property name="ruleSpreadsheetFilename" value="drools-ocr-rules.xlsx"/>
+    </bean>
+
+    <bean id="ocrBusinessProcessRulesExecutor"
+          class="com.armedia.acm.ocr.rules.OCRBusinessProcessRulesExecutor"
+          parent="simpleStatelessSingleObjectRuleManager">
+        <property name="ruleSpreadsheetFilename" value="drools-ocr-business-process-rules.xlsx"/>
+    </bean>
+
+    <!-- pre-save handlers -->
+    <bean id="ocrInitHandler" class="com.armedia.acm.ocr.pipline.presave.OCRInitHandler"/>
+
+    <!-- post-save handlers -->
+    <bean id="ocrRulesHandler" class="com.armedia.acm.ocr.pipline.postsave.OCRRulesHandler">
+        <property name="ocrBusinessRulesExecutor" ref="ocrBusinessRulesExecutor"/>
+        <property name="ocrEventPublisher" ref="ocrEventPublisher"/>
+    </bean>
+    <bean id="ocrBusinessProcessHandler"
+          class="com.armedia.acm.ocr.pipline.postsave.OCRBusinessProcessHandler">
+        <property name="arkCaseOCRService" ref="arkCaseOCRService"/>
+        <property name="activitiRuntimeService" ref="activitiRuntimeService"/>
+        <property name="ocrEventPublisher" ref="ocrEventPublisher"/>
+    </bean>
+
+    <bean id="ocrPipelineManager" class="com.armedia.acm.services.pipeline.PipelineManager">
+        <property name="preSaveHandlers">
+            <list value-type="com.armedia.acm.services.pipeline.handler.PipelineHandler">
+                <ref bean="ocrInitHandler"/>
+            </list>
+        </property>
+        <property name="postSaveHandlers">
+            <list value-type="com.armedia.acm.services.pipeline.handler.PipelineHandler">
+                <ref bean="ocrRulesHandler"/>
+                <ref bean="ocrBusinessProcessHandler"/>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="tesseractOCRService" class="com.armedia.acm.ocr.provider.tesseract.service.TesseractOCRService">
+        <property name="ocrEventPublisher" ref="ocrEventPublisher"/>
+        <property name="ocrConfigurationPropertiesService" ref="ocrConfigurationPropertiesService"/>
+        <property name="ecmFileTransaction" ref="ecmFileTransaction"/>
+        <property name="ocrDao" ref="ocrDao"/>
+        <property name="activitiRuntimeService" ref="activitiRuntimeService"/>
+    </bean>
+
+    <bean id="ocrServiceFactory" class="com.armedia.acm.ocr.factory.OCRServiceFactory">
+        <property name="tesseractOCRService" ref="tesseractOCRService"/>
+    </bean>
+
+    <bean id="ocrEventPublisher" class="com.armedia.acm.ocr.service.OCREventPublisher"/>
+
+    <bean id="ecmFileAddedListenerOCR" class="com.armedia.acm.ocr.listener.EcmFileAddedListener">
+        <property name="arkCaseOCRService" ref="arkCaseOCRService"/>
+    </bean>
+
+    <bean id="ecmFileUpdateListenerOCR" class="com.armedia.acm.ocr.listener.EcmFileUpdateListener">
+        <property name="arkCaseOCRService" ref="arkCaseOCRService"/>
+    </bean>
+
+    <bean id="ecmFileCopiedListenerOCR" class="com.armedia.acm.ocr.listener.EcmFileCopiedListener">
+        <property name="folderAndFilesUtils" ref="folderAndFilesUtils"/>
+        <property name="arkCaseOCRService" ref="arkCaseOCRService"/>
+        <property name="objectLockingManager" ref="acmObjectLockingManager"/>
+    </bean>
+
+    <bean id="arkCaseOCRService" class="com.armedia.acm.ocr.service.ArkCaseOCRServiceImpl">
+        <property name="ocrConfigurationPropertiesService" ref="ocrConfigurationPropertiesService"/>
+        <property name="ocrDao" ref="ocrDao"/>
+        <property name="ecmFileVersionDao" ref="ecmFileVersionDao"/>
+        <property name="pipelineManager" ref="ocrPipelineManager"/>
+        <property name="ocrEventPublisher" ref="ocrEventPublisher"/>
+        <property name="activitiRuntimeService" ref="activitiRuntimeService"/>
+        <property name="ocrArkCaseBeanUtils" ref="ocrArkCaseBeanUtils"/>
+        <property name="ocrBusinessProcessRulesExecutor" ref="ocrBusinessProcessRulesExecutor"/>
+        <property name="OCRServiceFactory" ref="ocrServiceFactory"/>
+        <property name="ecmFileServiceProperties" ref="ecmFileServiceProperties"/>
+        <property name="folderAndFilesUtils" ref="folderAndFilesUtils"/>
+    </bean>
+
+    <bean id="ocrProcessDelegate" class="com.armedia.acm.ocr.delegate.OCRProcessDelegate">
+        <property name="arkCaseOCRService" ref="arkCaseOCRService"/>
+        <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
+        <property name="objectLockService" ref="objectLockService"/>
+        <property name="objectLockingManager" ref="acmObjectLockingManager"/>
+    </bean>
+
+    <bean id="ocrCheckStatusDelegate" class="com.armedia.acm.ocr.delegate.OCRCheckStatusDelegate">
+        <property name="arkCaseOCRService" ref="arkCaseOCRService"/>
+        <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
+        <property name="ecmFileService" ref="ecmFileService"/>
+        <property name="activitiRuntimeService" ref="activitiRuntimeService"/>
+        <property name="objectLockingManager" ref="acmObjectLockingManager"/>
+    </bean>
+
+    <bean id="ocrPurgeDelegate" class="com.armedia.acm.ocr.delegate.OCRPurgeDelegate">
+        <property name="arkCaseOCRService" ref="arkCaseOCRService"/>
+        <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
+    </bean>
+
+    <bean id="ocrRemoveProcessIdDelegate" class="com.armedia.acm.ocr.delegate.OCRRemoveProcessIdDelegate">
+        <property name="arkCaseOCRService" ref="arkCaseOCRService"/>
+        <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
+    </bean>
+
+    <bean id="ocrQueueJob" class="com.armedia.acm.ocr.job.OCRQueueJob">
+        <property name="arkCaseOCRService" ref="arkCaseOCRService"/>
+        <property name="activitiRuntimeService" ref="activitiRuntimeService"/>
+        <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
+        <property name="objectLockService" ref="objectLockService"/>
+        <property name="objectLockingManager" ref="acmObjectLockingManager"/>
+    </bean>
+</beans>

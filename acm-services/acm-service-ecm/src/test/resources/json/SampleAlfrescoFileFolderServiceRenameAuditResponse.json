@@ -1,0 +1,31 @@
+{
+    "count": 2,
+    "entries": [
+        {
+            "id": 27229,
+            "application": "AuditArkCaseRename",
+            "user": "admin",
+            "time": "2019-01-15T17:11:16.532-05:00",
+            "values": {
+                "/auditarkcaserename/rename/derived/node-type": "{http://www.alfresco.org/model/content/1.0}folder",
+                "/auditarkcaserename/rename/in/a": "workspace://SpacesStore/93dfae54-498d-4cb6-a2f9-a4c4caa44029",
+                "/auditarkcaserename/rename/in/b": "pictures",
+                "/auditarkcaserename/rename/derived/node-name": "pictures",
+                "/auditarkcaserename/rename/out/a": "FileInfo[name=pictures, isFolder=true, nodeRef=workspace://SpacesStore/93dfae54-498d-4cb6-a2f9-a4c4caa44029]"
+            }
+        },
+        {
+            "id": 27228,
+            "application": "AuditArkCaseRename",
+            "user": "admin",
+            "time": "2019-01-15T17:05:38.317-05:00",
+            "values": {
+                "/auditarkcaserename/rename/derived/node-type": "{http://www.alfresco.org/model/content/1.0}content",
+                "/auditarkcaserename/rename/in/a": "workspace://SpacesStore/a8b179d5-e1e8-46fd-9d87-c53c5f7d1535",
+                "/auditarkcaserename/rename/in/b": "word.docx",
+                "/auditarkcaserename/rename/derived/node-name": "word.docx",
+                "/auditarkcaserename/rename/out/a": "FileInfo[name=word.docx, isFolder=false, nodeRef=workspace://SpacesStore/a8b179d5-e1e8-46fd-9d87-c53c5f7d1535]"
+            }
+        }
+    ]
+}

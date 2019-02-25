@@ -91,6 +91,7 @@ public class EmailSenderConfigurationServiceImpl implements EmailSenderConfigura
         emailSenderProperties.put(EmailSenderConfigurationConstants.ALLOW_ATTACHMENTS,
                 Boolean.toString(configuration.isAllowAttachments()));
         emailSenderProperties.put(EmailSenderConfigurationConstants.ALLOW_HYPERLINKS, Boolean.toString(configuration.isAllowHyperlinks()));
+        emailSenderProperties.put(EmailSenderConfigurationConstants.CONVERT_DOCUMENTS_TO_PDF, Boolean.toString(configuration.isConvertDocumentsToPdf()));
 
         Lock writeLock = lock.writeLock();
         writeLock.lock();
@@ -153,6 +154,9 @@ public class EmailSenderConfigurationServiceImpl implements EmailSenderConfigura
                 break;
             case EmailSenderConfigurationConstants.ALLOW_HYPERLINKS:
                 emailSenderConfiguration.setAllowHyperlinks(Boolean.valueOf(propertyValue));
+                break;
+            case EmailSenderConfigurationConstants.CONVERT_DOCUMENTS_TO_PDF:
+                emailSenderConfiguration.setConvertDocumentsToPdf(Boolean.valueOf(propertyValue));
             }
         }
 

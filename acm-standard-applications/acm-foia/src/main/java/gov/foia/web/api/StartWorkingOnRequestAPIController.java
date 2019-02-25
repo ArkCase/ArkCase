@@ -29,6 +29,7 @@ package gov.foia.web.api;
 
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.casefile.utility.CaseFileEventUtility;
+import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
@@ -43,6 +44,7 @@ import javax.servlet.http.HttpSession;
 import java.util.Date;
 
 import gov.foia.model.FOIARequest;
+import gov.foia.service.FOIARequestService;
 import gov.foia.service.RequestAssignmentService;
 
 /**
@@ -54,6 +56,7 @@ public class StartWorkingOnRequestAPIController
 {
     private RequestAssignmentService requestAssignmentService;
     private CaseFileEventUtility caseFileEventUtility;
+    private FOIARequestService requestService;
 
     @RequestMapping(value = "/{queueId}/start-working", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
@@ -71,6 +74,26 @@ public class StartWorkingOnRequestAPIController
         else
             throw new AcmUserActionFailedException("start-work", "QUEUE", queueId,
                     "No requests in this queue can be assigned to the current user.", null);
+    }
+
+    @RequestMapping(value = "/{requestId}/start-working-on-selected", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public FOIARequest assignSelectedRequestFromQueue(@PathVariable(value = "requestId") Long requestId, HttpSession session,
+            Authentication auth) throws AcmUserActionFailedException, PipelineProcessException
+    {
+
+        FOIARequest request = requestService.getFoiaRequestById(requestId);
+
+        if (request != null)
+        {
+            requestAssignmentService.assignUserGroupToRequest(request, session);
+            requestAssignmentService.assignRequestToUser(request, auth, session);
+        }
+        else
+            throw new AcmUserActionFailedException("start-work on request", "Request", requestId,
+                    "Request is not found and can't be assigned to the current user", null);
+
+        return request;
     }
 
     public RequestAssignmentService getRequestAssignmentService()
@@ -91,6 +114,11 @@ public class StartWorkingOnRequestAPIController
     public void setCaseFileEventUtility(CaseFileEventUtility caseFileEventUtility)
     {
         this.caseFileEventUtility = caseFileEventUtility;
+    }
+
+    public void setRequestService(FOIARequestService requestService)
+    {
+        this.requestService = requestService;
     }
 
 }

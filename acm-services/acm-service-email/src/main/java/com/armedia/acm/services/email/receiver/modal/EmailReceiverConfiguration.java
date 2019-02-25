@@ -68,6 +68,8 @@ public class EmailReceiverConfiguration
     
     private Boolean enableComplaint;
 
+    private String userId;
+
     /**
      * @return the email
      */
@@ -307,5 +309,15 @@ public class EmailReceiverConfiguration
 
     public void setEnableComplaint(Boolean enableComplaint) {
         this.enableComplaint = enableComplaint;
+    }
+
+    public String getUserId()
+    {
+        return userId;
+    }
+
+    public void setUserId(String userId)
+    {
+        this.userId = userId;
     }
 }

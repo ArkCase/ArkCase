@@ -63,6 +63,7 @@
         <module>acm-service-convert-folder</module>
         <module>acm-service-billing</module>
         <module>acm-service-sequence-manager</module>
+        <module>acm-service-ocr</module>
     </modules>
 
 </project>
