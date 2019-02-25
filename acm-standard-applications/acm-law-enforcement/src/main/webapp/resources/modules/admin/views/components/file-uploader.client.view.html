@@ -1,24 +1,23 @@
 <panel-view header="{{'admin.documentManagement.fileUploader.title' | translate}}" collapsible="false">
     <div ng-controller="Admin.FileUploaderController" class="well-sm">
         <form>
-            <div class="text">
-                <label class="control-label" for="uploadFileSizeLimit">
-                    <span translate>admin.documentManagement.fileUploader.uploadFileSizeLimit.label</span>
-                </label>
-                <input ng-model="uploadFileSizeLimit" class="form-control input-sm" id="uploadFileSizeLimit" />
-            </div>
-            <div class="text">
-                <label class="control-label" for="singleChunkFileSizeLimit">
-                    <span translate>admin.documentManagement.fileUploader.singleChunkFileSizeLimit.label</span>
-                </label>
-                <input ng-model="singleChunkFileSizeLimit" class="form-control input-sm" id="singleChunkFileSizeLimit" />
-            </div>
-            <br />
             <div class="checkbox">
                 <label>
                     <input type="checkbox" ng-model="enableFileChunkUpload">
                     <span translate>admin.documentManagement.fileUploader.enableFileChunkUpload.label</span>
                 </label>
+            </div>
+            <div class="text" ng-if="enableFileChunkUpload">
+                <label class="control-label" for="uploadFileSizeLimit">
+                    <span translate>admin.documentManagement.fileUploader.uploadFileSizeLimit.label</span>
+                </label>
+                <input ng-model="uploadFileSizeLimit" class="form-control input-sm" id="uploadFileSizeLimit" />
+            </div>
+            <div class="text" ng-if="enableFileChunkUpload">
+                <label class="control-label" for="singleChunkFileSizeLimit">
+                    <span translate>admin.documentManagement.fileUploader.singleChunkFileSizeLimit.label</span>
+                </label>
+                <input ng-model="singleChunkFileSizeLimit" class="form-control input-sm" id="singleChunkFileSizeLimit" />
             </div>
 
             <div class="form-group">

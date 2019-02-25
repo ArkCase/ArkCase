@@ -32,13 +32,13 @@ angular.module('core').controller(
             $scope.hashMapOfAllFiles[uuid].startByte = $scope.hashMapOfAllFiles[uuid].endByte;
             $scope.hashMapOfAllFiles[uuid].endByte = $scope.hashMapOfAllFiles[uuid].endByte + $scope.hashMapOfAllFiles[uuid].partBytes;
 
-            if ($scope.hashMapOfAllFiles[uuid].endByte >= $scope.hashMapOfAllFiles[uuid].file.size) {
+            if ($scope.enableFileChunkUpload && $scope.hashMapOfAllFiles[uuid].endByte >= $scope.hashMapOfAllFiles[uuid].file.size) {
                 $scope.hashMapOfAllFiles[uuid].endByte = $scope.hashMapOfAllFiles[uuid].file.size;
             }
 
             var file = $scope.hashMapOfAllFiles[uuid].file;
 
-            if ($scope.hashMapOfAllFiles[uuid].file.size > $scope.hashMapOfAllFiles[uuid].partBytes) {
+            if ($scope.enableFileChunkUpload && $scope.hashMapOfAllFiles[uuid].file.size > $scope.hashMapOfAllFiles[uuid].partBytes) {
                 file = $scope.hashMapOfAllFiles[uuid].file.slice($scope.hashMapOfAllFiles[uuid].startByte, $scope.hashMapOfAllFiles[uuid].endByte);
                 file.name = $scope.hashMapOfAllFiles[uuid].file.name + "_" + $scope.hashMapOfAllFiles[uuid].part + "_" + Date.now();
             }
@@ -86,7 +86,7 @@ angular.module('core').controller(
 
             var currentFileDetails = $scope.hashMapOfAllFiles[uuid];
             if (!Util.isEmpty(currentFileDetails)) {
-                if (currentFileDetails.file.size <= currentFileDetails.partBytes) {
+                if (!$scope.enableFileChunkUpload || currentFileDetails.file.size <= currentFileDetails.partBytes) {
                     params.fileLang = currentFileDetails.fileLang;
                     params.parentObjectType = currentFileDetails.objectType;
                     params.parentObjectId =  currentFileDetails.objectId;
@@ -106,7 +106,6 @@ angular.module('core').controller(
             };
             $scope.$bus.publish('notify-snackbar-upload-status', uploadIcon);
 
-            //if(enableFileChunkUpload){} else {call old funtion()}
             Upload.upload({
                 url: 'api/latest/service/ecm/uploadChunks',
                 params: getParams(uuid),
@@ -115,11 +114,11 @@ angular.module('core').controller(
                 var _uuid = !Util.isEmpty(result) && !Util.isEmpty(result.data) && !Util.isEmpty(result.data.uuid) ? result.data.uuid : uuid;
 
                 $scope.hashMapOfAllFiles[_uuid].parts.push(result.data.fileName);
-                if ($scope.hashMapOfAllFiles[_uuid].endByte < $scope.hashMapOfAllFiles[_uuid].file.size) {
+                if ($scope.enableFileChunkUpload && $scope.hashMapOfAllFiles[_uuid].endByte < $scope.hashMapOfAllFiles[_uuid].file.size) {
                     $scope.hashMapOfAllFiles[_uuid].progress = $scope.hashMapOfAllFiles[_uuid].progress + $scope.hashMapOfAllFiles[_uuid].partProgress;
                     uploadPart(_uuid);
                 } else {
-                    if ($scope.hashMapOfAllFiles[_uuid].file.size > $scope.hashMapOfAllFiles[_uuid].partBytes) {
+                    if ($scope.enableFileChunkUpload && $scope.hashMapOfAllFiles[_uuid].file.size > $scope.hashMapOfAllFiles[_uuid].partBytes) {
                         var data = {};
                         data.name = $scope.hashMapOfAllFiles[_uuid].file.name;
                         data.mimeType = $scope.hashMapOfAllFiles[_uuid].file.type;
@@ -151,13 +150,13 @@ angular.module('core').controller(
                 // The calculation for total is introduced because ng-file-upload makes discrepancy in the multipart file size.
                 // When parameters are send to the request for upload, total size gets bigger then the actual file size
                 var total = 0;
-                if($scope.hashMapOfAllFiles[uuid].file.size>$scope.uploadFileSizeLimit) {
+                if ($scope.enableFileChunkUpload && $scope.hashMapOfAllFiles[uuid].file.size > $scope.uploadFileSizeLimit) {
                     total = currentProgress < $scope.hashMapOfAllFiles[uuid].file.size ? $scope.hashMapOfAllFiles[uuid].file.size : currentProgress;
                     $scope.hashMapOfAllFiles[uuid].currentProgress = parseInt(50.0 * (currentProgress / total)) == 0 ? 50.0 : parseInt(50.0 * (currentProgress / total));
                 } else {
                     total = progress.total;
                     $scope.hashMapOfAllFiles[uuid].currentProgress = parseInt(50.0 * (currentProgress / total)) == 0 ? 50.0 : parseInt(50.0 * (currentProgress / total));
-                    if($scope.hashMapOfAllFiles[uuid].currentProgress == 100 && $scope.hashMapOfAllFiles[uuid].status != ObjectService.UploadFileStatus.FINISHED){
+                    if ($scope.hashMapOfAllFiles[uuid].currentProgress == 100 && $scope.hashMapOfAllFiles[uuid].status != ObjectService.UploadFileStatus.FINISHED) {
                         $scope.hashMapOfAllFiles[uuid].status = ObjectService.UploadFileStatus.FINISHED;
                         var message = {};
                         message.objectId = $scope.hashMapOfAllFiles[uuid].objectId;

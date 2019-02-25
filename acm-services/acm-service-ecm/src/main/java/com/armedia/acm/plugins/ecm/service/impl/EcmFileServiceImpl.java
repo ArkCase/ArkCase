@@ -69,6 +69,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.persistence.PersistenceException;
 import java.io.File;
@@ -89,7 +90,8 @@ import java.util.UUID;
 /**
  * Created by armdev on 5/1/14.
  */
-public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFileService {
+public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFileService
+{
     private Logger log = LoggerFactory.getLogger(getClass());
 
     private EcmFileTransaction ecmFileTransaction;
@@ -1652,6 +1654,36 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     public EcmFile findById(Long fileId)
     {
         return getEcmFileDao().find(fileId);
+    }
+
+    @Override
+    public String uploadFileChunk(MultipartHttpServletRequest request, String fileName, String uniqueArkCaseHashFileIdentifier) {
+        String dirPath = System.getProperty("java.io.tmpdir");
+        try {
+            MultipartHttpServletRequest multipartHttpServletRequest = request;
+            MultiValueMap<String, MultipartFile> attachments = multipartHttpServletRequest.getMultiFileMap();
+            if (attachments != null) {
+                for (Map.Entry<String, List<MultipartFile>> entry : attachments.entrySet()) {
+
+                    final List<MultipartFile> attachmentsList = entry.getValue();
+
+                    if (attachmentsList != null && !attachmentsList.isEmpty()) {
+
+                        for (final MultipartFile attachment : attachmentsList) {
+                            fileName = attachment.getOriginalFilename();
+                            File dir = new File(dirPath);
+                            if (dir.exists()) {
+                                File file = new File(dirPath + File.separator + uniqueArkCaseHashFileIdentifier + "-" + fileName);
+                                attachment.transferTo(file);
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            log.error("File upload was unsuccessful.", e);
+        }
+        return fileName;
     }
 
     public EcmFileTransaction getEcmFileTransaction()

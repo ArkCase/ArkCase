@@ -36,9 +36,9 @@ import org.apache.chemistry.opencmis.client.api.Document;
 import org.springframework.security.core.Authentication;
 
 import java.io.IOException;
-import java.io.SequenceInputStream;
 
-public interface FileChunkService {
+public interface FileChunkService
+{
 
     void mergeAndUploadFiles(FileDetails fileDetails, AcmFolder folder, Document existingFile, Authentication authentication)
             throws AcmUserActionFailedException, AcmCreateObjectFailedException, IOException;
