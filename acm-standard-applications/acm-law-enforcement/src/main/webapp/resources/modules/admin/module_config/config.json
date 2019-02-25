@@ -998,6 +998,58 @@
             "paginationPageSize": 20
         },
         {
+            "id": "recycleBin",
+            "title": "admin.application.recycleBin.title",
+            "enabled": true,
+            "type": "grid",
+            "enableFiltering": false,
+            "configurable": true,
+            "columnDefs": [
+                {
+                    "name": "fileName",
+                    "displayName": "admin.application.recycleBin.grid.fileName",
+                    "visible": true,
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<div context-menu='grid.appScope.contextmenuOptions(row)'>{{row.entity.fileName}}</div>"
+                },
+                {
+                    "name": "containerObjectTitle",
+                    "displayName": "admin.application.recycleBin.grid.containerObjectTitle",
+                    "visible": true,
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<a context-menu='grid.appScope.contextmenuOptions(row)' href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity)'>{{row.entity.containerObjectTitle}}</a>"
+                },
+                {
+                    "name": "dateModified",
+                    "displayName": "admin.application.recycleBin.grid.dateModified",
+                    "visible": true,
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<div context-menu='grid.appScope.contextmenuOptions(row)'>{{ row.entity.dateModified | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>"
+                },
+                {
+                    "name": "fileSizeBytes",
+                    "displayName": "admin.application.recycleBin.grid.fileSizeBytes",
+                    "visible": true,
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<div context-menu='grid.appScope.contextmenuOptions(row)'>{{row.entity.fileSizeBytes}}</div>"
+                },
+                {
+                    "name": "fileActiveVersionNameExtension",
+                    "displayName": "admin.application.recycleBin.grid.fileActiveVersionNameExtension",
+                    "visible": true,
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<div context-menu='grid.appScope.contextmenuOptions(row)'>{{row.entity.fileActiveVersionNameExtension}}</div>"
+                }
+            ],
+            "paginationPageSizes": [
+                5,
+                10,
+                20,
+                50
+            ],
+            "paginationPageSize": 20
+        },
+        {
             "id": "sequenceManagementConfiguration",
             "title": "admin.application.sequenceManagement.config.title",
             "enabled": true,
@@ -1419,6 +1471,13 @@
                 "label": "admin.application.objectTitleConfiguration.title",
                 "components": [
                     "application-object-title-configuration"
+                ]
+            },
+            {
+                "type": "p/application/recycleBin",
+                "label": "admin.application.recycleBin.title",
+                "components": [
+                    "application-recycle-bin.config"
                 ]
             },
             {
