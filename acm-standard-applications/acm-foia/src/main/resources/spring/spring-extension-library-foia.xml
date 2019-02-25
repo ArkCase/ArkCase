@@ -307,6 +307,7 @@
             <beans:property name="folderAndFilesUtils" ref="folderAndFilesUtils"/>
             <beans:property name="cmisConfigUtils" ref="cmisConfigUtils"/>
             <beans:property name="fileParticipantService" ref="fileParticipantService"/>
+            <beans:property name="recycleBinItemService" ref="recycleBinItemServiceImpl"/>
         </beans:bean>
 
         <beans:bean id="foiaConfig" class="gov.foia.model.FoiaConfig" scope="refresh">
