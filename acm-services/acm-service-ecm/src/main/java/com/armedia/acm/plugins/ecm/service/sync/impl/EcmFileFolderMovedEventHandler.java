@@ -27,15 +27,18 @@ package com.armedia.acm.plugins.ecm.service.sync.impl;
  * #L%
  */
 
+import com.armedia.acm.auth.AuthenticationUtils;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
+import com.armedia.acm.plugins.ecm.exception.AcmFolderException;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.model.sync.EcmEvent;
 import com.armedia.acm.plugins.ecm.model.sync.EcmEventType;
+import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
 
@@ -46,34 +49,63 @@ import org.springframework.context.ApplicationListener;
 /**
  * @author ivana.shekerova on 12/21/2018.
  */
-public class EcmFileMovedEventHandler implements ApplicationListener<EcmEvent>
+public class EcmFileFolderMovedEventHandler implements ApplicationListener<EcmEvent>
 {
 
     private transient final Logger log = LoggerFactory.getLogger(getClass());
     private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
     private EcmFileService fileService;
+    private AcmFolderService folderService;
     private FolderAndFilesUtils folderAndFilesUtils;
 
-    public EcmFile onEcmFileMoved(EcmEvent ecmEvent)
+    public void onEcmFileMoved(EcmEvent ecmEvent)
     {
         getAuditPropertyEntityAdapter().setUserId(ecmEvent.getUserId());
 
         AcmFolder sourceParentFolder = getFolderAndFilesUtils().lookupArkCaseFolder(ecmEvent.getSourceParentNodeId());
         AcmFolder targetParentFolder = getFolderAndFilesUtils().lookupArkCaseFolder(ecmEvent.getTargetParentNodeId());
 
-        if (sourceParentFolder != null && targetParentFolder != null)
+        if (ecmEvent.getNodeType().equals(EcmFileConstants.ECM_SYNC_NODE_TYPE_DOCUMENT))
         {
-            return moveFile(ecmEvent, sourceParentFolder, targetParentFolder);
+            if (sourceParentFolder != null && targetParentFolder != null)
+            {
+                moveFile(ecmEvent, sourceParentFolder, targetParentFolder);
+            }
+            else if (sourceParentFolder != null && targetParentFolder == null)
+            {
+                deleteFile(ecmEvent, sourceParentFolder);
+            }
+            else if (sourceParentFolder == null && targetParentFolder != null)
+            {
+                getFolderAndFilesUtils().uploadFile(ecmEvent, targetParentFolder);
+            }
         }
-        else if (sourceParentFolder != null && targetParentFolder == null)
+        else if (ecmEvent.getNodeType().equals(EcmFileConstants.ECM_SYNC_NODE_TYPE_FOLDER))
         {
-            deleteFile(ecmEvent, sourceParentFolder);
+            if (sourceParentFolder != null && targetParentFolder != null)
+            {
+                moveFolder(ecmEvent, targetParentFolder);
+            }
+            else if (sourceParentFolder != null && targetParentFolder == null)
+            {
+                deleteFolder(ecmEvent);
+            }
+            else if (sourceParentFolder == null && targetParentFolder != null)
+            {
+                AcmFolder created = getFolderService().createFolder(targetParentFolder, ecmEvent.getNodeId(), ecmEvent.getNodeName());
+
+                try
+                {
+                    getFolderService().createFolderChildrenInArkcase(created, ecmEvent.getUserId());
+                }
+                catch (AcmUserActionFailedException | AcmObjectNotFoundException e)
+                {
+                    log.debug("Can not create folder children for folder with id: {} and name: {} ", created.getId(), created.getName());
+                }
+
+                log.debug("Finished creating new folder with node id {}, ArkCase id {}", created.getCmisFolderId(), created.getId());
+            }
         }
-        else if (sourceParentFolder == null && targetParentFolder != null)
-        {
-            return getFolderAndFilesUtils().uploadFile(ecmEvent, targetParentFolder);
-        }
-        return null;
     }
 
     private void deleteFile(EcmEvent ecmEvent, AcmFolder sourceParentFolder)
@@ -94,6 +126,17 @@ public class EcmFileMovedEventHandler implements ApplicationListener<EcmEvent>
         }
     }
 
+    private void deleteFolder(EcmEvent ecmEvent)
+    {
+        // delete the folder, since target folder is not in arkcase
+        AcmFolder arkCaseFolder = getFolderAndFilesUtils().lookupArkCaseFolder(ecmEvent.getNodeId());
+        if (arkCaseFolder != null)
+        {
+            getFolderService().deleteFolderContent(arkCaseFolder, AuthenticationUtils.getUsername());
+            log.info("Deleted folder with CMIS ID [{}]", ecmEvent.getNodeId());
+        }
+    }
+
     private EcmFile moveFile(EcmEvent ecmEvent, AcmFolder sourceParentFolder, AcmFolder targetParentFolder)
     {
         EcmFile arkCaseFile = getFolderAndFilesUtils().lookupArkCaseFile(ecmEvent.getNodeId(), sourceParentFolder.getId());
@@ -105,7 +148,7 @@ public class EcmFileMovedEventHandler implements ApplicationListener<EcmEvent>
                 log.info("Moved file to ArkCase with CMIS ID [{}] and ArkCase ID [{}]", ecmEvent.getNodeId(), movedFile.getId());
                 return movedFile;
             }
-            catch (AcmUserActionFailedException | AcmObjectNotFoundException | AcmCreateObjectFailedException e)
+            catch (AcmUserActionFailedException | AcmCreateObjectFailedException e)
             {
                 log.error("Could not move file with CMIS ID [{}] to ArkCase: {}", ecmEvent.getNodeId(), e.getMessage(), e);
             }
@@ -113,10 +156,28 @@ public class EcmFileMovedEventHandler implements ApplicationListener<EcmEvent>
         return arkCaseFile;
     }
 
+    private AcmFolder moveFolder(EcmEvent ecmEvent, AcmFolder targetParentFolder)
+    {
+        AcmFolder arkCaseFolder = getFolderAndFilesUtils().lookupArkCaseFolder(ecmEvent.getNodeId());
+        if (arkCaseFolder != null)
+        {
+            try
+            {
+                AcmFolder movedFolder = getFolderService().moveFolderInArkcase(arkCaseFolder, targetParentFolder);
+                log.info("Moved folder to ArkCase with CMIS ID [{}] and ArkCase ID [{}]", ecmEvent.getNodeId(), movedFolder.getId());
+                return movedFolder;
+            }
+            catch (AcmUserActionFailedException | AcmObjectNotFoundException | AcmFolderException e)
+            {
+                log.error("Could not move folder with CMIS ID [{}] to ArkCase: {}", ecmEvent.getNodeId(), e.getMessage(), e);
+            }
+        }
+        return arkCaseFolder;
+    }
+
     protected boolean isMoveFileEvent(EcmEvent ecmEvent)
     {
-        return EcmEventType.MOVE.equals(ecmEvent.getEcmEventType()) &&
-                EcmFileConstants.ECM_SYNC_NODE_TYPE_DOCUMENT.equals(ecmEvent.getNodeType());
+        return EcmEventType.MOVE.equals(ecmEvent.getEcmEventType());
     }
 
     @Override
@@ -146,6 +207,16 @@ public class EcmFileMovedEventHandler implements ApplicationListener<EcmEvent>
     public void setFileService(EcmFileService fileService)
     {
         this.fileService = fileService;
+    }
+
+    public AcmFolderService getFolderService()
+    {
+        return folderService;
+    }
+
+    public void setFolderService(AcmFolderService folderService)
+    {
+        this.folderService = folderService;
     }
 
     public FolderAndFilesUtils getFolderAndFilesUtils()

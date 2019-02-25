@@ -66,6 +66,9 @@ public interface AcmFolderService
     AcmFolder moveFolder(AcmFolder folderForMoving, AcmFolder dstFolder)
             throws AcmObjectNotFoundException, AcmUserActionFailedException, AcmFolderException;
 
+    AcmFolder moveFolderInArkcase(AcmFolder folderForMoving, AcmFolder dstFolder)
+            throws AcmObjectNotFoundException, AcmUserActionFailedException, AcmFolderException;
+
     AcmFolder copyFolder(AcmFolder toBeCopied, AcmFolder dstFolder, Long targetObjectId, String targetObjectType)
             throws AcmUserActionFailedException, AcmObjectNotFoundException, AcmCreateObjectFailedException, AcmFolderException;
 
@@ -74,6 +77,8 @@ public interface AcmFolderService
     void deleteFolderTreeSafe(Long folderId, Authentication authentication) throws AcmUserActionFailedException, AcmObjectNotFoundException;
 
     void deleteFolderTree(Long folderId, Authentication authentication) throws AcmUserActionFailedException, AcmObjectNotFoundException;
+
+    void deleteFolderContent(AcmFolder folder, String user);
 
     void deleteContainerSafe(AcmContainer container, Authentication authentication) throws AcmUserActionFailedException;
 
@@ -129,4 +134,9 @@ public interface AcmFolderService
     DeleteFolderInfo getFolderToDeleteInfo(Long folderId) throws AcmObjectNotFoundException;
 
     AcmFolder saveFolder(AcmFolder folder);
+
+    AcmFolder createFolder(AcmFolder targetParentFolder, String cmisFolderId, String folderName);
+
+    void createFolderChildrenInArkcase(AcmFolder parentFolder, String userId)
+            throws AcmObjectNotFoundException, AcmUserActionFailedException;
 }
