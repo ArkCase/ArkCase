@@ -29,6 +29,7 @@ package com.armedia.acm.services.users.model.group;
 
 import com.armedia.acm.data.AcmEntity;
 import com.armedia.acm.services.users.model.AcmUser;
+import com.armedia.acm.services.users.model.AcmUserState;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -231,6 +232,12 @@ public class AcmGroup implements Serializable, AcmEntity
         memberGroups.clear();
     }
 
+    public void removeUserMembers()
+    {
+        userMembers.forEach(user -> user.setModified(new Date()));
+        this.setUserMembers(new HashSet<>());
+    }
+
     public void addToGroup(AcmGroup group)
     {
         memberOfGroups.add(group);
@@ -388,10 +395,35 @@ public class AcmGroup implements Serializable, AcmEntity
         this.supervisor = supervisor;
     }
 
+    /**
+     *
+     * @return all users regardless of status
+     */
+    @Deprecated
     public Set<AcmUser> getUserMembers()
     {
         return userMembers;
     }
+
+    /**
+     *
+     * @param onlyValidUsers
+     * @return all users if onlyValidUsers is false, otherwise users with VALID state
+     */
+    public Set<AcmUser> getUserMembers(boolean onlyValidUsers)
+    {
+        if (!onlyValidUsers)
+        {
+            return userMembers;
+        }
+        else
+        {
+            return userMembers.stream()
+                    .filter(user -> user.getUserState().equals(AcmUserState.VALID))
+                    .collect(Collectors.toSet());
+        }
+    }
+
 
     public void setUserMembers(Set<AcmUser> userMembers)
     {

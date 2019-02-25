@@ -27,6 +27,7 @@ package com.armedia.acm.services.email.filter;
  * #L%
  */
 
+import com.armedia.acm.services.email.receiver.service.EmailReceiverConfigurationServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
@@ -44,14 +45,13 @@ public class CaseFilePatternMailFilter extends AcmObjectPatternMailFilter
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
     private String objectTypeRegexPattern;
-    private Boolean enableCreatingObject;
+    private EmailReceiverConfigurationServiceImpl emailReceiverConfigurationService;
 
-    public CaseFilePatternMailFilter(String objectIdRegexPattern, String objectTypeRegexPattern, Boolean enableCreatingObject)
+    public CaseFilePatternMailFilter(String objectIdRegexPattern, String objectTypeRegexPattern)
     {
 
         super(objectIdRegexPattern, objectTypeRegexPattern);
         this.objectTypeRegexPattern = objectTypeRegexPattern;
-        this.enableCreatingObject = enableCreatingObject;
 
     }
 
@@ -59,7 +59,7 @@ public class CaseFilePatternMailFilter extends AcmObjectPatternMailFilter
     public boolean accept(Message message) throws MessagingException, IOException
     {
         boolean matchesFilter = false;
-        if(enableCreatingObject)
+        if(emailReceiverConfigurationService.readConfiguration().getEnableCase())
         {
             Pattern pattern = Pattern.compile(String.format("%s", objectTypeRegexPattern));
 
@@ -79,5 +79,13 @@ public class CaseFilePatternMailFilter extends AcmObjectPatternMailFilter
             return matchesFilter;
         }
 
+    }
+
+    public EmailReceiverConfigurationServiceImpl getEmailReceiverConfigurationService() {
+        return emailReceiverConfigurationService;
+    }
+
+    public void setEmailReceiverConfigurationService(EmailReceiverConfigurationServiceImpl emailReceiverConfigurationService) {
+        this.emailReceiverConfigurationService = emailReceiverConfigurationService;
     }
 }

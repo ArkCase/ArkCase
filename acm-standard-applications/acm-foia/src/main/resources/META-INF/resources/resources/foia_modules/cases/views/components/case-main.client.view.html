@@ -60,10 +60,8 @@
                 <div class="form-group col-sm-3">
                     <label class="control-label" translate> cases.comp.main.dispositionSubType.label</label> <select
                         ng-model="objectInfo.dispositionSubtype" ng-change="isChanged(objectInfo.dispositionSubtype)"
-                        ng-disabled="!objectInfo.disposition || objectInfo.disposition=='partial-denial'"
                         ng-options="dispositionSubType.key as dispositionSubType.value | translate for dispositionSubType in dispositionSubTypes"
-                        class="form-control input-md" permission="editRequestData" permission-object-type="CASE_FILE" permission-properties="objectInfo"
-                        permission-action="disable">
+                        class="form-control input-md" ng-disabled="objectInfo.disposition != 'full-denial'">
                 </select>
                 </div>
                 <div class="form-group col-sm-3">

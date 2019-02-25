@@ -99,14 +99,14 @@ angular.module('queues').factory('Queues.QueuesService', [ '$http', '$q', 'Ecm.M
      */
     function getPriorityByNumber(priorityStr) {
         switch (priorityStr.toLowerCase()) {
-        case 'normal':
-            return 3 + '-' + priorityStr.toLowerCase();
-        case 'medium':
-            return 2 + '-' + priorityStr.toLowerCase();
-        case 'urgent':
-            return 1 + '-' + priorityStr.toLowerCase();
-        default:
-            return 4 + '-' + 'unknown';
+            case 'normal':
+                return 3 + '-' + priorityStr.toLowerCase();
+            case 'medium':
+                return 2 + '-' + priorityStr.toLowerCase();
+            case 'urgent':
+                return 1 + '-' + priorityStr.toLowerCase();
+            default:
+                return 4 + '-' + 'unknown';
         }
     }
 
@@ -290,28 +290,28 @@ angular.module('queues').factory('Queues.QueuesService', [ '$http', '$q', 'Ecm.M
                     start: req.startWith,
                     n: req.pageSize
 
-                // TODO: figure out why fl parameter doesn't work
-                //fl: [
-                //    'address_lcs',
-                //    'assignee_full_name_lcs',
-                //    'billable_b',
-                //    'city_lcs',
-                //    'client_id_s',
-                //    'create_date_tdt',
-                //    'dueDate_tdt',
-                //    'mrn_s',
-                //    'request_id_s',
-                //    'page_count_l',
-                //    'patient_name_s',
-                //    'priority_s',
-                //    'requester_type_s',
-                //    'requester_name_s',
-                //    'reject_reason_ss',
-                //    'state_lcs',
-                //    'type_s',
-                //    'work_order_number_l',
-                //    'zip_code_s'
-                //].join(',')
+                    // TODO: figure out why fl parameter doesn't work
+                    //fl: [
+                    //    'address_lcs',
+                    //    'assignee_full_name_lcs',
+                    //    'billable_b',
+                    //    'city_lcs',
+                    //    'client_id_s',
+                    //    'create_date_tdt',
+                    //    'dueDate_tdt',
+                    //    'mrn_s',
+                    //    'request_id_s',
+                    //    'page_count_l',
+                    //    'patient_name_s',
+                    //    'priority_s',
+                    //    'requester_type_s',
+                    //    'requester_name_s',
+                    //    'reject_reason_ss',
+                    //    'state_lcs',
+                    //    'type_s',
+                    //    'work_order_number_l',
+                    //    'zip_code_s'
+                    //].join(',')
                 }
             }).then(function(response) {
                 // Perform second request to get locked items
@@ -385,6 +385,20 @@ angular.module('queues').factory('Queues.QueuesService', [ '$http', '$q', 'Ecm.M
                 method: 'POST',
                 url: 'api/v1/plugin/requests/' + queueId + '/start-working'
             }).then(function(response) {
+                return response.data;
+            });
+        },
+
+        /**
+         * @ngdoc method
+         * @name startWorkingOnRequestFromQueues
+         * @methodOf queues.service:Queues.QueuesService
+         */
+        startWorkingOnRequestFromQueues: function (requestId) {
+            return $http({
+                method: 'POST',
+                url: 'api/v1/plugin/requests/' + requestId + '/start-working-on-selected'
+            }).then(function (response) {
                 return response.data;
             });
         },

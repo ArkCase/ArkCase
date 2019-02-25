@@ -61,6 +61,8 @@ public class EmailSenderConfiguration
 
     private boolean allowHyperlinks;
 
+    private boolean convertDocumentsToPdf;
+
     /**
      * @return the host
      */
@@ -233,4 +235,13 @@ public class EmailSenderConfiguration
         this.allowHyperlinks = allowHyperlinks;
     }
 
+    public boolean isConvertDocumentsToPdf()
+    {
+        return convertDocumentsToPdf;
+    }
+
+    public void setConvertDocumentsToPdf(boolean convertDocumentsToPdf)
+    {
+        this.convertDocumentsToPdf = convertDocumentsToPdf;
+    }
 }

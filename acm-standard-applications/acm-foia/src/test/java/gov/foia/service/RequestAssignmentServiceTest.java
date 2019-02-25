@@ -46,6 +46,7 @@ import org.springframework.security.core.Authentication;
 import javax.servlet.http.HttpSession;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -103,10 +104,10 @@ public class RequestAssignmentServiceTest
     {
         participant.setParticipantLdapId("");
         oldestSelfAssignedRequest.setParticipants(Arrays.asList(selfAssignedParticipant, owningGroupParticipant));
-        oldestSelfAssignedRequest.setQueueEnterDate(LocalDate.now().minus(1, ChronoUnit.DAYS));
+        oldestSelfAssignedRequest.setQueueEnterDate(LocalDateTime.now().minus(1, ChronoUnit.DAYS));
 
         oldestNotAssignedRequest.setParticipants(Arrays.asList(participant, owningGroupParticipant));
-        oldestNotAssignedRequest.setQueueEnterDate(LocalDate.now());
+        oldestNotAssignedRequest.setQueueEnterDate(LocalDateTime.now());
 
         expect(mockedRequestDao.getOldestRequestInQueueAssignedToUser(queueId, userId)).andReturn(oldestSelfAssignedRequest);
 
@@ -130,10 +131,10 @@ public class RequestAssignmentServiceTest
     {
         participant.setParticipantLdapId("");
         oldestSelfAssignedRequest.setParticipants(Arrays.asList(selfAssignedParticipant, owningGroupParticipant));
-        oldestSelfAssignedRequest.setQueueEnterDate(LocalDate.now());
+        oldestSelfAssignedRequest.setQueueEnterDate(LocalDateTime.now());
 
         oldestNotAssignedRequest.setParticipants(Arrays.asList(participant, owningGroupParticipant));
-        oldestNotAssignedRequest.setQueueEnterDate(LocalDate.now().minus(1, ChronoUnit.DAYS));
+        oldestNotAssignedRequest.setQueueEnterDate(LocalDateTime.now().minus(1, ChronoUnit.DAYS));
 
         expect(mockedRequestDao.getOldestRequestInQueueAssignedToUser(queueId, userId)).andReturn(oldestSelfAssignedRequest);
 

@@ -94,14 +94,15 @@ public abstract class PDFDocumentGenerator<T>
                 String arkcaseFilename = String.format(fileNameFormat, objectId);
 
                 AcmFolder targetFolder = container.getAttachmentFolder() == null
-                    ? container.getFolder() : container.getAttachmentFolder();
-                
+                        ? container.getFolder()
+                        : container.getAttachmentFolder();
+
                 String targetFolderId = targetFolder.getCmisFolderId();
                 Long targetFolderArkCaseId = targetFolder.getId();
-                
+
                 EcmFile existing = ecmFileDao.findForContainerAttachmentFolderAndFileType(container.getId(),
                         targetFolderArkCaseId, documentName);
-                
+
                 try (InputStream fis = new FileInputStream(filename))
                 {
                     if (existing == null)
@@ -129,7 +130,7 @@ public abstract class PDFDocumentGenerator<T>
             }
             catch (PdfServiceException | AcmCreateObjectFailedException | AcmUserActionFailedException | IOException e)
             {
-                log.error("Unable to create {} document for costsheet [{}]",
+                log.error("Unable to create {} document for object [{}]",
                         documentName, objectId, e);
             }
             finally

@@ -980,40 +980,13 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
 
             Document cmisObject = message.getPayload(Document.class);
 
-            EcmFile fileCopy = new EcmFile();
-
-            fileCopy.setVersionSeriesId(cmisObject.getVersionSeriesId());
-            fileCopy.setFileType(file.getFileType());
-            fileCopy.setActiveVersionTag(cmisObject.getVersionLabel());
-            fileCopy.setFileName(file.getFileName());
-            fileCopy.setFolder(targetFolder);
-            fileCopy.setContainer(targetContainer);
-            fileCopy.setStatus(file.getStatus());
-            fileCopy.setCategory(file.getCategory());
-            fileCopy.setFileActiveVersionMimeType(file.getFileActiveVersionMimeType());
-            fileCopy.setClassName(file.getClassName());
-            fileCopy.setFileActiveVersionNameExtension(file.getFileActiveVersionNameExtension());
-            fileCopy.setFileSource(file.getFileSource());
-            fileCopy.setLegacySystemId(file.getLegacySystemId());
-            fileCopy.setPageCount(file.getPageCount());
-            fileCopy.setSecurityField(file.getSecurityField());
-
             EcmFileVersion fileCopyVersion = new EcmFileVersion();
-            fileCopyVersion.setVersionMimeType(file.getFileActiveVersionMimeType());
-            fileCopyVersion.setVersionFileNameExtension(file.getFileActiveVersionNameExtension());
             fileCopyVersion.setCmisObjectId(cmisObject.getId());
-            fileCopyVersion.setFile(file);
             fileCopyVersion.setVersionTag(cmisObject.getVersionLabel());
-
-            ObjectAssociation personCopy = copyObjectAssociation(file.getPersonAssociation());
-            fileCopy.setPersonAssociation(personCopy);
-
-            ObjectAssociation organizationCopy = copyObjectAssociation(file.getOrganizationAssociation());
-            fileCopy.setOrganizationAssociation(organizationCopy);
-
             copyFileVersionMetadata(file, fileCopyVersion);
 
-            fileCopy.getVersions().add(fileCopyVersion);
+            EcmFile fileCopy = copyEcmFile(file, targetFolder, targetContainer, fileCopyVersion, cmisObject.getVersionSeriesId(),
+                    cmisObject.getVersionLabel());
 
             result = getEcmFileDao().save(fileCopy);
 
@@ -1033,6 +1006,82 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
             throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_COPY_FILE, EcmFileConstants.OBJECT_FILE_TYPE, file.getId(),
                     "Could not copy file", e);
         }
+    }
+
+    @Override
+    @AcmAcquireAndReleaseObjectLock(acmObjectArgIndex = 0, objectType = "FILE", lockType = "READ")
+    @AcmAcquireAndReleaseObjectLock(acmObjectArgIndex = 2, objectType = "FOLDER", lockType = "WRITE", lockChildObjects = false, unlockChildObjects = false)
+    public EcmFile copyFileInArkcase(EcmFile originalFile, String copiedFileNodeId, AcmFolder targetFolder)
+            throws AcmUserActionFailedException
+    {
+        AcmContainer targetContainer;
+        try
+        {
+            targetContainer = getOrCreateContainer(targetFolder.getObjectType(), targetFolder.getId());
+        }
+        catch (AcmCreateObjectFailedException e)
+        {
+            log.error("Could not create container for {} with id {} ", targetFolder.getObjectType(), targetFolder.getId(), e.getMessage());
+            throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_COPY_FILE, EcmFileConstants.OBJECT_FILE_TYPE,
+                    originalFile.getId(),
+                    "Could not copy file", e);
+        }
+
+        EcmFile result;
+
+        try
+        {
+            EcmFileVersion fileCopyVersion = new EcmFileVersion();
+            fileCopyVersion.setCmisObjectId(copiedFileNodeId + ";1.0");
+            fileCopyVersion.setVersionTag("1.0");
+            copyFileVersionMetadata(originalFile, fileCopyVersion);
+
+            EcmFile fileCopy = copyEcmFile(originalFile, targetFolder, targetContainer, fileCopyVersion, copiedFileNodeId, "1.0");
+
+            result = getEcmFileDao().save(fileCopy);
+
+            result = getFileParticipantService().setFileParticipantsFromParentFolder(result);
+
+            return result;
+        }
+        catch (PersistenceException e)
+        {
+            log.error("Could not copy file {} ", e.getMessage(), e);
+            throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_COPY_FILE, EcmFileConstants.OBJECT_FILE_TYPE,
+                    originalFile.getId(),
+                    "Could not copy file", e);
+        }
+    }
+
+    protected EcmFile copyEcmFile(EcmFile originalFile, AcmFolder targetFolder, AcmContainer targetContainer,
+            EcmFileVersion fileVersion, String versionSeriesId, String activeVersionTag)
+    {
+        EcmFile fileCopy = new EcmFile();
+
+        fileCopy.setVersionSeriesId(versionSeriesId);
+        fileCopy.setFileType(originalFile.getFileType());
+        fileCopy.setActiveVersionTag(activeVersionTag);
+        fileCopy.setFileName(originalFile.getFileName());
+        fileCopy.setFolder(targetFolder);
+        fileCopy.setContainer(targetContainer);
+        fileCopy.setStatus(originalFile.getStatus());
+        fileCopy.setCategory(originalFile.getCategory());
+        fileCopy.setFileActiveVersionMimeType(originalFile.getFileActiveVersionMimeType());
+        fileCopy.setClassName(originalFile.getClassName());
+        fileCopy.setFileActiveVersionNameExtension(originalFile.getFileActiveVersionNameExtension());
+        fileCopy.setFileSource(originalFile.getFileSource());
+        fileCopy.setLegacySystemId(originalFile.getLegacySystemId());
+        fileCopy.setPageCount(originalFile.getPageCount());
+        fileCopy.setSecurityField(originalFile.getSecurityField());
+
+        ObjectAssociation personCopy = copyObjectAssociation(originalFile.getPersonAssociation());
+        fileCopy.setPersonAssociation(personCopy);
+
+        ObjectAssociation organizationCopy = copyObjectAssociation(originalFile.getOrganizationAssociation());
+        fileCopy.setOrganizationAssociation(organizationCopy);
+
+        fileCopy.getVersions().add(fileVersion);
+        return fileCopy;
     }
 
     protected ObjectAssociation copyObjectAssociation(ObjectAssociation original)
@@ -1062,6 +1111,10 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
 
     protected void copyFileVersionMetadata(EcmFile file, EcmFileVersion fileCopyVersion)
     {
+        fileCopyVersion.setVersionMimeType(file.getFileActiveVersionMimeType());
+        fileCopyVersion.setVersionFileNameExtension(file.getFileActiveVersionNameExtension());
+        fileCopyVersion.setFile(file);
+
         List<EcmFileVersion> versions = file.getVersions();
 
         // take the most recent version by default
@@ -1092,6 +1145,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
             fileCopyVersion.setDeviceMake(activeVersion.getDeviceMake());
             fileCopyVersion.setDeviceModel(activeVersion.getDeviceModel());
             fileCopyVersion.setDurationSeconds(activeVersion.getDurationSeconds());
+            fileCopyVersion.setSearchablePDF(activeVersion.isSearchablePDF());
         }
     }
 
@@ -1585,9 +1639,24 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     }
 
     @Override
+    @AcmAcquireAndReleaseObjectLock(acmObjectArgIndex = 0, objectType = "FILE", lockType = "DELETE")
+    public EcmFile renameFileInArkcase(EcmFile file, String newFileName)
+    {
+        newFileName = getFolderAndFilesUtils().getBaseFileName(newFileName);
+        file.setFileName(newFileName);
+        return getEcmFileDao().save(file);
+    }
+
+    @Override
     public EcmFile findById(Long fileId)
     {
         return getEcmFileDao().find(fileId);
+    }
+
+    @Override
+    public EcmFile findFileByContainerAndFileType(Long containerId, String fileType)
+    {
+        return getEcmFileDao().findForContainerAndFileType(containerId, fileType);
     }
 
     public EcmFileTransaction getEcmFileTransaction()

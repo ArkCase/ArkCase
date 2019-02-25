@@ -62,13 +62,14 @@ public class AcmAuthenticationManager implements AuthenticationManager
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException
     {
+        Exception lastException = null;
+
         try
         {
             String principal = authentication.getName();
 
             Map<String, AuthenticationProvider> providerMap = getSpringContextHolder().getAllBeansOfType(AuthenticationProvider.class);
             Authentication providerAuthentication = null;
-            Exception lastException = null;
             for (Map.Entry<String, AuthenticationProvider> providerEntry : providerMap.entrySet())
             {
                 try
@@ -139,6 +140,7 @@ public class AcmAuthenticationManager implements AuthenticationManager
                 }
                 getAuthenticationEventPublisher().publishAuthenticationFailure(ae, authentication);
                 log.debug("Detailed exception: ", lastException);
+                lastException = ae;
                 throw ae;
             }
         }
@@ -146,7 +148,12 @@ public class AcmAuthenticationManager implements AuthenticationManager
         {
             if (e instanceof NoProviderFoundException)
                 throw e;
-            throw new InternalAuthenticationServiceException("Unknown server error", e);
+            else if (lastException != null)
+                throw new AuthenticationServiceException(ExceptionUtils.getRootCauseMessage(lastException));
+            else
+            {
+                throw new InternalAuthenticationServiceException("Unknown server error", e);
+            }
         }
         // didn't get an exception, or an authentication either, so we can throw a provider not found exception,
         // since

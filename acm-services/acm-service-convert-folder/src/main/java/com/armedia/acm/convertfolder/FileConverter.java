@@ -29,6 +29,7 @@ package com.armedia.acm.convertfolder;
 
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 
+import java.io.File;
 import java.util.List;
 
 /**
@@ -41,6 +42,8 @@ public interface FileConverter
     List<String> getSupportedTypesExtensions();
 
     void convert(EcmFile file, String username) throws ConversionException;
+
+    File convert(EcmFile file) throws ConversionException;
 
     default String createFileName(EcmFile file)
     {

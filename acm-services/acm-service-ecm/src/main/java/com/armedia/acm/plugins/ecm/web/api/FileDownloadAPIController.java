@@ -186,7 +186,7 @@ public class FileDownloadAPIController implements ApplicationEventPublisherAware
                 JSONObject fileMetadata = new JSONObject();
                 fileMetadata.put("fileName", ecmFile.getFileName());
                 fileMetadata.put("fileType", ecmFile.getFileType());
-                String versionTag = version == null ? ecmFile.getActiveVersionTag() : version;
+                String versionTag = (version == null || version.equals("")) ? ecmFile.getActiveVersionTag() : version;
                 fileMetadata.put("fileNameWithVersion", String.format("%s:%s", ecmFile.getFileName(), versionTag)); 
                 fileMetadata.put("fileTypeCapitalized",
                         ecmFile.getFileType().substring(0, 1).toUpperCase() + ecmFile.getFileType().substring(1));

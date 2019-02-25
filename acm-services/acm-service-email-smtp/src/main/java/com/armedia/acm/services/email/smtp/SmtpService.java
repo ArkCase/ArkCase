@@ -28,6 +28,8 @@ package com.armedia.acm.services.email.smtp;
  */
 
 import com.armedia.acm.auth.AuthenticationUtils;
+import com.armedia.acm.convertfolder.ConversionException;
+import com.armedia.acm.convertfolder.DefaultFolderAndFileConverter;
 import com.armedia.acm.core.exceptions.AcmEncryptionException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.files.propertymanager.PropertyFileManager;
@@ -42,13 +44,14 @@ import com.armedia.acm.services.email.model.EmailWithAttachmentsDTO;
 import com.armedia.acm.services.email.model.EmailWithEmbeddedLinksDTO;
 import com.armedia.acm.services.email.model.EmailWithEmbeddedLinksResultDTO;
 import com.armedia.acm.services.email.sender.model.EmailSenderConfigurationConstants;
+import com.armedia.acm.services.email.sender.service.EmailSenderConfigurationServiceImpl;
 import com.armedia.acm.services.email.service.AcmEmailContentGeneratorService;
 import com.armedia.acm.services.email.service.AcmEmailSenderService;
 import com.armedia.acm.services.email.service.TemplatingEngine;
 import com.armedia.acm.services.users.model.AcmUser;
-
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
+import org.mule.util.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
@@ -56,10 +59,10 @@ import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.security.core.Authentication;
 
 import javax.activation.DataHandler;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -91,6 +94,10 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
     private AcmEmailContentGeneratorService acmEmailContentGeneratorService;
 
     private TemplatingEngine templatingEngine;
+
+    private EmailSenderConfigurationServiceImpl emailSenderConfigurationService;
+
+    private DefaultFolderAndFileConverter defaultFolderAndFileConverter;
 
     @Override
     public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher)
@@ -249,8 +256,7 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
 
     /**
      * @param in
-     * @param user
-     * @param firstIteration
+     * @param user     *
      * @param sentEvents
      * @return
      * @throws MuleException
@@ -270,6 +276,7 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
                 InputStream contents = ecmFileService.downloadAsInputStream(attachmentId);
                 EcmFile ecmFile = ecmFileService.findById(attachmentId);
                 String fileName = ecmFile.getFileName();
+                File pdfConvertedFile = null;
 
                 // add fileKey for AFDP- 5713
                 String fileKey = fileName;
@@ -284,7 +291,39 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
 
                     fileName = fileName + ecmFile.getFileActiveVersionNameExtension();
                 }
-                attachments.put(fileKey, new DataHandler(new InputStreamDataSource(contents, fileName)));
+
+                if(getEmailSenderConfigurationService().readConfiguration().isConvertDocumentsToPdf() &&
+                        Objects.nonNull(ecmFile) && !".pdf".equals(ecmFile.getFileActiveVersionNameExtension()))
+                {
+                    try
+                    {
+                        pdfConvertedFile = getDefaultFolderAndFileConverter().convert(ecmFile);
+                    }
+                    catch (ConversionException e)
+                    {
+                        LOG.error(String.format("Could not convert file [%s] to PDF", fileName), e);
+                    }
+
+                    try(InputStream pdfConvertedFileInputStream = new FileInputStream(pdfConvertedFile))
+                    {
+                        contents = pdfConvertedFileInputStream;
+                        fileName = fileKey.concat(".pdf");
+                        attachments.put(fileKey, new DataHandler(new InputStreamDataSource(contents, fileName)));
+                    }
+                    catch (IOException e)
+                    {
+                        LOG.error(String.format("Could not open input stream of file [%s]", fileName), e);
+                    }
+                    finally
+                    {
+                        FileUtils.deleteQuietly(pdfConvertedFile);
+                    }
+                }
+                else
+                {
+                    attachments.put(fileKey, new DataHandler(new InputStreamDataSource(contents, fileName)));
+                }
+
                 String ipAddress = AuthenticationUtils.getUserIpAddress();
 
                 sentEvents
@@ -293,6 +332,7 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
                 sentEvents.add(new SmtpEventSentEvent(ecmFile, user.getUserId(), ecmFile.getId(), ecmFile.getObjectType(), ipAddress));
             }
         }
+
         // Adding non ecmFile(s) as attachments
         if (in.getFilePaths() != null && !in.getFilePaths().isEmpty())
         {
@@ -467,4 +507,23 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
         this.templatingEngine = templatingEngine;
     }
 
+    public EmailSenderConfigurationServiceImpl getEmailSenderConfigurationService()
+    {
+        return emailSenderConfigurationService;
+    }
+
+    public void setEmailSenderConfigurationService(EmailSenderConfigurationServiceImpl emailSenderConfigurationService)
+    {
+        this.emailSenderConfigurationService = emailSenderConfigurationService;
+    }
+
+    public DefaultFolderAndFileConverter getDefaultFolderAndFileConverter()
+    {
+        return defaultFolderAndFileConverter;
+    }
+
+    public void setDefaultFolderAndFileConverter(DefaultFolderAndFileConverter defaultFolderAndFileConverter)
+    {
+        this.defaultFolderAndFileConverter = defaultFolderAndFileConverter;
+    }
 }

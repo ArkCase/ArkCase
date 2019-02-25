@@ -416,7 +416,7 @@ public class FunctionalAccessServiceImpl implements FunctionalAccessService, App
                 AcmGroup acmGroup = getAcmGroupDao().findByName(groupName);
                 if (acmGroup != null)
                 {
-                    retval.addAll(acmGroup.getUserMembers());
+                    retval.addAll(acmGroup.getUserMembers(true));
                 }
             }
         }

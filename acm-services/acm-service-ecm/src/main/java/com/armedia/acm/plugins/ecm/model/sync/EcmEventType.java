@@ -32,5 +32,5 @@ package com.armedia.acm.plugins.ecm.model.sync;
  */
 public enum EcmEventType
 {
-    CREATE, DELETE, MOVE
+    CREATE, DELETE, MOVE, COPY, RENAME, UPDATE
 }

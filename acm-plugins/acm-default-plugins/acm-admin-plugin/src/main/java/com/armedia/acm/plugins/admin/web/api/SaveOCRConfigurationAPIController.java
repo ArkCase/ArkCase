@@ -27,9 +27,9 @@ package com.armedia.acm.plugins.admin.web.api;
  * #L%
  */
 
-import com.armedia.acm.plugins.admin.model.OCRConfiguration;
-import com.armedia.acm.plugins.admin.service.ArkCaseOCRService;
-import com.armedia.acm.services.transcribe.exception.SaveConfigurationException;
+import com.armedia.acm.ocr.exception.SaveConfigurationException;
+import com.armedia.acm.ocr.model.OCRConfiguration;
+import com.armedia.acm.ocr.service.ArkCaseOCRService;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

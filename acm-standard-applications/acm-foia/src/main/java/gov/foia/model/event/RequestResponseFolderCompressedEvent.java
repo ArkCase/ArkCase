@@ -4,7 +4,7 @@ package gov.foia.model.event;
  * #%L
  * ACM Standard Application: Freedom of Information Act
  * %%
- * Copyright (C) 2014 - 2018 ArkCase LLC
+ * Copyright (C) 2014 - 2019 ArkCase LLC
  * %%
  * This file is part of the ArkCase software. 
  * 
@@ -29,9 +29,10 @@ package gov.foia.model.event;
 
 import com.armedia.acm.auth.AuthenticationUtils;
 import com.armedia.acm.core.model.AcmEvent;
-import gov.foia.model.FOIARequest;
 
 import java.util.Date;
+
+import gov.foia.model.FOIARequest;
 
 public class RequestResponseFolderCompressedEvent extends AcmEvent
 {

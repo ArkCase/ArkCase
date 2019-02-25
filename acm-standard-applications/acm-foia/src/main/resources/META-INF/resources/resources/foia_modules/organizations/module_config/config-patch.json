@@ -1,0 +1,50 @@
+[
+    {
+        "op": "replace",
+        "path": "/menus/?@.id=='topbar'/position",
+        "value": 40
+    },
+    {
+        "op": "remove",
+        "path": "/tree/filters/?@.desc=='organizations.tree.filters.iHaveCreatedActive'"
+    },
+    {
+        "op": "remove",
+        "path": "/tree/filters/?@.desc=='organizations.tree.filters.active'"
+    },
+    {
+        "op": "remove",
+        "path": "/tree/filters/?@.desc=='organizations.tree.filters.inActive'"
+    },
+    {
+        "op": "replace",
+        "path": "/tree/nodeTypes/?@.type=='p/ORGANIZATION'/components",
+        "value": [
+            "details",
+            "addresses",
+            "phones",
+            "faxes",
+            "emails",
+            "urls",
+            "participants",
+            "dbas",
+            "people",
+            "ids",
+            "cases",
+            "related",
+            "history"
+        ]
+    },
+    {
+        "op": "remove",
+        "path": "/tree/nodeTypes/?@.type=='p/ORGANIZATION/com'"
+    },
+    {
+        "op": "remove",
+        "path": "/components/?@.id=='main'/widgets/?@.id='complaints'"
+    },
+    {
+        "op": "remove",
+        "path": "/components/?@.id=='complaints'"
+    }
+]

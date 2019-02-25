@@ -1,0 +1,43 @@
+[
+    {
+        "op": "replace",
+        "path": "/components",
+        "value": [
+            {
+                "id": "datepickers",
+                "title": "reports.comp.datepickers.title",
+                "enabled": true,
+                "configurable": true,
+                "type": "empty"
+            },
+            {
+                "id": "reportselection",
+                "title": "reports.comp.reportselection.title",
+                "enabled": true,
+                "configurable": true
+            },
+            {
+                "id": "foiaTypes",
+                "resetTypeValues": [],
+                "types": [
+                    {
+                        "id": "FOIA",
+                        "name": "FOIA"
+                    },
+                    {
+                        "id": "PA",
+                        "name": "PA"
+                    },
+                    {
+                        "id": "PA_AMEND",
+                        "name": "PA Amend"
+                    },
+                    {
+                        "id": "Appeal",
+                        "name": "Appeal"
+                    }
+                ]
+            }
+        ]
+    }
+]

@@ -59,6 +59,7 @@ public class EcmFileTransactionPipelineContext extends AbstractPipelineContext
     private boolean isAppend;
     private boolean fileAlreadyInEcmSystem;
     private EcmTikaFile detectedFileMetadata;
+    private boolean searchablePDF;
 
     private byte[] mergedFileByteArray;
 
@@ -180,6 +181,16 @@ public class EcmFileTransactionPipelineContext extends AbstractPipelineContext
     public void setFileContents(File fileContents)
     {
         this.fileContents = fileContents;
+    }
+
+    public boolean isSearchablePDF()
+    {
+        return searchablePDF;
+    }
+
+    public void setSearchablePDF(boolean searchablePDF)
+    {
+        this.searchablePDF = searchablePDF;
     }
 
     @Deprecated

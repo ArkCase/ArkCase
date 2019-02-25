@@ -50,6 +50,7 @@ import com.armedia.acm.plugins.ecm.model.sync.EcmEvent;
 import com.armedia.acm.plugins.ecm.model.sync.EcmEventType;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
+import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
 
 import org.apache.chemistry.opencmis.client.api.Document;
 import org.apache.chemistry.opencmis.commons.data.ContentStream;
@@ -77,6 +78,7 @@ public class EcmFileMovedEventHandlerTest
     private AuditPropertyEntityAdapter auditPropertyEntityAdapter = mock(AuditPropertyEntityAdapter.class);
     private EcmFileService ecmFileService = mock(EcmFileService.class);
     private EcmFileService spyEcmFileService = spy(EcmFileService.class);
+    private FolderAndFilesUtils spyFolderAndFilesUtils = spy(FolderAndFilesUtils.class);
     private Document cmisDocument = mock(Document.class);
     private ContentStream contentStream = mock(ContentStream.class);
     private InputStream inputStream = mock(InputStream.class);
@@ -87,11 +89,13 @@ public class EcmFileMovedEventHandlerTest
     {
         unit = new EcmFileMovedEventHandler();
 
-        unit.setFolderService(acmFolderService);
         unit.setAuditPropertyEntityAdapter(auditPropertyEntityAdapter);
-        unit.setFolderDao(acmFolderDao);
-        unit.setFileDao(ecmFileDao);
         unit.setFileService(ecmFileService);
+        spyFolderAndFilesUtils.setFileDao(ecmFileDao);
+        spyFolderAndFilesUtils.setFileService(ecmFileService);
+        spyFolderAndFilesUtils.setFolderDao(acmFolderDao);
+        spyFolderAndFilesUtils.setFolderService(acmFolderService);
+        unit.setFolderAndFilesUtils(spyFolderAndFilesUtils);
 
         fileMovedEvent = new EcmEvent(new JSONObject());
         fileMovedEvent.setEcmEventType(EcmEventType.MOVE);

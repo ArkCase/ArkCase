@@ -2,8 +2,8 @@
 
 angular.module('queues').controller(
         'Queues.RequestsListController',
-        [ '$scope', '$state', '$stateParams', '$timeout', 'uiGridConstants', 'Queues.QueuesConstants', 'Queues.QueuesService', 'Admin.QueuesTimeToCompleteService', 'Task.AlertsService', 'DueDate.Service', 'Admin.HolidayService', '$filter', '$q',
-                function($scope, $state, $stateParams, $timeout, uiGridConstants, QueuesConstants, QueuesService, AdminQueuesTimeToCompleteService, TaskAlertsService, DueDateService, AdminHolidayService, $filter, $q) {
+        [ '$scope', '$state', '$stateParams', '$timeout', 'uiGridConstants', 'Queues.QueuesService', 'Admin.QueuesTimeToCompleteService', 'Task.AlertsService', 'DueDate.Service', 'Admin.HolidayService', '$filter', '$q', '$translate', 'MessageService', 'Requests.RequestsService', 'EcmService',
+                '$window', function($scope, $state, $stateParams, $timeout, uiGridConstants, QueuesService, AdminQueuesTimeToCompleteService, TaskAlertsService, DueDateService, AdminHolidayService, $filter, $q, $translate, MessageService, GenericRequestsService, EcmService, $window) {
                     $scope.$on('component-config', applyConfig);
                     $scope.$on('queue-selected', queueSelected);
                     $scope.$on('update-requests-list', update);
@@ -62,7 +62,7 @@ angular.module('queues').controller(
                         // } else {
                         $scope.gridOptions.columnDefs = $scope.config.columnDefs;
                         $scope.gridOptions.enableSelectAll = false;
-                        $scope.gridOptions.multiSelect = false;
+                        $scope.gridOptions.multiSelect = true;
                         // }
                         if ($scope.gridApi) {
                             $scope.gridApi.core.notifyDataChange(uiGridConstants.dataChange.OPTIONS);
@@ -89,21 +89,13 @@ angular.module('queues').controller(
                             $scope.gridApi = gridApi;
 
                             gridApi.selection.on.rowSelectionChanged($scope, function(row) {
-                                // Allow selection only for DISTRIBUTION queue
-                                // open request page for all other queues
-                                if ($scope.selectedQueue.id == QueuesConstants.DISTRIBUTION) {
-                                    var selectedRows = $scope.gridApi.selection.getSelectedRows();
-                                    $scope.$emit('req-select-requests', selectedRows);
-                                } else {
-                                    openRequestInfoPage(row.entity.request_id_lcs);
-                                }
+                                var selectedRows = $scope.gridApi.selection.getSelectedRows();
+                                $scope.$emit('req-select-requests', selectedRows);
                             });
 
                             gridApi.selection.on.rowSelectionChangedBatch($scope, function(rows) {
-                                if ($scope.selectedQueue.id == QueuesConstants.DISTRIBUTION) {
-                                    var selectedRows = $scope.gridApi.selection.getSelectedRows();
-                                    $scope.$emit('req-select-requests', selectedRows);
-                                }
+                                var selectedRows = $scope.gridApi.selection.getSelectedRows();
+                                $scope.$emit('req-select-requests', selectedRows);
                             });
 
                             gridApi.core.on.sortChanged($scope, function(grid, sortColumns) {
@@ -285,16 +277,42 @@ angular.module('queues').controller(
 
                         }
                     }
-
-                    function openRequestInfoPage(requestId) {
-                        //remove this request from the sorted list for picking next request to avoid to be picked twice
-                        QueuesService.removeRequestFromSortedList(requestId);
-
-                        $state.go('request-info', {
-                            id: requestId
-                        }, true);
+                    function getDocumentQuery(requestId) {
+                        return GenericRequestsService.queryDocument({
+                            requestId: requestId
+                        });
                     }
 
+                    function getFileId(repositoryInfo) {
+                        return EcmService.findFileByContainerAndFileType({
+                            containerId: repositoryInfo,
+                            fileType: 'Request Form'
+                        });
+                    }
+
+                    function openRequestInfoPage(requestId) {
+
+                        var newTabWindow = $window.open('', '_blank');
+                        //remove this request from the sorted list for picking next request to avoid to be picked twice
+                        QueuesService.removeRequestFromSortedList(requestId);
+                        var requestPromise = QueuesService.startWorkingOnRequestFromQueues(requestId);
+                        var fileInfo = getDocumentQuery(requestId);
+                        $q.all([ requestPromise, fileInfo ]).then(function(request) {
+                            getFileId(request[0].container.id).$promise.then(function(fileInfo) {
+                                var url = $state.href('request-info', {
+                                    id: requestId,
+                                    fileId: fileInfo.fileId
+                                }, {
+                                    absolute: true
+                                });
+                                
+                                newTabWindow.location.href = url;
+                                $scope.$emit("report-object-updated", request);
+                            }, function() {
+                                MessageService.info($translate.instant("queues.startWorking.noRequestToAssign"));
+                            });
+                        });
+                    }
                     function update() {
                         getPage();
                     }
