@@ -39,12 +39,12 @@ angular.module('request-info').factory(
                             }
                             return viewerUrl;
                         },
-                        buildViewerUrl: function(viewerBaseUrl, acmTicket, userId, file) {
+                        buildViewerUrl: function(viewerBaseUrl, acmTicket, userId, userFullName, file, caseNumber) {
 
                             // Forces the viewer iframe to be reloaded with the latest version of the document
                             var randomUrlArgToCauseIframeRefresh = (new Date()).getTime();
 
-                            return viewerBaseUrl + "?documentId=ecmFileId=" + file.fileId + "&acm_ticket=" + acmTicket + "&userid=" + userId + "&refreshCacheTimestamp=" + randomUrlArgToCauseIframeRefresh + "&documentName=" + file.fileName + "&parentObjectId=" + file.container.containerObjectId
+                            return viewerBaseUrl + "?documentId=ecmFileId=" + file.fileId + "&acm_ticket=" + acmTicket + "&userid=" + userId + "&userFullName=" + userFullName + "&caseNumber=" + caseNumber + "&refreshCacheTimestamp=" + randomUrlArgToCauseIframeRefresh + "&documentName=" + file.fileName + "&parentObjectId=" + file.container.containerObjectId
                                     + "&parentObjectType=" + file.container.containerObjectType + "&selectedIds=";
                         },
                         buildOpenDocumentIdString: function(files) {
@@ -57,7 +57,8 @@ angular.module('request-info').factory(
                             }
                             return openDocIds;
                         },
-                        buildViewerUrlMultiple: function(ecmFileProperties, acmTicket, userId, userFullName, files) {
+
+                        buildViewerUrlMultiple: function(ecmFileProperties, acmTicket, userId, userFullName, files, readonly, caseNumber) {
                             var viewerUrl = '';
                             if (files && files.length > 0) {
 
@@ -65,7 +66,7 @@ angular.module('request-info').factory(
                                 files[0].ecmFile.selectedIds = this.buildOpenDocumentIdString(files);
 
                                 // Generates the viewer url with the first document as the primary document
-                                var viewerUrl = SnowboundService.buildSnowboundUrl(ecmFileProperties, acmTicket, userId, userFullName, files[0].ecmFile);
+                                viewerUrl = SnowboundService.buildSnowboundUrl(ecmFileProperties, acmTicket, userId, userFullName, files[0].ecmFile, readonly, caseNumber);
                             }
                             return viewerUrl;
                         },

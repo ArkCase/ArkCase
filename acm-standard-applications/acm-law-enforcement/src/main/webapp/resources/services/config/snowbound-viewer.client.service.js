@@ -64,14 +64,14 @@ angular.module('services').factory(
                          * and allow snowbound to callback Alfresco (for merge/split, etc.) and authenticate.
                          */
                         ,
-                        buildSnowboundUrl: function(ecmFileProperties, acmTicket, userId, userFullName, file, readonly) {
+                            buildSnowboundUrl: function(ecmFileProperties, acmTicket, userId, userFullName, file, readonly, caseNumber) {
 
                             // Obtains the base portion of the viewer url (host/port, etc)
                             var viewerBaseUrl = this.extractViewerBaseUrl(ecmFileProperties, readonly);
                             var encryptionPassphrase = ecmFileProperties['ecm.viewer.snowbound.encryptionKey'];
                             // Forces the viewer iframe to be reloaded with the latest version of the document
                             var randomUrlArgToCauseIframeRefresh = (new Date()).getTime();
-                            var parameters = "ecmFileId=" + file.id + "&acm_ticket=" + acmTicket + "&userid=" + userId + "&userFullName=" + userFullName + "&documentName=" + file.name + "&parentObjectId=" + file.containerId + "&parentObjectType=" + file.containerType + "&selectedIds=" + file.selectedIds;
+                            var parameters = "ecmFileId=" + file.id + "&acm_ticket=" + acmTicket + "&userid=" + userId + "&userFullName=" + userFullName + "&caseNumber=" + caseNumber + "&documentName=" + file.name + "&parentObjectId=" + file.containerId + "&parentObjectType=" + file.containerType + "&selectedIds=" + file.selectedIds;
 
                             if (ecmFileProperties['ecm.viewer.snowbound.tabHeader']) {
                                 parameters += "&tabHeader=" + ecmFileProperties['ecm.viewer.snowbound.tabHeader'];
