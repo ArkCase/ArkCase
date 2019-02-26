@@ -673,12 +673,9 @@ public class FacetedSearchService
                 String parentType = "";
                 if (docs.getJSONObject(i).has("parent_ref_s"))
                 {
-                    String[] splitArray = docs.getJSONObject(i).getString("parent_ref_s").split("-");
-                    if (splitArray.length >= 2)
-                    {
-                        parentId = splitArray[0];
-                        parentType = splitArray[1];
-                    }
+                    String parentReference = docs.getJSONObject(i).getString("parent_ref_s");
+                    parentId = StringUtils.substringBefore(parentReference, "-");
+                    parentType = StringUtils.substringAfter(parentReference, "-");
                 }
 
                 if (StringUtils.isNotEmpty(parentId) && StringUtils.isNotEmpty(parentType)) {
