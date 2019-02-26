@@ -100,7 +100,7 @@
     },
     {
         "op": "add",
-        "path": "/tree/nodeTypes/",
+        "path": "/tree/nodeTypes/-",
         "value": {
             "type": "p/CASE_FILE/exemption",
             "label": "cases.tree.nodeTypes.exemptionCodes.label",
@@ -116,11 +116,15 @@
     },
     {
         "op": "remove",
+        "path": "/tree/nodeTypes/?@.type=='p/CASE_FILE/det'"
+    },
+    {
+        "op": "remove",
         "path": "/tree/nodeTypes/?@.type=='p/ERROR'"
     },
     {
         "op": "add",
-        "path": "/tree/nodeTypes/",
+        "path": "/tree/nodeTypes/-",
         "value": {
             "type": "p/CASE_FILE/billing",
             "label": "cases.tree.nodeTypes.billing.label",
