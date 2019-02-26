@@ -231,7 +231,7 @@ module.exports = function(grunt) {
                     doc = ooPatch(doc, patchObj).doc;
 
                     fs.writeFileSync(locationTmp, JSON.stringify(doc, null, 2));
-                    fs.unlink(patchFile);
+                    fs.unlinkSync(patchFile);
                 }
                 else {
                     fs.writeFileSync(locationTmp, JSON.stringify(inputObj, null, 2));
@@ -252,7 +252,7 @@ module.exports = function(grunt) {
                         doc = ooPatch(doc, patchObj).doc;
 
                         fs.writeFileSync(resourceModules + "/" + file, JSON.stringify(doc, null, 2));
-                        fs.unlink(patchLocation);
+                        fs.unlinkSync(patchLocation);
                     }
                     else {
                         fs.writeFileSync(resourceModules + "/" + file, JSON.stringify(inputObj, null, 2));

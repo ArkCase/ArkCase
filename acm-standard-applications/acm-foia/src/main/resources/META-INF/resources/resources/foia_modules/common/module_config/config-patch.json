@@ -46,7 +46,7 @@
     },
     {
         "op": "add",
-        "path": "/docTree/columnDefs/",
+        "path": "/docTree/columnDefs/8",
         "value": {
             "name": "reviewStatus",
             "displayName": "common.directive.docTree.table.columns.reviewStatus",
@@ -57,7 +57,7 @@
     },
     {
         "op": "add",
-        "path": "/docTree/columnDefs/",
+        "path": "/docTree/columnDefs/9",
         "value": {
             "name": "redactionStatus",
             "displayName": "common.directive.docTree.table.columns.redactionStatus ",
@@ -87,8 +87,18 @@
         "value": 11
     },
     {
+        "op": "replace",
+        "path": "/docTree/components/?@.id=='status'/index",
+        "value": 11
+    },
+    {
+        "op": "replace",
+        "path": "/docTree/components/?@.id=='status'/width",
+        "value": "7%"
+    },
+    {
         "op": "add",
-        "path": "/docTree/columnDefs/",
+        "path": "/docTree/columnDefs/-",
         "value": {
             "name": "public",
             "displayName": "common.directive.docTree.table.columns.public",
