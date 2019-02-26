@@ -51,7 +51,8 @@ import java.io.InputStream;
 import java.io.SequenceInputStream;
 import java.util.*;
 
-public class FileChunkServiceImpl implements FileChunkService {
+public class FileChunkServiceImpl implements FileChunkService
+{
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
@@ -64,7 +65,8 @@ public class FileChunkServiceImpl implements FileChunkService {
     @Async
     @Transactional
     public void mergeAndUploadFiles(FileDetails fileDetails, AcmFolder folder, Document existingFile, Authentication authentication)
-            throws IOException, AcmUserActionFailedException, AcmCreateObjectFailedException {
+            throws IOException, AcmUserActionFailedException, AcmCreateObjectFailedException
+    {
         SequenceInputStreamHolder holder = mergeChunks(fileDetails);
 
         getAuditPropertyEntityAdapter().setUserId(authentication.getName());
@@ -82,12 +84,17 @@ public class FileChunkServiceImpl implements FileChunkService {
 
         log.debug("Start uploading the file with name {}", uniqueFileName);
 
-        if (existingFile != null) {
-            //depricated upload method being called, find another solution. So far not implemented in upload large files
+        if (existingFile != null)
+        {
+            // depricated upload method being called, find another solution. So far not implemented in upload large
+            // files
             ecmFileService.upload(authentication, fileDetails.getObjectType(), fileDetails.getObjectId(), folder.getCmisFolderId(),
                     uniqueFileName, holder.getStream(), metadata, existingFile);
-        } else {
-            AcmMultipartFile multipartFile = new AcmMultipartFile(uniqueFileName, fileDetails.getName(), fileDetails.getMimeType(), false, holder.getSize(), new byte[0], holder.getStream(), true);
+        }
+        else
+        {
+            AcmMultipartFile multipartFile = new AcmMultipartFile(uniqueFileName, fileDetails.getName(), fileDetails.getMimeType(), false,
+                    holder.getSize(), new byte[0], holder.getStream(), true);
             ecmFileService.upload(authentication, multipartFile, folder.getCmisFolderId(), fileDetails.getObjectType(),
                     fileDetails.getObjectId(), metadata);
         }
@@ -99,14 +106,16 @@ public class FileChunkServiceImpl implements FileChunkService {
 
     @Override
     public SequenceInputStreamHolder mergeChunks(FileDetails fileDetails)
-            throws IOException {
+            throws IOException
+    {
         SequenceInputStreamHolder holder = new SequenceInputStreamHolder();
         SequenceInputStream inputStream = null;
         Long size = 0L;
-        if (fileDetails != null && fileDetails.getParts() != null && !fileDetails.getParts().isEmpty()) {
+        if (fileDetails != null && fileDetails.getParts() != null && !fileDetails.getParts().isEmpty())
+        {
             Pair pair = getInputStreamsAndSize(fileDetails.getParts());
             inputStream = new SequenceInputStream((Enumeration<? extends InputStream>) pair.getKey());
-            size = (Long)pair.getValue();
+            size = (Long) pair.getValue();
         }
 
         holder.setStream(inputStream);
@@ -114,10 +123,12 @@ public class FileChunkServiceImpl implements FileChunkService {
         return holder;
     }
 
-    private void setRepositoryRequestUserAndId(Authentication authentication) {
+    private void setRepositoryRequestUserAndId(Authentication authentication)
+    {
         String alfrescoUser = "admin";
 
-        if (authentication != null && authentication.getName() != null) {
+        if (authentication != null && authentication.getName() != null)
+        {
             alfrescoUser = StringUtils.substringBeforeLast(authentication.getName(), "@");
         }
 
@@ -125,20 +136,25 @@ public class FileChunkServiceImpl implements FileChunkService {
         MDC.put(MDCConstants.EVENT_MDC_REQUEST_ID_KEY, UUID.randomUUID().toString());
     }
 
-    public void deleteFilesQuietly(List<FileChunkDetails> parts) {
+    public void deleteFilesQuietly(List<FileChunkDetails> parts)
+    {
         String dirPath = System.getProperty("java.io.tmpdir");
         String uniqueArkCaseHashFileIdentifier = ecmFileServiceProperties.getProperty("ecm.arkcase.hash.file.identifier");
-        for (FileChunkDetails part : parts) {
-            org.mule.util.FileUtils.deleteQuietly(new File(dirPath + File.separator + uniqueArkCaseHashFileIdentifier + "-" + part.getFileName()));
+        for (FileChunkDetails part : parts)
+        {
+            org.mule.util.FileUtils
+                    .deleteQuietly(new File(dirPath + File.separator + uniqueArkCaseHashFileIdentifier + "-" + part.getFileName()));
         }
     }
 
-    private Pair<Enumeration<InputStream>, Long> getInputStreamsAndSize(List<FileChunkDetails> parts) throws IOException {
+    private Pair<Enumeration<InputStream>, Long> getInputStreamsAndSize(List<FileChunkDetails> parts) throws IOException
+    {
         String dirPath = System.getProperty("java.io.tmpdir");
         String uniqueArkCaseHashFileIdentifier = ecmFileServiceProperties.getProperty("ecm.arkcase.hash.file.identifier");
         Vector<InputStream> inputStream = new Vector<>();
         Long size = 0L;
-        for (FileChunkDetails part : parts) {
+        for (FileChunkDetails part : parts)
+        {
             File file = new File(dirPath + File.separator + uniqueArkCaseHashFileIdentifier + "-" + part.getFileName());
             InputStream stream = org.mule.util.FileUtils.openInputStream(file);
             inputStream.addElement(stream);
@@ -149,35 +165,43 @@ public class FileChunkServiceImpl implements FileChunkService {
         return pair;
     }
 
-    public FolderAndFilesUtils getFolderAndFilesUtils() {
+    public FolderAndFilesUtils getFolderAndFilesUtils()
+    {
         return folderAndFilesUtils;
     }
 
-    public void setFolderAndFilesUtils(FolderAndFilesUtils folderAndFilesUtils) {
+    public void setFolderAndFilesUtils(FolderAndFilesUtils folderAndFilesUtils)
+    {
         this.folderAndFilesUtils = folderAndFilesUtils;
     }
 
-    public EcmFileService getEcmFileService() {
+    public EcmFileService getEcmFileService()
+    {
         return ecmFileService;
     }
 
-    public void setEcmFileService(EcmFileService ecmFileService) {
+    public void setEcmFileService(EcmFileService ecmFileService)
+    {
         this.ecmFileService = ecmFileService;
     }
 
-    public AuditPropertyEntityAdapter getAuditPropertyEntityAdapter() {
+    public AuditPropertyEntityAdapter getAuditPropertyEntityAdapter()
+    {
         return auditPropertyEntityAdapter;
     }
 
-    public void setAuditPropertyEntityAdapter(AuditPropertyEntityAdapter auditPropertyEntityAdapter) {
+    public void setAuditPropertyEntityAdapter(AuditPropertyEntityAdapter auditPropertyEntityAdapter)
+    {
         this.auditPropertyEntityAdapter = auditPropertyEntityAdapter;
     }
 
-    public Properties getEcmFileServiceProperties() {
+    public Properties getEcmFileServiceProperties()
+    {
         return ecmFileServiceProperties;
     }
 
-    public void setEcmFileServiceProperties(Properties ecmFileServiceProperties) {
+    public void setEcmFileServiceProperties(Properties ecmFileServiceProperties)
+    {
         this.ecmFileServiceProperties = ecmFileServiceProperties;
     }
 }

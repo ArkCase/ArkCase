@@ -35,7 +35,6 @@ import org.springframework.messaging.support.MessageBuilder;
 import java.util.HashMap;
 import java.util.Map;
 
-
 public class FileUploadProgressNotifierMessageBuilder implements AcmProgressNotifierMessageBuilder
 {
 
@@ -44,7 +43,8 @@ public class FileUploadProgressNotifierMessageBuilder implements AcmProgressNoti
     /*
      * (non-Javadoc)
      * @see
-     * com.armedia.acm.data.FileUploadProgressNotifierMessageBuilder#buildMessage(com.armedia.acm.data.AcmProgressIndicator)
+     * com.armedia.acm.data.FileUploadProgressNotifierMessageBuilder#buildMessage(com.armedia.acm.data.
+     * AcmProgressIndicator)
      */
     @Override
     public Message<Map<String, Object>> buildMessage(AcmProgressIndicator progressIndicator)

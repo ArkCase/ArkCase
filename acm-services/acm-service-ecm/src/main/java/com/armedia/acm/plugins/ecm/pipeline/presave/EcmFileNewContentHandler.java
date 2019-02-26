@@ -71,7 +71,8 @@ public class EcmFileNewContentHandler implements PipelineHandler<EcmFile, EcmFil
             {
                 log.debug("Putting fileInputStream in a decorator stream so that the number of bytes can be counted");
                 CountingInputStream countingInputStream = new CountingInputStream(fileInputStream);
-                if (entity.getUuid() != null) {
+                if (entity.getUuid() != null)
+                {
                     ProgressbarDetails progressbarDetails = new ProgressbarDetails();
                     progressbarDetails.setProgressbar(true);
                     progressbarDetails.setStage(3);
@@ -81,7 +82,9 @@ public class EcmFileNewContentHandler implements PipelineHandler<EcmFile, EcmFil
                     progressbarDetails.setFileName(entity.getFileName());
                     progressbarDetails.setObjectNumber(pipelineContext.getContainer().getContainerObjectTitle());
                     log.debug("Start stage three for file {}. The file will be written to Alfresco", entity.getFileName());
-                    progressIndicatorService.start(countingInputStream, pipelineContext.getFileContents().length(), pipelineContext.getContainer().getContainerObjectId(), pipelineContext.getContainer().getContainerObjectType(), pipelineContext.getFileContents().getName(), pipelineContext.getAuthentication().getName(), progressbarDetails);
+                    progressIndicatorService.start(countingInputStream, pipelineContext.getFileContents().length(),
+                            pipelineContext.getContainer().getContainerObjectId(), pipelineContext.getContainer().getContainerObjectType(),
+                            pipelineContext.getFileContents().getName(), pipelineContext.getAuthentication().getName(), progressbarDetails);
                 }
                 // Adds the file to the ECM content repository as a new document... using the context filename
                 // as the filename for the repository.
@@ -98,8 +101,10 @@ public class EcmFileNewContentHandler implements PipelineHandler<EcmFile, EcmFil
             {
                 log.error("mule pre save handler failed: {}", e.getMessage(), e);
                 ProgressbarExecutor progressbarExecutor = progressIndicatorService.getExecutor(entity.getUuid());
-                if (entity.getUuid() != null && progressbarExecutor != null && progressbarExecutor.getProgressbarDetails().getStage() == 2) {
-                    log.debug("Stop progressbar executor in stage 3, for file {} and set file upload success to {}", entity.getUuid(), false);
+                if (entity.getUuid() != null && progressbarExecutor != null && progressbarExecutor.getProgressbarDetails().getStage() == 2)
+                {
+                    log.debug("Stop progressbar executor in stage 3, for file {} and set file upload success to {}", entity.getUuid(),
+                            false);
                     progressIndicatorService.end(entity.getUuid(), false);
                 }
                 throw new PipelineProcessException(e);
@@ -149,11 +154,13 @@ public class EcmFileNewContentHandler implements PipelineHandler<EcmFile, EcmFil
         this.ecmFileMuleUtils = ecmFileMuleUtils;
     }
 
-    public ProgressIndicatorService getProgressIndicatorService() {
+    public ProgressIndicatorService getProgressIndicatorService()
+    {
         return progressIndicatorService;
     }
 
-    public void setProgressIndicatorService(ProgressIndicatorService progressIndicatorService) {
+    public void setProgressIndicatorService(ProgressIndicatorService progressIndicatorService)
+    {
         this.progressIndicatorService = progressIndicatorService;
     }
 }

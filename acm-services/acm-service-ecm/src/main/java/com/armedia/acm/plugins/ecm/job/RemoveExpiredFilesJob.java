@@ -12,14 +12,15 @@ import java.io.FileFilter;
 import java.time.LocalDate;
 import java.util.Properties;
 
-public class RemoveExpiredFilesJob implements AcmSchedulableBean {
+public class RemoveExpiredFilesJob implements AcmSchedulableBean
+{
     private final Logger LOG = LoggerFactory.getLogger(getClass());
     private FileChunkServiceImpl fileChunkService;
     private EcmFileService ecmFileService;
     private Properties ecmFileServiceProperties;
 
-
-    public void deleteExpiredFiles(){
+    public void deleteExpiredFiles()
+    {
         String dirPath = System.getProperty("java.io.tmpdir");
         String uniqueArkCaseHashFileIdentifier = ecmFileServiceProperties.getProperty("ecm.arkcase.hash.file.identifier");
         File directory = new File(dirPath);
@@ -28,19 +29,24 @@ public class RemoveExpiredFilesJob implements AcmSchedulableBean {
 
         LOG.debug("Mark files that should be deleted.");
         FileFilter filter = file -> {
-            if(!(file.lastModified() < weekAgo.toEpochDay())){
+            if (!(file.lastModified() < weekAgo.toEpochDay()))
+            {
                 return false;
             }
             return file.getName().contains(uniqueArkCaseHashFileIdentifier);
         };
 
-        File [] files = directory.listFiles(filter);
+        File[] files = directory.listFiles(filter);
         LOG.debug("Found {} files to delete.", files.length);
         int deletedFiles = 0;
-        for(File file : files){
-            if(file.delete()){
+        for (File file : files)
+        {
+            if (file.delete())
+            {
                 deletedFiles++;
-            } else {
+            }
+            else
+            {
                 LOG.warn("The file {} could not be deleted.", file.getName());
             }
         }
@@ -48,31 +54,38 @@ public class RemoveExpiredFilesJob implements AcmSchedulableBean {
     }
 
     @Override
-    public void executeTask() {
+    public void executeTask()
+    {
         deleteExpiredFiles();
     }
 
-    public FileChunkServiceImpl getFileChunkService() {
+    public FileChunkServiceImpl getFileChunkService()
+    {
         return fileChunkService;
     }
 
-    public void setFileChunkService(FileChunkServiceImpl fileChunkService) {
+    public void setFileChunkService(FileChunkServiceImpl fileChunkService)
+    {
         this.fileChunkService = fileChunkService;
     }
 
-    public EcmFileService getEcmFileService() {
+    public EcmFileService getEcmFileService()
+    {
         return ecmFileService;
     }
 
-    public void setEcmFileService(EcmFileService ecmFileService) {
+    public void setEcmFileService(EcmFileService ecmFileService)
+    {
         this.ecmFileService = ecmFileService;
     }
 
-    public Properties getEcmFileServiceProperties() {
+    public Properties getEcmFileServiceProperties()
+    {
         return ecmFileServiceProperties;
     }
 
-    public void setEcmFileServiceProperties(Properties ecmFileServiceProperties) {
+    public void setEcmFileServiceProperties(Properties ecmFileServiceProperties)
+    {
         this.ecmFileServiceProperties = ecmFileServiceProperties;
     }
 }

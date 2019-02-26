@@ -42,7 +42,7 @@ public class ProgressbarDetails
     private String objectNumber;
     private String fileName;
 
-    //status of the file. inprogress, finished, failed.
+    // status of the file. inprogress, finished, failed.
     private enum UploadFileStatus
     {
         READY,
@@ -54,7 +54,8 @@ public class ProgressbarDetails
     /**
      * @return the uuid of the File
      */
-    public String getUuid() {
+    public String getUuid()
+    {
         return uuid;
     }
 
@@ -62,14 +63,16 @@ public class ProgressbarDetails
      * @param uuid
      *            the uuid of the File to set
      */
-    public void setUuid(String uuid) {
+    public void setUuid(String uuid)
+    {
         this.uuid = uuid;
     }
 
     /**
      * @return the current stage of upload process(stage 2 writes file to file system, stage 3 writes file to Alfresco)
      */
-    public int getStage() {
+    public int getStage()
+    {
         return stage;
     }
 
@@ -77,14 +80,16 @@ public class ProgressbarDetails
      * @param stage
      *            the stage of the upload process to set
      */
-    public void setStage(int stage) {
+    public void setStage(int stage)
+    {
         this.stage = stage;
     }
 
     /**
      * @return the currentProgress percentage of the file upload
      */
-    public int getCurrentProgress() {
+    public int getCurrentProgress()
+    {
         return currentProgress;
     }
 
@@ -92,14 +97,16 @@ public class ProgressbarDetails
      * @param currentProgress
      *            the currentProgress percentage of the file upload to set
      */
-    public void setCurrentProgress(int currentProgress) {
+    public void setCurrentProgress(int currentProgress)
+    {
         this.currentProgress = currentProgress;
     }
 
     /**
      * @return progressbar
      */
-    public boolean isProgressbar() {
+    public boolean isProgressbar()
+    {
         return isProgressbar;
     }
 
@@ -107,14 +114,16 @@ public class ProgressbarDetails
      * @param progressbar
      *            the progressbar property to set
      */
-    public void setProgressbar(boolean progressbar) {
+    public void setProgressbar(boolean progressbar)
+    {
         isProgressbar = progressbar;
     }
 
     /**
      * @return the success of the file upload
      */
-    public boolean isSuccess() {
+    public boolean isSuccess()
+    {
         return success;
     }
 
@@ -122,14 +131,16 @@ public class ProgressbarDetails
      * @param success
      *            the success property to set in file upload
      */
-    public void setSuccess(boolean success) {
+    public void setSuccess(boolean success)
+    {
         this.success = success;
     }
 
     /**
      * @return the objectType of the File
      */
-    public String getObjectType() {
+    public String getObjectType()
+    {
         return objectType;
     }
 
@@ -137,14 +148,16 @@ public class ProgressbarDetails
      * @param objectType
      *            the objectType of the File to set
      */
-    public void setObjectType(String objectType) {
+    public void setObjectType(String objectType)
+    {
         this.objectType = objectType;
     }
 
     /**
      * @return the objectId of the File
      */
-    public Long getObjectId() {
+    public Long getObjectId()
+    {
         return objectId;
     }
 
@@ -152,14 +165,16 @@ public class ProgressbarDetails
      * @param objectId
      *            the objectId of the File to set
      */
-    public void setObjectId(Long objectId) {
+    public void setObjectId(Long objectId)
+    {
         this.objectId = objectId;
     }
 
     /**
      * @return the objectNumber is the containerObjectTitle
      */
-    public String getObjectNumber() {
+    public String getObjectNumber()
+    {
         return objectNumber;
     }
 
@@ -167,14 +182,16 @@ public class ProgressbarDetails
      * @param objectNumber
      *            the objectNumber is the containerObjectTitle to set
      */
-    public void setObjectNumber(String objectNumber) {
+    public void setObjectNumber(String objectNumber)
+    {
         this.objectNumber = objectNumber;
     }
 
     /**
      * @return the fileName of the File
      */
-    public String getFileName() {
+    public String getFileName()
+    {
         return fileName;
     }
 
@@ -182,7 +199,8 @@ public class ProgressbarDetails
      * @param fileName
      *            the fileName of the File to set
      */
-    public void setFileName(String fileName) {
+    public void setFileName(String fileName)
+    {
         this.fileName = fileName;
     }
 }

@@ -42,84 +42,103 @@ public class FileDetails
     private Long existingFileId;
     private String lang;
 
-
-    public String getName() {
+    public String getName()
+    {
         return name;
     }
 
-    public void setName(String name) {
+    public void setName(String name)
+    {
         this.name = name;
     }
 
-    public String getMimeType() {
+    public String getMimeType()
+    {
         return mimeType;
     }
 
-    public void setMimeType(String mimeType) {
+    public void setMimeType(String mimeType)
+    {
         this.mimeType = mimeType;
     }
 
-    public Long getObjectId() {
+    public Long getObjectId()
+    {
         return objectId;
     }
 
-    public void setObjectId(Long objectId) {
+    public void setObjectId(Long objectId)
+    {
         this.objectId = objectId;
     }
 
-    public String getObjectType() {
+    public String getObjectType()
+    {
         return objectType;
     }
 
-    public void setObjectType(String objectType) {
+    public void setObjectType(String objectType)
+    {
         this.objectType = objectType;
     }
 
-    public Long getFolderId() {
+    public Long getFolderId()
+    {
         return folderId;
     }
 
-    public void setFolderId(Long folderId) {
+    public void setFolderId(Long folderId)
+    {
         this.folderId = folderId;
     }
 
-    public List<FileChunkDetails> getParts() {
+    public List<FileChunkDetails> getParts()
+    {
         return parts;
     }
 
-    public void setParts(List<FileChunkDetails> parts) {
+    public void setParts(List<FileChunkDetails> parts)
+    {
         this.parts = parts;
     }
 
-    public String getFileType() {
+    public String getFileType()
+    {
         return fileType;
     }
 
-    public void setFileType(String fileType) {
+    public void setFileType(String fileType)
+    {
         this.fileType = fileType;
     }
 
-    public String getUuid() {
+    public String getUuid()
+    {
         return uuid;
     }
 
-    public void setUuid(String uuid) {
+    public void setUuid(String uuid)
+    {
         this.uuid = uuid;
     }
 
-    public Long getExistingFileId() {
+    public Long getExistingFileId()
+    {
         return existingFileId;
     }
 
-    public void setExistingFileId(Long existingFileId) {
+    public void setExistingFileId(Long existingFileId)
+    {
         this.existingFileId = existingFileId;
     }
 
-    public String getLang() {
+    public String getLang()
+    {
         return lang;
     }
 
-    public void setLang(String lang) {
+    public void setLang(String lang)
+    {
         this.lang = lang;
     }
 }
