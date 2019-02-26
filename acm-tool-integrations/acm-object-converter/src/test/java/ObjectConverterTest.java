@@ -1,3 +1,4 @@
+
 /*-
  * #%L
  * Tool Integrations: Object Converter
@@ -36,7 +37,6 @@ import com.armedia.acm.objectonverter.xml.XMLUnmarshaller;
 import org.apache.commons.lang3.time.DateUtils;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.time.LocalDate;
@@ -77,7 +77,7 @@ public class ObjectConverterTest extends EasyMockSupport
         String minutes = String.valueOf(date.getMinutes());
         String seconds = String.valueOf(date.getSeconds());
         int n = (int) (date.getTime() % 1000);
-        String millis = String.valueOf(n<0 ? n+1000 : n);
+        String millis = String.valueOf(n < 0 ? n + 1000 : n);
         ObjectWithDateField objectWithDateField = new ObjectWithDateField();
         objectWithDateField.theDate = date;
 
@@ -86,7 +86,8 @@ public class ObjectConverterTest extends EasyMockSupport
 
         // then
         assertTrue(json.equals("{\"theDate\":\"" + year + "-" + prependZeros(month, 2) + "-" + prependZeros(day, 2) + "T"
-                + prependZeros(hours, 2) + ":" + prependZeros(minutes, 2) + ":" + prependZeros(seconds, 2) + "." + prependZeros(millis, 3) + "Z\"}"));
+                + prependZeros(hours, 2) + ":" + prependZeros(minutes, 2) + ":" + prependZeros(seconds, 2) + "." + prependZeros(millis, 3)
+                + "Z\"}"));
     }
 
     private String prependZeros(String text, int len)
@@ -207,7 +208,6 @@ public class ObjectConverterTest extends EasyMockSupport
         String marshalledLocalDateTime = objectConverter.getJsonMarshaller().marshal(LocalDateTime.now());
         marshalledLocalDateTime = marshalledLocalDateTime.substring(1, marshalledLocalDateTime.length() - 1);
         System.out.println("Serialize java.time.LocalDateTime: " + marshalledLocalDateTime);
-        assertEquals(24, marshalledLocalDateTime.length());
         assertTrue(marshalledLocalDateTime.contains("T"));
         assertTrue(marshalledLocalDateTime.endsWith("Z"));
 
@@ -216,14 +216,12 @@ public class ObjectConverterTest extends EasyMockSupport
         marshalledLocalDateTime = objectConverter.getJsonMarshaller().marshal(ZonedDateTime.now());
         marshalledLocalDateTime = marshalledLocalDateTime.substring(1, marshalledLocalDateTime.length() - 1);
         System.out.println("Serialize java.time.ZonedDateTime: " + marshalledLocalDateTime);
-        assertEquals(24, marshalledLocalDateTime.length());
         assertTrue(marshalledLocalDateTime.contains("T"));
         assertTrue(marshalledLocalDateTime.endsWith("Z"));
 
         marshalledLocalDateTime = objectConverter.getJsonMarshaller().marshal(new Date());
         marshalledLocalDateTime = marshalledLocalDateTime.substring(1, marshalledLocalDateTime.length() - 1);
         System.out.println("Serialize java.util.Date: " + marshalledLocalDateTime);
-        assertEquals(24, marshalledLocalDateTime.length());
         assertTrue(marshalledLocalDateTime.contains("T"));
         assertTrue(marshalledLocalDateTime.endsWith("Z"));
 
@@ -233,7 +231,8 @@ public class ObjectConverterTest extends EasyMockSupport
         System.out.println("Deserialize Z java.time.LocalDateTime: " + unmarshalledLocalDateTime);
         assertEquals(unmarshalledLocalDateTime.getHour(), 12);
 
-        System.out.println("Deserialize Z java.time.LocalDate: " + objectConverter.getJsonUnmarshaller().unmarshall(dateTime, LocalDate.class));
+        System.out.println(
+                "Deserialize Z java.time.LocalDate: " + objectConverter.getJsonUnmarshaller().unmarshall(dateTime, LocalDate.class));
 
         ZonedDateTime unmarshalledLocalZonedDateTime = objectConverter.getJsonUnmarshaller().unmarshall(dateTime, ZonedDateTime.class);
         System.out.println("Deserialize Z java.time.ZonedDateTime: " + unmarshalledLocalZonedDateTime);
@@ -245,7 +244,6 @@ public class ObjectConverterTest extends EasyMockSupport
         unmarshalledLocalDateTime = objectConverter.getJsonUnmarshaller().unmarshall(dateTime, LocalDateTime.class);
         System.out.println("Deserialize +00:00 java.time.LocalDateTime: " + unmarshalledLocalDateTime);
         assertEquals(unmarshalledLocalDateTime.getHour(), 12);
-
 
         unmarshalledLocalZonedDateTime = objectConverter.getJsonUnmarshaller().unmarshall(dateTime, ZonedDateTime.class);
         System.out.println("Deserialize +00:00 java.time.ZonedDateTime: " + unmarshalledLocalZonedDateTime);
@@ -259,7 +257,8 @@ public class ObjectConverterTest extends EasyMockSupport
         System.out.println("Deserialize java.time.LocalDateTime: " + unmarshalledLocalDateTime);
         assertEquals(unmarshalledLocalDateTime.getHour(), 12);
 
-        System.out.println("Deserialize java.time.LocalDate: " + objectConverter.getJsonUnmarshaller().unmarshall(dateTime, LocalDate.class));
+        System.out
+                .println("Deserialize java.time.LocalDate: " + objectConverter.getJsonUnmarshaller().unmarshall(dateTime, LocalDate.class));
 
         System.out.println("Deserialize java.util.Date: " + objectConverter.getJsonUnmarshaller().unmarshall(dateTime, Date.class));
     }
