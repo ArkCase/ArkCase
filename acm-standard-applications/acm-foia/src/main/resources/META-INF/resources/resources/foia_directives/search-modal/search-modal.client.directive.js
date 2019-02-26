@@ -343,7 +343,20 @@ angular.module('directives').directive('searchModal',
                         scope.modalInstance.dismiss('cancel')
                     };
 
-                    scope.onClickObjLink = function(event, rowEntity, keepModal) {
+                    /**
+                     * @ngdoc method
+                     * @name onClickObjLink
+                     * @methodOf global.directive:searchModal
+                     *
+                     * @param {String} event
+                     * @param {String} rowEntity data
+                     * @param {Boolean} keepModal Optional flag for keeping open modal active
+                     * @param {Boolean} newTab Optional flag for opening the Object in a new tab
+                     *
+                     * @description
+                     * Go to a page state that show the specified ArkCase Object (Case, Complaint, Document, etc.)
+                     */
+                    scope.onClickObjLink = function(event, rowEntity, keepModal, newTab) {
                         event.preventDefault();
                         var targetType = Util.goodMapValue(rowEntity, "object_type_s");
                         var targetId = '';
@@ -354,7 +367,33 @@ angular.module('directives').directive('searchModal',
                             targetId = Util.goodMapValue(rowEntity, "parentId");
                             targetId = parseInt(targetId.substring(0, targetId.indexOf('-')));
                         }
-                        gridHelper.showObject(targetType, targetId);
+                        gridHelper.showObject(targetType, targetId, newTab);
+                        if(!keepModal) {
+                            scope.onClickCancel();
+                        }
+                    };
+
+                    /**
+                     * @ngdoc method
+                     * @name onClickOpenFile
+                     * @methodOf global.directive:searchModal
+                     *
+                     * @param {String} event
+                     * @param {String} rowEntity data
+                     * @param {Boolean} keepModal Optional flag for keeping open modal active
+                     *
+                     * @description
+                     * Go to a page state that show the specified ArkCase File viewer of the selected item
+                     */
+                    scope.onClickOpenFile = function (event, rowEntity, keepModal){
+                        event.preventDefault();
+
+                        var targetId = Util.goodMapValue(rowEntity, "object_id_s");
+                        var parentId = Util.goodMapValue(rowEntity.parent_document, "object_id_s");
+                        var parentType = Util.goodMapValue(rowEntity.parent_document, "object_type_s");
+                        var fileName = Util.goodMapValue(rowEntity, "title_parseable");
+
+                        gridHelper.openObject(targetId, parentId, parentType, fileName);
                         if(!keepModal) {
                             scope.onClickCancel();
                         }

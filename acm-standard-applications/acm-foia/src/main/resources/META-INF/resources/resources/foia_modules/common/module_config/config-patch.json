@@ -343,5 +343,15 @@
                 }
             ]
         }
+    },
+    {
+        "op": "replace",
+        "path": "/docTree/dialogObjectPicker/columnDefs/?@.name=='title_parseable'/__introduce_OnClickOpenFileFunction/cellTemplate",
+        "value": "<a href='#' ng-click='grid.appScope.onClickOpenFile($event, row.entity, true)'>{{row.entity.title_parseable}}</a>"
+    },
+    {
+        "op": "replace",
+        "path": "/docTree/dialogObjectPicker/columnDefs/?@.field=='parent_ref_s'/__change_OnClickOpenObjectFunction/cellTemplate",
+        "value": "<a ng-if='row.entity.parent_document.title_parseable' ng-href='#' ng-click='grid.appScope.onClickObjLink($event, {parentId:row.entity.parent_ref_s, object_type_s:row.entity.parent_ref_s}, true, true)'>{{row.entity.parent_document.title_parseable}}</a>"
     }
 ]
