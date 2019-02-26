@@ -49,7 +49,7 @@ angular.module('reports').factory('Reports.BuildUrl', [ '$sce', 'Util.DateServic
                 + "&endDate=" + UtilDateService.goodIsoDate(params.endDate) 
                 + "&dateFormat=" + encodeURIComponent(UtilDateService.defaultDateFormat) 
                 + "&timeZone=" + encodeURIComponent(UtilDateService.getTimeZoneOffset())
-                + "&timestamp=" + new Date();
+                + "&timestamp=" + (new Date()).getTime();
 
             if (params.stateSelected) {
                 reportUrl += (reportUrl.indexOf("?") == -1 ? "?" : "&") + "status=" + params.stateSelected;
