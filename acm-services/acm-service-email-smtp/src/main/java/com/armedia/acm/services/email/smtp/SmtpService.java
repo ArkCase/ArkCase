@@ -49,6 +49,7 @@ import com.armedia.acm.services.email.service.AcmEmailContentGeneratorService;
 import com.armedia.acm.services.email.service.AcmEmailSenderService;
 import com.armedia.acm.services.email.service.TemplatingEngine;
 import com.armedia.acm.services.users.model.AcmUser;
+
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.mule.util.FileUtils;
@@ -59,6 +60,7 @@ import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.security.core.Authentication;
 
 import javax.activation.DataHandler;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -256,7 +258,8 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
 
     /**
      * @param in
-     * @param user     *
+     * @param user
+     *            *
      * @param sentEvents
      * @return
      * @throws MuleException
@@ -292,7 +295,7 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
                     fileName = fileName + ecmFile.getFileActiveVersionNameExtension();
                 }
 
-                if(getEmailSenderConfigurationService().readConfiguration().isConvertDocumentsToPdf() &&
+                if (getEmailSenderConfigurationService().readConfiguration().isConvertDocumentsToPdf() &&
                         Objects.nonNull(ecmFile) && !".pdf".equals(ecmFile.getFileActiveVersionNameExtension()))
                 {
                     try
@@ -304,19 +307,23 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
                         LOG.error(String.format("Could not convert file [%s] to PDF", fileName), e);
                     }
 
-                    try(InputStream pdfConvertedFileInputStream = new FileInputStream(pdfConvertedFile))
+                    if (pdfConvertedFile != null)
                     {
-                        contents = pdfConvertedFileInputStream;
-                        fileName = fileKey.concat(".pdf");
-                        attachments.put(fileKey, new DataHandler(new InputStreamDataSource(contents, fileName)));
-                    }
-                    catch (IOException e)
-                    {
-                        LOG.error(String.format("Could not open input stream of file [%s]", fileName), e);
-                    }
-                    finally
-                    {
-                        FileUtils.deleteQuietly(pdfConvertedFile);
+
+                        try (InputStream pdfConvertedFileInputStream = new FileInputStream(pdfConvertedFile))
+                        {
+                            contents = pdfConvertedFileInputStream;
+                            fileName = fileKey.concat(".pdf");
+                            attachments.put(fileKey, new DataHandler(new InputStreamDataSource(contents, fileName)));
+                        }
+                        catch (IOException e)
+                        {
+                            LOG.error(String.format("Could not open input stream of file [%s]", fileName), e);
+                        }
+                        finally
+                        {
+                            FileUtils.deleteQuietly(pdfConvertedFile);
+                        }
                     }
                 }
                 else
