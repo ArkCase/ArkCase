@@ -35,7 +35,6 @@ import com.armedia.acm.services.search.service.FacetedSearchService;
 import com.armedia.acm.spring.SpringContextHolder;
 
 import org.apache.commons.lang3.StringUtils;
-import org.json.JSONArray;
 import org.json.JSONObject;
 import org.mule.api.MuleException;
 import org.slf4j.Logger;
@@ -90,8 +89,8 @@ public class FacetedSearchAPIControllerV2
             @RequestParam(value = "titles", required = false) String[] exportTitles,
             // Part of the query to NOT ESCAPE
             @RequestParam(value = "unescapedQuery", required = false, defaultValue = "") String unescapedQuery,
-            //Add time-zone param for AFDP-5769
-            @RequestParam(value = "timeZone", required = false,defaultValue = "") Integer timeZoneOffsetinMinutes ,
+            // Add time-zone param for AFDP-5769
+            @RequestParam(value = "timeZone", required = false, defaultValue = "") Integer timeZoneOffsetinMinutes,
             // Add parent document, for retrieving parentDocument.title_parseable on ticket AFDP-5936
             @RequestParam(value = "getParentDocument", required = false, defaultValue = "false") boolean getParentDocument,
 
@@ -169,13 +168,14 @@ public class FacetedSearchAPIControllerV2
             try
             {
 
-                if (timeZoneOffsetinMinutes == null){
+                if (timeZoneOffsetinMinutes == null)
+                {
                     timeZoneOffsetinMinutes = 0;
                 }
                 // Get the appropriate generator for the requested file type
                 ReportGenerator generator = springContextHolder.getBeanByName(String.format("%sReportGenerator",
                         export.toLowerCase()), ReportGenerator.class);
-                String content = generator.generateReport(exportFields, exportTitles, res,timeZoneOffsetinMinutes);
+                String content = generator.generateReport(exportFields, exportTitles, res, timeZoneOffsetinMinutes);
                 headers.add("Content-Type", generator.getReportContentType());
                 headers.add("Content-Disposition", String.format("attachment; filename=\"%s\"", generator.generateReportName(reportName)));
 
@@ -196,7 +196,6 @@ public class FacetedSearchAPIControllerV2
 
         return new ResponseEntity<>(res, headers, HttpStatus.OK);
     }
-
 
     public ExecuteSolrQuery getExecuteSolrQuery()
     {

@@ -355,7 +355,7 @@ public class FacetedSearchService
                 }
                 else
                 {
-                    //if search key is unset, use empty value.
+                    // if search key is unset, use empty value.
                     buildFacetFilter(queryBuilder, propertyMap, timePeriodList, searchKey, "");
                 }
 
@@ -373,7 +373,7 @@ public class FacetedSearchService
             }
             else
             {
-                //if search key is unset, use empty value.
+                // if search key is unset, use empty value.
                 buildFacetFilter(queryBuilder, propertyMap, timePeriodList, searchKey, "");
             }
         }
@@ -609,11 +609,13 @@ public class FacetedSearchService
         this.pluginEventType = pluginEventType;
     }
 
-    public ExecuteSolrQuery getExecuteSolrQuery() {
+    public ExecuteSolrQuery getExecuteSolrQuery()
+    {
         return executeSolrQuery;
     }
 
-    public void setExecuteSolrQuery(ExecuteSolrQuery executeSolrQuery) {
+    public void setExecuteSolrQuery(ExecuteSolrQuery executeSolrQuery)
+    {
         this.executeSolrQuery = executeSolrQuery;
     }
 
@@ -662,7 +664,8 @@ public class FacetedSearchService
         return terms;
     }
 
-    public JSONObject getParentDocumentJsonObject(Authentication authentication, String res) throws MuleException {
+    public JSONObject getParentDocumentJsonObject(Authentication authentication, String res) throws MuleException
+    {
         JSONObject solrResponse = new JSONObject(res);
         if (solrResponse.getJSONObject("response").getLong("numFound") > 0)
         {
@@ -678,12 +681,16 @@ public class FacetedSearchService
                     parentType = StringUtils.substringAfter(parentReference, "-");
                 }
 
-                if (StringUtils.isNotEmpty(parentId) && StringUtils.isNotEmpty(parentType)) {
-                    String parentResult = getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.QUICK_SEARCH, "object_id_s:" + parentId + " AND object_type_s:" + parentType, 0,
+                if (StringUtils.isNotEmpty(parentId) && StringUtils.isNotEmpty(parentType))
+                {
+                    String parentResult = getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.QUICK_SEARCH,
+                            "object_id_s:" + parentId + " AND object_type_s:" + parentType, 0,
                             1, "create_date_tdt DESC");
                     JSONObject parentResponse = new JSONObject(parentResult);
-                    if (parentResponse.getJSONObject("response").getLong("numFound") == 1) {
-                        docs.getJSONObject(i).put("parent_document", parentResponse.getJSONObject("response").getJSONArray("docs").getJSONObject(0));
+                    if (parentResponse.getJSONObject("response").getLong("numFound") == 1)
+                    {
+                        docs.getJSONObject(i).put("parent_document",
+                                parentResponse.getJSONObject("response").getJSONArray("docs").getJSONObject(0));
                     }
                 }
             }
