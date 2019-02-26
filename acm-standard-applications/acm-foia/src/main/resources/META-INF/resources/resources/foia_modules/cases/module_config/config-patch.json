@@ -47,6 +47,10 @@
         "value": "fa fa-star"
     },
     {
+        "op": "remove",
+        "path": "/menus/?@.menuId=='topbar'/formsType"
+    },
+    {
         "op": "replace",
         "path": "/tree/filters/?@.name=='all-open-cases'/value",
         "value": "fq=-status_s:COMPLETE AND -status_s:DELETE AND -status_s:CLOSED AND -status_s:Released"
@@ -56,8 +60,12 @@
         "path": "/tree/filters/?@.name=='all-closed-cases'"
     },
     {
+        "op": "remove",
+        "path": "/tree/filters/?@.name=='all-open-cases'/default"
+    },
+    {
         "op": "add",
-        "path": "/tree/filters/",
+        "path": "/tree/filters/1",
         "value": {
             "desc": "cases.tree.filters.released",
             "name": "all-released-cases",
@@ -73,10 +81,6 @@
         "op": "add",
         "path": "/tree/filters/?@.name=='my-assigned-cases'/default",
         "value": true
-    },
-    {
-        "op": "remove",
-        "path": "/tree/filters/?@.name=='my-assigned-cases'"
     },
     {
         "op": "replace",
