@@ -4,43 +4,6 @@
         "path": "/components/?@.id=='securityCalendarConfig'/configurableObjectTypes/?@.id=='COMPLAINT'"
     },
     {
-        "op": "add",
-        "path": "/components/?@.id=='correspondenceManagementMergeFields'/objectTypes",
-        "value": [
-            {
-                "name": "Case File",
-                "id": "CASE_FILE"
-            },
-            {
-                "name": "Complaint",
-                "id": "COMPLAINT"
-            }
-        ]
-    },
-    {
-        "op": "add",
-        "path": "/components/?@.id=='correspondenceManagementTemplates'/objectTypes",
-        "value": [
-            {
-                "name": "Case File",
-                "id": "CASE_FILE"
-            },
-            {
-                "name": "Complaint",
-                "id": "COMPLAINT"
-            }
-        ]
-    },
-    {
-        "op": "remove",
-        "path": "/components/?@.id=='scheduleReportConfig'"
-    },
-    {
-        "op": "replace",
-        "path": "/components/?@.id=='emailTemplates'/columnDefs/?@.displayName=='admin.security.emailTemplates.table.columns.objectTypes'/name",
-        "value": "objectTypesNames"
-    },
-    {
         "op": "replace",
         "path": "/components/?@.id=='emailTemplates'/objectTypes/?@.id=='CASE_FILE'/name",
         "value": "Request"
