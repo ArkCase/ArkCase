@@ -129,7 +129,6 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
 
     private ProgressbarDetails progressbarDetails;
 
-
     @Override
     public CmisObject findObjectByPath(String path) throws Exception
     {
@@ -298,7 +297,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         log.info("File size: {}; content type: {}", file.getSize(), file.getContentType());
 
         AcmContainer container = getOrCreateContainer(parentObjectType, parentObjectId);
-        //makes a problem when trying to upload file to a children node folder
+        // makes a problem when trying to upload file to a children node folder
 
         // TODO: disgusting hack here. getOrCreateContainer is transactional, and may update the container or the
         // container folder, e.g. by adding participants. If it does, the object we get back won't have those changes,
@@ -316,7 +315,8 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
             EcmFile uploaded = getEcmFileTransaction().addFileTransaction(authentication, file.getOriginalFilename(), container,
                     targetCmisFolderId, fileInputStream, metadata, file);
 
-            if (uploaded.getUuid() != null) {
+            if (uploaded.getUuid() != null)
+            {
                 log.debug("Stop progressbar executor in stage 3, for file {} and set file upload success to {}", uploaded.getUuid(), true);
                 progressIndicatorService.end(uploaded.getUuid(), true);
             }
@@ -1657,22 +1657,29 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     }
 
     @Override
-    public String uploadFileChunk(MultipartHttpServletRequest request, String fileName, String uniqueArkCaseHashFileIdentifier) {
+    public String uploadFileChunk(MultipartHttpServletRequest request, String fileName, String uniqueArkCaseHashFileIdentifier)
+    {
         String dirPath = System.getProperty("java.io.tmpdir");
-        try {
+        try
+        {
             MultipartHttpServletRequest multipartHttpServletRequest = request;
             MultiValueMap<String, MultipartFile> attachments = multipartHttpServletRequest.getMultiFileMap();
-            if (attachments != null) {
-                for (Map.Entry<String, List<MultipartFile>> entry : attachments.entrySet()) {
+            if (attachments != null)
+            {
+                for (Map.Entry<String, List<MultipartFile>> entry : attachments.entrySet())
+                {
 
                     final List<MultipartFile> attachmentsList = entry.getValue();
 
-                    if (attachmentsList != null && !attachmentsList.isEmpty()) {
+                    if (attachmentsList != null && !attachmentsList.isEmpty())
+                    {
 
-                        for (final MultipartFile attachment : attachmentsList) {
+                        for (final MultipartFile attachment : attachmentsList)
+                        {
                             fileName = attachment.getOriginalFilename();
                             File dir = new File(dirPath);
-                            if (dir.exists()) {
+                            if (dir.exists())
+                            {
                                 File file = new File(dirPath + File.separator + uniqueArkCaseHashFileIdentifier + "-" + fileName);
                                 attachment.transferTo(file);
                             }
@@ -1680,7 +1687,9 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
                     }
                 }
             }
-        } catch (Exception e) {
+        }
+        catch (Exception e)
+        {
             log.error("File upload was unsuccessful.", e);
         }
         return fileName;
@@ -1847,19 +1856,23 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         this.participantService = participantService;
     }
 
-    public ProgressIndicatorService getProgressIndicatorService() {
+    public ProgressIndicatorService getProgressIndicatorService()
+    {
         return progressIndicatorService;
     }
 
-    public void setProgressIndicatorService(ProgressIndicatorService progressIndicatorService) {
+    public void setProgressIndicatorService(ProgressIndicatorService progressIndicatorService)
+    {
         this.progressIndicatorService = progressIndicatorService;
     }
 
-    public ProgressbarDetails getProgressbarDetails() {
+    public ProgressbarDetails getProgressbarDetails()
+    {
         return progressbarDetails;
     }
 
-    public void setProgressbarDetails(ProgressbarDetails progressbarDetails) {
+    public void setProgressbarDetails(ProgressbarDetails progressbarDetails)
+    {
         this.progressbarDetails = progressbarDetails;
     }
 }

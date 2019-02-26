@@ -27,7 +27,6 @@ package com.armedia.acm.plugins.ecm.service;
  * #L%
  */
 
-
 import com.armedia.acm.plugins.ecm.model.ProgressbarDetails;
 import org.apache.commons.io.input.CountingInputStream;
 import org.slf4j.Logger;
@@ -46,9 +45,12 @@ public class ProgressIndicatorService
     private JmsTemplate jmsTemplate;
     private ConnectionFactory activeMQConnectionFactory;
 
-    public void start(CountingInputStream inputStream, long size, Long id, String type, String name, String username, ProgressbarDetails progressbarDetails){
+    public void start(CountingInputStream inputStream, long size, Long id, String type, String name, String username,
+            ProgressbarDetails progressbarDetails)
+    {
         LOG.debug("Setup progressbar executor for file {}", name);
-        ProgressbarExecutor executor = new ProgressbarExecutor(progressbarDetails.getUuid(), username, activeMQConnectionFactory, jmsTemplate);
+        ProgressbarExecutor executor = new ProgressbarExecutor(progressbarDetails.getUuid(), username, activeMQConnectionFactory,
+                jmsTemplate);
 
         LOG.debug("Setup all progressbar details needed, which later will be displayed on UI");
         executor.setProgressbarDetails(progressbarDetails);
@@ -58,10 +60,12 @@ public class ProgressIndicatorService
         progressBars.put(executor.getID(), executor);
     }
 
-    public void end(String uuid, boolean successful){
+    public void end(String uuid, boolean successful)
+    {
         LOG.debug("Stop ProgressbarExecutor for the progressbar {}", progressBars.get(uuid));
         ProgressbarExecutor executor = progressBars.get(uuid);
-        if (executor != null) {
+        if (executor != null)
+        {
             executor.stopProgress(successful);
             progressBars.remove(uuid);
         }
@@ -72,11 +76,13 @@ public class ProgressIndicatorService
         return progressBars.get(uuid);
     }
 
-    public void setJmsTemplate(JmsTemplate jmsTemplate) {
+    public void setJmsTemplate(JmsTemplate jmsTemplate)
+    {
         this.jmsTemplate = jmsTemplate;
     }
 
-    public void setActiveMQConnectionFactory(ConnectionFactory activeMQConnectionFactory) {
+    public void setActiveMQConnectionFactory(ConnectionFactory activeMQConnectionFactory)
+    {
         this.activeMQConnectionFactory = activeMQConnectionFactory;
     }
 }

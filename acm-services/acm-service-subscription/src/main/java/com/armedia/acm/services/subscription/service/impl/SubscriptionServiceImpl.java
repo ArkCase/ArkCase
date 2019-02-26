@@ -43,34 +43,42 @@ import org.springframework.transaction.annotation.Transactional;
 import java.sql.SQLException;
 import java.util.List;
 
-public class SubscriptionServiceImpl implements SubscriptionService {
+public class SubscriptionServiceImpl implements SubscriptionService
+{
 
     private SubscriptionDao subscriptionDao;
     private SubscriptionEventDao subscriptionEventDao;
     private SubscriptionEventPublisher subscriptionEventPublisher;
 
     @Override
-    public AcmSubscription saveSubscription(AcmSubscription subscription) {
+    public AcmSubscription saveSubscription(AcmSubscription subscription)
+    {
         return getSubscriptionDao().save(subscription);
     }
 
     @Override
-    public List<AcmSubscription> getSubscriptionsByUserObjectIdAndType(String userId, Long objectId, String objectType) {
+    public List<AcmSubscription> getSubscriptionsByUserObjectIdAndType(String userId, Long objectId, String objectType)
+    {
         return getSubscriptionDao().getSubscriptionByUserObjectIdAndType(userId, objectId, objectType);
     }
 
     @Override
-    public List<AcmSubscription> getSubscriptionsByUser(String userId, int start, int numRows) throws AcmObjectNotFoundException {
+    public List<AcmSubscription> getSubscriptionsByUser(String userId, int start, int numRows) throws AcmObjectNotFoundException
+    {
         return getSubscriptionDao().getListOfSubscriptionsByUser(userId, start, numRows);
     }
 
     @Override
-    public int deleteSubscriptionForGivenObject(String userId, Long objectId, String objectType) throws SQLException {
+    public int deleteSubscriptionForGivenObject(String userId, Long objectId, String objectType) throws SQLException
+    {
 
         int rowsEffected = getSubscriptionDao().deleteSubscription(userId, objectId, objectType);
-        if (rowsEffected == SubscriptionConstants.NO_ROW_DELETED) {
+        if (rowsEffected == SubscriptionConstants.NO_ROW_DELETED)
+        {
             getSubscriptionEventPublisher().publishSubscriptionDeletedEvent(userId, objectId, objectType, false);
-        } else {
+        }
+        else
+        {
             getSubscriptionEventPublisher().publishSubscriptionDeletedEvent(userId, objectId, objectType, true);
         }
         return rowsEffected;
@@ -79,7 +87,8 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     @Async("deleteTaskExecutor")
     @Override
-    public void deleteSubscriptionEventsForGivenObject(String userId, Long objectId, String objectType) {
+    public void deleteSubscriptionEventsForGivenObject(String userId, Long objectId, String objectType)
+    {
         List<AcmSubscriptionEvent> deletedObjects = getSubscriptionEventDao().deleteSubscriptionEvents(userId, objectId, objectType);
 
         AcmObjectChangelist changelist = new AcmObjectChangelist();
@@ -88,27 +97,33 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         getSubscriptionEventPublisher().publishDeletedSubscriptionEvents(changelist);
     }
 
-    public SubscriptionEventDao getSubscriptionEventDao() {
+    public SubscriptionEventDao getSubscriptionEventDao()
+    {
         return subscriptionEventDao;
     }
 
-    public void setSubscriptionEventDao(SubscriptionEventDao subscriptionEventDao) {
+    public void setSubscriptionEventDao(SubscriptionEventDao subscriptionEventDao)
+    {
         this.subscriptionEventDao = subscriptionEventDao;
     }
 
-    public SubscriptionEventPublisher getSubscriptionEventPublisher() {
+    public SubscriptionEventPublisher getSubscriptionEventPublisher()
+    {
         return subscriptionEventPublisher;
     }
 
-    public void setSubscriptionEventPublisher(SubscriptionEventPublisher subscriptionEventPublisher) {
+    public void setSubscriptionEventPublisher(SubscriptionEventPublisher subscriptionEventPublisher)
+    {
         this.subscriptionEventPublisher = subscriptionEventPublisher;
     }
 
-    public SubscriptionDao getSubscriptionDao() {
+    public SubscriptionDao getSubscriptionDao()
+    {
         return subscriptionDao;
     }
 
-    public void setSubscriptionDao(SubscriptionDao subscriptionDao) {
+    public void setSubscriptionDao(SubscriptionDao subscriptionDao)
+    {
         this.subscriptionDao = subscriptionDao;
     }
 }

@@ -34,19 +34,23 @@ public class SequenceInputStreamHolder
     private SequenceInputStream stream;
     private long size;
 
-    public SequenceInputStream getStream() {
+    public SequenceInputStream getStream()
+    {
         return stream;
     }
 
-    public void setStream(SequenceInputStream stream) {
+    public void setStream(SequenceInputStream stream)
+    {
         this.stream = stream;
     }
 
-    public long getSize() {
+    public long getSize()
+    {
         return size;
     }
 
-    public void setSize(long size) {
+    public void setSize(long size)
+    {
         this.size = size;
     }
 }

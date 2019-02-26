@@ -51,7 +51,8 @@ public class ProgressbarExecutor
     private ConnectionFactory activeMQConnectionFactory;
     private ProgressbarDetails progressbarDetails;
 
-    public ProgressbarExecutor(String ID, String username, ConnectionFactory activeMQConnectionFactory, JmsTemplate jmsTemplate) {
+    public ProgressbarExecutor(String ID, String username, ConnectionFactory activeMQConnectionFactory, JmsTemplate jmsTemplate)
+    {
         this.ID = ID;
         this.username = username;
         this.activeMQConnectionFactory = activeMQConnectionFactory;
@@ -65,9 +66,12 @@ public class ProgressbarExecutor
         jmsTemplate.send(topic, inJmsSession -> {
             ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
             String jsonMessageObj = "";
-            try {
+            try
+            {
                 jsonMessageObj = ow.writeValueAsString(message);
-            } catch (JsonProcessingException e) {
+            }
+            catch (JsonProcessingException e)
+            {
                 // Print error
             }
 
@@ -76,39 +80,51 @@ public class ProgressbarExecutor
         });
     }
 
-    public void startProgress(CountingInputStream fileInputStream, long size, String containerObjectType, Long containerObjectId, String fileName){
+    public void startProgress(CountingInputStream fileInputStream, long size, String containerObjectType, Long containerObjectId,
+            String fileName)
+    {
         timer = new Timer();
-        timer.scheduleAtFixedRate(new TimerTask() {
+        timer.scheduleAtFixedRate(new TimerTask()
+        {
             @Override
-            public void run() {
+            public void run()
+            {
                 int _currentProgress = 0;
-                if(progressbarDetails.getStage() == 2){
+                if (progressbarDetails.getStage() == 2)
+                {
 
                     partProgress = fileInputStream.getByteCount();
 
-                    if(partProgress > size) {
+                    if (partProgress > size)
+                    {
                         partProgress = size;
                     }
                     _currentProgress = 50 + Math.round(10 * (float) partProgress / size);
-                    if(_currentProgress != currentProgress ) {
+                    if (_currentProgress != currentProgress)
+                    {
                         currentProgress = _currentProgress;
                         progressbarDetails.setCurrentProgress(currentProgress);
                         progressbarDetails.setSuccess(true);
-                        send(progressbarDetails, "VirtualTopic.UploadFileManager:" + username.replaceAll("\\.", "_DOT_").replaceAll("@", "_AT_"));
+                        send(progressbarDetails,
+                                "VirtualTopic.UploadFileManager:" + username.replaceAll("\\.", "_DOT_").replaceAll("@", "_AT_"));
                     }
                 }
-                else if(progressbarDetails.getStage() == 3) {
+                else if (progressbarDetails.getStage() == 3)
+                {
                     partProgress = fileInputStream.getByteCount();
 
-                    if(partProgress > size) {
+                    if (partProgress > size)
+                    {
                         partProgress = size;
                     }
                     _currentProgress = 60 + Math.round(40 * (float) partProgress / size);
-                    if(_currentProgress != currentProgress ) {
+                    if (_currentProgress != currentProgress)
+                    {
                         currentProgress = _currentProgress;
                         progressbarDetails.setCurrentProgress(currentProgress);
                         progressbarDetails.setSuccess(true);
-                        send(progressbarDetails, "VirtualTopic.UploadFileManager:" + username.replaceAll("\\.", "_DOT_").replaceAll("@", "_AT_"));
+                        send(progressbarDetails,
+                                "VirtualTopic.UploadFileManager:" + username.replaceAll("\\.", "_DOT_").replaceAll("@", "_AT_"));
                     }
                 }
 
@@ -116,9 +132,10 @@ public class ProgressbarExecutor
         }, 1000, 2000);
     }
 
-
-    public void stopProgress(boolean successfull){
-        if(timer != null) {
+    public void stopProgress(boolean successfull)
+    {
+        if (timer != null)
+        {
             timer.cancel();
         }
 
@@ -127,43 +144,53 @@ public class ProgressbarExecutor
         send(progressbarDetails, "VirtualTopic.UploadFileManager:" + username.replaceAll("\\.", "_DOT_").replaceAll("@", "_AT_"));
     }
 
-    public String getID() {
+    public String getID()
+    {
         return ID;
     }
 
-    public void setID(String ID) {
+    public void setID(String ID)
+    {
         this.ID = ID;
     }
 
-    public ConnectionFactory getActiveMQConnectionFactory() {
+    public ConnectionFactory getActiveMQConnectionFactory()
+    {
         return activeMQConnectionFactory;
     }
 
-    public void setActiveMQConnectionFactory(ConnectionFactory activeMQConnectionFactory) {
+    public void setActiveMQConnectionFactory(ConnectionFactory activeMQConnectionFactory)
+    {
         this.activeMQConnectionFactory = activeMQConnectionFactory;
     }
 
-    public JmsTemplate getJmsTemplate() {
+    public JmsTemplate getJmsTemplate()
+    {
         return jmsTemplate;
     }
 
-    public void setJmsTemplate(JmsTemplate jmsTemplate) {
+    public void setJmsTemplate(JmsTemplate jmsTemplate)
+    {
         this.jmsTemplate = jmsTemplate;
     }
 
-    public String getUsername() {
+    public String getUsername()
+    {
         return username;
     }
 
-    public void setUsername(String username) {
+    public void setUsername(String username)
+    {
         this.username = username;
     }
 
-    public ProgressbarDetails getProgressbarDetails() {
+    public ProgressbarDetails getProgressbarDetails()
+    {
         return progressbarDetails;
     }
 
-    public void setProgressbarDetails(ProgressbarDetails progressbarDetails) {
+    public void setProgressbarDetails(ProgressbarDetails progressbarDetails)
+    {
         this.progressbarDetails = progressbarDetails;
     }
 

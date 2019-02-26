@@ -182,7 +182,8 @@ public class EcmFile implements AcmEntity, Serializable, AcmObject, AcmStatefulE
      * This property is used to be able to make distinction between two or more EcmFile objects before these objects
      * to be persisted in database (before to take unique identifier from database)
      *
-     * By default is null and don't need to be set with every creation of EcmFile instance. Developers can use for their needs
+     * By default is null and don't need to be set with every creation of EcmFile instance. Developers can use for their
+     * needs
      */
     @Transient
     private String uuid;
@@ -622,11 +623,13 @@ public class EcmFile implements AcmEntity, Serializable, AcmObject, AcmStatefulE
         return Objects.hashCode(fileId);
     }
 
-    public String getUuid() {
+    public String getUuid()
+    {
         return uuid;
     }
 
-    public void setUuid(String uuid) {
+    public void setUuid(String uuid)
+    {
         this.uuid = uuid;
     }
 }

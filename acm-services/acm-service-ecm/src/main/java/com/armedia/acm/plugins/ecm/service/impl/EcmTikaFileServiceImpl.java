@@ -232,13 +232,18 @@ public class EcmTikaFileServiceImpl implements EcmTikaFileService
                     (m, n) -> m.put(n, metadata.get(n)),
                     (m, u) -> {
                     });
-        } catch (Exception tikaException) {
+        }
+        catch (Exception tikaException)
+        {
             // we have to at least return the mime type and extension, so we just log the parser error, and continue
             // with the already-detected mime type.
             logger.warn("Could not extract metadata from file: [{}]", tikaException.getMessage());
             fileMetadata = new HashMap<>();
-        } finally {
-            if (fileMetadata == null) {
+        }
+        finally
+        {
+            if (fileMetadata == null)
+            {
                 logger.warn("Could not extract metadata from file");
                 fileMetadata = new HashMap<>();
             }

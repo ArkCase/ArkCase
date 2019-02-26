@@ -124,7 +124,8 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
         {
             log.debug("Putting fileInputStream in a decorator stream so that the number of bytes can be counted");
             CountingInputStream countingInputStream = new CountingInputStream(fileContents);
-            //this reports progress on file system. Also should store info for the broker, for which part of the progress it is loading for the filesystem or the activity upload from 50% to 59%
+            // this reports progress on file system. Also should store info for the broker, for which part of the
+            // progress it is loading for the filesystem or the activity upload from 50% to 59%
             if (metadata.getUuid() != null && args != null && args.length > 0 && args[0] instanceof MultipartFile)
             {
                 MultipartFile file = (MultipartFile) args[0];
@@ -137,7 +138,8 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
                 progressbarDetails.setFileName(metadata.getFileName());
                 progressbarDetails.setObjectNumber(container.getContainerObjectTitle());
                 log.debug("Start stage two for file {}. The file will be written to file system", metadata.getFileName());
-                progressIndicatorService.start(countingInputStream, file.getSize(), container.getContainerObjectId(), container.getContainerObjectType(), file.getOriginalFilename(), authentication.getName(), progressbarDetails);
+                progressIndicatorService.start(countingInputStream, file.getSize(), container.getContainerObjectId(),
+                        container.getContainerObjectType(), file.getOriginalFilename(), authentication.getName(), progressbarDetails);
             }
             tempFileContents = File.createTempFile("arkcase-upload-temp-file-", null);
             FileUtils.copyInputStreamToFile(countingInputStream, tempFileContents);
@@ -194,9 +196,11 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
                 metadata.setFileActiveVersionMimeType(finalMimeType);
                 metadata.setFileActiveVersionNameExtension(finalExtension);
 
-                //stop the progressbar executor
-                if (metadata.getUuid() != null) {
-                    log.debug("Stop progressbar executor in stage 2, for file {} and set file upload success to {}", metadata.getUuid(), false);
+                // stop the progressbar executor
+                if (metadata.getUuid() != null)
+                {
+                    log.debug("Stop progressbar executor in stage 2, for file {} and set file upload success to {}", metadata.getUuid(),
+                            false);
                     progressIndicatorService.end(metadata.getUuid(), true);
                 }
 
@@ -226,9 +230,10 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
         }
         catch (Exception e)
         {
-            //stop the progressbar executor
+            // stop the progressbar executor
             ProgressbarExecutor progressbarExecutor = progressIndicatorService.getExecutor(metadata.getUuid());
-            if (metadata.getUuid() != null && progressbarExecutor != null && progressbarExecutor.getProgressbarDetails().getStage() == 2) {
+            if (metadata.getUuid() != null && progressbarExecutor != null && progressbarExecutor.getProgressbarDetails().getStage() == 2)
+            {
                 log.debug("Stop progressbar executor in stage 2, for file {} and set file upload success to {}", metadata.getUuid(), false);
                 progressIndicatorService.end(metadata.getUuid(), false);
             }
@@ -704,11 +709,13 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
         this.ocrEnabled = ocrEnabled;
     }
 
-    public ProgressIndicatorService getProgressIndicatorService() {
+    public ProgressIndicatorService getProgressIndicatorService()
+    {
         return progressIndicatorService;
     }
 
-    public void setProgressIndicatorService(ProgressIndicatorService progressIndicatorService) {
+    public void setProgressIndicatorService(ProgressIndicatorService progressIndicatorService)
+    {
         this.progressIndicatorService = progressIndicatorService;
     }
 }
