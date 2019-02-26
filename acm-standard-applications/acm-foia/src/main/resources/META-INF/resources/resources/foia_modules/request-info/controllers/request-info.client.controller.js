@@ -799,7 +799,7 @@ angular.module('request-info').controller(
                 // Generates and loads a url that will open the selected documents in the viewer
                 if ($scope.openOtherDocuments.length > 0) {
                     registerFileChangeEvents();
-                    var snowUrl = buildViewerUrlMultiple($scope.ecmFileConfig, $scope.acmTicket, $scope.userId, $scope.userFullName, $scope.openOtherDocuments);
+                    var snowUrl = buildViewerUrlMultiple($scope.ecmFileConfig, $scope.acmTicket, $scope.userId, $scope.userFullName, $scope.openOtherDocuments, !$scope.editingMode, $scope.requestInfo.caseNumber);
                     if (snowUrl) {
                         $scope.loadViewerIframe(snowUrl);
                     }
@@ -813,7 +813,7 @@ angular.module('request-info').controller(
              * an iframe which points to snowbound
              */
             $scope.openSnowboundViewer = function () {
-                var viewerUrl = SnowboundService.buildSnowboundUrl($scope.ecmFileProperties, $scope.acmTicket, $scope.userId, $scope.userFullName, $scope.fileInfo, !$scope.editingMode);
+                var viewerUrl = SnowboundService.buildSnowboundUrl($scope.ecmFileProperties, $scope.acmTicket, $scope.userId, $scope.userFullName, $scope.fileInfo, !$scope.editingMode, $scope.requestInfo.caseNumber);
                 $scope.documentViewerUrl = $sce.trustAsResourceUrl(viewerUrl);
             };
 
@@ -1349,7 +1349,7 @@ angular.module('request-info').controller(
                 return openDocIds;
             }
 
-            function buildViewerUrlMultiple(ecmFileProperties, acmTicket, userId, userFullName, files) {
+            function buildViewerUrlMultiple(ecmFileProperties, acmTicket, userId, userFullName, files, readonly, requestNumber) {
                 var viewerUrl = '';
 
                 if (files && files.length > 0) {
@@ -1362,7 +1362,7 @@ angular.module('request-info').controller(
                         }
 
                         // Generates the viewer url with the first document as the primary document
-                        viewerUrl = SnowboundService.buildSnowboundUrl(ecmFileProperties, acmTicket, userId, userFullName, files[0]);
+                        viewerUrl = SnowboundService.buildSnowboundUrl(ecmFileProperties, acmTicket, userId, userFullName, files[0], readonly, requestNumber);
                     }
                 }
                 return viewerUrl;
