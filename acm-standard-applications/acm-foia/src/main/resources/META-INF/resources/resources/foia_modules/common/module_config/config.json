@@ -1,0 +1,1083 @@
+{
+    "id": "common",
+    "title": "Common settings",
+    "configurable": false,
+    "notifyMessage": {
+        "duration": 5000,
+        "position": "right",
+        "maximumOpen": 5,
+        "allowDuplicate": false
+    },
+    "docTree": {
+        "extensions": [
+            "DocTreeExt.Checkin",
+            "DocTreeExt.Email",
+            "DocTreeExt.WebDAV",
+            "DocTreeExt.Record",
+            "DocTreeExt.Template",
+            "DocTreeExt.ReviewDoc",
+            "DocTreeExt.Participants",
+            "DocTreeExt.SearchAndAddDocuments"
+        ],
+        "columnDefs": [
+            {
+                "name": "checkbox",
+                "displayName": "",
+                "headTemplate": "<input type='checkbox'/>",
+                "width": "5%",
+                "index": 0
+            },
+            {
+                "name": "lock",
+                "displayName": "",
+                "width": "1%",
+                "index": 1
+            },
+            {
+                "name": "title",
+                "displayName": "common.directive.docTree.table.columns.title",
+                "headTemplate": "<label id='title' class='doc-tree-header' style='cursor: pointer;'></label>",
+                "icon": "<i class='fa fa-fw fa-sort-asc' data-sort='title' data-dir='DESC'></i>",
+                "width": "20%",
+                "index": 2
+            },
+            {
+                "name": "ext",
+                "displayName": "",
+                "width": "5%",
+                "index": 3
+            },
+            {
+                "name": "type",
+                "displayName": "common.directive.docTree.table.columns.type",
+                "headTemplate": "<label id='type' class='doc-tree-header' style='cursor: pointer;'></label>",
+                "icon": "<i class='fa fa-fw' data-sort='type' data-dir='ASC'></i>",
+                "__todo__cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+                "width": "10%",
+                "index": 4
+            },
+            {
+                "name": "created",
+                "displayName": "common.directive.docTree.table.columns.created",
+                "headTemplate": "<label id='created' class='doc-tree-header' style='cursor: pointer;'></label>",
+                "icon": "<i class='fa fa-fw' data-sort='created' data-dir='ASC'></i>",
+                "__todo__cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+                "width": "8%",
+                "index": 5
+            },
+            {
+                "name": "modified",
+                "displayName": "common.directive.docTree.table.columns.modified",
+                "headTemplate": "<label id='modified' class='doc-tree-header' style='cursor: pointer;'></label>",
+                "icon": "<i class='fa fa-fw' data-sort='modified' data-dir='ASC'></i>",
+                "__todo__cellTemplate": "<div>{{ row.entity.modified | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+                "width": "8%",
+                "index": 6
+            },
+            {
+                "name": "modifier",
+                "field": "modifier",
+                "displayName": "common.directive.docTree.table.columns.modifier",
+                "headTemplate": "<label id='modifier' class='doc-tree-header' style='cursor: pointer;'></label>",
+                "icon": "<i class='fa fa-fw' data-sort='modifier' data-dir='ASC'></i>",
+                "__todo__cellTemplate": "<div>{{ row.entity.modifier }}</div>",
+                "__todo__lookup": "userFullNames",
+                "width": "10%",
+                "index": 7
+            },
+            {
+                "name": "reviewStatus",
+                "displayName": "common.directive.docTree.table.columns.reviewStatus",
+                "__todo__cellTemplate": "<div>{{ row.entity.reviewStatus }}</div>",
+                "width": "8%",
+                "index": 8
+            },
+            {
+                "name": "redactionStatus",
+                "displayName": "common.directive.docTree.table.columns.redactionStatus ",
+                "__todo__cellTemplate": "<div>{{ row.entity.redactionStatus }}</div>",
+                "width": "8%",
+                "index": 9
+            },
+            {
+                "name": "version",
+                "displayName": "common.directive.docTree.table.columns.version",
+                "__todo__cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+                "width": "6%",
+                "index": 10
+            },
+            {
+                "name": "status",
+                "displayName": "common.directive.docTree.table.columns.status",
+                "__todo__cellTemplate": "{{node.data.status}}",
+                "width": "7%",
+                "index": 11
+            },
+            {
+                "name": "public",
+                "displayName": "common.directive.docTree.table.columns.public",
+                "headTemplate": "<label id='public' class='doc-tree-header' style='cursor: pointer;'></label>",
+                "icon": "<i class='fa fa-fw' data-sort='type' data-dir='ASC'></i>",
+                "__todo__cellTemplate": "<div>{{ row.entity.public }}</div>",
+                "width": "8%",
+                "index": 12
+            }
+        ],
+        "menu": {
+            "subMenuForms0": "common.directive.docTree.menu.forms",
+            "subMenuCorrespondences0": "common.directive.docTree.menu.correspondences",
+            "basic": {
+                "root": [
+                    {
+                        "___title": "New Folder <kbd>Ctrl+N</kbd>",
+                        "titleKey": "common.directive.docTree.menu.newFolder",
+                        "cmd": "newFolder",
+                        "uiIcon": "ui-icon-plus"
+                    },
+                    {
+                        "titleKey": "common.directive.docTree.menu.newDocument",
+                        "cmd": "subMenuFileTypes",
+                        "___children": "fileTypes"
+                    },
+                    {
+                        "titleKey": "common.directive.docTree.menu.newCorrespondence",
+                        "cmd": "subMenuCorrespondenceForms"
+                    },
+                    {
+                        "titleKey": "common.directive.docTree.menu.searchDocument",
+                        "cmd": "searchDocument",
+                        "uiIcon": "ui-icon-search"
+                    },
+                    {
+                        "title": "----"
+                    },
+                    {
+                        "___title": "Paste <kbd>Ctrl+V</kbd>",
+                        "titleKey": "common.directive.docTree.menu.paste",
+                        "cmd": "paste",
+                        "uiIcon": "ui-icon-clipboard",
+                        "disabled": true
+                    }
+                ],
+                "folder": [
+                    {
+                        "___title": "New Folder <kbd>Ctrl+N</kbd>",
+                        "titleKey": "common.directive.docTree.menu.newFolder",
+                        "cmd": "newFolder",
+                        "uiIcon": "ui-icon-plus"
+                    },
+                    {
+                        "titleKey": "common.directive.docTree.menu.newDocument",
+                        "cmd": "subMenuFileTypes"
+                    },
+                    {
+                        "titleKey": "common.directive.docTree.menu.newCorrespondence",
+                        "cmd": "subMenuCorrespondenceForms"
+                    },
+                    {
+                        "titleKey": "common.directive.docTree.menu.searchDocument",
+                        "cmd": "searchDocument",
+                        "uiIcon": "ui-icon-search"
+                    },
+                    {
+                        "title": "----"
+                    },
+                    {
+                        "title": "Participants",
+                        "cmd": "showParticipants"
+                    },
+                    {
+                        "title": "----"
+                    },
+                    {
+                        "___title": "Cut <kbd>Ctrl+X</kbd>",
+                        "titleKey": "common.directive.docTree.menu.cut",
+                        "cmd": "cut",
+                        "uiIcon": "ui-icon-scissors"
+                    },
+                    {
+                        "___title": "Copy <kbd>Ctrl+C</kbd>",
+                        "titleKey": "common.directive.docTree.menu.copy",
+                        "cmd": "copy",
+                        "uiIcon": "ui-icon-copy"
+                    },
+                    {
+                        "___title": "Paste <kbd>Ctrl+V</kbd>",
+                        "titleKey": "common.directive.docTree.menu.paste",
+                        "cmd": "paste",
+                        "uiIcon": "ui-icon-clipboard",
+                        "disabled": true
+                    },
+                    {
+                        "title": "----"
+                    },
+                    {
+                        "___title": "Rename <kbd>[F2]</kbd>",
+                        "titleKey": "common.directive.docTree.menu.rename",
+                        "cmd": "rename",
+                        "uiIcon": "ui-icon-pencil"
+                    },
+                    {
+                        "___title": "Delete <kbd>Ctrl+D</kbd>",
+                        "titleKey": "common.directive.docTree.menu.delete",
+                        "cmd": "remove",
+                        "uiIcon": "ui-icon-trash"
+                    },
+                    {
+                        "titleKey": "common.directive.docTree.menu.generateZip",
+                        "cmd": "generateZipFile",
+                        "uiIcon": "ui-icon-suitcase",
+                        "disabledExpression": "nodes[0].data.name !== '03 Response'"
+                    },
+                    {
+                        "titleKey": "common.directive.docTree.menu.declareRecord",
+                        "cmd": "declare",
+                        "uiIcon": "ui-icon-locked",
+                        "plugin": "RMA"
+                    },
+                    {
+                        "title": "----"
+                    },
+                    {
+                        "titleKey": "common.directive.docTree.menu.makeAllPublic",
+                        "cmd": "makeAllPublic",
+                        "disabledExpression": "DocTree.objectInfo.queue.name !== 'Release'"
+                    },
+                    {
+                        "titleKey": "common.directive.docTree.menu.makeAllNonPublic",
+                        "cmd": "makeAllNonPublic",
+                        "disabledExpression": "DocTree.objectInfo.queue.name !== 'Release'"
+                    }
+                ],
+                "file": [
+                    {
+                        "titleKey": "common.directive.docTree.menu.open",
+                        "cmd": "open",
+                        "uiIcon": "ui-icon-folder-open",
+                        "data": {
+                            "readOnly": true
+                        }
+                    },
+                    {
+                        "titleKey": "common.directive.docTree.menu.editWithWebDAV",
+                        "cmd": "editWithWebDAV",
+                        "uiIcon": "ui-icon-pencil",
+                        "disabledExpression": "!(new RegExp(Util.goodMapValue(DocTree.treeConfig, 'fileExtensionRegex', '\\.(doc|docx|pdf|xlsx|xls|ppt)$'), 'i').test(nodes[0].data.ext))"
+                    },
+                    {
+                        "titleKey": "common.directive.docTree.menu.editWithOfficeOnline",
+                        "cmd": "collaborate",
+                        "uiIcon": "ui-icon-person",
+                        "disabledExpression": "!(new RegExp('\\.(docx|xlsx|pptx)$', 'i').test(nodes[0].data.ext))",
+                        "plugin": "WOPI"
+                    },
+                    {
+                        "titleKey": "common.directive.docTree.menu.coEdit",
+                        "cmd": "co-edit",
+                        "uiIcon": "ui-icon-document",
+                        "disabledExpression": "!(new RegExp(Util.goodMapValue(DocTree.treeConfig, 'fileExtensionRegex', '\\.(doc|docx|pdf|xlsx|xls|ppt)$'), 'i').test(nodes[0].data.ext))",
+                        "plugin": "ONLY_OFFICE"
+                    },
+                    {
+                        "titleKey": "common.directive.docTree.menu.email",
+                        "cmd": "email",
+                        "uiIcon": "ui-icon-mail-closed",
+                        "data": {
+                            "readOnly": true
+                        }
+                    },
+                    {
+                        "title": "common.directive.docTree.menu.newTask",
+                        "cmd": "reviewDocument",
+                        "uiIcon": "ui-icon-circle-check",
+                        "data": {
+                            "readOnly": true
+                        }
+                    },
+                    {
+                        "title": "----"
+                    },
+                    {
+                        "titleKey": "common.directive.docTree.menu.checkout",
+                        "cmd": "checkout",
+                        "uiIcon": "ui-icon-check"
+                    },
+                    {
+                        "titleKey": "common.directive.docTree.menu.checkin",
+                        "cmd": "checkin",
+                        "uiIcon": "ui-icon-check",
+                        "data": {
+                            "uploadFile": true
+                        }
+                    },
+                    {
+                        "titleKey": "common.directive.docTree.menu.cancelEditing",
+                        "cmd": "cancelEditing",
+                        "uiIcon": "ui-icon-close",
+                        "disabled": true
+                    },
+                    {
+                        "title": "----"
+                    },
+                    {
+                        "title": "Participants",
+                        "cmd": "showParticipants"
+                    },
+                    {
+                        "title": "----"
+                    },
+                    {
+                        "___title": "Cut <kbd>Ctrl+X</kbd>",
+                        "titleKey": "common.directive.docTree.menu.cut",
+                        "cmd": "cut",
+                        "uiIcon": "ui-icon-scissors"
+                    },
+                    {
+                        "___title": "Copy <kbd>Ctrl+C</kbd>",
+                        "titleKey": "common.directive.docTree.menu.copy",
+                        "cmd": "copy",
+                        "uiIcon": "ui-icon-copy"
+                    },
+                    {
+                        "___title": "Paste <kbd>Ctrl+V</kbd>",
+                        "titleKey": "common.directive.docTree.menu.paste",
+                        "cmd": "paste",
+                        "uiIcon": "ui-icon-clipboard",
+                        "disabled": true
+                    },
+                    {
+                        "title": "----"
+                    },
+                    {
+                        "___title": "Rename <kbd>[F2]</kbd>",
+                        "titleKey": "common.directive.docTree.menu.rename",
+                        "cmd": "rename",
+                        "uiIcon": "ui-icon-pencil"
+                    },
+                    {
+                        "___title": "Delete <kbd>Ctrl+D</kbd>",
+                        "titleKey": "common.directive.docTree.menu.delete",
+                        "cmd": "remove",
+                        "uiIcon": "ui-icon-trash"
+                    },
+                    {
+                        "title": "----"
+                    },
+                    {
+                        "titleKey": "common.directive.docTree.menu.download",
+                        "cmd": "download",
+                        "uiIcon": "ui-icon-arrowthickstop-1-s",
+                        "data": {
+                            "readOnly": true
+                        }
+                    },
+                    {
+                        "titleKey": "common.directive.docTree.menu.replace",
+                        "cmd": "replace",
+                        "uiIcon": "",
+                        "data": {
+                            "uploadFile": true
+                        }
+                    },
+                    {
+                        "titleKey": "common.directive.docTree.menu.declareRecord",
+                        "cmd": "declare",
+                        "uiIcon": "ui-icon-locked",
+                        "plugin": "RMA"
+                    },
+                    {
+                        "title": "----"
+                    },
+                    {
+                        "titleKey": "common.directive.docTree.menu.makePublic",
+                        "cmd": "makePublic",
+                        "disabledExpression": "DocTree.objectInfo.queue.name !== 'Release'"
+                    },
+                    {
+                        "titleKey": "common.directive.docTree.menu.makeNonPublic",
+                        "cmd": "makeNonPublic",
+                        "disabledExpression": "DocTree.objectInfo.queue.name !== 'Release'"
+                    }
+                ]
+            },
+            "record": {
+                "root": [
+                    {
+                        "title": "Participants",
+                        "cmd": "showParticipants"
+                    }
+                ],
+                "folder": [
+                    {
+                        "title": "Participants",
+                        "cmd": "showParticipants"
+                    },
+                    {
+                        "title": "----"
+                    },
+                    {
+                        "___title": "Copy <kbd>Ctrl+C</kbd>",
+                        "titleKey": "common.directive.docTree.menu.copy",
+                        "cmd": "copy",
+                        "uiIcon": "ui-icon-copy"
+                    },
+                    {
+                        "titleKey": "common.directive.docTree.menu.generateZip",
+                        "cmd": "generateZipFile",
+                        "uiIcon": "ui-icon-suitcase",
+                        "disabledExpression": "nodes[0].data.name !== '03 Response'"
+                    },
+                    {
+                        "titleKey": "common.directive.docTree.menu.makeAllPublic",
+                        "cmd": "makeAllPublic",
+                        "disabledExpression": "DocTree.objectInfo.queue.name !== 'Release'"
+                    },
+                    {
+                        "titleKey": "common.directive.docTree.menu.makeAllNonPublic",
+                        "cmd": "makeAllNonPublic",
+                        "disabledExpression": "DocTree.objectInfo.queue.name !== 'Release'"
+                    }
+                ],
+                "file": [
+                    {
+                        "titleKey": "common.directive.docTree.menu.open",
+                        "cmd": "open",
+                        "uiIcon": "ui-icon-folder-open"
+                    },
+                    {
+                        "titleKey": "common.directive.docTree.menu.email",
+                        "cmd": "email",
+                        "uiIcon": "ui-icon-mail-closed",
+                        "data": {
+                            "readOnly": true
+                        }
+                    },
+                    {
+                        "title": "----"
+                    },
+                    {
+                        "title": "Participants",
+                        "cmd": "showParticipants"
+                    },
+                    {
+                        "title": "----"
+                    },
+                    {
+                        "___title": "Copy <kbd>Ctrl+C</kbd>",
+                        "titleKey": "common.directive.docTree.menu.copy",
+                        "cmd": "copy",
+                        "uiIcon": "ui-icon-copy"
+                    },
+                    {
+                        "title": "----"
+                    },
+                    {
+                        "titleKey": "common.directive.docTree.menu.download",
+                        "cmd": "download",
+                        "uiIcon": "ui-icon-arrowthickstop-1-s",
+                        "data": {
+                            "readOnly": true
+                        }
+                    },
+                    {
+                        "titleKey": "common.directive.docTree.menu.makePublic",
+                        "cmd": "makePublic",
+                        "disabledExpression": "DocTree.objectInfo.queue.name !== 'Release'"
+                    },
+                    {
+                        "titleKey": "common.directive.docTree.menu.makeNonPublic",
+                        "cmd": "makeNonPublic",
+                        "disabledExpression": "DocTree.objectInfo.queue.name !== 'Release'"
+                    }
+                ]
+            },
+            "batch": {
+                "files": [
+                    {
+                        "titleKey": "common.directive.docTree.menu.email",
+                        "cmd": "email",
+                        "uiIcon": "ui-icon-mail-closed",
+                        "data": {
+                            "readOnly": true
+                        }
+                    },
+                    {
+                        "title": "----"
+                    },
+                    {
+                        "titleKey": "common.directive.docTree.menu.cut",
+                        "cmd": "cut",
+                        "uiIcon": "ui-icon-scissors"
+                    },
+                    {
+                        "titleKey": "common.directive.docTree.menu.copy",
+                        "cmd": "copy",
+                        "uiIcon": "ui-icon-copy"
+                    },
+                    {
+                        "titleKey": "common.directive.docTree.menu.delete",
+                        "cmd": "remove",
+                        "uiIcon": "ui-icon-trash"
+                    },
+                    {
+                        "titleKey": "common.directive.docTree.menu.declareRecord",
+                        "cmd": "declare",
+                        "uiIcon": "ui-icon-locked",
+                        "plugin": "RMA"
+                    },
+                    {
+                        "title": "----"
+                    },
+                    {
+                        "titleKey": "common.directive.docTree.menu.makeAllPublic",
+                        "cmd": "makeAllPublic",
+                        "disabledExpression": "DocTree.objectInfo.queue.name !== 'Release'"
+                    },
+                    {
+                        "titleKey": "common.directive.docTree.menu.makeAllNonPublic",
+                        "cmd": "makeAllNonPublic",
+                        "disabledExpression": "DocTree.objectInfo.queue.name !== 'Release'"
+                    }
+                ],
+                "folders": [
+                    {
+                        "___title": "Cut <kbd>Ctrl+X</kbd>",
+                        "titleKey": "common.directive.docTree.menu.cut",
+                        "cmd": "cut",
+                        "uiIcon": "ui-icon-scissors"
+                    },
+                    {
+                        "___title": "Copy <kbd>Ctrl+C</kbd>",
+                        "titleKey": "common.directive.docTree.menu.copy",
+                        "cmd": "copy",
+                        "uiIcon": "ui-icon-copy"
+                    },
+                    {
+                        "___title": "Delete <kbd>Ctrl+D</kbd>",
+                        "titleKey": "common.directive.docTree.menu.delete",
+                        "cmd": "remove",
+                        "uiIcon": "ui-icon-trash"
+                    },
+                    {
+                        "titleKey": "common.directive.docTree.menu.declareRecord",
+                        "cmd": "declare",
+                        "uiIcon": "ui-icon-locked",
+                        "plugin": "RMA"
+                    },
+                    {
+                        "title": "----"
+                    },
+                    {
+                        "titleKey": "common.directive.docTree.menu.makeAllPublic",
+                        "cmd": "makeAllPublic",
+                        "disabledExpression": "DocTree.objectInfo.queue.name !== 'Release'"
+                    },
+                    {
+                        "titleKey": "common.directive.docTree.menu.makeAllNonPublic",
+                        "cmd": "makeAllNonPublic",
+                        "disabledExpression": "DocTree.objectInfo.queue.name !== 'Release'"
+                    }
+                ],
+                "filesAndFolders": [
+                    {
+                        "___title": "Cut <kbd>Ctrl+X</kbd>",
+                        "titleKey": "common.directive.docTree.menu.cut",
+                        "cmd": "cut",
+                        "uiIcon": "ui-icon-scissors"
+                    },
+                    {
+                        "___title": "Copy <kbd>Ctrl+C</kbd>",
+                        "titleKey": "common.directive.docTree.menu.copy",
+                        "cmd": "copy",
+                        "uiIcon": "ui-icon-copy"
+                    },
+                    {
+                        "___title": "Delete <kbd>Ctrl+D</kbd>",
+                        "titleKey": "common.directive.docTree.menu.delete",
+                        "cmd": "remove",
+                        "uiIcon": "ui-icon-trash"
+                    },
+                    {
+                        "titleKey": "common.directive.docTree.menu.declareRecord",
+                        "cmd": "declare",
+                        "uiIcon": "ui-icon-locked",
+                        "plugin": "RMA"
+                    },
+                    {
+                        "title": "----"
+                    },
+                    {
+                        "titleKey": "common.directive.docTree.menu.makeAllPublic",
+                        "cmd": "makeAllPublic",
+                        "disabledExpression": "DocTree.objectInfo.queue.name !== 'Release'"
+                    },
+                    {
+                        "titleKey": "common.directive.docTree.menu.makeAllNonPublic",
+                        "cmd": "makeAllNonPublic",
+                        "disabledExpression": "DocTree.objectInfo.queue.name !== 'Release'"
+                    }
+                ],
+                "filesOrFoldersRecord": [
+                    {
+                        "___title": "Cut <kbd>Ctrl+X</kbd>",
+                        "titleKey": "common.directive.docTree.menu.cut",
+                        "cmd": "cut",
+                        "uiIcon": "ui-icon-scissors"
+                    },
+                    {
+                        "___title": "Copy <kbd>Ctrl+C</kbd>",
+                        "titleKey": "common.directive.docTree.menu.copy",
+                        "cmd": "copy",
+                        "uiIcon": "ui-icon-copy"
+                    },
+                    {
+                        "titleKey": "common.directive.docTree.menu.declareRecord",
+                        "cmd": "declare",
+                        "uiIcon": "ui-icon-locked",
+                        "plugin": "RMA"
+                    },
+                    {
+                        "titleKey": "common.directive.docTree.menu.makeAllPublic",
+                        "cmd": "makeAllPublic",
+                        "disabledExpression": "DocTree.objectInfo.queue.name !== 'Release'"
+                    },
+                    {
+                        "titleKey": "common.directive.docTree.menu.makeAllNonPublic",
+                        "cmd": "makeAllNonPublic",
+                        "disabledExpression": "DocTree.objectInfo.queue.name !== 'Release'"
+                    }
+                ]
+            },
+            "noop": {
+                "titleKey": "common.directive.docTree.menu.noop",
+                "cmd": "noop",
+                "uiIcon": ""
+            },
+            "___menu_item_to_be_implemented_print": {
+                "___title": "Print <kbd>Ctrl+P</kbd>",
+                "title": "Print",
+                "cmd": "print",
+                "uiIcon": "ui-icon-print",
+                "data": {
+                    "readOnly": true
+                }
+            },
+            "___menu_item_to_be_implemented_edit": {
+                "title": "Edit",
+                "cmd": "edit",
+                "uiIcon": "ui-icon-pencil"
+            }
+        },
+        "emailDialog": {
+            "enableFiltering": false,
+            "multiSelect": true,
+            "showFacets": false,
+            "columnDefs": [
+                {
+                    "name": "name",
+                    "displayName": "common.directive.docTree.recipientsDialog.gridColumns.name",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "email_lcs",
+                    "displayName": "common.directive.docTree.recipientsDialog.gridColumns.email",
+                    "headerCellFilter": "translate"
+                }
+            ],
+            "paginationPageSizes": [
+                5,
+                10,
+                20,
+                50
+            ],
+            "paginationPageSize": 10,
+            "start": 0
+        },
+        "dialogUserPicker": {
+            "enableFiltering": false,
+            "multiSelect": false,
+            "showFacets": false,
+            "columnDefs": [
+                {
+                    "name": "name",
+                    "displayName": "frevvo.dialogUserPicker.table.columns.name",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "object_type_s",
+                    "displayName": "frevvo.dialogUserPicker.table.columns.type",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "title",
+                    "displayName": "frevvo.dialogUserPicker.table.columns.title",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "object_id_s",
+                    "displayName": "frevvo.dialogUserPicker.table.columns.id",
+                    "headerCellFilter": "translate"
+                }
+            ],
+            "paginationPageSizes": [
+                5,
+                10,
+                20,
+                50
+            ],
+            "paginationPageSize": 10,
+            "start": 0
+        },
+        "fileExtensionRegex": "\\.(doc|dot|docx|dotx|docm|dotm|docb|pdf|xlsx|xls|ppt)$",
+        "dialogObjectPicker": {
+            "enableFiltering": false,
+            "multiSelect": true,
+            "showFacets": false,
+            "columnDefs": [
+                {
+                    "name": "checkbox",
+                    "displayName": "",
+                    "cellTemplate": "<input type='checkbox' ng-click='grid.appScope.onClick($event, row.entity)'/>",
+                    "width": "6%",
+                    "index": 0
+                },
+                {
+                    "name": "object_id_s",
+                    "displayName": "common.dialogObjectPicker.table.columns.id",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "title_parseable",
+                    "displayName": "common.dialogObjectPicker.table.columns.title",
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickOpenFile($event, row.entity, true)'>{{row.entity.title_parseable}}</a>"
+                },
+                {
+                    "name": "parent_ref_s",
+                    "cellFilter": "beautifyParentRefToParentId",
+                    "type": "number",
+                    "displayName": "common.dialogObjectPicker.table.columns.parentId",
+                    "headerCellFilter": "translate",
+                    "visible": true
+                },
+                {
+                    "field":  "parent_ref_s",
+                    "displayName": "common.dialogObjectPicker.table.columns.parentTitle",
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<a ng-if='row.entity.parent_document.title_parseable' ng-href='#' ng-click='grid.appScope.onClickObjLink($event, {parentId:row.entity.parent_ref_s, object_type_s:row.entity.parent_ref_s}, true, true)'>{{row.entity.parent_document.title_parseable}}</a>"
+                }
+            ],
+            "paginationPageSizes": [
+                5,
+                10,
+                20,
+                50
+            ],
+            "paginationPageSize": 10,
+            "start": 0
+        },
+        "disabledFileCommandsOnLock": {
+            "WRITE":["editWithWebDAV","cut","copy","paste","rename","remove","replace","declare","co-edit","collaborate"],
+            "SHARED_WRITE": ["editWithWebDAV","checkout","checkin","cancelEditing","cut","copy","paste","rename","remove","replace","declare"]
+        }
+    },
+    "coreCalendar": {
+        "chooseEventAttendeesDialog": {
+            "dialogUserPicker": {
+                "enableFiltering": false,
+                "multiSelect": true,
+                "showFacets": false,
+                "columnDefs": [
+                    {
+                        "name": "name",
+                        "displayName": "common.directive.coreCalendar.chooseEventAttendeesDialog.table.columns.name",
+                        "headerCellFilter": "translate"
+                    },
+                    {
+                        "name": "email_lcs",
+                        "displayName": "common.directive.coreCalendar.chooseEventAttendeesDialog.table.columns.email",
+                        "headerCellFilter": "translate"
+                    }
+                ],
+                "paginationPageSizes": [
+                    5,
+                    10,
+                    20,
+                    50
+                ],
+                "paginationPageSize": 10,
+                "start": 0
+            }
+        }
+    },
+    "coreCalendarErrorMessage": {
+        "ACCESS_DENIED": "common.directive.coreCalendar.message.error.accessDenied",
+        "SERVICE_CONFIGURATION": "common.directive.coreCalendar.message.error.serviceConfiguration",
+        "INVALID_BIND_TO_SERVICE_CREDENTIALS": "common.directive.coreCalendar.message.error.serviceCredentials",
+        "CALENDAR_INTEGRATION": "common.directive.coreCalendar.message.error.calendarIntegration",
+        "INTERNAL_SERVER_ERROR": "common.directive.coreCalendar.message.error.internalServerError"
+    },
+    "dialogPersonPicker": {
+        "enableFiltering": false,
+        "multiSelect": false,
+        "showFacets": false,
+        "columnDefs": [
+            {
+                "name": "object_id_s",
+                "displayName": "common.dialogPersonPicker.table.columns.id",
+                "headerCellFilter": "translate"
+            },
+            {
+                "name": "first_name_lcs",
+                "displayName": "common.dialogPersonPicker.table.columns.givenName",
+                "headerCellFilter": "translate"
+            },
+            {
+                "name": "last_name_lcs",
+                "displayName": "common.dialogPersonPicker.table.columns.familyName",
+                "headerCellFilter": "translate"
+            },
+            {
+                "name": "default_organization_s",
+                "displayName": "common.dialogPersonPicker.table.columns.organization",
+                "headerCellFilter": "translate"
+            },
+            {
+                "name": "default_phone_s",
+                "displayName": "common.dialogPersonPicker.table.columns.phone",
+                "headerCellFilter": "translate"
+            },
+            {
+                "name": "default_location_s",
+                "displayName": "common.dialogPersonPicker.table.columns.location",
+                "headerCellFilter": "translate"
+            }
+        ],
+        "paginationPageSizes": [
+            5,
+            10,
+            20,
+            50
+        ],
+        "paginationPageSize": 10,
+        "start": 0
+    },
+    "dialogOrganizationPicker": {
+        "enableFiltering": false,
+        "multiSelect": false,
+        "showFacets": false,
+        "columnDefs": [
+            {
+                "name": "name",
+                "displayName": "common.dialogOrganizationPicker.table.columns.name",
+                "headerCellFilter": "translate"
+            },
+            {
+                "name": "default_identification_s",
+                "displayName": "common.dialogOrganizationPicker.table.columns.identification",
+                "headerCellFilter": "translate"
+            },
+            {
+                "name": "type_lcs",
+                "displayName": "common.dialogOrganizationPicker.table.columns.type",
+                "headerCellFilter": "translate"
+            },
+            {
+                "name": "primary_contact_s",
+                "displayName": "common.dialogOrganizationPicker.table.columns.contact",
+                "headerCellFilter": "translate"
+            },
+            {
+                "name": "default_phone_s",
+                "displayName": "common.dialogOrganizationPicker.table.columns.phone",
+                "headerCellFilter": "translate"
+            },
+            {
+                "name": "default_location_s",
+                "displayName": "common.dialogOrganizationPicker.table.columns.location",
+                "headerCellFilter": "translate"
+            }
+        ],
+        "paginationPageSizes": [
+            5,
+            10,
+            20,
+            50
+        ],
+        "paginationPageSize": 10,
+        "start": 0
+    },
+    "dialogObjectPicker": {
+        "enableFiltering": false,
+        "multiSelect": false,
+        "showFacets": false,
+        "columnDefs": [
+            {
+                "name": "object_id_s",
+                "displayName": "common.dialogObjectPicker.table.columns.id",
+                "headerCellFilter": "translate"
+            },
+            {
+                "name": "title_parseable",
+                "displayName": "common.dialogObjectPicker.table.columns.title",
+                "headerCellFilter": "translate"
+            },
+            {
+                "name": "parent_id_s",
+                "displayName": "common.dialogObjectPicker.table.columns.parentId",
+                "headerCellFilter": "translate"
+            },
+            {
+                "name": "parent_ref_s",
+                "displayName": "common.dialogObjectPicker.table.columns.parentTitle",
+                "headerCellFilter": "translate"
+            }
+        ],
+        "paginationPageSizes": [
+            5,
+            10,
+            20,
+            50
+        ],
+        "paginationPageSize": 10,
+        "start": 0
+    },
+    "objectHistoryGrid": {
+        "id": "objectHistoryModalGrid",
+        "title": "common.objectHistory.modal.title",
+        "icon": "fa fa-bell-o",
+        "enabled": true,
+        "configurable": true,
+        "type": "grid",
+        "enableFiltering": false,
+        "paginationPageSizes": [
+            5,
+            10,
+            20,
+            50
+        ],
+        "paginationPageSize": 10,
+        "columnDefs": [
+            {
+                "name": "action",
+                "displayName": "common.objectHistory.modal.table.columns.action",
+                "headerCellFilter": "translate",
+                "enableCellEdit": false,
+                "cellTemplate": "<div translate>{{'changes.'+row.entity.action+'.'+row.entity.path}}</div>"
+            },
+            {
+                "name": "oldValue",
+                "displayName": "common.objectHistory.modal.table.columns.oldValue",
+                "headerCellFilter": "translate",
+                "field": "oldValue"
+            },
+            {
+                "name": "newValue",
+                "displayName": "common.objectHistory.modal.table.columns.newValue",
+                "headerCellFilter": "translate",
+                "field": "newValue"
+            }
+        ]
+    },
+    "objectHistoryClientGrid": {
+        "id": "objectHistoryClientGrid",
+        "title": "common.objectHistory.client.title",
+        "icon": "fa fa-bell-o",
+        "enabled": true,
+        "configurable": true,
+        "type": "grid",
+        "enableFiltering": true,
+        "paginationPageSizes": [
+            5,
+            10,
+            20,
+            50
+        ],
+        "paginationPageSize": 10,
+        "columnDefs": [
+            {
+                "name": "eventType",
+                "displayName": "common.objectHistory.client.table.columns.eventType",
+                "headerCellFilter": "translate",
+                "cellTemplate": "historyEventNameCellTemplateId"
+            },
+            {
+                "name": "eventDate",
+                "displayName": "common.objectHistory.client.table.columns.eventDate",
+                "headerCellFilter": "translate",
+                "width": 150,
+                "cellTemplate": "<div>{{ row.entity.eventDate | date : 'short' }}</div>"
+            },
+            {
+                "name": "userId",
+                "displayName": "common.objectHistory.client.table.columns.userId",
+                "headerCellFilter": "translate",
+                "width": 200,
+                "lookup": "userFullNames"
+            },
+            {
+                "name": "details",
+                "width": 150,
+                "displayName": "",
+                "cellTemplate": "historyEventDetailsCellTemplateId"
+            }
+        ]
+    },
+    "customization": {
+        "labels": [
+            {
+                "key": "Case File",
+                "value": "Request"
+            },
+            {
+                "key": "CASE_FILE",
+                "value": "Request"
+            }
+        ]
+    },
+    "components": [
+        {
+            "id": "userOrGroupSearch",
+            "title": "tasks.userOrGroupSearch.title",
+            "enableFiltering": false,
+            "configurable": true,
+            "multiSelect": false,
+            "showFacets": false,
+            "columnDefs": [
+                {
+                    "name": "name",
+                    "displayName": "common.userOrGroupSearch.assigneeGridColumns.name",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "object_type_s",
+                    "displayName": "common.userOrGroupSearch.assigneeGridColumns.type",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "title",
+                    "displayName": "common.userOrGroupSearch.assigneeGridColumns.title",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "object_id_s",
+                    "displayName": "common.userOrGroupSearch.assigneeGridColumns.username",
+                    "headerCellFilter": "translate"
+                }
+            ],
+            "paginationPageSizes": [
+                5,
+                10,
+                20,
+                50
+            ],
+            "paginationPageSize": 10,
+            "start": 0,
+            "userOrGroupSearchFilters": {
+                "userOrGroupFacetFilter": "fq=\"object_type_s\":(GROUP OR USER)&fq=\"status_lcs\":(ACTIVE OR VALID)",
+                "userOrGroupFacetExtraFilter": "&fq=\"name\": "
+            }
+        }
+    ]
+
+}
