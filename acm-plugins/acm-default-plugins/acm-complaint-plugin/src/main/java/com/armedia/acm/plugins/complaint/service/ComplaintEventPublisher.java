@@ -156,6 +156,16 @@ public class ComplaintEventPublisher implements ApplicationEventPublisherAware
         eventPublisher.publishEvent(event);
     }
 
+    public void publishComplaintModified(Complaint in, String ipAddress, String eventStatus, String description)
+    {
+        ComplaintModifiedEvent event = new ComplaintModifiedEvent(in);
+        event.setSucceeded(true);
+        event.setIpAddress(ipAddress);
+        event.setEventStatus(eventStatus);
+        event.setEventDescription(description);
+        eventPublisher.publishEvent(event);
+    }
+
     public void publishParticipantsModifiedInComplaint(AcmParticipant participant, Complaint in, String ipAddress, String eventStatus)
     {
         ComplaintParticipantsModifiedEvent event = new ComplaintParticipantsModifiedEvent(participant);
