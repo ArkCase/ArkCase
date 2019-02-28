@@ -88,6 +88,7 @@ public class EmailReceiverConfigurationServiceImpl implements EmailReceiverConfi
         emailReceiverProperties.put(EmailReceiverConfigurationConstants.HOST, configuration.getHost());
         emailReceiverProperties.put(EmailReceiverConfigurationConstants.PORT, Integer.toString(configuration.getPort()));
         emailReceiverProperties.put(EmailReceiverConfigurationConstants.DEBUG, Boolean.toString(configuration.isDebug()));
+        emailReceiverProperties.put(EmailReceiverConfigurationConstants.USER_ID, configuration.getUserId());
         emailReceiverProperties.put(EmailReceiverConfigurationConstants.EMAIL_COMPLAINT, emailReceiverConfiguration.getUser_complaint());
         if (emailReceiverConfiguration.getPassword_complaint() == null)
         {
@@ -168,6 +169,9 @@ public class EmailReceiverConfigurationServiceImpl implements EmailReceiverConfi
                 break;
             case EmailReceiverConfigurationConstants.DEBUG:
                 emailReceiverConfiguration.setDebug(Boolean.valueOf(propertyValue));
+                break;
+            case EmailReceiverConfigurationConstants.USER_ID:
+                emailReceiverConfiguration.setUserId(propertyValue);
                 break;
             case EmailReceiverConfigurationConstants.EMAIL_COMPLAINT:
                 emailReceiverConfiguration.setUser_complaint(propertyValue);

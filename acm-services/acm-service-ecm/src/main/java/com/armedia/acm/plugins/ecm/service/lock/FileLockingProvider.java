@@ -244,7 +244,7 @@ public class FileLockingProvider implements ObjectLockingProvider
                 && (errorOnSameExistingLockType || !existingLock.getLockType().equals(lockType)))
         {
             throw new AcmObjectLockException(String.format(
-                    "[%s] not able to acquire object lock[objectId=%s, objectType=%s, lockType=%s]. Reason: Object already has a lock of type %s by user: [%s]",
+                    "%s not able to acquire object lock[objectId=%s, objectType=%s, lockType=%s]. Reason: Object already has a lock of type %s by user: [%s]",
                     userId, objectId, objectType, lockType, existingLock.getLockType(), existingLock.getCreator()));
         }
     }

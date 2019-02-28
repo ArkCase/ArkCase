@@ -18,13 +18,13 @@
                         <div class="h4 font-bold">{{ecmFile.fileName || 'common.value.unknown' | translate}}</div>
                         <!--<small class="text-muted" translate>documentDetails.name</small>-->
                     </div>
-                    <div class="col-sm-6 col-md-3">
+                    <div class="col-sm-6 col-md-2">
                         <div class="h4 font-bold">{{::ecmFile.creator | mapKeyValue: userList:'object_id_s':'name' || 'common.value.unknown'
                             | translate}}
                         </div>
                         <small class="text-muted" translate>documentDetails.creator</small>
                     </div>
-                    <div class="col-sm-6 col-md-3">
+                    <div class="col-sm-6 col-md-2">
                         <div class="h4 font-bold">{{::ecmFile.created | date : locale.DATETIME_FORMATS.shortDate}}</div>
                         <small class="text-muted" translate>documentDetails.created</small>
                     </div>
@@ -32,13 +32,19 @@
                         <div class="h4 font-bold">{{::assignee | mapKeyValue: userList:'object_id_s':'name' || 'common.value.unknown' | translate}}</div>
                         <small class="text-muted" translate>documentDetails.assignee</small>
                     </div>-->
-                    <div class="col-sm-6 col-md-3">
+                    <div class="col-sm-6 col-md-2">
                         <div class="h4 font-bold">{{fileType || 'common.value.unknown' | translate}}</div>
                         <small class="text-muted" translate>documentDetails.name</small>
                     </div>
-                    <div class="col-sm-6 col-md-3">
+                    <div class="col-sm-6 col-md-2">
                         <div class="h4 font-bold">{{ecmFile.status || 'common.value.unknown' | translate}}</div>
                         <small class="text-muted" translate>documentDetails.status</small>
+                    </div>
+                    <div class="col-sm-6 col-md-2" ng-controller="Document.OCRController" ng-show="ocrInfoActive">
+                        <div class="h4 font-bold" ng-style="{'color': colorOcrStatus}">{{ocrObjectModel.status
+                            || 'documentDetails.comp.ocr.readyForOCR' | translate}}
+                        </div>
+                        <small class="text-muted" translate>documentDetails.comp.ocr.ocrStatus</small>
                     </div>
 
                 </div>
@@ -57,7 +63,7 @@
                         <small class="text-muted" translate>documentDetails.comp.transcription.mediaViewer.confidence</small>
                     </div>
                     <div class="col-sm-6 col-md-3">
-                        <div class="h4 font-bold" ng-style="{'color': colorTranscribeStatus()}">{{transcribeObjectModel.status ||
+                        <div class="h4 font-bold" ng-style="{'color': colorTranscribeStatus}">{{transcribeObjectModel.status ||
                             'documentDetails.comp.transcription.mediaViewer.readyForTranscription' | translate}}
                         </div>
                         <small class="text-muted" translate>documentDetails.comp.transcription.mediaViewer.transcriptStatus</small>

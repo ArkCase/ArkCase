@@ -53,7 +53,6 @@ import org.springframework.util.Assert;
 import javax.persistence.FlushModeType;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -305,7 +304,7 @@ public class GroupServiceImpl implements GroupService
 
         acmGroup.removeMembers();
 
-        acmGroup.setUserMembers(new HashSet<>());
+        acmGroup.removeUserMembers();
 
         groupDao.deleteGroup(acmGroup);
 

@@ -336,6 +336,7 @@
                 "enableDocumentEmail.checkbox": "Documents can be emailed",
                 "enableDocumentAttach.checkbox": "Documents can be attached to emails",
                 "enableDocumentHyperlink.checkbox": "Documents can be sent as hyperlinks",
+                "documentsAsPdf.checkbox": "Send documents as PDFs",
                 "serverSettings.label": "Server Settings",
                 "serverType.label": "Server Type",
                 "serverType.placeholder": "Choose Email Server Type",

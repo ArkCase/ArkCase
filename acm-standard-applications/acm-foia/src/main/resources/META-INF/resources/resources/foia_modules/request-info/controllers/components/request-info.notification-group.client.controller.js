@@ -64,8 +64,6 @@ angular.module('request-info').controller(
             function saveCase() {
                 var promiseSaveInfo = Util.errorPromise($translate.instant("common.service.error.invalidData"));
                 if (CaseInfoService.validateCaseInfo($scope.objectInfo)) {
-                    $scope.objectInfo.recordSearchDateFrom = UtilDateService.dateToIsoDateTime($scope.objectInfo.recordSearchDateFrom);
-                    $scope.objectInfo.recordSearchDateTo = UtilDateService.dateToIsoDateTime($scope.objectInfo.recordSearchDateTo);
                     var objectInfo = Util.omitNg($scope.objectInfo);
                     promiseSaveInfo = CaseInfoService.saveFoiaRequestInfo(objectInfo);
                     promiseSaveInfo.then(function(caseInfo) {

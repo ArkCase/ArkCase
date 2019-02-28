@@ -2067,7 +2067,7 @@ angular
                                         item.disabled = true;
                                     } else {
                                         if (item.disabledExpression) {
-                                            item.disabled = item.disabledExpression;
+                                            item.disabled = eval(item.disabledExpression);
                                         } else {
                                             item.disabled = false;
                                         }
@@ -4939,7 +4939,6 @@ angular
                             DocTree.onSearch(data.searchFilter);
                         });
 
-                        //first try to notify doc-tree
                         DocTree.scope.$bus.subscribe('object.changed/' + DocTree.getObjType() + '/' + DocTree.getObjId(), function(message){
                             if (DocTree.getObjType() === message.parentObjectType && DocTree.getObjId() === message.parentObjectId && message.action === "INSERT" && message.objectType === "FILE")
                             {

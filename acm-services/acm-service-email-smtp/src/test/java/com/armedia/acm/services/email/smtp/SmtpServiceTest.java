@@ -47,7 +47,9 @@ import com.armedia.acm.services.email.model.EmailWithAttachmentsAndLinksDTO;
 import com.armedia.acm.services.email.model.EmailWithAttachmentsDTO;
 import com.armedia.acm.services.email.model.EmailWithEmbeddedLinksDTO;
 import com.armedia.acm.services.email.model.EmailWithEmbeddedLinksResultDTO;
+import com.armedia.acm.services.email.sender.model.EmailSenderConfiguration;
 import com.armedia.acm.services.email.sender.model.EmailSenderConfigurationConstants;
+import com.armedia.acm.services.email.sender.service.EmailSenderConfigurationServiceImpl;
 import com.armedia.acm.services.email.service.AcmEmailContentGeneratorService;
 import com.armedia.acm.services.users.model.AcmUser;
 
@@ -125,6 +127,9 @@ public class SmtpServiceTest
 
     @Mock
     private ApplicationEventPublisher mockApplicationEventPublisher;
+
+    @Mock
+    private EmailSenderConfigurationServiceImpl emailSenderConfigurationService;
 
     /**
      * @throws java.lang.Exception
@@ -301,6 +306,10 @@ public class SmtpServiceTest
         whenNew(FileInputStream.class).withArguments(mockFile).thenReturn(mockFileInputStream);
         when(mockFile.getName()).thenReturn("temp.zip");
 
+        EmailSenderConfiguration emailSenderConfiguration = new EmailSenderConfiguration();
+        emailSenderConfiguration.setConvertDocumentsToPdf(false);
+        when(emailSenderConfigurationService.readConfiguration()).thenReturn(emailSenderConfiguration);
+
         // when
         service.sendEmailWithAttachments(inputDTO, mockAuthentication, mockAcmUser);
 
@@ -372,6 +381,10 @@ public class SmtpServiceTest
         whenNew(File.class).withArguments(filePaths.get(0)).thenReturn(mockFile);
         whenNew(FileInputStream.class).withArguments(mockFile).thenReturn(mockFileInputStream);
         when(mockFile.getName()).thenReturn("temp.zip");
+
+        EmailSenderConfiguration emailSenderConfiguration = new EmailSenderConfiguration();
+        emailSenderConfiguration.setConvertDocumentsToPdf(false);
+        when(emailSenderConfigurationService.readConfiguration()).thenReturn(emailSenderConfiguration);
 
         // when
         service.sendEmailWithAttachments(inputDTO, mockAuthentication, mockAcmUser);
@@ -454,6 +467,10 @@ public class SmtpServiceTest
         whenNew(FileInputStream.class).withArguments(mockFile).thenReturn(mockFileInputStream);
         when(mockFile.getName()).thenReturn("temp.zip");
 
+        EmailSenderConfiguration emailSenderConfiguration = new EmailSenderConfiguration();
+        emailSenderConfiguration.setConvertDocumentsToPdf(false);
+        when(emailSenderConfigurationService.readConfiguration()).thenReturn(emailSenderConfiguration);
+
         // when
         service.sendEmailWithAttachmentsAndLinks(inputDTO, mockAuthentication, mockAcmUser);
 
@@ -533,6 +550,10 @@ public class SmtpServiceTest
         whenNew(File.class).withArguments(filePaths.get(0)).thenReturn(mockFile);
         whenNew(FileInputStream.class).withArguments(mockFile).thenReturn(mockFileInputStream);
         when(mockFile.getName()).thenReturn("temp.zip");
+
+        EmailSenderConfiguration emailSenderConfiguration = new EmailSenderConfiguration();
+        emailSenderConfiguration.setConvertDocumentsToPdf(false);
+        when(emailSenderConfigurationService.readConfiguration()).thenReturn(emailSenderConfiguration);
 
         // when
         service.sendEmailWithAttachmentsAndLinks(inputDTO, mockAuthentication, mockAcmUser);

@@ -3,8 +3,8 @@
 angular.module('document-details').controller(
         'DocumentDetailsController',
         [ '$rootScope', '$scope', '$stateParams', '$sce', '$q', '$timeout', '$window', '$modal', 'TicketService', 'ConfigService', 'LookupService', 'SnowboundService', 'Authentication', 'EcmService', 'Helper.LocaleService', 'Admin.TranscriptionManagementService', 'MessageService', 'UtilService', 'Util.TimerService',
-            'Object.LockingService', 'ObjectService', '$log', 'Dialog.BootboxService', '$translate', 'ArkCaseCrossWindowMessagingService', 'Object.LookupService',
-            function ($rootScope, $scope, $stateParams, $sce, $q, $timeout, $window, $modal, TicketService, ConfigService, LookupService, SnowboundService, Authentication, EcmService, LocaleHelper, TranscriptionManagementService, MessageService, Util, UtilTimerService, ObjectLockingService, ObjectService, $log, DialogService, $translate, ArkCaseCrossWindowMessagingService, ObjectLookupService) {
+            'Object.LockingService', 'ObjectService', '$log', 'Dialog.BootboxService', '$translate', 'ArkCaseCrossWindowMessagingService', 'Object.LookupService', 'Case.InfoService',
+            function ($rootScope, $scope, $stateParams, $sce, $q, $timeout, $window, $modal, TicketService, ConfigService, LookupService, SnowboundService, Authentication, EcmService, LocaleHelper, TranscriptionManagementService, MessageService, Util, UtilTimerService, ObjectLockingService, ObjectService, $log, DialogService, $translate, ArkCaseCrossWindowMessagingService, ObjectLookupService, CaseInfoService) {
 
                     new LocaleHelper.Locale({
                         scope: $scope
@@ -88,6 +88,15 @@ angular.module('document-details').controller(
                     $scope.showVideoPlayer = false;
                     $scope.showPdfJs = false;
                     $scope.transcriptionTabActive = false;
+                    $scope.ocrInfoActive = false;
+
+                    var scopeToColor =
+                        {
+                            "QUEUED": "#dcce22" ,
+                            "PROCESSING": "orange" ,
+                            "COMPLETED": "#05a205" ,
+                            "FAILED": "red"
+                        };
 
                     var transcriptionConfigurationPromise = TranscriptionManagementService.getTranscribeConfiguration();
 
@@ -122,25 +131,20 @@ angular.module('document-details').controller(
                         });
 
                         // color the status
-                        $scope.colorTranscribeStatus = function() {
-                            switch ($scope.transcribeObjectModel.status) {
-                            case 'QUEUED':
-                                return '#dcce22';
-                            case 'PROCESSING':
-                                return 'orange';
-                            case 'COMPLETED':
-                                return '#05a205';
-                            case 'FAILED':
-                                return 'red';
-                            }
-                        };
+                        $scope.colorTranscribeStatus = scopeToColor[$scope.transcribeObjectModel.status];
 
                         if (!Util.isEmpty($stateParams.seconds)) {
                             $scope.playAt($stateParams.seconds);
                         }
                     });
 
-                    var addCue = function(track, value) {
+                $scope.$on('ocr-data-model', function(event, ocrObj) {
+                    $scope.ocrObjectModel = ocrObj;
+                    $scope.ocrInfoActive = $scope.ocrObjectModel.status != null;
+                    $scope.colorOcrStatus = scopeToColor[$scope.ocrObjectModel.status];
+                });
+
+                var addCue = function(track, value) {
                         var cueAdded = false;
                         try {
                             track.addCue(new VTTCue(value.startTime, value.endTime, value.text));
@@ -173,7 +177,7 @@ angular.module('document-details').controller(
                      * an iframe which points to snowbound
                      */
                     $scope.openSnowboundViewer = function() {
-                        var viewerUrl = SnowboundService.buildSnowboundUrl($scope.ecmFileProperties, $scope.acmTicket, $scope.userId, $scope.userFullName, $scope.fileInfo, !$scope.editingMode);
+                        var viewerUrl = SnowboundService.buildSnowboundUrl($scope.ecmFileProperties, $scope.acmTicket, $scope.userId, $scope.userFullName, $scope.fileInfo, !$scope.editingMode, $scope.caseInfo.caseNumber);
                         $scope.documentViewerUrl = $sce.trustAsResourceUrl(viewerUrl);
                     };
 
@@ -213,7 +217,9 @@ angular.module('document-details').controller(
                         fileId: $stateParams['id']
                     });
 
-                    $q.all([ ticketInfo, userInfo, totalUserInfo, ecmFileConfig, ecmFileInfo.$promise, ecmFileEvents.$promise, ecmFileParticipants.$promise, formsConfig, transcriptionConfigurationPromise ]).then(function(data) {
+                    var caseInfo = CaseInfoService.getCaseInfo($stateParams['containerId']);
+
+                    $q.all([ ticketInfo, userInfo, totalUserInfo, ecmFileConfig, ecmFileInfo.$promise, ecmFileEvents.$promise, ecmFileParticipants.$promise, formsConfig, transcriptionConfigurationPromise, caseInfo ]).then(function(data) {
                         $scope.acmTicket = data[0].data;
                         $scope.userId = data[1].userId;
                         $scope.userFullName = data[1].fullName;
@@ -225,6 +231,7 @@ angular.module('document-details').controller(
                         $scope.ecmFileParticipants = data[6];
                         $scope.formsConfig = data[7];
                         $scope.transcriptionConfiguration = data[8];
+                        $scope.caseInfo = data[9];
 
                         // default view == snowbound
                         $scope.view = "modules/document-details/views/document-viewer-snowbound.client.view.html";
@@ -314,14 +321,15 @@ angular.module('document-details').controller(
                     // Release editing lock on window unload, if acquired
                     $window.addEventListener('beforeunload', function() {
                         if ($scope.editingMode) {
-                            ObjectLockingService.unlockObject($scope.ecmFile.fileId, ObjectService.ObjectTypes.FILE, ObjectService.LockTypes.WRITE);
+                            ObjectLockingService.unlockObject($scope.ecmFile.fileId, ObjectService.ObjectTypes.FILE, ObjectService.LockTypes.WRITE, true);
                         }
                     });
 
                     $rootScope.$bus.subscribe("object.changed/FILE/" + $stateParams.id, function() {
                         DialogService.alert($translate.instant("documentDetails.fileChangedAlert")).then(function() {
                             $scope.openSnowboundViewer();
-                        }); 
+                            $scope.$broadcast('refresh-ocr');
+                        });
                     });
                 } ]);
 

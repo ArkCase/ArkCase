@@ -252,14 +252,19 @@ public class FolderAndFilesUtils
 
     public EcmFile uploadFile(EcmEvent ecmEvent, AcmFolder targetParentFolder)
     {
+        return uploadFile(ecmEvent.getNodeId(), ecmEvent.getNodeName(), ecmEvent.getUserId(), targetParentFolder);
+    }
+
+    public EcmFile uploadFile(String nodeId, String nodeName, String userId, AcmFolder targetParentFolder)
+    {
         AcmContainer container = lookupArkCaseContainer(targetParentFolder.getId());
         if (container == null)
         {
-            log.debug("Can't find container for the new file with id {}, exiting.", ecmEvent.getNodeId());
+            log.debug("Can't find container for the new file with id {}, exiting.", nodeId);
             return null;
         }
         String cmisRepositoryId = getFolderService().getCmisRepositoryId(targetParentFolder);
-        Document cmisDocument = lookupCmisDocument(cmisRepositoryId, ecmEvent.getNodeId());
+        Document cmisDocument = lookupCmisDocument(cmisRepositoryId, nodeId);
         if (cmisDocument == null)
         {
             log.error("No document to be loaded - exiting.");
@@ -269,13 +274,13 @@ public class FolderAndFilesUtils
         try
         {
             addedToArkCase = getFileService().upload(
-                    ecmEvent.getNodeName(),
+                    nodeName,
                     findFileType(cmisDocument),
                     "Document",
                     cmisDocument.getContentStream().getStream(),
                     cmisDocument.getContentStreamMimeType(),
-                    ecmEvent.getNodeName(),
-                    new UsernamePasswordAuthenticationToken(ecmEvent.getUserId(), ecmEvent.getUserId()),
+                    nodeName,
+                    new UsernamePasswordAuthenticationToken(userId, userId),
                     targetParentFolder.getCmisFolderId(),
                     container.getContainerObjectType(),
                     container.getContainerObjectId(),
@@ -284,7 +289,7 @@ public class FolderAndFilesUtils
         }
         catch (AcmCreateObjectFailedException | AcmUserActionFailedException e)
         {
-            log.error("Could not add file with CMIS ID [{}] to ArkCase: {}", ecmEvent.getNodeId(), e.getMessage(), e);
+            log.error("Could not add file with CMIS ID [{}] to ArkCase: {}", nodeId, e.getMessage(), e);
         }
         return addedToArkCase;
     }

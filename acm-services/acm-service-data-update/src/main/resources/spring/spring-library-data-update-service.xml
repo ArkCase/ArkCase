@@ -31,6 +31,7 @@
                 <ref bean="documentRepositoryParticipantTypesUpdateExecutor"/>
                 <ref bean="solrReindexAssignedObjectsExecutor"/>
                 <ref bean="groupAscendantsStringUpdateExecutor"/>
+                <ref bean="ocrSystemUserUpdateExecutor"/>
             </list>
         </property>
         <property name="dataUpdateService" ref="dataUpdateService"/>
@@ -95,5 +96,9 @@
     <bean id="groupAscendantsStringUpdateExecutor" class="com.armedia.acm.services.dataupdate.service.GroupAscendantsStringUpdateExecutor">
         <property name="groupDao" ref="groupDao"/>
         <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
+    </bean>
+
+    <bean id="ocrSystemUserUpdateExecutor" class="com.armedia.acm.services.dataupdate.service.OCRSystemUserUpdateExecutor">
+        <property name="userDao" ref="userJpaDao"/>
     </bean>
 </beans>

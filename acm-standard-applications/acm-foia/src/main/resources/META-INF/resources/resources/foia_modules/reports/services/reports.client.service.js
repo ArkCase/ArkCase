@@ -50,7 +50,7 @@ angular.module('reports').factory(
                             + "&endDate=" + UtilDateService.goodIsoDate(params.endDate) 
                             + "&dateFormat=" + encodeURIComponent(UtilDateService.defaultDateFormat) 
                             + "&timeZone=" + encodeURIComponent(UtilDateService.getTimeZoneOffset())
-                            + "&timestamp=" + new Date();
+                            + "&timestamp=" + (new Date()).getTime();
                             
                             if (params.typeSelected) {
                                 reportUrl += "&foiaType=" + params.typeSelected;

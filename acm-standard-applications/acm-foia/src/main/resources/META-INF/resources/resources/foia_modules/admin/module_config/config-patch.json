@@ -1,0 +1,54 @@
+[
+    {
+        "op": "remove",
+        "path": "/components/?@.id=='securityCalendarConfig'/configurableObjectTypes/?@.id=='COMPLAINT'"
+    },
+    {
+        "op": "replace",
+        "path": "/components/?@.id=='emailTemplates'/objectTypes/?@.id=='CASE_FILE'/name",
+        "value": "Request"
+    },
+    {
+        "op": "remove",
+        "path": "/components/?@.id=='emailTemplates'/objectTypes/?@.id=='COMPLAINT'"
+    },
+    {
+        "path": "/components/",
+        "op": "add",
+        "value": {
+            "id": "timeToComplete",
+            "timeToCompleteTypes": [
+                {
+                    "name": "admin.queues.select.request",
+                    "id": "Request"
+                },
+                {
+                    "name": "admin.queues.select.appeal",
+                    "id": "Appeal"
+                }
+            ]
+        }
+    },
+    {
+        "path": "/tree/nodeTypes/",
+        "op": "add",
+        "value": {
+            "type": "p/application/foiaConfig",
+            "label": "admin.application.foia.config.title",
+            "components": [
+                "application-foia.config"
+            ]
+        }
+    },
+    {
+        "path": "/tree/nodeTypes/",
+        "op": "add",
+        "value": {
+            "type": "p/document/pdfConversion",
+            "label": "admin.documentManagement.pdfConversion.title",
+            "components": [
+                "pdf-conversion"
+            ]
+        }
+    }
+]

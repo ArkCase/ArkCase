@@ -147,6 +147,7 @@
     <bean id="facetedSearchService" class="com.armedia.acm.services.search.service.FacetedSearchService">
         <property name="pluginEventType" ref="pluginEventType"/>
         <property name="pluginSearch" ref="pluginSearch"/>
+        <property name="executeSolrQuery" ref="executeSolrQuery"/>
     </bean>
 
     <bean id="solrJoinDocumentsService" class="com.armedia.acm.services.search.service.SolrJoinDocumentsServiceImpl">
