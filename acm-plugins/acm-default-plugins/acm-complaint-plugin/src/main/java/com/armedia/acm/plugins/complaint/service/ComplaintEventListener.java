@@ -142,7 +142,8 @@ public class ComplaintEventListener implements ApplicationListener<AcmObjectHist
                                 folderCreatorDao.deleteObjectReference(updatedComplaint.getId(), updatedComplaint.getObjectType());
                             }
                         }
-                        getComplaintEventPublisher().publishComplaintModified(updatedComplaint, ipAddress, "status.changed");
+                        getComplaintEventPublisher().publishComplaintModified(updatedComplaint, ipAddress, "status.changed",
+                                "from " + existing.getStatus() + " to " + updatedComplaint.getStatus());
                     }
 
                     if (isLocationChanged(existing, updatedComplaint))

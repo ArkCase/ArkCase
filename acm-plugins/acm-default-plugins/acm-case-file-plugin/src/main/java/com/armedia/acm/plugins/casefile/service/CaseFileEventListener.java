@@ -158,7 +158,9 @@ public class CaseFileEventListener implements ApplicationListener<AcmObjectHisto
                                     folderCreatorDao.deleteObjectReference(updatedCaseFile.getId(), updatedCaseFile.getObjectType());
                                 }
                             }
-                            getCaseFileEventUtility().raiseCaseFileModifiedEvent(updatedCaseFile, event.getIpAddress(), "status.changed");
+                            getCaseFileEventUtility().raiseCaseFileModifiedEvent(updatedCaseFile, event.getIpAddress(), "status.changed",
+                                        "from " + existing.getStatus() + " to " + updatedCaseFile.getStatus());
+
                         }
                     }
                 }
