@@ -27,15 +27,9 @@ package com.armedia.acm.ocr.listener;
  * #L%
  */
 
-import com.armedia.acm.core.exceptions.AcmObjectLockException;
 import com.armedia.acm.ocr.exception.CreateOCRException;
-import com.armedia.acm.ocr.model.OCRConstants;
-import com.armedia.acm.ocr.model.OCRType;
 import com.armedia.acm.ocr.service.ArkCaseOCRService;
 import com.armedia.acm.plugins.ecm.model.EcmFileAddedEvent;
-import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
-import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
-import com.armedia.acm.service.objectlock.service.AcmObjectLockingManager;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,43 +41,23 @@ import org.springframework.context.ApplicationListener;
 public class EcmFileAddedListener implements ApplicationListener<EcmFileAddedEvent>
 {
     private final Logger LOG = LoggerFactory.getLogger(getClass());
-    private FolderAndFilesUtils folderAndFilesUtils;
     private ArkCaseOCRService arkCaseOCRService;
-    private AcmObjectLockingManager objectLockingManager;
 
     @Override
     public void onApplicationEvent(EcmFileAddedEvent event)
     {
         if (event != null && event.isSucceeded())
         {
-            EcmFileVersion ecmFileVersion = getFolderAndFilesUtils().getVersion(event.getSource(), event.getSource().getActiveVersionTag());
-
-            if (arkCaseOCRService.isOCREnabled() && arkCaseOCRService.isFileVersionOCRable(ecmFileVersion))
+            try
             {
-                try
-                {
-                    objectLockingManager.acquireObjectLock(ecmFileVersion.getFile().getId(), "FILE", "WRITE", null, true,
-                            OCRConstants.OCR_SYSTEM_USER);
-
-                    getArkCaseOCRService().create(ecmFileVersion, OCRType.AUTOMATIC);
-                }
-                catch (CreateOCRException | AcmObjectLockException e)
-                {
-                    LOG.error("Creating OCR for MEDIA_FILE_VERSION_ID=[{}] was not executed. REASON=[{}]",
-                            ecmFileVersion.getId(), e.getMessage(), e);
-                }
+                getArkCaseOCRService().create(event);
+            }
+            catch (CreateOCRException e)
+            {
+                LOG.warn("Creating OCR for file with ID=[{}] and VERSION_ID=[{}] is not executed. REASON=[{}]",
+                        event.getSource().getFileId(), event.getSource().getActiveVersionTag(), e.getMessage());
             }
         }
-    }
-
-    public FolderAndFilesUtils getFolderAndFilesUtils()
-    {
-        return folderAndFilesUtils;
-    }
-
-    public void setFolderAndFilesUtils(FolderAndFilesUtils folderAndFilesUtils)
-    {
-        this.folderAndFilesUtils = folderAndFilesUtils;
     }
 
     public ArkCaseOCRService getArkCaseOCRService()
@@ -94,15 +68,5 @@ public class EcmFileAddedListener implements ApplicationListener<EcmFileAddedEve
     public void setArkCaseOCRService(ArkCaseOCRService arkCaseOCRService)
     {
         this.arkCaseOCRService = arkCaseOCRService;
-    }
-
-    public AcmObjectLockingManager getObjectLockingManager()
-    {
-        return objectLockingManager;
-    }
-
-    public void setObjectLockingManager(AcmObjectLockingManager objectLockingManager)
-    {
-        this.objectLockingManager = objectLockingManager;
     }
 }

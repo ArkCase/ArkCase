@@ -66,4 +66,6 @@ angular.module('admin').controller('Admin.SequenceManagementPartsModalConfigCont
         };
 
         $scope.allNumbersExceptZero = '^(?!-?0)[-]?\\d{1,4}$';
+        $scope.allNumbersLargerOrEqualZero = '\\d+';
+        $scope.allNumbersLargerZero = '[1-9]\\d*';
     }]);

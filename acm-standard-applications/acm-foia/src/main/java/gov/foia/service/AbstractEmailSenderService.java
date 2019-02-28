@@ -60,6 +60,7 @@ public abstract class AbstractEmailSenderService
         emailWithAttachmentsDTO.setHeader("");
         emailWithAttachmentsDTO.setFooter("");
         emailWithAttachmentsDTO.setBody(buildEmailBodyFromTemplate(templateDataModel));
+        emailWithAttachmentsDTO.setTemplate(buildEmailBodyFromTemplate(templateDataModel));
         emailWithAttachmentsDTO.setAttachmentIds(attachmentIds);
         emailWithAttachmentsDTO.setEmailAddresses(emailAddresses);
 

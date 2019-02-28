@@ -1,0 +1,12 @@
+[
+    {
+        "op": "replace",
+        "path": "/costTracking.comp.info/incidentDate",
+        "value": "Created Date"
+    },
+    {
+        "op": "replace",
+        "path": "/costTracking.comp.info/subjectType",
+        "value": "Request Type"
+    }
+]

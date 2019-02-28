@@ -91,75 +91,80 @@ public class OCRCheckStatusDelegate implements JavaDelegate
             try
             {
                 OCR ocr = getArkCaseOCRService().get(ids.get(0));
-                if (OCRStatusType.PROCESSING.toString().equals(ocr.getStatus()))
+                if (!(OCRStatusType.PROCESSING.toString().equalsIgnoreCase(ocr.getStatus())))
                 {
-                    OCRConfiguration configuration = getArkCaseOCRService().getConfiguration();
-                    OCR providerOCR = getArkCaseOCRService().getOCRServiceFactory().getService(configuration.getProvider())
-                            .get(ocr.getRemoteId());
+                    ocr.setStatus(OCRStatusType.PROCESSING.toString());
+                    getArkCaseOCRService().save(ocr);
+                }
 
-                    if (providerOCR != null && !OCRStatusType.PROCESSING.toString().equals(providerOCR.getStatus()))
+                OCRConfiguration configuration = getArkCaseOCRService().getConfiguration();
+                OCR providerOCR = getArkCaseOCRService().getOCRServiceFactory().getService(configuration.getProvider())
+                        .get(ocr.getRemoteId());
+
+                if (providerOCR != null && !OCRStatusType.PROCESSING.toString().equals(providerOCR.getStatus()))
+                {
+                    String status = providerOCR.getStatus();
+
+                    switch (OCRStatusType.valueOf(providerOCR.getStatus()))
                     {
-                        String status = providerOCR.getStatus();
-
-                        switch (OCRStatusType.valueOf(providerOCR.getStatus()))
+                    case COMPLETED:
+                        action = OCRActionType.COMPLETED.toString();
+                        for (Long id : ids)
                         {
-                        case COMPLETED:
-                            action = OCRActionType.COMPLETED.toString();
-                            for (Long id : ids)
+                            try
                             {
-                                try
+                                Authentication authentication = SecurityContextHolder.getContext() != null
+                                        && SecurityContextHolder.getContext().getAuthentication() != null
+                                                ? SecurityContextHolder.getContext().getAuthentication()
+                                                : new AcmAuthentication(null, null, null, true,
+                                                        OCRConstants.OCR_SYSTEM_USER);
+
+                                MDC.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, "admin");
+                                MDC.put(MDCConstants.EVENT_MDC_REQUEST_ID_KEY, UUID.randomUUID().toString());
+
+                                String fileName = ocr.getEcmFileVersion().getFile().getFileName();
+                                String fileLocation;
+
+                                if (getActivitiRuntimeService().getVariable(ocr.getProcessId(), OCRConstants.QPDF_TMP) != null)
                                 {
-                                    Authentication authentication = SecurityContextHolder.getContext() != null
-                                            && SecurityContextHolder.getContext().getAuthentication() != null
-                                                    ? SecurityContextHolder.getContext().getAuthentication()
-                                                    : new AcmAuthentication(null, null, null, true,
-                                                            OCRConstants.OCR_SYSTEM_USER);
-
-                                    MDC.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, "admin");
-                                    MDC.put(MDCConstants.EVENT_MDC_REQUEST_ID_KEY, UUID.randomUUID().toString());
-
-                                    String fileName = ocr.getEcmFileVersion().getFile().getFileName();
-                                    String fileLocation;
-
-                                    if (getActivitiRuntimeService().getVariable(ocr.getProcessId(), OCRConstants.QPDF_TMP) != null)
+                                    fileLocation = (String) getActivitiRuntimeService().getVariable(ocr.getProcessId(),
+                                            OCRConstants.QPDF_TMP);
+                                    File file = new File(fileLocation);
+                                    try (InputStream stream = new FileInputStream(fileLocation))
                                     {
-                                        fileLocation = (String) getActivitiRuntimeService().getVariable(ocr.getProcessId(),
-                                                OCRConstants.QPDF_TMP);
-                                        File file = new File(fileLocation);
-                                        try (InputStream stream = new FileInputStream(fileLocation))
-                                        {
-                                            AcmMultipartFile multipartFile = new AcmMultipartFile(fileName, fileName, "application/pdf",
-                                                    false,
-                                                    file.length(),
-                                                    new byte[0], stream, true);
+                                        AcmMultipartFile multipartFile = new AcmMultipartFile(fileName, fileName, "application/pdf",
+                                                false,
+                                                file.length(),
+                                                new byte[0], stream, true);
 
-                                            getEcmFileService().update(ocr.getEcmFileVersion().getFile(), multipartFile,
-                                                    authentication);
-                                        }
+                                        getEcmFileService().update(ocr.getEcmFileVersion().getFile(), multipartFile,
+                                                authentication);
                                     }
-                                    objectLockingManager.releaseObjectLock(ocr.getEcmFileVersion().getFile().getId(), "FILE", "WRITE", true,
-                                            OCRConstants.OCR_SYSTEM_USER, null);
                                 }
-                                catch (Exception e)
-                                {
-                                    LOGGER.warn("Taking items for OCR with ID=[{}] and PROCESS_ID=[{}] failed. REASON=[{}]", id,
-                                            delegateExecution.getProcessInstanceId(), e.getMessage());
-                                }
+                                objectLockingManager.releaseObjectLock(ocr.getEcmFileVersion().getFile().getId(), "FILE", "WRITE", true,
+                                        OCRConstants.OCR_SYSTEM_USER, null);
                             }
-                            break;
-                        case FAILED:
-                            action = OCRActionType.FAILED.toString();
-                            objectLockingManager.releaseObjectLock(ocr.getEcmFileVersion().getFile().getId(), "FILE", "WRITE", true,
-                                    OCRConstants.OCR_SYSTEM_USER, null);
-                            break;
-
-                        default:
-                            throw new RuntimeException("Unknown OCR status type received");
+                            catch (Exception e)
+                            {
+                                LOGGER.warn("Taking items for OCR with ID=[{}] and PROCESS_ID=[{}] failed. REASON=[{}]", id,
+                                        delegateExecution.getProcessInstanceId(), e.getMessage());
+                            }
                         }
+                        break;
+                    case FAILED:
+                        action = OCRActionType.FAILED.toString();
+                        objectLockingManager.releaseObjectLock(ocr.getEcmFileVersion().getFile().getId(), "FILE", "WRITE", true,
+                                OCRConstants.OCR_SYSTEM_USER, null);
+                        break;
 
-                        delegateExecution.setVariable(OCRBusinessProcessVariableKey.STATUS.toString(), status);
-                        delegateExecution.setVariable(OCRBusinessProcessVariableKey.ACTION.toString(), action);
+                    default:
+                        throw new RuntimeException(
+                                String.format("Received OCR status type of [%s] for OCR_ID=[%s] and FILE_ID=[%s], but cannot handle it.",
+                                        status, ocr.getId(), ocr.getEcmFileVersion().getFile().getId()));
                     }
+
+                    delegateExecution.setVariable(OCRBusinessProcessVariableKey.STATUS.toString(), status);
+                    delegateExecution.setVariable(OCRBusinessProcessVariableKey.ACTION.toString(), action);
                 }
             }
             catch (GetOCRException | GetConfigurationException e)
@@ -172,7 +177,6 @@ public class OCRCheckStatusDelegate implements JavaDelegate
         }
 
     }
-
 
     public ArkCaseOCRService getArkCaseOCRService()
     {

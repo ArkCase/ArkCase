@@ -12,6 +12,7 @@
 angular.module('request-info').controller(
     'RequestInfoController',
     [
+        '$rootScope',
         '$scope',
         '$log',
         '$sce',
@@ -25,7 +26,6 @@ angular.module('request-info').controller(
         'RequestInfo.RequestsService',
         'RequestInfo.WorkflowsService',
         'Requests.RequestsService',
-        'Queues.QueuesConstants',
         'LookupService',
         'TicketService',
         'Queues.QueuesService',
@@ -50,13 +50,20 @@ angular.module('request-info').controller(
         'DueDate.Service',
         'Admin.HolidayService',
         'Admin.FoiaConfigService',
-        function ($scope, $log, $sce, $q, $state, $timeout, $stateParams, $modal, ConfigService, Authentication, RequestsService, WorkflowsService, GenericRequestsService, QueuesConstants, LookupService, TicketService, QueuesService, PermissionsService, CaseInfoService, ObjectService,
-                  HelperObjectBrowserService, ObjectLookupService, ObjectModelService, CaseLookupService, UtilDateService, QueuesSvc, ObjectSubscriptionService, Util, SnowboundService, EcmService, DocumentPrintingService, NotesService, UserInfoService, MessageService, $translate, DueDateService, AdminHolidayService, AdminFoiaConfigService) {
+        'Admin.TranscriptionManagementService',
+        '$window',
+        'ArkCaseCrossWindowMessagingService',
+        'Object.LockingService',
+        'Util.TimerService',
+        'Dialog.BootboxService',
+        function ($rootScope, $scope, $log, $sce, $q, $state, $timeout, $stateParams, $modal, ConfigService, Authentication, RequestsService, WorkflowsService, GenericRequestsService, LookupService, TicketService, QueuesService, PermissionsService, CaseInfoService, ObjectService,
+                  HelperObjectBrowserService, ObjectLookupService, ObjectModelService, CaseLookupService, UtilDateService, QueuesSvc, ObjectSubscriptionService, Util, SnowboundService, EcmService, DocumentPrintingService, NotesService, UserInfoService, MessageService, $translate,
+                  DueDateService, AdminHolidayService, AdminFoiaConfigService, TranscriptionManagementService, $window, ArkCaseCrossWindowMessagingService, ObjectLockingService, UtilTimerService, DialogService) {
 
-            $scope.openOtherDocuments = [];
-            $scope.fileChangeEvents = [];
-            $scope.fileChangeDate = null;
-            $scope.versionChangeRequest = false;
+            // $scope.openOtherDocuments = [];
+            // $scope.fileChangeEvents = [];
+            // $scope.fileChangeDate = null;
+            // $scope.versionChangeRequest = false;
 
             $scope.loading = false;
             $scope.loadingIcon = "fa fa-check";
@@ -64,10 +71,11 @@ angular.module('request-info').controller(
             $scope.saveIcon = false;
             $scope.saveLoadingIcon = "fa fa-floppy-o";
             $scope.viewerOnly = false;
-            $scope.expand = function () {
+
+            $scope.documentExpand = function () {
                 $scope.viewerOnly = true;
             };
-            $scope.compress = function () {
+            $scope.documentCompress = function () {
                 $scope.viewerOnly = false;
             };
             $scope.checkEscape = function (event) {
@@ -75,6 +83,141 @@ angular.module('request-info').controller(
                     $scope.viewerOnly = false;
                 }
             };
+            $scope.videoAPI = null;
+
+            $scope.videoExpand = function () {
+                if (!Util.isEmpty($scope.videoAPI)) {
+                    $scope.videoAPI.toggleFullScreen();
+                }
+            };
+
+            $scope.iframeLoaded = function () {
+                ObjectLookupService.getLookupByLookupName("annotationTags").then(function (allAnnotationTags) {
+                    $scope.allAnnotationTags = allAnnotationTags;
+                    ArkCaseCrossWindowMessagingService.addHandler('select-annotation-tags', onSelectAnnotationTags);
+                    ArkCaseCrossWindowMessagingService.start('snowbound', $scope.ecmFileProperties['ecm.viewer.snowbound']);
+                });
+            };
+
+            function onSelectAnnotationTags(data) {
+                var params = $scope.allAnnotationTags;
+                var modalInstance = $modal.open({
+                    animation: true,
+                    templateUrl: 'modules/document-details/views/components/annotation-tags-modal.client.view.html',
+                    controller: 'Document.AnnotationTagsModalController',
+                    backdrop: 'static',
+                    resolve: {
+                        params: function () {
+                            return params;
+                        }
+                    }
+                });
+
+                modalInstance.result.then(function (result) {
+                    var message = {
+                        source: 'arkcase',
+                        action: 'add-annotation-tags',
+                        data: {
+                            type: data.type,
+                            annotationTags: result.annotationTags,
+                            annotationNotes: result.annotationNotes
+                        }
+                    };
+                    ArkCaseCrossWindowMessagingService.send(message);
+                }, function () {
+                    // Do nothing
+                });
+            }
+
+            var transcriptionConfigurationPromise = TranscriptionManagementService.getTranscribeConfiguration();
+
+            $scope.getEcmFileActiveVersion = function (ecmFile) {
+                if (Util.isEmpty(ecmFile) || Util.isEmpty(ecmFile.activeVersionTag) || Util.isArrayEmpty(ecmFile.versions)) {
+                    return null;
+                }
+
+                var activeVersion = _.find(ecmFile.versions, function (version) {
+                    return ecmFile.activeVersionTag === version.versionTag;
+                });
+
+                return activeVersion;
+            };
+
+            $scope.$on('transcribe-data-model', function (event, transcribeObj) {
+                $scope.transcribeObjectModel = transcribeObj;
+
+                var track = null;
+                var videoElement = angular.element(document.getElementsByTagName("video")[0])[0];
+                if (videoElement) {
+                    track = videoElement.addTextTrack("subtitles", "Transcription", $scope.transcribeObjectModel.language);
+                    videoElement.addEventListener("play", function () {
+                        track.mode = "showing";
+                    });
+                }
+
+                angular.forEach($scope.transcribeObjectModel.transcribeItems, function (value, key) {
+                    if (track != null) {
+                        addCue(track, value);
+                    }
+                });
+
+                //color the status
+                $scope.colorTranscribeStatus = function () {
+                    switch ($scope.transcribeObjectModel.status) {
+                        case 'QUEUED':
+                            return '#dcce22';
+                        case 'PROCESSING':
+                            return 'orange';
+                        case 'COMPLETED':
+                            return '#05a205';
+                        case 'FAILED':
+                            return 'red';
+                    }
+                };
+
+                if (!Util.isEmpty($stateParams.seconds)) {
+                    $scope.playAt($stateParams.seconds);
+                }
+            });
+
+            var addCue = function (track, value) {
+                var cueAdded = false;
+                try {
+                    track.addCue(new VTTCue(value.startTime, value.endTime, value.text));
+                    cueAdded = true;
+                } catch (e) {
+                    $log.warn("Browser does not support VTTCue");
+                }
+
+                if (!cueAdded) {
+                    try {
+                        track.addCue(new TextTrackCue(value.startTime, value.endTime, value.text));
+                        cueAdded = true;
+                    } catch (e) {
+                        $log.warn("Browser does not support TextTrackCue");
+                    }
+                }
+            };
+
+            $scope.playAt = function (seconds) {
+                var videoElement = angular.element(document.getElementsByTagName("video")[0])[0];
+                if (videoElement) {
+                    videoElement.pause();
+                    videoElement.currentTime = seconds;
+                    videoElement.play();
+                }
+            };
+
+            $scope.$bus.subscribe('update-viewer-opened-versions', function (openedVersions) {
+                $scope.fileInfo.selectedIds = openedVersions.map(function (openedVersion, index) {
+                    if (index == 0) {
+                        $scope.fileInfo.id = $stateParams['selectedIds'] + ":" + openedVersion.versionTag;
+                    }
+                    return $stateParams['selectedIds'] + ":" + openedVersion.versionTag;
+                }).join(',');
+
+                $scope.openSnowboundViewer();
+            });
 
             $scope.$on('notificationGroupSaved', function () {
                 $scope.onClickNextQueue($scope.nameButton, "true");
@@ -201,7 +344,6 @@ angular.module('request-info').controller(
                 });
             };
 
-            $scope.QueuesConstants = QueuesConstants;
             $scope.requestButtons = null;
             $scope.$sce = $sce; // used to allow snowbound url (on a different domain) to be injected by angular
 
@@ -210,38 +352,55 @@ angular.module('request-info').controller(
 
             $scope.printEnabled = false;
 
-            $scope.acmTicket = '';
-            $scope.userId = '';
-            $scope.userFullName = '';
-            $scope.ecmFileConfig = {};
-
             $scope.readOnly = true;
             $scope.assignedPerson = null;
             $scope.expandPreview = expandPreview;
 
-            // Obtains the currently logged in user
-            var promiseUserInfo = Authentication.queryUserInfo();
-
-            // Obtains a list of all users in ArkCase
-            var totalUserInfo = LookupService.getUsers();
-
-            var promiseFileTypes = ObjectLookupService.getFileTypes();
-
-            // Retrieves the metadata for the file which is being opened in the viewer
-            var ecmFileNameInfo = EcmService.getFile({
-                fileId: $stateParams['fileId']
-            });
-
-            // Obtains list of all documents within the request
-            var documentInfo = GenericRequestsService.queryDocument({
-                requestId: requestId
-            });
+            $scope.acmTicket = '';
+            $scope.userId = '';
+            $scope.userFullName = '';
+            $scope.ecmFileProperties = {};
+            $scope.snowboundUrl = '';
+            $scope.ecmFileEvents = [];
+            $scope.ecmFileParticipants = [];
+            $scope.userList = [];
+            $scope.caseInfo = {};
+            $scope.fileInfo = {
+                id: $stateParams['id'],
+                containerId: $stateParams['containerId'],
+                containerType: $stateParams['containerType'],
+                name: $stateParams['name'],
+                selectedIds: $stateParams['selectedIds']
+            };
+            $scope.showVideoPlayer = false;
+            $scope.showPdfJs = false;
+            $scope.transcriptionTabActive = false;
 
             // Obtains authentication token for ArkCase
             var ticketInfo = TicketService.getArkCaseTicket();
 
+            // Obtains the currently logged in user
+            var userInfo = Authentication.queryUserInfo();
+
+            // Obtains a list of all users in ArkCase
+            var totalUserInfo = LookupService.getUsers();
+
             // Retrieves the properties from the ecmFileService.properties file (including Snowbound configuration)
-            var ecmFileInfo = LookupService.getConfig('ecmFileService');
+            var ecmFileConfig = LookupService.getConfig("ecmFileService");
+
+            var formsConfig = LookupService.getConfig("acm-forms");
+
+            // Retrieves the metadata for the file which is being opened in the viewer
+            var ecmFileInfo = EcmService.getFile({
+                fileId: $stateParams['fileId']
+            });
+            var ecmFileEvents = EcmService.getFileEvents({
+                fileId: $stateParams['fileId']
+            });
+
+            var ecmFileParticipants = EcmService.getFileParticipants({
+                fileId: $stateParams['fileId']
+            });
 
             // Be sure that request info is loaded before we check lock permission
             var requestLockDeferred = $q.defer();
@@ -265,7 +424,6 @@ angular.module('request-info').controller(
                 $scope.requestInfo = objectInfo;
                 $scope.dateInfo = $scope.dateInfo || {};
                 $scope.dateInfo.dueDate = UtilDateService.isoToDate($scope.requestInfo.dueDate);
-                $scope.requestInfo.receivedDate = UtilDateService.dateToIsoDateTime(objectInfo.receivedDate);
                 if (!Util.isEmpty($scope.objectInfo.recordSearchDateFrom)) {
                     $scope.objectInfo.recordSearchDateFrom = moment(objectInfo.recordSearchDateFrom).format(UtilDateService.defaultDateTimeFormat);
                 }
@@ -418,7 +576,7 @@ angular.module('request-info').controller(
                         $scope.requestInfo.disposition = $scope.dispositionTypes[0].key;
                     }
                 });
-            }
+            };
 
             function populateRequestTrack(objectInfo) {
                 ObjectLookupService.getRequestTrack().then(function (requestTrack) {
@@ -462,18 +620,28 @@ angular.module('request-info').controller(
                 }
             };
 
-            $q.all([promiseUserInfo, documentInfo.$promise, ticketInfo, ecmFileInfo, requestLockDeferred.promise, totalUserInfo, ecmFileNameInfo, promiseFileTypes]).then(function (data) {
-                var userInfo = data[0];
-                var documentInfo = data[1];
-                $scope.acmTicket = data[2].data;
-                $scope.ecmFileConfig = data[3];
-                $scope.requestLockInfo = data[4];
-                $scope.userList = data[5];
-                $scope.ecmFile = data[6];
-                $scope.fileTypes = data[7];
+            $q.all([ticketInfo, userInfo, totalUserInfo, ecmFileConfig, ecmFileInfo.$promise, ecmFileEvents.$promise, ecmFileParticipants.$promise, formsConfig, transcriptionConfigurationPromise]).then(function (data) {
+                $scope.acmTicket = data[0].data;
+                $scope.userId = data[1].userId;
+                $scope.userFullName = data[1].fullName;
+                $scope.userList = data[2];
+                $scope.ecmFileProperties = data[3];
+                $scope.editingMode = !$scope.ecmFileProperties['ecm.viewer.snowbound.readonly.initialState'];
+                $scope.ecmFile = data[4];
+                $scope.ecmFileEvents = data[5];
+                $scope.ecmFileParticipants = data[6];
+                $scope.formsConfig = data[7];
+                $scope.transcriptionConfiguration = data[8];
+                $scope.fileInfo = buildFileInfo($scope.ecmFile, $scope.ecmFile.container.id);
 
-                $scope.userId = userInfo.userId;
-                $scope.userFullName = userInfo.fullName;
+                // default view == snowbound
+                $scope.view = "modules/document-details/views/document-viewer-snowbound.client.view.html";
+
+                $scope.transcribeEnabled = $scope.transcriptionConfiguration.data.enabled;
+
+                $timeout(function () {
+                    $scope.$broadcast('document-data', $scope.ecmFile);
+                }, 1000);
 
                 WorkflowsService.getSubscribers({
                     userId: $scope.userId,
@@ -511,7 +679,86 @@ angular.module('request-info').controller(
                         });
                     }
                 }
+
+                var key = $scope.ecmFile.fileType + ".name";
+                // Search for descriptive file type in acm-forms.properties
+                $scope.fileType = $scope.formsConfig[key];
+                if ($scope.fileType === undefined) {
+                    // If descriptive file type does not exist, fallback to previous raw file type
+                    $scope.fileType = $scope.ecmFile.fileType;
+                }
+
+                $scope.mediaType = $scope.ecmFile.fileActiveVersionMimeType.indexOf("video") === 0 ? "video" : ($scope.ecmFile.fileActiveVersionMimeType.indexOf("audio") === 0 ? "audio" : "other");
+
+                if ($scope.mediaType === "video" || $scope.mediaType === "audio") {
+                    $scope.config = {
+                        sources: [{
+                            src: $sce.trustAsResourceUrl('api/latest/plugin/ecm/stream/' + $scope.ecmFile.fileId),
+                            type: $scope.ecmFile.fileActiveVersionMimeType
+                        }],
+                        theme: "node_modules/@bower_components/videogular-themes-default/videogular.css",
+                        plugins: {
+                            poster: "branding/loginlogo.png"
+                        },
+                        autoPlay: false
+                    };
+                    $scope.showVideoPlayer = true;
+                    $scope.view = "modules/document-details/views/document-viewer-videogular.client.view.html";
+                } else if ($scope.mediaType === "pdf" && "pdfjs" === $scope.ecmFileProperties['ecm.viewer.pdfViewer']) {
+                    $scope.config = {
+                        src: $sce.trustAsResourceUrl('api/latest/plugin/ecm/stream/' + $scope.ecmFile.fileId)
+                    };
+                    $scope.showPdfJs = true;
+                    $scope.view = "modules/document-details/views/document-viewer-pdfjs.client.view.html";
+                } else {
+                    $scope.openSnowboundViewer();
+                }
+
+                $scope.transcriptionTabActive = $scope.showVideoPlayer && $scope.transcribeEnabled;
+
             });
+            $scope.onPlayerReady = function (API) {
+                $scope.videoAPI = API;
+            }
+
+            $scope.enableEditing = function () {
+                ObjectLockingService.lockObject($scope.ecmFile.fileId, ObjectService.ObjectTypes.FILE, ObjectService.LockTypes.WRITE, true).then(function (lockedFile) {
+                    $scope.editingMode = true;
+                    $scope.openSnowboundViewer();
+
+                    // count user idle time. When user is idle for more then 1 minute, don't acquire lock
+                    $scope._idleSecondsCounter = 0;
+                    document.onclick = function () {
+                        $scope._idleSecondsCounter = 0;
+                    };
+                    document.onmousemove = function () {
+                        $scope._idleSecondsCounter = 0;
+                    };
+                    document.onkeypress = function () {
+                        $scope._idleSecondsCounter = 0;
+                    };
+
+                    function incrementIdleSecondsCounter() {
+                        $scope._idleSecondsCounter++;
+                    }
+
+                    window.setInterval(incrementIdleSecondsCounter, 1000);
+
+                    // Refresh editing lock on timer
+                    UtilTimerService.useTimer('refreshFileEditingLock', 60000 // every 1 minute
+                        , function () {
+                            if ($scope._idleSecondsCounter <= 60) {
+                                ObjectLockingService.lockObject($scope.ecmFile.fileId, ObjectService.ObjectTypes.FILE, ObjectService.LockTypes.WRITE, true).then(undefined, function (errorMessage) {
+                                    MessageService.error(errorMessage.data);
+                                });
+                            }
+                            return true;
+                        });
+                }, function (errorMessage) {
+                    MessageService.error(errorMessage.data);
+                });
+
+            }
 
             /**
              * @ngdoc method
@@ -552,7 +799,7 @@ angular.module('request-info').controller(
                 // Generates and loads a url that will open the selected documents in the viewer
                 if ($scope.openOtherDocuments.length > 0) {
                     registerFileChangeEvents();
-                    var snowUrl = buildViewerUrlMultiple($scope.ecmFileConfig, $scope.acmTicket, $scope.userId, $scope.userFullName, $scope.openOtherDocuments);
+                    var snowUrl = buildViewerUrlMultiple($scope.ecmFileConfig, $scope.acmTicket, $scope.userId, $scope.userFullName, $scope.openOtherDocuments, !$scope.editingMode, $scope.requestInfo.caseNumber);
                     if (snowUrl) {
                         $scope.loadViewerIframe(snowUrl);
                     }
@@ -560,6 +807,15 @@ angular.module('request-info').controller(
                     $scope.loadViewerIframe('about:blank');
                 }
             }
+
+            /**
+             * Builds the snowbound url based on the parameters passed into the controller state and opens the specified document in
+             * an iframe which points to snowbound
+             */
+            $scope.openSnowboundViewer = function () {
+                var viewerUrl = SnowboundService.buildSnowboundUrl($scope.ecmFileProperties, $scope.acmTicket, $scope.userId, $scope.userFullName, $scope.fileInfo, !$scope.editingMode, $scope.requestInfo.caseNumber);
+                $scope.documentViewerUrl = $sce.trustAsResourceUrl(viewerUrl);
+            };
 
             /**
              * @ngdoc method
@@ -627,7 +883,6 @@ angular.module('request-info').controller(
                         ecmFilePromises.push(ecmFile.$promise);
                     });
                 }
-
 
                 $q.all(ecmFilePromises).then(function (result) {
                     angular.forEach(result, function (value, index) {
@@ -1094,7 +1349,7 @@ angular.module('request-info').controller(
                 return openDocIds;
             }
 
-            function buildViewerUrlMultiple(ecmFileProperties, acmTicket, userId, userFullName, files) {
+            function buildViewerUrlMultiple(ecmFileProperties, acmTicket, userId, userFullName, files, readonly, requestNumber) {
                 var viewerUrl = '';
 
                 if (files && files.length > 0) {
@@ -1107,7 +1362,7 @@ angular.module('request-info').controller(
                         }
 
                         // Generates the viewer url with the first document as the primary document
-                        viewerUrl = SnowboundService.buildSnowboundUrl(ecmFileProperties, acmTicket, userId, userFullName, files[0]);
+                        viewerUrl = SnowboundService.buildSnowboundUrl(ecmFileProperties, acmTicket, userId, userFullName, files[0], readonly, requestNumber);
                     }
                 }
                 return viewerUrl;
@@ -1141,7 +1396,6 @@ angular.module('request-info').controller(
                     }
                 });
             }
-
 
             UserInfoService.getUserInfo().then(function (infoData) {
                 $scope.currentUserProfile = infoData;
@@ -1179,4 +1433,33 @@ angular.module('request-info').controller(
                     $rootScope.$broadcast('dueDate-changed', $scope.extendedDueDate);
                 }
             };
+
+            // Release editing lock on window unload, if acquired
+            $window.addEventListener('beforeunload', function () {
+                if ($scope.editingMode) {
+                    ObjectLockingService.unlockObject($scope.ecmFile.fileId, ObjectService.ObjectTypes.FILE, ObjectService.LockTypes.WRITE);
+                }
+            });
+
+            $rootScope.$bus.subscribe("object.changed/FILE/" + $stateParams.id, function () {
+                DialogService.alert($translate.instant("documentDetails.fileChangedAlert")).then(function () {
+                    $scope.openSnowboundViewer();
+                });
+            });
         }]);
+/**
+ * 2018-06-01 David Miller. This block is needed to tell the PDF.js angular module, where the PDF.js library is. Without this, on minified
+ * systems the PDF.js viewer will not work. I copied this from the project web page,
+ * https://github.com/legalthings/angular-pdfjs-viewer#advanced-configuration.
+ *
+ * @param pdfjsViewerConfigProvider
+ * @returns
+ */
+angular.module('document-details').config(function (pdfjsViewerConfigProvider) {
+    pdfjsViewerConfigProvider.setWorkerSrc("node_modules/@bower_components/pdf.js-viewer/pdf.worker.js");
+    pdfjsViewerConfigProvider.setCmapDir("node_modules/@bower_components/pdf.js-viewer/cmaps");
+    pdfjsViewerConfigProvider.setImageDir("node_modules/@bower_components/pdf.js-viewer/images");
+
+    // pdfjsViewerConfigProvider.disableWorker();
+    pdfjsViewerConfigProvider.setVerbosity("infos"); // "errors", "warnings" or "infos"
+});

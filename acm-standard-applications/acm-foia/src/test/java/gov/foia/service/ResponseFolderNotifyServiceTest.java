@@ -132,6 +132,35 @@ public class ResponseFolderNotifyServiceTest extends EasyMockSupport
         responseFolderNotifyService.sendEmailNotification(requestId);
 
         verifyAll();
+        assertEquals(String.format("%s %s", FOIAConstants.EMAIL_RELEASE_SUBJECT, caseNumber),
+                captureReleaseNotifier.getValue().getTitle());
+        assertEquals(emailAddress, captureReleaseNotifier.getValue().getUserEmail());
+    }
+
+    @Test
+    public void testSendEmailResponseCompressNotification()
+    {
+        expect(mockedCaseFileDao.find(requestId)).andReturn(mockedRequest);
+
+        expect(mockedRequest.getOriginator()).andReturn(mockedPersonAssociation);
+        expect(mockedPersonAssociation.getPerson()).andReturn(mockedPerson);
+        expect(mockedPerson.getContactMethods()).andReturn(mockedContactMethods);
+        expect(mockedContactMethod.getType()).andReturn(emailType);
+        expect(mockedContactMethod.getValue()).andReturn(emailAddress);
+
+        expect(mockedRequest.getRequestType()).andReturn(requestType).anyTimes();
+        expect(mockedRequest.getCaseNumber()).andReturn(caseNumber).anyTimes();
+        expect(mockedRequest.getObjectType()).andReturn(objectType).anyTimes();
+        expect(mockedRequest.getId()).andReturn(requestId).anyTimes();
+
+        Capture<Notification> captureReleaseNotifier = Capture.newInstance();
+        expect(mockedNotificationSender.send(capture(captureReleaseNotifier))).andReturn(new Notification());
+
+        replayAll();
+
+        responseFolderNotifyService.sendEmailResponseCompressNotification(requestId);
+
+        verifyAll();
         assertEquals(String.format("%s %s", FOIAConstants.EMAIL_RESPONSE_FOLDER_ZIP, caseNumber),
                 captureReleaseNotifier.getValue().getTitle());
         assertEquals(emailAddress, captureReleaseNotifier.getValue().getUserEmail());

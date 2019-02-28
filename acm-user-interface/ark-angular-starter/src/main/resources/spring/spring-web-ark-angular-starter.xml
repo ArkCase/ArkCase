@@ -24,13 +24,16 @@
 
     <bean id="angularResourceCopier" class="com.armedia.acm.userinterface.angular.AngularResourceCopier">
         <property name="springActiveProfile" ref="acmSpringActiveProfile"/>
+        <property name="mergeConfigFrontendTask">
+            <value>${frontEndCommandPrefix}${frontEndCommandPath}grunt${frontEndCommandSuffix} updateModulesConfig --no-color</value>
+        </property>
         <property name="tempFolderPath" value="#{ systemProperties ['user.home'] }/.arkcase/tmp"/>
         <property name="deployFolderPath" value="#{ systemProperties ['user.home'] }/.arkcase/custom"/>
-        <property name="frontEndCommandsToBeExecuted">
-            <list>
-                <value>${frontEndCommandPrefix}yarn --no-progress --non-interactive install</value>
-                <value>${frontEndCommandPrefix}${frontEndCommandPath}grunt${frontEndCommandSuffix} --no-color</value>
-            </list>
+        <property name="yarnInstallCommand">
+            <value>${frontEndCommandPrefix}yarn --ignore-engines --no-progress --non-interactive install</value>
+        </property>
+        <property name="gruntDefaultCommand">
+            <value>${frontEndCommandPrefix}${frontEndCommandPath}grunt${frontEndCommandSuffix} --no-color</value>
         </property>
         <property name="resourceFoldersToCopyFromArchive">
             <list>
@@ -43,6 +46,7 @@
                 <value>services</value>
                 <value>templates</value>
                 <value>filters</value>
+                <value>lib</value>
             </list>
         </property>
         <property name="customResourceSourcesToCopyFromArchive">
@@ -52,6 +56,7 @@
                 <value>directives</value>
                 <value>modules</value>
                 <value>services</value>
+                <value>lib</value>
             </list>
         </property>
         <property name="assembledFoldersToCopyToDeployment">
@@ -63,6 +68,7 @@
                 <value>modules_config</value>
                 <value>services</value>
                 <value>filters</value>
+                <value>lib</value>
             </list>
         </property>
         <property name="filesToCopyFromArchive">

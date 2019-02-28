@@ -5,6 +5,8 @@
             "leftnav.item": "Queues"
         },
         "startWorking.btn": "Start Working",
+        "assignSelected.btn": "Assignment",
+        "selectRequest.selectMinOneRequest": "Please select at least one Request",
         "startWorking.noRequestToAssign": "All requests in this queue are already assigned or cannot be assigned to current user.",
         "search.placeholder": "Filter list...",
         "queues": {

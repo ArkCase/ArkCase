@@ -210,34 +210,38 @@ public class FOIAQueueCorrespondenceService
     {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String emailAddress = extractRequestorEmailAddress(request.getOriginator().getPerson());
-        if (emailAddress != null)
+        if(emailAddress != null || emailAddress != "")
         {
-            EmailWithAttachmentsDTO emailData = new EmailWithAttachmentsDTO();
-            emailData.setEmailAddresses(Arrays.asList(emailAddress));
-
-            emailData.setSubject(String.format("%s %s", request.getRequestType(), request.getCaseNumber()));
-            emailData.setHeader(EMAIL_HEADER_ATTACHMENT);
-            try
+            if (emailAddress != null)
             {
-                String body = getTemplatingEngine().process(emailBodyTemplate, "request", request);
-                emailData.setBody(body);
-                emailData.setTemplate(body);
+                EmailWithAttachmentsDTO emailData = new EmailWithAttachmentsDTO();
+                emailData.setEmailAddresses(Arrays.asList(emailAddress));
+
+                emailData.setSubject(String.format("%s %s", request.getRequestType(), request.getCaseNumber()));
+                emailData.setHeader(EMAIL_HEADER_ATTACHMENT);
+                try
+                {
+                    String body = getTemplatingEngine().process(emailBodyTemplate, "request", request);
+                    emailData.setBody(body);
+                    emailData.setTemplate(body);
+                }
+                catch (TemplateException | IOException e)
+                {
+                    // failing to send an email should not break the flow
+                    log.error("Unable to generate email for {} about {} with ID [{}]", emailAddress, request.getObjectType(), request.getId(),
+                            e);
+                    emailData.setBody(EMAIL_BODY_ATTACHMENT);
+                }
+
+                emailData.setFooter(EMAIL_FOOTER_ATTACHMENT);
+                emailData.setAttachmentIds(Arrays.asList(letter.getFileId()));
+
+                String userIdOrName = request.getCreator();
+                getNotificationSender().sendEmailWithAttachments(emailData, auth, getUserDao().findByUserId(userIdOrName));
+
             }
-            catch (TemplateException | IOException e)
-            {
-                // failing to send an email should not break the flow
-                log.error("Unable to generate email for {} about {} with ID [{}]", emailAddress, request.getObjectType(), request.getId(),
-                        e);
-                emailData.setBody(EMAIL_BODY_ATTACHMENT);
-            }
-
-            emailData.setFooter(EMAIL_FOOTER_ATTACHMENT);
-            emailData.setAttachmentIds(Arrays.asList(letter.getFileId()));
-
-            String userIdOrName = request.getCreator();
-            getNotificationSender().sendEmailWithAttachments(emailData, auth, getUserDao().findByUserId(userIdOrName));
-
         }
+
     }
 
     /**

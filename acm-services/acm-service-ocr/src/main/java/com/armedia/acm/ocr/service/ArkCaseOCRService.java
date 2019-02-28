@@ -6,27 +6,28 @@ package com.armedia.acm.ocr.service;
  * %%
  * Copyright (C) 2014 - 2018 ArkCase LLC
  * %%
- * This file is part of the ArkCase software. 
- * 
- * If the software was purchased under a paid ArkCase license, the terms of 
- * the paid license agreement will prevail.  Otherwise, the software is 
+ * This file is part of the ArkCase software.
+ *
+ * If the software was purchased under a paid ArkCase license, the terms of
+ * the paid license agreement will prevail.  Otherwise, the software is
  * provided under the following open source license terms:
- * 
+ *
  * ArkCase is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *  
+ *
  * ArkCase is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
  * #L%
  */
 
+import com.armedia.acm.core.model.AcmEvent;
 import com.armedia.acm.ocr.exception.CreateOCRException;
 import com.armedia.acm.ocr.exception.GetConfigurationException;
 import com.armedia.acm.ocr.exception.GetOCRException;
@@ -35,6 +36,7 @@ import com.armedia.acm.ocr.exception.SaveOCRException;
 import com.armedia.acm.ocr.factory.OCRServiceFactory;
 import com.armedia.acm.ocr.model.OCR;
 import com.armedia.acm.ocr.model.OCRConfiguration;
+import com.armedia.acm.ocr.model.OCRStatusType;
 import com.armedia.acm.ocr.model.OCRType;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
@@ -49,6 +51,15 @@ import java.util.List;
  */
 public interface ArkCaseOCRService extends OCRService
 {
+
+    /**
+     * This method will start process to create searchable PDF for given event
+     *
+     * @param event
+     *            - Added or Replaced event
+     */
+    @Transactional
+    public void create(AcmEvent event) throws CreateOCRException;
 
     /**
      * This method will create searchable PDF for given file version ID
@@ -91,6 +102,28 @@ public interface ArkCaseOCRService extends OCRService
      * @return OCR object
      */
     public OCR getByMediaVersionId(Long mediaVersionId) throws GetOCRException;
+
+    /**
+     * This method will return OCR object for given fileId
+     * *
+     *
+     * @param fileId
+     *            - ID of the file
+     * @return OCR object
+     */
+    public OCR getByFileId(Long fileId) throws GetOCRException;
+
+    /**
+     * This method will return OCR object from QUEUE for given fileId
+     * *
+     *
+     * @param fileId
+     *            - ID of the file
+     * @param statusType
+     *            - OCR status type
+     * @return OCR object
+     */
+    public OCR getByFileIdAndStatus(Long fileId, OCRStatusType statusType) throws GetOCRException;
 
     /**
      * This method will save given OCR object in database. The method should be used only for OCR
@@ -246,7 +279,7 @@ public interface ArkCaseOCRService extends OCRService
 
     /**
      * This method will verify that all required libraries are installed in order to enable OCR.
-     * 
+     *
      * @param configuration
      *            - OCR Configuration object
      * @throws SaveConfigurationException
@@ -284,4 +317,11 @@ public interface ArkCaseOCRService extends OCRService
      * @return OCRServiceFactory object
      */
     public OCRServiceFactory getOCRServiceFactory();
+    /**
+     * This method will return true if file type contains in ocr.excludedFileTypes
+     * in .arkcase/acm/ecmFileService.properties
+     *
+     * @return OCRServiceFactory object
+     */
+    public boolean isExcludedFileTypes(String fileType);
 }

@@ -50,7 +50,6 @@ import javax.imageio.ImageIO;
 import javax.imageio.ImageWriteParam;
 import javax.imageio.ImageWriter;
 import javax.imageio.stream.ImageOutputStream;
-import javax.xml.XMLConstants;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
@@ -128,7 +127,6 @@ public class PdfServiceImpl implements PdfService
             FOUserAgent foUserAgent = fopFactory.newFOUserAgent();
 
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
-            transformerFactory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
             Transformer transformer = transformerFactory.newTransformer(new StreamSource(xslFile));
 
             try (OutputStream os = new BufferedOutputStream(new FileOutputStream(filename)))
@@ -251,7 +249,6 @@ public class PdfServiceImpl implements PdfService
             FOUserAgent foUserAgent = fopFactory.newFOUserAgent();
 
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
-            transformerFactory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
             Transformer transformer = transformerFactory.newTransformer(new StreamSource(xslFile));
 
             parameters.forEach((name, value) -> transformer.setParameter(name, value != null ? value : "N/A"));

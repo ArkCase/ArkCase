@@ -100,7 +100,7 @@ public class AcmApplicationTaskEventListener implements ApplicationListener<AcmO
                     {
                         AcmApplicationTaskEvent taskEvent = new AcmApplicationTaskEvent(updatedTask, "status.changed", event.getUserId(),
                                 true, event.getIpAddress());
-                        getTaskEventPublisher().publishTaskEvent(taskEvent);
+                        getTaskEventPublisher().publishTaskEvent(taskEvent, "from " + existing.getStatus() + " to " + updatedTask.getStatus());
                     }
 
                     if (isReworkDetailsChanged(existing, updatedTask))

@@ -27,6 +27,7 @@ package gov.foia.service;
  * #L%
  */
 
+import static gov.foia.model.FOIAConstants.EMAIL_RELEASE_SUBJECT;
 import static gov.foia.model.FOIAConstants.EMAIL_RESPONSE_FOLDER_ZIP;
 import static gov.foia.model.FOIARequestUtils.extractRequestorEmailAddress;
 
@@ -73,6 +74,23 @@ public class ResponseFolderNotifyService
     }
 
     public void sendEmailNotification(Long requestId)
+    {
+        FOIARequest request = (FOIARequest) caseFileDao.find(requestId);
+        String emailAddress = extractRequestorEmailAddress(request.getOriginator().getPerson());
+        if (emailAddress != null)
+        {
+            Notification responseFolderNotifier = new Notification();
+            responseFolderNotifier.setUserEmail(emailAddress);
+            responseFolderNotifier.setTitle(String.format("%s %s", EMAIL_RELEASE_SUBJECT, request.getCaseNumber()));
+            responseFolderNotifier.setNote("requestReleased");
+            responseFolderNotifier.setParentType(request.getObjectType());
+            responseFolderNotifier.setParentId(request.getId());
+            getNotificationSender().send(responseFolderNotifier);
+        }
+
+    }
+
+    public void sendEmailResponseCompressNotification(Long requestId)
     {
         FOIARequest request = (FOIARequest) caseFileDao.find(requestId);
         String emailAddress = extractRequestorEmailAddress(request.getOriginator().getPerson());
