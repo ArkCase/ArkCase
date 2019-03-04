@@ -802,7 +802,7 @@ angular.module('services').factory('UtilService', [ '$q', '$log', '$filter', fun
             if (!data) {
                 return false;
             }
-            if (Util.isEmpty(data.responseHeader) || Util.isEmpty(data.response)) {
+            if (Util.isEmpty(data.response)) {
                 return false;
             }
             if (Util.isEmpty(data.responseHeader.status)) {
