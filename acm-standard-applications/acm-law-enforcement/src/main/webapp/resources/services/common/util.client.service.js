@@ -805,9 +805,6 @@ angular.module('services').factory('UtilService', [ '$q', '$log', '$filter', fun
             if (Util.isEmpty(data.response)) {
                 return false;
             }
-            if (Util.isEmpty(data.responseHeader.status)) {
-                return false;
-            }
             //            if (0 != responseHeader.status) {
             //                return false;
             //            }
