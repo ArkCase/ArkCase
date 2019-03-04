@@ -357,7 +357,7 @@ public class ExecuteSolrQuery
             throws MuleException
     {
         return getResultsByPredefinedQuery(auth, core, solrQuery, firstRow, maxRows, sort, indent, rowQueryParameters, filterParentRef,
-                filterSubscriptionEvents, defaultField, true, "");
+                filterSubscriptionEvents, defaultField, true, fields);
     }
 
     /**
