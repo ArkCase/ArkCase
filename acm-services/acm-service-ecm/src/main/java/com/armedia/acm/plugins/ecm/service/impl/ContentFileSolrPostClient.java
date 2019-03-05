@@ -107,7 +107,7 @@ public class ContentFileSolrPostClient implements SolrPostClient, ApplicationEve
         InputStreamResource inputStreamResource = new InputStreamResource(contentStream.getStream());
         HttpEntity<InputStreamResource> entity = new HttpEntity<>(inputStreamResource, headers);
 
-        getSolrRestClient().postToSolr(core.getCore(), getSolrContentFileHandler(), entity, logText, urlWithPlaceholders);
+        getSolrRestClient().postToSolr(core.getCore(), getSolrContentFileHandler(), entity, logText, urlWithPlaceholders, urlValues);
 
         applicationEventPublisher.publishEvent(new EcmFileContentIndexedEvent(solrContentDocument));
 
