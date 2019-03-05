@@ -1,7 +1,0 @@
-[
-    {
-        "op": "replace",
-        "path": "/menus/?@.id=='topbar'/position",
-        "value": 70
-    }
-]
