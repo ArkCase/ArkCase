@@ -10,8 +10,9 @@
         "value": 20
     },
     {
-        "op": "remove",
-        "path": "/tree/nodeTypes/?@.type=='p/TASK/documentsunderrev'"
+        "op": "replace",
+        "path": "/tree/nodeTypes/?@.label=='tasks.tree.nodeTypes.docReview.label'/type",
+        "value": "p/TASK/docrev"
     },
     {
         "op": "replace",
@@ -31,20 +32,24 @@
     },
     {
         "op": "remove",
+        "path": "/tree/nodeTypes/?@.type=='p/ADHOC/docrev'"
+    },
+    {
+        "op": "remove",
         "path": "/tree/nodeTypes/?@.type=='p/ERROR'"
     },
     {
         "op": "replace",
-        "path": "/components/?@.id=='main'/widgets/?@.id=='documentsunderreview'/?@.displayName=='tasks.comp.documentsunderreview.table.columns.created'/name",
+        "path": "/components/?@.id=='main'/widgets/?@.id=='documentsunderreview'/columnDefs/?@.displayName=='tasks.comp.documentsunderreview.table.columns.created'/name",
         "value": "created"
     },
     {
         "op": "remove",
-        "path": "/components/?@.id='main'/widgets/?@.id=='documentsunderreview'/?@.displayName=='tasks.comp.documentsunderreview.table.columns.created'/cellTemplate"
+        "path": "/components/?@.id='main'/widgets/?@.id=='documentsunderreview'/columnDefs/?@.displayName=='tasks.comp.documentsunderreview.table.columns.created'/cellTemplate"
     },
     {
         "op": "remove",
-        "path": "/components/?@.id='main'/widgets/?@.id=='documentsunderreview'/?@.name=='status'/cellTemplate"
+        "path": "/components/?@.id='main'/widgets/?@.id=='documentsunderreview'/columnDefs/?@.name=='status'/cellTemplate"
     },
     {
         "op": "remove",
@@ -63,21 +68,16 @@
     },
     {
         "op": "remove",
-        "path": "/components/?@.id=='documentsunderreview'/doctree/nodeCacheKeyPrefix"
+        "path": "/components/?@.id=='documentsunderreview'/docTree/nodeCacheKeyPrefix"
     },
     {
         "op": "remove",
-        "path": "/components/?@.id=='tags'/columnDefs/?@.name=='creator'"
+        "path": "/components/?@.id=='tags'/columnDefs/?@.name=='creator'/lookup"
     },
     {
-        "op": "replace",
-        "path": "/components/?@.id=='tags'/columnDefs/?@.name=='creator'",
-        "value": {
-            "name": "creator",
-            "displayName": "tasks.comp.tags.table.columns.createdBy",
-            "headerCellFilter": "translate",
-            "fullNameField": "creator_full_name_lcs"
-        }
+        "op": "add",
+        "path": "/components/?@.id=='tags'/columnDefs/?@.name=='creator'/fullNameField",
+        "value": "creator_full_name_lcs"
     },
     {
         "op": "replace",
