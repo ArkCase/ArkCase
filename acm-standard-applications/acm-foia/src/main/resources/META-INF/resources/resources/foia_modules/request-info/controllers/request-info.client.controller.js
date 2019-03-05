@@ -620,7 +620,9 @@ angular.module('request-info').controller(
                 }
             };
 
-            $q.all([ticketInfo, userInfo, totalUserInfo, ecmFileConfig, ecmFileInfo.$promise, ecmFileEvents.$promise, ecmFileParticipants.$promise, formsConfig, transcriptionConfigurationPromise]).then(function (data) {
+            var getCaseInfo = CaseInfoService.getCaseInfo($stateParams['id']);
+            
+            $q.all([ticketInfo, userInfo, totalUserInfo, ecmFileConfig, ecmFileInfo.$promise, ecmFileEvents.$promise, ecmFileParticipants.$promise, formsConfig, transcriptionConfigurationPromise, getCaseInfo]).then(function (data) {
                 $scope.acmTicket = data[0].data;
                 $scope.userId = data[1].userId;
                 $scope.userFullName = data[1].fullName;
@@ -633,6 +635,7 @@ angular.module('request-info').controller(
                 $scope.formsConfig = data[7];
                 $scope.transcriptionConfiguration = data[8];
                 $scope.fileInfo = buildFileInfo($scope.ecmFile, $scope.ecmFile.container.id);
+                $scope.requestInfo.caseNumber = data[9].caseNumber;
 
                 // default view == snowbound
                 $scope.view = "modules/document-details/views/document-viewer-snowbound.client.view.html";
