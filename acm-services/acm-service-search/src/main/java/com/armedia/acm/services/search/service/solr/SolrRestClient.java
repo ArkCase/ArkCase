@@ -29,6 +29,7 @@ package com.armedia.acm.services.search.service.solr;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -36,17 +37,59 @@ import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.Map;
+
 public class SolrRestClient
 {
 
-
-    private transient final Logger logger = LoggerFactory.getLogger(getClass());
     private transient final RestTemplate restTemplate = new RestTemplate();
+    private transient final Logger logger = LoggerFactory.getLogger(getClass());
     private String solrHost;
     private int solrPort;
     private String solrContextRoot;
 
-    public void postToSolr(String core, String contentHandler, HttpEntity<? extends Object> entity, String logText, String extraUrlParams)
+    public void postToSolr(String core, String contentHandler, HttpEntity<InputStreamResource> entity, String logText,
+            String urlWithPlaceholders, Map<String, Object> urlValues)
+            throws SolrPostException
+    {
+        String url = String.format("https://%s:%s/%s/%s/%s?overwrite=true&%s",
+                getSolrHost(),
+                getSolrPort(),
+                getSolrContextRoot(),
+                core,
+                contentHandler,
+                urlWithPlaceholders);
+
+        try
+        {
+            ResponseEntity<String> response = restTemplate.postForEntity(url, entity, String.class, urlValues);
+            if (isRecoverable(response.getStatusCode()))
+            {
+                logger.error("Could not post to Solr: [{}], got response code {}", logText, response.getStatusCode().value());
+                throw new SolrPostException(String.format("Could not post [%s] to Solr: %s", logText, response.getStatusCode()));
+            }
+
+            logger.debug("Posted to Solr: [{}], got response code {}", logText, response.getStatusCode().value());
+        }
+        catch (HttpStatusCodeException e)
+        {
+            if (isRecoverable(e.getStatusCode()))
+            {
+                throw new SolrPostException(String.format("Could not post [%s] to Solr: %s", logText, e.getMessage()));
+            }
+            else
+            {
+                logger.error("Could not send [{}] to Solr, got an unrecoverable error {}", logText, e.getStatusCode());
+            }
+        }
+        catch (RestClientException e)
+        {
+            throw new SolrPostException(String.format("Could not post [%s] to Solr: %s", logText, e.getMessage()));
+        }
+
+    }
+
+    public void postToSolr(String core, String contentHandler, HttpEntity<? extends Object> entity, String logText)
             throws SolrPostException
     {
         String url = String.format("https://%s:%s/%s/%s/%s?overwrite=true",
@@ -55,10 +98,6 @@ public class SolrRestClient
                 getSolrContextRoot(),
                 core,
                 contentHandler);
-        if (extraUrlParams != null && !extraUrlParams.trim().isEmpty())
-        {
-            url += extraUrlParams.startsWith("&") ? extraUrlParams : "&" + extraUrlParams;
-        }
 
         try
         {
@@ -91,7 +130,7 @@ public class SolrRestClient
 
     /**
      * Is the exception such that the request may succeed if we try again?
-     * 
+     *
      * @param e
      * @return
      */
