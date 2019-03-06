@@ -147,7 +147,7 @@ public class FOIARequestDao extends AcmAbstractDao<FOIARequest>
 
         if (portalRequestStatus.getLastName() != null && !portalRequestStatus.getLastName().equals("undefined"))
         {
-            foiaRequests.setParameter("lastName", portalRequestStatus.getLastName());
+            foiaRequests.setParameter("lastName", portalRequestStatus.getLastName().trim());
         }
 
         List<Object[]> resultList = foiaRequests.getResultList();

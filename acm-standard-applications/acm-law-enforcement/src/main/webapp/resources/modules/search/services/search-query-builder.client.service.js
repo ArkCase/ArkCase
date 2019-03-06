@@ -90,7 +90,10 @@ angular.module('search').factory(
                  * @returns {HttpPromise} Future info about cancel status
                  */
                 buildSafeFqFacetedSearchQuerySorted: function(input, filters, n, start, sort, getParentDocument) {
-                    return (filters ? (encodeURIComponent(input) + "&filters=" + filters.replace(/&fq=/gi, '%26fq%3D') + "&n=" + n + "&start=" + start + "&s=" + sort + "&getParentDocument=" + getParentDocument) : (encodeURIComponent(input) + "&n=" + n + "&start=" + start + "&s=" + sort + "&getParentDocument=" + getParentDocument));
+                    var facedSearchQuerySorted = (filters ? (encodeURIComponent(input) + "&filters=" + filters.replace(/&fq=/gi, '%26fq%3D') + "&n=" + n + "&start=" + start + "&s=" + sort) : (encodeURIComponent(input) + "&n=" + n + "&start=" + start + "&s=" + sort));
+                    if (getParentDocument)
+                        facedSearchQuerySorted += "&getParentDocument=" + getParentDocument;
+                    return facedSearchQuerySorted;
                 }
 
             }
