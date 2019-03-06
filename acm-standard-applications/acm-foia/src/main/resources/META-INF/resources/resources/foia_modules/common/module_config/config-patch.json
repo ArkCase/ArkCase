@@ -78,22 +78,12 @@
     },
     {
         "op": "replace",
-        "path": "/docTree/components/?@.id=='main'/width",
-        "value": "7%"
-    },
-    {
-        "op": "replace",
-        "path": "/docTree/components/?@.id=='main'/index",
+        "path": "/docTree/columnDefs/?@.name=='status'/index",
         "value": 11
     },
     {
         "op": "replace",
-        "path": "/docTree/components/?@.id=='status'/index",
-        "value": 11
-    },
-    {
-        "op": "replace",
-        "path": "/docTree/components/?@.id=='status'/width",
+        "path": "/docTree/columnDefs/?@.name=='status'/width",
         "value": "7%"
     },
     {
@@ -111,7 +101,7 @@
     },
     {
         "op": "add",
-        "path": "/docTree/menu/basic/folder/",
+        "path": "/docTree/menu/basic/folder/-",
         "value": {
             "titleKey": "common.directive.docTree.menu.generateZip",
             "cmd": "generateZipFile",
@@ -121,14 +111,14 @@
     },
     {
         "op": "add",
-        "path": "/docTree/menu/basic/folder/",
+        "path": "/docTree/menu/basic/folder/-",
         "value": {
             "title": "----"
         }
     },
     {
         "op": "add",
-        "path": "/docTree/menu/basic/folder/",
+        "path": "/docTree/menu/basic/folder/-",
         "value": {
             "titleKey": "common.directive.docTree.menu.makeAllPublic",
             "cmd": "makeAllPublic",
@@ -137,7 +127,7 @@
     },
     {
         "op": "add",
-        "path": "/docTree/menu/basic/folder/",
+        "path": "/docTree/menu/basic/folder/-",
         "value": {
             "titleKey": "common.directive.docTree.menu.makeAllNonPublic",
             "cmd": "makeAllNonPublic",
@@ -146,14 +136,14 @@
     },
     {
         "op": "add",
-        "path": "/docTree/menu/basic/file/",
+        "path": "/docTree/menu/basic/file/-",
         "value": {
             "title": "----"
         }
     },
     {
         "op": "add",
-        "path": "/docTree/menu/basic/file/",
+        "path": "/docTree/menu/basic/file/-",
         "value": {
             "titleKey": "common.directive.docTree.menu.makePublic",
             "cmd": "makePublic",
@@ -162,7 +152,7 @@
     },
     {
         "op": "add",
-        "path": "/docTree/menu/basic/file/",
+        "path": "/docTree/menu/basic/file/-",
         "value": {
             "titleKey": "common.directive.docTree.menu.makeNonPublic",
             "cmd": "makeNonPublic",
@@ -171,11 +161,15 @@
     },
     {
         "op": "remove",
-        "path": "/docTree/menu/record/?@.___title=='Rename <kbd>[F2]</kbd>'"
+        "path": "/docTree/menu/record/folder/?@.titleKey=='common.directive.docTree.menu.rename'"
+    },
+    {
+        "op": "remove",
+        "path": "/docTree/menu/batch/files/?@.cmd=='reviewDocument'"
     },
     {
         "op": "add",
-        "path": "/docTree/menu/record/",
+        "path": "/docTree/menu/record/folder/-",
         "value": {
             "titleKey": "common.directive.docTree.menu.generateZip",
             "cmd": "generateZipFile",
@@ -185,7 +179,7 @@
     },
     {
         "op": "add",
-        "path": "/docTree/menu/record/",
+        "path": "/docTree/menu/record/folder/-",
         "value": {
             "titleKey": "common.directive.docTree.menu.makeAllPublic",
             "cmd": "makeAllPublic",
@@ -194,7 +188,7 @@
     },
     {
         "op": "add",
-        "path": "/docTree/menu/record/",
+        "path": "/docTree/menu/record/folder/-",
         "value": {
             "titleKey": "common.directive.docTree.menu.makeAllNonPublic",
             "cmd": "makeAllNonPublic",
@@ -203,7 +197,7 @@
     },
     {
         "op": "add",
-        "path": "/docTree/menu/record/file/",
+        "path": "/docTree/menu/record/file/-",
         "value": {
             "titleKey": "common.directive.docTree.menu.makePublic",
             "cmd": "makePublic",
@@ -212,7 +206,7 @@
     },
     {
         "op": "add",
-        "path": "/docTree/menu/record/file/",
+        "path": "/docTree/menu/record/file/-",
         "value": {
             "titleKey": "common.directive.docTree.menu.makeNonPublic",
             "cmd": "makeNonPublic",
@@ -221,18 +215,18 @@
     },
     {
         "op": "remove",
-        "path": "/docTree/menu/batch/files/?@.title=='New Task'"
+        "path": "/docTree/menu/record/file/?@.title=='New Task'"
     },
     {
         "op": "add",
-        "path": "/docTree/menu/batch/files/",
+        "path": "/docTree/menu/batch/files/-",
         "value": {
             "title": "----"
         }
     },
     {
         "op": "add",
-        "path": "/docTree/menu/batch/files/",
+        "path": "/docTree/menu/batch/files/-",
         "value": {
             "titleKey": "common.directive.docTree.menu.makeAllPublic",
             "cmd": "makeAllPublic",
@@ -241,7 +235,7 @@
     },
     {
         "op": "add",
-        "path": "/docTree/menu/batch/files/",
+        "path": "/docTree/menu/batch/files/-",
         "value": {
             "titleKey": "common.directive.docTree.menu.makeAllNonPublic",
             "cmd": "makeAllNonPublic",
@@ -250,14 +244,14 @@
     },
     {
         "op": "add",
-        "path": "/docTree/menu/batch/folders/",
+        "path": "/docTree/menu/batch/folders/-",
         "value": {
             "title": "----"
         }
     },
     {
         "op": "add",
-        "path": "/docTree/menu/batch/folders/",
+        "path": "/docTree/menu/batch/folders/-",
         "value": {
             "titleKey": "common.directive.docTree.menu.makeAllPublic",
             "cmd": "makeAllPublic",
@@ -266,7 +260,7 @@
     },
     {
         "op": "add",
-        "path": "/docTree/menu/batch/folders/",
+        "path": "/docTree/menu/batch/folders/-",
         "value": {
             "titleKey": "common.directive.docTree.menu.makeAllNonPublic",
             "cmd": "makeAllNonPublic",
@@ -275,14 +269,14 @@
     },
     {
         "op": "add",
-        "path": "/docTree/menu/batch/filesAndFolders/",
+        "path": "/docTree/menu/batch/filesAndFolders/-",
         "value": {
             "title": "----"
         }
     },
     {
         "op": "add",
-        "path": "/docTree/menu/batch/filesAndFolders/",
+        "path": "/docTree/menu/batch/filesAndFolders/-",
         "value": {
             "titleKey": "common.directive.docTree.menu.makeAllPublic",
             "cmd": "makeAllPublic",
@@ -291,7 +285,7 @@
     },
     {
         "op": "add",
-        "path": "/docTree/menu/batch/filesAndFolders/",
+        "path": "/docTree/menu/batch/filesAndFolders/-",
         "value": {
             "titleKey": "common.directive.docTree.menu.makeAllNonPublic",
             "cmd": "makeAllNonPublic",
@@ -300,7 +294,7 @@
     },
     {
         "op": "add",
-        "path": "/docTree/menu/batch/filesOrFoldersRecord/",
+        "path": "/docTree/menu/batch/filesOrFoldersRecord/-",
         "value": {
             "titleKey": "common.directive.docTree.menu.makeAllPublic",
             "cmd": "makeAllPublic",
@@ -309,7 +303,7 @@
     },
     {
         "op": "add",
-        "path": "/docTree/menu/batch/filesOrFoldersRecord/",
+        "path": "/docTree/menu/batch/filesOrFoldersRecord/-",
         "value": {
             "titleKey": "common.directive.docTree.menu.makeAllNonPublic",
             "cmd": "makeAllNonPublic",
@@ -355,13 +349,7 @@
         }
     },
     {
-        "op": "replace",
-        "path": "/docTree/dialogObjectPicker/columnDefs/?@.name=='title_parseable'/__introduce_OnClickOpenFileFunction/cellTemplate",
-        "value": "<a href='#' ng-click='grid.appScope.onClickOpenFile($event, row.entity, true)'>{{row.entity.title_parseable}}</a>"
-    },
-    {
-        "op": "replace",
-        "path": "/docTree/dialogObjectPicker/columnDefs/?@.field=='parent_ref_s'/__change_OnClickOpenObjectFunction/cellTemplate",
-        "value": "<a ng-if='row.entity.parent_document.title_parseable' ng-href='#' ng-click='grid.appScope.onClickObjLink($event, {parentId:row.entity.parent_ref_s, object_type_s:row.entity.parent_ref_s}, true, true)'>{{row.entity.parent_document.title_parseable}}</a>"
+        "op": "remove",
+        "path": "/docTree/dialogObjectPicker/parentDocument"
     }
 ]
