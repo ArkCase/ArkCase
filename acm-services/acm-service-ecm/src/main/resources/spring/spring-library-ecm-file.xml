@@ -273,6 +273,9 @@
     </bean>
 
     <bean id="progressIndicatorService" class="com.armedia.acm.plugins.ecm.service.ProgressIndicatorService">
+    </bean>
+
+    <bean id="progressbarExecutor" class="com.armedia.acm.plugins.ecm.service.ProgressbarExecutor" scope="prototype">
         <property name="activeMQConnectionFactory" ref="amqConnectionFactory"/>
         <property name="jmsTemplate" ref="jmsTemplate"/>
     </bean>

@@ -28,6 +28,7 @@ package com.armedia.acm.plugins.ecm.pipeline.presave;
  */
 
 import com.armedia.acm.plugins.ecm.model.EcmFile;
+import com.armedia.acm.plugins.ecm.model.FileUploadStage;
 import com.armedia.acm.plugins.ecm.model.ProgressbarDetails;
 import com.armedia.acm.plugins.ecm.pipeline.EcmFileTransactionPipelineContext;
 import com.armedia.acm.plugins.ecm.service.ProgressIndicatorService;
@@ -101,9 +102,9 @@ public class EcmFileNewContentHandler implements PipelineHandler<EcmFile, EcmFil
             {
                 log.error("mule pre save handler failed: {}", e.getMessage(), e);
                 ProgressbarExecutor progressbarExecutor = progressIndicatorService.getExecutor(entity.getUuid());
-                if (entity.getUuid() != null && progressbarExecutor != null && progressbarExecutor.getProgressbarDetails().getStage() == 2)
+                if (entity.getUuid() != null && progressbarExecutor != null && progressbarExecutor.getProgressbarDetails().getStage() == FileUploadStage.UPLOAD_CHUNKS_TO_FILESYSTEM.getValue())
                 {
-                    log.debug("Stop progressbar executor in stage 3, for file {} and set file upload success to {}", entity.getUuid(),
+                    log.debug("Stop progressbar executor in stage 2, for file {} and set file upload success to {}", entity.getUuid(),
                             false);
                     progressIndicatorService.end(entity.getUuid(), false);
                 }
