@@ -12,53 +12,57 @@ String targetType = getObjectType(query, rowQueryParametars)
 
 boolean includeDenyAccessFilter = message.getInboundProperty("includeDenyAccessFilter")
 
+StringBuilder dataAccessFilter = StringBuilder.newInstance();
+
 if (includeDACFilter) {
     if (!enableDocumentACL && targetType != null && (targetType.equals("FILE")
             || targetType.equals("FOLDER") || targetType.contentEquals("CONTAINER"))) {
         message.setInboundProperty("dataAccessFilter", "")
     } else {
-        StringBuilder dataAccessFilter = StringBuilder.newInstance();
-        dataAccessFilter.plus("(protected_object_b:true AND (allow_user_ls:").plus(authenticatedUserId)
+        dataAccessFilter.append("(protected_object_b:true AND (allow_user_ls:" + authenticatedUserId)
 
         for (Long groupId : authenticatedUserGroupIds) {
             // include records where current user is in a group on allow_group_ls
-            dataAccessFilter.plus(" OR allow_group_ls:").plus(groupId)
+            dataAccessFilter.append(" OR allow_group_ls:" + groupId)
         }
-        dataAccessFilter.plus(")) OR (public_doc_b:true OR protected_object_b:false OR (*:* -protected_object_b:[* TO *]) ").plus(
-                "OR parent_allow_user_ls:").plus(authenticatedUserId)
+        dataAccessFilter.append(")) OR (public_doc_b:true OR protected_object_b:false OR (*:* -protected_object_b:[* TO *]) " +
+                "OR parent_allow_user_ls:" + authenticatedUserId)
 
         for (Long groupId : authenticatedUserGroupIds) {
             // include records where current user is in a group on parent_allow_group_ls
-            dataAccessFilter.plus(" OR parent_allow_group_ls:").plus(groupId)
+            dataAccessFilter.append(" OR parent_allow_group_ls:" + groupId)
         }
-        dataAccessFilter.plus(")")
+        dataAccessFilter.append(")")
         message.setInboundProperty("dataAccessFilter", URLEncoder.encode(dataAccessFilter.toString(), StandardCharsets.UTF_8.displayName()))
     }
 } else {
     message.setInboundProperty("dataAccessFilter", "")
 }
 
+StringBuilder denyAccessFilter = StringBuilder.newInstance();
+
 if (includeDenyAccessFilter) {
     // exclude records where the user is specifically locked out
-    StringBuilder denyAccessFilter = StringBuilder.newInstance();
-    denyAccessFilter.plus("-deny_user_ls:").plus(authenticatedUserId)
+    denyAccessFilter.append("-deny_user_ls:" + authenticatedUserId)
     for (Long groupId : authenticatedUserGroupIds) {
         // exclude records where current user is in a locked-out group
-        denyAccessFilter.plus(" AND -deny_group_ls:").plus(groupId)
+        denyAccessFilter.append(" AND -deny_group_ls:" + groupId)
     }
-    denyAccessFilter.plus(" AND -deny_parent_user_ls:").plus(authenticatedUserId)
+    denyAccessFilter.append(" AND -deny_parent_user_ls:" + authenticatedUserId)
 
     for (Long groupId : authenticatedUserGroupIds) {
         // exclude records where current user is in a locked-out group
-        denyAccessFilter.plus(" AND -deny_parent_group_ls:").plus(groupId)
+        denyAccessFilter.append(" AND -deny_parent_group_ls:" + groupId)
     }
     message.setInboundProperty("denyAccessFilter", URLEncoder.encode(denyAccessFilter.toString(), StandardCharsets.UTF_8.displayName()))
 } else {
     message.setInboundProperty("denyAccessFilter", "")
 }
 
+
 message.setInboundProperty("childObjectDacFilter", "")
 message.setInboundProperty("childObjectFilterQuery", "")
+
 
 String subscribedFilter = "{!join from=id to=related_subscription_ref_s}object_type_s:SUBSCRIPTION"
 boolean filterSubscriptionEvents = message.getInboundProperty("filterSubscriptionEvents")
