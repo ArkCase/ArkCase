@@ -9,6 +9,7 @@
         <property name="arkPermissionEvaluator" ref="arkPermissionEvaluator"/>
         <property name="fileChunkService" ref="fileChunkService"/>
         <property name="ecmFileServiceProperties" ref="ecmFileServiceProperties"/>
+        <property name="permissionEvaluator" ref="arkPermissionEvaluator"/>
     </bean>
 
     <bean id="fileDownloadAPIController" class="com.armedia.acm.plugins.ecm.web.api.FileDownloadAPIController">

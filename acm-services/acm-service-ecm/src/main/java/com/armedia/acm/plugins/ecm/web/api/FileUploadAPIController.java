@@ -78,6 +78,7 @@ public class FileUploadAPIController implements ApplicationEventPublisherAware
     private ApplicationEventPublisher applicationEventPublisher;
     private FileChunkService fileChunkService;
     private Properties ecmFileServiceProperties;
+    private ArkPermissionEvaluator permissionEvaluator;
 
     // #parentObjectType == 'USER_ORG' applies to uploading profile picture
     @PreAuthorize("hasPermission(#parentObjectId, #parentObjectType, 'uploadOrReplaceFile') or #parentObjectType == 'USER_ORG'")
@@ -161,17 +162,16 @@ public class FileUploadAPIController implements ApplicationEventPublisherAware
                 {
                     for (final MultipartFile attachment : attachmentsList)
                     {
-                        AcmMultipartFile f = new AcmMultipartFile(attachment.getName(), attachment.getOriginalFilename(),
-                                attachment.getContentType(), attachment.isEmpty(), attachment.getSize(), attachment.getBytes(),
-                                attachment.getInputStream(), true);
+                        AcmMultipartFile acmMultipartFile = new AcmMultipartFile(attachment, true);
 
                         EcmFile metadata = new EcmFile();
                         metadata.setFileType(fileType);
                         metadata.setFileLang(fileLang);
                         metadata.setFileName(attachment.getOriginalFilename());
-                        metadata.setFileActiveVersionMimeType(f.getContentType());
+                        metadata.setFileActiveVersionMimeType(acmMultipartFile.getContentType());
                         metadata.setUuid(request.getParameter("uuid"));
-                        EcmFile temp = getEcmFileService().upload(authentication, f, folderCmisId, parentObjectType, parentObjectId,
+                        EcmFile temp = getEcmFileService().upload(authentication, acmMultipartFile, folderCmisId, parentObjectType,
+                                parentObjectId,
                                 metadata);
                         uploadedFiles.add(temp);
 
@@ -235,6 +235,7 @@ public class FileUploadAPIController implements ApplicationEventPublisherAware
         return folder;
     }
 
+    @PreAuthorize("hasPermission(#folderId, 'FOLDER', 'write|group-write')")
     @RequestMapping(value = "/uploadChunks", method = RequestMethod.POST, produces = { MediaType.APPLICATION_JSON_VALUE,
             MediaType.TEXT_PLAIN_VALUE })
     @ResponseBody
@@ -276,20 +277,27 @@ public class FileUploadAPIController implements ApplicationEventPublisherAware
                     uniqueArkCaseHashFileIdentifier);
         }
 
-        FileChunkDetails filechunkdetails = new FileChunkDetails();
-        filechunkdetails.setFileName(fileName);
-        filechunkdetails.setUuid(request.getParameter("uuid"));
-        return filechunkdetails;
+        FileChunkDetails fileChunkDetails = new FileChunkDetails();
+        fileChunkDetails.setFileName(fileName);
+        fileChunkDetails.setUuid(request.getParameter("uuid"));
+        return fileChunkDetails;
     }
 
     @RequestMapping(value = "/mergeChunks", method = RequestMethod.POST, produces = { MediaType.APPLICATION_JSON_VALUE,
             MediaType.TEXT_PLAIN_VALUE })
     @ResponseBody
-    public void mergeChunks(@RequestBody FileDetails fileDetails, Authentication authentication) throws Exception
+    public ResponseEntity mergeChunks(@RequestBody FileDetails fileDetails, Authentication authentication) throws Exception
     {
+        log.info("Merging chunks file [{}] per user [{}]", fileDetails.getObjectId(), authentication.getName());
+        boolean hasPermission = isActionAllowed(authentication, "write|group-write", fileDetails.getObjectId());
+        if (!hasPermission)
+        {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
 
         AcmFolder folder = getParentFolder(fileDetails.getObjectType(), fileDetails.getObjectId(), fileDetails.getFolderId());
         Document existingFile = null;
+
         if (fileDetails.getExistingFileId() != null)
         {
             EcmFile existingEcmFile = getEcmFileService().findById(fileDetails.getExistingFileId());
@@ -297,6 +305,7 @@ public class FileUploadAPIController implements ApplicationEventPublisherAware
                     existingEcmFile.getVersionSeriesId());
         }
         getFileChunkService().mergeAndUploadFiles(fileDetails, folder, existingFile, authentication);
+        return new ResponseEntity(HttpStatus.OK);
     }
 
     public AcmFolderService getAcmFolderService()
@@ -368,5 +377,15 @@ public class FileUploadAPIController implements ApplicationEventPublisherAware
     public void setEcmFileServiceProperties(Properties ecmFileServiceProperties)
     {
         this.ecmFileServiceProperties = ecmFileServiceProperties;
+    }
+
+    private boolean isActionAllowed(Authentication authentication, String action, Long targetId)
+    {
+        return permissionEvaluator.hasPermission(authentication, targetId, "FILE", action);
+    }
+
+    public void setPermissionEvaluator(ArkPermissionEvaluator permissionEvaluator)
+    {
+        this.permissionEvaluator = permissionEvaluator;
     }
 }

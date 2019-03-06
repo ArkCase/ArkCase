@@ -34,6 +34,7 @@ import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
+import com.armedia.acm.plugins.ecm.model.FileUploadStage;
 import com.armedia.acm.plugins.ecm.model.ProgressbarDetails;
 import com.armedia.acm.plugins.ecm.pipeline.EcmFileTransactionPipelineContext;
 import com.armedia.acm.plugins.ecm.service.EcmFileTransaction;
@@ -64,7 +65,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.multipart.MultipartFile;
 import org.xml.sax.SAXException;
 
-import javax.mail.Multipart;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -112,9 +112,151 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
     }
 
     @Override
+    @Deprecated
     public EcmFile addFileTransaction(Authentication authentication, String ecmUniqueFilename, AcmContainer container,
             String targetCmisFolderId, InputStream fileContents, EcmFile metadata,
-            Document existingCmisDocument, Object... args) throws MuleException, IOException
+            Document existingCmisDocument) throws MuleException, IOException
+    {
+
+        log.debug("Creating ecm file pipeline context");
+
+        File tempFileContents = null;
+        try
+        {
+            tempFileContents = File.createTempFile("arkcase-upload-temp-file-", null);
+            FileUtils.copyInputStreamToFile(fileContents, tempFileContents);
+
+            EcmTikaFile detectedMetadata = null;
+
+            try
+            {
+                detectedMetadata = extractFileMetadata(tempFileContents, metadata.getFileName());
+            }
+            catch (SAXException | TikaException e)
+            {
+                log.error("Could not extract metadata with Tika: [{}]", e.getMessage(), e);
+            }
+
+            String activeVersionMimeType = metadata.getFileActiveVersionMimeType();
+            if (activeVersionMimeType == null && detectedMetadata != null)
+            {
+                activeVersionMimeType = detectedMetadata.getContentType();
+            }
+
+            if (activeVersionMimeType != null && activeVersionMimeType.contains(";"))
+            {
+                activeVersionMimeType = metadata.getFileActiveVersionMimeType().split(";")[0];
+            }
+
+            if (activeVersionMimeType != null && detectedMetadata != null
+                    && ((detectedMetadata.getContentType().equals(activeVersionMimeType)) ||
+                            (getAllTikaMimeTypesForFile(mimeTypesByTika, activeVersionMimeType)
+                                    .contains(detectedMetadata.getContentType()))))
+            {
+
+                Pair<String, String> mimeTypeAndExtension = buildMimeTypeAndExtension(detectedMetadata, ecmUniqueFilename,
+                        metadata.getFileActiveVersionMimeType());
+                String finalMimeType = mimeTypeAndExtension.getLeft();
+                String finalExtension = mimeTypeAndExtension.getRight();
+
+                ecmUniqueFilename = getFolderAndFilesUtils().getBaseFileName(ecmUniqueFilename, finalExtension);
+
+                EcmFileTransactionPipelineContext pipelineContext = buildEcmFileTransactionPipelineContext(authentication,
+                        tempFileContents, targetCmisFolderId, container, metadata.getFileName(), existingCmisDocument,
+                        detectedMetadata, ecmUniqueFilename);
+
+                boolean searchablePDF = false;
+                if (ocrEnabled)
+                {
+                    searchablePDF = folderAndFilesUtils.isSearchablePDF(tempFileContents, finalMimeType);
+                }
+                pipelineContext.setSearchablePDF(searchablePDF);
+
+                String fileName = getFolderAndFilesUtils().getBaseFileName(metadata.getFileName(), finalExtension);
+                metadata.setFileName(fileName);
+                metadata.setFileActiveVersionMimeType(finalMimeType);
+                metadata.setFileActiveVersionNameExtension(finalExtension);
+
+                try
+                {
+                    log.debug("Calling pipeline manager handlers");
+                    getEcmFileUploadPipelineManager().executeOperation(metadata, pipelineContext, () -> metadata);
+                }
+                catch (Exception e)
+                {
+                    log.error("pipeline handler call failed: {}", e.getMessage(), e);
+                    if (e.getCause() != null && MuleException.class.isAssignableFrom(e.getCause().getClass()))
+                    {
+                        throw (MuleException) e.getCause();
+                    }
+                }
+                log.debug("Returning from addFileTransaction method");
+                return pipelineContext.getEcmFile();
+            }
+            else
+            {
+                log.error("Uploaded file with name [{}] - MIME type [{}] is not compatible with advertised type [{}]",
+                        metadata.getFileName(), metadata.getFileType(), metadata.getFileActiveVersionMimeType());
+                throw new IOException("Uploaded file's " + metadata.getFileName() + " MIME type " + metadata.getFileActiveVersionMimeType()
+                        + " is not compatible. " + metadata.getFileType());
+            }
+        }
+        finally
+        {
+            FileUtils.deleteQuietly(tempFileContents);
+        }
+    }
+
+    @Override
+    @Deprecated
+    public EcmFile addFileTransaction(Authentication authentication, String ecmUniqueFilename, AcmContainer container,
+            String targetCmisFolderId, InputStream fileContents, EcmFile metadata) throws MuleException, IOException
+    {
+        Document existingCmisDocument = null;
+        return addFileTransaction(authentication, ecmUniqueFilename, container, targetCmisFolderId, fileContents,
+                metadata, existingCmisDocument);
+
+    }
+
+
+    @Override
+    @Deprecated
+    public EcmFile addFileTransaction(String originalFileName, Authentication authentication, String fileType,
+                                      String fileCategory, InputStream fileInputStream, String mimeType, String fileName,
+                                      String cmisFolderId, AcmContainer container, String cmisRepositoryId)
+            throws MuleException, IOException
+    {
+        Document existingCmisDocument = null;
+        return addFileTransaction(originalFileName, authentication, fileType, fileCategory, fileInputStream,
+                mimeType, fileName, cmisFolderId, container, cmisRepositoryId, existingCmisDocument);
+    }
+
+    @Override
+    @Deprecated
+    public EcmFile addFileTransaction(String originalFileName, Authentication authentication, String fileType,
+                                      String fileCategory, InputStream fileContents, String fileContentType,
+                                      String fileName, String targetCmisFolderId, AcmContainer container,
+                                      String cmisRepositoryId, Document existingCmisDocument) throws MuleException, IOException
+    {
+
+        log.debug("Creating ecm file pipeline context");
+
+        EcmFile metadata = new EcmFile();
+        metadata.setFileActiveVersionMimeType(fileContentType);
+        metadata.setFileType(fileType);
+        metadata.setFileName(fileName);
+        metadata.setCategory(fileCategory);
+        metadata.setCmisRepositoryId(cmisRepositoryId);
+
+        return addFileTransaction(authentication, originalFileName, container, targetCmisFolderId, fileContents,
+                metadata, existingCmisDocument);
+
+    }
+
+    @Override
+    public EcmFile addFileTransaction(Authentication authentication, String ecmUniqueFilename, AcmContainer container,
+            String targetCmisFolderId, InputStream fileContents, EcmFile metadata,
+            Document existingCmisDocument, MultipartFile file) throws MuleException, IOException
     {
 
         log.debug("Creating ecm file pipeline context");
@@ -126,9 +268,8 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
             CountingInputStream countingInputStream = new CountingInputStream(fileContents);
             // this reports progress on file system. Also should store info for the broker, for which part of the
             // progress it is loading for the filesystem or the activity upload from 50% to 59%
-            if (metadata.getUuid() != null && args != null && args.length > 0 && args[0] instanceof MultipartFile)
+            if (metadata.getUuid() != null && file != null)
             {
-                MultipartFile file = (MultipartFile) args[0];
                 ProgressbarDetails progressbarDetails = new ProgressbarDetails();
                 progressbarDetails.setProgressbar(true);
                 progressbarDetails.setStage(2);
@@ -232,7 +373,7 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
         {
             // stop the progressbar executor
             ProgressbarExecutor progressbarExecutor = progressIndicatorService.getExecutor(metadata.getUuid());
-            if (metadata.getUuid() != null && progressbarExecutor != null && progressbarExecutor.getProgressbarDetails().getStage() == 2)
+            if (metadata.getUuid() != null && progressbarExecutor != null && progressbarExecutor.getProgressbarDetails().getStage() == FileUploadStage.UPLOAD_CHUNKS_TO_FILESYSTEM.getValue())
             {
                 log.debug("Stop progressbar executor in stage 2, for file {} and set file upload success to {}", metadata.getUuid(), false);
                 progressIndicatorService.end(metadata.getUuid(), false);
@@ -248,46 +389,12 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
 
     @Override
     public EcmFile addFileTransaction(Authentication authentication, String ecmUniqueFilename, AcmContainer container,
-            String targetCmisFolderId, InputStream fileContents, EcmFile metadata, Object... args)
+            String targetCmisFolderId, InputStream fileContents, EcmFile metadata, MultipartFile file)
             throws MuleException, IOException
     {
         Document existingCmisDocument = null;
         return addFileTransaction(authentication, ecmUniqueFilename, container, targetCmisFolderId, fileContents,
-                metadata, existingCmisDocument, args);
-    }
-
-    @Override
-    @Deprecated
-    public EcmFile addFileTransaction(String originalFileName, Authentication authentication, String fileType,
-            String fileCategory, InputStream fileInputStream, String mimeType, String fileName,
-            String cmisFolderId, AcmContainer container, String cmisRepositoryId)
-            throws MuleException, IOException
-    {
-        Document existingCmisDocument = null;
-        return addFileTransaction(originalFileName, authentication, fileType, fileCategory, fileInputStream,
-                mimeType, fileName, cmisFolderId, container, cmisRepositoryId, existingCmisDocument);
-    }
-
-    @Override
-    @Deprecated
-    public EcmFile addFileTransaction(String originalFileName, Authentication authentication, String fileType,
-            String fileCategory, InputStream fileContents, String fileContentType,
-            String fileName, String targetCmisFolderId, AcmContainer container,
-            String cmisRepositoryId, Document existingCmisDocument) throws MuleException, IOException
-    {
-
-        log.debug("Creating ecm file pipeline context");
-
-        EcmFile metadata = new EcmFile();
-        metadata.setFileActiveVersionMimeType(fileContentType);
-        metadata.setFileType(fileType);
-        metadata.setFileName(fileName);
-        metadata.setCategory(fileCategory);
-        metadata.setCmisRepositoryId(cmisRepositoryId);
-
-        return addFileTransaction(authentication, originalFileName, container, targetCmisFolderId, fileContents,
-                metadata, existingCmisDocument);
-
+                metadata, existingCmisDocument, file);
     }
 
     @Deprecated

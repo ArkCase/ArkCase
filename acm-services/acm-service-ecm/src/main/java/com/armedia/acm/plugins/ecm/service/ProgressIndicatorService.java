@@ -31,9 +31,8 @@ import com.armedia.acm.plugins.ecm.model.ProgressbarDetails;
 import org.apache.commons.io.input.CountingInputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.jms.core.JmsTemplate;
-
-import javax.jms.ConnectionFactory;
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -42,15 +41,14 @@ public class ProgressIndicatorService
     private Logger LOG = LoggerFactory.getLogger(getClass());
 
     private Map<String, ProgressbarExecutor> progressBars = new HashMap<>();
-    private JmsTemplate jmsTemplate;
-    private ConnectionFactory activeMQConnectionFactory;
+    @Autowired
+    private BeanFactory beanFactory;
 
     public void start(CountingInputStream inputStream, long size, Long id, String type, String name, String username,
             ProgressbarDetails progressbarDetails)
     {
         LOG.debug("Setup progressbar executor for file {}", name);
-        ProgressbarExecutor executor = new ProgressbarExecutor(progressbarDetails.getUuid(), username, activeMQConnectionFactory,
-                jmsTemplate);
+        ProgressbarExecutor executor = beanFactory.getBean(ProgressbarExecutor.class, progressbarDetails.getUuid(), username);
 
         LOG.debug("Setup all progressbar details needed, which later will be displayed on UI");
         executor.setProgressbarDetails(progressbarDetails);
@@ -74,15 +72,5 @@ public class ProgressIndicatorService
     public ProgressbarExecutor getExecutor(String uuid)
     {
         return progressBars.get(uuid);
-    }
-
-    public void setJmsTemplate(JmsTemplate jmsTemplate)
-    {
-        this.jmsTemplate = jmsTemplate;
-    }
-
-    public void setActiveMQConnectionFactory(ConnectionFactory activeMQConnectionFactory)
-    {
-        this.activeMQConnectionFactory = activeMQConnectionFactory;
     }
 }

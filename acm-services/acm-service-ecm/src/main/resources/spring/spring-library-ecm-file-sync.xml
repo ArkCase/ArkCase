@@ -63,6 +63,6 @@
 
     <!-- Check for old, expired files once a day. -->
     <task:scheduled-tasks scheduler="deleteExpiredFilesScheduler">
-        <task:scheduled ref="removeExpiredFilesJob" method="deleteExpiredFiles" cron="* * 23 * * *"/>
+        <task:scheduled ref="removeExpiredFilesJob" method="deleteExpiredFiles" cron="* 5 * * * *"/>
     </task:scheduled-tasks>
 </beans>

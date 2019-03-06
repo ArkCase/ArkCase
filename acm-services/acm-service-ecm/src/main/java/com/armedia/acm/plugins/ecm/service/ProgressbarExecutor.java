@@ -27,15 +27,19 @@ package com.armedia.acm.plugins.ecm.service;
  * #L%
  */
 
+import com.armedia.acm.plugins.ecm.model.FileUploadStage;
 import com.armedia.acm.plugins.ecm.model.ProgressbarDetails;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import org.apache.activemq.command.ActiveMQTopic;
 import org.apache.commons.io.input.CountingInputStream;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.jms.core.JmsTemplate;
 
 import javax.jms.*;
+import javax.json.JsonException;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -51,12 +55,14 @@ public class ProgressbarExecutor
     private ConnectionFactory activeMQConnectionFactory;
     private ProgressbarDetails progressbarDetails;
 
-    public ProgressbarExecutor(String ID, String username, ConnectionFactory activeMQConnectionFactory, JmsTemplate jmsTemplate)
-    {
+    private Logger LOG = LoggerFactory.getLogger(getClass());
+
+    public ProgressbarExecutor() {
+    }
+
+    public ProgressbarExecutor(String ID, String username) {
         this.ID = ID;
         this.username = username;
-        this.activeMQConnectionFactory = activeMQConnectionFactory;
-        this.jmsTemplate = jmsTemplate;
     }
 
     public void send(ProgressbarDetails message, String destination)
@@ -72,7 +78,8 @@ public class ProgressbarExecutor
             }
             catch (JsonProcessingException e)
             {
-                // Print error
+                LOG.error("Error while creating JSON from Object: " + e.getMessage(), e);
+                throw new JsonException("Unable to process JSON");
             }
 
             TextMessage theTextMessage = inJmsSession.createTextMessage(jsonMessageObj);
@@ -90,7 +97,7 @@ public class ProgressbarExecutor
             public void run()
             {
                 int _currentProgress = 0;
-                if (progressbarDetails.getStage() == 2)
+                if (progressbarDetails.getStage() == FileUploadStage.UPLOAD_CHUNKS_TO_FILESYSTEM.getValue())
                 {
 
                     partProgress = fileInputStream.getByteCount();
@@ -109,7 +116,7 @@ public class ProgressbarExecutor
                                 "VirtualTopic.UploadFileManager:" + username.replaceAll("\\.", "_DOT_").replaceAll("@", "_AT_"));
                     }
                 }
-                else if (progressbarDetails.getStage() == 3)
+                else if (progressbarDetails.getStage() == FileUploadStage.UPLOAD_TO_ALFRESCO.getValue())
                 {
                     partProgress = fileInputStream.getByteCount();
 
@@ -193,5 +200,6 @@ public class ProgressbarExecutor
     {
         this.progressbarDetails = progressbarDetails;
     }
+
 
 }
