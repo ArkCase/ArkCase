@@ -344,13 +344,13 @@ public class ArkPermissionEvaluator implements PermissionEvaluator, Initializing
             // if the Solr search returns the object, the user has read access to it.
             String result = getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.ADVANCED_SEARCH, query,
                     0, 1, "id asc", indent, objectType, filterParent,
-                    filterSubscriptionEvents, SearchConstants.DEFAULT_FIELD, shouldIncludeACLFilter);
+                    filterSubscriptionEvents, SearchConstants.DEFAULT_FIELD, shouldIncludeACLFilter, "");
 
             if (result.contains("numFound\":0"))
             {
                 result = getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.QUICK_SEARCH, query, 0,
                         1, "id asc", indent, objectType, filterParent, filterSubscriptionEvents,
-                        SearchConstants.DEFAULT_FIELD, shouldIncludeACLFilter);
+                        SearchConstants.DEFAULT_FIELD, shouldIncludeACLFilter, "");
             }
             return result;
         }
