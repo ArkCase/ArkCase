@@ -24,7 +24,7 @@
         </scripting:transformer>
 
         <set-payload
-            value="q=#[message.inboundProperties['query']]&amp;fq=#[message.inboundProperties['dataAccessFilter']]&amp;fq=#[message.inboundProperties['denyAccessFilter']]&amp;fq=#[message.inboundProperties['childObjectFilterQuery']]&amp;fq=#[message.inboundProperties['isSubscribed']]&amp;dac=#[message.inboundProperties['childObjectDacFilter']]&amp;start=#[message.inboundProperties['firstRow']]&amp;rows=#[message.inboundProperties['maxRows']]&amp;wt=json&amp;sort=#[message.inboundProperties['sort']]&amp;#[message.inboundProperties['rowQueryParametars']]&amp;indent=#[message.inboundProperties['indent']]#[message.inboundProperties['df'] != empty ? '&amp;df=' + message.inboundProperties['df'] : '']"/>
+            value="q=#[message.inboundProperties['query']]&amp;fq=#[message.inboundProperties['dataAccessFilter']]&amp;fq=#[message.inboundProperties['denyAccessFilter']]&amp;fq=#[message.inboundProperties['childObjectFilterQuery']]&amp;fq=#[message.inboundProperties['isSubscribed']]&amp;topLevel=#[message.inboundProperties['isTopLevelObjectFilter']]&amp;dac=#[message.inboundProperties['childObjectDacFilter']]&amp;start=#[message.inboundProperties['firstRow']]&amp;rows=#[message.inboundProperties['maxRows']]&amp;wt=json&amp;sort=#[message.inboundProperties['sort']]&amp;#[message.inboundProperties['rowQueryParametars']]&amp;indent=#[message.inboundProperties['indent']]#[message.inboundProperties['df'] != empty ? '&amp;df=' + message.inboundProperties['df'] : '']"/>
 
         <logger category="com.armedia.acm.plugins.search" level="DEBUG"/>
         <logger category="com.armedia.acm.plugins.search" level="INFO" message="Payload: #[message.payload]"/>

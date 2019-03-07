@@ -2,7 +2,7 @@
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:security="http://www.springframework.org/schema/security"
     xmlns:context="http://www.springframework.org/schema/context" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
-		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.1.xsd
+		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.2.xsd
 		http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.2.xsd
         http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
@@ -119,7 +119,49 @@
         Enable serving of classpath with Spring 3 resource serving mechanism. For example:
         /webflow-primefaces-showcase/app/resources/styles/blueprint/print.css
     -->
-    <mvc:resources mapping="/resources/**" location="/resources/"/>
+    <mvc:default-servlet-handler/>
+
+    <!-- provided max-age value is in seconds. In this example max-age = 30 days, and s-maxage = 365 days -->
+    <mvc:resources mapping="/lib/**" location="/lib/">
+        <mvc:cache-control max-age="2592000" s-maxage="31536000" cache-public="false" cache-private="true"/>
+        <mvc:resource-chain resource-cache="true" auto-registration="false">
+            <mvc:resolvers>
+                <bean class="org.springframework.web.servlet.resource.PathResourceResolver"/>
+            </mvc:resolvers>
+        </mvc:resource-chain>
+    </mvc:resources>
+
+    <!--All files under /assets/dist  will be versioned, and we could cache as long as possible. If file is changed, newer version will be used.-->
+
+    <mvc:resources mapping="/assets/dist/**" location="/assets/dist/">
+        <mvc:cache-control max-age="2592000" cache-public="true" s-maxage="2592000" cache-private="true"/>
+    </mvc:resources>
+
+    <!--Cache for 30 min, allow proxy to cache for 15 min-->
+    <mvc:resources mapping="/assets/css/**" location="/assets/css/">
+        <mvc:cache-control max-age="1800" cache-public="true" s-maxage="900" cache-private="true"/>
+    </mvc:resources>
+
+    <!--Cache for 30 min, allow proxy to cache for 15 min-->
+    <mvc:resources mapping="/assets/img/**" location="/assets/img/">
+        <mvc:cache-control max-age="1800" cache-public="true" s-maxage="900" cache-private="true"/>
+    </mvc:resources>
+
+    <!--Cache for 30 min, allow proxy to cache for 15 min-->
+    <mvc:resources mapping="/modules_config/**" location="/modules_config/">
+        <mvc:cache-control max-age="1800" cache-public="true" s-maxage="900" cache-private="true"/>
+    </mvc:resources>
+
+    <!-- Cache external resources which are not possible to add version to the name of the file. Strategy is: Cache for 1 hour, and than check for etag if changed, if not cache for 1 more hour, etc...-->
+    <mvc:resources mapping="/assets/js/**" location="/assets/js/">
+        <mvc:cache-control max-age="3600" cache-public="true" s-maxage="900" cache-private="true"/>
+        <mvc:resource-chain resource-cache="true" auto-registration="false">
+            <mvc:resolvers>
+                <bean class="com.armedia.acm.web.api.PathResourceResolverWithETag"/>
+            </mvc:resolvers>
+        </mvc:resource-chain>
+    </mvc:resources>
+
 
     <mvc:default-servlet-handler/>
 
