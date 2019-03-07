@@ -194,12 +194,6 @@
         </addColumn>
     </changeSet>
 
-    <changeSet id="14-add-parent-object-type-index" author="ilinpetar" failOnError="false">
-        <createIndex tableName="acm_audit_log" indexName="idx_audit_log_parent_object_id">
-            <column name="cm_parent_object_id"/>
-        </createIndex>
-    </changeSet>
-
     <changeSet id="14-add-index-parent_object_id" author="ilinpetar">
         <preConditions onFail="MARK_RAN">
             <not>
