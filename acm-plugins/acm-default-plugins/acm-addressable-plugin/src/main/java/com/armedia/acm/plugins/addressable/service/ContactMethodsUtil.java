@@ -54,6 +54,7 @@ public final class ContactMethodsUtil
 
         List<ContactMethod> invalidPhones = contactMethods.stream()
                 .filter(m -> "phone".equals(m.getType().toLowerCase()))
+                .filter(m -> !m.getValue().isEmpty())
                 .filter(m -> !ContactMethod.PHONE_REGEX.matcher(m.getValue()).matches())
                 .collect(Collectors.toList());
 
