@@ -30,7 +30,7 @@
         <property name="tempFolderPath" value="#{ systemProperties ['user.home'] }/.arkcase/tmp"/>
         <property name="deployFolderPath" value="#{ systemProperties ['user.home'] }/.arkcase/custom"/>
         <property name="yarnInstallCommand">
-            <value>${frontEndCommandPrefix}yarn --ignore-engines --no-progress --non-interactive install</value>
+            <value>${frontEndCommandPrefix}yarn --skip-integrity-check --ignore-engines --no-progress --non-interactive install</value>
         </property>
         <property name="gruntDefaultCommand">
             <value>${frontEndCommandPrefix}${frontEndCommandPath}grunt${frontEndCommandSuffix} --no-color</value>
