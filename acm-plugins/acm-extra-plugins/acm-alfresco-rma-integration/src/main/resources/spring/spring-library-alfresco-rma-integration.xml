@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
+    xmlns:aop="http://www.springframework.org/schema/aop"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
 
     <bean id="alfrescoRmaPluginPropertiesForSpring" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
         <!-- note: must leave "file:" at the start of the file name for spring
@@ -30,6 +31,8 @@
         <property name="declareRecordService" ref="declareRecordService"/>
         <property name="findFolderService" ref="findFolderService"/>
         <property name="setRecordMetadataService" ref="setRecordMetadataService"/>
+        <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
+        <aop:scoped-proxy proxy-target-class="true"/>
     </bean>
 
     <bean id="acmComplaintCloseListener" class="com.armedia.acm.plugins.alfrescorma.service.AcmComplaintClosedListener">
