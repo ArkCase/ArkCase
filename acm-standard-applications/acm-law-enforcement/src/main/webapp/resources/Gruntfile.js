@@ -76,7 +76,6 @@ module.exports = function(grunt) {
                 dest : 'assets/dist/vendors.min.js'
             }
         },
-
         cacheBust: {
             taskName: {
                 options: {
