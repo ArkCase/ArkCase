@@ -10,7 +10,7 @@
  *
  *  The WidgetService is used for fetching data from news api service and for fetching RSS data.
  */
-angular.module('dashboard').factory('Dashboard.WidgetService', [ '$http', function($http) {
+angular.module('dashboard').factory('Dashboard.WidgetService', ['$http', '$log', '$q', function ($http, $log, $q) {
 
     var data = {
         'getNews': getNews

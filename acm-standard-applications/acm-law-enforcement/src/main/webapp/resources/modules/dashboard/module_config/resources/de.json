@@ -165,7 +165,10 @@
                 "title": "Nachrichten",
                 "noDataMessage": "Derzeit gibt es kein RSS / info",
                 "configDescription": "Beschreibung",
-                "configDescriptionPlaceholder": "Widget-Beschreibung eingeben"
+                "configDescriptionPlaceholder": "Widget-Beschreibung eingeben",
+                "message": {
+                    "error": "Ungültige URL"
+                }
             },
             "details": {
                 "title": "Einzelheiten",
