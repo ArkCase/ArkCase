@@ -608,6 +608,11 @@
                 "weekly": "Weekly",
                 "monthly": "Monthly",
                 "yearly": "Yearly"
+            },
+            "sequenceName": {
+                "selectSequence": "Select sequence name",
+                "caseNumberSequence": "caseNumberSequence",
+                "complaintNumberSequence": "complaintNumberSequence"
             }
         },
         "userInfo": {

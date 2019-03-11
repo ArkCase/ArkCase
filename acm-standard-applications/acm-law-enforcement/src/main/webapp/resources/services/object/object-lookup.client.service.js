@@ -77,7 +77,21 @@ angular.module('services').factory('Object.LookupService', [ '$q', '$resource', 
     Service.getResetRepeatPeriod = function() {
         return Service.getLookupByLookupName("sequenceResetPeriod");
     };
-    
+
+    /**
+     * @ngdoc method
+     * @name getSequenceName
+     * @methodOf services:Object.LookupService
+     *
+     * @description
+     * Returns a list of sequence names
+     *
+     * @returns {Object} An array returned by $resource
+     */
+
+    Service.getSequenceName = function() {
+        return Service.getLookupByLookupName("sequenceName");
+    };
 
     /**
      * @ngdoc method
