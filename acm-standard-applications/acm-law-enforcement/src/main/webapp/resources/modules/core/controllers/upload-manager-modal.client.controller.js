@@ -61,7 +61,7 @@ angular.module('core').controller('UploadManagerModalController',
                     }
                 }
 
-                if (!foundInProgress && !Util.isEmpty(fileReadyToUpload)) {
+                if (!foundInProgress && !Util.isObjectEmpty(fileReadyToUpload)) {
                     uploadPart(fileReadyToUpload.uuid);
                 } else {
                     notifySnackbarUploadFinished();
@@ -80,6 +80,7 @@ angular.module('core').controller('UploadManagerModalController',
             var params = {};
             params.uuid = uuid;
             params.isFileChunk = true;
+            params.folderId = $scope.hashMapOfAllFiles[uuid].folderId;
 
             var currentFileDetails = $scope.hashMapOfAllFiles[uuid];
             if (!Util.isEmpty(currentFileDetails.file) && (!$scope.enableFileChunkUpload || currentFileDetails.file.size <= currentFileDetails.partBytes)) {
@@ -124,16 +125,9 @@ angular.module('core').controller('UploadManagerModalController',
                     data.fileType = $scope.hashMapOfAllFiles[_uuid].fileType;
                     data.fileLang = $scope.hashMapOfAllFiles[_uuid].fileLang;
                     data.uuid = _uuid;
-                    $http({
-                        method: "POST",
-                        url: 'api/latest/service/ecm/mergeChunks',
-                        data: data
-                    }).then(function(){
-                        $log.info('NESTO');
-                    })
-                    /*UploadManagerModalService.mergeChunks(data).then(function() {
+                    UploadManagerModalService.mergeChunks(data).then(function() {
                         $log.info('Merge chunk files successful');
-                    });*/
+                    });
                 }
                 $scope.onClickCloseModal = function() {
                     $modalInstance.dismiss('close');
@@ -150,10 +144,10 @@ angular.module('core').controller('UploadManagerModalController',
                 var total = 0;
                 if ($scope.enableFileChunkUpload && $scope.hashMapOfAllFiles[uuid].file.size > $scope.uploadFileSizeLimit) {
                     total = currentProgress < $scope.hashMapOfAllFiles[uuid].file.size ? $scope.hashMapOfAllFiles[uuid].file.size : currentProgress;
-                    $scope.hashMapOfAllFiles[uuid].currentProgress = parseInt(50.0 * (currentProgress / total)) == 0 ? 50.0 : parseInt(50.0 * (currentProgress / total));
+                    $scope.hashMapOfAllFiles[uuid].currentProgress = parseInt(50.0 * (currentProgress / total));
                 } else {
                     total = progress.total;
-                    $scope.hashMapOfAllFiles[uuid].currentProgress = parseInt(50.0 * (currentProgress / total)) == 0 ? 50.0 : parseInt(50.0 * (currentProgress / total));
+                    $scope.hashMapOfAllFiles[uuid].currentProgress = parseInt(50.0 * (currentProgress / total));
                     if ($scope.hashMapOfAllFiles[uuid].currentProgress == 100 && $scope.hashMapOfAllFiles[uuid].status != ObjectService.UploadFileStatus.FINISHED) {
                         $scope.hashMapOfAllFiles[uuid].status = ObjectService.UploadFileStatus.FINISHED;
                         var message = {};

@@ -31,6 +31,7 @@ public class FileChunkDetails
 {
     String fileName;
     String uuid;
+    Long folderId;
 
     public FileChunkDetails()
     {
@@ -41,10 +42,11 @@ public class FileChunkDetails
         this.fileName = fileName;
     }
 
-    public FileChunkDetails(String fileName, String uuid)
+    public FileChunkDetails(String fileName, String uuid, Long folderId)
     {
         this.fileName = fileName;
         this.uuid = uuid;
+        this.folderId = folderId;
     }
 
     public String getFileName()
@@ -65,5 +67,13 @@ public class FileChunkDetails
     public void setUuid(String uuid)
     {
         this.uuid = uuid;
+    }
+
+    public Long getFolderId() {
+        return folderId;
+    }
+
+    public void setFolderId(Long folderId) {
+        this.folderId = folderId;
     }
 }

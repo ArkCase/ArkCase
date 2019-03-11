@@ -235,7 +235,6 @@ public class FileUploadAPIController implements ApplicationEventPublisherAware
         return folder;
     }
 
-    @PreAuthorize("hasPermission(#folderId, 'FOLDER', 'write|group-write')")
     @RequestMapping(value = "/uploadChunks", method = RequestMethod.POST, produces = { MediaType.APPLICATION_JSON_VALUE,
             MediaType.TEXT_PLAIN_VALUE })
     @ResponseBody
@@ -272,7 +271,11 @@ public class FileUploadAPIController implements ApplicationEventPublisherAware
         }
         else
         {
-
+            if (!getArkPermissionEvaluator().hasPermission(authentication, folderId, "FOLDER", "write|group-write"))
+            {
+                throw new AcmAccessControlException(Arrays.asList(""),
+                        "The user {" + authentication.getName() + "} is not allowed to write to folder with id=" + folderId);
+            }
             fileName = getEcmFileService().uploadFileChunk((MultipartHttpServletRequest) request, fileName,
                     uniqueArkCaseHashFileIdentifier);
         }
@@ -280,6 +283,7 @@ public class FileUploadAPIController implements ApplicationEventPublisherAware
         FileChunkDetails fileChunkDetails = new FileChunkDetails();
         fileChunkDetails.setFileName(fileName);
         fileChunkDetails.setUuid(request.getParameter("uuid"));
+        fileChunkDetails.setFolderId(Long.parseLong(request.getParameter("folderId")));
         return fileChunkDetails;
     }
 
