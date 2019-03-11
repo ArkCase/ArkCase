@@ -29,6 +29,7 @@ package com.armedia.acm.pluginmanager.service;
 
 import com.armedia.acm.pluginmanager.model.AcmPluginConfig;
 import com.armedia.acm.spring.SpringContextHolder;
+import org.springframework.aop.scope.ScopedProxyUtils;
 
 import java.util.Map;
 import java.util.function.Function;
@@ -42,8 +43,9 @@ public class AcmConfigurablePluginsManager
     {
         Map<String, AcmConfigurablePlugin> configurablePlugins = contextHolder.getAllBeansOfType(AcmConfigurablePlugin.class);
 
-        return configurablePlugins.values().stream()
-                .map(it -> new AcmPluginConfig(it.getName(), it.isEnabled()))
+        return configurablePlugins.entrySet().stream()
+                .filter(it -> !ScopedProxyUtils.isScopedTarget(it.getKey()))
+                .map(it -> new AcmPluginConfig(it.getValue().getName(), it.getValue().isEnabled()))
                 .collect(Collectors.toMap(AcmPluginConfig::getPluginName, Function.identity()));
     }
 
