@@ -41,59 +41,73 @@ public class FoiaConfiguration extends SystemConfiguration
     private Boolean requestExtensionWorkingDaysEnabled;
     private Boolean purgeRequestWhenInHoldEnabled;
 
-    public Integer getMaxDaysInBillingQueue() {
+    public Integer getMaxDaysInBillingQueue()
+    {
         return maxDaysInBillingQueue;
     }
 
-    public void setMaxDaysInBillingQueue(Integer maxDaysInBillingQueue) {
+    public void setMaxDaysInBillingQueue(Integer maxDaysInBillingQueue)
+    {
         this.maxDaysInBillingQueue = maxDaysInBillingQueue;
     }
 
-    public Integer getMaxDaysInHoldQueue() {
+    public Integer getMaxDaysInHoldQueue()
+    {
         return maxDaysInHoldQueue;
     }
 
-    public void setMaxDaysInHoldQueue(Integer maxDaysInHoldQueue) {
+    public void setMaxDaysInHoldQueue(Integer maxDaysInHoldQueue)
+    {
         this.maxDaysInHoldQueue = maxDaysInHoldQueue;
     }
 
-    public Boolean getHoldedAndAppealedRequestsDueDateUpdateEnabled() {
+    public Boolean getHoldedAndAppealedRequestsDueDateUpdateEnabled()
+    {
         return holdedAndAppealedRequestsDueDateUpdateEnabled;
     }
 
-    public void setHoldedAndAppealedRequestsDueDateUpdateEnabled(Boolean holdedAndAppealedRequestsDueDateUpdateEnabled) {
+    public void setHoldedAndAppealedRequestsDueDateUpdateEnabled(Boolean holdedAndAppealedRequestsDueDateUpdateEnabled)
+    {
         this.holdedAndAppealedRequestsDueDateUpdateEnabled = holdedAndAppealedRequestsDueDateUpdateEnabled;
     }
 
-    public Integer getRequestExtensionWorkingDays() {
+    public Integer getRequestExtensionWorkingDays()
+    {
         return requestExtensionWorkingDays;
     }
 
-    public void setRequestExtensionWorkingDays(Integer requestExtensionWorkingDays) {
+    public void setRequestExtensionWorkingDays(Integer requestExtensionWorkingDays)
+    {
         this.requestExtensionWorkingDays = requestExtensionWorkingDays;
     }
 
-    public Boolean getDashboardBannerEnabled() {
+    public Boolean getDashboardBannerEnabled()
+    {
         return dashboardBannerEnabled;
     }
 
-    public void setDashboardBannerEnabled(Boolean dashboardBannerEnabled) {
+    public void setDashboardBannerEnabled(Boolean dashboardBannerEnabled)
+    {
         this.dashboardBannerEnabled = dashboardBannerEnabled;
     }
 
-    public Boolean getReceivedDateEnabled() {
+    public Boolean getReceivedDateEnabled()
+    {
         return receivedDateEnabled;
     }
 
-    public void setReceivedDateEnabled(Boolean receivedDateEnabled) {
+    public void setReceivedDateEnabled(Boolean receivedDateEnabled)
+    {
         this.receivedDateEnabled = receivedDateEnabled;
     }
-    
-    public Boolean getNotificationGroupsEnabled() {
+
+    public Boolean getNotificationGroupsEnabled()
+    {
         return notificationGroupsEnabled;
     }
 
-    public void setNotificationGroupsEnabled(Boolean notificationGroupsEnabled) {
+    public void setNotificationGroupsEnabled(Boolean notificationGroupsEnabled)
+    {
         this.notificationGroupsEnabled = notificationGroupsEnabled;
     }
 

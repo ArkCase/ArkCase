@@ -38,10 +38,9 @@
         <beans:bean id="baseNotificationSender" class="com.armedia.acm.services.notification.service.NotificationSender"
             abstract="true">
             <beans:property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
-            <beans:property name="propertyFileManager" ref="propertyFileManager"/>
-            <beans:property name="emailSenderPropertyFileLocation" ref="emailSenderPropertyFileLocation"/>
+            <beans:property name="emailSenderConfig" ref="emailSenderConfig"/>
             <beans:property name="notificationUtils" ref="notificationUtils"/>
-            <beans:property name="notificationTemplate" value="file:${notification.email.template.path}"/>
+            <beans:property name="notificationTemplate" value="file:#{notificationConfig.emailTemplatePath}"/>
             <beans:property name="userDao" ref="userJpaDao"/>
             <beans:property name="dataService" ref="acmDataService"/>
             <beans:property name="templatingEngine" ref="templatingEngine"/>

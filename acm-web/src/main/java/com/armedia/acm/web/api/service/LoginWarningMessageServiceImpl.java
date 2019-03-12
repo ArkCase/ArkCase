@@ -27,6 +27,8 @@ package com.armedia.acm.web.api.service;
  * #L%
  */
 
+import com.armedia.acm.web.model.LoginConfig;
+
 import org.springframework.ui.Model;
 
 import java.util.HashMap;
@@ -37,28 +39,27 @@ import java.util.Map;
  */
 public class LoginWarningMessageServiceImpl implements LoginWarningMessageService
 {
-    private Boolean warningEnabled;
-    private String warningMessage;
+    private LoginConfig loginConfig;
     private ApplicationMetaInfoService applicationMetaInfoService;
 
     @Override
     public boolean isEnabled()
     {
-        return warningEnabled == null ? false : warningEnabled.booleanValue();
+        return loginConfig.isWarningEnabled();
     }
 
     @Override
     public String getMessage()
     {
-        return warningMessage == null ? "" : warningMessage;
+        return loginConfig.getWarningMessage() == null ? "" : loginConfig.getWarningMessage();
     }
 
     @Override
     public Map<String, Object> getWarning()
     {
         Map<String, Object> map = new HashMap<>();
-        map.put("enabled", warningEnabled);
-        map.put("message", warningMessage);
+        map.put("enabled", isEnabled());
+        map.put("message", getMessage());
         return map;
     }
 
@@ -70,14 +71,14 @@ public class LoginWarningMessageServiceImpl implements LoginWarningMessageServic
         model.addAttribute("version", applicationMetaInfoService.getVersion());
     }
 
-    public void setWarningEnabled(String warningEnabled)
+    public LoginConfig getLoginConfig()
     {
-        this.warningEnabled = Boolean.parseBoolean(warningEnabled == null ? "false" : warningEnabled);
+        return loginConfig;
     }
 
-    public void setWarningMessage(String warningMessage)
+    public void setLoginConfig(LoginConfig loginConfig)
     {
-        this.warningMessage = warningMessage;
+        this.loginConfig = loginConfig;
     }
 
     public ApplicationMetaInfoService getApplicationMetaInfoService()

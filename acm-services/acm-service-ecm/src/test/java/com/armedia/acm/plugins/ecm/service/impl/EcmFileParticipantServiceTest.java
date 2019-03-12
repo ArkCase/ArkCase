@@ -33,7 +33,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 
-import com.armedia.acm.core.exceptions.AcmAccessControlException;
 import com.armedia.acm.core.exceptions.AcmParticipantsException;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.plugins.ecm.dao.AcmFolderDao;
@@ -41,6 +40,7 @@ import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
+import com.armedia.acm.plugins.ecm.model.EcmFileConfig;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.plugins.ecm.utils.EcmFileParticipantServiceHelper;
 import com.armedia.acm.services.participants.model.AcmParticipant;
@@ -56,7 +56,6 @@ import javax.persistence.FlushModeType;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Properties;
 
 public class EcmFileParticipantServiceTest extends EasyMockSupport
 {
@@ -66,8 +65,8 @@ public class EcmFileParticipantServiceTest extends EasyMockSupport
     private AcmFolderDao mockFolderDao;
     private AcmFolderService mockFolderService;
     private AcmParticipantService mockParticipantService;
-    private Properties fileServiceProperties;
     private AuditPropertyEntityAdapter mockAuditPropertyEntityAdapter;
+    private EcmFileConfig ecmFileConfigMock;
 
     @Before
     public void setUp()
@@ -75,26 +74,19 @@ public class EcmFileParticipantServiceTest extends EasyMockSupport
         fileParticipantService = new EcmFileParticipantService();
         fileParticipantServiceHelper = new EcmFileParticipantServiceHelper();
 
+        ecmFileConfigMock = createMock(EcmFileConfig.class);
         mockFileDao = createMock(EcmFileDao.class);
         mockFolderDao = createMock(AcmFolderDao.class);
         mockFolderService = createMock(AcmFolderService.class);
         mockParticipantService = createMock(AcmParticipantService.class);
         mockAuditPropertyEntityAdapter = createNiceMock(AuditPropertyEntityAdapter.class);
 
-        fileServiceProperties = new Properties();
-        fileServiceProperties.put("ecm.documentsParticipantTypes.mappings.read", "reader");
-        fileServiceProperties.put("ecm.documentsParticipantTypes.mappings.write", "assignee,co-owner,supervisor,collaborator,owner");
-        fileServiceProperties.put("ecm.documentsParticipantTypes.mappings.no-access", "");
-        fileServiceProperties.put("ecm.documentsParticipantTypes.mappings.group-read", "owning group");
-        fileServiceProperties.put("ecm.documentsParticipantTypes.mappings.group-write", "owning group");
-        fileServiceProperties.put("ecm.documentsParticipantTypes.mappings.group-no-access", "owning group");
-
         fileParticipantService.setFileDao(mockFileDao);
         fileParticipantService.setFolderDao(mockFolderDao);
         fileParticipantService.setFolderService(mockFolderService);
         fileParticipantService.setParticipantService(mockParticipantService);
-        fileParticipantService.setEcmFileServiceProperties(fileServiceProperties);
         fileParticipantService.setFileParticipantServiceHelper(fileParticipantServiceHelper);
+        fileParticipantService.setEcmFileConfig(ecmFileConfigMock);
 
         fileParticipantServiceHelper.setFileDao(mockFileDao);
         fileParticipantServiceHelper.setFolderDao(mockFolderDao);
@@ -515,7 +507,6 @@ public class EcmFileParticipantServiceTest extends EasyMockSupport
 
     @Test(expected = IllegalStateException.class)
     public void testSetFolderParticipantsFromParentFolderThrowsIllegalStateExceptionWhenFolderHasNoParentFolder()
-            throws AcmAccessControlException
     {
         // given
         AcmFolder folder = new AcmFolder();
@@ -532,19 +523,7 @@ public class EcmFileParticipantServiceTest extends EasyMockSupport
     public void testGetFolderParticipantsFromAssignedObjectReturnsCorrectParticipants()
     {
         // given
-        fileParticipantService.getEcmFileServiceProperties().setProperty("ecm.documentsParticipantTypes.mappings.write",
-                "assignee,owner");
-        fileParticipantService.getEcmFileServiceProperties().setProperty("ecm.documentsParticipantTypes.mappings.read",
-                "follower,reader");
-        fileParticipantService.getEcmFileServiceProperties().setProperty("ecm.documentsParticipantTypes.mappings.no-access",
-                "No Access");
-        fileParticipantService.getEcmFileServiceProperties().setProperty("ecm.documentsParticipantTypes.mappings.group-write",
-                "owning group");
-        fileParticipantService.getEcmFileServiceProperties().setProperty("ecm.documentsParticipantTypes.mappings.group-read",
-                "follower group");
-
         List<AcmParticipant> assignedObjectParticipants = new ArrayList<>();
-
         AcmParticipant participantAssignee = new AcmParticipant();
         participantAssignee.setParticipantLdapId("userId1");
         participantAssignee.setParticipantType("assignee");
@@ -580,10 +559,20 @@ public class EcmFileParticipantServiceTest extends EasyMockSupport
         participantFollowerGroup.setParticipantType("follower group");
         assignedObjectParticipants.add(participantFollowerGroup);
 
+        expect(ecmFileConfigMock.getFileParticipant("write")).andReturn("assignee,owner").anyTimes();
+        expect(ecmFileConfigMock.getFileParticipant("read")).andReturn("follower,reader").anyTimes();
+        expect(ecmFileConfigMock.getFileParticipant("no-access")).andReturn("No Access").anyTimes();
+        expect(ecmFileConfigMock.getFileParticipant("group-write")).andReturn("owning group").anyTimes();
+        expect(ecmFileConfigMock.getFileParticipant("group-read")).andReturn("follower group").anyTimes();
+        expect(ecmFileConfigMock.getFileParticipant("*")).andReturn("*").anyTimes();
+        expect(ecmFileConfigMock.getFileParticipant("group-no-access")).andReturn("owning group").anyTimes();
+
+        replayAll();
         // when
         List<AcmParticipant> returnedFileParticipants = fileParticipantService
                 .getFolderParticipantsFromAssignedObject(assignedObjectParticipants);
 
+        verifyAll();
         // then
         assertEquals(7, returnedFileParticipants.size());
         for (AcmParticipant participant : returnedFileParticipants)
@@ -624,8 +613,13 @@ public class EcmFileParticipantServiceTest extends EasyMockSupport
         // given
         String userId = "userId";
 
-        fileParticipantService.getEcmFileServiceProperties().setProperty("ecm.documentsParticipantTypes.mappings.write",
-                "assignee,owner");
+        expect(ecmFileConfigMock.getFileParticipant("write")).andReturn("assignee,owner").anyTimes();
+        expect(ecmFileConfigMock.getFileParticipant("read")).andReturn("follower,reader").anyTimes();
+        expect(ecmFileConfigMock.getFileParticipant("no-access")).andReturn("No Access").anyTimes();
+        expect(ecmFileConfigMock.getFileParticipant("group-write")).andReturn("owning group").anyTimes();
+        expect(ecmFileConfigMock.getFileParticipant("group-read")).andReturn("follower group").anyTimes();
+        expect(ecmFileConfigMock.getFileParticipant("*")).andReturn("*").anyTimes();
+        expect(ecmFileConfigMock.getFileParticipant("group-no-access")).andReturn("owning group").anyTimes();
 
         List<AcmParticipant> assignedObjectParticipants = new ArrayList<>();
 
@@ -639,9 +633,12 @@ public class EcmFileParticipantServiceTest extends EasyMockSupport
         participantOwner.setParticipantType("owner");
         assignedObjectParticipants.add(participantOwner);
 
+        replayAll();
         // when
         List<AcmParticipant> returnedFileParticipants = fileParticipantService
                 .getFolderParticipantsFromAssignedObject(assignedObjectParticipants);
+
+        verifyAll();
 
         // then
         assertEquals(1, returnedFileParticipants.size());
@@ -655,8 +652,13 @@ public class EcmFileParticipantServiceTest extends EasyMockSupport
         // given
         String mappedParticipantType = "someType";
 
-        fileParticipantService.getEcmFileServiceProperties().setProperty("ecm.documentsParticipantTypes.mappings.write",
-                mappedParticipantType);
+        expect(ecmFileConfigMock.getFileParticipant("write")).andReturn(mappedParticipantType).anyTimes();
+        expect(ecmFileConfigMock.getFileParticipant("read")).andReturn(null).anyTimes();
+        expect(ecmFileConfigMock.getFileParticipant("no-access")).andReturn(null).anyTimes();
+        expect(ecmFileConfigMock.getFileParticipant("group-write")).andReturn(null).anyTimes();
+        expect(ecmFileConfigMock.getFileParticipant("group-read")).andReturn(null).anyTimes();
+        expect(ecmFileConfigMock.getFileParticipant("*")).andReturn("*").anyTimes();
+        expect(ecmFileConfigMock.getFileParticipant("group-no-access")).andReturn(null).anyTimes();
 
         List<AcmParticipant> assignedObjectParticipants = new ArrayList<>();
 
@@ -670,8 +672,11 @@ public class EcmFileParticipantServiceTest extends EasyMockSupport
         participantWithNotMappedType.setParticipantType("unmappedType");
         assignedObjectParticipants.add(participantWithNotMappedType);
 
+        replayAll();
         // when
         fileParticipantService.getFolderParticipantsFromAssignedObject(assignedObjectParticipants);
+
+        verifyAll();
 
         // then
         fail("IllegalStateException should have been thrown!");
@@ -899,11 +904,9 @@ public class EcmFileParticipantServiceTest extends EasyMockSupport
     }
 
     @Test
-    public void testinheritParticipantsFromAssignedObject() throws AcmParticipantsException
+    public void testInheritParticipantsFromAssignedObject()
     {
-
         final Long objectId = 1L;
-        final Long childId = 2L;
 
         final String participantLdapId = "userId2";
         final String participantType = "write";
@@ -914,23 +917,20 @@ public class EcmFileParticipantServiceTest extends EasyMockSupport
         final String participantType2 = "assignee";
         final String participantLdapId3 = "userId3";
         final String participantType3 = "owning group";
-        List<AcmParticipant> participants = new ArrayList<>();
 
-        AcmParticipant participant1 = new AcmParticipant();
-        participant1.setParticipantLdapId(participantLdapId1);
-        participant1.setParticipantType(participantType1);
-        participant1.setReplaceChildrenParticipant(true);
-        participants.add(participant1);
+        expect(ecmFileConfigMock.getFileParticipant("write")).andReturn("assignee,owner").anyTimes();
+        expect(ecmFileConfigMock.getFileParticipant("read")).andReturn("follower,reader").anyTimes();
+        expect(ecmFileConfigMock.getFileParticipant("no-access")).andReturn("No Access").anyTimes();
+        expect(ecmFileConfigMock.getFileParticipant("group-write")).andReturn("owning group").anyTimes();
+        expect(ecmFileConfigMock.getFileParticipant("group-read")).andReturn("follower group").anyTimes();
+        expect(ecmFileConfigMock.getFileParticipant("*")).andReturn("*").anyTimes();
+        expect(ecmFileConfigMock.getFileParticipant("group-no-access")).andReturn("owning group").anyTimes();
 
         AcmContainer acmContainer = new AcmContainer();
         AcmFolder acmFolder = new AcmFolder();
         acmFolder.setId(objectId);
-//        AcmFolder childFolder = new AcmFolder();
-//        childFolder.setId(childId);
 
         acmContainer.setFolder(acmFolder);
-//        acmContainer.setd
-
 
         List<AcmParticipant> assignedObjectParticipants = new ArrayList<>();
         AcmParticipant participantAssign1 = new AcmParticipant();
@@ -959,36 +959,26 @@ public class EcmFileParticipantServiceTest extends EasyMockSupport
         orignalObjectParticipants.add(participantOrig1);
 
         EcmFile file = new EcmFile();
-        List<AcmParticipant> childFolderParticipants = new ArrayList<>();
 
         AcmParticipant childFolderParticipant = new AcmParticipant();
         childFolderParticipant.setParticipantLdapId(participantLdapId);
         childFolderParticipant.setParticipantType(participantType);
 
-
         expect(mockFileDao.findByFolderId(acmFolder.getId(), FlushModeType.COMMIT)).andReturn(Arrays.asList(file));
-//        expect(mockFileDao.findByFolderId(childFolder.getId(), FlushModeType.COMMIT)).andReturn(new ArrayList<>());
-        expect(mockFileDao.save(file)).andReturn(file);
-
-        expect(mockFolderDao.findSubFolders(objectId, FlushModeType.COMMIT)).andReturn(null);
-        expect(mockFolderDao.findSubFolders(objectId, FlushModeType.COMMIT)).andReturn(null);
-//        expect(mockFolderDao.findSubFolders(childId, FlushModeType.COMMIT)).andReturn(null);
-
-        expect(mockFileDao.findByFolderId(acmFolder.getId(), FlushModeType.COMMIT)).andReturn(Arrays.asList(file));
-        //        expect(mockFileDao.findByFolderId(childFolder.getId(), FlushModeType.COMMIT)).andReturn(new ArrayList<>());
         expect(mockFileDao.save(file)).andReturn(file);
 
         EntityManager em = mock(EntityManager.class);
         expect(mockFolderDao.getEm()).andReturn(em).anyTimes();
 
         expect(mockFolderDao.findSubFolders(objectId, FlushModeType.COMMIT)).andReturn(new ArrayList<>());
-        expect(mockFileDao.findByFolderId(acmFolder.getId(), FlushModeType.COMMIT)).andReturn(Arrays.asList(file));
 
         // when
         replayAll();
-        fileParticipantService.inheritParticipantsFromAssignedObject(assignedObjectParticipants,orignalObjectParticipants,acmContainer, false);
+        fileParticipantService.inheritParticipantsFromAssignedObject(assignedObjectParticipants, orignalObjectParticipants, acmContainer,
+                false);
 
-        //then
+        verifyAll();
+        // then
         assertEquals(participantLdapId1, file.getParticipants().get(0).getParticipantLdapId());
     }
 }

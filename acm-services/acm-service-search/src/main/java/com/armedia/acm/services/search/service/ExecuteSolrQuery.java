@@ -61,8 +61,6 @@ public class ExecuteSolrQuery
     private MuleContextManager muleContextManager;
     private ObjectConverter objectConverter;
     private SendDocumentsToSolr sendDocumentsToSolr;
-    private boolean enableDocumentACL;
-    private boolean includeDenyAccessFilter;
 
     /**
      * Executes solr queries and returns results as String
@@ -361,7 +359,13 @@ public class ExecuteSolrQuery
     }
 
     /**
-     * Executes solr queries and returns results as String
+     *
+     * Deprecated since parameter filterParentRef is no longer used.
+     * 
+     * @see ExecuteSolrQuery#getResultsByPredefinedQuery(Authentication, SolrCore, String, int, int, String, String,
+     *      boolean)
+     *
+     *      Executes solr queries and returns results as String
      *
      * @param authentication
      *            Authenticated user
@@ -390,9 +394,64 @@ public class ExecuteSolrQuery
      * @return results as String
      * @throws MuleException
      */
+    @Deprecated
     public String getResultsByPredefinedQuery(Authentication authentication, SolrCore core, String solrQuery, int firstRow, int maxRows,
             String sort, boolean indent, String rowQueryParameters, boolean filterParentRef, boolean filterSubscriptionEvents,
             String defaultField, boolean includeDACFilter, String fields) throws MuleException
+    {
+        return getResultsByPredefinedQuery(authentication, core, solrQuery, firstRow, maxRows, sort, indent, rowQueryParameters,
+                filterSubscriptionEvents, defaultField, includeDACFilter, false, false, fields);
+    }
+
+    /**
+     *
+     * Executes solr queries and returns results as String
+     *
+     * @param authentication
+     *            Authenticated user
+     * @param core
+     *            SolrCore could be quick or advanced search
+     * @param solrQuery
+     *            actual query
+     * @param firstRow
+     *            starting row
+     * @param maxRows
+     *            how many rows to return
+     * @param sort
+     *            sort by which field
+     * @param indent
+     *            boolean whether results should be indented
+     * @param rowQueryParameters
+     *            row query parameters
+     * @param filterSubscriptionEvents
+     *            boolean whether should filter subscription events
+     * @param defaultField
+     *            which default filed to be set. Can be null(than default field defined in solrconfig.xml is used)
+     * @param includeDACFilter
+     *            boolean whether should add acl filters on solr query
+     * @return results as String
+     */
+    public String getResultsByPredefinedQuery(Authentication authentication, SolrCore core, String solrQuery, int firstRow, int maxRows,
+            String sort, boolean indent, String rowQueryParameters, boolean filterSubscriptionEvents,
+            String defaultField, boolean includeDACFilter) throws MuleException
+    {
+        return getResultsByPredefinedQuery(authentication, core, solrQuery, firstRow, maxRows, sort, indent, rowQueryParameters,
+                filterSubscriptionEvents, defaultField, includeDACFilter, false, false, null);
+    }
+
+    public String getResultsByPredefinedQuery(Authentication authentication, SolrCore core, String solrQuery, int firstRow,
+            int maxRows, String sort, boolean indent, String rowQueryParameters,
+            boolean filterSubscriptionEvents, String defaultField, boolean includeDACFilter,
+            boolean includeDenyAccessFilter, boolean enableDocumentACL) throws MuleException
+    {
+        return getResultsByPredefinedQuery(authentication, core, solrQuery, firstRow, maxRows, sort, indent, rowQueryParameters,
+                filterSubscriptionEvents, defaultField, includeDACFilter, includeDenyAccessFilter, enableDocumentACL, null);
+    }
+
+    public String getResultsByPredefinedQuery(Authentication authentication, SolrCore core, String solrQuery, int firstRow,
+            int maxRows, String sort, boolean indent, String rowQueryParameters,
+            boolean filterSubscriptionEvents, String defaultField, boolean includeDACFilter,
+            boolean includeDenyAccessFilter, boolean enableDocumentACL, String fields) throws MuleException
     {
         AcmUserAuthorityContext authorityContext = (AcmUserAuthorityContext) authentication;
         Map<String, Object> headers = new HashMap<>();
@@ -404,8 +463,8 @@ public class ExecuteSolrQuery
         headers.put("acmUserGroupIds", authorityContext.getGroupAuthorities());
         headers.put("filterSubscriptionEvents", filterSubscriptionEvents);
         headers.put("rowQueryParametars", rowQueryParameters);
-        headers.put("enableDocumentACL", isEnableDocumentACL());
-        headers.put("includeDenyAccessFilter", isIncludeDenyAccessFilter());
+        headers.put("enableDocumentACL", includeDenyAccessFilter);
+        headers.put("includeDenyAccessFilter", enableDocumentACL);
         headers.put("indent", indent ? true : "");
         headers.put("df", defaultField);
         if (!Strings.isNullOrEmpty(fields))
@@ -489,26 +548,6 @@ public class ExecuteSolrQuery
     public void setObjectConverter(ObjectConverter objectConverter)
     {
         this.objectConverter = objectConverter;
-    }
-
-    public boolean isEnableDocumentACL()
-    {
-        return enableDocumentACL;
-    }
-
-    public void setEnableDocumentACL(boolean enableDocumentACL)
-    {
-        this.enableDocumentACL = enableDocumentACL;
-    }
-
-    public boolean isIncludeDenyAccessFilter()
-    {
-        return includeDenyAccessFilter;
-    }
-
-    public void setIncludeDenyAccessFilter(boolean includeDenyAccessFilter)
-    {
-        this.includeDenyAccessFilter = includeDenyAccessFilter;
     }
 
     public SendDocumentsToSolr getSendDocumentsToSolr()

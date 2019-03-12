@@ -7,14 +7,17 @@
 
     <bean id="acmSaveNotePlugin" class="com.armedia.acm.pluginmanager.model.AcmPlugin">
         <property name="pluginName" value="Save Note Service Plugin"/>
+        <property name="configurationPropertyService" ref="configurationPropertyService"/>
     </bean>
 
     <bean id="acmDeleteNoteByIdPlugin" class="com.armedia.acm.pluginmanager.model.AcmPlugin">
         <property name="pluginName" value="Delete Note Service Plugin"/>
+        <property name="configurationPropertyService" ref="configurationPropertyService"/>
     </bean>
 
     <bean id="acmListNotesPlugin" class="com.armedia.acm.pluginmanager.model.AcmPlugin">
-        <property name="pluginName" value="Delete Note Service Plugin"/>
+        <property name="pluginName" value="List Notes Service Plugin"/>
+        <property name="configurationPropertyService" ref="configurationPropertyService"/>
     </bean>
 
     <bean id="noteToSolrTransformer" class="com.armedia.acm.services.note.service.NoteToSolrTransformer">

@@ -58,7 +58,10 @@ import java.util.UUID;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
+        "/spring/spring-library-configuration.xml",
         "/spring/spring-library-object-history.xml",
+        "/spring/spring-library-audit-service.xml",
+        "/spring/spring-library-case-plugin-test.xml",
         "/spring/spring-library-case-file-dao-test.xml",
         "/spring/spring-library-data-source.xml",
         "/spring/spring-library-user-service.xml",
@@ -80,6 +83,13 @@ import java.util.UUID;
 @TransactionConfiguration(defaultRollback = true)
 public class CaseFileDaoIT
 {
+
+    static
+    {
+        String userHomePath = System.getProperty("user.home");
+        System.setProperty("acm.configurationserver.propertyfile", userHomePath + "/.arkcase/acm/conf.yml");
+    }
+
     @Autowired
     private CaseFileDao caseFileDao;
 

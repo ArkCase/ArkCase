@@ -1,24 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:task="http://www.springframework.org/schema/task"
-    xmlns="http://www.springframework.org/schema/beans" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
-       http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-4.1.xsd">
-
-    <!-- keeping this bean for now even though we are not using any properties yet.  -->
-    <bean id="adminPluginProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
-        <!-- note: must leave "file:" at the start of the file name for spring
-        to be able to read the file; otherwise it will try to read from the
-        classpath -->
-        <property name="location" value="file:${user.home}/.arkcase/acm/adminPlugin.properties"/>
-        <property name="ignoreResourceNotFound" value="true"/>
-        <property name="localOverride" value="false"/>
-        <property name="properties">
-            <props></props>
-        </property>
-    </bean>
+       xmlns="http://www.springframework.org/schema/beans" xmlns:aop="http://www.springframework.org/schema/aop" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+       http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-4.1.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
 
     <bean id="adminPlugin" class="com.armedia.acm.pluginmanager.model.AcmPlugin">
         <property name="pluginName" value="Admin Plugin"/>
-        <property name="pluginProperties" ref="adminPluginProperties"/>
+        <property name="configurationPropertyService" ref="configurationPropertyService"/>
     </bean>
 
     <!-- LDAP configuration API -->
@@ -44,7 +31,6 @@
         <property name="configurationFile" value="drools-form-business-process-rules.xlsx"/>
         <property name="configurationFileBackupTemplate" value="drools-form-business-process-rules.xlsx.%s.backup"/>
         <property name="configurationFileBackupRegex" value="^drools[-d]form[-d]business[-d]process[-d]rules.xlsx.[0-9]+.backup$"/>
-
         <property name="acmBpmnService" ref="processDefinitionManagementService"/>
         <property name="acmFileTypesService" ref="acmFileTypesService"/>
     </bean>
@@ -61,7 +47,7 @@
     </bean>
 
     <bean id="moduleConfigurationService" class="com.armedia.acm.plugins.admin.service.ModuleConfigurationService">
-        <property name="appConfigPropertiesFile" value="#{ systemProperties ['user.home'] }/.arkcase/acm/app-config.properties/"/>
+        <property name="configurationContainer" ref="configurationContainer"/>
     </bean>
 
     <bean id="googleAnalyticsConfigurationFile" class="java.io.File">
@@ -78,17 +64,16 @@
 
     <!-- Roles Privileges API-->
     <bean id="rolesPrivilegesService" class="com.armedia.acm.plugins.admin.service.RolesPrivilegesService">
-        <property name="applicationRolesFile" value="#{ systemProperties ['user.home'] }/.arkcase/acm/applicationRoles.properties"/>
-        <property name="applicationPrivilegesFile"
-            value="#{ systemProperties ['user.home'] }/.arkcase/acm/applicationPrivileges.properties"/>
-        <property name="applicationRolesPrivilegesPropertiesFile"
-            value="#{ systemProperties ['user.home'] }/.arkcase/acm/applicationRolesPrivileges.properties"/>
         <property name="applicationRolesPrivilegesTemplatesLocation"
-            value="#{ systemProperties ['user.home'] }/.arkcase/acm/spring/roles-privileges-templates/"/>
+                  value="#{ systemProperties ['user.home'] }/.arkcase/acm/spring/roles-privileges-templates/"/>
         <property name="applicationRolesPrivilegesTemplateFile" value="spring-acm-global-privileges.xml.ftl"/>
         <property name="applicationRolesPrivilegesFile"
-            value="#{ systemProperties ['user.home'] }/.arkcase/acm/spring/spring-config-acm-plugins/spring-acm-global-privileges.xml"/>
+                  value="#{ systemProperties ['user.home'] }/.arkcase/acm/spring/spring-config-acm-plugins/spring-acm-global-privileges.xml"/>
         <property name="userDao" ref="userJpaDao"/>
+        <property name="rolesConfig" ref="applicationRolesConfig"/>
+        <property name="privilegesConfig" ref="applicationPrivilegesConfig"/>
+        <property name="rolesToPrivilegesConfig" ref="rolesToPrivileges"/>
+        <property name="configurationPropertyService" ref="configurationPropertyService"/>
     </bean>
 
     <task:scheduler id="historyCleanScheduler" pool-size="1"/>
@@ -107,7 +92,7 @@
 
     <bean id="ldapDirectoryConfig" class="com.armedia.acm.plugins.admin.model.LdapDirectoryConfig">
         <property name="ldapConfigurationTemplatesLocation"
-            value="#{ systemProperties ['user.home'] }/.arkcase/acm/spring/ldap-config-templates/"/>
+                  value="#{ systemProperties ['user.home'] }/.arkcase/acm/spring/ldap-config-templates/"/>
         <property name="ldapTemplateFile" value="spring-config-ldap.xml.ftl"/>
         <property name="ldapTemplatePropertiesFile" value="spring-config-ldap.properties.ftl"/>
         <property name="ldapConfigurationLocation" value="#{ systemProperties ['user.home'] }/.arkcase/acm/spring/"/>
@@ -183,8 +168,12 @@
         <property name="objectConverter" ref="objectConverter"/>
     </bean>
 
-    <bean id="pdfConversionConfigurationService" class="com.armedia.acm.plugins.admin.service.PDFConversionConfigurationService" init-method="initBean">
-        <property name="propertiesFile" value="#{ systemProperties ['user.home'] }/.arkcase/acm/pdfConversionProperties.properties"/>
-        <property name="propertyFileManager" ref="propertyFileManager"/>
+    <bean id="pdfConversionConfigurationService" class="com.armedia.acm.plugins.admin.service.PDFConversionConfigurationService">
+        <property name="pdfConversionConfig" ref="pdfConversionConfig"/>
+        <property name="configurationPropertyService" ref="configurationPropertyService"/>
+    </bean>
+
+    <bean id="pdfConversionConfig" class="com.armedia.acm.plugins.admin.model.PdfConversionConfig" scope="refresh">
+        <aop:scoped-proxy/>
     </bean>
 </beans>

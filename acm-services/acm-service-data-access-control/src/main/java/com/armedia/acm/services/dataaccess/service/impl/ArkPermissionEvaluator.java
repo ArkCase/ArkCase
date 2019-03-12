@@ -3,6 +3,7 @@ package com.armedia.acm.services.dataaccess.service.impl;
 import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.data.service.AcmDataService;
 import com.armedia.acm.objectonverter.json.JSONMarshaller;
+import com.armedia.acm.services.dataaccess.model.DataAccessControlConfig;
 import com.armedia.acm.services.dataaccess.model.DataAccessControlConstants;
 import com.armedia.acm.services.dataaccess.service.AccessControlRuleChecker;
 import com.armedia.acm.services.participants.dao.AcmParticipantDao;
@@ -102,6 +103,7 @@ public class ArkPermissionEvaluator implements PermissionEvaluator, Initializing
     private JSONMarshaller jsonMarshaller;
     private Set<String> assignedObjectTypes;
     private String packagesToScan;
+    private DataAccessControlConfig dataAccessControlConfig;
 
     @Override
     public boolean hasPermission(Authentication authentication, Serializable targetId, String targetType, Object permission)
@@ -337,20 +339,21 @@ public class ArkPermissionEvaluator implements PermissionEvaluator, Initializing
         try
         {
             boolean shouldIncludeACLFilter = isAssignedObjectType(objectType);
-            boolean filterParent = true;
             boolean filterSubscriptionEvents = false;
             boolean indent = true;
 
             // if the Solr search returns the object, the user has read access to it.
             String result = getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.ADVANCED_SEARCH, query,
-                    0, 1, "id asc", indent, objectType, filterParent,
-                    filterSubscriptionEvents, SearchConstants.DEFAULT_FIELD, shouldIncludeACLFilter, "");
+                    0, 1, "id asc", indent, objectType,
+                    filterSubscriptionEvents, SearchConstants.DEFAULT_FIELD, shouldIncludeACLFilter,
+                    dataAccessControlConfig.getIncludeDenyAccessFilter(), dataAccessControlConfig.getEnableDocumentACL());
 
             if (result.contains("numFound\":0"))
             {
                 result = getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.QUICK_SEARCH, query, 0,
-                        1, "id asc", indent, objectType, filterParent, filterSubscriptionEvents,
-                        SearchConstants.DEFAULT_FIELD, shouldIncludeACLFilter, "");
+                        1, "id asc", indent, objectType, filterSubscriptionEvents,
+                        SearchConstants.DEFAULT_FIELD, shouldIncludeACLFilter,
+                        dataAccessControlConfig.getIncludeDenyAccessFilter(), dataAccessControlConfig.getEnableDocumentACL());
             }
             return result;
         }
@@ -485,6 +488,16 @@ public class ArkPermissionEvaluator implements PermissionEvaluator, Initializing
     public void setPackagesToScan(String packagesToScan)
     {
         this.packagesToScan = packagesToScan;
+    }
+
+    public DataAccessControlConfig getDataAccessControlConfig()
+    {
+        return dataAccessControlConfig;
+    }
+
+    public void setDataAccessControlConfig(DataAccessControlConfig dataAccessControlConfig)
+    {
+        this.dataAccessControlConfig = dataAccessControlConfig;
     }
 
     @Override

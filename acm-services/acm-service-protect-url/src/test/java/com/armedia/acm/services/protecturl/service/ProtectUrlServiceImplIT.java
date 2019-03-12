@@ -58,10 +58,18 @@ import java.util.UUID;
         "/spring/spring-library-context-holder.xml",
         "/spring/spring-library-property-file-manager.xml",
         "/spring/spring-library-acm-encryption.xml",
-        "/spring/spring-library-protect-url-test.xml"
+        "/spring/spring-library-protect-url-test.xml",
+        "/spring/spring-library-configuration.xml",
+        "/spring/spring-library-object-converter.xml"
 })
 public class ProtectUrlServiceImplIT
 {
+    static
+    {
+        String userHomePath = System.getProperty("user.home");
+        System.setProperty("acm.configurationserver.propertyfile", userHomePath + "/.arkcase/acm/conf.yml");
+    }
+
     @Autowired
     ProtectUrlService protectUrlService;
     /**

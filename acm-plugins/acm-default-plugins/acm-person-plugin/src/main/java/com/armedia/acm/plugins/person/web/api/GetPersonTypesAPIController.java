@@ -27,42 +27,44 @@ package com.armedia.acm.plugins.person.web.api;
  * #L%
  */
 
-
 import com.armedia.acm.core.exceptions.AcmListObjectsFailedException;
+import com.armedia.acm.plugins.person.model.PersonConfig;
 
-import org.apache.commons.lang.StringUtils;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.Arrays;
 import java.util.List;
-import java.util.Properties;
 
 @Controller
 @RequestMapping({ "/api/v1/plugin/person", "/api/latest/plugin/person" })
 public class GetPersonTypesAPIController
 {
-
-    private Properties personProperties;
+    private PersonConfig personConfig;
 
     @RequestMapping(value = "types", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody List<String> getPersonTypes() throws AcmListObjectsFailedException
     {
+        List<String> personTypes = personConfig.getTypes();
 
-        String commaSeparated = personProperties.getProperty("person.types");
-        if (StringUtils.isEmpty(commaSeparated))
+        if (personConfig.getTypes().isEmpty())
+        {
             throw new AcmListObjectsFailedException("PersonTypes", "person property with key [person.types] is not set or is empty", null);
+        }
 
-        String[] retval = commaSeparated.split(",");
-        return Arrays.asList(retval);
+        return personTypes;
 
     }
 
-    public void setPersonProperties(Properties personProperties)
+    public PersonConfig getPersonConfig()
     {
-        this.personProperties = personProperties;
+        return personConfig;
+    }
+
+    public void setPersonConfig(PersonConfig personConfig)
+    {
+        this.personConfig = personConfig;
     }
 }

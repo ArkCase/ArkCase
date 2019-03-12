@@ -31,6 +31,7 @@ import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.plugins.person.model.Organization;
 import com.armedia.acm.plugins.person.service.OrganizationService;
 import com.armedia.acm.plugins.profile.dao.UserOrgDao;
+import com.armedia.acm.plugins.profile.model.ProfileConfig;
 import com.armedia.acm.plugins.profile.model.ProfileDTO;
 import com.armedia.acm.plugins.profile.model.UserOrg;
 import com.armedia.acm.services.users.dao.UserDao;
@@ -63,7 +64,7 @@ public class UserOrgServiceImpl implements UserOrgService
 
     private OrganizationService organizationService;
 
-    private String profileLocation;
+    private ProfileConfig profileConfig;
 
     private MuleContextManager muleContextManager;
 
@@ -84,12 +85,7 @@ public class UserOrgServiceImpl implements UserOrgService
     @Override
     public String getProfileLocation()
     {
-        return profileLocation;
-    }
-
-    public void setProfileLocation(String profileLocation)
-    {
-        this.profileLocation = profileLocation;
+        return profileConfig.getUserProfileRootFolder();
     }
 
     @Override
@@ -340,5 +336,15 @@ public class UserOrgServiceImpl implements UserOrgService
     public void setDefaultCmisId(String defaultCmisId)
     {
         this.defaultCmisId = defaultCmisId;
+    }
+
+    public ProfileConfig getProfileConfig()
+    {
+        return profileConfig;
+    }
+
+    public void setProfileConfig(ProfileConfig profileConfig)
+    {
+        this.profileConfig = profileConfig;
     }
 }

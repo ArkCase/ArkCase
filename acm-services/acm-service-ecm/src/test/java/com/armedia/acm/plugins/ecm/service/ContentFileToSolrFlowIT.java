@@ -73,10 +73,18 @@ import java.util.UUID;
         "/spring/spring-library-particpants.xml",
         "/spring/spring-library-context-holder.xml",
         "/spring/spring-library-ecm-file-lock.xml",
-        "/spring/spring-library-service-data.xml"
+        "/spring/spring-library-service-data.xml",
+        "/spring/spring-library-configuration.xml",
+        "/spring/spring-library-object-converter.xml",
 })
 public class ContentFileToSolrFlowIT
 {
+    static
+    {
+        String userHomePath = System.getProperty("user.home");
+        System.setProperty("acm.configurationserver.propertyfile", userHomePath + "/.arkcase/acm/conf.yml");
+    }
+
     private transient final Logger log = LoggerFactory.getLogger(getClass());
     @Autowired
     private MuleContextManager muleContextManager;

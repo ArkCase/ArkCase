@@ -28,53 +28,37 @@ package com.armedia.acm.calendar.config.service;
  */
 
 import com.armedia.acm.auth.AuthenticationUtils;
-import com.armedia.acm.calendar.config.service.CalendarConfiguration.CalendarPropertyKeys;
-import com.armedia.acm.calendar.config.service.CalendarConfiguration.PurgeOptions;
+import com.armedia.acm.calendar.config.model.CalendarConfig;
+import com.armedia.acm.calendar.config.model.PurgeOptions;
+import com.armedia.acm.configuration.service.ConfigurationPropertyService;
 import com.armedia.acm.core.exceptions.AcmEncryptionException;
 import com.armedia.acm.crypto.properties.AcmEncryptablePropertyUtils;
 
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
-import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.AbstractMap.SimpleImmutableEntry;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Properties;
-import java.util.Set;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReadWriteLock;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.stream.Collectors;
 
 /**
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Mar 9, 2017
  */
-public class PropertyFileCalendarAdminService implements CalendarAdminService, InitializingBean, ApplicationEventPublisherAware
+public class PropertyFileCalendarAdminService implements CalendarAdminService, ApplicationEventPublisherAware
 {
-
     private static final String CALENDAR_CONFIG_SERVICE_USER_ID = "CALENDAR_CONFIG_SERVICE";
     private Logger log = LoggerFactory.getLogger(getClass());
-    private Resource configurableObjectTypes;
-    private Resource calendarPropertiesResource;
     private AcmEncryptablePropertyUtils encryptablePropertyUtils;
-    private ReadWriteLock lock = new ReentrantReadWriteLock();
-    private List<String> objectTypes;
     private ApplicationEventPublisher applicationEventPublisher;
-    private CalendarConfigurationsByObjectType configurations;
+    private CalendarConfig calendarConfig;
+    private ConfigurationPropertyService configurationPropertyService;
 
     /*
      * (non-Javadoc)
@@ -92,68 +76,28 @@ public class PropertyFileCalendarAdminService implements CalendarAdminService, I
      * @see com.armedia.acm.calendar.config.service.CalendarAdminService#readConfiguration()
      */
     @Override
-    public CalendarConfigurationsByObjectType readConfiguration(boolean includePassword) throws CalendarConfigurationException
+    public CalendarConfigurationsByObjectType readConfiguration(boolean includePassword)
     {
-        CalendarConfigurationException configurationException = new CalendarConfigurationException(
-                "Exception during reading calendar configuration properties.");
-        CalendarConfigurationsByObjectType configurationsCopy = new CalendarConfigurationsByObjectType();
+        CalendarConfigurationsByObjectType configurations = new CalendarConfigurationsByObjectType();
 
-        Lock readLock = lock.readLock();
-        readLock.lock();
-
-        Map<String, CalendarConfiguration> configurationsByType;
-
-        try
-        {
-
-            configurationsByType = configurations.getConfigurationsByType().entrySet().stream().map(entry -> {
-
-                try
-                {
+        Map<String, CalendarConfiguration> configurationsByType = calendarConfig.getConfigurationsByObjectType()
+                .entrySet().stream()
+                .map(entry -> {
                     CalendarConfiguration configuration = entry.getValue();
-
-                    CalendarConfiguration configurationCopy = new CalendarConfiguration();
-                    configurationCopy.setIntegrationEnabled(configuration.isIntegrationEnabled());
-                    configurationCopy.setPurgeOptions(configuration.getPurgeOptions());
-                    configurationCopy.setDaysClosed(configuration.getDaysClosed());
-                    configurationCopy.setSystemEmail(configuration.getSystemEmail());
-                    if (includePassword)
+                    if (!includePassword)
                     {
-                        configurationCopy.setPassword(encryptablePropertyUtils.decryptPropertyValue(configuration.getPassword()));
+                        configuration.setPassword("");
                     }
+                    return new SimpleImmutableEntry<>(entry.getKey(), configuration);
 
-                    return new SimpleImmutableEntry<>(entry.getKey(), configurationCopy);
-                }
-                catch (AcmEncryptionException e)
-                {
-                    log.error("Could not decrypt password for calendar configuration for object type [{}].", entry.getKey());
-                    configurationException.addSuppressed(new CalendarConfigurationException(
-                            String.format("Could not decrypt password for calendar configuration for object type [%s].", entry.getKey()), e,
-                            entry.getKey()));
-                    return null;
-                }
+                }).collect(Collectors.toMap(Entry::getKey, Entry::getValue));
 
-            }).filter(entry -> entry != null).collect(Collectors.toMap(Entry::getKey, Entry::getValue));
-
-        }
-        finally
-        {
-            readLock.unlock();
-        }
-
-        if (configurationException.getSuppressed().length > 0)
-        {
-            throw configurationException;
-        }
-
-        for (String objectType : objectTypes)
+        for (String objectType : calendarConfig.getObjectTypes())
         {
             configurationsByType.computeIfAbsent(objectType, k -> new CalendarConfiguration());
         }
-
-        configurationsCopy.setConfigurationsByType(configurationsByType);
-        return configurationsCopy;
-
+        configurations.setConfigurationsByType(configurationsByType);
+        return configurations;
     }
 
     /*
@@ -165,53 +109,27 @@ public class PropertyFileCalendarAdminService implements CalendarAdminService, I
     @Override
     public void writeConfiguration(CalendarConfigurationsByObjectType configurations) throws CalendarConfigurationException
     {
-
-        Properties calendarProperties = new Properties();
-
         Map<String, CalendarConfiguration> configurationsByType = configurations.getConfigurationsByType();
-        configurationsByType.entrySet().removeIf(entry -> !objectTypes.contains(entry.getKey().toUpperCase()));
+        configurationsByType.entrySet()
+                .removeIf(entry -> !calendarConfig.getObjectTypes().contains(entry.getKey().toUpperCase()));
 
         CalendarConfigurationsByObjectType loadedConfigurations = readConfiguration(true);
-
         CalendarConfigurationException configurationException = null;
-
         for (Entry<String, CalendarConfiguration> entry : configurationsByType.entrySet())
         {
-
             CalendarConfiguration configuration = entry.getValue();
             CalendarConfiguration loadedConfiguration = loadedConfigurations.getConfiguration(entry.getKey());
-
-            configurationException = writeEmailInput(configurationException, entry.getKey(), configuration, loadedConfiguration,
-                    calendarProperties);
-            configurationException = writePurgeOptionsInput(configurationException, entry.getKey(), configuration, calendarProperties);
-            calendarProperties.setProperty(String.format("%s.%s", entry.getKey(), CalendarPropertyKeys.INTEGRATION_ENABLED.name()),
-                    Boolean.toString(configuration.isIntegrationEnabled()));
-
+            configurationException = writeEmailInput(configurationException, entry.getKey(), configuration,
+                    loadedConfiguration);
+            configurationException = writePurgeOptionsInput(configurationException, entry.getKey(), configuration);
         }
-
         if (configurationException != null)
         {
             throw configurationException;
         }
 
-        Lock writeLock = lock.writeLock();
-        writeLock.lock();
-
-        try (OutputStream propertyOutputStream = new FileOutputStream(calendarPropertiesResource.getFile()))
-        {
-            calendarProperties.store(propertyOutputStream, String.format("Updated from ", getClass().getName()));
-            this.configurations = configurations;
-        }
-        catch (IOException e)
-        {
-            log.error("Could not write properties to [{}] file.", calendarPropertiesResource.getFilename());
-            throw new CalendarConfigurationException(
-                    String.format("Could not write properties to %s file.", calendarPropertiesResource.getFilename()), e);
-        }
-        finally
-        {
-            writeLock.unlock();
-        }
+        calendarConfig.setConfigurationsByObjectType(configurationsByType);
+        configurationPropertyService.updateProperties(calendarConfig);
         applicationEventPublisher.publishEvent(
                 new CalendarConfigurationEvent(configurations, CALENDAR_CONFIG_SERVICE_USER_ID, AuthenticationUtils.getUserIpAddress()));
     }
@@ -227,9 +145,8 @@ public class PropertyFileCalendarAdminService implements CalendarAdminService, I
     }
 
     private CalendarConfigurationException writeEmailInput(CalendarConfigurationException cce, String objectType,
-            CalendarConfiguration configuration, CalendarConfiguration loadedConfiguration, Properties calendarProperties)
+            CalendarConfiguration configuration, CalendarConfiguration loadedConfiguration)
     {
-
         if (configuration.isIntegrationEnabled())
         {
             if (checkEmailInput(configuration, loadedConfiguration))
@@ -244,14 +161,10 @@ public class PropertyFileCalendarAdminService implements CalendarAdminService, I
             }
             else
             {
-                calendarProperties.setProperty(String.format("%s.%s", objectType, CalendarPropertyKeys.SYSTEM_EMAIL.name()),
-                        configuration.getSystemEmail());
                 try
                 {
                     String encryptedPassword = encryptablePropertyUtils.encryptPropertyValue(
                             configuration.getPassword() != null ? configuration.getPassword() : loadedConfiguration.getPassword());
-                    calendarProperties.setProperty(String.format("%s.%s", objectType, CalendarPropertyKeys.PASSWORD.name()),
-                            encryptedPassword);
                     configuration.setPassword(encryptedPassword);
                 }
                 catch (AcmEncryptionException e)
@@ -267,7 +180,6 @@ public class PropertyFileCalendarAdminService implements CalendarAdminService, I
                 }
             }
         }
-
         return cce;
     }
 
@@ -289,9 +201,8 @@ public class PropertyFileCalendarAdminService implements CalendarAdminService, I
     }
 
     private CalendarConfigurationException writePurgeOptionsInput(CalendarConfigurationException cce, String objectType,
-            CalendarConfiguration configuration, Properties calendarProperties)
+            CalendarConfiguration configuration)
     {
-
         if (configuration.isIntegrationEnabled())
         {
             if (checkPurgeOptionsInput(configuration))
@@ -304,18 +215,7 @@ public class PropertyFileCalendarAdminService implements CalendarAdminService, I
                 cce.addSuppressed(new CalendarConfigurationValidationException(
                         String.format("Number of days has to be provided for purge option for object type %s.", objectType), objectType));
             }
-            else
-            {
-                calendarProperties.setProperty(String.format("%s.%s", objectType, CalendarPropertyKeys.PURGE_OPTION.name()),
-                        configuration.getPurgeOptions().name());
-                if (configuration.getPurgeOptions().equals(PurgeOptions.CLOSED_X_DAYS) && configuration.getDaysClosed() != null)
-                {
-                    calendarProperties.setProperty(String.format("%s.%s", objectType, CalendarPropertyKeys.DAYS_CLOSED.name()),
-                            configuration.getDaysClosed().toString());
-                }
-            }
         }
-
         return cce;
     }
 
@@ -328,128 +228,6 @@ public class PropertyFileCalendarAdminService implements CalendarAdminService, I
         return configuration.getPurgeOptions().equals(PurgeOptions.CLOSED_X_DAYS) && configuration.getDaysClosed() == null;
     }
 
-    private Properties loadProperties() throws CalendarConfigurationException
-    {
-        Properties calendarProperties = new Properties();
-        Lock readLock = lock.readLock();
-        readLock.lock();
-        try (InputStream propertyInputStream = calendarPropertiesResource.getInputStream())
-        {
-            calendarProperties.load(propertyInputStream);
-            return calendarProperties;
-        }
-        catch (IOException e)
-        {
-            log.error("Could not read properties from [{}] file.", calendarPropertiesResource.getFilename(), e);
-            throw new CalendarConfigurationException(
-                    String.format("Could not read properties from %s file.", calendarPropertiesResource.getFilename()), e);
-        }
-        finally
-        {
-            readLock.unlock();
-        }
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see org.springframework.beans.factory.InitializingBean#afterPropertiesSet()
-     */
-    @Override
-    public void afterPropertiesSet() throws Exception
-    {
-        Properties objectTypeProperties = new Properties();
-        try (InputStream objectTypesInputStream = configurableObjectTypes.getInputStream())
-        {
-
-            objectTypeProperties.load(objectTypesInputStream);
-            String keys = objectTypeProperties.getProperty("configured_object_types").toUpperCase();
-            if (keys != null)
-            {
-                objectTypes = Arrays.asList(keys.split(",\\s*"));
-            }
-            else
-            {
-                objectTypes = new ArrayList<>();
-            }
-        }
-        catch (IOException ioe)
-        {
-            log.error("Could not read properties from [{}] file.", configurableObjectTypes.getFilename(), ioe);
-            objectTypes = new ArrayList<>();
-        }
-        // load configurations in memory on startup in order to speed up subsequent reads.
-        loadConfigurations();
-    }
-
-    private void loadConfigurations() throws CalendarConfigurationException
-    {
-        Properties calendarProperties = loadProperties();
-
-        configurations = new CalendarConfigurationsByObjectType();
-
-        Set<String> propertyNames = calendarProperties.stringPropertyNames();
-
-        Map<String, CalendarConfiguration> configurationsByType = new HashMap<>();
-
-        for (String propertyName : propertyNames)
-        {
-            String[] objectTypePropertyName = propertyName.split("\\.");
-            String objectType = objectTypePropertyName[0];
-
-            if (!objectTypes.contains(objectType.toUpperCase()))
-            {
-                continue;
-            }
-
-            CalendarConfiguration configuration = configurationsByType.computeIfAbsent(objectType, k -> new CalendarConfiguration());
-            String propertyValue = calendarProperties.getProperty(propertyName);
-            CalendarPropertyKeys propertyType = CalendarPropertyKeys.valueOf(objectTypePropertyName[1]);
-            switch (propertyType)
-            {
-            case INTEGRATION_ENABLED:
-                configuration.setIntegrationEnabled(Boolean.valueOf(propertyValue));
-                break;
-            case SYSTEM_EMAIL:
-                configuration.setSystemEmail(propertyValue);
-                break;
-            case PASSWORD:
-                configuration.setPassword(propertyValue);
-                break;
-            case PURGE_OPTION:
-                configuration.setPurgeOptions(PurgeOptions.valueOf(propertyValue));
-                break;
-            case DAYS_CLOSED:
-                configuration.setDaysClosed(Integer.parseInt(propertyValue));
-                break;
-            }
-        }
-
-        for (String objectType : objectTypes)
-        {
-            configurationsByType.computeIfAbsent(objectType, k -> new CalendarConfiguration());
-        }
-
-        configurations.setConfigurationsByType(configurationsByType);
-    }
-
-    /**
-     * @param configurableObjectTypes
-     *            the configurableObjectTypes to set
-     */
-    public void setConfigurableObjectTypes(Resource configurableObjectTypes)
-    {
-        this.configurableObjectTypes = configurableObjectTypes;
-    }
-
-    /**
-     * @param calendarPropertiesResource
-     *            the calendarPropertiesResource to set
-     */
-    public void setCalendarPropertiesResource(Resource calendarPropertiesResource)
-    {
-        this.calendarPropertiesResource = calendarPropertiesResource;
-    }
-
     /**
      * @param encryptablePropertyUtils
      *            the encryptablePropertyUtils to set
@@ -457,6 +235,26 @@ public class PropertyFileCalendarAdminService implements CalendarAdminService, I
     public void setEncryptablePropertyUtils(AcmEncryptablePropertyUtils encryptablePropertyUtils)
     {
         this.encryptablePropertyUtils = encryptablePropertyUtils;
+    }
+
+    public CalendarConfig getCalendarConfig()
+    {
+        return calendarConfig;
+    }
+
+    public void setCalendarConfig(CalendarConfig calendarConfig)
+    {
+        this.calendarConfig = calendarConfig;
+    }
+
+    public ConfigurationPropertyService getConfigurationPropertyService()
+    {
+        return configurationPropertyService;
+    }
+
+    public void setConfigurationPropertyService(ConfigurationPropertyService configurationPropertyService)
+    {
+        this.configurationPropertyService = configurationPropertyService;
     }
 
     /**

@@ -16,4 +16,5 @@
 
     <bean id="objectConverter" class="com.armedia.acm.objectonverter.ObjectConverter" factory-method="createObjectConverterForTests"/>
 
+    <bean id="acmParticipantDao" class="com.armedia.acm.services.participants.dao.AcmParticipantDao"/>
 </beans>

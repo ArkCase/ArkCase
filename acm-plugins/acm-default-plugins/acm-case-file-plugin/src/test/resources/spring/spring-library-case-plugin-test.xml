@@ -1,7 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
 
     <bean id="exceptionResolver" class="org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver"/>
+
+    <bean id="acmApplication" class="com.armedia.acm.core.AcmApplication"/>
+
+    <bean id="caseConfig" class="com.armedia.acm.plugins.casefile.model.CaseFileConfig"/>
+
+    <bean id="calendarServiceProvider" class="com.armedia.acm.calendar.service.integration.exchange.ExchangeCalendarService">
+        <property name="entityHandlers">
+            <map>
+            </map>
+        </property>
+        <property name="outlookDao" ref="exchangeWebServicesOutlookDao"/>
+        <property name="calendarAdminService" ref="propertyFileCalendarAdminService"/>
+        <property name="folderCreatorDao" ref="outlookFolderCreatorDao"/>
+        <property name="folderRecreator" ref="outlookFolderRecreator"/>
+    </bean>
+
+    <bean id="emailSenderConfig" class="com.armedia.acm.email.model.EmailSenderConfig"/>
+
+    <bean id="emailReceiverConfig" class="com.armedia.acm.email.model.EmailReceiverConfig"/>
 
 </beans>

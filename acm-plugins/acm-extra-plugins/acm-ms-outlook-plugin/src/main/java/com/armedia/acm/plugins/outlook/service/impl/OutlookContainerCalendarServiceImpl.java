@@ -34,6 +34,7 @@ import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.outlook.service.OutlookContainerCalendarService;
 import com.armedia.acm.plugins.profile.service.UserOrgService;
 import com.armedia.acm.service.outlook.model.AcmOutlookUser;
+import com.armedia.acm.service.outlook.model.OutlookConfig;
 import com.armedia.acm.service.outlook.model.OutlookFolder;
 import com.armedia.acm.service.outlook.model.OutlookFolderPermission;
 import com.armedia.acm.service.outlook.service.OutlookFolderService;
@@ -42,14 +43,11 @@ import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -68,17 +66,9 @@ public class OutlookContainerCalendarServiceImpl implements OutlookContainerCale
     private OutlookFolderService outlookFolderService;
     private AcmContainerDao acmContainerDao;
     private UserDao userDao;
-
-    // properties
-    private List<String> participantsTypesForOutlookFolder;
-    private String defaultAccess;
-    private String approverAccess;
-    private String assigneeAccess;
-    private String followerAccess;
-
-    private Boolean useSystemUser;
     private UserOrgService userOrgService;
     private OutlookService outlookService;
+    private OutlookConfig outlookConfig;
 
     @Override
     @Transactional(propagation = Propagation.REQUIRES_NEW)
@@ -130,7 +120,7 @@ public class OutlookContainerCalendarServiceImpl implements OutlookContainerCale
     private List<OutlookFolderPermission> mapParticipantsToFolderPermission(List<AcmParticipant> participantsForObject)
     {
         List<OutlookFolderPermission> folderPermissionsToBeAdded = new LinkedList<>();
-        if (participantsTypesForOutlookFolder == null || participantsTypesForOutlookFolder.isEmpty())
+        if (outlookConfig.getParticipantTypes() == null || outlookConfig.getParticipantTypes().isEmpty())
         {
             // this will cause all permissions in folder to be removed
             log.warn("There are not defined participants types to include");
@@ -139,7 +129,7 @@ public class OutlookContainerCalendarServiceImpl implements OutlookContainerCale
         {
             for (AcmParticipant ap : participantsForObject)
             {
-                if (participantsTypesForOutlookFolder.contains(ap.getParticipantType()))
+                if (outlookConfig.getParticipantTypes().contains(ap.getParticipantType()))
                 {
                     // add participant to access calendar folder
                     AcmUser user = userDao.findByUserId(ap.getParticipantLdapId());
@@ -152,9 +142,9 @@ public class OutlookContainerCalendarServiceImpl implements OutlookContainerCale
                     switch (ap.getParticipantType())
                     {
                     case "follower":
-                        if (getFollowerAccess() != null)
+                        if (outlookConfig.getFollowerAccess() != null)
                         {
-                            outlookFolderPermission.setLevel(FolderPermissionLevel.valueOf(getFollowerAccess()));
+                            outlookFolderPermission.setLevel(FolderPermissionLevel.valueOf(outlookConfig.getFollowerAccess()));
                             break;
                         }
                         else
@@ -163,9 +153,9 @@ public class OutlookContainerCalendarServiceImpl implements OutlookContainerCale
                             break;
                         }
                     case "assignee":
-                        if (getAssigneeAccess() != null)
+                        if (outlookConfig.getAssigneeAccess() != null)
                         {
-                            outlookFolderPermission.setLevel(FolderPermissionLevel.valueOf(getAssigneeAccess()));
+                            outlookFolderPermission.setLevel(FolderPermissionLevel.valueOf(outlookConfig.getAssigneeAccess()));
                             break;
                         }
                         else
@@ -174,9 +164,9 @@ public class OutlookContainerCalendarServiceImpl implements OutlookContainerCale
                             break;
                         }
                     case "approver":
-                        if (getApproverAccess() != null)
+                        if (outlookConfig.getApproverAccess() != null)
                         {
-                            outlookFolderPermission.setLevel(FolderPermissionLevel.valueOf(getApproverAccess()));
+                            outlookFolderPermission.setLevel(FolderPermissionLevel.valueOf(outlookConfig.getApproverAccess()));
                             break;
                         }
                         else
@@ -185,9 +175,9 @@ public class OutlookContainerCalendarServiceImpl implements OutlookContainerCale
                             break;
                         }
                     default:
-                        if (getDefaultAccess() != null)
+                        if (outlookConfig.getDefaultAccess() != null)
                         {
-                            outlookFolderPermission.setLevel(FolderPermissionLevel.valueOf(getDefaultAccess()));
+                            outlookFolderPermission.setLevel(FolderPermissionLevel.valueOf(outlookConfig.getDefaultAccess()));
                             break;
                         }
                         else
@@ -203,71 +193,24 @@ public class OutlookContainerCalendarServiceImpl implements OutlookContainerCale
         return folderPermissionsToBeAdded;
     }
 
+    public OutlookFolderService getOutlookFolderService()
+    {
+        return outlookFolderService;
+    }
+
     public void setOutlookFolderService(OutlookFolderService outlookFolderService)
     {
         this.outlookFolderService = outlookFolderService;
     }
 
+    public AcmContainerDao getAcmContainerDao()
+    {
+        return acmContainerDao;
+    }
+
     public void setAcmContainerDao(AcmContainerDao acmContainerDao)
     {
         this.acmContainerDao = acmContainerDao;
-    }
-
-    public void setParticipantsTypesForOutlookFolder(String participantsTypesForOutlookFolder)
-    {
-        this.participantsTypesForOutlookFolder = !StringUtils.isEmpty(participantsTypesForOutlookFolder)
-                ? Arrays.asList(participantsTypesForOutlookFolder.trim().replaceAll(",[\\s]*", ",").split(","))
-                : new ArrayList<>();
-    }
-
-    public String getDefaultAccess()
-    {
-        return defaultAccess;
-    }
-
-    public void setDefaultAccess(String defaultAccess)
-    {
-        this.defaultAccess = defaultAccess;
-    }
-
-    public String getApproverAccess()
-    {
-        return approverAccess;
-    }
-
-    public void setApproverAccess(String approverAccess)
-    {
-        this.approverAccess = approverAccess;
-    }
-
-    public String getAssigneeAccess()
-    {
-        return assigneeAccess;
-    }
-
-    public void setAssigneeAccess(String assigneeAccess)
-    {
-        this.assigneeAccess = assigneeAccess;
-    }
-
-    public String getFollowerAccess()
-    {
-        return followerAccess;
-    }
-
-    public void setFollowerAccess(String followerAccess)
-    {
-        this.followerAccess = followerAccess;
-    }
-
-    public Boolean getUseSystemUser()
-    {
-        return useSystemUser;
-    }
-
-    public void setUseSystemUser(Boolean useSystemUser)
-    {
-        this.useSystemUser = useSystemUser;
     }
 
     public UserDao getUserDao()
@@ -298,5 +241,15 @@ public class OutlookContainerCalendarServiceImpl implements OutlookContainerCale
     public void setOutlookService(OutlookService outlookService)
     {
         this.outlookService = outlookService;
+    }
+
+    public OutlookConfig getOutlookConfig()
+    {
+        return outlookConfig;
+    }
+
+    public void setOutlookConfig(OutlookConfig outlookConfig)
+    {
+        this.outlookConfig = outlookConfig;
     }
 }

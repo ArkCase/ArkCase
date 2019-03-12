@@ -25,7 +25,8 @@
     <!-- Scan for Spring beans declared via annotations. -->
     <!--<context:component-scan base-package="com.armedia.acm.web"/>-->
     <context:component-scan base-package="org.springframework.security.saml.web"/>
-
+    <context:property-placeholder ignore-resource-not-found="true" ignore-unresolvable="true"/>
+    
     <bean id="jacksonDeserializationHandler" class="com.armedia.acm.web.api.handler.JacksonDeserializationHandler"/>
     <bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
         <property name="targetObject" ref="sourceObjectMapper"/>

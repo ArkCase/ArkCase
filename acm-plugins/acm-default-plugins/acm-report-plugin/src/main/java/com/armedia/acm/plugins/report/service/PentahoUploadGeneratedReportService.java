@@ -41,6 +41,7 @@ import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.report.model.PentahoFileProperties;
 import com.armedia.acm.plugins.report.model.PentahoReportScheduleConstants;
+import com.armedia.acm.pentaho.config.PentahoReportsConfig;
 import com.armedia.acm.web.api.MDCConstants;
 
 import org.slf4j.Logger;
@@ -70,17 +71,16 @@ public class PentahoUploadGeneratedReportService
     private DocumentRepositoryDao documentRepositoryDao;
     private EcmFileDao ecmFileDao;
     private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
-    private String uploadUserId;
-    private String reportDocumentRepository;
+    private PentahoReportsConfig reportsConfig;
 
     @Transactional
     public EcmFile uploadReport(InputStream reportDataStream, PentahoFileProperties pentahoFileProperties)
             throws AcmObjectNotFoundException
     {
-        DocumentRepository documentRepository = getDocumentRepositoryDao().findByName(getReportDocumentRepository());
+        DocumentRepository documentRepository = getDocumentRepositoryDao().findByName(reportsConfig.getReportDocumentRepositoryName());
         if (documentRepository != null)
         {
-            String uploadUserId = (getUploadUserId() == null) ? "admin" : getUploadUserId();
+            String uploadUserId = (reportsConfig.getCmisStoreReportUser() == null) ? "admin" : reportsConfig.getCmisStoreReportUser();
             Authentication auth = new UsernamePasswordAuthenticationToken(uploadUserId, uploadUserId);
             getAuditPropertyEntityAdapter().setUserId(uploadUserId);
             if (MDC.get(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY) == null)
@@ -224,23 +224,13 @@ public class PentahoUploadGeneratedReportService
         this.auditPropertyEntityAdapter = auditPropertyEntityAdapter;
     }
 
-    public String getUploadUserId()
+    public PentahoReportsConfig getReportsConfig()
     {
-        return uploadUserId;
+        return reportsConfig;
     }
 
-    public void setUploadUserId(String uploadUserId)
+    public void setReportsConfig(PentahoReportsConfig reportsConfig)
     {
-        this.uploadUserId = uploadUserId;
-    }
-
-    public String getReportDocumentRepository()
-    {
-        return reportDocumentRepository;
-    }
-
-    public void setReportDocumentRepository(String reportDocumentRepository)
-    {
-        this.reportDocumentRepository = reportDocumentRepository;
+        this.reportsConfig = reportsConfig;
     }
 }

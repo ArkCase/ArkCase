@@ -31,6 +31,7 @@ import com.armedia.acm.pluginmanager.service.AcmConfigurablePlugin;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.onlyoffice.exceptions.UnsupportedExtension;
+import com.armedia.acm.plugins.onlyoffice.model.OnlyOfficeConfig;
 import com.armedia.acm.plugins.onlyoffice.model.config.Config;
 import com.armedia.acm.plugins.onlyoffice.model.config.Document;
 import com.armedia.acm.plugins.onlyoffice.model.config.DocumentInfo;
@@ -52,19 +53,9 @@ public class ConfigServiceImpl implements ConfigService, AcmConfigurablePlugin
 {
     private Logger logger = LoggerFactory.getLogger(getClass());
     private EcmFileDao ecmFileDao;
-
     private ArkPermissionEvaluator arkPermissionEvaluator;
     private DocumentTypeResolver documentTypeResolver;
-
-    private String documentServerUrlApi;
-    private String arkcaseBaseUrl;
-    private Boolean pluginEnabled;
-    private static final String ONLY_OFFICE_PLUGIN = "ONLY_OFFICE";
-
-    private String configViewType;
-    private String configViewHeight;
-    private String configViewWidth;
-    private boolean outboundSignEnabled;
+    private OnlyOfficeConfig onlyOfficeConfig;
 
     @Override
     public Config getConfig(Long fileId, String mode, String lang, Authentication auth, String token, AcmUser user)
@@ -72,9 +63,9 @@ public class ConfigServiceImpl implements ConfigService, AcmConfigurablePlugin
         EcmFile ecmFile = ecmFileDao.find(fileId);
 
         Config config = new Config();
-        config.setHeight(configViewHeight);
-        config.setWidth(configViewWidth);
-        config.setType(configViewType);
+        config.setHeight(onlyOfficeConfig.getConfigViewHeight());
+        config.setWidth(onlyOfficeConfig.getConfigViewWidth());
+        config.setType(onlyOfficeConfig.getConfigViewType());
         if (ecmFile.getFileExtension() == null)
         {
             throw new UnsupportedExtension("Extension is not specified for document id[" + ecmFile.getId() + "].");
@@ -97,7 +88,7 @@ public class ConfigServiceImpl implements ConfigService, AcmConfigurablePlugin
                             String.format("%s-%s", ecmFile.getId(), ecmFile.getActiveVersionTag()),
                             ecmFile.getFileName(),
                             String.format("%s/api/v1/plugin/ecm/download?ecmFileId=%s&acm_email_ticket=%s",
-                                    arkcaseBaseUrl,
+                                    onlyOfficeConfig.getArkcaseBaseUrl(),
                                     ecmFile.getFileId(),
                                     authTicket)));
         }
@@ -139,8 +130,8 @@ public class ConfigServiceImpl implements ConfigService, AcmConfigurablePlugin
         {
             config.setEditorConfig(
                     new EditorConfig(
-                            String.format("%s/api/onlyoffice/callback?acm_email_ticket=%s&ecmFileId=%s", arkcaseBaseUrl, authTicket,
-                                    fileId.toString())));
+                            String.format("%s/api/onlyoffice/callback?acm_email_ticket=%s&ecmFileId=%s",
+                                    onlyOfficeConfig.getArkcaseBaseUrl(), authTicket, fileId.toString())));
         }
         EditorConfig editorConfig = config.getEditorConfig();
         editorConfig.setMode(mode);
@@ -163,31 +154,21 @@ public class ConfigServiceImpl implements ConfigService, AcmConfigurablePlugin
         customization.setShowReviewChanges(true);
     }
 
-    public void setArkcaseBaseUrl(String arkcaseBaseUrl)
-    {
-        this.arkcaseBaseUrl = arkcaseBaseUrl;
-    }
-
     public void setEcmFileDao(EcmFileDao ecmFileDao)
     {
         this.ecmFileDao = ecmFileDao;
     }
 
-    public void setDocumentServerUrlApi(String documentServerUrlApi)
-    {
-        this.documentServerUrlApi = documentServerUrlApi;
-    }
-
     @Override
     public String getDocumentServerUrlApi()
     {
-        return documentServerUrlApi;
+        return onlyOfficeConfig.getDocumentServerUrlApi();
     }
 
     @Override
     public String getArkcaseBaseUrl()
     {
-        return arkcaseBaseUrl;
+        return onlyOfficeConfig.getArkcaseBaseUrl();
     }
 
     public void setArkPermissionEvaluator(ArkPermissionEvaluator arkPermissionEvaluator)
@@ -200,51 +181,26 @@ public class ConfigServiceImpl implements ConfigService, AcmConfigurablePlugin
         this.documentTypeResolver = documentTypeResolver;
     }
 
-    public void setConfigViewType(String configViewType)
-    {
-        this.configViewType = configViewType;
-    }
-
-    public void setConfigViewHeight(String configViewHeight)
-    {
-        this.configViewHeight = configViewHeight;
-    }
-
-    public void setConfigViewWidth(String configViewWidth)
-    {
-        this.configViewWidth = configViewWidth;
-    }
-
-    public Boolean getPluginEnabled()
-    {
-        return pluginEnabled;
-    }
-
-    public void setPluginEnabled(Boolean pluginEnabled)
-    {
-        this.pluginEnabled = pluginEnabled;
-    }
-
     @Override
     public boolean isEnabled()
     {
-        return pluginEnabled;
+        return onlyOfficeConfig.isPluginEnabled();
     }
 
     @Override
     public String getName()
     {
-        return ONLY_OFFICE_PLUGIN;
-    }
-
-    public void setOutboundSignEnabled(boolean outboundSignEnabled)
-    {
-        this.outboundSignEnabled = outboundSignEnabled;
+        return OnlyOfficeConfig.getOnlyOfficePluginName();
     }
 
     @Override
     public boolean isOutboundSignEnabled()
     {
-        return outboundSignEnabled;
+        return onlyOfficeConfig.isOutboundSignEnabled();
+    }
+
+    public void setOnlyOfficeConfig(OnlyOfficeConfig onlyOfficeConfig)
+    {
+        this.onlyOfficeConfig = onlyOfficeConfig;
     }
 }
