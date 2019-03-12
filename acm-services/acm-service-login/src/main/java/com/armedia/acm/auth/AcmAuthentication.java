@@ -48,7 +48,6 @@ public class AcmAuthentication implements Authentication, AcmUserAuthorityContex
     public AcmAuthentication(Authentication authentication)
     {
         AcmGrantedAuthoritiesMapper acmGrantedAuthoritiesMapper = new AcmGrantedAuthoritiesMapper();
-        acmGrantedAuthoritiesMapper.setActiveMapping(new HashMap<String, List<String>>());
         this.authorities = acmGrantedAuthoritiesMapper.mapAuthorities(authentication.getAuthorities());
         this.credentials = authentication.getCredentials();
         this.principal = authentication.getPrincipal();

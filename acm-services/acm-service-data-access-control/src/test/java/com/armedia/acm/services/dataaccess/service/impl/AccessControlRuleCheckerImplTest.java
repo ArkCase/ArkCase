@@ -33,6 +33,7 @@ import static org.junit.Assert.assertTrue;
 import com.armedia.acm.auth.AcmAuthentication;
 import com.armedia.acm.services.dataaccess.model.AccessControlRule;
 import com.armedia.acm.services.dataaccess.model.AccessControlRules;
+import com.armedia.acm.services.dataaccess.model.DataAccessControlConfig;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.easymock.EasyMock;
@@ -107,11 +108,12 @@ public class AccessControlRuleCheckerImplTest extends EasyMockSupport
         propertiesMapping.put("object_sub_type_s", "objectSubType");
         propertiesMapping.put("status_lcs", "status");
 
-        accessControlRuleChecker.setGetObjectExpression("get|list|read|download|view|subscribe");
-        accessControlRuleChecker
-                .setEditObjectExpression("save|insert|remove|add|edit|change|lock|complete|unlock|merge|restrict|declare|rename|write");
-        accessControlRuleChecker.setInsertObjectExpression("create");
-        accessControlRuleChecker.setDeleteObjectExpression("delete");
+        DataAccessControlConfig config = new DataAccessControlConfig();
+        config.setFallbackInsertObjectExpression("create");
+        config.setFallbackDeleteObjectExpression("delete");
+        config.setFallbackEditObjectExpression("save|insert|remove|add|edit|change|lock|complete|unlock|merge|restrict|declare|rename|write");
+        config.setFallbackGetObjectExpression("get|list|read|download|view|subscribe");
+        accessControlRuleChecker.setDacConfig(config);
     }
 
     @Test

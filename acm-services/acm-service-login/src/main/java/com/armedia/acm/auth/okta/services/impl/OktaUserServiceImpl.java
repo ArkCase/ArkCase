@@ -27,7 +27,6 @@ package com.armedia.acm.auth.okta.services.impl;
  * #L%
  */
 
-import com.armedia.acm.auth.okta.auth.AcmMultiFactorConfig;
 import com.armedia.acm.auth.okta.exceptions.OktaException;
 import com.armedia.acm.auth.okta.model.OktaAPIConstants;
 import com.armedia.acm.auth.okta.model.user.OktaUser;
@@ -53,7 +52,6 @@ public class OktaUserServiceImpl implements OktaUserService
 {
     private Logger LOGGER = LoggerFactory.getLogger(OktaUserServiceImpl.class);
     private OktaRestService oktaRestService;
-    private AcmMultiFactorConfig multiFactorConfig;
 
     @Override
     public OktaUser createUser(OktaUser user) throws OktaException
@@ -291,15 +289,5 @@ public class OktaUserServiceImpl implements OktaUserService
     public void setOktaRestService(OktaRestService oktaRestService)
     {
         this.oktaRestService = oktaRestService;
-    }
-
-    public AcmMultiFactorConfig getMultiFactorConfig()
-    {
-        return multiFactorConfig;
-    }
-
-    public void setMultiFactorConfig(AcmMultiFactorConfig multiFactorConfig)
-    {
-        this.multiFactorConfig = multiFactorConfig;
     }
 }

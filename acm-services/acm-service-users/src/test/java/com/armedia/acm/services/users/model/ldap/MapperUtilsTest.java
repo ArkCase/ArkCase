@@ -29,7 +29,6 @@ package com.armedia.acm.services.users.model.ldap;
 
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertThat;
 
 import org.junit.Test;
@@ -105,7 +104,7 @@ public class MapperUtilsTest
         config.setUserDomain("armedia.com");
         config.setUserIdAttributeName("sAMAccountName");
         String userId = MapperUtils.buildUserId("veryyylongusername", config);
-        assertEquals("dco.veryyylonguserna@armedia.com",userId);
+        assertEquals("dco.veryyylonguserna@armedia.com", userId);
     }
 
     @Test
@@ -116,7 +115,7 @@ public class MapperUtilsTest
         config.setUserDomain("armedia.com");
         config.setUserIdAttributeName("sAMAccountName");
         String userId = MapperUtils.buildUserId("ann-acm", config);
-        assertEquals("dco.ann-acm@armedia.com",userId);
+        assertEquals("dco.ann-acm@armedia.com", userId);
     }
 
     @Test
@@ -127,7 +126,7 @@ public class MapperUtilsTest
         config.setUserDomain("armedia.com");
         config.setUserIdAttributeName("uid");
         String userId = MapperUtils.buildUserId("veryyyyyylongusername", config);
-        assertEquals("veryyyyyylongusername@armedia.com",userId);
+        assertEquals("veryyyyyylongusername@armedia.com", userId);
     }
 
     @Test

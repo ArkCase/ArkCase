@@ -32,6 +32,7 @@ package com.armedia.acm.audit.service;
 
 import com.armedia.acm.audit.dao.AuditDao;
 import com.armedia.acm.audit.log4j2.ConfidentialDataConverter;
+import com.armedia.acm.audit.model.AuditConfig;
 import com.armedia.acm.audit.model.AuditEvent;
 import com.armedia.acm.audit.service.systemlogger.ISystemLogger;
 
@@ -48,13 +49,9 @@ import java.util.Map;
  */
 public class AuditServiceImpl implements AuditService
 {
-
     private final Logger LOG = LoggerFactory.getLogger(getClass());
 
-    private boolean batchRun;
-    private int purgeDays;
-    private boolean databaseLoggerEnabled;
-    private boolean systemLogLoggerEnabled;
+    private AuditConfig auditConfig;
     private ISystemLogger systemLogger;
     private AuditDao auditDao;
     private ConfidentialDataConverter confidentialDataConverter = ConfidentialDataConverter.newInstanceWithoutFormatters();
@@ -65,7 +62,7 @@ public class AuditServiceImpl implements AuditService
     @Override
     public void purgeBatchRun()
     {
-        if (!isBatchRun())
+        if (!auditConfig.getBatchRun())
         {
             return;
         }
@@ -74,7 +71,7 @@ public class AuditServiceImpl implements AuditService
 
         int deletedAudits = getAuditDao().purgeAudits(dateThreshold);
 
-        LOG.debug(deletedAudits + " audits was deleted.");
+        LOG.debug("[{}] audits were deleted.", deletedAudits);
     }
 
     @Override
@@ -84,11 +81,11 @@ public class AuditServiceImpl implements AuditService
         {
             convertConfidentialProperties(auditEvent);
 
-            if (isDatabaseLoggerEnabled())
+            if (auditConfig.getDatabaseChangesLoggingEnabled())
             {
                 auditDao.save(auditEvent);
             }
-            if (isSystemLogLoggerEnabled())
+            if (auditConfig.getSystemLogEnabled())
             {
                 systemLogger.log(auditEvent.toString());
             }
@@ -116,32 +113,12 @@ public class AuditServiceImpl implements AuditService
 
     private Date createPurgeThreshold()
     {
-        int purgeDays = getPurgeDays();
+        int purgeDays = auditConfig.getPurgeDays();
 
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.DATE, -purgeDays);
 
         return calendar.getTime();
-    }
-
-    public boolean isBatchRun()
-    {
-        return batchRun;
-    }
-
-    public void setBatchRun(boolean batchRun)
-    {
-        this.batchRun = batchRun;
-    }
-
-    public int getPurgeDays()
-    {
-        return purgeDays;
-    }
-
-    public void setPurgeDays(int purgeDays)
-    {
-        this.purgeDays = purgeDays;
     }
 
     public AuditDao getAuditDao()
@@ -164,26 +141,6 @@ public class AuditServiceImpl implements AuditService
         this.systemLogger = systemLogger;
     }
 
-    public boolean isDatabaseLoggerEnabled()
-    {
-        return databaseLoggerEnabled;
-    }
-
-    public void setDatabaseLoggerEnabled(boolean databaseLoggerEnabled)
-    {
-        this.databaseLoggerEnabled = databaseLoggerEnabled;
-    }
-
-    public boolean isSystemLogLoggerEnabled()
-    {
-        return systemLogLoggerEnabled;
-    }
-
-    public void setSystemLogLoggerEnabled(boolean systemLogLoggerEnabled)
-    {
-        this.systemLogLoggerEnabled = systemLogLoggerEnabled;
-    }
-
     /**
      * @return the confidentialDataConverter
      */
@@ -199,5 +156,16 @@ public class AuditServiceImpl implements AuditService
     public void setConfidentialDataConverter(ConfidentialDataConverter confidentialDataConverter)
     {
         this.confidentialDataConverter = confidentialDataConverter;
+    }
+
+
+    public void setAuditConfig(AuditConfig auditConfig)
+    {
+        this.auditConfig = auditConfig;
+    }
+
+    public AuditConfig getAuditConfig()
+    {
+        return auditConfig;
     }
 }

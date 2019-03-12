@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.springframework.org/schema/beans"
-       xmlns:task="http://www.springframework.org/schema/task" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-             http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd">
+       xmlns:task="http://www.springframework.org/schema/task" xmlns:aop="http://www.springframework.org/schema/aop" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+             http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
 
     <bean id="buckslipTaskHelper" class="com.armedia.acm.plugins.task.listener.BuckslipTaskHelper"/>
 
@@ -14,28 +14,15 @@
         <property name="buckslipTaskHelper" ref="buckslipTaskHelper"/>
     </bean>
 
-    <bean id="taskPluginProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
-        <!-- note: must leave "file:" at the start of the file name for spring
-        to be able to read the file; otherwise it will try to read from the
-        classpath -->
-        <property name="location" value="file:${user.home}/.arkcase/acm/taskPlugin.properties"/>
-        <property name="ignoreResourceNotFound" value="true"/>
-        <property name="localOverride" value="false"/>
-        <property name="properties">
-            <props/>
-        </property>
-    </bean>
-
-    <!-- lookup tables -->
-
     <bean id="taskPlugin" class="com.armedia.acm.pluginmanager.model.AcmPlugin">
         <property name="pluginName" value="Task Plugin"/>
-        <property name="pluginProperties" ref="taskPluginProperties"/>
+        <property name="configurationPropertyService" ref="configurationPropertyService"/>
         <property name="suportedObjectTypesNames">
             <list>
                 <value>TASK</value>
             </list>
         </property>
+        <property name="pluginConfig" ref="taskConfig"/>
     </bean>
 
     <bean id="priorityLevelToNumberMap" class="java.util.HashMap">
@@ -190,18 +177,16 @@
         <property name="activitiTaskService" ref="activitiTaskService"/>
         <property name="activitiTaskDao" ref="acmTaskDao"/>
         <property name="senderFactory" ref="notificationSenderFactory"/>
-        <property name="messageSubject" value="${upcoming.tasks.notification.subject}"/>
-        <property name="messageBodyTemplate" value="${upcoming.tasks.notification.body.template}"/>
         <property name="userDao" ref="userJpaDao"/>
+        <property name="taskNotificationConfig" ref="taskNotificationConfig"/>
     </bean>
 
     <bean id="overdueTasksNotifier" class="com.armedia.acm.plugins.task.service.impl.OverdueTasksNotifier">
         <property name="activitiTaskService" ref="activitiTaskService"/>
         <property name="activitiTaskDao" ref="acmTaskDao"/>
         <property name="senderFactory" ref="notificationSenderFactory"/>
-        <property name="messageSubject" value="${overdue.tasks.notification.subject}"/>
-        <property name="messageBodyTemplate" value="${overdue.tasks.notification.body.template}"/>
         <property name="userDao" ref="userJpaDao"/>
+        <property name="taskNotificationConfig" ref="taskNotificationConfig"/>
     </bean>
 
     <bean id="createAdHocTaskService" class="com.armedia.acm.plugins.task.service.impl.CreateAdHocTaskService">
@@ -221,4 +206,11 @@
         <!-- <task:scheduled ref="overdueTasksNotifier" method="notifyTaskAssignees" initial-delay="60000" fixed-rate="60000"/> -->
     </task:scheduled-tasks>
 
+    <bean id="taskNotificationConfig" class="com.armedia.acm.plugins.task.model.TaskNotificationConfig" scope="refresh">
+        <aop:scoped-proxy/>
+    </bean>
+
+    <bean id="taskConfig" class="com.armedia.acm.plugins.task.model.TaskConfig" scope="refresh">
+        <aop:scoped-proxy/>
+    </bean>
 </beans>

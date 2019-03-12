@@ -28,6 +28,7 @@ package com.armedia.acm.plugins.task.service.impl;
  */
 
 import com.armedia.acm.plugins.task.model.AcmTask;
+import com.armedia.acm.plugins.task.model.TaskNotificationConfig;
 import com.armedia.acm.plugins.task.service.AbstractTaskNotifier;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
@@ -45,44 +46,8 @@ import java.util.Map;
 public class OverdueTasksNotifier extends AbstractTaskNotifier
 {
 
-    // Task overdue notification.
-    /**
-     * Text to be inserted as a subject in the notification email.
-     */
-    private String messageSubject;
-
-    // "The task %s with ID %s was due on %t."
-    /**
-     * Formatting string to be used for producing text to inserted as a body in the notification email. The formating
-     * string accept 3 parameters marked with %1$s, %2$s and %3$s. First parameter is the task title. second is the task
-     * ID, and the third is the due date.
-     */
-    private String messageBodyTemplate;
-
     private UserDao userDao;
-
-    /**
-     * @param messageSubject
-     *            the messageSubject to set
-     */
-    public void setMessageSubject(String messageSubject)
-    {
-        this.messageSubject = messageSubject;
-    }
-
-    /**
-     * @param messageBodyTemplate
-     *            the messageBodyTemplate to set
-     */
-    public void setMessageBodyTemplate(String messageBodyTemplate)
-    {
-        this.messageBodyTemplate = messageBodyTemplate;
-    }
-
-    public void setUserDao(UserDao userDao)
-    {
-        this.userDao = userDao;
-    }
+    private TaskNotificationConfig taskNotificationConfig;
 
     /*
      * (non-Javadoc)
@@ -128,7 +93,7 @@ public class OverdueTasksNotifier extends AbstractTaskNotifier
         }
 
         properties.put("to", email);
-        properties.put("subject", messageSubject);
+        properties.put("subject", taskNotificationConfig.getOverdueTasksNotificationSubject());
     }
 
     /*
@@ -138,7 +103,17 @@ public class OverdueTasksNotifier extends AbstractTaskNotifier
     @Override
     public String buildEmailBody(AcmTask task)
     {
-        return String.format(messageBodyTemplate, task.getTitle(), task.getId(), task.getDueDate());
+        return String.format(taskNotificationConfig.getOverdueTasksNotificationBodyTemplate(), task.getTitle(), task.getId(),
+                task.getDueDate());
     }
 
+    public void setUserDao(UserDao userDao)
+    {
+        this.userDao = userDao;
+    }
+
+    public void setTaskNotificationConfig(TaskNotificationConfig taskNotificationConfig)
+    {
+        this.taskNotificationConfig = taskNotificationConfig;
+    }
 }

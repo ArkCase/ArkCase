@@ -56,6 +56,8 @@ import java.util.UUID;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(name = "spring", locations = {
+        "/spring/spring-library-configuration.xml",
+        "/spring/spring-library-object-converter.xml",
         "/spring/spring-library-data-source.xml",
         "/spring/spring-library-complaint-dao-test.xml",
         "/spring/spring-library-context-holder.xml",
@@ -65,6 +67,12 @@ import java.util.UUID;
 @TransactionConfiguration(defaultRollback = true, transactionManager = "transactionManager")
 public class CloseComplaintRequestDaoIT
 {
+    static
+    {
+        String userHomePath = System.getProperty("user.home");
+        System.setProperty("acm.configurationserver.propertyfile", userHomePath + "/.arkcase/acm/conf.yml");
+    }
+
     @Autowired
     private CloseComplaintRequestDao requestDao;
 

@@ -27,6 +27,8 @@ package com.armedia.acm.services.costsheet.web;
  * #L%
  */
 
+import com.armedia.acm.configuration.service.ConfigurationPropertyException;
+import com.armedia.acm.services.costsheet.model.CostsheetConfig;
 import com.armedia.acm.services.costsheet.service.CostsheetConfigurationService;
 
 import org.slf4j.Logger;
@@ -40,9 +42,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.io.IOException;
-import java.util.Map;
-
 @Controller
 @RequestMapping({ "/api/v1/service/costsheet", "/api/latest/service/costsheet" })
 public class CostsheetConfigurationAPIController
@@ -52,22 +51,14 @@ public class CostsheetConfigurationAPIController
 
     @RequestMapping(value = "/properties", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<Map<String, String>> loadCostsheetProperties() throws IOException
+    public ResponseEntity<CostsheetConfig> loadCostsheetProperties()
     {
-        try
-        {
-            return new ResponseEntity<>(getCostsheetConfigurationService().loadProperties(), HttpStatus.OK);
-        }
-        catch (IOException e)
-        {
-            log.error("Could not load Costsheet Properties File", e);
-            throw e;
-        }
+        return new ResponseEntity<>(getCostsheetConfigurationService().loadProperties(), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/properties", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public void saveCostsheetProperties(@RequestBody Map<String, String> costsheetProperties)
+    public void saveCostsheetProperties(@RequestBody CostsheetConfig costsheetProperties) throws ConfigurationPropertyException
     {
         getCostsheetConfigurationService().saveProperties(costsheetProperties);
     }

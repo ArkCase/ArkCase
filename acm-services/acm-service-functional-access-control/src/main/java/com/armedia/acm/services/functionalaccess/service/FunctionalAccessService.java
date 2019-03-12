@@ -43,7 +43,7 @@ import java.util.Set;
 public interface FunctionalAccessService
 {
 
-    public List<String> getApplicationRoles();
+    List<String> getApplicationRoles();
 
     /**
      * Retrieve Application roles
@@ -52,7 +52,7 @@ public interface FunctionalAccessService
      *            startRow, maxRows
      * @return application roles
      */
-    public List<String> getApplicationRolesPaged(String sortDirection, Integer startRow, Integer maxRows);
+    List<String> getApplicationRolesPaged(String sortDirection, Integer startRow, Integer maxRows);
 
     /**
      * Retrieve Application roles filtered by name & paged & sorted(natural sort)
@@ -61,9 +61,9 @@ public interface FunctionalAccessService
      *            startRow, maxRows, filterQuery
      * @return application roles
      */
-    public List<String> getApplicationRolesByName(String sortDirection, Integer startRow, Integer maxRows, String filterName);
+    List<String> getApplicationRolesByName(String sortDirection, Integer startRow, Integer maxRows, String filterName);
 
-    public List<String> getGroupsByRole(Authentication auth, String role, Integer startRow, Integer maxRows,
+    List<String> getGroupsByRole(Authentication auth, String role, Integer startRow, Integer maxRows,
             String sortDirection,
             Boolean authorized, String filterName) throws MuleException;
 
@@ -75,7 +75,7 @@ public interface FunctionalAccessService
      *            startRow, maxRows, sortDirection, authorized
      * @return groups
      */
-    public List<String> getGroupsByRolePaged(Authentication auth, String role, Integer startRow, Integer maxRows,
+    List<String> getGroupsByRolePaged(Authentication auth, String role, Integer startRow, Integer maxRows,
             String sortDirection,
             Boolean authorized) throws MuleException;
 
@@ -87,13 +87,13 @@ public interface FunctionalAccessService
      *            startRow, maxRows, sortDirection, authorized
      * @return groups
      */
-    public List<String> getGroupsByRoleByName(Authentication auth, String role, Integer startRow, Integer maxRows,
+    List<String> getGroupsByRoleByName(Authentication auth, String role, Integer startRow, Integer maxRows,
             String sortDirection,
             Boolean authorized, String filterQuery) throws MuleException;
 
-    public Map<String, List<String>> getApplicationRolesToGroups();
+    Map<String, List<String>> getApplicationRolesToGroups();
 
-    public boolean saveApplicationRolesToGroups(Map<String, List<String>> rolesToGroups, Authentication auth);
+    boolean saveApplicationRolesToGroups(Map<String, List<String>> rolesToGroups, Authentication auth);
 
     /**
      * Retrieve success(boolean) if the saving was successful
@@ -104,7 +104,7 @@ public interface FunctionalAccessService
      *            roleName, auth
      * @return
      */
-    public boolean saveGroupsToApplicationRole(List<String> groups, String roleName, Authentication auth) throws AcmEncryptionException;
+    boolean saveGroupsToApplicationRole(List<String> groups, String roleName, Authentication auth) throws AcmEncryptionException;
 
     /**
      * Retrieve success(boolean) if the removing was successful
@@ -115,11 +115,11 @@ public interface FunctionalAccessService
      *            roleName, auth
      * @return
      */
-    public boolean removeGroupsToApplicationRole(List<String> groups, String roleName, Authentication auth);
+    boolean removeGroupsToApplicationRole(List<String> groups, String roleName, Authentication auth);
 
-    public boolean saveApplicationRolesToGroups(Map<String, List<String>> rolesToGroups, String userId);
+    boolean saveApplicationRolesToGroups(Map<String, List<String>> rolesToGroups, String userId);
 
-    public Set<AcmUser> getUsersByRolesAndGroups(List<String> roles, Map<String, List<String>> rolesToGroups, String group,
+    Set<AcmUser> getUsersByRolesAndGroups(List<String> roles, Map<String, List<String>> rolesToGroups, String group,
             String currentAssignee);
 
     /**
@@ -129,7 +129,7 @@ public interface FunctionalAccessService
      *            rolesToGroup, startRow, maxRows, startRow, sort, auth
      * @return users
      */
-    public String getGroupsByPrivilege(List<String> roles, Map<String, List<String>> rolesToGroups, int startRow, int maxRows, String sort,
+    String getGroupsByPrivilege(List<String> roles, Map<String, List<String>> rolesToGroups, int startRow, int maxRows, String sort,
             Authentication auth) throws MuleException;
 
 }

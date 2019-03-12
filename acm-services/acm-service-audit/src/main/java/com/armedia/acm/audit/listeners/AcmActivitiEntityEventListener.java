@@ -28,6 +28,7 @@ package com.armedia.acm.audit.listeners;
  */
 
 import com.armedia.acm.activiti.model.SpringActivitiEntityEvent;
+import com.armedia.acm.audit.model.AuditConfig;
 import com.armedia.acm.audit.model.AuditConstants;
 import com.armedia.acm.audit.model.AuditEvent;
 import com.armedia.acm.audit.service.AuditService;
@@ -61,8 +62,8 @@ public class AcmActivitiEntityEventListener implements ApplicationListener<Sprin
     private Logger log = LoggerFactory.getLogger(getClass());
 
     private AuditService auditService;
-    private boolean activitiEventsLoggingEntityEventsEnabled;
-    private boolean activitiEventsLoggingEntityEventsObjectEnabled;
+
+    private AuditConfig auditConfig;
 
     private ObjectConverter objectConverter;
 
@@ -118,7 +119,7 @@ public class AcmActivitiEntityEventListener implements ApplicationListener<Sprin
 
         ActivitiEntityEvent activitiEntityEvent = (ActivitiEntityEvent) event;
 
-        if (isActivitiEventsLoggingEntityEventsEnabled())
+        if (auditConfig.getActivitiLoggingEntityEventsEnabled())
         {
             Object entity = activitiEntityEvent.getEntity();
 
@@ -132,10 +133,7 @@ public class AcmActivitiEntityEventListener implements ApplicationListener<Sprin
             setAuditEventProperties(auditEvent, entity, processVariables);
             auditEvent.setStatus(eventStatus);
 
-            if (log.isTraceEnabled())
-            {
-                log.trace("Activiti entity AuditEvent: " + auditEvent.toString());
-            }
+            log.trace("Activiti entity AuditEvent: {}", auditEvent.toString());
 
             getAuditService().audit(auditEvent);
         }
@@ -178,7 +176,7 @@ public class AcmActivitiEntityEventListener implements ApplicationListener<Sprin
                     .collect(Collectors.toMap(Map.Entry::getKey, e -> (e.getValue() == null) ? "null" : e.getValue().toString())));
         }
 
-        if (isActivitiEventsLoggingEntityEventsObjectEnabled())
+        if (getAuditConfig().isActivitiLoggingEntityEventsObjectEnabled())
         {
             // Convert Object to JSON string
             eventProperties.put("Object", getObjectConverter().getJsonMarshaller().marshal(object));
@@ -197,24 +195,14 @@ public class AcmActivitiEntityEventListener implements ApplicationListener<Sprin
         this.auditService = auditService;
     }
 
-    public boolean isActivitiEventsLoggingEntityEventsEnabled()
+    public AuditConfig getAuditConfig()
     {
-        return activitiEventsLoggingEntityEventsEnabled;
+        return auditConfig;
     }
 
-    public void setActivitiEventsLoggingEntityEventsEnabled(boolean activitiEventsLoggingEntityEventsEnabled)
+    public void setAuditConfig(AuditConfig auditConfig)
     {
-        this.activitiEventsLoggingEntityEventsEnabled = activitiEventsLoggingEntityEventsEnabled;
-    }
-
-    public boolean isActivitiEventsLoggingEntityEventsObjectEnabled()
-    {
-        return activitiEventsLoggingEntityEventsObjectEnabled;
-    }
-
-    public void setActivitiEventsLoggingEntityEventsObjectEnabled(boolean activitiEventsLoggingEntityEventsObjectEnabled)
-    {
-        this.activitiEventsLoggingEntityEventsObjectEnabled = activitiEventsLoggingEntityEventsObjectEnabled;
+        this.auditConfig = auditConfig;
     }
 
     public ObjectConverter getObjectConverter()

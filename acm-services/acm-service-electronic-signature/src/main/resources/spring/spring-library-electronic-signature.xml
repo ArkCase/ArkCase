@@ -6,10 +6,12 @@
 
     <bean id="acmSignatureConfirmPlugin" class="com.armedia.acm.pluginmanager.model.AcmPlugin">
         <property name="pluginName" value="Signature Confirm Service Plugin"/>
+        <property name="configurationPropertyService" ref="configurationPropertyService"/>
     </bean>
 
     <bean id="acmSignatureFindPlugin" class="com.armedia.acm.pluginmanager.model.AcmPlugin">
         <property name="pluginName" value="Signature Find Service Plugin"/>
+        <property name="configurationPropertyService" ref="configurationPropertyService"/>
     </bean>
 
 </beans>

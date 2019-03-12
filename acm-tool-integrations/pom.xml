@@ -38,6 +38,7 @@
         <module>acm-spring-data-source</module>
         <module>acm-reload-properties</module>
         <module>acm-websockets</module>
+        <module>acm-configuration</module>
     </modules>
 
 </project>

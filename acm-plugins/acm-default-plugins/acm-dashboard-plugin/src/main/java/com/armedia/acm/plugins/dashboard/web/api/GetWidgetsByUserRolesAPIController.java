@@ -64,7 +64,6 @@ public class GetWidgetsByUserRolesAPIController
 {
 
     private UserDao userDao;
-    private AcmPlugin dashboardPlugin;
     private WidgetDao widgetDao;
     private DashboardPropertyReader dashboardPropertyReader;
     private WidgetEventPublisher eventPublisher;
@@ -93,8 +92,8 @@ public class GetWidgetsByUserRolesAPIController
             retval = dashboardService.onlyUniqueValues(getWidgetDao().getAllWidgetsByRoles(roles));
             raiseGetEvent(authentication, session, retval, true);
             List<Widget> dashboardWidgetsOnly = dashboardPropertyReader.getDashboardWidgetsOnly();
-            List<Widget> result = retval.stream().filter(w -> dashboardWidgetsOnly.contains(w)).collect(Collectors.toList());
-            return result;
+            return retval.stream()
+                    .filter(dashboardWidgetsOnly::contains).collect(Collectors.toList());
         }
         catch (AcmObjectNotFoundException e)
         {
@@ -123,16 +122,6 @@ public class GetWidgetsByUserRolesAPIController
     public void setUserDao(UserDao userDao)
     {
         this.userDao = userDao;
-    }
-
-    public AcmPlugin getDashboardPlugin()
-    {
-        return dashboardPlugin;
-    }
-
-    public void setDashboardPlugin(AcmPlugin dashboardPlugin)
-    {
-        this.dashboardPlugin = dashboardPlugin;
     }
 
     public WidgetDao getWidgetDao()

@@ -29,7 +29,7 @@ package com.armedia.acm.plugins.alfrescorma.service;
 
 import static org.easymock.EasyMock.expect;
 
-import com.armedia.acm.plugins.alfrescorma.model.AlfrescoRmaPluginConstants;
+import com.armedia.acm.plugins.alfrescorma.model.AlfrescoRmaConfig;
 import com.armedia.acm.plugins.complaint.model.Complaint;
 import com.armedia.acm.plugins.complaint.model.ComplaintConstants;
 import com.armedia.acm.plugins.complaint.model.ComplaintCreatedEvent;
@@ -42,6 +42,7 @@ public class AcmComplaintFolderListenerTest extends EasyMockSupport
 {
     private AcmComplaintFolderListener unit;
     private AlfrescoRecordsService mockService;
+    private AlfrescoRmaConfig rmaConfig;
 
     @Before
     public void setUp()
@@ -50,12 +51,15 @@ public class AcmComplaintFolderListenerTest extends EasyMockSupport
         mockService = createMock(AlfrescoRecordsService.class);
 
         unit.setAlfrescoRecordsService(mockService);
+        rmaConfig = new AlfrescoRmaConfig();
+        rmaConfig.setIntegrationEnabled(true);
     }
 
     @Test
     public void doNotProceed_shouldNotCreateRecordFolder()
     {
-        expect(mockService.checkIntegrationEnabled(AlfrescoRmaPluginConstants.COMPLAINT_FOLDER_INTEGRATION_KEY)).andReturn(Boolean.FALSE);
+        rmaConfig.setCreateRecordFolderOnComplaintCreate(false);
+        expect(mockService.getRmaConfig()).andReturn(rmaConfig);
 
         ComplaintCreatedEvent event = new ComplaintCreatedEvent(new Complaint());
 
@@ -72,7 +76,8 @@ public class AcmComplaintFolderListenerTest extends EasyMockSupport
         Complaint complaint = new Complaint();
         complaint.setComplaintNumber("complaintNumber");
 
-        expect(mockService.checkIntegrationEnabled(AlfrescoRmaPluginConstants.COMPLAINT_FOLDER_INTEGRATION_KEY)).andReturn(Boolean.TRUE);
+        rmaConfig.setCreateRecordFolderOnComplaintCreate(true);
+        expect(mockService.getRmaConfig()).andReturn(rmaConfig);
 
         expect(mockService.findFolder(ComplaintConstants.OBJECT_TYPE)).andReturn(null);
         expect(mockService.createOrFindRecordFolder(complaint.getComplaintNumber(), null)).andReturn(null);

@@ -27,6 +27,8 @@ package com.armedia.acm.service.outlook.service.impl;
  * #L%
  */
 
+import com.armedia.acm.convertfolder.ConversionException;
+import com.armedia.acm.convertfolder.DefaultFolderAndFileConverter;
 import com.armedia.acm.core.exceptions.AcmEncryptionException;
 import com.armedia.acm.core.exceptions.AcmOutlookConnectionFailedException;
 import com.armedia.acm.core.exceptions.AcmOutlookCreateItemFailedException;
@@ -34,9 +36,6 @@ import com.armedia.acm.core.exceptions.AcmOutlookException;
 import com.armedia.acm.core.exceptions.AcmOutlookFindItemsFailedException;
 import com.armedia.acm.core.exceptions.AcmOutlookItemNotFoundException;
 import com.armedia.acm.core.exceptions.AcmOutlookListItemsFailedException;
-import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
-import com.armedia.acm.convertfolder.ConversionException;
-import com.armedia.acm.convertfolder.DefaultFolderAndFileConverter;
 import com.armedia.acm.crypto.AcmCryptoUtils;
 import com.armedia.acm.plugins.ecm.dao.AcmContainerDao;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
@@ -46,15 +45,53 @@ import com.armedia.acm.service.outlook.dao.AcmOutlookFolderCreatorDao;
 import com.armedia.acm.service.outlook.dao.AcmOutlookFolderCreatorDaoException;
 import com.armedia.acm.service.outlook.dao.OutlookDao;
 import com.armedia.acm.service.outlook.dao.OutlookPasswordDao;
-import com.armedia.acm.service.outlook.model.*;
+import com.armedia.acm.service.outlook.model.AcmOutlookFolderCreator;
+import com.armedia.acm.service.outlook.model.AcmOutlookUser;
+import com.armedia.acm.service.outlook.model.OutlookCalendarItem;
+import com.armedia.acm.service.outlook.model.OutlookContactItem;
+import com.armedia.acm.service.outlook.model.OutlookDTO;
+import com.armedia.acm.service.outlook.model.OutlookFolder;
+import com.armedia.acm.service.outlook.model.OutlookFolderPermission;
+import com.armedia.acm.service.outlook.model.OutlookItem;
+import com.armedia.acm.service.outlook.model.OutlookMailItem;
+import com.armedia.acm.service.outlook.model.OutlookPassword;
+import com.armedia.acm.service.outlook.model.OutlookResults;
+import com.armedia.acm.service.outlook.model.OutlookTaskItem;
 import com.armedia.acm.service.outlook.service.OutlookEventPublisher;
 import com.armedia.acm.service.outlook.service.OutlookFolderService;
 import com.armedia.acm.service.outlook.service.OutlookService;
-import com.armedia.acm.services.email.model.*;
+import com.armedia.acm.services.email.model.EmailBodyBuilder;
+import com.armedia.acm.services.email.model.EmailBuilder;
+import com.armedia.acm.services.email.model.EmailWithAttachmentsAndLinksDTO;
+import com.armedia.acm.services.email.model.EmailWithAttachmentsDTO;
+import com.armedia.acm.services.email.model.EmailWithEmbeddedLinksDTO;
+import com.armedia.acm.services.email.model.EmailWithEmbeddedLinksResultDTO;
 import com.armedia.acm.services.email.sender.service.EmailSenderConfigurationServiceImpl;
 import com.armedia.acm.services.email.service.AcmEmailContentGeneratorService;
 import com.armedia.acm.services.email.service.TemplatingEngine;
 import com.armedia.acm.services.users.model.AcmUser;
+
+import org.apache.commons.codec.digest.DigestUtils;
+import org.mule.util.FileUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.security.core.Authentication;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Base64;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import microsoft.exchange.webservices.data.core.ExchangeService;
 import microsoft.exchange.webservices.data.core.PropertySet;
 import microsoft.exchange.webservices.data.core.enumeration.property.BodyType;
@@ -64,27 +101,22 @@ import microsoft.exchange.webservices.data.core.enumeration.property.WellKnownFo
 import microsoft.exchange.webservices.data.core.enumeration.service.DeleteMode;
 import microsoft.exchange.webservices.data.core.exception.service.local.ServiceLocalException;
 import microsoft.exchange.webservices.data.core.service.folder.Folder;
-import microsoft.exchange.webservices.data.core.service.item.*;
-import microsoft.exchange.webservices.data.core.service.schema.*;
+import microsoft.exchange.webservices.data.core.service.item.Appointment;
+import microsoft.exchange.webservices.data.core.service.item.Contact;
+import microsoft.exchange.webservices.data.core.service.item.EmailMessage;
+import microsoft.exchange.webservices.data.core.service.item.Item;
+import microsoft.exchange.webservices.data.core.service.item.Task;
+import microsoft.exchange.webservices.data.core.service.schema.AppointmentSchema;
+import microsoft.exchange.webservices.data.core.service.schema.ContactSchema;
+import microsoft.exchange.webservices.data.core.service.schema.EmailMessageSchema;
+import microsoft.exchange.webservices.data.core.service.schema.ItemSchema;
+import microsoft.exchange.webservices.data.core.service.schema.TaskSchema;
 import microsoft.exchange.webservices.data.property.complex.FolderId;
 import microsoft.exchange.webservices.data.property.complex.FolderPermission;
 import microsoft.exchange.webservices.data.property.complex.MessageBody;
 import microsoft.exchange.webservices.data.property.definition.ExtendedPropertyDefinition;
 import microsoft.exchange.webservices.data.search.FindItemsResults;
 import microsoft.exchange.webservices.data.search.filter.SearchFilter;
-import org.apache.commons.codec.digest.DigestUtils;
-import org.mule.api.MuleException;
-import org.mule.util.FileUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.security.core.Authentication;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.io.*;
-import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * Created by armdev on 4/20/15.
@@ -514,7 +546,7 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
                     fileName = fileName + ecmFile.getFileActiveVersionNameExtension();
                 }
 
-                if(getEmailSenderConfigurationService().readConfiguration().isConvertDocumentsToPdf() &&
+                if (getEmailSenderConfigurationService().readConfiguration().getConvertDocumentsToPdf() &&
                         Objects.nonNull(ecmFile) && !".pdf".equals(ecmFile.getFileActiveVersionNameExtension()))
                 {
                     try
@@ -539,7 +571,7 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
         }
         emailMessage.sendAndSaveCopy();
 
-        //CLEAN TEMP FILES AND INPUT STREAMS
+        // CLEAN TEMP FILES AND INPUT STREAMS
 
         tmpFilesInputStream.forEach(inputStream -> {
             try
@@ -548,7 +580,7 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
             }
             catch (IOException e)
             {
-               log.warn("Could not close input stream", e);
+                log.warn("Could not close input stream", e);
             }
         });
 
@@ -1201,11 +1233,13 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
         this.emailSenderConfigurationService = emailSenderConfigurationService;
     }
 
-    public DefaultFolderAndFileConverter getDefaultFolderAndFileConverter() {
+    public DefaultFolderAndFileConverter getDefaultFolderAndFileConverter()
+    {
         return defaultFolderAndFileConverter;
     }
 
-    public void setDefaultFolderAndFileConverter(DefaultFolderAndFileConverter defaultFolderAndFileConverter) {
+    public void setDefaultFolderAndFileConverter(DefaultFolderAndFileConverter defaultFolderAndFileConverter)
+    {
         this.defaultFolderAndFileConverter = defaultFolderAndFileConverter;
     }
 }

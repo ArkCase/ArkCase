@@ -31,10 +31,10 @@ import com.armedia.acm.auth.AcmAuthentication;
 import com.armedia.acm.auth.AcmGrantedAuthority;
 import com.armedia.acm.auth.AuthenticationUtils;
 import com.armedia.acm.auth.LoginEvent;
-import com.armedia.acm.auth.okta.auth.AcmMultiFactorConfig;
 import com.armedia.acm.auth.okta.auth.OktaAuthenticationDetails;
 import com.armedia.acm.auth.okta.exceptions.OktaException;
 import com.armedia.acm.auth.okta.model.OktaAPIConstants;
+import com.armedia.acm.auth.okta.model.OktaConfig;
 import com.armedia.acm.auth.okta.model.ProviderType;
 import com.armedia.acm.auth.okta.model.factor.Factor;
 import com.armedia.acm.auth.okta.model.factor.FactorProfile;
@@ -86,16 +86,16 @@ import java.util.stream.Collectors;
 public class AuthLoginController implements ApplicationEventPublisherAware
 {
     private Logger LOGGER = LoggerFactory.getLogger(getClass());
-    private AcmMultiFactorConfig multiFactorConfig;
     private OktaUserService oktaUserService;
     private FactorService factorService;
     private FactorLifecycleService factorLifecycleService;
     private FactorVerificationService factorVerificationService;
     private UserDao userDao;
     private ApplicationEventPublisher applicationEventPublisher;
+    private OktaConfig oktaConfig;
 
     @RequestMapping(value = "/auth", method = RequestMethod.GET)
-    public ModelAndView auth(Model model, HttpServletRequest request, Authentication authentication) throws OktaException
+    public ModelAndView auth(Model model, HttpServletRequest request, Authentication authentication)
     {
         try
         {
@@ -161,7 +161,7 @@ public class AuthLoginController implements ApplicationEventPublisherAware
             if (factors.isEmpty())
             {
                 LOGGER.debug("No factors found for user, redirecting to enrollment page");
-                return new ModelAndView("redirect:" + getMultiFactorConfig().getEnrollmentTargetUrl());
+                return new ModelAndView("redirect:" + oktaConfig.getEnrollmentTargetUrl());
             }
             else
             {
@@ -169,12 +169,12 @@ public class AuthLoginController implements ApplicationEventPublisherAware
                 factors = factors.stream().filter(factor -> FactorStatus.isActive(factor.getStatus())).collect(Collectors.toList());
                 if (factors.isEmpty())
                 {
-                    return new ModelAndView("redirect:" + getMultiFactorConfig().getEnrollmentTargetUrl());
+                    return new ModelAndView("redirect:" + oktaConfig.getEnrollmentTargetUrl());
                 }
             }
 
             model.addAttribute("factors", factors);
-            model.addAttribute("enrollmentUrl", getMultiFactorConfig().getEnrollmentTargetUrl());
+            model.addAttribute("enrollmentUrl", oktaConfig.getEnrollmentTargetUrl());
 
             // Update authentication with okta user details
             OktaAuthenticationDetails oktaAuthenticationDetails = new OktaAuthenticationDetails(user, request);
@@ -183,7 +183,7 @@ public class AuthLoginController implements ApplicationEventPublisherAware
                     authentication.getName(), dbUser.getIdentifier());
             SecurityContextHolder.getContext().setAuthentication(acmAuthentication);
 
-            return new ModelAndView(getMultiFactorConfig().getSelectMethodTargetUrl(), model.asMap());
+            return new ModelAndView(oktaConfig.getSelectMethodTargetUrl(), model.asMap());
         }
         catch (Exception e)
         {
@@ -191,7 +191,7 @@ public class AuthLoginController implements ApplicationEventPublisherAware
             LOGGER.error("Error on /auth page", e);
             model.addAttribute("factors", Collections.emptyList());
             model.addAttribute("error", e.getMessage());
-            return new ModelAndView(getMultiFactorConfig().getSelectMethodTargetUrl(), model.asMap());
+            return new ModelAndView(oktaConfig.getSelectMethodTargetUrl(), model.asMap());
         }
     }
 
@@ -227,14 +227,14 @@ public class AuthLoginController implements ApplicationEventPublisherAware
             // send the known user id and factor id to the new view
             model.put("factor", factorId);
             model.put("sendCode", !FactorType.SOFTWARE_TOKEN.equals(factor.getFactorType()));
-            return new ModelAndView(getMultiFactorConfig().getVerifyMethodTargetUrl(), model);
+            return new ModelAndView(oktaConfig.getVerifyMethodTargetUrl(), model);
 
         }
         catch (OktaException e)
         {
             LOGGER.error("Failed to send challenge code: " + e.getMessage(), e);
             model.put(OktaAPIConstants.ERROR, e.getMessage());
-            return new ModelAndView(getMultiFactorConfig().getSelectMethodTargetUrl(), model);
+            return new ModelAndView(oktaConfig.getSelectMethodTargetUrl(), model);
         }
     }
 
@@ -287,7 +287,7 @@ public class AuthLoginController implements ApplicationEventPublisherAware
     public ModelAndView verify()
     {
         // If someone refreshes this page, redirect to select auth page, should never come to verify page manually
-        return new ModelAndView("redirect:" + getMultiFactorConfig().getSelectMethodTargetUrl());
+        return new ModelAndView("redirect:" + oktaConfig.getSelectMethodTargetUrl());
     }
 
     @RequestMapping(value = "/verify", method = RequestMethod.POST)
@@ -296,7 +296,7 @@ public class AuthLoginController implements ApplicationEventPublisherAware
         Map<String, Object> model = new HashMap<>();
         FactorVerifyResult result = null;
 
-        String view = getMultiFactorConfig().getVerifyMethodTargetUrl();
+        String view = oktaConfig.getVerifyMethodTargetUrl();
         Object details = authentication.getDetails();
         if (!(details instanceof OktaAuthenticationDetails))
         {
@@ -355,7 +355,7 @@ public class AuthLoginController implements ApplicationEventPublisherAware
     }
 
     @RequestMapping(value = "/enroll", method = RequestMethod.GET)
-    public ModelAndView enroll(Authentication authentication) throws OktaException
+    public ModelAndView enroll(Authentication authentication)
     {
         Map<String, Object> model = new HashMap<>();
         try
@@ -366,13 +366,13 @@ public class AuthLoginController implements ApplicationEventPublisherAware
             {
                 model.put("factors", factors);
             }
-            return new ModelAndView(getMultiFactorConfig().getEnrollmentTargetUrl(), model);
+            return new ModelAndView(oktaConfig.getEnrollmentTargetUrl(), model);
         }
         catch (Exception e)
         {
             LOGGER.error("Error on /enroll page", e);
             model.put(OktaAPIConstants.ERROR, e.getMessage());
-            return new ModelAndView(getMultiFactorConfig().getEnrollmentTargetUrl(), model);
+            return new ModelAndView(oktaConfig.getEnrollmentTargetUrl(), model);
         }
     }
 
@@ -407,7 +407,7 @@ public class AuthLoginController implements ApplicationEventPublisherAware
                 {
                     model.put("factors", Collections.singletonList(factorEnroll));
                     model.put("embedded", request.getParameter("phoneNumber"));
-                    return new ModelAndView(getMultiFactorConfig().getEnrollmentTargetUrl(), model);
+                    return new ModelAndView(oktaConfig.getEnrollmentTargetUrl(), model);
                 }
                 break;
             case SOFTWARE_TOKEN:
@@ -416,20 +416,20 @@ public class AuthLoginController implements ApplicationEventPublisherAware
                 {
                     putSharedSecret(enroll, model);
                     model.put("factors", Collections.singletonList(enroll));
-                    return new ModelAndView(getMultiFactorConfig().getEnrollmentTargetUrl(), model);
+                    return new ModelAndView(oktaConfig.getEnrollmentTargetUrl(), model);
                 }
                 break;
             default:
                 break;
             }
 
-            return new ModelAndView("redirect:" + getMultiFactorConfig().getSelectMethodTargetUrl());
+            return new ModelAndView("redirect:" + oktaConfig.getSelectMethodTargetUrl());
         }
         catch (Exception e)
         {
             LOGGER.error("Error confirming enrollment", e);
             addEnrollErrorData(model, e, authentication);
-            return new ModelAndView(getMultiFactorConfig().getEnrollmentTargetUrl(), model);
+            return new ModelAndView(oktaConfig.getEnrollmentTargetUrl(), model);
         }
     }
 
@@ -443,16 +443,16 @@ public class AuthLoginController implements ApplicationEventPublisherAware
             Factor activate = getFactorLifecycleService().activate(factorHref, passCode);
             if (activate != null && FactorStatus.ACTIVE.equals(activate.getStatus()))
             {
-                return new ModelAndView("redirect:" + getMultiFactorConfig().getSelectMethodTargetUrl());
+                return new ModelAndView("redirect:" + oktaConfig.getSelectMethodTargetUrl());
             }
 
-            return new ModelAndView("redirect:" + getMultiFactorConfig().getSelectMethodTargetUrl());
+            return new ModelAndView("redirect:" + oktaConfig.getSelectMethodTargetUrl());
         }
         catch (Exception e)
         {
             LOGGER.error("Failed to confirm secondary enrollment activation", e);
             addEnrollErrorData(model, e, authentication);
-            return new ModelAndView(getMultiFactorConfig().getEnrollmentTargetUrl(), model);
+            return new ModelAndView(oktaConfig.getEnrollmentTargetUrl(), model);
         }
     }
 
@@ -499,16 +499,6 @@ public class AuthLoginController implements ApplicationEventPublisherAware
         event.setSucceeded(true);
         getApplicationEventPublisher().publishEvent(event);
 
-    }
-
-    public AcmMultiFactorConfig getMultiFactorConfig()
-    {
-        return multiFactorConfig;
-    }
-
-    public void setMultiFactorConfig(AcmMultiFactorConfig multiFactorConfig)
-    {
-        this.multiFactorConfig = multiFactorConfig;
     }
 
     public OktaUserService getOktaUserService()
@@ -570,5 +560,15 @@ public class AuthLoginController implements ApplicationEventPublisherAware
     public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher)
     {
         this.applicationEventPublisher = applicationEventPublisher;
+    }
+
+    public OktaConfig getOktaConfig()
+    {
+        return oktaConfig;
+    }
+
+    public void setOktaConfig(OktaConfig oktaConfig)
+    {
+        this.oktaConfig = oktaConfig;
     }
 }

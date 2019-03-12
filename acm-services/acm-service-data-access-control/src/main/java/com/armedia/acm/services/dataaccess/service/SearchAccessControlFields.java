@@ -32,7 +32,7 @@ import com.armedia.acm.services.search.model.solr.SolrBaseDocument;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.group.AcmGroup;
-import com.armedia.acm.services.users.service.group.GroupServiceImpl;
+import com.armedia.acm.services.users.service.group.GroupService;
 
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
@@ -52,7 +52,7 @@ public class SearchAccessControlFields
 {
     private ParticipantAccessChecker participantAccessChecker;
     private UserDao userDao;
-    private GroupServiceImpl groupService;
+    private GroupService groupService;
 
     public void setAccessControlFields(SolrBaseDocument doc, AcmAssignedObject object)
     {
@@ -172,12 +172,12 @@ public class SearchAccessControlFields
         this.userDao = userDao;
     }
 
-    public GroupServiceImpl getGroupService()
+    public GroupService getGroupService()
     {
         return groupService;
     }
 
-    public void setGroupService(GroupServiceImpl groupService)
+    public void setGroupService(GroupService groupService)
     {
         this.groupService = groupService;
     }

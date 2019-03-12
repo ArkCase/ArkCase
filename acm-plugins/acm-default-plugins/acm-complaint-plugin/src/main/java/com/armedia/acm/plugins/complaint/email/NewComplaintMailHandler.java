@@ -31,8 +31,7 @@ import com.armedia.acm.auth.AcmAuthentication;
 import com.armedia.acm.auth.AuthenticationUtils;
 import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.data.AcmNameDao;
-import com.armedia.acm.files.ConfigurationFileChangedEvent;
-import com.armedia.acm.files.propertymanager.PropertyFileManager;
+import com.armedia.acm.email.model.EmailReceiverConfig;
 import com.armedia.acm.plugins.complaint.dao.ComplaintDao;
 import com.armedia.acm.plugins.complaint.model.Complaint;
 import com.armedia.acm.plugins.complaint.service.SaveComplaintTransaction;
@@ -49,7 +48,6 @@ import com.armedia.acm.web.api.MDCConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
-import org.springframework.context.ApplicationListener;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
@@ -65,41 +63,21 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.lang.reflect.InvocationTargetException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
-public class NewComplaintMailHandler extends AcmObjectMailHandler implements ApplicationListener<ConfigurationFileChangedEvent>
+public class NewComplaintMailHandler extends AcmObjectMailHandler
 {
-
     private final Logger log = LoggerFactory.getLogger(getClass());
-    private String objectTypeRegexPattern;
+
     private SaveComplaintTransaction saveComplaintTransaction;
     private LookupDao lookupDao;
-    private String emailReceiverPropertiesFile;
-    private Map<String, String> emailReceiverProperties = new HashMap<>();
-    private PropertyFileManager propertyFileManager;
+    private EmailReceiverConfig emailReceiverConfig;
     private ComplaintDao complaintDao;
 
     public NewComplaintMailHandler(AcmNameDao dao)
     {
         super(dao);
-    }
-
-    public void initBean()
-    {
-        try
-        {
-            emailReceiverProperties = getPropertyFileManager()
-                    .readFromFileAsMap((new File(getEmailReceiverPropertiesFile())));
-        }
-        catch (IOException e)
-        {
-            log.error("Could not read properties file [{}]", getEmailReceiverPropertiesFile());
-        }
-
     }
 
     private PersonAssociation createInitiator(Message message) throws MessagingException
@@ -152,7 +130,8 @@ public class NewComplaintMailHandler extends AcmObjectMailHandler implements App
         complaint.setOriginator(createInitiator(message));
         complaint.setComplaintType(setComplaintType());
 
-        AcmAuthentication acmAuthentication = new AcmAuthentication(null, null, null, true, emailReceiverProperties.get("email.userId"));
+        AcmAuthentication acmAuthentication = new AcmAuthentication(null, null, null,
+                true, emailReceiverConfig.getEmailUserId());
 
         try
         {
@@ -170,8 +149,8 @@ public class NewComplaintMailHandler extends AcmObjectMailHandler implements App
 
     @Override
     @Transactional
-    public void handle(Message message) throws MessagingException, IllegalAccessException, IllegalArgumentException,
-            InvocationTargetException, NoSuchMethodException, SecurityException, IOException
+    public void handle(Message message) throws MessagingException, IllegalArgumentException,
+            SecurityException, IOException
     {
 
         if (!isEnabled())
@@ -179,7 +158,7 @@ public class NewComplaintMailHandler extends AcmObjectMailHandler implements App
             return;
         }
 
-        String userId = emailReceiverProperties.get("email.userId");
+        String userId = emailReceiverConfig.getEmailUserId();
         getAuditPropertyEntityAdapter().setUserId(userId);
 
         // set the Alfresco user id, so we can attach the incoming message to the parent object.
@@ -240,11 +219,6 @@ public class NewComplaintMailHandler extends AcmObjectMailHandler implements App
 
     }
 
-    public void setObjectTypeRegexPattern(String objectTypeRegexPattern)
-    {
-        this.objectTypeRegexPattern = objectTypeRegexPattern;
-    }
-
     public void setSaveComplaintTransaction(SaveComplaintTransaction saveComplaintTransaction)
     {
         this.saveComplaintTransaction = saveComplaintTransaction;
@@ -260,26 +234,6 @@ public class NewComplaintMailHandler extends AcmObjectMailHandler implements App
         this.lookupDao = lookupDao;
     }
 
-    public String getEmailReceiverPropertiesFile()
-    {
-        return emailReceiverPropertiesFile;
-    }
-
-    public void setEmailReceiverPropertiesFile(String emailReceiverPropertiesFile)
-    {
-        this.emailReceiverPropertiesFile = emailReceiverPropertiesFile;
-    }
-
-    public PropertyFileManager getPropertyFileManager()
-    {
-        return propertyFileManager;
-    }
-
-    public void setPropertyFileManager(PropertyFileManager propertyFileManager)
-    {
-        this.propertyFileManager = propertyFileManager;
-    }
-
     public ComplaintDao getComplaintDao()
     {
         return complaintDao;
@@ -290,12 +244,18 @@ public class NewComplaintMailHandler extends AcmObjectMailHandler implements App
         this.complaintDao = complaintDao;
     }
 
-    @Override
-    public void onApplicationEvent(ConfigurationFileChangedEvent event)
+    public SaveComplaintTransaction getSaveComplaintTransaction()
     {
-        if (event.getConfigFile().getAbsolutePath().equals(getEmailReceiverPropertiesFile()))
-        {
-            initBean();
-        }
+        return saveComplaintTransaction;
+    }
+
+    public EmailReceiverConfig getEmailReceiverConfig()
+    {
+        return emailReceiverConfig;
+    }
+
+    public void setEmailReceiverConfig(EmailReceiverConfig emailReceiverConfig)
+    {
+        this.emailReceiverConfig = emailReceiverConfig;
     }
 }

@@ -63,7 +63,8 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
  * Created by maksud.sharif on 6/1/2017.
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = { "classpath:/spring/spring-web-acm-web.xml", "classpath:/spring/spring-library-person-plugin-test.xml" })
+@ContextConfiguration(locations = { "classpath:/spring/spring-web-acm-web.xml",
+        "classpath:/spring/spring-library-person-plugin-api-test.xml" })
 public class OrganizationAPIControllerTest extends EasyMockSupport
 {
     private MockMvc mockMvc;

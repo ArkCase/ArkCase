@@ -32,7 +32,7 @@ package com.armedia.acm.plugins.alfrescorma.service;
 
 import com.armedia.acm.auth.AcmAuthentication;
 import com.armedia.acm.auth.AcmAuthenticationManager;
-import com.armedia.acm.plugins.alfrescorma.model.AlfrescoRmaPluginConstants;
+import com.armedia.acm.plugins.alfrescorma.model.AlfrescoRmaConfig;
 import com.armedia.acm.plugins.complaint.model.Complaint;
 import com.armedia.acm.plugins.complaint.model.ComplaintClosedEvent;
 
@@ -58,9 +58,9 @@ public class AcmComplaintClosedListener implements ApplicationListener<Complaint
     @Override
     public void onApplicationEvent(ComplaintClosedEvent event)
     {
+        AlfrescoRmaConfig rmaConfig = alfrescoRecordsService.getRmaConfig();
 
-        boolean proceed = getAlfrescoRecordsService().checkIntegrationEnabled(AlfrescoRmaPluginConstants.COMPLAINT_CLOSE_INTEGRATION_KEY);
-
+        boolean proceed = rmaConfig.getIntegrationEnabled() && rmaConfig.getDeclareRecordsOnComplaintClose();
         if (!proceed)
         {
             return;

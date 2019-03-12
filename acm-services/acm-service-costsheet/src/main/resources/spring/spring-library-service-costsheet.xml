@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
-
-    <bean id="costProperties" class="com.armedia.acm.reloadproperties.beans.AcmReloadablePropertiesFactoryBean">
-        <property name="location" value="file:${user.home}/.arkcase/acm/cost.properties"/>
-        <property name="ignoreResourceNotFound" value="true"/>
-    </bean>
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
 
     <bean id="startWorkflowEventsForCostsheet" class="java.util.ArrayList">
         <constructor-arg>
@@ -16,10 +12,10 @@
     </bean>
 
     <bean id="acmCostsheetDao" class="com.armedia.acm.services.costsheet.dao.AcmCostsheetDao"/>
+
     <bean id="acmCostDao" class="com.armedia.acm.services.costsheet.dao.AcmCostDao"/>
 
     <bean id="costsheetService" class="com.armedia.acm.services.costsheet.service.CostsheetServiceImpl">
-        <property name="properties" ref="costProperties"/>
         <property name="acmCostsheetDao" ref="acmCostsheetDao"/>
         <property name="submissionStatusesMap">
             <map>
@@ -53,10 +49,15 @@
 
     <bean id="acmCostsheetPlugin" class="com.armedia.acm.pluginmanager.model.AcmPlugin">
         <property name="pluginName" value="Cost Tracking Service Plugin"/>
+        <property name="configurationPropertyService" ref="configurationPropertyService"/>
     </bean>
 
     <bean id="costsheetConfigurationService" class="com.armedia.acm.services.costsheet.service.CostsheetConfigurationService">
-        <property name="propertiesFile" value="#{ systemProperties ['user.home'] }/.arkcase/acm/costsheetProperties.properties"/>
-        <property name="propertyFileManager" ref="propertyFileManager"/>
+        <property name="configurationPropertyService" ref="configurationPropertyService"/>
+        <property name="costsheetConfig" ref="costsheetConfig"/>
+    </bean>
+
+    <bean id="costsheetConfig" class="com.armedia.acm.services.costsheet.model.CostsheetConfig" scope="refresh">
+        <aop:scoped-proxy/>
     </bean>
 </beans>

@@ -27,8 +27,7 @@ package com.armedia.acm.plugins.admin.web.api;
  * #L%
  */
 
-import com.armedia.acm.core.exceptions.AcmEncryptionException;
-import com.armedia.acm.services.email.receiver.modal.EmailReceiverConfiguration;
+import com.armedia.acm.email.model.EmailReceiverConfig;
 import com.armedia.acm.services.email.receiver.service.EmailReceiverConfigurationService;
 import com.armedia.acm.services.email.receiver.service.EmailReceiverConfigurationServiceImpl;
 import com.armedia.acm.services.email.service.AcmEmailConfigurationException;
@@ -38,7 +37,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -56,20 +54,20 @@ public class EmailReceiverConfigurationAPIController
 
     @RequestMapping(value = "/email/receiver/configuration", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public EmailReceiverConfiguration getConfiguration() throws AcmEncryptionException
+    public EmailReceiverConfig getConfiguration()
     {
         return emailReceiverConfigurationService.readConfiguration();
     }
 
     @RequestMapping(value = "/email/receiver/configuration", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<?> updateConfiguration(@RequestBody EmailReceiverConfiguration emailReceiverConfiguration, Authentication auth)
-            throws AcmEncryptionException, AcmEmailConfigurationException
+    public ResponseEntity<?> updateConfiguration(@RequestBody EmailReceiverConfig emailReceiverConfiguration)
+            throws AcmEmailConfigurationException
     {
         try
         {
             log.debug("Writing email receiver configuration [{}] ", emailReceiverConfiguration);
-            emailReceiverConfigurationService.writeConfiguration(emailReceiverConfiguration, auth);
+            emailReceiverConfigurationService.writeConfiguration(emailReceiverConfiguration);
             return new ResponseEntity<>(HttpStatus.OK);
         }
         catch (Exception e)

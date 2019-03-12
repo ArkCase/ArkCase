@@ -28,7 +28,7 @@ package com.armedia.acm.plugins.alfrescorma.service;
  */
 
 import com.armedia.acm.plugins.alfrescorma.exception.AlfrescoServiceException;
-import com.armedia.acm.plugins.alfrescorma.model.AlfrescoRmaPluginConstants;
+import com.armedia.acm.plugins.alfrescorma.model.AlfrescoRmaConfig;
 import com.armedia.acm.plugins.complaint.model.ComplaintConstants;
 import com.armedia.acm.plugins.complaint.model.ComplaintCreatedEvent;
 
@@ -48,7 +48,8 @@ public class AcmComplaintFolderListener implements ApplicationListener<Complaint
     @Override
     public void onApplicationEvent(ComplaintCreatedEvent complaintCreatedEvent)
     {
-        boolean proceed = getAlfrescoRecordsService().checkIntegrationEnabled(AlfrescoRmaPluginConstants.COMPLAINT_FOLDER_INTEGRATION_KEY);
+        AlfrescoRmaConfig rmaConfig = alfrescoRecordsService.getRmaConfig();
+        boolean proceed = rmaConfig.getIntegrationEnabled() && rmaConfig.getCreateRecordFolderOnComplaintCreate();
 
         if (!proceed)
         {

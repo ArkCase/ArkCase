@@ -43,6 +43,7 @@ import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.AcmFolderConstants;
 import com.armedia.acm.plugins.ecm.model.DeleteFolderInfo;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
+import com.armedia.acm.plugins.ecm.model.EcmFileConfig;
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
@@ -80,7 +81,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Properties;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -100,9 +100,9 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
     private MuleContextManager muleContextManager;
     private EcmFileService fileService;
     private FolderAndFilesUtils folderAndFilesUtils;
-    private Properties ecmFileServiceProperties;
     private CmisConfigUtils cmisConfigUtils;
     private EcmFileParticipantService fileParticipantService;
+    private EcmFileConfig ecmFileConfig;
 
     @Override
     @AcmAcquireAndReleaseObjectLock(objectIdArgIndex = 0, objectType = "FOLDER", lockType = "WRITE", lockChildObjects = false, unlockChildObjects = false)
@@ -263,7 +263,7 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
         }
         else
         {
-            String defaultCmisId = ecmFileServiceProperties.getProperty("ecm.defaultCmisId");
+            String defaultCmisId = ecmFileConfig.getDefaultCmisId();
             findFolderProperties.put(AcmFolderConstants.CONFIGURATION_REFERENCE, cmisConfigUtils.getCmisConfiguration(defaultCmisId));
         }
         MuleMessage findFolderMessage = getMuleContextManager().send(AcmFolderConstants.MULE_ENDPOINT_GET_FOLDER, null,
@@ -934,7 +934,7 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
         String cmisRepositoryId = folder.getCmisRepositoryId();
         if (cmisRepositoryId == null)
         {
-            cmisRepositoryId = ecmFileServiceProperties.getProperty("ecm.defaultCmisId");
+            cmisRepositoryId = ecmFileConfig.getDefaultCmisId();
         }
         return cmisRepositoryId;
     }
@@ -1571,16 +1571,6 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
         this.folderAndFilesUtils = folderAndFilesUtils;
     }
 
-    public Properties getEcmFileServiceProperties()
-    {
-        return ecmFileServiceProperties;
-    }
-
-    public void setEcmFileServiceProperties(Properties ecmFileServiceProperties)
-    {
-        this.ecmFileServiceProperties = ecmFileServiceProperties;
-    }
-
     public CmisConfigUtils getCmisConfigUtils()
     {
         return cmisConfigUtils;
@@ -1599,5 +1589,15 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
     public void setFileParticipantService(EcmFileParticipantService fileParticipantService)
     {
         this.fileParticipantService = fileParticipantService;
+    }
+
+    public EcmFileConfig getEcmFileConfig()
+    {
+        return ecmFileConfig;
+    }
+
+    public void setEcmFileConfig(EcmFileConfig ecmFileConfig)
+    {
+        this.ecmFileConfig = ecmFileConfig;
     }
 }

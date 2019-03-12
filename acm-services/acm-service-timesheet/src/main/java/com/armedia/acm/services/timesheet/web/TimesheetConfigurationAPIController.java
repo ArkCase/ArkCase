@@ -27,9 +27,12 @@ package com.armedia.acm.services.timesheet.web;
  * #L%
  */
 
+import com.armedia.acm.configuration.service.ConfigurationPropertyException;
 import com.armedia.acm.services.timesheet.model.TimesheetConfig;
+import com.armedia.acm.services.timesheet.model.TimesheetConfigDTO;
 import com.armedia.acm.services.timesheet.service.TimesheetConfigurationService;
 
+import org.bouncycastle.util.Times;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -41,7 +44,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.io.IOException;
 import java.util.Map;
 
 @Controller
@@ -54,38 +56,30 @@ public class TimesheetConfigurationAPIController
 
     @RequestMapping(value = "/config", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public void saveTimesheetConfiguration(@RequestBody TimesheetConfig timesheetConfig)
+    public void saveTimesheetConfiguration(@RequestBody TimesheetConfigDTO timesheetConfig)
     {
         getTimesheetConfigurationService().saveConfig(timesheetConfig);
     }
 
     @RequestMapping(value = "/config", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<TimesheetConfig> loadTimesheetConfiguration()
+    public ResponseEntity<TimesheetConfigDTO> loadTimesheetConfiguration()
     {
         return new ResponseEntity<>(getTimesheetConfigurationService().getConfig(), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/properties", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public void saveTimesheetProperties(@RequestBody Map<String, String> timesheetProperties)
+    public void saveTimesheetProperties(@RequestBody TimesheetConfig timesheetProperties) throws ConfigurationPropertyException
     {
         getTimesheetConfigurationService().saveProperties(timesheetProperties);
     }
 
     @RequestMapping(value = "/properties", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<Map<String, String>> loadTimesheetProperties() throws IOException
+    public ResponseEntity<TimesheetConfig> loadTimesheetProperties()
     {
-        try
-        {
-            return new ResponseEntity<>(getTimesheetConfigurationService().loadProperties(), HttpStatus.OK);
-        }
-        catch (IOException e)
-        {
-            log.error("Could not load Timesheet Properties File", e);
-            throw e;
-        }
+        return ResponseEntity.ok(getTimesheetConfigurationService().loadProperties());
     }
 
     public TimesheetConfigurationService getTimesheetConfigurationService()

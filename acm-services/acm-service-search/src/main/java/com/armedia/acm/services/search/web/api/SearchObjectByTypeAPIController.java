@@ -307,7 +307,7 @@ public class SearchObjectByTypeAPIController
                 {
                     for (String s : srt)
                     {
-                        String jsonString = (String) plugin.getPluginProperties().get("search.tree.sort");
+                        String jsonString = plugin.getPluginConfig().getSearchTreeSort();
                         JSONArray jsonArray = new JSONArray(jsonString);
                         for (int i = 0; i < jsonArray.length(); i++)
                         {
@@ -354,7 +354,7 @@ public class SearchObjectByTypeAPIController
                 {
                     for (String filterName : filterNames)
                     {
-                        String jsonString = (String) plugin.getPluginProperties().get("search.tree.filter");
+                        String jsonString = plugin.getPluginConfig().getSearchTreeFilter();
                         JSONArray jsonArray = new JSONArray(jsonString);
                         for (int i = 0; i < jsonArray.length(); i++)
                         {
@@ -389,8 +389,7 @@ public class SearchObjectByTypeAPIController
             {
                 if (objectType.equals(objectTypeName))
                 {
-                    String searchQueryPropertiesAsString = (String) plugin.getPluginProperties()
-                            .get(SearchConstants.SEARCH_QUERY_PROPERTIES_KEY);
+                    String searchQueryPropertiesAsString =  plugin.getPluginConfig().getSearchTreeQuery();
 
                     if (StringUtils.isNotEmpty(searchQueryPropertiesAsString))
                     {

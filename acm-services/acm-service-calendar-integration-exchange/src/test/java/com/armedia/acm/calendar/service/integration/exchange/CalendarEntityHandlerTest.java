@@ -36,7 +36,7 @@ import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 
-import com.armedia.acm.calendar.config.service.CalendarConfiguration.PurgeOptions;
+import com.armedia.acm.calendar.config.model.PurgeOptions;
 import com.armedia.acm.calendar.service.integration.exchange.CalendarEntityHandler.ServiceConnector;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.plugins.ecm.dao.AcmContainerDao;
