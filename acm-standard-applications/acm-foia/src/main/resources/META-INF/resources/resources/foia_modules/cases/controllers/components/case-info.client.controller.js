@@ -3,8 +3,8 @@
 angular.module('cases').controller(
     'Cases.InfoController',
     [ '$scope', '$stateParams', '$translate', '$timeout', 'UtilService', 'Util.DateService', 'ConfigService', 'Object.LookupService', 'Case.LookupService', 'Case.InfoService', 'Object.ModelService', 'Helper.ObjectBrowserService', 'DueDate.Service', 'Admin.HolidayService',
-        'MessageService', '$modal', 'LookupService', 'Admin.FoiaConfigService',
-        function($scope, $stateParams, $translate, $timeout, Util, UtilDateService, ConfigService, ObjectLookupService, CaseLookupService, CaseInfoService, ObjectModelService, HelperObjectBrowserService, DueDateService, AdminHolidayService, MessageService, $modal, LookupService, AdminFoiaConfigService) {
+        'MessageService', '$modal', 'LookupService', 'Admin.FoiaConfigService', 'Admin.ObjectTitleConfigurationService',
+        function($scope, $stateParams, $translate, $timeout, Util, UtilDateService, ConfigService, ObjectLookupService, CaseLookupService, CaseInfoService, ObjectModelService, HelperObjectBrowserService, DueDateService, AdminHolidayService, MessageService, $modal, LookupService, AdminFoiaConfigService, AdminObjectTitleConfigurationService) {
 
             new HelperObjectBrowserService.Component({
                 scope: $scope,
@@ -126,7 +126,32 @@ angular.module('cases').controller(
                         $scope.receivedDateDisabledLink = false;
                     }
                 });
-                
+
+                AdminObjectTitleConfigurationService.getObjectTitleConfiguration().then(function (value) {
+                    var configTitleList = value.data.objectTitleTypes;
+                    $scope.configurationTitle = _.find(configTitleList, function (confTitle) {
+                        return confTitle.objectType = "REQUEST";
+                    });
+                    if($scope.configurationTitle.title === "Use the 'Object ID' as a Title")
+                    {
+                        $scope.nodeTitle = $scope.objectInfo.id;
+                    }
+                    else if($scope.configurationTitle.title === "Use the 'Title' as a Title")
+                    {
+                        $scope.nodeTitle = $scope.objectInfo.title;
+                    }
+                    else if($scope.configurationTitle.title === "Use the 'Object ID - Title' as a Title")
+                    {
+                        $scope.nodeTitle = $scope.objectInfo.id + $scope.objectInfo.title;
+                    }
+                    else if($scope.configurationTitle.title === "Use the 'Title - Object ID' as a Title")
+                    {
+                        $scope.nodeTitle = $scope.objectInfo.title + $scope.objectInfo.id;
+                    }
+                });
+
+
+
                 $scope.isAmendmentAdded = data.amendmentFlag;
 
             };

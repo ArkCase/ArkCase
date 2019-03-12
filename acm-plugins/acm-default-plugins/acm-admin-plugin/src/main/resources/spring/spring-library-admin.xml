@@ -187,4 +187,8 @@
         <property name="propertiesFile" value="#{ systemProperties ['user.home'] }/.arkcase/acm/pdfConversionProperties.properties"/>
         <property name="propertyFileManager" ref="propertyFileManager"/>
     </bean>
+    <bean id="objectTitleConfigurationService" class="com.armedia.acm.plugins.admin.service.ObjectTitleConfigurationService">
+        <property name="objectTitleConfigurationFile" value="file:${user.home}/.arkcase/acm/objectTitleConfiguration.json"/>
+        <property name="objectConverter" ref="objectConverter"/>
+    </bean>
 </beans>

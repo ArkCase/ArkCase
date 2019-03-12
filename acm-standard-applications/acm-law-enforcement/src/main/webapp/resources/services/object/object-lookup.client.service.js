@@ -849,6 +849,21 @@ angular.module('services').factory('Object.LookupService', [ '$q', '$resource', 
         return Service.getLookupByLookupName('timesheetChargeRoles');
     };
 
+
+    /**
+     * @ngdoc method
+     * @name getObjectTitleTypes
+     * @methodOf services:Object.LookupService
+     *
+     * @description
+     * Query list of Object Titles
+     *
+     * @returns {Object} An array returned by $resource
+     */
+    Service.getObjectTitleTypes = function() {
+        return Service.getLookupByLookupName('objectTitleTypes');
+    };
+
     /**
      * @ngdoc method
      * @name getLookupsDefs

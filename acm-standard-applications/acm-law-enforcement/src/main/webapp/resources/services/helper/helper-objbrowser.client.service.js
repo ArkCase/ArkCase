@@ -14,8 +14,8 @@
  */
 angular.module('services').factory(
         'Helper.ObjectBrowserService',
-        [ '$q', '$resource', '$translate', '$timeout', '$locale', 'Acm.StoreService', 'UtilService', 'ConfigService', 'ServCommService', 'MessageService', 'ObjectService', 'Config.LocaleService',
-                function($q, $resource, $translate, $timeout, $locale, Store, Util, ConfigService, ServCommService, MessageService, ObjectService, LocaleService) {
+        [ '$q', '$resource', '$translate', '$timeout', '$locale', 'Acm.StoreService', 'UtilService', 'ConfigService', 'ServCommService', 'MessageService', 'ObjectService', 'Config.LocaleService', 'Admin.ObjectTitleConfigurationService',
+                function($q, $resource, $translate, $timeout, $locale, Store, Util, ConfigService, ServCommService, MessageService, ObjectService, LocaleService, AdminObjectTitleConfigurationService) {
 
                     var SyncDataLoader = {
                         data: {},
@@ -146,7 +146,11 @@ angular.module('services').factory(
                             that.scope.$on("object-updated", function(e, objectInfo) {
                                 var node = that.makeTreeNode(objectInfo);
                                 if (that.scope.treeControl) {
-                                    that.scope.treeControl.setTitle(node.nodeType, node.nodeId, node.nodeTitle, node.nodeToolTip);
+                                    if (node.nodeSubType){
+                                        that.scope.treeControl.setTitle(node.nodeSubType, node.nodeId, node.nodeTitle, node.nodeToolTip);
+                                    }else {
+                                        that.scope.treeControl.setTitle(node.nodeType, node.nodeId, node.nodeTitle, node.nodeToolTip);
+                                    }
                                     if (that.updateTreeData && that.treeParams) {
                                         that.updateTreeData(that.treeParams.start, that.treeParams.n, that.treeParams.sort, that.treeParams.filters, that.treeParams.query, node);
                                     }
@@ -624,6 +628,8 @@ angular.module('services').factory(
 
                             var promiseTreeData = that.getTreeData(start, n, sort, filters, query);
 
+                            var promisConfigTitle = AdminObjectTitleConfigurationService.getObjectTitleConfiguration();
+
                             var deferNodeData = $q.defer();
                             if (that.nodeId) {
                                 that.getNodeData(that.nodeId).then(function(objectInfo) {
@@ -643,12 +649,15 @@ angular.module('services').factory(
                                 deferNodeData.resolve(null);
                             }
 
-                            $q.all([ promiseTreeData, deferNodeData.promise ]).then(function(data) {
+                            $q.all([ promiseTreeData, deferNodeData.promise, promisConfigTitle]).then(function(data) {
                                 var treeData = Util.goodValue(data[0], {
                                     docs: [],
                                     total: 0
                                 });
                                 var treeNode = data[1];
+
+                                var configTitleData = data[2];
+                                var configTitleList = configTitleData.data.objectTitleTypes;
 
                                 var selectNode = Util.goodMapValue(treeData, "docs[0]", null);
                                 if (treeNode) {
@@ -660,13 +669,18 @@ angular.module('services').factory(
                                         docs.unshift(treeNode);
                                         treeData = {
                                             docs: docs,
-                                            total: treeData.total + 1
+                                            total: treeData.total + 1,
+                                            configTitleList: configTitleList
                                         };
                                         selectNode = treeNode;
                                     }
                                 }
 
-                                that.scope.treeData = treeData;
+                                that.scope.treeData = {
+                                    docs: treeData.docs,
+                                    total: treeData.total,
+                                    configTitleList: configTitleList
+                                };
                                 if (selectNode) {
                                     that.scope.treeControl.select({
                                         pageStart: start,

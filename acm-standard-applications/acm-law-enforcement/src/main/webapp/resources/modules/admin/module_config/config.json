@@ -1126,6 +1126,34 @@
                     "paginationPageSize": 20
                 }
             }
+        },
+        {
+            "id": "objectTitleConfiguration",
+            "title": "admin.application.objectTitleConfiguration.title",
+            "enabled": true,
+            "type": "grid",
+            "enableFiltering": false,
+            "configurable": true,
+            "columnDefs": [
+                {
+                    "name": "objectType",
+                    "displayName": "admin.application.objectTitleConfiguration.objectType",
+                    "visible": true,
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "enableTitleField",
+                    "displayName": "admin.application.objectTitleConfiguration.enableTitleField",
+                    "visible": true,
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "title",
+                    "displayName": "admin.application.objectTitleConfiguration.titleOption",
+                    "visible": true,
+                    "headerCellFilter": "translate"
+                }
+            ]
         }
     ],
     "tree": {
@@ -1372,6 +1400,13 @@
                 "label": "admin.application.sequenceManagement.config.title",
                 "components": [
                     "application-sequence-management.config"
+                ]
+            },
+            {
+                "type": "p/application/objectTitleConfiguration",
+                "label": "admin.application.objectTitleConfiguration.title",
+                "components": [
+                    "application-object-title-configuration"
                 ]
             },
             {
