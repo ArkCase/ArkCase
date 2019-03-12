@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('admin').controller('AdminListController', [ '$scope', '$state', '$stateParams', '$translate', '$timeout', 'UtilService', 'ConfigService', function($scope, $state, $stateParams, $translate, $timeout, Util, ConfigService) {
+angular.module('admin').controller('AdminListController', [ '$scope', '$state', '$stateParams', '$translate', '$timeout', 'UtilService', 'ConfigService', 'Admin.ObjectTitleConfigurationService', function($scope, $state, $stateParams, $translate, $timeout, Util, ConfigService, AdminObjectTitleConfigurationService) {
 
     ConfigService.getModuleConfig("admin").then(function(config) {
         $scope.treeConfig = config.tree;

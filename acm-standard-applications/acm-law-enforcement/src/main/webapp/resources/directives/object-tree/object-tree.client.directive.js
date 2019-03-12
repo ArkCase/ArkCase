@@ -137,7 +137,8 @@
  </file>
  </example>
  */
-angular.module('directives').directive('objectTree', [ '$q', '$translate', 'UtilService', 'Acm.StoreService', 'Helper.ObjectBrowserService', 'ObjectService', function($q, $translate, Util, Store, HelperObjectBrowserService, ObjectService) {
+angular.module('directives').directive('objectTree', [ '$q', '$translate', 'UtilService', 'Acm.StoreService', 'Helper.ObjectBrowserService', 'ObjectService', 'Admin.ObjectTitleConfigurationService',
+    function($q, $translate, Util, Store, HelperObjectBrowserService, ObjectService, AdminObjectTitleConfigurationService) {
     var Tree = {
         create: function(treeArgs) {
             Tree.Info.create({
@@ -170,6 +171,16 @@ angular.module('directives').directive('objectTree', [ '$q', '$translate', 'Util
                     node.setFocus();
                 }
             }
+        },
+        _configTitle : function(args) {
+            AdminObjectTitleConfigurationService.getObjectTitleConfiguration().then(function (response) {
+                if (!Util.isEmpty(response.data)) {
+                    var configTitleList = response.data.objectTitleTypes;
+                }
+                return _.find(configTitleList, function (confTitle) {
+                    return confTitle.objectType = args.nodeType;
+                });
+            })
         },
         selectComponent: function(nodeType, nodeId, component) {
             var key = Tree.Key.getKeyByObj(nodeType, nodeId);
@@ -395,13 +406,15 @@ angular.module('directives').directive('objectTree', [ '$q', '$translate', 'Util
                 lazyLoad: Tree.lazyLoad,
                 activate: function(event, data) {
                     Tree.onActivate(data.node);
-                },
+                    },
                 beforeActivate: function(event, data) {//todo: use to check dirty data
                     return true;
-                },
+                    },
                 renderNode: function(event, data) {
                     Tree.fixNodeIcon(data.node);
                 }
+
+
             }
         },
         onActivate: function(node) {
@@ -448,83 +461,107 @@ angular.module('directives').directive('objectTree', [ '$q', '$translate', 'Util
         },
         getSource: function() {
             var treeData = Util.goodValue(Tree.treeData, {
-                total: 0,
-                docs: []
-            });
-            var treeInfo = Tree.Info.getTreeInfo();
-            treeInfo.pageSize = Util.goodMapValue(Tree, "treeConfig.pageSize", Tree.Info.DEFAULT_PAGE_SIZE);
-            treeInfo.total = treeData.total;
-
-            var objList = Util.goodMapValue(treeData, "docs", []);
-            if (Util.isArrayEmpty(objList)) {
-                return [];
-            }
-
-            var builder = Util.FancyTreeBuilder.reset();
-
-            if (0 < treeInfo.start) {
-                builder.addLeaf({
-                    key: Tree.Key.NODE_TYPE_PART_PREV_PAGE,
-                    title: treeInfo.start + $translate.instant("common.directive.objectTree.btnPrev.title"),
-                    tooltip: $translate.instant("common.directive.objectTree.btnPrev.toolTip"),
-                    tooltipLabel: "common.directive.objectTree.btnPrev.toolTip",
-                    expanded: false,
-                    folder: false
+                    total: 0,
+                    docs: []
                 });
-            }
+                var treeInfo = Tree.Info.getTreeInfo();
+                treeInfo.pageSize = Util.goodMapValue(Tree, "treeConfig.pageSize", Tree.Info.DEFAULT_PAGE_SIZE);
+                treeInfo.total = treeData.total;
 
-            _.each(objList, function(obj) {
-                var nodeId = obj.nodeId;
-                var nodeType = obj.nodeType;
-                var nodeStatus = obj.nodeStatus;
-                var nodeStatusColor = obj.nodeStatusColor;
-                var nodeTitleLabel = obj.nodeTitleLabel;
-                var nodeTitle = nodeTitleLabel ? $translate.instant(nodeTitleLabel) : obj.nodeTitle;
-                var nodeToolTipLabel = obj.nodeToolTipLabel;
-                var nodeToolTip = nodeToolTipLabel ? $translate.instant(nodeToolTipLabel) : obj.nodeToolTip;
-                if (nodeId && nodeType) {
-                    var objKey = Tree.Key.getKeyByObjWithPage(treeInfo.start, nodeType, nodeId);
-                    var components = Tree.getComponentsByKey(objKey);
-                    var leadComponent = Tree.getLeadComponentByKey(objKey);
-                    var hidden = Tree.getHiddenByKey(objKey);
+                var objList = Util.goodMapValue(treeData, "docs", []);
+                if (Util.isArrayEmpty(objList)) {
+                    return [];
+                }
+
+                var builder = Util.FancyTreeBuilder.reset();
+
+                if (0 < treeInfo.start) {
                     builder.addLeaf({
-                        key: objKey,
-                        title: nodeTitle,
-                        label: nodeTitleLabel,
-                        tooltip: nodeToolTip,
-                        tooltipLabel: nodeToolTipLabel,
+                        key: Tree.Key.NODE_TYPE_PART_PREV_PAGE,
+                        title: treeInfo.start + $translate.instant("common.directive.objectTree.btnPrev.title"),
+                        tooltip: $translate.instant("common.directive.objectTree.btnPrev.toolTip"),
+                        tooltipLabel: "common.directive.objectTree.btnPrev.toolTip",
                         expanded: false,
-                        folder: true,
-                        lazy: true,
-                        cache: false,
-                        components: components,
-                        leadComponent: leadComponent,
-                        nodeType: nodeType,
-                        nodeId: nodeId,
-                        nodeStatus: nodeStatus,
-                        nodeStatusColor: nodeStatusColor,
-                        hidden: hidden
+                        folder: false
                     });
                 }
-            });
-            builder.makeLast();
 
-            if ((0 > treeInfo.total) //unknown size
-                    || (treeInfo.total - treeInfo.n > treeInfo.start)) { //more page
-                var title = (0 > treeInfo.total) ? $translate.instant("common.directive.objectTree.btnNext.titleUnknownSize") : (treeInfo.total - treeInfo.start - treeInfo.n) + $translate.instant("common.directive.objectTree.btnNext.title");
-
-                builder.addLeafLast({
-                    key: Tree.Key.NODE_TYPE_PART_NEXT_PAGE,
-                    title: title,
-                    tooltip: $translate.instant("common.directive.objectTree.btnNext.toolTip"),
-                    tooltipLabel: "common.directive.objectTree.btnNext.toolTip",
-                    expanded: false,
-                    folder: false
+                _.each(objList, function(obj) {
+                    var nodeId = obj.nodeId;
+                    var nodeType = obj.nodeType;
+                    var nodeStatus = obj.nodeStatus;
+                    var nodeStatusColor = obj.nodeStatusColor;
+                    var nodeTitleLabel = obj.nodeTitleLabel;
+                    if(treeData.configTitleList){
+                        var configurationTitle = _.find(treeData.configTitleList, function (confTitle) {
+                            return confTitle.objectType = obj.nodeType;
+                        });
+                        if(configurationTitle.title === "Use the 'Object ID' as a Title")
+                        {
+                            var nodeTitle = obj.nodeId;
+                        }
+                        else if(configurationTitle.title === "Use the 'Title' as a Title")
+                        {
+                            var nodeTitle = obj.nodeTitle;
+                        }
+                        else if(configurationTitle.title === "Use the 'Object ID - Title' as a Title")
+                        {
+                            var nodeTitle = obj.nodeId + obj.nodeTitle;
+                        }
+                        else if(configurationTitle.title === "Use the 'Title - Object ID' as a Title")
+                        {
+                            var nodeTitle = obj.nodeTitle + obj.nodeId;
+                        }
+                    }else
+                    {
+                        var nodeTitle = nodeTitleLabel ? $translate.instant(nodeTitleLabel) : obj.nodeTitle;
+                    }
+                    var nodeToolTipLabel = obj.nodeToolTipLabel;
+                    var nodeToolTip = nodeToolTipLabel ? $translate.instant(nodeToolTipLabel) : obj.nodeToolTip;
+                    if (nodeId && nodeType) {
+                        var objKey = Tree.Key.getKeyByObjWithPage(treeInfo.start, nodeType, nodeId);
+                        var components = Tree.getComponentsByKey(objKey);
+                        var leadComponent = Tree.getLeadComponentByKey(objKey);
+                        var hidden = Tree.getHiddenByKey(objKey);
+                        builder.addLeaf({
+                            key: objKey,
+                            title: nodeTitle,
+                            label: nodeTitleLabel,
+                            tooltip: nodeToolTip,
+                            tooltipLabel: nodeToolTipLabel,
+                            expanded: false,
+                            folder: true,
+                            lazy: true,
+                            cache: false,
+                            components: components,
+                            leadComponent: leadComponent,
+                            nodeType: nodeType,
+                            nodeId: nodeId,
+                            nodeStatus: nodeStatus,
+                            nodeStatusColor: nodeStatusColor,
+                            hidden: hidden
+                        });
+                    }
                 });
-            }
+                builder.makeLast();
 
-            return builder.getTree();
-        },
+                if ((0 > treeInfo.total) //unknown size
+                    || (treeInfo.total - treeInfo.n > treeInfo.start)) { //more page
+                    var title = (0 > treeInfo.total) ? $translate.instant("common.directive.objectTree.btnNext.titleUnknownSize") : (treeInfo.total - treeInfo.start - treeInfo.n) + $translate.instant("common.directive.objectTree.btnNext.title");
+
+                    builder.addLeafLast({
+                        key: Tree.Key.NODE_TYPE_PART_NEXT_PAGE,
+                        title: title,
+                        tooltip: $translate.instant("common.directive.objectTree.btnNext.toolTip"),
+                        tooltipLabel: "common.directive.objectTree.btnNext.toolTip",
+                        expanded: false,
+                        folder: false
+                    });
+                }
+
+                return builder.getTree();
+            }
+            ,
         lazyLoad: function(event, data) {
             var builder = Util.FancyTreeBuilder.reset();
             var nodeTypes = Util.goodMapValue(Tree, "treeConfig.nodeTypes", []);
@@ -844,7 +881,7 @@ angular.module('directives').directive('objectTree', [ '$q', '$translate', 'Util
             Tree.treeConfig = null; //scope.treeConfig;
             Tree.treeData = null; //scope.treeData;
             scope.treeControl = {
-                setTitle: Tree.setTitle,
+                    setTitle: Tree.setTitle,
                 select: Tree.select,
                 selectComponent: Tree.selectComponent,
                 refresh: Tree.refresh,
