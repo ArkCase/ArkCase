@@ -56,7 +56,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExc
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
         "classpath:/spring/spring-web-acm-web.xml",
-        "classpath:/spring/spring-library-person-plugin-test.xml"
+        "classpath:/spring/spring-library-person-plugin-api-test.xml"
 })
 
 public class DeletePersonByIdAPIControllerTest extends EasyMockSupport

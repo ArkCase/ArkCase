@@ -32,8 +32,6 @@ import static org.easymock.EasyMock.expectLastCall;
 import static org.junit.Assert.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 
-import com.armedia.acm.pluginmanager.model.AcmPlugin;
-import com.armedia.acm.services.subscription.model.SubscriptionConstants;
 import com.armedia.acm.services.subscription.service.SubscriptionService;
 import com.armedia.acm.services.subscription.web.api.RemovingSubscriptionAPIController;
 
@@ -55,9 +53,6 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver;
 
-import java.util.HashMap;
-import java.util.Map;
-
 /**
  * Created by marjan.stefanoski on 12.02.2015.
  */
@@ -72,7 +67,6 @@ public class RemovingSubscriptionAPIControllerTest extends EasyMockSupport
     private Authentication mockAuthentication;
     private RemovingSubscriptionAPIController mockRemovingSubscriptionAPIController;
     private SubscriptionService mockSubscriptionService;
-    private AcmPlugin mockSubscriptionPlugin;
     private MockHttpSession mockHttpSession;
 
     @Autowired
@@ -81,20 +75,15 @@ public class RemovingSubscriptionAPIControllerTest extends EasyMockSupport
     private Logger log = LoggerFactory.getLogger(getClass());
 
     @Before
-    public void setUp() throws Exception
+    public void setUp()
     {
 
         mockRemovingSubscriptionAPIController = new RemovingSubscriptionAPIController();
 
         mockSubscriptionService = createMock(SubscriptionService.class);
-        mockSubscriptionPlugin = createMock(AcmPlugin.class);
-        mockSubscriptionPlugin = createMock(AcmPlugin.class);
-
         mockHttpSession = new MockHttpSession();
 
         mockRemovingSubscriptionAPIController.setSubscriptionService(mockSubscriptionService);
-        mockRemovingSubscriptionAPIController.setSubscriptionPlugin(mockSubscriptionPlugin);
-
         mockMvc = MockMvcBuilders.standaloneSetup(mockRemovingSubscriptionAPIController).setHandlerExceptionResolvers(exceptionResolver)
                 .build();
         mockAuthentication = createMock(Authentication.class);
@@ -108,10 +97,6 @@ public class RemovingSubscriptionAPIControllerTest extends EasyMockSupport
         Long objectId = 100L;
         String userId = "user-acm";
 
-        Map<String, Object> prop = new HashMap<>();
-        prop.put(SubscriptionConstants.SUCCESS_MSG, "SUCCESS");
-
-        expect(mockSubscriptionPlugin.getPluginProperties()).andReturn(prop).once();
         expect(mockSubscriptionService.deleteSubscriptionForGivenObject(userId, objectId, objectType)).andReturn(1);
         mockSubscriptionService.deleteSubscriptionEventsForGivenObject(userId, objectId, objectType);
         expectLastCall();

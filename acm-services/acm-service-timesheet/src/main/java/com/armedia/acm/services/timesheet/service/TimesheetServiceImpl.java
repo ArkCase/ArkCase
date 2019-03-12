@@ -39,6 +39,7 @@ import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.timesheet.dao.AcmTimesheetDao;
 import com.armedia.acm.services.timesheet.model.AcmTime;
 import com.armedia.acm.services.timesheet.model.AcmTimesheet;
+import com.armedia.acm.services.timesheet.model.TimesheetConfig;
 import com.armedia.acm.services.timesheet.model.TimesheetConstants;
 import com.armedia.acm.services.timesheet.pipeline.TimesheetPipelineContext;
 
@@ -60,23 +61,22 @@ public class TimesheetServiceImpl implements TimesheetService
 
     private Logger LOG = LoggerFactory.getLogger(getClass());
 
-    private Properties properties;
+    private TimesheetConfig configuration;
     private AcmTimesheetDao acmTimesheetDao;
     private Map<String, String> submissionStatusesMap;
     private ExecuteSolrQuery executeSolrQuery;
     private List<String> startWorkflowEvents;
-
     private PipelineManager<AcmTimesheet, TimesheetPipelineContext> pipelineManager;
 
     @Override
-    public Properties getProperties()
+    public TimesheetConfig getConfiguration()
     {
-        return properties;
+        return configuration;
     }
 
-    public void setProperties(Properties properties)
+    public void setConfiguration(TimesheetConfig configuration)
     {
-        this.properties = properties;
+        this.configuration = configuration;
     }
 
     @Override
@@ -258,12 +258,7 @@ public class TimesheetServiceImpl implements TimesheetService
     @Override
     public boolean checkWorkflowStartup(String type)
     {
-        if (getStartWorkflowEvents() != null && getStartWorkflowEvents().contains(type))
-        {
-            return true;
-        }
-
-        return false;
+        return getStartWorkflowEvents() != null && getStartWorkflowEvents().contains(type);
     }
 
     @Override

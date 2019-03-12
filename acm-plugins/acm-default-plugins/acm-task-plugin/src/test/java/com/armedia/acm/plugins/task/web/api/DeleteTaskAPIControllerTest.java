@@ -67,7 +67,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExc
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
         "classpath:/spring/spring-web-acm-web.xml",
-        "classpath:/spring/spring-library-task-plugin-test.xml"
+        "classpath:/spring/spring-library-task-plugin-unit-test.xml"
 })
 public class DeleteTaskAPIControllerTest extends EasyMockSupport
 {

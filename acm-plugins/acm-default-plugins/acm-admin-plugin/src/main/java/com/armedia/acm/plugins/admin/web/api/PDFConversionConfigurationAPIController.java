@@ -28,6 +28,7 @@ package com.armedia.acm.plugins.admin.web.api;
  */
 
 import com.armedia.acm.plugins.admin.service.PDFConversionConfigurationService;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -39,7 +40,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.io.IOException;
 import java.util.Map;
 
 @Controller
@@ -51,14 +51,14 @@ public class PDFConversionConfigurationAPIController
 
     @RequestMapping(value = "/pdfConversion", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<Map<String, String>> loadPDFConversionProperties()
+    public ResponseEntity<Map<String, Object>> loadPDFConversionProperties()
     {
         return new ResponseEntity<>(getPdfConversionConfigurationService().loadProperties(), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/pdfConversion", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public void savePDFConversionProperties(@RequestBody Map<String, String> costsheetProperties)
+    public void savePDFConversionProperties(@RequestBody Map<String, Object> costsheetProperties)
     {
         getPdfConversionConfigurationService().saveProperties(costsheetProperties);
     }

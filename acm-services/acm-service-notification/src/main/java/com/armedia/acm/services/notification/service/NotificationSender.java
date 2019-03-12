@@ -32,7 +32,7 @@ import com.armedia.acm.data.AcmAbstractDao;
 
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.data.service.AcmDataService;
-import com.armedia.acm.files.propertymanager.PropertyFileManager;
+import com.armedia.acm.email.model.EmailSenderConfig;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.services.authenticationtoken.dao.AuthenticationTokenDao;
 import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenService;
@@ -43,7 +43,6 @@ import com.armedia.acm.services.email.model.EmailWithAttachmentsDTO;
 import com.armedia.acm.services.email.model.EmailWithEmbeddedLinksDTO;
 import com.armedia.acm.services.email.model.EmailWithEmbeddedLinksResultDTO;
 import com.armedia.acm.services.email.model.MessageBodyFactory;
-import com.armedia.acm.services.email.sender.model.EmailSenderConfigurationConstants;
 import com.armedia.acm.services.email.service.AcmEmailSenderService;
 import com.armedia.acm.services.email.service.TemplatingEngine;
 import com.armedia.acm.services.notification.model.Notification;
@@ -77,8 +76,6 @@ public abstract class NotificationSender
     private final Logger LOG = LoggerFactory.getLogger(getClass());
 
     protected AuditPropertyEntityAdapter auditPropertyEntityAdapter;
-    protected PropertyFileManager propertyFileManager;
-    protected String emailSenderPropertyFileLocation;
     protected AuthenticationTokenService authenticationTokenService;
     protected AuthenticationTokenDao authenticationTokenDao;
     protected EcmFileService ecmFileService;
@@ -89,6 +86,7 @@ public abstract class NotificationSender
     private AcmDataService dataService;
     private TemplatingEngine templatingEngine;
     private Map<String, String> notificationTemplates = new HashMap<>();
+    private EmailSenderConfig emailSenderConfig;
 
     /**
      * Sends the notification to user's email. If successful, sets the notification state to
@@ -148,7 +146,7 @@ public abstract class NotificationSender
                     ? SecurityContextHolder.getContext().getAuthentication()
                     : null;
 
-            String userId = propertyFileManager.load(emailSenderPropertyFileLocation, EmailSenderConfigurationConstants.USERNAME, null);
+            String userId = emailSenderConfig.getUsername();
 
             AcmUser acmUser = userDao.findByUserId(userId);
 
@@ -211,20 +209,6 @@ public abstract class NotificationSender
     public void setAuditPropertyEntityAdapter(AuditPropertyEntityAdapter auditPropertyEntityAdapter)
     {
         this.auditPropertyEntityAdapter = auditPropertyEntityAdapter;
-    }
-
-    public void setPropertyFileManager(PropertyFileManager propertyFileManager)
-    {
-        this.propertyFileManager = propertyFileManager;
-    }
-
-    /**
-     * @param emailSenderPropertyFileLocation
-     *            the emailSenderPropertyFileLocation to set
-     */
-    public void setEmailSenderPropertyFileLocation(String emailSenderPropertyFileLocation)
-    {
-        this.emailSenderPropertyFileLocation = emailSenderPropertyFileLocation;
     }
 
     public AuthenticationTokenService getAuthenticationTokenService()
@@ -320,5 +304,15 @@ public abstract class NotificationSender
     public void setDataService(AcmDataService dataService)
     {
         this.dataService = dataService;
+    }
+
+    public EmailSenderConfig getEmailSenderConfig()
+    {
+        return emailSenderConfig;
+    }
+
+    public void setEmailSenderConfig(EmailSenderConfig emailSenderConfig)
+    {
+        this.emailSenderConfig = emailSenderConfig;
     }
 }

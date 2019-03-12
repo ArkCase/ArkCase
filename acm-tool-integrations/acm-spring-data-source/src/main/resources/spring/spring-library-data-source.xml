@@ -1,107 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:int="http://www.springframework.org/schema/integration"
        xmlns:task="http://www.springframework.org/schema/task" xmlns:tx="http://www.springframework.org/schema/tx"
-       xmlns="http://www.springframework.org/schema/beans" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+       xmlns="http://www.springframework.org/schema/beans" xmlns:aop="http://www.springframework.org/schema/aop" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
        http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/spring-integration.xsd
        http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.1.xsd
-       http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd">
-
-    <bean id="datasourceProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
-        <!-- note: must leave "file:" at the start of the file name for spring
-        to be able to read the file; otherwise it will try to read from the
-        classpath -->
-        <property name="location" value="file:${user.home}/.arkcase/acm/datasource.properties"/>
-        <property name="ignoreResourceNotFound" value="true"/>
-        <property name="localOverride" value="false"/>
-        <!-- following properties are the default datasource mappings.  The properties file
-             should include all of these properties.  In practice there should always be a
-             specific properties file; these defaults are here for reference, not to be used. -->
-        <property name="properties">
-            <props>
-                <prop key="acm.driverClassName">oracle.jdbc.OracleDriver</prop>
-                <prop key="acm.url">jdbc:oracle:thin:@localhost:1521:XE</prop>
-                <prop key="acm.username">acm</prop>
-                <prop key="acm.password">acm</prop>
-                <prop key="acm.initialSize">5</prop>
-                <prop key="acm.maxActive">5</prop>
-                <prop key="acm.minIdle">5</prop>
-                <prop key="acm.maxWait">10000</prop>
-                <prop key="acm.testOnBorrow">true</prop>
-                <prop key="acm.testOnReturn">false</prop>
-                <prop key="acm.idleConnectionTestPeriodInSeconds">30</prop>
-                <prop key="acm.validationQuery">select 1 from dual</prop>
-                <prop key="acm.acquireRetryAttempts">30</prop>
-                <prop key="acm.acquireRetryDelay">1000</prop>
-                <prop key="acm.acquireIncrement">5</prop>
-                <prop key="acm.abandonedTimeoutInSeconds">60</prop>
-
-                <!-- whether the schema should be updated at application startup - set to false to run with JRebel  -->
-                <prop key="schema.autoUpdate">true</prop>
-                <!-- database.platform must be an EclipseLink database platform. -->
-                <prop key="database.platform">org.eclipse.persistence.platform.database.OraclePlatform</prop>
-                <!-- EclipseLink specific: whether it should output the SQL that caused an exception -->
-                <prop key="database.platform.showSql">true</prop>
-                <!-- EclipseLink specific: logging level - FINER shows SQL and transaction details -->
-                <prop key="eclipselink.logging.level">FINER</prop>
-
-                <!-- JPA package scanning:
-                    - comma separated list of packages to scan for JPA entity classes.
-                    - NOTE: Cannot start with a wild card.  The leading package name must be specified.
-                    - NOTE: Use '**' to recurse into sub-packages.
-                 -->
-                <prop key="jpa.model.packages">com.armedia.**</prop>
-                <!-- Add Tomcat JDBC interceptors (SlowQueryReport, QueryTimeoutInterceptor, etc) -->
-                <prop key="acm.jdbcInterceptors"></prop>
-
-            </props>
-        </property>
-    </bean>
-
-    <bean id="acmObjectsNotifications" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
-        <!-- note: must leave "file:" at the start of the file name for spring
-        to be able to read the file; otherwise it will try to read from the
-        classpath -->
-        <property name="location" value="file:${user.home}/.arkcase/acm/acmObjectsNotifications.properties"/>
-        <property name="ignoreResourceNotFound" value="true"/>
-        <property name="localOverride" value="false"/>
-        <property name="properties">
-            <props></props>
-        </property>
-    </bean>
+       http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
 
     <bean id="acmDataSource" class="org.apache.tomcat.jdbc.pool.DataSource" destroy-method="close">
-        <property name="driverClassName" value="${acm.driverClassName}"/>
-        <property name="url" value="${acm.url}"/>
-        <property name="username" value="${acm.username}"/>
-        <property name="password" value="${acm.password}"/>
-        <property name="initialSize" value="${acm.initialSize}"/>
-        <property name="maxActive" value="${acm.maxActive}"/>
-        <property name="maxIdle" value="${acm.maxActive}"/>
-        <property name="minIdle" value="${acm.maxActive}"/>
-        <property name="maxWait" value="${acm.maxWait}"/>
+        <property name="driverClassName" value="#{dataSourceConfig.driverClassName}"/>
+        <property name="url" value="#{dataSourceConfig.url}"/>
+        <property name="username" value="#{dataSourceConfig.username}"/>
+        <property name="password" value="#{dataSourceConfig.password}"/>
+        <property name="initialSize" value="#{dataSourceConfig.initialSize}"/>
+        <property name="maxActive" value="#{dataSourceConfig.maxActive}"/>
+        <property name="maxIdle" value="#{dataSourceConfig.maxActive}"/>
+        <property name="minIdle" value="#{dataSourceConfig.minIdle}"/>
+        <property name="maxWait" value="#{dataSourceConfig.maxWait}"/>
         <property name="maxAge" value="5000"/>
-        <property name="testOnBorrow" value="${acm.testOnBorrow}"/>
-        <property name="testOnReturn" value="${acm.testOnReturn}"/>
+        <property name="testOnBorrow" value="#{dataSourceConfig.testOnBorrow}"/>
+        <property name="testOnReturn" value="#{dataSourceConfig.testOnReturn}"/>
         <!--<property name="test" value="${acm.idleConnectionTestPeriodInSeconds}"/>-->
-        <property name="validationQuery" value="${acm.validationQuery}"/>
-        <property name="loginTimeout" value="${acm.maxWait}"/>
-        <property name="defaultAutoCommit" value="${acm.autoCommit}"/>
+        <property name="validationQuery" value="#{dataSourceConfig.validationQuery}"/>
+        <property name="loginTimeout" value="#{dataSourceConfig.maxWait}"/>
+        <property name="defaultAutoCommit" value="#{dataSourceConfig.autoCommit}"/>
         <property name="logAbandoned" value="true"/>
         <property name="minEvictableIdleTimeMillis" value="1000"/>
         <property name="removeAbandoned" value="true"/>
-        <property name="removeAbandonedTimeout" value="${acm.abandonedTimeoutInSeconds}"/>
+        <property name="removeAbandonedTimeout" value="#{dataSourceConfig.abandonedTimeoutInSeconds}"/>
         <property name="timeBetweenEvictionRunsMillis" value="3000"/>
         <property name="testOnConnect" value="true"/>
-        <property name="jdbcInterceptors" value="${acm.jdbcInterceptors}"/>
+        <property name="jdbcInterceptors" value="#{dataSourceConfig.jdbcInterceptors}"/>
     </bean>
 
     <bean id="converterScanPostProcessor" class="com.armedia.acm.data.converter.ConverterScanPostProcessor">
-        <property name="packagesToScan" value="${jpa.model.packages}"/>
+        <property name="packagesToScan" value="#{dataSourceConfig.jpaModelPackages}"/>
     </bean>
 
     <bean id="acmPersistenceUnitManager" class="org.springframework.orm.jpa.persistenceunit.DefaultPersistenceUnitManager">
         <property name="defaultDataSource" ref="acmDataSource"/>
-        <property name="packagesToScan" value="${jpa.model.packages}"/>
+        <property name="packagesToScan" value="#{dataSourceConfig.jpaModelPackages}"/>
         <property name="persistenceUnitPostProcessors">
             <list>
                 <ref bean="converterScanPostProcessor"/>
@@ -116,8 +53,8 @@
         <property name="jpaPropertyMap">
             <props>
                 <prop key="eclipselink.weaving">false</prop>
-                <prop key="eclipselink.logging.level">${eclipselink.logging.level}</prop>
-                <prop key="eclipselink.logging.logger">${eclipselink.logging.logger}</prop>
+                <prop key="eclipselink.logging.level">#{dataSourceConfig.eclipseLinkLoggingLevel}</prop>
+                <prop key="eclipselink.logging.logger">#{dataSourceConfig.eclipseLinkLoggingLogger}</prop>
                 <!-- The EclipseLink core cache causes unusual things to happen unless every single database
            update is through EclipseLink.  For ACM this mostly will not be true; most customers will have
            batch feeds and other processes that modify the share database without using the application
@@ -140,7 +77,6 @@
 
             </props>
         </property>
-        <!--<property name="packagesToScan" value="${jpa.model.packages}"/>-->
         <property name="jpaVendorAdapter" ref="jpaVendorAdapter"/>
         <property name="persistenceUnitManager" ref="acmPersistenceUnitManager"/>
     </bean>
@@ -194,10 +130,10 @@
         <property name="staticMethod" value="com.armedia.acm.data.converter.StringEncryptionConverter.setAcmDecryptionProperties"/>
         <property name="arguments">
             <list>
-                <value type="java.lang.Boolean">${database.encryption_enabled}</value>
+                <value type="java.lang.Boolean">#{dataSourceConfig.encryptionEnabled}</value>
                 <ref bean="acmCryptoUtils"/>
-                <value type="java.lang.String">${database.encryption_passphrase}</value>
-                <value type="java.lang.Boolean">${database.encryption_supported}</value>
+                <value type="java.lang.String">#{dataSourceConfig.encryptionPassphrase}</value>
+                <value type="java.lang.Boolean">#{dataSourceConfig.encryptionSupported}</value>
 
             </list>
         </property>
@@ -208,9 +144,9 @@
     </bean>
 
     <bean id="jpaVendorAdapter" class="org.springframework.orm.jpa.vendor.EclipseLinkJpaVendorAdapter">
-        <property name="databasePlatform" value="${database.platform}"/>
+        <property name="databasePlatform" value="#{dataSourceConfig.databasePlatform}"/>
         <property name="generateDdl" value="false"/>
-        <property name="showSql" value="${database.platform.showSql}"/>
+        <property name="showSql" value="#{dataSourceConfig.showSql}"/>
     </bean>
 
     <!-- JPA transaction manager (use JtaTransactionManager for
@@ -234,12 +170,16 @@
     <bean id="liquibase" class="liquibase.integration.spring.SpringLiquibase">
         <property name="dataSource" ref="acmDataSource"/>
         <property name="changeLog" value="classpath:/ddl/acm-database-changelog.xml"/>
-        <property name="shouldRun" value="${schema.autoUpdate}"/>
+        <property name="shouldRun" value="#{dataSourceConfig.autoUpdate}"/>
         <!--<property name="dropFirst" value="true"/>-->
 
         <!--
         contexts specifies the runtime contexts to use.
         -->
         <!--<property name="contexts" value="test, production" />-->
+    </bean>
+
+    <bean id="dataSourceConfig" class="com.armedia.acm.data.AcmDataSourceConfig" scope="refresh" depends-on="configSource">
+        <aop:scoped-proxy/>
     </bean>
 </beans>

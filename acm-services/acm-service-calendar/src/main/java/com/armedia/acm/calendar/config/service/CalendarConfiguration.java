@@ -27,20 +27,17 @@ package com.armedia.acm.calendar.config.service;
  * #L%
  */
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.armedia.acm.calendar.config.model.PurgeOptions;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.voodoodyne.jackson.jsog.JSOGGenerator;
 
 /**
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Mar 9, 2017
  *
  */
 @JsonInclude(Include.NON_NULL)
-@JsonIdentityInfo(generator = JSOGGenerator.class)
 public class CalendarConfiguration
 {
-
     private boolean integrationEnabled;
     private String systemEmail;
     private String password;
@@ -130,16 +127,6 @@ public class CalendarConfiguration
     public void setDaysClosed(Integer daysClosed)
     {
         this.daysClosed = daysClosed;
-    }
-
-    public static enum CalendarPropertyKeys
-    {
-        INTEGRATION_ENABLED, SYSTEM_EMAIL, PASSWORD, PURGE_OPTION, DAYS_CLOSED;
-    }
-
-    public static enum PurgeOptions
-    {
-        RETAIN_INDEFINITELY, CLOSED, CLOSED_X_DAYS;
     }
 
 }

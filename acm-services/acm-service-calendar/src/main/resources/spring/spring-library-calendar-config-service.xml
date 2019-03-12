@@ -1,16 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
 
     <bean id="propertyFileCalendarAdminService" class="com.armedia.acm.calendar.config.service.PropertyFileCalendarAdminService">
-        <property name="configurableObjectTypes" value="file:${user.home}/.arkcase/acm/calendarConfiguredObjectTypes.properties"/>
-        <property name="calendarPropertiesResource" value="file:${user.home}/.arkcase/acm/calendarService.properties"/>
         <property name="encryptablePropertyUtils" ref="acmEncryptablePropertyUtils"/>
+        <property name="calendarConfig" ref="calendarConfig"/>
+        <property name="configurationPropertyService" ref="configurationPropertyService"/>
     </bean>
 
     <bean id="scheduledCalendarPurger" class="com.armedia.acm.calendar.service.AcmScheduledCalendarPurger">
         <property name="calendarAdminService" ref="propertyFileCalendarAdminService"/>
         <property name="calendarService" ref="calendarServiceProvider"/>
+    </bean>
+
+    <bean id="calendarConfig" class="com.armedia.acm.calendar.config.model.CalendarConfig">
+        <property name="jsonUnmarshaller" ref="jsonUnmarshaller"/>
+        <aop:scoped-proxy/>
     </bean>
 
 </beans>

@@ -32,22 +32,22 @@ import com.armedia.acm.services.users.model.group.AcmGroup;
 
 import org.apache.commons.lang3.StringUtils;
 
+import java.io.Serializable;
 import java.util.AbstractMap;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class AcmRoleToGroupMapping
+public class AcmRoleToGroupMapping implements Serializable
 {
     public static final String GROUP_NAME_WILD_CARD = "@*";
-    private Map<String, String> roleToGroupMap;
     private AcmGroupDao groupDao;
+    private ApplicationRolesToGroupsConfig rolesToGroupsConfig;
 
     public static Function<String, Stream<String>> mapGroupsString(Function<String, List<AcmGroup>> findGroup)
     {
@@ -64,13 +64,6 @@ public class AcmRoleToGroupMapping
                 return Stream.of(group);
             }
         };
-    }
-
-    public void reloadRoleToGroupMap(Properties properties)
-    {
-        roleToGroupMap = properties.entrySet()
-                .stream()
-                .collect(Collectors.toMap(entry -> entry.getKey().toString(), entry -> entry.getValue().toString()));
     }
 
     public Map<String, List<String>> getGroupToRolesMap()
@@ -106,7 +99,7 @@ public class AcmRoleToGroupMapping
                     .collect(Collectors.toSet());
         };
 
-        return roleToGroupMap.entrySet()
+        return rolesToGroupsConfig.getRolesToGroups().entrySet()
                 .stream()
                 .filter(entry -> StringUtils.isNotBlank(entry.getKey()))
                 .filter(entry -> StringUtils.isNotBlank(entry.getValue()))
@@ -123,13 +116,23 @@ public class AcmRoleToGroupMapping
                                         .apply(isUpperCase ? entry.getValue().trim().toUpperCase() : entry.getValue().trim())));
     }
 
-    public void setRoleToGroupMap(Map<String, String> roleToGroupMap)
-    {
-        this.roleToGroupMap = roleToGroupMap;
-    }
-
     public void setGroupDao(AcmGroupDao groupDao)
     {
         this.groupDao = groupDao;
+    }
+
+    public AcmGroupDao getGroupDao()
+    {
+        return groupDao;
+    }
+
+    public ApplicationRolesToGroupsConfig getRolesToGroupsConfig()
+    {
+        return rolesToGroupsConfig;
+    }
+
+    public void setRolesToGroupsConfig(ApplicationRolesToGroupsConfig rolesToGroupsConfig)
+    {
+        this.rolesToGroupsConfig = rolesToGroupsConfig;
     }
 }

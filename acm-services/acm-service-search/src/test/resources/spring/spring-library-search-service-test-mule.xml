@@ -13,4 +13,5 @@
         </property>
     </bean>
 
+    <bean id="solrConfig" class="com.armedia.acm.services.search.model.solr.SolrConfig"/>
 </beans>

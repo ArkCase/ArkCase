@@ -4,6 +4,7 @@
 
     <bean id="acmSampleBlogPlugin" class="com.armedia.acm.pluginmanager.model.AcmPlugin">
         <property name="pluginName" value="armediaBlogPlugin"/>
+        <property name="configurationPropertyService" ref="configurationPropertyService"/>
     </bean>
 
 </beans>

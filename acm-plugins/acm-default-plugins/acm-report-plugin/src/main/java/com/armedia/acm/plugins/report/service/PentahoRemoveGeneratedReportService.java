@@ -27,6 +27,7 @@ package com.armedia.acm.plugins.report.service;
  * #L%
  */
 
+import com.armedia.acm.pentaho.config.PentahoReportsConfig;
 import com.armedia.acm.plugins.report.model.ScheduleReportException;
 
 import org.slf4j.Logger;
@@ -48,9 +49,7 @@ public class PentahoRemoveGeneratedReportService
 {
     private static final Logger LOGGER = LoggerFactory.getLogger(PentahoRemoveGeneratedReportService.class);
     private ResponseEntity<String> response;
-    private String pentahoUrl;
-    private String pentahoPort;
-    private String removeFileApi;
+    private PentahoReportsConfig reportsConfig;
 
     public void removeReport(HttpHeaders headers, RestTemplate restTemplate, String id) throws ScheduleReportException
     {
@@ -78,8 +77,9 @@ public class PentahoRemoveGeneratedReportService
 
     public String buildRemoveFileUrl()
     {
-        return getPentahoUrl() + ((getPentahoPort() != null && !getPentahoPort().isEmpty()) ? ":" + getPentahoPort() : "")
-                + getRemoveFileApi();
+        return reportsConfig.getServerUrl()
+                + (reportsConfig.getServerPort() != null ? ":" + reportsConfig.getServerPort() : "")
+                + reportsConfig.getRemoveFileApi();
     }
 
     public ResponseEntity<String> getResponse()
@@ -87,33 +87,13 @@ public class PentahoRemoveGeneratedReportService
         return response;
     }
 
-    public String getPentahoUrl()
+    public PentahoReportsConfig getReportsConfig()
     {
-        return pentahoUrl;
+        return reportsConfig;
     }
 
-    public void setPentahoUrl(String pentahoUrl)
+    public void setReportsConfig(PentahoReportsConfig reportsConfig)
     {
-        this.pentahoUrl = pentahoUrl;
-    }
-
-    public String getPentahoPort()
-    {
-        return pentahoPort;
-    }
-
-    public void setPentahoPort(String pentahoPort)
-    {
-        this.pentahoPort = pentahoPort;
-    }
-
-    public String getRemoveFileApi()
-    {
-        return removeFileApi;
-    }
-
-    public void setRemoveFileApi(String removeFileApi)
-    {
-        this.removeFileApi = removeFileApi;
+        this.reportsConfig = reportsConfig;
     }
 }

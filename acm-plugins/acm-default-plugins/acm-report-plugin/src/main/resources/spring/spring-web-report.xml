@@ -33,8 +33,8 @@
 
     <bean id="scheduleReportAPIController" class="com.armedia.acm.plugins.report.web.api.ScheduleReportAPIController">
         <property name="scheduleReportService" ref="scheduleReportRestService"/>
-        <property name="scheduleInputFolder" value="${PENTAHO_SCHEDULE_INPUT_FOLDER}"/>
-        <property name="scheduleOutputFolder" value="${PENTAHO_SCHEDULE_OUTPUT_FOLDER}"/>
+        <property name="scheduleInputFolder" value="#{pentahoReportsConfig.scheduleInputFolder}"/>
+        <property name="scheduleOutputFolder" value="#{pentahoReportsConfig.scheduleOutputFolder}"/>
     </bean>
 </beans>
 

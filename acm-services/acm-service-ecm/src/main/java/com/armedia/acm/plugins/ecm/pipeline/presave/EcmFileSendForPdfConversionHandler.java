@@ -28,9 +28,9 @@ package com.armedia.acm.plugins.ecm.pipeline.presave;
  */
 
 import com.armedia.acm.plugins.ecm.model.EcmFile;
+import com.armedia.acm.files.capture.CaptureConfig;
 import com.armedia.acm.plugins.ecm.pipeline.EcmFileTransactionPipelineContext;
 import com.armedia.acm.plugins.ecm.service.SendForPdfConversion;
-import com.armedia.acm.plugins.ecm.utils.GenericUtils;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.pipeline.handler.PipelineHandler;
 
@@ -48,8 +48,7 @@ public class EcmFileSendForPdfConversionHandler implements PipelineHandler<EcmFi
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
     private SendForPdfConversion sendForPdfConversion;
-    private String fileTypesToBeConvertedToPDF;
-    private String fileFormatsToBeConvertedToPDF;
+    private CaptureConfig captureConfig;
 
     @Override
     public void execute(EcmFile entity, EcmFileTransactionPipelineContext pipelineContext) throws PipelineProcessException
@@ -58,10 +57,10 @@ public class EcmFileSendForPdfConversionHandler implements PipelineHandler<EcmFi
         String fileExtension = entity.getFileExtension();
 
         // Only certain file types (authorization, abstract, etc.) are converted to PDF
-        boolean isFileTypeConvertibleToPdf = GenericUtils.isFileTypeInList(entity.getFileType(), fileTypesToBeConvertedToPDF);
+        boolean isFileTypeConvertibleToPdf = captureConfig.getFileTypesToBeConvertedToPdf().contains(entity.getFileType());
 
         // Only certain file formats (tiff, jpg, etc.) are converted to PDF
-        boolean isFileFormatConvertibleToPdf = GenericUtils.isFileTypeInList(fileExtension, fileFormatsToBeConvertedToPDF);
+        boolean isFileFormatConvertibleToPdf = captureConfig.getFileFormatsToBeConvertedToPdf().contains(fileExtension);
 
         if (isFileFormatConvertibleToPdf && isFileTypeConvertibleToPdf)
         {
@@ -102,23 +101,13 @@ public class EcmFileSendForPdfConversionHandler implements PipelineHandler<EcmFi
         this.sendForPdfConversion = sendForPdfConversion;
     }
 
-    public String getFileTypesToBeConvertedToPDF()
+    public CaptureConfig getCaptureConfig()
     {
-        return fileTypesToBeConvertedToPDF;
+        return captureConfig;
     }
 
-    public void setFileTypesToBeConvertedToPDF(String fileTypesToBeConvertedToPDF)
+    public void setCaptureConfig(CaptureConfig captureConfig)
     {
-        this.fileTypesToBeConvertedToPDF = fileTypesToBeConvertedToPDF;
-    }
-
-    public String getFileFormatsToBeConvertedToPDF()
-    {
-        return fileFormatsToBeConvertedToPDF;
-    }
-
-    public void setFileFormatsToBeConvertedToPDF(String fileFormatsToBeConvertedToPDF)
-    {
-        this.fileFormatsToBeConvertedToPDF = fileFormatsToBeConvertedToPDF;
+        this.captureConfig = captureConfig;
     }
 }

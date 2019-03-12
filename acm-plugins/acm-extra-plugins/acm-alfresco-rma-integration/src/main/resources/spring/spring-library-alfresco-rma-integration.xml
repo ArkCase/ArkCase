@@ -1,16 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:aop="http://www.springframework.org/schema/aop"
-    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
-
-    <bean id="alfrescoRmaPluginPropertiesForSpring" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
-        <!-- note: must leave "file:" at the start of the file name for spring
-        to be able to read the file; otherwise it will try to read from the
-        classpath -->
-        <property name="location" value="file:${user.home}/.arkcase/acm/alfrescoRmaPlugin.properties"/>
-        <property name="ignoreResourceNotFound" value="true"/>
-        <property name="localOverride" value="false"/>
-    </bean>
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
 
     <bean id="acmComplaintFolderListener" class="com.armedia.acm.plugins.alfrescorma.service.AcmComplaintFolderListener">
         <property name="alfrescoRecordsService" ref="alfrescoRecordsService"/>
@@ -22,15 +13,14 @@
 
     <bean id="alfrescoRecordsService" class="com.armedia.acm.plugins.alfrescorma.service.AlfrescoRecordsService">
         <property name="ecmFileService" ref="ecmFileService"/>
-        <property name="alfrescoRmaProperties" ref="alfrescoRmaPluginPropertiesForSpring"/>
         <property name="ecmFileDao" ref="ecmFileDao"/>
-        <property name="encryptablePropertyUtils" ref="acmEncryptablePropertyUtils"/>
         <property name="completeRecordService" ref="completeRecordService"/>
         <property name="moveToRecordFolderService" ref="moveToRecordFolderService"/>
         <property name="createOrFindRecordFolderService" ref="createOrFindRecordFolderService"/>
         <property name="declareRecordService" ref="declareRecordService"/>
         <property name="findFolderService" ref="findFolderService"/>
         <property name="setRecordMetadataService" ref="setRecordMetadataService"/>
+        <property name="rmaConfig" ref="rmaConfig"/>
         <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
         <aop:scoped-proxy proxy-target-class="true"/>
     </bean>
@@ -60,4 +50,7 @@
         <property name="acmFolderService" ref="acmFolderService"/>
     </bean>
 
+    <bean id="rmaConfig" class="com.armedia.acm.plugins.alfrescorma.model.AlfrescoRmaConfig" scope="refresh">
+        <aop:scoped-proxy/>
+    </bean>
 </beans>

@@ -27,6 +27,9 @@ package com.armedia.acm.pluginmanager.model;
  * #L%
  */
 
+import com.armedia.acm.configuration.service.ConfigurationPropertyService;
+import com.armedia.acm.pluginmanager.service.AcmPluginConfigBean;
+
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
@@ -41,10 +44,9 @@ public class AcmPlugin implements Serializable
      */
     private String pluginName;
 
-    /**
-     * List of plugin-specific properties.
-     */
-    private Map<String, Object> pluginProperties = new HashMap<>();
+    private AcmPluginConfigBean pluginConfig;
+
+    private ConfigurationPropertyService configurationPropertyService;
 
     /**
      * Privileges supported by the plugin. Each plugin may have its own set of unique privileges.
@@ -72,14 +74,31 @@ public class AcmPlugin implements Serializable
         this.pluginName = pluginName;
     }
 
+    /**
+     * Plugin's configuration keys have been changed.
+     * Each plugin configuration is hold by some POJO named *Config.java
+     * which properties are backed by Spring Cloud Config Server and
+     * can be used as regular dependency bean.
+     *
+     */
+    @Deprecated
     public Map<String, Object> getPluginProperties()
     {
-        return pluginProperties;
+        if (pluginConfig == null)
+        {
+            return new HashMap<>();
+        }
+        return configurationPropertyService.getProperties(pluginConfig);
     }
 
-    public void setPluginProperties(Map<String, Object> pluginProperties)
+    public AcmPluginConfigBean getPluginConfig()
     {
-        this.pluginProperties = pluginProperties;
+        return pluginConfig;
+    }
+
+    public void setPluginConfig(AcmPluginConfigBean pluginConfig)
+    {
+        this.pluginConfig = pluginConfig;
     }
 
     public List<AcmPluginPrivilege> getPrivileges()
@@ -110,5 +129,15 @@ public class AcmPlugin implements Serializable
     public void setSuportedObjectTypesNames(List<String> suportedObjectTypesNames)
     {
         this.suportedObjectTypesNames = suportedObjectTypesNames;
+    }
+
+    public ConfigurationPropertyService getConfigurationPropertyService()
+    {
+        return configurationPropertyService;
+    }
+
+    public void setConfigurationPropertyService(ConfigurationPropertyService configurationPropertyService)
+    {
+        this.configurationPropertyService = configurationPropertyService;
     }
 }

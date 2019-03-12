@@ -27,6 +27,7 @@ package com.armedia.acm.auth.okta.services.impl;
  * #L%
  */
 
+import com.armedia.acm.auth.okta.model.OktaConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpEntity;
@@ -41,20 +42,19 @@ import java.util.Collections;
 public class OktaRestService
 {
     private static final Logger LOGGER = LoggerFactory.getLogger(OktaRestService.class);
-    private String idpUrl;
-    private String token;
     private RestTemplate restTemplate;
+    private OktaConfig oktaConfig;
 
     public <T> ResponseEntity<T> doRestCall(String apiPath, HttpMethod httpMethod, Class<T> responseClass, String body)
     {
         HttpHeaders headers = new HttpHeaders();
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
         headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.add("Authorization", "SSWS " + token);
+        headers.add("Authorization", "SSWS " + oktaConfig.getToken());
 
         HttpEntity<String> entity = new HttpEntity<>(body, headers);
-        LOGGER.trace("Sending Okta request: [url: {}, entity: {}, method: {}]", idpUrl + apiPath, entity, httpMethod);
-        return restTemplate.exchange(idpUrl + apiPath, httpMethod, entity, responseClass);
+        LOGGER.trace("Sending Okta request: [url: {}, entity: {}, method: {}]", oktaConfig.getIdpUrl() + apiPath, entity, httpMethod);
+        return restTemplate.exchange(oktaConfig.getIdpUrl() + apiPath, httpMethod, entity, responseClass);
     }
 
     public <T> ResponseEntity<T> doRestHref(String href, HttpMethod httpMethod, Class<T> responseClass, String body)
@@ -62,30 +62,10 @@ public class OktaRestService
         HttpHeaders headers = new HttpHeaders();
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
         headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.add("Authorization", "SSWS " + token);
+        headers.add("Authorization", "SSWS " + oktaConfig.getToken());
 
         HttpEntity<String> entity = new HttpEntity<>(body, headers);
         return restTemplate.exchange(href, httpMethod, entity, responseClass);
-    }
-
-    public String getIdpUrl()
-    {
-        return idpUrl;
-    }
-
-    public void setIdpUrl(String idpUrl)
-    {
-        this.idpUrl = idpUrl;
-    }
-
-    public String getToken()
-    {
-        return token;
-    }
-
-    public void setToken(String token)
-    {
-        this.token = token;
     }
 
     public RestTemplate getRestTemplate()
@@ -96,5 +76,15 @@ public class OktaRestService
     public void setRestTemplate(RestTemplate restTemplate)
     {
         this.restTemplate = restTemplate;
+    }
+
+    public OktaConfig getOktaConfig()
+    {
+        return oktaConfig;
+    }
+
+    public void setOktaConfig(OktaConfig oktaConfig)
+    {
+        this.oktaConfig = oktaConfig;
     }
 }

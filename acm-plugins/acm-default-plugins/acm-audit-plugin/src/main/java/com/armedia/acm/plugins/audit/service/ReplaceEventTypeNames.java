@@ -28,17 +28,20 @@ package com.armedia.acm.plugins.audit.service;
  */
 
 import com.armedia.acm.audit.model.AuditEvent;
-import com.armedia.acm.pluginmanager.model.AcmPlugin;
 import com.armedia.acm.plugins.audit.model.AuditConstants;
+import com.armedia.acm.audit.model.AuditEventConfig;
+
+import java.util.Map;
 
 public class ReplaceEventTypeNames
 {
-
-    private AcmPlugin pluginEventType;
+    private AuditEventConfig auditEventConfig;
 
     public AuditEvent replaceNameInAcmEvent(AuditEvent event)
     {
-        String replacementName = (String) getPluginEventType().getPluginProperties()
+        Map<String, String> eventTypesMapping = auditEventConfig.getEventTypes();
+
+        String replacementName = eventTypesMapping
                 .get(AuditConstants.EVENT_TYPE + event.getFullEventType());
         if (replacementName == null)
         {
@@ -51,13 +54,13 @@ public class ReplaceEventTypeNames
         return event;
     }
 
-    public AcmPlugin getPluginEventType()
+    public AuditEventConfig getAuditEventConfig()
     {
-        return pluginEventType;
+        return auditEventConfig;
     }
 
-    public void setPluginEventType(AcmPlugin pluginEventType)
+    public void setAuditEventConfig(AuditEventConfig auditEventConfig)
     {
-        this.pluginEventType = pluginEventType;
+        this.auditEventConfig = auditEventConfig;
     }
 }

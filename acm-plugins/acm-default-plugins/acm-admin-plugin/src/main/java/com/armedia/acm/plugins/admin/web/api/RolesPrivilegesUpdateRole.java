@@ -78,7 +78,7 @@ public class RolesPrivilegesUpdateRole implements RolePrivilegesConstants
         }
         catch (Exception e)
         {
-            log.error("Can't update role", e);
+            log.error("Can't update role [{}], {}", roleName, e.getMessage());
             throw new AcmRolesPrivilegesException("Can't update role", e);
         }
     }
