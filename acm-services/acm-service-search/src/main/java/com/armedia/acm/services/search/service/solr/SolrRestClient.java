@@ -27,6 +27,8 @@ package com.armedia.acm.services.search.service.solr;
  * #L%
  */
 
+import com.armedia.acm.services.search.model.solr.SolrConfig;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.InputStreamResource;
@@ -44,21 +46,14 @@ public class SolrRestClient
 
     private transient final RestTemplate restTemplate = new RestTemplate();
     private transient final Logger logger = LoggerFactory.getLogger(getClass());
-    private String solrHost;
-    private int solrPort;
-    private String solrContextRoot;
+    private SolrConfig solrConfig;
 
     public void postToSolr(String core, String contentHandler, HttpEntity<InputStreamResource> entity, String logText,
             String urlWithPlaceholders, Map<String, Object> urlValues)
             throws SolrPostException
     {
         String url = String.format("https://%s:%s/%s/%s/%s?overwrite=true&%s",
-                getSolrHost(),
-                getSolrPort(),
-                getSolrContextRoot(),
-                core,
-                contentHandler,
-                urlWithPlaceholders);
+                solrConfig.getHost(), solrConfig.getPort(), solrConfig.getContextRoot(), core, contentHandler, urlWithPlaceholders);
 
         try
         {
@@ -93,11 +88,7 @@ public class SolrRestClient
             throws SolrPostException
     {
         String url = String.format("https://%s:%s/%s/%s/%s?overwrite=true",
-                getSolrHost(),
-                getSolrPort(),
-                getSolrContextRoot(),
-                core,
-                contentHandler);
+                solrConfig.getHost(), solrConfig.getPort(), solrConfig.getContextRoot(), core, contentHandler);
 
         try
         {
@@ -131,7 +122,7 @@ public class SolrRestClient
     /**
      * Is the exception such that the request may succeed if we try again?
      * 
-     * @param e
+     * @param status
      * @return
      */
     private boolean isRecoverable(HttpStatus status)
@@ -142,34 +133,13 @@ public class SolrRestClient
                 || HttpStatus.TOO_MANY_REQUESTS.equals(status);
     }
 
-    public String getSolrHost()
+    public SolrConfig getSolrConfig()
     {
-        return solrHost;
+        return solrConfig;
     }
 
-    public void setSolrHost(String solrHost)
+    public void setSolrConfig(SolrConfig solrConfig)
     {
-        this.solrHost = solrHost;
+        this.solrConfig = solrConfig;
     }
-
-    public int getSolrPort()
-    {
-        return solrPort;
-    }
-
-    public void setSolrPort(int solrPort)
-    {
-        this.solrPort = solrPort;
-    }
-
-    public String getSolrContextRoot()
-    {
-        return solrContextRoot;
-    }
-
-    public void setSolrContextRoot(String solrContextRoot)
-    {
-        this.solrContextRoot = solrContextRoot;
-    }
-
 }

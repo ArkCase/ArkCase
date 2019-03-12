@@ -28,6 +28,8 @@ package com.armedia.acm.plugins.alfrescorma.service;
  */
 
 import com.armedia.acm.plugins.alfrescorma.exception.AlfrescoServiceException;
+import com.armedia.acm.plugins.alfrescorma.model.AlfrescoConfig;
+import com.armedia.acm.plugins.alfrescorma.model.AlfrescoRmaConfig;
 import com.armedia.mule.cmis.basic.auth.HttpInvokerUtil;
 
 import org.apache.commons.codec.binary.Base64;
@@ -53,21 +55,16 @@ public abstract class AlfrescoService<T>
     private static final String KERBEROS_USERNAME_PREFIX = "KERBEROS/";
     private static final String APP_CONFIGURATION_ENTRY_NAME = "MuleAlfrescoLogin";
     private final Logger LOG = LoggerFactory.getLogger(getClass());
-    private String protocol;
-    private String host;
-    private String port;
-    private String contextRoot;
-    private String username;
-    private String password;
     private RestTemplate restTemplate;
     private String basicAuthenticationHeaderValue;
     private short maxAttempts = 10;
     private short backoffMillis = 500;
+    private AlfrescoConfig alfrescoConfig;
 
     public String baseUrl()
     {
-        String url = getProtocol() + "://" + getHost() + ":" + getPort() + "/" + getContextRoot();
-        return url;
+        return String.format("%s://%s:%d/%s", alfrescoConfig.getProtocol(), alfrescoConfig.getHost(),
+                alfrescoConfig.getPort(), alfrescoConfig.getContextRoot());
     }
 
     public T service(Map<String, Object> context) throws AlfrescoServiceException
@@ -130,7 +127,7 @@ public abstract class AlfrescoService<T>
 
     private AlfrescoAuthenticationType findAlfrescoAuthenticationType()
     {
-        if (getUsername().startsWith(KERBEROS_USERNAME_PREFIX))
+        if (alfrescoConfig.getUser().startsWith(KERBEROS_USERNAME_PREFIX))
         {
             return AlfrescoAuthenticationType.KERBEROS;
         }
@@ -143,7 +140,7 @@ public abstract class AlfrescoService<T>
     {
         if (basicAuthenticationHeaderValue == null)
         {
-            String auth = username + ":" + password;
+            String auth = alfrescoConfig.getUser() + ":" + alfrescoConfig.getPassword();
             byte[] encodedAuth = Base64.encodeBase64(auth.getBytes());
             basicAuthenticationHeaderValue = "Basic " + new String(encodedAuth);
         }
@@ -152,46 +149,6 @@ public abstract class AlfrescoService<T>
     }
 
     public abstract T doService(Map<String, Object> context) throws AlfrescoServiceException;
-
-    public String getProtocol()
-    {
-        return protocol;
-    }
-
-    public void setProtocol(String protocol)
-    {
-        this.protocol = protocol;
-    }
-
-    public String getHost()
-    {
-        return host;
-    }
-
-    public void setHost(String host)
-    {
-        this.host = host;
-    }
-
-    public String getPort()
-    {
-        return port;
-    }
-
-    public void setPort(String port)
-    {
-        this.port = port;
-    }
-
-    public String getContextRoot()
-    {
-        return contextRoot;
-    }
-
-    public void setContextRoot(String contextRoot)
-    {
-        this.contextRoot = contextRoot;
-    }
 
     synchronized protected RestTemplate getRestTemplate()
     {
@@ -224,38 +181,14 @@ public abstract class AlfrescoService<T>
         }
     }
 
-    /**
-     * @return the username
-     */
-    public String getUsername()
+    public AlfrescoConfig getAlfrescoConfig()
     {
-        return username;
+        return alfrescoConfig;
     }
 
-    /**
-     * @param username
-     *            the username to set
-     */
-    public void setUsername(String username)
+    public void setAlfrescoConfig(AlfrescoConfig alfrescoConfig)
     {
-        this.username = username;
-    }
-
-    /**
-     * @return the password
-     */
-    public String getPassword()
-    {
-        return password;
-    }
-
-    /**
-     * @param password
-     *            the password to set
-     */
-    public void setPassword(String password)
-    {
-        this.password = password;
+        this.alfrescoConfig = alfrescoConfig;
     }
 
 }

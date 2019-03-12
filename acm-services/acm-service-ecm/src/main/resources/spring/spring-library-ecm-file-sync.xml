@@ -48,6 +48,6 @@
         <property name="folderDao" ref="acmFolderDao"/>
         <property name="fileDao" ref="ecmFileDao"/>
         <property name="folderAndFilesUtils" ref="folderAndFilesUtils"/>
-        <property name="metadataUpdateProperties" ref="metadataUpdateProperties"/>
+        <property name="updateMetadataConfig" ref="updateMetadataConfig"/>
     </bean>
 </beans>

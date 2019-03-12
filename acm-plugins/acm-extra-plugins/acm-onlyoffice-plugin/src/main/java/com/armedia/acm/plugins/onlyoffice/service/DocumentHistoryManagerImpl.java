@@ -33,6 +33,7 @@ import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
 import com.armedia.acm.plugins.onlyoffice.exceptions.OnlyOfficeException;
 import com.armedia.acm.plugins.onlyoffice.model.DocumentHistory;
 import com.armedia.acm.plugins.onlyoffice.model.DocumentHistoryVersion;
+import com.armedia.acm.plugins.onlyoffice.model.OnlyOfficeConfig;
 import com.armedia.acm.plugins.onlyoffice.model.callback.History;
 import com.armedia.acm.plugins.onlyoffice.model.config.User;
 import com.armedia.acm.services.users.dao.UserDao;
@@ -41,6 +42,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -60,13 +62,11 @@ public class DocumentHistoryManagerImpl implements DocumentHistoryManager
 {
     private final String JSON_EXTENSION = ".json";
     private final String ZIP_EXTENSION = ".zip";
-
     private Logger logger = LoggerFactory.getLogger(getClass());
-    private String historyFolderPath;
     private EcmFileDao ecmFileDao;
     private UserDao userDao;
     private ObjectMapper mapper;
-    private String documentHistoryDateFormat;
+    private OnlyOfficeConfig config;
 
     @Override
     public void saveHistoryChanges(History history, String changesUrl, EcmFile ecmFile)
@@ -82,7 +82,7 @@ public class DocumentHistoryManagerImpl implements DocumentHistoryManager
             throw new OnlyOfficeException("Provided url [" + changesUrl + "] is not accessible.", e);
         }
 
-        File ecmFileFolder = Paths.get(System.getProperty("user.home"), ".arkcase", historyFolderPath, ecmFile.getId().toString())
+        File ecmFileFolder = Paths.get(System.getProperty("user.home"), ".arkcase", config.getHistoryFolderPath(), ecmFile.getId().toString())
                 .toFile();
         try (InputStream stream = connection.getInputStream();
                 OutputStream historyOS = new FileOutputStream(
@@ -117,14 +117,14 @@ public class DocumentHistoryManagerImpl implements DocumentHistoryManager
     @Override
     public File getHistoryChangesFile(Long fileId, String version)
     {
-        return Paths.get(System.getProperty("user.home"), ".arkcase", historyFolderPath, fileId.toString(), version + ZIP_EXTENSION)
+        return Paths.get(System.getProperty("user.home"), ".arkcase", config.getHistoryFolderPath(), fileId.toString(), version + ZIP_EXTENSION)
                 .toFile();
     }
 
     @Override
     public DocumentHistory getDocumentHistory(Long fileId)
     {
-        SimpleDateFormat sdf = new SimpleDateFormat(documentHistoryDateFormat);
+        SimpleDateFormat sdf = new SimpleDateFormat(config.getDocumentHistoryDateFormat());
         List<DocumentHistoryVersion> documentHistoryVersions = new ArrayList<>();
         EcmFile file = ecmFileDao.find(fileId);
         for (EcmFileVersion fileVersion : file.getVersions())
@@ -133,7 +133,7 @@ public class DocumentHistoryManagerImpl implements DocumentHistoryManager
             AcmUser acmUser = userDao.findByUserId(fileVersion.getCreator());
             // read already saved history changes
             File historyFile = Paths
-                    .get(System.getProperty("user.home"), ".arkcase", historyFolderPath, fileId.toString(),
+                    .get(System.getProperty("user.home"), ".arkcase", config.getHistoryFolderPath(), fileId.toString(),
                             fileVersion.getVersionTag() + ".json")
                     .toFile();
             if (historyFile.exists())
@@ -165,11 +165,6 @@ public class DocumentHistoryManagerImpl implements DocumentHistoryManager
         return documentHistory;
     }
 
-    public void setHistoryFolderPath(String historyFolderPath)
-    {
-        this.historyFolderPath = historyFolderPath;
-    }
-
     public void setEcmFileDao(EcmFileDao ecmFileDao)
     {
         this.ecmFileDao = ecmFileDao;
@@ -185,8 +180,8 @@ public class DocumentHistoryManagerImpl implements DocumentHistoryManager
         this.mapper = mapper;
     }
 
-    public void setDocumentHistoryDateFormat(String documentHistoryDateFormat)
+    public void setConfig(OnlyOfficeConfig config)
     {
-        this.documentHistoryDateFormat = documentHistoryDateFormat;
+        this.config = config;
     }
 }

@@ -33,6 +33,7 @@ import static org.junit.Assert.assertEquals;
 import com.armedia.acm.core.AcmApplication;
 import com.armedia.acm.core.AcmObjectType;
 import com.armedia.acm.services.notification.model.Notification;
+import com.armedia.acm.services.notification.model.NotificationConfig;
 import com.armedia.acm.services.notification.model.NotificationConstants;
 
 import org.easymock.EasyMockSupport;
@@ -49,8 +50,6 @@ public class NotificationUtilsTest extends EasyMockSupport
 {
     private static final String BASE_URL = "/arkcase";
     private List<AcmObjectType> acmObjectTypes;
-
-    private Properties mockProperties;
     private Notification notification;
     private AcmApplication mockAcmAppConfiguration;
     private NotificationUtils notificationUtils;
@@ -58,14 +57,16 @@ public class NotificationUtilsTest extends EasyMockSupport
     @Before
     public void setUp()
     {
-        mockProperties = createMock(Properties.class);
         notification = new Notification();
         acmObjectTypes = new ArrayList<>();
         mockAcmAppConfiguration = createMock(AcmApplication.class);
 
         notificationUtils = new NotificationUtils();
         notificationUtils.setAcmAppConfiguration(mockAcmAppConfiguration);
-        notificationUtils.setNotificationProperties(mockProperties);
+
+        NotificationConfig config = new NotificationConfig();
+        config.setBaseUrl(BASE_URL);
+        notificationUtils.setNotificationConfig(config);
     }
 
     /**
@@ -177,7 +178,6 @@ public class NotificationUtilsTest extends EasyMockSupport
 
     public void runTestBuildLink(String expectedLink)
     {
-        expect(mockProperties.getProperty(NotificationConstants.BASE_URL_KEY)).andReturn(BASE_URL);
         expect(mockAcmAppConfiguration.getObjectTypes()).andReturn(acmObjectTypes);
 
         // when

@@ -30,11 +30,11 @@ package com.armedia.acm.form.casefile.service;
  * #L%
  */
 
+import com.armedia.acm.form.casefile.model.CaseFileFormConfig;
 import com.armedia.acm.form.config.FormsTypeCheckService;
 import com.armedia.acm.frevvo.config.FrevvoFormName;
 import com.armedia.acm.frevvo.config.FrevvoFormService;
 import com.armedia.acm.plugins.casefile.model.CaseEvent;
-import com.armedia.acm.plugins.casefile.model.CaseFileConstants;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,9 +47,8 @@ import java.util.Properties;
  */
 public class CaseFileUpdatedListener implements ApplicationListener<CaseEvent>
 {
-
     private final Logger LOG = LoggerFactory.getLogger(getClass());
-
+    private CaseFileFormConfig formConfig;
     private Properties properties;
     private FrevvoFormService caseFileService;
     private FormsTypeCheckService formsTypeCheckService;
@@ -65,26 +64,16 @@ public class CaseFileUpdatedListener implements ApplicationListener<CaseEvent>
             {
                 LOG.debug("Updating Frevvo XML file ...");
 
-                if (getProperties() != null)
+                try
                 {
-
-                    if (getProperties().containsKey(CaseFileConstants.ACTIVE_CASE_FORM_KEY))
+                    if (FrevvoFormName.CASE_FILE.equals(formConfig.getActiveForm()))
                     {
-                        String activeFormName = (String) getProperties().get(CaseFileConstants.ACTIVE_CASE_FORM_KEY);
-
-                        try
-                        {
-                            if (FrevvoFormName.CASE_FILE.equals(activeFormName))
-                            {
-                                getCaseFileService().updateXML(event.getCaseFile(), event.getEventUser(),
-                                        getCaseFileService().getFormClass());
-                            }
-                        }
-                        catch (Exception e)
-                        {
-                            LOG.error(String.format("Could not update Frevvo form XML: [%s]", e.getMessage()), e);
-                        }
+                        getCaseFileService().updateXML(event.getCaseFile(), event.getEventUser(), getCaseFileService().getFormClass());
                     }
+                }
+                catch (Exception e)
+                {
+                    LOG.error(String.format("Could not update Frevvo form XML: [%s]", e.getMessage()), e);
                 }
             }
         }
@@ -113,5 +102,15 @@ public class CaseFileUpdatedListener implements ApplicationListener<CaseEvent>
     public void setCaseFileService(CaseFileService caseFileService)
     {
         this.caseFileService = caseFileService;
+    }
+
+    public CaseFileFormConfig getFormConfig()
+    {
+        return formConfig;
+    }
+
+    public void setFormConfig(CaseFileFormConfig formConfig)
+    {
+        this.formConfig = formConfig;
     }
 }

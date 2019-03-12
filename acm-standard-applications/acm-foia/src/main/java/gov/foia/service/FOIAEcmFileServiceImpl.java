@@ -78,7 +78,7 @@ public class FOIAEcmFileServiceImpl extends EcmFileServiceImpl implements FOIAEc
         String cmisRepositoryId = targetFolder.getCmisRepositoryId();
         if (cmisRepositoryId == null)
         {
-            cmisRepositoryId = getEcmFileServiceProperties().getProperty("ecm.defaultCmisId");
+            cmisRepositoryId = getEcmFileConfig().getDefaultCmisId();
         }
         props.put(EcmFileConstants.CONFIGURATION_REFERENCE, getCmisConfigUtils().getCmisConfiguration(cmisRepositoryId));
         props.put(EcmFileConstants.VERSIONING_STATE, getCmisConfigUtils().getVersioningState(cmisRepositoryId));

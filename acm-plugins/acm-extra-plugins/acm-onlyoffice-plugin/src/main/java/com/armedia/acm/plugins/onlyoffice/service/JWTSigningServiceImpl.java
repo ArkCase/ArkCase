@@ -28,6 +28,7 @@ package com.armedia.acm.plugins.onlyoffice.service;
  */
 
 import com.armedia.acm.plugins.onlyoffice.exceptions.OnlyOfficeException;
+import com.armedia.acm.plugins.onlyoffice.model.OnlyOfficeConfig;
 import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.jose.JWSHeader;
 import com.nimbusds.jose.JWSObject;
@@ -37,99 +38,98 @@ import com.nimbusds.jose.Payload;
 import com.nimbusds.jose.crypto.MACSigner;
 import com.nimbusds.jose.crypto.MACVerifier;
 
-public class JWTSigningServiceImpl implements JWTSigningService {
-    private String jwtOutboundAlgorithm;
-    private String jwtOutboundKey;
-    private String jwtOutboundKeyStore;
-    private String jwtOutboundCertificateAlias;
+import org.springframework.beans.factory.annotation.Value;
 
-    private String jwtInboundKey;
-    private String jwtInboundTrustStore;
+import java.nio.charset.StandardCharsets;
+
+public class JWTSigningServiceImpl implements JWTSigningService
+{
+
+    private OnlyOfficeConfig config;
 
     @Override
     public boolean verifyToken(String token)
     {
-        try {
-            JWSVerifier verifier = new MACVerifier(getKey(jwtInboundKey));
+        try
+        {
+            JWSVerifier verifier = new MACVerifier(getKey(config.getJwtInboundKey()));
 
             JWSObject jwsObject = JWSObject.parse(token);
 
             return jwsObject.verify(verifier);
-        } catch (Exception e) {
+        }
+        catch (Exception e)
+        {
             throw new OnlyOfficeException("Can't verify payload. Reason: " + e.getMessage(), e);
         }
     }
 
     @Override
-    public String signJsonPayload(String jsonString) {
-        try {
-            JWSAlgorithm jwsAlgorithm = new JWSAlgorithm(jwtOutboundAlgorithm);
+    public String signJsonPayload(String jsonString)
+    {
+        try
+        {
+            JWSAlgorithm jwsAlgorithm = new JWSAlgorithm(config.getJwtOutboundAlgorithm());
 
-            JWSSigner signer = new MACSigner(getKey(jwtOutboundKey));
+            JWSSigner signer = new MACSigner(getKey(config.getJwtOutboundKey()));
 
             JWSHeader header = new JWSHeader(jwsAlgorithm);
             JWSObject jwsObject = new JWSObject(header, new Payload(jsonString));
 
             jwsObject.sign(signer);
 
-            String s = jwsObject.serialize();
-
-            return s;
-        } catch (Exception e) {
+            return jwsObject.serialize();
+        }
+        catch (Exception e)
+        {
             throw new OnlyOfficeException("Can't sign payload. Reason: " + e.getMessage(), e);
         }
     }
 
-    private byte[] getKey(String key) {
-        try {
-            if (jwtOutboundAlgorithm.startsWith("HS")) {
-                //for HS algorithm key must be exact length as algorithm is chosen, i.e. if HS256 than key length must be 256 bits or 32 bytes
-                int keyExpectedLength = Integer.valueOf(jwtOutboundAlgorithm.substring(2)) / 8;
-                byte[] jwtOutboundKeyBytes = key.getBytes("UTF8");
+    private byte[] getKey(String key)
+    {
+        try
+        {
+            if (config.getJwtOutboundAlgorithm().startsWith("HS"))
+            {
+                // for HS algorithm key must be exact length as algorithm is chosen, i.e. if HS256 than key length must
+                // be 256 bits or 32 bytes
+                int keyExpectedLength = Integer.valueOf(config.getJwtOutboundAlgorithm().substring(2)) / 8;
+                byte[] jwtOutboundKeyBytes = key.getBytes(StandardCharsets.UTF_8);
 
                 byte[] sharedSecret = new byte[keyExpectedLength];
 
-                if (keyExpectedLength > jwtOutboundKeyBytes.length) {
-                    //if key length is smaller that expected, fill with zeroes
+                if (keyExpectedLength > jwtOutboundKeyBytes.length)
+                {
+                    // if key length is smaller that expected, fill with zeroes
                     System.arraycopy(jwtOutboundKeyBytes, 0, sharedSecret, 0, jwtOutboundKeyBytes.length);
-                } else if (keyExpectedLength < jwtOutboundKeyBytes.length) {
-                    //if key length is bigger that expected, remove after expected length
+                }
+                else if (keyExpectedLength < jwtOutboundKeyBytes.length)
+                {
+                    // if key length is bigger that expected, remove after expected length
                     System.arraycopy(jwtOutboundKeyBytes, 0, sharedSecret, 0, keyExpectedLength);
-                } else if (keyExpectedLength == jwtOutboundKeyBytes.length) {
+                }
+                else
+                {
                     sharedSecret = jwtOutboundKeyBytes;
                 }
 
                 return sharedSecret;
-            } else {
-                //TODO implement for other algorithms as needed
-                throw new OnlyOfficeException("Algorithm [" + jwtOutboundAlgorithm + "] not supported.");
             }
-        } catch (Exception e) {
+            else
+            {
+                // TODO implement for other algorithms as needed
+                throw new OnlyOfficeException("Algorithm [" + config.getJwtOutboundAlgorithm() + "] not supported.");
+            }
+        }
+        catch (Exception e)
+        {
             throw new OnlyOfficeException("Can't get key. Reason: " + e.getMessage());
         }
     }
 
-    public void setJwtOutboundAlgorithm(String jwtOutboundAlgorithm) {
-        this.jwtOutboundAlgorithm = jwtOutboundAlgorithm;
-    }
-
-    public void setJwtOutboundKey(String jwtOutboundKey) {
-        this.jwtOutboundKey = jwtOutboundKey;
-    }
-
-    public void setJwtOutboundKeyStore(String jwtOutboundKeyStore) {
-        this.jwtOutboundKeyStore = jwtOutboundKeyStore;
-    }
-
-    public void setJwtOutboundCertificateAlias(String jwtOutboundCertificateAlias) {
-        this.jwtOutboundCertificateAlias = jwtOutboundCertificateAlias;
-    }
-
-    public void setJwtInboundKey(String jwtInboundKey) {
-        this.jwtInboundKey = jwtInboundKey;
-    }
-
-    public void setJwtInboundTrustStore(String jwtInboundTrustStore) {
-        this.jwtInboundTrustStore = jwtInboundTrustStore;
+    public void setConfig(OnlyOfficeConfig config)
+    {
+        this.config = config;
     }
 }

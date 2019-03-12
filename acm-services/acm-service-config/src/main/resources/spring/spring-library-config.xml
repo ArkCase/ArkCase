@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
 
     <bean id="acmConfigPlugin" class="com.armedia.acm.pluginmanager.model.AcmPlugin">
         <property name="pluginName" value="Config Service Plugin"/>
+        <property name="configurationPropertyService" ref="configurationPropertyService"/>
     </bean>
 
     <bean id="configService" class="com.armedia.acm.services.config.service.ConfigService">
@@ -62,12 +63,6 @@
         <constructor-arg value="UTF-8"/>
     </bean>
 
-    <bean id="fiscalYearProperties"  class="org.springframework.beans.factory.config.PropertiesFactoryBean">
-        <property name="location" value="file:${user.home}/.arkcase/acm/fiscalYear.properties"/>
-        <property name="ignoreResourceNotFound" value="false"/>
-        <property name="localOverride" value="false"/>
-    </bean>
-    
     <bean id="configList" class="java.util.ArrayList">
         <constructor-arg>
             <list>
@@ -77,220 +72,166 @@
                     <property name="acmApplication" ref="acmApplication"/>
                     <property name="objectConverter" ref="objectConverter"/>
                 </bean>
-                <bean class="com.armedia.acm.services.config.model.PropertyConfig">
-                    <property name="configName" value="admin"/>
-                    <property name="configDescription" value="Admin"/>
-                    <property name="properties" ref="adminPluginProperties"/>
-                    <property name="encryptablePropertyUtils" ref="acmEncryptablePropertyUtils"/>
-                    <property name="objectConverter" ref="objectConverter"/>
-                </bean>
-                <bean class="com.armedia.acm.services.config.model.PropertyConfig">
+                <bean class="com.armedia.acm.services.config.model.ConfigBean">
                     <property name="configName" value="alfrescoRma"/>
-                    <property name="configDescription" value="Alfresco rma"/>
-                    <property name="properties" ref="alfrescoRmaPluginPropertiesForSpring"/>
-                    <property name="encryptablePropertyUtils" ref="acmEncryptablePropertyUtils"/>
-                    <property name="objectConverter" ref="objectConverter"/>
+                    <property name="description" value="Alfresco rma"/>
+                    <property name="config" ref="rmaConfig"/>
+                    <property name="jsonMarshaller" ref="jsonMarshaller"/>
                 </bean>
-                <bean class="com.armedia.acm.services.config.model.PropertyConfig">
+                <bean class="com.armedia.acm.services.config.model.ConfigMap">
                     <property name="configName" value="applicationRoleToUserGroup"/>
-                    <property name="configDescription" value="Application Role To User Group"/>
-                    <property name="properties" ref="applicationRoleToUserGroupProperties"/>
-                    <property name="encryptablePropertyUtils" ref="acmEncryptablePropertyUtils"/>
-                    <property name="objectConverter" ref="objectConverter"/>
+                    <property name="description" value="Application Role To User Group"/>
+                    <property name="configMapping" value="#{rolesToGroupsConfig.getRolesToGroups()}"/>
+                    <property name="jsonMarshaller" ref="jsonMarshaller"/>
                 </bean>
-                <bean class="com.armedia.acm.services.config.model.PropertyConfig">
+                <bean class="com.armedia.acm.services.config.model.ConfigBean">
                     <property name="configName" value="audit"/>
-                    <property name="configDescription" value="Audit"/>
-                    <property name="properties" ref="auditPluginProperties"/>
-                    <property name="encryptablePropertyUtils" ref="acmEncryptablePropertyUtils"/>
-                    <property name="objectConverter" ref="objectConverter"/>
+                    <property name="description" value="Audit"/>
+                    <property name="config" ref="auditConfig"/>
+                    <property name="jsonMarshaller" ref="jsonMarshaller"/>
                 </bean>
-                <bean class="com.armedia.acm.services.config.model.PropertyConfig">
+                <bean class="com.armedia.acm.services.config.model.ConfigBean">
                     <property name="configName" value="caseFile"/>
-                    <property name="configDescription" value="Case File"/>
-                    <property name="properties" ref="caseFilePluginProperties"/>
-                    <property name="encryptablePropertyUtils" ref="acmEncryptablePropertyUtils"/>
-                    <property name="objectConverter" ref="objectConverter"/>
+                    <property name="description" value="Case File"/>
+                    <property name="config" ref="caseConfig"/>
+                    <property name="jsonMarshaller" ref="jsonMarshaller"/>
                 </bean>
-                <bean class="com.armedia.acm.services.config.model.PropertyConfig">
+                <bean class="com.armedia.acm.services.config.model.ConfigBean">
                     <property name="configName" value="complaint"/>
-                    <property name="configDescription" value="Complaint"/>
-                    <property name="properties" ref="complaintPluginProperties"/>
-                    <property name="encryptablePropertyUtils" ref="acmEncryptablePropertyUtils"/>
-                    <property name="objectConverter" ref="objectConverter"/>
+                    <property name="description" value="Complaint"/>
+                    <property name="config" ref="complaintConfig"/>
+                    <property name="jsonMarshaller" ref="jsonMarshaller"/>
                 </bean>
-                <bean class="com.armedia.acm.services.config.model.PropertyConfig">
-                    <property name="configName" value="correspondence"/>
-                    <property name="configDescription" value="Correspondence"/>
-                    <property name="properties" ref="correspondencePluginProperties"/>
-                    <property name="encryptablePropertyUtils" ref="acmEncryptablePropertyUtils"/>
-                    <property name="objectConverter" ref="objectConverter"/>
-                </bean>
-                <bean class="com.armedia.acm.services.config.model.PropertyConfig">
+                <bean class="com.armedia.acm.services.config.model.ConfigBean">
                     <property name="configName" value="cost"/>
-                    <property name="configDescription" value="Cost"/>
-                    <property name="properties" ref="costProperties"/>
-                    <property name="encryptablePropertyUtils" ref="acmEncryptablePropertyUtils"/>
-                    <property name="objectConverter" ref="objectConverter"/>
+                    <property name="description" value="Cost"/>
+                    <property name="config" ref="costsheetConfig"/>
+                    <property name="jsonMarshaller" ref="jsonMarshaller"/>
                 </bean>
-                <bean class="com.armedia.acm.services.config.model.PropertyConfig">
+                <bean class="com.armedia.acm.services.config.model.ConfigBean">
                     <property name="configName" value="dacService"/>
-                    <property name="configDescription" value="Dac Service"/>
-                    <property name="properties" ref="dacServicePluginProperties"/>
-                    <property name="encryptablePropertyUtils" ref="acmEncryptablePropertyUtils"/>
-                    <property name="objectConverter" ref="objectConverter"/>
+                    <property name="description" value="Dac Service"/>
+                    <property name="config" ref="dacConfig"/>
+                    <property name="jsonMarshaller" ref="jsonMarshaller"/>
                 </bean>
-                <bean class="com.armedia.acm.services.config.model.PropertyConfig">
+                <bean class="com.armedia.acm.services.config.model.ConfigBean">
                     <property name="configName" value="dashboard"/>
-                    <property name="configDescription" value="Dashboard"/>
-                    <property name="properties" ref="dashboardPluginProperties"/>
-                    <property name="encryptablePropertyUtils" ref="acmEncryptablePropertyUtils"/>
-                    <property name="objectConverter" ref="objectConverter"/>
+                    <property name="description" value="Dashboard"/>
+                    <property name="config" ref="dashboardConfig"/>
+                    <property name="jsonMarshaller" ref="jsonMarshaller"/>
                 </bean>
-                <bean class="com.armedia.acm.services.config.model.PropertyConfig">
+                <bean class="com.armedia.acm.services.config.model.ConfigBean">
                     <property name="configName" value="datasource"/>
-                    <property name="configDescription" value="Data Source"/>
-                    <property name="properties" ref="datasourceProperties"/>
-                    <property name="encryptablePropertyUtils" ref="acmEncryptablePropertyUtils"/>
-                    <property name="objectConverter" ref="objectConverter"/>
+                    <property name="description" value="Data Source"/>
+                    <property name="config" ref="dataSourceConfig"/>
+                    <property name="jsonMarshaller" ref="jsonMarshaller"/>
                 </bean>
-                <bean class="com.armedia.acm.services.config.model.PropertyConfig">
+                <bean class="com.armedia.acm.services.config.model.ConfigBean">
                     <property name="configName" value="ecmFileService"/>
-                    <property name="configDescription" value="Ecm File Service"/>
-                    <property name="properties" ref="ecmFileServiceProperties"/>
-                    <property name="encryptablePropertyUtils" ref="acmEncryptablePropertyUtils"/>
-                    <property name="objectConverter" ref="objectConverter"/>
+                    <property name="description" value="Ecm File Service"/>
+                    <property name="config" ref="ecmFileConfig"/>
+                    <property name="jsonMarshaller" ref="jsonMarshaller"/>
                 </bean>
-                <bean class="com.armedia.acm.services.config.model.PropertyConfig">
+                <bean class="com.armedia.acm.services.config.model.ConfigMap">
                     <property name="configName" value="eventType"/>
-                    <property name="configDescription" value="Event Type"/>
-                    <property name="properties" ref="eventTypeProperties"/>
-                    <property name="encryptablePropertyUtils" ref="acmEncryptablePropertyUtils"/>
-                    <property name="objectConverter" ref="objectConverter"/>
+                    <property name="description" value="Event Type"/>
+                    <property name="configMapping" value="#{auditEventConfig.getEventTypes()}"/>
+                    <property name="jsonMarshaller" ref="jsonMarshaller"/>
                 </bean>
-                <bean class="com.armedia.acm.services.config.model.PropertyConfig">
-                    <property name="configName" value="acm-forms"/>
-                    <property name="configDescription" value="Acm Forms"/>
-                    <property name="properties" ref="acm-forms-properties"/>
-                    <property name="encryptablePropertyUtils" ref="acmEncryptablePropertyUtils"/>
-                    <property name="objectConverter" ref="objectConverter"/>
-                </bean>
-                <bean class="com.armedia.acm.services.config.model.PropertyConfig">
+                <bean class="com.armedia.acm.services.config.model.ConfigBean">
                     <property name="configName" value="msOutlookIntegration"/>
-                    <property name="configDescription" value="MS Outlook Integration"/>
-                    <property name="properties" ref="msOutlookIntegrationProperties"/>
-                    <property name="encryptablePropertyUtils" ref="acmEncryptablePropertyUtils"/>
-                    <property name="objectConverter" ref="objectConverter"/>
+                    <property name="description" value="MS Outlook Integration"/>
+                    <property name="config" ref="outlookConfig"/>
+                    <property name="jsonMarshaller" ref="jsonMarshaller"/>
                 </bean>
-                <bean class="com.armedia.acm.services.config.model.PropertyConfig">
+                <bean class="com.armedia.acm.services.config.model.ConfigBean">
                     <property name="configName" value="notification"/>
-                    <property name="configDescription" value="Notification"/>
-                    <property name="properties" ref="notificationProperties"/>
-                    <property name="encryptablePropertyUtils" ref="acmEncryptablePropertyUtils"/>
-                    <property name="objectConverter" ref="objectConverter"/>
+                    <property name="description" value="Notification"/>
+                    <property name="config" ref="notificationConfig"/>
+                    <property name="jsonMarshaller" ref="jsonMarshaller"/>
                 </bean>
-                <bean class="com.armedia.acm.services.config.model.PropertyConfig">
-                    <property name="configName" value="participant"/>
-                    <property name="configDescription" value="Participant"/>
-                    <property name="properties" ref="participantProperties"/>
-                    <property name="encryptablePropertyUtils" ref="acmEncryptablePropertyUtils"/>
-                    <property name="objectConverter" ref="objectConverter"/>
-                </bean>
-                <bean class="com.armedia.acm.services.config.model.PropertyConfig">
+                <bean class="com.armedia.acm.services.config.model.ConfigBean">
                     <property name="configName" value="profile"/>
-                    <property name="configDescription" value="Profile"/>
-                    <property name="properties" ref="profilePluginProperties"/>
-                    <property name="encryptablePropertyUtils" ref="acmEncryptablePropertyUtils"/>
-                    <property name="objectConverter" ref="objectConverter"/>
+                    <property name="description" value="Profile"/>
+                    <property name="config" ref="profileConfig"/>
+                    <property name="jsonMarshaller" ref="jsonMarshaller"/>
                 </bean>
-                <bean class="com.armedia.acm.services.config.model.PropertyConfig">
+                <bean class="com.armedia.acm.services.config.model.ConfigMap">
                     <property name="configName" value="acm-reports"/>
-                    <property name="configDescription" value="Acm Reports"/>
-                    <property name="properties" ref="reportPluginProperties"/>
-                    <property name="encryptablePropertyUtils" ref="acmEncryptablePropertyUtils"/>
-                    <property name="objectConverter" ref="objectConverter"/>
+                    <property name="description" value="Acm Reports"/>
+                    <property name="configMapping" value="#{pentahoReportsConfig.getReportToUrlMap()}"/>
+                    <property name="jsonMarshaller" ref="jsonMarshaller"/>
                 </bean>
                 <bean class="com.armedia.acm.services.config.model.JsonConfig">
                     <property name="configName" value="reportsParameters"/>
                     <property name="configDescription" value="Reports parameters"/>
                     <property name="json" ref="reportsParametersJsonConfig"/>
                 </bean>
-                <bean class="com.armedia.acm.services.config.model.PropertyConfig">
+                <bean class="com.armedia.acm.services.config.model.ConfigBean">
                     <property name="configName" value="acm-reports-server-config"/>
-                    <property name="configDescription" value="Acm Reports Server config"/>
-                    <property name="properties" ref="reportServerConfigurationProperties"/>
-                    <property name="encryptablePropertyUtils" ref="acmEncryptablePropertyUtils"/>
-                    <property name="objectConverter" ref="objectConverter"/>
+                    <property name="description" value="Acm Reports Server config"/>
+                    <property name="config" ref="pentahoReportsConfig"/>
+                    <property name="jsonMarshaller" ref="jsonMarshaller"/>
                 </bean>
-                <bean class="com.armedia.acm.services.config.model.PropertyConfig">
+                <bean class="com.armedia.acm.services.config.model.ConfigBean">
                     <property name="configName" value="reportToRolesMap"/>
-                    <property name="configDescription" value="Reports to Roles map"/>
-                    <property name="properties" ref="reportToRolesMapProperties"/>
-                    <property name="encryptablePropertyUtils" ref="acmEncryptablePropertyUtils"/>
-                    <property name="objectConverter" ref="objectConverter"/>
+                    <property name="description" value="Reports to Roles map"/>
+                    <property name="config" ref="reportsToRolesConfig"/>
+                    <property name="jsonMarshaller" ref="jsonMarshaller"/>
                 </bean>
-                <bean class="com.armedia.acm.services.config.model.PropertyConfig">
+                <bean class="com.armedia.acm.services.config.model.ConfigBean">
                     <property name="configName" value="acm-roles"/>
-                    <property name="configDescription" value="Acm Roles"/>
-                    <property name="properties" ref="acm-roles-properties"/>
-                    <property name="encryptablePropertyUtils" ref="acmEncryptablePropertyUtils"/>
-                    <property name="objectConverter" ref="objectConverter"/>
+                    <property name="description" value="Acm Roles"/>
+                    <property name="config" ref="applicationRolesConfig"/>
+                    <property name="jsonMarshaller" ref="jsonMarshaller"/>
                 </bean>
-                <bean class="com.armedia.acm.services.config.model.PropertyConfig">
+                <bean class="com.armedia.acm.services.config.model.ConfigBean">
                     <property name="configName" value="search"/>
-                    <property name="configDescription" value="Search"/>
-                    <property name="properties" ref="searchProperties"/>
-                    <property name="encryptablePropertyUtils" ref="acmEncryptablePropertyUtils"/>
-                    <property name="objectConverter" ref="objectConverter"/>
+                    <property name="description" value="Search"/>
+                    <property name="config" ref="solrConfig"/>
+                    <property name="jsonMarshaller" ref="jsonMarshaller"/>
                 </bean>
-                <bean class="com.armedia.acm.services.config.model.PropertyConfig">
+                <bean class="com.armedia.acm.services.config.model.ConfigBean">
                     <property name="configName" value="solr"/>
-                    <property name="configDescription" value="Solr"/>
-                    <property name="properties" ref="searchPluginProperties"/>
-                    <property name="encryptablePropertyUtils" ref="acmEncryptablePropertyUtils"/>
-                    <property name="objectConverter" ref="objectConverter"/>
+                    <property name="description" value="Solr"/>
+                    <property name="config" ref="solrConfig"/>
+                    <property name="jsonMarshaller" ref="jsonMarshaller"/>
                 </bean>
-                <bean class="com.armedia.acm.services.config.model.PropertyConfig">
+                <bean class="com.armedia.acm.services.config.model.ConfigBean">
                     <property name="configName" value="subscription"/>
-                    <property name="configDescription" value="Subscription"/>
-                    <property name="properties" ref="subscriptionProperties"/>
-                    <property name="encryptablePropertyUtils" ref="acmEncryptablePropertyUtils"/>
-                    <property name="objectConverter" ref="objectConverter"/>
+                    <property name="description" value="Subscription"/>
+                    <property name="config" ref="subscriptionConfig"/>
+                    <property name="jsonMarshaller" ref="jsonMarshaller"/>
                 </bean>
-                <bean class="com.armedia.acm.services.config.model.PropertyConfig">
+                <bean class="com.armedia.acm.services.config.model.ConfigBean">
                     <property name="configName" value="tag"/>
-                    <property name="configDescription" value="Tag"/>
-                    <property name="properties" ref="tagProperties"/>
-                    <property name="encryptablePropertyUtils" ref="acmEncryptablePropertyUtils"/>
-                    <property name="objectConverter" ref="objectConverter"/>
+                    <property name="description" value="Tag"/>
+                    <property name="config" ref="tagConfig"/>
+                    <property name="jsonMarshaller" ref="jsonMarshaller"/>
                 </bean>
-                <bean class="com.armedia.acm.services.config.model.PropertyConfig">
+                <bean class="com.armedia.acm.services.config.model.ConfigBean">
                     <property name="configName" value="task"/>
-                    <property name="configDescription" value="Task"/>
-                    <property name="properties" ref="taskPluginProperties"/>
-                    <property name="encryptablePropertyUtils" ref="acmEncryptablePropertyUtils"/>
-                    <property name="objectConverter" ref="objectConverter"/>
+                    <property name="description" value="Task"/>
+                    <property name="config" ref="taskConfig"/>
+                    <property name="jsonMarshaller" ref="jsonMarshaller"/>
                 </bean>
-                <bean class="com.armedia.acm.services.config.model.PropertyConfig">
+                <bean class="com.armedia.acm.services.config.model.ConfigBean">
                     <property name="configName" value="time"/>
-                    <property name="configDescription" value="Time"/>
-                    <property name="properties" ref="timeProperties"/>
-                    <property name="encryptablePropertyUtils" ref="acmEncryptablePropertyUtils"/>
-                    <property name="objectConverter" ref="objectConverter"/>
+                    <property name="description" value="Time"/>
+                    <property name="config" ref="timesheetConfig"/>
+                    <property name="jsonMarshaller" ref="jsonMarshaller"/>
                 </bean>
-                <bean class="com.armedia.acm.services.config.model.PropertyConfig">
+                <bean class="com.armedia.acm.services.config.model.ConfigBean">
                     <property name="configName" value="activiti"/>
-                    <property name="configDescription" value="Activiti BPMN properties"/>
-                    <property name="properties" ref="activitiProperties"/>
-                    <property name="encryptablePropertyUtils" ref="acmEncryptablePropertyUtils"/>
-                    <property name="objectConverter" ref="objectConverter"/>
+                    <property name="description" value="Activiti BPMN properties"/>
+                    <property name="config" ref="activitiConfig"/>
+                    <property name="jsonMarshaller" ref="jsonMarshaller"/>
                 </bean>
-                <bean class="com.armedia.acm.services.config.model.PropertyConfig">
+                <bean class="com.armedia.acm.services.config.model.ConfigBean">
                     <property name="configName" value="acm-analytics-config"/>
-                    <property name="configDescription" value="Acm ELK/SILK Analytics Server config"/>
-                    <property name="properties" ref="analyticsServerConfigurationProperties"/>
-                    <property name="encryptablePropertyUtils" ref="acmEncryptablePropertyUtils"/>
-                    <property name="objectConverter" ref="objectConverter"/>
+                    <property name="description" value="Acm ELK/SILK Analytics Server config"/>
+                    <property name="config" ref="analyticsServerConfig"/>
+                    <property name="jsonMarshaller" ref="jsonMarshaller"/>
                 </bean>
                 <bean class="com.armedia.acm.services.config.model.JsonConfig">
                     <property name="configName" value="objectTypes"/>
@@ -307,12 +248,11 @@
                     <property name="configDescription" value="Language Setting"/>
                     <property name="json" ref="languageJsonSettings"/>
                 </bean>
-                <bean class="com.armedia.acm.services.config.model.PropertyConfig">
+                <bean class="com.armedia.acm.services.config.model.ConfigBean">
                     <property name="configName" value="fiscalYear"/>
-                    <property name="configDescription" value="Fiscal year definition"/>
-                    <property name="properties" ref="fiscalYearProperties"/>
-                    <property name="encryptablePropertyUtils" ref="acmEncryptablePropertyUtils"/>
-                    <property name="objectConverter" ref="objectConverter"/>
+                    <property name="description" value="Fiscal year definition"/>
+                    <property name="config" ref="fiscalYearConfig"/>
+                    <property name="jsonMarshaller" ref="jsonMarshaller"/>
                 </bean>
             </list>
         </constructor-arg>

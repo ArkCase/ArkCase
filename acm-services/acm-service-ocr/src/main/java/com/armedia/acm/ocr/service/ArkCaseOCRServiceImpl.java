@@ -40,6 +40,7 @@ import com.armedia.acm.ocr.model.OCR;
 import com.armedia.acm.ocr.model.OCRActionType;
 import com.armedia.acm.ocr.model.OCRBusinessProcessModel;
 import com.armedia.acm.ocr.model.OCRBusinessProcessVariableKey;
+import com.armedia.acm.ocr.model.OCRConfig;
 import com.armedia.acm.ocr.model.OCRConfiguration;
 import com.armedia.acm.ocr.model.OCRConstants;
 import com.armedia.acm.ocr.model.OCRStatusType;
@@ -63,12 +64,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 
 /**
  * Created by Vladimir Cherepnalkovski
@@ -86,7 +85,7 @@ public class ArkCaseOCRServiceImpl implements ArkCaseOCRService
     private ArkCaseBeanUtils ocrArkCaseBeanUtils;
     private OCRBusinessProcessRulesExecutor ocrBusinessProcessRulesExecutor;
     private OCRServiceFactory ocrServiceFactory;
-    private Properties ecmFileServiceProperties;
+    private OCRConfig ocrConfig;
     private FolderAndFilesUtils folderAndFilesUtils;
 
     @Override
@@ -684,7 +683,7 @@ public class ArkCaseOCRServiceImpl implements ArkCaseOCRService
     @Override
     public boolean isExcludedFileTypes(String fileType)
     {
-        return Arrays.asList(getEcmFileServiceProperties().getProperty("ocr.excludedFileTypes").split(",")).contains(fileType);
+        return ocrConfig.getExcludedFileTypes().contains(fileType);
     }
 
     // <editor-fold desc="getters and setters">
@@ -768,16 +767,6 @@ public class ArkCaseOCRServiceImpl implements ArkCaseOCRService
         this.ocrBusinessProcessRulesExecutor = ocrBusinessProcessRulesExecutor;
     }
 
-    public Properties getEcmFileServiceProperties()
-    {
-        return ecmFileServiceProperties;
-    }
-
-    public void setEcmFileServiceProperties(Properties ecmFileServiceProperties)
-    {
-        this.ecmFileServiceProperties = ecmFileServiceProperties;
-    }
-
     @Override
     public OCRServiceFactory getOCRServiceFactory()
     {
@@ -787,6 +776,16 @@ public class ArkCaseOCRServiceImpl implements ArkCaseOCRService
     public void setOCRServiceFactory(OCRServiceFactory ocrServiceFactory)
     {
         this.ocrServiceFactory = ocrServiceFactory;
+    }
+
+    public OCRConfig getOcrConfig()
+    {
+        return ocrConfig;
+    }
+
+    public void setOcrConfig(OCRConfig ocrConfig)
+    {
+        this.ocrConfig = ocrConfig;
     }
 
     public FolderAndFilesUtils getFolderAndFilesUtils()

@@ -80,9 +80,6 @@ public interface EcmFileConstants
 
     String FIND_CONTAINERS_QUERY = "SELECT e FROM AcmContainer e WHERE e.containerObjectId IN :objectIds AND e.containerObjectType = :objectType";
 
-    String PROPERTY_KEY_DEFAULT_FOLDER_BASE_PATH = "ecm.defaultBasePath";
-    String PROPERTY_PREFIX_FOLDER_PATH_BY_TYPE = "ecm.defaultPath.";
-
     String CONTAINER_FOLDER_NAME = "ROOT";
 
     String CATEGORY_ALL = "all";

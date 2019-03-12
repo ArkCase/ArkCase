@@ -1,29 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.springframework.org/schema/beans"
-    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
-
-    <bean id="ecmFileServiceProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
-        <!-- note: must leave "file:" at the start of the file name for spring
-        to be able to read the file; otherwise it will try to read from the
-        classpath -->
-        <property name="location" value="file:${user.home}/.arkcase/acm/ecmFileService.properties"/>
-        <property name="ignoreResourceNotFound" value="true"/>
-        <property name="localOverride" value="false"/>
-        <property name="properties">
-            <props>
-                <prop key="ecm.defaultBasePath">/Sites/acm/documentLibrary</prop>
-                <prop key="ecm.defaultPath.COMPLAINT">/Complaints</prop>
-                <prop key="ecm.defaultPath.TASK">/Tasks</prop>
-                <prop key="ecm.defaultPath.CASE_FILE">/Case Files</prop>
-                <prop key="ecm.defaultCmisId">alfresco</prop>
-            </props>
-        </property>
-    </bean>
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
 
     <bean id="ecmFileDao" class="com.armedia.acm.plugins.ecm.dao.EcmFileDao"/>
+
     <bean id="acmContainerFolderDao" class="com.armedia.acm.plugins.ecm.dao.AcmContainerDao">
         <property name="fileParticipantService" ref="fileParticipantService"/>
     </bean>
+
     <bean id="acmFolderDao" class="com.armedia.acm.plugins.ecm.dao.AcmFolderDao"/>
 
     <bean id="ecmFileVersionDao" class="com.armedia.acm.plugins.ecm.dao.EcmFileVersionDao"/>
@@ -45,23 +30,23 @@
         <property name="folderDao" ref="acmFolderDao"/>
         <property name="folderService" ref="acmFolderService"/>
         <property name="participantService" ref="acmParticipantService"/>
-        <property name="ecmFileServiceProperties" ref="ecmFileServiceProperties"/>
         <property name="fileParticipantServiceHelper" ref="fileParticipantServiceHelper"/>
+        <property name="ecmFileConfig" ref="ecmFileConfig"/>
     </bean>
 
     <bean id="entityParticipantsChangedEventListener"
-        class="com.armedia.acm.plugins.ecm.service.EntityParticipantsChangedEventListener">
+          class="com.armedia.acm.plugins.ecm.service.EntityParticipantsChangedEventListener">
         <property name="fileParticipantService" ref="fileParticipantService"/>
     </bean>
 
     <bean id="folderDataAccessUpdateLocator"
-        class="com.armedia.acm.plugins.ecm.service.impl.FolderDataAccessUpdateLocator">
+          class="com.armedia.acm.plugins.ecm.service.impl.FolderDataAccessUpdateLocator">
         <property name="folderDao" ref="acmFolderDao"/>
     </bean>
 
     <!-- Bactes Capture folder handler to drop non-pdf files to the Ephesoft shared hot folder -->
     <bean id="captureFolderHandler" class="com.armedia.acm.plugins.ecm.service.impl.SendForPdfConversionImpl">
-        <property name="captureFolderToWatch" value="${capture.sendForPdfConversionFolder}"/>
+        <property name="captureConfig" ref="captureConfig"/>
     </bean>
 
     <!-- Mule Utility Bean for downloading, updating, adding files -->
@@ -72,14 +57,13 @@
 
     <!-- Bactes specific pipeline pre save handlers -->
     <bean id="ecmFileMergeHandler" class="com.armedia.acm.plugins.ecm.pipeline.presave.EcmFileMergeHandler">
-        <property name="fileFormatsToMerge" value="${capture.fileFormatsToMerge}"/>
-        <property name="fileTypesToMerge" value="${capture.fileTypesToMerge}"/>
         <property name="ecmFileDao" ref="ecmFileDao"/>
         <property name="folderAndFilesUtils" ref="folderAndFilesUtils"/>
         <property name="ecmFileMuleUtils" ref="ecmFileMuleUtils"/>
+        <property name="captureConfig" ref="captureConfig"/>
     </bean>
     <bean id="ecmFileMergedContentHandler"
-        class="com.armedia.acm.plugins.ecm.pipeline.presave.EcmFileMergeContentHandler">
+          class="com.armedia.acm.plugins.ecm.pipeline.presave.EcmFileMergeContentHandler">
         <property name="ecmFileMuleUtils" ref="ecmFileMuleUtils"/>
     </bean>
     <bean id="ecmFileNewContentHandler" class="com.armedia.acm.plugins.ecm.pipeline.presave.EcmFileNewContentHandler">
@@ -91,30 +75,29 @@
         <property name="pageCountService" ref="pageCountService"/>
     </bean>
     <bean id="ecmFileMergedMetadataHandler"
-        class="com.armedia.acm.plugins.ecm.pipeline.presave.EcmFileMergedMetadataHandler">
+          class="com.armedia.acm.plugins.ecm.pipeline.presave.EcmFileMergedMetadataHandler">
         <property name="ecmFileDao" ref="ecmFileDao"/>
         <property name="folderDao" ref="acmFolderDao"/>
         <property name="pageCountService" ref="pageCountService"/>
 
     </bean>
     <bean id="ecmFileSendForPdfConversionHandler"
-        class="com.armedia.acm.plugins.ecm.pipeline.presave.EcmFileSendForPdfConversionHandler">
+          class="com.armedia.acm.plugins.ecm.pipeline.presave.EcmFileSendForPdfConversionHandler">
         <property name="captureFolderService" ref="captureFolderHandler"/>
-        <property name="fileTypesToBeConvertedToPDF" value="${capture.fileTypesToBeConvertedToPDF}"/>
-        <property name="fileFormatsToBeConvertedToPDF" value="${capture.fileFormatsToBeConvertedToPDF}"/>
+        <property name="captureConfig" ref="captureConfig"/>
     </bean>
     <bean id="ecmFileUpdateContentHandler"
-        class="com.armedia.acm.plugins.ecm.pipeline.presave.EcmFileUpdateContentHandler">
+          class="com.armedia.acm.plugins.ecm.pipeline.presave.EcmFileUpdateContentHandler">
         <property name="ecmFileMuleUtils" ref="ecmFileMuleUtils"/>
     </bean>
     <bean id="ecmFileUpdateMetadataHandler"
-        class="com.armedia.acm.plugins.ecm.pipeline.presave.EcmFileUpdateMetadataHandler">
+          class="com.armedia.acm.plugins.ecm.pipeline.presave.EcmFileUpdateMetadataHandler">
         <property name="ecmFileDao" ref="ecmFileDao"/>
         <property name="folderDao" ref="acmFolderDao"/>
         <property name="pageCountService" ref="pageCountService"/>
     </bean>
     <bean id="ecmFileParticipantsHandler"
-        class="com.armedia.acm.plugins.ecm.pipeline.postsave.EcmFileParticipantsHandler">
+          class="com.armedia.acm.plugins.ecm.pipeline.postsave.EcmFileParticipantsHandler">
         <property name="fileParticipantService" ref="fileParticipantService"/>
     </bean>
     <!-- This pipeline uploads document content to Alfresco and the metadata to the acm3 database -->
@@ -159,7 +142,7 @@
         <property name="ecmFileUploadPipelineManager" ref="ecmFileUploadPipelineManager"/>
         <property name="ecmFileUpdatePipelineManager" ref="ecmFileUpdatePipelineManager"/>
         <property name="cmisConfigUtils" ref="cmisConfigUtils"/>
-        <property name="ocrEnabled" value="${ecm.viewer.snowbound.enableOCR}"/>
+        <property name="ocrEnabled" value="#{ecmFileConfig.snowboundEnableOcr}"/>
         <property name="mimeTypesByTika">
             <map>
                 <entry key="text/plain">
@@ -266,7 +249,6 @@
         <property name="ecmFileTransaction" ref="ecmFileTransaction"/>
         <property name="ecmFileDao" ref="ecmFileDao"/>
         <property name="containerFolderDao" ref="acmContainerFolderDao"/>
-        <property name="ecmFileServiceProperties" ref="ecmFileServiceProperties"/>
         <property name="muleContextManager" ref="muleContextManager"/>
         <property name="solrQuery" ref="executeSolrQuery"/>
         <property name="searchResults" ref="searchResults"/>
@@ -299,12 +281,13 @@
         <property name="folderAndFilesUtils" ref="folderAndFilesUtils"/>
         <property name="cmisConfigUtils" ref="cmisConfigUtils"/>
         <property name="fileParticipantService" ref="fileParticipantService"/>
+        <property name="ecmFileConfig" ref="ecmFileConfig"/>
     </bean>
 
     <bean id="ecmFileToSolrTrasnformer" class="com.armedia.acm.plugins.ecm.service.EcmFileToSolrTransformer">
         <property name="ecmFileDao" ref="ecmFileDao"/>
-        <property name="enableDocumentACL" value="${dac.enableDocumentACL}"/>
-        <property name="enableContentFileIndexing" value="${solr.enableContentFileIndexing}"/>
+        <property name="enableDocumentACL" value="#{dacConfig.enableDocumentACL}"/>
+        <property name="enableContentFileIndexing" value="#{solrConfig.enableContentFileIndexing}"/>
         <property name="userDao" ref="userJpaDao"/>
         <property name="searchAccessControlFields" ref="searchAccessControlFields"/>
         <property name="acmDataService" ref="acmDataService"/>
@@ -323,7 +306,7 @@
         <property name="ecmFileService" ref="ecmFileService"/>
         <property name="objectConverter" ref="objectConverter"/>
         <property name="cmisConfigUtils" ref="cmisConfigUtils"/>
-        <property name="solrContentFileHandler" value="${solr.contentFileHandler}"/>
+        <property name="solrContentFileHandler" value="#{solrConfig.contentFileHandler}"/>
         <property name="solrRestClient" ref="solrRestClient"/>
     </bean>
 
@@ -332,7 +315,7 @@
     </bean>
 
     <bean id="fileWorkflowBusinessRule" class="com.armedia.acm.plugins.ecm.service.impl.FileWorkflowBusinessRule"
-        parent="simpleStatelessSingleObjectRuleManager">
+          parent="simpleStatelessSingleObjectRuleManager">
         <property name="ruleSpreadsheetFilename" value="drools-form-business-process-rules.xlsx"/>
     </bean>
 
@@ -347,9 +330,9 @@
         <property name="fileDao" ref="ecmFileDao"/>
         <property name="fileService" ref="ecmFileService"/>
         <property name="folderAndFilesUtils" ref="folderAndFilesUtils"/>
-        <property name="ecmFileServiceProperties" ref="ecmFileServiceProperties"/>
         <property name="cmisConfigUtils" ref="cmisConfigUtils"/>
         <property name="fileParticipantService" ref="fileParticipantService"/>
+        <property name="ecmFileConfig" ref="ecmFileConfig"/>
     </bean>
 
     <bean id="folderAndFilesUtils" class="com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils">
@@ -365,27 +348,20 @@
 
     <bean id="ecmFilePlugin" class="com.armedia.acm.pluginmanager.model.AcmPlugin">
         <property name="pluginName" value="ECM File Plugin"/>
+        <property name="configurationPropertyService" ref="configurationPropertyService"/>
     </bean>
 
     <bean id="acmFileTypesService" class="com.armedia.acm.plugins.ecm.service.impl.AcmFileTypesServiceImpl">
-        <property name="propertyFileManager" ref="propertyFileManager"/>
-
         <property name="propertiesLocation" value="${user.home}/.arkcase/acm/"></property>
         <property name="acmFormsPlainPropertiesFile" value="acm-forms-plain.properties"></property>
         <property name="acmFormsAcmPropertiesFile" value="acm-forms.properties"></property>
-        <property name="propertyFiles">
-            <list>
-                <value>caseFilePlugin.properties</value>
-                <value>complaintPlugin.properties</value>
-                <value>taskPlugin.properties</value>
-            </list>
-        </property>
+        <property name="contextHolder" ref="acmContextHolder"/>
     </bean>
 
     <bean id="pageCountService" class="com.armedia.acm.plugins.ecm.service.impl.PageCountServiceImpl"/>
 
     <bean id="fileCreatedWorkflowHandler"
-        class="com.armedia.acm.plugins.ecm.handler.FileCreatedBuckslipWorkflowHandler">
+          class="com.armedia.acm.plugins.ecm.handler.FileCreatedBuckslipWorkflowHandler">
         <property name="fileWorkflowBusinessRule" ref="fileWorkflowBusinessRule"/>
         <property name="activitiRuntimeService" ref="activitiRuntimeService"/>
         <property name="objectConverter" ref="objectConverter"/>
@@ -416,16 +392,15 @@
 
     <bean id="fileAclSolrUpdateHelper" class="com.armedia.acm.plugins.ecm.service.FileAclSolrUpdateHelper">
         <property name="ecmFileDao" ref="ecmFileDao"/>
-        <property name="enableDocumentACL" value="${dac.enableDocumentACL}"/>
+        <property name="enableDocumentACL" value="#{dacConfig.enableDocumentACL}"/>
         <property name="searchAccessControlFields" ref="searchAccessControlFields"/>
     </bean>
 
-    <bean id="metadataUpdateProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
-        <!-- note: must leave "file:" at the start of the file name for spring
-        to be able to read the file; otherwise it will try to read from the
-        classpath -->
-        <property name="location" value="file:${user.home}/.arkcase/acm/alfrescoUpdateMetadata.properties"/>
-        <property name="ignoreResourceNotFound" value="true"/>
-        <property name="localOverride" value="false"/>
+    <bean id="ecmFileConfig" class="com.armedia.acm.plugins.ecm.model.EcmFileConfig" scope="refresh">
+        <aop:scoped-proxy/>
+    </bean>
+
+    <bean id="updateMetadataConfig" class="com.armedia.acm.plugins.ecm.model.UpdateMetadataConfig" scope="refresh">
+        <aop:scoped-proxy/>
     </bean>
 </beans>

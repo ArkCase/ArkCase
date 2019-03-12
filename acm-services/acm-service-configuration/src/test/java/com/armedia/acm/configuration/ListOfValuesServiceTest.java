@@ -30,6 +30,8 @@ package com.armedia.acm.configuration;
 import static org.easymock.EasyMock.expect;
 import static org.junit.Assert.assertEquals;
 
+import com.armedia.acm.services.configuration.ListOfValuesService;
+import com.armedia.acm.services.configuration.LookupTableDescriptor;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;

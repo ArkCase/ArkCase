@@ -1,28 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
 
     <bean id="msOutlookPlugin" class="com.armedia.acm.pluginmanager.model.AcmPlugin">
         <property name="pluginName" value="Microsoft Outlook Plugin"/>
+        <property name="configurationPropertyService" ref="configurationPropertyService"/>
         <property name="suportedObjectTypesNames">
             <list/>
         </property>
     </bean>
 
     <bean id="outlookContainerService" class="com.armedia.acm.plugins.outlook.service.impl.OutlookContainerCalendarServiceImpl">
-        <property name="participantsTypesForOutlookFolder" value="${participants-types-as-outlook-permission}"/>
-        <property name="defaultAccess" value="${outlook.exchange.default_access}"/>
-        <property name="approverAccess" value="${outlook.exchange.approver_access}"/>
-        <property name="followerAccess" value="${outlook.exchange.follower_access}"/>
-        <property name="assigneeAccess" value="${outlook.exchange.assignee_access}"/>
-
         <property name="userDao" ref="userJpaDao"/>
         <property name="acmContainerDao" ref="acmContainerFolderDao"/>
         <property name="outlookFolderService" ref="outlookService"/>
-
-        <property name="useSystemUser" value="${outlook.exchange.calendar.use.system.user}"/>
         <property name="userOrgService" ref="acmUserOrgService"/>
         <property name="outlookService" ref="outlookService"/>
+        <property name="outlookConfig" ref="outlookConfig"/>
     </bean>
 
 </beans>

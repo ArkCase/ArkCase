@@ -37,6 +37,7 @@ import com.armedia.acm.plugins.onlyoffice.exceptions.OnlyOfficeException;
 import com.armedia.acm.plugins.onlyoffice.model.CallbackResponse;
 import com.armedia.acm.plugins.onlyoffice.model.CallbackResponseError;
 import com.armedia.acm.plugins.onlyoffice.model.CallbackResponseSuccess;
+import com.armedia.acm.plugins.onlyoffice.model.OnlyOfficeConfig;
 import com.armedia.acm.plugins.onlyoffice.model.StatusType;
 import com.armedia.acm.plugins.onlyoffice.model.callback.Action;
 import com.armedia.acm.plugins.onlyoffice.model.callback.CallBackData;
@@ -46,6 +47,7 @@ import com.armedia.acm.service.objectlock.service.AcmObjectLockingManager;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 
 import java.io.IOException;
@@ -62,10 +64,9 @@ public class CallbackServiceImpl implements CallbackService
     private EcmFileService ecmFileService;
     private AcmObjectLockService objectLockService;
     private OnlyOfficeEventPublisher onlyOfficeEventPublisher;
-    private JWTSigningService jwtSigningService;
-    private boolean inboundVerifyEnabled;
     private DocumentHistoryManager documentHistoryManager;
     private AcmObjectLockingManager acmObjectLockingManager;
+    private OnlyOfficeConfig config;
 
     @Override
     public CallbackResponse handleCallback(CallBackData callBackData, Authentication authentication)
@@ -73,7 +74,7 @@ public class CallbackServiceImpl implements CallbackService
         Objects.requireNonNull(callBackData, "Callback data must not be null.");
         logger.debug("handle callback data [{}]", callBackData);
 
-        if (inboundVerifyEnabled)
+        if (config.isInboundVerifyEnabled())
         {
             // TODO verify callback data in token are equal as provided
         }
@@ -256,16 +257,6 @@ public class CallbackServiceImpl implements CallbackService
         this.objectLockService = objectLockService;
     }
 
-    public void setInboundVerifyEnabled(boolean inboundVerifyEnabled)
-    {
-        this.inboundVerifyEnabled = inboundVerifyEnabled;
-    }
-
-    public void setJwtSigningService(JWTSigningService jwtSigningService)
-    {
-        this.jwtSigningService = jwtSigningService;
-    }
-
     public void setDocumentHistoryManager(DocumentHistoryManager documentHistoryManager)
     {
         this.documentHistoryManager = documentHistoryManager;
@@ -274,5 +265,10 @@ public class CallbackServiceImpl implements CallbackService
     public void setAcmObjectLockingManager(AcmObjectLockingManager acmObjectLockingManager)
     {
         this.acmObjectLockingManager = acmObjectLockingManager;
+    }
+
+    public void setConfig(OnlyOfficeConfig config)
+    {
+        this.config = config;
     }
 }

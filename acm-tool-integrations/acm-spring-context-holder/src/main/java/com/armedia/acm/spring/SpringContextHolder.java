@@ -38,6 +38,7 @@ import com.armedia.acm.spring.exceptions.AcmContextHolderException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.aop.scope.ScopedProxyUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.context.ApplicationContext;
@@ -60,6 +61,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class SpringContextHolder
         implements ApplicationContextAware, ApplicationListener<AbstractConfigurationFileEvent>, ApplicationEventPublisherAware
@@ -271,6 +273,10 @@ public class SpringContextHolder
         }
 
         log.debug("Returning {} beans of type {}", beans.size(), type.getName());
+        beans = beans.entrySet()
+                .stream()
+                .filter(it -> !ScopedProxyUtils.isScopedTarget(it.getKey()))
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
         return Collections.unmodifiableMap(beans);
     }
 

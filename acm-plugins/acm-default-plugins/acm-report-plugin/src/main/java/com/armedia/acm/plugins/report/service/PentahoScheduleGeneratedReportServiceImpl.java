@@ -27,12 +27,11 @@ package com.armedia.acm.plugins.report.service;
  * #L%
  */
 
-import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
-import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.report.model.PentahoFileProperties;
 import com.armedia.acm.plugins.report.model.PentahoReportFiles;
+import com.armedia.acm.pentaho.config.PentahoReportsConfig;
 import com.armedia.acm.scheduler.AcmSchedulableBean;
 
 import org.apache.commons.ssl.Base64;
@@ -56,9 +55,7 @@ public class PentahoScheduleGeneratedReportServiceImpl implements AcmSchedulable
     private PentahoFilePropertiesService pentahoFilePropertiesService;
     private PentahoRemoveGeneratedReportService pentahoRemoveGeneratedReportService;
     private PentahoUploadGeneratedReportService uploadService;
-    private PentahoReportFiles pentahoReportFiles;
-    private String pentahoUser;
-    private String pentahoPassword;
+    private PentahoReportsConfig reportsConfig;
 
     @Override
     public void executeTask()
@@ -68,7 +65,7 @@ public class PentahoScheduleGeneratedReportServiceImpl implements AcmSchedulable
         restTemplate = new RestTemplate();
 
         // get generate report metadata
-        pentahoReportFiles = getPentahoFilePropertiesService().consumeXML(headers, restTemplate);
+        PentahoReportFiles pentahoReportFiles = getPentahoFilePropertiesService().consumeXML(headers, restTemplate);
         if (pentahoReportFiles != null && pentahoReportFiles.getPentahoFilePropertiesList() != null)
         {
             pentahoReportFiles.getPentahoFilePropertiesList().forEach(pentahoFileProperties -> {
@@ -98,8 +95,7 @@ public class PentahoScheduleGeneratedReportServiceImpl implements AcmSchedulable
         }
     }
 
-    private EcmFile uploadReportToArkCase(PentahoFileProperties pentahoFileProperties)
-            throws AcmCreateObjectFailedException, AcmUserActionFailedException, AcmObjectNotFoundException
+    private EcmFile uploadReportToArkCase(PentahoFileProperties pentahoFileProperties) throws AcmObjectNotFoundException
     {
         byte[] data = getDownloadService().getResponse().getBody();
         InputStream inputStream = new ByteArrayInputStream(data);
@@ -108,7 +104,7 @@ public class PentahoScheduleGeneratedReportServiceImpl implements AcmSchedulable
 
     private void createCredentialHeaders()
     {
-        String plainCreds = getPentahoUser() + ":" + getPentahoPassword();
+        String plainCreds = reportsConfig.getServerUser() + ":" + reportsConfig.getServerPassword();
         byte[] plainCredsBytes = plainCreds.getBytes();
         byte[] base64CredsBytes = Base64.encodeBase64(plainCredsBytes);
         String base64Creds = new String(base64CredsBytes);
@@ -156,23 +152,13 @@ public class PentahoScheduleGeneratedReportServiceImpl implements AcmSchedulable
         this.uploadService = uploadService;
     }
 
-    public String getPentahoUser()
+    public PentahoReportsConfig getReportsConfig()
     {
-        return pentahoUser;
+        return reportsConfig;
     }
 
-    public void setPentahoUser(String pentahoUser)
+    public void setReportsConfig(PentahoReportsConfig reportsConfig)
     {
-        this.pentahoUser = pentahoUser;
-    }
-
-    public String getPentahoPassword()
-    {
-        return pentahoPassword;
-    }
-
-    public void setPentahoPassword(String pentahoPassword)
-    {
-        this.pentahoPassword = pentahoPassword;
+        this.reportsConfig = reportsConfig;
     }
 }
