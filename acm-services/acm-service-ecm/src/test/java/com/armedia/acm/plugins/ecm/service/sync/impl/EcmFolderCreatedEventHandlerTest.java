@@ -51,8 +51,6 @@ import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 
-import javax.persistence.NoResultException;
-
 /**
  * Created by dmiller on 5/17/17.
  */
