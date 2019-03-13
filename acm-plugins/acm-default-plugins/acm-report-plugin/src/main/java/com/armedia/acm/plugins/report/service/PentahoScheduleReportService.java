@@ -55,7 +55,7 @@ public class PentahoScheduleReportService implements ScheduleReportService
 
     private void createCredentialHeaders()
     {
-        String plainCreds = reportsConfig.getServerUrl() + ":" + reportsConfig.getServerPassword();
+        String plainCreds = reportsConfig.getServerUser() + ":" + reportsConfig.getServerPassword();
         byte[] plainCredsBytes = plainCreds.getBytes();
         byte[] base64CredsBytes = Base64.encodeBase64(plainCredsBytes);
         String base64Creds = new String(base64CredsBytes);
@@ -148,15 +148,15 @@ public class PentahoScheduleReportService implements ScheduleReportService
 
     public String buildDeleteScheduleUrl()
     {
-        return reportsConfig.getServerUrl() +
-                ((reportsConfig.getServerPort() != null) ? ":" + reportsConfig.getServerPort() : "")
+        return reportsConfig.getServerInternalUrl() +
+                ((reportsConfig.getServerInternalPort() != null) ? ":" + reportsConfig.getServerInternalPort() : "")
                 + reportsConfig.getDeleteScheduleApi();
     }
 
     public String buildRetrieveSchedulesUrl()
     {
-        return reportsConfig.getServerUrl() +
-                ((reportsConfig.getServerPort() != null) ? ":" + reportsConfig.getServerPort() : "")
+        return reportsConfig.getServerInternalUrl() +
+                ((reportsConfig.getServerInternalPort() != null) ? ":" + reportsConfig.getServerInternalPort() : "")
                 + reportsConfig.getRetrieveSchedulesApi();
     }
 
@@ -164,7 +164,7 @@ public class PentahoScheduleReportService implements ScheduleReportService
     {
 
         return reportsConfig.getServerUrl() +
-                ((reportsConfig.getServerPort() != null) ? ":" + reportsConfig.getServerPort() : "")
+                ((reportsConfig.getServerInternalPort() != null) ? ":" + reportsConfig.getServerInternalPort() : "")
                 + reportsConfig.getScheduleApi();
     }
 
