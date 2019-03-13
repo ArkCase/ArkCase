@@ -1,5 +1,32 @@
 package com.armedia.acm.plugins.ecm.service.sync.impl;
 
+/*-
+ * #%L
+ * ACM Service: Enterprise Content Management
+ * %%
+ * Copyright (C) 2014 - 2019 ArkCase LLC
+ * %%
+ * This file is part of the ArkCase software. 
+ * 
+ * If the software was purchased under a paid ArkCase license, the terms of 
+ * the paid license agreement will prevail.  Otherwise, the software is 
+ * provided under the following open source license terms:
+ * 
+ * ArkCase is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *  
+ * ArkCase is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
+ * #L%
+ */
+
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
@@ -22,6 +49,9 @@ import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.MockitoAnnotations;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import javax.persistence.NoResultException;
 
@@ -78,8 +108,8 @@ public class EcmNodeDeletedEventHandlerTest
 
         unit.onEcmNodeDeleted(nodeDeletedEvent);
 
-        verify(ecmFileDao, times(1)).findByCmisFileId(anyString());
-        verify(acmFolderDao, times(0)).findByCmisFolderId(anyString());
+        verify(ecmFileDao, times(1)).findByCmisFileId(nodeDeletedEvent.getNodeId());
+        verify(acmFolderDao, times(0)).findByCmisFolderId(nodeDeletedEvent.getNodeId());
     }
 
     @Test
@@ -92,9 +122,14 @@ public class EcmNodeDeletedEventHandlerTest
         when(ecmFileDao.findByCmisFileId(nodeDeletedEvent.getNodeId())).thenThrow(new NoResultException());
         when(acmFolderDao.findByCmisFolderId(nodeDeletedEvent.getNodeId())).thenReturn(folder);
 
+        // I don't know why this is needed, but Mockito throws up without it
+        Authentication auth = new UsernamePasswordAuthenticationToken("test", "test");
+        SecurityContextHolder.getContext().setAuthentication(auth);
+
         unit.onEcmNodeDeleted(nodeDeletedEvent);
 
-        verify(ecmFileDao, times(1)).findByCmisFileId(anyString());
-        verify(acmFolderDao, times(1)).findByCmisFolderId(anyString());
+
+        verify(ecmFileDao, times(1)).findByCmisFileId(nodeDeletedEvent.getNodeId());
+        verify(acmFolderDao, times(1)).findByCmisFolderId(nodeDeletedEvent.getNodeId());
     }
 }
