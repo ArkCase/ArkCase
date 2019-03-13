@@ -165,7 +165,10 @@
                 "title": "Новости",
                 "noDataMessage": "В настоящее время RSS / информация отсутствует",
                 "configDescription": "Описание",
-                "configDescriptionPlaceholder": "Введите описание виджета"
+                "configDescriptionPlaceholder": "Введите описание виджета",
+                "message": {
+                    "error": "Недопустимый URL"
+                }
             },
             "details": {
                 "title": "Детали",

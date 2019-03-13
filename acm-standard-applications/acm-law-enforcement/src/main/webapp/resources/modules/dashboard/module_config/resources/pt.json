@@ -165,7 +165,10 @@
                 "title": "Notícias",
                 "noDataMessage": "Atualmente não há RSS / info",
                 "configDescription": "Descrição",
-                "configDescriptionPlaceholder": "Insira a descrição do widget"
+                "configDescriptionPlaceholder": "Insira a descrição do widget",
+                "message": {
+                    "error": "URL inválida"
+                }
             },
             "details": {
                 "title": "Detalhes",
