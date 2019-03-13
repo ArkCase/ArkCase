@@ -56,6 +56,8 @@ import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import com.armedia.acm.service.objectlock.annotation.AcmAcquireAndReleaseObjectLock;
 import com.armedia.acm.service.objectlock.annotation.AcmAcquireObjectLock;
+import com.armedia.acm.service.objectlock.model.AcmObjectLock;
+import com.armedia.acm.service.objectlock.service.AcmObjectLockService;
 import com.armedia.acm.services.participants.service.AcmParticipantService;
 import com.armedia.acm.services.search.model.SearchConstants;
 import com.armedia.acm.services.search.model.SolrCore;
@@ -73,6 +75,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
+import org.springframework.messaging.MessageChannel;
+import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -134,6 +138,10 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     private AcmParticipantService participantService;
 
     private EcmFileConfig ecmFileConfig;
+
+    private MessageChannel genericMessagesChannel;
+
+    private AcmObjectLockService objectLockService;
 
     @Override
     public CmisObject findObjectByPath(String path) throws Exception
@@ -315,6 +323,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
 
             String cmisRepositoryId = metadata.getCmisRepositoryId() == null ? ecmFileConfig.getDefaultCmisId()
                     : metadata.getCmisRepositoryId();
+
             metadata.setCmisRepositoryId(cmisRepositoryId);
             EcmFile uploaded = getEcmFileTransaction().addFileTransaction(authentication, file.getOriginalFilename(), container,
                     targetCmisFolderId, fileInputStream, metadata);
@@ -1454,6 +1463,13 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
 
     @Override
     @AcmAcquireAndReleaseObjectLock(objectIdArgIndex = 0, objectType = "FILE", lockType = "DELETE")
+    public void deleteFileFromArkcase(Long fileId)
+    {
+        getEcmFileDao().deleteFile(fileId);
+    }
+
+    @Override
+    @AcmAcquireAndReleaseObjectLock(objectIdArgIndex = 0, objectType = "FILE", lockType = "DELETE")
     public void deleteFile(Long objectId) throws AcmUserActionFailedException, AcmObjectNotFoundException
     {
         deleteFile(objectId, true);
@@ -1641,6 +1657,24 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     }
 
     @Override
+    @Transactional
+    public void removeLockAndSendMessage(Long objectId, String message)
+    {
+        AcmObjectLock lock = getObjectLockService().findLock(objectId, EcmFileConstants.OBJECT_FILE_TYPE);
+        if (lock != null)
+        {
+            Map<String, Object> payload = new HashMap<>();
+            payload.put("user", lock.getCreator());
+            payload.put("eventType", "sync-progress");
+            payload.put("message", message);
+
+            getObjectLockService().removeLock(lock);
+
+            getGenericMessagesChannel().send(MessageBuilder.withPayload(payload).build());
+        }
+    }
+
+    @Override
     public EcmFile findById(Long fileId)
     {
         return getEcmFileDao().find(fileId);
@@ -1811,5 +1845,25 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     public void setEcmFileConfig(EcmFileConfig ecmFileConfig)
     {
         this.ecmFileConfig = ecmFileConfig;
+    }
+
+    public MessageChannel getGenericMessagesChannel()
+    {
+        return genericMessagesChannel;
+    }
+
+    public void setGenericMessagesChannel(MessageChannel genericMessagesChannel)
+    {
+        this.genericMessagesChannel = genericMessagesChannel;
+    }
+
+    public AcmObjectLockService getObjectLockService()
+    {
+        return objectLockService;
+    }
+
+    public void setObjectLockService(AcmObjectLockService objectLockService)
+    {
+        this.objectLockService = objectLockService;
     }
 }

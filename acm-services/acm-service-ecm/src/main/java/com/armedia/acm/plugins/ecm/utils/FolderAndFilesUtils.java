@@ -6,22 +6,22 @@ package com.armedia.acm.plugins.ecm.utils;
  * %%
  * Copyright (C) 2014 - 2018 ArkCase LLC
  * %%
- * This file is part of the ArkCase software. 
- * 
- * If the software was purchased under a paid ArkCase license, the terms of 
- * the paid license agreement will prevail.  Otherwise, the software is 
+ * This file is part of the ArkCase software.
+ *
+ * If the software was purchased under a paid ArkCase license, the terms of
+ * the paid license agreement will prevail.  Otherwise, the software is
  * provided under the following open source license terms:
- * 
+ *
  * ArkCase is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *  
+ *
  * ArkCase is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
  * #L%
@@ -251,11 +251,13 @@ public class FolderAndFilesUtils
     }
 
     public EcmFile uploadFile(EcmEvent ecmEvent, AcmFolder targetParentFolder)
+            throws AcmUserActionFailedException, AcmCreateObjectFailedException
     {
         return uploadFile(ecmEvent.getNodeId(), ecmEvent.getNodeName(), ecmEvent.getUserId(), targetParentFolder);
     }
 
     public EcmFile uploadFile(String nodeId, String nodeName, String userId, AcmFolder targetParentFolder)
+            throws AcmCreateObjectFailedException, AcmUserActionFailedException
     {
         AcmContainer container = lookupArkCaseContainer(targetParentFolder.getId());
         if (container == null)
@@ -263,6 +265,7 @@ public class FolderAndFilesUtils
             log.debug("Can't find container for the new file with id {}, exiting.", nodeId);
             return null;
         }
+
         String cmisRepositoryId = getFolderService().getCmisRepositoryId(targetParentFolder);
         Document cmisDocument = lookupCmisDocument(cmisRepositoryId, nodeId);
         if (cmisDocument == null)
@@ -270,27 +273,21 @@ public class FolderAndFilesUtils
             log.error("No document to be loaded - exiting.");
             return null;
         }
-        EcmFile addedToArkCase = null;
-        try
-        {
-            addedToArkCase = getFileService().upload(
-                    nodeName,
-                    findFileType(cmisDocument),
-                    "Document",
-                    cmisDocument.getContentStream().getStream(),
-                    cmisDocument.getContentStreamMimeType(),
-                    nodeName,
-                    new UsernamePasswordAuthenticationToken(userId, userId),
-                    targetParentFolder.getCmisFolderId(),
-                    container.getContainerObjectType(),
-                    container.getContainerObjectId(),
-                    targetParentFolder.getCmisRepositoryId(),
-                    cmisDocument);
-        }
-        catch (AcmCreateObjectFailedException | AcmUserActionFailedException e)
-        {
-            log.error("Could not add file with CMIS ID [{}] to ArkCase: {}", nodeId, e.getMessage(), e);
-        }
+
+        EcmFile addedToArkCase = getFileService().upload(
+                nodeName,
+                findFileType(cmisDocument),
+                "Document",
+                cmisDocument.getContentStream().getStream(),
+                cmisDocument.getContentStreamMimeType(),
+                nodeName,
+                new UsernamePasswordAuthenticationToken(userId, userId),
+                targetParentFolder.getCmisFolderId(),
+                container.getContainerObjectType(),
+                container.getContainerObjectId(),
+                targetParentFolder.getCmisRepositoryId(),
+                cmisDocument);
+
         return addedToArkCase;
     }
 
@@ -346,7 +343,7 @@ public class FolderAndFilesUtils
         try
         {
             EcmFile found = getFileDao().findByCmisFileIdAndFolderId(nodeId, parentFolderId);
-            log.debug("ArkCase has file with CMIS ID {}: folder id is {}", nodeId, found.getId());
+            log.debug("ArkCase has file with CMIS ID: {} and folder id:{}", nodeId, found.getId());
             return found;
         }
         catch (NoResultException e)
@@ -364,7 +361,7 @@ public class FolderAndFilesUtils
             if (!fileList.isEmpty())
             {
                 EcmFile ecmFile = fileList.get(0);
-                log.debug("ArkCase has file with CMIS ID {}: file id is {}", fileCmisId, ecmFile.getId());
+                log.debug("ArkCase has file with CMIS ID: {} and file id: {}", fileCmisId, ecmFile.getId());
                 return ecmFile;
             }
             return null;
@@ -383,7 +380,7 @@ public class FolderAndFilesUtils
             AcmFolder found = getFolderDao().findByCmisFolderId(folderCmisId);
             if (found != null)
             {
-                log.debug("ArkCase has folder with CMIS ID {}: folder id is {}", folderCmisId, found.getId());
+                log.debug("ArkCase has folder with CMIS ID: {} and folder id: {}", folderCmisId, found.getId());
             }
             else
             {
