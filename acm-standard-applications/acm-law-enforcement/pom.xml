@@ -498,7 +498,6 @@
             <artifactId>acm-service-sequence-manager</artifactId>
             <version>${acm.version}</version>
         </dependency>
-
         <dependency>
             <groupId>com.armedia.acm.acm-standard-applications</groupId>
             <artifactId>acm-foia</artifactId>
