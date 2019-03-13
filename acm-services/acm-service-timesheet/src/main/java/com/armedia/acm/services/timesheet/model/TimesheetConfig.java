@@ -29,6 +29,7 @@ package com.armedia.acm.services.timesheet.model;
 
 import com.armedia.acm.pluginmanager.service.AcmPluginConfigBean;
 import com.fasterxml.jackson.annotation.JsonProperty;
+
 import org.springframework.beans.factory.annotation.Value;
 
 public class TimesheetConfig implements AcmPluginConfigBean

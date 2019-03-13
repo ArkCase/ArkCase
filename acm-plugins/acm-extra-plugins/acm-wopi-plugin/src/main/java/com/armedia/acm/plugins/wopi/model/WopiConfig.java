@@ -78,11 +78,6 @@ public class WopiConfig
         return wopiTenantDomain;
     }
 
-    public void setWopiTenantDomain(String wopiTenantDomain)
-    {
-        this.wopiTenantDomain = wopiTenantDomain;
-    }
-
     public String getWopiTenantProtocol()
     {
         return wopiTenantProtocol;
@@ -108,19 +103,9 @@ public class WopiConfig
         return wopiTenantContext;
     }
 
-    public void setWopiTenantContext(String wopiTenantContext)
-    {
-        this.wopiTenantContext = wopiTenantContext;
-    }
-
     public String getWopiTenantAccessTokenParamName()
     {
         return wopiTenantAccessTokenParamName;
-    }
-
-    public void setWopiTenantAccessTokenParamName(String wopiTenantAccessTokenParamName)
-    {
-        this.wopiTenantAccessTokenParamName = wopiTenantAccessTokenParamName;
     }
 
     public String getWopiTenantFileIdParamName()
@@ -128,28 +113,13 @@ public class WopiConfig
         return wopiTenantFileIdParamName;
     }
 
-    public void setWopiTenantFileIdParamName(String wopiTenantFileIdParamName)
-    {
-        this.wopiTenantFileIdParamName = wopiTenantFileIdParamName;
-    }
-
     public Long getWopiLockDuration()
     {
         return wopiLockDuration;
     }
 
-    public void setWopiLockDuration(Long wopiLockDuration)
-    {
-        this.wopiLockDuration = wopiLockDuration;
-    }
-
     public Boolean getWopiPluginEnabled()
     {
         return wopiPluginEnabled;
-    }
-
-    public void setWopiPluginEnabled(Boolean wopiPluginEnabled)
-    {
-        this.wopiPluginEnabled = wopiPluginEnabled;
     }
 }
