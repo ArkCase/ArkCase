@@ -91,13 +91,17 @@ public class ModuleConfigurationService implements ModuleConfigurationConstants
             nameProperty = String.format(PROP_MODULE_NAME_TMPL, moduleId);
             privilegeProperty = String.format(PROP_MODULE_PRIVILEGE_TMPL, moduleId);
 
-            ModuleItem moduleItem = new ModuleItem();
-            moduleItem.setId(moduleId);
-            moduleItem.setName((String) props.get(nameProperty));
-            moduleItem.setPrivilege((String) props.get(privilegeProperty));
-            moduleItem.setKey((String) props.get(privilegeProperty));
-
-            modulesInfos.add(moduleItem);
+            String moduleName = (String) props.getOrDefault(nameProperty, "");
+            String privilege = (String) props.getOrDefault(privilegeProperty, "");
+            if (!moduleName.isEmpty() && !privilege.isEmpty())
+            {
+                ModuleItem moduleItem = new ModuleItem();
+                moduleItem.setId(moduleId);
+                moduleItem.setName(moduleName);
+                moduleItem.setPrivilege(privilege);
+                moduleItem.setKey((String) props.get(privilegeProperty));
+                modulesInfos.add(moduleItem);
+            }
         }
 
         // Get only modules names
