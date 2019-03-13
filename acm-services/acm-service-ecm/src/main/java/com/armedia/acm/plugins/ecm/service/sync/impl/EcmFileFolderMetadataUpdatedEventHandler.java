@@ -36,6 +36,7 @@ import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
+import com.armedia.acm.plugins.ecm.model.UpdateMetadataConfig;
 import com.armedia.acm.plugins.ecm.model.sync.EcmEvent;
 import com.armedia.acm.plugins.ecm.model.sync.EcmEventType;
 import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
@@ -48,7 +49,6 @@ import org.springframework.context.ApplicationListener;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Properties;
 
 /**
  * @author ivana.shekerova on 1/22/2019.
@@ -61,7 +61,7 @@ public class EcmFileFolderMetadataUpdatedEventHandler implements ApplicationList
     private AcmFolderDao folderDao;
     private EcmFileDao fileDao;
     private FolderAndFilesUtils folderAndFilesUtils;
-    private Properties metadataUpdateProperties;
+    private UpdateMetadataConfig updateMetadataConfig;
 
     public void onEcmMetadataUpdated(EcmEvent ecmEvent)
     {
@@ -70,7 +70,7 @@ public class EcmFileFolderMetadataUpdatedEventHandler implements ApplicationList
         JSONArray propertiesFromConfigArray;
         if (ecmEvent.getNodeType().equals(EcmFileConstants.ECM_SYNC_NODE_TYPE_DOCUMENT))
         {
-            propertiesFromConfigArray = new JSONArray(getMetadataUpdateProperties().getProperty("alfresco.metadata.update.file"));
+            propertiesFromConfigArray = new JSONArray(updateMetadataConfig.getMetadataUpdateFile());
             EcmFile file = getFolderAndFilesUtils().lookupArkCaseFile(ecmEvent.getNodeId());
             Map<String, String> propertiesForUpdateFromConfig = mapPropertiesFromConfig(propertiesFromConfigArray);
             EcmFile updatedFile = (EcmFile) setObjectMetadata(ecmEvent.getProperties(), propertiesForUpdateFromConfig, file);
@@ -82,7 +82,7 @@ public class EcmFileFolderMetadataUpdatedEventHandler implements ApplicationList
         }
         else if (ecmEvent.getNodeType().equals(EcmFileConstants.ECM_SYNC_NODE_TYPE_FOLDER))
         {
-            propertiesFromConfigArray = new JSONArray(getMetadataUpdateProperties().getProperty("alfresco.metadata.update.folder"));
+            propertiesFromConfigArray = new JSONArray(updateMetadataConfig.getMetadataUpdateFolder());
             AcmFolder folder = getFolderAndFilesUtils().lookupArkCaseFolder(ecmEvent.getNodeId());
             Map<String, String> propertiesForUpdateFromConfig = mapPropertiesFromConfig(propertiesFromConfigArray);
             AcmFolder updatedFolder = (AcmFolder) setObjectMetadata(ecmEvent.getProperties(), propertiesForUpdateFromConfig, folder);
@@ -194,16 +194,6 @@ public class EcmFileFolderMetadataUpdatedEventHandler implements ApplicationList
         this.fileDao = fileDao;
     }
 
-    public Properties getMetadataUpdateProperties()
-    {
-        return metadataUpdateProperties;
-    }
-
-    public void setMetadataUpdateProperties(Properties metadataUpdateProperties)
-    {
-        this.metadataUpdateProperties = metadataUpdateProperties;
-    }
-
     public FolderAndFilesUtils getFolderAndFilesUtils()
     {
         return folderAndFilesUtils;
@@ -212,5 +202,15 @@ public class EcmFileFolderMetadataUpdatedEventHandler implements ApplicationList
     public void setFolderAndFilesUtils(FolderAndFilesUtils folderAndFilesUtils)
     {
         this.folderAndFilesUtils = folderAndFilesUtils;
+    }
+
+    public UpdateMetadataConfig getUpdateMetadataConfig()
+    {
+        return updateMetadataConfig;
+    }
+
+    public void setUpdateMetadataConfig(UpdateMetadataConfig updateMetadataConfig)
+    {
+        this.updateMetadataConfig = updateMetadataConfig;
     }
 }

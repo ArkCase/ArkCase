@@ -93,6 +93,7 @@ public class FacetedSearchAPIControllerV2
             @RequestParam(value = "timeZone", required = false, defaultValue = "") Integer timeZoneOffsetinMinutes,
             // Add parent document, for retrieving parentDocument.title_parseable on ticket AFDP-5936
             @RequestParam(value = "getParentDocument", required = false, defaultValue = "false") boolean getParentDocument,
+            @RequestParam(value = "fl", required = false) String fields,
 
             Authentication authentication) throws MuleException, UnsupportedEncodingException
     {
@@ -148,7 +149,8 @@ public class FacetedSearchAPIControllerV2
         }
 
         String results = getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.ADVANCED_SEARCH,
-                query, startRow, maxRows, sort, true, rowQueryParameters, isParentRef, isSubscriptionSearch, SearchConstants.DEFAULT_FIELD);
+                query, startRow, maxRows, sort, true, rowQueryParameters, isParentRef, isSubscriptionSearch, SearchConstants.DEFAULT_FIELD,
+                fields);
         String res = getFacetedSearchService().replaceEventTypeName(results);
 
         if (StringUtils.isNotEmpty(export))

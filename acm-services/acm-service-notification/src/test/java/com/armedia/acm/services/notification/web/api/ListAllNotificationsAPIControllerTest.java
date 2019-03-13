@@ -178,7 +178,7 @@ public class ListAllNotificationsAPIControllerTest extends EasyMockSupport
         assertNotNull(fromReturnedNotificationList);
         assertEquals(fromReturnedNotificationList.size(), 1);
         assertEquals(fromReturnedNotificationList.get(0).getUser(), user);
-        // assertEquals(fromReturnedNotificationList.get(1).getUser(), user);
+        // assertEquals(fromReturnedNotificationList.get(1).getCaseFileUser(), user);
 
         log.info("notification size : ", fromReturnedNotificationList.size());
     }

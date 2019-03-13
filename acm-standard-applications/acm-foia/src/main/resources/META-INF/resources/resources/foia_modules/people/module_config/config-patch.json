@@ -1,7 +1,7 @@
 [
     {
         "op": "replace",
-        "path": "/menus/?@.id=='topbar'/position",
+        "path": "/menus/?@.menuId=='topbar'/position",
         "value": 30
     },
     {
@@ -17,18 +17,22 @@
         "path": "/tree/filters/?@.desc=='people.tree.filters.inActive'"
     },
     {
+        "op": "remove",
+        "path": "/tree/nodeTypes/?@.type=='p/PERSON'/id"
+    },
+    {
         "op": "replace",
         "path": "/tree/nodeTypes/?@.type=='p/PERSON'/components",
         "value": [
             "details",
+            "pictures",
             "addresses",
             "phones",
-            "faxes",
             "emails",
             "urls",
             "participants",
-            "dbas",
-            "people",
+            "aliases",
+            "organizations",
             "ids",
             "cases",
             "related",
@@ -37,7 +41,7 @@
     },
     {
         "op": "remove",
-        "path": "/tree/nodeTypes/?@.id=='person/com'"
+        "path": "/tree/nodeTypes/?@.type=='p/PERSON/com'"
     },
     {
         "op": "remove",

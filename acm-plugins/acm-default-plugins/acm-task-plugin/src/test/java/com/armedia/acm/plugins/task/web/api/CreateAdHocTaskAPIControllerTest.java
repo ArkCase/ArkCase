@@ -70,7 +70,8 @@ import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExc
 import java.util.Date;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = { "classpath:/spring/spring-web-acm-web.xml", "classpath:/spring/spring-library-task-plugin-test.xml" })
+@ContextConfiguration(locations = { "classpath:/spring/spring-web-acm-web.xml",
+        "classpath:/spring/spring-library-task-plugin-unit-test.xml" })
 public class CreateAdHocTaskAPIControllerTest extends EasyMockSupport
 {
     private MockMvc mockMvc;

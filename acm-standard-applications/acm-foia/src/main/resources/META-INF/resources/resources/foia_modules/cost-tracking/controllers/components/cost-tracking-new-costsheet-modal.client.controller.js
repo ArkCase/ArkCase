@@ -16,7 +16,7 @@ angular.module('cost-tracking').controller(
                     var participantTypeOwningGroup = "owning group";
 
                     $scope.costsheetProperties = {
-                        "useApprovalWorkflow": "true"
+                        "cost.plugin.useApprovalWorkflow": "true"
                     };
 
                     ConfigService.getModuleConfig("cost-tracking").then(function(moduleConfig) {

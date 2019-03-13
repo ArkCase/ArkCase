@@ -29,9 +29,9 @@ package com.armedia.acm.audit.listeners;
 
 import com.armedia.acm.audit.model.AuditConstants;
 import com.armedia.acm.audit.model.AuditEvent;
+import com.armedia.acm.audit.model.AuditEventDescriptionConfig;
 import com.armedia.acm.audit.service.AuditService;
 import com.armedia.acm.core.model.AcmEvent;
-import com.armedia.acm.files.AbstractConfigurationFileEvent;
 import com.armedia.acm.web.api.AsyncApplicationListener;
 import com.armedia.acm.web.api.MDCConstants;
 
@@ -46,30 +46,23 @@ import org.springframework.expression.ExpressionParser;
 import org.springframework.expression.ParseException;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Properties;
 import java.util.UUID;
 
 @AsyncApplicationListener
 public class AuditWriter implements ApplicationListener<ApplicationEvent>
 {
     private Logger log = LoggerFactory.getLogger(getClass());
+
+    private AuditEventDescriptionConfig auditEventDescriptionConfig;
+
     private AuditService auditService;
     /**
      * Spring expression parser instance.
      */
     private ExpressionParser expressionParser;
-
-    /**
-     * Event description configuration file
-     */
-    private File eventDescriptionPropertiesFile;
 
     /**
      * (event name, parsed SpEL expression) pairs
@@ -81,46 +74,28 @@ public class AuditWriter implements ApplicationListener<ApplicationEvent>
      */
     public void loadConfiguration()
     {
-        if (eventDescriptionPropertiesFile != null && eventDescriptionPropertiesFile.exists())
+        Map<String, String> eventDescription = auditEventDescriptionConfig.getEventDescription();
+        // while audit event descriptions are evaluated at the same time
+        Map<String, Expression> tempExpressionMap = new HashMap<>();
+
+        for (String eventType : eventDescription.keySet())
         {
-            log.debug("Loading Audit event descriptions from configuration file [{}]", eventDescriptionPropertiesFile.getPath());
-            Properties properties = new Properties();
-            try (InputStream propertyStream = new FileInputStream(eventDescriptionPropertiesFile))
-            {
-                // use temporary map to avoid race conditions where new configuration is loaded
-                // while audit event descriptions are evaluated at the same time
-                Map<String, Expression> tempExpressionMap = new HashMap<>();
-                // load the properties
-                properties.load(propertyStream);
-                for (String eventType : properties.stringPropertyNames())
+            // try to parse SpEL expressions
+            String spelExpression = eventDescription.get(eventType);
+            if (spelExpression != null && !spelExpression.isEmpty())
+                try
                 {
-                    // try to parse SpEL expressions
-                    String spelExpression = properties.getProperty(eventType);
-                    if (spelExpression != null && !spelExpression.isEmpty())
-                        try
-                        {
-                            Expression expression = expressionParser.parseExpression(spelExpression);
-                            tempExpressionMap.put(eventType, expression);
-                            log.debug("SpEL expression [{}] for event type [{}] added ", spelExpression, eventType);
-                        }
-                        catch (ParseException e)
-                        {
-                            log.error("Unable to parse SpEL expression [{}]", spelExpression);
-                        }
+                    Expression expression = expressionParser.parseExpression(spelExpression);
+                    tempExpressionMap.put(eventType, expression);
+                    log.debug("SpEL expression [{}] for event type [{}] added ", spelExpression, eventType);
                 }
-                // replace existing map
-                expressionMap = tempExpressionMap;
-            }
-            catch (IOException e)
-            {
-                log.error("Unable to read configuration file [{}]", eventDescriptionPropertiesFile.getPath());
-            }
+                catch (ParseException e)
+                {
+                    log.error("Unable to parse SpEL expression [{}]", spelExpression);
+                }
         }
-        else
-        {
-            // configuration file deleted, we're assuming that SpEL expression evaluation is no longer needed
-            expressionMap.clear();
-        }
+        // replace existing map
+        expressionMap = tempExpressionMap;
     }
 
     @Override
@@ -131,10 +106,6 @@ public class AuditWriter implements ApplicationListener<ApplicationEvent>
             if (applicationEvent instanceof AcmEvent)
             {
                 handleAuditEvent((AcmEvent) applicationEvent);
-            }
-            else if (applicationEvent instanceof AbstractConfigurationFileEvent)
-            {
-                handleConfigurationFileEvent((AbstractConfigurationFileEvent) applicationEvent);
             }
         }
     }
@@ -195,22 +166,6 @@ public class AuditWriter implements ApplicationListener<ApplicationEvent>
     }
 
     /**
-     * Handle configuration file events
-     * 
-     * @param abstractConfigurationFileEvent
-     *            configuration file related application event
-     */
-    private void handleConfigurationFileEvent(AbstractConfigurationFileEvent abstractConfigurationFileEvent)
-    {
-        if (abstractConfigurationFileEvent != null && abstractConfigurationFileEvent.getConfigFile() != null
-                && abstractConfigurationFileEvent.getConfigFile().getPath()
-                        .equals(eventDescriptionPropertiesFile.getPath()))
-        {
-            loadConfiguration();
-        }
-    }
-
-    /**
      * Evaluate event description based on SpEL expression in properties
      * 
      * @param acmEvent
@@ -266,13 +221,13 @@ public class AuditWriter implements ApplicationListener<ApplicationEvent>
         this.expressionParser = expressionParser;
     }
 
-    public File getEventDescriptionPropertiesFile()
+    public AuditEventDescriptionConfig getAuditEventDescriptionConfig()
     {
-        return eventDescriptionPropertiesFile;
+        return auditEventDescriptionConfig;
     }
 
-    public void setEventDescriptionPropertiesFile(File eventDescriptionPropertiesFile)
+    public void setAuditEventDescriptionConfig(AuditEventDescriptionConfig auditEventDescriptionConfig)
     {
-        this.eventDescriptionPropertiesFile = eventDescriptionPropertiesFile;
+        this.auditEventDescriptionConfig = auditEventDescriptionConfig;
     }
 }

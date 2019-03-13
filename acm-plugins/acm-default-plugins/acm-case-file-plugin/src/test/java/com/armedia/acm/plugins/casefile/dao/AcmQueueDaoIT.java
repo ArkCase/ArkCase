@@ -41,9 +41,11 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
+        "/spring/spring-library-configuration.xml",
+        "/spring/spring-library-object-converter.xml",
         "/spring/spring-library-case-file-queue-service.xml",
         "/spring/spring-library-case-file-rules.xml",
-        "/spring/spring-library-case-file-dao.xml",
+        "/spring/spring-library-case-file-dao-test.xml",
         "/spring/spring-library-user-tracker.xml",
         "/spring/spring-library-data-source.xml",
         "/spring/spring-library-context-holder.xml",
@@ -54,11 +56,21 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
         "/spring/spring-library-user-service.xml",
         "/spring/spring-library-search.xml",
         "/spring/test-case-file-context.xml",
-        "/spring/spring-library-object-converter.xml"
+        "/spring/spring-library-data-access-control.xml",
+        "/spring/spring-library-audit-service.xml",
+        "/spring/spring-library-case-plugin-test.xml",
+        "/spring/spring-library-service-data.xml"
 })
 @TransactionConfiguration(defaultRollback = true)
 public class AcmQueueDaoIT
 {
+
+    static
+    {
+        String userHomePath = System.getProperty("user.home");
+        System.setProperty("acm.configurationserver.propertyfile", userHomePath + "/.arkcase/acm/conf.yml");
+    }
+
     @Autowired
     private AcmQueueDao acmQueueDao;
 

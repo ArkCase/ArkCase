@@ -34,6 +34,16 @@
             <artifactId>acm-encryption</artifactId>
             <version>${acm.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.armedia.acm.acm-tool-integrations</groupId>
+            <artifactId>acm-configuration</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.activemq</groupId>
+            <artifactId>activemq-spring</artifactId>
+            <scope>test</scope>
+        </dependency>
 
         <!-- datasource -->
         <dependency>

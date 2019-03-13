@@ -45,6 +45,7 @@ import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
+import com.armedia.acm.plugins.ecm.model.EcmFileConfig;
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.model.sync.EcmEvent;
 import com.armedia.acm.plugins.ecm.model.sync.EcmEventType;
@@ -67,7 +68,6 @@ import javax.persistence.NoResultException;
 
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Properties;
 
 /**
  * @author ivana.shekerova on 1/8/2019.
@@ -84,13 +84,13 @@ public class EcmFileFolderCopiedEventHandlerTest
     private AuditPropertyEntityAdapter auditPropertyEntityAdapter = mock(AuditPropertyEntityAdapter.class);
     private EcmFileService ecmFileService = mock(EcmFileService.class);
     private FolderAndFilesUtils spyFolderAndFilesUtils = spy(FolderAndFilesUtils.class);
-    private Properties ecmFileServiceProperties = mock(Properties.class);
     private EcmFileParticipantService ecmFileParticipantService = mock(EcmFileParticipantService.class);
     private EcmFileServiceImpl spyEcmFileService = spy(EcmFileServiceImpl.class);
     private Document cmisDocument = mock(Document.class);
     private ContentStream contentStream = mock(ContentStream.class);
     private InputStream inputStream = mock(InputStream.class);
     private EcmEvent fileCopiedEvent;
+    private EcmFileConfig ecmFileConfig = mock(EcmFileConfig.class);
 
     @Before
     public void setUp() throws Exception
@@ -223,7 +223,7 @@ public class EcmFileFolderCopiedEventHandlerTest
     @Test
     public void onEcmFileMoved_ifTargetFolderIsArkcaseFolder_And_ifOriginalFileIsInArkcase_copyFile() throws Exception
     {
-        spyEcmFileService.setEcmFileServiceProperties(ecmFileServiceProperties);
+        spyEcmFileService.setEcmFileConfig(ecmFileConfig);
         spyEcmFileService.setContainerFolderDao(acmContainerDao);
         spyEcmFileService.setEcmFileDao(ecmFileDao);
         spyEcmFileService.setFileParticipantService(ecmFileParticipantService);
@@ -262,7 +262,7 @@ public class EcmFileFolderCopiedEventHandlerTest
         // original file is in Arkcase
         when(ecmFileDao.findByCmisFileId(fileCopiedEvent.getSourceOfCopyNodeId())).thenReturn(listFiles);
 
-        when(ecmFileServiceProperties.getProperty(anyString())).thenReturn("alfresco");
+        when(ecmFileConfig.getDefaultCmisId()).thenReturn("alfresco");
         when(acmContainerDao.findFolderByObjectTypeIdAndRepositoryId(anyString(), anyLong(), anyString())).thenReturn(container);
         when(ecmFileDao.save(any(EcmFile.class))).thenReturn(originalFile);
         when(ecmFileParticipantService.setFileParticipantsFromParentFolder(any(EcmFile.class))).thenReturn(originalFile);

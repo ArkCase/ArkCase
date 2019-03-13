@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:task="http://www.springframework.org/schema/task"
        xmlns:util="http://www.springframework.org/schema/util" xmlns="http://www.springframework.org/schema/beans"
+       xmlns:aop="http://www.springframework.org/schema/aop"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
        http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-4.1.xsd
        http://www.springframework.org/schema/util
-       http://www.springframework.org/schema/util/spring-util-2.5.xsd">
+       http://www.springframework.org/schema/util/spring-util-2.5.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
 
     <task:scheduler id="ldapSyncTaskScheduler" pool-size="1"/>
 
@@ -89,31 +90,9 @@
         <property name="springContextHolder" ref="acmContextHolder"/>
     </bean>
 
-    <bean id="applicationRoleToUserGroupProperties"
-          class="com.armedia.acm.reloadproperties.beans.AcmReloadablePropertiesFactoryBean">
-        <!-- note: must leave "file:" at the start of the file name for spring
-        to be able to read the file; otherwise it will try to read from the
-        classpath -->
-        <property name="location" value="file:${user.home}/.arkcase/acm/applicationRoleToUserGroup.properties"/>
-        <property name="ignoreResourceNotFound" value="true"/>
-        <property name="localOverride" value="false"/>
-        <!-- following properties are the default mapping of roles to
-             groups.  These properties will be overwritten by properties in the
-             properties file.  The properties file must have each key from the
-             below list. -->
-        <property name="properties">
-            <props>
-                <prop key="ROLE_INVESTIGATOR"></prop>
-                <prop key="ROLE_INVESTIGATOR_SUPERVISOR"></prop>
-                <prop key="ROLE_ANALYST"></prop>
-                <prop key="ROLE_CALLCENTER"></prop>
-            </props>
-        </property>
-    </bean>
-
     <bean id="acmRoleToGroupConfig" class="com.armedia.acm.services.users.model.AcmRoleToGroupMapping">
-        <property name="roleToGroupMap" ref="applicationRoleToUserGroupProperties"/>
         <property name="groupDao" ref="groupDao"/>
+        <property name="rolesToGroupsConfig" ref="rolesToGroupsConfig"/>
     </bean>
 
     <!-- NOTE: LDAP sync service beans (of class com.armedia.acm.services.users.service.ldap.LdapSyncService) should
@@ -240,7 +219,7 @@
     </util:list>
 
     <bean id="passwordShouldNotContainUserId"
-          class="com.armedia.acm.services.users.model.ldap.PasswordShouldNotContainUserId"></bean>
+          class="com.armedia.acm.services.users.model.ldap.PasswordShouldNotContainUserId"/>
 
     <bean id="passwordShouldMatchLowerCasePattern"
           class="com.armedia.acm.services.users.model.ldap.PasswordShouldMatchPattern">
@@ -284,6 +263,25 @@
 
     <bean id="usersStateProvider" class="com.armedia.acm.services.users.state.AcmUsersStateProvider">
         <property name="userDao" ref="userJpaDao"/>
+    </bean>
+
+    <bean id="applicationPrivilegesConfig" class="com.armedia.acm.services.users.model.ApplicationPrivilegesConfig" scope="refresh">
+        <aop:scoped-proxy/>
+        <property name="jsonUnmarshaller" ref="jsonUnmarshaller"/>
+    </bean>
+
+    <bean id="applicationRolesConfig" class="com.armedia.acm.services.users.model.ApplicationRolesConfig" scope="refresh">
+        <aop:scoped-proxy/>
+    </bean>
+
+    <bean id="rolesToGroupsConfig" class="com.armedia.acm.services.users.model.ApplicationRolesToGroupsConfig" scope="refresh">
+        <aop:scoped-proxy/>
+        <property name="jsonUnmarshaller" ref="jsonUnmarshaller"/>
+    </bean>
+
+    <bean id="rolesToPrivileges" class="com.armedia.acm.services.users.model.ApplicationRolesToPrivilegesConfig" scope="refresh">
+        <property name="jsonUnmarshaller" ref="jsonUnmarshaller"/>
+        <aop:scoped-proxy/>
     </bean>
 
 </beans>

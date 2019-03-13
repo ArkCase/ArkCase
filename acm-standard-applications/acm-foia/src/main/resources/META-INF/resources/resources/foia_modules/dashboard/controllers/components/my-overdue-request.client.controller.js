@@ -92,9 +92,4 @@ angular.module('dashboard.my-overdue-requests').controller('Dashboard.MyOverdueR
                 });
             }
 
-            vm.onTopicClick = function(row) {
-                $state.go('request-details', {
-                    id: row.entity.request_id_lcs
-                }, true);
-            }
         } ]);

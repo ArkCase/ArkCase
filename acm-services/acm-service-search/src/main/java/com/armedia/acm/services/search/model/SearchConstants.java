@@ -48,7 +48,6 @@ public interface SearchConstants
     String SOLR_FILTER_QUERY_ATTRIBUTE_NAME = "&fq=";
     String SOLR_FACET_NAME_CHANGE_COMMAND = "!key=";
 
-    String TIME_PERIOD_KEY = "search.time.period";
     String TIME_PERIOD_DESCRIPTION = "desc";
     String TIME_PERIOD_VALUE = "value";
 
@@ -89,7 +88,7 @@ public interface SearchConstants
     String PROPERTY_OBJECT_TYPE_S = "object_type_s";
     String PROPERTY_ASSIGNEE_ID = "assignee_s";
 
-    String USER = "${user}";
+    String USER = "$[user]";
     /**
      * The date format SOLR expects. Any other date format causes SOLR to throw an exception.
      */
@@ -101,11 +100,6 @@ public interface SearchConstants
     String ISO_DATE_FORMAT = "yyyy-MM-dd";
 
     String SORT_DESC = "DESC";
-
-    /**
-     * Key that keeping information which objects to exclude from the search
-     */
-    String OBJECTS_TO_EXCLUDE = "objects.to.exclude";
 
     /**
      * Query operators
@@ -124,7 +118,7 @@ public interface SearchConstants
 
     String FACETED_SEARCH_ENCODING = "UTF-8";
 
-    String EXPORT_FIELDS = "export.fields";
+    String EXPORT_FIELDS = "facet.search.export.fields";
 
     String SEPARATOR_COMMA = ",";
 

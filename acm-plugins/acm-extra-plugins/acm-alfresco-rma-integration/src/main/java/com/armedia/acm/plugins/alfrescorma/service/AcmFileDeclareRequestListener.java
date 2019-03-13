@@ -28,7 +28,7 @@ package com.armedia.acm.plugins.alfrescorma.service;
  */
 
 import com.armedia.acm.plugins.alfrescorma.exception.AlfrescoServiceException;
-import com.armedia.acm.plugins.alfrescorma.model.AlfrescoRmaPluginConstants;
+import com.armedia.acm.plugins.alfrescorma.model.AlfrescoRmaConfig;
 import com.armedia.acm.plugins.ecm.model.EcmFileDeclareRequestEvent;
 
 import org.slf4j.Logger;
@@ -47,8 +47,8 @@ public class AcmFileDeclareRequestListener implements ApplicationListener<EcmFil
     @Override
     public void onApplicationEvent(EcmFileDeclareRequestEvent ecmFileDeclareRequestEvent)
     {
-        boolean proceed = getAlfrescoRecordsService()
-                .checkIntegrationEnabled(AlfrescoRmaPluginConstants.FILE_DECLARE_REQUEST_INTEGRATION_KEY);
+        AlfrescoRmaConfig rmaConfig = alfrescoRecordsService.getRmaConfig();
+        boolean proceed = rmaConfig.getIntegrationEnabled() && rmaConfig.getDeclareFileRecordOnDeclareRequest();
 
         if (!proceed)
         {
@@ -64,7 +64,7 @@ public class AcmFileDeclareRequestListener implements ApplicationListener<EcmFil
         {
             getAlfrescoRecordsService().declareFileAsRecord(ecmFileDeclareRequestEvent.getSource().getContainer(),
                     ecmFileDeclareRequestEvent.getEventDate(), ecmFileDeclareRequestEvent.getParentObjectName(),
-                    getAlfrescoRecordsService().getAlfrescoRmaProperties().getProperty(AlfrescoRmaPluginConstants.PROPERTY_ORIGINATOR_ORG),
+                    rmaConfig.getDefaultOriginatorOrg(),
                     ecmFileDeclareRequestEvent.getUserId(), ecmFileDeclareRequestEvent.getEcmFileId(),
                     ecmFileDeclareRequestEvent.getSource().getStatus(), ecmFileDeclareRequestEvent.getObjectId());
 

@@ -29,9 +29,9 @@ package com.armedia.acm.services.config.model;
 
 public interface AcmConfig
 {
-    public String getConfigName();
+    String getConfigName();
 
-    public String getConfigAsJson();
+    String getConfigAsJson();
 
-    public String getConfigDescription();
+    String getConfigDescription();
 }

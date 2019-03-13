@@ -33,6 +33,7 @@ import com.armedia.acm.plugins.dashboard.dao.DashboardDao;
 import com.armedia.acm.plugins.dashboard.dao.WidgetDao;
 import com.armedia.acm.plugins.dashboard.exception.AcmWidgetException;
 import com.armedia.acm.plugins.dashboard.model.Dashboard;
+import com.armedia.acm.plugins.dashboard.model.DashboardConfig;
 import com.armedia.acm.plugins.dashboard.model.DashboardConstants;
 import com.armedia.acm.plugins.dashboard.model.DashboardDto;
 import com.armedia.acm.plugins.dashboard.model.widget.RolesGroupByWidgetDto;
@@ -43,6 +44,7 @@ import com.armedia.acm.services.users.model.AcmRole;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.service.AcmUserRoleService;
 
+import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -64,7 +66,7 @@ import java.util.stream.Collectors;
 public class DashboardService
 {
     private transient static final Logger log = LoggerFactory.getLogger(DashboardService.class);
-    private AcmPlugin dashboardPlugin;
+    private DashboardConfig dashboardConfig;
     private DashboardDao dashboardDao;
     private UserDao userDao;
     private WidgetDao widgetDao;
@@ -150,17 +152,18 @@ public class DashboardService
         d.setDashboardOwner(owner);
         d.setModuleName(moduleName);
         d.setCollapsed(Boolean.FALSE);
-        if (!dashboardPlugin.getPluginProperties().isEmpty())
+
+        String defaultDashboard = dashboardConfig.getDefaultDashboard();
+        if (StringUtils.isNotBlank(defaultDashboard))
         {
-            if (moduleName.equals(DashboardConstants.DEFAULT_DASHBOARD_NAME))
+            if (moduleName.equals(defaultDashboard))
             {
-                d.setDashboardConfig((String) dashboardPlugin.getPluginProperties().get(DashboardConstants.DEFAULT_DASHBOARD));
+                d.setDashboardConfig(defaultDashboard);
             }
             else
             {
-                String defaultModuleDashboardConfig = (String) dashboardPlugin.getPluginProperties()
-                        .get(DashboardConstants.DEFAULT_MODULE_DASHBOARD);
-                if (defaultModuleDashboardConfig != null)
+                String defaultModuleDashboardConfig = dashboardConfig.getModuleDefaultDashboard();
+                if (StringUtils.isNotBlank(defaultModuleDashboardConfig))
                 {
                     d.setDashboardConfig(defaultModuleDashboardConfig);
                 }
@@ -357,16 +360,6 @@ public class DashboardService
         return result.stream().skip(startRow).limit(maxRows).collect(Collectors.toList());
     }
 
-    public AcmPlugin getDashboardPlugin()
-    {
-        return dashboardPlugin;
-    }
-
-    public void setDashboardPlugin(AcmPlugin dashboardPlugin)
-    {
-        this.dashboardPlugin = dashboardPlugin;
-    }
-
     public DashboardDao getDashboardDao()
     {
         return dashboardDao;
@@ -420,5 +413,15 @@ public class DashboardService
     public void setEventPublisher(WidgetEventPublisher eventPublisher)
     {
         this.eventPublisher = eventPublisher;
+    }
+
+    public DashboardConfig getDashboardConfig()
+    {
+        return dashboardConfig;
+    }
+
+    public void setDashboardConfig(DashboardConfig dashboardConfig)
+    {
+        this.dashboardConfig = dashboardConfig;
     }
 }

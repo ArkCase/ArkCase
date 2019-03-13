@@ -1,7 +1,7 @@
 [
     {
         "op": "add",
-        "path": "/components/",
+        "path": "/components/1",
         "value": {
             "id": "weather",
             "title": "Weather Widget",
@@ -15,33 +15,41 @@
     },
     {
         "op": "replace",
-        "path": "/components/?@.id=='myCases'/columnDefs/?@.displayName=='dashboard.widgets.myCases.table.header.caseId'/name",
-        "value": "object_id_s"
+        "path": "/components/?@.id=='myCases'/columnDefs/?@.name=='name'",
+        "value": {
+            "name": "object_id_s",
+            "displayName": "dashboard.widgets.myCases.table.header.caseId",
+            "headerCellFilter": "translate",
+            "enableSorting": true,
+            "type": "number",
+            "cellTemplate": "<div class='ui-grid-cell-contents'><a data-ui-sref=\"cases.main({id: row.entity.object_id_s})\">{{COL_FIELD CUSTOM_FILTERS}}</a></div>",
+            "width": 130
+        }
     },
     {
         "op": "replace",
-        "path": "/components/?@.id=='myCases'/columnDefs/?@.displayName=='dashboard.widgets.myCases.table.header.caseId'/cellTemplate",
-        "value": "<div class='ui-grid-cell-contents'><a data-ui-sref=\"cases.main({id: row.entity.object_id_s})\">{{COL_FIELD CUSTOM_FILTERS}}</a></div>"
-    },
-    {
-        "op": "add",
-        "path": "/components/?@.id=='myCases'/columnDefs/?@.displayName=='dashboard.widgets.myCases.table.header.caseId'/type",
-        "value": "number"
-    },
-    {
-        "op": "add",
-        "path": "/components/?@.id=='myCases'/columnDefs/?@.displayName=='dashboard.widgets.myCases.table.header.caseId'/width",
-        "value": 130
-    },
-    {
-        "op": "replace",
-        "path": "/components/?@.id=='myCases'/columnDefs/?@.name=='title_parseable'/dipslayName",
+        "path": "/components/?@.id=='myCases'/columnDefs/?@.name=='title_parseable'/displayName",
         "value": "dashboard.widgets.myCases.table.header.topic"
     },
     {
-        "op": "replace",
-        "path": "/components/?@.id=='myCases'/columnDefs/?@.displayName=='dashboard.widgets.myCases.table.header.status'/name",
-        "value": "request_status_lcs"
+        "op": "remove",
+        "path": "/components/?@.id=='myCases'/columnDefs/?@.name=='status_lcs'"
+    },
+    {
+        "op": "add",
+        "path": "/components/?@.id=='myCases'/columnDefs/2",
+        "value": {
+            "name": "request_status_lcs",
+            "displayName": "dashboard.widgets.myCases.table.header.status",
+            "headerCellFilter": "translate",
+            "enableSorting": true,
+            "width": 150
+        }
+    },
+    {
+        "op": "add",
+        "path": "/components/?@.id=='myCases'/columnDefs/?@.name=='priority_lcs'/width",
+        "value": 70
     },
     {
         "op": "remove",
@@ -57,23 +65,62 @@
     },
     {
         "op": "replace",
-        "path": "/components/?@.id=='myTasks'/columnDefs/?@.name=='dueDate_tdt'/cellTemplate",
-        "value": "<div>{{ row.entity.dueDate_tdt | date : ('common.defaultDateUIFormat' | translate)}}</div>"
+        "path": "/components/?@.id=='myTasks'/columnDefs",
+        "value": [
+            {
+                "field": "alerts",
+                "displayName": "",
+                "cellTemplate": "<div><a ng-if=\"row.entity.isOverdue\" tooltip=\"{{'dashboard.widgets.myTasks.table.overdue.tooltip' | translate}}\" tooltip-append-to-body=\"true\" tooltip-class=\"tooltip-overdue\"><i class=\"fa fa-exclamation-circle icon-overdue\"></i></a><a ng-if=\"row.entity.isDeadline\" tooltip=\"{{'dashboard.widgets.myTasks.table.deadline.tooltip' | translate}}\" tooltip-append-to-body=\"true\" tooltip-class=\"tooltip-due-soon\"><i class=\"fa fa-exclamation-triangle icon-due-soon\"></i></a></div>",
+                "width": 40,
+                "enableSorting": false,
+                "enableColumnMenu": false
+            },
+            {
+                "name": "object_id_i",
+                "displayName": "dashboard.widgets.myTasks.table.header.taskId",
+                "headerCellFilter": "translate",
+                "enableSorting": true,
+                "type": "number",
+                "cellTemplate": "<a data-ui-sref=\"tasks.main({id: row.entity.object_id_i})\">{{COL_FIELD}}</a>",
+                "width": 75
+            },
+            {
+                "name": "title_parseable",
+                "displayName": "dashboard.widgets.myTasks.table.header.title",
+                "headerCellFilter": "translate",
+                "cellTemplate": "<a data-ui-sref=\"tasks.main({id: row.entity.object_id_s})\">{{COL_FIELD}}</a>"
+            },
+            {
+                "name": "priority_lcs",
+                "displayName": "dashboard.widgets.myTasks.table.header.priority",
+                "headerCellFilter": "translate",
+                "width": 75
+            },
+            {
+                "name": "dueDate_tdt",
+                "displayName": "dashboard.widgets.myTasks.table.header.dueDate",
+                "headerCellFilter": "translate",
+                "cellTemplate": "<div>{{ row.entity.dueDate_tdt | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+                "width": 70
+            },
+            {
+                "name": "status_lcs",
+                "displayName": "dashboard.widgets.myTasks.table.header.status",
+                "headerCellFilter": "translate",
+                "width": 100
+            },
+            {
+                "name": "parent_id_s",
+                "displayName": "dashboard.widgets.myTasks.table.header.caseId",
+                "headerCellFilter": "translate",
+                "cellTemplate": "<a data-ui-sref=\"cases.main({id: row.entity.parent_id_s})\">{{COL_FIELD}}<\/a>",
+                "width": 100
+            }
+        ]
     },
     {
-        "op": "replace",
-        "path": "/components/?@.id=='myTasks'/columnDefs/?@.name=='parent_id_s'/displayName",
-        "value": "dashboard.widgets.myTasks.table.header.objectId"
-    },
-    {
-        "op": "replace",
-        "path": "/components/?@.id=='myTasks'/columnDefs/?@.name=='parent_id_s'/cellTemplate",
-        "value": "<a data-ui-sref=\"cases.main({id: row.entity.parent_id_s})\">{{COL_FIELD}}<\/a>"
-    },
-    {
-        "op": "replace",
-        "path": "/components/?@.id=='myComplaints'",
-        "value": "<a data-ui-sref=\"cases.main({id: row.entity.parent_id_s})\">{{COL_FIELD}}<\/a>"
+        "op": "remove",
+        "path": "/components/?@.id=='myComplaints'"
     },
     {
         "op": "add",
@@ -183,8 +230,12 @@
         "path": "/components/?@.id=='casesByStatus'"
     },
     {
+        "op": "remove",
+        "path": "/components/?@.id=='newComplaints'"
+    },
+    {
         "op": "add",
-        "path": "/components/",
+        "path": "/components/-",
         "value": {
             "id": "myOverdueRequests",
             "title": "dashboard.widgets.myOverdueRequests.title",
@@ -244,7 +295,11 @@
     },
     {
         "op": "replace",
-        "path": "/modules/?@.configName=='MY_DOC_REPO'/name",
+        "path": "/modules/?@.configName=='my-documents'/name",
         "value": "DOC_REPO"
+    },
+    {
+        "op": "remove",
+        "path": "/components/?@.id=='workflowReport'"
     }
 ]

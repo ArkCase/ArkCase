@@ -42,7 +42,7 @@ import org.springframework.transaction.annotation.Transactional;
 public interface AuditService
 {
 
-    public void purgeBatchRun();
+    void purgeBatchRun();
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     @Async("auditorExecutor")

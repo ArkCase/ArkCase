@@ -156,7 +156,7 @@
     },
     {
         "op": "add",
-        "path": "/components/",
+        "path": "/components/-",
         "value": {
             "id": "exemption",
             "title": "cases.comp.exemption.title",
@@ -211,7 +211,7 @@
     },
     {
         "op": "add",
-        "path": "/components/",
+        "path": "/components/-",
         "value": {
             "id": "requests",
             "requestTypes": [
@@ -264,7 +264,7 @@
     },
     {
         "op": "add",
-        "path": "/components/",
+        "path": "/components/-",
         "value": {
             "id": "objectSearch",
             "title": "cases.objectSearch.title",
@@ -306,7 +306,7 @@
     },
     {
         "op": "add",
-        "path": "/components/",
+        "path": "/components/-",
         "value": {
                 "id": "new-foia-request",
                 "objectSearch": {
@@ -316,7 +316,7 @@
     },
     {
         "op": "add",
-        "path": "/components/",
+        "path": "/components/-",
         "value": {
             "id": "billing",
             "title": "cases.comp.billing.title",
@@ -356,7 +356,7 @@
     },
     {
         "op": "add",
-        "path": "/components/",
+        "path": "/components/-",
         "value": {
             "id": "listInvoices",
             "title": "cases.comp.billing.title",
@@ -398,7 +398,7 @@
     },
     {
         "op": "add",
-        "path": "/components/",
+        "path": "/components/-",
         "value": {
             "id": "exemptionCodesDescription",
             "enabled": "true",
@@ -464,6 +464,15 @@
     {
         "op": "remove",
         "path": "/components/?@.id=='documents'/docTree/menu"
+    },
+    {
+        "op": "add",
+        "path": "/components/?@.id=='documents'/docTree/allowParentOwnerToCancel",
+        "value": true
+    },
+    {
+        "op": "remove",
+        "path": "/components/?@.id=='references'/columnDefs/?@.name=='assignee'"
     },
     {
         "op": "remove",
@@ -701,7 +710,7 @@
     },
     {
         "op": "add",
-        "path": "/components/?@.id=='references'/columnDefs/",
+        "path": "/components/?@.id=='references'/columnDefs/3",
         "value": {
             "name": "parentName",
             "displayName": "cases.comp.references.table.columns.parentName",
@@ -788,8 +797,12 @@
         "path": "/components/?@.id=='pastapprovals'/configurable"
     },
     {
+        "op": "remove",
+        "path": "/components/?@.id=='pastapprovals'/columnDefs/?@.name=='approverFullName'"
+    },
+    {
         "op": "add",
-        "path": "/components/?@.id=='pastapprovals'/columnDefs/",
+        "path": "/components/?@.id=='pastapprovals'/columnDefs/1",
         "value": {
             "name": "approverId",
             "displayName": "cases.comp.pastApprovals.table.columns.approverId",

@@ -42,6 +42,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
+        "/spring/spring-library-configuration.xml",
+        "/spring/spring-library-object-converter.xml",
         "/spring/spring-library-data-source-test.xml",
         "/spring/spring-library-data-source.xml",
         "/spring/spring-library-context-holder.xml",
@@ -50,6 +52,12 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 })
 public class SpringEntityListenerConfigurerIT
 {
+    static
+    {
+        String userHomePath = System.getProperty("user.home");
+        System.setProperty("acm.configurationserver.propertyfile", userHomePath + "/.arkcase/acm/conf.yml");
+    }
+
     @Autowired
     private TestInsertListener testInsertListener;
 

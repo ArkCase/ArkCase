@@ -35,6 +35,7 @@ import static org.junit.Assert.assertEquals;
 
 import com.armedia.acm.auth.AcmAuthentication;
 import com.armedia.acm.auth.AcmAuthenticationManager;
+import com.armedia.acm.plugins.alfrescorma.model.AlfrescoRmaConfig;
 import com.armedia.acm.plugins.alfrescorma.model.AlfrescoRmaPluginConstants;
 import com.armedia.acm.plugins.casefile.model.CaseEvent;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
@@ -56,6 +57,7 @@ public class AcmCaseFileClosedListenerTest extends EasyMockSupport
     private AlfrescoRecordsService mockService;
     private Authentication mockAuthentication;
     private AcmAuthenticationManager mockAuthenticationManager;
+    private AlfrescoRmaConfig rmaConfig;
 
     @Before
     public void setUp()
@@ -67,12 +69,15 @@ public class AcmCaseFileClosedListenerTest extends EasyMockSupport
 
         unit.setAlfrescoRecordsService(mockService);
         unit.setAuthenticationManager(mockAuthenticationManager);
+        rmaConfig = new AlfrescoRmaConfig();
+        rmaConfig.setIntegrationEnabled(true);
     }
 
     @Test
     public void doNotProceed_shouldNotDeclareRecords()
     {
-        expect(mockService.checkIntegrationEnabled(AlfrescoRmaPluginConstants.CASE_CLOSE_INTEGRATION_KEY)).andReturn(Boolean.FALSE);
+        rmaConfig.setDeclareRecordsOnCaseClose(false);
+        expect(mockService.getRmaConfig()).andReturn(rmaConfig);
 
         CaseEvent caseEvent = new CaseEvent(new CaseFile(), "ipAddress", "user", "eventType", new Date(), true,
                 mockAuthentication);
@@ -87,7 +92,8 @@ public class AcmCaseFileClosedListenerTest extends EasyMockSupport
     @Test
     public void notACaseClosedEvent_shouldNotDeclareRecords()
     {
-        expect(mockService.checkIntegrationEnabled(AlfrescoRmaPluginConstants.CASE_CLOSE_INTEGRATION_KEY)).andReturn(Boolean.TRUE);
+        rmaConfig.setDeclareRecordsOnCaseClose(true);
+        expect(mockService.getRmaConfig()).andReturn(rmaConfig);
 
         CaseEvent caseEvent = new CaseEvent(new CaseFile(), "ipAddress", "user", "caseOpenEvent", new Date(), true,
                 mockAuthentication);
@@ -109,7 +115,8 @@ public class AcmCaseFileClosedListenerTest extends EasyMockSupport
 
         Capture<Authentication> captureAuth = Capture.newInstance();
 
-        expect(mockService.checkIntegrationEnabled(AlfrescoRmaPluginConstants.CASE_CLOSE_INTEGRATION_KEY)).andReturn(Boolean.TRUE);
+        rmaConfig.setDeclareRecordsOnCaseClose(true);
+        expect(mockService.getRmaConfig()).andReturn(rmaConfig);
         expect(mockAuthenticationManager.getAcmAuthentication(new UsernamePasswordAuthenticationToken(user, user)))
                 .andReturn(new AcmAuthentication(Collections.emptySet(), user, "", true, user));
 

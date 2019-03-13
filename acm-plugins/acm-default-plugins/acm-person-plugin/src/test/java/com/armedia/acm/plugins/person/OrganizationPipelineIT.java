@@ -80,10 +80,20 @@ import java.util.Date;
         "/spring/spring-library-object-association-plugin.xml",
         "/spring/spring-library-object-converter.xml",
         "/spring/spring-library-ecm-file-lock.xml",
-        "/spring/spring-library-service-data.xml" })
+        "/spring/spring-library-service-data.xml",
+        "/spring/spring-library-configuration.xml",
+        "/spring/spring-library-person-plugin-test.xml",
+        "/spring/spring-library-folder-watcher.xml"
+})
 @TransactionConfiguration(defaultRollback = false, transactionManager = "transactionManager")
 public class OrganizationPipelineIT
 {
+
+    static
+    {
+        String userHomePath = System.getProperty("user.home");
+        System.setProperty("acm.configurationserver.propertyfile", userHomePath + "/.arkcase/acm/conf.yml");
+    }
 
     @Autowired
     private OrganizationService organizationService;

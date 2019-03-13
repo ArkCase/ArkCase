@@ -10,6 +10,7 @@
 
     <bean id="milestonePlugin" class="com.armedia.acm.pluginmanager.model.AcmPlugin">
         <property name="pluginName" value="Milestone Plugin"/>
+        <property name="configurationPropertyService" ref="configurationPropertyService"/>
     </bean>
 
 </beans>

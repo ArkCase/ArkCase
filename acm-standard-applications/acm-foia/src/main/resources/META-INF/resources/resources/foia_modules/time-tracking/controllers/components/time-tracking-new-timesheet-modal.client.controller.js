@@ -35,7 +35,7 @@ angular.module('time-tracking').controller(
             var participantTypeOwningGroup = "owning group";
 
             $scope.timesheetProperties = {
-                "useApprovalWorkflow": "true"
+                "time.plugin.useApprovalWorkflow": "true"
             };
 
             ConfigService.getModuleConfig("time-tracking").then(function (moduleConfig) {
