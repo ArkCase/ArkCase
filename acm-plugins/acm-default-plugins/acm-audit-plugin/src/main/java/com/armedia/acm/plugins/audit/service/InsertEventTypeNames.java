@@ -29,9 +29,9 @@ package com.armedia.acm.plugins.audit.service;
 
 import com.armedia.acm.audit.dao.AuditLookupDao;
 import com.armedia.acm.audit.model.AcmAuditLookup;
+import com.armedia.acm.audit.model.AuditEventConfig;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.plugins.audit.model.AuditConstants;
-import com.armedia.acm.audit.model.AuditEventConfig;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
