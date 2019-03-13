@@ -1,19 +1,4 @@
 package com.armedia.acm.plugins.ecm.service.impl;
-
-import com.armedia.acm.plugins.ecm.exception.EphesoftException;
-import com.armedia.acm.plugins.ecm.model.EcmFile;
-import com.armedia.acm.files.capture.CaptureConfig;
-import com.armedia.acm.plugins.ecm.service.SendForPdfConversion;
-
-import org.apache.commons.io.IOUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-
 /*-
  * #%L
  * ACM Service: Enterprise Content Management
@@ -40,6 +25,20 @@ import java.io.InputStream;
  * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
  * #L%
  */
+
+import com.armedia.acm.files.capture.CaptureConfig;
+import com.armedia.acm.plugins.ecm.exception.EphesoftException;
+import com.armedia.acm.plugins.ecm.model.EcmFile;
+import com.armedia.acm.plugins.ecm.service.SendForPdfConversion;
+
+import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * Created by joseph.mcgrady on 9/14/2015.
