@@ -29,6 +29,7 @@ package com.armedia.acm.plugins.alfrescorma.service;
 
 import com.armedia.acm.auth.AcmAuthentication;
 import com.armedia.acm.auth.AcmAuthenticationManager;
+import com.armedia.acm.plugins.alfrescorma.model.AlfrescoRmaConfig;
 import com.armedia.acm.plugins.alfrescorma.model.AlfrescoRmaPluginConstants;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.casefile.model.CaseFileModifiedEvent;
@@ -44,6 +45,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class AcmCaseFileStatusChangedListener implements ApplicationListener<CaseFileModifiedEvent>, InitializingBean
@@ -57,8 +59,8 @@ public class AcmCaseFileStatusChangedListener implements ApplicationListener<Cas
     @Override
     public void onApplicationEvent(CaseFileModifiedEvent event)
     {
-        boolean checkIntegrationEnabled = getAlfrescoRecordsService()
-                .checkIntegrationEnabled(AlfrescoRmaPluginConstants.CASE_CLOSE_INTEGRATION_KEY);
+        AlfrescoRmaConfig rmaConfig = alfrescoRecordsService.getRmaConfig();
+        boolean checkIntegrationEnabled =rmaConfig.getIntegrationEnabled() && rmaConfig.getDeclareRecordsOnCaseClose();
 
         if (!checkIntegrationEnabled)
         {
@@ -114,12 +116,12 @@ public class AcmCaseFileStatusChangedListener implements ApplicationListener<Cas
     public void afterPropertiesSet()
     {
         LOG.debug("Finding case closed statuses");
-        String statuses = getAlfrescoRecordsService().getAlfrescoRmaProperties().getProperty("alfresco_rma_case_closed_statuses");
+        String statuses = alfrescoRecordsService.getRmaConfig().getClosedStatuses();
         if (statuses != null)
         {
             LOG.debug("Case closed statuses: {}", statuses);
             List<String> statusList = Arrays.asList(statuses.split(","));
-            statusList = statusList.stream().filter(s -> s != null).filter(s -> !s.trim().isEmpty()).map(s -> s.trim())
+            statusList = statusList.stream().filter(Objects::nonNull).filter(s -> !s.trim().isEmpty()).map(String::trim)
                     .collect(Collectors.toList());
             setCaseClosedStatuses(statusList);
         }

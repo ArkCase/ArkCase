@@ -27,14 +27,12 @@ package com.armedia.acm.plugins.admin.web.api;
  * #L%
  */
 
-import com.armedia.acm.core.exceptions.AcmEncryptionException;
-import com.armedia.acm.services.email.sender.model.EmailSenderConfiguration;
+import com.armedia.acm.email.model.EmailSenderConfig;
 import com.armedia.acm.services.email.sender.service.EmailSenderConfigurationServiceImpl;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -56,7 +54,7 @@ public class EmailSenderConfigurationAPIController
 
     @RequestMapping(value = "/email/configuration", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public EmailSenderConfiguration getConfiguration() throws AcmEncryptionException
+    public EmailSenderConfig getConfiguration()
     {
         return emailSenderConfigurationService.readConfiguration();
 
@@ -66,7 +64,7 @@ public class EmailSenderConfigurationAPIController
     @ResponseBody
     public boolean getSenderAllowDocuments()
     {
-        return emailSenderConfigurationService.readConfiguration().isAllowDocuments();
+        return emailSenderConfigurationService.readConfiguration().getAllowDocuments();
 
     }
 
@@ -74,7 +72,7 @@ public class EmailSenderConfigurationAPIController
     @ResponseBody
     public boolean getSenderAllowAttachments()
     {
-        return emailSenderConfigurationService.readConfiguration().isAllowAttachments();
+        return emailSenderConfigurationService.readConfiguration().getAllowAttachments();
 
     }
 
@@ -82,20 +80,20 @@ public class EmailSenderConfigurationAPIController
     @ResponseBody
     public boolean getSenderAllowHyperlinks()
     {
-        return emailSenderConfigurationService.readConfiguration().isAllowHyperlinks();
+        return emailSenderConfigurationService.readConfiguration().getAllowHyperlinks();
 
     }
 
     @RequestMapping(value = "/email/configuration", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public void updateConfiguration(@RequestBody EmailSenderConfiguration configuration, Authentication auth) throws AcmEncryptionException
+    public void updateConfiguration(@RequestBody EmailSenderConfig configuration)
     {
-        emailSenderConfigurationService.writeConfiguration(configuration, auth);
+        emailSenderConfigurationService.writeConfiguration(configuration);
     }
 
     @RequestMapping(value = "/email/configuration/validate", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public boolean validateSmtpConfiguration(@RequestBody EmailSenderConfiguration configuration, Authentication auth)
+    public boolean validateSmtpConfiguration(@RequestBody EmailSenderConfig configuration)
     {
         return emailSenderConfigurationService.validateSmtpConfiguration(configuration);
     }

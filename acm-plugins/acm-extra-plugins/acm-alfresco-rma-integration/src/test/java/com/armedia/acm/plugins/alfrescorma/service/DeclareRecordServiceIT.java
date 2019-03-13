@@ -51,12 +51,21 @@ import java.util.UUID;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
+        "/spring/spring-library-configuration.xml",
+        "/spring/spring-library-object-converter.xml",
         "/spring/spring-alfresco-records-service-test.xml",
         "/spring/spring-library-alfresco-service.xml",
         "/spring/spring-library-acm-encryption.xml",
-        "/spring/spring-library-property-file-manager.xml" })
+        "/spring/spring-library-property-file-manager.xml"
+})
 public class DeclareRecordServiceIT
 {
+    static
+    {
+        String userHomePath = System.getProperty("user.home");
+        System.setProperty("acm.configurationserver.propertyfile", userHomePath + "/.arkcase/acm/conf.yml");
+    }
+
     private transient final Logger LOG = LoggerFactory.getLogger(getClass());
     @Autowired
     private MuleContextManager muleContextManager;

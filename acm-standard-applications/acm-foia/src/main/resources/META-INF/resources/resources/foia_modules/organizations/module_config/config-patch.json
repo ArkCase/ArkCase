@@ -1,7 +1,7 @@
 [
     {
         "op": "replace",
-        "path": "/menus/?@.id=='topbar'/position",
+        "path": "/menus/?@.menuId=='topbar'/position",
         "value": 40
     },
     {

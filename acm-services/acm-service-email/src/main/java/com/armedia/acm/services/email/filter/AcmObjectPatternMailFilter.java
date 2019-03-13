@@ -64,7 +64,6 @@ public class AcmObjectPatternMailFilter
      * @param message
      * @return
      * @throws MessagingException
-     * @throws IOException
      */
     public boolean accept(Message message) throws MessagingException, IOException
     {

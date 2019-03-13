@@ -27,6 +27,7 @@ package com.armedia.acm.plugins.admin.web.api;
  * #L%
  */
 
+import com.armedia.acm.configuration.service.ConfigurationPropertyException;
 import com.armedia.acm.plugins.admin.exception.AcmRolesPrivilegesException;
 import com.armedia.acm.plugins.admin.model.RolePrivilegesConstants;
 import com.armedia.acm.plugins.admin.service.RolesPrivilegesService;
@@ -91,7 +92,7 @@ public class RolesPrivilegesRetrieveRolesByPrivilege implements RolePrivilegesCo
             rolesByNamePaged = rolesPrivilegesService.getRolesByNamePaged(privilegeName, sortBy, sortDirection, startRow, maxRows,
                     authorized, "");
         }
-        catch (AcmRolesPrivilegesException e)
+        catch (ConfigurationPropertyException e)
         {
             log.warn("Can't retrieve roles {}", e);
         }

@@ -9,7 +9,7 @@
         <property name="ecmFileDao" ref="ecmFileDao"/>
         <property name="acmParticipantService" ref="acmParticipantService"/>
         <property name="acmParticipantDao" ref="acmParticipantDao"/>
-        <property name="excludeDocumentTypes" value="${casefile.merge.exclude_document_types}"/>
+        <property name="excludeDocumentTypes" value="#{caseConfig.mergeExcludeDocumentTypes}"/>
     </bean>
 
     <bean id="splitCaseService" class="com.armedia.acm.plugins.casefile.service.SplitCaseServiceImpl">
@@ -17,7 +17,7 @@
         <property name="caseFileDao" ref="caseFileDao"/>
         <property name="acmTaskService" ref="acmTaskService"/>
         <property name="acmFolderService" ref="acmFolderService"/>
-        <property name="typesToCopy" value="${casefile.split.typesToCopy}"/>
+        <property name="typesToCopy" value="#{caseConfig.splitTypesToCopy}"/>
         <property name="splitCaseFileBusinessRule" ref="splitCaseFileBusinessRule"/>
     </bean>
 </beans>

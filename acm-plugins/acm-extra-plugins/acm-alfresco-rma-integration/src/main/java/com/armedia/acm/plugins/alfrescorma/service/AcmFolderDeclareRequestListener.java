@@ -28,7 +28,7 @@ package com.armedia.acm.plugins.alfrescorma.service;
  */
 
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
-import com.armedia.acm.plugins.alfrescorma.model.AlfrescoRmaPluginConstants;
+import com.armedia.acm.plugins.alfrescorma.model.AlfrescoRmaConfig;
 import com.armedia.acm.plugins.ecm.dao.AcmFolderDao;
 import com.armedia.acm.plugins.ecm.model.AcmCmisObjectList;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
@@ -52,8 +52,8 @@ public class AcmFolderDeclareRequestListener implements ApplicationListener<EcmF
     @Override
     public void onApplicationEvent(EcmFolderDeclareRequestEvent ecmFolderDeclareRequestEvent)
     {
-        boolean proceed = getAlfrescoRecordsService()
-                .checkIntegrationEnabled(AlfrescoRmaPluginConstants.FOLDER_DECLARE_REQUEST_INTEGRATION_KEY);
+        AlfrescoRmaConfig rmaConfig = alfrescoRecordsService.getRmaConfig();
+        boolean proceed = rmaConfig.getIntegrationEnabled() && rmaConfig.getDeclareFolderRecordOnDeclareRequest();
 
         if (!proceed)
         {

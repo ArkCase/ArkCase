@@ -66,15 +66,18 @@ import java.nio.file.Files;
         "/spring/spring-library-context-holder.xml",
         "/spring/spring-library-property-file-manager.xml",
         "/spring/spring-library-acm-encryption.xml",
-        "/spring/spring-library-object-lock.xml",
         "/spring/spring-library-object-lock-test.xml",
-        "/spring/spring-library-search.xml",
         "/spring/spring-library-object-lock-mule-test.xml",
-        "/spring/spring-library-user-service.xml",
-        "/spring/spring-library-object-converter.xml"
+        "/spring/spring-library-object-converter.xml",
+        "/spring/spring-library-configuration.xml"
 })
 public class AcmObjectLockServiceImplIT extends EasyMockSupport
 {
+    static
+    {
+        String userHomePath = System.getProperty("user.home");
+        System.setProperty("acm.configurationserver.propertyfile", userHomePath + "/.arkcase/acm/conf.yml");
+    }
 
     @Autowired
     private AcmObjectLockServiceImpl acmObjectLockService;

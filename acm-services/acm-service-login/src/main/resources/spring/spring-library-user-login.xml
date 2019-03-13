@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?><!--suppress SpringSecurityFiltersConfiguredInspection -->
 <beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.springframework.org/schema/beans"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
 
     <bean id="acmAuthoritiesMapper" class="com.armedia.acm.auth.AcmGrantedAuthoritiesMapper" init-method="initBean">
-        <property name="applicationRoleToUserGroupProperties" ref="applicationRoleToUserGroupProperties"/>
-        <property name="propertyFileManager" ref="propertyFileManager"/>
         <property name="roleToGroupMapping" ref="acmRoleToGroupConfig"/>
         <property name="groupService" ref="groupService"/>
     </bean>
@@ -88,8 +87,7 @@
           class="com.armedia.acm.auth.AcmConcurrentSessionControlAuthenticationStrategy">
         <constructor-arg name="sessionRegistry" ref="sessionRegistry"/>
         <constructor-arg name="authenticationTokenService" ref="authenticationTokenService"/>
-        <property name="maximumSessions" value="${sessionControl.maximumSessions}"/>
-        <property name="exceptionIfMaximumExceeded" value="${sessionControl.exceptionIfMaximumExceeded}"/>
+        <property name="sessionControlConfig" ref="sessionConfig"/>
     </bean>
 
     <bean id="sessionRegistry" class="org.springframework.security.core.session.SessionRegistryImpl"/>
@@ -103,6 +101,10 @@
 
     <bean id="acmLoginStateProvider" class="com.armedia.acm.auth.state.AcmLoginStateProvider">
         <property name="auditDao" ref="auditDao"/>
+    </bean>
+
+    <bean id="sessionConfig" class="com.armedia.acm.auth.SessionControlConfig" scope="refresh">
+        <aop:scoped-proxy/>
     </bean>
 
     <beans profile="ldap,kerberos,externalAuth,mfa-okta">

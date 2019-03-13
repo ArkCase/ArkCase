@@ -3,7 +3,7 @@
          xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd" version="3.1"
          metadata-complete="true">
     <!-- 
-        These settings shave 23 seconds on Tomcat startup (Scan jars step is down from 30s to 7 s):
+        These settings save 23 seconds on Tomcat startup (Scan jars step is down from 30s to 7 s):
         
         Setting metadata-complete="true" disables scanning your web application and its libraries for classes that use annotations to define
         components of a web application (Servlets etc.)
@@ -28,7 +28,8 @@
     </listener>
     <context-param>
         <param-name>contextConfigLocation</param-name>
-        <param-value>classpath*:/spring/spring-library-*.xml,
+        <param-value>classpath:/spring/spring-library-configuration.xml,
+            classpath*:/spring/spring-library-*.xml,
             classpath*:/spring/spring-extension-library-*.xml,
             classpath*:/spring/spring-custom-library-*.xml
             classpath:/spring/spring-security-config.xml,
@@ -126,8 +127,8 @@
         <async-supported>true</async-supported>
         <init-param>
             <param-name>contextConfigLocation</param-name>
-            <param-value>
-                classpath:/spring/appServlet/servlet-context.xml
+            <param-value>classpath:/spring/appServlet/servlet-context.xml,
+                classpath*:spring/spring-web-configuration.xml,
                 classpath*:spring/spring-web-*.xml
                 classpath*:spring/spring-extension-web-*.xml
                 classpath*:spring/spring-custom-web-*.xml
@@ -166,22 +167,6 @@
     <filter-mapping>
         <filter-name>characterEncodingFilter</filter-name>
         <url-pattern>/*</url-pattern>
-    </filter-mapping>
-
-    <!-- 
-    	ETag Filter - .js and .css files
-     -->
-    <filter>
-        <filter-name>etagFilter</filter-name>
-        <filter-class>org.springframework.web.filter.ShallowEtagHeaderFilter</filter-class>
-    </filter>
-    <filter-mapping>
-        <filter-name>etagFilter</filter-name>
-        <url-pattern>*.js</url-pattern>
-    </filter-mapping>
-    <filter-mapping>
-        <filter-name>etagFilter</filter-name>
-        <url-pattern>*.css</url-pattern>
     </filter-mapping>
 
 </web-app>

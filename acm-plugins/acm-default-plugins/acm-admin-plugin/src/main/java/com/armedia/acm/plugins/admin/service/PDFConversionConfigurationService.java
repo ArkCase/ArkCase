@@ -27,82 +27,48 @@ package com.armedia.acm.plugins.admin.service;
  * #L%
  */
 
-import com.armedia.acm.files.ConfigurationFileChangedEvent;
-import com.armedia.acm.files.propertymanager.PropertyFileManager;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.context.ApplicationListener;
+import com.armedia.acm.configuration.service.ConfigurationPropertyService;
+import com.armedia.acm.plugins.admin.model.PdfConversionConfig;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.HashMap;
 import java.util.Map;
-import java.util.Properties;
 
-public class PDFConversionConfigurationService implements ApplicationListener<ConfigurationFileChangedEvent>
+public class PDFConversionConfigurationService
 {
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private PdfConversionConfig pdfConversionConfig;
+    private ConfigurationPropertyService configurationPropertyService;
 
-    private String propertiesFile;
-    private PropertyFileManager propertyFileManager;
-
-    private Map<String, String> properties = new HashMap<>();
-
-    public void initBean()
+    public void saveProperties(Map<String, Object> properties)
     {
-        try
-        {
-            properties = getPropertyFileManager().readFromFileAsMap(new File(getPropertiesFile()));
-        }
-        catch (IOException e)
-        {
-            log.error("Could not read properties file [{}]", propertiesFile);
-        }
+        configurationPropertyService.updateProperties(properties);
     }
 
-    @Override
-    public void onApplicationEvent(ConfigurationFileChangedEvent configurationFileChangedEvent)
+    public Map<String, Object> loadProperties()
     {
-        if(configurationFileChangedEvent.getConfigFile().getName().equals(propertiesFile.substring(propertiesFile.lastIndexOf("/") + 1)))
-        {
-            initBean();
-        }
-    }
-
-    public void  saveProperties(Map<String, String> properties)
-    {
-        getPropertyFileManager().storeMultiple(properties, getPropertiesFile(), true);
-    }
-
-    public Map<String, String> loadProperties()
-    {
-        return properties;
+        return configurationPropertyService.getProperties(pdfConversionConfig);
     }
 
     public Boolean isResponseFolderConversionEnabled()
     {
-        Map<String, String> pdfProperties = loadProperties();
-
-        return !pdfProperties.isEmpty() && pdfProperties.containsKey("responseFolderConversion") && "true".equals(pdfProperties.get("responseFolderConversion"));
+        return pdfConversionConfig.getResponseFolderConversion();
     }
 
-    public String getPropertiesFile()
+    public PdfConversionConfig getPdfConversionConfig()
     {
-        return propertiesFile;
+        return pdfConversionConfig;
     }
 
-    public void setPropertiesFile(String propertiesFile)
+    public void setPdfConversionConfig(PdfConversionConfig pdfConversionConfig)
     {
-        this.propertiesFile = propertiesFile;
+        this.pdfConversionConfig = pdfConversionConfig;
     }
 
-    public PropertyFileManager getPropertyFileManager()
+    public ConfigurationPropertyService getConfigurationPropertyService()
     {
-        return propertyFileManager;
+        return configurationPropertyService;
     }
 
-    public void setPropertyFileManager(PropertyFileManager propertyFileManager)
+    public void setConfigurationPropertyService(ConfigurationPropertyService configurationPropertyService)
     {
-        this.propertyFileManager = propertyFileManager;
+        this.configurationPropertyService = configurationPropertyService;
     }
 }

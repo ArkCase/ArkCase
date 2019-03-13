@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
 
     <bean id="muleContextManager" class="com.armedia.acm.muletools.mulecontextmanager.MuleContextManager" destroy-method="shutdownBean">
         <property name="specificConfigFiles">
@@ -14,7 +14,7 @@
             </list>
         </property>
     </bean>
-
+    
     <bean id="logoutUrl" class="java.lang.String" factory-method="valueOf">
         <constructor-arg value="logoutUrl"/>
     </bean>
@@ -26,5 +26,11 @@
             <list/>
         </constructor-arg>
     </bean>
+
+    <bean id="auditEventConfig" class="com.armedia.acm.audit.model.AuditEventConfig">
+        <property name="jsonUnmarshaller" ref="jsonUnmarshaller"/>
+    </bean>
+
+    <bean id="captureConfig" class="com.armedia.acm.files.capture.CaptureConfig"/>
 
 </beans>

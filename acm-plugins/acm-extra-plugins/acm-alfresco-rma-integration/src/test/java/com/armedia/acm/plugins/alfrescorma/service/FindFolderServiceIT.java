@@ -71,11 +71,17 @@ import java.util.UUID;
         "/spring/spring-library-user-login.xml",
         "/spring/spring-library-plugin-manager.xml",
         "/spring/spring-library-audit-service.xml",
-        "/spring/spring-library-authentication-token.xml"
-        
+        "/spring/spring-library-authentication-token.xml",
+        "/spring/spring-library-configuration.xml"
 })
 public class FindFolderServiceIT
 {
+    static
+    {
+        String userHomePath = System.getProperty("user.home");
+        System.setProperty("acm.configurationserver.propertyfile", userHomePath + "/.arkcase/acm/conf.yml");
+    }
+
     @Autowired
     @Qualifier("findFolderService")
     private AlfrescoService<Folder> service;

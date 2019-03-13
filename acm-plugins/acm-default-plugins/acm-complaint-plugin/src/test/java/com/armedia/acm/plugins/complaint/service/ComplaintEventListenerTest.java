@@ -34,8 +34,8 @@ import static org.easymock.EasyMock.expectLastCall;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
+import com.armedia.acm.calendar.config.model.PurgeOptions;
 import com.armedia.acm.calendar.config.service.CalendarConfiguration;
-import com.armedia.acm.calendar.config.service.CalendarConfiguration.PurgeOptions;
 import com.armedia.acm.calendar.config.service.CalendarConfigurationsByObjectType;
 import com.armedia.acm.objectonverter.AcmMarshaller;
 import com.armedia.acm.objectonverter.ObjectConverter;
@@ -330,7 +330,7 @@ public class ComplaintEventListenerTest extends EasyMockSupport
         currentJsonObject = acmMarshaller.marshal(jsonComplaint);
         currentHistory.setObjectString(currentJsonObject);
 
-        runAndTestComplaintModifiedEvent(currentHistory, previousHistory, "priority.changed", jsonComplaint, false);
+        runAndTestComplaintModifiedEvent(currentHistory, previousHistory, "priority.changed", null, jsonComplaint, false);
     }
 
     @Test
@@ -351,7 +351,7 @@ public class ComplaintEventListenerTest extends EasyMockSupport
         currentJsonObject = acmMarshaller.marshal(jsonComplaint);
         currentHistory.setObjectString(currentJsonObject);
 
-        runAndTestComplaintModifiedEvent(currentHistory, previousHistory, "location.updated", jsonComplaint, false);
+        runAndTestComplaintModifiedEvent(currentHistory, previousHistory, "location.updated", null, jsonComplaint, false);
     }
 
     @Test
@@ -373,7 +373,7 @@ public class ComplaintEventListenerTest extends EasyMockSupport
         currentHistory.setObjectType(ComplaintConstants.OBJECT_TYPE);
         currentHistory.setObjectString(currentJsonObject);
 
-        runAndTestComplaintModifiedEvent(currentHistory, previousHistory, "location.updated", jsonComplaint, false);
+        runAndTestComplaintModifiedEvent(currentHistory, previousHistory, "location.updated", null, jsonComplaint, false);
     }
 
     @Test
@@ -394,7 +394,7 @@ public class ComplaintEventListenerTest extends EasyMockSupport
         currentJsonObject = acmMarshaller.marshal(jsonComplaint);
         currentHistory.setObjectString(currentJsonObject);
 
-        runAndTestComplaintModifiedEvent(currentHistory, previousHistory, "status.changed", jsonComplaint, true);
+        runAndTestComplaintModifiedEvent(currentHistory, previousHistory, "status.changed", "description", jsonComplaint, true);
     }
 
     @Test
@@ -439,7 +439,7 @@ public class ComplaintEventListenerTest extends EasyMockSupport
         currentJsonObject = acmMarshaller.marshal(jsonComplaint);
         currentHistory.setObjectString(currentJsonObject);
 
-        runAndTestComplaintModifiedEvent(currentHistory, previousHistory, "details.changed", jsonComplaint, false);
+        runAndTestComplaintModifiedEvent(currentHistory, previousHistory, "details.changed", null, jsonComplaint, false);
     }
 
     @Test
@@ -461,7 +461,7 @@ public class ComplaintEventListenerTest extends EasyMockSupport
         currentJsonObject = acmMarshaller.marshal(jsonComplaint);
         currentHistory.setObjectString(currentJsonObject);
 
-        runAndTestComplaintModifiedEvent(currentHistory, previousHistory, "details.changed", jsonComplaint, false);
+        runAndTestComplaintModifiedEvent(currentHistory, previousHistory, "details.changed", null, jsonComplaint, false);
     }
 
     public void verifyEvent(String ipAddress, Complaint complaintCapture, Complaint jsonComplaint)
@@ -479,7 +479,7 @@ public class ComplaintEventListenerTest extends EasyMockSupport
     }
 
     public void runAndTestComplaintModifiedEvent(AcmObjectHistory currentHistory, AcmObjectHistory previousHistory, String statusToCheck,
-            Complaint complaint, boolean mockCalendarConfiguration) throws Exception
+            String eventDescription, Complaint complaint, boolean mockCalendarConfiguration) throws Exception
     {
         AcmObjectHistoryEvent event = new AcmObjectHistoryEvent(currentHistory);
         event.setIpAddress(IP_ADDRESS);
@@ -491,8 +491,17 @@ public class ComplaintEventListenerTest extends EasyMockSupport
         Capture<String> ipAddressCapture = Capture.newInstance();
         Capture<String> eventStatusCapture = Capture.newInstance();
 
-        mockComplaintEventPublisher.publishComplaintModified(capture(complaintCapture), capture(ipAddressCapture),
-                capture(eventStatusCapture));
+        if (eventDescription != null)
+        {
+            Capture<String> eventDescriptionCapture = Capture.newInstance();
+            mockComplaintEventPublisher.publishComplaintModified(capture(complaintCapture), capture(ipAddressCapture),
+                    capture(eventStatusCapture), capture(eventDescriptionCapture));
+        }
+        else
+        {
+            mockComplaintEventPublisher.publishComplaintModified(capture(complaintCapture), capture(ipAddressCapture),
+                    capture(eventStatusCapture));
+        }
         expectLastCall().once();
 
         if (mockCalendarConfiguration)
@@ -522,6 +531,7 @@ public class ComplaintEventListenerTest extends EasyMockSupport
         Capture<Complaint> complaintCapture = Capture.newInstance();
         Capture<String> ipAddressCapture = Capture.newInstance();
         Capture<String> eventStatusCapture = Capture.newInstance();
+        Capture<String> eventDescriptionCapture = Capture.newInstance();
         Capture<AcmContainer> containerCapture = Capture.newInstance();
         Capture<AcmOutlookUser> calendarOutlookUser = Capture.newInstance();
 
@@ -529,7 +539,7 @@ public class ComplaintEventListenerTest extends EasyMockSupport
         expectLastCall().once();
 
         mockComplaintEventPublisher.publishComplaintModified(capture(complaintCapture), capture(ipAddressCapture),
-                capture(eventStatusCapture));
+                capture(eventStatusCapture), capture(eventDescriptionCapture));
         expectLastCall().once();
 
         expect(mockedCalendarAdminService.getEventListenerOutlookUser(ComplaintConstants.OBJECT_TYPE))

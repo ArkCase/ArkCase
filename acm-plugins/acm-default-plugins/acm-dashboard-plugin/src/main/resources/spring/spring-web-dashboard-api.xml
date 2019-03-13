@@ -3,7 +3,6 @@
     xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
 
     <bean id="getDashboardSettings" class="com.armedia.acm.plugins.dashboard.web.api.GetDashboardConfigAPIController">
-        <property name="dashboardPlugin" ref="dashboardPlugin"/>
         <property name="eventPublisher" ref="dashboardEventPublisher"/>
         <property name="dashboardPropertyReader" ref="dashboardPropertyReader"/>
         <property name="dashboardService" ref="dashboardService"/>
@@ -18,7 +17,6 @@
     <bean id="getWidgetsByUserRoles"
         class="com.armedia.acm.plugins.dashboard.web.api.GetWidgetsByUserRolesAPIController">
         <property name="widgetDao" ref="acmWidgetDao"/>
-        <property name="dashboardPlugin" ref="dashboardPlugin"/>
         <property name="userDao" ref="userJpaDao"/>
         <property name="dashboardPropertyReader" ref="dashboardPropertyReader"/>
         <property name="eventPublisher" ref="widgetEventPublisher"/>
@@ -47,7 +45,7 @@
 
     <bean id="dashboardPropertyReader" class="com.armedia.acm.plugins.dashboard.service.DashboardPropertyReader"
         init-method="init">
-        <property name="dashboardPlugin" ref="dashboardPlugin"/>
+        <property name="dashboardConfig" ref="dashboardConfig"/>
         <property name="moduleDao" ref="moduleDao"/>
         <property name="widgetDao" ref="acmWidgetDao"/>
         <property name="dashboardDao" ref="acmDashboardDao"/>
@@ -68,11 +66,11 @@
 
     <bean id="dashboardService" class="com.armedia.acm.plugins.dashboard.service.DashboardService">
         <property name="dashboardDao" ref="acmDashboardDao"/>
-        <property name="dashboardPlugin" ref="dashboardPlugin"/>
         <property name="userDao" ref="userJpaDao"/>
         <property name="dashboardPropertyReader" ref="dashboardPropertyReader"/>
         <property name="widgetDao" ref="acmWidgetDao"/>
         <property name="userRoleService" ref="userRoleService"/>
+        <property name="dashboardConfig" ref="dashboardConfig"/>
         <property name="eventPublisher" ref="widgetEventPublisher"/>
     </bean>
 

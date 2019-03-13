@@ -48,15 +48,21 @@ import java.io.File;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
+        "/spring/spring-library-configuration.xml",
+        "/spring/spring-library-object-converter.xml",
         "/spring/spring-library-folder-watcher.xml",
-        "/spring-test-config-file-watcher.xml"
-        // this is needed because all beans are loaded in spring-library-folder-watcher.xml and it depends on this, also
-        // need access to
-        // capture.properties properties
-        , "/spring/spring-library-property-file-manager.xml", "/spring/spring-library-acm-encryption.xml"
+        "/spring-test-config-file-watcher.xml",
+        "/spring/spring-library-property-file-manager.xml",
+        "/spring/spring-library-acm-encryption.xml"
 })
 public class CaptureFileWatcherIT
 {
+    static
+    {
+        String userHomePath = System.getProperty("user.home");
+        System.setProperty("acm.configurationserver.propertyfile", userHomePath + "/.arkcase/acm/conf.yml");
+    }
+
     private Logger log = LoggerFactory.getLogger(getClass());
 
     @Autowired

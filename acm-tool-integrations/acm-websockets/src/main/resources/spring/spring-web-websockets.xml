@@ -10,38 +10,8 @@
 
     <context:annotation-config/>
 
-    <bean id="websocketProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
-        <property name="location" value="file:${user.home}/.arkcase/acm/websockets.properties"/>
-        <property name="localOverride" value="false"/>
-        <property name="ignoreResourceNotFound" value="true"/>
-        <property name="properties">
-            <props>
-                <prop key="acm.websockets.enabled">true</prop>
-                <prop key="acm.websockets.stomp_endpoint">/stomp</prop>
-                <prop key="acm.websockets.application_destination_prefix">/app</prop>
-                <prop key="acm.websockets.stomp_broker_relay.relay_protocol">ssl</prop>
-                <prop key="acm.websockets.stomp_broker_relay.keystore">${user.home}/.arkcase/acm/private/keystore</prop>
-                <prop key="acm.websockets.stomp_broker_relay.keystore_pass">password</prop>
-                <prop key="acm.websockets.stomp_broker_relay.truststore">${user.home}/.arkcase/acm/private/truststore</prop>
-                <prop key="acm.websockets.stomp_broker_relay.truststore_pass">password</prop>
-                <prop key="acm.websockets.stomp_broker_relay.truststore_type">JKS</prop>
-                <prop key="acm.websockets.stomp_broker_relay.relay_host">acm-activemq</prop>
-                <prop key="acm.websockets.stomp_broker_relay.relay_port">61613</prop>
-                <prop key="acm.websockets.stomp_broker_relay.heartbeat_send_interval">20000</prop>
-                <prop key="acm.websockets.stomp_broker_relay.heartbeat_receive_interval">20000</prop>
-                <prop key="acm.websockets.stomp_broker_relay.client_login">guest</prop>
-                <prop key="acm.websockets.stomp_broker_relay.client_passcode">guest</prop>
-                <prop key="acm.websockets.stomp_broker_relay.system_login">guest</prop>
-                <prop key="acm.websockets.stomp_broker_relay.system_passcode">guest</prop>
-                <prop key="acm.websockets.socksjs.enabled">true</prop>
-            </props>
-        </property>
-    </bean>
-
-    <context:property-placeholder ignore-unresolvable="true" local-override="false" order="29831" properties-ref="websocketProperties"/>
-
-    <websocket:message-broker application-destination-prefix="${acm.websockets.application_destination_prefix}">
-        <websocket:stomp-endpoint path="${acm.websockets.stomp_endpoint}">
+    <websocket:message-broker application-destination-prefix="#{socketsConfig.applicationDestinationPrefix}">
+        <websocket:stomp-endpoint path="#{socketsConfig.stompEndpoint}">
             <!--
                 client-library-url: sockjs version must be always aligned with bower dependency;
                 the path is relative to /sockjs/iframe.html, iframe URL created by sockjs
@@ -49,14 +19,14 @@
             -->
             <websocket:sockjs websocket-enabled="true" client-library-url="../node_modules/@bower_components/sockjs-client/dist/sockjs.min.js"></websocket:sockjs>
         </websocket:stomp-endpoint>
-        <websocket:stomp-broker-relay prefix="/topic,/queue" relay-host="${acm.websockets.stomp_broker_relay.relay_host}"
-            relay-port="${acm.websockets.stomp_broker_relay.relay_port}"
-            heartbeat-send-interval="${acm.websockets.stomp_broker_relay.heartbeat_send_interval}"
-            heartbeat-receive-interval="${acm.websockets.stomp_broker_relay.heartbeat_receive_interval}"
-            client-login="${acm.websockets.stomp_broker_relay.client_login}"
-            client-passcode="${acm.websockets.stomp_broker_relay.client_passcode}"
-            system-login="${acm.websockets.stomp_broker_relay.system_login}"
-            system-passcode="${acm.websockets.stomp_broker_relay.system_passcode}"/>
+        <websocket:stomp-broker-relay prefix="/topic,/queue" relay-host="#{socketsConfig.stompBrokerRelayHost}"
+            relay-port="#{socketsConfig.stompBrokerRelayPort}"
+            heartbeat-send-interval="#{socketsConfig.stompBrokerRelayHeartbeatSendInterval}"
+            heartbeat-receive-interval="#{socketsConfig.stompBrokerRelayHeartbeatReceiveInterval}"
+            client-login="#{socketsConfig.stompBrokerRelayClientLogin}"
+            client-passcode="#{socketsConfig.stompBrokerRelayClientPasscode}"
+            system-login="#{socketsConfig.stompBrokerRelaySystemLogin}"
+            system-passcode="#{socketsConfig.stompBrokerRelaySystemPasscode}"/>
         <websocket:client-inbound-channel>
             <websocket:interceptors>
                 <bean class="com.armedia.acm.websockets.AcmWebSocketChannelInterceptor"></bean>
@@ -65,42 +35,22 @@
     </websocket:message-broker>
 
     <bean class="com.armedia.acm.websockets.configuration.StompBrokerRelayMessageHandlerBeanPostProcessor">
-        <property name="relayProtocol" value="${acm.websockets.stomp_broker_relay.relay_protocol}"/>
-        <property name="keyStore" value="${acm.websockets.stomp_broker_relay.keystore}"/>
-        <property name="keyStorePass" value="${acm.websockets.stomp_broker_relay.keystore_pass}"/>
-        <property name="trustStore" value="${acm.websockets.stomp_broker_relay.truststore}"/>
-        <property name="trustStorePass" value="${acm.websockets.stomp_broker_relay.truststore_pass}"/>
-        <property name="trustStoreType" value="${acm.websockets.stomp_broker_relay.truststore_type}"/>
-        <property name="host" value="${acm.websockets.stomp_broker_relay.relay_host}"/>
-        <property name="port" value="${acm.websockets.stomp_broker_relay.relay_port}"/>
-    </bean>
-
-    <bean id="objectChangeNotificationProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
-        <!-- note: must leave "file:" at the start of the file name for spring
-        to be able to read the file; otherwise it will try to read from the
-        classpath -->
-        <property name="location" value="file:${user.home}/.arkcase/acm/acmObjectsNotifications.properties"/>
-        <property name="ignoreResourceNotFound" value="true"/>
-        <property name="localOverride" value="false"/>
-        <property name="properties">
-            <props>
-                <prop key="acm.object.changed.notification.filter.include.classNames">
-                    com.armedia.acm.plugins.casefile.model.CaseFile,com.armedia.acm.plugins.complaint.model.Complaint,com.armedia.acm.plugins.task.model.AcmTask,com.armedia.acm.plugins.ecm.model.EcmFile,com.armedia.acm.plugins.casefile.model.ChangeCaseStatus,com.armedia.acm.plugins.complaint.model.CloseComplaintRequest,com.armedia.acm.services.costsheet.model.AcmCostsheet,com.armedia.acm.services.timesheet.model.AcmTimesheet,com.armedia.acm.plugins.documentrepository.model.DocumentRepository,com.armedia.acm.plugins.person.model.Person,com.armedia.acm.plugins.person.model.Organization
-                </prop>
-                <prop key="acm.object.changed.notification.filter.include.object_types">
-                    CASE_FILE,COMPLAINT,TASK,FILE,DOC_REPO,PERSON,ORGANIZATION
-                </prop>
-                <prop key="acm.object.changed.notification.filter.include.parent_object_types">
-                    CASE_FILE,COMPLAINT,TASK,FILE,DOC_REPO
-                </prop>
-            </props>
-        </property>
+        <property name="relayProtocol" value="#{socketsConfig.stompBrokerRelayProtocol}"/>
+        <property name="keyStore" value="#{socketsConfig.stompBrokerRelayKeystore}"/>
+        <property name="keyStorePass" value="#{socketsConfig.stompBrokerRelayKeystorePassword}"/>
+        <property name="trustStore" value="#{socketsConfig.stompBrokerRelayTruststore}"/>
+        <property name="trustStorePass" value="#{socketsConfig.stompBrokerRelayTruststorePass}"/>
+        <property name="trustStoreType" value="#{socketsConfig.stompBrokerRelayTruststoreType}"/>
+        <property name="host" value="#{socketsConfig.stompBrokerRelayHost}"/>
+        <property name="port" value="#{socketsConfig.stompBrokerRelayPort}"/>
     </bean>
 
     <bean id="messageReceiver" class="com.armedia.acm.websockets.MessageReceiver"/>
-    <bean id="objectUpdateNotifier" class="com.armedia.acm.websockets.ObjectUpdateNotifier" init-method="initBean">
-        <property name="objectChangeNotificationProperties" ref="objectChangeNotificationProperties"/>
+
+    <bean id="objectUpdateNotifier" class="com.armedia.acm.websockets.ObjectUpdateNotifier">
+        <property name="objectNotificationsConfig" ref="objectNotificationConfig"/>
     </bean>
+
     <int:service-activator ref="objectUpdateNotifier" input-channel="objectEventChannel" method="notifyChange"/>
 
     <bean id="simplePushNotifier" class="com.armedia.acm.websockets.SimplePushNotifier"/>

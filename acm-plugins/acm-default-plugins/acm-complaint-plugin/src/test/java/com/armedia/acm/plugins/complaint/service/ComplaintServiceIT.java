@@ -57,6 +57,7 @@ import java.util.UUID;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(name = "spring", locations = {
+        "/spring/spring-library-configuration.xml",
         "/spring/spring-library-acm-encryption.xml",
         "/spring/spring-library-activiti-actions.xml",
         "/spring/spring-library-activiti-configuration.xml",
@@ -109,11 +110,19 @@ import java.util.UUID;
         "/spring/spring-library-object-converter.xml",
         "/spring/spring-library-ecm-file-lock.xml",
         "/spring/spring-library-audit-service.xml",
-        "/spring/spring-library-core-api.xml"        
+        "/spring/spring-library-core-api.xml",
+        "/spring/spring-library-convert-folder-service.xml"
 })
 @TransactionConfiguration(defaultRollback = true, transactionManager = "transactionManager")
 public class ComplaintServiceIT
 {
+
+    static
+    {
+        String userHomePath = System.getProperty("user.home");
+        System.setProperty("acm.configurationserver.propertyfile", userHomePath + "/.arkcase/acm/conf.yml");
+    }
+
     private ComplaintService service;
 
     @Autowired

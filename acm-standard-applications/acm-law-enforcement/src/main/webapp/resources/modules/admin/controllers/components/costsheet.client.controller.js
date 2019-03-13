@@ -4,7 +4,7 @@ angular.module('admin').controller('Admin.CostsheetController',
         [ '$scope', 'Admin.CostsheetConfigurationService', 'MessageService', 'UtilService', function($scope, CostsheetConfigurationService, MessageService, Util) {
 
             $scope.costsheetProperties = {
-                "useApprovalWorkflow": "true"
+                "cost.plugin.useApprovalWorkflow": "true"
             };
 
             CostsheetConfigurationService.getProperties().then(function(response) {

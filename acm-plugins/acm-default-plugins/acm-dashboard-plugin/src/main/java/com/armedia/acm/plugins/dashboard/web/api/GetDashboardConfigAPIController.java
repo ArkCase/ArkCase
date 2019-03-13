@@ -59,8 +59,6 @@ import java.util.List;
 @RequestMapping({ "/api/v1/plugin/dashboard", "/api/latest/plugin/dashboard" })
 public class GetDashboardConfigAPIController
 {
-
-    private AcmPlugin dashboardPlugin;
     private DashboardPropertyReader dashboardPropertyReader;
     private DashboardEventPublisher eventPublisher;
     private DashboardService dashboardService;
@@ -70,7 +68,7 @@ public class GetDashboardConfigAPIController
     @ResponseBody
     public DashboardDto getDashboardConfig(
             @RequestParam(value = "moduleName", required = false, defaultValue = "DASHBOARD") String moduleName,
-            Authentication authentication, HttpSession session) throws AcmDashboardException, AcmObjectNotFoundException
+            Authentication authentication) throws AcmDashboardException, AcmObjectNotFoundException
     {
         String userId = authentication.getName();
         log.info("Finding dashboard configuration for user: [{}]", userId);
@@ -135,16 +133,6 @@ public class GetDashboardConfigAPIController
     public void setEventPublisher(DashboardEventPublisher eventPublisher)
     {
         this.eventPublisher = eventPublisher;
-    }
-
-    public AcmPlugin getDashboardPlugin()
-    {
-        return dashboardPlugin;
-    }
-
-    public void setDashboardPlugin(AcmPlugin dashboardPlugin)
-    {
-        this.dashboardPlugin = dashboardPlugin;
     }
 
     public DashboardPropertyReader getDashboardPropertyReader()

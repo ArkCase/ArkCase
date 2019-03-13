@@ -65,7 +65,7 @@ import javax.persistence.PersistenceException;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
         "classpath:/spring/spring-web-acm-web.xml",
-        "classpath:/spring/spring-library-complaint-plugin-test.xml"
+        "classpath:/spring/spring-library-complaint-plugin-unit-test.xml"
 })
 public class FindComplaintByIdAPIControllerTest extends EasyMockSupport
 {

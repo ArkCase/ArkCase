@@ -42,6 +42,7 @@ import java.util.UUID;
 
 import gov.foia.model.PortalFOIARequest;
 import gov.foia.service.PortalCreateRequestService;
+import org.springframework.beans.factory.annotation.Value;
 
 /**
  * FOIA Request message consumer intercepts FOIA request objects sent from external portal
@@ -53,7 +54,9 @@ public class FOIARequestBrokerClient extends AcmObjectBrokerClient<PortalFOIAReq
 
     private static final Logger LOG = LoggerFactory.getLogger(FOIARequestBrokerClient.class);
     private PortalCreateRequestService createRequestService;
+    @Value("${external.integration.enable}")
     private boolean externalEnable;
+    @Value("${external.integration.userId}")
     private String externalUserId;
 
     public FOIARequestBrokerClient(ActiveMQConnectionFactory connectionFactory, String outboundQueue, String inboundQueue)

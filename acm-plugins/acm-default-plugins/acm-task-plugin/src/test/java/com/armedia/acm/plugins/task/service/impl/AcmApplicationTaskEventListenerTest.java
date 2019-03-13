@@ -204,7 +204,7 @@ public class AcmApplicationTaskEventListenerTest extends EasyMockSupport
         currentJsonObject = acmMarshaller.marshal(jsonTask);
         currentHistory.setObjectString(currentJsonObject);
 
-        runAndTestTaskEvent(currentHistory, previousHistory, "priority.changed", jsonTask);
+        runAndTestTaskEvent(currentHistory, previousHistory, "priority.changed", null, jsonTask);
     }
 
     @Test
@@ -225,7 +225,7 @@ public class AcmApplicationTaskEventListenerTest extends EasyMockSupport
         currentJsonObject = acmMarshaller.marshal(jsonTask);
         currentHistory.setObjectString(currentJsonObject);
 
-        runAndTestTaskEvent(currentHistory, previousHistory, "status.changed", jsonTask);
+        runAndTestTaskEvent(currentHistory, previousHistory, "status.changed", "description", jsonTask);
     }
 
     @Test
@@ -246,7 +246,7 @@ public class AcmApplicationTaskEventListenerTest extends EasyMockSupport
         currentJsonObject = acmMarshaller.marshal(jsonTask);
         currentHistory.setObjectString(currentJsonObject);
 
-        runAndTestTaskEvent(currentHistory, previousHistory, "details.changed", jsonTask);
+        runAndTestTaskEvent(currentHistory, previousHistory, "details.changed", null, jsonTask);
     }
 
     @Test
@@ -268,7 +268,7 @@ public class AcmApplicationTaskEventListenerTest extends EasyMockSupport
         currentJsonObject = acmMarshaller.marshal(jsonTask);
         currentHistory.setObjectString(currentJsonObject);
 
-        runAndTestTaskEvent(currentHistory, previousHistory, "details.changed", jsonTask);
+        runAndTestTaskEvent(currentHistory, previousHistory, "details.changed", null, jsonTask);
     }
 
     @Test
@@ -289,7 +289,7 @@ public class AcmApplicationTaskEventListenerTest extends EasyMockSupport
         currentJsonObject = acmMarshaller.marshal(jsonTask);
         currentHistory.setObjectString(currentJsonObject);
 
-        runAndTestTaskEvent(currentHistory, previousHistory, "reworkdetails.changed", jsonTask);
+        runAndTestTaskEvent(currentHistory, previousHistory, "reworkdetails.changed", null, jsonTask);
     }
 
     @Test
@@ -311,10 +311,11 @@ public class AcmApplicationTaskEventListenerTest extends EasyMockSupport
         currentJsonObject = acmMarshaller.marshal(jsonTask);
         currentHistory.setObjectString(currentJsonObject);
 
-        runAndTestTaskEvent(currentHistory, previousHistory, "reworkdetails.changed", jsonTask);
+        runAndTestTaskEvent(currentHistory, previousHistory, "reworkdetails.changed", null, jsonTask);
     }
 
-    public void runAndTestTaskEvent(AcmObjectHistory currentHistory, AcmObjectHistory previousHistory, String statusToCheck, AcmTask task)
+    public void runAndTestTaskEvent(AcmObjectHistory currentHistory, AcmObjectHistory previousHistory, String statusToCheck,
+            String eventDescription, AcmTask task)
     {
         AcmObjectHistoryEvent event = new AcmObjectHistoryEvent(currentHistory);
         event.setIpAddress(IP_ADDRESS);
@@ -324,7 +325,16 @@ public class AcmApplicationTaskEventListenerTest extends EasyMockSupport
 
         Capture<AcmApplicationTaskEvent> taskEventCapture = Capture.newInstance();
 
-        mockTaskEventPublisher.publishTaskEvent(capture(taskEventCapture));
+        if (eventDescription != null)
+        {
+            Capture<String> taskEventCaptureDescription = Capture.newInstance();
+            mockTaskEventPublisher.publishTaskEvent(capture(taskEventCapture), capture(taskEventCaptureDescription));
+        }
+        else
+        {
+            mockTaskEventPublisher.publishTaskEvent(capture(taskEventCapture));
+        }
+
         expectLastCall().once();
 
         replayAll();

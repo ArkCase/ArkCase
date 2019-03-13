@@ -27,17 +27,38 @@ package com.armedia.acm.plugins.wopi.model;
  * #L%
  */
 
+import org.springframework.beans.factory.annotation.Value;
+
 public class WopiConfig
 {
+    @Value("${wopi.plugin.host.url}")
     private String wopiHostUrl;
+
+    @Value("${wopi.plugin.host.validation.url}")
     private String wopiHostValidationUrl;
+
+    @Value("${wopi.plugin.tenant.domain}")
     private String wopiTenantDomain;
+
+    @Value("${wopi.plugin.tenant.protocol}")
     private String wopiTenantProtocol;
-    private Long wopiTenantPort;
+
+    @Value("${wopi.plugin.tenant.port}")
+    private Integer wopiTenantPort;
+
+    @Value("${wopi.plugin.tenant.context}")
     private String wopiTenantContext;
+
+    @Value("${wopi.plugin.tenant.accessTokenParamName}")
     private String wopiTenantAccessTokenParamName;
+
+    @Value("${wopi.plugin.tenant.fileIdParamName}")
     private String wopiTenantFileIdParamName;
+
+    @Value("${wopi.plugin.lockDuration}")
     private Long wopiLockDuration;
+
+    @Value("${wopi.plugin.enabled}")
     private Boolean wopiPluginEnabled;
 
     public String getWopiHostUrl(Long fileId, String accessToken)
@@ -46,20 +67,10 @@ public class WopiConfig
                 wopiTenantContext, wopiTenantAccessTokenParamName, wopiTenantFileIdParamName);
     }
 
-    public void setWopiHostUrl(String wopiHostUrl)
-    {
-        this.wopiHostUrl = wopiHostUrl;
-    }
-
     public String getWopiHostValidationUrl(Long fileId, String accessToken)
     {
         return String.format(wopiHostValidationUrl, fileId, accessToken, wopiTenantProtocol, wopiTenantDomain, wopiTenantPort,
                 wopiTenantContext, wopiTenantAccessTokenParamName, wopiTenantFileIdParamName);
-    }
-
-    public void setWopiHostValidationUrl(String wopiHostValidationUrl)
-    {
-        this.wopiHostValidationUrl = wopiHostValidationUrl;
     }
 
     public String getWopiTenantDomain()
@@ -82,12 +93,12 @@ public class WopiConfig
         this.wopiTenantProtocol = wopiTenantProtocol;
     }
 
-    public Long getWopiTenantPort()
+    public Integer getWopiTenantPort()
     {
         return wopiTenantPort;
     }
 
-    public void setWopiTenantPort(Long wopiTenantPort)
+    public void setWopiTenantPort(Integer wopiTenantPort)
     {
         this.wopiTenantPort = wopiTenantPort;
     }

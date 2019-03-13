@@ -18,4 +18,7 @@
         </constructor-arg>
     </bean>
 
+    <bean id="emailSenderConfig" class="com.armedia.acm.email.model.EmailSenderConfig"/>
+
+    <bean id="emailReceiverConfig" class="com.armedia.acm.email.model.EmailReceiverConfig"/>
 </beans>

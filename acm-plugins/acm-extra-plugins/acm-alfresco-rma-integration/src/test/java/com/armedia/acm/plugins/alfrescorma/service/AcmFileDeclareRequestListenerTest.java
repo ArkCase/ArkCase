@@ -31,7 +31,7 @@ import static org.easymock.EasyMock.anyObject;
 import static org.easymock.EasyMock.eq;
 import static org.easymock.EasyMock.expect;
 
-import com.armedia.acm.plugins.alfrescorma.model.AlfrescoRmaPluginConstants;
+import com.armedia.acm.plugins.alfrescorma.model.AlfrescoRmaConfig;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileDeclareRequestEvent;
@@ -42,13 +42,13 @@ import org.junit.Test;
 import org.springframework.security.core.Authentication;
 
 import java.util.Date;
-import java.util.Properties;
 
 public class AcmFileDeclareRequestListenerTest extends EasyMockSupport
 {
     private AcmFileDeclareRequestListener unit;
     private AlfrescoRecordsService mockService;
     private Authentication mockAuthentication;
+    private AlfrescoRmaConfig rmaConfig;
 
     @Before
     public void setUp()
@@ -57,6 +57,8 @@ public class AcmFileDeclareRequestListenerTest extends EasyMockSupport
         mockService = createMock(AlfrescoRecordsService.class);
         mockAuthentication = createMock(Authentication.class);
         unit.setAlfrescoRecordsService(mockService);
+        rmaConfig = new AlfrescoRmaConfig();
+        rmaConfig.setIntegrationEnabled(true);
     }
 
     @Test
@@ -65,8 +67,8 @@ public class AcmFileDeclareRequestListenerTest extends EasyMockSupport
         EcmFile file = new EcmFile();
         file.setContainer(new AcmContainer());
 
-        expect(mockService.checkIntegrationEnabled(AlfrescoRmaPluginConstants.FILE_DECLARE_REQUEST_INTEGRATION_KEY))
-                .andReturn(Boolean.FALSE);
+        rmaConfig.setDeclareFileRecordOnDeclareRequest(false);
+        expect(mockService.getRmaConfig()).andReturn(rmaConfig);
         expect(mockAuthentication.getDetails()).andReturn("details").anyTimes();
 
         replayAll();
@@ -86,16 +88,10 @@ public class AcmFileDeclareRequestListenerTest extends EasyMockSupport
         file.getContainer().setContainerObjectType("containerObjectType");
         file.setStatus("ACTIVE");
 
-        Properties p = new Properties();
-        p.setProperty(AlfrescoRmaPluginConstants.PROPERTY_ORIGINATOR_ORG, "Grateful Dead");
-
-        expect(mockService.getAlfrescoRmaProperties()).andReturn(p);
-
+        rmaConfig.setDefaultOriginatorOrg("Grateful Dead");
+        rmaConfig.setDeclareFileRecordOnDeclareRequest(true);
+        expect(mockService.getRmaConfig()).andReturn(rmaConfig);
         expect(mockAuthentication.getDetails()).andReturn("details").anyTimes();
-
-        expect(mockService.checkIntegrationEnabled(AlfrescoRmaPluginConstants.FILE_DECLARE_REQUEST_INTEGRATION_KEY))
-                .andReturn(Boolean.TRUE);
-
         mockService.declareFileAsRecord(eq(file.getContainer()), anyObject(Date.class), eq("parentObjectName"), eq("Grateful Dead"),
                 eq("userId"), eq("cmisObjectId"), eq(file.getStatus()), eq(500L));
 

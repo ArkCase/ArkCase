@@ -27,9 +27,9 @@ package com.armedia.acm.services.tag.service;
  * #L%
  */
 
-import com.armedia.acm.pluginmanager.model.AcmPlugin;
 import com.armedia.acm.services.tag.dao.TagDao;
 import com.armedia.acm.services.tag.model.AcmTag;
+import com.armedia.acm.services.tag.model.TagConfig;
 import com.armedia.acm.services.tag.model.TagConstants;
 
 import org.json.JSONArray;
@@ -49,7 +49,7 @@ public class TagService
 
     private transient final Logger log = LoggerFactory.getLogger(getClass());
     private TagDao tagDao;
-    private AcmPlugin tagPlugin;
+    private TagConfig tagConfig;
 
     public List<AcmTag> getAllTags()
     {
@@ -112,23 +112,15 @@ public class TagService
     private List<AcmTag> prepareTagsFromPropertiesFile()
     {
         List<AcmTag> tags = new ArrayList<>();
-        String jsonTagsString = null;
-        if (getTagPlugin().getPluginProperties().containsKey(TagConstants.TAGS))
-        {
-            jsonTagsString = (String) getTagPlugin().getPluginProperties().get(TagConstants.TAGS);
-            JSONArray allTagsJsonArray = new JSONArray(jsonTagsString);
-            for (int i = 0; i < allTagsJsonArray.length(); i++)
-            {
-                JSONObject tagObject = allTagsJsonArray.getJSONObject(i);
-                tags.add(prepareTagFromJsonObject(tagObject));
-            }
-            return tags;
-        }
-        else
-        {
-            return new ArrayList<>();
-        }
+        String jsonTagsString = tagConfig.getTags();
 
+        JSONArray allTagsJsonArray = new JSONArray(jsonTagsString);
+        for (int i = 0; i < allTagsJsonArray.length(); i++)
+        {
+            JSONObject tagObject = allTagsJsonArray.getJSONObject(i);
+            tags.add(prepareTagFromJsonObject(tagObject));
+        }
+        return tags;
     }
 
     private AcmTag prepareTagFromJsonObject(JSONObject jsonObject)
@@ -141,16 +133,6 @@ public class TagService
         return tag;
     }
 
-    public AcmPlugin getTagPlugin()
-    {
-        return tagPlugin;
-    }
-
-    public void setTagPlugin(AcmPlugin tagPlugin)
-    {
-        this.tagPlugin = tagPlugin;
-    }
-
     public TagDao getTagDao()
     {
         return tagDao;
@@ -159,5 +141,15 @@ public class TagService
     public void setTagDao(TagDao tagDao)
     {
         this.tagDao = tagDao;
+    }
+
+    public TagConfig getTagConfig()
+    {
+        return tagConfig;
+    }
+
+    public void setTagConfig(TagConfig tagConfig)
+    {
+        this.tagConfig = tagConfig;
     }
 }
