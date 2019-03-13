@@ -1313,7 +1313,7 @@ angular
 
                                                 var $option = $("<option/>").val(key).text(value).appendTo($select);
 
-                                                if (Util.goodValue(node.data.reviewStatus) == value) {
+                                                if (Util.goodValue(node.data.reviewStatus) === key) {
                                                     $option.attr("selected", true);
                                                 }
                                             }
@@ -1338,7 +1338,7 @@ angular
 
                                                 var $option = $("<option/>").val(key).text(value).appendTo($select);
 
-                                                if (Util.goodValue(node.data.redactionStatus) == value) {
+                                                if (Util.goodValue(node.data.redactionStatus) === key) {
                                                     $option.attr("selected", true);
                                                 }
                                             }
