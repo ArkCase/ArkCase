@@ -28,10 +28,12 @@ package com.armedia.acm.plugins.ecm.service.sync.impl;
  */
 
 import com.armedia.acm.core.AcmObject;
+import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
+import com.armedia.acm.plugins.ecm.exception.AcmFolderException;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
@@ -54,6 +56,8 @@ public class EcmFileFolderCopiedEventHandler implements ApplicationListener<EcmE
 {
 
     private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private static String COPY_MESSAGE = "The %s you were working on was copied from the content repository.";
+    private static String COPY_INTO_MESSAGE = "Into the folder you were working on was added %s from the content repository.";
     private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
     private EcmFileDao fileDao;
     private EcmFileService fileService;
@@ -83,7 +87,14 @@ public class EcmFileFolderCopiedEventHandler implements ApplicationListener<EcmE
                 if (listFiles.isEmpty())
                 {
                     // not in arkcase, so the folder that the file was copied from is not an Arkcase folder
-                    getFolderAndFilesUtils().uploadFile(ecmEvent, targetParentFolder);
+                    try
+                    {
+                        getFolderAndFilesUtils().uploadFile(ecmEvent, targetParentFolder);
+                    }
+                    catch (AcmCreateObjectFailedException | AcmUserActionFailedException e)
+                    {
+                        log.debug("Could not add file with CMIS ID [{}] to ArkCase: [{}]", ecmEvent.getNodeId(), e.getMessage(), e);
+                    }
                 }
                 else
                 {
@@ -94,22 +105,33 @@ public class EcmFileFolderCopiedEventHandler implements ApplicationListener<EcmE
         }
         else if (ecmEvent.getNodeType().equals(EcmFileConstants.ECM_SYNC_NODE_TYPE_FOLDER))
         {
-            // If it already exists, the copy has already been done in ArkCase, and no further work is needed
             AcmFolder arkCaseFolder = getFolderAndFilesUtils().lookupArkCaseFolder(ecmEvent.getNodeId());
             if (targetParentFolder != null && arkCaseFolder == null)
             {
-                    AcmFolder created = getFolderService().createFolder(targetParentFolder, ecmEvent.getNodeId(), ecmEvent.getNodeName());
-                    try
-                    {
-                    getFolderService().createFolderChildrenInArkcase(created, ecmEvent.getUserId());
-                    }
-                    catch (AcmUserActionFailedException | AcmObjectNotFoundException e)
-                    {
-                        log.debug("Can not create folder children for folder with id: {} and name: {} ", created.getId(),
-                                created.getName());
-                    }
+                AcmFolder created = null;
+                try
+                {
+                    String message = String.format(COPY_INTO_MESSAGE, ecmEvent.getNodeType());
+                    getFolderService().removeLockAndSendMessage(targetParentFolder.getId(), message);
 
-                    log.debug("Finished creating new folder with node id {}, ArkCase id {}", created.getCmisFolderId(), created.getId());
+                    created = getFolderService().createFolder(targetParentFolder, ecmEvent.getNodeId(), ecmEvent.getNodeName());
+                }
+                catch (AcmUserActionFailedException | AcmFolderException e)
+                {
+                    log.debug("Can't create new folder with node id [{}]", ecmEvent.getNodeId());
+                }
+
+                try
+                {
+                    getFolderService().recordMetadataOfExistingFolderChildren(created, ecmEvent.getUserId());
+                }
+                catch (AcmUserActionFailedException | AcmObjectNotFoundException e)
+                {
+                    log.debug("Can not create folder children for folder with id: {} and name: {} ", created.getId(),
+                            created.getName());
+                }
+
+                log.debug("Finished creating new folder with node id {}, ArkCase id {}", created.getCmisFolderId(), created.getId());
             }
             else if (targetParentFolder != null && arkCaseFolder != null)
             {
@@ -118,12 +140,13 @@ public class EcmFileFolderCopiedEventHandler implements ApplicationListener<EcmE
                     List<AcmObject> acmObjects = getFolderService().getFolderChildren(arkCaseFolder.getId());
                     if (acmObjects.isEmpty())
                     {
-                        getFolderService().createFolderChildrenInArkcase(arkCaseFolder, ecmEvent.getUserId());
+                        getFolderService().recordMetadataOfExistingFolderChildren(arkCaseFolder, ecmEvent.getUserId());
                     }
                 }
                 catch (AcmUserActionFailedException | AcmObjectNotFoundException e)
                 {
-                    log.error("Could not create children in folder with CMIS ID [{}] to ArkCase: {}", ecmEvent.getNodeId(), e.getMessage(),
+                    log.debug("Could not create children in folder with CMIS ID [{}] to ArkCase: [{}]", ecmEvent.getNodeId(),
+                            e.getMessage(),
                             e);
                 }
 
@@ -137,11 +160,14 @@ public class EcmFileFolderCopiedEventHandler implements ApplicationListener<EcmE
         EcmFile copiedFile = null;
         try
         {
+            String message = String.format(COPY_MESSAGE, originalFile.getObjectType());
+            getFileService().removeLockAndSendMessage(originalFile.getFileId(), message);
+
             copiedFile = getFileService().copyFileInArkcase(originalFile, ecmEvent.getNodeId(), targetParentFolder);
         }
         catch (AcmUserActionFailedException e)
         {
-            log.error("Could not copy file with CMIS ID [{}] to ArkCase: {}", ecmEvent.getNodeId(), e.getMessage(), e);
+            log.debug("Could not copy file with CMIS ID [{}] to ArkCase: [{}]", ecmEvent.getNodeId(), e.getMessage(), e);
         }
         return copiedFile;
     }
@@ -209,5 +235,4 @@ public class EcmFileFolderCopiedEventHandler implements ApplicationListener<EcmE
     {
         this.folderAndFilesUtils = folderAndFilesUtils;
     }
-
 }
