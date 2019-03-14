@@ -636,7 +636,8 @@
             "done": "Done",
             "close": "Close",
             "failed": "File upload failed!",
-            "uploading": "Uploading..."
+            "uploading": "Uploading...",
+            "retry": "RETRY"
         },
         "loginWarning": {
             "btnOK.text": "OK",
