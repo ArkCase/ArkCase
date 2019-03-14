@@ -116,10 +116,11 @@ public class AcmMultipartFile implements MultipartFile
     @Override
     public String getName()
     {
-        if (this.multipartFile != null)
+        //AFDP-6153, causes an issue when user tries to write file(AcmMultipartFile) to alfresco, it writes with the file original name, not the file name from the instance
+        /*if (this.multipartFile != null)
         {
             return this.multipartFile.getName();
-        }
+        }*/
 
         return name;
     }
@@ -132,10 +133,11 @@ public class AcmMultipartFile implements MultipartFile
     @Override
     public String getOriginalFilename()
     {
-        if (this.multipartFile != null)
+        //AFDP-6153, causes an issue when user tries to write file(AcmMultipartFile) to alfresco, it writes with the file original name, not the file name from the instance
+        /*if (this.multipartFile != null)
         {
             return this.multipartFile.getOriginalFilename();
-        }
+        }*/
 
         return originalFilename;
     }

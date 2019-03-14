@@ -16,6 +16,15 @@ angular.module('core').controller('UploadManagerModalController',
             delete $scope.hashMapOfAllFiles[uuid];
         };
 
+        $scope.onClickRetryUploadFile = function (uuid) {
+            var fileReadyToUploadAgain = $scope.hashMapOfAllFiles[uuid];
+            uploadPart(fileReadyToUploadAgain.uuid);
+        };
+
+        $scope.onClickCloseModal = function() {
+            $modalInstance.close();
+        };
+
         function notifySnackbarUploadFinished() {
             var uploadIcon = {
                 hide: true
@@ -56,7 +65,7 @@ angular.module('core').controller('UploadManagerModalController',
                         foundInProgress = true;
                         break;
                     }
-                    if ((Util.isObjectEmpty(fileReadyToUpload) || fileReadyToUpload.date > fileDetails.date) && fileDetails.status == ObjectService.UploadFileStatus.READY) {
+                    if ((Util.isObjectEmpty(fileReadyToUpload) || fileReadyToUpload.date > fileDetails.date) && fileDetails.status == ObjectService.UploadFileStatus.READY || fileDetails.status == ObjectService.UploadFileStatus.FAILED) {
                         fileReadyToUpload = fileDetails;
                     }
                 }
@@ -68,13 +77,13 @@ angular.module('core').controller('UploadManagerModalController',
                 }
             }
         }
-        ;
+
 
         function uploadPart(uuid) {
             var file = getPartFile(uuid);
             uploadChunks(file, uuid);
         }
-        ;
+
 
         function getParams(uuid) {
             var params = {};
@@ -93,7 +102,7 @@ angular.module('core').controller('UploadManagerModalController',
             }
             return params;
         }
-        ;
+
 
         function uploadChunks(file, uuid) {
             $scope.hashMapOfAllFiles[uuid].status = ObjectService.UploadFileStatus.IN_PROGRESS;
@@ -129,13 +138,12 @@ angular.module('core').controller('UploadManagerModalController',
                         $log.info('Merge chunk files successful');
                     });
                 }
-                $scope.onClickCloseModal = function() {
-                    $modalInstance.dismiss('close');
-                };
 
             }, function(error) {
                 $scope.hashMapOfAllFiles[uuid].status = ObjectService.UploadFileStatus.FAILED;
-                MessageService.error($translate.instant('common.directive.docTree.progressBar.failed') + ": " + error);
+                $scope.hashMapOfAllFiles[uuid].success = false;
+                $scope.hashMapOfAllFiles[uuid].currentProgress = 0;
+                MessageService.error($translate.instant('core.progressBar.failed') + ": " + error.status);
             }, function(progress) {
                 $scope.hashMapOfAllFiles[uuid].partProgress = progress.loaded;
                 var currentProgress = $scope.hashMapOfAllFiles[uuid].progress + $scope.hashMapOfAllFiles[uuid].partProgress;
@@ -176,6 +184,7 @@ angular.module('core').controller('UploadManagerModalController',
         function updateCurrentProgress(message) {
             $scope.hashMapOfAllFiles[message.uuid].status = message.status;
             $scope.hashMapOfAllFiles[message.uuid].currentProgress = message.currentProgress;
+            $scope.hashMapOfAllFiles[message.uuid].success = message.success;
         }
 
         $scope.$bus.subscribe('start-upload-chunk-file', function(fileDetails) {
@@ -199,6 +208,7 @@ angular.module('core').controller('UploadManagerModalController',
                 currentFileDetails.parentObjectNumber = fileDetails.parentObjectNumber;
                 currentFileDetails.fileLang = Util.isEmpty(fileDetails.lang) ? "en" : fileDetails.lang;
                 currentFileDetails.date = Date.now();
+                currentFileDetails.success = true;
 
                 var uuid = Util.isEmpty(fileDetails.uuid) ? Date.now().toString() + i.toString() : fileDetails.uuid;
                 currentFileDetails.uuid = uuid;
