@@ -28,7 +28,7 @@ package com.armedia.acm.plugins.alfrescorma.service;
  */
 
 import com.armedia.acm.plugins.alfrescorma.exception.AlfrescoServiceException;
-import com.armedia.acm.plugins.alfrescorma.model.AlfrescoRmaPluginConstants;
+import com.armedia.acm.plugins.alfrescorma.model.AlfrescoRmaConfig;
 import com.armedia.acm.plugins.ecm.model.EcmFileAddedEvent;
 
 import org.slf4j.Logger;
@@ -47,7 +47,8 @@ public class AcmFileListener implements ApplicationListener<EcmFileAddedEvent>
     @Override
     public void onApplicationEvent(EcmFileAddedEvent ecmFileAddedEvent)
     {
-        boolean proceed = getAlfrescoRecordsService().checkIntegrationEnabled(AlfrescoRmaPluginConstants.FILE_INTEGRATION_KEY);
+        AlfrescoRmaConfig rmaConfig = alfrescoRecordsService.getRmaConfig();
+        boolean proceed = rmaConfig.getIntegrationEnabled() && rmaConfig.getDeclareRecordFolderOnFileUpload();
 
         if (!proceed)
         {
@@ -64,7 +65,7 @@ public class AcmFileListener implements ApplicationListener<EcmFileAddedEvent>
         {
             getAlfrescoRecordsService().declareFileAsRecord(ecmFileAddedEvent.getSource().getContainer(), ecmFileAddedEvent.getEventDate(),
                     ecmFileAddedEvent.getParentObjectName(),
-                    getAlfrescoRecordsService().getAlfrescoRmaProperties().getProperty(AlfrescoRmaPluginConstants.PROPERTY_ORIGINATOR_ORG),
+                    rmaConfig.getDefaultOriginatorOrg(),
                     ecmFileAddedEvent.getUserId(), ecmFileAddedEvent.getEcmFileId(), ecmFileAddedEvent.getSource().getStatus(),
                     ecmFileAddedEvent.getObjectId());
 

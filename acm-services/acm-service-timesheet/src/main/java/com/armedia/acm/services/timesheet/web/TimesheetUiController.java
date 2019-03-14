@@ -53,7 +53,7 @@ public class TimesheetUiController
         ModelAndView retval = new ModelAndView();
         retval.setViewName("timesheet");
 
-        String treeSort = (String) getTimesheetService().getProperties().get(TimesheetConstants.SEARCH_TREE_SORT);
+        String treeSort = getTimesheetService().getConfiguration().getSearchTreeSort();
         if (null != treeSort)
         {
             retval.addObject("treeSort", treeSort);

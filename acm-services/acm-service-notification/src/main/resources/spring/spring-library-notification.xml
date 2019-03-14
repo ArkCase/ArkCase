@@ -1,43 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.springframework.org/schema/beans"
-    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
-
-    <bean id="notificationProperties" class="com.armedia.acm.reloadproperties.beans.AcmReloadablePropertiesFactoryBean">
-        <!-- note: must leave "file:" at the start of the file name for spring
-        to be able to read the file; otherwise it will try to read from the
-        classpath -->
-        <property name="location" value="file:${user.home}/.arkcase/acm/notification.properties"/>
-        <property name="ignoreResourceNotFound" value="true"/>
-        <property name="localOverride" value="false"/>
-        <property name="properties">
-            <props>
-                <prop key="notification.user.batch.run">true</prop>
-                <prop key="notification.user.batch.frequency">100000</prop>
-                <prop key="notification.user.batch.size">50</prop>
-                <prop key="notification.purge.days">30</prop>
-                <prop key="notification.send.from.system.user">false</prop>
-            </props>
-        </property>
-    </bean>
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
 
     <!-- Notification Service is defined under $HOME/.acm/spring folder -->
-
-    <!-- We need these for adding in the Notification Service defined under $HOME/.acm/spring  -->
-    <bean id="notificationUserBatchRun" class="java.lang.Boolean">
-        <constructor-arg value="${notification.user.batch.run}"/>
-    </bean>
-    <bean id="notificationUserBatchSize" class="java.lang.Integer">
-        <constructor-arg value="${notification.user.batch.size}"/>
-    </bean>
-    <bean id="notificationUserBatchFrequency" class="java.lang.Long">
-        <constructor-arg value="${notification.user.batch.frequency}"/>
-    </bean>
-    <bean id="notificationPropertyFileLocation" class="java.lang.String">
-        <constructor-arg value="${user.home}/.arkcase/acm/notification.properties"/>
-    </bean>
-    <bean id="notificationPurgeDays" class="java.lang.Long">
-        <constructor-arg value="${notification.purge.days}"/>
-    </bean>
 
     <bean id="notificationDao" class="com.armedia.acm.services.notification.dao.NotificationDao">
         <property name="notificationUtils" ref="notificationUtils"/>
@@ -76,6 +42,7 @@
 
     <bean id="acmNotificationPlugin" class="com.armedia.acm.pluginmanager.model.AcmPlugin">
         <property name="pluginName" value="Save Notification Service Plugin"/>
+        <property name="configurationPropertyService" ref="configurationPropertyService"/>
     </bean>
 
     <!-- Senders Definition -->
@@ -93,22 +60,21 @@
 
     <bean id="baseNotificationSender" class="com.armedia.acm.services.notification.service.NotificationSender" abstract="true">
         <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
-        <property name="propertyFileManager" ref="propertyFileManager"/>
-        <property name="emailSenderPropertyFileLocation" ref="emailSenderPropertyFileLocation"/>
         <property name="notificationUtils" ref="notificationUtils"/>
-        <property name="notificationTemplate" value="file:${notification.email.template.path}"/>
+        <property name="notificationTemplate" value="file:#{notificationConfig.emailTemplatePath}"/>
         <property name="userDao" ref="userJpaDao"/>
         <property name="dataService" ref="acmDataService"/>
         <property name="templatingEngine" ref="templatingEngine"/>
+        <property name="emailSenderConfig" ref="emailSenderConfig"/>
     </bean>
 
     <bean id="smtpNotificationSender" class="com.armedia.acm.services.notification.service.SmtpNotificationSender"
-        parent="baseNotificationSender">
+          parent="baseNotificationSender">
         <property name="emailSenderService" ref="smtpService"/>
     </bean>
 
     <bean id="microsoftExchangeNotificationSender" class="com.armedia.acm.services.notification.service.MicrosoftExchangeNotificationSender"
-        parent="baseNotificationSender">
+          parent="baseNotificationSender">
         <property name="emailSenderService" ref="outlookService"/>
     </bean>
 
@@ -122,11 +88,23 @@
         </property>
     </bean>
 
+    <bean id="notificationPropertyFileLocation" class="java.lang.String">
+        <constructor-arg value="${user.home}/.arkcase/acm/notification.properties"/>
+    </bean>
+
     <bean id="notificationSender" factory-bean="notificationSenderFactory" factory-method="getNotificationSender"/>
 
     <bean id="notificationUtils" class="com.armedia.acm.services.notification.service.NotificationUtils">
         <property name="acmAppConfiguration" ref="acmApplication"/>
-        <property name="notificationProperties" ref="notificationProperties"/>
         <property name="acmDataService" ref="acmDataService"/>
+        <property name="notificationConfig" ref="notificationConfig"/>
+    </bean>
+
+    <bean id="notificationFormatter" class="com.armedia.acm.services.notification.service.NotificationFormatter">
+        <property name="notificationConfig" ref="notificationConfig"/>
+    </bean>
+
+    <bean id="notificationConfig" class="com.armedia.acm.services.notification.model.NotificationConfig" scope="refresh">
+        <aop:scoped-proxy/>
     </bean>
 </beans>

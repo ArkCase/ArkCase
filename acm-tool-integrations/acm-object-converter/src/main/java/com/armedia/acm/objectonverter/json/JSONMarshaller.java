@@ -56,10 +56,24 @@ public class JSONMarshaller implements AcmMarshaller
         }
         catch (JsonProcessingException e)
         {
-            LOG.error("Error while creating JSON from Object: " + e.getMessage(), e);
+            LOG.error("Error while creating JSON from Object: {}", e.getMessage(), e);
         }
 
         return output;
+    }
+
+    @Override
+    public String marshal(Object object, Class clazz)
+    {
+        try
+        {
+            return mapper.writerFor(clazz).writeValueAsString(object);
+        }
+        catch (JsonProcessingException e)
+        {
+            LOG.error("Error while creating JSON from Object: {}", e.getMessage(), e);
+            return null;
+        }
     }
 
     public ObjectMapper getMapper()

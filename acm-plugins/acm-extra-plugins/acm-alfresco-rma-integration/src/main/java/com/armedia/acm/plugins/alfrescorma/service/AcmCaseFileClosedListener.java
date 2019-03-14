@@ -50,8 +50,8 @@ public class AcmCaseFileClosedListener implements ApplicationListener<CaseEvent>
     @Override
     public void onApplicationEvent(CaseEvent event)
     {
-        boolean checkIntegrationEnabled = getAlfrescoRecordsService()
-                .checkIntegrationEnabled(AlfrescoRmaPluginConstants.CASE_CLOSE_INTEGRATION_KEY);
+
+        boolean checkIntegrationEnabled = alfrescoRecordsService.getRmaConfig().getDeclareRecordsOnCaseClose();
 
         if (!checkIntegrationEnabled)
         {

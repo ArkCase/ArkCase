@@ -331,6 +331,10 @@ angular.module('document-details').controller(
                             $scope.$broadcast('refresh-ocr');
                         });
                     });
+
+                    $scope.$bus.subscribe('sync-progress', function(data) {
+                        MessageService.info(data.message);
+                    });
                 } ]);
 
 /**

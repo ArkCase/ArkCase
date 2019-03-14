@@ -71,10 +71,18 @@ import java.util.List;
 
 @RunWith(PowerMockRunner.class)
 @PowerMockRunnerDelegate(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = { "/spring/spring-library-category.xml", "/spring/spring-library-data-source.xml",
-        "/spring/spring-library-user-service.xml", "/spring/spring-library-context-holder.xml", "/spring/spring-library-acm-encryption.xml",
-        "/spring/spring-library-property-file-manager.xml", "/spring/spring-library-object-lock.xml", "/spring/spring-library-search.xml",
-        "/spring/spring-library-category-test.xml" })
+@ContextConfiguration(locations = { "/spring/spring-library-category.xml",
+        "/spring/spring-library-data-source.xml",
+        "/spring/spring-library-user-service.xml",
+        "/spring/spring-library-context-holder.xml",
+        "/spring/spring-library-acm-encryption.xml",
+        "/spring/spring-library-property-file-manager.xml",
+        "/spring/spring-library-object-lock.xml",
+        "/spring/spring-library-search.xml",
+        "/spring/spring-library-category-test.xml",
+        "/spring/spring-library-configuration.xml",
+        "/spring/spring-library-object-converter.xml"
+})
 @TransactionConfiguration(defaultRollback = true)
 @Transactional
 @PrepareForTest(LoggerFactory.class)
@@ -82,6 +90,12 @@ import java.util.List;
 @Ignore
 public class CategoryServiceIT
 {
+    static
+    {
+        String userHomePath = System.getProperty("user.home");
+        System.setProperty("acm.configurationserver.propertyfile", userHomePath + "/.arkcase/acm/conf.yml");
+    }
+
     @Rule
     public ExpectedException expectedException = ExpectedException.none();
     @Autowired
@@ -92,16 +106,9 @@ public class CategoryServiceIT
     private AuditPropertyEntityAdapter auditAdapter;
     @Mock
     private Logger mockedLogger;
-
-    // private Category parent;
-
     private Long parentId;
     private Long childId;
     private Long grandChildId;
-
-    // private Category child;
-
-    // private Category grandChild;
 
     @Before
     public void setUp() throws Exception

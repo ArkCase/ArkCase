@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
-
     <bean id="osProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
         <property name="properties">
             <props>
@@ -19,21 +18,23 @@
         </property>
     </bean>
     <bean id="angularResourceCopierProperties" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="placeholderPrefix" value="$["/>
+        <property name="placeholderSuffix" value="]"/>
         <property name="properties" ref="osProperties"/>
     </bean>
 
     <bean id="angularResourceCopier" class="com.armedia.acm.userinterface.angular.AngularResourceCopier">
         <property name="springActiveProfile" ref="acmSpringActiveProfile"/>
         <property name="mergeConfigFrontendTask">
-            <value>${frontEndCommandPrefix}${frontEndCommandPath}grunt${frontEndCommandSuffix} updateModulesConfig --no-color</value>
+            <value>$[frontEndCommandPrefix]$[frontEndCommandPath]grunt$[frontEndCommandSuffix] updateModulesConfig --no-color</value>
         </property>
         <property name="tempFolderPath" value="#{ systemProperties ['user.home'] }/.arkcase/tmp"/>
         <property name="deployFolderPath" value="#{ systemProperties ['user.home'] }/.arkcase/custom"/>
         <property name="yarnInstallCommand">
-            <value>${frontEndCommandPrefix}yarn --ignore-engines --no-progress --non-interactive install</value>
+            <value>$[frontEndCommandPrefix]yarn --skip-integrity-check --ignore-engines --no-progress --non-interactive install</value>
         </property>
         <property name="gruntDefaultCommand">
-            <value>${frontEndCommandPrefix}${frontEndCommandPath}grunt${frontEndCommandSuffix} --no-color</value>
+            <value>$[frontEndCommandPrefix]$[frontEndCommandPath]grunt$[frontEndCommandSuffix] --no-color</value>
         </property>
         <property name="resourceFoldersToCopyFromArchive">
             <list>

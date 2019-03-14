@@ -31,6 +31,7 @@ import com.armedia.acm.core.AcmApplication;
 import com.armedia.acm.services.email.model.EmailBodyBuilder;
 import com.armedia.acm.services.email.model.EmailBuilder;
 import com.armedia.acm.services.email.model.EmailMentionsDTO;
+import com.armedia.acm.services.email.model.MentionsEmailConfig;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,13 +53,13 @@ public class AcmEmailMentionsService
 
     private AcmEmailSenderService emailSenderService;
     private AcmApplication acmAppConfiguration;
-    private String mentionsEmailSubject;
+    private MentionsEmailConfig mentionsEmailConfig;
     private String mentionsEmailBodyTemplate;
     private TemplatingEngine templatingEngine;
 
     private String buildEmailSubject(EmailMentionsDTO in, String userFullName)
     {
-        return String.format(mentionsEmailSubject,
+        return String.format(mentionsEmailConfig.getSubject(),
                 userFullName,
                 in.getObjectType() + " " + in.getObjectId());
     }
@@ -86,7 +87,7 @@ public class AcmEmailMentionsService
                     .filter(acmObjectType -> acmObjectType.getName().equals(in.getObjectType()))
                     .map(acmObjectType -> acmObjectType.getUrl().get(subType))
                     .collect(Collectors.toList()).stream().findFirst();
-            return objectUrl.isPresent() ? baseUrl + String.format(objectUrl.get(), in.getObjectId()) : baseUrl;
+            return objectUrl.map(s -> baseUrl + String.format(s, in.getObjectId())).orElse(baseUrl);
         }
     }
 
@@ -94,7 +95,7 @@ public class AcmEmailMentionsService
             String userFullName)
     {
         EmailBodyBuilder<AbstractMap.SimpleImmutableEntry<String, List<String>>> emailBodyBuilder = emailData -> String.format(
-                mentionsEmailBodyTemplate,
+                mentionsEmailConfig.getBodyTemplate(),
                 buildObjectUrl(in),
                 buildObjectUrl(in),
                 buildEmailSubject(in, userFullName),
@@ -143,14 +144,14 @@ public class AcmEmailMentionsService
         this.acmAppConfiguration = acmAppConfiguration;
     }
 
-    public void setMentionsEmailSubject(String mentionsEmailSubject)
+    public MentionsEmailConfig getMentionsEmailConfig()
     {
-        this.mentionsEmailSubject = mentionsEmailSubject;
+        return mentionsEmailConfig;
     }
 
-    public void setMentionsEmailBodyTemplate(String mentionsEmailBodyTemplate)
+    public void setMentionsEmailConfig(MentionsEmailConfig mentionsEmailConfig)
     {
-        this.mentionsEmailBodyTemplate = mentionsEmailBodyTemplate;
+        this.mentionsEmailConfig = mentionsEmailConfig;
     }
 
     public TemplatingEngine getTemplatingEngine()

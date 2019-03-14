@@ -28,14 +28,12 @@ package com.armedia.acm.services.notification.service;
  */
 
 import com.armedia.acm.services.notification.model.Notification;
+import com.armedia.acm.services.notification.model.NotificationConfig;
 import com.armedia.acm.services.notification.model.NotificationConstants;
-
-import java.util.Properties;
 
 public class NotificationFormatter
 {
-
-    private Properties notificationProperties;
+    private NotificationConfig notificationConfig;
 
     public Notification replaceFormatPlaceholders(Notification notification)
     {
@@ -85,26 +83,23 @@ public class NotificationFormatter
 
     private String replaceObjectTypeLabel(String withPlaceholder, String placeholder, String parentType)
     {
-        String keyLabel = parentType + ".label";
-        String objectTypeLabel = getNotificationProperties().getProperty(keyLabel);
+        String objectTypeLabel = notificationConfig.getLabelForObjectType(parentType);
         return withPlaceholder.replace(placeholder, objectTypeLabel);
     }
 
     private String replaceParentTypeLabel(String withPlaceholder, String placeholder, String relatedType)
     {
-        String keyLabel = relatedType + ".label";
-        String parentTypeLabel = getNotificationProperties().getProperty(keyLabel);
+        String parentTypeLabel = notificationConfig.getLabelForObjectType(relatedType);
         return withPlaceholder.replace(placeholder, parentTypeLabel);
     }
 
-    public Properties getNotificationProperties()
+    public NotificationConfig getNotificationConfig()
     {
-        return notificationProperties;
+        return notificationConfig;
     }
 
-    public void setNotificationProperties(Properties notificationProperties)
+    public void setNotificationConfig(NotificationConfig notificationConfig)
     {
-        this.notificationProperties = notificationProperties;
+        this.notificationConfig = notificationConfig;
     }
-
 }

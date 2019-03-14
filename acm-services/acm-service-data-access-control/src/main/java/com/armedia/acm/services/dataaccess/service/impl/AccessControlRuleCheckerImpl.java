@@ -30,6 +30,7 @@ package com.armedia.acm.services.dataaccess.service.impl;
 import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.services.dataaccess.model.AccessControlRule;
 import com.armedia.acm.services.dataaccess.model.AccessControlRules;
+import com.armedia.acm.services.dataaccess.model.DataAccessControlConfig;
 import com.armedia.acm.services.dataaccess.service.AccessControlRuleChecker;
 import com.armedia.acm.services.users.model.AcmRoleToGroupMapping;
 
@@ -77,11 +78,8 @@ public class AccessControlRuleCheckerImpl implements AccessControlRuleChecker
 
     private ObjectConverter objectConverter;
 
-    // Fallback parent expressions
-    private String getObjectExpression;
-    private String editObjectExpression;
-    private String insertObjectExpression;
-    private String deleteObjectExpression;
+    private DataAccessControlConfig dacConfig;
+
     /**
      * Logger instance.
      */
@@ -210,23 +208,23 @@ public class AccessControlRuleCheckerImpl implements AccessControlRuleChecker
     private String getFallbackPermissionName(String permission)
     {
         String parentActionName = null;
-        if (permission.toLowerCase().matches("(" + getObjectExpression + ").*"))
+        if (permission.toLowerCase().matches("(" + dacConfig.getFallbackGetObjectExpression() + ").*"))
         {
             // read parent permission
             parentActionName = "getObject";
         }
         else if (permission.toLowerCase()
-                .matches("(" + editObjectExpression + ").*"))
+                .matches("(" + dacConfig.getFallbackEditObjectExpression() + ").*"))
         {
             // write parent permission
             parentActionName = "editObject";
         }
-        else if (permission.toLowerCase().matches("(" + insertObjectExpression + ").*"))
+        else if (permission.toLowerCase().matches("(" + dacConfig.getFallbackInsertObjectExpression() + ").*"))
         {
             // insert parent permission
             parentActionName = "insertObject";
         }
-        else if (permission.toLowerCase().matches("(" + deleteObjectExpression + ").*"))
+        else if (permission.toLowerCase().matches("(" + dacConfig.getFallbackDeleteObjectExpression() + ").*"))
         {
             // delete parent permission
             parentActionName = "deleteObject";
@@ -443,7 +441,7 @@ public class AccessControlRuleCheckerImpl implements AccessControlRuleChecker
         {
             String propertyName = matcher.group(1);
             Object propertyValue = targetObjectProperties.get(propertyName);
-            if (propertyValue == null || !(propertyValue instanceof String))
+            if (!(propertyValue instanceof String))
             {
                 continue;
             }
@@ -529,43 +527,13 @@ public class AccessControlRuleCheckerImpl implements AccessControlRuleChecker
         this.objectConverter = objectConverter;
     }
 
-    public String getGetObjectExpression()
+    public DataAccessControlConfig getDacConfig()
     {
-        return getObjectExpression;
+        return dacConfig;
     }
 
-    public void setGetObjectExpression(String getObjectExpression)
+    public void setDacConfig(DataAccessControlConfig dacConfig)
     {
-        this.getObjectExpression = getObjectExpression;
-    }
-
-    public String getEditObjectExpression()
-    {
-        return editObjectExpression;
-    }
-
-    public void setEditObjectExpression(String editObjectExpression)
-    {
-        this.editObjectExpression = editObjectExpression;
-    }
-
-    public String getInsertObjectExpression()
-    {
-        return insertObjectExpression;
-    }
-
-    public void setInsertObjectExpression(String insertObjectExpression)
-    {
-        this.insertObjectExpression = insertObjectExpression;
-    }
-
-    public String getDeleteObjectExpression()
-    {
-        return deleteObjectExpression;
-    }
-
-    public void setDeleteObjectExpression(String deleteObjectExpression)
-    {
-        this.deleteObjectExpression = deleteObjectExpression;
+        this.dacConfig = dacConfig;
     }
 }
