@@ -40,6 +40,8 @@ import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 import org.springframework.stereotype.Component;
 
+import java.lang.annotation.Annotation;
+
 /**
  * Around aspect targeting annotation: {@link AcmAcquireObjectLock}
  * 
@@ -93,6 +95,30 @@ public class AcmAcquireObjectLockAspect
             log.error(e.getMessage());
             throw e;
         }
+    }
+
+    @Around(value = "@annotation(acmAcquireObjectLock)")
+    public Object aroundAcquireObjectLockSingle(ProceedingJoinPoint pjp, AcmAcquireObjectLock acmAcquireObjectLock)
+            throws Throwable, AcmObjectLockException
+    {
+        AcmAcquireObjectLock.List locks = new AcmAcquireObjectLock.List()
+        {
+
+            @Override
+            public Class<? extends Annotation> annotationType()
+            {
+                return AcmAcquireObjectLock.class;
+            }
+
+            @Override
+            public AcmAcquireObjectLock[] value()
+            {
+                return new AcmAcquireObjectLock[] {
+                        acmAcquireObjectLock
+                };
+            }
+        };
+        return aroundAcquireObjectLock(pjp, locks);
     }
 
     private Long getObjectId(ProceedingJoinPoint pjp, AcmAcquireObjectLock acquireObjectLock, Object[] args)

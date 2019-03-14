@@ -40,6 +40,8 @@ import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 import org.springframework.stereotype.Component;
 
+import java.lang.annotation.Annotation;
+
 /**
  * Around aspect targeting annotation: {@link AcmReleaseObjectLock}
  * 
@@ -94,6 +96,30 @@ public class AcmReleaseObjectLockAspect
             log.error(e.getMessage());
             throw e;
         }
+    }
+
+    @Around(value = "@annotation(acmReleaseObjectLock)")
+    public Object aroundReleaseObjectLockSingle(ProceedingJoinPoint pjp, AcmReleaseObjectLock acmReleaseObjectLock)
+            throws Throwable, AcmObjectLockException
+    {
+        AcmReleaseObjectLock.List locks = new AcmReleaseObjectLock.List()
+        {
+
+            @Override
+            public Class<? extends Annotation> annotationType()
+            {
+                return AcmReleaseObjectLock.class;
+            }
+
+            @Override
+            public AcmReleaseObjectLock[] value()
+            {
+                return new AcmReleaseObjectLock[] {
+                        acmReleaseObjectLock
+                };
+            }
+        };
+        return aroundReleaseObjectLock(pjp, locks);
     }
 
     private Long getObjectId(ProceedingJoinPoint pjp, AcmReleaseObjectLock releaseObjectLock, Object[] args)
