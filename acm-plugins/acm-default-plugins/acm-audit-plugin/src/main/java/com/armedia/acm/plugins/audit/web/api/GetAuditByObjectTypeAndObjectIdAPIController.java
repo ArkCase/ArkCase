@@ -29,6 +29,7 @@ package com.armedia.acm.plugins.audit.web.api;
 
 import com.armedia.acm.audit.dao.AuditDao;
 import com.armedia.acm.audit.model.AuditEvent;
+import com.armedia.acm.audit.model.AuditEventConfig;
 import com.armedia.acm.core.query.QueryResultPageWithTotalCount;
 import com.armedia.acm.plugins.audit.model.AuditConstants;
 import com.armedia.acm.plugins.audit.service.ReplaceEventTypeNames;
@@ -47,7 +48,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author riste.tutureski
@@ -60,7 +60,7 @@ public class GetAuditByObjectTypeAndObjectIdAPIController
     private final Logger LOG = LoggerFactory.getLogger(getClass());
 
     private AuditDao auditDao;
-    private Map<String, String> auditProperties;
+    private AuditEventConfig auditEventConfig;
     private ReplaceEventTypeNames replaceEventTypeNames;
 
     @RequestMapping(value = "/{objectType}/{objectId}", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
@@ -77,7 +77,7 @@ public class GetAuditByObjectTypeAndObjectIdAPIController
         LOG.debug("Finding audit for {} with id {}; start row: {}; max rows: {}", objectType, objectId, startRow, maxRows);
 
         String key = String.format("%s.%s", objectType, AuditConstants.HISTORY_TYPES);
-        String eventTypesString = getAuditProperties().get(key);
+        String eventTypesString = auditEventConfig.getEventTypes().get(key);
         List<String> eventTypes = null;
         if (StringUtils.isNotEmpty(eventTypesString))
         {
@@ -122,14 +122,14 @@ public class GetAuditByObjectTypeAndObjectIdAPIController
         this.auditDao = dao;
     }
 
-    public Map<String, String> getAuditProperties()
+    public AuditEventConfig getAuditEventConfig()
     {
-        return auditProperties;
+        return auditEventConfig;
     }
 
-    public void setAuditProperties(Map<String, String> auditProperties)
+    public void setAuditEventConfig(AuditEventConfig auditEventConfig)
     {
-        this.auditProperties = auditProperties;
+        this.auditEventConfig = auditEventConfig;
     }
 
     public ReplaceEventTypeNames getReplaceEventTypeNames()

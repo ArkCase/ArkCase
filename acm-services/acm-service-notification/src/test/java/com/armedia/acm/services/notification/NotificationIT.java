@@ -67,14 +67,21 @@ import org.springframework.transaction.annotation.Transactional;
         "/spring/spring-library-email.xml",
         "/spring/spring-library-email-smtp.xml",
         "/spring/spring-library-calendar-config-service.xml",
-        "/spring/spring-library-calendar-integration-exchange-service.xml",
         "/spring/spring-library-object-converter.xml",
         "/spring/spring-library-ecm-file-lock.xml",
-        "/spring/spring-library-core-api.xml"
+        "/spring/spring-library-core-api.xml",
+        "/spring/spring-library-configuration.xml",
+        "/spring/spring-library-convert-folder-service.xml"
 })
 @TransactionConfiguration(defaultRollback = true, transactionManager = "transactionManager")
 public class NotificationIT
 {
+    static
+    {
+        String userHomePath = System.getProperty("user.home");
+        System.setProperty("acm.configurationserver.propertyfile", userHomePath + "/.arkcase/acm/conf.yml");
+    }
+
     @Autowired
     private NotificationDao notificationDao;
     private Logger log = LoggerFactory.getLogger(getClass());

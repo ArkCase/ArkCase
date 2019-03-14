@@ -27,127 +27,64 @@ package gov.foia.service;
  * #L%
  */
 
-import com.armedia.acm.files.ConfigurationFileChangedEvent;
-import com.armedia.acm.files.propertymanager.PropertyFileManager;
+import com.armedia.acm.configuration.service.ConfigurationPropertyService;
 import com.armedia.acm.plugins.casefile.service.SystemConfigurationService;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.context.ApplicationListener;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-
+import gov.foia.model.FoiaConfig;
 import gov.foia.model.FoiaConfiguration;
-import gov.foia.model.FoiaConfigurationConstants;
 
-public class FoiaConfigurationService extends SystemConfigurationService implements ApplicationListener<ConfigurationFileChangedEvent>
+public class FoiaConfigurationService extends SystemConfigurationService
 {
-    private PropertyFileManager propertyFileManager;
-    private String propertiesFile;
-    private Logger log = LoggerFactory.getLogger(getClass());
-    private Map<String, String> foiaProperties = new HashMap<>();
-
-    public void initBean()
-    {
-        try
-        {
-            foiaProperties = getPropertyFileManager().readFromFileAsMap((new File(getPropertiesFile())));
-        }
-        catch (IOException e)
-        {
-            log.error("Could not read properties file [{}]", getPropertiesFile());
-        }
-    }
+    private FoiaConfig foiaConfig;
+    private ConfigurationPropertyService configurationPropertyService;
 
     public void writeConfiguration(FoiaConfiguration foiaConfiguration)
     {
-        Map<String, String> properties = new HashMap<>();
-        properties.put(FoiaConfigurationConstants.MAX_DAYS_IN_BILLING_QUEUE, foiaConfiguration.getMaxDaysInBillingQueue().toString());
-        properties.put(FoiaConfigurationConstants.PURGE_REQUEST_ENABLED, foiaConfiguration.getPurgeRequestWhenInHoldEnabled().toString());
-        properties.put(FoiaConfigurationConstants.MAX_DAYS_IN_HOLD_QUEUE, foiaConfiguration.getMaxDaysInHoldQueue().toString());
-        properties.put(FoiaConfigurationConstants.HOLDED_AND_APPEALED_REQUESTS,
-                foiaConfiguration.getHoldedAndAppealedRequestsDueDateUpdateEnabled().toString());
-        properties.put(FoiaConfigurationConstants.REQUEST_EXTENSION_WORKING_DAYS_ENABLED,
-                foiaConfiguration.getRequestExtensionWorkingDaysEnabled().toString());
-        properties.put(FoiaConfigurationConstants.EXTENSTION_WORKING_DAYS, foiaConfiguration.getRequestExtensionWorkingDays().toString());
-        properties.put(FoiaConfigurationConstants.DASHBOARD_BANNER_ENABLED, foiaConfiguration.getDashboardBannerEnabled().toString());
-        properties.put(FoiaConfigurationConstants.RECEIVED_DATE_ENABLED, foiaConfiguration.getReceivedDateEnabled().toString());
-        properties.put(FoiaConfigurationConstants.NOTIFICATION_GROUPS_ENABLED, foiaConfiguration.getNotificationGroupsEnabled().toString());
-
-        getPropertyFileManager().storeMultiple(properties, getPropertiesFile(), true);
-        foiaProperties = properties;
+        foiaConfig.setMaxDaysInBillingQueue(foiaConfiguration.getMaxDaysInBillingQueue());
+        foiaConfig.setMaxDaysInHoldQueue(foiaConfiguration.getMaxDaysInHoldQueue());
+        foiaConfig.setHoldedAndAppealedRequestsDueDateUpdateEnabled(foiaConfiguration.getHoldedAndAppealedRequestsDueDateUpdateEnabled());
+        foiaConfig.setRequestExtensionWorkingDays(foiaConfiguration.getRequestExtensionWorkingDays());
+        foiaConfig.setDashboardBannerEnabled(foiaConfiguration.getDashboardBannerEnabled());
+        foiaConfig.setReceivedDateEnabled(foiaConfiguration.getReceivedDateEnabled());
+        foiaConfig.setNotificationGroupsEnabled(foiaConfiguration.getNotificationGroupsEnabled());
+        foiaConfig.setRequestExtensionWorkingDaysEnabled(foiaConfiguration.getRequestExtensionWorkingDaysEnabled());
+        foiaConfig.setPurgeRequestEnabled(foiaConfiguration.getPurgeRequestWhenInHoldEnabled());
+        configurationPropertyService.updateProperties(foiaConfiguration);
     }
 
     @Override
     public FoiaConfiguration readConfiguration()
     {
         FoiaConfiguration foiaConfiguration = new FoiaConfiguration();
-        for (String property : foiaProperties.keySet())
-        {
-            switch (property)
-            {
-            case FoiaConfigurationConstants.MAX_DAYS_IN_BILLING_QUEUE:
-                foiaConfiguration.setMaxDaysInBillingQueue(Integer.valueOf(foiaProperties.get(property)));
-                break;
-            case FoiaConfigurationConstants.MAX_DAYS_IN_HOLD_QUEUE:
-                foiaConfiguration.setMaxDaysInHoldQueue(Integer.valueOf(foiaProperties.get(property)));
-                break;
-            case FoiaConfigurationConstants.HOLDED_AND_APPEALED_REQUESTS:
-                foiaConfiguration.setHoldedAndAppealedRequestsDueDateUpdateEnabled(Boolean.valueOf(foiaProperties.get(property)));
-                break;
-            case FoiaConfigurationConstants.EXTENSTION_WORKING_DAYS:
-                foiaConfiguration.setRequestExtensionWorkingDays(Integer.valueOf(foiaProperties.get(property)));
-                break;
-            case FoiaConfigurationConstants.DASHBOARD_BANNER_ENABLED:
-                foiaConfiguration.setDashboardBannerEnabled(Boolean.valueOf(foiaProperties.get(property)));
-                break;
-            case FoiaConfigurationConstants.RECEIVED_DATE_ENABLED:
-                foiaConfiguration.setReceivedDateEnabled(Boolean.valueOf(foiaProperties.get(property)));
-                break;
-            case FoiaConfigurationConstants.NOTIFICATION_GROUPS_ENABLED:
-                foiaConfiguration.setNotificationGroupsEnabled(Boolean.valueOf(foiaProperties.get(property)));
-                break;
-            case FoiaConfigurationConstants.REQUEST_EXTENSION_WORKING_DAYS_ENABLED:
-                foiaConfiguration.setRequestExtensionWorkingDaysEnabled(Boolean.valueOf(foiaProperties.get(property)));
-                break;
-            case FoiaConfigurationConstants.PURGE_REQUEST_ENABLED:
-                foiaConfiguration.setPurgeRequestWhenInHoldEnabled(Boolean.valueOf(foiaProperties.get(property)));
-            }
-        }
-
+        foiaConfiguration.setMaxDaysInBillingQueue(foiaConfig.getMaxDaysInBillingQueue());
+        foiaConfiguration.setMaxDaysInHoldQueue(foiaConfig.getMaxDaysInHoldQueue());
+        foiaConfiguration.setHoldedAndAppealedRequestsDueDateUpdateEnabled(foiaConfig.getHoldedAndAppealedRequestsDueDateUpdateEnabled());
+        foiaConfiguration.setRequestExtensionWorkingDays(foiaConfig.getRequestExtensionWorkingDays());
+        foiaConfiguration.setDashboardBannerEnabled(foiaConfig.getDashboardBannerEnabled());
+        foiaConfiguration.setReceivedDateEnabled(foiaConfig.getReceivedDateEnabled());
+        foiaConfiguration.setNotificationGroupsEnabled(foiaConfig.getNotificationGroupsEnabled());
+        foiaConfiguration.setRequestExtensionWorkingDaysEnabled(foiaConfig.getRequestExtensionWorkingDaysEnabled());
+        foiaConfiguration.setPurgeRequestWhenInHoldEnabled(foiaConfig.getPurgeRequestEnabled());
         return foiaConfiguration;
     }
 
-    public PropertyFileManager getPropertyFileManager()
+    public FoiaConfig getFoiaConfig()
     {
-        return propertyFileManager;
+        return foiaConfig;
     }
 
-    public void setPropertyFileManager(PropertyFileManager propertyFileManager)
+    public void setFoiaConfig(FoiaConfig foiaConfig)
     {
-        this.propertyFileManager = propertyFileManager;
+        this.foiaConfig = foiaConfig;
     }
 
-    public String getPropertiesFile()
+    public ConfigurationPropertyService getConfigurationPropertyService()
     {
-        return propertiesFile;
+        return configurationPropertyService;
     }
 
-    public void setPropertiesFile(String propertiesFile)
+    public void setConfigurationPropertyService(ConfigurationPropertyService configurationPropertyService)
     {
-        this.propertiesFile = propertiesFile;
-    }
-
-    @Override
-    public void onApplicationEvent(ConfigurationFileChangedEvent event)
-    {
-        if (event.getConfigFile().getName().equals(getPropertiesFile().substring(getPropertiesFile().lastIndexOf("/") + 1)))
-        {
-            initBean();
-        }
-
+        this.configurationPropertyService = configurationPropertyService;
     }
 }

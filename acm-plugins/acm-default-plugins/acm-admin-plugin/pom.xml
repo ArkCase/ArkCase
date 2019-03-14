@@ -139,6 +139,11 @@
             <artifactId>acm-service-transcribe</artifactId>
             <version>${acm.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.armedia.acm.acm-tool-integrations</groupId>
+            <artifactId>acm-configuration</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
 
         <dependency>
             <groupId>com.armedia.acm.acm-services</groupId>

@@ -1,6 +1,3 @@
-/**
- *
- */
 package com.armedia.acm.plugins.person.service;
 
 /*-
@@ -34,7 +31,6 @@ import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUpdateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
-import com.armedia.acm.plugins.ecm.utils.ReflectionMethodsUtils;
 import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.plugins.addressable.exceptions.AcmContactMethodValidationException;
 import com.armedia.acm.plugins.addressable.service.ContactMethodsUtil;
@@ -48,9 +44,11 @@ import com.armedia.acm.plugins.ecm.service.EcmTikaFileService;
 import com.armedia.acm.plugins.ecm.service.impl.EcmFileParticipantService;
 import com.armedia.acm.plugins.ecm.service.impl.EcmTikaFile;
 import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
+import com.armedia.acm.plugins.ecm.utils.ReflectionMethodsUtils;
 import com.armedia.acm.plugins.person.dao.PersonDao;
 import com.armedia.acm.plugins.person.model.Identification;
 import com.armedia.acm.plugins.person.model.Person;
+import com.armedia.acm.plugins.person.model.PersonConfig;
 import com.armedia.acm.plugins.person.model.PersonOrganizationAssociation;
 import com.armedia.acm.plugins.person.model.PersonOrganizationConstants;
 import com.armedia.acm.plugins.person.model.xml.FrevvoPerson;
@@ -90,27 +88,15 @@ public class PersonServiceImpl implements PersonService
     private Logger log = LoggerFactory.getLogger(getClass());
 
     private PipelineManager<Person, PersonPipelineContext> personPipelineManager;
-
     private PersonDao personDao;
     private EcmFileParticipantService fileParticipantService;
-    /**
-     * Root folder for all People
-     */
-    private String peopleRootFolder = null;
-    /**
-     * folder where pictures will be kept
-     */
-    private String picturesFolder = null;
-    /**
-     * Person own folder which contains spel expression to generate folder name
-     */
-    private String personOwnFolder = null;
     private EcmFileService ecmFileService;
     private AcmFolderService acmFolderService;
     private FolderAndFilesUtils folderAndFilesUtils;
     private PersonEventPublisher personEventPublisher;
     private ObjectConverter objectConverter;
     private EcmTikaFileService ecmTikaFileService;
+    private PersonConfig personConfig;
 
     @Override
     public Person get(Long id)
@@ -260,7 +246,8 @@ public class PersonServiceImpl implements PersonService
         {
             person = createContainerAndPictureFolder(person, auth);
         }
-        AcmFolder picturesFolderObj = acmFolderService.findByNameAndParent(picturesFolder, person.getContainer().getFolder());
+        AcmFolder picturesFolderObj = acmFolderService.findByNameAndParent(personConfig.getPicturesFolder(),
+                person.getContainer().getFolder());
         Objects.requireNonNull(picturesFolderObj, "Pictures folder not found.");
 
         File pictureFile = null;
@@ -309,7 +296,8 @@ public class PersonServiceImpl implements PersonService
         Person person = personDao.find(personId);
         Objects.requireNonNull(person, "Person not found.");
 
-        AcmFolder picturesFolderObj = acmFolderService.findByNameAndParent(picturesFolder, person.getContainer().getFolder());
+        AcmFolder picturesFolderObj = acmFolderService.findByNameAndParent(personConfig.getPicturesFolder(),
+                person.getContainer().getFolder());
         Objects.requireNonNull(picturesFolderObj, "Pictures folder not found.");
 
         EcmFile uploaded;
@@ -352,7 +340,7 @@ public class PersonServiceImpl implements PersonService
         folder.setName("ROOT");
         folder.setParticipants(getFileParticipantService().getFolderParticipantsFromAssignedObject(person.getParticipants()));
 
-        String cmisFolderId = ecmFileService.createFolder(peopleRootFolder + personRootFolderName);
+        String cmisFolderId = ecmFileService.createFolder(personConfig.getFolderRoot() + personRootFolderName);
         folder.setCmisFolderId(cmisFolderId);
 
         container.setFolder(folder);
@@ -363,21 +351,21 @@ public class PersonServiceImpl implements PersonService
         person = personDao.save(person);
 
         // create Pictures folder
-        acmFolderService.addNewFolder(person.getContainer().getFolder(), picturesFolder);
+        acmFolderService.addNewFolder(person.getContainer().getFolder(), personConfig.getPicturesFolder());
         return person;
     }
 
     private String getPersonRootFolderName(Person person)
     {
         ExpressionParser ep = new SpelExpressionParser();
-        Expression exp = ep.parseExpression(personOwnFolder);
+        Expression exp = ep.parseExpression(personConfig.getFolderOwnSpel());
         EvaluationContext ec = new StandardEvaluationContext();
         return exp.getValue(ec, person, String.class);
     }
 
     @Override
-    public Person savePerson(Person in, Authentication authentication) throws AcmObjectNotFoundException, AcmCreateObjectFailedException,
-            AcmUpdateObjectFailedException, AcmUserActionFailedException, PipelineProcessException
+    public Person savePerson(Person in, Authentication authentication) throws AcmCreateObjectFailedException,
+            AcmUpdateObjectFailedException, PipelineProcessException
     {
         validateOrganizationAssociations(in);
         try
@@ -437,7 +425,7 @@ public class PersonServiceImpl implements PersonService
             StringBuilder errorMessage = new StringBuilder();
             errorMessage.append("Missing person to organization relation type!");
             missingAssocTypes.forEach(assoc -> {
-                errorMessage.append(" [OrganizationId: " + assoc.getPerson().getId() + "]");
+                errorMessage.append(" [OrganizationId: ").append(assoc.getPerson().getId()).append("]");
             });
             throw new AcmCreateObjectFailedException("Person", errorMessage.toString(), null);
         }
@@ -501,7 +489,8 @@ public class PersonServiceImpl implements PersonService
                 {
                     person = createContainerAndPictureFolder(person, authentication);
                 }
-            }   catch (AcmObjectNotFoundException e)
+            }
+            catch (AcmObjectNotFoundException e)
             {
                 log.error("Error uploading pictures to person id [{}]", person.getId());
                 return person;
@@ -519,11 +508,7 @@ public class PersonServiceImpl implements PersonService
                         hasDefaultPicture = true;
                     }
                 }
-                catch (IOException e)
-                {
-                    log.error("Error uploading picture [{}] to person id [{}]", picture, person.getId());
-                }
-                catch (AcmObjectNotFoundException e)
+                catch (IOException | AcmObjectNotFoundException e)
                 {
                     log.error("Error uploading picture [{}] to person id [{}]", picture, person.getId());
                 }
@@ -547,24 +532,9 @@ public class PersonServiceImpl implements PersonService
         this.personDao = personDao;
     }
 
-    public void setPeopleRootFolder(String peopleRootFolder)
-    {
-        this.peopleRootFolder = peopleRootFolder;
-    }
-
-    public void setPicturesFolder(String picturesFolder)
-    {
-        this.picturesFolder = picturesFolder;
-    }
-
     public void setEcmFileService(EcmFileService ecmFileService)
     {
         this.ecmFileService = ecmFileService;
-    }
-
-    public void setPersonOwnFolder(String personOwnFolder)
-    {
-        this.personOwnFolder = personOwnFolder;
     }
 
     public void setAcmFolderService(AcmFolderService acmFolderService)
@@ -627,5 +597,15 @@ public class PersonServiceImpl implements PersonService
     public void setEcmTikaFileService(EcmTikaFileService ecmTikaFileService)
     {
         this.ecmTikaFileService = ecmTikaFileService;
+    }
+
+    public PersonConfig getPersonConfig()
+    {
+        return personConfig;
+    }
+
+    public void setPersonConfig(PersonConfig personConfig)
+    {
+        this.personConfig = personConfig;
     }
 }

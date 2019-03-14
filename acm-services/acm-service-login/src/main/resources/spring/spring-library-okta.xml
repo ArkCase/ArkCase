@@ -1,38 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
-
-    <bean id="oktaProperties" class="com.armedia.acm.reloadproperties.beans.AcmReloadablePropertiesFactoryBean">
-        <property name="location" value="file:${user.home}/.arkcase/acm/okta.properties"/>
-        <property name="ignoreResourceNotFound" value="true"/>
-    </bean>
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
 
     <bean id="acmRoleRedirectFilter" class="com.armedia.acm.auth.okta.auth.AcmRoleRedirectAuthenticationFilter">
-        <property name="multiFactorConfig" ref="acmMultiFactorConfig"/>
+        <property name="oktaConfig" ref="oktaConfig"/>
     </bean>
 
     <bean id="acmMultiFactorLoginSuccessHandler" class="com.armedia.acm.auth.okta.auth.AcmMultiFactorLoginSuccessHandler">
-        <property name="acmMultiFactorConfig" ref="acmMultiFactorConfig"/>
+        <property name="oktaConfig" ref="oktaConfig"/>
         <property name="loginSuccessOperations" ref="acmLoginSuccessOperations"/>
-        <property name="defaultTargetUrl" value="${okta.defaultLoginTargetUrl}"/>
         <property name="alwaysUseDefaultTargetUrl" value="true"/>
         <property name="sessionRegistry" ref="sessionRegistry"/>
         <property name="sessionAuthenticationStrategy" ref="concurrentSessionControlAuthenticationStrategy"/>
     </bean>
 
-    <bean id="acmMultiFactorConfig" class="com.armedia.acm.auth.okta.auth.AcmMultiFactorConfig">
-        <property name="alwaysUseDefaultUrl" value="true"/>
-        <property name="defaultLoginTargetUrl" value="${okta.defaultLoginTargetUrl}"/>
-        <property name="enrollmentTargetUrl" value="${okta.enrollmentTargetUrl}"/>
-        <property name="selectMethodTargetUrl" value="${okta.selectMethodTargetUrl}"/>
-        <property name="verifyMethodTargetUrl" value="${okta.verifyMethodTargetUrl}"/>
-    </bean>
-
     <bean id="oktaRestService" class="com.armedia.acm.auth.okta.services.impl.OktaRestService">
-        <property name="idpUrl" value="${okta.idpUrl}"/>
-        <property name="token" value="${okta.token}"/>
         <property name="restTemplate" ref="restTemplate"/>
+        <property name="oktaConfig" ref="oktaConfig"/>
     </bean>
 
     <bean id="restTemplate" class="org.springframework.web.client.RestTemplate">
@@ -52,11 +37,13 @@
 
     <bean id="oktaUserService" class="com.armedia.acm.auth.okta.services.impl.OktaUserServiceImpl">
         <property name="oktaRestService" ref="oktaRestService"/>
-        <property name="multiFactorConfig" ref="acmMultiFactorConfig"/>
     </bean>
 
     <bean id="factorVerificationService" class="com.armedia.acm.auth.okta.services.impl.FactorVerificationServiceImpl">
         <property name="oktaRestService" ref="oktaRestService"/>
     </bean>
 
+    <bean id="oktaConfig" class="com.armedia.acm.auth.okta.model.OktaConfig" scope="refresh">
+        <aop:scoped-proxy/>
+    </bean>
 </beans>

@@ -43,12 +43,15 @@ import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.AcmFolderConstants;
 import com.armedia.acm.plugins.ecm.model.DeleteFolderInfo;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
+import com.armedia.acm.plugins.ecm.model.EcmFileConfig;
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.ecm.utils.CmisConfigUtils;
 import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
 import com.armedia.acm.service.objectlock.annotation.AcmAcquireAndReleaseObjectLock;
+import com.armedia.acm.service.objectlock.model.AcmObjectLock;
+import com.armedia.acm.service.objectlock.service.AcmObjectLockService;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 
 import org.apache.chemistry.opencmis.client.api.CmisObject;
@@ -65,6 +68,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
+import org.springframework.messaging.MessageChannel;
+import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -80,7 +85,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Properties;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -100,9 +104,11 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
     private MuleContextManager muleContextManager;
     private EcmFileService fileService;
     private FolderAndFilesUtils folderAndFilesUtils;
-    private Properties ecmFileServiceProperties;
     private CmisConfigUtils cmisConfigUtils;
     private EcmFileParticipantService fileParticipantService;
+    private EcmFileConfig ecmFileConfig;
+    private MessageChannel genericMessagesChannel;
+    private AcmObjectLockService objectLockService;
 
     @Override
     @AcmAcquireAndReleaseObjectLock(objectIdArgIndex = 0, objectType = "FOLDER", lockType = "WRITE", lockChildObjects = false, unlockChildObjects = false)
@@ -263,7 +269,7 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
         }
         else
         {
-            String defaultCmisId = ecmFileServiceProperties.getProperty("ecm.defaultCmisId");
+            String defaultCmisId = ecmFileConfig.getDefaultCmisId();
             findFolderProperties.put(AcmFolderConstants.CONFIGURATION_REFERENCE, cmisConfigUtils.getCmisConfiguration(defaultCmisId));
         }
         MuleMessage findFolderMessage = getMuleContextManager().send(AcmFolderConstants.MULE_ENDPOINT_GET_FOLDER, null,
@@ -934,7 +940,7 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
         String cmisRepositoryId = folder.getCmisRepositoryId();
         if (cmisRepositoryId == null)
         {
-            cmisRepositoryId = ecmFileServiceProperties.getProperty("ecm.defaultCmisId");
+            cmisRepositoryId = ecmFileConfig.getDefaultCmisId();
         }
         return cmisRepositoryId;
     }
@@ -1028,7 +1034,7 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
      * @throws AcmUserActionFailedException
      */
     @Override
-    public void createFolderChildrenInArkcase(AcmFolder parentFolder, String userId)
+    public void recordMetadataOfExistingFolderChildren(AcmFolder parentFolder, String userId)
             throws AcmObjectNotFoundException, AcmUserActionFailedException
     {
         ItemIterable<CmisObject> folderChildren = getFolderChildrenFromContentRepository(parentFolder.getId());
@@ -1042,7 +1048,14 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
                 {
                     if (getFileDao().findByCmisFileId(cmisFileId).size() == 0)
                     {
-                        getFolderAndFilesUtils().uploadFile(cmisFileId, cmisObject.getName(), userId, parentFolder);
+                        try
+                        {
+                            getFolderAndFilesUtils().uploadFile(cmisFileId, cmisObject.getName(), userId, parentFolder);
+                        }
+                        catch (AcmCreateObjectFailedException e)
+                        {
+                            log.debug("Could not add file with CMIS ID [{}] to ArkCase: [{}]", cmisFileId, e.getMessage(), e);
+                        }
                     }
                 }
                 catch (NoResultException e)
@@ -1057,8 +1070,16 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
                 // create the folder and check for children, if any create them
                 Folder folder = (Folder) cmisObject;
                 String cmisFolderId = folder.getId();
-                AcmFolder created = createFolder(parentFolder, cmisFolderId, cmisObject.getName());
-                createFolderChildrenInArkcase(created, userId);
+                AcmFolder created = null;
+                try
+                {
+                    created = createFolder(parentFolder, cmisFolderId, cmisObject.getName());
+                }
+                catch (AcmFolderException e)
+                {
+                    log.debug("Can't create new folder with id {}", cmisObject.getId());
+                }
+                recordMetadataOfExistingFolderChildren(created, userId);
             }
         }
     }
@@ -1107,19 +1128,10 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
 
     @Override
     public AcmFolder createFolder(AcmFolder targetParentFolder, String cmisFolderId, String folderName)
+            throws AcmFolderException, AcmUserActionFailedException
     {
         String cmisRepositoryId = getCmisRepositoryId(targetParentFolder);
-        AcmFolder created = null;
-        try
-        {
-            created = prepareFolder(targetParentFolder, cmisFolderId, folderName,
-                    cmisRepositoryId);
-        }
-        catch (AcmUserActionFailedException | AcmFolderException e)
-        {
-            log.debug("Can't create new folder with node id {}, ArkCase id {}", created.getCmisFolderId(), created.getId());
-        }
-        return created;
+        return prepareFolder(targetParentFolder, cmisFolderId, folderName, cmisRepositoryId);
     }
 
     private String createNewFolderAndReturnCmisID(AcmFolder folder, Map<String, Object> properties)
@@ -1495,6 +1507,24 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
     }
 
     @Override
+    @Transactional
+    public void removeLockAndSendMessage(Long objectId, String message)
+    {
+        AcmObjectLock lock = getObjectLockService().findLock(objectId, AcmFolderConstants.OBJECT_FOLDER_TYPE);
+        if (lock != null)
+        {
+            Map<String, Object> payload = new HashMap<>();
+            payload.put("user", lock.getCreator());
+            payload.put("eventType", "sync-progress");
+            payload.put("message", message);
+
+            getObjectLockService().removeLock(lock);
+
+            getGenericMessagesChannel().send(MessageBuilder.withPayload(payload).build());
+        }
+    }
+
+    @Override
     public AcmFolder saveFolder(AcmFolder folder)
     {
         return getFolderDao().save(folder);
@@ -1571,16 +1601,6 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
         this.folderAndFilesUtils = folderAndFilesUtils;
     }
 
-    public Properties getEcmFileServiceProperties()
-    {
-        return ecmFileServiceProperties;
-    }
-
-    public void setEcmFileServiceProperties(Properties ecmFileServiceProperties)
-    {
-        this.ecmFileServiceProperties = ecmFileServiceProperties;
-    }
-
     public CmisConfigUtils getCmisConfigUtils()
     {
         return cmisConfigUtils;
@@ -1599,5 +1619,34 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
     public void setFileParticipantService(EcmFileParticipantService fileParticipantService)
     {
         this.fileParticipantService = fileParticipantService;
+    }
+
+    public EcmFileConfig getEcmFileConfig()
+    {
+        return ecmFileConfig;
+    }
+
+    public void setEcmFileConfig(EcmFileConfig ecmFileConfig)
+    {
+        this.ecmFileConfig = ecmFileConfig;
+    }
+
+    public MessageChannel getGenericMessagesChannel()
+    {
+        return genericMessagesChannel;
+    }
+
+    public void setGenericMessagesChannel(MessageChannel genericMessagesChannel)
+    {
+        this.genericMessagesChannel = genericMessagesChannel;
+    }
+
+    public AcmObjectLockService getObjectLockService()
+    {
+        return objectLockService;
+    }
+
+    public void setObjectLockService(AcmObjectLockService objectLockService) {
+        this.objectLockService = objectLockService;
     }
 }

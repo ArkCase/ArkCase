@@ -53,6 +53,8 @@ public class EcmFileFolderMovedEventHandler implements ApplicationListener<EcmEv
 {
 
     private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private static String MOVED_MESSAGE = "The %s you were working on was moved from the content repository.";
+    private static String MOVED_INTO_MESSAGE = "Into the folder you were working on was added %s from the content repository.";
     private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
     private EcmFileService fileService;
     private AcmFolderService folderService;
@@ -77,7 +79,17 @@ public class EcmFileFolderMovedEventHandler implements ApplicationListener<EcmEv
             }
             else if (sourceParentFolder == null && targetParentFolder != null)
             {
-                getFolderAndFilesUtils().uploadFile(ecmEvent, targetParentFolder);
+                try
+                {
+                    String message = String.format(MOVED_INTO_MESSAGE, ecmEvent.getNodeType());
+                    getFolderService().removeLockAndSendMessage(targetParentFolder.getId(), message);
+
+                    getFolderAndFilesUtils().uploadFile(ecmEvent, targetParentFolder);
+                }
+                catch (AcmCreateObjectFailedException | AcmUserActionFailedException e)
+                {
+                    log.error("Could not add file with CMIS ID [{}] to ArkCase: {}", ecmEvent.getNodeId(), e.getMessage(), e);
+                }
             }
         }
         else if (ecmEvent.getNodeType().equals(EcmFileConstants.ECM_SYNC_NODE_TYPE_FOLDER))
@@ -92,11 +104,22 @@ public class EcmFileFolderMovedEventHandler implements ApplicationListener<EcmEv
             }
             else if (sourceParentFolder == null && targetParentFolder != null)
             {
-                AcmFolder created = getFolderService().createFolder(targetParentFolder, ecmEvent.getNodeId(), ecmEvent.getNodeName());
+                AcmFolder created = null;
+                try
+                {
+                    String message = String.format(MOVED_INTO_MESSAGE, ecmEvent.getNodeType());
+                    getFolderService().removeLockAndSendMessage(targetParentFolder.getId(), message);
+
+                    created = getFolderService().createFolder(targetParentFolder, ecmEvent.getNodeId(), ecmEvent.getNodeName());
+                }
+                catch (AcmUserActionFailedException | AcmFolderException e)
+                {
+                    log.debug("Can't create new folder with node id [{}]", ecmEvent.getNodeId());
+                }
 
                 try
                 {
-                    getFolderService().createFolderChildrenInArkcase(created, ecmEvent.getUserId());
+                    getFolderService().recordMetadataOfExistingFolderChildren(created, ecmEvent.getUserId());
                 }
                 catch (AcmUserActionFailedException | AcmObjectNotFoundException e)
                 {
@@ -116,6 +139,9 @@ public class EcmFileFolderMovedEventHandler implements ApplicationListener<EcmEv
             EcmFile arkCaseFile = getFolderAndFilesUtils().lookupArkCaseFile(ecmEvent.getNodeId(), sourceParentFolder.getId());
             if (arkCaseFile != null)
             {
+                String message = String.format(MOVED_MESSAGE, arkCaseFile.getObjectType());
+                getFileService().removeLockAndSendMessage(arkCaseFile.getFileId(), message);
+
                 getFileService().deleteFileInArkcase(arkCaseFile);
                 log.info("Deleted file with CMIS ID [{}]", ecmEvent.getNodeId());
             }
@@ -132,6 +158,9 @@ public class EcmFileFolderMovedEventHandler implements ApplicationListener<EcmEv
         AcmFolder arkCaseFolder = getFolderAndFilesUtils().lookupArkCaseFolder(ecmEvent.getNodeId());
         if (arkCaseFolder != null)
         {
+            String message = String.format(MOVED_MESSAGE, arkCaseFolder.getObjectType());
+            getFolderService().removeLockAndSendMessage(arkCaseFolder.getId(), message);
+
             getFolderService().deleteFolderContent(arkCaseFolder, AuthenticationUtils.getUsername());
             log.info("Deleted folder with CMIS ID [{}]", ecmEvent.getNodeId());
         }
@@ -144,6 +173,9 @@ public class EcmFileFolderMovedEventHandler implements ApplicationListener<EcmEv
         {
             try
             {
+                String message = String.format(MOVED_MESSAGE, arkCaseFile.getObjectType());
+                getFileService().removeLockAndSendMessage(arkCaseFile.getId(), message);
+
                 EcmFile movedFile = getFileService().moveFileInArkcase(arkCaseFile, targetParentFolder, ecmEvent.getTargetParentNodeType());
                 log.info("Moved file to ArkCase with CMIS ID [{}] and ArkCase ID [{}]", ecmEvent.getNodeId(), movedFile.getId());
                 return movedFile;
@@ -163,6 +195,9 @@ public class EcmFileFolderMovedEventHandler implements ApplicationListener<EcmEv
         {
             try
             {
+                String message = String.format(MOVED_MESSAGE, arkCaseFolder.getObjectType());
+                getFolderService().removeLockAndSendMessage(arkCaseFolder.getId(), message);
+
                 AcmFolder movedFolder = getFolderService().moveFolderInArkcase(arkCaseFolder, targetParentFolder);
                 log.info("Moved folder to ArkCase with CMIS ID [{}] and ArkCase ID [{}]", ecmEvent.getNodeId(), movedFolder.getId());
                 return movedFolder;

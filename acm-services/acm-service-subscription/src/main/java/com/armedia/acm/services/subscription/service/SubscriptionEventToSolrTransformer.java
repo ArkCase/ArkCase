@@ -27,7 +27,7 @@ package com.armedia.acm.services.subscription.service;
  * #L%
  */
 
-import com.armedia.acm.pluginmanager.model.AcmPlugin;
+import com.armedia.acm.audit.model.AuditEventConfig;
 import com.armedia.acm.services.notification.service.NotificationFormatter;
 import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
 import com.armedia.acm.services.search.model.solr.SolrDocument;
@@ -38,9 +38,7 @@ import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by marjan.stefanoski on 29.01.2015.
@@ -49,10 +47,9 @@ public class SubscriptionEventToSolrTransformer implements AcmObjectToSolrDocTra
 {
 
     private SubscriptionEventDao subscriptionEventDao;
-    private AcmPlugin subscriptionEventPlugin;
     private UserDao userDao;
-    private NotificationFormatter notificationFormater;
-    private Map<String, Object> eventTypeProperties = new HashMap<>();
+    private NotificationFormatter notificationFormatter;
+    private AuditEventConfig auditEventConfig;
 
     @Override
     public List<AcmSubscriptionEvent> getObjectsModifiedSince(Date lastModified, int start, int pageSize)
@@ -75,18 +72,10 @@ public class SubscriptionEventToSolrTransformer implements AcmObjectToSolrDocTra
         solr.setModified_date_tdt(in.getModified());
         solr.setModifier_lcs(in.getModifier());
 
-        String title;
-        if (in.getEventType() != null && getSubscriptionEventPlugin().getPluginProperties().containsKey(in.getEventType()))
-        {
-            title = (String) getSubscriptionEventPlugin().getPluginProperties().get(in.getEventType());
-        }
-        else
-        {
-            title = in.getEventObjectType() + " " + in.getEventObjectId() + ": "
-                    + getEventTypeProperties().getOrDefault("eventType." + in.getEventType(), "Was updated");
-        }
+        String event = auditEventConfig.getEventTypes().getOrDefault("eventType." + in.getEventType(), "Was updated");
+        String title = in.getEventObjectType() + " " + in.getEventObjectId() + ": " + event;
 
-        solr.setTitle_parseable(notificationFormater.replaceSubscriptionTitle(title, in.getEventObjectType(), in.getEventObjectType()));
+        solr.setTitle_parseable(notificationFormatter.replaceSubscriptionTitle(title, in.getEventObjectType(), in.getEventObjectType()));
 
         if (in.getEventObjectId() != null)
         {
@@ -137,19 +126,7 @@ public class SubscriptionEventToSolrTransformer implements AcmObjectToSolrDocTra
         solr.setLast_modified_tdt(in.getModified());
         solr.setModifier_s(in.getModifier());
 
-        String title;
-        if (in.getEventType() != null && getSubscriptionEventPlugin().getPluginProperties().containsKey(in.getEventType()))
-        {
-            title = (String) getSubscriptionEventPlugin().getPluginProperties().get(in.getEventType());
-        }
-        else if (in.getEventType() != null)
-        {
-            title = "Subscription on " + in.getEventObjectType() + ":" + in.getEventObjectId() + " - " + in.getEventObjectName();
-        }
-        else
-        {
-            title = "";
-        }
+        String title = "Subscription on " + in.getEventObjectType() + ":" + in.getEventObjectId() + " - " + in.getEventObjectName();
         solr.setTitle_parseable(title);
         solr.setParent_object_id_s(Long.toString(in.getEventObjectId()));
 
@@ -178,16 +155,6 @@ public class SubscriptionEventToSolrTransformer implements AcmObjectToSolrDocTra
         this.subscriptionEventDao = subscriptionEventDao;
     }
 
-    public AcmPlugin getSubscriptionEventPlugin()
-    {
-        return subscriptionEventPlugin;
-    }
-
-    public void setSubscriptionEventPlugin(AcmPlugin subscriptionEventPlugin)
-    {
-        this.subscriptionEventPlugin = subscriptionEventPlugin;
-    }
-
     public UserDao getUserDao()
     {
         return userDao;
@@ -198,29 +165,29 @@ public class SubscriptionEventToSolrTransformer implements AcmObjectToSolrDocTra
         this.userDao = userDao;
     }
 
-    public NotificationFormatter getNotificationFormater()
+    public NotificationFormatter getNotificationFormatter()
     {
-        return notificationFormater;
+        return notificationFormatter;
     }
 
-    public void setNotificationFormater(NotificationFormatter notificationFormater)
+    public void setNotificationFormatter(NotificationFormatter notificationFormatter)
     {
-        this.notificationFormater = notificationFormater;
-    }
-
-    public Map<String, Object> getEventTypeProperties()
-    {
-        return eventTypeProperties;
-    }
-
-    public void setEventTypeProperties(Map<String, Object> eventTypeProperties)
-    {
-        this.eventTypeProperties = eventTypeProperties;
+        this.notificationFormatter = notificationFormatter;
     }
 
     @Override
     public Class<?> getAcmObjectTypeSupported()
     {
         return AcmSubscriptionEvent.class;
+    }
+
+    public AuditEventConfig getAuditEventConfig()
+    {
+        return auditEventConfig;
+    }
+
+    public void setAuditEventConfig(AuditEventConfig auditEventConfig)
+    {
+        this.auditEventConfig = auditEventConfig;
     }
 }

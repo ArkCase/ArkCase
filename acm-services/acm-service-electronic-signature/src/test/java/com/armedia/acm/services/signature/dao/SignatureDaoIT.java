@@ -50,11 +50,19 @@ import java.util.List;
         "/spring/spring-library-electronic-signature-dao.xml",
         "/spring/spring-library-context-holder.xml",
         "/spring/spring-library-property-file-manager.xml",
-        "/spring/spring-library-acm-encryption.xml"
+        "/spring/spring-library-acm-encryption.xml",
+        "/spring/spring-library-configuration.xml",
+        "/spring/spring-library-object-converter.xml"
 })
 @TransactionConfiguration(defaultRollback = true, transactionManager = "transactionManager")
 public class SignatureDaoIT extends BaseTestCase
 {
+    static
+    {
+        String userHomePath = System.getProperty("user.home");
+        System.setProperty("acm.configurationserver.propertyfile", userHomePath + "/.arkcase/acm/conf.yml");
+    }
+
     @Autowired
     private SignatureDao dao;
 

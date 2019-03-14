@@ -31,6 +31,7 @@ import com.armedia.acm.auth.AcmAuthentication;
 import com.armedia.acm.auth.AuthenticationUtils;
 import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.data.AcmNameDao;
+import com.armedia.acm.email.model.EmailReceiverConfig;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.casefile.service.SaveCaseService;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
@@ -46,7 +47,6 @@ import com.armedia.acm.web.api.MDCConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
-import org.springframework.core.io.Resource;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
@@ -62,23 +62,19 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.lang.reflect.InvocationTargetException;
 import java.util.List;
-import java.util.Properties;
-import java.util.Set;
 import java.util.UUID;
-import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class NewCaseFileMailHandler extends AcmObjectMailHandler
 {
-
     private final Logger log = LoggerFactory.getLogger(getClass());
+
     private SaveCaseService saveCaseService;
     private LookupDao lookupDao;
-    private Resource emailReceiverPropertiesResource;
     private ReadWriteLock lock = new ReentrantReadWriteLock();
+    private EmailReceiverConfig emailReceiverConfig;
 
     public NewCaseFileMailHandler(AcmNameDao dao)
     {
@@ -112,40 +108,6 @@ public class NewCaseFileMailHandler extends AcmObjectMailHandler
         personAssociation.setPerson(person);
 
         return personAssociation;
-    }
-
-    private String setUserId()
-    {
-
-        String userId = null;
-        Properties emailReceiverProperties = new Properties();
-
-        Lock readLock = lock.readLock();
-        readLock.lock();
-
-        try (InputStream propertyInputStream = emailReceiverPropertiesResource.getInputStream())
-        {
-            emailReceiverProperties.load(propertyInputStream);
-        }
-        catch (IOException e)
-        {
-            log.error("Could not read properties from [{}] file.", emailReceiverPropertiesResource.getFilename());
-        }
-        finally
-        {
-            readLock.unlock();
-        }
-        Set<String> propertyNames = emailReceiverProperties.stringPropertyNames();
-        for (String propertyName : propertyNames)
-        {
-            String propertyValue = emailReceiverProperties.getProperty(propertyName);
-            if (propertyName.equals("email.userId"))
-            {
-                userId = propertyValue;
-            }
-        }
-        return userId;
-
     }
 
     private String setCaseFileType()
@@ -184,15 +146,14 @@ public class NewCaseFileMailHandler extends AcmObjectMailHandler
 
     @Override
     @Transactional
-    public void handle(Message message) throws MessagingException, IllegalAccessException, IllegalArgumentException,
-            InvocationTargetException, NoSuchMethodException, SecurityException, IOException
+    public void handle(Message message) throws MessagingException, IllegalArgumentException, SecurityException, IOException
     {
         if (!isEnabled())
         {
             return;
         }
 
-        String userId = setUserId();
+        String userId = emailReceiverConfig.getEmailUserId();
         getAuditPropertyEntityAdapter().setUserId(userId);
 
         // set the Alfresco user id, so we can attach the incoming message to the parent object.
@@ -266,13 +227,13 @@ public class NewCaseFileMailHandler extends AcmObjectMailHandler
         this.lookupDao = lookupDao;
     }
 
-    public Resource getEmailReceiverPropertiesResource()
+    public EmailReceiverConfig getEmailReceiverConfig()
     {
-        return emailReceiverPropertiesResource;
+        return emailReceiverConfig;
     }
 
-    public void setEmailReceiverPropertiesResource(Resource emailReceiverPropertiesResource)
+    public void setEmailReceiverConfig(EmailReceiverConfig emailReceiverConfig)
     {
-        this.emailReceiverPropertiesResource = emailReceiverPropertiesResource;
+        this.emailReceiverConfig = emailReceiverConfig;
     }
 }

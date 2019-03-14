@@ -10,7 +10,7 @@
         <property name="containerEntityDao" ref="acmContainerFolderDao"/>
         <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
         <property name="entityIdForQuery" value="id"/>
-        <property name="closedStates" value="${casefile.status.closed}"/>
+        <property name="closedStates" value="#{caseConfig.statusClosed}"/>
         <property name="permissionEvaluator" ref="arkPermissionEvaluator"/>
         <property name="readPermission" value="viewCaseDetailsPage"/>
         <property name="writePermission" value="editCase"/>
@@ -24,7 +24,7 @@
         <property name="containerEntityDao" ref="acmContainerFolderDao"/>
         <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
         <property name="entityIdForQuery" value="complaintId"/>
-        <property name="closedStates" value="${complaint.status.closed}"/>
+        <property name="closedStates" value="#{complaintConfig.statusClosed}"/>
         <property name="permissionEvaluator" ref="arkPermissionEvaluator"/>
         <property name="readPermission" value="viewComplaintDetailsPage"/>
         <property name="writePermission" value="editComplaint"/>

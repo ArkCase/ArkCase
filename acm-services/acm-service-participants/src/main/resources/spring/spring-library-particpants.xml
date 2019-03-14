@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
 
     <bean id="acmParticipantDao" class="com.armedia.acm.services.participants.dao.AcmParticipantDao"/>
 
@@ -12,21 +12,9 @@
 
     <bean id="acmParticipantEventPublisher" class="com.armedia.acm.services.participants.service.AcmParticipantEventPublisher"/>
 
-    <bean id="participantProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
-        <!-- note: must leave "file:" at the start of the file name for spring
-        to be able to read the file; otherwise it will try to read from the
-        classpath -->
-        <property name="location" value="file:${user.home}/.arkcase/acm/participantPlugin.properties"/>
-        <property name="ignoreResourceNotFound" value="true"/>
-        <property name="localOverride" value="false"/>
-        <property name="properties">
-            <props></props>
-        </property>
-    </bean>
-
     <bean id="participantPlugin" class="com.armedia.acm.pluginmanager.model.AcmPlugin">
         <property name="pluginName" value="Participant Plugin"/>
-        <property name="pluginProperties" ref="participantProperties"/>
+        <property name="configurationPropertyService" ref="configurationPropertyService"/>
     </bean>
 
     <bean id="participantToSolrTransformer" class="com.armedia.acm.services.participants.service.ParticipantToSolrTransformer">
@@ -35,7 +23,7 @@
     </bean>
 
     <bean id="participantsBusinessRule" class="com.armedia.acm.services.participants.service.ParticipantsBusinessRule"
-        parent="simpleStatelessSingleObjectRuleManager">
+          parent="simpleStatelessSingleObjectRuleManager">
         <property name="ruleSpreadsheetFilename" value="drools-participant-assignment-rules.xlsx"/>
     </bean>
 </beans>

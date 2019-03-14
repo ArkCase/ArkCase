@@ -34,6 +34,7 @@ import static org.easymock.EasyMock.newCapture;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
+import com.armedia.acm.audit.model.AuditConfig;
 import com.armedia.acm.audit.model.AuditConstants;
 import com.armedia.acm.audit.model.AuditEvent;
 import com.armedia.acm.audit.service.AuditService;
@@ -84,6 +85,7 @@ public class AcmAuditRequestInterceptorTest extends EasyMockSupport
     private AcmAuditRequestInterceptor interceptor;
     private AuditService mockAuditService;
     private HttpServletRequest mockRequest;
+    private AuditConfig auditConfig;
 
     @Before
     public void setUp() throws Exception
@@ -91,6 +93,8 @@ public class AcmAuditRequestInterceptorTest extends EasyMockSupport
         interceptor = new AcmAuditRequestInterceptor();
         mockRequest = createMock(HttpServletRequest.class);
         mockAuditService = createMock(AuditService.class);
+        auditConfig = new AuditConfig();
+        interceptor.setAuditConfig(auditConfig);
         interceptor.setAuditService(mockAuditService);
         MDC.put(MDCConstants.EVENT_MDC_REQUEST_ID_KEY, requestID.toString());
         MDC.put(MDCConstants.EVENT_MDC_REQUEST_REMOTE_ADDRESS_KEY, remoteAddress);
@@ -101,11 +105,10 @@ public class AcmAuditRequestInterceptorTest extends EasyMockSupport
     public void preHandleDoesNotAuditRequestWhenRequestLoggingDisabled() throws Exception
     {
         // given
-        interceptor.setRequestsLoggingEnabled(false);
-        interceptor.setRequestsLoggingHeadersEnabled(true);
-        interceptor.setRequestsLoggingCookiesEnabled(true);
-        interceptor.setRequestsLoggingBodyEnabled(true);
-
+        auditConfig.setRequestsLoggingEnabled(false);
+        auditConfig.setRequestsLoggingHeadersEnabled(true);
+        auditConfig.setRequestsLoggingCookiesEnabled(true);
+        auditConfig.setRequestsLoggingBodyEnabled(true);
         // when
         replayAll();
         interceptor.preHandle(mockRequest, null, null);
@@ -118,10 +121,10 @@ public class AcmAuditRequestInterceptorTest extends EasyMockSupport
     public void preHandleDoesNotAuditRequestHeadersWhenRequestHeadersLoggingDisabled() throws Exception
     {
         // given
-        interceptor.setRequestsLoggingEnabled(true);
-        interceptor.setRequestsLoggingHeadersEnabled(false);
-        interceptor.setRequestsLoggingCookiesEnabled(false);
-        interceptor.setRequestsLoggingBodyEnabled(false);
+        auditConfig.setRequestsLoggingEnabled(true);
+        auditConfig.setRequestsLoggingHeadersEnabled(false);
+        auditConfig.setRequestsLoggingCookiesEnabled(false);
+        auditConfig.setRequestsLoggingBodyEnabled(false);
 
         expect(mockRequest.getMethod()).andReturn(postMethod);
         expect(mockRequest.getProtocol()).andReturn(protocol);
@@ -157,10 +160,10 @@ public class AcmAuditRequestInterceptorTest extends EasyMockSupport
     public void preHandleDoesNotAuditRequestCookiesWhenRequestCookiesLoggingDisabled() throws Exception
     {
         // given
-        interceptor.setRequestsLoggingEnabled(true);
-        interceptor.setRequestsLoggingHeadersEnabled(true);
-        interceptor.setRequestsLoggingCookiesEnabled(false);
-        interceptor.setRequestsLoggingBodyEnabled(false);
+        auditConfig.setRequestsLoggingEnabled(true);
+        auditConfig.setRequestsLoggingHeadersEnabled(true);
+        auditConfig.setRequestsLoggingCookiesEnabled(false);
+        auditConfig.setRequestsLoggingBodyEnabled(false);
 
         expect(mockRequest.getMethod()).andReturn(postMethod);
         expect(mockRequest.getProtocol()).andReturn(protocol);
@@ -202,10 +205,10 @@ public class AcmAuditRequestInterceptorTest extends EasyMockSupport
     public void preHandleDoesNotAuditRequestBodyWhenRequestBodyLoggingDisabled() throws Exception
     {
         // given
-        interceptor.setRequestsLoggingEnabled(true);
-        interceptor.setRequestsLoggingHeadersEnabled(true);
-        interceptor.setRequestsLoggingCookiesEnabled(true);
-        interceptor.setRequestsLoggingBodyEnabled(false);
+        auditConfig.setRequestsLoggingEnabled(true);
+        auditConfig.setRequestsLoggingHeadersEnabled(true);
+        auditConfig.setRequestsLoggingCookiesEnabled(true);
+        auditConfig.setRequestsLoggingBodyEnabled(false);
 
         expect(mockRequest.getMethod()).andReturn(postMethod);
         expect(mockRequest.getProtocol()).andReturn(protocol);
@@ -250,10 +253,10 @@ public class AcmAuditRequestInterceptorTest extends EasyMockSupport
     public void preHandleAuditsBodyInRequestWhenPOST() throws Exception
     {
         // given
-        interceptor.setRequestsLoggingEnabled(true);
-        interceptor.setRequestsLoggingHeadersEnabled(true);
-        interceptor.setRequestsLoggingCookiesEnabled(true);
-        interceptor.setRequestsLoggingBodyEnabled(true);
+        auditConfig.setRequestsLoggingEnabled(true);
+        auditConfig.setRequestsLoggingHeadersEnabled(true);
+        auditConfig.setRequestsLoggingCookiesEnabled(true);
+        auditConfig.setRequestsLoggingBodyEnabled(true);
 
         expect(mockRequest.getMethod()).andReturn(postMethod).anyTimes();
         expect(mockRequest.getProtocol()).andReturn(protocol);
@@ -300,10 +303,10 @@ public class AcmAuditRequestInterceptorTest extends EasyMockSupport
     public void preHandleDoesNotAuditBodyInRequestWhenGET() throws Exception
     {
         // given
-        interceptor.setRequestsLoggingEnabled(true);
-        interceptor.setRequestsLoggingHeadersEnabled(true);
-        interceptor.setRequestsLoggingCookiesEnabled(true);
-        interceptor.setRequestsLoggingBodyEnabled(true);
+        auditConfig.setRequestsLoggingEnabled(true);
+        auditConfig.setRequestsLoggingHeadersEnabled(true);
+        auditConfig.setRequestsLoggingCookiesEnabled(true);
+        auditConfig.setRequestsLoggingBodyEnabled(true);
 
         expect(mockRequest.getMethod()).andReturn(getMethod).anyTimes();
         expect(mockRequest.getProtocol()).andReturn(protocol);
