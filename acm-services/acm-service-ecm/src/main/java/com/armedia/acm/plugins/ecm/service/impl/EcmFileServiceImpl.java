@@ -744,7 +744,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
 
     @Override
     @PreAuthorize("hasPermission(#fileId, 'FILE', 'read|group-read|write|group-write')")
-    @AcmAcquireAndReleaseObjectLock(objectIdArgIndex = 1, objectType = "FILE", lockType = "WRITE")
+    @AcmAcquireAndReleaseObjectLock(objectIdArgIndex = 0, objectType = "FILE", lockType = "WRITE")
     public void declareFileAsRecord(Long fileId, Authentication authentication) throws AcmObjectNotFoundException
     {
 
@@ -1588,7 +1588,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     }
 
     @Override
-    @AcmAcquireAndReleaseObjectLock(objectIdArgIndex = 0, objectType = "FILE", lockType = "DELETE")
+    @AcmAcquireAndReleaseObjectLock(acmObjectArgIndex = 0, objectType = "FILE", lockType = "DELETE")
     public void deleteFileInArkcase(EcmFile file)
             throws AcmUserActionFailedException, AcmObjectNotFoundException
     {
