@@ -27,24 +27,22 @@ package com.armedia.acm.form.project.service;
  * #L%
  */
 
+import com.armedia.acm.form.casefile.model.CaseFileFormConfig;
 import com.armedia.acm.form.project.model.ProjectForm;
 import com.armedia.acm.frevvo.config.FrevvoFormName;
 import com.armedia.acm.frevvo.config.FrevvoFormService;
 import com.armedia.acm.plugins.casefile.model.CaseEvent;
-import com.armedia.acm.plugins.casefile.model.CaseFileConstants;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;
-
-import java.util.Properties;
 
 public class ProjectUpdatedListener implements ApplicationListener<CaseEvent>
 {
 
     private final Logger LOG = LoggerFactory.getLogger(getClass());
 
-    private Properties properties;
+    private CaseFileFormConfig caseFileFormConfig;
     private FrevvoFormService projectService;
 
     @Override
@@ -54,29 +52,12 @@ public class ProjectUpdatedListener implements ApplicationListener<CaseEvent>
         {
             LOG.debug("Updating Frevvo XML file ...");
 
-            if (getProperties() != null)
+            String activeFormName = caseFileFormConfig.getActiveForm();
+            if (FrevvoFormName.PROJECT.equals(activeFormName))
             {
-                if (getProperties().containsKey(CaseFileConstants.ACTIVE_CASE_FORM_KEY))
-                {
-                    String activeFormName = (String) getProperties().get(CaseFileConstants.ACTIVE_CASE_FORM_KEY);
-
-                    if (FrevvoFormName.PROJECT.equals(activeFormName))
-                    {
-                        getProjectService().updateXML(event.getCaseFile(), event.getEventUser(), ProjectForm.class);
-                    }
-                }
+                getProjectService().updateXML(event.getCaseFile(), event.getEventUser(), ProjectForm.class);
             }
         }
-    }
-
-    public Properties getProperties()
-    {
-        return properties;
-    }
-
-    public void setProperties(Properties properties)
-    {
-        this.properties = properties;
     }
 
     public FrevvoFormService getProjectService()
@@ -89,4 +70,13 @@ public class ProjectUpdatedListener implements ApplicationListener<CaseEvent>
         this.projectService = projectService;
     }
 
+    public CaseFileFormConfig getCaseFileFormConfig()
+    {
+        return caseFileFormConfig;
+    }
+
+    public void setCaseFileFormConfig(CaseFileFormConfig caseFileFormConfig)
+    {
+        this.caseFileFormConfig = caseFileFormConfig;
+    }
 }

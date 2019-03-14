@@ -56,11 +56,19 @@ import java.util.Date;
         "/spring/spring-library-user-service.xml",
         "/spring/spring-library-mule-context-manager.xml",
         "/spring/spring-library-search.xml",
-        "/spring/spring-library-note-plugin-test.xml"
+        "/spring/spring-library-note-plugin-test.xml",
+        "/spring/spring-library-configuration.xml",
+        "/spring/spring-library-object-converter.xml"
 })
 @TransactionConfiguration(defaultRollback = true, transactionManager = "transactionManager")
 public class NoteIT
 {
+    static
+    {
+        String userHomePath = System.getProperty("user.home");
+        System.setProperty("acm.configurationserver.propertyfile", userHomePath + "/.arkcase/acm/conf.yml");
+    }
+
     @Autowired
     private NoteDao noteDao;
 

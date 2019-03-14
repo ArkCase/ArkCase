@@ -33,7 +33,7 @@ import static org.easymock.EasyMock.expect;
 
 import com.armedia.acm.auth.AcmAuthentication;
 import com.armedia.acm.auth.AcmAuthenticationManager;
-import com.armedia.acm.plugins.alfrescorma.model.AlfrescoRmaPluginConstants;
+import com.armedia.acm.plugins.alfrescorma.model.AlfrescoRmaConfig;
 import com.armedia.acm.plugins.complaint.model.Complaint;
 import com.armedia.acm.plugins.complaint.model.ComplaintClosedEvent;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
@@ -50,6 +50,7 @@ public class AcmComplaintClosedListenerTest extends EasyMockSupport
     private AcmComplaintClosedListener unit;
     private AlfrescoRecordsService mockService;
     private AcmAuthenticationManager mockAuthenticationManager;
+    private AlfrescoRmaConfig rmaConfig;
 
     @Before
     public void setUp()
@@ -60,12 +61,15 @@ public class AcmComplaintClosedListenerTest extends EasyMockSupport
 
         unit.setAlfrescoRecordsService(mockService);
         unit.setAuthenticationManager(mockAuthenticationManager);
+        rmaConfig = new AlfrescoRmaConfig();
+        rmaConfig.setIntegrationEnabled(true);
     }
 
     @Test
     public void doNotProceed_shouldNotDeclareRecords()
     {
-        expect(mockService.checkIntegrationEnabled(AlfrescoRmaPluginConstants.COMPLAINT_CLOSE_INTEGRATION_KEY)).andReturn(Boolean.FALSE);
+        rmaConfig.setDeclareRecordsOnComplaintClose(false);
+        expect(mockService.getRmaConfig()).andReturn(rmaConfig);
 
         ComplaintClosedEvent event = new ComplaintClosedEvent(new Complaint(), true, "user", new Date());
 
@@ -83,7 +87,8 @@ public class AcmComplaintClosedListenerTest extends EasyMockSupport
         complaint.setContainer(new AcmContainer());
         complaint.setComplaintNumber("complaintNumber");
 
-        expect(mockService.checkIntegrationEnabled(AlfrescoRmaPluginConstants.COMPLAINT_CLOSE_INTEGRATION_KEY)).andReturn(Boolean.TRUE);
+        rmaConfig.setDeclareRecordsOnComplaintClose(true);
+        expect(mockService.getRmaConfig()).andReturn(rmaConfig);
         expect(mockAuthenticationManager.getAcmAuthentication(anyObject()))
                 .andReturn(new AcmAuthentication(null, "", "", true, ""));
         mockService.declareAllContainerFilesAsRecords(

@@ -27,22 +27,22 @@ package com.armedia.acm.plugins.ecm.service.impl;
  * #L%
  */
 
-import com.armedia.acm.files.propertymanager.PropertyFileManager;
 import com.armedia.acm.plugins.ecm.exception.AcmFileTypesException;
 import com.armedia.acm.plugins.ecm.service.AcmFileTypesService;
+import com.armedia.acm.plugins.ecm.service.SupportsFileTypes;
+import com.armedia.acm.spring.SpringContextHolder;
 
 import org.apache.commons.io.FileUtils;
-import org.json.JSONArray;
-import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.InputStream;
 import java.util.HashSet;
-import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Created by admin on 6/12/15.
@@ -50,41 +50,18 @@ import java.util.Set;
 public class AcmFileTypesServiceImpl implements AcmFileTypesService
 {
     private Logger log = LoggerFactory.getLogger(getClass());
-    private PropertyFileManager propertyFileManager;
-
     private String propertiesLocation;
-    private List<String> propertyFiles;
     private String acmFormsAcmPropertiesFile;
     private String acmFormsPlainPropertiesFile;
+    private SpringContextHolder contextHolder;
 
     @Override
-    public Set<String> getFileTypes() throws AcmFileTypesException
+    public Set<String> getFileTypes()
     {
-        try
-        {
-            Set<String> fileTypes = new HashSet<>();
-            // Load properties file and get fileTypes property
-            for (String fileName : propertyFiles)
-            {
-                String fileTypesStr = propertyFileManager.load(propertiesLocation + fileName, PROP_FILE_TYPES, "[]");
-                JSONArray fileTypesArray = new JSONArray(fileTypesStr);
-                for (int i = 0; i < fileTypesArray.length(); i++)
-                {
-                    JSONObject fileTypeObj = fileTypesArray.getJSONObject(i);
-                    String fileType = fileTypeObj.getString(PROP_TYPE);
-                    if (!fileTypes.contains(fileType))
-                    {
-                        fileTypes.add(fileType);
-                    }
-                }
-            }
-            return fileTypes;
-        }
-        catch (Exception e)
-        {
-            log.error("Can't get file types from properties files", e);
-            throw new AcmFileTypesException("Can't get file types from properties files", e);
-        }
+        Map<String, SupportsFileTypes> supportsFileTypesPlugins = contextHolder.getAllBeansOfType(SupportsFileTypes.class);
+        return supportsFileTypesPlugins.entrySet().stream()
+                .flatMap(it -> it.getValue().getFileTypes().stream())
+                .collect(Collectors.toSet());
     }
 
     @Override
@@ -167,9 +144,14 @@ public class AcmFileTypesServiceImpl implements AcmFileTypesService
         return result;
     }
 
-    public void setPropertyFiles(List<String> propertyFiles)
+    public SpringContextHolder getContextHolder()
     {
-        this.propertyFiles = propertyFiles;
+        return contextHolder;
+    }
+
+    public void setContextHolder(SpringContextHolder contextHolder)
+    {
+        this.contextHolder = contextHolder;
     }
 
     public void setPropertiesLocation(String propertiesLocation)
@@ -185,10 +167,5 @@ public class AcmFileTypesServiceImpl implements AcmFileTypesService
     public void setAcmFormsPlainPropertiesFile(String acmFormsPlainPropertiesFile)
     {
         this.acmFormsPlainPropertiesFile = acmFormsPlainPropertiesFile;
-    }
-
-    public void setPropertyFileManager(PropertyFileManager propertyFileManager)
-    {
-        this.propertyFileManager = propertyFileManager;
     }
 }

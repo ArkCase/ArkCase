@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
 
     <bean id="userHomeFolder" class="java.io.File">
         <constructor-arg value="${user.home}/.arkcase"/>
@@ -33,20 +34,20 @@
     </bean>
 
     <bean id="configMonitorController" class="com.armedia.acm.files.ConfigFileController" init-method="initBean" destroy-method="stopBean"
-        depends-on="activitiProcessEngineConfiguration">
+          depends-on="activitiProcessEngineConfiguration">
         <property name="configFolder" ref="configFolder"/>
         <property name="configFolderMonitor" ref="configFileMonitor"/>
     </bean>
 
     <!-- Capture File -->
     <bean id="captureFolder" factory-bean="vfsManager" factory-method="resolveFile">
-        <constructor-arg index="0" value="${capture.rootFolderToWatch}"/>
+        <constructor-arg index="0" value="#{captureConfig.rootFolderToWatch}"/>
     </bean>
 
     <bean id="captureFileListener" class="com.armedia.acm.files.FileWatcher" depends-on="springEntityListenerConfigurer">
         <property name="watchFolder" ref="captureFolder"/>
         <!-- Do not put a period before the extension -->
-        <property name="allowedFileExtensions" value="${capture.fileExtensions}"/>
+        <property name="allowedFileExtensions" value="#{captureConfig.fileExtension}"/>
         <property name="type" value="CAPTURE"/>
     </bean>
 
@@ -63,7 +64,7 @@
 
     <!-- Converted Folder -->
     <bean id="convertedFilesFolder" factory-bean="vfsManager" factory-method="resolveFile">
-        <constructor-arg index="0" value="${capture.convertedPdfsFolder}"/>
+        <constructor-arg index="0" value="#{captureConfig.convertedPdfsFolder}"/>
     </bean>
 
     <bean id="convertedFileListener" class="com.armedia.acm.files.capture.ConvertedFileWatcher" depends-on="springEntityListenerConfigurer">
@@ -79,24 +80,27 @@
     </bean>
 
     <bean id="convertedMonitorController" class="com.armedia.acm.files.capture.ConvertedFileController" init-method="initBean"
-        destroy-method="stopBean">
+          destroy-method="stopBean">
         <property name="convertedFolder" ref="convertedFilesFolder"/>
         <property name="convertedFileMonitor" ref="convertedFileMonitor"/>
     </bean>
 
     <!-- Working Folder -->
     <bean id="workingFolder" factory-bean="vfsManager" factory-method="resolveFile">
-        <constructor-arg index="0" value="${capture.working.folder}"/>
+        <constructor-arg index="0" value="#{captureConfig.workingFolder}"/>
     </bean>
 
     <!-- Completed Folder -->
     <bean id="completedFolder" factory-bean="vfsManager" factory-method="resolveFile">
-        <constructor-arg index="0" value="${capture.completed.folder}"/>
+        <constructor-arg index="0" value="#{captureConfig.completedFolder}"/>
     </bean>
 
     <!-- Error Folder -->
     <bean id="errorFolder" factory-bean="vfsManager" factory-method="resolveFile">
-        <constructor-arg index="0" value="${capture.error.folder}"/>
+        <constructor-arg index="0" value="#{captureConfig.errorFolder}"/>
     </bean>
 
+    <bean id="captureConfig" class="com.armedia.acm.files.capture.CaptureConfig">
+        <aop:scoped-proxy/>
+    </bean>
 </beans>

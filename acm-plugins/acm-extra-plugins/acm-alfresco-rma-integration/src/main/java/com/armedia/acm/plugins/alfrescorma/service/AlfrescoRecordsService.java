@@ -29,9 +29,10 @@ package com.armedia.acm.plugins.alfrescorma.service;
 
 import com.armedia.acm.core.exceptions.AcmListObjectsFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
-import com.armedia.acm.crypto.properties.AcmEncryptablePropertyUtils;
+import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.pluginmanager.service.AcmConfigurablePlugin;
 import com.armedia.acm.plugins.alfrescorma.exception.AlfrescoServiceException;
+import com.armedia.acm.plugins.alfrescorma.model.AlfrescoRmaConfig;
 import com.armedia.acm.plugins.alfrescorma.model.AlfrescoRmaPluginConstants;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.AcmCmisObject;
@@ -40,47 +41,45 @@ import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
+import com.armedia.acm.web.api.MDCConstants;
 
 import org.apache.chemistry.opencmis.client.api.Folder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.InitializingBean;
+import org.slf4j.MDC;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.core.Authentication;
 
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Properties;
+import java.util.UUID;
+
 
 /**
  * Created by armdev on 3/27/15.
  */
-public class AlfrescoRecordsService implements InitializingBean, AcmConfigurablePlugin
+public class AlfrescoRecordsService implements AcmConfigurablePlugin
 {
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
     private EcmFileService ecmFileService;
-    private Properties alfrescoRmaProperties;
-    private Map<String, Object> alfrescoRmaPropertiesMap;
     private EcmFileDao ecmFileDao;
-    private AcmEncryptablePropertyUtils encryptablePropertyUtils;
     private DeclareRecordService declareRecordService;
     private SetRecordMetadataService setRecordMetadataService;
     private FindFolderService findFolderService;
     private CreateOrFindRecordFolderService createOrFindRecordFolderService;
     private MoveToRecordFolderService moveToRecordFolderService;
     private CompleteRecordService completeRecordService;
+    private AlfrescoRmaConfig rmaConfig;
+    private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
 
-    @Override
-    public void afterPropertiesSet()
-    {
-        getEncryptablePropertyUtils().decryptProperties(alfrescoRmaProperties);
-
-        getEncryptablePropertyUtils().decryptProperties(alfrescoRmaPropertiesMap);
-    }
-
+    @Async
     public void declareAllContainerFilesAsRecords(Authentication auth, AcmContainer container, Date receiveDate, String recordFolderName)
     {
+        MDC.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, "admin");
+        MDC.put(MDCConstants.EVENT_MDC_REQUEST_ID_KEY, UUID.randomUUID().toString());
+        getAuditPropertyEntityAdapter().setUserId("RECORDS_SERVICE_USER");
         try
         {
             AcmCmisObjectList files = getEcmFileService().allFilesForContainer(auth, container);
@@ -93,16 +92,24 @@ public class AlfrescoRecordsService implements InitializingBean, AcmConfigurable
         }
     }
 
+    @Async
     public void declareAllFilesInFolderAsRecords(AcmCmisObjectList folder, AcmContainer container, Date receiveDate,
             String recordFolderName)
     {
+        MDC.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, "admin");
+        MDC.put(MDCConstants.EVENT_MDC_REQUEST_ID_KEY, UUID.randomUUID().toString());
+        getAuditPropertyEntityAdapter().setUserId("RECORDS_SERVICE_USER");
+
         declareAsRecords(folder, container, receiveDate, recordFolderName);
     }
 
+    @Async
     public void declareAsRecords(AcmCmisObjectList files, AcmContainer container, Date receiveDate, String recordFolderName)
     {
-        String originatorOrg = getAlfrescoRmaProperties().getProperty(AlfrescoRmaPluginConstants.PROPERTY_ORIGINATOR_ORG,
-                AlfrescoRmaPluginConstants.DEFAULT_ORIGINATOR_ORG);
+        String originatorOrg = rmaConfig.getDefaultOriginatorOrg();
+        MDC.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, "admin");
+        MDC.put(MDCConstants.EVENT_MDC_REQUEST_ID_KEY, UUID.randomUUID().toString());
+        getAuditPropertyEntityAdapter().setUserId("RECORDS_SERVICE_USER");
 
         try
         {
@@ -119,9 +126,14 @@ public class AlfrescoRecordsService implements InitializingBean, AcmConfigurable
         }
     }
 
+    @Async
     protected void declareFileAsRecord(AcmContainer container, Date receiveDate, String recordFolderName, String originatorOrg,
             String originator, String cmisObjectId, String objectStatus, Long ecmFileId) throws AlfrescoServiceException
     {
+        MDC.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, "admin");
+        MDC.put(MDCConstants.EVENT_MDC_REQUEST_ID_KEY, UUID.randomUUID().toString());
+        getAuditPropertyEntityAdapter().setUserId("RECORDS_SERVICE_USER");
+
         if (!((EcmFileConstants.RECORD).equals(objectStatus)))
         {
             declareRecord(cmisObjectId);
@@ -206,29 +218,13 @@ public class AlfrescoRecordsService implements InitializingBean, AcmConfigurable
             {
                 ecmFile.setStatus(EcmFileConstants.RECORD);
                 getEcmFileDao().save(ecmFile);
-                if (log.isDebugEnabled())
-                {
-                    log.debug("File with ID : " + ecmFile.getFileId() + " Status is changed to " + EcmFileConstants.RECORD);
-                }
+                log.debug("For file with ID: [{}] status is changed to [{}]", ecmFile.getFileId(), EcmFileConstants.RECORD);
             }
         }
         catch (AcmObjectNotFoundException e)
         {
-            if (log.isErrorEnabled())
-            {
-                log.error("File with id: " + fileId + " does not exists - " + e.getMessage());
-            }
+            log.error("File with id: [{}] does not exists - ", fileId, e.getMessage());
         }
-    }
-
-    public boolean checkIntegrationEnabled(String integrationPointKey)
-    {
-        String integrationEnabledKey = "alfresco.rma.integration.enabled";
-
-        Properties rmaProps = getAlfrescoRmaProperties();
-
-        return "true".equals(rmaProps.getProperty(integrationEnabledKey, "true"))
-                && "true".equals(rmaProps.getProperty(integrationPointKey, "true"));
     }
 
     public EcmFileService getEcmFileService()
@@ -241,24 +237,6 @@ public class AlfrescoRecordsService implements InitializingBean, AcmConfigurable
         this.ecmFileService = ecmFileService;
     }
 
-    public Properties getAlfrescoRmaProperties()
-    {
-        return alfrescoRmaProperties;
-    }
-
-    public void setAlfrescoRmaProperties(Properties alfrescoRmaProperties)
-    {
-        this.alfrescoRmaProperties = alfrescoRmaProperties;
-
-        if (alfrescoRmaProperties != null)
-        {
-            Map<String, Object> stringObjectMap = new HashMap<>();
-            alfrescoRmaProperties.entrySet().stream().filter((entry) -> entry.getKey() != null)
-                    .forEach((entry) -> stringObjectMap.put((String) entry.getKey(), entry.getValue()));
-            setAlfrescoRmaPropertiesMap(stringObjectMap);
-        }
-    }
-
     public EcmFileDao getEcmFileDao()
     {
         return ecmFileDao;
@@ -269,14 +247,14 @@ public class AlfrescoRecordsService implements InitializingBean, AcmConfigurable
         this.ecmFileDao = ecmFileDao;
     }
 
-    public AcmEncryptablePropertyUtils getEncryptablePropertyUtils()
+    public AlfrescoRmaConfig getRmaConfig()
     {
-        return encryptablePropertyUtils;
+        return rmaConfig;
     }
 
-    public void setEncryptablePropertyUtils(AcmEncryptablePropertyUtils encryptablePropertyUtils)
+    public void setRmaConfig(AlfrescoRmaConfig rmaConfig)
     {
-        this.encryptablePropertyUtils = encryptablePropertyUtils;
+        this.rmaConfig = rmaConfig;
     }
 
     public DeclareRecordService getDeclareRecordService()
@@ -339,25 +317,25 @@ public class AlfrescoRecordsService implements InitializingBean, AcmConfigurable
         this.completeRecordService = completeRecordService;
     }
 
-    public Map<String, Object> getAlfrescoRmaPropertiesMap()
-    {
-        return alfrescoRmaPropertiesMap;
-    }
-
-    public void setAlfrescoRmaPropertiesMap(Map<String, Object> alfrescoRmaPropertiesMap)
-    {
-        this.alfrescoRmaPropertiesMap = alfrescoRmaPropertiesMap;
-    }
-
     @Override
     public boolean isEnabled()
     {
-        return Boolean.parseBoolean(alfrescoRmaProperties.getProperty("alfresco_rma_integration_enabled", "false"));
+        return rmaConfig.getIntegrationEnabled();
     }
 
     @Override
     public String getName()
     {
         return AlfrescoRmaPluginConstants.RMA_PLUGIN;
+    }
+
+    public AuditPropertyEntityAdapter getAuditPropertyEntityAdapter()
+    {
+        return auditPropertyEntityAdapter;
+    }
+
+    public void setAuditPropertyEntityAdapter(AuditPropertyEntityAdapter auditPropertyEntityAdapter)
+    {
+        this.auditPropertyEntityAdapter = auditPropertyEntityAdapter;
     }
 }

@@ -65,7 +65,7 @@ import java.util.Map;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
-        "classpath:/spring/spring-library-case-plugin-test.xml"
+        "classpath:/spring/spring-library-case-plugin-unit-test.xml"
 })
 public class GetNumberOfActiveCaseFilesByQueueAPIControllerTest extends EasyMockSupport
 {

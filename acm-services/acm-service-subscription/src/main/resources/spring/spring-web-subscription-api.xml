@@ -5,7 +5,7 @@
     <bean id="createSubscriptionAPIController" class="com.armedia.acm.services.subscription.web.api.CreateSubscriptionAPIController">
         <property name="executeSolrQuery" ref="executeSolrQuery"/>
         <property name="subscriptionService" ref="subscriptionService"/>
-        <property name="subscriptionPlugin" ref="subscriptionPlugin"/>
+        <property name="subscriptionConfig" ref="subscriptionConfig"/>
         <property name="subscriptionEventPublisher" ref="subscriptionEventPublisher"/>
     </bean>
 
@@ -16,15 +16,12 @@
     </bean>
 
     <bean id="removingSubscriptionAPIController" class="com.armedia.acm.services.subscription.web.api.RemovingSubscriptionAPIController">
-        <property name="subscriptionPlugin" ref="subscriptionPlugin"/>
         <property name="subscriptionService" ref="subscriptionService"/>
+        <property name="subscriptionConfig" ref="subscriptionConfig"/>
     </bean>
 
     <bean class="com.armedia.acm.services.subscription.web.api.GetUserSubscriptionAPIController">
         <property name="subscriptionService" ref="subscriptionService"/>
     </bean>
 
-    <bean id="subscriptionUiController" class="com.armedia.acm.services.subscription.web.SubscriptionUiController">
-        <property name="pluginProperties" ref="subscriptionProperties"/>
-    </bean>
 </beans>

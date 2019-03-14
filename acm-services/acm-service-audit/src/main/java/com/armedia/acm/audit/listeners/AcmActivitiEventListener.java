@@ -28,6 +28,7 @@ package com.armedia.acm.audit.listeners;
  */
 
 import com.armedia.acm.activiti.model.SpringActivitiEvent;
+import com.armedia.acm.audit.model.AuditConfig;
 import com.armedia.acm.audit.model.AuditConstants;
 import com.armedia.acm.audit.model.AuditEvent;
 import com.armedia.acm.audit.service.AuditService;
@@ -57,7 +58,8 @@ public class AcmActivitiEventListener implements ApplicationListener<SpringActiv
     private Logger log = LoggerFactory.getLogger(getClass());
 
     private AuditService auditService;
-    private boolean activitiEventsLoggingEnabled;
+
+    private AuditConfig auditConfig;
 
     @Override
     public void onApplicationEvent(SpringActivitiEvent springActivitiEvent)
@@ -91,7 +93,7 @@ public class AcmActivitiEventListener implements ApplicationListener<SpringActiv
 
     private void audit(ActivitiEvent event, String eventResult)
     {
-        if (isActivitiEventsLoggingEnabled())
+        if (getAuditConfig().getActivitiLoggingEntityEventsEnabled())
         {
             AuditEvent auditEvent = new AuditEvent();
 
@@ -138,13 +140,13 @@ public class AcmActivitiEventListener implements ApplicationListener<SpringActiv
         this.auditService = auditService;
     }
 
-    public boolean isActivitiEventsLoggingEnabled()
+    public AuditConfig getAuditConfig()
     {
-        return activitiEventsLoggingEnabled;
+        return auditConfig;
     }
 
-    public void setActivitiEventsLoggingEnabled(boolean activitiEventsLoggingEnabled)
+    public void setAuditConfig(AuditConfig auditConfig)
     {
-        this.activitiEventsLoggingEnabled = activitiEventsLoggingEnabled;
+        this.auditConfig = auditConfig;
     }
 }

@@ -33,6 +33,7 @@ import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
 
 import com.armedia.acm.audit.dao.AuditDao;
+import com.armedia.acm.audit.model.AuditConfig;
 import com.armedia.acm.audit.model.AuditEvent;
 import com.armedia.acm.audit.service.systemlogger.ISystemLogger;
 
@@ -50,12 +51,15 @@ public class AuditServiceImplT extends EasyMockSupport
     private AuditServiceImpl auditService;
     private AuditEvent event;
     private AuditDao mockAuditDao;
+    private AuditConfig auditConfig;
     private ISystemLogger mockSyslogLogger;
 
     @Before
     public void setUp() throws Exception
     {
         auditService = new AuditServiceImpl();
+        auditConfig = new AuditConfig();
+        auditService.setAuditConfig(auditConfig);
         event = new AuditEvent();
         event.setEventDate(new Date());
     }
@@ -64,8 +68,8 @@ public class AuditServiceImplT extends EasyMockSupport
     public void auditLogsToDatabaseOnly()
     {
         // given
-        auditService.setDatabaseLoggerEnabled(true);
-        auditService.setSystemLogLoggerEnabled(false);
+        auditConfig.setDatabaseChangesLoggingEnabled(true);
+        auditConfig.setSystemLogEnabled(false);
         mockAuditDao = createMock(AuditDao.class);
         expect(mockAuditDao.save(event)).andReturn(event);
         auditService.setAuditDao(mockAuditDao);
@@ -82,8 +86,8 @@ public class AuditServiceImplT extends EasyMockSupport
     public void auditLogsToSystemLogOnly()
     {
         // given
-        auditService.setDatabaseLoggerEnabled(false);
-        auditService.setSystemLogLoggerEnabled(true);
+        auditConfig.setDatabaseChangesLoggingEnabled(false);
+        auditConfig.setSystemLogEnabled(true);
         mockSyslogLogger = createMock(ISystemLogger.class);
         mockSyslogLogger.log(event.toString());
         expectLastCall();
@@ -101,8 +105,8 @@ public class AuditServiceImplT extends EasyMockSupport
     public void auditLogsBothToDatabaseLogAndSystemLog()
     {
         // given
-        auditService.setDatabaseLoggerEnabled(true);
-        auditService.setSystemLogLoggerEnabled(true);
+        auditConfig.setDatabaseChangesLoggingEnabled(true);
+        auditConfig.setSystemLogEnabled(true);
         mockSyslogLogger = createMock(ISystemLogger.class);
         mockSyslogLogger.log(event.toString());
         expectLastCall();

@@ -67,11 +67,11 @@ angular.module('audit').controller(
                         $scope.acmReportsProperties = data[0];
                         $scope.auditPluginProperties = data[1];
 
-                        $scope.pentahoHost = $scope.acmReportsProperties['PENTAHO_SERVER_URL'];
-                        $scope.pentahoPort = $scope.acmReportsProperties['PENTAHO_SERVER_PORT'];
-                        $scope.auditReportUri = $scope.auditPluginProperties['AUDIT_REPORT'];
-                        $scope.pentahoUser = $scope.acmReportsProperties['PENTAHO_SERVER_USER'];
-                        $scope.pentahoPassword = $scope.acmReportsProperties['PENTAHO_SERVER_PASSWORD'];
+                        $scope.pentahoHost = $scope.acmReportsProperties['report.plugin.PENTAHO_SERVER_URL'];
+                        $scope.pentahoPort = $scope.acmReportsProperties['report.plugin.PENTAHO_SERVER_PORT'];
+                        $scope.auditReportUri = $scope.auditPluginProperties['report.plugin.AUDIT_REPORT'];
+                        $scope.pentahoUser = $scope.acmReportsProperties['report.plugin.PENTAHO_SERVER_USER'];
+                        $scope.pentahoPassword = $scope.acmReportsProperties['report.plugin.PENTAHO_SERVER_PASSWORD'];
                         $scope.auditDropdown = data[2];
                     });
 

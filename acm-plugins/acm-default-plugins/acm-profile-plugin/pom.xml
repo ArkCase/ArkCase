@@ -69,6 +69,13 @@
             <scope>runtime</scope>
         </dependency>
 
+        <dependency>
+            <groupId>com.armedia.acm.acm-services</groupId>
+            <artifactId>acm-service-notification</artifactId>
+            <version>${acm.version}</version>
+            <scope>test</scope>
+        </dependency>
+
         <!-- date time -->
         <dependency>
             <groupId>joda-time</groupId>

@@ -2,16 +2,6 @@
     "id": "preference",
     "title": "Preferences",
     "configurable": false,
-    "menus": [
-        {
-            "menuId": "usermenu",
-            "menuItemURL": "preference",
-            "menuItemTitle": "preference.menus.usermenu.item",
-            "moduleId": "none",
-            "iconClass": "glyphicon glyphicon-asterisk",
-            "position": 120
-        }
-    ],
     "moduleWidgetPreferences": [
         {
             "id": "complaints",

@@ -49,9 +49,20 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = { "/spring/spring-library-search-service-test-mule.xml" })
+@ContextConfiguration(locations = {
+        "/spring/spring-library-configuration.xml",
+        "/spring/spring-library-search-service-test-mule.xml",
+        "/spring/spring-library-property-file-manager.xml",
+        "/spring/spring-library-acm-encryption.xml",
+        "/spring/spring-library-object-converter.xml" })
 public class AdvancedSearchQueryFlowIT
 {
+    static
+    {
+        String userHomePath = System.getProperty("user.home");
+        System.setProperty("acm.configurationserver.propertyfile", userHomePath + "/.arkcase/acm/conf.yml");
+    }
+
     private transient final Logger log = LoggerFactory.getLogger(getClass());
     @Autowired
     private MuleContextManager muleContextManager;

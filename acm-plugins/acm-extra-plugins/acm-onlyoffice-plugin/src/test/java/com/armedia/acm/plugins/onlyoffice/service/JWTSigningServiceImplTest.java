@@ -29,18 +29,22 @@ package com.armedia.acm.plugins.onlyoffice.service;
 
 import static org.junit.Assert.assertTrue;
 
+import com.armedia.acm.plugins.onlyoffice.model.OnlyOfficeConfig;
 import org.junit.Before;
 import org.junit.Test;
 
 public class JWTSigningServiceImplTest {
+
     private JWTSigningServiceImpl signingService;
 
     @Before
     public void setUp() {
         signingService = new JWTSigningServiceImpl();
-        signingService.setJwtInboundKey("secret");
-        signingService.setJwtOutboundAlgorithm("HS256");
-        signingService.setJwtOutboundKey("secret");
+        OnlyOfficeConfig onlyOfficeConfig = new OnlyOfficeConfig();
+        onlyOfficeConfig.setJwtInboundKey("secret");
+        onlyOfficeConfig.setJwtOutboundAlgorithm("HS256");
+        onlyOfficeConfig.setJwtOutboundKey("secret");
+        signingService.setConfig(onlyOfficeConfig);
     }
 
     @Test

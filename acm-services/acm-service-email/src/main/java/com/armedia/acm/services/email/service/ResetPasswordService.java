@@ -29,6 +29,7 @@ package com.armedia.acm.services.email.service;
 
 import com.armedia.acm.core.AcmSpringActiveProfile;
 import com.armedia.acm.services.email.model.EmailWithEmbeddedLinksDTO;
+import com.armedia.acm.services.email.model.UsernamePasswordNotifierConfig;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.PasswordResetToken;
@@ -49,8 +50,8 @@ public class ResetPasswordService
     private UserDao userDao;
     private AcmEmailSenderService emailSenderService;
     private AcmSpringActiveProfile acmSpringActiveProfile;
+    private UsernamePasswordNotifierConfig usernamePasswordNotifierConfig;
     private String passwordResetEmailBodyTemplate;
-    private String passwordResetEmailSubject;
     private TemplatingEngine templatingEngine;
 
     @Async
@@ -67,7 +68,7 @@ public class ResetPasswordService
             user.setPasswordResetToken(new PasswordResetToken());
             userDao.save(user);
             EmailWithEmbeddedLinksDTO emailDTO = new EmailWithEmbeddedLinksDTO();
-            emailDTO.setSubject(passwordResetEmailSubject);
+            emailDTO.setSubject(usernamePasswordNotifierConfig.getPasswordResetEmailSubject());
             String body = getTemplatingEngine().process(passwordResetEmailBodyTemplate, "changePassword", user);
             emailDTO.setBody(body);
             emailDTO.setTemplate(body);
@@ -101,11 +102,6 @@ public class ResetPasswordService
         this.emailSenderService = emailSenderService;
     }
 
-    public void setPasswordResetEmailSubject(String passwordResetEmailSubject)
-    {
-        this.passwordResetEmailSubject = passwordResetEmailSubject;
-    }
-
     public AcmSpringActiveProfile getAcmSpringActiveProfile()
     {
         return acmSpringActiveProfile;
@@ -114,6 +110,16 @@ public class ResetPasswordService
     public void setAcmSpringActiveProfile(AcmSpringActiveProfile acmSpringActiveProfile)
     {
         this.acmSpringActiveProfile = acmSpringActiveProfile;
+    }
+
+    public UsernamePasswordNotifierConfig getUsernamePasswordNotifierConfig()
+    {
+        return usernamePasswordNotifierConfig;
+    }
+
+    public void setUsernamePasswordNotifierConfig(UsernamePasswordNotifierConfig usernamePasswordNotifierConfig)
+    {
+        this.usernamePasswordNotifierConfig = usernamePasswordNotifierConfig;
     }
 
     public TemplatingEngine getTemplatingEngine()

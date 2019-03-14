@@ -76,7 +76,14 @@ module.exports = function(grunt) {
                 dest : 'assets/dist/vendors.min.js'
             }
         },
-
+        cacheBust: {
+            taskName: {
+                options: {
+                    assets: [ 'assets/dist/**' ]
+                },
+                src: [ 'home.html' ]
+            }
+        },
         /////////////////////////////////////
         // Development tasks
         /////////////////////////////////////
@@ -121,11 +128,11 @@ module.exports = function(grunt) {
                 compareUsing : 'mtime'
             }
         },
-
-        watch : {
-            resources : {
-                files : [ 'assets/**', 'directives/**', 'filters/**', 'modules/**', 'modules_config/**', 'service/**' ],
-                tasks : [ 'sync:resources' ]
+        clean: [ 'assets/dist' ],
+        watch: {
+            resources: {
+                files: [ 'assets/**', 'directives/**', 'filters/**', 'modules/**', 'modules_config/**', 'service/**' ],
+                tasks: [ 'sync:resources' ]
             }
         }
     });
@@ -388,7 +395,7 @@ module.exports = function(grunt) {
 
     // Build task.
     //grunt.registerTask('build', ['renderHome', 'sass', 'lint', 'loadConfig', 'ngAnnotate', 'uglify', 'cssmin']);
-    grunt.registerTask('default', ['loadConfig', 'ngAnnotate', 'uglify', 'concat', 'cssmin', 'renderHome', 'copyToModulesConfigFolder']);
+    grunt.registerTask('default', [ 'loadConfig', 'clean', 'ngAnnotate', 'uglify', 'concat', 'cssmin', 'renderHome', 'cacheBust', 'copyToModulesConfigFolder' ]);
 
     // Task syncs current folder with $user/.arkcase/custom/ folder
     grunt.registerTask('sync-dev', ['concurrent:default'])

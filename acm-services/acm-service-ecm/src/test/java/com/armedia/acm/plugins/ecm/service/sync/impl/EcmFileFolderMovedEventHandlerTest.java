@@ -51,6 +51,8 @@ import com.armedia.acm.plugins.ecm.model.sync.EcmEventType;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
+import com.armedia.acm.service.objectlock.model.AcmObjectLock;
+import com.armedia.acm.service.objectlock.service.AcmObjectLockService;
 
 import org.apache.chemistry.opencmis.client.api.Document;
 import org.apache.chemistry.opencmis.commons.data.ContentStream;
@@ -59,6 +61,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.MockitoAnnotations;
+import org.springframework.messaging.Message;
+import org.springframework.messaging.MessageChannel;
 import org.springframework.security.core.Authentication;
 
 import javax.persistence.NoResultException;
@@ -82,6 +86,9 @@ public class EcmFileFolderMovedEventHandlerTest
     private Document cmisDocument = mock(Document.class);
     private ContentStream contentStream = mock(ContentStream.class);
     private InputStream inputStream = mock(InputStream.class);
+    private MessageChannel genericMessagesChannel = mock(MessageChannel.class);
+    private AcmObjectLockService objectLockService = mock(AcmObjectLockService.class);
+
     private EcmEvent fileMovedEvent;
 
     @Before
@@ -91,6 +98,7 @@ public class EcmFileFolderMovedEventHandlerTest
 
         unit.setAuditPropertyEntityAdapter(auditPropertyEntityAdapter);
         unit.setFileService(ecmFileService);
+        unit.setFolderService(acmFolderService);
         spyFolderAndFilesUtils.setFileDao(ecmFileDao);
         spyFolderAndFilesUtils.setFileService(ecmFileService);
         spyFolderAndFilesUtils.setFolderDao(acmFolderDao);
@@ -180,6 +188,8 @@ public class EcmFileFolderMovedEventHandlerTest
 
         when(ecmFileDao.find(file.getFileId())).thenReturn(file);
         doNothing().when(ecmFileDao).deleteFile(file.getFileId());
+        when(objectLockService.findLock(anyLong(), anyString())).thenReturn(new AcmObjectLock());
+        when(genericMessagesChannel.send(any(Message.class))).thenReturn(true);
 
         unit.onEcmFileMoved(fileMovedEvent);
 

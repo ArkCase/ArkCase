@@ -60,17 +60,22 @@ import java.util.List;
 @ContextConfiguration(locations = {
         "/spring/spring-library-data-source.xml",
         "/spring/spring-library-context-holder.xml",
-        "/spring/spring-library-particpants.xml",
         "/spring/spring-library-property-file-manager.xml",
         "/spring/spring-library-acm-encryption.xml",
-        "/spring/spring-library-user-service.xml",
-        "/spring/spring-library-search.xml",
         "/spring/spring-config-participant-service-test-beans.xml",
-        "/spring/spring-library-drools-rule-monitor.xml"
+        "/spring/spring-library-drools-rule-monitor.xml",
+        "/spring/spring-library-configuration.xml",
+        "/spring/spring-library-object-converter.xml"
 })
 @TransactionConfiguration(defaultRollback = true)
 public class ParticipantDaoIT
 {
+    static
+    {
+        String userHomePath = System.getProperty("user.home");
+        System.setProperty("acm.configurationserver.propertyfile", userHomePath + "/.arkcase/acm/conf.yml");
+    }
+
     private final Logger log = LoggerFactory.getLogger(getClass());
     @PersistenceContext
     private EntityManager entityManager;

@@ -38,12 +38,14 @@ import static org.junit.Assert.assertEquals;
 
 import com.armedia.acm.core.exceptions.AcmEncryptionException;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
+import com.armedia.acm.email.model.EmailSenderConfig;
 import com.armedia.acm.files.propertymanager.PropertyFileManager;
 import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.services.notification.dao.NotificationDao;
 import com.armedia.acm.services.notification.model.ApplicationNotificationEvent;
 import com.armedia.acm.services.notification.model.BasicNotificationRule;
 import com.armedia.acm.services.notification.model.Notification;
+import com.armedia.acm.services.notification.model.NotificationConfig;
 import com.armedia.acm.services.notification.model.NotificationRule;
 import com.armedia.acm.services.notification.model.QueryType;
 import com.armedia.acm.spring.SpringContextHolder;
@@ -75,6 +77,8 @@ public class NotificationServiceTest extends EasyMockSupport
     private SendExecutor sendExecutor;
     private PurgeExecutor purgeExecutor;
     private NotificationFormatter mockNotificationFormatter;
+    private NotificationConfig notificationConfig;
+    private EmailSenderConfig emailSenderConfig;
 
     @Before
     public void setUp() throws Exception
@@ -101,11 +105,23 @@ public class NotificationServiceTest extends EasyMockSupport
         notificationService.setPropertyFileManager(mockPropertyFileManager);
         notificationService.setNotificationEventPublisher(mockNotificationEventPublisher);
         notificationService.setSpringContextHolder(mockSpringContextHolder);
-        notificationService.setBatchRun(true);
-        notificationService.setBatchSize(10);
-        notificationService.setPurgeDays(30);
         notificationService.setNotificationFormatter(mockNotificationFormatter);
         notificationService.setAuditPropertyEntityAdapter(mockAuditPropertyEntityAdapter);
+
+        notificationConfig = new NotificationConfig();
+        notificationConfig.setUserBatchRun(true);
+        notificationConfig.setUserBatchSize(10);
+        notificationConfig.setPurgeDays(30);
+        notificationService.setNotificationConfig(notificationConfig);
+
+        emailSenderConfig = new EmailSenderConfig();
+        emailSenderConfig.setHost("host");
+        emailSenderConfig.setPort(8080);
+        emailSenderConfig.setUsername("user");
+        emailSenderConfig.setPassword("password");
+        emailSenderConfig.setUserFrom("from");
+        emailSenderConfig.setType("smtp");
+        emailSenderConfig.setEncryption("off");
     }
 
     @Test
@@ -178,7 +194,7 @@ public class NotificationServiceTest extends EasyMockSupport
 
         SmtpNotificationSender smtpNotificationServer = new SmtpNotificationSender();
         smtpNotificationServer.setAuditPropertyEntityAdapter(mockAuditPropertyEntityAdapter);
-        smtpNotificationServer.setPropertyFileManager(mockPropertyFileManager);
+        smtpNotificationServer.setEmailSenderConfig(emailSenderConfig);
 
         notificationSenderMap.put("smtp", smtpNotificationServer);
         notificationSenderFactory.setNotificationSenderMap(notificationSenderMap);
@@ -205,20 +221,6 @@ public class NotificationServiceTest extends EasyMockSupport
                 .anyTimes();
         mockAuditPropertyEntityAdapter.setUserId(eq("NOTIFICATION-BATCH-INSERT"));
         expectLastCall().anyTimes();
-        expect(mockPropertyFileManager.load(capture(stringCapture), eq("email.sender.host"), capture(stringCapture))).andReturn("host")
-                .anyTimes();
-        expect(mockPropertyFileManager.load(capture(stringCapture), eq("email.sender.port"), capture(stringCapture))).andReturn("port")
-                .anyTimes();
-        expect(mockPropertyFileManager.load(capture(stringCapture), eq("email.sender.username"), capture(stringCapture))).andReturn("user")
-                .anyTimes();
-        expect(mockPropertyFileManager.load(capture(stringCapture), eq("email.sender.password"), capture(stringCapture)))
-                .andReturn("password").anyTimes();
-        expect(mockPropertyFileManager.load(capture(stringCapture), eq("email.sender.userFrom"), capture(stringCapture))).andReturn("from")
-                .anyTimes();
-        expect(mockPropertyFileManager.load(capture(stringCapture), eq("email.sender.type"), capture(stringCapture))).andReturn("smtp")
-                .anyTimes();
-        expect(mockPropertyFileManager.load(capture(stringCapture), eq("email.sender.encryption"), capture(stringCapture))).andReturn("off")
-                .anyTimes();
 
         Capture<Map<String, Object>> messagePropsCapture = null;
         try
@@ -330,7 +332,7 @@ public class NotificationServiceTest extends EasyMockSupport
         SmtpNotificationSender smtpNotificationServer = new SmtpNotificationSender();
         smtpNotificationServer.setNotificationUtils(mockNotificationUtils);
         smtpNotificationServer.setAuditPropertyEntityAdapter(mockAuditPropertyEntityAdapter);
-        smtpNotificationServer.setPropertyFileManager(mockPropertyFileManager);
+        // smtpNotificationServer.setPropertyFileManager(mockPropertyFileManager);
 
         notificationSenderMap.put("smtp", smtpNotificationServer);
         notificationSenderFactory.setNotificationSenderMap(notificationSenderMap);

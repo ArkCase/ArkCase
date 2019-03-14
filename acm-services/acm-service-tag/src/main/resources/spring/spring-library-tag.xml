@@ -1,22 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
-
-    <bean id="tagProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
-        <!-- note: must leave "file:" at the start of the file name for spring
-        to be able to read the file; otherwise it will try to read from the
-        classpath -->
-        <property name="location" value="file:${user.home}/.arkcase/acm/tagPlugin.properties"/>
-        <property name="ignoreResourceNotFound" value="true"/>
-        <property name="localOverride" value="false"/>
-        <property name="properties">
-            <props></props>
-        </property>
-    </bean>
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
 
     <bean id="tagPlugin" class="com.armedia.acm.pluginmanager.model.AcmPlugin">
         <property name="pluginName" value="Tag Plugin"/>
-        <property name="pluginProperties" ref="tagProperties"/>
+        <property name="configurationPropertyService" ref="configurationPropertyService"/>
     </bean>
 
     <bean id="associatedTagDao" class="com.armedia.acm.services.tag.dao.AssociatedTagDao"/>
@@ -29,14 +18,14 @@
 
     <bean id="tagService" class="com.armedia.acm.services.tag.service.TagService">
         <property name="tagDao" ref="tagDao"/>
-        <property name="tagPlugin" ref="tagPlugin"/>
+        <property name="tagConfig" ref="tagConfig"/>
     </bean>
 
     <bean id="associatedTagService" class="com.armedia.acm.services.tag.service.AssociatedTagService">
         <property name="tagDao" ref="tagDao"/>
         <property name="associatedTagDao" ref="associatedTagDao"/>
         <property name="executeSolrQuery" ref="executeSolrQuery"/>
-        <property name="tagPlugin" ref="tagPlugin"/>
+        <property name="tagConfig" ref="tagConfig"/>
     </bean>
 
     <bean id="associatedTagToSolrTransformer" class="com.armedia.acm.services.tag.service.AssociatedTagToSolrTransformer">
@@ -49,4 +38,7 @@
         <property name="userDao" ref="userJpaDao"/>
     </bean>
 
+    <bean id="tagConfig" class="com.armedia.acm.services.tag.model.TagConfig" scope="refresh">
+        <aop:scoped-proxy/>
+    </bean>
 </beans>

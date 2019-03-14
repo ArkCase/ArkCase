@@ -86,7 +86,6 @@ public class GetDashboardConfigAPIControllerTest extends EasyMockSupport
     private DashboardService mockDashboardService;
     private DashboardEventPublisher mockDashboardEventPublisher;
     private Authentication mockAuthentication;
-    private AcmPlugin mockDashboardPlugin;
     private DashboardPropertyReader mockDashboardPropertyReader;
 
     @Autowired
@@ -101,14 +100,12 @@ public class GetDashboardConfigAPIControllerTest extends EasyMockSupport
         mockDashboardEventPublisher = createMock(DashboardEventPublisher.class);
         mockHttpSession = new MockHttpSession();
         mockAuthentication = createMock(Authentication.class);
-        mockDashboardPlugin = createMock(AcmPlugin.class);
         mockDashboardPropertyReader = createMock(DashboardPropertyReader.class);
 
         unit = new GetDashboardConfigAPIController();
 
         unit.setDashboardService(mockDashboardService);
         unit.setEventPublisher(mockDashboardEventPublisher);
-        unit.setDashboardPlugin(mockDashboardPlugin);
         unit.setDashboardPropertyReader(mockDashboardPropertyReader);
 
         mockMvc = MockMvcBuilders.standaloneSetup(unit).setHandlerExceptionResolvers(exceptionResolver).build();
@@ -144,7 +141,6 @@ public class GetDashboardConfigAPIControllerTest extends EasyMockSupport
         expect(mockDashboardService.getDashboardConfigForUserAndModuleName(user, DashboardConstants.DASHBOARD_MODULE_NAME)).andReturn(ret);
         expect(mockDashboardService.getUserByUserId(userId)).andReturn(user);
         expect(mockDashboardService.prepareDashboardDto(ret, false, DashboardConstants.DASHBOARD_MODULE_NAME)).andReturn(returned);
-        expect(mockDashboardPlugin.getPluginProperties()).andReturn(prop).anyTimes();
 
         // MVC test classes must call getName() somehow
         expect(mockAuthentication.getName()).andReturn("ann-acm").atLeastOnce();

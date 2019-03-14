@@ -90,7 +90,7 @@
 
     <bean id="solrReindexAssignedObjectsExecutor" class="com.armedia.acm.services.dataupdate.service.SolrReindexAssignedObjectsExecutor">
         <property name="solrReindexService" ref="solrReindexService"/>
-        <property name="packages" value="${jpa.model.packages}"/>
+        <property name="packages" value="#{dataSourceConfig.jpaModelPackages}"/>
     </bean>
 
     <bean id="groupAscendantsStringUpdateExecutor" class="com.armedia.acm.services.dataupdate.service.GroupAscendantsStringUpdateExecutor">

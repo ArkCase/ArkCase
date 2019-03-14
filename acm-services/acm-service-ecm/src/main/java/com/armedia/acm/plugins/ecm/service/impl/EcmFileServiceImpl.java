@@ -36,7 +36,20 @@ import com.armedia.acm.objectonverter.ArkCaseBeanUtils;
 import com.armedia.acm.plugins.ecm.dao.AcmContainerDao;
 import com.armedia.acm.plugins.ecm.dao.AcmFolderDao;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
-import com.armedia.acm.plugins.ecm.model.*;
+import com.armedia.acm.plugins.ecm.model.AcmCmisObject;
+import com.armedia.acm.plugins.ecm.model.AcmCmisObjectList;
+import com.armedia.acm.plugins.ecm.model.AcmContainer;
+import com.armedia.acm.plugins.ecm.model.AcmFolder;
+import com.armedia.acm.plugins.ecm.model.AcmFolderConstants;
+import com.armedia.acm.plugins.ecm.model.EcmFile;
+import com.armedia.acm.plugins.ecm.model.EcmFileAddedEvent;
+import com.armedia.acm.plugins.ecm.model.EcmFileConfig;
+import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
+import com.armedia.acm.plugins.ecm.model.EcmFileDeclareRequestEvent;
+import com.armedia.acm.plugins.ecm.model.EcmFileUpdatedEvent;
+import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
+import com.armedia.acm.plugins.ecm.model.EcmFolderDeclareRequestEvent;
+import com.armedia.acm.plugins.ecm.model.ProgressbarDetails;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.ecm.service.EcmFileTransaction;
 import com.armedia.acm.plugins.ecm.service.ProgressIndicatorService;
@@ -45,11 +58,14 @@ import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import com.armedia.acm.service.objectlock.annotation.AcmAcquireAndReleaseObjectLock;
 import com.armedia.acm.service.objectlock.annotation.AcmAcquireObjectLock;
+import com.armedia.acm.service.objectlock.model.AcmObjectLock;
+import com.armedia.acm.service.objectlock.service.AcmObjectLockService;
 import com.armedia.acm.services.participants.service.AcmParticipantService;
 import com.armedia.acm.services.search.model.SearchConstants;
 import com.armedia.acm.services.search.model.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.search.service.SearchResults;
+
 import org.apache.chemistry.opencmis.client.api.CmisObject;
 import org.apache.chemistry.opencmis.client.api.Document;
 import org.apache.commons.io.FileUtils;
@@ -61,6 +77,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
+import org.springframework.messaging.MessageChannel;
+import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -70,6 +88,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.persistence.PersistenceException;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -82,7 +101,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Properties;
 import java.util.UUID;
 
 /**
@@ -106,11 +124,10 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
 
     private Map<String, String> solrObjectTypeToAcmType;
 
-    private Properties ecmFileServiceProperties;
-
     private MuleContextManager muleContextManager;
 
     private ExecuteSolrQuery solrQuery;
+
     private Map<String, String> categoryMap;
 
     private SearchResults searchResults;
@@ -127,11 +144,17 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
 
     private ProgressbarDetails progressbarDetails;
 
+    private EcmFileConfig ecmFileConfig;
+
+    private MessageChannel genericMessagesChannel;
+
+    private AcmObjectLockService objectLockService;
+
     @Override
     public CmisObject findObjectByPath(String path) throws Exception
     {
         Map<String, Object> properties = new HashMap<>();
-        String cmisRepositoryId = ecmFileServiceProperties.getProperty("ecm.defaultCmisId");
+        String cmisRepositoryId = ecmFileConfig.getDefaultCmisId();
         properties.put(EcmFileConstants.CONFIGURATION_REFERENCE, cmisConfigUtils.getCmisConfiguration(cmisRepositoryId));
 
         MuleMessage muleMessage = getMuleContextManager().send("vm://getObjectByPath.in", path, properties);
@@ -169,7 +192,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
             String fileName, Authentication authentication, String targetCmisFolderId, String parentObjectType, Long parentObjectId)
             throws AcmCreateObjectFailedException, AcmUserActionFailedException
     {
-        String cmisRepositoryId = ecmFileServiceProperties.getProperty("ecm.defaultCmisId");
+        String cmisRepositoryId = ecmFileConfig.getDefaultCmisId();
         return upload(arkcaseFileName, fileType, fileCategory, fileContents, fileContentType, fileName, authentication, targetCmisFolderId,
                 parentObjectType, parentObjectId, cmisRepositoryId);
     }
@@ -263,7 +286,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
 
         try
         {
-            String cmisRepositoryId = metadata.getCmisRepositoryId() == null ? ecmFileServiceProperties.getProperty("ecm.defaultCmisId")
+            String cmisRepositoryId = metadata.getCmisRepositoryId() == null ? ecmFileConfig.getDefaultCmisId()
                     : metadata.getCmisRepositoryId();
             metadata.setCmisRepositoryId(cmisRepositoryId);
 
@@ -306,8 +329,10 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         EcmFileAddedEvent event = null;
         try (InputStream fileInputStream = file.getInputStream())
         {
-            String cmisRepositoryId = metadata.getCmisRepositoryId() == null ? ecmFileServiceProperties.getProperty("ecm.defaultCmisId")
+
+            String cmisRepositoryId = metadata.getCmisRepositoryId() == null ? ecmFileConfig.getDefaultCmisId()
                     : metadata.getCmisRepositoryId();
+
             metadata.setCmisRepositoryId(cmisRepositoryId);
             EcmFile uploaded = getEcmFileTransaction().addFileTransaction(authentication, file.getOriginalFilename(), container,
                     targetCmisFolderId, fileInputStream, metadata, file);
@@ -419,8 +444,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     @Override
     public String createFolder(String folderPath) throws AcmCreateObjectFailedException
     {
-        String cmisRepositoryId = ecmFileServiceProperties.getProperty("ecm.defaultCmisId");
-        return createFolder(folderPath, cmisRepositoryId);
+        return createFolder(folderPath, ecmFileConfig.getDefaultCmisId());
     }
 
     @Override
@@ -448,8 +472,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     public AcmContainer getOrCreateContainer(String objectType, Long objectId)
             throws AcmCreateObjectFailedException, AcmUserActionFailedException
     {
-        String cmisRepositoryId = ecmFileServiceProperties.getProperty("ecm.defaultCmisId");
-        return getOrCreateContainer(objectType, objectId, cmisRepositoryId);
+        return getOrCreateContainer(objectType, objectId, ecmFileConfig.getDefaultCmisId());
     }
 
     @Override
@@ -488,8 +511,8 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     {
         log.debug("Creating new folder for object: {} id: {}", objectType, objectId);
 
-        String path = getEcmFileServiceProperties().getProperty(EcmFileConstants.PROPERTY_KEY_DEFAULT_FOLDER_BASE_PATH);
-        path += getEcmFileServiceProperties().getProperty(EcmFileConstants.PROPERTY_PREFIX_FOLDER_PATH_BY_TYPE + objectType);
+        String path = ecmFileConfig.getDefaultBasePath();
+        path += ecmFileConfig.getDefaultPathForObject(objectType);
         path += "/" + objectId;
 
         String cmisFolderId = createFolder(path, cmisRepositoryId);
@@ -960,7 +983,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         String cmisRepositoryId = targetFolder.getCmisRepositoryId();
         if (cmisRepositoryId == null)
         {
-            cmisRepositoryId = ecmFileServiceProperties.getProperty("ecm.defaultCmisId");
+            cmisRepositoryId = ecmFileConfig.getDefaultCmisId();
         }
         props.put(EcmFileConstants.CONFIGURATION_REFERENCE, cmisConfigUtils.getCmisConfiguration(cmisRepositoryId));
         props.put(EcmFileConstants.VERSIONING_STATE, cmisConfigUtils.getVersioningState(cmisRepositoryId));
@@ -994,13 +1017,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
 
             return result;
         }
-        catch (MuleException e)
-        {
-            log.error("Could not copy file {} ", e.getMessage(), e);
-            throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_COPY_FILE, EcmFileConstants.OBJECT_FILE_TYPE, file.getId(),
-                    "Could not copy file", e);
-        }
-        catch (PersistenceException e)
+        catch (MuleException | PersistenceException e)
         {
             log.error("Could not copy file {} ", e.getMessage(), e);
             throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_COPY_FILE, EcmFileConstants.OBJECT_FILE_TYPE, file.getId(),
@@ -1388,7 +1405,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         String cmisRepositoryId = folder.getCmisRepositoryId();
         if (cmisRepositoryId == null)
         {
-            cmisRepositoryId = ecmFileServiceProperties.getProperty("ecm.defaultCmisId");
+            cmisRepositoryId = ecmFileConfig.getDefaultCmisId();
         }
         props.put(EcmFileConstants.CONFIGURATION_REFERENCE, cmisConfigUtils.getCmisConfiguration(cmisRepositoryId));
         props.put(EcmFileConstants.VERSIONING_STATE, cmisConfigUtils.getVersioningState(cmisRepositoryId));
@@ -1435,7 +1452,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         String cmisRepositoryId = targetParentFolder.getCmisRepositoryId();
         if (cmisRepositoryId == null)
         {
-            cmisRepositoryId = ecmFileServiceProperties.getProperty("ecm.defaultCmisId");
+            cmisRepositoryId = ecmFileConfig.getDefaultCmisId();
         }
 
         AcmContainer container = getOrCreateContainer(targetObjectType, targetParentFolder.getId(), cmisRepositoryId);
@@ -1457,6 +1474,13 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
             throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_MOVE_FILE, EcmFileConstants.OBJECT_FILE_TYPE, file.getId(),
                     "Could not move file", e);
         }
+    }
+
+    @Override
+    @AcmAcquireAndReleaseObjectLock(objectIdArgIndex = 0, objectType = "FILE", lockType = "DELETE")
+    public void deleteFileFromArkcase(Long fileId)
+    {
+        getEcmFileDao().deleteFile(fileId);
     }
 
     @Override
@@ -1487,7 +1511,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         String cmisRepositoryId = file.getCmisRepositoryId();
         if (cmisRepositoryId == null)
         {
-            cmisRepositoryId = ecmFileServiceProperties.getProperty("ecm.defaultCmisId");
+            cmisRepositoryId = ecmFileConfig.getDefaultCmisId();
         }
         props.put(EcmFileConstants.CONFIGURATION_REFERENCE, cmisConfigUtils.getCmisConfiguration(cmisRepositoryId));
         props.put(EcmFileConstants.ALL_VERSIONS, allVersions);
@@ -1526,7 +1550,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         props.put(EcmFileConstants.ECM_FILE_ID, cmisObject.getProperty("cmis:versionSeriesId").getFirstValue());
         if (cmisRepositoryId == null)
         {
-            cmisRepositoryId = ecmFileServiceProperties.getProperty("ecm.defaultCmisId");
+            cmisRepositoryId = ecmFileConfig.getDefaultCmisId();
         }
         props.put(EcmFileConstants.CONFIGURATION_REFERENCE,
                 cmisConfigUtils.getCmisConfiguration(cmisRepositoryId));
@@ -1560,7 +1584,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         String cmisRepositoryId = file.getCmisRepositoryId();
         if (cmisRepositoryId == null)
         {
-            cmisRepositoryId = ecmFileServiceProperties.getProperty("ecm.defaultCmisId");
+            cmisRepositoryId = ecmFileConfig.getDefaultCmisId();
         }
         props.put(EcmFileConstants.CONFIGURATION_REFERENCE, cmisConfigUtils.getCmisConfiguration(cmisRepositoryId));
 
@@ -1617,7 +1641,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         String cmisRepositoryId = file.getCmisRepositoryId();
         if (cmisRepositoryId == null)
         {
-            cmisRepositoryId = ecmFileServiceProperties.getProperty("ecm.defaultCmisId");
+            cmisRepositoryId = ecmFileConfig.getDefaultCmisId();
         }
         props.put(EcmFileConstants.CONFIGURATION_REFERENCE, cmisConfigUtils.getCmisConfiguration(cmisRepositoryId));
 
@@ -1645,6 +1669,24 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         newFileName = getFolderAndFilesUtils().getBaseFileName(newFileName);
         file.setFileName(newFileName);
         return getEcmFileDao().save(file);
+    }
+
+    @Override
+    @Transactional
+    public void removeLockAndSendMessage(Long objectId, String message)
+    {
+        AcmObjectLock lock = getObjectLockService().findLock(objectId, EcmFileConstants.OBJECT_FILE_TYPE);
+        if (lock != null)
+        {
+            Map<String, Object> payload = new HashMap<>();
+            payload.put("user", lock.getCreator());
+            payload.put("eventType", "sync-progress");
+            payload.put("message", message);
+
+            getObjectLockService().removeLock(lock);
+
+            getGenericMessagesChannel().send(MessageBuilder.withPayload(payload).build());
+        }
     }
 
     @Override
@@ -1758,16 +1800,6 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         this.containerFolderDao = containerFolderDao;
     }
 
-    public Properties getEcmFileServiceProperties()
-    {
-        return ecmFileServiceProperties;
-    }
-
-    public void setEcmFileServiceProperties(Properties ecmFileServiceProperties)
-    {
-        this.ecmFileServiceProperties = ecmFileServiceProperties;
-    }
-
     public ExecuteSolrQuery getSolrQuery()
     {
         return solrQuery;
@@ -1877,5 +1909,35 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     public void setProgressbarDetails(ProgressbarDetails progressbarDetails)
     {
         this.progressbarDetails = progressbarDetails;
+    }
+
+    public EcmFileConfig getEcmFileConfig()
+    {
+        return ecmFileConfig;
+    }
+
+    public void setEcmFileConfig(EcmFileConfig ecmFileConfig)
+    {
+        this.ecmFileConfig = ecmFileConfig;
+    }
+
+    public MessageChannel getGenericMessagesChannel()
+    {
+        return genericMessagesChannel;
+    }
+
+    public void setGenericMessagesChannel(MessageChannel genericMessagesChannel)
+    {
+        this.genericMessagesChannel = genericMessagesChannel;
+    }
+
+    public AcmObjectLockService getObjectLockService()
+    {
+        return objectLockService;
+    }
+
+    public void setObjectLockService(AcmObjectLockService objectLockService)
+    {
+        this.objectLockService = objectLockService;
     }
 }
