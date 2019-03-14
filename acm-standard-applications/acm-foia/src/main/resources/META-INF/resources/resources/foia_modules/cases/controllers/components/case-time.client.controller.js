@@ -33,7 +33,7 @@ angular.module('cases').controller(
                     });
 
                     $scope.timesheetProperties = {
-                        "useApprovalWorkflow": "true"
+                        "time.plugin.useApprovalWorkflow": "true"
                     };
 
                     TimesheetConfigurationService.getProperties().then(function(response) {

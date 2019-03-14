@@ -32,16 +32,15 @@ import com.armedia.acm.core.AcmNotifiableEntity;
 import com.armedia.acm.core.AcmObjectType;
 import com.armedia.acm.data.AcmNotificationDao;
 import com.armedia.acm.data.service.AcmDataService;
-import com.armedia.acm.services.notification.model.NotificationConstants;
+import com.armedia.acm.services.notification.model.NotificationConfig;
 
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Map;
-import java.util.Properties;
 
 public class NotificationUtils
 {
-    private Properties notificationProperties;
+    private NotificationConfig notificationConfig;
 
     private AcmApplication acmAppConfiguration;
 
@@ -49,7 +48,7 @@ public class NotificationUtils
 
     public String buildNotificationLink(String parentType, Long parentId, String relatedObjectType, Long relatedObjectId)
     {
-        String baseUrl = getNotificationProperties().getProperty(NotificationConstants.BASE_URL_KEY);
+        String baseUrl = notificationConfig.getBaseUrl();
         // If relatedObjectType is null, the parent object is TOP LEVEL (Case File or Complaint)
         // else parent object is nested in top level object
         String linkedObjectType = StringUtils.isEmpty(relatedObjectType) ? parentType : relatedObjectType;
@@ -90,14 +89,14 @@ public class NotificationUtils
         return null;
     }
 
-    public Properties getNotificationProperties()
+    public NotificationConfig getNotificationConfig()
     {
-        return notificationProperties;
+        return notificationConfig;
     }
 
-    public void setNotificationProperties(Properties notificationProperties)
+    public void setNotificationConfig(NotificationConfig notificationConfig)
     {
-        this.notificationProperties = notificationProperties;
+        this.notificationConfig = notificationConfig;
     }
 
     public AcmApplication getAcmAppConfiguration()

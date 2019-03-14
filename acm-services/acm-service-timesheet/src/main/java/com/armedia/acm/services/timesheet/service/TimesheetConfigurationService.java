@@ -27,9 +27,10 @@ package com.armedia.acm.services.timesheet.service;
  * #L%
  */
 
-import com.armedia.acm.files.propertymanager.PropertyFileManager;
+import com.armedia.acm.configuration.service.ConfigurationPropertyService;
 import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.services.timesheet.model.TimesheetConfig;
+import com.armedia.acm.services.timesheet.model.TimesheetConfigDTO;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,10 +41,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Reader;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Objects;
-import java.util.Properties;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
@@ -52,17 +50,17 @@ public class TimesheetConfigurationService
     private Logger log = LoggerFactory.getLogger(getClass());
 
     private String configurationFile;
-    private String propertiesFile;
-
-    private PropertyFileManager propertyFileManager;
     private ObjectConverter objectConverter;
     private ReadWriteLock lock = new ReentrantReadWriteLock();
 
-    public TimesheetConfig getConfig()
+    private TimesheetConfig timesheetConfig;
+    private ConfigurationPropertyService configurationPropertyService;
+
+    public TimesheetConfigDTO getConfig()
     {
         String currentLine;
-        String timesheetConfigJson = "";
-        TimesheetConfig timesheetConfig = null;
+        StringBuilder timesheetConfigJson = new StringBuilder();
+        TimesheetConfigDTO timesheetConfig = null;
 
         try (Reader fileReader = new FileReader(new File(getConfigurationFile()));
                 BufferedReader bufferedReader = new BufferedReader(fileReader))
@@ -73,11 +71,12 @@ public class TimesheetConfigurationService
 
             while ((currentLine = bufferedReader.readLine()) != null)
             {
-                timesheetConfigJson += currentLine;
+                timesheetConfigJson.append(currentLine);
             }
 
             fileReader.close();
-            timesheetConfig = getObjectConverter().getJsonUnmarshaller().unmarshall(timesheetConfigJson, TimesheetConfig.class);
+            timesheetConfig = getObjectConverter().getJsonUnmarshaller().unmarshall(timesheetConfigJson.toString(),
+                    TimesheetConfigDTO.class);
         }
         catch (IOException e)
         {
@@ -91,7 +90,7 @@ public class TimesheetConfigurationService
         return timesheetConfig;
     }
 
-    public void saveConfig(TimesheetConfig config)
+    public void saveConfig(TimesheetConfigDTO config)
     {
         String timesheetConfigJson = Objects.nonNull(config) ? getObjectConverter().getJsonMarshaller().marshal(config) : "";
 
@@ -111,19 +110,14 @@ public class TimesheetConfigurationService
         }
     }
 
-    public void saveProperties(Map<String, String> properties)
+    public void saveProperties(TimesheetConfig timesheetConfig)
     {
-        getPropertyFileManager().storeMultiple(properties, getPropertiesFile(), true);
+        configurationPropertyService.updateProperties(timesheetConfig);
     }
 
-    public Map<String, String> loadProperties() throws IOException
+    public TimesheetConfig loadProperties()
     {
-        Map<String, String> propertiesMap = new HashMap<>();
-
-        Properties properties = getPropertyFileManager().readFromFile(new File(getPropertiesFile()));
-        properties.forEach((o, o2) -> propertiesMap.put((String) o, (String) o2));
-
-        return propertiesMap;
+        return timesheetConfig;
     }
 
     public String getConfigurationFile()
@@ -136,26 +130,6 @@ public class TimesheetConfigurationService
         this.configurationFile = configurationFile;
     }
 
-    public String getPropertiesFile()
-    {
-        return propertiesFile;
-    }
-
-    public void setPropertiesFile(String propertiesFile)
-    {
-        this.propertiesFile = propertiesFile;
-    }
-
-    public PropertyFileManager getPropertyFileManager()
-    {
-        return propertyFileManager;
-    }
-
-    public void setPropertyFileManager(PropertyFileManager propertyFileManager)
-    {
-        this.propertyFileManager = propertyFileManager;
-    }
-
     public ObjectConverter getObjectConverter()
     {
         return objectConverter;
@@ -164,5 +138,25 @@ public class TimesheetConfigurationService
     public void setObjectConverter(ObjectConverter objectConverter)
     {
         this.objectConverter = objectConverter;
+    }
+
+    public TimesheetConfig getTimesheetConfig()
+    {
+        return timesheetConfig;
+    }
+
+    public void setTimesheetConfig(TimesheetConfig timesheetConfig)
+    {
+        this.timesheetConfig = timesheetConfig;
+    }
+
+    public ConfigurationPropertyService getConfigurationPropertyService()
+    {
+        return configurationPropertyService;
+    }
+
+    public void setConfigurationPropertyService(ConfigurationPropertyService configurationPropertyService)
+    {
+        this.configurationPropertyService = configurationPropertyService;
     }
 }

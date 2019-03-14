@@ -29,15 +29,13 @@ package com.armedia.acm.services.search.service;
 
 import static org.junit.Assert.assertEquals;
 
-import com.armedia.acm.pluginmanager.model.AcmPlugin;
 import com.armedia.acm.services.search.model.SearchConstants;
+import com.armedia.acm.services.search.model.solr.SearchConfig;
 
 import org.junit.Before;
 import org.junit.Test;
 
 import java.net.URLEncoder;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Created by dmiller on 2/23/16.
@@ -45,22 +43,16 @@ import java.util.Map;
 public class FacetedSearchServiceTest
 {
     private FacetedSearchService unit;
+    private SearchConfig searchConfig;
 
     @Before
     public void setUp() throws Exception
     {
         unit = new FacetedSearchService();
-
-        // faceted search requires certain properties to exist.
-        unit.setPluginSearch(new AcmPlugin());
-
-        Map<String, Object> p = new HashMap<>();
-        unit.getPluginSearch().setPluginProperties(p);
-
-        // this property copied straight from searchPlugin.properties
-        p.put("search.time.period", "[{\"desc\": \"Previous Week\", \"value\":\"[NOW/DAY-7DAY TO *]\"}]");
-
-        p.put("objects.to.exclude", "BAND,AUTHOR");
+        searchConfig = new SearchConfig();
+        searchConfig.setTimePeriod("[{\"desc\": \"Previous Week\", \"value\":\"[NOW/DAY-7DAY TO *]\"}]");
+        searchConfig.setObjectsToExclude("BAND,AUTHOR");
+        unit.setSearchConfig(searchConfig);
     }
 
     @Test
@@ -102,8 +94,7 @@ public class FacetedSearchServiceTest
     @Test
     public void buildSolrQuery_facetFilterShouldHaveFieldNameFromProperties() throws Exception
     {
-        unit.getPluginSearch().getPluginProperties().put("facet.my_facet_lcs", "Example Facet");
-
+        searchConfig.getFacets().put("facet.my_facet_lcs", "Example Facet");
         String filter = "\"Example Facet\":1401";
         String query = "&fq=" + URLEncoder.encode("{!field f=my_facet_lcs}1401", SearchConstants.FACETED_SEARCH_ENCODING);
 
@@ -115,10 +106,9 @@ public class FacetedSearchServiceTest
     @Test
     public void getFacetKeys() throws Exception
     {
-        unit.getPluginSearch().getPluginProperties().put("facet.first_name_s", "First Name");
-        unit.getPluginSearch().getPluginProperties().put("facet.last_name_s", "Last Name");
-        unit.getPluginSearch().getPluginProperties().put("facet.date.birth_date_tdt", "Birth Date");
-
+        searchConfig.getFacets().put("facet.first_name_s", "First Name");
+        searchConfig.getFacets().put("facet.last_name_s", "Last Name");
+        searchConfig.getFacets().put("facet.date.birth_date_tdt", "Birth Date");
         String expected = "facet.query=" +
                 URLEncoder.encode("{!key='Birth Date, Previous Week'}birth_date_tdt", SearchConstants.FACETED_SEARCH_ENCODING) +
                 ":" + URLEncoder.encode("[NOW/DAY-7DAY TO *]", SearchConstants.FACETED_SEARCH_ENCODING) +

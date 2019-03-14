@@ -27,8 +27,7 @@ package com.armedia.acm.services.subscription.web.api;
  * #L%
  */
 
-import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
-import com.armedia.acm.pluginmanager.model.AcmPlugin;
+import com.armedia.acm.services.subscription.model.SubscriptionConfig;
 import com.armedia.acm.services.subscription.model.SubscriptionConstants;
 import com.armedia.acm.services.subscription.service.SubscriptionService;
 
@@ -36,14 +35,11 @@ import org.activiti.engine.impl.util.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-import javax.servlet.http.HttpSession;
 
 import java.sql.SQLException;
 
@@ -56,7 +52,7 @@ import java.sql.SQLException;
 public class RemovingSubscriptionAPIController
 {
 
-    private AcmPlugin subscriptionPlugin;
+    private SubscriptionConfig subscriptionConfig;
     private SubscriptionService subscriptionService;
 
     private Logger log = LoggerFactory.getLogger(getClass());
@@ -66,27 +62,23 @@ public class RemovingSubscriptionAPIController
     public String removeSubscription(
             @PathVariable("userId") String userId,
             @PathVariable("objType") String objectType,
-            @PathVariable("objId") Long objectId,
-            Authentication authentication,
-            HttpSession httpSession) throws AcmObjectNotFoundException, SQLException
+            @PathVariable("objId") Long objectId) throws SQLException
     {
-        log.info("Removing subscription for user:" + userId + " on object['" + objectType + "]:[" + objectId + "]");
+        log.info("Removing subscription for user: {} on object [{}]:[{}]", userId, objectType, objectId);
         int resultFromDeleteAction = getSubscriptionService().deleteSubscriptionForGivenObject(userId, objectId, objectType);
 
         if (resultFromDeleteAction == SubscriptionConstants.NO_ROW_DELETED)
         {
-            log.debug("Subscription for user:" + userId + " on object['" + objectType + "]:[" + objectId + "] not found in the DB");
-            String msg = (String) getSubscriptionPlugin().getPluginProperties().get(SubscriptionConstants.SUCCESS_MSG);
-            return prepareJsonReturnMsg(msg, objectId);
+            log.debug("Subscription for user: {} on object [{}]:[{}] not found in the DB",userId, objectType,objectId);
+            return prepareJsonReturnMsg("Subscription Removed Successfully", objectId);
         }
         else
         {
-            log.debug("Subscription for user:" + userId + " on object['" + objectType + "]:[" + objectId + "] successfully removed");
+            log.debug("Subscription for user: {} on object [{}]:[{}] successfully removed", userId, objectType, objectId);
             getSubscriptionService().deleteSubscriptionEventsForGivenObject(userId, objectId, objectType);
             log.debug("Deleted all subscription events related to object '{}' with id '{}' for user '{}'", objectType, objectId, userId);
 
-            String successMsg = (String) getSubscriptionPlugin().getPluginProperties().get(SubscriptionConstants.SUCCESS_MSG);
-            return prepareJsonReturnMsg(successMsg, objectId);
+            return prepareJsonReturnMsg("Subscription Removed Successfully", objectId);
         }
     }
 
@@ -100,14 +92,14 @@ public class RemovingSubscriptionAPIController
         return objectToReturn;
     }
 
-    public AcmPlugin getSubscriptionPlugin()
+    public SubscriptionConfig getSubscriptionConfig()
     {
-        return subscriptionPlugin;
+        return subscriptionConfig;
     }
 
-    public void setSubscriptionPlugin(AcmPlugin subscriptionPlugin)
+    public void setSubscriptionConfig(SubscriptionConfig subscriptionConfig)
     {
-        this.subscriptionPlugin = subscriptionPlugin;
+        this.subscriptionConfig = subscriptionConfig;
     }
 
     public SubscriptionService getSubscriptionService()

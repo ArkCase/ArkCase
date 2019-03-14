@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.springframework.org/schema/beans"
-    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
+       xmlns:context="http://www.springframework.org/schema/context" xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+    http://www.springframework.org/schema/context
+    http://www.springframework.org/schema/context/spring-context-4.1.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+    <context:annotation-config/>
 
     <bean id="acmPersonDao" class="com.armedia.acm.plugins.person.dao.PersonDao"/>
     <bean id="acmPersonContactDao" class="com.armedia.acm.plugins.person.dao.PersonContactDao"/>
@@ -38,13 +43,11 @@
         <property name="ecmFileService" ref="ecmFileService"/>
         <property name="folderAndFilesUtils" ref="folderAndFilesUtils"/>
         <property name="personEventPublisher" ref="personEventPublisher"/>
-        <property name="peopleRootFolder" value="${person.folder.root}"/>
-        <property name="personOwnFolder" value="${person.folder.own.spel}"/>
-        <property name="picturesFolder" value="${person.folder.pictures}"/>
         <property name="personPipelineManager" ref="personPipelineManager"/>
         <property name="fileParticipantService" ref="fileParticipantService"/>
         <property name="objectConverter" ref="objectConverter"/>
         <property name="ecmTikaFileService" ref="ecmTikaFileService"/>
+        <property name="personConfig" ref="personConfig"/>
     </bean>
 
     <bean id="personPipelineManager" class="com.armedia.acm.services.pipeline.PipelineManager">
@@ -92,7 +95,7 @@
     </bean>
 
     <bean id="organizationAssociationToSolrTransformer"
-        class="com.armedia.acm.plugins.person.service.OrganizationAssociationToSolrTransformer">
+          class="com.armedia.acm.plugins.person.service.OrganizationAssociationToSolrTransformer">
         <property name="organizationAssociationDao" ref="acmOrganizationAssociationDao"/>
         <property name="userDao" ref="userJpaDao"/>
     </bean>
@@ -113,33 +116,19 @@
 
     <bean id="personPlugin" class="com.armedia.acm.pluginmanager.model.AcmPlugin">
         <property name="pluginName" value="Person Plugin"/>
-        <property name="pluginProperties" ref="personPluginProperties"/>
+        <property name="configurationPropertyService" ref="configurationPropertyService"/>
         <property name="suportedObjectTypesNames">
             <list>
                 <value>PERSON</value>
                 <value>ORGANIZATION</value>
             </list>
         </property>
+        <property name="pluginConfig" ref="personConfig"/>
     </bean>
 
     <bean id="personAssociationPlugin" class="com.armedia.acm.pluginmanager.model.AcmPlugin">
         <property name="pluginName" value="PersonAssocaition Plugin"/>
-    </bean>
-
-    <bean id="personPluginProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
-        <!-- note: must leave "file:" at the start of the file name for spring
-        to be able to read the file; otherwise it will try to read from the
-        classpath -->
-        <property name="location" value="file:${user.home}/.arkcase/acm/personPlugin.properties"/>
-        <property name="ignoreResourceNotFound" value="true"/>
-        <property name="localOverride" value="false"/>
-        <property name="properties">
-            <props>
-                <prop key="person.types">Complaintant,Subject,Witness,Wrongdoer,Other,Initiator,Primary
-                    Victim,Victim,Defendant,Investigating Officer,Police Witness
-                </prop>
-            </props>
-        </property>
+        <property name="configurationPropertyService" ref="configurationPropertyService"/>
     </bean>
 
     <bean id="personAssociationService" class="com.armedia.acm.plugins.person.service.PersonAssociationServiceImpl">
@@ -161,5 +150,9 @@
         <property name="nonHistoryGeneratingEvents">
             <list></list>
         </property>
+    </bean>
+
+    <bean id="personConfig" class="com.armedia.acm.plugins.person.model.PersonConfig" scope="refresh">
+        <aop:scoped-proxy/>
     </bean>
 </beans>

@@ -46,10 +46,16 @@ import java.time.LocalDate;
         "/spring/spring-library-acm-encryption.xml",
         "/spring/spring-config-user-service-test-dummy-beans.xml",
         "/spring/spring-library-search.xml",
-        "/spring/spring-library-object-converter.xml"
+        "/spring/spring-library-object-converter.xml",
+        "/spring/spring-library-configuration.xml"
 })
 public class UserDaoIT
 {
+    static
+    {
+        String userHomePath = System.getProperty("user.home");
+        System.setProperty("acm.configurationserver.propertyfile", userHomePath + "/.arkcase/acm/conf.yml");
+    }
 
     @Autowired
     private UserDao userDao;

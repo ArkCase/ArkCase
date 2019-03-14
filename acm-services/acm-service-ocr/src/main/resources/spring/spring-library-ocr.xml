@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns="http://www.springframework.org/schema/beans"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
+       xmlns="http://www.springframework.org/schema/beans" xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
 
     <bean id="ocrArkCaseBeanUtils" class="com.armedia.acm.objectonverter.ArkCaseBeanUtils">
         <property name="excludeFields">
@@ -97,7 +97,7 @@
         <property name="ocrArkCaseBeanUtils" ref="ocrArkCaseBeanUtils"/>
         <property name="ocrBusinessProcessRulesExecutor" ref="ocrBusinessProcessRulesExecutor"/>
         <property name="OCRServiceFactory" ref="ocrServiceFactory"/>
-        <property name="ecmFileServiceProperties" ref="ecmFileServiceProperties"/>
+        <property name="ocrConfig" ref="ocrConfig"/>
         <property name="folderAndFilesUtils" ref="folderAndFilesUtils"/>
     </bean>
 
@@ -132,5 +132,9 @@
         <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
         <property name="objectLockService" ref="objectLockService"/>
         <property name="objectLockingManager" ref="acmObjectLockingManager"/>
+    </bean>
+
+    <bean id="ocrConfig" class="com.armedia.acm.ocr.model.OCRConfig" scope="refresh">
+        <aop:scoped-proxy/>
     </bean>
 </beans>

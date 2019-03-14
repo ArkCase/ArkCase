@@ -101,11 +101,20 @@ import java.util.UUID;
         "/spring/spring-library-calendar-integration-exchange-service.xml",
         "/spring/spring-library-object-converter.xml",
         "/spring/spring-library-ecm-file-lock.xml",
-        "/spring/spring-library-core-api.xml"        
+        "/spring/spring-library-core-api.xml",
+        "/spring/spring-library-configuration.xml",
+        "/spring/spring-library-task-plugin-test.xml",
+        "/spring/spring-library-convert-folder-service.xml"
 })
 @TransactionConfiguration(defaultRollback = true)
 public class BuckslipArkcaseIT
 {
+    static
+    {
+        String userHomePath = System.getProperty("user.home");
+        System.setProperty("acm.configurationserver.propertyfile", userHomePath + "/.arkcase/acm/conf.yml");
+    }
+
     final String processName = "ArkCaseBuckslipProcess";
     private transient final Logger LOG = LoggerFactory.getLogger(getClass());
     @Autowired

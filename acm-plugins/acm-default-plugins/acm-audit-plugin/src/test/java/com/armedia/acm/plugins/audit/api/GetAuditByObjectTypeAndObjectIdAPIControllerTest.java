@@ -37,6 +37,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 
 import com.armedia.acm.audit.dao.AuditDao;
 import com.armedia.acm.audit.model.AuditEvent;
+import com.armedia.acm.audit.model.AuditEventConfig;
 import com.armedia.acm.core.query.QueryResultPageWithTotalCount;
 import com.armedia.acm.plugins.audit.model.AuditConstants;
 import com.armedia.acm.plugins.audit.service.ReplaceEventTypeNames;
@@ -63,10 +64,9 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = { "classpath:/spring/spring-library-audit-plugin-test.xml" })
@@ -85,13 +85,13 @@ public class GetAuditByObjectTypeAndObjectIdAPIControllerTest
     String sort = "";
     private MockMvc mockMvc;
     private MockHttpSession mockHttpSession;
-    private Map<String, String> mockAuditProperties;
     private GetAuditByObjectTypeAndObjectIdAPIController unit;
     private AuditDao mockAuditDao;
     private Authentication mockAuthentication;
     private ReplaceEventTypeNames mockReplaceEventTypeNames;
     @Autowired
     private ExceptionHandlerExceptionResolver exceptionResolver;
+    private AuditEventConfig auditEventConfigMock;
     private Logger log = LoggerFactory.getLogger(getClass());
 
     @Before
@@ -101,11 +101,11 @@ public class GetAuditByObjectTypeAndObjectIdAPIControllerTest
         mockHttpSession = new MockHttpSession();
         mockAuthentication = createMock(Authentication.class);
         mockReplaceEventTypeNames = createMock(ReplaceEventTypeNames.class);
+        auditEventConfigMock = createMock(AuditEventConfig.class);
         unit = new GetAuditByObjectTypeAndObjectIdAPIController();
-        mockAuditProperties = createMock(HashMap.class);
-        unit.setAuditProperties(mockAuditProperties);
         unit.setAuditDao(mockAuditDao);
         unit.setReplaceEventTypeNames(mockReplaceEventTypeNames);
+        unit.setAuditEventConfig(auditEventConfigMock);
 
         mockMvc = MockMvcBuilders.standaloneSetup(unit).setHandlerExceptionResolvers(exceptionResolver).build();
 
@@ -146,14 +146,16 @@ public class GetAuditByObjectTypeAndObjectIdAPIControllerTest
     @Test
     public void getEventsByObjectTypeAndObjectId() throws Exception
     {
-        expect(mockAuditProperties.get(eq(key))).andReturn("com.armedia.acm.app.task.create, com.armedia.acm.casefile.created");
+        expect(auditEventConfigMock.getEventTypes())
+                .andReturn(Collections.singletonMap(key, "com.armedia.acm.app.task.create, com.armedia.acm.casefile.created"));
         executeTest(false);
     }
 
     @Test
     public void getEventsByObjectTypeAndObjectIdWhenEventTypesNull() throws Exception
     {
-        expect(mockAuditProperties.get(eq(key))).andReturn(null);
+        expect(auditEventConfigMock.getEventTypes())
+                .andReturn(Collections.singletonMap(key, null));
         executeTest(true);
     }
 

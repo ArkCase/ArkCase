@@ -28,7 +28,7 @@ package com.armedia.acm.plugins.alfrescorma.service;
  */
 
 import com.armedia.acm.plugins.alfrescorma.exception.AlfrescoServiceException;
-import com.armedia.acm.plugins.alfrescorma.model.AlfrescoRmaPluginConstants;
+import com.armedia.acm.plugins.alfrescorma.model.AlfrescoRmaConfig;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 
 import org.apache.chemistry.opencmis.client.api.Folder;
@@ -36,7 +36,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Map;
-import java.util.Properties;
 
 /**
  * Created by dmiller on 11/7/2016.
@@ -46,8 +45,7 @@ public class FindFolderService extends AlfrescoService<Folder>
     private static final String BASE_PATH = "/Sites/rm/documentLibrary/";
     private transient final Logger LOG = LoggerFactory.getLogger(getClass());
     private EcmFileService ecmFileService;
-    private String rmaRootFolder;
-    private Properties alfrescoRmaPluginProperties;
+    private AlfrescoRmaConfig rmaConfig;
 
     /**
      * The context must contain either "objectType" or "folderPath" keys. If "objectType" is present, the category
@@ -86,18 +84,14 @@ public class FindFolderService extends AlfrescoService<Folder>
         if (context.containsKey("folderPath"))
         {
             String path = (String) context.get("folderPath");
-            return BASE_PATH + getRmaRootFolder() + "/" + path;
+            return BASE_PATH + rmaConfig.getRootFolder() + "/" + path;
         }
 
         String objectType = (String) context.get("objectType");
 
-        String propertyName = AlfrescoRmaPluginConstants.CATEGORY_FOLDER_PROPERTY_KEY_PREFIX + objectType;
+        String categoryFolderName = rmaConfig.getCategoryFolderForObject(objectType);
 
-        String categoryFolderName = getAlfrescoRmaPluginProperties().getProperty(propertyName);
-
-        String fullPath = BASE_PATH + getRmaRootFolder() + "/" + categoryFolderName;
-
-        return fullPath;
+        return BASE_PATH + rmaConfig.getRootFolder() + "/" + categoryFolderName;
     }
 
     private void validateContext(Map<String, Object> context) throws IllegalArgumentException
@@ -118,23 +112,13 @@ public class FindFolderService extends AlfrescoService<Folder>
         this.ecmFileService = ecmFileService;
     }
 
-    public String getRmaRootFolder()
+    public AlfrescoRmaConfig getRmaConfig()
     {
-        return rmaRootFolder;
+        return rmaConfig;
     }
 
-    public void setRmaRootFolder(String rmaRootFolder)
+    public void setRmaConfig(AlfrescoRmaConfig rmaConfig)
     {
-        this.rmaRootFolder = rmaRootFolder;
-    }
-
-    public Properties getAlfrescoRmaPluginProperties()
-    {
-        return alfrescoRmaPluginProperties;
-    }
-
-    public void setAlfrescoRmaPluginProperties(Properties alfrescoRmaPluginProperties)
-    {
-        this.alfrescoRmaPluginProperties = alfrescoRmaPluginProperties;
+        this.rmaConfig = rmaConfig;
     }
 }

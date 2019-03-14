@@ -30,9 +30,8 @@ package com.armedia.acm.services.email.smtp;
 import com.armedia.acm.auth.AuthenticationUtils;
 import com.armedia.acm.convertfolder.ConversionException;
 import com.armedia.acm.convertfolder.DefaultFolderAndFileConverter;
-import com.armedia.acm.core.exceptions.AcmEncryptionException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
-import com.armedia.acm.files.propertymanager.PropertyFileManager;
+import com.armedia.acm.email.model.EmailSenderConfig;
 import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
@@ -43,7 +42,6 @@ import com.armedia.acm.services.email.model.EmailWithAttachmentsAndLinksDTO;
 import com.armedia.acm.services.email.model.EmailWithAttachmentsDTO;
 import com.armedia.acm.services.email.model.EmailWithEmbeddedLinksDTO;
 import com.armedia.acm.services.email.model.EmailWithEmbeddedLinksResultDTO;
-import com.armedia.acm.services.email.sender.model.EmailSenderConfigurationConstants;
 import com.armedia.acm.services.email.sender.service.EmailSenderConfigurationServiceImpl;
 import com.armedia.acm.services.email.service.AcmEmailContentGeneratorService;
 import com.armedia.acm.services.email.service.AcmEmailSenderService;
@@ -81,10 +79,6 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
 
     private final Logger LOG = LoggerFactory.getLogger(getClass());
 
-    private PropertyFileManager propertyFileManager;
-
-    private String emailSenderPropertyFileLocation;
-
     private EcmFileService ecmFileService;
 
     private MuleContextManager muleContextManager;
@@ -94,6 +88,8 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
     private String flow;
 
     private AcmEmailContentGeneratorService acmEmailContentGeneratorService;
+
+    private EmailSenderConfig emailSenderConfig;
 
     private TemplatingEngine templatingEngine;
 
@@ -295,7 +291,7 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
                     fileName = fileName + ecmFile.getFileActiveVersionNameExtension();
                 }
 
-                if (getEmailSenderConfigurationService().readConfiguration().isConvertDocumentsToPdf() &&
+                if (getEmailSenderConfigurationService().readConfiguration().getConvertDocumentsToPdf() &&
                         Objects.nonNull(ecmFile) && !".pdf".equals(ecmFile.getFileActiveVersionNameExtension()))
                 {
                     try
@@ -374,7 +370,7 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
      */
     @Override
     public List<EmailWithEmbeddedLinksResultDTO> sendEmailWithEmbeddedLinks(EmailWithEmbeddedLinksDTO in, Authentication authentication,
-            AcmUser user) throws Exception
+            AcmUser user)
     {
         List<EmailWithEmbeddedLinksResultDTO> emailResultList = new ArrayList<>();
         Exception exception = null;
@@ -412,59 +408,26 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
             event.setSucceeded(success);
             eventPublisher.publishEvent(event);
         }
-
         return emailResultList;
+
     }
 
-    protected Map<String, Object> loadSmtpAndOriginatingProperties() throws AcmEncryptionException
+    protected Map<String, Object> loadSmtpAndOriginatingProperties()
     {
-        Map<String, Object> loadedProperties = propertyFileManager.loadMultiple(emailSenderPropertyFileLocation,
-                EmailSenderConfigurationConstants.HOST, EmailSenderConfigurationConstants.PORT, EmailSenderConfigurationConstants.USERNAME,
-                EmailSenderConfigurationConstants.PASSWORD, EmailSenderConfigurationConstants.USER_FROM,
-                EmailSenderConfigurationConstants.ENCRYPTION);
-
         Map<String, Object> messageProps = new HashMap<>();
-
-        messageProps.put("host", loadedProperties.get(EmailSenderConfigurationConstants.HOST));
-        messageProps.put("port", loadedProperties.get(EmailSenderConfigurationConstants.PORT));
-        messageProps.put("user", loadedProperties.get(EmailSenderConfigurationConstants.USERNAME));
-        messageProps.put("password", loadedProperties.get(EmailSenderConfigurationConstants.PASSWORD));
-        messageProps.put("from", loadedProperties.get(EmailSenderConfigurationConstants.USER_FROM));
-        messageProps.put("encryption", loadedProperties.get(EmailSenderConfigurationConstants.ENCRYPTION));
+        messageProps.put("host", emailSenderConfig.getHost());
+        messageProps.put("port", emailSenderConfig.getPort());
+        messageProps.put("user", emailSenderConfig.getUsername());
+        messageProps.put("password", emailSenderConfig.getPassword());
+        messageProps.put("from", emailSenderConfig.getUserFrom());
+        messageProps.put("encryption", emailSenderConfig.getEncryption());
 
         return messageProps;
     }
 
     private String makeNote(String emailAddress, EmailWithEmbeddedLinksDTO emailWithEmbeddedLinksDTO, Authentication authentication)
-            throws AcmEncryptionException
     {
         return getAcmEmailContentGeneratorService().generateEmailBody(emailWithEmbeddedLinksDTO, emailAddress, authentication);
-    }
-
-    /**
-     * @return the propertyFileManager
-     */
-    public PropertyFileManager getPropertyFileManager()
-    {
-        return propertyFileManager;
-    }
-
-    /**
-     * @param propertyFileManager
-     *            the propertyFileManager to set
-     */
-    public void setPropertyFileManager(PropertyFileManager propertyFileManager)
-    {
-        this.propertyFileManager = propertyFileManager;
-    }
-
-    /**
-     * @param emailSenderPropertyFileLocation
-     *            the emailSenderPropertyFileLocation to set
-     */
-    public void setEmailSenderPropertyFileLocation(String emailSenderPropertyFileLocation)
-    {
-        this.emailSenderPropertyFileLocation = emailSenderPropertyFileLocation;
     }
 
     /**
@@ -502,6 +465,16 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
     public void setFlow(String flow)
     {
         this.flow = flow;
+    }
+
+    public EmailSenderConfig getEmailSenderConfig()
+    {
+        return emailSenderConfig;
+    }
+
+    public void setEmailSenderConfig(EmailSenderConfig emailSenderConfig)
+    {
+        this.emailSenderConfig = emailSenderConfig;
     }
 
     public TemplatingEngine getTemplatingEngine()

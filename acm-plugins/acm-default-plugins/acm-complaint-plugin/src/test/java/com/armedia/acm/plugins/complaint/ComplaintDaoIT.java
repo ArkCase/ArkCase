@@ -56,11 +56,19 @@ import javax.persistence.PersistenceContext;
         "/spring/spring-library-complaint-dao-test.xml",
         "/spring/spring-library-context-holder.xml",
         "/spring/spring-library-property-file-manager.xml",
-        "/spring/spring-library-acm-encryption.xml"
+        "/spring/spring-library-acm-encryption.xml",
+        "/spring/spring-library-configuration.xml",
+        "/spring/spring-library-object-converter.xml"
 })
 @TransactionConfiguration(defaultRollback = true, transactionManager = "transactionManager")
 public class ComplaintDaoIT
 {
+    static
+    {
+        String userHomePath = System.getProperty("user.home");
+        System.setProperty("acm.configurationserver.propertyfile", userHomePath + "/.arkcase/acm/conf.yml");
+    }
+
     @Autowired
     private ComplaintDao complaintDao;
 

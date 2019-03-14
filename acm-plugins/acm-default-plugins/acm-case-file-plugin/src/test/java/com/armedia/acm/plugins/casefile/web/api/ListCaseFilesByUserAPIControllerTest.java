@@ -70,7 +70,7 @@ import java.util.List;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
         "classpath:/spring/spring-web-acm-web.xml",
-        "classpath:/spring/spring-library-case-plugin-test.xml"
+        "classpath:/spring/spring-library-case-plugin-unit-test.xml"
 })
 
 public class ListCaseFilesByUserAPIControllerTest extends EasyMockSupport

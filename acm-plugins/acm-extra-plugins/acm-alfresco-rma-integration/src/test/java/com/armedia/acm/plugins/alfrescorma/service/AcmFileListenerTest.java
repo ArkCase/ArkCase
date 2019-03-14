@@ -31,7 +31,7 @@ import static org.easymock.EasyMock.anyObject;
 import static org.easymock.EasyMock.eq;
 import static org.easymock.EasyMock.expect;
 
-import com.armedia.acm.plugins.alfrescorma.model.AlfrescoRmaPluginConstants;
+import com.armedia.acm.plugins.alfrescorma.model.AlfrescoRmaConfig;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileAddedEvent;
@@ -42,13 +42,13 @@ import org.junit.Test;
 import org.springframework.security.core.Authentication;
 
 import java.util.Date;
-import java.util.Properties;
 
 public class AcmFileListenerTest extends EasyMockSupport
 {
     private AcmFileListener unit;
     private AlfrescoRecordsService mockService;
     private Authentication mockAuthentication;
+    private AlfrescoRmaConfig rmaConfig;
 
     @Before
     public void setUp()
@@ -58,6 +58,8 @@ public class AcmFileListenerTest extends EasyMockSupport
         mockAuthentication = createMock(Authentication.class);
 
         unit.setAlfrescoRecordsService(mockService);
+        rmaConfig = new AlfrescoRmaConfig();
+        rmaConfig.setIntegrationEnabled(true);
     }
 
     @Test
@@ -66,7 +68,8 @@ public class AcmFileListenerTest extends EasyMockSupport
         EcmFile file = new EcmFile();
         file.setContainer(new AcmContainer());
 
-        expect(mockService.checkIntegrationEnabled(AlfrescoRmaPluginConstants.FILE_INTEGRATION_KEY)).andReturn(Boolean.FALSE);
+        rmaConfig.setDeclareRecordFolderOnFileUpload(false);
+        expect(mockService.getRmaConfig()).andReturn(rmaConfig);
         expect(mockAuthentication.getDetails()).andReturn("details").anyTimes();
 
         replayAll();
@@ -85,19 +88,13 @@ public class AcmFileListenerTest extends EasyMockSupport
         file.getContainer().setContainerObjectType("containerObjectType");
         String categoryFolder = "categoryFolder";
         file.setStatus("ACTIVE");
-
-        Properties p = new Properties();
-        p.setProperty(AlfrescoRmaPluginConstants.CATEGORY_FOLDER_PROPERTY_KEY_PREFIX + file.getContainer().getContainerObjectType(),
-                categoryFolder);
         String originatorOrg = "originatorOrg";
-        p.setProperty(AlfrescoRmaPluginConstants.PROPERTY_ORIGINATOR_ORG, originatorOrg);
 
+        rmaConfig.setDefaultOriginatorOrg(originatorOrg);
+        rmaConfig.setCategoryFolderCaseFile(categoryFolder);
+        rmaConfig.setDeclareRecordFolderOnFileUpload(true);
+        expect(mockService.getRmaConfig()).andReturn(rmaConfig);
         expect(mockAuthentication.getDetails()).andReturn("details").anyTimes();
-
-        expect(mockService.checkIntegrationEnabled(AlfrescoRmaPluginConstants.FILE_INTEGRATION_KEY)).andReturn(Boolean.TRUE);
-
-        expect(mockService.getAlfrescoRmaProperties()).andReturn(p).atLeastOnce();
-
         mockService.declareFileAsRecord(eq(file.getContainer()), anyObject(Date.class), eq("parentObjectName"), eq(originatorOrg),
                 eq("userId"), eq("cmisObjectId"), eq(file.getStatus()), eq(500L));
 

@@ -165,7 +165,10 @@
                 "title": "新聞",
                 "noDataMessage": "目前沒有RSS /信息",
                 "configDescription": "描述",
-                "configDescriptionPlaceholder": "輸入小部件描述"
+                "configDescriptionPlaceholder": "輸入小部件描述",
+                "message": {
+                    "error": "無效的網址"
+                }
             },
             "details": {
                 "title": "詳細信息",

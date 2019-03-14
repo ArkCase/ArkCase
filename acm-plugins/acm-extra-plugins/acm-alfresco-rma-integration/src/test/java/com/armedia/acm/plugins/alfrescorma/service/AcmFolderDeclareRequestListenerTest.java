@@ -31,7 +31,7 @@ import static org.easymock.EasyMock.anyObject;
 import static org.easymock.EasyMock.eq;
 import static org.easymock.EasyMock.expect;
 
-import com.armedia.acm.plugins.alfrescorma.model.AlfrescoRmaPluginConstants;
+import com.armedia.acm.plugins.alfrescorma.model.AlfrescoRmaConfig;
 import com.armedia.acm.plugins.ecm.dao.AcmFolderDao;
 import com.armedia.acm.plugins.ecm.model.AcmCmisObjectList;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
@@ -53,6 +53,7 @@ public class AcmFolderDeclareRequestListenerTest extends EasyMockSupport
     private Authentication mockAuthentication;
     private AcmFolderDao mockAcmFolderDao;
     private AcmFolderService mockAcmFolderService;
+    private AlfrescoRmaConfig rmaConfig;
 
     @Before
     public void setUp()
@@ -65,6 +66,8 @@ public class AcmFolderDeclareRequestListenerTest extends EasyMockSupport
         unit.setAlfrescoRecordsService(mockService);
         unit.setAcmFolderDao(mockAcmFolderDao);
         unit.setAcmFolderService(mockAcmFolderService);
+        rmaConfig = new AlfrescoRmaConfig();
+        rmaConfig.setIntegrationEnabled(true);
     }
 
     @Test
@@ -76,8 +79,8 @@ public class AcmFolderDeclareRequestListenerTest extends EasyMockSupport
 
         AcmContainer acmContainer = new AcmContainer();
 
-        expect(mockService.checkIntegrationEnabled(AlfrescoRmaPluginConstants.FOLDER_DECLARE_REQUEST_INTEGRATION_KEY))
-                .andReturn(Boolean.FALSE);
+        rmaConfig.setDeclareFolderRecordOnDeclareRequest(false);
+        expect(mockService.getRmaConfig()).andReturn(rmaConfig);
         expect(mockAuthentication.getDetails()).andReturn("details").anyTimes();
         expect(mockAuthentication.getName()).andReturn("user").anyTimes();
 
@@ -102,8 +105,8 @@ public class AcmFolderDeclareRequestListenerTest extends EasyMockSupport
         AcmFolder acmFolder = new AcmFolder();
         acmFolder.setId(234L);
 
-        expect(mockService.checkIntegrationEnabled(AlfrescoRmaPluginConstants.FOLDER_DECLARE_REQUEST_INTEGRATION_KEY))
-                .andReturn(Boolean.TRUE);
+        rmaConfig.setDeclareFolderRecordOnDeclareRequest(true);
+        expect(mockService.getRmaConfig()).andReturn(rmaConfig);
         expect(mockAuthentication.getDetails()).andReturn("details").anyTimes();
         expect(mockAuthentication.getName()).andReturn("user").anyTimes();
         expect(mockAcmFolderService.findById(acmCmisObjectList.getFolderId())).andReturn(acmFolder);
@@ -133,8 +136,8 @@ public class AcmFolderDeclareRequestListenerTest extends EasyMockSupport
 
         AcmContainer acmContainer = new AcmContainer();
 
-        expect(mockService.checkIntegrationEnabled(AlfrescoRmaPluginConstants.FOLDER_DECLARE_REQUEST_INTEGRATION_KEY))
-                .andReturn(Boolean.TRUE);
+        rmaConfig.setDeclareFolderRecordOnDeclareRequest(true);
+        expect(mockService.getRmaConfig()).andReturn(rmaConfig);
         expect(mockAuthentication.getDetails()).andReturn("details").anyTimes();
         expect(mockAuthentication.getName()).andReturn("user").anyTimes();
 

@@ -28,13 +28,13 @@ package com.armedia.acm.services.tag.service;
  */
 
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
-import com.armedia.acm.pluginmanager.model.AcmPlugin;
 import com.armedia.acm.services.search.model.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.tag.dao.AssociatedTagDao;
 import com.armedia.acm.services.tag.dao.TagDao;
 import com.armedia.acm.services.tag.model.AcmAssociatedTag;
 import com.armedia.acm.services.tag.model.AcmTag;
+import com.armedia.acm.services.tag.model.TagConfig;
 import com.armedia.acm.services.tag.model.TagConstants;
 
 import org.json.JSONArray;
@@ -47,7 +47,6 @@ import org.springframework.security.core.Authentication;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by marjan.stefanoski on 31.03.2015.
@@ -58,7 +57,7 @@ public class AssociatedTagService
     private transient final Logger log = LoggerFactory.getLogger(getClass());
     private TagDao tagDao;
     private AssociatedTagDao associatedTagDao;
-    private AcmPlugin tagPlugin;
+    private TagConfig tagConfig;
     private ExecuteSolrQuery executeSolrQuery;
 
     public List<AcmAssociatedTag> getAcmAssociatedTagByTagIdAndObjectIdAndType(Long tagId, Long objectId, String objectType)
@@ -89,11 +88,10 @@ public class AssociatedTagService
             throws AcmObjectNotFoundException
     {
 
-        Map<String, Object> properties = getTagPlugin().getPluginProperties();
-        String predefinedQuery = (String) properties.get(TagConstants.SOLR_QUERY_GET_ASSOCIATED_TAG_BY_OBJECT_ID_AND_OBJECT_TYPE);
+        String predefinedQuery = tagConfig.getTagAssociatedByObjectIdAndTypeQuery();
         predefinedQuery = predefinedQuery.replace(TagConstants.SOLR_PLACEHOLDER_PARENT_TYPE, objectType);
         predefinedQuery = predefinedQuery.replace(TagConstants.SOLR_PLACEHOLDER_PARENT_ID, Long.toString(objectId));
-        String solrResponseJsonString = null;
+        String solrResponseJsonString;
         try
         {
             solrResponseJsonString = getExecuteSolrQuery().getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH,
@@ -101,11 +99,8 @@ public class AssociatedTagService
         }
         catch (MuleException e)
         {
-            if (log.isErrorEnabled())
-            {
-                log.error("Mule exception occurred while performing quick search to fetch tags for object['" + objectType + "]:[" + objectId
-                        + "]", e);
-            }
+            log.error("Mule exception occurred while performing quick search to fetch tags for object [{}]:[{}]",
+                    objectType, objectId, e);
             throw new AcmObjectNotFoundException(TagConstants.OBJECT_TYPE, null,
                     "Mule exception occurred while performing quick search to fetch tags for object['" + objectType + "]:[" + objectId
                             + "]",
@@ -123,10 +118,7 @@ public class AssociatedTagService
         JSONArray docsList = responseBody.getJSONArray(TagConstants.SOLR_RESPONSE_DOCS);
         if (docsList.length() == 0)
         {
-            if (log.isErrorEnabled())
-            {
-                log.error("No tags associated to the object['" + objectType + "]:[" + objectId + "]");
-            }
+            log.error("No tags associated to the object[{}]:[{}]", objectType, objectId);
             throw new AcmObjectNotFoundException(objectType, objectId, "no such object to subscribe to", null);
         }
         for (int i = 0; i < docsList.length(); i++)
@@ -187,14 +179,14 @@ public class AssociatedTagService
         return newAssociatedTag;
     }
 
-    public AcmPlugin getTagPlugin()
+    public TagConfig getTagConfig()
     {
-        return tagPlugin;
+        return tagConfig;
     }
 
-    public void setTagPlugin(AcmPlugin tagPlugin)
+    public void setTagConfig(TagConfig tagConfig)
     {
-        this.tagPlugin = tagPlugin;
+        this.tagConfig = tagConfig;
     }
 
     public ExecuteSolrQuery getExecuteSolrQuery()

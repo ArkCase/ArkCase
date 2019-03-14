@@ -27,9 +27,9 @@ package com.armedia.acm.services.notification.service;
  * #L%
  */
 
+import com.armedia.acm.email.model.EmailSenderConfig;
 import com.armedia.acm.files.AbstractConfigurationFileEvent;
 import com.armedia.acm.files.ConfigurationFileChangedEvent;
-import com.armedia.acm.services.email.sender.model.EmailSenderConfiguration;
 import com.armedia.acm.services.email.sender.service.EmailSenderConfigurationServiceImpl;
 
 import org.slf4j.Logger;
@@ -56,11 +56,9 @@ public class NotificationSenderFactory implements ApplicationListener<AbstractCo
 
         if (event instanceof ConfigurationFileChangedEvent && event.getConfigFile().getName().equals("acmEmailSender.properties"))
         {
-            EmailSenderConfiguration senderConfigurationUpdated = null;
-            senderConfigurationUpdated = emailSenderConfigurationService.readConfiguration();
+            EmailSenderConfig senderConfigurationUpdated = emailSenderConfigurationService.readConfiguration();
             flowType = senderConfigurationUpdated.getType();
         }
-
     }
 
     /**

@@ -27,8 +27,9 @@ package com.armedia.acm.plugins.report.service;
  * #L%
  */
 
-import com.armedia.acm.files.propertymanager.PropertyFileManager;
+import com.armedia.acm.configuration.service.ConfigurationPropertyService;
 import com.armedia.acm.plugins.report.model.PentahoReportFiles;
+import com.armedia.acm.pentaho.config.PentahoReportsConfig;
 import com.armedia.acm.plugins.report.model.Report;
 import com.armedia.acm.plugins.report.model.ScheduleReportException;
 
@@ -54,21 +55,16 @@ import java.util.stream.Collectors;
 public class PentahoFilePropertiesService
 {
     private static final Logger LOGGER = LoggerFactory.getLogger(PentahoFilePropertiesService.class);
-    private final Logger LOG = LoggerFactory.getLogger(getClass());
     private PentahoReportFiles pentahoReportFiles;
     private ResponseEntity<PentahoReportFiles> response;
-    private String pentahoUrl;
-    private String pentahoPort;
-    private String filePropertiesApi;
-    private PropertyFileManager propertyFileManager;
     private ReportServiceImpl reportService;
-    private String reportsPropertyFileLocation;
+    private ConfigurationPropertyService configurationPropertyService;
+    private PentahoReportsConfig reportsConfig;
 
     public List<Report> getPentahoReports() throws Exception
     {
         List<Report> retval = new ArrayList<>();
-        List<Report> reports = null;
-        reports = getReportService().getPentahoReports();
+        List<Report> reports = getReportService().getPentahoReports();
 
         if (reports != null)
         {
@@ -76,17 +72,7 @@ public class PentahoFilePropertiesService
             {
                 if (!report.isFolder())
                 {
-                    String acmReportProperty = null;
-
-                    try
-                    {
-                        acmReportProperty = getPropertyFileManager().load(getReportsPropertyFileLocation(), report.getPropertyName(), null);
-                    }
-                    catch (Exception e)
-                    {
-                        LOG.warn("Cannot find property in the report properties file.");
-                    }
-
+                    String acmReportProperty = (String) configurationPropertyService.getProperty(report.getPropertyName());
                     if (acmReportProperty != null)
                     {
                         report.setInjected(true);
@@ -96,7 +82,6 @@ public class PentahoFilePropertiesService
                 }
             }
         }
-
         return retval;
     }
 
@@ -157,8 +142,9 @@ public class PentahoFilePropertiesService
 
     public String buildFilePropertiesUrl()
     {
-        return getPentahoUrl() + ((getPentahoPort() != null && !getPentahoPort().isEmpty()) ? ":" + getPentahoPort() : "")
-                + getFilePropertiesApi();
+        return reportsConfig.getServerUrl()
+                + (reportsConfig.getServerPort() != null ? ":" + reportsConfig.getServerPort() : "")
+                + reportsConfig.getFilePropertiesApi();
     }
 
     public PentahoReportFiles getPentahoReportFiles()
@@ -181,46 +167,6 @@ public class PentahoFilePropertiesService
         this.response = response;
     }
 
-    public String getPentahoUrl()
-    {
-        return pentahoUrl;
-    }
-
-    public void setPentahoUrl(String pentahoUrl)
-    {
-        this.pentahoUrl = pentahoUrl;
-    }
-
-    public String getPentahoPort()
-    {
-        return pentahoPort;
-    }
-
-    public void setPentahoPort(String pentahoPort)
-    {
-        this.pentahoPort = pentahoPort;
-    }
-
-    public String getFilePropertiesApi()
-    {
-        return filePropertiesApi;
-    }
-
-    public void setFilePropertiesApi(String filePropertiesApi)
-    {
-        this.filePropertiesApi = filePropertiesApi;
-    }
-
-    public PropertyFileManager getPropertyFileManager()
-    {
-        return propertyFileManager;
-    }
-
-    public void setPropertyFileManager(PropertyFileManager propertyFileManager)
-    {
-        this.propertyFileManager = propertyFileManager;
-    }
-
     public ReportServiceImpl getReportService()
     {
         return reportService;
@@ -231,13 +177,23 @@ public class PentahoFilePropertiesService
         this.reportService = reportService;
     }
 
-    public String getReportsPropertyFileLocation()
+    public PentahoReportsConfig getReportsConfig()
     {
-        return reportsPropertyFileLocation;
+        return reportsConfig;
     }
 
-    public void setReportsPropertyFileLocation(String reportsPropertyFileLocation)
+    public void setReportsConfig(PentahoReportsConfig reportsConfig)
     {
-        this.reportsPropertyFileLocation = reportsPropertyFileLocation;
+        this.reportsConfig = reportsConfig;
+    }
+
+    public ConfigurationPropertyService getConfigurationPropertyService()
+    {
+        return configurationPropertyService;
+    }
+
+    public void setConfigurationPropertyService(ConfigurationPropertyService configurationPropertyService)
+    {
+        this.configurationPropertyService = configurationPropertyService;
     }
 }

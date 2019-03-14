@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:int="http://www.springframework.org/schema/integration"
-       xmlns:int-mail="http://www.springframework.org/schema/integration/mail"
-       xmlns:util="http://www.springframework.org/schema/util" xmlns="http://www.springframework.org/schema/beans"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/spring-integration.xsd
 		http://www.springframework.org/schema/integration/mail http://www.springframework.org/schema/integration/mail/spring-integration-mail.xsd
-		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd"
+       xmlns:int="http://www.springframework.org/schema/integration" xmlns:int-mail="http://www.springframework.org/schema/integration/mail"
+       xmlns:util="http://www.springframework.org/schema/util">
 
     <!-- if we add task executor in publish-subscribe-channel than all mail processing will be done async,
     that would be needed if we are dealing with lot of incoming mails-->
     <int:publish-subscribe-channel id="mailChannelCaseFile"/>
 
-    <int-mail:inbound-channel-adapter id="emailReceiverAdapterCaseFile"
-                                      store-uri="imaps://${email.CASE_FILE.user}:${email.CASE_FILE.password}@${email.host}:${email.port}/${email.fetch.folder}"
+    <int-mail:inbound-channel-adapter id="emailReceiverAdapter"
+                                      store-uri="imaps://#{emailReceiverConfig.caseFileUser}:#{emailReceiverConfig.caseFilePassword}@#{emailReceiverConfig.host}:#{emailReceiverConfig.port}/#{emailReceiverConfig.fetchFolder}"
                                       channel="mailChannelCaseFile"
-                                      auto-startup="true" should-delete-messages="${email.should-delete-messages}"
-                                      should-mark-messages-as-read="${email.should-mark-messages-as-read}"
+                                      auto-startup="true" should-delete-messages="#{emailReceiverConfig.shouldDeleteMessages}"
+                                      should-mark-messages-as-read="#{emailReceiverConfig.shouldMarkMessagesAsRead}"
                                       java-mail-properties="javaMailPropertiesCaseFile" max-fetch-size="1">
-        <int:poller max-messages-per-poll="${email.max-messages-per-poll}" fixed-rate="${email.fixed-rate}"
+        <int:poller max-messages-per-poll="#{emailReceiverConfig.maxMessagesPerPoll}" fixed-rate="#{emailReceiverConfig.fixedRate}"
                     error-channel="mailErrorChannelCaseFile"/>
     </int-mail:inbound-channel-adapter>
 
@@ -33,21 +33,20 @@
     <util:properties id="javaMailPropertiesCaseFile">
         <prop key="mail.imap.socketFactory.class">javax.net.ssl.SSLSocketFactory</prop>
         <prop key="mail.imap.socketFactory.fallback">false</prop>
-        <prop key="mail.store.protocol">${email.protocol}</prop>
-        <prop key="mail.debug">${email.debug}</prop>
+        <prop key="mail.store.protocol">#{emailReceiverConfig.protocol}</prop>
+        <prop key="mail.debug">#{emailReceiverConfig.debug}</prop>
     </util:properties>
-
 
     <!-- Complaint mail channel -->
     <int:publish-subscribe-channel id="mailChannelComplaint"/>
 
     <int-mail:inbound-channel-adapter id="emailReceiverAdapterComplaint"
-                                      store-uri="imaps://${email.COMPLAINT.user}:${email.COMPLAINT.password}@${email.host}:${email.port}/${email.fetch.folder}"
+                                      store-uri="imaps://#{emailReceiverConfig.complaintUser}:#{emailReceiverConfig.complaintPassword}@#{emailReceiverConfig.host}:#{emailReceiverConfig.port}/#{emailReceiverConfig.fetchFolder}"
                                       channel="mailChannelComplaint"
-                                      auto-startup="true" should-delete-messages="${email.should-delete-messages}"
-                                      should-mark-messages-as-read="${email.should-mark-messages-as-read}"
+                                      auto-startup="true" should-delete-messages="#{emailReceiverConfig.shouldDeleteMessages}"
+                                      should-mark-messages-as-read="#{emailReceiverConfig.shouldMarkMessagesAsRead}"
                                       java-mail-properties="javaMailPropertiesComplaint" max-fetch-size="1">
-        <int:poller max-messages-per-poll="${email.max-messages-per-poll}" fixed-rate="${email.fixed-rate}"
+        <int:poller max-messages-per-poll="#{emailReceiverConfig.maxMessagesPerPoll}" fixed-rate="#{emailReceiverConfig.fixedRate}"
                     error-channel="mailErrorChannelComplaint"/>
     </int-mail:inbound-channel-adapter>
 
@@ -63,8 +62,15 @@
     <util:properties id="javaMailPropertiesComplaint">
         <prop key="mail.imap.socketFactory.class">javax.net.ssl.SSLSocketFactory</prop>
         <prop key="mail.imap.socketFactory.fallback">false</prop>
-        <prop key="mail.store.protocol">${email.protocol}</prop>
-        <prop key="mail.debug">${email.debug}</prop>
+        <prop key="mail.store.protocol">#{emailReceiverConfig.protocol}</prop>
+        <prop key="mail.debug">#{emailReceiverConfig.debug}</prop>
     </util:properties>
 
+    <bean id="emailReceiverConfig" class="com.armedia.acm.email.model.EmailReceiverConfig" scope="refresh">
+        <aop:scoped-proxy/>
+    </bean>
+
+    <bean id="emailSenderConfig" class="com.armedia.acm.email.model.EmailSenderConfig" scope="refresh">
+        <aop:scoped-proxy/>
+    </bean>
 </beans>

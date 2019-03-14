@@ -27,20 +27,18 @@ package com.armedia.acm.plugins.admin.service;
  * #L%
  */
 
+import com.armedia.acm.configuration.core.ConfigurationContainer;
 import com.armedia.acm.plugins.admin.exception.AcmModuleConfigurationException;
 import com.armedia.acm.plugins.admin.model.ModuleConfigurationConstants;
 import com.armedia.acm.plugins.admin.model.ModuleItem;
 
-import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Properties;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -49,75 +47,65 @@ import java.util.stream.Collectors;
 public class ModuleConfigurationService implements ModuleConfigurationConstants
 {
     private Logger log = LoggerFactory.getLogger(getClass());
-    private String appConfigPropertiesFile;
+    private ConfigurationContainer configurationContainer;
 
     public List<ModuleItem> retrieveModules() throws AcmModuleConfigurationException
     {
-        try (InputStream propInputStream = FileUtils.openInputStream(new File(appConfigPropertiesFile)))
+        Map<String, Object> props = configurationContainer.getConfigurationMap();
+
+        // Get only navigator keys
+        List<String> modulesIds = new ArrayList<>();
+        for (Object keyIter : props.keySet())
         {
-            Properties props = new Properties();
-            props.load(propInputStream);
-
-            // Get only navigator keys
-            List<String> modulesIds = new ArrayList<>();
-            for (Object keyIter : props.keySet())
+            String key = (String) keyIter;
+            if (key.indexOf(PROP_NAVIGATOR) == 0)
             {
-                String key = (String) keyIter;
-                if (key.indexOf(PROP_NAVIGATOR) == 0)
+                // Remove prefix
+                int beginIndex = key.indexOf(".");
+                if (beginIndex == -1)
                 {
-                    // Remove prefix
-                    int beginIndex = key.indexOf(".");
-                    if (beginIndex == -1)
-                    {
-                        throw new AcmModuleConfigurationException(String.format("Wrong property name %s", (String) keyIter));
-                    }
-                    key = key.substring(beginIndex + 1);
+                    throw new AcmModuleConfigurationException(String.format("Wrong property name %s", (String) keyIter));
+                }
+                key = key.substring(beginIndex + 1);
 
-                    // Remove suffix
-                    int endIndex = key.indexOf(".");
-                    if (beginIndex == -1)
-                    {
-                        throw new AcmModuleConfigurationException(String.format("Wrong property name %s", (String) keyIter));
-                    }
-                    key = key.substring(0, endIndex);
-                    if (!modulesIds.contains(key))
-                    {
-                        modulesIds.add(key);
-                    }
+                // Remove suffix
+                int endIndex = key.indexOf(".");
+                key = key.substring(0, endIndex);
+                if (!modulesIds.contains(key))
+                {
+                    modulesIds.add(key);
+                }
 
-                    if (!modulesIds.contains(key))
-                    {
-                        modulesIds.add(key);
-                    }
+                if (!modulesIds.contains(key))
+                {
+                    modulesIds.add(key);
                 }
             }
+        }
 
-            List<ModuleItem> modulesInfos = new ArrayList<>();
-            String nameProperty = "";
-            String privilegeProperty = "";
-            for (String moduleId : modulesIds)
+        List<ModuleItem> modulesInfos = new ArrayList<>();
+        String nameProperty;
+        String privilegeProperty;
+        for (String moduleId : modulesIds)
+        {
+            nameProperty = String.format(PROP_MODULE_NAME_TMPL, moduleId);
+            privilegeProperty = String.format(PROP_MODULE_PRIVILEGE_TMPL, moduleId);
+
+            String moduleName = (String) props.getOrDefault(nameProperty, "");
+            String privilege = (String) props.getOrDefault(privilegeProperty, "");
+            if (!moduleName.isEmpty() && !privilege.isEmpty())
             {
-                nameProperty = String.format(PROP_MODULE_NAME_TMPL, moduleId);
-                privilegeProperty = String.format(PROP_MODULE_PRIVILEGE_TMPL, moduleId);
-
                 ModuleItem moduleItem = new ModuleItem();
                 moduleItem.setId(moduleId);
-                moduleItem.setName(props.getProperty(nameProperty, ""));
-                moduleItem.setPrivilege(props.getProperty(privilegeProperty));
-                moduleItem.setKey(props.getProperty(privilegeProperty));
-
+                moduleItem.setName(moduleName);
+                moduleItem.setPrivilege(privilege);
+                moduleItem.setKey((String) props.get(privilegeProperty));
                 modulesInfos.add(moduleItem);
             }
-
-            // Get only modules names
-            return modulesInfos;
-
         }
-        catch (Exception e)
-        {
-            log.error("Can't retrieve modules", e);
-            throw new AcmModuleConfigurationException("Can't retrieve modules", e);
-        }
+
+        // Get only modules names
+        return modulesInfos;
     }
 
     public List<ModuleItem> findModulesPaged(Integer startRow, Integer maxRows, String sortDirection)
@@ -158,8 +146,13 @@ public class ModuleConfigurationService implements ModuleConfigurationConstants
         return modules.stream().skip(startRow).limit(maxRows).collect(Collectors.toList());
     }
 
-    public void setAppConfigPropertiesFile(String appConfigPropertiesFile)
+    public ConfigurationContainer getConfigurationContainer()
     {
-        this.appConfigPropertiesFile = appConfigPropertiesFile;
+        return configurationContainer;
+    }
+
+    public void setConfigurationContainer(ConfigurationContainer configurationContainer)
+    {
+        this.configurationContainer = configurationContainer;
     }
 }

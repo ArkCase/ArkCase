@@ -32,6 +32,7 @@ import com.armedia.acm.files.propertymanager.PropertyFileManager;
 import com.armedia.acm.services.notification.dao.NotificationDao;
 import com.armedia.acm.services.notification.model.ApplicationNotificationEvent;
 import com.armedia.acm.services.notification.model.Notification;
+import com.armedia.acm.services.notification.model.NotificationConfig;
 import com.armedia.acm.services.notification.model.NotificationConstants;
 import com.armedia.acm.services.notification.model.NotificationRule;
 import com.armedia.acm.spring.SpringContextHolder;
@@ -52,11 +53,9 @@ public class NotificationServiceImpl implements NotificationService
 
     private final Logger LOG = LoggerFactory.getLogger(getClass());
 
-    private boolean batchRun;
-    private int batchSize;
-    private int purgeDays;
     private PropertyFileManager propertyFileManager;
     private String notificationPropertyFileLocation;
+    private NotificationConfig notificationConfig;
     private NotificationDao notificationDao;
     private NotificationEventPublisher notificationEventPublisher;
     private SpringContextHolder springContextHolder;
@@ -69,7 +68,7 @@ public class NotificationServiceImpl implements NotificationService
     @Override
     public void run()
     {
-        if (!isBatchRun())
+        if (!notificationConfig.getUserBatchRun())
         {
             return;
         }
@@ -120,7 +119,7 @@ public class NotificationServiceImpl implements NotificationService
     public void runRule(Date lastRun, NotificationRule rule)
     {
         int firstResult = 0;
-        int maxResult = getBatchSize();
+        int maxResult = notificationConfig.getUserBatchSize();
 
         List<Notification> notifications;
 
@@ -210,59 +209,9 @@ public class NotificationServiceImpl implements NotificationService
     private Date createPurgeThreshold()
     {
         Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.DATE, -getPurgeDays());
+        calendar.add(Calendar.DATE, -notificationConfig.getPurgeDays());
 
         return calendar.getTime();
-    }
-
-    public boolean isBatchRun()
-    {
-        return batchRun;
-    }
-
-    public void setBatchRun(boolean batchRun)
-    {
-        this.batchRun = batchRun;
-    }
-
-    public int getBatchSize()
-    {
-        return batchSize;
-    }
-
-    public void setBatchSize(int batchSize)
-    {
-        this.batchSize = batchSize;
-    }
-
-    public int getPurgeDays()
-    {
-        return purgeDays;
-    }
-
-    public void setPurgeDays(int purgeDays)
-    {
-        this.purgeDays = purgeDays;
-    }
-
-    public PropertyFileManager getPropertyFileManager()
-    {
-        return propertyFileManager;
-    }
-
-    public void setPropertyFileManager(PropertyFileManager propertyFileManager)
-    {
-        this.propertyFileManager = propertyFileManager;
-    }
-
-    public String getNotificationPropertyFileLocation()
-    {
-        return notificationPropertyFileLocation;
-    }
-
-    public void setNotificationPropertyFileLocation(String notificationPropertyFileLocation)
-    {
-        this.notificationPropertyFileLocation = notificationPropertyFileLocation;
     }
 
     public NotificationDao getNotificationDao()
@@ -313,5 +262,35 @@ public class NotificationServiceImpl implements NotificationService
     public void setNotificationFormatter(NotificationFormatter notificationFormatter)
     {
         this.notificationFormatter = notificationFormatter;
+    }
+
+    public NotificationConfig getNotificationConfig()
+    {
+        return notificationConfig;
+    }
+
+    public void setNotificationConfig(NotificationConfig notificationConfig)
+    {
+        this.notificationConfig = notificationConfig;
+    }
+
+    public PropertyFileManager getPropertyFileManager()
+    {
+        return propertyFileManager;
+    }
+
+    public void setPropertyFileManager(PropertyFileManager propertyFileManager)
+    {
+        this.propertyFileManager = propertyFileManager;
+    }
+
+    public String getNotificationPropertyFileLocation()
+    {
+        return notificationPropertyFileLocation;
+    }
+
+    public void setNotificationPropertyFileLocation(String notificationPropertyFileLocation)
+    {
+        this.notificationPropertyFileLocation = notificationPropertyFileLocation;
     }
 }

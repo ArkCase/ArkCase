@@ -38,6 +38,8 @@ import com.armedia.acm.plugins.ecm.model.DeleteFolderInfo;
 
 import org.json.JSONArray;
 import org.mule.api.MuleException;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.security.core.Authentication;
 
 import java.util.Date;
@@ -66,6 +68,7 @@ public interface AcmFolderService
     AcmFolder moveFolder(AcmFolder folderForMoving, AcmFolder dstFolder)
             throws AcmObjectNotFoundException, AcmUserActionFailedException, AcmFolderException;
 
+    @Retryable(maxAttempts = 3, value = Exception.class, backoff = @Backoff(delay = 500))
     AcmFolder moveFolderInArkcase(AcmFolder folderForMoving, AcmFolder dstFolder)
             throws AcmObjectNotFoundException, AcmUserActionFailedException, AcmFolderException;
 
@@ -135,8 +138,13 @@ public interface AcmFolderService
 
     AcmFolder saveFolder(AcmFolder folder);
 
-    AcmFolder createFolder(AcmFolder targetParentFolder, String cmisFolderId, String folderName);
+    @Retryable(maxAttempts = 3, value = Exception.class, backoff = @Backoff(delay = 500))
+    AcmFolder createFolder(AcmFolder targetParentFolder, String cmisFolderId, String folderName)
+            throws AcmFolderException, AcmUserActionFailedException;
 
-    void createFolderChildrenInArkcase(AcmFolder parentFolder, String userId)
+    @Retryable(maxAttempts = 3, value = Exception.class, backoff = @Backoff(delay = 500))
+    void recordMetadataOfExistingFolderChildren(AcmFolder parentFolder, String userId)
             throws AcmObjectNotFoundException, AcmUserActionFailedException;
+
+    void removeLockAndSendMessage(Long objectId, String message);
 }

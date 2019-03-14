@@ -38,7 +38,7 @@ import static org.mockito.Mockito.when;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
 
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
-import com.armedia.acm.files.propertymanager.PropertyFileManager;
+import com.armedia.acm.email.model.EmailSenderConfig;
 import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
@@ -47,8 +47,6 @@ import com.armedia.acm.services.email.model.EmailWithAttachmentsAndLinksDTO;
 import com.armedia.acm.services.email.model.EmailWithAttachmentsDTO;
 import com.armedia.acm.services.email.model.EmailWithEmbeddedLinksDTO;
 import com.armedia.acm.services.email.model.EmailWithEmbeddedLinksResultDTO;
-import com.armedia.acm.services.email.sender.model.EmailSenderConfiguration;
-import com.armedia.acm.services.email.sender.model.EmailSenderConfigurationConstants;
 import com.armedia.acm.services.email.sender.service.EmailSenderConfigurationServiceImpl;
 import com.armedia.acm.services.email.service.AcmEmailContentGeneratorService;
 import com.armedia.acm.services.users.model.AcmUser;
@@ -71,7 +69,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -91,9 +88,6 @@ public class SmtpServiceTest
 
     @Mock
     private AuditPropertyEntityAdapter mockAuditPropertyEntityAdapter;
-
-    @Mock
-    private PropertyFileManager mockPropertyFileManager;
 
     @Mock
     private MuleException mockMuleException;
@@ -126,10 +120,12 @@ public class SmtpServiceTest
     private FileInputStream mockFileInputStream;
 
     @Mock
-    private ApplicationEventPublisher mockApplicationEventPublisher;
+    private EmailSenderConfigurationServiceImpl mockEmailSenderConfigurationService;
 
     @Mock
-    private EmailSenderConfigurationServiceImpl emailSenderConfigurationService;
+    private ApplicationEventPublisher mockApplicationEventPublisher;
+
+    private EmailSenderConfig senderConfig;
 
     /**
      * @throws java.lang.Exception
@@ -137,8 +133,16 @@ public class SmtpServiceTest
     @Before
     public void setUp() throws Exception
     {
+        
         service.setFlow("vm://sendEmailViaSmtp.in");
-        service.setEmailSenderPropertyFileLocation("dummy_location");
+        senderConfig = new EmailSenderConfig();
+        senderConfig.setHost("host_value");
+        senderConfig.setPort(0);
+        senderConfig.setUsername("email_user_value");
+        senderConfig.setPassword("email_password_value");
+        senderConfig.setUserFrom("email_from_value");
+        senderConfig.setConvertDocumentsToPdf(false);
+        service.setEmailSenderConfig(senderConfig);
     }
 
     @Test
@@ -166,12 +170,13 @@ public class SmtpServiceTest
         inputDTO.setFileIds(fileIds);
         inputDTO.setFooter(footer);
 
+        senderConfig.setEncryption("off");
+
         ArgumentCaptor<String> capturedNote = ArgumentCaptor.forClass(String.class);
 
         when(mockMuleContextManager.send(eq("vm://sendEmailViaSmtp.in"), capturedNote.capture(), any(Map.class)))
                 .thenReturn(mockMuleMessage);
 
-        setSendExpectations(false);
         when(mockMuleMessage.getInboundProperty("sendEmailException")).thenReturn(null);
 
         when(mockAcmEmailContentGeneratorService.generateEmailBody(inputDTO, email, mockAuthentication)).thenReturn(note);
@@ -218,13 +223,14 @@ public class SmtpServiceTest
         inputDTO.setFileIds(fileIds);
         inputDTO.setFooter(footer);
 
+        senderConfig.setEncryption("starttls");
+
         ArgumentCaptor<Map> messagePropsCaptor = ArgumentCaptor.forClass(Map.class);
         ArgumentCaptor<String> capturedNote = ArgumentCaptor.forClass(String.class);
 
         when(mockMuleContextManager.send(eq("vm://sendEmailViaSmtp.in"), capturedNote.capture(), messagePropsCaptor.capture()))
                 .thenReturn(mockMuleMessage);
 
-        setSendExpectations(true);
         when(mockMuleMessage.getInboundProperty("sendEmailException")).thenReturn(null);
 
         when(mockAcmEmailContentGeneratorService.generateEmailBody(inputDTO, email, mockAuthentication)).thenReturn(note);
@@ -265,8 +271,10 @@ public class SmtpServiceTest
         inputDTO.setBody(body);
         inputDTO.setFooter(footer);
 
+        senderConfig.setEncryption("off");
+
         List<Long> attachmentIds = new ArrayList<>();
-        attachmentIds.add(new Long(999));
+        attachmentIds.add(999L);
         inputDTO.setAttachmentIds(attachmentIds);
 
         List<String> filePaths = new ArrayList<>();
@@ -277,10 +285,9 @@ public class SmtpServiceTest
         ArgumentCaptor<Map> messagePropsCaptor = ArgumentCaptor.forClass(Map.class);
         ArgumentCaptor<String> capturedNote = ArgumentCaptor.forClass(String.class);
         ArgumentCaptor<Map> capturedAttachments = ArgumentCaptor.forClass(Map.class);
+        when(mockEmailSenderConfigurationService.readConfiguration()).thenReturn(senderConfig);
         when(mockMuleContextManager.send(eq("vm://sendEmailViaSmtp.in"), capturedNote.capture(), capturedAttachments.capture(),
                 messagePropsCaptor.capture())).thenReturn(mockMuleMessage);
-
-        setSendExpectations(false);
 
         when(mockMuleMessage.getInboundProperty("sendEmailException")).thenReturn(null);
 
@@ -305,10 +312,6 @@ public class SmtpServiceTest
         whenNew(File.class).withArguments(filePaths.get(0)).thenReturn(mockFile);
         whenNew(FileInputStream.class).withArguments(mockFile).thenReturn(mockFileInputStream);
         when(mockFile.getName()).thenReturn("temp.zip");
-
-        EmailSenderConfiguration emailSenderConfiguration = new EmailSenderConfiguration();
-        emailSenderConfiguration.setConvertDocumentsToPdf(false);
-        when(emailSenderConfigurationService.readConfiguration()).thenReturn(emailSenderConfiguration);
 
         // when
         service.sendEmailWithAttachments(inputDTO, mockAuthentication, mockAcmUser);
@@ -342,7 +345,7 @@ public class SmtpServiceTest
         inputDTO.setFooter(footer);
 
         List<Long> attachmentIds = new ArrayList<>();
-        attachmentIds.add(new Long(999));
+        attachmentIds.add(999L);
         inputDTO.setAttachmentIds(attachmentIds);
 
         List<String> filePaths = new ArrayList<>();
@@ -350,13 +353,15 @@ public class SmtpServiceTest
         filePaths.add(resource.getFile().getAbsolutePath());
         inputDTO.setFilePaths(filePaths);
 
+        senderConfig.setEncryption("starttls");
+
         ArgumentCaptor<Map> messagePropsCaptor = ArgumentCaptor.forClass(Map.class);
         ArgumentCaptor<String> capturedNote = ArgumentCaptor.forClass(String.class);
         ArgumentCaptor<Map> capturedAttachments = ArgumentCaptor.forClass(Map.class);
+
+        when(mockEmailSenderConfigurationService.readConfiguration()).thenReturn(senderConfig);
         when(mockMuleContextManager.send(eq("vm://sendEmailViaSmtp.in"), capturedNote.capture(), capturedAttachments.capture(),
                 messagePropsCaptor.capture())).thenReturn(mockMuleMessage);
-
-        setSendExpectations(true);
 
         when(mockMuleMessage.getInboundProperty("sendEmailException")).thenReturn(null);
 
@@ -381,10 +386,6 @@ public class SmtpServiceTest
         whenNew(File.class).withArguments(filePaths.get(0)).thenReturn(mockFile);
         whenNew(FileInputStream.class).withArguments(mockFile).thenReturn(mockFileInputStream);
         when(mockFile.getName()).thenReturn("temp.zip");
-
-        EmailSenderConfiguration emailSenderConfiguration = new EmailSenderConfiguration();
-        emailSenderConfiguration.setConvertDocumentsToPdf(false);
-        when(emailSenderConfigurationService.readConfiguration()).thenReturn(emailSenderConfiguration);
 
         // when
         service.sendEmailWithAttachments(inputDTO, mockAuthentication, mockAcmUser);
@@ -425,7 +426,7 @@ public class SmtpServiceTest
         inputDTO.setFileIds(fileIds);
         inputDTO.setFooter(footer);
         List<Long> attachmentIds = new ArrayList<>();
-        attachmentIds.add(new Long(fileId));
+        attachmentIds.add(999L);
         inputDTO.setAttachmentIds(attachmentIds);
 
         List<String> filePaths = new ArrayList<>();
@@ -433,13 +434,15 @@ public class SmtpServiceTest
         filePaths.add(resource.getFile().getAbsolutePath());
         inputDTO.setFilePaths(filePaths);
 
+        senderConfig.setEncryption("off");
+
         ArgumentCaptor<Map> messagePropsCaptor = ArgumentCaptor.forClass(Map.class);
         ArgumentCaptor<String> capturedNote = ArgumentCaptor.forClass(String.class);
         ArgumentCaptor<Map> capturedAttachments = ArgumentCaptor.forClass(Map.class);
+
+        when(mockEmailSenderConfigurationService.readConfiguration()).thenReturn(senderConfig);
         when(mockMuleContextManager.send(eq("vm://sendEmailViaSmtp.in"), capturedNote.capture(), capturedAttachments.capture(),
                 messagePropsCaptor.capture())).thenReturn(mockMuleMessage);
-
-        setSendExpectations(false);
 
         when(mockMuleMessage.getInboundProperty("sendEmailException")).thenReturn(null);
 
@@ -448,6 +451,7 @@ public class SmtpServiceTest
         ArgumentCaptor<byte[]> read = ArgumentCaptor.forClass(byte[].class);
         when(mockEcmFileService.downloadAsInputStream(attachmentIds.get(0))).thenReturn(mockInputStream);
         when(mockEcmFileService.findById(attachmentIds.get(0))).thenReturn(mockEcmFile);
+        when(mockEcmFileService.findById(fileId)).thenReturn(mockEcmFile);
         when(mockInputStream.read(read.capture(), eq(0), eq(16384))).thenReturn(-1);
 
         when(mockEcmFile.getFileName()).thenReturn("fileName");
@@ -466,10 +470,6 @@ public class SmtpServiceTest
         whenNew(File.class).withArguments(filePaths.get(0)).thenReturn(mockFile);
         whenNew(FileInputStream.class).withArguments(mockFile).thenReturn(mockFileInputStream);
         when(mockFile.getName()).thenReturn("temp.zip");
-
-        EmailSenderConfiguration emailSenderConfiguration = new EmailSenderConfiguration();
-        emailSenderConfiguration.setConvertDocumentsToPdf(false);
-        when(emailSenderConfigurationService.readConfiguration()).thenReturn(emailSenderConfiguration);
 
         // when
         service.sendEmailWithAttachmentsAndLinks(inputDTO, mockAuthentication, mockAcmUser);
@@ -509,7 +509,7 @@ public class SmtpServiceTest
         inputDTO.setFileIds(fileIds);
         inputDTO.setFooter(footer);
         List<Long> attachmentIds = new ArrayList<>();
-        attachmentIds.add(new Long(fileId));
+        attachmentIds.add(999L);
         inputDTO.setAttachmentIds(attachmentIds);
 
         List<String> filePaths = new ArrayList<>();
@@ -517,13 +517,15 @@ public class SmtpServiceTest
         filePaths.add(resource.getFile().getAbsolutePath());
         inputDTO.setFilePaths(filePaths);
 
+        senderConfig.setEncryption("starttls");
+
         ArgumentCaptor<Map> messagePropsCaptor = ArgumentCaptor.forClass(Map.class);
         ArgumentCaptor<String> capturedNote = ArgumentCaptor.forClass(String.class);
         ArgumentCaptor<Map> capturedAttachments = ArgumentCaptor.forClass(Map.class);
+
+        when(mockEmailSenderConfigurationService.readConfiguration()).thenReturn(senderConfig);
         when(mockMuleContextManager.send(eq("vm://sendEmailViaSmtp.in"), capturedNote.capture(), capturedAttachments.capture(),
                 messagePropsCaptor.capture())).thenReturn(mockMuleMessage);
-
-        setSendExpectations(true);
 
         when(mockMuleMessage.getInboundProperty("sendEmailException")).thenReturn(null);
 
@@ -532,6 +534,8 @@ public class SmtpServiceTest
         ArgumentCaptor<byte[]> read = ArgumentCaptor.forClass(byte[].class);
         when(mockEcmFileService.downloadAsInputStream(attachmentIds.get(0))).thenReturn(mockInputStream);
         when(mockEcmFileService.findById(attachmentIds.get(0))).thenReturn(mockEcmFile);
+
+        when(mockEcmFileService.findById(fileId)).thenReturn(mockEcmFile);
         when(mockInputStream.read(read.capture(), eq(0), eq(16384))).thenReturn(-1);
 
         when(mockEcmFile.getFileName()).thenReturn("fileName");
@@ -551,10 +555,6 @@ public class SmtpServiceTest
         whenNew(FileInputStream.class).withArguments(mockFile).thenReturn(mockFileInputStream);
         when(mockFile.getName()).thenReturn("temp.zip");
 
-        EmailSenderConfiguration emailSenderConfiguration = new EmailSenderConfiguration();
-        emailSenderConfiguration.setConvertDocumentsToPdf(false);
-        when(emailSenderConfigurationService.readConfiguration()).thenReturn(emailSenderConfiguration);
-
         // when
         service.sendEmailWithAttachmentsAndLinks(inputDTO, mockAuthentication, mockAcmUser);
 
@@ -567,33 +567,6 @@ public class SmtpServiceTest
         assertThat(capturedAttachments.getValue().get("temp.zip"), notNullValue());
         mockApplicationEventPublisher.publishEvent(any(SmtpEventSentEvent.class));
         assertThat(messagePropsCaptor.getValue().get("encryption"), is("starttls"));
-    }
-
-    /**
-     * @throws Exception
-     */
-    private void setSendExpectations(boolean withEncription) throws Exception
-    {
-        Map<String, Object> returnedValues = new HashMap<>();
-        returnedValues.put(EmailSenderConfigurationConstants.HOST, "host_value");
-        returnedValues.put(EmailSenderConfigurationConstants.PORT, "port_value");
-        returnedValues.put(EmailSenderConfigurationConstants.USERNAME, "email_user_value");
-        returnedValues.put(EmailSenderConfigurationConstants.PASSWORD, "email_password_value");
-        returnedValues.put(EmailSenderConfigurationConstants.USER_FROM, "email_from_value");
-        if (withEncription)
-        {
-            returnedValues.put(EmailSenderConfigurationConstants.ENCRYPTION, "starttls");
-        }
-        else
-        {
-            returnedValues.put(EmailSenderConfigurationConstants.ENCRYPTION, "off");
-        }
-
-        when(mockPropertyFileManager.loadMultiple("dummy_location", EmailSenderConfigurationConstants.HOST,
-                EmailSenderConfigurationConstants.PORT, EmailSenderConfigurationConstants.USERNAME,
-                EmailSenderConfigurationConstants.PASSWORD, EmailSenderConfigurationConstants.USER_FROM,
-                EmailSenderConfigurationConstants.ENCRYPTION)).thenReturn(returnedValues);
-
     }
 
 }

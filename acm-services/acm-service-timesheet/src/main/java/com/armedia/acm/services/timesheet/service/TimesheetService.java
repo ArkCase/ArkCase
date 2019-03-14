@@ -31,17 +31,17 @@ import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.timesheet.model.AcmTime;
 import com.armedia.acm.services.timesheet.model.AcmTimesheet;
 
+import com.armedia.acm.services.timesheet.model.TimesheetConfig;
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 
 public interface TimesheetService
 {
 
-    Properties getProperties();
+    TimesheetConfig getConfiguration();
 
     @Transactional
     AcmTimesheet save(AcmTimesheet timesheet) throws PipelineProcessException;

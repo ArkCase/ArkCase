@@ -27,14 +27,16 @@ package com.armedia.acm.plugins.report.service;
  * #L%
  */
 
-import com.armedia.acm.core.exceptions.AcmEncryptionException;
-import com.armedia.acm.files.propertymanager.PropertyFileManager;
+import com.armedia.acm.configuration.service.ConfigurationPropertyService;
 import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.pentaho.config.PentahoReportUrl;
+import com.armedia.acm.pentaho.config.PentahoReportsConfig;
 import com.armedia.acm.plugins.report.model.Report;
 import com.armedia.acm.plugins.report.model.Reports;
+import com.armedia.acm.report.config.ReportsToRolesConfig;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.search.service.SearchResults;
+import com.armedia.acm.services.users.model.ApplicationRolesConfig;
 import com.armedia.acm.services.users.service.AcmUserRoleService;
 
 import org.apache.commons.lang3.StringUtils;
@@ -54,7 +56,6 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import java.io.ByteArrayInputStream;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
@@ -65,8 +66,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Optional;
-import java.util.Properties;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -76,25 +75,17 @@ public class ReportServiceImpl implements ReportService
     private static final String PENTAHO_ANALYSIS_REPORT_EXTENSION = ".xanalyzer";
     private static final String PENTAHO_INTERACTIVE_REPORT_EXTENSION = ".prpti";
     private final Logger LOG = LoggerFactory.getLogger(getClass());
-    private final String PENTAHO_REPORT_URL_TEMPLATE = "PENTAHO_REPORT_URL_TEMPLATE";
     private final String PENTAHO_REPORT_URL_TEMPLATE_DEFAULT = "/pentaho/api/repos/{path}/viewer";
-    private final String PENTAHO_VIEW_REPORT_URL_PRPTI_TEMPLATE = "PENTAHO_VIEW_REPORT_URL_PRPTI_TEMPLATE";
     private final String PENTAHO_VIEW_REPORT_URL_PRPTI_TEMPLATE_DEFAULT = "/pentaho/api/repos/{path}/prpti.view";
-    private final String PENTAHO_VIEW_DASHBOARD_REPORT_URL_TEMPLATE = "PENTAHO_VIEW_DASHBOARD_REPORT_URL_TEMPLATE";
     private final String PENTAHO_VIEW_DASHBOARD_REPORT_URL_TEMPLATE_DEFAULT = "/pentaho/api/repos/{path}/viewer?ts={timestamp}";
-    private final String PENTAHO_VIEW_ANALYSIS_REPORT_URL_TEMPLATE = "PENTAHO_VIEW_ANALYSIS_REPORT_URL_TEMPLATE";
     private final String PENTAHO_VIEW_ANALYSIS_REPORT_URL_TEMPLATE_DEFAULT = "/pentaho/api/repos/{path}/viewer";
-    private String reportsPropertiesFileLocation;
-    private String reportToRolesMapPropertiesFileLocation;
-    private String reportServerConfigPropertiesFileLocation;
-    private Map<String, String> reportToRolesMapProperties;
-    private Map<String, String> reportPluginProperties;
     private MuleContextManager muleContextManager;
-    private PropertyFileManager propertyFileManager;
     private PentahoReportUrl reportUrl;
     private ExecuteSolrQuery executeSolrQuery;
     private SearchResults searchResults;
-    private Properties applicationRolesProperties;
+    private PentahoReportsConfig reportsConfig;
+    private ReportsToRolesConfig reportsToRolesConfig;
+    private ConfigurationPropertyService configurationPropertyService;
     private AcmUserRoleService userRoleService;
 
     @Override
@@ -148,19 +139,15 @@ public class ReportServiceImpl implements ReportService
     @Override
     public List<Report> getAcmReports()
     {
-        List<Report> reports = new ArrayList<>();
-        if (getReportPluginProperties() != null)
-        {
-            reports.addAll(getReportPluginProperties().entrySet().stream().map(entry -> {
-                Report report = new Report();
-                report.setPropertyName(entry.getKey());
-                report.setPropertyPath(entry.getValue());
-                report.setTitle(createReportTitleFromKey(entry.getKey()));
-                return report;
-            }).collect(Collectors.toList()));
-        }
-
-        return reports;
+        return reportsConfig.getReportToUrlMap().entrySet()
+                .stream()
+                .map(entry -> {
+                    Report report = new Report();
+                    report.setPropertyName(entry.getKey());
+                    report.setPropertyPath(entry.getValue());
+                    report.setTitle(createReportTitleFromKey(entry.getKey()));
+                    return report;
+                }).collect(Collectors.toList());
     }
 
     private String createReportTitleFromKey(String key)
@@ -187,7 +174,9 @@ public class ReportServiceImpl implements ReportService
 
             if (reports != null)
             {
-                userReports = reports.stream().filter(report -> checkReportAuthorization(report, userId)).collect(Collectors.toList());
+                userReports = reports.stream()
+                        .filter(report -> checkReportAuthorization(report, userId))
+                        .collect(Collectors.toList());
             }
         }
 
@@ -220,14 +209,11 @@ public class ReportServiceImpl implements ReportService
             if (reportsToRolesMap.containsKey(report.getPropertyName()))
             {
                 List<String> reportToRoles = reportsToRolesMap.get(report.getPropertyName());
-                if (reportToRoles != null && userRoles != null)
+                if (reportToRoles != null)
                 {
                     try
                     {
-                        Optional<String> optional = reportToRoles.stream().filter(reportRole -> userRoles.contains(reportRole))
-                                .findAny();
-
-                        authorized = optional.isPresent();
+                        authorized = reportToRoles.stream().anyMatch(userRoles::contains);
                     }
                     catch (Exception e)
                     {
@@ -241,23 +227,6 @@ public class ReportServiceImpl implements ReportService
         return authorized;
     }
 
-    private List<String> getApplicationRoles()
-    {
-        List<String> applicationRoles = new ArrayList<>();
-
-        try
-        {
-            Properties roleProperties = getApplicationRolesProperties();
-            applicationRoles = Arrays.asList(roleProperties.getProperty("application.roles").split(","));
-        }
-        catch (Exception e)
-        {
-            LOG.error("Cannot read application roles from configuration.", e);
-        }
-
-        return applicationRoles;
-    }
-
     @Override
     public List<Report> sync() throws Exception
     {
@@ -265,32 +234,38 @@ public class ReportServiceImpl implements ReportService
         if (reports != null)
         {
             List<String> propertiesToDelete = new ArrayList<>();
-            for (Entry<String, String> entry : reportPluginProperties.entrySet())
+            Map<String, String> reportToUrlMapping = reportsConfig.getReportToUrlMap();
+            for (Entry<String, String> entry : reportToUrlMapping.entrySet())
             {
-                Report found = reports.stream().filter(item -> entry.getKey().equals(item.getPropertyName())).findFirst().orElse(null);
+                Report found = reports.stream()
+                        .filter(item -> entry.getKey().equals(item.getPropertyName()))
+                        .findFirst()
+                        .orElse(null);
                 if (found == null)
                 {
                     propertiesToDelete.add(entry.getKey());
                 }
             }
 
-            propertiesToDelete.forEach(item -> reportPluginProperties.remove(item));
+            Map<String, String> reportsToRolesMapping = reportsToRolesConfig.getReportsToRolesMap();
+            propertiesToDelete.forEach(item -> {
+                reportToUrlMapping.remove(item);
+                reportsToRolesMapping.remove(item);
+            });
 
-            getPropertyFileManager().removeMultiple(propertiesToDelete, getReportsPropertiesFileLocation());
-            getPropertyFileManager().removeMultiple(propertiesToDelete, getReportToRolesMapPropertiesFileLocation());
+            configurationPropertyService.updateProperties(reportToUrlMapping);
+            configurationPropertyService.updateProperties(reportsToRolesMapping);
         }
 
         return reports;
     }
 
     @Override
-    public boolean saveReports(List<Report> reports) throws AcmEncryptionException
+    public boolean saveReports(List<Report> reports)
     {
-
+        Map<String, String> reportToUrlMapping = reportsConfig.getReportToUrlMap();
         if (reports != null && reports.size() > 0)
         {
-            Map<String, String> propertiesToUpdate = new HashMap<>();
-            List<String> propertiesToDelete = new ArrayList<>();
             for (Report report : reports)
             {
                 String key = report.getPropertyName();
@@ -298,49 +273,44 @@ public class ReportServiceImpl implements ReportService
                 if (report.isInjected())
                 {
                     String value = createPentahoReportUri(report);
-                    propertiesToUpdate.put(key, value);
-                    reportPluginProperties.put(key, value);
+                    reportToUrlMapping.put(key, value);
                 }
                 else
                 {
-                    propertiesToDelete.add(key);
-                    reportPluginProperties.remove(key);
+                    reportToUrlMapping.remove(key);
                 }
             }
-
-            getPropertyFileManager().storeMultiple(propertiesToUpdate, getReportsPropertiesFileLocation(), false);
-            getPropertyFileManager().removeMultiple(propertiesToDelete, getReportsPropertiesFileLocation());
+            configurationPropertyService.updateProperties(reportToUrlMapping);
         }
         return true;
     }
 
-    private String createPentahoReportUri(Report report) throws AcmEncryptionException
+    private String createPentahoReportUri(Report report)
     {
         if (report == null)
         {
             return null;
         }
 
-        String url = null;
+        String url;
         if (report.getName() != null && report.getName().endsWith(PENTAHO_INTERACTIVE_REPORT_EXTENSION))
         {
-            url = getPropertyFileManager().load(getReportServerConfigPropertiesFileLocation(), PENTAHO_VIEW_REPORT_URL_PRPTI_TEMPLATE,
-                    PENTAHO_VIEW_REPORT_URL_PRPTI_TEMPLATE_DEFAULT);
+            url = reportsConfig.getViewReportUrlPrptiTemplate() != null ? reportsConfig.getViewReportUrlPrptiTemplate()
+                    : PENTAHO_VIEW_REPORT_URL_PRPTI_TEMPLATE_DEFAULT;
         }
         else if (report.getName() != null && report.getName().endsWith(PENTAHO_ANALYSIS_REPORT_EXTENSION))
         {
-            url = getPropertyFileManager().load(getReportServerConfigPropertiesFileLocation(), PENTAHO_VIEW_ANALYSIS_REPORT_URL_TEMPLATE,
-                    PENTAHO_VIEW_ANALYSIS_REPORT_URL_TEMPLATE_DEFAULT);
+            url = reportsConfig.getViewAnalysisReportUrlTemplate() != null ? reportsConfig.getViewAnalysisReportUrlTemplate()
+                    : PENTAHO_VIEW_ANALYSIS_REPORT_URL_TEMPLATE_DEFAULT;
         }
         else if (report.getName() != null && report.getName().endsWith(PENTAHO_DASHBOARD_REPORT_EXTENSION))
         {
-            url = getPropertyFileManager().load(getReportServerConfigPropertiesFileLocation(), PENTAHO_VIEW_DASHBOARD_REPORT_URL_TEMPLATE,
-                    PENTAHO_VIEW_DASHBOARD_REPORT_URL_TEMPLATE_DEFAULT);
+            url = reportsConfig.getViewDashboardReportUrlTemplate() != null ? reportsConfig.getViewDashboardReportUrlTemplate()
+                    : PENTAHO_VIEW_DASHBOARD_REPORT_URL_TEMPLATE_DEFAULT;
         }
         else
         {
-            url = getPropertyFileManager().load(getReportServerConfigPropertiesFileLocation(), PENTAHO_REPORT_URL_TEMPLATE,
-                    PENTAHO_REPORT_URL_TEMPLATE_DEFAULT);
+            url = reportsConfig.getReportUrlTemplate() != null ? reportsConfig.getReportUrlTemplate() : PENTAHO_REPORT_URL_TEMPLATE_DEFAULT;
         }
 
         if (url != null)
@@ -376,14 +346,8 @@ public class ReportServiceImpl implements ReportService
 
     private Map<String, String> prepareReportToRolesMapForSaving(Map<String, List<String>> reportsToRolesMap)
     {
-        Map<String, String> retval = new HashMap<>();
-
-        if (reportsToRolesMap != null && reportsToRolesMap.size() > 0)
-        {
-            reportsToRolesMap.forEach((key, value) -> retval.put(key, StringUtils.join(value, ",")));
-        }
-
-        return retval;
+        return reportsToRolesMap.entrySet().stream()
+                .collect(Collectors.toMap(Entry::getKey, it -> StringUtils.join(it.getValue(), ",")));
     }
 
     private Map<String, List<String>> prepareReportToRolesMapForRetrieving(Map<String, String> reportsToRolesMap)
@@ -398,19 +362,17 @@ public class ReportServiceImpl implements ReportService
     @Override
     public Map<String, List<String>> getReportToRolesMap()
     {
-        Map<String, String> reportsToRolesMap = getReportToRolesMapProperties();
-        return prepareReportToRolesMapForRetrieving(reportsToRolesMap);
+        return prepareReportToRolesMapForRetrieving(reportsToRolesConfig.getReportsToRolesMap());
     }
 
     @Override
     public List<String> getReportToRoles(String sortDirection, Integer startRow, Integer maxRows, String filterName) throws IOException
     {
-        Properties reportsToRoles = propertyFileManager.readFromFile(new File(getReportToRolesMapPropertiesFileLocation()));
-        List<String> result = new ArrayList<>(reportsToRoles.stringPropertyNames());
+        List<String> result = new ArrayList<>(reportsToRolesConfig.getReportsToRolesMap().keySet());
 
         if (sortDirection.contains("DESC"))
         {
-            Collections.sort(result, Collections.reverseOrder());
+            result.sort(Collections.reverseOrder());
         }
         else
         {
@@ -447,76 +409,53 @@ public class ReportServiceImpl implements ReportService
     @Override
     public boolean saveReportToRolesMap(Map<String, List<String>> reportToRolesMap, Authentication auth)
     {
-        boolean success;
-        try
-        {
-            Map<String, String> prepared = prepareReportToRolesMapForSaving(reportToRolesMap);
-            getPropertyFileManager().storeMultiple(prepared,
-                    getReportToRolesMapPropertiesFileLocation(), true);
-            setReportToRolesMapProperties(prepared);
-            success = true;
-        }
-        catch (Exception e)
-        {
-            LOG.error("Cannot save report to roles map", e);
-            success = false;
-        }
-        return success;
+        configurationPropertyService.updateProperties(reportToRolesMap);
+        return true;
     }
 
     @Override
     public List<String> saveRolesToReport(String reportName, List<String> roles, Authentication auth)
     {
-        String reportUpdated = "";
-        try
-        {
-            reportUpdated += getPropertyFileManager().load(getReportToRolesMapPropertiesFileLocation(), reportName, "");
-            reportUpdated += (reportUpdated.isEmpty() ? "" : ",") + roles.stream().collect(Collectors.joining(","));
-            getPropertyFileManager().store(reportName, reportUpdated, getReportToRolesMapPropertiesFileLocation(), false);
-        }
-        catch (AcmEncryptionException e)
-        {
-            LOG.warn("Cannot save roles to report", e);
-        }
+        Map<String, String> reportsToRolesMapping = reportsToRolesConfig.getReportsToRolesMap();
+        String[] rolesForReport = reportsToRolesMapping.get(reportName).split(",");
 
-        return Arrays.asList(reportUpdated.split(","));
+        Set<String> updatedRolesForReport = Arrays.stream(rolesForReport).collect(Collectors.toSet());
+        updatedRolesForReport.addAll(roles);
 
+        reportsToRolesMapping.put(reportName, String.join(",", updatedRolesForReport));
+        configurationPropertyService.updateProperties(reportsToRolesMapping);
+        return new ArrayList<>(updatedRolesForReport);
     }
 
     @Override
-    public List<String> removeRolesToReport(String reportName, List<String> roles, Authentication auth) throws Exception
+    public List<String> removeRolesToReport(String reportName, List<String> roles, Authentication auth)
     {
-        String reportUpdated = "";
-        List<String> rolesForReport = new ArrayList<>(
-                Arrays.asList(propertyFileManager.load(getReportToRolesMapPropertiesFileLocation(), reportName, "").split(",")));
+        Map<String, String> reportsToRolesMapping = reportsToRolesConfig.getReportsToRolesMap();
+        String[] rolesForReport = reportsToRolesMapping.get(reportName).split(",");
 
-        for (String role : roles)
-        {
-            rolesForReport.remove(role);
-        }
+        List<String> updatedRolesForReport = Arrays.stream(rolesForReport)
+                .filter(role -> !roles.contains(role))
+                .collect(Collectors.toList());
 
-        reportUpdated += rolesForReport.stream().collect(Collectors.joining(","));
-
-        getPropertyFileManager().store(reportName, reportUpdated, getReportToRolesMapPropertiesFileLocation(), false);
-
-        return Arrays.asList(reportUpdated.split(","));
+        reportsToRolesMapping.put(reportName, String.join(",", updatedRolesForReport));
+        configurationPropertyService.updateProperties(reportsToRolesMapping);
+        return updatedRolesForReport;
     }
 
     @Override
-    public List<String> getRolesForReport(Boolean authorized, String reportId) throws AcmEncryptionException
+    public List<String> getRolesForReport(Boolean authorized, String reportId)
     {
 
-        List<String> rolesForReport = new ArrayList<>(
-                Arrays.asList(propertyFileManager.load(getReportToRolesMapPropertiesFileLocation(), reportId, "").split(",")));
+        String[] rolesForReport = reportsToRolesConfig.getReportsToRolesMap().get(reportId).split(",");
 
         if (!authorized)
         {
-            return getApplicationRoles().stream()
-                    .filter(role -> rolesForReport.stream().noneMatch(r -> r.trim().equals(role)))
+            return Arrays.stream(rolesForReport)
+                    .filter(role -> Arrays.stream(rolesForReport).noneMatch(r -> r.trim().equals(role)))
                     .collect(Collectors.toList());
         }
 
-        return rolesForReport;
+        return Arrays.asList(rolesForReport);
     }
 
     public MuleContextManager getMuleContextManager()
@@ -529,16 +468,6 @@ public class ReportServiceImpl implements ReportService
         this.muleContextManager = muleContextManager;
     }
 
-    public PropertyFileManager getPropertyFileManager()
-    {
-        return propertyFileManager;
-    }
-
-    public void setPropertyFileManager(PropertyFileManager propertyFileManager)
-    {
-        this.propertyFileManager = propertyFileManager;
-    }
-
     public PentahoReportUrl getReportUrl()
     {
         return reportUrl;
@@ -547,36 +476,6 @@ public class ReportServiceImpl implements ReportService
     public void setReportUrl(PentahoReportUrl reportUrl)
     {
         this.reportUrl = reportUrl;
-    }
-
-    public String getReportsPropertiesFileLocation()
-    {
-        return reportsPropertiesFileLocation;
-    }
-
-    public void setReportsPropertiesFileLocation(String reportsPropertiesFileLocation)
-    {
-        this.reportsPropertiesFileLocation = reportsPropertiesFileLocation;
-    }
-
-    public String getReportServerConfigPropertiesFileLocation()
-    {
-        return reportServerConfigPropertiesFileLocation;
-    }
-
-    public void setReportServerConfigPropertiesFileLocation(String reportServerConfigPropertiesFileLocation)
-    {
-        this.reportServerConfigPropertiesFileLocation = reportServerConfigPropertiesFileLocation;
-    }
-
-    public Map<String, String> getReportPluginProperties()
-    {
-        return reportPluginProperties;
-    }
-
-    public void setReportPluginProperties(Map<String, String> reportPluginProperties)
-    {
-        this.reportPluginProperties = reportPluginProperties;
     }
 
     public ExecuteSolrQuery getExecuteSolrQuery()
@@ -599,34 +498,34 @@ public class ReportServiceImpl implements ReportService
         this.searchResults = searchResults;
     }
 
-    public String getReportToRolesMapPropertiesFileLocation()
+    public PentahoReportsConfig getReportsConfig()
     {
-        return reportToRolesMapPropertiesFileLocation;
+        return reportsConfig;
     }
 
-    public void setReportToRolesMapPropertiesFileLocation(String reportToRolesMapPropertiesFileLocation)
+    public void setReportsConfig(PentahoReportsConfig reportsConfig)
     {
-        this.reportToRolesMapPropertiesFileLocation = reportToRolesMapPropertiesFileLocation;
+        this.reportsConfig = reportsConfig;
     }
 
-    public Map<String, String> getReportToRolesMapProperties()
+    public ReportsToRolesConfig getReportsToRolesConfig()
     {
-        return reportToRolesMapProperties;
+        return reportsToRolesConfig;
     }
 
-    public void setReportToRolesMapProperties(Map<String, String> reportToRolesMapProperties)
+    public void setReportsToRolesConfig(ReportsToRolesConfig reportsToRolesConfig)
     {
-        this.reportToRolesMapProperties = reportToRolesMapProperties;
+        this.reportsToRolesConfig = reportsToRolesConfig;
     }
 
-    public Properties getApplicationRolesProperties()
+    public ConfigurationPropertyService getConfigurationPropertyService()
     {
-        return applicationRolesProperties;
+        return configurationPropertyService;
     }
 
-    public void setApplicationRolesProperties(Properties applicationRolesProperties)
+    public void setConfigurationPropertyService(ConfigurationPropertyService configurationPropertyService)
     {
-        this.applicationRolesProperties = applicationRolesProperties;
+        this.configurationPropertyService = configurationPropertyService;
     }
 
     public AcmUserRoleService getUserRoleService()

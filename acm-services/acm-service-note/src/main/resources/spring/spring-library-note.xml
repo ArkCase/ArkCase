@@ -1,20 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
 
     <bean id="noteDao" class="com.armedia.acm.services.note.dao.NoteDao"/>
     <bean id="noteEventPublisher" class="com.armedia.acm.services.note.service.NoteEventPublisher"/>
 
     <bean id="acmSaveNotePlugin" class="com.armedia.acm.pluginmanager.model.AcmPlugin">
         <property name="pluginName" value="Save Note Service Plugin"/>
+        <property name="configurationPropertyService" ref="configurationPropertyService"/>
     </bean>
 
     <bean id="acmDeleteNoteByIdPlugin" class="com.armedia.acm.pluginmanager.model.AcmPlugin">
         <property name="pluginName" value="Delete Note Service Plugin"/>
+        <property name="configurationPropertyService" ref="configurationPropertyService"/>
     </bean>
 
     <bean id="acmListNotesPlugin" class="com.armedia.acm.pluginmanager.model.AcmPlugin">
-        <property name="pluginName" value="Delete Note Service Plugin"/>
+        <property name="pluginName" value="List Notes Service Plugin"/>
+        <property name="configurationPropertyService" ref="configurationPropertyService"/>
     </bean>
 
     <bean id="noteToSolrTransformer" class="com.armedia.acm.services.note.service.NoteToSolrTransformer">

@@ -27,6 +27,7 @@ package com.armedia.acm.plugins.report.service;
  * #L%
  */
 
+import com.armedia.acm.pentaho.config.PentahoReportsConfig;
 import com.armedia.acm.plugins.report.model.ScheduleReportException;
 
 import org.apache.commons.ssl.Base64;
@@ -50,17 +51,11 @@ public class PentahoScheduleReportService implements ScheduleReportService
     private HttpHeaders headers;
     private RestTemplate restTemplate;
     private ResponseEntity<String> response;
-    private String pentahoUser;
-    private String pentahoPassword;
-    private String pentahoUrl;
-    private String pentahoPort;
-    private String scheduleApi;
-    private String retrieveSchedulesApi;
-    private String deleteScheduleApi;
+    private PentahoReportsConfig reportsConfig;
 
     private void createCredentialHeaders()
     {
-        String plainCreds = getPentahoUser() + ":" + getPentahoPassword();
+        String plainCreds = reportsConfig.getServerUser() + ":" + reportsConfig.getServerPassword();
         byte[] plainCredsBytes = plainCreds.getBytes();
         byte[] base64CredsBytes = Base64.encodeBase64(plainCredsBytes);
         String base64Creds = new String(base64CredsBytes);
@@ -153,89 +148,33 @@ public class PentahoScheduleReportService implements ScheduleReportService
 
     public String buildDeleteScheduleUrl()
     {
-        return getPentahoUrl() + ((getPentahoPort() != null && !getPentahoPort().isEmpty()) ? ":" + getPentahoPort() : "")
-                + getDeleteScheduleApi();
+        return reportsConfig.getServerInternalUrl() +
+                ((reportsConfig.getServerInternalPort() != null) ? ":" + reportsConfig.getServerInternalPort() : "")
+                + reportsConfig.getDeleteScheduleApi();
     }
 
     public String buildRetrieveSchedulesUrl()
     {
-        return getPentahoUrl() + ((getPentahoPort() != null && !getPentahoPort().isEmpty()) ? ":" + getPentahoPort() : "")
-                + getRetrieveSchedulesApi();
+        return reportsConfig.getServerInternalUrl() +
+                ((reportsConfig.getServerInternalPort() != null) ? ":" + reportsConfig.getServerInternalPort() : "")
+                + reportsConfig.getRetrieveSchedulesApi();
     }
 
     public String buildScheduleUrl()
     {
-        return getPentahoUrl() + ((getPentahoPort() != null && !getPentahoPort().isEmpty()) ? ":" + getPentahoPort() : "")
-                + getScheduleApi();
+
+        return reportsConfig.getServerUrl() +
+                ((reportsConfig.getServerInternalPort() != null) ? ":" + reportsConfig.getServerInternalPort() : "")
+                + reportsConfig.getScheduleApi();
     }
 
-    public String getPentahoUser()
+    public PentahoReportsConfig getReportsConfig()
     {
-        return pentahoUser;
+        return reportsConfig;
     }
 
-    public void setPentahoUser(String pentahoUser)
+    public void setReportsConfig(PentahoReportsConfig reportsConfig)
     {
-        this.pentahoUser = pentahoUser;
-    }
-
-    public String getPentahoPassword()
-    {
-        return pentahoPassword;
-    }
-
-    public void setPentahoPassword(String pentahoPassword)
-    {
-        this.pentahoPassword = pentahoPassword;
-    }
-
-    public String getPentahoUrl()
-    {
-        return pentahoUrl;
-    }
-
-    public void setPentahoUrl(String pentahoUrl)
-    {
-        this.pentahoUrl = pentahoUrl;
-    }
-
-    public String getPentahoPort()
-    {
-        return pentahoPort;
-    }
-
-    public void setPentahoPort(String pentahoPort)
-    {
-        this.pentahoPort = pentahoPort;
-    }
-
-    public String getScheduleApi()
-    {
-        return scheduleApi;
-    }
-
-    public void setScheduleApi(String scheduleApi)
-    {
-        this.scheduleApi = scheduleApi;
-    }
-
-    public String getRetrieveSchedulesApi()
-    {
-        return retrieveSchedulesApi;
-    }
-
-    public void setRetrieveSchedulesApi(String retrieveSchedulesApi)
-    {
-        this.retrieveSchedulesApi = retrieveSchedulesApi;
-    }
-
-    public String getDeleteScheduleApi()
-    {
-        return deleteScheduleApi;
-    }
-
-    public void setDeleteScheduleApi(String deleteScheduleApi)
-    {
-        this.deleteScheduleApi = deleteScheduleApi;
+        this.reportsConfig = reportsConfig;
     }
 }
