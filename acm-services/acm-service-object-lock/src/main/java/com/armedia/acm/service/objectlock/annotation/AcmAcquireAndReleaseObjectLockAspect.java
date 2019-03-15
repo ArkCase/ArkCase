@@ -42,6 +42,7 @@ import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 import org.springframework.stereotype.Component;
 
+import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -130,6 +131,31 @@ public class AcmAcquireAndReleaseObjectLockAspect
             log.error(e.getMessage());
             throw e;
         }
+    }
+
+    @Around(value = "@annotation(acmAcquireAndReleaseObjectLock)")
+    public Object aroundAcquireAndReleaseObjectLockSingle(ProceedingJoinPoint pjp,
+            AcmAcquireAndReleaseObjectLock acmAcquireAndReleaseObjectLock)
+            throws Throwable, AcmObjectLockException
+    {
+        AcmAcquireAndReleaseObjectLock.List locks = new AcmAcquireAndReleaseObjectLock.List()
+        {
+
+            @Override
+            public Class<? extends Annotation> annotationType()
+            {
+                return AcmAcquireAndReleaseObjectLock.class;
+            }
+
+            @Override
+            public AcmAcquireAndReleaseObjectLock[] value()
+            {
+                return new AcmAcquireAndReleaseObjectLock[] {
+                        acmAcquireAndReleaseObjectLock
+                };
+            }
+        };
+        return aroundAcquireObjectLock(pjp, locks);
     }
 
     private Long getObjectId(ProceedingJoinPoint pjp, AcmAcquireAndReleaseObjectLock acquireAndReleaseObjectLock, Object[] args)
