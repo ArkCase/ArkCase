@@ -22,38 +22,39 @@ angular.module('cost-tracking').controller(
                     ConfigService.getModuleConfig("cost-tracking").then(function(moduleConfig) {
                         $scope.config = moduleConfig;
 
-                        if (!$scope.isEdit) {
-                            //new costsheet with predefined values
-                            $scope.isTypeSelected = false;
-                            $scope.isApproverAdded = false;
-                            $scope.costsheet = {
-                                className: $scope.config.className,
-                                status: 'DRAFT',
-                                parentId: '',
-                                parentType: '',
-                                parentNumber: '',
-                                details: '',
-                                costs: [ {} ],
-                                participants: []
-                            };
+                        UserInfoService.getUserInfo().then(function(infoData) {
 
-                            $scope.approverName = "";
-                            $scope.groupName = "";
+                            if (!$scope.isEdit) {
+                                //new costsheet with predefined values
+                                $scope.isTypeSelected = false;
+                                $scope.isApproverAdded = false;
+                                $scope.costsheet = {
+                                    className: $scope.config.className,
+                                    status: 'DRAFT',
+                                    parentId: '',
+                                    parentType: '',
+                                    parentNumber: '',
+                                    details: '',
+                                    costs: [ {} ],
+                                    participants: []
+                                };
+                                $scope.costsheet.user = infoData;
+
+                                $scope.approverName = "";
+                                $scope.groupName = "";
 
 
-                            if(!Util.isEmpty($scope.modalParams.parentType) && !Util.isEmpty($scope.modalParams.parentNumber) && !Util.isEmpty($scope.modalParams.parentId)) {
-
-                                UserInfoService.getUserInfo().then(function(infoData) {
-                                    $scope.costsheet.user = infoData;
+                                if(!Util.isEmpty($scope.modalParams.parentType) && !Util.isEmpty($scope.modalParams.parentNumber) && !Util.isEmpty($scope.modalParams.parentId)) {
                                     $scope.costsheet.parentId = $scope.modalParams.parentId;
-                                        $scope.costsheet.parentType = $scope.modalParams.parentType;
-                                        $scope.costsheet.parentNumber = $scope.modalParams.parentNumber;
-                                        $scope.costsheet.title =  $scope.costsheet.user.fullName + " - " + $scope.modalParams.parentNumber;
-                                        $scope.isTypeSelected = true;
-                                        $scope.disableCostType = true;
-                                });
+                                    $scope.costsheet.parentType = $scope.modalParams.parentType;
+                                    $scope.costsheet.parentNumber = $scope.modalParams.parentNumber;
+                                    $scope.costsheet.title =  $scope.costsheet.user.fullName + " - " + $scope.modalParams.parentNumber;
+                                    $scope.isTypeSelected = true;
+                                    $scope.disableCostType = true;
+                                }
                             }
-                        }
+                        });
+
 
                         $scope.newCostObjectPicker = _.find(moduleConfig.components, {
                             id: "newCostObjectPicker"
