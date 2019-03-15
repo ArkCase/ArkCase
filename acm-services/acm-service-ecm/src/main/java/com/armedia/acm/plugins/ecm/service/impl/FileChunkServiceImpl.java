@@ -59,7 +59,7 @@ public class FileChunkServiceImpl implements FileChunkService
     private FolderAndFilesUtils folderAndFilesUtils;
     private EcmFileService ecmFileService;
     private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
-    private Properties ecmFileServiceProperties;
+    private EcmFileConfig ecmFileConfig;
 
     @Override
     @Async
@@ -139,7 +139,9 @@ public class FileChunkServiceImpl implements FileChunkService
     public void deleteFilesQuietly(List<FileChunkDetails> parts)
     {
         String dirPath = System.getProperty("java.io.tmpdir");
-        String uniqueArkCaseHashFileIdentifier = ecmFileServiceProperties.getProperty("ecm.arkcase.hash.file.identifier");
+        String uniqueArkCaseHashFileIdentifier = ecmFileConfig.getUniqueHashFileIdentifier();
+        // String uniqueArkCaseHashFileIdentifier =
+        // ecmFileServiceProperties.getProperty("ecm.arkcase.hash.file.identifier");
         for (FileChunkDetails part : parts)
         {
             org.mule.util.FileUtils
@@ -150,7 +152,7 @@ public class FileChunkServiceImpl implements FileChunkService
     private Pair<Enumeration<InputStream>, Long> getInputStreamsAndSize(List<FileChunkDetails> parts) throws IOException
     {
         String dirPath = System.getProperty("java.io.tmpdir");
-        String uniqueArkCaseHashFileIdentifier = ecmFileServiceProperties.getProperty("ecm.arkcase.hash.file.identifier");
+        String uniqueArkCaseHashFileIdentifier = ecmFileConfig.getUniqueHashFileIdentifier();
         Vector<InputStream> inputStream = new Vector<>();
         Long size = 0L;
         for (FileChunkDetails part : parts)
@@ -195,13 +197,13 @@ public class FileChunkServiceImpl implements FileChunkService
         this.auditPropertyEntityAdapter = auditPropertyEntityAdapter;
     }
 
-    public Properties getEcmFileServiceProperties()
+    public EcmFileConfig getEcmFileConfig()
     {
-        return ecmFileServiceProperties;
+        return ecmFileConfig;
     }
 
-    public void setEcmFileServiceProperties(Properties ecmFileServiceProperties)
+    public void setEcmFileConfig(EcmFileConfig ecmFileConfig)
     {
-        this.ecmFileServiceProperties = ecmFileServiceProperties;
+        this.ecmFileConfig = ecmFileConfig;
     }
 }

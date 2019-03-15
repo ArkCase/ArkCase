@@ -8,7 +8,7 @@
         <property name="objectConverter" ref="objectConverter"/>
         <property name="arkPermissionEvaluator" ref="arkPermissionEvaluator"/>
         <property name="fileChunkService" ref="fileChunkService"/>
-        <property name="ecmFileServiceProperties" ref="ecmFileServiceProperties"/>
+        <property name="ecmFileConfig" ref="ecmFileConfig"/>
         <property name="permissionEvaluator" ref="arkPermissionEvaluator"/>
     </bean>
 

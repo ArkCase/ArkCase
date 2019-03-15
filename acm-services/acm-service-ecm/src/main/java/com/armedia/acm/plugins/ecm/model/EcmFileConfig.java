@@ -117,6 +117,10 @@ public class EcmFileConfig implements InitializingBean
     @Value("${ecm.viewer.snowbound.enableOCR}")
     private Boolean snowboundEnableOcr;
 
+    @JsonProperty("ecm.arkcase.hash.file.identifier")
+    @Value("${ecm.arkcase.hash.file.identifier}")
+    private String uniqueHashFileIdentifier;
+
     private Map<String, String> documentsParticipantTypesFileMappings = new HashMap<>();
 
     private Map<String, String> defaultPathByObjectType = new HashMap<>();
@@ -365,5 +369,13 @@ public class EcmFileConfig implements InitializingBean
     public void setSnowboundEnableOcr(Boolean snowboundEnableOcr)
     {
         this.snowboundEnableOcr = snowboundEnableOcr;
+    }
+
+    public String getUniqueHashFileIdentifier() {
+        return uniqueHashFileIdentifier;
+    }
+
+    public void setUniqueHashFileIdentifier(String uniqueHashFileIdentifier) {
+        this.uniqueHashFileIdentifier = uniqueHashFileIdentifier;
     }
 }

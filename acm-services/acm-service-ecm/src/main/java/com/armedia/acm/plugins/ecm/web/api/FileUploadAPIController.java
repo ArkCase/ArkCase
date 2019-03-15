@@ -77,7 +77,7 @@ public class FileUploadAPIController implements ApplicationEventPublisherAware
     private ArkPermissionEvaluator arkPermissionEvaluator;
     private ApplicationEventPublisher applicationEventPublisher;
     private FileChunkService fileChunkService;
-    private Properties ecmFileServiceProperties;
+    private EcmFileConfig ecmFileConfig;
     private ArkPermissionEvaluator permissionEvaluator;
 
     // #parentObjectType == 'USER_ORG' applies to uploading profile picture
@@ -250,7 +250,7 @@ public class FileUploadAPIController implements ApplicationEventPublisherAware
         log.debug("Starting a file upload by user {}", authentication.getName());
 
         String fileName = "";
-        String uniqueArkCaseHashFileIdentifier = ecmFileServiceProperties.getProperty("ecm.arkcase.hash.file.identifier");
+        String uniqueArkCaseHashFileIdentifier = ecmFileConfig.getUniqueHashFileIdentifier();
 
         if (!isFileChunk)
         {
@@ -373,14 +373,14 @@ public class FileUploadAPIController implements ApplicationEventPublisherAware
         this.fileChunkService = fileChunkService;
     }
 
-    public Properties getEcmFileServiceProperties()
+    public EcmFileConfig getEcmFileConfig()
     {
-        return ecmFileServiceProperties;
+        return ecmFileConfig;
     }
 
-    public void setEcmFileServiceProperties(Properties ecmFileServiceProperties)
+    public void setEcmFileConfig(EcmFileConfig ecmFileConfig)
     {
-        this.ecmFileServiceProperties = ecmFileServiceProperties;
+        this.ecmFileConfig = ecmFileConfig;
     }
 
     private boolean isActionAllowed(Authentication authentication, String action, Long targetId)
@@ -392,4 +392,5 @@ public class FileUploadAPIController implements ApplicationEventPublisherAware
     {
         this.permissionEvaluator = permissionEvaluator;
     }
+
 }
