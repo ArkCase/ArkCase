@@ -63,7 +63,7 @@
         class="com.armedia.acm.plugins.ecm.job.RemoveExpiredFilesJob">
         <property name="fileChunkService" ref="fileChunkService"/>
         <property name="ecmFileService" ref="ecmFileService"/>
-        <property name="ecmFileServiceProperties" ref="ecmFileServiceProperties"/>
+        <property name="ecmFileConfig" ref="ecmFileConfig"/>
     </bean>
 
     <task:scheduler id="deleteExpiredFilesScheduler" pool-size="1"/>
