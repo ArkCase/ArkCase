@@ -657,7 +657,7 @@ angular.module('services').factory(
                                 var treeNode = data[1];
 
                                 var configTitleData = data[2];
-                                var configTitleList = configTitleData.data.objectTitleTypes;
+                                var configTitleList = configTitleData.data.objectTitleConfig;
 
                                 var selectNode = Util.goodMapValue(treeData, "docs[0]", null);
                                 if (treeNode) {

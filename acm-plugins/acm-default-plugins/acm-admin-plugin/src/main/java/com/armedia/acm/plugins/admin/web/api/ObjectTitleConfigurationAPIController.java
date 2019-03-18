@@ -27,8 +27,10 @@ package com.armedia.acm.plugins.admin.web.api;
  * #L%
  */
 
-import com.armedia.acm.plugins.admin.model.ObjectTitleConfiguration;
+import com.armedia.acm.plugins.admin.model.ObjectTitleConfig;
 import com.armedia.acm.plugins.admin.service.ObjectTitleConfigurationService;
+import org.json.JSONObject;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -43,14 +45,14 @@ public class ObjectTitleConfigurationAPIController
 
     @RequestMapping(method = RequestMethod.POST)
     @ResponseBody
-    public void saveObjectTitleConfiguration(@RequestBody ObjectTitleConfiguration objectTitleConfiguration)
+    public void saveObjectTitleConfiguration(@RequestBody ObjectTitleConfig objectTitleConfiguration)
     {
         objectTitleConfigurationService.saveObjectTitleConfiguration(objectTitleConfiguration);
     }
 
-    @RequestMapping(method = RequestMethod.GET)
+    @RequestMapping(method = RequestMethod.GET,  produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ObjectTitleConfiguration getObjectTitleConfiguration()
+    public ObjectTitleConfig getObjectTitleConfiguration()
     {
         return objectTitleConfigurationService.getObjectTitleConfig();
     }
