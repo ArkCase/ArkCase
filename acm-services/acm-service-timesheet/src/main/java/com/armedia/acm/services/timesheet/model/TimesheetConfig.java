@@ -28,17 +28,18 @@ package com.armedia.acm.services.timesheet.model;
  */
 
 import com.armedia.acm.pluginmanager.service.AcmPluginConfigBean;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import org.springframework.beans.factory.annotation.Value;
 
+@JsonSerialize(as = TimesheetConfig.class)
 public class TimesheetConfig implements AcmPluginConfigBean
 {
-    @JsonProperty("time.plugin.root.folder")
     @Value("${time.plugin.root.folder}")
     private String rootFolder;
 
-    @JsonProperty("time.plugin.search.tree.sort")
     @Value("${time.plugin.search.tree.sort}")
     private String searchTreeSort;
 
@@ -71,18 +72,21 @@ public class TimesheetConfig implements AcmPluginConfigBean
         this.useApprovalWorkflow = useApprovalWorkflow;
     }
 
+    @JsonIgnore
     @Override
     public String getSearchTreeFilter()
     {
         return "";
     }
 
+    @JsonIgnore
     @Override
     public String getSearchTreeQuery()
     {
         return "";
     }
 
+    @JsonIgnore
     @Override
     public String getSearchTreeSort()
     {
