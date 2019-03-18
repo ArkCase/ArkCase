@@ -14,7 +14,7 @@
         <property name="calendarService" ref="calendarServiceProvider"/>
     </bean>
 
-    <bean id="calendarConfig" class="com.armedia.acm.calendar.config.model.CalendarConfig">
+    <bean id="calendarConfig" class="com.armedia.acm.calendar.config.model.CalendarConfig" scope="refresh">
         <property name="jsonUnmarshaller" ref="jsonUnmarshaller"/>
         <aop:scoped-proxy/>
     </bean>

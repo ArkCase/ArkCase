@@ -47,12 +47,26 @@ angular.module('admin').controller('Admin.ObjectTitleConfigurationController', [
         };
         AdminObjectTitleConfigurationService.getObjectTitleConfiguration().then(function(response) {
             if (!Util.isEmpty(response.data)) {
-                $scope.objectTitleConfiguration = response.data;
+                angular.forEach(response.data.objectTitleConfig, function (value, key){
+                    $scope.objectTitleConfiguration.objectTitleTypes.push({
+                        objectType: key,
+                        enableTitleField: value.enableTitleField,
+                        title: value.title
+                    })
+                });
                 reloadGrid();
             }
         });
 
         var saveConfig = function() {
+            var objectTitleConfig = {};
+            angular.forEach($scope.objectTitleConfiguration, function (object) {
+                objectTitleConfig[object.objectType] = {
+                    enableTitleField: object.enableTitleField,
+                    title: object.title
+                };
+            });
+
             AdminObjectTitleConfigurationService.saveObjectTitleConfiguration($scope.objectTitleConfiguration).then(function(response) {
                 MessageService.succsessAction($translate.instant("admin.application.objectTitleConfiguration.message.success"));
             }, function(error) {

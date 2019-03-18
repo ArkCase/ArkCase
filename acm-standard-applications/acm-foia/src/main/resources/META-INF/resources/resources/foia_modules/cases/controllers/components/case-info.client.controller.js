@@ -128,28 +128,35 @@ angular.module('cases').controller(
                 });
 
                 AdminObjectTitleConfigurationService.getObjectTitleConfiguration().then(function (value) {
-                    var configTitleList = value.data.objectTitleTypes;
-                    $scope.configurationTitle = _.find(configTitleList, function (confTitle) {
-                        return confTitle.objectType = "REQUEST";
-                    });
-                    if($scope.configurationTitle.title === "Use the 'Object ID' as a Title")
+                    var configurationTitle = value.data.objectTitleConfig.REQUEST.title;
+                    if(configurationTitle === "Use the 'Object ID' as a Title")
                     {
                         $scope.nodeTitle = $scope.objectInfo.id;
                     }
-                    else if($scope.configurationTitle.title === "Use the 'Title' as a Title")
+                    else if(configurationTitle === "Use the 'Title' as a Title")
                     {
                         $scope.nodeTitle = $scope.objectInfo.title;
                     }
-                    else if($scope.configurationTitle.title === "Use the 'Object ID - Title' as a Title")
+                    else if(configurationTitle === "Use the 'Object ID - Title' as a Title")
                     {
                         $scope.nodeTitle = $scope.objectInfo.id + $scope.objectInfo.title;
                     }
-                    else if($scope.configurationTitle.title === "Use the 'Title - Object ID' as a Title")
+                    else if(configurationTitle === "Use the 'Title - Object ID' as a Title")
                     {
                         $scope.nodeTitle = $scope.objectInfo.title + $scope.objectInfo.id;
                     }
                 });
 
+
+
+                $scope.isAmendmentAdded = data.amendmentFlag;
+
+            };
+            $scope.userOrGroupSearch = function() {
+                var assigneUserName = _.find($scope.userFullNames, function (user)
+                {
+                    return user.id === $scope.assignee
+                });
 
 
                 $scope.isAmendmentAdded = data.amendmentFlag;

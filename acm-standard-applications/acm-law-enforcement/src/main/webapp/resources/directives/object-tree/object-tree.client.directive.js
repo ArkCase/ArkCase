@@ -137,8 +137,8 @@
  </file>
  </example>
  */
-angular.module('directives').directive('objectTree', [ '$q', '$translate', 'UtilService', 'Acm.StoreService', 'Helper.ObjectBrowserService', 'ObjectService', 'Admin.ObjectTitleConfigurationService',
-    function($q, $translate, Util, Store, HelperObjectBrowserService, ObjectService, AdminObjectTitleConfigurationService) {
+angular.module('directives').directive('objectTree', [ '$q', '$translate', 'UtilService', 'Acm.StoreService', 'Helper.ObjectBrowserService', 'ObjectService',
+    function($q, $translate, Util, Store, HelperObjectBrowserService, ObjectService) {
     var Tree = {
         create: function(treeArgs) {
             Tree.Info.create({
@@ -171,16 +171,6 @@ angular.module('directives').directive('objectTree', [ '$q', '$translate', 'Util
                     node.setFocus();
                 }
             }
-        },
-        _configTitle : function(args) {
-            AdminObjectTitleConfigurationService.getObjectTitleConfiguration().then(function (response) {
-                if (!Util.isEmpty(response.data)) {
-                    var configTitleList = response.data.objectTitleTypes;
-                }
-                return _.find(configTitleList, function (confTitle) {
-                    return confTitle.objectType = args.nodeType;
-                });
-            })
         },
         selectComponent: function(nodeType, nodeId, component) {
             var key = Tree.Key.getKeyByObj(nodeType, nodeId);
@@ -493,22 +483,20 @@ angular.module('directives').directive('objectTree', [ '$q', '$translate', 'Util
                     var nodeStatusColor = obj.nodeStatusColor;
                     var nodeTitleLabel = obj.nodeTitleLabel;
                     if(treeData.configTitleList){
-                        var configurationTitle = _.find(treeData.configTitleList, function (confTitle) {
-                            return confTitle.objectType = obj.nodeType;
-                        });
-                        if(configurationTitle.title === "Use the 'Object ID' as a Title")
+                        var configurationTitle = treeData.configTitleList[obj.nodeType].title;
+                        if(configurationTitle === "Use the 'Object ID' as a Title")
                         {
                             var nodeTitle = obj.nodeId;
                         }
-                        else if(configurationTitle.title === "Use the 'Title' as a Title")
+                        else if(configurationTitle === "Use the 'Title' as a Title")
                         {
                             var nodeTitle = obj.nodeTitle;
                         }
-                        else if(configurationTitle.title === "Use the 'Object ID - Title' as a Title")
+                        else if(configurationTitle === "Use the 'Object ID - Title' as a Title")
                         {
                             var nodeTitle = obj.nodeId + obj.nodeTitle;
                         }
-                        else if(configurationTitle.title === "Use the 'Title - Object ID' as a Title")
+                        else if(configurationTitle === "Use the 'Title - Object ID' as a Title")
                         {
                             var nodeTitle = obj.nodeTitle + obj.nodeId;
                         }

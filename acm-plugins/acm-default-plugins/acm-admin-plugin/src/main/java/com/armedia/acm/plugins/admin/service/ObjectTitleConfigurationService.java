@@ -27,15 +27,15 @@ package com.armedia.acm.plugins.admin.service;
  * #L%
  */
 
+import com.armedia.acm.configuration.service.ConfigurationPropertyService;
 import com.armedia.acm.objectonverter.ObjectConverter;
-import com.armedia.acm.plugins.admin.model.ObjectTitleConfiguration;
-import org.apache.commons.io.FileUtils;
+import com.armedia.acm.plugins.admin.model.ObjectTitleConfig;
+import com.armedia.acm.plugins.admin.model.TitleConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 
-import java.io.IOException;
-import java.util.Objects;
+import java.util.Map;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
@@ -46,47 +46,27 @@ public class ObjectTitleConfigurationService
     private Logger log = LoggerFactory.getLogger(getClass());
 
     private ObjectConverter objectConverter;
-    private ObjectTitleConfiguration objectTitleConfiguration;
+    private ObjectTitleConfig objectTitleConfiguration;
+    private ConfigurationPropertyService configurationPropertyService;
 
-    public void saveObjectTitleConfiguration(ObjectTitleConfiguration objectTitleConfiguration)
+    public void saveObjectTitleConfiguration(ObjectTitleConfig objectTitleConfiguration)
     {
-        String queueConfigJson = Objects.nonNull(objectTitleConfiguration)
-                ? getObjectConverter().getIndentedJsonMarshaller().marshal(objectTitleConfiguration)
-                : "{}";
-        try
-        {
-            log.info("Trying to write to config file: {}", getObjectTitleConfigurationFile().getFile().getAbsolutePath());
-            lock.writeLock().lock();
-            FileUtils.writeStringToFile(getObjectTitleConfigurationFile().getFile(), queueConfigJson);
-        }
-        catch (IOException e)
-        {
-            log.error(e.getMessage());
-        }
-        finally
-        {
-            lock.writeLock().unlock();
-        }
+        configurationPropertyService.updateProperties(objectTitleConfiguration);
     }
-    public ObjectTitleConfiguration getObjectTitleConfig()
+    public ObjectTitleConfig getObjectTitleConfig()
     {
-        try
-        {
-            log.info("Trying to read from config file: {}", getObjectTitleConfigurationFile().getFile().getAbsolutePath());
-
-            lock.readLock().lock();
-            String queueConfigJson = FileUtils.readFileToString(getObjectTitleConfigurationFile().getFile());
-            objectTitleConfiguration = getObjectConverter().getJsonUnmarshaller().unmarshall(queueConfigJson, ObjectTitleConfiguration.class);
-        }
-        catch (IOException e)
-        {
-            log.error(e.getMessage());
-        }
-        finally
-        {
-            lock.readLock().unlock();
-        }
         return objectTitleConfiguration;
+
+    }
+
+    public ConfigurationPropertyService getConfigurationPropertyService()
+    {
+        return configurationPropertyService;
+    }
+
+    public void setConfigurationPropertyService(ConfigurationPropertyService configurationPropertyService)
+    {
+        this.configurationPropertyService = configurationPropertyService;
     }
 
     public Resource getObjectTitleConfigurationFile()
@@ -129,13 +109,8 @@ public class ObjectTitleConfigurationService
         this.objectConverter = objectConverter;
     }
 
-    public void setObjectTitleConfiguration(ObjectTitleConfiguration objectTitleConfiguration)
+    public void setObjectTitleConfiguration(ObjectTitleConfig objectTitleConfiguration)
     {
         this.objectTitleConfiguration = objectTitleConfiguration;
-    }
-
-    public ObjectTitleConfiguration getObjectTitleConfiguration()
-    {
-        return objectTitleConfiguration;
     }
 }

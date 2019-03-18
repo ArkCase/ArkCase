@@ -29,19 +29,8 @@ package com.armedia.acm.plugins.admin.model;
 
 public class TitleConfiguration
 {
-    private String objectType;
     private Boolean enableTitleField;
     private String title;
-
-    public String getObjectType()
-    {
-        return objectType;
-    }
-
-    public void setObjectType(String objectType)
-    {
-        this.objectType = objectType;
-    }
 
     public Boolean getEnableTitleField()
     {
