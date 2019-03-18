@@ -31,7 +31,9 @@ package com.armedia.acm.services.notification.service;
  */
 
 import com.armedia.acm.services.notification.model.Notification;
+import com.armedia.acm.services.notification.model.NotificationConstants;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -41,4 +43,24 @@ import java.util.List;
 public interface UsersNotified
 {
     List<Notification> getNotifications(Object[] notification, Long parentObjectId, String parentObjectType);
+
+    default Notification setNewNotification(Object obj[])
+    {
+        Notification notification = new Notification();
+        notification.setTitle((String) obj[0]);
+        notification.setNote((String) obj[1]);
+        notification.setType((String) obj[2]);
+        notification.setParentId((Long) obj[3]);
+        notification.setParentType((String) obj[4]);
+        notification.setParentName((String) obj[5]);
+        notification.setParentTitle((String) obj[6]);
+        notification.setRelatedObjectId((Long) obj[7]);
+        notification.setRelatedObjectType((String) obj[8]);
+        notification.setActionDate((Date) obj[9]);
+        notification.setTemplateModelName((String) obj[10]);
+        notification.setStatus(NotificationConstants.STATUS_NEW);
+        notification.setAction(NotificationConstants.ACTION_DEFAULT);
+        notification.setData("{\"usr\":\"/plugin/" + ((String) obj[4]).toLowerCase() + "/" + obj[3] + "\"}");
+        return notification;
+    }
 }

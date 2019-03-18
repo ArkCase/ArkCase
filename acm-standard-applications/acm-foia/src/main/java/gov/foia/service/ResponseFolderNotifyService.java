@@ -34,6 +34,7 @@ import static gov.foia.model.FOIARequestUtils.extractRequestorEmailAddress;
 import com.armedia.acm.compressfolder.FolderCompressor;
 import com.armedia.acm.core.AcmApplication;
 import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
+import com.armedia.acm.services.notification.dao.NotificationDao;
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.service.NotificationSender;
 import com.armedia.acm.services.users.dao.UserDao;
@@ -55,6 +56,7 @@ public class ResponseFolderNotifyService
     private UserDao userDao;
     private Logger log = LoggerFactory.getLogger(getClass());
     private AcmApplication acmAppConfiguration;
+    private NotificationDao notificationDao;
 
     /**
      * @return the acmAppConfiguration
@@ -80,12 +82,13 @@ public class ResponseFolderNotifyService
         if (emailAddress != null)
         {
             Notification responseFolderNotifier = new Notification();
-            responseFolderNotifier.setUserEmail(emailAddress);
+            responseFolderNotifier.setEmailAddresses(emailAddress);
             responseFolderNotifier.setTitle(String.format("%s %s", EMAIL_RELEASE_SUBJECT, request.getCaseNumber()));
-            responseFolderNotifier.setNote("requestReleased");
+            responseFolderNotifier.setTemplateModelName("requestReleased");
             responseFolderNotifier.setParentType(request.getObjectType());
             responseFolderNotifier.setParentId(request.getId());
-            getNotificationSender().send(responseFolderNotifier);
+            responseFolderNotifier.setAttachFiles(false);
+            notificationDao.save(responseFolderNotifier);
         }
 
     }
@@ -97,12 +100,13 @@ public class ResponseFolderNotifyService
         if (emailAddress != null)
         {
             Notification responseFolderNotifier = new Notification();
-            responseFolderNotifier.setUserEmail(emailAddress);
+            responseFolderNotifier.setEmailAddresses(emailAddress);
             responseFolderNotifier.setTitle(String.format("%s %s", EMAIL_RESPONSE_FOLDER_ZIP, request.getCaseNumber()));
-            responseFolderNotifier.setNote("portalDocumentsLink");
+            responseFolderNotifier.setTemplateModelName("portalDocumentsLink");
             responseFolderNotifier.setParentType(request.getObjectType());
             responseFolderNotifier.setParentId(request.getId());
-            getNotificationSender().send(responseFolderNotifier);
+            responseFolderNotifier.setAttachFiles(false);
+            notificationDao.save(responseFolderNotifier);
         }
     }
 
@@ -161,5 +165,15 @@ public class ResponseFolderNotifyService
     public void setCaseFileDao(CaseFileDao caseFileDao)
     {
         this.caseFileDao = caseFileDao;
+    }
+
+    public NotificationDao getNotificationDao()
+    {
+        return notificationDao;
+    }
+
+    public void setNotificationDao(NotificationDao notificationDao)
+    {
+        this.notificationDao = notificationDao;
     }
 }
