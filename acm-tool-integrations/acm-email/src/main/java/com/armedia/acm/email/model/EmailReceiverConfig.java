@@ -29,15 +29,18 @@ package com.armedia.acm.email.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
 import org.springframework.beans.factory.annotation.Value;
 
+@JsonSerialize(as = EmailReceiverConfig.class)
 public class EmailReceiverConfig
 {
     @JsonProperty("email.CASE_FILE.user")
     @Value("${email.CASE_FILE.user}")
     private String caseFileUser;
 
-    @JsonIgnore
+    @JsonProperty("email.CASE_FILE.password")
     @Value("${email.CASE_FILE.password}")
     private String caseFilePassword;
 
@@ -45,11 +48,11 @@ public class EmailReceiverConfig
     @Value("${email.create.case.enabled}")
     private Boolean createCaseEnabled;
 
-    @JsonProperty("user_complaint")
+    @JsonProperty("email.COMPLAINT.user")
     @Value("${email.COMPLAINT.user}")
     private String complaintUser;
 
-    @JsonIgnore
+    @JsonProperty("email.COMPLAINT.password")
     @Value("${email.COMPLAINT.password}")
     private String complaintPassword;
 
@@ -57,43 +60,33 @@ public class EmailReceiverConfig
     @Value("${email.create.complaint.enabled}")
     private Boolean createComplaintEnabled;
 
-    @JsonProperty("email.protocol")
     @Value("${email.protocol}")
     private String protocol;
 
-    @JsonProperty("email.host")
     @Value("${email.host}")
     private String host;
 
-    @JsonProperty("email.fetch.folder")
     @Value("${email.fetch.folder}")
     private String fetchFolder;
 
-    @JsonProperty("email.port")
     @Value("${email.port}")
     private Integer port;
 
-    @JsonProperty("email.debug")
     @Value("${email.debug}")
     private Boolean debug;
 
-    @JsonProperty("email.should-delete-messages")
     @Value("${email.should-delete-messages}")
     private Boolean shouldDeleteMessages;
 
-    @JsonProperty("email.should-mark-messages-as-read")
     @Value("${email.should-mark-messages-as-read}")
     private Boolean shouldMarkMessagesAsRead;
 
-    @JsonProperty("email.max-messages-per-poll")
     @Value("${email.max-messages-per-poll}")
     private Integer maxMessagesPerPoll;
 
-    @JsonProperty("email.fixed-rate")
     @Value("${email.fixed-rate}")
     private Integer fixedRate;
 
-    @JsonProperty("email.userId")
     @Value("${email.userId}")
     private String emailUserId;
 
@@ -157,6 +150,7 @@ public class EmailReceiverConfig
         this.createComplaintEnabled = createComplaintEnabled;
     }
 
+    @JsonIgnore
     public String getProtocol()
     {
         return protocol;
@@ -167,6 +161,7 @@ public class EmailReceiverConfig
         this.protocol = protocol;
     }
 
+    @JsonIgnore
     public String getHost()
     {
         return host;
@@ -177,6 +172,7 @@ public class EmailReceiverConfig
         this.host = host;
     }
 
+    @JsonIgnore
     public String getFetchFolder()
     {
         return fetchFolder;
@@ -187,6 +183,7 @@ public class EmailReceiverConfig
         this.fetchFolder = fetchFolder;
     }
 
+    @JsonIgnore
     public Integer getPort()
     {
         return port;
@@ -197,6 +194,7 @@ public class EmailReceiverConfig
         this.port = port;
     }
 
+    @JsonIgnore
     public Boolean getDebug()
     {
         return debug;
@@ -207,6 +205,7 @@ public class EmailReceiverConfig
         this.debug = debug;
     }
 
+    @JsonIgnore
     public Boolean getShouldDeleteMessages()
     {
         return shouldDeleteMessages;
@@ -217,6 +216,7 @@ public class EmailReceiverConfig
         this.shouldDeleteMessages = shouldDeleteMessages;
     }
 
+    @JsonIgnore
     public Boolean getShouldMarkMessagesAsRead()
     {
         return shouldMarkMessagesAsRead;
@@ -227,6 +227,7 @@ public class EmailReceiverConfig
         this.shouldMarkMessagesAsRead = shouldMarkMessagesAsRead;
     }
 
+    @JsonIgnore
     public Integer getMaxMessagesPerPoll()
     {
         return maxMessagesPerPoll;
@@ -237,6 +238,7 @@ public class EmailReceiverConfig
         this.maxMessagesPerPoll = maxMessagesPerPoll;
     }
 
+    @JsonIgnore
     public Integer getFixedRate()
     {
         return fixedRate;
@@ -247,6 +249,7 @@ public class EmailReceiverConfig
         this.fixedRate = fixedRate;
     }
 
+    @JsonIgnore
     public String getEmailUserId()
     {
         return emailUserId;
