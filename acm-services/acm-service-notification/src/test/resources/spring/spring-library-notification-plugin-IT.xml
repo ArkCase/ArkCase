@@ -20,17 +20,6 @@
 
     <bean id="emailReceiverConfig" class="com.armedia.acm.email.model.EmailReceiverConfig"/>
 
-    <bean id="calendarServiceProvider" class="com.armedia.acm.calendar.service.integration.exchange.ExchangeCalendarService">
-        <property name="entityHandlers">
-            <map>
-            </map>
-        </property>
-        <property name="outlookDao" ref="exchangeWebServicesOutlookDao"/>
-        <property name="calendarAdminService" ref="propertyFileCalendarAdminService"/>
-        <property name="folderCreatorDao" ref="outlookFolderCreatorDao"/>
-        <property name="folderRecreator" ref="outlookFolderRecreator"/>
-    </bean>
-
     <bean id="auditEventConfig" class="com.armedia.acm.audit.model.AuditEventConfig">
         <property name="jsonUnmarshaller" ref="jsonUnmarshaller"/>
     </bean>
