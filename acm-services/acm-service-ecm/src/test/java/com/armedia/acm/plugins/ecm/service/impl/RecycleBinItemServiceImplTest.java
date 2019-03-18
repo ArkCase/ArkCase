@@ -32,10 +32,12 @@ import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.dao.RecycleBinItemDao;
 import com.armedia.acm.plugins.ecm.model.*;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
+import com.armedia.acm.plugins.ecm.service.FileEventPublisher;
 import org.easymock.Capture;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.mock.web.MockHttpSession;
 import org.springframework.security.core.Authentication;
 
 import java.util.ArrayList;
@@ -43,6 +45,7 @@ import java.util.List;
 
 import static org.easymock.EasyMock.capture;
 import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.expectLastCall;
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -59,6 +62,8 @@ public class RecycleBinItemServiceImplTest extends EasyMockSupport
     private AcmContainerDao mockAcmContainerDao;
     private Authentication mockAuthentication;
     private AcmFolderService mockAcmFolderService;
+    private MockHttpSession mockSession;
+    private FileEventPublisher mockEventPublisher;
 
     @Before
     public void setUp() throws Exception
@@ -71,11 +76,14 @@ public class RecycleBinItemServiceImplTest extends EasyMockSupport
         mockAcmContainerDao = createMock(AcmContainerDao.class);
         mockAuthentication = createMock(Authentication.class);
         mockAcmFolderService = createMock(AcmFolderService.class);
+        mockSession = new MockHttpSession();
+        mockEventPublisher = createMock(FileEventPublisher.class);
 
         unit.setEcmFileDao(mockEcmFileDao);
         unit.setRecycleBinItemDao(mockRecycleBinItemDao);
         unit.setEcmFileService(mockEcmFileService);
         unit.setFolderService(mockAcmFolderService);
+        unit.setFileEventPublisher(mockEventPublisher);
     }
 
     @Test
@@ -126,6 +134,8 @@ public class RecycleBinItemServiceImplTest extends EasyMockSupport
         destinationContainer.setCmisRepositoryId(EcmFileConstants.DEFAULT_CMIS_REPOSITORY_ID);
         destinationContainer.setFolder(targetFolder);
 
+        mockSession.setAttribute("acm_ip_address", "ipAddress");
+
         expect(mockAuthentication.getName()).andReturn("user").anyTimes();
 
         expect(mockRecycleBinItemDao.getContainerForRecycleBin(RecycleBinConstants.OBJECT_TYPE, EcmFileConstants.DEFAULT_CMIS_REPOSITORY_ID)).andReturn(destinationContainer);
@@ -138,9 +148,11 @@ public class RecycleBinItemServiceImplTest extends EasyMockSupport
         expect(mockEcmFileService.moveFile(toBeDeleted.getFileId(), destinationContainer.getContainerObjectId(),
                 destinationContainer.getContainerObjectType(), destinationContainer.getFolder().getId())).andReturn(toBeDeleted);
 
+        mockEventPublisher.publishFileMovedInRecycleBinEvent(toBeDeleted, mockAuthentication, "ipAddress", true);
+        expectLastCall();
         replayAll();
 
-        RecycleBinItem deletedFile = unit.putFileIntoRecycleBin(toBeDeleted, mockAuthentication);
+        RecycleBinItem deletedFile = unit.putFileIntoRecycleBin(toBeDeleted, mockAuthentication, mockSession);
 
         verifyAll();
 
