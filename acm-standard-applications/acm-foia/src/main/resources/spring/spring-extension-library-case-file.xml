@@ -51,6 +51,7 @@
             <beans:property name="notificationSender" ref="notificationSender"/>
             <beans:property name="userDao" ref="userJpaDao"/>
             <beans:property name="ecmFileService" ref="ecmFileService"/>
+            <beans:property name="notificationDao" ref="notificationDao"/>
         </beans:bean>
 
         <beans:bean id="caseFilePipelineManager" class="com.armedia.acm.services.pipeline.PipelineManager">
@@ -117,7 +118,7 @@
             <beans:property name="foiaConfigurationService" ref="foiaConfigurationService"/>
             <beans:property name="foiaQueueCorrespondenceService" ref="foiaQueueCorrespondenceService"/>
             <beans:property name="templatingEngine" ref="templatingEngine"/>
-            <beans:property name="emailBodyTemplate" value="file:${user.home}/.arkcase/acm/templates/request-document-attached.html"/>
+            <beans:property name="emailBodyTemplate" value="file:${user.home}/.arkcase/acm/templates/requestDocumentAttached.html"/>
         </beans:bean>
 
         <beans:bean id="documentGeneratorService" class="gov.foia.service.FOIADocumentGeneratorService">
@@ -164,6 +165,7 @@
             <beans:property name="userDao" ref="userJpaDao"/>
             <beans:property name="responseFolderService" ref="responseFolderService"/>
             <beans:property name="acmAppConfiguration" ref="acmApplication"/>
+            <beans:property name="notificationDao" ref="notificationDao"/>
         </beans:bean>
 
         <beans:bean id="responseFolderService" class="gov.foia.service.ResponseFolderService">
@@ -194,7 +196,8 @@
             <beans:property name="documentGeneratorService" ref="documentGeneratorService"/>
             <beans:property name="foiaConfigurationService" ref="foiaConfigurationService"/>
             <beans:property name="templatingEngine" ref="templatingEngine"/>
-            <beans:property name="emailBodyTemplate" value="file:${user.home}/.arkcase/acm/templates/request-document-attached.html"/>
+            <beans:property name="emailBodyTemplate" value="file:${user.home}/.arkcase/acm/templates/requestDocumentAttached.html"/>
+            <beans:property name="notificationDao" ref="notificationDao"/>
         </beans:bean>
 
         <beans:bean id="foiaFileService" class="gov.foia.service.FOIAFileService">

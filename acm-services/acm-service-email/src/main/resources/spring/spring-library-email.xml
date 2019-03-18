@@ -41,49 +41,7 @@
         <property name="authenticationTokenService" ref="authenticationTokenService"/>
         <property name="authenticationTokenDao" ref="authenticationTokenDao"/>
         <property name="templatingEngine" ref="templatingEngine"/>
-    </bean>
-
-    <bean id="onLoginCheckPasswordExpiration" class="com.armedia.acm.services.email.service.OnLoginCheckPasswordExpiration">
-        <property name="resetPasswordService" ref="resetPasswordService"/>
-    </bean>
-
-    <bean id="onForgotUsername" class="com.armedia.acm.services.email.service.OnForgotUsername">
-        <property name="emailSenderService" ref="configurableEmailSenderService"/>
-        <property name="acmAppConfiguration" ref="acmApplication"/>
-        <property name="acmSpringActiveProfile" ref="acmSpringActiveProfile"/>
-        <property name="usernamePasswordNotifierConfig" ref="usernamePasswordNotifierConfig"/>
-    </bean>
-
-    <bean id="onForgotPassword" class="com.armedia.acm.services.email.service.OnForgotPassword">
-        <property name="resetPasswordService" ref="resetPasswordService"/>
-    </bean>
-
-    <bean id="onSendSetPasswordEmailEvent" class="com.armedia.acm.services.email.service.OnSetPasswordEmail">
-        <property name="resetPasswordService" ref="resetPasswordService"/>
-    </bean>
-
-    <bean id="resetPasswordService" class="com.armedia.acm.services.email.service.ResetPasswordService">
-        <property name="userDao" ref="userJpaDao"/>
-        <property name="emailSenderService" ref="configurableEmailSenderService"/>
-        <property name="acmSpringActiveProfile" ref="acmSpringActiveProfile"/>
-        <property name="usernamePasswordNotifierConfig" ref="usernamePasswordNotifierConfig"/>
-        <property name="passwordResetEmailBodyTemplate" value="file:${user.home}/.arkcase/acm/templates/change-password.html"/>
-        <property name="templatingEngine" ref="templatingEngine"/>
-    </bean>
-
-    <bean id="acmEmailMentionsService" class="com.armedia.acm.services.email.service.AcmEmailMentionsService">
-        <property name="emailSenderService" ref="configurableEmailSenderService"/>
-        <property name="acmAppConfiguration" ref="acmApplication"/>
-        <property name="mentionsEmailConfig" ref="mentionsEmailConfig"/>
-    </bean>
-
-    <bean id="usernamePasswordNotifierConfig"
-          class="com.armedia.acm.services.email.model.UsernamePasswordNotifierConfig" scope="refresh">
-        <aop:scoped-proxy/>
-    </bean>
-
-    <bean id="mentionsEmailConfig" class="com.armedia.acm.services.email.model.MentionsEmailConfig" scope="refresh">
-        <aop:scoped-proxy/>
+        <property name="ecmFileDao" ref="ecmFileDao"/>
     </bean>
 
     <bean id="templatingEngine" class="com.armedia.acm.services.email.service.TemplatingEngine">

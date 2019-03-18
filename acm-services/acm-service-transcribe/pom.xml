@@ -87,6 +87,12 @@
             <groupId>com.amazonaws</groupId>
             <artifactId>aws-java-sdk-transcribe</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.armedia.acm.acm-services</groupId>
+            <artifactId>acm-service-notification</artifactId>
+            <version>${acm.version}</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
 
 </project>

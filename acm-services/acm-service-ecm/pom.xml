@@ -297,6 +297,12 @@
             <groupId>us.fatehi</groupId>
             <artifactId>pointlocation6709</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.armedia.acm.acm-tool-integrations</groupId>
+            <artifactId>acm-email</artifactId>
+            <version>${acm.version}</version>
+            <scope>compile</scope>
+        </dependency>
 
     </dependencies>
 
