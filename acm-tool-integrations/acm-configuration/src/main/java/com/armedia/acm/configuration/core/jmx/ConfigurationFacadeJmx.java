@@ -2,6 +2,11 @@ package com.armedia.acm.configuration.core.jmx;
 
 import com.armedia.acm.configuration.api.ConfigurationFacade;
 
+import org.springframework.jmx.export.annotation.ManagedOperation;
+import org.springframework.jmx.export.annotation.ManagedOperationParameter;
+import org.springframework.jmx.export.annotation.ManagedOperationParameters;
+import org.springframework.jmx.export.annotation.ManagedResource;
+
 /*-
  * #%L
  * configuration-core
@@ -28,11 +33,6 @@ import com.armedia.acm.configuration.api.ConfigurationFacade;
  * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
  * #L%
  */
-
-import org.springframework.jmx.export.annotation.ManagedOperation;
-import org.springframework.jmx.export.annotation.ManagedOperationParameter;
-import org.springframework.jmx.export.annotation.ManagedOperationParameters;
-import org.springframework.jmx.export.annotation.ManagedResource;
 
 @ManagedResource(objectName = "configuration:name=configuration-service,type=com.armedia.acm.configuration.ConfigurationService,artifactId=configuration-service")
 public class ConfigurationFacadeJmx implements ConfigurationFacade

@@ -165,7 +165,10 @@
                 "title": "新闻",
                 "noDataMessage": "目前没有RSS /信息",
                 "configDescription": "描述",
-                "configDescriptionPlaceholder": "输入小部件描述"
+                "configDescriptionPlaceholder": "输入小部件描述",
+                "message": {
+                    "error": "无效的网址"
+                }
             },
             "details": {
                 "title": "详细信息",

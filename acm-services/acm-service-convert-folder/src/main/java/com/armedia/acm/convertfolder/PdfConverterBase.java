@@ -71,23 +71,35 @@ public abstract class PdfConverterBase implements FileConverter
     @Override
     public void convert(EcmFile file, String username) throws ConversionException
     {
-        convertFile(file, username, false);
+        convertFile(file, "", username, false);
     }
 
     @Override
-    public File convert(EcmFile file) throws ConversionException
-    {
-        return convertFile(file, new String(), true);
+    public File convert(EcmFile file) throws ConversionException {
+        return convertAndReturnConvertedFile(file);
     }
 
-    private File convertFile(EcmFile file, String username, Boolean skipUploadAndReturnConvertedFile) throws ConversionException
+    @Override
+    public File convertAndReturnConvertedFile(EcmFile file) throws ConversionException
+    {
+        return convertFile(file, "", "", true);
+    }
+
+    @Override
+    public File convertAndReturnConvertedFile(EcmFile file, String version) throws ConversionException
+    {
+        return convertFile(file, version, "", true);
+    }
+
+    private File convertFile(EcmFile file, String version, String username, Boolean skipUploadAndReturnConvertedFile) throws ConversionException
     {
         String tempUploadFolderPath = FileUtils.getTempDirectoryPath();
         String fileName = file.getFileName() + "." + file.getFileExtension();
+        String fileVersion = (version.isEmpty() || version == null) ? file.getActiveVersionTag() : version;
         log.debug("Converting file [{}].", fileName);
         File tempOriginFile = new File(tempUploadFolderPath + File.separator + fileName + "_" + Thread.currentThread().getName());
 
-        try (InputStream fileByteStream = fileService.downloadAsInputStream(file.getId()))
+        try (InputStream fileByteStream = fileService.downloadAsInputStream(file.getId(), fileVersion))
         {
             FileUtils.copyInputStreamToFile(fileByteStream, tempOriginFile);
         }
