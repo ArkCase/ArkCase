@@ -1313,7 +1313,7 @@ angular
 
                                                 var $option = $("<option/>").val(key).text(value).appendTo($select);
 
-                                                if (Util.goodValue(node.data.reviewStatus) == value) {
+                                                if (Util.goodValue(node.data.reviewStatus) === key) {
                                                     $option.attr("selected", true);
                                                 }
                                             }
@@ -1338,7 +1338,7 @@ angular
 
                                                 var $option = $("<option/>").val(key).text(value).appendTo($select);
 
-                                                if (Util.goodValue(node.data.redactionStatus) == value) {
+                                                if (Util.goodValue(node.data.redactionStatus) === key) {
                                                     $option.attr("selected", true);
                                                 }
                                             }
@@ -3934,6 +3934,9 @@ angular
                         $(node.tr).find("select.reviewstatus").prop('disabled', true);
                         $(node.tr).find("select.redactionstatus").prop('disabled', true);
 
+                        var nodeParentFolder = node.parent;
+                        var cacheKey = DocTree.getCacheKeyByNode(nodeParentFolder);
+
                         if(statusType === "review") {
                             Util.serviceCall({
                                 service: Ecm.setFileReviewStatus,
@@ -3949,6 +3952,7 @@ angular
                                 $(node.tr).find("select.reviewstatus").prop('disabled', false);
                                 $(node.tr).find("select.redactionstatus").prop('disabled', false);
                                 node.data.reviewStatus = statusValue;
+                                DocTree.cacheFolderList.remove(cacheKey);
 
                                 return data;
                             }, function(error) {
@@ -3975,6 +3979,7 @@ angular
                                 $(node.tr).find("select.reviewstatus").prop('disabled', false);
                                 $(node.tr).find("select.redactionstatus").prop('disabled', false);
                                 node.data.redactionStatus = statusValue;
+                                DocTree.cacheFolderList.remove(cacheKey);
 
                                 return data;
                             }, function(error) {

@@ -57,6 +57,7 @@ import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
@@ -293,6 +294,7 @@ public class SmtpServiceTest
 
         ArgumentCaptor<byte[]> read = ArgumentCaptor.forClass(byte[].class);
         when(mockEcmFileService.downloadAsInputStream(attachmentIds.get(0))).thenReturn(mockInputStream);
+        when(mockEcmFileService.downloadAsInputStream(attachmentIds.get(0), null)).thenReturn(mockInputStream);
         when(mockEcmFileService.findById(attachmentIds.get(0))).thenReturn(mockEcmFile);
         when(mockInputStream.read(read.capture(), eq(0), eq(16384))).thenReturn(-1);
 
@@ -367,6 +369,7 @@ public class SmtpServiceTest
 
         ArgumentCaptor<byte[]> read = ArgumentCaptor.forClass(byte[].class);
         when(mockEcmFileService.downloadAsInputStream(attachmentIds.get(0))).thenReturn(mockInputStream);
+        when(mockEcmFileService.downloadAsInputStream(attachmentIds.get(0), null)).thenReturn(mockInputStream);
         when(mockEcmFileService.findById(attachmentIds.get(0))).thenReturn(mockEcmFile);
         when(mockInputStream.read(read.capture(), eq(0), eq(16384))).thenReturn(-1);
 
@@ -450,6 +453,7 @@ public class SmtpServiceTest
 
         ArgumentCaptor<byte[]> read = ArgumentCaptor.forClass(byte[].class);
         when(mockEcmFileService.downloadAsInputStream(attachmentIds.get(0))).thenReturn(mockInputStream);
+        when(mockEcmFileService.downloadAsInputStream(attachmentIds.get(0), null)).thenReturn(mockInputStream);
         when(mockEcmFileService.findById(attachmentIds.get(0))).thenReturn(mockEcmFile);
         when(mockEcmFileService.findById(fileId)).thenReturn(mockEcmFile);
         when(mockInputStream.read(read.capture(), eq(0), eq(16384))).thenReturn(-1);
@@ -533,6 +537,7 @@ public class SmtpServiceTest
 
         ArgumentCaptor<byte[]> read = ArgumentCaptor.forClass(byte[].class);
         when(mockEcmFileService.downloadAsInputStream(attachmentIds.get(0))).thenReturn(mockInputStream);
+        when(mockEcmFileService.downloadAsInputStream(attachmentIds.get(0), null)).thenReturn(mockInputStream);
         when(mockEcmFileService.findById(attachmentIds.get(0))).thenReturn(mockEcmFile);
 
         when(mockEcmFileService.findById(fileId)).thenReturn(mockEcmFile);

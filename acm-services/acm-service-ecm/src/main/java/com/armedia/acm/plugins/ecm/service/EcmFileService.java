@@ -38,6 +38,8 @@ import com.armedia.acm.plugins.ecm.model.EcmFile;
 
 import org.apache.chemistry.opencmis.client.api.CmisObject;
 import org.apache.chemistry.opencmis.client.api.Document;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.MultiValueMap;
@@ -45,6 +47,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.PersistenceException;
 
+import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
@@ -228,6 +232,8 @@ public interface EcmFileService
 
     InputStream downloadAsInputStream(Long id) throws AcmUserActionFailedException;
 
+    InputStream downloadAsInputStream(Long id, String version) throws AcmUserActionFailedException;
+
     AcmContainer createContainerFolder(String objectType, Long objectId, String cmisRepositoryId) throws AcmCreateObjectFailedException;
 
     /**
@@ -305,8 +311,12 @@ public interface EcmFileService
     EcmFile moveFile(Long fileId, Long targetObjectId, String targetObjectType, AcmFolder folder)
             throws AcmUserActionFailedException, AcmObjectNotFoundException, AcmCreateObjectFailedException;
 
+    @Retryable(maxAttempts = 3, value = Exception.class, backoff = @Backoff(delay = 500))
     EcmFile moveFileInArkcase(EcmFile file, AcmFolder targetParentFolder, String targetObjectType)
             throws AcmUserActionFailedException, AcmCreateObjectFailedException;
+
+    @Retryable(maxAttempts = 3, value = Exception.class, backoff = @Backoff(delay = 500))
+    void deleteFileFromArkcase(Long fileId);
 
     void deleteFile(Long fileId) throws AcmUserActionFailedException, AcmObjectNotFoundException;
 
@@ -316,6 +326,7 @@ public interface EcmFileService
 
     void deleteFile(Long fileId, Long parentId, String parentType) throws AcmUserActionFailedException, AcmObjectNotFoundException;
 
+    @Retryable(maxAttempts = 3, value = Exception.class, backoff = @Backoff(delay = 500))
     void deleteFileInArkcase(EcmFile file) throws AcmUserActionFailedException, AcmObjectNotFoundException;
 
     EcmFile renameFile(Long fileId, String newFileName) throws AcmUserActionFailedException, AcmObjectNotFoundException;
@@ -332,6 +343,7 @@ public interface EcmFileService
     EcmFile copyFile(Long documentId, AcmFolder targetFolder, AcmContainer targetContainer)
             throws AcmUserActionFailedException, AcmObjectNotFoundException;
 
+    @Retryable(maxAttempts = 3, value = Exception.class, backoff = @Backoff(delay = 500))
     EcmFile copyFileInArkcase(EcmFile originalFile, String copiedFileNodeId, AcmFolder targetFolder)
             throws AcmUserActionFailedException;
 
@@ -364,4 +376,8 @@ public interface EcmFileService
      * @return whether the delete was successful
      */
     boolean deleteTempFile(String uniqueFileName);
+    
+    File convertFile(String fileKey, String version, String fileExtension, String fileName, String mimeType, EcmFile ecmFile) throws IOException;
+
+    void removeLockAndSendMessage(Long objectId, String message);
 }

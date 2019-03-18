@@ -34,7 +34,12 @@ import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
 import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.when;
 
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
@@ -49,6 +54,8 @@ import com.armedia.acm.plugins.ecm.model.sync.EcmEventType;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
+import com.armedia.acm.service.objectlock.model.AcmObjectLock;
+import com.armedia.acm.service.objectlock.service.AcmObjectLockService;
 
 import org.apache.chemistry.opencmis.client.api.Document;
 import org.apache.chemistry.opencmis.commons.data.ContentStream;
@@ -56,6 +63,8 @@ import org.easymock.Capture;
 import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.messaging.Message;
+import org.springframework.messaging.MessageChannel;
 import org.springframework.security.core.Authentication;
 
 import javax.persistence.NoResultException;
@@ -78,6 +87,8 @@ public class EcmFileCreatedEventHandlerTest
     private Document cmisDocument = createMock(Document.class);
     private ContentStream contentStream = createMock(ContentStream.class);
     private InputStream inputStream = createMock(InputStream.class);
+    private MessageChannel messageChannel = mock(MessageChannel.class);
+    private AcmObjectLockService objectLockService = mock(AcmObjectLockService.class);
 
     private Object[] mocks = { acmFolderDao, acmFolderService, ecmFileDao, auditPropertyEntityAdapter, ecmFileService,
             cmisDocument, contentStream, inputStream };
@@ -161,6 +172,9 @@ public class EcmFileCreatedEventHandlerTest
                 eq(container.getContainerObjectId()),
                 eq(parentFolder.getCmisRepositoryId()),
                 eq(cmisDocument))).andReturn(new EcmFile());
+
+        when(objectLockService.findLock(anyLong(), anyString())).thenReturn(new AcmObjectLock());
+        when(messageChannel.send(any(Message.class))).thenReturn(true);
 
         replay(mocks);
 

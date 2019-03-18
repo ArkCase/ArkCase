@@ -73,7 +73,7 @@ angular.module('services').factory('Ecm.EmailService', [ '$resource', '$translat
         ,
         _sendMentionsEmail: {
             method: 'POST',
-            url: 'api/latest/service/email/send/mentions'
+            url: 'api/latest/plugin/notification/mentions'
         }
     });
 

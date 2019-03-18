@@ -39,6 +39,7 @@ import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.group.AcmGroup;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
@@ -50,25 +51,6 @@ public class ParticipantsNotified implements UsersNotified
     private UserDao userDao;
     private AcmGroupDao groupDao;
     private AcmDataService acmDataService;
-
-    private Notification setNewNotification(Object obj[])
-    {
-        Notification notification = new Notification();
-        notification.setTitle((String) obj[0]);
-        notification.setNote((String) obj[1]);
-        notification.setType((String) obj[2]);
-        notification.setParentId((Long) obj[3]);
-        notification.setParentType((String) obj[4]);
-        notification.setParentName((String) obj[5]);
-        notification.setParentTitle((String) obj[6]);
-        notification.setRelatedObjectId((Long) obj[7]);
-        notification.setRelatedObjectType((String) obj[8]);
-        notification.setActionDate((Date) obj[9]);
-        notification.setStatus(NotificationConstants.STATUS_NEW);
-        notification.setAction(NotificationConstants.ACTION_DEFAULT);
-        notification.setData("{\"usr\":\"/plugin/" + ((String) obj[4]).toLowerCase() + "/" + obj[3] + "\"}");
-        return notification;
-    }
 
     /**
      * Find the users that should be notified on specific event for TASK, CASE_FILE or COMPLAINT and set notification
@@ -110,7 +92,7 @@ public class ParticipantsNotified implements UsersNotified
                 AcmGroup group = getGroupDao().findByName(participant.getReceiverLdapId());
                 if (group != null)
                 {
-                    receivers.addAll(group.getUserMembers(true));
+                    receivers.addAll(group.getUserMembers());
                 }
 
             }
@@ -132,7 +114,7 @@ public class ParticipantsNotified implements UsersNotified
         for (AcmUser user : users)
         {
             Notification notification = setNewNotification(obj);
-            notification.setUserEmail(user.getMail());
+            notification.setEmailAddresses(user.getMail());
             notification.setUser(user.getUserId());
             notifications.add(notification);
         }
