@@ -272,8 +272,8 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
             int idx = 1;
             for (Long attachmentId : in.getAttachmentIds())
             {
-                InputStream contents = ecmFileService.downloadAsInputStream(attachmentId);
                 EcmFile ecmFile = ecmFileService.findById(attachmentId);
+                InputStream contents = ecmFileService.downloadAsInputStream(attachmentId, ecmFile.getActiveVersionTag());
                 String fileName = ecmFile.getFileName();
                 File pdfConvertedFile = null;
 
@@ -291,12 +291,13 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
                     fileName = fileName + ecmFile.getFileActiveVersionNameExtension();
                 }
 
+                //Convert the Attachment to PDF if set in Admin section
                 if (getEmailSenderConfigurationService().readConfiguration().getConvertDocumentsToPdf() &&
                         Objects.nonNull(ecmFile) && !".pdf".equals(ecmFile.getFileActiveVersionNameExtension()))
                 {
                     try
                     {
-                        pdfConvertedFile = getDefaultFolderAndFileConverter().convert(ecmFile);
+                        pdfConvertedFile = getDefaultFolderAndFileConverter().convertAndReturnConvertedFile(ecmFile);
                     }
                     catch (ConversionException e)
                     {

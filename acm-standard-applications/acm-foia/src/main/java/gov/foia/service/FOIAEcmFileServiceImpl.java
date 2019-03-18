@@ -34,11 +34,13 @@ import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
+import com.armedia.acm.plugins.ecm.model.event.EcmFileConvertEvent;
 import com.armedia.acm.plugins.ecm.service.impl.EcmFileServiceImpl;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import com.armedia.acm.service.objectlock.annotation.AcmAcquireAndReleaseObjectLock;
 
 import org.apache.chemistry.opencmis.client.api.Document;
+import org.apache.commons.io.FileUtils;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.slf4j.Logger;
@@ -46,6 +48,10 @@ import org.slf4j.LoggerFactory;
 
 import javax.persistence.PersistenceException;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -175,17 +181,44 @@ public class FOIAEcmFileServiceImpl extends EcmFileServiceImpl implements FOIAEc
                 .findFirst()
                 .orElse(null);
 
-        if(Objects.nonNull(fileVersionToUpdate) && fileVersionToUpdate instanceof FOIAEcmFileVersion)
+        if (Objects.nonNull(fileVersionToUpdate) && fileVersionToUpdate instanceof FOIAEcmFileVersion)
         {
-            if("review".equals(statusType))
+            if ("review".equals(statusType))
             {
-                ((FOIAEcmFileVersion)fileVersionToUpdate).setReviewStatus(status);
+                ((FOIAEcmFileVersion) fileVersionToUpdate).setReviewStatus(status);
             }
-            else if("redaction".equals(statusType))
+            else if ("redaction".equals(statusType))
             {
-                ((FOIAEcmFileVersion)fileVersionToUpdate).setRedactionStatus(status);
+                ((FOIAEcmFileVersion) fileVersionToUpdate).setRedactionStatus(status);
             }
             getEcmFileDao().save(file);
         }
     }
+
+    @Override
+    public File convertFile(String fileKey, String version, String fileExtension, String fileName, String mimeType, EcmFile ecmFile)
+            throws IOException
+    {
+        InputStream fileIs;
+        InputStream pdfConvertedIs;
+        File tmpPdfConvertedFile = null;
+
+        String timestamp = String.valueOf(new Timestamp(System.currentTimeMillis()).getTime());
+        String tmpPdfConvertedFileName = timestamp.concat(fileKey).concat(".pdf");
+        String tmpPdfConvertedFullFileName = FileUtils.getTempDirectoryPath().concat(File.separator).concat(tmpPdfConvertedFileName);
+
+        Map<String, Object> eventProperties = new HashMap<>();
+        eventProperties.put("ecmFileVersion", version);
+        eventProperties.put("tmpPdfConvertedFullFileName", tmpPdfConvertedFullFileName);
+
+        // An Event listener is performing the conversion
+        EcmFileConvertEvent ecmFileConvertEvent = new EcmFileConvertEvent(ecmFile, eventProperties);
+        getApplicationEventPublisher().publishEvent(ecmFileConvertEvent);
+        //
+
+        tmpPdfConvertedFile = new File(tmpPdfConvertedFullFileName);
+
+        return tmpPdfConvertedFile;
+    }
+
 }

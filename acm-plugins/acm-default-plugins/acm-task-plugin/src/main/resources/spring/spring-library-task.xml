@@ -22,7 +22,6 @@
                 <value>TASK</value>
             </list>
         </property>
-        <property name="pluginConfig" ref="taskConfig"/>
     </bean>
 
     <bean id="priorityLevelToNumberMap" class="java.util.HashMap">
@@ -178,7 +177,7 @@
         <property name="activitiTaskDao" ref="acmTaskDao"/>
         <property name="senderFactory" ref="notificationSenderFactory"/>
         <property name="userDao" ref="userJpaDao"/>
-        <property name="taskNotificationConfig" ref="taskNotificationConfig"/>
+        <property name="notificationDao" ref="notificationDao"/>
     </bean>
 
     <bean id="overdueTasksNotifier" class="com.armedia.acm.plugins.task.service.impl.OverdueTasksNotifier">
@@ -186,7 +185,7 @@
         <property name="activitiTaskDao" ref="acmTaskDao"/>
         <property name="senderFactory" ref="notificationSenderFactory"/>
         <property name="userDao" ref="userJpaDao"/>
-        <property name="taskNotificationConfig" ref="taskNotificationConfig"/>
+        <property name="notificationDao" ref="notificationDao"/>
     </bean>
 
     <bean id="createAdHocTaskService" class="com.armedia.acm.plugins.task.service.impl.CreateAdHocTaskService">
