@@ -50,4 +50,19 @@
     <int:chain input-channel="mailChannelComplaint" output-channel="newComplaintFilteredMailChannel">
         <int:filter ref="newComplaintMailFilter" throw-exception-on-rejection="false" method="accept"/>
     </int:chain>
+
+    <bean id="complaintEntityHandler" class="com.armedia.acm.calendar.service.integration.exchange.CalendarEntityHandler">
+        <property name="outlookDao" ref="exchangeWebServicesOutlookDao"/>
+        <property name="entityType" value="COMPLAINT"/>
+        <property name="entityTypeForQuery" value="Complaint"/>
+        <property name="containerEntityDao" ref="acmContainerFolderDao"/>
+        <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
+        <property name="entityIdForQuery" value="complaintId"/>
+        <property name="closedStates" value="#{complaintConfig.statusClosed}"/>
+        <property name="permissionEvaluator" ref="arkPermissionEvaluator"/>
+        <property name="readPermission" value="viewComplaintDetailsPage"/>
+        <property name="writePermission" value="editComplaint"/>
+        <property name="deletePermission" value="editComplaint"/>
+        <property name="folderCreatorDao" ref="outlookFolderCreatorDao"/>
+    </bean>
 </beans>
