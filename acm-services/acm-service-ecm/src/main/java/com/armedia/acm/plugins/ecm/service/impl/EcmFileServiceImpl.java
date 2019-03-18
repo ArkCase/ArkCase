@@ -31,6 +31,7 @@ import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmListObjectsFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
+import com.armedia.acm.email.model.EmailSenderConfig;
 import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.objectonverter.ArkCaseBeanUtils;
 import com.armedia.acm.plugins.ecm.dao.AcmContainerDao;
@@ -49,6 +50,7 @@ import com.armedia.acm.plugins.ecm.model.EcmFileDeclareRequestEvent;
 import com.armedia.acm.plugins.ecm.model.EcmFileUpdatedEvent;
 import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
 import com.armedia.acm.plugins.ecm.model.EcmFolderDeclareRequestEvent;
+import com.armedia.acm.plugins.ecm.model.event.EcmFileConvertEvent;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.ecm.service.EcmFileTransaction;
 import com.armedia.acm.plugins.ecm.utils.CmisConfigUtils;
@@ -90,6 +92,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
+import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -142,6 +145,8 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     private MessageChannel genericMessagesChannel;
 
     private AcmObjectLockService objectLockService;
+
+    private EmailSenderConfig emailSenderConfig;
 
     @Override
     public CmisObject findObjectByPath(String path) throws Exception
@@ -411,10 +416,22 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     @AcmAcquireAndReleaseObjectLock(objectIdArgIndex = 0, objectType = "FILE", lockType = "READ")
     public InputStream downloadAsInputStream(Long id) throws AcmUserActionFailedException
     {
+        return performDownloadAsInputStream(id, new String());
+    }
+
+    @Override
+    @AcmAcquireAndReleaseObjectLock(objectIdArgIndex = 0, objectType = "FILE", lockType = "READ")
+    public InputStream downloadAsInputStream(Long id, String version) throws AcmUserActionFailedException
+    {
+        return performDownloadAsInputStream(id, version);
+    }
+
+    private InputStream performDownloadAsInputStream(Long id, String version) throws AcmUserActionFailedException
+    {
         try
         {
             EcmFile ecmFile = getEcmFileDao().find(id);
-            InputStream content = getEcmFileTransaction().downloadFileTransactionAsInputStream(ecmFile);
+            InputStream content = getEcmFileTransaction().downloadFileTransactionAsInputStream(ecmFile, version);
 
             return content;
         }
@@ -1686,6 +1703,32 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         return getEcmFileDao().findForContainerAndFileType(containerId, fileType);
     }
 
+    @Override
+    public File convertFile(String fileKey, String version, String fileExtension, String fileName, String mimeType, EcmFile ecmFile)
+            throws IOException
+    {
+        InputStream fileIs;
+        InputStream pdfConvertedIs;
+        File tmpPdfConvertedFile = null;
+
+        String timestamp = String.valueOf(new Timestamp(System.currentTimeMillis()).getTime());
+        String tmpPdfConvertedFileName = timestamp.concat(fileKey).concat(".pdf");
+        String tmpPdfConvertedFullFileName = FileUtils.getTempDirectoryPath().concat(File.separator).concat(tmpPdfConvertedFileName);
+
+        Map<String, Object> eventProperties = new HashMap<>();
+        eventProperties.put("ecmFileVersion", version);
+        eventProperties.put("tmpPdfConvertedFullFileName", tmpPdfConvertedFullFileName);
+
+        // An Event listener is performing the conversion
+        EcmFileConvertEvent ecmFileConvertEvent = new EcmFileConvertEvent(ecmFile, eventProperties);
+        getApplicationEventPublisher().publishEvent(ecmFileConvertEvent);
+        //
+
+        tmpPdfConvertedFile = new File(tmpPdfConvertedFullFileName);
+
+        return tmpPdfConvertedFile;
+    }
+
     public EcmFileTransaction getEcmFileTransaction()
     {
         return ecmFileTransaction;
@@ -1845,6 +1888,16 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     public void setEcmFileConfig(EcmFileConfig ecmFileConfig)
     {
         this.ecmFileConfig = ecmFileConfig;
+    }
+
+    public EmailSenderConfig getEmailSenderConfig()
+    {
+        return emailSenderConfig;
+    }
+
+    public void setEmailSenderConfig(EmailSenderConfig emailSenderConfig)
+    {
+        this.emailSenderConfig = emailSenderConfig;
     }
 
     public MessageChannel getGenericMessagesChannel()

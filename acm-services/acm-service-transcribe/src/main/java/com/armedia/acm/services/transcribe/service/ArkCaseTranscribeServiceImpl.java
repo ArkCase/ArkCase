@@ -34,6 +34,7 @@ import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.data.AcmEntity;
 import com.armedia.acm.objectonverter.ArkCaseBeanUtils;
+import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.dao.EcmFileVersionDao;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
@@ -45,6 +46,8 @@ import com.armedia.acm.services.email.service.AcmMailTemplateConfigurationServic
 import com.armedia.acm.services.email.service.EmailSource;
 import com.armedia.acm.services.email.service.EmailTemplateConfiguration;
 import com.armedia.acm.services.labels.service.LabelManagementService;
+import com.armedia.acm.services.notification.dao.NotificationDao;
+import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.participants.model.AcmAssignedObject;
 import com.armedia.acm.services.participants.utils.ParticipantUtils;
 import com.armedia.acm.services.pipeline.PipelineManager;
@@ -125,6 +128,8 @@ public class ArkCaseTranscribeServiceImpl implements ArkCaseTranscribeService
     private UserDao userDao;
     private LabelManagementService labelManagementService;
     private AcmApplication acmApplication;
+    private NotificationDao notificationDao;
+    private EcmFileDao ecmFileDao;
 
     @Override
     @Transactional
@@ -393,65 +398,28 @@ public class ArkCaseTranscribeServiceImpl implements ArkCaseTranscribeService
                 }
 
                 // Send email for all users in the list
-                sendEmail(users, action, transcribe);
+                Notification notification = new Notification();
+                notification.setTitle("Transcription status");
+                if(!action.equals("QUEUED"))
+                {
+                    notification.setTemplateModelName("transcribeStatus");    
+                }
+                else 
+                {
+                    notification.setTemplateModelName("transcribeQueued");
+                }
+                notification.setNote(action);
+                notification.setAttachFiles(false);
+                notification.setParentId(transcribe.getMediaEcmFileVersion().getId());
+                notification.setParentType(transcribe.getObjectType());
+                notification.setEmailAddresses(transcribe.getMediaEcmFileVersion().getFile().getCreator());
+                notification.setData(transcribe.getMediaEcmFileVersion().getFile().getFileName());
+                notificationDao.save(notification);
+
             }
         }
     }
-
-    private void sendEmail(List<AcmUser> users, String action, Transcribe transcribe)
-    {
-        if (users != null && !users.isEmpty() && StringUtils.isNotEmpty(action) && transcribe != null)
-        {
-            users.forEach(user -> {
-                try
-                {
-                    JSONObject jsonConfig = getLabelManagementService().getResource("document-details",
-                            StringUtils.isNotEmpty(user.getLang()) ? user.getLang() : "en", false);
-                    String subject = jsonConfig.getString("documentDetails.transcribe.email.subject");
-                    String body = jsonConfig.getString("documentDetails.transcribe.email.body");
-                    body = body.replace(":transcribeId", transcribe.getId().toString())
-                            .replace(":action", action)
-                            .replace(":name", transcribe.getMediaEcmFileVersion().getFile().getFileName())
-                            .replace(":id", transcribe.getMediaEcmFileVersion().getFile().getId().toString())
-                            .replace(":containerId",
-                                    transcribe.getMediaEcmFileVersion().getFile().getContainer().getContainerObjectId().toString())
-                            .replace(":containerType",
-                                    transcribe.getMediaEcmFileVersion().getFile().getContainer().getContainerObjectType())
-                            .replace(":host", getAcmApplication().getBaseUrl());
-
-                    EmailWithAttachmentsDTO emailWithAttachmentsDTO = new EmailWithAttachmentsDTO();
-                    emailWithAttachmentsDTO.setSubject(subject);
-                    emailWithAttachmentsDTO.setBody(body);
-                    emailWithAttachmentsDTO.setEmailAddresses(Arrays.asList(user.getMail()));
-
-                    String objectType = transcribe.getMediaEcmFileVersion().getFile().getContainer().getContainerObjectType();
-                    List<EmailTemplateConfiguration> configurations = getTemplateService().getMatchingTemplates(user.getMail(), objectType,
-                            EmailSource.MANUAL, Arrays.asList("sendAsLinks"));
-
-                    // We'll need only one template. Take the first one
-                    if (configurations != null && configurations.size() > 0)
-                    {
-                        String template = getTemplateService().getTemplate(configurations.get(0).getTemplateName());
-                        emailWithAttachmentsDTO.setTemplate(template);
-                    }
-
-                    getEmailSenderService().sendEmail(emailWithAttachmentsDTO, null, user);
-                }
-                catch (Exception e)
-                {
-                    LOG.error(
-                            "Email notification was not sent to the USER=[{}] for Transcribe with ID=[{}] for the ACTION=[{}]. REASON=[{}]",
-                            user, transcribe.getId(), action, e.getMessage());
-                }
-            });
-        }
-        else
-        {
-            LOG.error("Email notification was not sent for Transcribe with ID=[{}] for the ACTION=[{}]. Users not found.",
-                    transcribe != null ? transcribe.getId() : null, action);
-        }
-    }
-
+    
     private String getUserIdForGivenUserType(String userType, Transcribe transcribe)
     {
         String userId = null;
@@ -1132,5 +1100,25 @@ public class ArkCaseTranscribeServiceImpl implements ArkCaseTranscribeService
     public void setAcmApplication(AcmApplication acmApplication)
     {
         this.acmApplication = acmApplication;
+    }
+
+    public NotificationDao getNotificationDao()
+    {
+        return notificationDao;
+    }
+
+    public void setNotificationDao(NotificationDao notificationDao)
+    {
+        this.notificationDao = notificationDao;
+    }
+
+    public EcmFileDao getEcmFileDao()
+    {
+        return ecmFileDao;
+    }
+
+    public void setEcmFileDao(EcmFileDao ecmFileDao)
+    {
+        this.ecmFileDao = ecmFileDao;
     }
 }

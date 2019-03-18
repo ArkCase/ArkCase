@@ -1,8 +1,8 @@
-package com.armedia.acm.plugins.task.service.impl;
+package com.armedia.acm.services.notification.service;
 
 /*-
  * #%L
- * ACM Default Plugin: Tasks
+ * ACM Service: Email
  * %%
  * Copyright (C) 2014 - 2018 ArkCase LLC
  * %%
@@ -27,44 +27,32 @@ package com.armedia.acm.plugins.task.service.impl;
  * #L%
  */
 
-import com.armedia.acm.plugins.task.model.AcmTask;
-import com.armedia.acm.plugins.task.service.AbstractTaskNotifier;
-import com.armedia.acm.services.users.dao.UserDao;
+import com.armedia.acm.auth.web.ForgotPasswordEvent;
 import com.armedia.acm.services.users.model.AcmUser;
 
-import org.activiti.engine.task.TaskQuery;
+import org.springframework.context.ApplicationListener;
 
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.Date;
-import java.util.Map;
-
-/**
- * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Oct 10, 2016
- */
-public class UpcomingTasksNotifier extends AbstractTaskNotifier
+public class OnForgotPassword implements ApplicationListener<ForgotPasswordEvent>
 {
+    private ResetPasswordService resetPasswordService;
 
     @Override
-    protected TaskQuery tasksDueBetween(TaskQuery query)
+    public void onApplicationEvent(ForgotPasswordEvent forgotPasswordEvent)
     {
-        return query.dueBefore(queryEndDate()).dueAfter(queryStartDate());
+        if (forgotPasswordEvent.isSucceeded())
+        {
+            AcmUser user = forgotPasswordEvent.getAcmUser();
+            resetPasswordService.sendPasswordResetNotification(user);
+        }
     }
 
-    /**
-     * @return
-     */
-    private Date queryStartDate()
+    public ResetPasswordService getResetPasswordService()
     {
-        return Date.from(LocalDate.now().atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
+        return resetPasswordService;
     }
 
-    /**
-     * @return
-     */
-    private Date queryEndDate()
+    public void setResetPasswordService(ResetPasswordService resetPasswordService)
     {
-        return Date.from(LocalDate.now().plusDays(1).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
+        this.resetPasswordService = resetPasswordService;
     }
-    
 }

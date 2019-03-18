@@ -198,4 +198,33 @@
         </addColumn>
     </changeSet>
 
+    <changeSet id="16-add-column-template-model-name" author="stefan.sanevski">
+        <addColumn tableName="acm_notification">
+            <column name="cm_template_model_name" type="VARCHAR(1024)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="17-add-column-attach-files" author="stefan.sanevski">
+        <addColumn tableName="acm_notification">
+            <column name="cm_attach_files" type="BOOLEAN" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="18-create-notification-files-table" author="stefan.sanevski" >
+        <createTable tableName="acm_notification_files">
+            <column name="cm_notification_id" type="${fkIdType}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_file_id" type="${fkIdType}"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="19-add-column-email-addresses" author="stefan.sanevski">
+        <addColumn tableName="acm_notification">
+            <column name="cm_email_addresses" type="CLOB"/>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>
