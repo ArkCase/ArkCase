@@ -1,28 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans:beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
              xmlns:beans="http://www.springframework.org/schema/beans"
-             xmlns:context="http://www.springframework.org/schema/context" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+             xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
     <beans:beans>
-        <!-- Configuration properties -->
-        <beans:bean id="foiaRequestBrokerProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
-            <beans:property name="location" value="file:#{ systemProperties ['user.home'] }/.arkcase/acm/foiaRequestBroker.properties"/>
-            <beans:property name="localOverride" value="false"/>
-            <beans:property name="ignoreResourceNotFound" value="false"/>
-        </beans:bean>
 
-        <context:property-placeholder ignore-unresolvable="true" local-override="false" order="30333"
-                                      properties-ref="foiaRequestBrokerProperties"/>
+        <beans:bean id="foiaRequestBrokerConfig" class="gov.foia.model.FoiaRequestBrokerConfig"/>
 
         <!-- FOIA Request Broker -->
         <beans:bean id="connectionFactory" class="org.apache.activemq.ActiveMQSslConnectionFactory">
             <beans:property name="brokerURL"
-                            value="${gov.foia.broker.url}?jms.blobTransferPolicy.uploadUrl=${gov.foia.broker.file_upload_url}"/>
-            <beans:property name="keyStore" value="${gov.foia.broker.keystore}"/>
-            <beans:property name="keyStorePassword" value="${gov.foia.broker.keystore.password}"/>
-            <beans:property name="trustStore" value="${gov.foia.broker.truststore}"/>
-            <beans:property name="trustStorePassword" value="${gov.foia.broker.truststore.password}"/>
+                            value="#{foiaRequestBrokerConfig.url}?jms.blobTransferPolicy.uploadUrl=#{foiaRequestBrokerConfig.fileUploadUrl}"/>
+            <beans:property name="keyStore" value="#{foiaRequestBrokerConfig.keystore}"/>
+            <beans:property name="keyStorePassword" value="#{foiaRequestBrokerConfig.keystorePassword}"/>
+            <beans:property name="trustStore" value="#{foiaRequestBrokerConfig.truststore}"/>
+            <beans:property name="trustStorePassword" value="#{foiaRequestBrokerConfig.truststorePassword}"/>
         </beans:bean>
 
         <beans:bean id="foiaRequestBrokerClient" class="gov.foia.broker.FOIARequestBrokerClient">
@@ -35,7 +27,7 @@
             <beans:constructor-arg index="0" ref="connectionFactory"/>
             <beans:constructor-arg index="1" value="foia-file-queue-test"/>
             <beans:constructor-arg index="2" value="foia-file-queue-test"/>
-            <beans:property name="fileUploadUrl" value="${gov.foia.broker.file_upload_url}"/>
+            <beans:property name="fileUploadUrl" value="#{foiaRequestBrokerConfig.fileUploadUrl}"/>
         </beans:bean>
     </beans:beans>
 </beans:beans>

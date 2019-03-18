@@ -28,17 +28,18 @@ package com.armedia.acm.services.costsheet.model;
  */
 
 import com.armedia.acm.pluginmanager.service.AcmPluginConfigBean;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import org.springframework.beans.factory.annotation.Value;
 
+@JsonSerialize(as = CostsheetConfig.class)
 public class CostsheetConfig implements AcmPluginConfigBean
 {
-    @JsonProperty("cost.plugin.root.folder")
     @Value("${cost.plugin.root.folder}")
     private String rootFolder;
 
-    @JsonProperty("cost.plugin.search.tree.sort")
     @Value("${cost.plugin.search.tree.sort}")
     private String searchTreeSort;
 
@@ -61,18 +62,21 @@ public class CostsheetConfig implements AcmPluginConfigBean
         this.searchTreeSort = searchTreeSort;
     }
 
+    @JsonIgnore
     @Override
     public String getSearchTreeFilter()
     {
         return "";
     }
 
+    @JsonIgnore
     @Override
     public String getSearchTreeQuery()
     {
         return "";
     }
 
+    @JsonIgnore
     @Override
     public String getSearchTreeSort()
     {
