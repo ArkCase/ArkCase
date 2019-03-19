@@ -28,24 +28,11 @@ package com.armedia.acm.plugins.admin.service;
  */
 
 import com.armedia.acm.configuration.service.ConfigurationPropertyService;
-import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.plugins.admin.model.ObjectTitleConfig;
-import com.armedia.acm.plugins.admin.model.TitleConfiguration;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.core.io.Resource;
 
-import java.util.Map;
-import java.util.concurrent.locks.ReadWriteLock;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class ObjectTitleConfigurationService
 {
-    private Resource objectTitleConfigurationFile;
-    private ReadWriteLock lock = new ReentrantReadWriteLock();
-    private Logger log = LoggerFactory.getLogger(getClass());
-
-    private ObjectConverter objectConverter;
     private ObjectTitleConfig objectTitleConfiguration;
     private ConfigurationPropertyService configurationPropertyService;
 
@@ -53,6 +40,7 @@ public class ObjectTitleConfigurationService
     {
         configurationPropertyService.updateProperties(objectTitleConfiguration);
     }
+    
     public ObjectTitleConfig getObjectTitleConfig()
     {
         return objectTitleConfiguration;
@@ -67,46 +55,6 @@ public class ObjectTitleConfigurationService
     public void setConfigurationPropertyService(ConfigurationPropertyService configurationPropertyService)
     {
         this.configurationPropertyService = configurationPropertyService;
-    }
-
-    public Resource getObjectTitleConfigurationFile()
-    {
-        return objectTitleConfigurationFile;
-    }
-
-    public void setObjectTitleConfigurationFile(Resource objectTitleConfigurationFile)
-    {
-        this.objectTitleConfigurationFile = objectTitleConfigurationFile;
-    }
-
-    public ReadWriteLock getLock()
-    {
-        return lock;
-    }
-
-    public void setLock(ReadWriteLock lock)
-    {
-        this.lock = lock;
-    }
-
-    public Logger getLog()
-    {
-        return log;
-    }
-
-    public void setLog(Logger log)
-    {
-        this.log = log;
-    }
-
-    public ObjectConverter getObjectConverter()
-    {
-        return objectConverter;
-    }
-
-    public void setObjectConverter(ObjectConverter objectConverter)
-    {
-        this.objectConverter = objectConverter;
     }
 
     public void setObjectTitleConfiguration(ObjectTitleConfig objectTitleConfiguration)
