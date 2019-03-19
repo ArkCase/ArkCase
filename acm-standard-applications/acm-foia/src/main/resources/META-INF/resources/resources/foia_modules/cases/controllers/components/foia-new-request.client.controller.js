@@ -11,6 +11,7 @@ angular.module('cases').controller(
             $scope.loading = false;
             $scope.loadingIcon = "fa fa-floppy-o";
             $scope.formInvalid = false;
+            $scope.enableTitle = false;
 
             var descriptionDocumentType = "Description Document";
             var consentDocumentType = "Consent";
@@ -109,11 +110,6 @@ angular.module('cases').controller(
                 var states = data[8];
                 var configTitle = data[9];
 
-
-//                 var configTitleList = configTitle.data.objectTitleTypes.REQUEST.enableTitleField;
-//                 var configurationTitle = _.find(configTitleList, function (confTitle) {
-//                     return confTitle.objectType = "REQUEST";
-//                 });
                 $scope.enableTitle = configTitle.data.objectTitleTypes.REQUEST.enableTitleField;
                 $scope.organizationTypes = organizationTypes;
 
