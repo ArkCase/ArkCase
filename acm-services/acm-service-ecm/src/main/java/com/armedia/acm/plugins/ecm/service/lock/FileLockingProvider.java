@@ -28,6 +28,7 @@ package com.armedia.acm.plugins.ecm.service.lock;
  */
 
 import com.armedia.acm.core.exceptions.AcmObjectLockException;
+import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.service.objectlock.model.AcmObjectLock;
 import com.armedia.acm.service.objectlock.service.AcmObjectLockService;
 import com.armedia.acm.service.objectlock.service.ObjectLockingProvider;
@@ -48,6 +49,12 @@ public class FileLockingProvider implements ObjectLockingProvider
 
     private AcmObjectLockService objectLockService;
     private Long expiryTimeInMilliseconds;
+
+    @Override
+    public String getObjectType()
+    {
+        return EcmFileConstants.OBJECT_FILE_TYPE;
+    }
 
     @Override
     public void checkIfObjectLockCanBeAcquired(Long objectId, String objectType, String lockType, boolean checkChildObjects, String userId)
