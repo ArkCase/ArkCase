@@ -63,7 +63,7 @@ import java.util.Date;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
         "classpath:/spring/spring-web-acm-web.xml",
-        "classpath:/spring/spring-library-note-plugin-test.xml"
+        "classpath:/spring/spring-library-note-plugin-unit-test.xml"
 })
 public class SaveNoteAPIControllerTest extends EasyMockSupport
 {

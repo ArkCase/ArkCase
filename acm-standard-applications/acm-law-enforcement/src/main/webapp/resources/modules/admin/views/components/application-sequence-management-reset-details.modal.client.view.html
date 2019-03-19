@@ -35,7 +35,7 @@
         </fieldset>
     </div>
     <div class="modal-footer">
-        <button class="btn btn-primary" ng-click="onClickSave()" ng-hide="viewMode" ng-disabled="enableSave || ( showDaily == '0' && sequenceReset.resetRepeatablePeriod == '' )">
+        <button class="btn btn-primary" ng-click="onClickSave()" ng-hide="viewMode" ng-disabled="(enableSave || ( sequenceReset.resetRepeatableFlag && (showDaily == '0' && sequenceReset.resetRepeatablePeriod == '' )))">
             <span translate>admin.application.sequenceManagementReset.saveBtn</span>
         </button>
         <button class="btn btn-secondary" ng-click="onClickCancel()" ng-hide="viewMode">

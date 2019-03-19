@@ -1,21 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans:beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
              xmlns:beans="http://www.springframework.org/schema/beans"
-             xmlns:task="http://www.springframework.org/schema/task" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-            http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd">
+             xmlns:task="http://www.springframework.org/schema/task" xmlns:aop="http://www.springframework.org/schema/aop"
+             xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+            http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
 
     <beans:beans profile="extension-foia">
 
         <beans:bean id="liquibase" class="liquibase.integration.spring.SpringLiquibase">
             <beans:property name="dataSource" ref="acmDataSource"/>
-            <beans:property name="changeLog" value="classpath:/com/armedia/acm/extension/foia/ddl/acm-extension-foia-database-changelog.xml"/>
-            <beans:property name="shouldRun" value="${schema.autoUpdate}"/>
-            <!--<property name="dropFirst" value="true"/>-->
-
-            <!--
-            contexts specifies the runtime contexts to use.
-            -->
-            <!--<property name="contexts" value="test, production" />-->
+            <beans:property name="changeLog"
+                            value="classpath:/com/armedia/acm/extension/foia/ddl/acm-extension-foia-database-changelog.xml"/>
+            <beans:property name="shouldRun" value="#{dataSourceConfig.autoUpdate}"/>
         </beans:bean>
 
         <beans:bean id="arkCaseBeanUtils" class="com.armedia.acm.objectonverter.ArkCaseBeanUtils">
@@ -96,9 +92,9 @@
             <beans:property name="holidayConfigurationService" ref="holidayConfigurationService"/>
         </beans:bean>
 
-        <beans:bean id="foiaConfigurationService" class="gov.foia.service.FoiaConfigurationService" init-method="initBean">
-            <beans:property name="propertyFileManager" ref="propertyFileManager"/>
-            <beans:property name="propertiesFile" value="#{ systemProperties ['user.home'] }/.arkcase/acm/foia.properties"/>
+        <beans:bean id="foiaConfigurationService" class="gov.foia.service.FoiaConfigurationService">
+            <beans:property name="configurationPropertyService" ref="configurationPropertyService"/>
+            <beans:property name="foiaConfig" ref="foiaConfig"/>
         </beans:bean>
 
         <beans:bean id="ecmFileNewMetadataHandler" class="gov.foia.pipeline.presave.FOIAEcmFileNewMetadataHandler">
@@ -236,10 +232,11 @@
         </beans:bean>
 
         <beans:bean id="billingInvoiceEmailSenderService" class="gov.foia.service.BillingInvoiceEmailSenderService">
-            <beans:property name="emailSenderService" ref="smtpService"/>
-            <beans:property name="emailTemplate" value="file:${user.home}/.arkcase/acm/templates/ArkCaseEmailTemplate.html"/>
             <beans:property name="caseFileDao" ref="caseFileDao"/>
             <beans:property name="billingService" ref="billingService"/>
+            <beans:property name="notificationSender" ref="notificationSender"/>
+            <beans:property name="notificationDao" ref="notificationDao"/>
+            <beans:property name="fileService" ref="ecmFileService"/>
         </beans:bean>
 
         <beans:bean id="publicFlagService" class="gov.foia.service.PublicFlagService">
@@ -249,22 +246,20 @@
         </beans:bean>
 
         <beans:bean id="notificationGroupEmailSenderService" class="gov.foia.service.NotificationGroupEmailSenderService">
-            <beans:property name="emailSenderService" ref="smtpService"/>
-            <beans:property name="emailTemplate" value="file:${user.home}/.arkcase/acm/templates/ArkCaseEmailTemplate.html"/>
             <beans:property name="caseFileDao" ref="caseFileDao"/>
             <beans:property name="ecmFileDao" ref="ecmFileDao"/>
             <beans:property name="lookupDao" ref="lookupDao"/>
+            <beans:property name="notificationDao" ref="notificationDao"/>
         </beans:bean>
 
         <beans:bean id="firstAssigneeOwningGroupNotify" class="gov.foia.service.FirstAssigneeOwningGroupNotify">
-            <beans:property name="emailSenderService" ref="smtpService"/>
-            <beans:property name="emailTemplate" value="file:${user.home}/.arkcase/acm/templates/ArkCaseEmailTemplate.html"/>
             <beans:property name="groupService" ref="groupService"/>
             <beans:property name="searchResults" ref="searchResults"/>
             <beans:property name="userDao" ref="userJpaDao"/>
             <beans:property name="notificationUtils" ref="notificationUtils"/>
             <beans:property name="templatingEngine" ref="templatingEngine"/>
-            <beans:property name="emailBodyTemplate" value="file:${user.home}/.arkcase/acm/templates/request-assigned.html"/>
+            <beans:property name="emailBodyTemplate" value="file:${user.home}/.arkcase/acm/templates/requestAssigned.html"/>
+            <beans:property name="notificationDao" ref="notificationDao"/>
         </beans:bean>
 
         <beans:bean id="foiaExecutiveGroupNotificationService" class="gov.foia.service.FOIAExecutiveGroupNotificationService">
@@ -278,7 +273,7 @@
             <beans:property name="ecmFileTransaction" ref="ecmFileTransaction"/>
             <beans:property name="ecmFileDao" ref="ecmFileDao"/>
             <beans:property name="containerFolderDao" ref="acmContainerFolderDao"/>
-            <beans:property name="ecmFileServiceProperties" ref="ecmFileServiceProperties"/>
+            <beans:property name="ecmFileConfig" ref="ecmFileConfig"/>
             <beans:property name="muleContextManager" ref="muleContextManager"/>
             <beans:property name="solrQuery" ref="executeSolrQuery"/>
             <beans:property name="searchResults" ref="searchResults"/>
@@ -313,5 +308,12 @@
             <beans:property name="fileParticipantService" ref="fileParticipantService"/>
         </beans:bean>
 
+        <beans:bean id="foiaConfig" class="gov.foia.model.FoiaConfig" scope="refresh">
+            <aop:scoped-proxy/>
+        </beans:bean>
+
+        <beans:bean id="foiaRequestBrokerConfig" class="gov.foia.model.FoiaRequestBrokerConfig" scope="refresh">
+            <aop:scoped-proxy/>
+        </beans:bean>
     </beans:beans>
 </beans:beans>

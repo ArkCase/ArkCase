@@ -33,7 +33,7 @@ angular.module('cases').controller(
                     });
 
                     $scope.costsheetProperties = {
-                        "useApprovalWorkflow": "true"
+                        "cost.plugin.useApprovalWorkflow": "true"
                     };
 
                     CostsheetConfigurationService.getProperties().then(function(response) {

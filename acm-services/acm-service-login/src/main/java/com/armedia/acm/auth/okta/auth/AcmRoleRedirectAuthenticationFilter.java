@@ -28,6 +28,7 @@ package com.armedia.acm.auth.okta.auth;
  */
 
 import com.armedia.acm.auth.okta.model.OktaAPIConstants;
+import com.armedia.acm.auth.okta.model.OktaConfig;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -48,7 +49,7 @@ import java.util.stream.Collectors;
 
 public class AcmRoleRedirectAuthenticationFilter extends GenericFilterBean
 {
-    private AcmMultiFactorConfig multiFactorConfig;
+    private OktaConfig oktaConfig;
 
     @Override
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException
@@ -70,7 +71,7 @@ public class AcmRoleRedirectAuthenticationFilter extends GenericFilterBean
                     && !request.getServletPath().toLowerCase().contains("mfa")
                     && !request.getServletPath().toLowerCase().contains("logout"))
             {
-                response.sendRedirect(request.getContextPath() + getMultiFactorConfig().getSelectMethodTargetUrl());
+                response.sendRedirect(request.getContextPath() + oktaConfig.getSelectMethodTargetUrl());
                 return;
             }
 
@@ -78,13 +79,13 @@ public class AcmRoleRedirectAuthenticationFilter extends GenericFilterBean
         }
     }
 
-    public AcmMultiFactorConfig getMultiFactorConfig()
+    public OktaConfig getOktaConfig()
     {
-        return multiFactorConfig;
+        return oktaConfig;
     }
 
-    public void setMultiFactorConfig(AcmMultiFactorConfig multiFactorConfig)
+    public void setOktaConfig(OktaConfig oktaConfig)
     {
-        this.multiFactorConfig = multiFactorConfig;
+        this.oktaConfig = oktaConfig;
     }
 }

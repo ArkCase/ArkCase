@@ -27,7 +27,7 @@ package com.armedia.acm.plugins.complaint.service;
  * #L%
  */
 
-import com.armedia.acm.calendar.config.service.CalendarConfiguration.PurgeOptions;
+import com.armedia.acm.calendar.config.model.PurgeOptions;
 import com.armedia.acm.calendar.config.service.CalendarConfigurationException;
 import com.armedia.acm.objectonverter.AcmUnmarshaller;
 import com.armedia.acm.objectonverter.ObjectConverter;
@@ -142,7 +142,8 @@ public class ComplaintEventListener implements ApplicationListener<AcmObjectHist
                                 folderCreatorDao.deleteObjectReference(updatedComplaint.getId(), updatedComplaint.getObjectType());
                             }
                         }
-                        getComplaintEventPublisher().publishComplaintModified(updatedComplaint, ipAddress, "status.changed");
+                        getComplaintEventPublisher().publishComplaintModified(updatedComplaint, ipAddress, "status.changed",
+                                "from " + existing.getStatus() + " to " + updatedComplaint.getStatus());
                     }
 
                     if (isLocationChanged(existing, updatedComplaint))

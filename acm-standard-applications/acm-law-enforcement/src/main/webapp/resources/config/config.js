@@ -112,7 +112,7 @@ module.exports.getModulesJavaScriptAssets = function() {
         var profileServicesFiles = _.map(customServicesFiles, function(item) {
             return profile + '_services/' + item;
         });
-        jsCustomDirectives.concat(profileServicesFiles);
+        jsCustomServices.concat(profileServicesFiles);
     });
 
     output = output.concat(jsModules);

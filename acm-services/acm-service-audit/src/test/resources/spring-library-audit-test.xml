@@ -1,42 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
-
-    <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-        <property name="properties" ref="datasourceProperties"/>
-        <!-- placeholders changed due to maven using same type -->
-        <property name="placeholderPrefix" value="$["/>
-        <property name="placeholderSuffix" value="]"/>
-    </bean>
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
 
     <bean id="acmApplication" class="com.armedia.acm.core.AcmApplication"/>
 
-    <bean id="datasourceProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
-        <!-- note: must leave "file:" at the start of the file name for spring
-        to be able to read the file; otherwise it will try to read from the
-        classpath -->
-        <property name="location" value="file:${user.home}/.arkcase/acm/datasource.properties"/>
-        <property name="ignoreResourceNotFound" value="true"/>
-        <property name="localOverride" value="false"/>
-        <!-- following properties are the default datasource mappings.  The properties file
-             should include all of these properties.  In practice there should always be a
-             specific properties file; these defaults are here for reference, not to be used. -->
-        <property name="properties">
-            <props>
-                <prop key="acm.driverClassName">oracle.jdbc.OracleDriver</prop>
-                <prop key="acm.url">jdbc:oracle:thin:@localhost:1521:XE</prop>
-                <prop key="acm.username">acm</prop>
-                <prop key="acm.password">acm</prop>
-            </props>
-        </property>
-    </bean>
+    <bean id="auditPropertyEntityAdapter" class="com.armedia.acm.data.AuditPropertyEntityAdapter"/>
 
-    <bean id="acmDataSource" class="org.apache.tomcat.jdbc.pool.DataSource">
-        <property name="driverClassName" value="${acm.driverClassName}"/>
-        <property name="url" value="${acm.url}"/>
-        <property name="username" value="${acm.username}"/>
-        <property name="password" value="${acm.password}"/>
-        <property name="defaultAutoCommit" value="false"/>
-    </bean>
-
+    <bean id="auditDao" class="com.armedia.acm.audit.dao.AuditDao"/>
 </beans>

@@ -19,8 +19,8 @@ angular.module('admin').controller('Admin.SequenceManagementResetController', [ 
         SequenceManagementResetService.getSequenceReset(params.sequenceName, params.sequencePartName).then(function(response){
             var resetList = [];
             _.forEach(response.data, function (item) {
-               item.resetDate = item.resetDate ? moment.utc(item.resetDate).local().format(UtilDateService.defaultDateLongTimeFormat) : "";
-               item.resetExecutedDate = item.resetExecutedDate ? moment.utc(item.resetExecutedDate).local().format(UtilDateService.defaultDateLongTimeFormat) : "";
+               item.resetDate = item.resetDate ? item.resetDate : "";
+               item.resetExecutedDate = item.resetExecutedDate ? item.resetExecutedDate : "";
                if(item.resetRepeatablePeriod == -1){
                    item.resetRepeatablePeriod = 'WEEKLY';
                }else if(item.resetRepeatablePeriod == -2){
@@ -105,11 +105,11 @@ angular.module('admin').controller('Admin.SequenceManagementResetController', [ 
 
     $scope.deleteReset = function(rowEntity) {
         var sequenceReset = {};
-        var resetDate = moment(rowEntity.resetDate).toDate();
-        sequenceReset.resetDate = UtilDateService.dateToIsoDateTime(resetDate);
+        var resetDate = rowEntity.resetDate;
+        sequenceReset.resetDate = resetDate;
         if (rowEntity.resetExecutedDate) {
-            var executeDate = moment(rowEntity.resetExecutedDate).toDate();
-            sequenceReset.resetExecutedDate = UtilDateService.dateToIsoDateTime(executeDate);
+            var executeDate = rowEntity.resetExecutedDate;
+            sequenceReset.resetExecutedDate = executeDate;
         }
         sequenceReset.resetExecutedFlag = rowEntity.resetExecutedFlag;
         sequenceReset.resetRepeatableFlag = rowEntity.resetRepeatableFlag;

@@ -27,7 +27,6 @@ package com.armedia.acm.plugins.person.web.api;
  * #L%
  */
 
-
 import static org.easymock.EasyMock.expect;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -35,6 +34,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.armedia.acm.plugins.person.model.PersonConfig;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.easymock.EasyMockSupport;
@@ -54,35 +54,32 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver;
 
-import java.util.Properties;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
         "classpath:/spring/spring-web-acm-web.xml",
-        "classpath:/spring/spring-library-person-plugin-test.xml"
+        "classpath:/spring/spring-library-person-plugin-api-test.xml"
 })
 public class GetPersonTypesAPIControllerTest extends EasyMockSupport
 {
-    @Autowired
-    Properties wrongPersonPluginProperties;
     private MockMvc mockMvc;
     private Authentication mockAuthentication;
     @Autowired
     private ExceptionHandlerExceptionResolver exceptionResolver;
-    private Properties personPluginProperties;
     private GetPersonTypesAPIController unit;
-
+    private PersonConfig personConfig;
     private Logger log = LoggerFactory.getLogger(getClass());
 
     @Before
     public void setUp() throws Exception
     {
-
-        personPluginProperties = new Properties();
-        personPluginProperties.setProperty("person.types", "one,two,three,four,five");
+        personConfig = new PersonConfig();
+        personConfig.setTypes(Arrays.asList("one", "two", "three", "four", "five"));
 
         unit = new GetPersonTypesAPIController();
-
+        unit.setPersonConfig(personConfig);
         mockMvc = MockMvcBuilders.standaloneSetup(unit).setHandlerExceptionResolvers(exceptionResolver).build();
 
         mockAuthentication = createMock(Authentication.class);
@@ -91,10 +88,8 @@ public class GetPersonTypesAPIControllerTest extends EasyMockSupport
     @Test
     public void getPersonTypes() throws Exception
     {
-
         // MVC test classes must call getName() somehow
         expect(mockAuthentication.getName()).andReturn("user");
-        unit.setPersonProperties(personPluginProperties);
         replayAll();
 
         MvcResult result = mockMvc.perform(
@@ -114,7 +109,7 @@ public class GetPersonTypesAPIControllerTest extends EasyMockSupport
 
         ObjectMapper objectMapper = new ObjectMapper();
 
-        String types[] = objectMapper.readValue(returned, String[].class);
+        String[] types = objectMapper.readValue(returned, String[].class);
 
         // the actual person properties could change at any time; so a unit test should not load the real
         // properties file; but should use properties created just for this test.
@@ -125,7 +120,7 @@ public class GetPersonTypesAPIControllerTest extends EasyMockSupport
     @Test
     public void getPersonTypes_exception() throws Exception
     {
-        unit.setPersonProperties(wrongPersonPluginProperties);
+        personConfig.setTypes(new ArrayList<>());
         // MVC test classes must call getName() somehow
         expect(mockAuthentication.getName()).andReturn("user");
 

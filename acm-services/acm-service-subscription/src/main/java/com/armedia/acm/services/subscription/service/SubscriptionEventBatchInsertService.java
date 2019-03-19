@@ -34,6 +34,7 @@ import com.armedia.acm.files.propertymanager.PropertyFileManager;
 import com.armedia.acm.services.subscription.dao.SubscriptionDao;
 import com.armedia.acm.services.subscription.dao.SubscriptionEventDao;
 import com.armedia.acm.services.subscription.model.AcmSubscriptionEvent;
+import com.armedia.acm.services.subscription.model.SubscriptionConfig;
 import com.armedia.acm.services.subscription.model.SubscriptionConstants;
 import com.armedia.acm.spring.SpringContextHolder;
 
@@ -49,14 +50,12 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by marjan.stefanoski on 29.01.2015.
  */
 public class SubscriptionEventBatchInsertService
 {
-
     private SubscriptionDao subscriptionDao;
     private SubscriptionEventDao subscriptionEventDao;
     private PropertyFileManager propertyFileManager;
@@ -67,7 +66,7 @@ public class SubscriptionEventBatchInsertService
     private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
     private String fullPath;
     private SpringContextHolder springContextHolder;
-    private Map<String, String> subscriptionProperties;
+    private SubscriptionConfig subscriptionConfig;
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
@@ -86,7 +85,7 @@ public class SubscriptionEventBatchInsertService
 
         try
         {
-            String eventTypesString = getSubscriptionProperties().get(SubscriptionConstants.SUBSCRIPTION_EVENT_TYPES_TO_BE_REMOVED);
+            String eventTypesString = subscriptionConfig.getRemovedEventTypes();
             List<String> eventsToBeRemoved = null;
             if (StringUtils.isNotEmpty(eventTypesString))
             {
@@ -113,10 +112,7 @@ public class SubscriptionEventBatchInsertService
         }
         catch (ParseException e)
         {
-            if (log.isErrorEnabled())
-            {
-                log.error("Parsing exception occurred while fetching lastBatchRunDate ", e);
-            }
+            log.error("Parsing exception occurred while fetching lastBatchRunDate ", e);
         }
     }
 
@@ -240,13 +236,13 @@ public class SubscriptionEventBatchInsertService
         this.springContextHolder = springContextHolder;
     }
 
-    public Map<String, String> getSubscriptionProperties()
+    public SubscriptionConfig getSubscriptionConfig()
     {
-        return subscriptionProperties;
+        return subscriptionConfig;
     }
 
-    public void setSubscriptionProperties(Map<String, String> subscriptionProperties)
+    public void setSubscriptionConfig(SubscriptionConfig subscriptionConfig)
     {
-        this.subscriptionProperties = subscriptionProperties;
+        this.subscriptionConfig = subscriptionConfig;
     }
 }

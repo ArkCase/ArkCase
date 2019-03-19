@@ -27,6 +27,8 @@ package com.armedia.acm.services.email.service;
  * #L%
  */
 
+import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
+import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.services.authenticationtoken.dao.AuthenticationTokenDao;
 import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenService;
 import com.armedia.acm.services.email.model.EmailWithEmbeddedLinksDTO;
@@ -41,6 +43,7 @@ public class AcmEmailContentGeneratorService
     private AuthenticationTokenService authenticationTokenService;
     private AuthenticationTokenDao authenticationTokenDao;
     private TemplatingEngine templatingEngine;
+    private EcmFileDao ecmFileDao;
 
     public String generateEmailBody(EmailWithEmbeddedLinksDTO emailDTO, String emailAddress, Authentication authentication)
     {
@@ -53,9 +56,11 @@ public class AcmEmailContentGeneratorService
         {
             for (Long fileId : emailDTO.getFileIds())
             {
+                EcmFile ecmFile = getEcmFileDao().find(fileId);
                 String token = authenticationTokenService.generateAndSaveAuthenticationToken(fileId, emailAddress, authentication);
-                body.append(emailDTO.getBaseUrl()).append(fileId).append("&acm_email_ticket=").append(token).append("<br/>");
+                body.append(fileId).append("&version=").append(ecmFile.getActiveVersionTag()).append("&acm_email_ticket=").append(token).append("<br/>");
                 emailDTO.getTokens().add(token);
+                emailDTO.setFileVersion(ecmFile.getActiveVersionTag());
             }
         }
 
@@ -90,5 +95,15 @@ public class AcmEmailContentGeneratorService
     public void setTemplatingEngine(TemplatingEngine templatingEngine)
     {
         this.templatingEngine = templatingEngine;
+    }
+
+    public EcmFileDao getEcmFileDao()
+    {
+        return ecmFileDao;
+    }
+
+    public void setEcmFileDao(EcmFileDao ecmFileDao)
+    {
+        this.ecmFileDao = ecmFileDao;
     }
 }

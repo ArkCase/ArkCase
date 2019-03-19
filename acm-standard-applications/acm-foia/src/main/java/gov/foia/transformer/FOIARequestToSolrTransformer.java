@@ -118,10 +118,11 @@ public class FOIARequestToSolrTransformer extends CaseFileToSolrTransformer
     {
         additionalProperties.put("object_sub_type_s", "FOIA_REQUEST");
 
-        additionalProperties.put("received_date_tdt", solrDateFromLocalDateTime(requestIn.getReceivedDate()));
-        additionalProperties.put("final_reply_date_tdt", solrDateFromLocalDate(requestIn.getFinalReplyDate()));
-        additionalProperties.put("scanned_date_tdt", solrDateFromLocalDate(requestIn.getScannedDate()));
+        additionalProperties.put("received_date_tdt", requestIn.getReceivedDate());
+        additionalProperties.put("final_reply_date_tdt", requestIn.getFinalReplyDate());
+        additionalProperties.put("scanned_date_tdt", requestIn.getScannedDate());
         additionalProperties.put("expedite_flag_b", requestIn.getExpediteFlag());
+        additionalProperties.put("foia_amendment_flag_b", requestIn.getAmendmentFlag());
         additionalProperties.put("fee_waiver_flag_b", requestIn.getFeeWaiverFlag());
         additionalProperties.put("litigation_flag_b", requestIn.getLitigationFlag());
         additionalProperties.put("public_flag_b", requestIn.getPublicFlag());
@@ -156,25 +157,15 @@ public class FOIARequestToSolrTransformer extends CaseFileToSolrTransformer
             additionalProperties.put("requester_name_s", "");
         }
 
-        additionalProperties.put("queue_enter_date_tdt", solrDateFromLocalDate(requestIn.getQueueEnterDate()));
+        additionalProperties.put("queue_enter_date_tdt", requestIn.getQueueEnterDate());
 
-        additionalProperties.put("record_search_date_from_tdt", solrDateFromLocalDateTime(requestIn.getRecordSearchDateFrom()));
-        additionalProperties.put("record_search_date_to_tdt", solrDateFromLocalDateTime(requestIn.getRecordSearchDateTo()));
+        additionalProperties.put("record_search_date_from_tdt", requestIn.getRecordSearchDateFrom());
+        additionalProperties.put("record_search_date_to_tdt", requestIn.getRecordSearchDateTo());
         additionalProperties.put("request_fee_waive_reason_s", requestIn.getRequestFeeWaiveReason());
         additionalProperties.put("request_expedite_reason_s", requestIn.getRequestExpediteReason());
+        additionalProperties.put("foia_request_amendment_details_s", requestIn.getRequestAmendmentDetails());
         additionalProperties.put("pay_fee_s", requestIn.getPayFee());
         additionalProperties.put("processing_fee_waive_s", Double.toString(requestIn.getProcessingFeeWaive()));
         additionalProperties.put("request_agency_s", requestIn.getComponentAgency());
     }
-
-    private Date solrDateFromLocalDate(LocalDate localDate)
-    {
-        return localDate == null ? null : Date.from(localDate.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
-    }
-
-    private Date solrDateFromLocalDateTime(LocalDateTime localDateTime)
-    {
-        return localDateTime == null ? null : Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
-    }
-
 }

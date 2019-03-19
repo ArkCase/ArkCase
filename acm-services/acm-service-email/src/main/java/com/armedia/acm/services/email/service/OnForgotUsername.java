@@ -1,3 +1,4 @@
+
 package com.armedia.acm.services.email.service;
 
 /*-
@@ -33,13 +34,13 @@ import com.armedia.acm.core.AcmSpringActiveProfile;
 import com.armedia.acm.services.email.model.EmailBodyBuilder;
 import com.armedia.acm.services.email.model.EmailBuilder;
 
+import com.armedia.acm.services.email.model.UsernamePasswordNotifierConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;
 
 import java.util.AbstractMap;
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class OnForgotUsername implements ApplicationListener<ForgotUsernameEvent>
@@ -48,24 +49,18 @@ public class OnForgotUsername implements ApplicationListener<ForgotUsernameEvent
     private AcmEmailSenderService emailSenderService;
     private AcmApplication acmAppConfiguration;
     private AcmSpringActiveProfile acmSpringActiveProfile;
-    private String forgotUsernameEmailSubject;
-    /**
-     * Formatting string to be used for producing text to inserted as a body in the forgot username email. The
-     * formatting
-     * string accepts the login link string twice.
-     * e.g: "Proceed to login <a href='%s'>%s</a>"
-     */
-    private String forgotUsernameEmailBodyTemplate;
+    private UsernamePasswordNotifierConfig usernamePasswordNotifierConfig;
+
     private EmailBuilder<AbstractMap.SimpleImmutableEntry<String, List<String>>> emailBuilder = (emailUserData, messageProps) -> {
         messageProps.put("to", emailUserData.getKey());
-        messageProps.put("subject", forgotUsernameEmailSubject);
+        messageProps.put("subject", usernamePasswordNotifierConfig.getForgotUsernameEmailSubject());
     };
     private EmailBodyBuilder<AbstractMap.SimpleImmutableEntry<String, List<String>>> emailBodyBuilder = emailUserData -> {
 
         int userAccountsNum = emailUserData.getValue().size();
         String userAccounts = toUserAccountsString(emailUserData.getValue());
 
-        return String.format(forgotUsernameEmailBodyTemplate, userAccountsNum, userAccounts,
+        return String.format(usernamePasswordNotifierConfig.getForgotUsernameEmailBodyTemplate(), userAccountsNum, userAccounts,
                 acmAppConfiguration.getBaseUrl(), acmAppConfiguration.getBaseUrl());
     };
 
@@ -102,8 +97,7 @@ public class OnForgotUsername implements ApplicationListener<ForgotUsernameEvent
 
     private String toUserAccountsString(List<String> accounts)
     {
-        return accounts.stream()
-                .collect(Collectors.joining(","));
+        return String.join(",", accounts);
     }
 
     public void setEmailSenderService(AcmEmailSenderService emailSenderService)
@@ -116,16 +110,6 @@ public class OnForgotUsername implements ApplicationListener<ForgotUsernameEvent
         this.acmAppConfiguration = acmAppConfiguration;
     }
 
-    public void setForgotUsernameEmailSubject(String forgotUsernameEmailSubject)
-    {
-        this.forgotUsernameEmailSubject = forgotUsernameEmailSubject;
-    }
-
-    public void setForgotUsernameEmailBodyTemplate(String forgotUsernameEmailBodyTemplate)
-    {
-        this.forgotUsernameEmailBodyTemplate = forgotUsernameEmailBodyTemplate;
-    }
-
     public AcmSpringActiveProfile getAcmSpringActiveProfile()
     {
         return acmSpringActiveProfile;
@@ -134,5 +118,16 @@ public class OnForgotUsername implements ApplicationListener<ForgotUsernameEvent
     public void setAcmSpringActiveProfile(AcmSpringActiveProfile acmSpringActiveProfile)
     {
         this.acmSpringActiveProfile = acmSpringActiveProfile;
+    }
+
+    public UsernamePasswordNotifierConfig getUsernamePasswordNotifierConfig()
+    {
+        return usernamePasswordNotifierConfig;
+    }
+
+    public void setUsernamePasswordNotifierConfig(
+            UsernamePasswordNotifierConfig usernamePasswordNotifierConfig)
+    {
+        this.usernamePasswordNotifierConfig = usernamePasswordNotifierConfig;
     }
 }

@@ -15,13 +15,17 @@
         <property name="folderAndFilesUtils" ref="folderAndFilesUtils"/>
         <property name="cmisConfigUtils" ref="cmisConfigUtils"/>
         <property name="objectConverter" ref="objectConverter"/>
+        <property name="propertyFileManager" ref="propertyFileManager"/>
+        <property name="emailSenderProperties" value="${user.home}/.arkcase/acm/acmEmailSender.properties"/>
+        <property name="ecmFileService" ref="ecmFileService"/>
+        <property name="emailSenderConfig" ref="emailSenderConfig"/>
     </bean>
 
-    <bean id="documentUiController" class="com.armedia.acm.plugins.ecm.web.DocumentUiController">
+   <!-- <bean id="documentUiController" class="com.armedia.acm.plugins.ecm.web.DocumentUiController">
         <property name="ecmFileServiceProperties" ref="ecmFileServiceProperties"/>
         <property name="fileService" ref="ecmFileService"/>
         <property name="authenticationTokenService" ref="authenticationTokenService"/>
-    </bean>
+    </bean>-->
 
     <bean id="folderListAPIController" class="com.armedia.acm.plugins.ecm.web.api.FolderListAPIController">
         <property name="ecmFileService" ref="ecmFileService"/>

@@ -10,12 +10,12 @@
     </bean>
 
     <bean id="authLoginController" class="com.armedia.acm.auth.okta.web.AuthLoginController">
-        <property name="multiFactorConfig" ref="acmMultiFactorConfig"/>
         <property name="factorService" ref="oktaFactorService"/>
         <property name="factorLifecycleService" ref="oktaFactorLifecycleService"/>
         <property name="oktaUserService" ref="oktaUserService"/>
         <property name="userDao" ref="userJpaDao"/>
         <property name="factorVerificationService" ref="factorVerificationService"/>
+        <property name="oktaConfig" ref="oktaConfig"/>
     </bean>
 
 </beans>

@@ -45,7 +45,11 @@ angular.module('reports').factory('Reports.BuildUrl', [ '$sce', 'Util.DateServic
 
             // add parameters only on prpt reports
             if (reportUrl.indexOf('prpt/viewer', reportUrl.length - 'prpt/viewer'.length) !== -1)
-                reportUrl += "?startDate=" + UtilDateService.goodIsoDate(params.startDate) + "&endDate=" + UtilDateService.goodIsoDate(params.endDate) + "&dateFormat=" + encodeURIComponent(UtilDateService.defaultDateFormat) + "&timeZone=" + encodeURIComponent(UtilDateService.getTimeZoneOffset());
+                reportUrl += "?startDate=" + UtilDateService.goodIsoDate(params.startDate) 
+                + "&endDate=" + UtilDateService.goodIsoDate(params.endDate) 
+                + "&dateFormat=" + encodeURIComponent(UtilDateService.defaultDateFormat) 
+                + "&timeZone=" + encodeURIComponent(UtilDateService.getTimeZoneOffset())
+                + "&timestamp=" + (new Date()).getTime();
 
             if (params.stateSelected) {
                 reportUrl += (reportUrl.indexOf("?") == -1 ? "?" : "&") + "status=" + params.stateSelected;

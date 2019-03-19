@@ -27,29 +27,16 @@ package com.armedia.acm.services.email.sender.service;
  * #L%
  */
 
-
-import com.armedia.acm.core.exceptions.AcmEncryptionException;
-import com.armedia.acm.crypto.properties.AcmEncryptablePropertyUtilsImpl;
-import com.armedia.acm.services.email.sender.model.EmailSenderConfiguration;
-import com.armedia.acm.services.email.sender.model.EmailSenderConfigurationConstants;
+import com.armedia.acm.configuration.service.ConfigurationPropertyService;
+import com.armedia.acm.email.model.EmailSenderConfig;
 
 import org.apache.commons.net.smtp.AuthenticatingSMTPClient;
 import org.apache.commons.net.smtp.SMTPClient;
 import org.apache.commons.net.smtp.SMTPReply;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.io.Resource;
-import org.springframework.security.core.Authentication;
 
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.Properties;
-import java.util.Set;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReadWriteLock;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
  * @author sasko.tanaskoski
@@ -59,128 +46,23 @@ public class EmailSenderConfigurationServiceImpl implements EmailSenderConfigura
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
-    private Resource emailSenderPropertiesResource;
+    private EmailSenderConfig emailSenderConfig;
 
-    private ReadWriteLock lock = new ReentrantReadWriteLock();
-
-    private AcmEncryptablePropertyUtilsImpl acmEncryptablePropertyUtils;
+    private ConfigurationPropertyService configurationPropertyService;
 
     @Override
-    public void writeConfiguration(EmailSenderConfiguration configuration, Authentication auth) throws AcmEncryptionException
+    public void writeConfiguration(EmailSenderConfig configuration)
     {
-        EmailSenderConfiguration config = readConfiguration();
-        Properties emailSenderProperties = new Properties();
-
-        emailSenderProperties.put(EmailSenderConfigurationConstants.HOST, configuration.getHost());
-        emailSenderProperties.put(EmailSenderConfigurationConstants.PORT, configuration.getPort().toString());
-        emailSenderProperties.put(EmailSenderConfigurationConstants.ENCRYPTION, configuration.getEncryption());
-        emailSenderProperties.put(EmailSenderConfigurationConstants.TYPE, configuration.getType());
-        emailSenderProperties.put(EmailSenderConfigurationConstants.USERNAME, configuration.getUsername());
-        if (configuration.getPassword() == null)
-        {
-            emailSenderProperties.put(EmailSenderConfigurationConstants.PASSWORD,
-                    acmEncryptablePropertyUtils.encryptPropertyValue(config.getPassword()));
-        }
-        else
-        {
-            emailSenderProperties.put(EmailSenderConfigurationConstants.PASSWORD,
-                    acmEncryptablePropertyUtils.encryptPropertyValue(configuration.getPassword()));
-        }
-        emailSenderProperties.put(EmailSenderConfigurationConstants.USER_FROM, configuration.getUserFrom());
-        emailSenderProperties.put(EmailSenderConfigurationConstants.ALLOW_DOCUMENTS, Boolean.toString(configuration.isAllowDocuments()));
-        emailSenderProperties.put(EmailSenderConfigurationConstants.ALLOW_ATTACHMENTS,
-                Boolean.toString(configuration.isAllowAttachments()));
-        emailSenderProperties.put(EmailSenderConfigurationConstants.ALLOW_HYPERLINKS, Boolean.toString(configuration.isAllowHyperlinks()));
-
-        Lock writeLock = lock.writeLock();
-        writeLock.lock();
-
-        try (OutputStream propertyOutputStream = new FileOutputStream(emailSenderPropertiesResource.getFile()))
-        {
-            emailSenderProperties.store(propertyOutputStream, String.format("Updated by %s", auth.getName()));
-        }
-        catch (IOException e)
-        {
-            log.error("Could not write properties to [{}] file.", emailSenderPropertiesResource.getFilename());
-        }
-        finally
-        {
-            writeLock.unlock();
-        }
+        configurationPropertyService.updateProperties(configuration);
     }
 
     @Override
-    public EmailSenderConfiguration readConfiguration()
+    public EmailSenderConfig readConfiguration()
     {
-        EmailSenderConfiguration emailSenderConfiguration = new EmailSenderConfiguration();
-
-        Properties emailSenderProperties = loadProperties();
-
-        Set<String> propertyNames = emailSenderProperties.stringPropertyNames();
-
-        for (String propertyName : propertyNames)
-        {
-
-            String propertyValue = emailSenderProperties.getProperty(propertyName);
-            switch (propertyName)
-            {
-            case EmailSenderConfigurationConstants.HOST:
-                emailSenderConfiguration.setHost(propertyValue);
-                break;
-            case EmailSenderConfigurationConstants.PORT:
-                emailSenderConfiguration.setPort(Integer.valueOf(propertyValue));
-                break;
-            case EmailSenderConfigurationConstants.ENCRYPTION:
-                emailSenderConfiguration.setEncryption(propertyValue);
-                break;
-            case EmailSenderConfigurationConstants.TYPE:
-                emailSenderConfiguration.setType(propertyValue);
-                break;
-            case EmailSenderConfigurationConstants.USERNAME:
-                emailSenderConfiguration.setUsername(propertyValue);
-                break;
-            case EmailSenderConfigurationConstants.PASSWORD:
-                emailSenderConfiguration.setPassword(propertyValue);
-                break;
-            case EmailSenderConfigurationConstants.USER_FROM:
-                emailSenderConfiguration.setUserFrom(propertyValue);
-                break;
-            case EmailSenderConfigurationConstants.ALLOW_DOCUMENTS:
-                emailSenderConfiguration.setAllowDocuments(Boolean.valueOf(propertyValue));
-                break;
-            case EmailSenderConfigurationConstants.ALLOW_ATTACHMENTS:
-                emailSenderConfiguration.setAllowAttachments(Boolean.valueOf(propertyValue));
-                break;
-            case EmailSenderConfigurationConstants.ALLOW_HYPERLINKS:
-                emailSenderConfiguration.setAllowHyperlinks(Boolean.valueOf(propertyValue));
-            }
-        }
-
-        return emailSenderConfiguration;
+        return emailSenderConfig;
     }
 
-    private Properties loadProperties()
-    {
-        Properties emailSenderProperties = new Properties();
-        Lock readLock = lock.readLock();
-        readLock.lock();
-        try (InputStream propertyInputStream = emailSenderPropertiesResource.getInputStream())
-        {
-            emailSenderProperties.load(propertyInputStream);
-        }
-        catch (IOException e)
-        {
-            log.error("Could not read properties from [{}] file.", emailSenderPropertiesResource.getFilename());
-        }
-        finally
-        {
-            readLock.unlock();
-
-        }
-        return emailSenderProperties;
-    }
-
-    public boolean validateSmtpConfiguration(EmailSenderConfiguration configuration)
+    public boolean validateSmtpConfiguration(EmailSenderConfig configuration)
     {
         boolean validation = false;
         AuthenticatingSMTPClient authenticatingSmtpClient = null;
@@ -261,21 +143,23 @@ public class EmailSenderConfigurationServiceImpl implements EmailSenderConfigura
         }
     }
 
-    /**
-     * @param emailSenderPropertiesResource
-     *            the emailSenderPropertiesResource to set
-     */
-    public void setEmailSenderPropertiesResource(Resource emailSenderPropertiesResource)
+    public EmailSenderConfig getEmailSenderConfig()
     {
-        this.emailSenderPropertiesResource = emailSenderPropertiesResource;
+        return emailSenderConfig;
     }
 
-    public AcmEncryptablePropertyUtilsImpl getAcmEncryptablePropertyUtils() {
-        return acmEncryptablePropertyUtils;
+    public void setEmailSenderConfig(EmailSenderConfig emailSenderConfig)
+    {
+        this.emailSenderConfig = emailSenderConfig;
     }
 
-    public void setAcmEncryptablePropertyUtils(AcmEncryptablePropertyUtilsImpl acmEncryptablePropertyUtils) {
-        this.acmEncryptablePropertyUtils = acmEncryptablePropertyUtils;
+    public ConfigurationPropertyService getConfigurationPropertyService()
+    {
+        return configurationPropertyService;
     }
 
+    public void setConfigurationPropertyService(ConfigurationPropertyService configurationPropertyService)
+    {
+        this.configurationPropertyService = configurationPropertyService;
+    }
 }

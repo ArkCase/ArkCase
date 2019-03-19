@@ -27,6 +27,7 @@ package com.armedia.acm.audit.listeners;
  * #L%
  */
 
+import com.armedia.acm.audit.model.AuditConfig;
 import com.armedia.acm.audit.model.AuditConstants;
 import com.armedia.acm.audit.model.AuditEvent;
 import com.armedia.acm.audit.service.AuditService;
@@ -52,7 +53,6 @@ import org.slf4j.MDC;
 
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -70,10 +70,7 @@ public class AcmMessageProcessorNotificationListener implements MessageProcessor
     private Logger log = LoggerFactory.getLogger(getClass());
 
     private AuditService auditService;
-    private boolean muleFlowsLoggingEnabled;
-    private boolean muleFlowsLoggingMessageEnabled;
-    private boolean muleFlowsLoggingMessagePropertiesEnabled;
-    private List<String> contentTypesToLog;
+    private AuditConfig auditConfig;
 
     @Override
     public void onNotification(MessageProcessorNotification notification)
@@ -138,7 +135,7 @@ public class AcmMessageProcessorNotificationListener implements MessageProcessor
 
         MuleEvent event = notification.getSource();
 
-        if (isMuleFlowsLoggingEnabled())
+        if (auditConfig.getMuleFlowsLoggingEnabled())
         {
             AuditEvent auditEvent = new AuditEvent();
 
@@ -203,8 +200,10 @@ public class AcmMessageProcessorNotificationListener implements MessageProcessor
                 eventProperties.put("Base URL", baseUrl);
             }
 
-            if (isMuleFlowsLoggingMessageEnabled() && ((event.getMessage().getProperty("contentType", PropertyScope.INVOCATION) == null)
-                    || getContentTypesToLog().contains(event.getMessage().getProperty("contentType", PropertyScope.INVOCATION))))
+            if (auditConfig.getMuleFlowsLoggingMessageEnabled()
+                    && ((event.getMessage().getProperty("contentType", PropertyScope.INVOCATION) == null)
+                            || auditConfig.getContentTypesToLog()
+                                    .contains(event.getMessage().getProperty("contentType", PropertyScope.INVOCATION))))
             {
                 try
                 {
@@ -217,7 +216,7 @@ public class AcmMessageProcessorNotificationListener implements MessageProcessor
                 }
             }
 
-            if (isMuleFlowsLoggingMessagePropertiesEnabled())
+            if (auditConfig.getMuleFlowsLoggingMessagePropertiesEnabled())
             {
                 final MuleMessage message = event.getMessage();
 
@@ -242,10 +241,7 @@ public class AcmMessageProcessorNotificationListener implements MessageProcessor
 
             auditEvent.setEventProperties(eventProperties);
 
-            if (log.isTraceEnabled())
-            {
-                log.trace("Activiti AuditEvent: " + auditEvent.toString());
-            }
+            log.trace("Activiti AuditEvent: {}", auditEvent.toString());
 
             getAuditService().audit(auditEvent);
         }
@@ -261,43 +257,13 @@ public class AcmMessageProcessorNotificationListener implements MessageProcessor
         this.auditService = auditService;
     }
 
-    public boolean isMuleFlowsLoggingEnabled()
+    public AuditConfig getAuditConfig()
     {
-        return muleFlowsLoggingEnabled;
+        return auditConfig;
     }
 
-    public void setMuleFlowsLoggingEnabled(boolean muleFlowsLoggingEnabled)
+    public void setAuditConfig(AuditConfig auditConfig)
     {
-        this.muleFlowsLoggingEnabled = muleFlowsLoggingEnabled;
-    }
-
-    public boolean isMuleFlowsLoggingMessageEnabled()
-    {
-        return muleFlowsLoggingMessageEnabled;
-    }
-
-    public void setMuleFlowsLoggingMessageEnabled(boolean muleFlowsLoggingMessageEnabled)
-    {
-        this.muleFlowsLoggingMessageEnabled = muleFlowsLoggingMessageEnabled;
-    }
-
-    public boolean isMuleFlowsLoggingMessagePropertiesEnabled()
-    {
-        return muleFlowsLoggingMessagePropertiesEnabled;
-    }
-
-    public void setMuleFlowsLoggingMessagePropertiesEnabled(boolean muleFlowsLoggingMessagePropertiesEnabled)
-    {
-        this.muleFlowsLoggingMessagePropertiesEnabled = muleFlowsLoggingMessagePropertiesEnabled;
-    }
-
-    public List<String> getContentTypesToLog()
-    {
-        return contentTypesToLog;
-    }
-
-    public void setContentTypesToLog(List<String> contentTypesToLog)
-    {
-        this.contentTypesToLog = contentTypesToLog;
+        this.auditConfig = auditConfig;
     }
 }

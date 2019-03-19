@@ -4,4 +4,7 @@
 
     <bean id="exceptionResolver" class="org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver"/>
 
+    <bean id="emailSenderConfig" class="com.armedia.acm.email.model.EmailSenderConfig"/>
+
+    <bean id="emailReceiverConfig" class="com.armedia.acm.email.model.EmailReceiverConfig"/>
 </beans>

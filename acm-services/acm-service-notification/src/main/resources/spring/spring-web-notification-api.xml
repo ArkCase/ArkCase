@@ -19,6 +19,7 @@
     <bean id="saveNotification" class="com.armedia.acm.services.notification.web.api.SaveNotificationAPIController">
         <property name="notificationDao" ref="notificationDao"/>
         <property name="notificationEventPublisher" ref="notificationEventPublisher"/>
+        <property name="acmEmailMentionsService" ref="acmEmailMentionsService"/>
     </bean>
 
     <bean id="sendEmailWithAttachmentsAPIController"
@@ -35,8 +36,8 @@
         <property name="notificationSenderFactory" ref="notificationSenderFactory"/>
     </bean>
 
-    <bean id="notificationUiController" class="com.armedia.acm.services.notification.web.NotificationUiController">
+  <!--  <bean id="notificationUiController" class="com.armedia.acm.services.notification.web.NotificationUiController">
         <property name="pluginProperties" ref="notificationProperties"/>
-    </bean>
+    </bean>-->
 
 </beans>

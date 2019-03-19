@@ -100,23 +100,23 @@ public class DocumentUiController
         switch (viewer)
         {
         case "js":
-            srcLink = srcLink.replace("${context}", req.getContextPath());
-            srcLink = srcLink.replace("${type}", type);
-            srcLink = srcLink.replace("${title}", title);
-            srcLink = srcLink.replace("${fileId}", fileId.toString());
+            srcLink = srcLink.replace("$[context]", req.getContextPath());
+            srcLink = srcLink.replace("$[type]", type);
+            srcLink = srcLink.replace("$[title]", title);
+            srcLink = srcLink.replace("$[fileId]", fileId.toString());
             mv.addObject("link", srcLink);
             break;
         case "snowbound":
-            srcLink = srcLink.replace("${ticket}", ticket);
-            srcLink = srcLink.replace("${fileId}", fileId.toString());
-            srcLink = srcLink.replace("${userid}", auth.getName());
+            srcLink = srcLink.replace("$[ticket]", ticket);
+            srcLink = srcLink.replace("$[fileId]", fileId.toString());
+            srcLink = srcLink.replace("$[userid]", auth.getName());
             mv.addObject("link", srcLink);
             break;
         default:
-            srcLink = srcLink.replace("${context}", req.getContextPath());
-            srcLink = srcLink.replace("${type}", type);
-            srcLink = srcLink.replace("${title}", title);
-            srcLink = srcLink.replace("${fileId}", fileId.toString());
+            srcLink = srcLink.replace("$[context]", req.getContextPath());
+            srcLink = srcLink.replace("$[type]", type);
+            srcLink = srcLink.replace("$[title]", title);
+            srcLink = srcLink.replace("$[fileId]", fileId.toString());
             mv.addObject("link", srcLink);
             break;
         }

@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
 
     <bean id="smtpService" class="com.armedia.acm.services.email.smtp.SmtpService">
-        <property name="propertyFileManager" ref="propertyFileManager"/>
-        <property name="emailSenderPropertyFileLocation" ref="emailSenderPropertyFileLocation"/>
         <property name="ecmFileService" ref="ecmFileService"/>
         <property name="muleContextManager" ref="muleContextManager"/>
         <property name="flow" value="vm://sendEmailViaSmtp.in"/>
         <property name="acmEmailContentGeneratorService" ref="acmEmailContentGeneratorService"/>
+        <property name="emailSenderConfig" ref="emailSenderConfig"/>
         <property name="templatingEngine" ref="templatingEngine"/>
+        <property name="emailSenderConfigurationService" ref="emailSenderConfigurationService"/>
+        <property name="defaultFolderAndFileConverter" ref="folderConverter"/>
     </bean>
 
 </beans>

@@ -77,11 +77,19 @@ import java.util.UUID;
         "/spring/spring-library-user-login.xml",
         "/spring/spring-library-plugin-manager.xml",
         "/spring/spring-library-audit-service.xml",
-        "/spring/spring-library-authentication-token.xml"
-
+        "/spring/spring-library-authentication-token.xml",
+        "/spring/spring-library-configuration.xml",
+        "/spring/spring-library-acm-email.xml",
+        "/spring/spring-library-folder-watcher.xml"
 })
 public class MoveToRecordFolderServiceIT
 {
+    static
+    {
+        String userHomePath = System.getProperty("user.home");
+        System.setProperty("acm.configurationserver.propertyfile", userHomePath + "/.arkcase/acm/conf.yml");
+    }
+
     private transient final Logger LOG = LoggerFactory.getLogger(getClass());
     @Autowired
     private MuleContextManager muleContextManager;

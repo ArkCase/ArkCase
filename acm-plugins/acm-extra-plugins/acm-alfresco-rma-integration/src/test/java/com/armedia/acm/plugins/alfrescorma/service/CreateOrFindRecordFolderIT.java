@@ -6,22 +6,22 @@ package com.armedia.acm.plugins.alfrescorma.service;
  * %%
  * Copyright (C) 2014 - 2018 ArkCase LLC
  * %%
- * This file is part of the ArkCase software. 
- * 
- * If the software was purchased under a paid ArkCase license, the terms of 
- * the paid license agreement will prevail.  Otherwise, the software is 
+ * This file is part of the ArkCase software.
+ *
+ * If the software was purchased under a paid ArkCase license, the terms of
+ * the paid license agreement will prevail.  Otherwise, the software is
  * provided under the following open source license terms:
- * 
+ *
  * ArkCase is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *  
+ *
  * ArkCase is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
  * #L%
@@ -73,10 +73,19 @@ import java.util.UUID;
         "/spring/spring-library-user-login.xml",
         "/spring/spring-library-plugin-manager.xml",
         "/spring/spring-library-audit-service.xml",
-        "/spring/spring-library-authentication-token.xml"
+        "/spring/spring-library-authentication-token.xml",
+        "/spring/spring-library-configuration.xml",
+        "/spring/spring-library-acm-email.xml",
+        "/spring/spring-library-folder-watcher.xml"
 })
 public class CreateOrFindRecordFolderIT
 {
+    static
+    {
+        String userHomePath = System.getProperty("user.home");
+        System.setProperty("acm.configurationserver.propertyfile", userHomePath + "/.arkcase/acm/conf.yml");
+    }
+
     private transient final Logger LOG = LoggerFactory.getLogger(getClass());
     @Autowired
     @Qualifier("createOrFindRecordFolderService")
@@ -121,7 +130,6 @@ public class CreateOrFindRecordFolderIT
         assertNotNull(folderIdSecondLookup);
 
         assertEquals(folderIdFirstLookup, folderIdSecondLookup);
-
     }
 
 }

@@ -72,18 +72,28 @@ import java.util.List;
         "/spring/spring-library-email.xml",
         "/spring/spring-library-email-smtp.xml",
         "/spring/spring-library-calendar-config-service.xml",
-        "/spring/spring-library-calendar-integration-exchange-service.xml",
         "/spring/spring-library-object-converter.xml",
         "/spring/spring-library-ecm-file-lock.xml",
         "/spring/spring-library-service-data.xml",
-        "/spring/spring-library-core-api.xml"        
+        "/spring/spring-library-core-api.xml",
+        "/spring/spring-library-configuration.xml",
+        "/spring/spring-library-convert-folder-service.xml",
+        "/spring/spring-library-folder-watcher.xml",
+        "/spring/spring-library-calendar-integration-exchange-service.xml"
 })
 @TransactionConfiguration(defaultRollback = true, transactionManager = "transactionManager")
 public class UserOrgDaoIT extends EasyMockSupport
 {
 
+    static
+    {
+        String userHomePath = System.getProperty("user.home");
+        System.setProperty("acm.configurationserver.propertyfile", userHomePath + "/.arkcase/acm/conf.yml");
+    }
+
     @Autowired
     OutlookPasswordDao outlookPasswordDao;
+
     private Authentication authentication;
 
     @PersistenceContext

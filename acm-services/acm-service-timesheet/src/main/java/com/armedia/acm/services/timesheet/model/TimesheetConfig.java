@@ -2,7 +2,7 @@ package com.armedia.acm.services.timesheet.model;
 
 /*-
  * #%L
- * ACM Default Plugin: admin
+ * ACM Service: Timesheet
  * %%
  * Copyright (C) 2014 - 2018 ArkCase LLC
  * %%
@@ -27,20 +27,69 @@ package com.armedia.acm.services.timesheet.model;
  * #L%
  */
 
-import java.util.List;
+import com.armedia.acm.pluginmanager.service.AcmPluginConfigBean;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
-public class TimesheetConfig
+import org.springframework.beans.factory.annotation.Value;
+
+@JsonSerialize(as = TimesheetConfig.class)
+public class TimesheetConfig implements AcmPluginConfigBean
 {
+    @Value("${time.plugin.root.folder}")
+    private String rootFolder;
 
-    List<TimesheetChargeRoleConfigItem> chargeRoleItems;
+    @Value("${time.plugin.search.tree.sort}")
+    private String searchTreeSort;
 
-    public List<TimesheetChargeRoleConfigItem> getChargeRoleItems()
+    @JsonProperty("time.plugin.useApprovalWorkflow")
+    @Value("${time.plugin.useApprovalWorkflow}")
+    private Boolean useApprovalWorkflow;
+
+    public String getRootFolder()
     {
-        return chargeRoleItems;
+        return rootFolder;
     }
 
-    public void setChargeRoleItems(List<TimesheetChargeRoleConfigItem> chargeRoleItems)
+    public void setRootFolder(String rootFolder)
     {
-        this.chargeRoleItems = chargeRoleItems;
+        this.rootFolder = rootFolder;
+    }
+
+    public void setSearchTreeSort(String searchTreeSort)
+    {
+        this.searchTreeSort = searchTreeSort;
+    }
+
+    public Boolean isUseApprovalWorkflow()
+    {
+        return useApprovalWorkflow;
+    }
+
+    public void setUseApprovalWorkflow(Boolean useApprovalWorkflow)
+    {
+        this.useApprovalWorkflow = useApprovalWorkflow;
+    }
+
+    @JsonIgnore
+    @Override
+    public String getSearchTreeFilter()
+    {
+        return "";
+    }
+
+    @JsonIgnore
+    @Override
+    public String getSearchTreeQuery()
+    {
+        return "";
+    }
+
+    @JsonIgnore
+    @Override
+    public String getSearchTreeSort()
+    {
+        return searchTreeSort;
     }
 }

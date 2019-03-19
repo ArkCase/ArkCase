@@ -10,10 +10,11 @@
                           http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mule/scripting/current/mule-scripting.xsd">
 
     <!-- AFDP-7210 switch to new-style HTTP transport, to enable TLSv1.2 -->
-    <http:request-config name="solr-advanced-search" protocol="HTTPS" host="${solr.host}" port="${solr.port}"/>
+    <http:request-config name="solr-advanced-search" protocol="HTTPS" host="#[flowVars['host']]" port="#[flowVars['port']]"/>
 
     <flow name="advancedSearchQuery" doc:name="Advanced Search Query Flow">
-        <vm:inbound-endpoint connector-ref="arkcase-vm-connector" address="vm://advancedSearchQuery.in" exchange-pattern="request-response"/>
+        <vm:inbound-endpoint connector-ref="arkcase-vm-connector" address="vm://advancedSearchQuery.in"
+                             exchange-pattern="request-response"/>
 
         <timer-interceptor/>
 
@@ -22,13 +23,28 @@
             <scripting:script engine="groovy" file="scripts/dataAccessFilter.groovy"/>
         </scripting:transformer>
 
+        <scripting:component doc:name="Script">
+            <scripting:script engine="groovy"><![CDATA[
+                import com.armedia.acm.services.search.model.solr.SolrConfig
+
+                SolrConfig solrConfig = muleContext.registry.get("arkContext").getBean("solrConfig")
+	    	    message.setInvocationProperty("host", solrConfig.getHost())
+	    	    message.setInvocationProperty("port", solrConfig.getPort())
+	    	    message.setInvocationProperty("contextRoot", solrConfig.getContextRoot())
+	    	    message.setInvocationProperty("advancedSearchCore", solrConfig.getAdvancedSearchCore())
+	    	    message.setInvocationProperty("searchHandler", solrConfig.getSearchHandler())
+	        ]]>
+            </scripting:script>
+        </scripting:component>
+
         <set-payload
-            value="q=#[message.inboundProperties['query']]&amp;fq=#[message.inboundProperties['dataAccessFilter']]&amp;fq=#[message.inboundProperties['denyAccessFilter']]&amp;fq=#[message.inboundProperties['childObjectFilterQuery']]&amp;dac=#[message.inboundProperties['childObjectDacFilter']]&amp;fq=#[message.inboundProperties['isSubscribed']]&amp;start=#[message.inboundProperties['firstRow']]&amp;rows=#[message.inboundProperties['maxRows']]&amp;wt=json&amp;sort=#[message.inboundProperties['sort']]&amp;facet=true&amp;#[message.inboundProperties['rowQueryParametars']]&amp;indent=#[message.inboundProperties['indent']]#[message.inboundProperties['df'] != empty ? '&amp;df=' + message.inboundProperties['df'] : '']"/>
+                value="q=#[message.inboundProperties['query']]&amp;fq=#[message.inboundProperties['dataAccessFilter']]&amp;fq=#[message.inboundProperties['denyAccessFilter']]&amp;fq=#[message.inboundProperties['childObjectFilterQuery']]&amp;dac=#[message.inboundProperties['childObjectDacFilter']]&amp;fq=#[message.inboundProperties['isSubscribed']]&amp;start=#[message.inboundProperties['firstRow']]&amp;rows=#[message.inboundProperties['maxRows']]&amp;wt=json&amp;sort=#[message.inboundProperties['sort']]&amp;facet=true&amp;omitHeader=true&amp;fl=#[message.inboundProperties['fl']]&amp;#[message.inboundProperties['rowQueryParametars']]&amp;indent=#[message.inboundProperties['indent']]#[message.inboundProperties['df'] != empty ? '&amp;df=' + message.inboundProperties['df'] : '']"/>
 
         <logger category="com.armedia.acm.plugins.search" level="DEBUG"/>
 
-        
-        <http:request config-ref="solr-advanced-search" path="/${solr.contextRoot}/${solr.advancedsearch.core}/${solr.searchHandler}" method="POST">
+        <http:request config-ref="solr-advanced-search"
+                      path="/#[flowVars['contextRoot']]/#[flowVars['advancedSearchCore']]/#[flowVars['searchHandler']]"
+                      method="POST">
             <http:request-builder>
                 <http:header headerName="Content-Type" value="application/x-www-form-urlencoded; charset=UTF-8"/>
             </http:request-builder>

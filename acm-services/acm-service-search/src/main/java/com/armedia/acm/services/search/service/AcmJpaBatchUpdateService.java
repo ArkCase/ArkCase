@@ -32,6 +32,7 @@ import com.armedia.acm.data.AcmObjectChangelist;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.files.propertymanager.PropertyFileManager;
 import com.armedia.acm.services.search.model.SearchConstants;
+import com.armedia.acm.services.search.model.solr.SolrConfig;
 import com.armedia.acm.spring.SpringContextHolder;
 import com.armedia.acm.web.api.MDCConstants;
 
@@ -46,6 +47,7 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -71,14 +73,23 @@ public class AcmJpaBatchUpdateService
     private JpaObjectsToSearchService objectsToSearchService;
     private int batchSize;
     private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
+    private SolrConfig solrConfig;
 
-    public void jpaBatchUpdate() throws AcmEncryptionException
+    public void jpaBatchUpdate() throws AcmEncryptionException, InterruptedException
     {
         log.debug("JPA batch update enabled: [{}]", isBatchUpdateBasedOnLastModifiedEnabled());
 
         if (!isBatchUpdateBasedOnLastModifiedEnabled())
+            if (!solrConfig.getEnableBatchUpdateBasedOnLastModified())
+            {
+                return;
+            }
+
+        // Wait for all IJpaBatchUpdatePrerequisite implementations to finish their work
+        while (!prerequisitesFinished())
         {
-            return;
+            log.debug("Waiting for the IJpaBatchUpdatePrerequisite implementations to finish...");
+            Thread.sleep(1000l);
         }
 
         // The Alfresco user id to use, to retrieve the files to be indexed
@@ -121,6 +132,19 @@ public class AcmJpaBatchUpdateService
         {
             log.error("Could not send index updates to SOLR: [{}]", e.getMessage(), e);
         }
+    }
+
+    private boolean prerequisitesFinished()
+    {
+        Map<String, IJpaBatchUpdatePrerequisite> prerequisites = springContextHolder.getAllBeansOfType(IJpaBatchUpdatePrerequisite.class);
+        for (IJpaBatchUpdatePrerequisite prerequisite : prerequisites.values())
+        {
+            if (!prerequisite.isFinished())
+            {
+                return false;
+            }
+        }
+        return true;
     }
 
     private void storeCurrentDateForNextBatchRun(String lastRunDateKey, DateFormat solrDateFormat)
@@ -238,5 +262,15 @@ public class AcmJpaBatchUpdateService
     public void setAuditPropertyEntityAdapter(AuditPropertyEntityAdapter auditPropertyEntityAdapter)
     {
         this.auditPropertyEntityAdapter = auditPropertyEntityAdapter;
+    }
+
+    public SolrConfig getSolrConfig()
+    {
+        return solrConfig;
+    }
+
+    public void setSolrConfig(SolrConfig solrConfig)
+    {
+        this.solrConfig = solrConfig;
     }
 }

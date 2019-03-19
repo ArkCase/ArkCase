@@ -123,7 +123,7 @@ function($scope, ReportsConfigService, LookupService, $q, $sce, MessageService) 
 
             $scope.reportsRoles = payload[2].data;
 
-            var url = $scope.reportsConfig['PENTAHO_SERVER_URL'] + '/pentaho';
+            var url = $scope.reportsConfig['report.plugin.PENTAHO_SERVER_URL'] + '/pentaho';
             $scope.reportDesignerUrl = $sce.trustAsResourceUrl(url);
             $scope.onObjSelect($scope.reportsData.chooseObject[0]);
         });

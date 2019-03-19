@@ -30,4 +30,11 @@
         </constructor-arg>
     </bean>
 
+    <bean id="emailSenderConfig" class="com.armedia.acm.email.model.EmailSenderConfig"/>
+
+    <bean id="emailReceiverConfig" class="com.armedia.acm.email.model.EmailReceiverConfig"/>
+
+    <bean id="auditEventConfig" class="com.armedia.acm.audit.model.AuditEventConfig">
+        <property name="jsonUnmarshaller" ref="jsonUnmarshaller"/>
+    </bean>
 </beans>

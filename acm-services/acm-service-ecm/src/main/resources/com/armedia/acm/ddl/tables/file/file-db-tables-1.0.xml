@@ -651,5 +651,11 @@
         </update>
     </changeSet>
 
+    <changeSet id="63-add-file-version-searchable-pdf-column" author="vladimir.cherepnalkovski">
+        <addColumn tableName="acm_file_version">
+            <column name="cm_file_version_searchable_pdf" type="VARCHAR(5)" defaultValue="false"/>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>
 

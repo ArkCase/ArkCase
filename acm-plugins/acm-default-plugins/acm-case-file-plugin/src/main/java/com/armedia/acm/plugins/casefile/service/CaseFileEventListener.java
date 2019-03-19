@@ -27,7 +27,7 @@ package com.armedia.acm.plugins.casefile.service;
  * #L%
  */
 
-import com.armedia.acm.calendar.config.service.CalendarConfiguration.PurgeOptions;
+import com.armedia.acm.calendar.config.model.PurgeOptions;
 import com.armedia.acm.calendar.config.service.CalendarConfigurationException;
 import com.armedia.acm.objectonverter.AcmUnmarshaller;
 import com.armedia.acm.objectonverter.ObjectConverter;
@@ -158,7 +158,9 @@ public class CaseFileEventListener implements ApplicationListener<AcmObjectHisto
                                     folderCreatorDao.deleteObjectReference(updatedCaseFile.getId(), updatedCaseFile.getObjectType());
                                 }
                             }
-                            getCaseFileEventUtility().raiseCaseFileModifiedEvent(updatedCaseFile, event.getIpAddress(), "status.changed");
+                            getCaseFileEventUtility().raiseCaseFileModifiedEvent(updatedCaseFile, event.getIpAddress(), "status.changed",
+                                        "from " + existing.getStatus() + " to " + updatedCaseFile.getStatus());
+
                         }
                     }
                 }

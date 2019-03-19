@@ -2,11 +2,12 @@
     xsi:schemaLocation="
             http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
-    <changeSet id="01-stored-procedures-for-median-calculations" author="marko.stojanoski" dbms="mysql"
+    <!-- AFDP-7342 renamed all procedures to avoid name conflicts with built-in functions and procedures -->        
+    <changeSet id="01-AFDP-7342-stored-procedures-for-median-calculations" author="marko.stojanoski" dbms="mysql"
                logicalFilePath="/ddl/triggers/foia-db-procedures-1.0.xml">
         <createProcedure>
             <![CDATA[
-            CREATE PROCEDURE Median( tbl CHAR(64), col CHAR(64), OUT res DOUBLE )
+            CREATE PROCEDURE ark_Median( tbl CHAR(64), col CHAR(64), OUT res DOUBLE )
             BEGIN
               SET @sql = CONCAT( 'SELECT ((COUNT(*))/2) INTO @c FROM ', tbl );
               PREPARE stmt FROM @sql;
@@ -36,14 +37,14 @@
         </createProcedure>
         <createProcedure>
             <![CDATA[
-            create procedure MedianWithTableDrop(in p_table_name text, in p_table_column text, out result text)
+            create procedure ark_MedianWithTableDrop(in p_table_name text, in p_table_column text, out result text)
             begin
 
             set @t = p_table_name;
             set @c = p_table_column;
             set @r = result;
 
-            prepare medianstmt from 'call Median(?, ?, ?)';
+            prepare medianstmt from 'call ark_Median(?, ?, ?)';
             execute medianstmt using @t, @c, @r;
             deallocate prepare medianstmt;
 
@@ -56,7 +57,7 @@
         </createProcedure>
         <createProcedure>
             <![CDATA[
-            create procedure MedianDataForAllProcessedRequests(in p_component_agency text, in p_request_track text, in p_start_date text, in p_end_date text, out result text)
+            create procedure ark_MedianDataForAllProcessedRequests(in p_component_agency text, in p_request_track text, in p_start_date text, in p_end_date text, out result text)
             begin
             SELECT LEFT(UUID(), 8) INTO @tmpTableName;
 
@@ -86,7 +87,7 @@
         </createProcedure>
         <createProcedure>
             <![CDATA[
-            create procedure MedianDataForAllPendingRequests(in p_component_agency text, in p_request_track text, in p_start_date text, in p_end_date text, out result text)
+            create procedure ark_MedianDataForAllPendingRequests(in p_component_agency text, in p_request_track text, in p_start_date text, in p_end_date text, out result text)
             begin
             SELECT LEFT(UUID(), 8) INTO @tmpTableName;
 
@@ -119,7 +120,7 @@
         </createProcedure>
         <createProcedure>
             <![CDATA[
-            create procedure MedianForAllProcessedRequests(in component_agency text, in request_track text, in start_date text, in end_date text, out medianValueRes text)
+            create procedure ark_MedianForAllProcessedRequests(in component_agency text, in request_track text, in start_date text, in end_date text, out medianValueRes text)
             begin
 
             set @c = component_agency;
@@ -129,13 +130,13 @@
             set @m = medianValueRes;
 
 
-            prepare stmt1 from 'call MedianDataForAllProcessedRequests(?, ?, ?, ?, ?)';
+            prepare stmt1 from 'call ark_MedianDataForAllProcessedRequests(?, ?, ?, ?, ?)';
             execute stmt1 using @c, @r, @s, @e, @dataTable;
             deallocate prepare stmt1;
 
 
             set @p = "response_time";
-            prepare stmt2 from 'call MedianWithTableDrop(?, ?, ?)';
+            prepare stmt2 from 'call ark_MedianWithTableDrop(?, ?, ?)';
             execute stmt2 using @dataTable, @p, @m;
             deallocate prepare stmt2;
 
@@ -144,7 +145,7 @@
         </createProcedure>
         <createProcedure>
             <![CDATA[
-            create procedure MedianForAllPendingRequests(in component_agency text, in request_track text, in start_date text, in end_date text, out medianValueRes text)
+            create procedure ark_MedianForAllPendingRequests(in component_agency text, in request_track text, in start_date text, in end_date text, out medianValueRes text)
             begin
 
             set @c = component_agency;
@@ -153,12 +154,12 @@
             set @e = end_date;
             set @m = medianValueRes;
 
-            prepare stmt1 from 'call MedianDataForAllPendingRequests(?, ?, ?, ?, ?)';
+            prepare stmt1 from 'call ark_MedianDataForAllPendingRequests(?, ?, ?, ?, ?)';
             execute stmt1 using @c, @r, @s, @e, @dataTable;
             deallocate prepare stmt1;
 
             set @p = "pending_time";
-            prepare stmt2 from 'call MedianWithTableDrop(?, ?, ?)';
+            prepare stmt2 from 'call ark_MedianWithTableDrop(?, ?, ?)';
             execute stmt2 using @dataTable, @p, @m;
             deallocate prepare stmt2;
 
@@ -167,11 +168,11 @@
         </createProcedure>
     </changeSet>
 
-    <changeSet id="02-functions-for-median-calculations" author="bojan.milenkoski" dbms="mysql"
+    <changeSet id="02-AFDP-7342-functions-for-median-calculations" author="bojan.milenkoski" dbms="mysql"
                logicalFilePath="/ddl/triggers/foia-db-procedures-1.0.xml">
         <createProcedure>
             <![CDATA[
-            CREATE FUNCTION `MedianForRequests` (p_component_agency text, p_case_status text, p_request_track text, p_start_date text, p_end_date text)
+            CREATE FUNCTION `ark_MedianForRequests` (p_component_agency text, p_case_status text, p_request_track text, p_start_date text, p_end_date text)
             RETURNS TEXT
             begin
                 DECLARE median_val TEXT; 
@@ -209,7 +210,7 @@
         </createProcedure>
         <createProcedure>
             <![CDATA[
-            CREATE FUNCTION `MedianForPendingRequests`(p_component_agency text, p_request_track text, p_end_date text) 
+            CREATE FUNCTION `ark_MedianForPendingRequests`(p_component_agency text, p_request_track text, p_end_date text) 
             RETURNS TEXT
             begin
                 DECLARE median_val TEXT; 
@@ -254,11 +255,11 @@
         </createProcedure>
     </changeSet>
     
-    <changeSet id="03-functions-for-median-calculations" author="bojan.milenkoski" dbms="mysql"
+    <changeSet id="03-AFDP-7342-functions-for-median-calculations" author="bojan.milenkoski" dbms="mysql"
                logicalFilePath="/ddl/triggers/foia-db-procedures-1.0.xml">
         <createProcedure>
             <![CDATA[
-            CREATE FUNCTION `MedianForPendingRequestsAnyTrack`(p_component_agency text, p_end_date text) 
+            CREATE FUNCTION `ark_MedianForPendingRequestsAnyTrack`(p_component_agency text, p_end_date text) 
             RETURNS TEXT
             begin
                 DECLARE median_val TEXT; 

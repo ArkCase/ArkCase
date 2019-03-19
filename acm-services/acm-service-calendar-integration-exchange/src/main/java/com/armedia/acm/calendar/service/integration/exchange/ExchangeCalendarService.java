@@ -55,6 +55,7 @@ import com.armedia.acm.service.outlook.model.AcmOutlookFolderCreator;
 import com.armedia.acm.service.outlook.model.AcmOutlookUser;
 import com.armedia.acm.service.outlook.service.OutlookFolderRecreator;
 import com.armedia.acm.services.users.model.AcmUser;
+import com.armedia.acm.spring.SpringContextHolder;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -97,11 +98,11 @@ public class ExchangeCalendarService
     static final String PROCESS_USER = "CALENDAR_SERVICE_PURGER";
     private Logger log = LoggerFactory.getLogger(getClass());
     private CalendarAdminService calendarAdminService;
-    private Map<String, CalendarEntityHandler> entityHandlers;
     private OutlookDao outlookDao;
     private AcmOutlookFolderCreatorDao folderCreatorDao;
     private Map<String, CalendarConfiguration> configurationsByType;
     private OutlookFolderRecreator folderRecreator;
+    private SpringContextHolder springContextHolder;
 
     /*
      * (non-Javadoc)
@@ -137,6 +138,14 @@ public class ExchangeCalendarService
         }
     }
 
+    protected CalendarEntityHandler findEntityHandlerByObjectType(String objectType)
+    {
+        return getSpringContextHolder().getAllBeansOfType(CalendarEntityHandler.class)
+            .values()
+            .stream()
+            .filter(eh -> objectType.equals(eh.getEntityType())).findFirst().orElse(null);
+    }
+
     /*
      * (non-Javadoc)
      * @see
@@ -153,7 +162,7 @@ public class ExchangeCalendarService
             return Optional.ofNullable(null);
         }
 
-        CalendarEntityHandler handler = Optional.ofNullable(entityHandlers.get(objectType))
+        CalendarEntityHandler handler = Optional.ofNullable(findEntityHandlerByObjectType(objectType))
                 .orElseThrow(() -> new CalendarServiceConfigurationException(
                         String.format("No CalendarEntityHandler registered for [%s] object type.", objectType)));
 
@@ -186,7 +195,7 @@ public class ExchangeCalendarService
         {
             if (configurationsByType.containsKey(objectType) && configurationsByType.get(objectType).isIntegrationEnabled())
             {
-                CalendarEntityHandler handler = Optional.ofNullable(entityHandlers.get(objectType))
+                CalendarEntityHandler handler = Optional.ofNullable(findEntityHandlerByObjectType(objectType))
                         .orElseThrow(() -> new CalendarServiceConfigurationException(
                                 String.format("No CalendarEntityHandler registered for [%s] object type.", objectType)));
                 ServiceConnector connector = getConnector(auth.getName(), objectType, handler);
@@ -195,15 +204,15 @@ public class ExchangeCalendarService
         }
         else
         {
-            for (Entry<String, CalendarEntityHandler> handlerEntry : entityHandlers.entrySet())
+            for (CalendarEntityHandler handler : getSpringContextHolder().getAllBeansOfType(CalendarEntityHandler.class).values() )
             {
-                if (!configurationsByType.containsKey(handlerEntry.getKey())
-                        && !configurationsByType.get(handlerEntry.getKey()).isIntegrationEnabled())
+                if (!configurationsByType.containsKey(handler.getEntityType())
+                        && !configurationsByType.get(handler.getEntityType()).isIntegrationEnabled())
                 {
                     continue;
                 }
-                ServiceConnector connector = getConnector(auth.getName(), objectType, handlerEntry.getValue());
-                result.addAll(handlerEntry.getValue().listCalendars(connector, user, auth, sort, sortDirection, start, maxItems));
+                ServiceConnector connector = getConnector(auth.getName(), objectType, handler);
+                result.addAll(handler.listCalendars(connector, user, auth, sort, sortDirection, start, maxItems));
             }
         }
         return result;
@@ -231,7 +240,7 @@ public class ExchangeCalendarService
                     String.format("Calendar integration is not enabled for [%s] object type.", calendarEvent.getObjectType()));
         }
 
-        CalendarEntityHandler handler = Optional.ofNullable(entityHandlers.get(calendarEvent.getObjectType()))
+        CalendarEntityHandler handler = Optional.ofNullable(findEntityHandlerByObjectType(calendarEvent.getObjectType()))
                 .orElseThrow(() -> new CalendarServiceConfigurationException(
                         String.format("No CalendarEntityHandler registered for [%s] object type.", calendarEvent.getObjectType())));
 
@@ -308,7 +317,7 @@ public class ExchangeCalendarService
 
         try
         {
-            CalendarEntityHandler handler = Optional.ofNullable(entityHandlers.get(calendarEvent.getObjectType()))
+            CalendarEntityHandler handler = Optional.ofNullable(findEntityHandlerByObjectType(calendarEvent.getObjectType()))
                     .orElseThrow(() -> new CalendarServiceConfigurationException(
                             String.format("No CalendarEntityHandler registered for [%s] object type.", calendarEvent.getObjectType())));
 
@@ -454,7 +463,7 @@ public class ExchangeCalendarService
 
         try
         {
-            CalendarEntityHandler handler = Optional.ofNullable(entityHandlers.get(objectType))
+            CalendarEntityHandler handler = Optional.ofNullable(findEntityHandlerByObjectType(objectType))
                     .orElseThrow(() -> new CalendarServiceConfigurationException(
                             String.format("No CalendarEntityHandler registered for [%s] object type.", objectType)));
 
@@ -505,7 +514,7 @@ public class ExchangeCalendarService
             return;
         }
 
-        CalendarEntityHandler handler = Optional.ofNullable(entityHandlers.get(objectType))
+        CalendarEntityHandler handler = Optional.ofNullable(findEntityHandlerByObjectType(objectType))
                 .orElseThrow(() -> new CalendarServiceConfigurationException(
                         String.format("No CalendarEntityHandler registered for [%s] object type.", objectType)));
 
@@ -635,12 +644,15 @@ public class ExchangeCalendarService
     {
         try
         {
-            CalendarEntityHandler handler = entityHandlers.get(objectType);
-            if (handler.isObjectClosed(objectId))
+            CalendarEntityHandler handler = findEntityHandlerByObjectType(objectType);
+            if ( handler != null ) 
             {
-                throw new CalendarObjectClosedException(String.format("Object of [%s] type and [%s] id is closed.", objectType, objectId));
+                if (handler.isObjectClosed(objectId))
+                {
+                    throw new CalendarObjectClosedException(String.format("Object of [%s] type and [%s] id is closed.", objectType, objectId));
+                }
+                folderRecreator.recreateFolder(objectType, objectId, outlookUser);
             }
-            folderRecreator.recreateFolder(objectType, objectId, outlookUser);
             return outlookUser;
         }
         catch (CalendarServiceException cse)
@@ -685,15 +697,6 @@ public class ExchangeCalendarService
     public void setCalendarAdminService(CalendarAdminService calendarAdminService)
     {
         this.calendarAdminService = calendarAdminService;
-    }
-
-    /**
-     * @param entityHandlers
-     *            the entityHandlers to set
-     */
-    public void setEntityHandlers(Map<String, CalendarEntityHandler> entityHandlers)
-    {
-        this.entityHandlers = entityHandlers;
     }
 
     /**
@@ -778,6 +781,16 @@ public class ExchangeCalendarService
             }
         }
 
+    }
+
+    public SpringContextHolder getSpringContextHolder() 
+    {
+        return springContextHolder;
+    }
+
+    public void setSpringContextHolder(SpringContextHolder springContextHolder) 
+    {
+        this.springContextHolder = springContextHolder;
     }
 
 }

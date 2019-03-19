@@ -220,6 +220,15 @@ public class UserDao extends AcmAbstractDao<AcmUser>
         return in;
     }
 
+    public void deleteAcmRole(String roleName)
+    {
+        AcmRole existing = entityManager.find(AcmRole.class, roleName);
+        if(existing != null)
+        {
+            entityManager.remove(existing);
+        }
+    }
+
     @Transactional
     public AcmUser markUserInvalid(String id)
     {

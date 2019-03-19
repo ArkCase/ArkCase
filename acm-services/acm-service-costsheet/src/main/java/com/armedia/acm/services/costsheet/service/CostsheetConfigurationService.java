@@ -27,51 +27,42 @@ package com.armedia.acm.services.costsheet.service;
  * #L%
  */
 
-import com.armedia.acm.files.propertymanager.PropertyFileManager;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
+import com.armedia.acm.configuration.service.ConfigurationPropertyService;
+import com.armedia.acm.services.costsheet.model.CostsheetConfig;
 
 public class CostsheetConfigurationService
 {
-    private String propertiesFile;
-    private PropertyFileManager propertyFileManager;
+    private CostsheetConfig costsheetConfig;
 
-    public void  saveProperties(Map<String, String> properties)
+    private ConfigurationPropertyService configurationPropertyService;
+
+    public void saveProperties(CostsheetConfig costsheetConfig)
     {
-        getPropertyFileManager().storeMultiple(properties, getPropertiesFile(), true);
+        configurationPropertyService.updateProperties(costsheetConfig);
     }
 
-    public Map<String, String> loadProperties() throws IOException
+    public CostsheetConfig loadProperties()
     {
-        Map<String, String> propertiesMap = new HashMap<>();
-
-        Properties properties =  getPropertyFileManager().readFromFile(new File(getPropertiesFile()));
-        properties.forEach((o, o2) -> propertiesMap.put((String)o, (String)o2));
-
-        return propertiesMap;
+        return costsheetConfig;
     }
 
-    public String getPropertiesFile()
+    public CostsheetConfig getCostsheetConfig()
     {
-        return propertiesFile;
+        return costsheetConfig;
     }
 
-    public void setPropertiesFile(String propertiesFile)
+    public void setCostsheetConfig(CostsheetConfig costsheetConfig)
     {
-        this.propertiesFile = propertiesFile;
+        this.costsheetConfig = costsheetConfig;
     }
 
-    public PropertyFileManager getPropertyFileManager()
+    public ConfigurationPropertyService getConfigurationPropertyService()
     {
-        return propertyFileManager;
+        return configurationPropertyService;
     }
 
-    public void setPropertyFileManager(PropertyFileManager propertyFileManager)
+    public void setConfigurationPropertyService(ConfigurationPropertyService configurationPropertyService)
     {
-        this.propertyFileManager = propertyFileManager;
+        this.configurationPropertyService = configurationPropertyService;
     }
 }

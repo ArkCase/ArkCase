@@ -39,6 +39,7 @@ import java.time.LocalDateTime;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(name = "spring", locations = {
+        "/spring/spring-library-configuration.xml",
         "/spring/spring-library-data-source.xml",
         "/spring/spring-library-ecm-file.xml",
         "/spring/spring-library-ecm-tika.xml",
@@ -57,9 +58,16 @@ import java.time.LocalDateTime;
         "/spring/spring-library-object-lock.xml",
         "/spring/spring-library-object-converter.xml",
         "/spring/spring-library-ecm-file-lock.xml",
-        "/spring/spring-library-service-data.xml" })
+        "/spring/spring-library-service-data.xml",
+        "/spring/spring-library-acm-email.xml" })
 public class EcmFileVersionDaoIT
 {
+
+    static
+    {
+        String userHomePath = System.getProperty("user.home");
+        System.setProperty("acm.configurationserver.propertyfile", userHomePath + "/.arkcase/acm/conf.yml");
+    }
 
     @Autowired
     private EcmFileVersionDao ecmFileVersionDao;

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
 
     <bean id="eventRaisingActivitiProcessListener" class="com.armedia.acm.activiti.AcmProcessEventHandler">
         <property name="runtimeService" ref="activitiRuntimeService"/>
@@ -92,7 +93,7 @@
         <property name="databaseSchemaUpdate" value="true"/>
         <property name="schemaCommandConfig" ref="schemaCommandConfig"/>
         <property name="transactionsExternallyManaged" value="true"/>
-        <property name="databaseType" value="${activiti.db.type}"/>
+        <property name="databaseType" value="#{dataSourceConfig.activitiDbType}"/>
         <property name="preBpmnParseHandlers">
             <list>
                 <ref bean="acmActivitiProcessHandler"/>
@@ -105,7 +106,7 @@
                 <ref bean="acmActivitiEntityEventListener"/>
             </list>
         </property>
-        <property name="jobExecutorActivate" value="${activiti.job.executor.activate}"/>
+        <property name="jobExecutorActivate" value="#{activitiConfig.jobExecutorActivate}"/>
         <property name="jobExecutor" ref="activitiJobExecutor"/>
     </bean>
 
@@ -147,18 +148,7 @@
 
     <bean id="acmProcessDefinitionDao" class="com.armedia.acm.activiti.services.dao.AcmBpmnDao"/>
 
-    <bean id="activitiProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
-        <!-- note: must leave "file:" at the start of the file name for spring
-        to be able to read the file; otherwise it will try to read from the
-        classpath -->
-        <property name="location" value="file:${user.home}/.arkcase/acm/activiti.properties"/>
-        <property name="ignoreResourceNotFound" value="true"/>
-        <property name="localOverride" value="false"/>
-        <property name="properties">
-            <props>
-                <prop key="activiti.job.executor.activate">false</prop>
-            </props>
-        </property>
+    <bean id="activitiConfig" class="com.armedia.acm.activiti.model.ActivitiConfig" scope="refresh">
+        <aop:scoped-proxy/>
     </bean>
-
 </beans>

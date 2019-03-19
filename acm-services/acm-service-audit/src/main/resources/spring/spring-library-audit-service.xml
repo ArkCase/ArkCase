@@ -1,77 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:task="http://www.springframework.org/schema/task" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
-       http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-4.1.xsd">
+       xmlns:task="http://www.springframework.org/schema/task" xmlns:aop="http://www.springframework.org/schema/aop" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+       http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-4.1.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
 
     <bean id="expressionParser" class="org.springframework.expression.spel.standard.SpelExpressionParser"/>
-
-    <bean id="eventDescriptionPropertiesFile" class="java.io.File">
-        <constructor-arg value="${user.home}/.arkcase/acm/eventDescription.properties"/>
-    </bean>
 
     <bean id="auditWriter" class="com.armedia.acm.audit.listeners.AuditWriter" init-method="loadConfiguration">
         <property name="auditService" ref="auditService"/>
         <property name="expressionParser" ref="expressionParser"/>
-        <property name="eventDescriptionPropertiesFile" ref="eventDescriptionPropertiesFile"/>
+        <property name="auditEventDescriptionConfig" ref="auditEventDescriptionConfig"/>
     </bean>
 
     <task:executor id="auditorExecutor" pool-size="5"/>
 
     <bean id="auditDao" class="com.armedia.acm.audit.dao.AuditDao"/>
 
-    <bean id="auditPluginProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
-        <!-- note: must leave "file:" at the start of the file name for spring
-        to be able to read the file; otherwise it will try to read from the
-        classpath -->
-        <property name="location" value="file:${user.home}/.arkcase/acm/auditPlugin.properties"/>
-        <property name="ignoreResourceNotFound" value="true"/>
-        <property name="localOverride" value="false"/>
-        <property name="properties">
-            <props>
-                <prop key="audit.database.enabled">true</prop>
-                <prop key="audit.systemlog.enabled">false</prop>
-                <prop key="audit.batch.run">true</prop>
-                <prop key="audit.purge.days">30</prop>
-                <prop key="audit.batch.frequency">3600000</prop>
-                <prop key="audit.systemlog.syslog.protocol">UDP</prop>
-                <prop key="audit.systemlog.syslog.host">localhost</prop>
-                <prop key="audit.systemlog.syslog.port">514</prop>
-                <prop key="audit.systemlog.windows.eventlog.eventId">100</prop>
-                <prop key="audit.requests.logging.enabled">true</prop>
-                <prop key="audit.requests.logging.headers.enabled">false</prop>
-                <prop key="audit.requests.logging.cookies.enabled">false</prop>
-                <prop key="audit.requests.logging.body.enabled">false</prop>
-                <prop key="audit.database.changes.logging.enabled">false</prop>
-                <prop key="audit.database.changes.logging.fieldvalues.enabled">false</prop>
-                <prop key="audit.activiti.logging.enabled">false</prop>
-                <prop key="audit.activiti.logging.entity.events.enabled">false</prop>
-                <prop key="audit.activiti.logging.entity.events.object.enabled">false</prop>
-                <prop key="audit.mule.flows.logging.enabled">false</prop>
-                <prop key="audit.mule.flows.logging.message.enabled">false</prop>
-                <prop key="audit.mule.flows.logging.message.properties.enabled">false</prop>
-                <prop key="audit.contentTypesToLog">
-                    application/json,application/atom+xml,text/plain,text/csv,text/html
-                </prop>
-            </props>
-        </property>
-    </bean>
-
     <!-- Task Scheduler - once a day -->
     <task:scheduler id="auditTaskScheduler" pool-size="1"/>
     <task:scheduled-tasks scheduler="auditTaskScheduler">
-        <task:scheduled ref="auditService" method="purgeBatchRun" fixed-delay="${audit.batch.frequency}"/>
+        <task:scheduled ref="auditService" method="purgeBatchRun" fixed-delay="#{auditConfig.batchFrequency}"/>
     </task:scheduled-tasks>
 
     <bean id="auditSyslogLogger" class="com.armedia.acm.audit.service.systemlogger.SyslogLogger">
-        <property name="protocol" value="${audit.systemlog.syslog.protocol}"/>
-        <property name="host" value="${audit.systemlog.syslog.host}"/>
-        <property name="port" value="${audit.systemlog.syslog.port}"/>
+        <property name="protocol" value="#{auditConfig.systemLogSysLogProtocol}"/>
+        <property name="host" value="#{auditConfig.systemLogSysLogHost}"/>
+        <property name="port" value="#{auditConfig.systemLogSysLogPort}"/>
         <property name="acmApplication" ref="acmApplication"/>
     </bean>
 
     <bean id="auditWindowsEventLogger" class="com.armedia.acm.audit.service.systemlogger.WindowsEventLogger">
         <property name="acmApplication" ref="acmApplication"/>
-        <property name="eventId" value="${audit.systemlog.windows.eventlog.eventId}"/>
+        <property name="eventId" value="#{auditConfig.systemLogWindowsEventLogEventId}"/>
     </bean>
 
     <bean id="auditSystemLoggerFactory" class="com.armedia.acm.audit.service.systemlogger.SystemLoggerFactory">
@@ -82,52 +41,50 @@
     <bean id="auditSystemLogger" factory-bean="auditSystemLoggerFactory" factory-method="getSystemLogger"/>
 
     <bean id="auditService" class="com.armedia.acm.audit.service.AuditServiceImpl">
-        <property name="databaseLoggerEnabled" value="${audit.database.enabled}"/>
-        <property name="systemLogLoggerEnabled" value="${audit.systemlog.enabled}"/>
-        <property name="batchRun" value="${audit.batch.run}"/>
-        <property name="purgeDays" value="${audit.purge.days}"/>
         <property name="auditDao" ref="auditDao"/>
         <property name="systemLogger" ref="auditSystemLogger"/>
+        <property name="auditConfig" ref="auditConfig"/>
     </bean>
 
     <bean id="acmAuditRequestInterceptor" class="com.armedia.acm.audit.listeners.AcmAuditRequestInterceptor">
         <property name="auditService" ref="auditService"/>
-        <property name="requestsLoggingEnabled" value="${audit.requests.logging.enabled}"/>
-        <property name="requestsLoggingHeadersEnabled" value="${audit.requests.logging.headers.enabled}"/>
-        <property name="requestsLoggingCookiesEnabled" value="${audit.requests.logging.cookies.enabled}"/>
-        <property name="requestsLoggingBodyEnabled" value="${audit.requests.logging.body.enabled}"/>
-        <property name="contentTypesToLog" value="#{'${audit.contentTypesToLog}'.split(',')}"/>
+        <property name="auditConfig" ref="auditConfig"/>
     </bean>
 
     <bean id="acmAuditDatabaseListener" class="com.armedia.acm.audit.listeners.AcmAuditDatabaseListener">
         <property name="auditService" ref="auditService"/>
-        <property name="databaseChangesLoggingEnabled" value="${audit.database.changes.logging.enabled}"/>
-        <property name="databaseChangesLoggingFieldValuesEnabled"
-                  value="${audit.database.changes.logging.fieldvalues.enabled}"/>
+        <property name="auditConfig" ref="auditConfig"/>
         <property name="objectConverter" ref="objectConverter"/>
     </bean>
 
     <bean id="acmActivitiEntityEventAuditor" class="com.armedia.acm.audit.listeners.AcmActivitiEntityEventListener">
         <property name="auditService" ref="auditService"/>
-        <property name="activitiEventsLoggingEntityEventsEnabled"
-                  value="${audit.activiti.logging.entity.events.enabled}"/>
-        <property name="activitiEventsLoggingEntityEventsObjectEnabled"
-                  value="${audit.activiti.logging.entity.events.object.enabled}"/>
+        <property name="auditConfig" ref="auditConfig"/>
         <property name="objectConverter" ref="objectConverter"/>
     </bean>
 
     <bean id="acmActivitiEventAuditor" class="com.armedia.acm.audit.listeners.AcmActivitiEventListener">
         <property name="auditService" ref="auditService"/>
-        <property name="activitiEventsLoggingEnabled" value="${audit.activiti.logging.enabled}"/>
+        <property name="auditConfig" ref="auditConfig"/>
     </bean>
 
     <bean name="muleAuditMessageProcessorNotificationListener"
           class="com.armedia.acm.audit.listeners.AcmMessageProcessorNotificationListener">
         <property name="auditService" ref="auditService"/>
-        <property name="muleFlowsLoggingEnabled" value="${audit.mule.flows.logging.enabled}"/>
-        <property name="muleFlowsLoggingMessageEnabled" value="${audit.mule.flows.logging.message.enabled}"/>
-        <property name="muleFlowsLoggingMessagePropertiesEnabled"
-                  value="${audit.mule.flows.logging.message.properties.enabled}"/>
-        <property name="contentTypesToLog" value="#{'${audit.contentTypesToLog}'.split(',')}"/>
+        <property name="auditConfig" ref="auditConfig"/>
+    </bean>
+
+    <bean id="auditConfig" class="com.armedia.acm.audit.model.AuditConfig" scope="refresh">
+        <aop:scoped-proxy/>
+    </bean>
+
+    <bean id="auditEventDescriptionConfig" class="com.armedia.acm.audit.model.AuditEventDescriptionConfig" scope="refresh">
+        <aop:scoped-proxy/>
+        <property name="jsonUnmarshaller" ref="jsonUnmarshaller"/>
+    </bean>
+
+    <bean id="auditEventConfig" class="com.armedia.acm.audit.model.AuditEventConfig" scope="refresh">
+        <property name="jsonUnmarshaller" ref="jsonUnmarshaller"/>
+        <aop:scoped-proxy/>
     </bean>
 </beans>

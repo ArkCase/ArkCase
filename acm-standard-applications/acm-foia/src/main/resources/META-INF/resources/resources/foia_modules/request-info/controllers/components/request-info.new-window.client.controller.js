@@ -23,6 +23,7 @@ angular.module('request-info').controller(
                     $scope.ecmFileConfig = {};
                     $scope.userId = '';
                     $scope.userFullName = '';
+                    $scope.requestId = '';
 
                     $scope.$sce = $sce; // used to allow snowbound url (on a different domain) to be injected by angular
 
@@ -62,6 +63,7 @@ angular.module('request-info').controller(
                         var documentInfo = data[2];
                         $scope.acmTicket = data[3].data;
                         $scope.ecmFileConfig = data[4];
+                        $scope.editingMode = !$scope.ecmFileConfig['ecm.viewer.snowbound.readonly.initialState'];
                         $scope.userId = data[5].userId;
                         $scope.userFullName = data[5].fullName;
 
@@ -125,7 +127,7 @@ angular.module('request-info').controller(
 
                         // Generates and loads a url that will open the selected documents in the viewer
                         if (allOpenDocuments.length > 0) {
-                            var snowUrl = AttachmentsService.buildViewerUrlMultiple($scope.ecmFileConfig, $scope.acmTicket, $scope.userId, $scope.userFullName, allOpenDocuments);
+                            var snowUrl = AttachmentsService.buildViewerUrlMultiple($scope.ecmFileConfig, $scope.acmTicket, $scope.userId, $scope.userFullName, allOpenDocuments, !$scope.editingMode, $scope.requestId);
                             $scope.loadViewerIframe(snowUrl);
                         } else {
                             $scope.loadViewerIframe('about:blank');

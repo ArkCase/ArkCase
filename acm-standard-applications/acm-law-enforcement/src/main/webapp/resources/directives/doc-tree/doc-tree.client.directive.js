@@ -873,9 +873,6 @@ angular
 
                     ,
                     onDblClick : function(event, data) {
-                        if (DocTree.readOnly) {
-                            return;
-                        }
                         var setting = DocTree.Config.getSetting();
                         if (DocTree.isFolderNode(data.node) && setting.search.enabled) {
                             DocTree.Op.removeSearchFilter();
@@ -2048,7 +2045,7 @@ angular
                                         item.disabled = true;
                                     } else {
                                         if (item.disabledExpression) {
-                                                item.disabled = item.disabledExpression;
+                                                item.disabled = eval(item.disabledExpression);
                                         } else {
                                             item.disabled = false;
                                         }
@@ -2057,16 +2054,18 @@ angular
                             });
 
                             $q.all(promiseArray).then(function() {
-                                menu = _.filter(menu, function(item) {
-                                    if (item.plugin){
-                                        var pluginName = item.plugin;
-                                        var pluginConfig = pluginsConfig[pluginName];
-                                        if (pluginConfig){
-                                            return pluginConfig.enabled && !item.invisible;
+                                if (pluginsConfig) {
+                                    menu = _.filter(menu, function (item) {
+                                        if (item.plugin) {
+                                            var pluginName = item.plugin;
+                                            var pluginConfig = pluginsConfig[pluginName];
+                                            if (pluginConfig) {
+                                                return pluginConfig.enabled && !item.invisible;
+                                            }
                                         }
-                                    }
-                                    return !item.invisible;
-                                });
+                                        return !item.invisible;
+                                    });
+                                }
 
                                 //Under readOnly mode, disable all non-readOnly cmd
                                 if (DocTree.readOnly) {

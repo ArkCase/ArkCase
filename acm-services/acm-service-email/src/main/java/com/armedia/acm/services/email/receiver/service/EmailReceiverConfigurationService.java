@@ -27,16 +27,12 @@ package com.armedia.acm.services.email.receiver.service;
  * #L%
  */
 
-import com.armedia.acm.core.exceptions.AcmEncryptionException;
-import com.armedia.acm.services.email.receiver.modal.EmailReceiverConfiguration;
-
-import org.springframework.security.core.Authentication;
+import com.armedia.acm.email.model.EmailReceiverConfig;
 
 public interface EmailReceiverConfigurationService
 {
 
-    void writeConfiguration(EmailReceiverConfiguration emailReceiverConfiguration, Authentication authentication)
-            throws AcmEncryptionException;
+    void writeConfiguration(EmailReceiverConfig emailReceiverConfiguration);
 
-    EmailReceiverConfiguration readConfiguration() throws AcmEncryptionException;
+    EmailReceiverConfig readConfiguration();
 }

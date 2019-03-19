@@ -28,6 +28,7 @@ package com.armedia.acm.services.dataupdate.service;
  */
 
 import com.armedia.acm.services.dataupdate.model.AcmDataUpdateExecutorLog;
+import com.armedia.acm.services.search.service.IJpaBatchUpdatePrerequisite;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,7 +50,7 @@ import java.util.stream.Collectors;
  * Executors may depend one of another, so order of executions is enforced
  * and planned to finish in one transaction.
  */
-public class AcmDataUpdateManager implements ApplicationListener<ContextRefreshedEvent>
+public class AcmDataUpdateManager implements ApplicationListener<ContextRefreshedEvent>, IJpaBatchUpdatePrerequisite
 {
     private static final Logger log = LoggerFactory.getLogger(AcmDataUpdateManager.class);
     private AcmDataUpdateService dataUpdateService;
@@ -61,6 +62,8 @@ public class AcmDataUpdateManager implements ApplicationListener<ContextRefreshe
     private List<AcmDataUpdateExecutor> dataUpdateExecutors;
     @Autowired(required = false)
     private ExtensionDataUpdateExecutors extensionDataUpdateExecutors;
+
+    private boolean finished = false;
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event)
@@ -89,6 +92,8 @@ public class AcmDataUpdateManager implements ApplicationListener<ContextRefreshe
                         .filter(updatesNotExecuted)
                         .forEach(dataUpdateExecutor);
             }
+
+            finished = true;
         }
     }
 
@@ -100,5 +105,11 @@ public class AcmDataUpdateManager implements ApplicationListener<ContextRefreshe
     public void setDataUpdateExecutors(List<AcmDataUpdateExecutor> dataUpdateExecutors)
     {
         this.dataUpdateExecutors = dataUpdateExecutors;
+    }
+
+    @Override
+    public boolean isFinished()
+    {
+        return finished;
     }
 }

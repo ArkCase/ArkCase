@@ -52,10 +52,17 @@ import java.util.List;
         "/spring/spring-library-property-file-manager.xml",
         "/spring/spring-library-acm-encryption.xml",
         "/spring-library-audit-test.xml",
-        "/spring/spring-library-object-converter.xml"
+        "/spring/spring-library-object-converter.xml",
+        "/spring/spring-library-configuration.xml"
 })
 public class AuditDaoIT
 {
+    static
+    {
+        String userHomePath = System.getProperty("user.home");
+        System.setProperty("acm.configurationserver.propertyfile", userHomePath + "/.arkcase/acm/conf.yml");
+    }
+
     private final Logger log = LoggerFactory.getLogger(getClass());
     @Autowired
     private AuditDao dao;

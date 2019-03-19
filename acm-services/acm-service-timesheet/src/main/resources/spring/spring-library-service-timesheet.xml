@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
-
-    <bean id="timeProperties" class="com.armedia.acm.reloadproperties.beans.AcmReloadablePropertiesFactoryBean">
-        <property name="location" value="file:${user.home}/.arkcase/acm/time.properties"/>
-        <property name="ignoreResourceNotFound" value="true"/>
-    </bean>
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
 
     <bean id="startWorkflowEventsForTimesheet" class="java.util.ArrayList">
         <constructor-arg>
@@ -19,7 +15,7 @@
     <bean id="acmTimeDao" class="com.armedia.acm.services.timesheet.dao.AcmTimeDao"/>
 
     <bean id="timesheetService" class="com.armedia.acm.services.timesheet.service.TimesheetServiceImpl">
-        <property name="properties" ref="timeProperties"/>
+        <property name="configuration" ref="timesheetConfig"/>
         <property name="acmTimesheetDao" ref="acmTimesheetDao"/>
         <property name="submissionStatusesMap">
             <map>
@@ -53,13 +49,19 @@
 
     <bean id="acmTimesheetPlugin" class="com.armedia.acm.pluginmanager.model.AcmPlugin">
         <property name="pluginName" value="Time Tracking Service Plugin"/>
+        <property name="configurationPropertyService" ref="configurationPropertyService"/>
+        <property name="pluginConfig" ref="timesheetConfig"/>
     </bean>
 
     <bean id="timesheetConfigurationService" class="com.armedia.acm.services.timesheet.service.TimesheetConfigurationService">
         <property name="configurationFile" value="#{ systemProperties ['user.home'] }/.arkcase/acm/timesheetConfiguration.json"/>
-        <property name="propertiesFile" value="#{ systemProperties ['user.home'] }/.arkcase/acm/timesheetProperties.properties"/>
-        <property name="propertyFileManager" ref="propertyFileManager"/>
         <property name="objectConverter" ref="objectConverter"/>
+        <property name="configurationPropertyService" ref="configurationPropertyService"/>
+        <property name="timesheetConfig" ref="timesheetConfig"/>
+    </bean>
+
+    <bean id="timesheetConfig" class="com.armedia.acm.services.timesheet.model.TimesheetConfig" scope="refresh">
+        <aop:scoped-proxy/>
     </bean>
 
 </beans>

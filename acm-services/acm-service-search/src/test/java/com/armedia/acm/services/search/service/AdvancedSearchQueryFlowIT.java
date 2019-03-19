@@ -49,9 +49,20 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = { "/spring/spring-library-search-service-test-mule.xml" })
+@ContextConfiguration(locations = {
+        "/spring/spring-library-configuration.xml",
+        "/spring/spring-library-search-service-test-mule.xml",
+        "/spring/spring-library-property-file-manager.xml",
+        "/spring/spring-library-acm-encryption.xml",
+        "/spring/spring-library-object-converter.xml" })
 public class AdvancedSearchQueryFlowIT
 {
+    static
+    {
+        String userHomePath = System.getProperty("user.home");
+        System.setProperty("acm.configurationserver.propertyfile", userHomePath + "/.arkcase/acm/conf.yml");
+    }
+
     private transient final Logger log = LoggerFactory.getLogger(getClass());
     @Autowired
     private MuleContextManager muleContextManager;
@@ -115,62 +126,4 @@ public class AdvancedSearchQueryFlowIT
 
     }
 
-    @Test
-    public void verifyDefaultFieldHeadersSent() throws Exception
-    {
-        String query = "test";
-
-        log.debug("query length: " + query.length());
-
-        Long authenticatedUserId = 100L;
-        Map<String, Object> headers = new HashMap<>();
-        headers.put("query", query);
-        headers.put("firstRow", 0);
-        headers.put("maxRows", 10);
-        headers.put("sort", "object_type_s asc");
-        headers.put("acmUser", authenticatedUserId);
-        headers.put("df", "catch_all");
-        headers.put("acmUserGroupIds", Arrays.asList(1L, 2L, 3L));
-
-        MuleMessage response = muleContextManager.send("vm://advancedSearchQuery.in", "", headers);
-
-        assertTrue(response.getPayload() != null && response.getPayload() instanceof String);
-
-        assertNull(response.getExceptionPayload());
-
-        log.debug("response: " + response.getPayloadAsString());
-
-        JSONObject json = new JSONObject(response.getPayloadAsString());
-
-        assertEquals("catch_all", json.getJSONObject("responseHeader").getJSONObject("params").get("df"));
-    }
-
-    @Test
-    public void verifyNoDefaultFieldHeadersSent() throws Exception
-    {
-        String query = "test";
-
-        log.debug("query length: " + query.length());
-
-        Long authenticatedUserId = 100L;
-        Map<String, Object> headers = new HashMap<>();
-        headers.put("query", query);
-        headers.put("firstRow", 0);
-        headers.put("maxRows", 10);
-        headers.put("sort", "object_type_s asc");
-        headers.put("acmUser", authenticatedUserId);
-        headers.put("acmUserGroupIds", Arrays.asList(1L, 2L, 3L));
-
-        MuleMessage response = muleContextManager.send("vm://advancedSearchQuery.in", "", headers);
-
-        assertTrue(response.getPayload() != null && response.getPayload() instanceof String);
-
-        assertNull(response.getExceptionPayload());
-
-        log.debug("response: " + response.getPayloadAsString());
-
-        JSONObject json = new JSONObject(response.getPayloadAsString());
-
-        assertFalse(json.getJSONObject("responseHeader").getJSONObject("params").has("df"));
-    }
 }

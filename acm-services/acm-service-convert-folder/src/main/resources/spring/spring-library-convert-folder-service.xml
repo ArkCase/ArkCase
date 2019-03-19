@@ -1,20 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:task="http://www.springframework.org/schema/task" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-            http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd">
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
     <bean id="docxToPdfConverter" class="com.armedia.acm.convertfolder.DocxToPdfConverter">
         <property name="fileService" ref="ecmFileService"/>
     </bean>
-    
+
     <bean id="imageToPdfConverter" class="com.armedia.acm.convertfolder.ImageToPdfConverter">
         <property name="fileService" ref="ecmFileService"/>
     </bean>
-    
+
     <bean id="pptXToPdfConverter" class="com.armedia.acm.convertfolder.PptxToPdfConverter">
         <property name="fileService" ref="ecmFileService"/>
     </bean>
-    
+
     <bean id="folderConverter" class="com.armedia.acm.convertfolder.DefaultFolderAndFileConverter">
         <constructor-arg>
             <list>
@@ -24,6 +23,10 @@
             </list>
         </constructor-arg>
         <property name="folderService" ref="acmFolderService"/>
+    </bean>
+
+    <bean id="convertEcmFileEventListener" class="com.armedia.acm.convertfolder.listener.ConvertEcmFileEventListener">
+        <property name="fileConverter" ref="folderConverter" />
     </bean>
 
 </beans>

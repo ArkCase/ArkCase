@@ -115,7 +115,7 @@ angular.module('cases').controller(
                             });
 
                             CaseFutureApprovalService.getBusinessProcessVariableForObject("CASE_FILE", objectInfo.id, "nonConcurEndsApprovals", true).then(function(response) {
-                                if (!Util.isEmpty(response.data)) {
+                                if (!Util.isArray(response.data) && !Util.isEmpty(response.data)) {
                                     $scope.nonConcurEndsApprovals = response.data;
                                 }
                             });

@@ -29,7 +29,7 @@ package com.armedia.acm.calendar.service.integration.exchange;
 
 import static com.armedia.acm.calendar.service.integration.exchange.ExchangeCalendarService.PROCESS_USER;
 
-import com.armedia.acm.calendar.config.service.CalendarConfiguration.PurgeOptions;
+import com.armedia.acm.calendar.config.model.PurgeOptions;
 import com.armedia.acm.calendar.service.AcmCalendarEvent;
 import com.armedia.acm.calendar.service.AcmCalendarEventInfo;
 import com.armedia.acm.calendar.service.AcmCalendarInfo;
@@ -526,13 +526,18 @@ public class CalendarEntityHandler
         this.folderCreatorDao = folderCreatorDao;
     }
 
-    public static enum PermissionType
+    public String getEntityType() 
     {
-        READ, WRITE, DELETE;
+        return this.entityType;
+    }
+
+    public enum PermissionType
+    {
+        READ, WRITE, DELETE
     }
 
     @FunctionalInterface
-    public static interface ServiceConnector
+    public interface ServiceConnector
     {
         Optional<ExchangeService> connect(Long objectId);
     }

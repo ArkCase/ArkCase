@@ -29,10 +29,10 @@ package com.armedia.acm.plugins.ecm.pipeline.presave;
 
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
+import com.armedia.acm.files.capture.CaptureConfig;
 import com.armedia.acm.plugins.ecm.pipeline.EcmFileTransactionPipelineContext;
 import com.armedia.acm.plugins.ecm.utils.EcmFileMuleUtils;
 import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
-import com.armedia.acm.plugins.ecm.utils.GenericUtils;
 import com.armedia.acm.plugins.ecm.utils.PDFUtils;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.pipeline.handler.PipelineHandler;
@@ -51,8 +51,7 @@ public class EcmFileMergeHandler implements PipelineHandler<EcmFile, EcmFileTran
 {
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
-    private String fileFormatsToMerge;
-    private String fileTypesToMerge;
+    private CaptureConfig captureConfig;
     private EcmFileDao ecmFileDao;
     private FolderAndFilesUtils folderAndFilesUtils;
     private EcmFileMuleUtils ecmFileMuleUtils;
@@ -74,10 +73,10 @@ public class EcmFileMergeHandler implements PipelineHandler<EcmFile, EcmFileTran
 
             // Only certain file types (authorization, abstract, etc.) are merged directly within the Bactes extension
             // application
-            boolean isFileTypeMergeable = GenericUtils.isFileTypeInList(entity.getFileType(), fileTypesToMerge);
+            boolean isFileTypeMergeable = captureConfig.getFileTypesToMerge().contains(entity.getFileType());
 
             // Only certain file formats (tiff, jpg, etc.) are merged directly within the Bactes extension application
-            boolean isFileFormatMergeable = GenericUtils.isFileTypeInList(fileExtension, fileFormatsToMerge);
+            boolean isFileFormatMergeable = captureConfig.getFileFormatsToMerge().contains(fileExtension);
 
             if (isFileTypeMergeable && isFileFormatMergeable)
             {
@@ -161,24 +160,14 @@ public class EcmFileMergeHandler implements PipelineHandler<EcmFile, EcmFileTran
         return matchFile;
     }
 
-    public String getFileFormatsToMerge()
+    public CaptureConfig getCaptureConfig()
     {
-        return fileFormatsToMerge;
+        return captureConfig;
     }
 
-    public void setFileFormatsToMerge(String fileFormatsToMerge)
+    public void setCaptureConfig(CaptureConfig captureConfig)
     {
-        this.fileFormatsToMerge = fileFormatsToMerge;
-    }
-
-    public String getFileTypesToMerge()
-    {
-        return fileTypesToMerge;
-    }
-
-    public void setFileTypesToMerge(String mergeableTypes)
-    {
-        this.fileTypesToMerge = mergeableTypes;
+        this.captureConfig = captureConfig;
     }
 
     public EcmFileDao getEcmFileDao()

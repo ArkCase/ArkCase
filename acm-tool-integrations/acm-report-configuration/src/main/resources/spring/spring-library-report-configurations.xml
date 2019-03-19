@@ -1,14 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
 
     <bean id="reportResource" class="com.armedia.acm.pentaho.config.PentahoReportUrl">
-        <property name="reportsProperties" ref="acm-reports-properties"/>
-        <property name="reportServerConfigurationProperties" ref="reportServerConfigurationProperties"/>
-    </bean>
-
-    <bean id="acm-reports-properties" class="com.armedia.acm.reloadproperties.beans.AcmReloadablePropertiesFactoryBean">
-        <property name="location" value="file:${user.home}/.arkcase/acm/acm-reports.properties"/>
+        <property name="reportsConfig" ref="pentahoReportsConfig"/>
     </bean>
 
     <bean id="reportsParametersJsonConfig" class="org.apache.commons.io.IOUtils" factory-method="toString">
@@ -18,5 +14,15 @@
             </bean>
         </constructor-arg>
         <constructor-arg value="UTF-8"/>
+    </bean>
+
+    <bean id="pentahoReportsConfig" class="com.armedia.acm.pentaho.config.PentahoReportsConfig" scope="refresh">
+        <property name="jsonUnmarshaller" ref="jsonUnmarshaller"/>
+        <aop:scoped-proxy/>
+    </bean>
+
+    <bean id="reportsToRolesConfig" class="com.armedia.acm.report.config.ReportsToRolesConfig" scope="refresh">
+        <property name="jsonUnmarshaller" ref="jsonUnmarshaller"/>
+        <aop:scoped-proxy/>
     </bean>
 </beans>

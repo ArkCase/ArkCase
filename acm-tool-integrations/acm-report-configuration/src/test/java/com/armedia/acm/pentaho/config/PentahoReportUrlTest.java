@@ -27,46 +27,51 @@ package com.armedia.acm.pentaho.config;
  * #L%
  */
 
+import static org.easymock.EasyMock.expect;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Properties;
 
-public class PentahoReportUrlTest
+public class PentahoReportUrlTest extends EasyMockSupport
 {
-    private Map<String, Object> reportsProperties;
-    private Properties reportServerConfigurationProperties;
+    private Map<String, String> reportsProperties;
     private String PENTAHO_SERVER_URL = "http://localhost";
-    private String PENTAHO_SERVER_PORT = "8080";
+    private int PENTAHO_SERVER_PORT = 8080;
     private String COMPLAINT_REPORT = "/pentaho/api/repos/:public:opm-ecms:ComplaintReport.prpt/viewer";
     private String BILLING_REPORT = "/pentaho/api/repos/:public:opm-ecms:Billing.prpt/viewer";
     private PentahoReportUrl reportUrl;
+    private PentahoReportsConfig reportsConfig;
 
     @Before
-    public void setUp() throws Exception
+    public void setUp()
     {
         reportsProperties = new HashMap<>();
-        reportServerConfigurationProperties = new Properties();
-
-        reportServerConfigurationProperties.put("PENTAHO_SERVER_URL", PENTAHO_SERVER_URL);
-        reportServerConfigurationProperties.put("PENTAHO_SERVER_PORT", PENTAHO_SERVER_PORT);
         reportsProperties.put("COMPLAINT_REPORT", COMPLAINT_REPORT);
         reportsProperties.put("BILLING_REPORT", BILLING_REPORT);
 
         reportUrl = new PentahoReportUrl();
-        reportUrl.setReportsProperties(reportsProperties);
-        reportUrl.setReportServerConfigurationProperties(reportServerConfigurationProperties);
+
+        reportsConfig = createMock(PentahoReportsConfig.class);
+        reportUrl.setReportsConfig(reportsConfig);
     }
 
     @Test
-    public void getNewReportUrlList() throws Exception
+    public void getNewReportUrlList()
     {
+        expect(reportsConfig.getServerUrl()).andReturn(PENTAHO_SERVER_URL);
+        expect(reportsConfig.getServerPort()).andReturn(PENTAHO_SERVER_PORT);
+        expect(reportsConfig.getReportToUrlMap()).andReturn(reportsProperties);
+
+        replayAll();
         Map<String, String> urlMap = reportUrl.getNewReportUrlList();
+        verifyAll();
+
         assertTrue(urlMap.containsKey(ReportName.COMPLAINT_REPORT.getDisplayName()));
         assertEquals(PENTAHO_SERVER_URL + ":" + PENTAHO_SERVER_PORT + COMPLAINT_REPORT,
                 urlMap.get(ReportName.COMPLAINT_REPORT.getDisplayName()));
@@ -76,9 +81,16 @@ public class PentahoReportUrlTest
     }
 
     @Test
-    public void getReportUrlPathTest() throws Exception
+    public void getReportUrlPathTest()
     {
+        expect(reportsConfig.getServerUrl()).andReturn(PENTAHO_SERVER_URL);
+        expect(reportsConfig.getServerPort()).andReturn(PENTAHO_SERVER_PORT);
+        expect(reportsConfig.getReportToUrlMap()).andReturn(reportsProperties);
+
+        replayAll();
         String path = reportUrl.getNewReportUrl(ReportName.COMPLAINT_REPORT.name());
+        verifyAll();
+
         assertEquals(PENTAHO_SERVER_URL + ":" + PENTAHO_SERVER_PORT + COMPLAINT_REPORT, path);
     }
 }

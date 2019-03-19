@@ -35,16 +35,11 @@ import com.google.common.collect.ImmutableMap;
 
 import org.json.JSONObject;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
 
 /**
  * Read Alfresco audit records from the Alfresco FileFolderService <code>moveFrom</code> method. Alfresco uses the
- * FileFolderService move method to move content files (but NOT to move folders, or thumbnails).
- * <p>
- * For now, from the file/folder service we are interested only in moved content files. This reader ignores all other
- * new content types.
+ * FileFolderService move method to move content files and folders.
  *
  * @author ivana.shekerova on 12/14/2018.
  */
@@ -54,18 +49,13 @@ public class AlfrescoFileFolderServiceMoveAuditResponseReader implements EcmAudi
             .of("{http://www.alfresco.org/model/content/1.0}content", EcmFileConstants.ECM_SYNC_NODE_TYPE_DOCUMENT,
                     "{http://www.alfresco.org/model/content/1.0}folder", EcmFileConstants.ECM_SYNC_NODE_TYPE_FOLDER);
 
-    protected final List<String> typesToIncludeInResults = Arrays.asList(EcmFileConstants.ECM_SYNC_NODE_TYPE_DOCUMENT);
-
     @Override
     public EcmEvent buildEcmEvent(JSONObject moveEvent)
     {
-        // this reader only cares about documents
         JSONObject values = moveEvent.getJSONObject("values");
 
         String alfrescoContentType = values.getString("/auditarkcasemovefrom/move/derived/source-node-type");
-        String arkcaseContentType = alfrescoTypeToArkCaseType.get(alfrescoContentType);
-        boolean includeThisNode = typesToIncludeInResults.contains(arkcaseContentType);
-
+        boolean includeThisNode = alfrescoTypeToArkCaseType.containsKey(alfrescoContentType);
         if (includeThisNode)
         {
             EcmEvent retval = new EcmEvent(moveEvent);

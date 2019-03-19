@@ -71,12 +71,35 @@ public abstract class PdfConverterBase implements FileConverter
     @Override
     public void convert(EcmFile file, String username) throws ConversionException
     {
+        convertFile(file, "", username, false);
+    }
+
+    @Override
+    public File convert(EcmFile file) throws ConversionException {
+        return convertAndReturnConvertedFile(file);
+    }
+
+    @Override
+    public File convertAndReturnConvertedFile(EcmFile file) throws ConversionException
+    {
+        return convertFile(file, "", "", true);
+    }
+
+    @Override
+    public File convertAndReturnConvertedFile(EcmFile file, String version) throws ConversionException
+    {
+        return convertFile(file, version, "", true);
+    }
+
+    private File convertFile(EcmFile file, String version, String username, Boolean skipUploadAndReturnConvertedFile) throws ConversionException
+    {
         String tempUploadFolderPath = FileUtils.getTempDirectoryPath();
         String fileName = file.getFileName() + "." + file.getFileExtension();
+        String fileVersion = (version.isEmpty() || version == null) ? file.getActiveVersionTag() : version;
         log.debug("Converting file [{}].", fileName);
         File tempOriginFile = new File(tempUploadFolderPath + File.separator + fileName + "_" + Thread.currentThread().getName());
 
-        try (InputStream fileByteStream = fileService.downloadAsInputStream(file.getId()))
+        try (InputStream fileByteStream = fileService.downloadAsInputStream(file.getId(), fileVersion))
         {
             FileUtils.copyInputStreamToFile(fileByteStream, tempOriginFile);
         }
@@ -91,6 +114,11 @@ public abstract class PdfConverterBase implements FileConverter
         File tempPdfFile = new File(tempUploadFolderPath + File.separator + createFileName(file));
 
         performConversion(file, tempOriginFile, tempPdfFile);
+
+        if(skipUploadAndReturnConvertedFile)
+        {
+            return tempPdfFile;
+        }
 
         try (FileInputStream fis = new FileInputStream(tempPdfFile))
         {
@@ -119,6 +147,7 @@ public abstract class PdfConverterBase implements FileConverter
             FileUtils.deleteQuietly(tempPdfFile);
         }
 
+        return null;
     }
 
     /**

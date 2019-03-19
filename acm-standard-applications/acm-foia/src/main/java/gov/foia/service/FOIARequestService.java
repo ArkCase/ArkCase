@@ -476,4 +476,9 @@ public class FOIARequestService
     public void setFoiaConfigurationService(FoiaConfigurationService foiaConfigurationService) {
         this.foiaConfigurationService = foiaConfigurationService;
     }
+
+    public FOIARequest getFoiaRequestById(Long requestId)
+    {
+        return foiaRequestDao.find(requestId);
+    }
 }

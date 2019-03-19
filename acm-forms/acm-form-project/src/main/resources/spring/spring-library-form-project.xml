@@ -12,8 +12,8 @@
     </bean>
 
     <bean id="projectUpdatedListener" class="com.armedia.acm.form.project.service.ProjectUpdatedListener">
-        <property name="properties" ref="acm-forms-properties"/>
         <lookup-method name="getProjectService" bean="projectService"/>
+        <property name="caseFileFormConfig" ref="caseFileFormConfig"/>
     </bean>
 
 </beans>

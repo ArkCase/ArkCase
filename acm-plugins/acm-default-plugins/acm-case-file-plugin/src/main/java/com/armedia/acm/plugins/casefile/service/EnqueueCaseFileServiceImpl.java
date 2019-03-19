@@ -27,7 +27,12 @@ package com.armedia.acm.plugins.casefile.service;
  * #L%
  */
 
-import com.armedia.acm.plugins.businessprocess.model.*;
+import com.armedia.acm.plugins.businessprocess.model.EnterQueueModel;
+import com.armedia.acm.plugins.businessprocess.model.LeaveCurrentQueueModel;
+import com.armedia.acm.plugins.businessprocess.model.NextPossibleQueuesModel;
+import com.armedia.acm.plugins.businessprocess.model.OnEnterQueueModel;
+import com.armedia.acm.plugins.businessprocess.model.OnLeaveQueueModel;
+import com.armedia.acm.plugins.businessprocess.model.SystemConfiguration;
 import com.armedia.acm.plugins.businessprocess.service.QueueService;
 import com.armedia.acm.plugins.businessprocess.service.StartBusinessProcessService;
 import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
@@ -133,6 +138,14 @@ public class EnqueueCaseFileServiceImpl implements EnqueueCaseFileService
 
         startLeaveProcess(context, caseFile);
         startEnterProcess(context, caseFile);
+
+        if (nextQueueAction.equals(CaseFileConstants.NEXT_QUEUE_ACTION_NEXT))
+        {
+            caseFile.getParticipants().stream()
+                    .filter(p -> "assignee".equals(p.getParticipantType()) || "owning group".equals(p.getParticipantType())).forEach(p -> {
+                        p.setParticipantLdapId("");
+                    });
+        }
 
         // the unlock of the case file should be released from the UI,
         // but extensions already rely on the service releasing the lock, so we'll leave this here

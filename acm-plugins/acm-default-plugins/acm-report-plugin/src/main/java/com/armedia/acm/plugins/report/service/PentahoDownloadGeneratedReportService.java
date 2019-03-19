@@ -27,6 +27,7 @@ package com.armedia.acm.plugins.report.service;
  * #L%
  */
 
+import com.armedia.acm.pentaho.config.PentahoReportsConfig;
 import com.armedia.acm.plugins.report.model.ScheduleReportException;
 
 import org.slf4j.Logger;
@@ -48,9 +49,7 @@ public class PentahoDownloadGeneratedReportService
 {
     private static final Logger LOGGER = LoggerFactory.getLogger(PentahoDownloadGeneratedReportService.class);
     private ResponseEntity<byte[]> response;
-    private String pentahoUrl;
-    private String pentahoPort;
-    private String downloadApi;
+    private PentahoReportsConfig reportsConfig;
 
     public void downloadReport(HttpHeaders headers, RestTemplate restTemplate, String fileName)
             throws ScheduleReportException
@@ -80,8 +79,9 @@ public class PentahoDownloadGeneratedReportService
 
     public String buildDownloadUrl(String fileName)
     {
-        return getPentahoUrl() + ((getPentahoPort() != null && !getPentahoPort().isEmpty()) ? ":" + getPentahoPort() : "")
-                + getDownloadApi().replace("{reportFileName}", fileName);
+        return reportsConfig.getServerUrl()
+                + ((reportsConfig.getServerPort() != null ? ":" + reportsConfig.getServerPort() : ""))
+                + reportsConfig.getDownloadApi().replace("{reportFileName}", fileName);
     }
 
     public ResponseEntity<byte[]> getResponse()
@@ -89,33 +89,13 @@ public class PentahoDownloadGeneratedReportService
         return response;
     }
 
-    public String getPentahoUrl()
+    public PentahoReportsConfig getReportsConfig()
     {
-        return pentahoUrl;
+        return reportsConfig;
     }
 
-    public void setPentahoUrl(String pentahoUrl)
+    public void setReportsConfig(PentahoReportsConfig reportsConfig)
     {
-        this.pentahoUrl = pentahoUrl;
-    }
-
-    public String getPentahoPort()
-    {
-        return pentahoPort;
-    }
-
-    public void setPentahoPort(String pentahoPort)
-    {
-        this.pentahoPort = pentahoPort;
-    }
-
-    public String getDownloadApi()
-    {
-        return downloadApi;
-    }
-
-    public void setDownloadApi(String downloadApi)
-    {
-        this.downloadApi = downloadApi;
+        this.reportsConfig = reportsConfig;
     }
 }

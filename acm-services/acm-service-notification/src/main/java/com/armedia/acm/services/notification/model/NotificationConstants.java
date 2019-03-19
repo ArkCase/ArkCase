@@ -81,6 +81,11 @@ public interface NotificationConstants
     String STATE_READ = "READ";
 
     /**
+     * Notification message state when template is failed.
+     */
+    String STATE_TEMPLATE_ERROR = "TEMPLATE_ERROR";
+
+    /**
      * The property key to use in the properties file that keeps email response timeout
      */
     String EMAIL_RESPONSE_TIMEOUT_KEY = "notification.user.email.responseTimeout";
@@ -118,8 +123,6 @@ public interface NotificationConstants
     String NAME_LABEL = "${nameLabel}";
 
     String LAST_BATCH_RUN_PROPERTY_FILE = System.getProperty("user.home") + "/.arkcase/acm/notificationLastBatchUpdate.properties";
-
-    String BASE_URL_KEY = "arkcase.url.base";
 
     String PARTICIPANT_TYPE_GROUP = "owning group";
     String SPECIAL_PARTICIPANT_TYPE = "*";

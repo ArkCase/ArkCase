@@ -27,6 +27,7 @@ package com.armedia.acm.audit.listeners;
  * #L%
  */
 
+import com.armedia.acm.audit.model.AuditConfig;
 import com.armedia.acm.audit.model.AuditConstants;
 import com.armedia.acm.audit.model.AuditEvent;
 import com.armedia.acm.audit.model.NotAudited;
@@ -60,8 +61,7 @@ public class AcmAuditDatabaseListener implements ApplicationListener<AcmDatabase
     private static final String EVENT_TYPE = "com.armedia.acm.audit.database";
     private Logger log = LoggerFactory.getLogger(getClass());
     private AuditService auditService;
-    private boolean databaseChangesLoggingEnabled;
-    private boolean databaseChangesLoggingFieldValuesEnabled;
+    private AuditConfig auditConfig;
     private ObjectConverter objectConverter;
 
     /**
@@ -75,7 +75,7 @@ public class AcmAuditDatabaseListener implements ApplicationListener<AcmDatabase
     {
         log.debug("Database changes auditing event handling");
 
-        if (isDatabaseChangesLoggingEnabled())
+        if (auditConfig.getDatabaseChangesLoggingEnabled())
         {
             AcmObjectChangelist changelist = event.getObjectChangelist();
 
@@ -179,12 +179,12 @@ public class AcmAuditDatabaseListener implements ApplicationListener<AcmDatabase
         catch (Exception e)
         {
             // object doesn't have Long getId() method, we'll use the default -1L
-            log.debug("Object of class: " + object.getClass().getName() + " doesn't have getId() method!");
+            log.debug("Object of class: [{}] doesn't have getId() method!", object.getClass().getName());
         }
 
         auditEvent.setObjectId(id);
 
-        if (isDatabaseChangesLoggingFieldValuesEnabled())
+        if (auditConfig.getDatabaseChangesLoggingFieldValuesEnabled())
         {
             // event properties
             Map<String, String> eventProperties = new HashMap<>();
@@ -233,26 +233,6 @@ public class AcmAuditDatabaseListener implements ApplicationListener<AcmDatabase
         this.auditService = auditService;
     }
 
-    public boolean isDatabaseChangesLoggingEnabled()
-    {
-        return databaseChangesLoggingEnabled;
-    }
-
-    public void setDatabaseChangesLoggingEnabled(boolean databaseChangesLoggingEnabled)
-    {
-        this.databaseChangesLoggingEnabled = databaseChangesLoggingEnabled;
-    }
-
-    public boolean isDatabaseChangesLoggingFieldValuesEnabled()
-    {
-        return databaseChangesLoggingFieldValuesEnabled;
-    }
-
-    public void setDatabaseChangesLoggingFieldValuesEnabled(boolean databaseChangesLoggingFieldValuesEnabled)
-    {
-        this.databaseChangesLoggingFieldValuesEnabled = databaseChangesLoggingFieldValuesEnabled;
-    }
-
     public ObjectConverter getObjectConverter()
     {
         return objectConverter;
@@ -261,5 +241,15 @@ public class AcmAuditDatabaseListener implements ApplicationListener<AcmDatabase
     public void setObjectConverter(ObjectConverter objectConverter)
     {
         this.objectConverter = objectConverter;
+    }
+
+    public AuditConfig getAuditConfig()
+    {
+        return auditConfig;
+    }
+
+    public void setAuditConfig(AuditConfig auditConfig)
+    {
+        this.auditConfig = auditConfig;
     }
 }

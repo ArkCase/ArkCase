@@ -61,7 +61,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.lang.reflect.InvocationTargetException;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -99,8 +98,7 @@ public class AcmObjectMailHandler implements ApplicationEventPublisherAware
     }
 
     @Transactional
-    public void handle(Message message) throws MessagingException, IllegalAccessException, IllegalArgumentException,
-            InvocationTargetException, NoSuchMethodException, SecurityException, IOException
+    public void handle(Message message) throws MessagingException, IllegalArgumentException, SecurityException, IOException
     {
         if (!enabled)
         {
