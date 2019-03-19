@@ -40,8 +40,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;
 
-import java.util.Properties;
-
 /**
  * @author riste.tutureski
  */
@@ -49,7 +47,6 @@ public class CaseFileUpdatedListener implements ApplicationListener<CaseEvent>
 {
     private final Logger LOG = LoggerFactory.getLogger(getClass());
     private CaseFileFormConfig formConfig;
-    private Properties properties;
     private FrevvoFormService caseFileService;
     private FormsTypeCheckService formsTypeCheckService;
 
@@ -82,16 +79,6 @@ public class CaseFileUpdatedListener implements ApplicationListener<CaseEvent>
     public void setFormsTypeCheckService(FormsTypeCheckService formsTypeCheckService)
     {
         this.formsTypeCheckService = formsTypeCheckService;
-    }
-
-    public Properties getProperties()
-    {
-        return properties;
-    }
-
-    public void setProperties(Properties properties)
-    {
-        this.properties = properties;
     }
 
     public FrevvoFormService getCaseFileService()

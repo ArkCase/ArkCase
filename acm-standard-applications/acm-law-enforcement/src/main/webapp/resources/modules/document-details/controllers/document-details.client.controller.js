@@ -217,9 +217,17 @@ angular.module('document-details').controller(
                         fileId: $stateParams['id']
                     });
 
-                    var caseInfo = CaseInfoService.getCaseInfo($stateParams['containerId']);
+                    if($stateParams['containerType'] === 'CASE_FILE') {
+                        CaseInfoService.getCaseInfo($stateParams['containerId']).then(
+                            function (result){
+                                $scope.caseInfo = result;
+                            });
+                    }
+                    else {
+                        $scope.caseInfo.caseNumber = '';
+                    }
 
-                    $q.all([ ticketInfo, userInfo, totalUserInfo, ecmFileConfig, ecmFileInfo.$promise, ecmFileEvents.$promise, ecmFileParticipants.$promise, formsConfig, transcriptionConfigurationPromise, caseInfo ]).then(function(data) {
+                    $q.all([ ticketInfo, userInfo, totalUserInfo, ecmFileConfig, ecmFileInfo.$promise, ecmFileEvents.$promise, ecmFileParticipants.$promise, formsConfig, transcriptionConfigurationPromise]).then(function(data) {
                         $scope.acmTicket = data[0].data;
                         $scope.userId = data[1].userId;
                         $scope.userFullName = data[1].fullName;
@@ -231,8 +239,6 @@ angular.module('document-details').controller(
                         $scope.ecmFileParticipants = data[6];
                         $scope.formsConfig = data[7];
                         $scope.transcriptionConfiguration = data[8];
-                        $scope.caseInfo = data[9];
-
                         // default view == snowbound
                         $scope.view = "modules/document-details/views/document-viewer-snowbound.client.view.html";
 

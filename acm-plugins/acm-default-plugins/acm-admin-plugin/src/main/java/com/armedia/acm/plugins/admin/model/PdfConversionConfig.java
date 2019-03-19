@@ -28,9 +28,11 @@ package com.armedia.acm.plugins.admin.model;
  */
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import org.springframework.beans.factory.annotation.Value;
 
+@JsonSerialize(as = PdfConversionConfig.class)
 public class PdfConversionConfig
 {
     @JsonProperty("responseFolderConversion")
