@@ -30,13 +30,14 @@ package com.armedia.acm.plugins.admin.model;
 import com.armedia.acm.objectonverter.json.JSONUnmarshaller;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.json.JSONObject;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
 
 import java.util.HashMap;
 import java.util.Map;
-
+@JsonSerialize(as = ObjectTitleConfig.class)
 public class ObjectTitleConfig implements InitializingBean
 {
     @Value("${objectTitleConfig}")
