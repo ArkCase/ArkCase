@@ -38,6 +38,8 @@ import com.armedia.acm.plugins.ecm.model.DeleteFolderInfo;
 
 import org.json.JSONArray;
 import org.mule.api.MuleException;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.security.core.Authentication;
 
 import java.util.Date;
@@ -66,6 +68,10 @@ public interface AcmFolderService
     AcmFolder moveFolder(AcmFolder folderForMoving, AcmFolder dstFolder)
             throws AcmObjectNotFoundException, AcmUserActionFailedException, AcmFolderException;
 
+    @Retryable(maxAttempts = 3, value = Exception.class, backoff = @Backoff(delay = 500))
+    AcmFolder moveFolderInArkcase(AcmFolder folderForMoving, AcmFolder dstFolder)
+            throws AcmObjectNotFoundException, AcmUserActionFailedException, AcmFolderException;
+
     AcmFolder copyFolder(AcmFolder toBeCopied, AcmFolder dstFolder, Long targetObjectId, String targetObjectType)
             throws AcmUserActionFailedException, AcmObjectNotFoundException, AcmCreateObjectFailedException, AcmFolderException;
 
@@ -74,6 +80,8 @@ public interface AcmFolderService
     void deleteFolderTreeSafe(Long folderId, Authentication authentication) throws AcmUserActionFailedException, AcmObjectNotFoundException;
 
     void deleteFolderTree(Long folderId, Authentication authentication) throws AcmUserActionFailedException, AcmObjectNotFoundException;
+
+    void deleteFolderContent(AcmFolder folder, String user);
 
     void deleteContainerSafe(AcmContainer container, Authentication authentication) throws AcmUserActionFailedException;
 
@@ -129,4 +137,14 @@ public interface AcmFolderService
     DeleteFolderInfo getFolderToDeleteInfo(Long folderId) throws AcmObjectNotFoundException;
 
     AcmFolder saveFolder(AcmFolder folder);
+
+    @Retryable(maxAttempts = 3, value = Exception.class, backoff = @Backoff(delay = 500))
+    AcmFolder createFolder(AcmFolder targetParentFolder, String cmisFolderId, String folderName)
+            throws AcmFolderException, AcmUserActionFailedException;
+
+    @Retryable(maxAttempts = 3, value = Exception.class, backoff = @Backoff(delay = 500))
+    void recordMetadataOfExistingFolderChildren(AcmFolder parentFolder, String userId)
+            throws AcmObjectNotFoundException, AcmUserActionFailedException;
+
+    void removeLockAndSendMessage(Long objectId, String message);
 }

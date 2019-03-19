@@ -80,14 +80,16 @@ import java.util.UUID;
 @RunWith(SpringJUnit4ClassRunner.class)
 
 @ContextConfiguration(name = "spring", locations = {
+        "/spring/spring-library-configuration.xml",
         "/spring/spring-library-acm-encryption.xml",
+        "/spring/spring-library-case-plugin-test.xml",
         "/spring/spring-library-activiti-configuration.xml",
         "/spring/spring-library-admin.xml",
         "/spring/spring-library-audit-service.xml",
         "/spring/spring-library-authentication-token.xml",
         "/spring/spring-library-business-process.xml",
         "/spring/spring-library-calendar-config-service.xml",
-        "/spring/spring-library-calendar-integration-exchange-service.xml",
+        "/spring/spring-library-convert-folder-service.xml",
         "/spring/spring-library-case-file-dao.xml",
         "/spring/spring-library-case-file-rules.xml",
         "/spring/spring-library-case-file-save.xml",
@@ -97,14 +99,14 @@ import java.util.UUID;
         "/spring/spring-library-data-source.xml",
         "/spring/spring-library-drools-rule-monitor.xml",
         "/spring/spring-library-ecm-file.xml",
-        "/spring/spring-library-ecm-file-lock.xml",        
+        "/spring/spring-library-ecm-file-lock.xml",
         "/spring/spring-library-ecm-tika.xml",
         "/spring/spring-library-email.xml",
         "/spring/spring-library-email-smtp.xml",
         "/spring/spring-library-event.xml",
         "/spring/spring-library-folder-watcher.xml",
         "/spring/spring-library-form-configurations.xml",
-        "/spring/spring-library-forms-configuration.xml",        
+        "/spring/spring-library-forms-configuration.xml",
         "/spring/spring-library-merge-case-test-IT.xml",
         "/spring/spring-library-ms-outlook-integration.xml",
         "/spring/spring-library-ms-outlook-plugin.xml",
@@ -129,12 +131,17 @@ import java.util.UUID;
         "/spring/spring-library-core-api.xml",
         "/spring/spring-library-user-login.xml",
         "/spring/spring-library-plugin-manager.xml",
-        "/spring/spring-library-audit-service.xml"
-
+        "/spring/spring-library-audit-service.xml",
+        "/spring/spring-library-calendar-integration-exchange-service.xml"
 })
 @TransactionConfiguration(defaultRollback = true)
 public class SplitCaseFileServiceIT extends EasyMock
 {
+    static
+    {
+        String userHomePath = System.getProperty("user.home");
+        System.setProperty("acm.configurationserver.propertyfile", userHomePath + "/.arkcase/acm/conf.yml");
+    }
 
     private final Logger log = LoggerFactory.getLogger(getClass());
     @Autowired

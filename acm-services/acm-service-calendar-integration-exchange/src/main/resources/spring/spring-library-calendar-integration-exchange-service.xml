@@ -3,42 +3,9 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
 
-    <bean id="caseFileEntityHandler" class="com.armedia.acm.calendar.service.integration.exchange.CalendarEntityHandler">
-        <property name="outlookDao" ref="exchangeWebServicesOutlookDao"/>
-        <property name="entityType" value="CASE_FILE"/>
-        <property name="entityTypeForQuery" value="CaseFile"/>
-        <property name="containerEntityDao" ref="acmContainerFolderDao"/>
-        <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
-        <property name="entityIdForQuery" value="id"/>
-        <property name="closedStates" value="${casefile.status.closed}"/>
-        <property name="permissionEvaluator" ref="arkPermissionEvaluator"/>
-        <property name="readPermission" value="viewCaseDetailsPage"/>
-        <property name="writePermission" value="editCase"/>
-        <property name="deletePermission" value="editCase"/>
-        <property name="folderCreatorDao" ref="outlookFolderCreatorDao"/>
-    </bean>
-    <bean id="complaintEntityHandler" class="com.armedia.acm.calendar.service.integration.exchange.CalendarEntityHandler">
-        <property name="outlookDao" ref="exchangeWebServicesOutlookDao"/>
-        <property name="entityType" value="COMPLAINT"/>
-        <property name="entityTypeForQuery" value="Complaint"/>
-        <property name="containerEntityDao" ref="acmContainerFolderDao"/>
-        <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
-        <property name="entityIdForQuery" value="complaintId"/>
-        <property name="closedStates" value="${complaint.status.closed}"/>
-        <property name="permissionEvaluator" ref="arkPermissionEvaluator"/>
-        <property name="readPermission" value="viewComplaintDetailsPage"/>
-        <property name="writePermission" value="editComplaint"/>
-        <property name="deletePermission" value="editComplaint"/>
-        <property name="folderCreatorDao" ref="outlookFolderCreatorDao"/>
-    </bean>
 
     <bean id="calendarServiceProvider" class="com.armedia.acm.calendar.service.integration.exchange.ExchangeCalendarService">
-        <property name="entityHandlers">
-            <map>
-                <entry key="CASE_FILE" value-ref="caseFileEntityHandler"/>
-                <entry key="COMPLAINT" value-ref="complaintEntityHandler"/>
-            </map>
-        </property>
+        <property name="springContextHolder" ref="acmContextHolder"/>
         <property name="outlookDao" ref="exchangeWebServicesOutlookDao"/>
         <property name="calendarAdminService" ref="propertyFileCalendarAdminService"/>
         <property name="folderCreatorDao" ref="outlookFolderCreatorDao"/>

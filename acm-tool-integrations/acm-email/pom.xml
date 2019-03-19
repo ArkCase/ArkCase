@@ -2,7 +2,7 @@
     <parent>
         <artifactId>acm-tool-integrations</artifactId>
         <groupId>com.armedia.acm</groupId>
-        <version>3.3.0</version>
+        <version>3.3.1</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -25,12 +25,19 @@
             <artifactId>spring-integration-core</artifactId>
             <version>${spring.integration.version}</version>
         </dependency>
-
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
             <version>${spring.version}</version>
             <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
         </dependency>
         <dependency>
             <groupId>junit</groupId>

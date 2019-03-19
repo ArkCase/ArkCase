@@ -56,6 +56,7 @@ import java.util.Date;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
         "/spring/spring-library-data-source.xml",
+        "/spring/spring-library-configuration.xml",
         "/spring/spring-library-person.xml",
         "/spring/spring-library-person-plugin-test-mule.xml",
         "/spring/spring-library-context-holder.xml",
@@ -77,10 +78,19 @@ import java.util.Date;
         "/spring/spring-library-object-association-plugin.xml",
         "/spring/spring-library-object-converter.xml",
         "/spring/spring-library-ecm-file-lock.xml",
-        "/spring/spring-library-service-data.xml" })
+        "/spring/spring-library-service-data.xml",
+        "/spring/spring-library-person-plugin-test.xml",
+        "/spring/spring-library-folder-watcher.xml",
+        "/spring/spring-library-acm-email.xml"
+})
 @TransactionConfiguration(defaultRollback = true, transactionManager = "transactionManager")
 public class OrganizationIT
 {
+    static
+    {
+        String userHomePath = System.getProperty("user.home");
+        System.setProperty("acm.configurationserver.propertyfile", userHomePath + "/.arkcase/acm/conf.yml");
+    }
 
     @PersistenceContext
     private EntityManager em;

@@ -27,6 +27,7 @@ package com.armedia.acm.audit.listeners;
  * #L%
  */
 
+import com.armedia.acm.audit.model.AuditConfig;
 import com.armedia.acm.audit.model.AuditConstants;
 import com.armedia.acm.audit.model.AuditEvent;
 import com.armedia.acm.audit.service.AuditService;
@@ -62,18 +63,14 @@ public class AcmAuditRequestInterceptor extends HandlerInterceptorAdapter
     public static final String EVENT_TYPE = "com.armedia.acm.audit.request";
     private Logger log = LoggerFactory.getLogger(getClass());
     private AuditService auditService;
-    private boolean requestsLoggingEnabled;
-    private boolean requestsLoggingHeadersEnabled;
-    private boolean requestsLoggingCookiesEnabled;
-    private boolean requestsLoggingBodyEnabled;
-    private List<String> contentTypesToLog;
+    private AuditConfig auditConfig;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception
     {
         log.trace("Request audit interceptor called");
 
-        if (isRequestsLoggingEnabled())
+        if (auditConfig.getRequestsLoggingEnabled())
         {
             AuditEvent auditEvent = new AuditEvent();
             auditEvent.setEventDate(new Date());
@@ -88,10 +85,7 @@ public class AcmAuditRequestInterceptor extends HandlerInterceptorAdapter
                     : AuditConstants.USER_ID_ANONYMOUS);
             auditEvent.setEventProperties(getEventProperties(request));
 
-            if (log.isTraceEnabled())
-            {
-                log.trace("Request created AuditEvent: " + auditEvent.toString());
-            }
+            log.trace("Request created AuditEvent: {}", auditEvent.toString());
 
             getAuditService().audit(auditEvent);
         }
@@ -118,7 +112,7 @@ public class AcmAuditRequestInterceptor extends HandlerInterceptorAdapter
         // }
 
         // headers
-        if (isRequestsLoggingHeadersEnabled())
+        if (auditConfig.getRequestsLoggingHeadersEnabled())
         {
             String headers = getRequestHeadersAsString(request);
             if (headers.length() > 0)
@@ -128,7 +122,7 @@ public class AcmAuditRequestInterceptor extends HandlerInterceptorAdapter
         }
 
         // cookies
-        if (isRequestsLoggingCookiesEnabled() && (request.getCookies() != null))
+        if (auditConfig.getRequestsLoggingCookiesEnabled() && (request.getCookies() != null))
         {
             String cookies = getCookiesAsString(request);
             if (cookies.length() > 0)
@@ -138,7 +132,7 @@ public class AcmAuditRequestInterceptor extends HandlerInterceptorAdapter
         }
 
         // body
-        if (isRequestsLoggingBodyEnabled() && "POST".equalsIgnoreCase(request.getMethod()))
+        if (auditConfig.getRequestsLoggingBodyEnabled() && "POST".equalsIgnoreCase(request.getMethod()))
         {
             Map<String, String[]> parameterMap = request.getParameterMap();
             StringBuilder parameters = new StringBuilder();
@@ -147,7 +141,7 @@ public class AcmAuditRequestInterceptor extends HandlerInterceptorAdapter
             {
                 parameters.append(separator);
                 separator = "|";
-                parameters.append(parameterKey + ": [");
+                parameters.append(parameterKey).append(": [");
                 parameters.append(String.join(", ", parameterMap.get(parameterKey)));
                 parameters.append("]");
             }
@@ -166,14 +160,14 @@ public class AcmAuditRequestInterceptor extends HandlerInterceptorAdapter
                         MultipartFile multipartFile = multipartFiles.get(i);
                         parameters.append(separator);
                         separator = "|";
-                        parameters.append(paramName + "[" + multipartFile.getOriginalFilename() + "]" + ": [");
-                        if (getContentTypesToLog().contains(multipartFile.getContentType()))
+                        parameters.append(paramName).append("[").append(multipartFile.getOriginalFilename()).append("]").append(": [");
+                        if (getAuditConfig().getContentTypesToLog().contains(multipartFile.getContentType()))
                         {
                             parameters.append(new String(multipartFile.getBytes(), Charset.forName("UTF-8")));
                         }
                         else
                         {
-                            parameters.append("Content not logged for contenttype=" + multipartFile.getContentType());
+                            parameters.append("Content not logged for contenttype=").append(multipartFile.getContentType());
                         }
                         parameters.append("]");
                     }
@@ -234,53 +228,13 @@ public class AcmAuditRequestInterceptor extends HandlerInterceptorAdapter
         this.auditService = auditService;
     }
 
-    public boolean isRequestsLoggingEnabled()
+    public AuditConfig getAuditConfig()
     {
-        return requestsLoggingEnabled;
+        return auditConfig;
     }
 
-    public void setRequestsLoggingEnabled(boolean requestsLoggingEnabled)
+    public void setAuditConfig(AuditConfig auditConfig)
     {
-        this.requestsLoggingEnabled = requestsLoggingEnabled;
-    }
-
-    public boolean isRequestsLoggingHeadersEnabled()
-    {
-        return requestsLoggingHeadersEnabled;
-    }
-
-    public void setRequestsLoggingHeadersEnabled(boolean requestsLoggingHeadersEnabled)
-    {
-        this.requestsLoggingHeadersEnabled = requestsLoggingHeadersEnabled;
-    }
-
-    public boolean isRequestsLoggingCookiesEnabled()
-    {
-        return requestsLoggingCookiesEnabled;
-    }
-
-    public void setRequestsLoggingCookiesEnabled(boolean requestsLoggingCookiesEnabled)
-    {
-        this.requestsLoggingCookiesEnabled = requestsLoggingCookiesEnabled;
-    }
-
-    public boolean isRequestsLoggingBodyEnabled()
-    {
-        return requestsLoggingBodyEnabled;
-    }
-
-    public void setRequestsLoggingBodyEnabled(boolean requestsLoggingBodyEnabled)
-    {
-        this.requestsLoggingBodyEnabled = requestsLoggingBodyEnabled;
-    }
-
-    public List<String> getContentTypesToLog()
-    {
-        return contentTypesToLog;
-    }
-
-    public void setContentTypesToLog(List<String> contentTypesToLog)
-    {
-        this.contentTypesToLog = contentTypesToLog;
+        this.auditConfig = auditConfig;
     }
 }

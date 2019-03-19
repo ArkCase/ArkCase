@@ -165,7 +165,10 @@
                 "title": "ニュース",
                 "noDataMessage": "現在RSS /情報はありません",
                 "configDescription": "説明",
-                "configDescriptionPlaceholder": "ウィジェットの説明を入力"
+                "configDescriptionPlaceholder": "ウィジェットの説明を入力",
+                "message": {
+                    "error": "無効なURL"
+                }
             },
             "details": {
                 "title": "詳細",

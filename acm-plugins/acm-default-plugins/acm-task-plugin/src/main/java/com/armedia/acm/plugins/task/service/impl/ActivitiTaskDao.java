@@ -1092,11 +1092,8 @@ public class ActivitiTaskDao extends AcmAbstractDao<AcmTask> implements TaskDao,
         retval.setAssignee(hti.getAssignee());
 
         // set Candidate Groups if there are any
-        if (retval.getAssignee() == null)
-        {
-            List<String> candidateGroups = findHistoricCandidateGroups(hti.getId());
-            retval.setCandidateGroups(candidateGroups);
-        }
+        List<String> candidateGroups = findHistoricCandidateGroups(hti.getId());
+        retval.setCandidateGroups(candidateGroups);
 
         if (hti.getProcessVariables() != null)
         {
@@ -1334,6 +1331,11 @@ public class ActivitiTaskDao extends AcmAbstractDao<AcmTask> implements TaskDao,
         {
             String legacySystemId = (String) taskLocal.get(TaskConstants.VARIABLE_NAME_LEGACY_SYSTEM_ID);
             acmTask.setLegacySystemId(legacySystemId);
+        }
+        if(acmTask.getWorkflowRequestType() == null)
+        {
+            String workflowRequestType = (String)taskLocal.get(TaskConstants.VARIABLE_NAME_REQUEST_TYPE);
+            acmTask.setWorkflowRequestType(workflowRequestType);
         }
         Date startDate = (Date) taskLocal.get(TaskConstants.VARIABLE_NAME_START_DATE);
         acmTask.setTaskStartDate(startDate);

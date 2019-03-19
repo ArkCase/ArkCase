@@ -27,6 +27,7 @@ package com.armedia.acm.services.notification.service;
  * #L%
  */
 
+import static org.easymock.EasyMock.anyString;
 import static org.easymock.EasyMock.capture;
 import static org.easymock.EasyMock.eq;
 import static org.easymock.EasyMock.expect;
@@ -35,8 +36,12 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
+import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.core.exceptions.AcmEncryptionException;
+import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
+import com.armedia.acm.email.model.EmailSenderConfig;
+import com.armedia.acm.data.service.AcmDataService;
 import com.armedia.acm.files.propertymanager.PropertyFileManager;
 import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
@@ -47,7 +52,8 @@ import com.armedia.acm.services.email.model.EmailWithAttachmentsAndLinksDTO;
 import com.armedia.acm.services.email.model.EmailWithAttachmentsDTO;
 import com.armedia.acm.services.email.model.EmailWithEmbeddedLinksDTO;
 import com.armedia.acm.services.email.model.EmailWithEmbeddedLinksResultDTO;
-import com.armedia.acm.services.email.sender.model.EmailSenderConfigurationConstants;
+import com.armedia.acm.services.email.service.AcmMailTemplateConfigurationService;
+import com.armedia.acm.services.email.service.TemplatingEngine;
 import com.armedia.acm.services.email.smtp.SmtpService;
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.model.NotificationConstants;
@@ -63,6 +69,7 @@ import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -77,7 +84,6 @@ public class SmtpNotificationSenderTest extends EasyMockSupport
     private SmtpService mockSmtpService;
     private AuditPropertyEntityAdapter mockAuditPropertyEntityAdapter;
     private MuleContextManager mockMuleContextManager;
-    private PropertyFileManager mockPropertyFileManager;
     private MuleException mockMuleException;
     private MuleMessage mockMuleMessage;
     private Authentication mockAuthentication;
@@ -95,15 +101,20 @@ public class SmtpNotificationSenderTest extends EasyMockSupport
     private EmailWithAttachmentsDTO mockEmailWithAttachmentsDTO;
     private EmailWithEmbeddedLinksDTO mockEmailWithEmbeddedLinksDTO;
     private EmailWithAttachmentsAndLinksDTO mockEmailWithAttachmentsAndLinksDTO;
+    private AcmMailTemplateConfigurationService templateService;
+    private AcmDataService acmDataService;
+    private AcmAbstractDao<AcmObject> dao;
+    private TemplatingEngine templatingEngine;
 
     @Before
     public void setUp()
     {
         smtpNotificationSender = new SmtpNotificationSender();
+        EmailSenderConfig senderConfig = new EmailSenderConfig();
+        senderConfig.setUsername("email_user_value");
         mockSmtpService = createMock(SmtpService.class);
         mockMuleContextManager = createMock(MuleContextManager.class);
         mockAuditPropertyEntityAdapter = createMock(AuditPropertyEntityAdapter.class);
-        mockPropertyFileManager = createMock(PropertyFileManager.class);
         mockMuleException = createMock(MuleException.class);
         mockMuleMessage = createMock(MuleMessage.class);
         mockAuthenticationTokenService = createMock(AuthenticationTokenService.class);
@@ -121,47 +132,50 @@ public class SmtpNotificationSenderTest extends EasyMockSupport
         mockEmailWithAttachmentsDTO = createMock(EmailWithAttachmentsDTO.class);
         mockEmailWithEmbeddedLinksDTO = createMock(EmailWithEmbeddedLinksDTO.class);
         mockEmailWithAttachmentsAndLinksDTO = createMock(EmailWithAttachmentsAndLinksDTO.class);
+        templateService = createMock(AcmMailTemplateConfigurationService.class);
+        acmDataService = createMock(AcmDataService.class);
+        dao = createMock(AcmAbstractDao.class);
+        templatingEngine = createMock(TemplatingEngine.class);
 
         smtpNotificationSender.setEmailSenderService(mockSmtpService);
         smtpNotificationSender.setAuditPropertyEntityAdapter(mockAuditPropertyEntityAdapter);
-        smtpNotificationSender.setPropertyFileManager(mockPropertyFileManager);
-        smtpNotificationSender.setEmailSenderPropertyFileLocation("");
         smtpNotificationSender.setAuthenticationTokenService(mockAuthenticationTokenService);
         smtpNotificationSender.setAuthenticationTokenDao(mockAuthenticationTokenDao);
         smtpNotificationSender.setEcmFileService(mockEcmFileService);
         smtpNotificationSender.setNotificationUtils(mockNotificationUtils);
         smtpNotificationSender.setUserDao(mockUserDao);
+        smtpNotificationSender.setTemplateService(templateService);
+        smtpNotificationSender.setDataService(acmDataService);
+        smtpNotificationSender.setTemplatingEngine(templatingEngine);
     }
 
     @Test
     public void testSendWhenException() throws Exception
     {
         Notification notification = new Notification();
-        notification.setUserEmail("user_email");
+        notification.setEmailAddresses("user_email");
         notification.setTitle("title");
         notification.setNote("the_note");
 
+        expect(templateService.getTemplate(anyString())).andReturn(null);
         expect(mockNotificationUtils.buildNotificationLink(notification.getParentType(), notification.getParentId(),
                 notification.getRelatedObjectType(), notification.getRelatedObjectId())).andReturn(null);
 
         smtpNotificationSender.getAuditPropertyEntityAdapter().setUserId(NotificationConstants.SYSTEM_USER);
-        // Capture<Map<String, Object>> messagePropsCapture = EasyMock.newCapture();
-        // expect(mockMuleContextManager.send(eq("vm://sendEmailViaSmtp.in"), matches("\\s*the_note\\s*"),
-        // capture(messagePropsCapture)))
-        // .andThrow(mockMuleException);
-        expect(mockMuleException.getLocalizedMessage()).andReturn(null);
-        expect(mockMuleException.getStackTrace()).andReturn(new StackTraceElement[1]);
-        setSendExpectations();
-        // expect(mockPropertyFileManager.load("", EmailSenderConfigurationConstants.ENCRYPTION,
-        // null)).andReturn("off");
-        expect(mockUserDao.findByUserId("email_user_value")).andReturn(mockAcmUser);
-        Capture<EmailWithAttachmentsDTO> dtoCapture = EasyMock.newCapture();
-        mockSmtpService.sendEmail(capture(dtoCapture), eq(null), eq(mockAcmUser));
-        expectLastCall().andThrow(mockMuleException);
 
+        Capture<EmailWithAttachmentsDTO> emailWithAttachmentsDTOCapture = EasyMock.newCapture();
+        Capture<AcmUser> user = EasyMock.newCapture();
+        Authentication authentication = SecurityContextHolder.getContext() != null ? SecurityContextHolder.getContext().getAuthentication()
+                : null;
+       
+        mockSmtpService.sendEmail(capture(emailWithAttachmentsDTOCapture), eq(authentication), capture(user));
+        EasyMock.expectLastCall().andThrow(new Exception("Message not sent"));
+
+        
+        Object object = new Object();
         // when
         replayAll();
-        Notification returnedNotification = smtpNotificationSender.send(notification);
+        Notification returnedNotification = smtpNotificationSender.send(notification, object);
 
         // then
         verifyAll();
@@ -170,26 +184,38 @@ public class SmtpNotificationSenderTest extends EasyMockSupport
     }
 
     @Test
-    public void testSend() throws Exception
+    public void testSend_WithNewEmailTemplate() throws Exception
     {
+        smtpNotificationSender.getAuditPropertyEntityAdapter().setUserId(NotificationConstants.SYSTEM_USER);
+
         Notification notification = new Notification();
         notification.setUserEmail("user_email");
+        notification.setEmailAddresses("no-suchmail@armedia.com");
         notification.setTitle("title");
         notification.setNote("the_note");
+        notification.setTemplateModelName("modelName");
+        notification.setParentType("parentType");
+        notification.setParentId(111L);
 
-        expect(mockNotificationUtils.buildNotificationLink(notification.getParentType(), notification.getParentId(),
-                notification.getRelatedObjectType(), notification.getRelatedObjectId())).andReturn(null);
+        Object object = new Object();
 
-        smtpNotificationSender.getAuditPropertyEntityAdapter().setUserId(NotificationConstants.SYSTEM_USER);
-        setSendExpectations();
-        expect(mockUserDao.findByUserId("email_user_value")).andReturn(mockAcmUser);
+        String templateName = String.format("%s.html", notification.getTemplateModelName());
+        String template = "template";
+
+        expect(templateService.getTemplate(templateName)).andReturn(template);
+
+        String body = "body";
+        expect(templatingEngine.process(template, notification.getTemplateModelName(), object)).andReturn(body);
+
         Capture<EmailWithAttachmentsDTO> dtoCapture = EasyMock.newCapture();
-        mockSmtpService.sendEmail(capture(dtoCapture), eq(null), eq(mockAcmUser));
-        expectLastCall();
+        Capture<AcmUser> userCapture = EasyMock.newCapture();
+        Authentication authentication = SecurityContextHolder.getContext() != null ? SecurityContextHolder.getContext().getAuthentication()
+                : null;
+        mockSmtpService.sendEmail(capture(dtoCapture), eq(authentication), capture(userCapture));
 
         // when
         replayAll();
-        Notification returnedNotification = smtpNotificationSender.send(notification);
+        Notification returnedNotification = smtpNotificationSender.send(notification, object);
 
         // then
         verifyAll();
@@ -274,10 +300,4 @@ public class SmtpNotificationSenderTest extends EasyMockSupport
         // then
         verifyAll();
     }
-
-    private void setSendExpectations() throws AcmEncryptionException
-    {
-        expect(mockPropertyFileManager.load("", EmailSenderConfigurationConstants.USERNAME, null)).andReturn("email_user_value");
-    }
-
 }

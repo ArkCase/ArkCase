@@ -27,13 +27,18 @@ package com.armedia.acm.services.users.service.ldap;
  * #L%
  */
 
+import static org.easymock.EasyMock.expect;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.everyItem;
 import static org.hamcrest.Matchers.isIn;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 import com.armedia.acm.services.users.model.AcmRoleToGroupMapping;
+import com.armedia.acm.services.users.model.ApplicationRolesToGroupsConfig;
 
+import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -45,10 +50,11 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class AcmRoleToGroupMappingTest
+public class AcmRoleToGroupMappingTest extends EasyMockSupport
 {
     private AcmRoleToGroupMapping unit;
     private Map<String, String> roleToGroupMap;
+    private ApplicationRolesToGroupsConfig mockConfig;
 
     @Before
     public void setup()
@@ -60,14 +66,20 @@ public class AcmRoleToGroupMappingTest
                 + "ACM_INVESTIGATOR_DEV,ACM_ANALYST_DEV,ACM_CALLCENTER_DEV,ACM_ADMINISTRATOR_DEV,ACM_INVESTIGATOR_MK,"
                 + "ARKCASE_ADMINISTRATOR");
         unit = new AcmRoleToGroupMapping();
-        unit.setRoleToGroupMap(roleToGroupMap);
+        mockConfig = createMock(ApplicationRolesToGroupsConfig.class);
+        unit.setRolesToGroupsConfig(mockConfig);
     }
 
     @Test
     public void testRoleToGroupsMap()
     {
+        expect(mockConfig.getRolesToGroups()).andReturn(roleToGroupMap).anyTimes();
+
+        replayAll();
+
         Map<String, Set<String>> roleToGroups = unit.getRoleToGroupsMap();
 
+        verifyAll();
         assertThat("Key set should be the same", roleToGroups.keySet(), everyItem(isIn(roleToGroupMap.keySet())));
 
         Set<String> expectedGroups = roleToGroupMap.entrySet()
@@ -99,7 +111,13 @@ public class AcmRoleToGroupMappingTest
                 + "ACM_INVESTIGATOR_DEV,ACM_ANALYST_DEV,ACM_CALLCENTER_DEV,ACM_ADMINISTRATOR_DEV,ACM_INVESTIGATOR_MK,"
                 + "ARKCASE_ADMINISTRATOR");
 
+        expect(mockConfig.getRolesToGroups()).andReturn(roleToGroupMap).anyTimes();
+
+        replayAll();
+
         Map<String, List<String>> groupToRoles = unit.getGroupToRolesMap();
+
+        verifyAll();
 
         Set<String> expectedValues = groupToRoles.values()
                 .stream()
@@ -126,4 +144,58 @@ public class AcmRoleToGroupMappingTest
             });
         });
     }
+
+    /**
+     * Test if the active mappings have one key for each
+     * value from the configuration, with the value for that key being the list
+     * of keys that have that value. The configuration map logical role names
+     * to LDAP groups (to ensure each role name is accounted for). But we
+     * need to map group names to roles. So we want to reverse the configuration
+     * - make one key for each property value. But a group might map to more
+     * than one role. Hence the need to have a list of roles for each group.
+     *
+     * Also the group and role names should be normalized to upper case.
+     *
+     * Also group and role names should be trimmed.
+     *
+     * Also null or empty group or role names - that property should be ignored.
+     *
+     * Also the roles should have "ROLE_" in front.
+     *
+     * E.g., if the properties have:
+     * - ROLE1=group1
+     * - Role2= group2
+     * - ROLE_ROLE3 =group1
+     * Then the active mapping should be:
+     * - GROUP1=ROLE_ROLE1,ROLE_ROLE3
+     * - GROUP2=ROLE_ROLE2
+     */
+    @Test
+    public void initializeRolesToGroupsMapping()
+    {
+        Map<String, String> roleToGroupsMapping = new HashMap<>();
+        roleToGroupsMapping.put("ROLE1", "group1");
+        roleToGroupsMapping.put("Role2", "group2");
+        roleToGroupsMapping.put("ROLE_ROLE3", "group1");
+        roleToGroupsMapping.put("", "group5");
+        roleToGroupsMapping.put("ROLE4", "");
+
+        expect(mockConfig.getRolesToGroups()).andReturn(roleToGroupsMapping).anyTimes();
+        replayAll();
+
+        verifyAll();
+        assertEquals(2, unit.getGroupToRolesMap().size());
+        assertTrue(unit.getGroupToRolesMap().containsKey("GROUP1"));
+        assertTrue(unit.getGroupToRolesMap().containsKey("GROUP2"));
+
+        List<String> foundGroup1Roles = unit.getGroupToRolesMap().get("GROUP1");
+        assertEquals(2, foundGroup1Roles.size());
+        assertTrue(foundGroup1Roles.contains("ROLE_ROLE1"));
+        assertTrue(foundGroup1Roles.contains("ROLE_ROLE3"));
+
+        List<String> foundGroup2Roles = unit.getGroupToRolesMap().get("GROUP2");
+        assertEquals(1, foundGroup2Roles.size());
+        assertTrue(foundGroup2Roles.contains("ROLE_ROLE2"));
+    }
+
 }

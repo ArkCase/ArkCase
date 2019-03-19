@@ -44,6 +44,11 @@ public class TaskEventPublisher implements ApplicationEventPublisherAware
     {
         getApplicationEventPublisher().publishEvent(event);
     }
+    public void publishTaskEvent(AcmApplicationTaskEvent event, String description)
+    {
+        event.setEventDescription(description);
+        getApplicationEventPublisher().publishEvent(event);
+    }
 
     public void publishAcmEvent(AcmEvent event)
     {

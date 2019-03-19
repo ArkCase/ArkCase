@@ -166,7 +166,7 @@ public class AcmUser implements Serializable
     public void addGroup(AcmGroup group)
     {
         groups.add(group);
-        group.getUserMembers().add(this);
+        group.getUserMembers(false).add(this);
     }
 
     /**
@@ -177,7 +177,7 @@ public class AcmUser implements Serializable
     public void removeGroup(AcmGroup group)
     {
         groups.remove(group);
-        group.getUserMembers().remove(this);
+        group.getUserMembers(false).remove(this);
     }
 
     @PrePersist

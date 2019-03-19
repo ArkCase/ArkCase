@@ -33,11 +33,13 @@ import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
+import com.armedia.acm.plugins.ecm.model.EcmFileConfig;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.plugins.ecm.utils.EcmFileParticipantServiceHelper;
 import com.armedia.acm.services.participants.model.AcmAssignedObject;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.participants.service.AcmParticipantService;
+
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,7 +50,6 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Properties;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -64,8 +65,8 @@ public class EcmFileParticipantService
     private AcmFolderDao folderDao;
     private AcmFolderService folderService;
     private AcmParticipantService participantService;
-    private Properties ecmFileServiceProperties;
     private EcmFileParticipantServiceHelper fileParticipantServiceHelper;
+    private EcmFileConfig ecmFileConfig;
 
     /**
      * Sets the file's participants from the parent folder's participants and persists the file instance with the
@@ -170,8 +171,8 @@ public class EcmFileParticipantService
             participant.setParticipantLdapId(parentObjectParticipant.getParticipantLdapId());
 
             // for files and folders we allow only one AcmParticipant for one user
-            if (!participants.stream()
-                    .anyMatch(existingParticipant -> existingParticipant.getParticipantLdapId().equals(participant.getParticipantLdapId())))
+            if (participants.stream()
+                    .noneMatch(existingParticipant -> existingParticipant.getParticipantLdapId().equals(participant.getParticipantLdapId())))
             {
                 participants.add(participant);
             }
@@ -227,20 +228,17 @@ public class EcmFileParticipantService
         assignedObjectParticipants = assignedObjectParticipants.stream().filter(
                 participant -> participant.getParticipantLdapId() != null && participant.getParticipantLdapId().trim().length() > 0)
                 .collect(Collectors.toList());
-        originalAssignedObjectParticipants = originalAssignedObjectParticipants.stream().filter(
-                participant -> participant.getParticipantLdapId() != null && participant.getParticipantLdapId().trim().length() > 0)
-                .collect(Collectors.toList());
 
         boolean inheritAllParticipants = assignedObjectParticipants.stream()
-                .allMatch(participant -> participant.isReplaceChildrenParticipant());
+                .allMatch(AcmParticipant::isReplaceChildrenParticipant);
 
         boolean inheritNoParticipants = assignedObjectParticipants.stream()
-                .allMatch(participant -> !participant.isReplaceChildrenParticipant());
+                .noneMatch(AcmParticipant::isReplaceChildrenParticipant);
 
         if (inheritAllParticipants || inheritNoParticipants)
         {
             List<AcmParticipant> fileParticipants = assignedObjectParticipants.stream()
-                    .map(assignedObjectParticipant -> getDocumentParticipantFromAssignedObjectParticipant(assignedObjectParticipant))
+                    .map(this::getDocumentParticipantFromAssignedObjectParticipant)
                     .collect(Collectors.toList());
             setFolderParticipants(folder, fileParticipants, restricted);
         }
@@ -248,35 +246,35 @@ public class EcmFileParticipantService
         {
 
             // inherit participants where needed
-            assignedObjectParticipants.stream().filter(participant -> participant.isReplaceChildrenParticipant()).forEach(
+            assignedObjectParticipants.stream().filter(AcmParticipant::isReplaceChildrenParticipant).forEach(
                     participant -> setParticipantToFolderAndChildren(folder,
                             getDocumentParticipantFromAssignedObjectParticipant(participant), restricted));
 
-
             List<AcmParticipant> fileParticipants = assignedObjectParticipants.stream()
-                    .map(assignedObjectParticipant -> getDocumentParticipantFromAssignedObjectParticipant(assignedObjectParticipant))
+                    .map(this::getDocumentParticipantFromAssignedObjectParticipant)
                     .collect(Collectors.toList());
-            //check Participants which should be deleted. Compare assignParticipants with the participants of folder
+            // check Participants which should be deleted. Compare assignParticipants with the participants of folder
             List<AcmParticipant> existDeletedParticipants = checkDifferentParticipant(fileParticipants, folder.getParticipants());
 
-            if(existDeletedParticipants.size() > 0)
+            if (existDeletedParticipants.size() > 0)
             {
                 setFolderParticipants(folder, fileParticipants, restricted);
-                getFileParticipantServiceHelper().removeDeletedParticipantFromFolderChild(folder,existDeletedParticipants);
+                getFileParticipantServiceHelper().removeDeletedParticipantFromFolderChild(folder, existDeletedParticipants);
             }
 
         }
     }
 
     /**
-     *  Check wether there is any participant should be deleted
+     * Check wether there is any participant should be deleted
+     * 
      * @param assignedObjectParticipants
      * @return
      */
-    private List<AcmParticipant> checkDifferentParticipant(List<AcmParticipant> assignedObjectParticipants, List<AcmParticipant> orignialObjectParticipants)
+    private List<AcmParticipant> checkDifferentParticipant(List<AcmParticipant> assignedObjectParticipants,
+            List<AcmParticipant> orignialObjectParticipants)
     {
         List<AcmParticipant> deletedParticipantList = new ArrayList<>();
-
 
         for (AcmParticipant originalParticipant : orignialObjectParticipants)
         {
@@ -291,16 +289,16 @@ public class EcmFileParticipantService
                     break;
                 }
             }
-            if(found == false){
-                //if the orginal participant is not in the assignedParticipant list
-                //add it to the delete list
+            if (!found)
+            {
+                // if the orginal participant is not in the assignedParticipant list
+                // add it to the delete list
                 deletedParticipantList.add(originalParticipant);
             }
         }
 
         return deletedParticipantList;
     }
-
 
     private AcmParticipant getDocumentParticipantFromAssignedObjectParticipant(AcmParticipant participant)
     {
@@ -327,21 +325,14 @@ public class EcmFileParticipantService
             return assignedObjectParticipantType;
         }
 
-        String documentParticipantType = fileParticipantTypes.stream().filter(fileParticipantType -> getEcmFileServiceProperties()
-                .getProperty("ecm.documentsParticipantTypes.mappings." + fileParticipantType) != null)
-                .filter(fileParticipantType -> Arrays.asList(getEcmFileServiceProperties()
-                        .getProperty("ecm.documentsParticipantTypes.mappings." + fileParticipantType).split(","))
+        return fileParticipantTypes.stream()
+                .filter(fileParticipantType -> ecmFileConfig.getFileParticipant(fileParticipantType) != null)
+                .filter(fileParticipantType -> Arrays.asList(ecmFileConfig.getFileParticipant(fileParticipantType).split(","))
                         .contains(assignedObjectParticipantType))
-                .findFirst().orElse(null);
-
-        if (documentParticipantType == null)
-        {
-            throw new IllegalStateException(
-                    "No document participant type mapping found for participant type: " + assignedObjectParticipantType
-                            + ". Add mapping for new participant type in 'ecmFileService.properties'!");
-        }
-
-        return documentParticipantType;
+                .findFirst()
+                .orElseThrow(() -> new IllegalStateException(
+                        "No document participant type mapping found for participant type: " + assignedObjectParticipantType
+                                + ". Add mapping for new participant type in 'ecmFileService.properties'!"));
     }
 
     /**
@@ -413,7 +404,7 @@ public class EcmFileParticipantService
 
         // copy file participants to a new list because the file.getParticipants() list will be modified in the loop and
         // will cause ConcurrentModificationException
-        List<AcmParticipant> fileParticipants = file.getParticipants().stream().collect(Collectors.toList());
+        List<AcmParticipant> fileParticipants = new ArrayList<>(file.getParticipants());
 
         // remove deleted participants
         for (AcmParticipant existingParticipant : fileParticipants)
@@ -429,9 +420,7 @@ public class EcmFileParticipantService
 
     private boolean containsParticipantWithLdapId(List<AcmParticipant> participants, String ldapId)
     {
-        return participants.stream()
-                .filter(participant -> participant.getParticipantLdapId().equals(ldapId))
-                .count() == 0;
+        return participants.stream().noneMatch(participant -> participant.getParticipantLdapId().equals(ldapId));
     }
 
     private void setFolderParticipants(AcmFolder folder, List<AcmParticipant> participants, boolean restricted)
@@ -443,7 +432,7 @@ public class EcmFileParticipantService
 
         // copy folder participants to a new list because the folder.getParticipants() list will be modified in
         // removeParticipantFromFolderAndChildren() method and will cause ConcurrentModificationException
-        List<AcmParticipant> folderParticipants = folder.getParticipants().stream().collect(Collectors.toList());
+        List<AcmParticipant> folderParticipants = new ArrayList<>(folder.getParticipants());
 
         // remove deleted participants
         for (AcmParticipant existingParticipant : folderParticipants)
@@ -498,7 +487,7 @@ public class EcmFileParticipantService
 
         // search for duplicate participants LDAPIds. One participant cannot have different roles for an object
         Set<String> allLdapIds = new HashSet<>();
-        List<String> duplicateParticipantLdapIdsErrors = participants.stream().map(participant -> participant.getParticipantLdapId())
+        List<String> duplicateParticipantLdapIdsErrors = participants.stream().map(AcmParticipant::getParticipantLdapId)
                 .filter(participantLdapId -> !allLdapIds.add(participantLdapId))
                 .map(participantLdapId -> "Participant LDAP Id in multiple roles: " + participantLdapId).collect(Collectors.toList());
         if (duplicateParticipantLdapIdsErrors.size() > 0)
@@ -541,16 +530,6 @@ public class EcmFileParticipantService
         this.participantService = participantService;
     }
 
-    public Properties getEcmFileServiceProperties()
-    {
-        return ecmFileServiceProperties;
-    }
-
-    public void setEcmFileServiceProperties(Properties ecmFileServiceProperties)
-    {
-        this.ecmFileServiceProperties = ecmFileServiceProperties;
-    }
-
     public AcmFolderService getFolderService()
     {
         return folderService;
@@ -579,5 +558,15 @@ public class EcmFileParticipantService
     public void setFolderDao(AcmFolderDao folderDao)
     {
         this.folderDao = folderDao;
+    }
+
+    public EcmFileConfig getEcmFileConfig()
+    {
+        return ecmFileConfig;
+    }
+
+    public void setEcmFileConfig(EcmFileConfig ecmFileConfig)
+    {
+        this.ecmFileConfig = ecmFileConfig;
     }
 }

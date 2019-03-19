@@ -3,7 +3,7 @@
     <parent>
         <artifactId>acm-services</artifactId>
         <groupId>com.armedia.acm</groupId>
-        <version>3.3.0</version>
+        <version>3.3.1</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -127,6 +127,16 @@
         <dependency>
             <groupId>com.armedia.acm.acm-tool-integrations</groupId>
             <artifactId>acm-pdf-utilities</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.armedia.acm.acm-tool-integrations</groupId>
+            <artifactId>acm-configuration</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.armedia.acm.acm-tool-integrations</groupId>
+            <artifactId>acm-file-folder-watcher</artifactId>
             <version>${acm.version}</version>
         </dependency>
 
@@ -286,6 +296,12 @@
         <dependency>
             <groupId>us.fatehi</groupId>
             <artifactId>pointlocation6709</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.armedia.acm.acm-tool-integrations</groupId>
+            <artifactId>acm-email</artifactId>
+            <version>${acm.version}</version>
+            <scope>compile</scope>
         </dependency>
 
     </dependencies>

@@ -43,14 +43,13 @@ import com.armedia.acm.plugins.ecm.model.sync.EcmEvent;
 import com.armedia.acm.plugins.ecm.model.sync.EcmEventType;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.plugins.ecm.service.impl.EcmFileParticipantService;
+import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
 
 import org.easymock.Capture;
 import org.easymock.EasyMock;
 import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
-
-import javax.persistence.NoResultException;
 
 /**
  * Created by dmiller on 5/17/17.
@@ -63,8 +62,9 @@ public class EcmFolderCreatedEventHandlerTest
     private AcmFolderService acmFolderService = EasyMock.createMock(AcmFolderService.class);
     private AuditPropertyEntityAdapter auditPropertyEntityAdapter = EasyMock.createMock(AuditPropertyEntityAdapter.class);
     private EcmFileParticipantService fileParticipantService = EasyMock.createMock(EcmFileParticipantService.class);
+    private FolderAndFilesUtils folderAndFilesUtils = EasyMock.createMock(FolderAndFilesUtils.class);
 
-    private Object[] mocks = { acmFolderDao, acmFolderService, auditPropertyEntityAdapter, fileParticipantService };
+    private Object[] mocks = { folderAndFilesUtils, acmFolderDao, acmFolderService, auditPropertyEntityAdapter, fileParticipantService };
 
     private EcmEvent folderCreated;
 
@@ -77,6 +77,7 @@ public class EcmFolderCreatedEventHandlerTest
         unit.setFolderService(acmFolderService);
         unit.setAuditPropertyEntityAdapter(auditPropertyEntityAdapter);
         unit.setFileParticipantService(fileParticipantService);
+        unit.setFolderAndFilesUtils(folderAndFilesUtils);
 
         folderCreated = new EcmEvent(new JSONObject());
         folderCreated.setEcmEventType(EcmEventType.CREATE);
@@ -96,10 +97,10 @@ public class EcmFolderCreatedEventHandlerTest
         Capture<AcmFolder> newFolder = Capture.newInstance();
 
         // new folder is not in ArkCase ...
-        expect(acmFolderDao.findByCmisFolderId(folderCreated.getNodeId())).andThrow(new NoResultException());
+        expect(folderAndFilesUtils.lookupArkCaseFolder(folderCreated.getNodeId())).andReturn(null);
 
         // ... and the parent folder is in ArkCase
-        expect(acmFolderDao.findByCmisFolderId(folderCreated.getParentNodeId())).andReturn(parentFolder);
+        expect(folderAndFilesUtils.lookupArkCaseFolder(folderCreated.getParentNodeId())).andReturn(parentFolder);
 
         // get the CMIS repository id
         expect(acmFolderService.getCmisRepositoryId(parentFolder)).andReturn(parentFolder.getCmisRepositoryId());
@@ -133,7 +134,8 @@ public class EcmFolderCreatedEventHandlerTest
     @Test
     public void onEcmFolderCreated_ifAlreadyInArkcase_thenNoFurtherAction() throws Exception
     {
-        expect(acmFolderDao.findByCmisFolderId(folderCreated.getNodeId())).andReturn(new AcmFolder());
+        // new folder is in ArkCase ...
+        expect(folderAndFilesUtils.lookupArkCaseFolder(folderCreated.getNodeId())).andReturn(new AcmFolder());
 
         replay(mocks);
 
@@ -146,11 +148,11 @@ public class EcmFolderCreatedEventHandlerTest
     public void onEcmFolderCreated_ifParentFolderNotInArkcase_thenNoFurtherAction() throws Exception
     {
         // new folder is not in ArkCase ...
-        expect(acmFolderDao.findByCmisFolderId(folderCreated.getNodeId())).andThrow(new NoResultException());
+        expect(folderAndFilesUtils.lookupArkCaseFolder(folderCreated.getNodeId())).andReturn(null);
 
-        // ... and the parent folder also is not in ArkCase
-        expect(acmFolderDao.findByCmisFolderId(folderCreated.getParentNodeId())).andThrow(new NoResultException());
-
+        // ... and the parent folder is in ArkCase
+        expect(folderAndFilesUtils.lookupArkCaseFolder(folderCreated.getParentNodeId())).andReturn(null);
+        
         replay(mocks);
 
         unit.onEcmFolderCreated(folderCreated);

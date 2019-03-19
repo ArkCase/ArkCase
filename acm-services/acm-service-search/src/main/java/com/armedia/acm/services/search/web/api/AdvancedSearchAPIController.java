@@ -6,27 +6,28 @@ package com.armedia.acm.services.search.web.api;
  * %%
  * Copyright (C) 2014 - 2018 ArkCase LLC
  * %%
- * This file is part of the ArkCase software. 
- * 
- * If the software was purchased under a paid ArkCase license, the terms of 
- * the paid license agreement will prevail.  Otherwise, the software is 
+ * This file is part of the ArkCase software.
+ *
+ * If the software was purchased under a paid ArkCase license, the terms of
+ * the paid license agreement will prevail.  Otherwise, the software is
  * provided under the following open source license terms:
- * 
+ *
  * ArkCase is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *  
+ *
  * ArkCase is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
  * #L%
  */
 
+import com.armedia.acm.services.search.model.SearchConstants;
 import com.armedia.acm.services.search.model.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 
@@ -80,9 +81,10 @@ public class AdvancedSearchAPIController
             @RequestParam(value = "s", required = false, defaultValue = "") String sort,
             @RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
             @RequestParam(value = "n", required = false, defaultValue = "10") int maxRows,
+            @RequestParam(value = "fl", required = false) String fields,
             Authentication authentication) throws MuleException
     {
-        return advancedSearch(query, sort, startRow, maxRows, authentication);
+        return advancedSearch(query, sort, startRow, maxRows, fields, authentication);
     }
 
     /**
@@ -129,7 +131,7 @@ public class AdvancedSearchAPIController
         {
             maxRows = (int) requestParams.get("n");
         }
-        return advancedSearch(query, sort, startRow, maxRows, authentication);
+        return advancedSearch(query, sort, startRow, maxRows, null, authentication);
     }
 
     /**
@@ -149,7 +151,8 @@ public class AdvancedSearchAPIController
      * @throws MuleException
      *             on error
      */
-    private String advancedSearch(String query, String sort, int startRow, int maxRows, Authentication authentication) throws MuleException
+    private String advancedSearch(String query, String sort, int startRow, int maxRows, String fields, Authentication authentication)
+            throws MuleException
     {
         log.debug("User [{}] is searching for [{}]", authentication.getName(), query);
 
@@ -172,7 +175,8 @@ public class AdvancedSearchAPIController
             query = query.replace("facet.range.gap=+", "facet.range.gap=%2B");
         }
 
-        return getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.ADVANCED_SEARCH, query, startRow, maxRows, sort);
+        return getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.ADVANCED_SEARCH, query, startRow, maxRows, sort,
+                true, "", true, false, SearchConstants.DEFAULT_FIELD, fields);
     }
 
     public ExecuteSolrQuery getExecuteSolrQuery()

@@ -66,10 +66,18 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
         "/spring/spring-library-object-association-plugin.xml",
         "/spring/spring-library-object-converter.xml",
         "/spring/spring-library-ecm-file-lock.xml",
-        "/spring/spring-library-service-data.xml" })
+        "/spring/spring-library-service-data.xml",
+        "/spring/spring-library-acm-email.xml",
+        "/spring/spring-library-configuration.xml",
+        "/spring/spring-library-folder-watcher.xml" })
 @TransactionConfiguration(defaultRollback = true)
 public class PersonServiceIT
 {
+    static
+    {
+        String userHomePath = System.getProperty("user.home");
+        System.setProperty("acm.configurationserver.propertyfile", userHomePath + "/.arkcase/acm/conf.yml");
+    }
 
     @Autowired
     PersonService personService;

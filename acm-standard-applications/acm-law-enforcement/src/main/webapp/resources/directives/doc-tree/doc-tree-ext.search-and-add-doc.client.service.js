@@ -95,7 +95,8 @@ angular.module('services').factory('DocTreeExt.SearchAndAddDocuments', [ '$q', '
             params.parentType = DocTree._objType;
             params.parentId = DocTree._objId;
             params.folderId = DocTree.objectInfo.container.folder.nodeId;
-            params.filter = 'fq="object_type_s": FILE';
+            params.filter = '"object_type_s": FILE';
+
             params.header = $translate.instant("common.dialogObjectPicker.addDocument");
             params.config = Util.goodMapValue(DocTree.treeConfig, "dialogObjectPicker");
 

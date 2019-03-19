@@ -28,6 +28,7 @@ package com.armedia.acm.auth.okta.auth;
  */
 
 import com.armedia.acm.auth.AcmLoginSuccessOperations;
+import com.armedia.acm.auth.okta.model.OktaConfig;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,10 +46,10 @@ import java.io.IOException;
 public class AcmMultiFactorLoginSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler
 {
     private Logger LOGGER = LoggerFactory.getLogger(AcmMultiFactorLoginSuccessHandler.class);
-    private AcmMultiFactorConfig acmMultiFactorConfig;
     private SessionRegistry sessionRegistry;
     private SessionAuthenticationStrategy sessionAuthenticationStrategy;
     private AcmLoginSuccessOperations loginSuccessOperations;
+    private OktaConfig oktaConfig;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication)
@@ -62,26 +63,26 @@ public class AcmMultiFactorLoginSuccessHandler extends SavedRequestAwareAuthenti
         sessionAuthenticationStrategy.onAuthentication(authentication, request, response);
     }
 
-    public AcmMultiFactorConfig getAcmMultiFactorConfig()
+    public OktaConfig getOktaConfig()
     {
-        return acmMultiFactorConfig;
+        return oktaConfig;
     }
 
-    public void setAcmMultiFactorConfig(AcmMultiFactorConfig acmMultiFactorConfig)
+    public void setOktaConfig(OktaConfig oktaConfig)
     {
-        this.acmMultiFactorConfig = acmMultiFactorConfig;
+        this.oktaConfig = oktaConfig;
     }
 
     @Override
     public void setAlwaysUseDefaultTargetUrl(boolean alwaysUseDefaultTargetUrl)
     {
-        super.setAlwaysUseDefaultTargetUrl(getAcmMultiFactorConfig().isAlwaysUseDefaultUrl());
+        super.setAlwaysUseDefaultTargetUrl(oktaConfig.getAlwaysUseDefaultUrl());
     }
 
     @Override
     public void setDefaultTargetUrl(String defaultTargetUrl)
     {
-        super.setDefaultTargetUrl(getAcmMultiFactorConfig().getDefaultLoginTargetUrl());
+        super.setDefaultTargetUrl(oktaConfig.getDefaultLoginTargetUrl());
     }
 
     public SessionRegistry getSessionRegistry()

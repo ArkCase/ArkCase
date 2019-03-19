@@ -27,66 +27,44 @@ package com.armedia.acm.services.dataaccess.service;
  * #L%
  */
 
-import com.armedia.acm.files.propertymanager.PropertyFileManager;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.armedia.acm.configuration.service.ConfigurationPropertyService;
+import com.armedia.acm.services.dataaccess.model.DataAccessControlConfig;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.HashMap;
 import java.util.Map;
 
 public class DataAccessControlService
 {
+    private DataAccessControlConfig dacConfig;
 
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private ConfigurationPropertyService configurationPropertyService;
 
-    private String propertiesFile;
-    private PropertyFileManager propertyFileManager;
-
-    private Map<String, String> properties = new HashMap<>();
-
-    public void initBean()
+    public void saveProperties(Map<String, Object> properties)
     {
-        try
-        {
-            properties = getPropertyFileManager().readFromFileAsMap(new File(getPropertiesFile()));
-        }
-        catch (IOException e)
-        {
-            log.error("Could not read properties file [{}]", propertiesFile);
-        }
+        configurationPropertyService.updateProperties(properties);
     }
 
-    public void  saveProperties(Map<String, String> properties)
+    public Map<String, Object> loadProperties()
     {
-        getPropertyFileManager().storeMultiple(properties, getPropertiesFile(), true);
-        this.properties = properties;
+        return configurationPropertyService.getProperties(dacConfig);
     }
 
-    public Map<String, String> loadProperties()
+    public DataAccessControlConfig getDacConfig()
     {
-        return properties;
+        return dacConfig;
     }
 
-    public String getPropertiesFile()
+    public void setDacConfig(DataAccessControlConfig dacConfig)
     {
-        return propertiesFile;
+        this.dacConfig = dacConfig;
     }
 
-    public void setPropertiesFile(String propertiesFile)
+    public ConfigurationPropertyService getConfigurationPropertyService()
     {
-        this.propertiesFile = propertiesFile;
+        return configurationPropertyService;
     }
 
-    public PropertyFileManager getPropertyFileManager()
+    public void setConfigurationPropertyService(ConfigurationPropertyService configurationPropertyService)
     {
-        return propertyFileManager;
+        this.configurationPropertyService = configurationPropertyService;
     }
-
-    public void setPropertyFileManager(PropertyFileManager propertyFileManager)
-    {
-        this.propertyFileManager = propertyFileManager;
-    }
-
 }

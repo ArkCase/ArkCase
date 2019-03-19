@@ -34,6 +34,10 @@ package com.armedia.acm.objectonverter;
 public interface AcmMarshaller
 {
 
-    public String marshal(Object obj);
+    String marshal(Object obj);
 
+    default String marshal(Object object, Class clazz)
+    {
+        return null;
+    }
 }

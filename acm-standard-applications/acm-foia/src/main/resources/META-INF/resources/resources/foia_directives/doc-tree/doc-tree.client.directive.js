@@ -936,9 +936,6 @@ angular
 
                     ,
                     onDblClick : function(event, data) {
-                        if (DocTree.readOnly) {
-                            return;
-                        }
                         var setting = DocTree.Config.getSetting();
                         if (DocTree.isFolderNode(data.node) && setting.search.enabled) {
                             DocTree.Op.removeSearchFilter();
@@ -1316,7 +1313,7 @@ angular
 
                                                 var $option = $("<option/>").val(key).text(value).appendTo($select);
 
-                                                if (Util.goodValue(node.data.reviewStatus) == value) {
+                                                if (Util.goodValue(node.data.reviewStatus) === key) {
                                                     $option.attr("selected", true);
                                                 }
                                             }
@@ -1341,7 +1338,7 @@ angular
 
                                                 var $option = $("<option/>").val(key).text(value).appendTo($select);
 
-                                                if (Util.goodValue(node.data.redactionStatus) == value) {
+                                                if (Util.goodValue(node.data.redactionStatus) === key) {
                                                     $option.attr("selected", true);
                                                 }
                                             }
@@ -2210,16 +2207,18 @@ angular
                             });
 
                             $q.all(promiseArray).then(function() {
-                                menu = _.filter(menu, function(item) {
-                                    if (item.plugin){
-                                        var pluginName = item.plugin;
-                                        var pluginConfig = pluginsConfig[pluginName];
-                                        if (pluginConfig){
-                                            return pluginConfig.enabled && !item.invisible;
+                                if (pluginsConfig) {
+                                    menu = _.filter(menu, function (item) {
+                                        if (item.plugin) {
+                                            var pluginName = item.plugin;
+                                            var pluginConfig = pluginsConfig[pluginName];
+                                            if (pluginConfig) {
+                                                return pluginConfig.enabled && !item.invisible;
+                                            }
                                         }
-                                    }
-                                    return !item.invisible;
-                                });
+                                        return !item.invisible;
+                                    });
+                                }
 
                                 //Under readOnly mode, disable all non-readOnly cmd
                                 if (DocTree.readOnly) {
@@ -3935,6 +3934,9 @@ angular
                         $(node.tr).find("select.reviewstatus").prop('disabled', true);
                         $(node.tr).find("select.redactionstatus").prop('disabled', true);
 
+                        var nodeParentFolder = node.parent;
+                        var cacheKey = DocTree.getCacheKeyByNode(nodeParentFolder);
+
                         if(statusType === "review") {
                             Util.serviceCall({
                                 service: Ecm.setFileReviewStatus,
@@ -3950,6 +3952,7 @@ angular
                                 $(node.tr).find("select.reviewstatus").prop('disabled', false);
                                 $(node.tr).find("select.redactionstatus").prop('disabled', false);
                                 node.data.reviewStatus = statusValue;
+                                DocTree.cacheFolderList.remove(cacheKey);
 
                                 return data;
                             }, function(error) {
@@ -3976,6 +3979,7 @@ angular
                                 $(node.tr).find("select.reviewstatus").prop('disabled', false);
                                 $(node.tr).find("select.redactionstatus").prop('disabled', false);
                                 node.data.redactionStatus = statusValue;
+                                DocTree.cacheFolderList.remove(cacheKey);
 
                                 return data;
                             }, function(error) {

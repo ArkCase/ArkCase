@@ -4,7 +4,7 @@
     <parent>
         <groupId>com.armedia.acm</groupId>
         <artifactId>acm-standard-applications</artifactId>
-        <version>3.3.0</version>
+        <version>3.3.1</version>
     </parent>
 
     <groupId>com.armedia.acm.acm-standard-applications</groupId>
@@ -482,22 +482,30 @@
             <artifactId>acm-onlyoffice-plugin</artifactId>
             <version>${acm.version}</version>
         </dependency>
-
         <dependency>
             <groupId>com.armedia.acm.acm-services</groupId>
             <artifactId>acm-service-billing</artifactId>
             <version>${acm.version}</version>
         </dependency>
-        
+        <dependency>
+            <groupId>com.armedia.acm.acm-tool-integrations</groupId>
+            <artifactId>acm-configuration</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
         <dependency>
             <groupId>com.armedia.acm.acm-services</groupId>
             <artifactId>acm-service-sequence-manager</artifactId>
             <version>${acm.version}</version>
         </dependency>
-
         <dependency>
             <groupId>com.armedia.acm.acm-standard-applications</groupId>
             <artifactId>acm-foia</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.armedia.acm.acm-services</groupId>
+            <artifactId>acm-service-ocr</artifactId>
             <version>${acm.version}</version>
         </dependency>
 

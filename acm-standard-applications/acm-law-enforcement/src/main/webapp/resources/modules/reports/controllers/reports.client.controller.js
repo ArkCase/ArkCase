@@ -53,12 +53,12 @@ angular.module('reports').controller('ReportsController',
                 fillFiscalYears(data[3]);
 
                 // On some reason reports list contains URL and PORT info
-                delete $scope.data.reports.PENTAHO_SERVER_URL;
-                delete $scope.data.reports.PENTAHO_SERVER_PORT;
-                $scope.data.reportsHost = reportsConfig['PENTAHO_SERVER_URL'];
-                $scope.data.reportsPort = reportsConfig['PENTAHO_SERVER_PORT'];
-                $scope.data.reportsUser = reportsConfig['PENTAHO_SERVER_USER'];
-                $scope.data.reportsPassword = reportsConfig['PENTAHO_SERVER_PASSWORD'];
+                delete $scope.data.reports["report.plugin.PENTAHO_SERVER_URL"];
+                delete $scope.data.reports["report.plugin.PENTAHO_SERVER_PORT"];
+                $scope.data.reportsHost = reportsConfig['report.plugin.PENTAHO_SERVER_URL'];
+                $scope.data.reportsPort = reportsConfig['report.plugin.PENTAHO_SERVER_PORT'];
+                $scope.data.reportsUser = reportsConfig['report.plugin.PENTAHO_SERVER_USER'];
+                $scope.data.reportsPassword = reportsConfig['report.plugin.PENTAHO_SERVER_PASSWORD'];
                 $scope.data.reportSelected = null;
                 $scope.data.dateSearchType = null;
 
@@ -87,21 +87,6 @@ angular.module('reports').controller('ReportsController',
                     $scope.showReportParameters = false;
                     return;
                 }
-
-                var reportParameters = _.find($scope.reportsParameters, {
-                    "reportName": $scope.data.reportSelected
-                });
-
-                // reset start and end date
-                $scope.data.startDate = new Date();
-                $scope.data.endDate = new Date();
-
-                if (!reportParameters) {
-                    $scope.data.dateSearchType = 'DATE_RANGE'; // by default DATE_RANGE is used
-                } else {
-                    $scope.data.dateSearchType = reportParameters.dateSearchType;
-                }
-
                 var reportUrl = $scope.data.reports[$scope.data.reportSelected];
                 // show report parameters only on prpt reports
                 if (reportUrl.indexOf('prpt/viewer', reportUrl.length - 'prpt/viewer'.length) !== -1) {

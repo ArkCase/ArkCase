@@ -165,7 +165,10 @@
                 "title": "News",
                 "noDataMessage": "Currently there is no RSS/info",
                 "configDescription": "Description",
-                "configDescriptionPlaceholder": "Enter widget description"
+                "configDescriptionPlaceholder": "Enter widget description",
+                "message": {
+                    "error": "Invalid URL"
+                }
             },
             "details": {
                 "title": "Details",
@@ -350,7 +353,7 @@
                 "noDataMessage": "Currently there are no approvers to display"
             },
             "userWebsites": {
-                "title": "Websites",
+                "title": "Websites Widget",
                 "description": "Displays user websites",
                 "noDataMessage": "Currently there is no website info",
                 "table": {

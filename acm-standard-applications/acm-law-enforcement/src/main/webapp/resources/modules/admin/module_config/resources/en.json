@@ -52,6 +52,7 @@
             "userDomain": "User domain",
             "userPrefix": "Username Prefix",
             "userControlGroup": "User Control Group",
+            "groupPrefix": "Group Prefix",
             "groupControlGroup": "Group Control Group",
             "syncPageSize": "Sync Page Size",
             "groupSearchFilter": "Group Search Filter",
@@ -86,6 +87,7 @@
             "userIdAttributeName": "Enter attribute used for user id (e.g. 'uid')",
             "userDomain": "Enter user domain",
             "userPrefix": "Fill in the username prefix for SAML environment.",
+            "groupPrefix": "Fill in the group prefix for SAML environment.",
             "userControlGroup": "Fill in the user control group for SAML environment.",
             "groupControlGroup": "Fill in the group control group for SAML environment.",
             "syncPageSize": "Enter paging size",
@@ -336,6 +338,7 @@
                 "enableDocumentEmail.checkbox": "Documents can be emailed",
                 "enableDocumentAttach.checkbox": "Documents can be attached to emails",
                 "enableDocumentHyperlink.checkbox": "Documents can be sent as hyperlinks",
+                "documentsAsPdf.checkbox": "Send documents as PDFs",
                 "serverSettings.label": "Server Settings",
                 "serverType.label": "Server Type",
                 "serverType.placeholder": "Choose Email Server Type",
@@ -1026,6 +1029,15 @@
             "ocrConfigForm": {
                 "title": "OCR Services",
                 "save.button": "Save",
+                "enableOCR.checkbox": "Enable OCR"
+            }
+        },
+        "ocr": {
+            "title": "OCR Services",
+            "ocrManagement": "OCR Management",
+            "ocrConfigForm": {
+                "save.button": "Save",
+                "enableOCR.label": "OCR Configuration",
                 "enableOCR.checkbox": "Enable OCR"
             }
         },

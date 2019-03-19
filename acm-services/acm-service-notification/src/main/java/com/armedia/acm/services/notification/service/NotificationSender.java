@@ -1,38 +1,11 @@
 package com.armedia.acm.services.notification.service;
 
-import com.armedia.acm.core.AcmObject;
-import com.armedia.acm.data.AcmAbstractDao;
-
-/*-
- * #%L
- * ACM Service: Notification
- * %%
- * Copyright (C) 2014 - 2018 ArkCase LLC
- * %%
- * This file is part of the ArkCase software. 
- * 
- * If the software was purchased under a paid ArkCase license, the terms of 
- * the paid license agreement will prevail.  Otherwise, the software is 
- * provided under the following open source license terms:
- * 
- * ArkCase is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *  
- * ArkCase is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
- * 
- * You should have received a copy of the GNU Lesser General Public License
- * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
- * #L%
- */
-
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.data.service.AcmDataService;
+import com.armedia.acm.email.model.EmailSenderConfig;
 import com.armedia.acm.files.propertymanager.PropertyFileManager;
+import com.armedia.acm.plugins.ecm.model.EcmFile;
+import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.services.authenticationtoken.dao.AuthenticationTokenDao;
 import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenService;
@@ -43,8 +16,8 @@ import com.armedia.acm.services.email.model.EmailWithAttachmentsDTO;
 import com.armedia.acm.services.email.model.EmailWithEmbeddedLinksDTO;
 import com.armedia.acm.services.email.model.EmailWithEmbeddedLinksResultDTO;
 import com.armedia.acm.services.email.model.MessageBodyFactory;
-import com.armedia.acm.services.email.sender.model.EmailSenderConfigurationConstants;
 import com.armedia.acm.services.email.service.AcmEmailSenderService;
+import com.armedia.acm.services.email.service.AcmMailTemplateConfigurationService;
 import com.armedia.acm.services.email.service.TemplatingEngine;
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.model.NotificationConstants;
@@ -60,13 +33,39 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Stream;
 
 import freemarker.template.TemplateException;
+
+/*-
+ * #%L
+ * ACM Service: Notification
+ * %%
+ * Copyright (C) 2014 - 2018 ArkCase LLC
+ * %%
+ * This file is part of the ArkCase software.
+ *
+ * If the software was purchased under a paid ArkCase license, the terms of
+ * the paid license agreement will prevail.  Otherwise, the software is
+ * provided under the following open source license terms:
+ *
+ * ArkCase is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * ArkCase is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
+ * #L%
+ */
 
 /**
  * @author riste.tutureski
@@ -77,8 +76,6 @@ public abstract class NotificationSender
     private final Logger LOG = LoggerFactory.getLogger(getClass());
 
     protected AuditPropertyEntityAdapter auditPropertyEntityAdapter;
-    protected PropertyFileManager propertyFileManager;
-    protected String emailSenderPropertyFileLocation;
     protected AuthenticationTokenService authenticationTokenService;
     protected AuthenticationTokenDao authenticationTokenDao;
     protected EcmFileService ecmFileService;
@@ -88,7 +85,7 @@ public abstract class NotificationSender
     private UserDao userDao;
     private AcmDataService dataService;
     private TemplatingEngine templatingEngine;
-    private Map<String, String> notificationTemplates = new HashMap<>();
+    private AcmMailTemplateConfigurationService templateService;
 
     /**
      * Sends the notification to user's email. If successful, sets the notification state to
@@ -98,7 +95,7 @@ public abstract class NotificationSender
      *            the notification to send
      * @return the notification with state set
      */
-    public Notification send(Notification notification)
+    public Notification send(Notification notification, Object object)
     {
         Exception exception = null;
 
@@ -116,44 +113,50 @@ public abstract class NotificationSender
             in.setHeader("");
             in.setFooter("");
 
-            String template = notificationTemplates.get(notification.getNote());
+            String templateName = String.format("%s.html", notification.getTemplateModelName());
+
+            String template = templateService.getTemplate(templateName);
             if (template == null)
             {
+                LOG.warn("Sending notifications without a template is deprecated!");
                 setupDefaultTemplateAndBody(notification, in);
             }
             else
             {
-                AcmAbstractDao<AcmObject> dao = getDataService().getDaoByObjectType(notification.getParentType());
-                AcmObject object = dao.find(notification.getParentId());
                 try
                 {
-                    String body = getTemplatingEngine().process(template, notification.getNote(), object);
+                    String body = getTemplatingEngine().process(template, notification.getTemplateModelName(), object);
                     in.setBody(body);
                     in.setTemplate(body);
                 }
                 catch (TemplateException | IOException e)
                 {
                     // failing to send an email should not break the flow
-                    LOG.error("Unable to generate email for {} about {} with ID [{}]", Arrays.asList(notification.getUserEmail()),
-                            object.getObjectType(), object.getId(), e);
+                    LOG.error("Unable to generate email for {} ", Arrays.asList(notification.getUserEmail()), e);
                     setupDefaultTemplateAndBody(notification, in);
                 }
 
             }
+            if (notification.getAttachFiles())
+            {
+                List<Long> notificationFileIds = new ArrayList<>();
+                for (EcmFileVersion fileVersion : notification.getFiles())
+                {
+                    notificationFileIds.add(fileVersion.getFile().getId());
+                }
+                in.setAttachmentIds(notificationFileIds);
+            }
 
             in.setSubject(notification.getTitle());
-            in.setEmailAddresses(Arrays.asList(notification.getUserEmail()));
+            in.setEmailAddresses(Arrays.asList(notification.getEmailAddresses().split(",")));
 
             Authentication authentication = SecurityContextHolder.getContext() != null
                     ? SecurityContextHolder.getContext().getAuthentication()
                     : null;
-
-            String userId = propertyFileManager.load(emailSenderPropertyFileLocation, EmailSenderConfigurationConstants.USERNAME, null);
-
-            AcmUser acmUser = userDao.findByUserId(userId);
+            
+            AcmUser acmUser = notification.getUser() != null ? userDao.findByUserId(notification.getUser()) : null;
 
             getEmailSenderService().sendEmail(in, authentication, acmUser);
-
         }
         catch (Exception e)
         {
@@ -166,7 +169,14 @@ public abstract class NotificationSender
         else
         {
             LOG.error("Notification message not sent ...", exception);
-            notification.setState(NotificationConstants.STATE_NOT_SENT);
+            if (exception instanceof TemplateException)
+            {
+                notification.setState(NotificationConstants.STATE_TEMPLATE_ERROR);
+            }
+            else
+            {
+                notification.setState(NotificationConstants.STATE_NOT_SENT);
+            }
         }
 
         return notification;
@@ -211,20 +221,6 @@ public abstract class NotificationSender
     public void setAuditPropertyEntityAdapter(AuditPropertyEntityAdapter auditPropertyEntityAdapter)
     {
         this.auditPropertyEntityAdapter = auditPropertyEntityAdapter;
-    }
-
-    public void setPropertyFileManager(PropertyFileManager propertyFileManager)
-    {
-        this.propertyFileManager = propertyFileManager;
-    }
-
-    /**
-     * @param emailSenderPropertyFileLocation
-     *            the emailSenderPropertyFileLocation to set
-     */
-    public void setEmailSenderPropertyFileLocation(String emailSenderPropertyFileLocation)
-    {
-        this.emailSenderPropertyFileLocation = emailSenderPropertyFileLocation;
     }
 
     public AuthenticationTokenService getAuthenticationTokenService()
@@ -292,16 +288,6 @@ public abstract class NotificationSender
         this.userDao = userDao;
     }
 
-    public Map<String, String> getNotificationTemplates()
-    {
-        return notificationTemplates;
-    }
-
-    public void setNotificationTemplates(Map<String, String> notificationTemplates)
-    {
-        this.notificationTemplates = notificationTemplates;
-    }
-
     public TemplatingEngine getTemplatingEngine()
     {
         return templatingEngine;
@@ -320,5 +306,15 @@ public abstract class NotificationSender
     public void setDataService(AcmDataService dataService)
     {
         this.dataService = dataService;
+    }
+
+    public AcmMailTemplateConfigurationService getTemplateService()
+    {
+        return templateService;
+    }
+
+    public void setTemplateService(AcmMailTemplateConfigurationService templateService)
+    {
+        this.templateService = templateService;
     }
 }

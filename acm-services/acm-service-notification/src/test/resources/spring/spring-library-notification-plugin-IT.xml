@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
     <import resource="file:${user.home}/.arkcase/acm/app-config.xml"/>
 
@@ -14,4 +14,13 @@
         </constructor-arg>
     </bean>
 
+    <bean id="notificationConfig" class="com.armedia.acm.services.notification.model.NotificationConfig"/>
+
+    <bean id="emailSenderConfig" class="com.armedia.acm.email.model.EmailSenderConfig"/>
+
+    <bean id="emailReceiverConfig" class="com.armedia.acm.email.model.EmailReceiverConfig"/>
+
+    <bean id="auditEventConfig" class="com.armedia.acm.audit.model.AuditEventConfig">
+        <property name="jsonUnmarshaller" ref="jsonUnmarshaller"/>
+    </bean>
 </beans>

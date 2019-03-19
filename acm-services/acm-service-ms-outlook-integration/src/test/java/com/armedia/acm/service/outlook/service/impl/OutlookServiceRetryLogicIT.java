@@ -79,10 +79,19 @@ import microsoft.exchange.webservices.data.search.filter.SearchFilter;
         "/spring/spring-library-object-converter.xml",
         "/spring/spring-library-ecm-file-lock.xml",
         "/spring/spring-library-service-data.xml",
-        "/spring/spring-library-core-api.xml"
+        "/spring/spring-library-core-api.xml",
+        "/spring/spring-library-configuration.xml",
+        "/spring/spring-library-convert-folder-service.xml",
+        "/spring/spring-library-folder-watcher.xml"
 })
 public class OutlookServiceRetryLogicIT extends EasyMockSupport
 {
+    static
+    {
+        String userHomePath = System.getProperty("user.home");
+        System.setProperty("acm.configurationserver.propertyfile", userHomePath + "/.arkcase/acm/conf.yml");
+    }
+
     private transient final Logger log = LoggerFactory.getLogger(getClass());
     @Autowired
     private OutlookService outlookService;

@@ -60,6 +60,18 @@
                             </div>
                         </div>
                     </div>
+                    <div class="row" ng-if="emailSenderConfigDataModel.allowDocuments">
+                        <div class="col-lg-12">
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox" ng-model="emailSenderConfigDataModel.convertDocumentsToPdf">
+                                    <span translate>
+                                        admin.security.emailConfiguration.emailConfigForm.documentsAsPdf.checkbox
+                                    </span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="row">

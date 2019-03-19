@@ -39,6 +39,8 @@ import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -132,17 +134,41 @@ public class DefaultFolderAndFileConverter implements FolderConverter, FileConve
 
     /**
      * @param username
-     * @param id
+     * @param file
      * @throws ConversionException
      */
     @Override
     public void convert(EcmFile file, String username) throws ConversionException
     {
+        convertFile(file, "", username, false);
+    }
+
+    @Override
+    public File convert(EcmFile file) throws ConversionException
+    {
+        return convertAndReturnConvertedFile(file);
+    }
+
+    @Override
+    public File convertAndReturnConvertedFile(EcmFile file) throws ConversionException
+    {
+        return convertFile(file, "", "", true);
+    }
+
+    @Override
+    public File convertAndReturnConvertedFile(EcmFile file, String version) throws ConversionException
+    {
+        return convertFile(file, version, "", true);
+    }
+
+    private File convertFile(EcmFile file, String version, String username, Boolean skipUploadAndReturnConvertedFile) throws ConversionException
+    {
         List<FileConverter> converters = convertersByType.get(file.getFileExtension().toLowerCase());
         if (converters == null)
         {
-            return;
+            return null;
         }
+
         ConversionException ex = new ConversionException(
                 String.format("Error converting file [%s] of type [%s] with version [%s].", file.getFileName(),
                         file.getFileExtension(), file.getActiveVersionTag()));
@@ -152,7 +178,15 @@ public class DefaultFolderAndFileConverter implements FolderConverter, FileConve
             {
                 log.debug("Using converter of type [{}] to convert file [{}] of type [{}].", converter.getClass().getName(),
                         file.getFileName() + "." + file.getFileExtension(), file.getFileExtension());
-                converter.convert(file, username);
+
+                if(skipUploadAndReturnConvertedFile)
+                {
+                    return converter.convertAndReturnConvertedFile(file, version);
+                }
+                else
+                {
+                    converter.convert(file, username);
+                }
             }
             catch (ConversionException ce)
             {
@@ -163,6 +197,8 @@ public class DefaultFolderAndFileConverter implements FolderConverter, FileConve
         {
             throw ex;
         }
+
+        return null;
     }
 
     /**

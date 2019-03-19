@@ -71,6 +71,8 @@ import java.nio.file.StandardCopyOption;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
+        "/spring/spring-library-configuration.xml",
+        "/spring/spring-library-object-converter.xml",
         "/spring/spring-library-ephesoft-test.xml",
         "/spring/spring-library-context-holder.xml",
         "/spring/spring-library-property-file-manager.xml",
@@ -79,6 +81,12 @@ import java.nio.file.StandardCopyOption;
 @TransactionConfiguration(defaultRollback = true)
 public class AttachmentCaptureFileListenerIT extends EasyMockSupport
 {
+    static
+    {
+        String userHomePath = System.getProperty("user.home");
+        System.setProperty("acm.configurationserver.propertyfile", userHomePath + "/.arkcase/acm/conf.yml");
+    }
+
     @Autowired
     FileObject captureFolder;
     @Autowired

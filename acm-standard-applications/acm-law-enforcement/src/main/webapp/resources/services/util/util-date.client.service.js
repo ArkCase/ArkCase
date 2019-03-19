@@ -151,7 +151,7 @@ angular.module('services').factory('Util.DateService', [ '$translate', 'UtilServ
         ,
         isoToLocalDateTime: function (isoDateTime) {
             if (!Util.isEmpty(isoDateTime)) {
-                return moment.utc(isoDateTime).local().format("YYYY-MM-DDTHH:mm:ss");
+                return moment.utc(isoDateTime).local().format("YYYY-MM-DDTHH:mm:ss.sssZ");
             } else {
                 return "";
             }

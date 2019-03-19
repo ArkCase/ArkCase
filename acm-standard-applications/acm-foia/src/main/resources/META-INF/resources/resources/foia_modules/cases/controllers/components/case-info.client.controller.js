@@ -81,7 +81,6 @@ angular.module('cases').controller(
                     $scope.owningGroup = ObjectModelService.getGroup(data);
                     $scope.assignee = ObjectModelService.getAssignee(data);
                     $scope.objectInfo.dueDate = UtilDateService.dateToIso(UtilDateService.isoToDate($scope.objectInfo.dueDate));
-                    $scope.objectInfo.receivedDate = UtilDateService.isoToLocalDateTime($scope.objectInfo.receivedDate);
                     if (!$scope.includeWeekends) {
                         $scope.daysLeft = DueDateService.daysLeft($scope.holidays, $scope.objectInfo.dueDate);
                         $scope.calculateOverdueObj = DueDateService.calculateOverdueDays(new Date($scope.objectInfo.dueDate), $scope.daysLeft, $scope.holidays);
@@ -103,7 +102,7 @@ angular.module('cases').controller(
                     });
                     $scope.today = new Date();
                     $scope.receivedDateMinYear = $scope.today.getFullYear();
-                    $scope.receivedDateMaxYear = moment($scope.today).add(1, 'years').toDate().getFullYear();
+                    $scope.receivedDateMaxYear = $scope.receivedDateMinYear + 1;
                 });
 
                 $scope.notificationGroup = null;
@@ -127,6 +126,8 @@ angular.module('cases').controller(
                         $scope.receivedDateDisabledLink = false;
                     }
                 });
+                
+                $scope.isAmendmentAdded = data.amendmentFlag;
 
             };
             $scope.userOrGroupSearch = function() {
@@ -221,8 +222,6 @@ angular.module('cases').controller(
             function saveCase() {
                 var promiseSaveInfo = Util.errorPromise($translate.instant("common.service.error.invalidData"));
                         if (CaseInfoService.validateCaseInfo($scope.objectInfo)) {
-                            $scope.objectInfo.recordSearchDateFrom = UtilDateService.dateToIsoDateTime($scope.objectInfo.recordSearchDateFrom);
-                            $scope.objectInfo.recordSearchDateTo = UtilDateService.dateToIsoDateTime($scope.objectInfo.recordSearchDateTo);
                     var objectInfo = Util.omitNg($scope.objectInfo);
                     promiseSaveInfo = CaseInfoService.saveFoiaRequestInfo(objectInfo);
                     promiseSaveInfo.then(function(caseInfo) {
@@ -273,8 +272,7 @@ angular.module('cases').controller(
             };
             $scope.setReceivedDate = function(data){
                 if (!Util.isEmpty(data)) {
-                    var receivedDate = new Date(data);
-                    $scope.objectInfo.receivedDate = UtilDateService.dateTimeToIso(UtilDateService.isoToDate(receivedDate));
+                    $scope.objectInfo.receivedDate = data;
                     $scope.saveCase();
                 } else {
                 }

@@ -27,6 +27,8 @@ package com.armedia.acm.services.email.filter;
  * #L%
  */
 
+import com.armedia.acm.email.model.EmailReceiverConfig;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
@@ -34,7 +36,6 @@ import org.springframework.util.StringUtils;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 
-import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -43,20 +44,19 @@ public class ComplaintFilePatternMailFilter extends AcmObjectPatternMailFilter
 
     private transient final Logger log = LoggerFactory.getLogger(getClass());
     private String objectTypeRegexPattern;
-    private Boolean enableCreatingObject;
+    private EmailReceiverConfig emailReceiverConfig;
 
-    public ComplaintFilePatternMailFilter(String objectIdRegexPattern, String objectTypeRegexPattern, Boolean enableCreatingObject)
+    public ComplaintFilePatternMailFilter(String objectIdRegexPattern, String objectTypeRegexPattern)
     {
         super(objectIdRegexPattern, objectTypeRegexPattern);
         this.objectTypeRegexPattern = objectTypeRegexPattern;
-        this.enableCreatingObject = enableCreatingObject;
     }
 
     @Override
-    public boolean accept(Message message) throws MessagingException, IOException
+    public boolean accept(Message message) throws MessagingException
     {
         boolean matchesFilter = false;
-        if(enableCreatingObject)
+        if (emailReceiverConfig.getCreateComplaintEnabled())
         {
             Pattern pattern = Pattern.compile(String.format("%s", objectTypeRegexPattern));
 
@@ -75,6 +75,16 @@ public class ComplaintFilePatternMailFilter extends AcmObjectPatternMailFilter
         {
             return matchesFilter;
         }
-        
+
+    }
+
+    public EmailReceiverConfig getEmailReceiverConfig()
+    {
+        return emailReceiverConfig;
+    }
+
+    public void setEmailReceiverConfig(EmailReceiverConfig emailReceiverConfig)
+    {
+        this.emailReceiverConfig = emailReceiverConfig;
     }
 }

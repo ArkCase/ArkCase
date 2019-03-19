@@ -165,7 +165,10 @@
                 "title": "समाचार",
                 "noDataMessage": "वर्तमान में कोई भी आरएसएस / जानकारी नहीं है",
                 "configDescription": "विवरण",
-                "configDescriptionPlaceholder": "विजेट विवरण दर्ज करें"
+                "configDescriptionPlaceholder": "विजेट विवरण दर्ज करें",
+                "message": {
+                    "error": "अवैध यूआरएल"
+                }
             },
             "details": {
                 "title": "विवरण",

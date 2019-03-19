@@ -4,54 +4,6 @@
              xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
 
     <beans:beans profile="extension-foia">
-        <beans:bean id="foiaPropertiesConfigurer"
-                    class="com.armedia.acm.crypto.properties.AcmEncryptablePropertySourcesPlaceholderConfigurer">
-            <!-- note: must leave "file:" at the start of the file name for spring
-                to be able to read the file; otherwise it will try to read from the
-                classpath -->
-            <beans:property name="encryptablePropertyUtils" ref="acmEncryptablePropertyUtils"/>
-            <beans:property name="ignoreResourceNotFound" value="true"/>
-            <beans:property name="localOverride" value="false"/>
-            <beans:property name="locations">
-                <beans:list>
-                    <beans:value>file:${user.home}/.arkcase/acm/foia.properties</beans:value>
-                </beans:list>
-            </beans:property>
-        </beans:bean>
-
-        <!-- needed for the UI  -->
-        <beans:bean id="foiaProperties" class="com.armedia.acm.reloadproperties.beans.AcmReloadablePropertiesFactoryBean">
-            <!-- note: must leave "file:" at the start of the file name for spring
-            to be able to read the file; otherwise it will try to read from the
-            classpath -->
-            <beans:property name="location" value="file:${user.home}/.arkcase/acm/foia.properties"/>
-            <beans:property name="ignoreResourceNotFound" value="true"/>
-            <beans:property name="localOverride" value="false"/>
-            <beans:property name="properties">
-                <beans:props></beans:props>
-            </beans:property>
-        </beans:bean>
-
-        <beans:bean id="foiaConfigListExtension" class="java.util.ArrayList">
-            <beans:constructor-arg>
-                <beans:list>
-                    <beans:bean class="com.armedia.acm.services.config.model.PropertyConfig">
-                        <beans:property name="configName" value="foia"/>
-                        <beans:property name="configDescription" value="FOIA"/>
-                        <beans:property name="properties" ref="foiaProperties"/>
-                        <beans:property name="encryptablePropertyUtils" ref="acmEncryptablePropertyUtils"/>
-                        <beans:property name="objectConverter" ref="objectConverter"/>
-                    </beans:bean>
-                </beans:list>
-            </beans:constructor-arg>
-        </beans:bean>
-
-        <beans:bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
-            <beans:property name="targetObject" ref="configList"/>
-            <beans:property name="targetMethod" value="addAll"/>
-            <beans:property name="arguments" ref="foiaConfigListExtension"/>
-        </beans:bean>
-
         <beans:bean id="caseFileStartBusinessProcessBusinessRule"
                     class="com.armedia.acm.plugins.casefile.service.CaseFileStartBusinessProcessBusinessRule">
             <beans:property name="ruleSpreadsheetFilename" value="drools-start-business-process-rules-foia.xlsx"/>
@@ -86,8 +38,8 @@
             <beans:property name="foiaRequestDao" ref="foiaRequestDao"/>
             <beans:property name="holidayConfigurationService" ref="holidayConfigurationService"/>
             <beans:property name="arkPermissionEvaluator" ref="arkPermissionEvaluator"/>
-            <beans:property name="extensionWorkingDays" value="${request.extensionWorkingDays}"/>
-            <beans:property name="requestExtensionWorkingDaysEnabled" value="${requestExtensionWorkingDaysEnabled}"/>
+            <beans:property name="extensionWorkingDays" value="#{foiaConfig.requestExtensionWorkingDays}"/>
+            <beans:property name="requestExtensionWorkingDaysEnabled" value="#{foiaConfig.requestExtensionWorkingDaysEnabled}"/>
         </beans:bean>
         <beans:bean id="foiaConfigurationHandler" class="gov.foia.pipeline.postsave.FOIAConfigurationHandler">
             <beans:property name="foiaConfigurationService" ref="foiaConfigurationService"/>
@@ -99,6 +51,7 @@
             <beans:property name="notificationSender" ref="notificationSender"/>
             <beans:property name="userDao" ref="userJpaDao"/>
             <beans:property name="ecmFileService" ref="ecmFileService"/>
+            <beans:property name="notificationDao" ref="notificationDao"/>
         </beans:bean>
 
         <beans:bean id="caseFilePipelineManager" class="com.armedia.acm.services.pipeline.PipelineManager">
@@ -165,7 +118,7 @@
             <beans:property name="foiaConfigurationService" ref="foiaConfigurationService"/>
             <beans:property name="foiaQueueCorrespondenceService" ref="foiaQueueCorrespondenceService"/>
             <beans:property name="templatingEngine" ref="templatingEngine"/>
-            <beans:property name="emailBodyTemplate" value="file:${user.home}/.arkcase/acm/templates/request-document-attached.html"/>
+            <beans:property name="emailBodyTemplate" value="file:${user.home}/.arkcase/acm/templates/requestDocumentAttached.html"/>
         </beans:bean>
 
         <beans:bean id="documentGeneratorService" class="gov.foia.service.FOIADocumentGeneratorService">
@@ -212,6 +165,7 @@
             <beans:property name="userDao" ref="userJpaDao"/>
             <beans:property name="responseFolderService" ref="responseFolderService"/>
             <beans:property name="acmAppConfiguration" ref="acmApplication"/>
+            <beans:property name="notificationDao" ref="notificationDao"/>
         </beans:bean>
 
         <beans:bean id="responseFolderService" class="gov.foia.service.ResponseFolderService">
@@ -242,7 +196,8 @@
             <beans:property name="documentGeneratorService" ref="documentGeneratorService"/>
             <beans:property name="foiaConfigurationService" ref="foiaConfigurationService"/>
             <beans:property name="templatingEngine" ref="templatingEngine"/>
-            <beans:property name="emailBodyTemplate" value="file:${user.home}/.arkcase/acm/templates/request-document-attached.html"/>
+            <beans:property name="emailBodyTemplate" value="file:${user.home}/.arkcase/acm/templates/requestDocumentAttached.html"/>
+            <beans:property name="notificationDao" ref="notificationDao"/>
         </beans:bean>
 
         <beans:bean id="foiaFileService" class="gov.foia.service.FOIAFileService">

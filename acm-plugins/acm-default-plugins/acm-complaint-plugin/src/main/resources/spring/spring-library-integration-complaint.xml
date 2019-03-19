@@ -1,21 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:int="http://www.springframework.org/schema/integration"
-       xmlns="http://www.springframework.org/schema/beans"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-		http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/spring-integration.xsd">
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/spring-integration.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd"
+       xmlns:int="http://www.springframework.org/schema/integration">
 
     <int:channel id="complaintFilteredMailChannel"/>
 
-    <bean id="complaintMailFilter" class="com.armedia.acm.services.email.filter.AcmObjectPatternMailFilter">
-        <constructor-arg index="0" value="${complaint.email.regex.complaint_number}"/>
-        <constructor-arg index="1" value="${complaint.email.regex.object_type}"/>
+    <bean id="complaintMailFilter" class="com.armedia.acm.services.email.filter.AcmObjectPatternMailFilter" scope="refresh">
+        <constructor-arg index="0" value="#{complaintConfig.emailRegexComplaintNumber}"/>
+        <constructor-arg index="1" value="#{complaintConfig.emailRegexObjectType}"/>
+        <aop:scoped-proxy/>
     </bean>
 
     <bean id="complaintMailHandler" class="com.armedia.acm.services.email.handler.AcmObjectMailHandler">
         <constructor-arg index="0" ref="acmComplaintDao"/>
-        <property name="mailDirectory" value="${casefile.email.folder.relative.path}"/>
-        <property name="enabled" value="${complaint.email.handler.enabled}"/>
-        <property name="objectIdRegexPattern" value="${complaint.email.regex.complaint_number}"/>
+        <property name="mailDirectory" value="#{complaintConfig.emailFolderRelativePath}"/>
+        <property name="enabled" value="#{complaintConfig.emailHandlerEnabled}"/>
+        <property name="objectIdRegexPattern" value="#{complaintConfig.emailRegexComplaintNumber}"/>
         <property name="acmFolderService" ref="acmFolderService"/>
         <property name="ecmFileService" ref="ecmFileService"/>
         <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
@@ -29,21 +30,19 @@
 
 
     <!-- Create new Complaint from incoming mail -->
-    <bean id="newComplaintMailFilter" class="com.armedia.acm.services.email.filter.ComplaintFilePatternMailFilter">
+    <bean id="newComplaintMailFilter" class="com.armedia.acm.services.email.filter.ComplaintFilePatternMailFilter" scope="refresh">
         <constructor-arg index="0" value=""/>
-        <constructor-arg index="1" value="${complaint.email.regex.object_type}"/>
-        <constructor-arg index="2" value="${email.create.complaint.enabled}"/>
+        <constructor-arg index="1" value="#{complaintConfig.emailRegexObjectType}"/>
+        <property name="emailReceiverConfig" ref="emailReceiverConfig"/>
+        <aop:scoped-proxy/>
     </bean>
 
     <bean id="newComplaintMailHandler" class="com.armedia.acm.plugins.complaint.email.NewComplaintMailHandler"
-          parent="complaintMailHandler" init-method="initBean">
-        <property name="objectTypeRegexPattern" value="${complaint.email.regex.object_type}"/>
+          parent="complaintMailHandler">
         <property name="saveComplaintTransaction" ref="saveComplaintTransaction"/>
         <property name="lookupDao" ref="lookupDao"/>
-        <property name="emailReceiverPropertiesFile"
-                  value="#{ systemProperties ['user.home'] }/.arkcase/acm/acmEmailReceiver.properties"/>
-        <property name="propertyFileManager" ref="propertyFileManager"/>
         <property name="complaintDao" ref="acmComplaintDao"/>
+        <property name="emailReceiverConfig" ref="emailReceiverConfig"/>
     </bean>
 
     <int:service-activator input-channel="newComplaintFilteredMailChannel" ref="newComplaintMailHandler" method="handle"/>
@@ -51,4 +50,19 @@
     <int:chain input-channel="mailChannelComplaint" output-channel="newComplaintFilteredMailChannel">
         <int:filter ref="newComplaintMailFilter" throw-exception-on-rejection="false" method="accept"/>
     </int:chain>
+
+    <bean id="complaintEntityHandler" class="com.armedia.acm.calendar.service.integration.exchange.CalendarEntityHandler">
+        <property name="outlookDao" ref="exchangeWebServicesOutlookDao"/>
+        <property name="entityType" value="COMPLAINT"/>
+        <property name="entityTypeForQuery" value="Complaint"/>
+        <property name="containerEntityDao" ref="acmContainerFolderDao"/>
+        <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
+        <property name="entityIdForQuery" value="complaintId"/>
+        <property name="closedStates" value="#{complaintConfig.statusClosed}"/>
+        <property name="permissionEvaluator" ref="arkPermissionEvaluator"/>
+        <property name="readPermission" value="viewComplaintDetailsPage"/>
+        <property name="writePermission" value="editComplaint"/>
+        <property name="deletePermission" value="editComplaint"/>
+        <property name="folderCreatorDao" ref="outlookFolderCreatorDao"/>
+    </bean>
 </beans>

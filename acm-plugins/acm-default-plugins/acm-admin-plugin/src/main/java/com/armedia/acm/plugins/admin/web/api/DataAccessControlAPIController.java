@@ -49,16 +49,18 @@ public class DataAccessControlAPIController
 
     @RequestMapping(value = "/getDataAccessControlProperties", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<Map<String, String>> loadDataAccessControlProperties()
+    public ResponseEntity<Map<String, Object>> loadDataAccessControlProperties()
     {
         return new ResponseEntity<>(getDataAccessControlService().loadProperties(), HttpStatus.OK);
     }
 
-    public DataAccessControlService getDataAccessControlService() {
+    public DataAccessControlService getDataAccessControlService()
+    {
         return dataAccessControlService;
     }
 
-    public void setDataAccessControlService(DataAccessControlService dataAccessControlService) {
+    public void setDataAccessControlService(DataAccessControlService dataAccessControlService)
+    {
         this.dataAccessControlService = dataAccessControlService;
     }
 }

@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.armedia</groupId>
     <artifactId>acm</artifactId>
-    <version>3.3.0</version>
+    <version>3.3.1</version>
     <packaging>pom</packaging>
     <name>ArkCase Case Management System</name>
     <description>Cloud-based case management system with a very nice UI</description>
@@ -119,6 +119,11 @@
         <xmlgraphics.version>2.0.1</xmlgraphics.version>
         <xmlunit.version>2.5.1</xmlunit.version>
         <zt-exec.version>1.8</zt-exec.version>
+        <docx4j.core>3.3.7</docx4j.core>
+        <docx4j.export.fo>3.3.6</docx4j.export.fo>
+        <snakeyaml.version>1.11</snakeyaml.version>
+        <commons-configuration.version>1.10</commons-configuration.version>
+        <cdi-api.version>1.0</cdi-api.version>
     </properties>
     <organization>
         <name>ArkCase LLC</name>
@@ -486,6 +491,11 @@
                 <version>${frevvo.forms.version}</version>
                 <classifier>mailfix</classifier>
             </dependency>
+            <dependency>
+                <groupId>javax.enterprise</groupId>
+                <artifactId>cdi-api</artifactId>
+                <version>${cdi-api.version}</version>
+            </dependency>
             <!-- Java mail -->
             <dependency>
                 <groupId>javax.mail</groupId>
@@ -584,6 +594,16 @@
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-aop</artifactId>
                 <version>${spring.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-expression</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.retry</groupId>
+                <artifactId>spring-retry</artifactId>
+                <version>${spring-retry-version}</version>
             </dependency>
             <dependency>
                 <groupId>org.aspectj</groupId>
@@ -754,11 +774,6 @@
                         <artifactId>spring-expression</artifactId>
                     </exclusion>
                 </exclusions>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework.retry</groupId>
-                <artifactId>spring-retry</artifactId>
-                <version>${spring-retry-version}</version>
             </dependency>
             <!-- activiti -->
             <dependency>
@@ -1079,9 +1094,19 @@
                 <version>${apache-commons-beanutils.version}</version>
             </dependency>
             <dependency>
+                <groupId>commons-configuration</groupId>
+                <artifactId>commons-configuration</artifactId>
+                <version>${commons-configuration.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-exec</artifactId>
                 <version>${apache-commons-exec.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-codec</groupId>
+                <artifactId>commons-codec</artifactId>
+                <version>${apache-commons-codec}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.httpcomponents</groupId>
@@ -1134,6 +1159,11 @@
                 <groupId>com.google.code.gson</groupId>
                 <artifactId>gson</artifactId>
                 <version>${gson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.yaml</groupId>
+                <artifactId>snakeyaml</artifactId>
+                <version>${snakeyaml.version}</version>
             </dependency>
             <!-- json schema validation -->
             <dependency>

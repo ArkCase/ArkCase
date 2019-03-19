@@ -20,16 +20,6 @@ angular.module('cases').controller(
             var onObjectInfoRetrieved = function (objectInfo) {
                 $scope.objectInfo = objectInfo;
 
-                if (!Util.isEmpty($scope.objectInfo.releasedDate)) {
-                    $scope.objectInfo.releasedDate = moment($scope.objectInfo.releasedDate).format(UtilDateService.defaultDateTimeFormat);
-                }
-                if (!Util.isEmpty($scope.objectInfo.recordSearchDateFrom)) {
-                    $scope.objectInfo.recordSearchDateFrom = moment(objectInfo.recordSearchDateFrom).format(UtilDateService.defaultDateTimeFormat);
-                }
-                if (!Util.isEmpty($scope.objectInfo.recordSearchDateTo)) {
-                    $scope.objectInfo.recordSearchDateTo = moment($scope.objectInfo.recordSearchDateTo).format(UtilDateService.defaultDateTimeFormat);
-                }
-
                 ObjectLookupService.getRequestCategories().then(function (requestCategories) {
                     $scope.requestCategories = requestCategories;
                 });
@@ -172,9 +162,6 @@ angular.module('cases').controller(
                 if (CaseInfoService.validateCaseInfo($scope.objectInfo)) {
                     var objectInfo = Util.omitNg($scope.objectInfo);
 
-                    objectInfo.recordSearchDateFrom = UtilDateService.dateToIsoDateTime($scope.objectInfo.recordSearchDateFrom);
-                    objectInfo.recordSearchDateTo = UtilDateService.dateToIsoDateTime($scope.objectInfo.recordSearchDateTo);
-
                     $scope.originalDueDate = objectInfo.dueDate;
                     $scope.extendedDueDate = undefined;
 
@@ -214,6 +201,7 @@ angular.module('cases').controller(
             $scope.openedRecordSearchDateTo = {};
             $scope.openedRecordSearchDateTo.openedStart = false;
             $scope.openedRecordSearchDateTo.openedEnd = false;
+            
         }
 
     ]);

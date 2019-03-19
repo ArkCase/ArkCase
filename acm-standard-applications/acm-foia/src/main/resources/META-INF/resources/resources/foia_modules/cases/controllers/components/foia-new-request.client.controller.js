@@ -21,8 +21,6 @@ angular.module('cases').controller(
             $scope.uploadFilesDescription[consentDocumentType] = [];
             $scope.uploadFilesDescription[proofOfIdentityDocumentType] = [];
 
-            $scope.uploadFilesConsent = [];
-            $scope.uploadFilesProofOfIdentity = [];
             $scope.requestExpedite = false;
             $scope.config = null;
 
@@ -50,7 +48,7 @@ angular.module('cases').controller(
             };
 
             $scope.removeFileDescription = function (index) {
-                $scope.uploadFilesDescription.splice(index, 1);
+                $scope.uploadFilesDescription['Description Document'].splice(index, 1);
             };
 
             $scope.addFileConsent = function (file) {
@@ -64,7 +62,7 @@ angular.module('cases').controller(
             };
 
             $scope.removeFileConsent = function (index) {
-                $scope.uploadFilesConsent.splice(index, 1);
+                $scope.uploadFilesDescription['Consent'].splice(index, 1);
             };
 
             $scope.addFileProofOfIdentity = function (file) {
@@ -78,7 +76,7 @@ angular.module('cases').controller(
             };
 
             $scope.removeFileProofOfIdentity = function (index) {
-                $scope.uploadFilesProofOfIdentity.splice(index, 1);
+                $scope.uploadFilesDescription['Proof of Identity'].splice(index, 1);
             };
             var stateRequest = ObjectLookupService.getStates();
 
@@ -151,9 +149,6 @@ angular.module('cases').controller(
                 $scope.config.data.deliveryMethodOfResponse = $scope.deliveryMethodOfResponses[0].key;
 
                 $scope.config.data.payFee = $scope.payFees[0].key;
-
-                        $scope.config.data.recordSearchDateFrom = UtilDateService.dateToIsoDateTime($scope.config.data.recordSearchDateFrom);
-                        $scope.config.data.recordSearchDateTo = UtilDateService.dateToIsoDateTime($scope.config.data.recordSearchDateTo);
 
             });
             $scope.validateForm = function (requestForm) {
@@ -322,9 +317,6 @@ angular.module('cases').controller(
                 $scope.loading = true;
                 $scope.loadingIcon = "fa fa-circle-o-notch fa-spin";
                 var formdata = new FormData();
-                        $scope.config.data.recordSearchDateFrom = UtilDateService.dateToIsoDateTime($scope.config.data.recordSearchDateFrom);
-                $scope.config.data.recordSearchDateTo = UtilDateService.dateToIsoDateTime(UtilDateService.dateToIso($scope.config.data.recordSearchDateTo));
-
                 var basicData = {};
                 for (var property in $scope.config.data) {
                     if ($scope.config.data.hasOwnProperty(property)) {

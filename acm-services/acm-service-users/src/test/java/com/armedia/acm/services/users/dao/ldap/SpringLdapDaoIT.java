@@ -45,6 +45,9 @@ import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
 /**
  * Created by dmiller on 6/28/16.
  */
@@ -57,10 +60,17 @@ import java.util.Optional;
         "/spring/spring-library-context-holder.xml",
         "/spring/spring-library-user-service-test-user-home-files.xml",
         "/spring/spring-library-search.xml",
-        "/spring/spring-library-object-converter.xml" })
+        "/spring/spring-library-object-converter.xml",
+        "/spring/spring-library-configuration.xml"})
 
 public class SpringLdapDaoIT
 {
+    static
+    {
+        String userHomePath = System.getProperty("user.home");
+        System.setProperty("acm.configurationserver.propertyfile", userHomePath + "/.arkcase/acm/conf.yml");
+    }
+
     static final Logger log = LoggerFactory.getLogger(SpringLdapDaoIT.class);
 
     static final int RUNS = 10;
@@ -142,8 +152,12 @@ public class SpringLdapDaoIT
     public void findUser()
     {
         LdapTemplate ldapTemplate = springLdapDao.buildLdapTemplate(acmSyncLdapConfig);
+        List<LdapUser> result = springLdapDao.findUsersPaged(ldapTemplate, acmSyncLdapConfig, Optional.ofNullable(null));
+        assertNotNull(result);
+        assertTrue(!result.isEmpty());
 
-        String userName = "arkcase-admin";
+        String userName = result.get(0).getUid(); 
+
         long start = System.currentTimeMillis();
         LdapUser ldapUser = springLdapUserDao.findUser(userName, ldapTemplate, acmSyncLdapConfig,
                 acmSyncLdapConfig.getUserSyncAttributes());
@@ -156,13 +170,17 @@ public class SpringLdapDaoIT
     public void findUserByLookup()
     {
         LdapTemplate ldapTemplate = springLdapDao.buildLdapTemplate(acmSyncLdapConfig);
+        List<LdapUser> result = springLdapDao.findUsersPaged(ldapTemplate, acmSyncLdapConfig, Optional.ofNullable(null));
+        assertNotNull(result);
+        assertTrue(!result.isEmpty());
 
-        String userName = "arkcase-admin";
+        String userName = result.get(0).getUid();
+
         LdapUser testUser = springLdapUserDao.findUser(userName, ldapTemplate, acmSyncLdapConfig,
                 acmSyncLdapConfig.getUserSyncAttributes());
-        
+
         String dn = testUser.getDistinguishedName();
-        
+
         long start = System.currentTimeMillis();
         LdapUser ldapUser = springLdapUserDao.findUserByLookup(dn, ldapTemplate, acmSyncLdapConfig);
         long time = System.currentTimeMillis() - start;
