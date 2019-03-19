@@ -48,4 +48,6 @@
     <int:chain input-channel="mailChannelCaseFile" output-channel="newCaseFileFilteredMailChannel">
         <int:filter ref="newCaseFileMailFilter" throw-exception-on-rejection="false" method="accept"/>
     </int:chain>
+
+
 </beans>

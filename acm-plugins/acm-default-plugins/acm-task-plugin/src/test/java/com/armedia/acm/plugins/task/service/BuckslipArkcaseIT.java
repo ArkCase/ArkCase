@@ -104,7 +104,8 @@ import java.util.UUID;
         "/spring/spring-library-core-api.xml",
         "/spring/spring-library-configuration.xml",
         "/spring/spring-library-task-plugin-test.xml",
-        "/spring/spring-library-convert-folder-service.xml"
+        "/spring/spring-library-convert-folder-service.xml",
+        "/spring/spring-library-business-process.xml"
 })
 @TransactionConfiguration(defaultRollback = true)
 public class BuckslipArkcaseIT
