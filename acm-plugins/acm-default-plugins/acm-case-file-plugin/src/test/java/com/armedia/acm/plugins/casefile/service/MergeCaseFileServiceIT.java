@@ -40,6 +40,7 @@ import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
 import com.armedia.acm.plugins.casefile.exceptions.MergeCaseFilesException;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
+import com.armedia.acm.plugins.casefile.model.CaseFileConfig;
 import com.armedia.acm.plugins.casefile.model.MergeCaseOptions;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
@@ -97,6 +98,9 @@ import java.util.stream.Collectors;
         "/spring/spring-library-case-file-rules.xml",
         "/spring/spring-library-case-file-save.xml",
         "/spring/spring-library-case-file-split-merge.xml",
+        "/spring/spring-library-case-file.xml",
+        "/spring/spring-library-case-file-events.xml",
+        "/spring/spring-library-case-file-queue-service.xml",
         "/spring/spring-library-context-holder.xml",
         "/spring/spring-library-data-access-control.xml",
         "/spring/spring-library-data-source.xml",
@@ -134,11 +138,20 @@ import java.util.stream.Collectors;
         "/spring/spring-library-core-api.xml",
         "/spring/spring-library-user-login.xml",
         "/spring/spring-library-plugin-manager.xml",
-        "/spring/spring-library-audit-service.xml"
+        "/spring/spring-library-audit-service.xml",
+        "/spring/spring-library-configuration.xml",
+        "/spring/spring-library-acm-email.xml",
+        "/spring/spring-library-convert-folder-service.xml",
+        "/spring/spring-library-user-tracker.xml"
     })
 @TransactionConfiguration(defaultRollback = true)
 public class MergeCaseFileServiceIT
 {
+    static
+    {
+        String userHomePath = System.getProperty("user.home");
+        System.setProperty("acm.configurationserver.propertyfile", userHomePath + "/.arkcase/acm/conf.yml");
+    }
 
     private final Logger log = LoggerFactory.getLogger(getClass());
 
@@ -148,6 +161,9 @@ public class MergeCaseFileServiceIT
     private EcmFileService ecmFileService;
     @Autowired
     private AcmFolderService acmFolderService;
+
+    @Autowired
+    private CaseFileConfig caseConfig;
 
     @Autowired
     private EcmFileDao ecmFileDao;
@@ -249,21 +265,17 @@ public class MergeCaseFileServiceIT
         sourceFiles = ecmFileDao.findForContainer(sourceSaved.getContainer().getId());
         if ( !sourceFiles.isEmpty() )
         {
+            String excluded = caseConfig.getMergeExcludeDocumentTypes();
+            List<String> excludedTypes = Arrays.asList(excluded.trim().replaceAll(",[\\s]*", ",").split(","));
+
             // any files left in the original case file must have a file type from
             // the exclude file types list
-            Properties p = new Properties();
-            try ( InputStream pis = new FileInputStream(new File(System.getProperty("user.home") + "/.arkcase/acm/caseFilePlugin.properties")))
+            for ( EcmFile sourceFile : sourceFiles )
             {
-                p.load(pis);
-                String excluded = p.getProperty("casefile.merge.exclude_document_types");
-                List<String> excludedTypes = Arrays.asList(excluded.trim().replaceAll(",[\\s]*", ",").split(","));
-                for ( EcmFile sourceFile : sourceFiles )
-                {
-                    String found = excludedTypes.stream().filter(et -> et.equalsIgnoreCase(sourceFile.getFileType())).findFirst().orElse(null);
-                    assertNotNull("File remaining in source case has type [" + sourceFile.getFileType() + "] " +
-                                  "which is not in the list of excluded types [" + excluded + "]",
-                                  found);
-                }
+                String found = excludedTypes.stream().filter(et -> et.equalsIgnoreCase(sourceFile.getFileType())).findFirst().orElse(null);
+                assertNotNull("File remaining in source case has type [" + sourceFile.getFileType() + "] " +
+                              "which is not in the list of excluded types [" + excluded + "]",
+                              found);
             }
         }
 
