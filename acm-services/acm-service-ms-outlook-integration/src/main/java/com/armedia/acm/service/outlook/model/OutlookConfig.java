@@ -222,6 +222,7 @@ public class OutlookConfig
         this.participantsTypesAsOutlookPermission = participantsTypesAsOutlookPermission;
     }
 
+    @JsonProperty
     public List<String> getParticipantTypes()
     {
         return Arrays.asList(participantsTypesAsOutlookPermission.split(","));
