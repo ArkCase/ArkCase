@@ -27,6 +27,7 @@ package com.armedia.acm.service.outlook.model;
  * #L%
  */
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -222,7 +223,7 @@ public class OutlookConfig
         this.participantsTypesAsOutlookPermission = participantsTypesAsOutlookPermission;
     }
 
-    @JsonProperty
+    @JsonIgnore
     public List<String> getParticipantTypes()
     {
         return Arrays.asList(participantsTypesAsOutlookPermission.split(","));
