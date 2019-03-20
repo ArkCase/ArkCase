@@ -41,6 +41,10 @@ import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.email.model.EmailSenderConfig;
 import com.armedia.acm.files.propertymanager.PropertyFileManager;
 import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
+import com.armedia.acm.services.email.model.EmailWithAttachmentsDTO;
+import com.armedia.acm.services.email.service.AcmEmailSenderService;
+import com.armedia.acm.services.email.service.AcmMailTemplateConfigurationService;
+import com.armedia.acm.services.email.service.TemplatingEngine;
 import com.armedia.acm.services.notification.dao.NotificationDao;
 import com.armedia.acm.services.notification.model.ApplicationNotificationEvent;
 import com.armedia.acm.services.notification.model.BasicNotificationRule;
@@ -48,6 +52,8 @@ import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.model.NotificationConfig;
 import com.armedia.acm.services.notification.model.NotificationRule;
 import com.armedia.acm.services.notification.model.QueryType;
+import com.armedia.acm.services.notification.service.provider.TemplateModelProvider;
+import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.spring.SpringContextHolder;
 
 import org.easymock.Capture;
@@ -79,6 +85,11 @@ public class NotificationServiceTest extends EasyMockSupport
     private NotificationFormatter mockNotificationFormatter;
     private NotificationConfig notificationConfig;
     private EmailSenderConfig emailSenderConfig;
+    private TemplateModelProvider mockTemplateModelProvider;
+    private AcmMailTemplateConfigurationService mockTemplateService;
+    private TemplatingEngine mockTemplatingEngine;
+    private UserDao mockUserDao;
+    private AcmEmailSenderService mockEmailSenderService;
 
     @Before
     public void setUp() throws Exception
@@ -92,9 +103,15 @@ public class NotificationServiceTest extends EasyMockSupport
         mockAuditPropertyEntityAdapter = createMock(AuditPropertyEntityAdapter.class);
         mockMuleMessage = createMock(MuleMessage.class);
         mockSpringContextHolder = createMock(SpringContextHolder.class);
+        mockTemplateModelProvider = createMock(TemplateModelProvider.class);
+        mockTemplateService = createMock(AcmMailTemplateConfigurationService.class);
+        mockTemplatingEngine = createMock(TemplatingEngine.class);
+        mockUserDao = createMock(UserDao.class);
+        mockEmailSenderService = createMock(AcmEmailSenderService.class);
 
         sendExecutor = new SendExecutor();
         sendExecutor.setSpringContextHolder(mockSpringContextHolder);
+        sendExecutor.setTemplateModelProvider(mockTemplateModelProvider);
 
         purgeExecutor = new PurgeExecutor();
         purgeExecutor.setAuditPropertyEntityAdapter(mockAuditPropertyEntityAdapter);
@@ -125,12 +142,11 @@ public class NotificationServiceTest extends EasyMockSupport
     }
 
     @Test
-    public void testRunEmailSent() throws AcmEncryptionException
+    public void testRunEmailSent() throws Exception
     {
         List<Notification> notifications = new ArrayList<>();
 
         Notification notification1 = new Notification();
-        notification1.setUser("user");
         notification1.setTitle("title");
         notification1.setNote("note");
         notification1.setType("type");
@@ -143,9 +159,10 @@ public class NotificationServiceTest extends EasyMockSupport
         notification1.setAction("action");
         notification1.setData("data");
         notification1.setState("state");
+        notification1.setTemplateModelName("test");
+        notification1.setEmailAddresses("user email");
 
         Notification notification2 = new Notification();
-        notification2.setUser("user");
         notification2.setTitle("title");
         notification2.setNote("note");
         notification2.setType("type");
@@ -158,6 +175,8 @@ public class NotificationServiceTest extends EasyMockSupport
         notification2.setAction("action");
         notification2.setData("data");
         notification2.setState("state");
+        notification2.setTemplateModelName("test");
+        notification2.setEmailAddresses("user email");
 
         notifications.add(notification1);
         notifications.add(notification2);
@@ -194,7 +213,6 @@ public class NotificationServiceTest extends EasyMockSupport
 
         SmtpNotificationSender smtpNotificationServer = new SmtpNotificationSender();
         smtpNotificationServer.setAuditPropertyEntityAdapter(mockAuditPropertyEntityAdapter);
-        smtpNotificationServer.setEmailSenderConfig(emailSenderConfig);
 
         notificationSenderMap.put("smtp", smtpNotificationServer);
         notificationSenderFactory.setNotificationSenderMap(notificationSenderMap);
@@ -245,6 +263,26 @@ public class NotificationServiceTest extends EasyMockSupport
         expectLastCall().anyTimes();
         expect(mockNotificationDao.executeQuery(capture(propertiesCapture), eq(10), eq(10), capture(ruleCapture)))
                 .andReturn(new ArrayList<>()).anyTimes();
+        String template = "Template";
+
+        smtpNotificationServer.setTemplateService(mockTemplateService);
+        smtpNotificationServer.setTemplatingEngine(mockTemplatingEngine);
+        smtpNotificationServer.setUserDao(mockUserDao);
+        smtpNotificationServer.setEmailSenderService(mockEmailSenderService);
+
+        expect(mockTemplateService.getTemplate("test.html")).andReturn(template).times(4);
+
+        for (Notification notification : notifications)
+        {
+            Capture<EmailWithAttachmentsDTO> emailWithAttachmentsDTOCapture = Capture.newInstance();
+
+            expect(smtpNotificationServer.getTemplatingEngine().process(template, notification.getTemplateModelName(), notification))
+                    .andReturn("Body").times(2);
+            expect(mockTemplateModelProvider.getModel(notification)).andReturn(notification).times(2);
+
+            smtpNotificationServer.getEmailSenderService().sendEmail(capture(emailWithAttachmentsDTOCapture), eq(null), eq(null));
+            expectLastCall().anyTimes();
+        }
         expect(mockNotificationFormatter.replaceFormatPlaceholders(notification1)).andReturn(notification1).atLeastOnce();
         expect(mockNotificationFormatter.replaceFormatPlaceholders(notification2)).andReturn(notification2).atLeastOnce();
         expect(mockNotificationUtils.buildNotificationLink(anyString(), anyLong(), anyString(), anyLong())).andReturn(null).anyTimes();
@@ -260,12 +298,11 @@ public class NotificationServiceTest extends EasyMockSupport
     }
 
     @Test
-    public void testRunEmailNotSent() throws AcmEncryptionException
+    public void testRunEmailNotSent() throws AcmEncryptionException, Exception
     {
         List<Notification> notifications = new ArrayList<>();
 
         Notification notification1 = new Notification();
-        notification1.setUser("user");
         notification1.setTitle("title");
         notification1.setNote("note");
         notification1.setType("type");
@@ -278,9 +315,10 @@ public class NotificationServiceTest extends EasyMockSupport
         notification1.setAction("action");
         notification1.setData("data");
         notification1.setState("state");
+        notification1.setTemplateModelName("test");
+        notification1.setEmailAddresses("user email");
 
         Notification notification2 = new Notification();
-        notification2.setUser("user");
         notification2.setTitle("title");
         notification2.setNote("note");
         notification2.setType("type");
@@ -293,6 +331,8 @@ public class NotificationServiceTest extends EasyMockSupport
         notification2.setAction("action");
         notification2.setData("data");
         notification2.setState("state");
+        notification2.setTemplateModelName("test");
+        notification2.setEmailAddresses("user email");
 
         notifications.add(notification1);
         notifications.add(notification2);
@@ -354,6 +394,27 @@ public class NotificationServiceTest extends EasyMockSupport
         expect(mockSpringContextHolder.getAllBeansOfType(NotificationSenderFactory.class)).andReturn(senders).anyTimes();
         expect(mockNotificationDao.executeQuery(capture(propertiesCapture), eq(0), eq(10), capture(ruleCapture))).andReturn(notifications)
                 .anyTimes();
+
+        String template = "Template";
+
+        smtpNotificationServer.setTemplateService(mockTemplateService);
+        smtpNotificationServer.setTemplatingEngine(mockTemplatingEngine);
+        smtpNotificationServer.setUserDao(mockUserDao);
+        smtpNotificationServer.setEmailSenderService(mockEmailSenderService);
+
+        expect(mockTemplateService.getTemplate("test.html")).andReturn(template).times(4);
+
+        for (Notification notification : notifications)
+        {
+            Capture<EmailWithAttachmentsDTO> emailWithAttachmentsDTOCapture = Capture.newInstance();
+
+            expect(smtpNotificationServer.getTemplatingEngine().process(template, notification.getTemplateModelName(), notification))
+                    .andReturn("Body").times(2);
+            expect(mockTemplateModelProvider.getModel(notification)).andReturn(notification).times(2);
+
+            smtpNotificationServer.getEmailSenderService().sendEmail(capture(emailWithAttachmentsDTOCapture), eq(null), eq(null));
+            expectLastCall().anyTimes();
+        }
 
         mockAuditPropertyEntityAdapter.setUserId(eq("NOTIFICATION-BATCH-INSERT"));
         expectLastCall().anyTimes();

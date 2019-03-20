@@ -27,13 +27,11 @@ package com.armedia.acm.services.email.web.api;
  * #L%
  */
 
-import com.armedia.acm.services.email.model.EmailMentionsDTO;
 import com.armedia.acm.services.email.model.EmailWithAttachmentsAndLinksDTO;
 import com.armedia.acm.services.email.model.EmailWithAttachmentsDTO;
 import com.armedia.acm.services.email.model.EmailWithEmbeddedLinksDTO;
 import com.armedia.acm.services.email.model.EmailWithEmbeddedLinksResultDTO;
 import com.armedia.acm.services.email.service.AcmEmailConfigurationException;
-import com.armedia.acm.services.email.service.AcmEmailMentionsService;
 import com.armedia.acm.services.email.service.AcmEmailSenderService;
 import com.armedia.acm.services.email.service.AcmEmailServiceException;
 import com.armedia.acm.services.email.service.AcmMailTemplateConfigurationService;
@@ -67,7 +65,6 @@ public class AcmMailServiceAPIController
     private AcmMailTemplateConfigurationService templateService;
 
     private AcmEmailSenderService emailSenderService;
-    private AcmEmailMentionsService acmEmailMentionsService;
 
     @RequestMapping(value = "/withattachments/{objectType}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
@@ -184,23 +181,6 @@ public class AcmMailServiceAPIController
         return in;
     }
 
-    @RequestMapping(value = "/mentions", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
-    public EmailMentionsDTO createPlainEmail(@RequestBody EmailMentionsDTO in,
-            Authentication authentication, HttpSession session)
-            throws AcmEmailServiceException
-    {
-        if (null == in)
-        {
-            throw new AcmEmailServiceException("Could not create email message, invalid input : " + in);
-        }
-
-        // the user is stored in the session during login.
-        AcmUser user = (AcmUser) session.getAttribute("acm_user");
-        acmEmailMentionsService.sendMentionsEmail(in, user.getFullName());
-
-        return in;
-    }
 
     /**
      * @param objectType
@@ -239,8 +219,4 @@ public class AcmMailServiceAPIController
         this.emailSenderService = emailSenderService;
     }
 
-    public void setAcmEmailMentionsService(AcmEmailMentionsService acmEmailMentionsService)
-    {
-        this.acmEmailMentionsService = acmEmailMentionsService;
-    }
 }

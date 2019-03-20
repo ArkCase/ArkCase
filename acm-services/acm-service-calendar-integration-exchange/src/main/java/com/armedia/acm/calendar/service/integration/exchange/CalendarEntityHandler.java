@@ -526,6 +526,11 @@ public class CalendarEntityHandler
         this.folderCreatorDao = folderCreatorDao;
     }
 
+    public String getEntityType() 
+    {
+        return this.entityType;
+    }
+
     public enum PermissionType
     {
         READ, WRITE, DELETE

@@ -75,7 +75,8 @@ import javax.persistence.PersistenceContext;
         "/spring/spring-library-ecm-file-lock.xml",
         "/spring/spring-library-service-data.xml",
         "/spring/spring-library-configuration.xml",
-        "/spring/spring-library-folder-watcher.xml"})
+        "/spring/spring-library-folder-watcher.xml",
+        "/spring/spring-library-acm-email.xml"})
 @TransactionConfiguration(defaultRollback = true, transactionManager = "transactionManager")
 public class PersonIT
 {

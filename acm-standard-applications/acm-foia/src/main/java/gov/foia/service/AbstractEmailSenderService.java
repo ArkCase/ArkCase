@@ -42,6 +42,8 @@ import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Map;
 
+// All emails should be send as notifications.
+@Deprecated
 public abstract class AbstractEmailSenderService
 {
     private transient final Logger log = LoggerFactory.getLogger(this.getClass());

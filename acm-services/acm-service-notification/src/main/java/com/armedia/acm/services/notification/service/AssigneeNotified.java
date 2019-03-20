@@ -56,10 +56,12 @@ public class AssigneeNotified implements UsersNotified
         customNotification.setRelatedObjectType((String) notification[8]);
         customNotification.setActionDate((Date) notification[9]);
         customNotification.setUser(getUserId((String) notification[10]));
-        customNotification.setUserEmail(getEmailForUser((String) notification[10]));
+        customNotification.setEmailAddresses(getEmailForUser((String) notification[10]));
+        customNotification.setTemplateModelName((String) notification[11]);
         customNotification.setStatus(NotificationConstants.STATUS_NEW);
         customNotification.setAction(NotificationConstants.ACTION_DEFAULT);
         customNotification.setData("{\"usr\":\"/plugin/" + ((String) notification[4]).toLowerCase() + "/" + notification[3] + "\"}");
+        customNotification.setAttachFiles(false);
 
         return Arrays.asList(customNotification);
     }

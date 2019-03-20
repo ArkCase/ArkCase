@@ -50,9 +50,20 @@ import gov.foia.model.PortalFOIARequest;
  * @author dame.gjorgjievski
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = { "classpath:/spring/spring-library-message-broker-test.xml" })
+@ContextConfiguration(locations = {
+        "/spring/spring-library-configuration.xml",
+        "/spring/spring-library-object-converter.xml",
+        "/spring/spring-library-property-file-manager.xml",
+        "/spring/spring-library-acm-encryption.xml",
+        "classpath:/spring/spring-library-message-broker-test.xml"
+})
 public class FOIARequestBrokerClientTestIT
 {
+    static
+    {
+        String userHomePath = System.getProperty("user.home");
+        System.setProperty("acm.configurationserver.propertyfile", userHomePath + "/.arkcase/acm/conf.yml");
+    }
 
     private static final String TEST_FILE_CONTENT = "Test file {} content. XX";
     private static PortalFOIARequest inboundRequest;

@@ -17,4 +17,8 @@
         </constructor-arg>
     </bean>
 
+    <bean id="auditEventConfig" class="com.armedia.acm.audit.model.AuditEventConfig">
+        <property name="jsonUnmarshaller" ref="jsonUnmarshaller"/>
+    </bean>
+
 </beans>
