@@ -31,20 +31,13 @@ import com.armedia.acm.services.sequence.dao.AcmSequenceDao;
 import com.armedia.acm.services.sequence.dao.AcmSequenceRegistryDao;
 import com.armedia.acm.services.sequence.dao.AcmSequenceResetDao;
 import com.armedia.acm.services.sequence.exception.AcmSequenceException;
-import com.armedia.acm.services.sequence.model.AcmSequenceEntity;
-import com.armedia.acm.services.sequence.model.AcmSequenceEntityId;
-import com.armedia.acm.services.sequence.model.AcmSequencePart;
-import com.armedia.acm.services.sequence.model.AcmSequenceRegistry;
-import com.armedia.acm.services.sequence.model.AcmSequenceReset;
-import com.armedia.acm.services.sequence.model.AcmSequenceResetId;
-
+import com.armedia.acm.services.sequence.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.FlushModeType;
-
 import java.util.List;
 
 /**
@@ -180,6 +173,37 @@ public class AcmSequenceServiceImpl implements AcmSequenceService
                     String.format("Unable to get Sequence Registry List for [%s] [%s]", sequenceName, sequencePartName), e);
         }
     }
+
+    @Override
+    public List<AcmSequenceRegistry> getSequenceRegistryList() throws AcmSequenceException
+    {
+        log.info("Getting Sequence Registry List");
+        try
+        {
+            return getSequenceRegistryDao().getSequenceRegistryList();
+        }
+        catch(Exception e)
+        {
+            throw new AcmSequenceException(String.format("Unable to get Sequence Registry List"), e);
+        }
+    }
+
+    @Override
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public AcmSequenceEntity updateSequenceEntity(AcmSequenceEntity acmSequenceEntity) throws AcmSequenceException
+    {
+        log.info("Update Sequence Number");
+        try
+        {
+            return getSequenceDao().save(acmSequenceEntity);
+        }
+        catch (Exception e)
+        {
+            throw new AcmSequenceException(String.format("Unable to update Sequence Number"), e);
+        }
+    }
+
+
 
     /*
      * (non-Javadoc)
