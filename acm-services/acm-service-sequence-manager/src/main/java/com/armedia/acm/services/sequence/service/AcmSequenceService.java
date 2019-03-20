@@ -58,6 +58,9 @@ public interface AcmSequenceService
     public AcmSequenceEntity updateSequenceEntity(AcmSequenceEntity sequenceEntity, AcmSequencePart sequencePart, Boolean isReset)
             throws AcmSequenceException;
 
+    public AcmSequenceEntity updateSequenceEntity(AcmSequenceEntity acmSequenceEntity)
+            throws AcmSequenceException;
+
     // Sequence Reset
     public AcmSequenceReset saveSequenceReset(AcmSequenceReset sequenceReset) throws AcmSequenceException;
 
@@ -76,6 +79,8 @@ public interface AcmSequenceService
 
     public List<AcmSequenceRegistry> getSequenceRegistryList(String sequenceName, String sequencePartName,
             Boolean sequencePartValueUsedFlag, FlushModeType flushModeType) throws AcmSequenceException;
+
+    public List<AcmSequenceRegistry> getSequenceRegistryList() throws AcmSequenceException;
 
     public Integer updateSequenceRegistryAsUnused(String sequenceValue) throws AcmSequenceException;
 

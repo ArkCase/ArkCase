@@ -1010,7 +1010,8 @@
                     "displayName": "admin.application.sequenceManagement.config.grid.sequenceName",
                     "visible": true,
                     "headerCellFilter": "translate",
-                    "cellClass": "ui-grid-cell-contents-auto"
+                    "cellClass": "ui-grid-cell-contents-auto",
+                    "cellTemplate": "<div class='ui-grid-cell-contents'>{{ grid.appScope.utils.getLookupValue(grid.appScope.sequences, row.entity.sequenceName) | translate }}</div>"
                 },
                 {
                     "name": "sequenceDescription",
@@ -1031,6 +1032,139 @@
                     "width": "70",
                     "headerCellTemplate": "<span></span>",
                     "cellTemplate": ""
+                }
+            ],
+            "paginationPageSizes": [
+                5,
+                10,
+                20,
+                50
+            ],
+            "paginationPageSize": 20,
+            "sequenceManagementPartsConfig": {
+                "id": "sequenceManagementPartsConfiguration",
+                "title": "admin.application.sequenceManagement.config.title",
+                "enabled": true,
+                "type": "grid",
+                "enableFiltering": false,
+                "configurable": true,
+                "columnDefs": [
+                    {
+                        "name": "sequencePartName",
+                        "displayName": "admin.application.sequenceManagementParts.config.grid.sequenceName",
+                        "visible": true,
+                        "headerCellFilter": "translate"
+                    },
+                    {
+                        "name": "sequencePartType",
+                        "displayName": "admin.application.sequenceManagementParts.config.grid.sequenceDescription",
+                        "visible": true,
+                        "headerCellFilter": "translate"
+                    },
+                    {
+                        "name": "act",
+                        "cellEditableCondition": false,
+                        "width": "90",
+                        "headerCellTemplate": "<span></span>",
+                        "cellTemplate": ""
+                    }
+                ],
+                "paginationPageSizes": [
+                    5,
+                    10,
+                    20,
+                    50
+                ],
+                "paginationPageSize": 20,
+                "sequenceManagementResetConfig": {
+                    "id": "sequenceManagementResetConfig",
+                    "title": "admin.application.sequenceManagementReset.title",
+                    "type": "grid",
+                    "enableFiltering": false,
+                    "configurable": true,
+                    "columnDefs": [
+                        {
+                            "name": "resetDate",
+                            "displayName": "admin.application.sequenceManagementReset.grid.startResetDate",
+                            "visible": true,
+                            "headerCellFilter": "translate",
+                            "cellTemplate": "<div>{{ (row.entity.resetDate | date: ('common.defaultDateTimeUIFormat' | translate)) }}</div>"
+                        },
+                        {
+                            "name": "resetExecutedDate",
+                            "displayName": "admin.application.sequenceManagementReset.grid.executedDate",
+                            "visible": true,
+                            "headerCellFilter": "translate",
+                            "cellTemplate": "<div>{{ row.entity.resetExecutedDate ? (row.entity.resetExecutedDate | date: ('common.defaultDateTimeUIFormat' | translate)) : ''}}</div>"
+                        },
+                        {
+                            "name": "resetRepeatableFlag",
+                            "displayName": "admin.application.sequenceManagementReset.grid.repeat",
+                            "visible": true,
+                            "headerCellFilter": "translate",
+                            "cellTemplate": "<span align='center'>{{row.entity.resetRepeatableFlag ? 'Enabled' : 'Disabled'}}</span>"
+                        },
+                        {
+                            "name": "resetRepeatablePeriod",
+                            "displayName": "admin.application.sequenceManagementReset.grid.repeatPeriod",
+                            "visible": true,
+                            "headerCellFilter": "translate"
+                        },
+                        {
+                            "name": "act",
+                            "cellEditableCondition": false,
+                            "width": "70",
+                            "headerCellTemplate": "<span></span>",
+                            "cellTemplate": ""
+                        }
+                    ],
+                    "paginationPageSizes": [
+                        5,
+                        10,
+                        20,
+                        50
+                    ],
+                    "paginationPageSize": 20
+                }
+            }
+        },
+        {
+            "id": "sequenceRegistry",
+            "title": "admin.application.sequenceRegistry.title",
+            "enabled": true,
+            "type": "grid",
+            "enableFiltering": false,
+            "configurable": true,
+            "columnDefs": [
+                {
+                    "name": "sequenceValue",
+                    "displayName": "admin.application.sequenceRegistry.sequenceValue",
+                    "visible": true,
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "sequenceName",
+                    "displayName": "admin.application.sequenceRegistry.sequenceName",
+                    "visible": true,
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "sequencePartName",
+                    "displayName": "admin.application.sequenceRegistry.sequencePartName",
+                    "visible": true,
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "sequencePartValue",
+                    "displayName": "admin.application.sequenceRegistry.sequencePartValue",
+                    "visible": true,
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "sequencePartValueUsedFlag",
+                    "displayName": "admin.application.sequenceRegistry.sequencePartValueUsedFlag",
+                    "visible": true,
+                    "headerCellFilter": "translate"
                 }
             ],
             "paginationPageSizes": [

@@ -610,9 +610,14 @@
                 "yearly": "Yearly"
             },
             "sequenceName": {
-                "selectSequence": "Select sequence name",
-                "caseNumberSequence": "caseNumberSequence",
-                "complaintNumberSequence": "complaintNumberSequence"
+                "caseNumberSequence": "Case Number Sequence",
+                "complaintNumberSequence": "Complaint Number Sequence"
+            },
+            "sequenceObjectProperty": {
+                "id": "id",
+                "caseType": "case type",
+                "status": "status",
+                "priority": "priority"
             }
         },
         "userInfo": {

@@ -707,6 +707,13 @@
                     "sequenceEnabled": "Sequence Enabled",
                     "cancel": "Cancel",
                     "save": "Save"
+                },
+                "registry": "Registry",
+                "editSequenceNumber": {
+                    "modal": {
+                        "title": "Edit Sequence Number",
+                        "sequencePartValue": "Sequence Number"
+                    }
                 }
             },
             "sequenceManagementParts.config": {
@@ -772,6 +779,16 @@
                     "repeatReset": "Repeat reset",
                     "repeatResetPeriod": "Repeat reset period (days)"
                 }
+            },
+            "sequenceRegistry": {
+                "title": "View/Edit Sequence Registry",
+                "sequenceValue": "Sequence Value",
+                "sequenceName": "Sequence Name",
+                "sequencePartName": "Sequence Part Name",
+                "sequencePartValue": "Sequence Part Value",
+                "sequencePartValueUsedFlag": "Sequence Part Value Used Flag",
+                "cancel": "Cancel",
+                "save": "Save"
             },
             "login.config": {
                 "title": "Login Configuration",
