@@ -28,15 +28,20 @@ package com.armedia.acm.services.notification.web.api;
  */
 
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
+import com.armedia.acm.services.email.model.EmailMentionsDTO;
+import com.armedia.acm.services.email.service.AcmEmailServiceException;
 import com.armedia.acm.services.notification.dao.NotificationDao;
 import com.armedia.acm.services.notification.model.ApplicationNotificationEvent;
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.model.NotificationConstants;
+import com.armedia.acm.services.notification.service.AcmEmailMentionsService;
 import com.armedia.acm.services.notification.service.NotificationEventPublisher;
 
+import com.armedia.acm.services.users.model.AcmUser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -52,6 +57,7 @@ public class SaveNotificationAPIController
 
     private NotificationDao notificationDao;
     private NotificationEventPublisher notificationEventPublisher;
+    private AcmEmailMentionsService acmEmailMentionsService;
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
@@ -123,6 +129,24 @@ public class SaveNotificationAPIController
                     e.getMessage(), e);
         }
     }
+    
+    @RequestMapping(value = "/mentions", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public EmailMentionsDTO createPlainEmail(@RequestBody EmailMentionsDTO in,
+                                             Authentication authentication, HttpSession session)
+            throws AcmEmailServiceException
+    {
+        if (null == in)
+        {
+            throw new AcmEmailServiceException("Could not create email message, invalid input : " + in);
+        }
+
+        // the user is stored in the session during login.
+        AcmUser user = (AcmUser) session.getAttribute("acm_user");
+        acmEmailMentionsService.sendMentionsEmail(in, user.getFullName());
+
+        return in;
+    }
 
     protected void publishNotificationEvent(
             HttpSession httpSession,
@@ -155,4 +179,11 @@ public class SaveNotificationAPIController
         this.notificationDao = notificationDao;
     }
 
+    public AcmEmailMentionsService getAcmEmailMentionsService() {
+        return acmEmailMentionsService;
+    }
+
+    public void setAcmEmailMentionsService(AcmEmailMentionsService acmEmailMentionsService) {
+        this.acmEmailMentionsService = acmEmailMentionsService;
+    }
 }

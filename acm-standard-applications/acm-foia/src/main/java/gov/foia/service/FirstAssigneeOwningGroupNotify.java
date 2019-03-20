@@ -29,8 +29,10 @@ package gov.foia.service;
 
 import com.armedia.acm.plugins.casefile.model.CaseEvent;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
-import com.armedia.acm.services.email.model.EmailWithAttachmentsDTO;
+import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.services.email.service.TemplatingEngine;
+import com.armedia.acm.services.notification.dao.NotificationDao;
+import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.service.NotificationUtils;
 import com.armedia.acm.services.participants.utils.ParticipantUtils;
 import com.armedia.acm.services.search.service.SearchResults;
@@ -51,15 +53,17 @@ import java.io.DataInputStream;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import freemarker.template.TemplateException;
 
-public class FirstAssigneeOwningGroupNotify extends AbstractEmailSenderService implements ApplicationListener<CaseEvent>
+public class FirstAssigneeOwningGroupNotify implements ApplicationListener<CaseEvent>
 {
     private transient Logger LOG = LoggerFactory.getLogger(getClass());
     private GroupService groupService;
@@ -68,6 +72,7 @@ public class FirstAssigneeOwningGroupNotify extends AbstractEmailSenderService i
     private NotificationUtils notificationUtils;
     private String emailBodyTemplate;
     private TemplatingEngine templatingEngine;
+    private NotificationDao notificationDao;
 
     @Override
     public void onApplicationEvent(CaseEvent event)
@@ -104,7 +109,19 @@ public class FirstAssigneeOwningGroupNotify extends AbstractEmailSenderService i
                     }
 
                     List<String> emailAddresses = new ArrayList<>(usersEmails.values());
-                    sendAssigneeMailToOwningGroupMembers(event.getCaseFile(), assigneeId, emailAddresses, event.getEventUser());
+
+                    AcmUser user = getUserDao().findByUserId(assigneeId);
+
+                    String assigneeFullName = user.getFullName();
+
+                    Notification notification = new Notification();
+                    notification.setTemplateModelName("requestAssigned");
+                    notification.setParentType(event.getObjectType());
+                    notification.setParentId(event.getObjectId());
+                    notification.setEmailAddresses(emailAddresses.stream().collect(Collectors.joining(",")));
+                    notification.setTitle(String.format("Request:%s assigned to %s", event.getCaseFile().getCaseNumber(), assigneeFullName));
+                    notification.setAttachFiles(false);
+                    notificationDao.save(notification);
                 }
                 catch (MuleException e)
                 {
@@ -118,70 +135,7 @@ public class FirstAssigneeOwningGroupNotify extends AbstractEmailSenderService i
             }
         }
     }
-
-    private void sendAssigneeMailToOwningGroupMembers(CaseFile caseFile, String assigneeId, List<String> emailAddresses,
-            Authentication authentication) throws Exception
-    {
-        if (assigneeId != null)
-        {
-            AcmUser user = getUserDao().findByUserId(assigneeId);
-
-            String assigneeFullName = user.getFullName();
-            String link = getNotificationUtils().buildNotificationLink("CASE_FILE", caseFile.getId(), "CASE_FILE", caseFile.getId());
-            String mailSubject = String.format("Request:%s assigned to %s", caseFile.getCaseNumber(), assigneeFullName);
-
-            String mailBody = null;
-            try
-            {
-                mailBody = getTemplatingEngine().process(emailBodyTemplate, "request", caseFile);
-            }
-            catch (TemplateException | IOException e)
-            {
-                // failing to send an email should not break the flow
-                LOG.error("Unable to genarate email {} for {}", user.getMail(), caseFile, e);
-                mailBody = String.format("Request:%s was assigned to %s Link: %s", caseFile.getCaseNumber(), assigneeFullName, link);
-            }
-
-            Map<String, Object> bodyModel = new HashMap<>();
-
-            bodyModel.put("body", mailBody);
-            bodyModel.put("header", new String());
-            bodyModel.put("footer", new String());
-
-            try
-            {
-                LOG.info("Trying to send Assignee email to owning group members");
-                sendEmailWithAttachment(emailAddresses, mailSubject, bodyModel, null, user, authentication);
-            }
-            catch (Exception e)
-            {
-                LOG.error("Could not send the Assignee email to the owning group members", e);
-                throw e;
-            }
-        }
-    }
-
-    @Override
-    public void sendEmailWithAttachment(List<String> emailAddresses,
-            String subject,
-            Map<String, Object> templateDataModel,
-            List<Long> attachmentIds,
-            AcmUser user,
-            Authentication authentication) throws Exception
-    {
-        EmailWithAttachmentsDTO emailWithAttachmentsDTO = new EmailWithAttachmentsDTO();
-        emailWithAttachmentsDTO.setSubject(subject);
-        emailWithAttachmentsDTO.setHeader("");
-        emailWithAttachmentsDTO.setFooter("");
-        emailWithAttachmentsDTO.setBody((String) templateDataModel.get("body"));
-        emailWithAttachmentsDTO.setTemplate((String) templateDataModel.get("body"));
-        emailWithAttachmentsDTO.setAttachmentIds(attachmentIds);
-        emailWithAttachmentsDTO.setEmailAddresses(emailAddresses);
-
-        LOG.info(String.format("Sending an email with subject [%s]", subject));
-        getEmailSenderService().sendEmailWithAttachments(emailWithAttachmentsDTO, authentication, user);
-    }
-
+    
     public GroupService getGroupService()
     {
         return groupService;
@@ -245,5 +199,13 @@ public class FirstAssigneeOwningGroupNotify extends AbstractEmailSenderService i
     public void setTemplatingEngine(TemplatingEngine templatingEngine)
     {
         this.templatingEngine = templatingEngine;
+    }
+
+    public NotificationDao getNotificationDao() {
+        return notificationDao;
+    }
+
+    public void setNotificationDao(NotificationDao notificationDao) {
+        this.notificationDao = notificationDao;
     }
 }

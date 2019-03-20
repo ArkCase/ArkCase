@@ -81,6 +81,11 @@ public interface NotificationConstants
     String STATE_READ = "READ";
 
     /**
+     * Notification message state when template is failed.
+     */
+    String STATE_TEMPLATE_ERROR = "TEMPLATE_ERROR";
+
+    /**
      * The property key to use in the properties file that keeps email response timeout
      */
     String EMAIL_RESPONSE_TIMEOUT_KEY = "notification.user.email.responseTimeout";

@@ -27,40 +27,55 @@ package com.armedia.acm.email.model;
  * #L%
  */
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
 import org.springframework.beans.factory.annotation.Value;
 
+@JsonSerialize(as = EmailSenderConfig.class)
 public class EmailSenderConfig
 {
+    @JsonProperty("email.sender.type")
     @Value("${email.sender.type}")
     private String type;
 
+    @JsonProperty("email.sender.encryption")
     @Value("${email.sender.encryption}")
     private String encryption;
 
+    @JsonProperty("email.sender.allowAttachments")
     @Value("${email.sender.allowAttachments}")
     private Boolean allowAttachments;
 
+    @JsonProperty("email.sender.allowDocuments")
     @Value("${email.sender.allowDocuments}")
     private Boolean allowDocuments;
 
+    @JsonProperty("email.sender.host")
     @Value("${email.sender.host}")
     private String host;
 
+    @JsonProperty("email.sender.allowHyperlinks")
     @Value("${email.sender.allowHyperlinks}")
     private Boolean allowHyperlinks;
 
+    @JsonProperty("email.sender.userFrom")
     @Value("${email.sender.userFrom}")
     private String userFrom;
 
+    @JsonProperty("email.sender.port")
     @Value("${email.sender.port}")
     private Integer port;
 
+    @JsonProperty("email.sender.username")
     @Value("${email.sender.username}")
     private String username;
 
+    @JsonProperty("email.sender.password")
     @Value("${email.sender.password}")
     private String password;
 
+    @JsonProperty("email.sender.convertDocumentsToPdf")
     @Value("${email.sender.convertDocumentsToPdf}")
     private Boolean convertDocumentsToPdf;
 
@@ -72,7 +87,7 @@ public class EmailSenderConfig
     /**
      * @return the type
      */
-    public String getType() 
+    public String getType()
     {
         return type;
     }

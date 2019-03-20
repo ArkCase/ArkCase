@@ -31,6 +31,7 @@ package com.armedia.acm.services.notification.service;
  */
 
 import com.armedia.acm.services.notification.model.Notification;
+import com.armedia.acm.services.notification.service.provider.TemplateModelProvider;
 import com.armedia.acm.spring.SpringContextHolder;
 
 import java.util.Map;
@@ -43,6 +44,8 @@ public class SendExecutor implements Executor
 {
 
     private SpringContextHolder springContextHolder;
+
+    private TemplateModelProvider templateModelProvider;
 
     @Override
     public Notification execute(Notification notification)
@@ -57,7 +60,7 @@ public class SendExecutor implements Executor
             for (NotificationSenderFactory senderFactory : senderFactoryList.values())
             {
                 // Send notification
-                notification = senderFactory.getNotificationSender().send(notification);
+                notification = senderFactory.getNotificationSender().send(notification, templateModelProvider.getModel(notification));
             }
         }
 
@@ -74,4 +77,11 @@ public class SendExecutor implements Executor
         this.springContextHolder = springContextHolder;
     }
 
+    public TemplateModelProvider getTemplateModelProvider() {
+        return templateModelProvider;
+    }
+
+    public void setTemplateModelProvider(TemplateModelProvider templateModelProvider) {
+        this.templateModelProvider = templateModelProvider;
+    }
 }

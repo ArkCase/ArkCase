@@ -38,6 +38,7 @@ import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
+import com.armedia.acm.services.notification.dao.NotificationDao;
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.service.NotificationSender;
 import com.armedia.acm.services.users.dao.UserDao;
@@ -81,6 +82,7 @@ public class ResponseFolderNotifyServiceTest extends EasyMockSupport
     private FolderCompressor mockedCompressor;
     private ResponseFolderService mockedResponseFolderService;
     private AcmApplication mockedAcmApplication;
+    private NotificationDao mockNotificationDao;
 
     @Before
     public void setUp()
@@ -97,13 +99,15 @@ public class ResponseFolderNotifyServiceTest extends EasyMockSupport
         mockedCompressor = createMock(FolderCompressor.class);
         mockedResponseFolderService = createMock(ResponseFolderService.class);
         mockedAcmApplication = createMock(AcmApplication.class);
-
+        mockNotificationDao = createMock(NotificationDao.class);
+        
         responseFolderNotifyService.setCaseFileDao(mockedCaseFileDao);
         responseFolderNotifyService.setUserDao(mockedUserDao);
         responseFolderNotifyService.setResponseFolderService(mockedResponseFolderService);
         responseFolderNotifyService.setCompressor(mockedCompressor);
         responseFolderNotifyService.setNotificationSender(mockedNotificationSender);
         responseFolderNotifyService.setAcmAppConfiguration(mockedAcmApplication);
+        responseFolderNotifyService.setNotificationDao(mockNotificationDao);
 
         mockedContactMethods = Arrays.asList(mockedContactMethod);
     }
@@ -124,8 +128,9 @@ public class ResponseFolderNotifyServiceTest extends EasyMockSupport
         expect(mockedRequest.getObjectType()).andReturn(objectType).anyTimes();
         expect(mockedRequest.getId()).andReturn(requestId).anyTimes();
 
+        
         Capture<Notification> captureReleaseNotifier = Capture.newInstance();
-        expect(mockedNotificationSender.send(capture(captureReleaseNotifier))).andReturn(new Notification());
+        expect(mockNotificationDao.save(capture(captureReleaseNotifier))).andReturn(new Notification());
 
         replayAll();
 
@@ -134,7 +139,7 @@ public class ResponseFolderNotifyServiceTest extends EasyMockSupport
         verifyAll();
         assertEquals(String.format("%s %s", FOIAConstants.EMAIL_RELEASE_SUBJECT, caseNumber),
                 captureReleaseNotifier.getValue().getTitle());
-        assertEquals(emailAddress, captureReleaseNotifier.getValue().getUserEmail());
+        assertEquals(emailAddress, captureReleaseNotifier.getValue().getEmailAddresses());
     }
 
     @Test
@@ -153,9 +158,9 @@ public class ResponseFolderNotifyServiceTest extends EasyMockSupport
         expect(mockedRequest.getObjectType()).andReturn(objectType).anyTimes();
         expect(mockedRequest.getId()).andReturn(requestId).anyTimes();
 
+        
         Capture<Notification> captureReleaseNotifier = Capture.newInstance();
-        expect(mockedNotificationSender.send(capture(captureReleaseNotifier))).andReturn(new Notification());
-
+        expect(mockNotificationDao.save(capture(captureReleaseNotifier))).andReturn(new Notification());
         replayAll();
 
         responseFolderNotifyService.sendEmailResponseCompressNotification(requestId);
@@ -163,6 +168,6 @@ public class ResponseFolderNotifyServiceTest extends EasyMockSupport
         verifyAll();
         assertEquals(String.format("%s %s", FOIAConstants.EMAIL_RESPONSE_FOLDER_ZIP, caseNumber),
                 captureReleaseNotifier.getValue().getTitle());
-        assertEquals(emailAddress, captureReleaseNotifier.getValue().getUserEmail());
+        assertEquals(emailAddress, captureReleaseNotifier.getValue().getEmailAddresses());
     }
 }
