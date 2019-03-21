@@ -57,7 +57,6 @@ public class EmailSenderConfigurationAPIController
     public EmailSenderConfig getConfiguration()
     {
         return emailSenderConfigurationService.readConfiguration();
-
     }
 
     @RequestMapping(value = "/email/sender/allowdocuments", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -73,7 +72,6 @@ public class EmailSenderConfigurationAPIController
     public boolean getSenderAllowAttachments()
     {
         return emailSenderConfigurationService.readConfiguration().getAllowAttachments();
-
     }
 
     @RequestMapping(value = "/email/sender/allowhyperlinks", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
