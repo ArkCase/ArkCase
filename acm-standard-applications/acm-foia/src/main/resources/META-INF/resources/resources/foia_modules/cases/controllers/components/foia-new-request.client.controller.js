@@ -110,7 +110,9 @@ angular.module('cases').controller(
                 var states = data[8];
                 var configTitle = data[9];
 
-                $scope.enableTitle = configTitle.data.objectTitleTypes.REQUEST.enableTitleField;
+                if(!Util.isEmpty(configTitle)) {
+                    $scope.enableTitle = configTitle.data.objectTitleConfig.REQUEST.enableTitleField;
+                }
                 $scope.organizationTypes = organizationTypes;
 
                 $scope.config = _.find(moduleConfig.components, {

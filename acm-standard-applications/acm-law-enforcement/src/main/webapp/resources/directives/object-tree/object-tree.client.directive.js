@@ -484,19 +484,19 @@ angular.module('directives').directive('objectTree', [ '$q', '$translate', 'Util
                     var nodeTitleLabel = obj.nodeTitleLabel;
                     if(treeData.configTitleList){
                         var configurationTitle = treeData.configTitleList[obj.nodeType].title;
-                        if(configurationTitle === "Use the 'Object ID' as a Title")
+                        if(configurationTitle === "objectId")
                         {
                             var nodeTitle = obj.nodeId;
                         }
-                        else if(configurationTitle === "Use the 'Title' as a Title")
+                        else if(configurationTitle === "titleTitle")
                         {
                             var nodeTitle = obj.nodeTitle;
                         }
-                        else if(configurationTitle === "Use the 'Object ID - Title' as a Title")
+                        else if(configurationTitle === "objectIdTitle")
                         {
                             var nodeTitle = obj.nodeId + obj.nodeTitle;
                         }
-                        else if(configurationTitle === "Use the 'Title - Object ID' as a Title")
+                        else if(configurationTitle === "titleObjectId")
                         {
                             var nodeTitle = obj.nodeTitle + obj.nodeId;
                         }

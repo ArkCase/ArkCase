@@ -37,6 +37,7 @@ import org.springframework.beans.factory.annotation.Value;
 
 import java.util.HashMap;
 import java.util.Map;
+
 @JsonSerialize(as = ObjectTitleConfig.class)
 public class ObjectTitleConfig implements InitializingBean
 {
