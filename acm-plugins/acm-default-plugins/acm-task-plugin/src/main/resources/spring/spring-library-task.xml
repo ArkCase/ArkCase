@@ -16,7 +16,6 @@
 
     <bean id="taskPlugin" class="com.armedia.acm.pluginmanager.model.AcmPlugin">
         <property name="pluginName" value="Task Plugin"/>
-        <property name="pluginConfig" ref="taskConfig"/>
         <property name="configurationPropertyService" ref="configurationPropertyService"/>
         <property name="pluginConfig" ref="taskConfig"/>
         <property name="suportedObjectTypesNames">
