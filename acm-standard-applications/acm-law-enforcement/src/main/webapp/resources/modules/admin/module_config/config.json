@@ -1151,9 +1151,16 @@
                     "name": "title",
                     "displayName": "admin.application.objectTitleConfiguration.titleOption",
                     "visible": true,
+                    "cellTemplate": "<div class='ui-grid-cell-contents'>{{ grid.appScope.getTitleValue(row.entity.title) | translate }}</div>",
                     "headerCellFilter": "translate"
                 }
-            ]
+            ],
+            "radioButtonTitle": {
+                "objectId": "admin.application.objectTitleConfiguration.objectId",
+                "titleTitle": "admin.application.objectTitleConfiguration.titleTitle",
+                "objectIdTitle": "admin.application.objectTitleConfiguration.objectIdTitle",
+                "titleObjectId": "admin.application.objectTitleConfiguration.titleObjectId"
+            }
         }
     ],
     "tree": {

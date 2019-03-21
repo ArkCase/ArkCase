@@ -14,6 +14,7 @@ angular.module('admin').controller('Admin.ObjectTitleConfigurationController', [
             }));
 
             $scope.config = config;
+            $scope.radioButtonTitle = config.radioButtonTitle;
 
             gridHelper.addButton(config, "edit");
             gridHelper.addButton(config, "delete");
@@ -59,15 +60,17 @@ angular.module('admin').controller('Admin.ObjectTitleConfigurationController', [
         });
 
         var saveConfig = function() {
-            var objectTitleConfig = {};
-            angular.forEach($scope.objectTitleConfiguration, function (object) {
-                objectTitleConfig[object.objectType] = {
+            var model = {
+                objectTitleConfig: {}
+            };
+            angular.forEach($scope.objectTitleConfiguration.objectTitleTypes, function (object) {
+                model.objectTitleConfig[object.objectType] = {
                     enableTitleField: object.enableTitleField,
                     title: object.title
                 };
             });
 
-            AdminObjectTitleConfigurationService.saveObjectTitleConfiguration($scope.objectTitleConfiguration).then(function(response) {
+            AdminObjectTitleConfigurationService.saveObjectTitleConfiguration(model).then(function(response) {
                 MessageService.succsessAction($translate.instant("admin.application.objectTitleConfiguration.message.success"));
             }, function(error) {
                 MessageService.errorAction($translate.instant("admin.application.objectTitleConfiguration.message.error"));
@@ -142,5 +145,10 @@ angular.module('admin').controller('Admin.ObjectTitleConfigurationController', [
             reloadGrid();
             saveConfig();
         };
+
+        $scope.getTitleValue = function (key) {
+            return $scope.radioButtonTitle[key];
+        }
+
 
     }]);

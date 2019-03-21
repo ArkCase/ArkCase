@@ -128,22 +128,24 @@ angular.module('cases').controller(
                 });
 
                 AdminObjectTitleConfigurationService.getObjectTitleConfiguration().then(function (value) {
-                    var configurationTitle = value.data.objectTitleConfig.REQUEST.title;
-                    if(configurationTitle === "Use the 'Object ID' as a Title")
-                    {
-                        $scope.nodeTitle = $scope.objectInfo.id;
-                    }
-                    else if(configurationTitle === "Use the 'Title' as a Title")
-                    {
-                        $scope.nodeTitle = $scope.objectInfo.title;
-                    }
-                    else if(configurationTitle === "Use the 'Object ID - Title' as a Title")
-                    {
-                        $scope.nodeTitle = $scope.objectInfo.id + $scope.objectInfo.title;
-                    }
-                    else if(configurationTitle === "Use the 'Title - Object ID' as a Title")
-                    {
-                        $scope.nodeTitle = $scope.objectInfo.title + $scope.objectInfo.id;
+                    if(!Util.isEmpty(value)) {
+                        var configurationTitle = value.data.objectTitleConfig.REQUEST.title;
+                        if(configurationTitle === "objectId")
+                        {
+                            $scope.nodeTitle = $scope.objectInfo.id;
+                        }
+                        else if(configurationTitle === "titleTitle")
+                        {
+                            $scope.nodeTitle = $scope.objectInfo.title;
+                        }
+                        else if(configurationTitle === "objectIdTitle")
+                        {
+                            $scope.nodeTitle = $scope.objectInfo.id + $scope.objectInfo.title;
+                        }
+                        else if(configurationTitle === "titleObjectId")
+                        {
+                            $scope.nodeTitle = $scope.objectInfo.title + $scope.objectInfo.id;
+                        }
                     }
                 });
 

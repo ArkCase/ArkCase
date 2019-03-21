@@ -43,7 +43,7 @@ public class ObjectTitleConfigurationAPIController
 {
     private ObjectTitleConfigurationService objectTitleConfigurationService;
 
-    @RequestMapping(method = RequestMethod.POST)
+    @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public void saveObjectTitleConfiguration(@RequestBody ObjectTitleConfig objectTitleConfiguration)
     {
