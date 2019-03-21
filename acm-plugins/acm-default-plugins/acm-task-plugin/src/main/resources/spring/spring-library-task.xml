@@ -18,6 +18,7 @@
         <property name="pluginName" value="Task Plugin"/>
         <property name="pluginConfig" ref="taskConfig"/>
         <property name="configurationPropertyService" ref="configurationPropertyService"/>
+        <property name="pluginConfig" ref="taskConfig"/>
         <property name="suportedObjectTypesNames">
             <list>
                 <value>TASK</value>
