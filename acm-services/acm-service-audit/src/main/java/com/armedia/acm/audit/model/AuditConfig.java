@@ -124,12 +124,12 @@ public class AuditConfig
     @Value("${audit.plugin.contentTypesToLog}")
     private String contentTypesToLogString;
 
-    @JsonProperty("AUDIT_REPORT")
-    @Value("${AUDIT_REPORT}")
+    @JsonProperty("audit.plugin.AUDIT_REPORT")
+    @Value("${audit.plugin.AUDIT_REPORT}")
     private String auditReportUrl;
 
-    @JsonProperty("AUDIT_CRITERIA")
-    @Value("${AUDIT_CRITERIA}")
+    @JsonProperty("audit.plugin.AUDIT_CRITERIA")
+    @Value("${audit.plugin.AUDIT_CRITERIA}")
     private String auditCriteria;
 
     @JsonProperty("CASE_FILE.history.event.types")
