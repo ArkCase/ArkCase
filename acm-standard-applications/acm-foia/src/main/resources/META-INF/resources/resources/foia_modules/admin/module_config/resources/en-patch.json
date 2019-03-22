@@ -69,5 +69,10 @@
                 "appeal": "Appeal"
             }
         }
+    },
+    {
+        "op": "replace",
+        "path": "/admin/application/objectTitleConfiguration/caseFile",
+        "value": "Request"
     }
 ]

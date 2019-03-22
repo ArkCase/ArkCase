@@ -15,6 +15,7 @@ angular.module('admin').controller('Admin.ObjectTitleConfigurationController', [
 
             $scope.config = config;
             $scope.radioButtonTitle = config.radioButtonTitle;
+            $scope.objectTypeValue = config.objectTypeValue;
 
             gridHelper.addButton(config, "edit");
             gridHelper.addButton(config, "delete");
@@ -48,7 +49,7 @@ angular.module('admin').controller('Admin.ObjectTitleConfigurationController', [
         };
         AdminObjectTitleConfigurationService.getObjectTitleConfiguration().then(function(response) {
             if (!Util.isEmpty(response.data)) {
-                angular.forEach(response.data.objectTitleConfig, function (value, key){
+                angular.forEach(response.data, function (value, key){
                     $scope.objectTitleConfiguration.objectTitleTypes.push({
                         objectType: key,
                         enableTitleField: value.enableTitleField,
@@ -70,7 +71,7 @@ angular.module('admin').controller('Admin.ObjectTitleConfigurationController', [
                 };
             });
 
-            AdminObjectTitleConfigurationService.saveObjectTitleConfiguration(model).then(function(response) {
+            AdminObjectTitleConfigurationService.saveObjectTitleConfiguration(model.objectTitleConfig).then(function(response) {
                 MessageService.succsessAction($translate.instant("admin.application.objectTitleConfiguration.message.success"));
             }, function(error) {
                 MessageService.errorAction($translate.instant("admin.application.objectTitleConfiguration.message.error"));
@@ -148,6 +149,10 @@ angular.module('admin').controller('Admin.ObjectTitleConfigurationController', [
 
         $scope.getTitleValue = function (key) {
             return $scope.radioButtonTitle[key];
+        }
+
+        $scope.getObjectTypeValue = function (key) {
+            return $scope.objectTypeValue[key];
         }
 
 

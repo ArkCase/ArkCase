@@ -129,7 +129,7 @@ angular.module('cases').controller(
 
                 AdminObjectTitleConfigurationService.getObjectTitleConfiguration().then(function (value) {
                     if(!Util.isEmpty(value)) {
-                        var configurationTitle = value.data.objectTitleConfig.REQUEST.title;
+                        var configurationTitle = value.data.CASE_FILE.title;
                         if(configurationTitle === "objectId")
                         {
                             $scope.nodeTitle = $scope.objectInfo.id;

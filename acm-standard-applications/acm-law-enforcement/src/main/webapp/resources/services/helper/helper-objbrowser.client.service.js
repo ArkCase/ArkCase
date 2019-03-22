@@ -145,16 +145,34 @@ angular.module('services').factory(
 
                             that.scope.$on("object-updated", function(e, objectInfo) {
                                 var node = that.makeTreeNode(objectInfo);
-                                if (that.scope.treeControl) {
-                                    if (node.nodeSubType){
-                                        that.scope.treeControl.setTitle(node.nodeSubType, node.nodeId, node.nodeTitle, node.nodeToolTip);
-                                    }else {
-                                        that.scope.treeControl.setTitle(node.nodeType, node.nodeId, node.nodeTitle, node.nodeToolTip);
+                                if (that.scope.treeData.configTitleList) {
+                                    var configurationTitle = that.scope.treeData.configTitleList[node.nodeType].title;
+                                        if(configurationTitle === "objectId")
+                                        {
+                                            var title = obj.nodeId;
+                                        }
+                                        else if(configurationTitle === "titleTitle")
+                                        {
+                                            var title = obj.nodeTitle;
+                                        }
+                                        else if(configurationTitle === "objectIdTitle")
+                                        {
+                                            var title = obj.nodeId + obj.nodeTitle;
+                                        }
+                                        else if(configurationTitle === "titleObjectId")
+                                        {
+                                            var title = obj.nodeTitle + obj.nodeId;
+                                        }
+                                    }else
+                                    {
+                                        var title = node.nodeTitle;
                                     }
+
+                                        that.scope.treeControl.setTitle(node.nodeType, title,  node.nodeToolTip);
+
                                     if (that.updateTreeData && that.treeParams) {
                                         that.updateTreeData(that.treeParams.start, that.treeParams.n, that.treeParams.sort, that.treeParams.filters, that.treeParams.query, node);
                                     }
-                                }
                             });
 
                             that.scope.$on("object-update-failed", function(e, error) {
@@ -657,7 +675,7 @@ angular.module('services').factory(
                                 var treeNode = data[1];
 
                                 var configTitleData = data[2];
-                                var configTitleList = configTitleData.data.objectTitleConfig;
+                                var configTitleList = configTitleData.data;
 
                                 var selectNode = Util.goodMapValue(treeData, "docs[0]", null);
                                 if (treeNode) {

@@ -64,8 +64,7 @@ angular.module('cases').controller(
                                 nodeId: Util.goodValue(caseInfo.id, 0),
                                 nodeType: ObjectService.ObjectTypes.CASE_FILE,
                                 nodeTitle: Util.goodValue(caseInfo.title),
-                                nodeToolTip: Util.goodValue(caseInfo.title),
-                                nodeSubType: "REQUEST"
+                                nodeToolTip: Util.goodValue(caseInfo.title)
                             };
                         }
                     });
