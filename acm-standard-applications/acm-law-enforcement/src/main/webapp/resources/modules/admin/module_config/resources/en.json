@@ -817,6 +817,8 @@
                 "objectIdTitle": "Use the 'Object ID - Title' as a Title",
                 "objectType": "Object Type",
                 "titleOption": "Title",
+                "caseFile": "Case File",
+                "complaint": "Complaint",
                 "message": {
                     "success": "Object Title Configuration is successfully saved",
                     "error": "Error. Object Title Configuration is not saved.",

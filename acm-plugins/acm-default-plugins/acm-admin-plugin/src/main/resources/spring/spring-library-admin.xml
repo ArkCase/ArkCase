@@ -178,7 +178,7 @@
         <property name="jsonUnmarshaller" ref="jsonUnmarshaller"/>
         <aop:scoped-proxy proxy-target-class="true"/>
     </bean>
-    
+
     <bean id="objectTitleConfigurationService" class="com.armedia.acm.plugins.admin.service.ObjectTitleConfigurationService">
         <property name="configurationPropertyService" ref="configurationPropertyService"/>
         <property name="objectTitleConfiguration" ref="objectTitleConfiguration" />

@@ -1139,6 +1139,7 @@
                     "name": "objectType",
                     "displayName": "admin.application.objectTitleConfiguration.objectType",
                     "visible": true,
+                    "cellTemplate": "<div class='ui-grid-cell-contents'>{{ grid.appScope.getObjectTypeValue(row.entity.objectType) | translate }}</div>",
                     "headerCellFilter": "translate"
                 },
                 {
@@ -1160,6 +1161,10 @@
                 "titleTitle": "admin.application.objectTitleConfiguration.titleTitle",
                 "objectIdTitle": "admin.application.objectTitleConfiguration.objectIdTitle",
                 "titleObjectId": "admin.application.objectTitleConfiguration.titleObjectId"
+            },
+            "objectTypeValue":{
+                "CASE_FILE": "admin.application.objectTitleConfiguration.caseFile",
+                "COMPLAINT": "admin.application.objectTitleConfiguration.complaint"
             }
         }
     ],

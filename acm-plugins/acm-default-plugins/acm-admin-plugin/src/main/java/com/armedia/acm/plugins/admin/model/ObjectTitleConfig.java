@@ -41,18 +41,17 @@ import java.util.Map;
 @JsonSerialize(as = ObjectTitleConfig.class)
 public class ObjectTitleConfig implements InitializingBean
 {
+    @JsonProperty("objectTitleConfig")
     @Value("${objectTitleConfig}")
     private String objectTitleTypesString;
 
-    @JsonProperty("objectTitleConfig")
     private Map<String, TitleConfiguration> objectTitleTypes = new HashMap<>();
 
     private JSONUnmarshaller jsonUnmarshaller;
 
-    @JsonIgnore
     public String getObjectTitleTypesString()
     {
-        return objectTitleTypesString;
+        return new JSONObject(objectTitleTypes).toString();
     }
 
     public void setObjectTitleTypesString(String objectTitleTypesString)
@@ -83,6 +82,7 @@ public class ObjectTitleConfig implements InitializingBean
         });
     }
 
+    @JsonIgnore
     public Map<String, TitleConfiguration> getObjectTitleTypes()
     {
         return objectTitleTypes;

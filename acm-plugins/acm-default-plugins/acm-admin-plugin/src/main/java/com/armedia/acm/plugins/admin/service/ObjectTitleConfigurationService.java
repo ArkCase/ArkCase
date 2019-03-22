@@ -29,6 +29,9 @@ package com.armedia.acm.plugins.admin.service;
 
 import com.armedia.acm.configuration.service.ConfigurationPropertyService;
 import com.armedia.acm.plugins.admin.model.ObjectTitleConfig;
+import com.armedia.acm.plugins.admin.model.TitleConfiguration;
+
+import java.util.Map;
 
 
 public class ObjectTitleConfigurationService
@@ -36,14 +39,15 @@ public class ObjectTitleConfigurationService
     private ObjectTitleConfig objectTitleConfiguration;
     private ConfigurationPropertyService configurationPropertyService;
 
-    public void saveObjectTitleConfiguration(ObjectTitleConfig objectTitleConfiguration)
+    public void saveObjectTitleConfiguration(Map<String, TitleConfiguration> objectTitleMapping)
     {
+        objectTitleConfiguration.setObjectTitleTypes(objectTitleMapping);
         configurationPropertyService.updateProperties(objectTitleConfiguration);
     }
-    
-    public ObjectTitleConfig getObjectTitleConfig()
+
+    public Map<String, TitleConfiguration>  getObjectTitleConfig()
     {
-        return objectTitleConfiguration;
+        return objectTitleConfiguration.getObjectTitleTypes();
 
     }
 
