@@ -267,7 +267,7 @@
                     "name": "object_id_s",
                     "type": "number",
                     "displayName": "dashboard.widgets.myOverdueRequests.uniqueId",
-                    "cellTemplate": "<a href='#' ng-click='grid.appScope.myOverdueRequests.onTopicClick(row)'>{{row.entity.object_id_s}}</a>",
+                    "cellTemplate": "<a data-ui-sref=\"cases.main({id: row.entity.object_id_s})\">{{row.entity.object_id_s}}</a>",
                     "headerCellFilter": "translate",
                     "enableSorting": true
                 },
@@ -275,7 +275,7 @@
                     "name": "title_parseable_lcs",
                     "type": "number",
                     "displayName": "dashboard.widgets.myOverdueRequests.topic",
-                    "cellTemplate": "<a href='#' ng-click='grid.appScope.myOverdueRequests.onTopicClick(row)'>{{row.entity.title_parseable_lcs}}</a>",
+                    "cellTemplate": "<a data-ui-sref=\"cases.main({id: row.entity.object_id_s})\">{{row.entity.title_parseable_lcs}}</a>",
                     "headerCellFilter": "translate"
                 },
                 {

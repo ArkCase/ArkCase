@@ -45,6 +45,9 @@ import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
 /**
  * Created by dmiller on 6/28/16.
  */
@@ -149,8 +152,12 @@ public class SpringLdapDaoIT
     public void findUser()
     {
         LdapTemplate ldapTemplate = springLdapDao.buildLdapTemplate(acmSyncLdapConfig);
+        List<LdapUser> result = springLdapDao.findUsersPaged(ldapTemplate, acmSyncLdapConfig, Optional.ofNullable(null));
+        assertNotNull(result);
+        assertTrue(!result.isEmpty());
 
-        String userName = "arkcase-admin";
+        String userName = result.get(0).getUid(); 
+
         long start = System.currentTimeMillis();
         LdapUser ldapUser = springLdapUserDao.findUser(userName, ldapTemplate, acmSyncLdapConfig,
                 acmSyncLdapConfig.getUserSyncAttributes());
@@ -163,8 +170,12 @@ public class SpringLdapDaoIT
     public void findUserByLookup()
     {
         LdapTemplate ldapTemplate = springLdapDao.buildLdapTemplate(acmSyncLdapConfig);
+        List<LdapUser> result = springLdapDao.findUsersPaged(ldapTemplate, acmSyncLdapConfig, Optional.ofNullable(null));
+        assertNotNull(result);
+        assertTrue(!result.isEmpty());
 
-        String userName = "arkcase-admin";
+        String userName = result.get(0).getUid();
+
         LdapUser testUser = springLdapUserDao.findUser(userName, ldapTemplate, acmSyncLdapConfig,
                 acmSyncLdapConfig.getUserSyncAttributes());
 
