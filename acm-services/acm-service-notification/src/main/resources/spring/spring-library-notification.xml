@@ -112,13 +112,13 @@
     </bean>
 
     <bean id="notificationSenderFactory" class="com.armedia.acm.services.notification.service.NotificationSenderFactory">
-        <property name="emailSenderConfigurationService" ref="emailSenderConfigurationService"/>
         <property name="notificationSenderMap">
             <map>
                 <entry key="smtp" value-ref="smtpNotificationSender"/>
                 <entry key="outlook" value-ref="microsoftExchangeNotificationSender"/>
             </map>
         </property>
+        <property name="emailSenderConfig" ref="emailSenderConfig"/>
     </bean>
 
     <bean id="notificationPropertyFileLocation" class="java.lang.String">
