@@ -27,6 +27,7 @@ package com.armedia.acm.plugins.admin.web.api;
  * #L%
  */
 
+import com.armedia.acm.plugins.admin.model.GoogleAnalyticsConfig;
 import com.armedia.acm.plugins.admin.service.GoogleAnalyticsConfigService;
 
 import org.slf4j.Logger;
@@ -76,7 +77,7 @@ public class GoogleAnalyticsConfigAPIController
      */
     @RequestMapping(value = "/googleAnalytics", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public String getGoogleAnalyticsSettings()
+    public GoogleAnalyticsConfig getGoogleAnalyticsSettings()
     {
         return googleAnalyticsConfigService.getGoogleAnalyticsSettings();
     }
@@ -90,7 +91,7 @@ public class GoogleAnalyticsConfigAPIController
      */
     @RequestMapping(value = "/googleAnalytics", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public String setGoogleAnalyticsSettings(@RequestBody String configuration)
+    public GoogleAnalyticsConfig setGoogleAnalyticsSettings(@RequestBody GoogleAnalyticsConfig configuration)
     {
         return googleAnalyticsConfigService.setGoogleAnalyticsSettings(configuration);
     }
