@@ -43,7 +43,7 @@ import org.springframework.context.ApplicationListener;
 import java.util.Map;
 
 /**
- * Created by Vladimir Cherepnalkovski <vladimir.cherepnalkovski@armedia.com>
+ * Created by Riste Tutureski <riste.tutureski@armedia.com> on 02/27/2018
  */
 public class EcmFileAddedListener implements ApplicationListener<EcmFileAddedEvent>
 {
@@ -75,8 +75,8 @@ public class EcmFileAddedListener implements ApplicationListener<EcmFileAddedEve
 
                     catch (CreateMediaEngineException e)
                     {
-                        LOG.error("Creating [{}] for file with ID=[{}] and VERSION_ID=[{}] is not executed. REASON=[{}]", serviceName,
-                                ecmFile.getFileId(), ecmFileVersion.getId(), e.getMessage(), e);
+                        LOG.warn("Creating [{}] for file with ID=[{}] and VERSION_ID=[{}] is not executed. REASON=[{}]", serviceName,
+                                ecmFile.getFileId(), ecmFile.getId(), e.getMessage());
                     }
                 }
             }
