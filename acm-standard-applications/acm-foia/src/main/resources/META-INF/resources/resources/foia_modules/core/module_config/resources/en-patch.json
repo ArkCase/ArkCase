@@ -158,5 +158,10 @@
                 "fullyRedacted": "Fully Redacted"
             }
         }
+    },
+    {
+        "op": "add",
+        "path": "/core/lookups/objectTitleTypes/request",
+        "value": "Request"
     }
 ]
