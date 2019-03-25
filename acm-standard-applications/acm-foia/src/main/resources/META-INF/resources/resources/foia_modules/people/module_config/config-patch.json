@@ -6,18 +6,6 @@
     },
     {
         "op": "remove",
-        "path": "/tree/filters/?@.desc=='people.tree.filters.iHaveCreatedActive'"
-    },
-    {
-        "op": "remove",
-        "path": "/tree/filters/?@.desc=='people.tree.filters.active'"
-    },
-    {
-        "op": "remove",
-        "path": "/tree/filters/?@.desc=='people.tree.filters.inActive'"
-    },
-    {
-        "op": "remove",
         "path": "/tree/nodeTypes/?@.type=='p/PERSON'/id"
     },
     {
