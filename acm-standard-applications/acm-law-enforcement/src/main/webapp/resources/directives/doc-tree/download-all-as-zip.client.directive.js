@@ -69,8 +69,9 @@ angular.module('directives').directive('downloadAllAsZip', [ 'MessageService', '
             scope.downloadAllAsZip = function() {
                 scope.downloadInProgress = true;
 
-                var folderId = Util.goodMapValue(scope.objectInfo, 'container.folder.id', false);
+                var rootFolderId = scope.treeControl.getTopNode().data.objectId;
                 scope.tmpSelectedNodes = scope.treeControl.getSelectedNodes();
+
                 var selectedNodes = [];
 
                 for (var i = 0; i < scope.tmpSelectedNodes.length; i++) {
@@ -84,7 +85,7 @@ angular.module('directives').directive('downloadAllAsZip', [ 'MessageService', '
                     });
                 }
                 var compressNode = {
-                    rootFolderId: folderId,
+                    rootFolderId: rootFolderId,
                     selectedNodes: selectedNodes
                 };
 
