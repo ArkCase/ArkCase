@@ -27,7 +27,18 @@ package com.armedia.acm.calendar.config.model;
  * #L%
  */
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+
+@JsonDeserialize(using = PurgeOptionsDeserializer.class)
 public enum PurgeOptions
 {
-    RETAIN_INDEFINITELY, CLOSED, CLOSED_X_DAYS
+    @JsonProperty("RETAIN_INDEFINITELY")
+    RETAIN_INDEFINITELY,
+
+    @JsonProperty("CLOSED")
+    CLOSED,
+
+    @JsonProperty("CLOSED_X_DAYS")
+    CLOSED_X_DAYS
 }

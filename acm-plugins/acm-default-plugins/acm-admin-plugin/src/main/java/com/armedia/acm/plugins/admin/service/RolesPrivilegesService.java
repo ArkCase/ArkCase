@@ -353,7 +353,7 @@ public class RolesPrivilegesService
         }
         catch (IllegalArgumentException | TransactionRequiredException | ConfigurationPropertyException e)
         {
-            throw new AcmRolesPrivilegesException("Failed to save new role [" + roleName + ".", e);
+            throw new AcmRolesPrivilegesException("Failed to save new role [" + roleName + "]", e);
         }
     }
 
@@ -404,7 +404,7 @@ public class RolesPrivilegesService
         }
         catch (ConfigurationPropertyException e)
         {
-            log.error("Can't save role [{}] to configuration", roleName, e);
+            log.error("Can't save role [{}] to role to privileges configuration", roleName, e);
             throw new AcmRolesPrivilegesException(String.format("Can't save role '%s' to configuration", roleName), e);
         }
     }

@@ -34,23 +34,23 @@ import org.springframework.beans.factory.annotation.Value;
 public class TagConfig
 {
     @JsonProperty("tag.plugin.search.name")
-    @Value("tag.plugin.search.name")
+    @Value("${tag.plugin.search.name}")
     private String searchName;
 
     @JsonProperty("tag.plugin.search.filters")
-    @Value("tag.plugin.search.filters")
+    @Value("${tag.plugin.search.filters}")
     private String searchFilters;
 
     @JsonProperty("tag.plugin.search.topFacets")
-    @Value("tag.plugin.search.topFacets")
+    @Value("${tag.plugin.search.topFacets}")
     private String topFacets;
 
     @JsonProperty("tag.plugin.associated.by.object.id.and.type")
-    @Value("tag.plugin.associated.by.object.id.and.type")
+    @Value("${tag.plugin.associated.by.object.id.and.type}")
     private String tagAssociatedByObjectIdAndTypeQuery;
 
     @JsonProperty("tag.plugin.tags")
-    @Value("tag.plugin.tags")
+    @Value("${tag.plugin.tags}")
     private String tags;
 
     public String getSearchName()
