@@ -216,6 +216,7 @@ public class NotificationServiceTest extends EasyMockSupport
 
         notificationSenderMap.put("smtp", smtpNotificationServer);
         notificationSenderFactory.setNotificationSenderMap(notificationSenderMap);
+        notificationSenderFactory.setEmailSenderConfig(emailSenderConfig);
 
         NotificationUtils mockNotificationUtils = createMock(NotificationUtils.class);
         smtpNotificationServer.setNotificationUtils(mockNotificationUtils);
@@ -376,6 +377,7 @@ public class NotificationServiceTest extends EasyMockSupport
 
         notificationSenderMap.put("smtp", smtpNotificationServer);
         notificationSenderFactory.setNotificationSenderMap(notificationSenderMap);
+        notificationSenderFactory.setEmailSenderConfig(emailSenderConfig);
 
         Map<String, NotificationSenderFactory> senders = new HashMap<>();
         senders.put("notificationSender", notificationSenderFactory);
