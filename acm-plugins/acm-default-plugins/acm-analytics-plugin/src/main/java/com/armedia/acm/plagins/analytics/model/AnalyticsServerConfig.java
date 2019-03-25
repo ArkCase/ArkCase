@@ -45,34 +45,35 @@ public class AnalyticsServerConfig
     private String elkInternalUrl;
 
     @JsonProperty("elk.server.user")
-    @Value("elk.server.user")
+    @Value("${elk.server.user}")
     private String elkUser;
 
-    @Value("elk.server.password")
+    @JsonProperty("elk.server.password")
+    @Value("${elk.server.password}")
     private String elkPassword;
 
     @JsonProperty("elk.dashboard.url")
-    @Value("elk.dashboard.url")
+    @Value("${elk.dashboard.url}")
     private String elkDashboardUrl;
 
     @JsonProperty("slk.server.internal.url")
-    @Value("slk.server.internal.url")
+    @Value("${slk.server.internal.url}")
     private String slkInternalUrl;
 
     @JsonProperty("slk.server.internal.port")
-    @Value("slk.server.internal.port")
+    @Value("${slk.server.internal.port}")
     private int slkInternalPort;
 
     @JsonProperty("slk.server.external.url")
-    @Value("slk.server.external.url")
+    @Value("${slk.server.external.url}")
     private String slkExternalUrl;
 
     @JsonProperty("slk.server.dashboard.url")
-    @Value("slk.server.dashboard.url")
+    @Value("${slk.server.dashboard.url}")
     private String slkDashboardUrl;
 
     @JsonProperty("slk.server.dashboardfile.url")
-    @Value("slk.server.dashboardfile.url")
+    @Value("${slk.server.dashboardfile.url}")
     private String slkDashboardFileUrl;
 
     public String getElkUrl()
