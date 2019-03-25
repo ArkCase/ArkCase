@@ -611,7 +611,6 @@
             },
             "objectTitleTypes": {
                 "caseFile": "Case File",
-                "request": "Request",
                 "complaint": "Complaint"
             }
         },

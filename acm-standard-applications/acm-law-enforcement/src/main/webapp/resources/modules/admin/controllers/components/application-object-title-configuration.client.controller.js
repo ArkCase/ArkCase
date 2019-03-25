@@ -103,7 +103,7 @@ angular.module('admin').controller('Admin.ObjectTitleConfigurationController', [
             var objectTitleTypes = {
                 objectType: '',
                 enableTitleField: true,
-                title: 'Use the \'Object ID\' as a Title'
+                title: 'objectId'
             };
 
             showModal(objectTitleTypes, false, $scope.objectTitleTypesDropdownOptions).then(function(data) {
