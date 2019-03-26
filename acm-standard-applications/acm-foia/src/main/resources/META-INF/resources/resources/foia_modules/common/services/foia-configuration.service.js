@@ -7,9 +7,9 @@ angular.module('services').factory('FOIAConfiguration.Service', [ '$http', 'Util
             var url = 'api/latest/service/foia/configuration/dashboardBannerConfiguration';
             return $http({
                 method: 'GET',
-                url: url,
+                url: url
             });
-        }
+        };
 
     return {
         isDashboardBannerEnabled: _isDashboardBannerEnabled
