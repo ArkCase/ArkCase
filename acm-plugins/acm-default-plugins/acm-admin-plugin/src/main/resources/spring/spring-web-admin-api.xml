@@ -284,5 +284,7 @@
         class="com.armedia.acm.plugins.admin.web.api.DataAccessControlAPIController">
         <property name="dataAccessControlService" ref="dataAccessControlService"/>
     </bean>
-
+    <bean id="objectTitleConfigurationController" class="com.armedia.acm.plugins.admin.web.api.ObjectTitleConfigurationAPIController">
+        <property name="objectTitleConfigurationService" ref="objectTitleConfigurationService"/>
+    </bean>
 </beans>

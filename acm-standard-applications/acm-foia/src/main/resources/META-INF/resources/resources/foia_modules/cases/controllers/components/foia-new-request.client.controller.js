@@ -3,14 +3,15 @@
 angular.module('cases').controller(
     'Cases.NewRequestController',
     ['$scope', '$sce', '$q', '$modal', '$translate', 'ConfigService', 'FOIA.Data', 'Request.InfoService', 'ObjectService', 'modalParams', 'Object.LookupService', 'Util.DateService', 'MessageService', 'UtilService',
-        'Requests.RequestsService', 'Dialog.BootboxService', 'Organization.InfoService', '$location', '$anchorScroll',
+        'Requests.RequestsService', 'Dialog.BootboxService', 'Organization.InfoService', '$location', '$anchorScroll', 'Admin.ObjectTitleConfigurationService',
 
-        function ($scope, $sce, $q, $modal, $translate, ConfigService, Data, RequestInfoService, ObjectService, modalParams, ObjectLookupService, UtilDateService, MessageService, Util, RequestsService, DialogService, OrganizationInfoService, $location, $anchorScroll) {
+        function ($scope, $sce, $q, $modal, $translate, ConfigService, Data, RequestInfoService, ObjectService, modalParams, ObjectLookupService, UtilDateService, MessageService, Util, RequestsService, DialogService, OrganizationInfoService, $location, $anchorScroll, AdminObjectTitleConfigurationService) {
 
             $scope.modalParams = modalParams;
             $scope.loading = false;
             $scope.loadingIcon = "fa fa-floppy-o";
             $scope.formInvalid = false;
+            $scope.enableTitle = false;
 
             var descriptionDocumentType = "Description Document";
             var consentDocumentType = "Consent";
@@ -94,7 +95,9 @@ angular.module('cases').controller(
 
             var componentsAgenciesPromise = ObjectLookupService.getLookupByLookupName("componentsAgencies");
             var organizationTypeLookup = ObjectLookupService.getPersonOrganizationRelationTypes();
-            $q.all([requestConfig, componentsAgenciesPromise, organizationTypeLookup, prefixNewRequest, newRequestTypes, deliveryMethodOfResponsesRequest, payFeesRequest, requestCategories, stateRequest]).then(function (data) {
+            var promiseConfigTitle = AdminObjectTitleConfigurationService.getObjectTitleConfiguration();
+
+            $q.all([requestConfig, componentsAgenciesPromise, organizationTypeLookup, prefixNewRequest, newRequestTypes, deliveryMethodOfResponsesRequest, payFeesRequest, requestCategories, stateRequest, promiseConfigTitle]).then(function (data) {
 
                 var moduleConfig = data[0];
                 var componentsAgencies = data[1];
@@ -105,7 +108,11 @@ angular.module('cases').controller(
                 var payFees = data[6];
                 var categories = data[7];
                 var states = data[8];
+                var configTitle = data[9];
 
+                if(!Util.isEmpty(configTitle)) {
+                    $scope.enableTitle = configTitle.data.CASE_FILE.enableTitleField;
+                }
                 $scope.organizationTypes = organizationTypes;
 
                 $scope.config = _.find(moduleConfig.components, {

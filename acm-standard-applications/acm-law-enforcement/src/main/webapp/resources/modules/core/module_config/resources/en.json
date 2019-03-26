@@ -608,6 +608,10 @@
                 "weekly": "Weekly",
                 "monthly": "Monthly",
                 "yearly": "Yearly"
+            },
+            "objectTitleTypes": {
+                "caseFile": "Case File",
+                "complaint": "Complaint"
             }
         },
         "userInfo": {

@@ -1126,6 +1126,46 @@
                     "paginationPageSize": 20
                 }
             }
+        },
+        {
+            "id": "objectTitleConfiguration",
+            "title": "admin.application.objectTitleConfiguration.title",
+            "enabled": true,
+            "type": "grid",
+            "enableFiltering": false,
+            "configurable": true,
+            "columnDefs": [
+                {
+                    "name": "objectType",
+                    "displayName": "admin.application.objectTitleConfiguration.objectType",
+                    "visible": true,
+                    "cellTemplate": "<div class='ui-grid-cell-contents'>{{ grid.appScope.getObjectTypeValue(row.entity.objectType) | translate }}</div>",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "enableTitleField",
+                    "displayName": "admin.application.objectTitleConfiguration.enableTitleField",
+                    "visible": true,
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "title",
+                    "displayName": "admin.application.objectTitleConfiguration.titleOption",
+                    "visible": true,
+                    "cellTemplate": "<div class='ui-grid-cell-contents'>{{ grid.appScope.getTitleValue(row.entity.title) | translate }}</div>",
+                    "headerCellFilter": "translate"
+                }
+            ],
+            "radioButtonTitle": {
+                "objectId": "admin.application.objectTitleConfiguration.objectId",
+                "titleTitle": "admin.application.objectTitleConfiguration.titleTitle",
+                "objectIdTitle": "admin.application.objectTitleConfiguration.objectIdTitle",
+                "titleObjectId": "admin.application.objectTitleConfiguration.titleObjectId"
+            },
+            "objectTypeValue":{
+                "CASE_FILE": "admin.application.objectTitleConfiguration.caseFile",
+                "COMPLAINT": "admin.application.objectTitleConfiguration.complaint"
+            }
         }
     ],
     "tree": {
@@ -1372,6 +1412,13 @@
                 "label": "admin.application.sequenceManagement.config.title",
                 "components": [
                     "application-sequence-management.config"
+                ]
+            },
+            {
+                "type": "p/application/objectTitleConfiguration",
+                "label": "admin.application.objectTitleConfiguration.title",
+                "components": [
+                    "application-object-title-configuration"
                 ]
             },
             {
