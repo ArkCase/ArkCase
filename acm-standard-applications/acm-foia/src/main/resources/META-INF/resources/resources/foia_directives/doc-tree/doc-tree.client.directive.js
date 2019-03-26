@@ -5044,6 +5044,7 @@ angular
 
                         scope.treeControl = {
                             getSelectedNodes : DocTree.getSelectedNodes,
+                            getTopNode: DocTree.getTopNode,
                             refreshTree : DocTree.refreshTree,
                             refreshNode : DocTree.refreshNode,
                             updateNodeData : DocTree.updateNodeData,
