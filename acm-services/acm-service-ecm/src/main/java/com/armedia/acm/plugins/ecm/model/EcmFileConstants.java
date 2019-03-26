@@ -103,6 +103,8 @@ public interface EcmFileConstants
 
     String OBJECT_FOLDER_TYPE = "FOLDER";
 
+    String OBJECT_CONTAINER_TYPE = "CONTAINER";
+
     String EVENT_TYPE_TAG_UPDATE = "com.armedia.acm.tag.updated";
     String EVENT_TYPE_ACTIVE_VERSION_SET = "com.armedia.acm.file.version.set";
     String EVENT_TYPE_FILE_EMAILED = "com.armedia.acm.ecm.file.emailed";

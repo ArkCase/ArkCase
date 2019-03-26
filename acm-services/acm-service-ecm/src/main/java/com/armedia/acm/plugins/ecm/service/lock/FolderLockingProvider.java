@@ -59,6 +59,12 @@ public class FolderLockingProvider implements ObjectLockingProvider
     private Long expiryTimeInMilliseconds;
 
     @Override
+    public String getObjectType()
+    {
+        return EcmFileConstants.OBJECT_FOLDER_TYPE;
+    }
+
+    @Override
     public void checkIfObjectLockCanBeAcquired(Long objectId, String objectType, String lockType, boolean checkChildObjects, String userId)
             throws AcmObjectLockException
     {
