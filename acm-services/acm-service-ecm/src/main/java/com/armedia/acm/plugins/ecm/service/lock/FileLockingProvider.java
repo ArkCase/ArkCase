@@ -226,9 +226,11 @@ public class FileLockingProvider implements ObjectLockingProvider
                 throwErrorOnExistingLockExceptForReadLock(objectId, objectType, lockType, userId, existingLock, false);
                 break;
             case DELETE:
-                throw new AcmObjectLockException(String.format(
-                        "[{}] not able to release object lock[objectId={}, objectType={}, lockType={}]. Reason: Object already has a lock of type {} by user: [{}]",
-                        userId, objectId, objectType, lockType, existingLock.getLockType(), existingLock.getCreator()));
+                log.error(
+                        " {} not able to release object lock[objectId={}, objectType={}, lockType={}]. Reason: Object already has a lock of type {} by user: {}",
+                        userId, objectId, objectType, lockType, existingLock.getLockType(), existingLock.getCreator());
+                throw new AcmObjectLockException(
+                        "Document is locked and can't be modified or moved");
             default:
                 throw new AcmObjectLockException("Unimplemented handling of lock type: " + lockType);
             }
