@@ -552,12 +552,15 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
                     try
                     {
                         pdfConvertedFile = getDefaultFolderAndFileConverter().convertAndReturnConvertedFile(ecmFile);
-                        pdfConvertedFileInputStream = new FileInputStream(pdfConvertedFile);
-                        contents = pdfConvertedFileInputStream;
-                        fileName = fileKey.concat(".pdf");
+                        if(pdfConvertedFile != null)
+                        {
+                            pdfConvertedFileInputStream = new FileInputStream(pdfConvertedFile);
+                            contents = pdfConvertedFileInputStream;
+                            fileName = fileKey.concat(".pdf");
 
-                        tmpFiles.add(pdfConvertedFile);
-                        tmpFilesInputStream.add(pdfConvertedFileInputStream);
+                            tmpFiles.add(pdfConvertedFile);
+                            tmpFilesInputStream.add(pdfConvertedFileInputStream);
+                        }
                     }
                     catch (ConversionException | FileNotFoundException e)
                     {

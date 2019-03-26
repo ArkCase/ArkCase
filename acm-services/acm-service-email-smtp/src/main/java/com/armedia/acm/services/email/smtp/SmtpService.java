@@ -322,6 +322,10 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
                             FileUtils.deleteQuietly(pdfConvertedFile);
                         }
                     }
+                    else
+                    {
+                        attachments.put(fileKey, new DataHandler(new InputStreamDataSource(contents, fileName)));
+                    }
                 }
                 else
                 {
