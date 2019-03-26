@@ -142,8 +142,8 @@ public class PentahoFilePropertiesService
 
     public String buildFilePropertiesUrl()
     {
-        return reportsConfig.getServerUrl()
-                + (reportsConfig.getServerPort() != null ? ":" + reportsConfig.getServerPort() : "")
+        return reportsConfig.getServerInternalUrl()
+                + (reportsConfig.getServerInternalPort() != null ? ":" + reportsConfig.getServerInternalPort() : "")
                 + reportsConfig.getFilePropertiesApi();
     }
 
