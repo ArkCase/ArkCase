@@ -27,17 +27,13 @@ package com.armedia.acm.plugins.task.service.impl;
  * #L%
  */
 
-import com.armedia.acm.plugins.task.model.AcmTask;
 import com.armedia.acm.plugins.task.service.AbstractTaskNotifier;
-import com.armedia.acm.services.users.dao.UserDao;
-import com.armedia.acm.services.users.model.AcmUser;
 
 import org.activiti.engine.task.TaskQuery;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
-import java.util.Map;
 
 /**
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Oct 10, 2016
