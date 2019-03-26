@@ -135,6 +135,12 @@ public class DefaultObjectLockingProvider implements ObjectLockingProvider
     }
 
     @Override
+    public String getObjectType()
+    {
+        return "DEFAULT";
+    }
+
+    @Override
     public Long getExpiryTimeInMilliseconds()
     {
         return expiryTimeInMilliseconds;

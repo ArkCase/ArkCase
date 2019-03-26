@@ -30,6 +30,7 @@ package com.armedia.acm.plugins.ecm.service.lock;
 import com.armedia.acm.core.exceptions.AcmObjectLockException;
 import com.armedia.acm.plugins.ecm.dao.AcmContainerDao;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
+import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.service.objectlock.model.AcmObjectLock;
 import com.armedia.acm.service.objectlock.service.AcmObjectLockService;
 import com.armedia.acm.service.objectlock.service.ObjectLockingProvider;
@@ -53,6 +54,12 @@ public class ContainerLockingProvider implements ObjectLockingProvider
     private AcmContainerDao containerDao;
     private FolderLockingProvider folderLockingProvider;
     private Long expiryTimeInMilliseconds;
+
+    @Override
+    public String getObjectType()
+    {
+        return EcmFileConstants.OBJECT_CONTAINER_TYPE;
+    }
 
     @Override
     public void checkIfObjectLockCanBeAcquired(Long objectId, String objectType, String lockType, boolean checkChildObjects, String userId)
