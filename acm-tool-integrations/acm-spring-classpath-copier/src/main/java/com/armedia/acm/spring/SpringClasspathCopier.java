@@ -72,24 +72,28 @@ public class SpringClasspathCopier implements ApplicationContextAware
                 getDeployFolder().mkdirs();
             }
 
-            Resource[] matchingResources = getResolver().getResources(getResourcePattern());
-            for (Resource resource : matchingResources)
+            String[] patterns = getResourcePattern().split(",");
+            for (String pattern : patterns)
             {
-                String resourceFilename = resource.getFilename();
-                if (log.isInfoEnabled())
+                Resource[] matchingResources = getResolver().getResources(pattern);
+                for (Resource resource : matchingResources)
                 {
-                    log.info("Found resource '" + resourceFilename + "'");
-                }
-
-                File target = new File(getDeployFolder() + File.separator + resourceFilename);
-                if (!target.exists())
-                {
-                    if (log.isDebugEnabled())
+                    String resourceFilename = resource.getFilename();
+                    if (log.isInfoEnabled())
                     {
-                        log.debug("Copying resource '" + resourceFilename + "' to deploy folder.");
+                        log.info("Found resource '" + resourceFilename + "'");
                     }
-                    // NOTE: FileCopyUtils will close both the input and the output streams.
-                    FileCopyUtils.copy(resource.getInputStream(), new FileOutputStream(target));
+
+                    File target = new File(getDeployFolder() + File.separator + resourceFilename);
+                    if (!target.exists())
+                    {
+                        if (log.isDebugEnabled())
+                        {
+                            log.debug("Copying resource '" + resourceFilename + "' to deploy folder.");
+                        }
+                        // NOTE: FileCopyUtils will close both the input and the output streams.
+                        FileCopyUtils.copy(resource.getInputStream(), new FileOutputStream(target));
+                    }
                 }
             }
         }

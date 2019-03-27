@@ -129,7 +129,7 @@
     </bean>
 
     <bean id="activitiResourceExpression" class="java.lang.String">
-        <constructor-arg value="classpath*:/activiti/*.bpmn20.xml"/>
+        <constructor-arg value="classpath*:/activiti/acm*.bpmn20.xml,classpath*:/activiti/ArkCase*.bpmn20.xml,classpath*:/activiti/cmComplaint*.bpmn20.xml,classpath*:/activiti/Corrective*.bpmn20.xml,classpath*:/activiti/OCR*.bpmn20.xml,classpath*:/activiti/Transcribe*.bpmn20.xml"/>
     </bean>
 
     <bean id="activitiPathMatchingResolver" class="org.springframework.core.io.support.PathMatchingResourcePatternResolver"/>
