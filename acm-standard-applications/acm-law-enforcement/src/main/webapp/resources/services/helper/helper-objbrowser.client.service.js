@@ -145,34 +145,29 @@ angular.module('services').factory(
 
                             that.scope.$on("object-updated", function(e, objectInfo) {
                                 var node = that.makeTreeNode(objectInfo);
-                                if (that.scope.treeData.configTitleList) {
-                                    var configurationTitle = that.scope.treeData.configTitleList[node.nodeType].title;
-                                        if(configurationTitle === "objectId")
-                                        {
-                                            var title = obj.nodeId;
+                                if (!Util.isEmpty(that.scope.treeData)) {
+                                    if (!Util.isEmpty(that.scope.treeData.configTitleList)) {
+                                        var configurationTitle = that.scope.treeData.configTitleList[node.nodeType].title;
+                                        if (configurationTitle === "objectId") {
+                                            var title = node.nodeId;
+                                        } else if (configurationTitle === "titleTitle") {
+                                            var title = node.nodeTitle;
+                                        } else if (configurationTitle === "objectIdTitle") {
+                                            var title = node.nodeId + node.nodeTitle;
+                                        } else if (configurationTitle === "titleObjectId") {
+                                            var title = node.nodeTitle + node.nodeId;
                                         }
-                                        else if(configurationTitle === "titleTitle")
-                                        {
-                                            var title = obj.nodeTitle;
-                                        }
-                                        else if(configurationTitle === "objectIdTitle")
-                                        {
-                                            var title = obj.nodeId + obj.nodeTitle;
-                                        }
-                                        else if(configurationTitle === "titleObjectId")
-                                        {
-                                            var title = obj.nodeTitle + obj.nodeId;
-                                        }
-                                    }else
-                                    {
-                                        var title = node.nodeTitle;
                                     }
+                                } else {
+                                    var title = node.nodeTitle;
+                                }
 
-                                        that.scope.treeControl.setTitle(node.nodeType, title,  node.nodeToolTip);
+                                that.scope.treeControl.setTitle(node.nodeType, node.nodeId, title, node.nodeToolTip);
 
-                                    if (that.updateTreeData && that.treeParams) {
-                                        that.updateTreeData(that.treeParams.start, that.treeParams.n, that.treeParams.sort, that.treeParams.filters, that.treeParams.query, node);
-                                    }
+                                if (that.updateTreeData && that.treeParams) {
+                                    that.updateTreeData(that.treeParams.start, that.treeParams.n, that.treeParams.sort, that.treeParams.filters, that.treeParams.query, node);
+                                }
+
                             });
 
                             that.scope.$on("object-update-failed", function(e, error) {
@@ -667,7 +662,7 @@ angular.module('services').factory(
                                 deferNodeData.resolve(null);
                             }
 
-                            $q.all([ promiseTreeData, deferNodeData.promise, promisConfigTitle]).then(function(data) {
+                            $q.all([ promiseTreeData, deferNodeData.promise, promisConfigTitle ]).then(function(data) {
                                 var treeData = Util.goodValue(data[0], {
                                     docs: [],
                                     total: 0
