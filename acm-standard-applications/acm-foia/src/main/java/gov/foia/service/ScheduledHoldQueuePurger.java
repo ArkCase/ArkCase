@@ -63,15 +63,15 @@ public class ScheduledHoldQueuePurger extends AbstractScheduledQueuePurger
      * @return
      */
     @Override
-    protected String getMaxDaysInQueueProperty()
+    protected Integer getMaxDaysInQueueProperty()
     {
-        return "maxDaysInHoldQueue";
+        return getFoiaConfigurationService().getFoiaConfig().getMaxDaysInHoldQueue();
     }
 
     @Override
-    protected String getPurgeRequestWhenInHoldEnabled()
+    protected Boolean getPurgeRequestWhenInHoldEnabled()
     {
-        return "purgeRequestEnabled";
+        return getFoiaConfigurationService().getFoiaConfig().getPurgeRequestEnabled();
     }
 
     @Override
@@ -94,6 +94,5 @@ public class ScheduledHoldQueuePurger extends AbstractScheduledQueuePurger
     {
         return "foia-extension-delete-process";
     }
-
 
 }

@@ -61,6 +61,26 @@
                     </div>
                 </div>
                 <div class="row">
+                    <div class="col-lg-4"></div>
+                    <div class="col-lg-4">
+                        <label translate>admin.application.foia.config.labels.moveToBillingQueueEnabled</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-4">
+                        <div class="checkbox">
+                            <label>
+                                <span translate>
+                                    admin.application.foia.config.labels.moveRequestToBillingQueue
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <input type="number" min="1" ng-model="configDataModel.maxDaysInBillingQueue" class="form-control">
+                    </div>
+                </div>
+                <div class="row">
                     <div class="col-lg-12">
                         <div class="checkbox">
                             <label>
