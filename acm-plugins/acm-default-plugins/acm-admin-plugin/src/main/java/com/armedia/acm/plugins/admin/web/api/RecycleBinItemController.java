@@ -33,7 +33,6 @@ import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.ecm.model.RecycleBinDTO;
 import com.armedia.acm.plugins.ecm.model.RecycleBinItemDTO;
 import com.armedia.acm.plugins.ecm.service.RecycleBinItemService;
-import org.mule.api.MuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -45,7 +44,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -66,7 +64,7 @@ public class RecycleBinItemController
             @RequestParam(value = "start", required = false, defaultValue = "0") int start,
             @RequestParam(value = "n", required = false, defaultValue = "5") int maxRows,
             @RequestParam(value = "sortBy", required = false, defaultValue = "modified_date_tdt") String sortBy,
-            @RequestParam(value = "sortDir", required = false, defaultValue = "desc") String sortDir) throws MuleException, ParseException
+            @RequestParam(value = "sortDir", required = false, defaultValue = "desc") String sortDir)
     {
         try
         {
