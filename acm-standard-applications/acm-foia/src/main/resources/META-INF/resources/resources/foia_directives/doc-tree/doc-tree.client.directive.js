@@ -3217,7 +3217,7 @@ angular
 
                                     var fileId = node.data.objectId;
                                     Util.serviceCall({
-                                        service : Ecm.deleteFile,
+                                        service : Ecm.deleteFileTemporary,
                                         param : {
                                             fileId : fileId
                                         },

@@ -36,6 +36,7 @@ import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 
+import com.armedia.acm.plugins.ecm.model.RecycleBinItem;
 import org.apache.chemistry.opencmis.client.api.CmisObject;
 import org.apache.chemistry.opencmis.client.api.Document;
 import org.springframework.retry.annotation.Backoff;
@@ -46,6 +47,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.PersistenceException;
+import javax.servlet.http.HttpSession;
 
 import java.io.File;
 import java.io.IOException;
@@ -319,6 +321,8 @@ public interface EcmFileService
     void deleteFileFromArkcase(Long fileId);
 
     void deleteFile(Long fileId) throws AcmUserActionFailedException, AcmObjectNotFoundException;
+
+    RecycleBinItem putFileIntoRecycleBin(Long fileId, Authentication authentication, HttpSession session) throws AcmUserActionFailedException, AcmObjectNotFoundException, AcmCreateObjectFailedException;
 
     void deleteFile(Long fileId, Boolean allVersions) throws AcmUserActionFailedException, AcmObjectNotFoundException;
 

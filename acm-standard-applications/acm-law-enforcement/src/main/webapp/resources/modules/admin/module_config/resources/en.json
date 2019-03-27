@@ -806,6 +806,16 @@
                     "date": "Enter Date of Holiday"
                 }
             },
+            "recycleBin": {
+                "title": "Recycle Bin",
+                "grid": {
+                    "fileName": "File Name",
+                    "containerObjectTitle": "Original Location (Parent Object Id)",
+                    "dateModified": "Date Deleted",
+                    "fileSizeBytes": "Size",
+                    "fileActiveVersionNameExtension": "Item Type"
+                }
+            },
             "objectTitleConfiguration": {
                 "title": "Object Title Configuration",
                 "save": "Save",
@@ -1117,5 +1127,9 @@
                 "title": "Email templates"
             }
         }
+    },
+    "contextMenu.options": {
+        "restore": "Restore",
+        "delete" : "Delete"
     }
 }
