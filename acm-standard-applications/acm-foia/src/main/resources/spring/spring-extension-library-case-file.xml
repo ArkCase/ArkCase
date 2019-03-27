@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans:beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.springframework.org/schema/beans"
-             xmlns:beans="http://www.springframework.org/schema/beans"
-             xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
+    xmlns:beans="http://www.springframework.org/schema/beans"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
 
     <beans:beans profile="extension-foia">
         <beans:bean id="caseFileStartBusinessProcessBusinessRule"
@@ -136,12 +136,14 @@
             <beans:property name="requestDao" ref="foiaRequestDao"/>
             <beans:property name="startBusinessProcessService" ref="startBusinessProcessService"/>
             <beans:property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
+            <beans:property name="foiaConfigurationService" ref="foiaConfigurationService"/>
         </beans:bean>
 
         <beans:bean id="scheduledHoldQueuePurger" class="gov.foia.service.ScheduledHoldQueuePurger">
             <beans:property name="requestDao" ref="foiaRequestDao"/>
             <beans:property name="startBusinessProcessService" ref="startBusinessProcessService"/>
             <beans:property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
+            <beans:property name="foiaConfigurationService" ref="foiaConfigurationService"/>
         </beans:bean>
 
         <beans:bean id="responseFolderConverterService" class="gov.foia.service.ResponseFolderConverterService">

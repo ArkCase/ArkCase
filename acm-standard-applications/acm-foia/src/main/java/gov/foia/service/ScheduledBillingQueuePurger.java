@@ -63,15 +63,15 @@ public class ScheduledBillingQueuePurger extends AbstractScheduledQueuePurger
      * @return
      */
     @Override
-    protected String getMaxDaysInQueueProperty()
+    protected Integer getMaxDaysInQueueProperty()
     {
-        return "maxDaysInBillingQueue";
+        return getFoiaConfigurationService().getFoiaConfig().getMaxDaysInBillingQueue();
     }
 
     @Override
-    protected String getPurgeRequestWhenInHoldEnabled()
+    protected Boolean getPurgeRequestWhenInHoldEnabled()
     {
-        return "";
+        return getFoiaConfigurationService().getFoiaConfig().getPurgeRequestEnabled();
     }
 
     @Override
