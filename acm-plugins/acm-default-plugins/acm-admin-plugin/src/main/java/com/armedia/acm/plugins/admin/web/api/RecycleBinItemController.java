@@ -46,6 +46,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -73,8 +74,8 @@ public class RecycleBinItemController
         }
         catch (Exception e)
         {
-            log.error("No recycle bin items found, reason {}", e.getMessage(), e);
-            return null;
+            log.error("No recycle bin items found, reason {}", e.getMessage());
+            return new RecycleBinDTO(0, new ArrayList<>());
         }
     }
 

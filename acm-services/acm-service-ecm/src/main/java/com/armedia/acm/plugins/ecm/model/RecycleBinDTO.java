@@ -38,6 +38,17 @@ public class RecycleBinDTO
     private int numRecycleBinItems;
     private List<RecycleBinItemDTO> recycleBinItems;
 
+    public RecycleBinDTO ()
+    {
+
+    }
+
+    public RecycleBinDTO(int numRecycleBinItems, List<RecycleBinItemDTO> recycleBinItems)
+    {
+        this.numRecycleBinItems = numRecycleBinItems;
+        this.recycleBinItems = recycleBinItems;
+    }
+
     public int getNumRecycleBinItems()
     {
         return numRecycleBinItems;
