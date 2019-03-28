@@ -56,19 +56,13 @@ public class SpringClasspathCopier implements ApplicationContextAware
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException
     {
-        if (log.isInfoEnabled())
-        {
-            log.info("Scanning for resources matching '" + getResourcePattern() + "'");
-        }
+        log.info("Scanning for resources matching [{}]", getResourcePattern());
 
         try
         {
             if (!getDeployFolder().exists())
             {
-                if (log.isInfoEnabled())
-                {
-                    log.info("Creating folder '" + getDeployFolder().getCanonicalPath() + "'");
-                }
+                log.info("Creating folder [{}]", getDeployFolder().getCanonicalPath());
                 getDeployFolder().mkdirs();
             }
 
@@ -79,18 +73,13 @@ public class SpringClasspathCopier implements ApplicationContextAware
                 for (Resource resource : matchingResources)
                 {
                     String resourceFilename = resource.getFilename();
-                    if (log.isInfoEnabled())
-                    {
-                        log.info("Found resource '" + resourceFilename + "'");
-                    }
+                    log.info("Found resource [{}]", resourceFilename);
 
                     File target = new File(getDeployFolder() + File.separator + resourceFilename);
                     if (!target.exists())
                     {
-                        if (log.isDebugEnabled())
-                        {
-                            log.debug("Copying resource '" + resourceFilename + "' to deploy folder.");
-                        }
+                        log.debug("Copying resource [{}] to deploy folder.", resourceFilename);
+
                         // NOTE: FileCopyUtils will close both the input and the output streams.
                         FileCopyUtils.copy(resource.getInputStream(), new FileOutputStream(target));
                     }
@@ -99,13 +88,10 @@ public class SpringClasspathCopier implements ApplicationContextAware
         }
         catch (IOException e)
         {
-            log.error("Could not copy resource: " + e.getMessage(), e);
+            log.error("Could not copy resource: [{}]", e.getMessage(), e);
         }
 
-        if (log.isInfoEnabled())
-        {
-            log.info("Done scanning for resources matching " + getResourcePattern() + "'");
-        }
+        log.info("Done scanning for resources matching [{}]", getResourcePattern());
     }
 
     public File getDeployFolder()
