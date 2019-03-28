@@ -91,7 +91,7 @@ public class LabelManagementRetrieveResource
         try
         {
             // Retrieve resource, third parameter indicates that we have to try create resource it it is absent
-            JSONObject jsonResource = labelManagementService.getResource(ns, lang, true);
+            JSONObject jsonResource = labelManagementService.getResource(ns, lang);
 
             // Return empty JSON if resource is absent
             if (jsonResource == null)
