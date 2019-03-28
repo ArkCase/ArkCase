@@ -113,7 +113,7 @@ public class AWSTranscribeServiceImpl implements TranscribeIntegrationService
 
     @Override
     @Async
-    public MediaEngineDTO create(MediaEngineDTO mediaEngineDTO) throws CreateMediaEngineToolException
+    public void create(MediaEngineDTO mediaEngineDTO) throws CreateMediaEngineToolException
     {
         AWSTranscribeConfiguration configuration = null;
 
@@ -132,8 +132,6 @@ public class AWSTranscribeServiceImpl implements TranscribeIntegrationService
         checkIfMediaExist(mediaEngineDTO, configuration.getBucket());
         uploadMedia(mediaEngineDTO);
         startTranscribeJob(mediaEngineDTO);
-
-        return mediaEngineDTO;
     }
 
     @Override

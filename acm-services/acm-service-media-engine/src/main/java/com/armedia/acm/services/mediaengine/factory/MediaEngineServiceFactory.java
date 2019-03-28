@@ -29,20 +29,25 @@ package com.armedia.acm.services.mediaengine.factory;
 
 import com.armedia.acm.services.mediaengine.exception.MediaEngineServiceNotFoundException;
 import com.armedia.acm.services.mediaengine.service.MediaEngineService;
+import com.armedia.acm.spring.SpringContextHolder;
+
+import org.springframework.beans.factory.InitializingBean;
 
 import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * Created by Vladimir Cherepnalkovski <vladimir.cherepnalkovski@armedia.com>
  */
-public class MediaEngineServiceFactory
+public class MediaEngineServiceFactory implements InitializingBean
 {
-
     private Map<String, MediaEngineService> services;
+    private SpringContextHolder springContextHolder;
 
     public MediaEngineService getService(String name) throws MediaEngineServiceNotFoundException
     {
-        if (services != null && services.containsKey(name))
+        if (services.containsKey(name))
         {
             return services.get(name);
         }
@@ -59,5 +64,24 @@ public class MediaEngineServiceFactory
     public void setServices(Map<String, MediaEngineService> services)
     {
         this.services = services;
+    }
+
+    public SpringContextHolder getSpringContextHolder()
+    {
+        return springContextHolder;
+    }
+
+    public void setSpringContextHolder(SpringContextHolder springContextHolder)
+    {
+        this.springContextHolder = springContextHolder;
+    }
+
+    @Override
+    public void afterPropertiesSet() throws Exception
+    {
+        services = springContextHolder.getAllBeansOfType(MediaEngineService.class)
+                .values()
+                .stream()
+                .collect(Collectors.toMap((MediaEngineService it) -> it.getServiceName(), Function.identity()));
     }
 }
