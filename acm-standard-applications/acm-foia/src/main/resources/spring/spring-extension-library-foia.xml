@@ -317,6 +317,5 @@
         <beans:bean id="foiaRequestBrokerConfig" class="gov.foia.model.FoiaRequestBrokerConfig" scope="refresh">
             <aop:scoped-proxy/>
         </beans:bean>
-        
     </beans:beans>
 </beans:beans>
