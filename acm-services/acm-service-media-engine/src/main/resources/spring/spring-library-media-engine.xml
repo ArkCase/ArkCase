@@ -30,7 +30,7 @@
     </bean>
 
     <bean id="mediaEngineServiceFactory" class="com.armedia.acm.services.mediaengine.factory.MediaEngineServiceFactory">
-        <property name="services" ref="mediaEngineServices"/>
+        <property name="springContextHolder" ref="acmContextHolder"/>
     </bean>
 
     <bean id="mediaEngineEcmFileAddedListener" class="com.armedia.acm.services.mediaengine.listener.EcmFileAddedListener">
@@ -109,15 +109,6 @@
         <constructor-arg>
             <map key-type="java.lang.String"
                  value-type="com.armedia.acm.services.mediaengine.rules.MediaEngineBusinessProcessRulesExecutor">
-            </map>
-        </constructor-arg>
-    </bean>
-
-    <bean id="mediaEngineServices" class="java.util.HashMap">
-        <constructor-arg>
-            <map key-type="java.lang.String" value-type="com.armedia.acm.services.mediaengine.service.MediaEngineService">
-                <entry key="TRANSCRIBE" value-ref="arkCaseTranscribeService"/>
-                <entry key="OCR" value-ref="arkCaseOCRService"/>
             </map>
         </constructor-arg>
     </bean>

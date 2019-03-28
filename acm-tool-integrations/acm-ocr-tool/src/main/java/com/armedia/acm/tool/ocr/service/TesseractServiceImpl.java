@@ -60,7 +60,7 @@ public class TesseractServiceImpl implements OCRIntegrationService
 
     @Override
     @Async
-    public MediaEngineDTO create(MediaEngineDTO mediaEngineDTO) throws CreateMediaEngineToolException
+    public void create(MediaEngineDTO mediaEngineDTO) throws CreateMediaEngineToolException
     {
         String activeVersionMimeType = mediaEngineDTO.getProperties().get("activeVersionMimeType");
         String fileId = mediaEngineDTO.getProperties().get(OCRIntegrationConstants.MAP_PROP_FILE_ID);
@@ -111,7 +111,6 @@ public class TesseractServiceImpl implements OCRIntegrationService
                         mediaEngineDTO.getProcessId(), fileId, e.getMessage(), e);
             }
         }
-        return mediaEngineDTO;
     }
 
     private Integer readResultStatusFromFile(String remoteId, String tempPath) throws GetMediaEngineToolException

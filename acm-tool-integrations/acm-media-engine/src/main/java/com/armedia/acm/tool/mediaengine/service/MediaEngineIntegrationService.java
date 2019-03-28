@@ -36,7 +36,7 @@ import com.armedia.acm.tool.mediaengine.model.MediaEngineDTO;
  */
 public interface MediaEngineIntegrationService
 {
-    MediaEngineDTO create(MediaEngineDTO mediaEngineDTO) throws CreateMediaEngineToolException;
+    void create(MediaEngineDTO mediaEngineDTO) throws CreateMediaEngineToolException;
 
     MediaEngineDTO get(String remoteId, String tempPath) throws GetMediaEngineToolException;
 
