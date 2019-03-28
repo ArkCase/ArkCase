@@ -318,8 +318,5 @@
             <aop:scoped-proxy/>
         </beans:bean>
         
-        <beans:bean id="activitiResourceExpression" class="java.lang.String">
-            <beans:constructor-arg value="classpath*:/activiti/foia*.bpmn20.xml,classpath*:/activiti/OCR*.bpmn20.xml,classpath*:/activiti/Transcribe*.bpmn20.xml"/>
-        </beans:bean>
     </beans:beans>
 </beans:beans>
