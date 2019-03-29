@@ -31,13 +31,20 @@ import com.armedia.acm.services.sequence.dao.AcmSequenceDao;
 import com.armedia.acm.services.sequence.dao.AcmSequenceRegistryDao;
 import com.armedia.acm.services.sequence.dao.AcmSequenceResetDao;
 import com.armedia.acm.services.sequence.exception.AcmSequenceException;
-import com.armedia.acm.services.sequence.model.*;
+import com.armedia.acm.services.sequence.model.AcmSequenceEntity;
+import com.armedia.acm.services.sequence.model.AcmSequenceEntityId;
+import com.armedia.acm.services.sequence.model.AcmSequencePart;
+import com.armedia.acm.services.sequence.model.AcmSequenceRegistry;
+import com.armedia.acm.services.sequence.model.AcmSequenceReset;
+import com.armedia.acm.services.sequence.model.AcmSequenceResetId;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.FlushModeType;
+
 import java.util.List;
 
 /**
@@ -182,7 +189,7 @@ public class AcmSequenceServiceImpl implements AcmSequenceService
         {
             return getSequenceRegistryDao().getSequenceRegistryList();
         }
-        catch(Exception e)
+        catch (Exception e)
         {
             throw new AcmSequenceException(String.format("Unable to get Sequence Registry List"), e);
         }
@@ -202,8 +209,6 @@ public class AcmSequenceServiceImpl implements AcmSequenceService
             throw new AcmSequenceException(String.format("Unable to update Sequence Number"), e);
         }
     }
-
-
 
     /*
      * (non-Javadoc)
