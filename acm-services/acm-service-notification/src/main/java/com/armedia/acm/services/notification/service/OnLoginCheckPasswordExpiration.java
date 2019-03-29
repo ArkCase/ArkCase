@@ -1,4 +1,4 @@
-package com.armedia.acm.services.email.service;
+package com.armedia.acm.services.notification.service;
 
 /*-
  * #%L
@@ -27,31 +27,52 @@ package com.armedia.acm.services.email.service;
  * #L%
  */
 
-import com.armedia.acm.services.users.model.AcmUser;
-import com.armedia.acm.services.users.model.event.SetPasswordEmailEvent;
+import com.armedia.acm.auth.LoginEvent;
 
+import com.armedia.acm.services.users.dao.UserDao;
+import com.armedia.acm.services.users.model.AcmUser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;
+import org.springframework.security.core.Authentication;
 
-public class OnSetPasswordEmail implements ApplicationListener<SetPasswordEmailEvent>
+public class OnLoginCheckPasswordExpiration implements ApplicationListener<LoginEvent>
 {
-    private final Logger log = LoggerFactory.getLogger(getClass());
     private ResetPasswordService resetPasswordService;
-
+    private final Logger log = LoggerFactory.getLogger(getClass());
+    private UserDao userDao;
+    
     @Override
-    public void onApplicationEvent(SetPasswordEmailEvent setPasswordEmailEvent)
+    public void onApplicationEvent(LoginEvent loginEvent)
     {
-        if (setPasswordEmailEvent.isSucceeded())
+        if (!loginEvent.isSucceeded())
         {
-            log.debug("On set password mail event...");
-            AcmUser user = setPasswordEmailEvent.getAcmUser();
-            resetPasswordService.sendPasswordResetEmail(user);
+            Authentication authentication = loginEvent.getAuthentication();
+            if (authentication != null)
+            {
+                log.debug("Checking password expiration for user: [{}]", authentication.getName());
+                if (resetPasswordService.isUserPasswordExpired(authentication.getName()))
+                {
+                    log.debug("Password for user [{}] is expired", authentication.getName());
+                    AcmUser user = userDao.findByUserId(authentication.getName());
+                    resetPasswordService.sendPasswordResetNotification(user);
+                }
+            }
         }
     }
 
     public void setResetPasswordService(ResetPasswordService resetPasswordService)
     {
         this.resetPasswordService = resetPasswordService;
+    }
+
+    public UserDao getUserDao()
+    {
+        return userDao;
+    }
+
+    public void setUserDao(UserDao userDao)
+    {
+        this.userDao = userDao;
     }
 }

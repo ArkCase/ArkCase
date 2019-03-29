@@ -31,6 +31,8 @@ import static junit.framework.TestCase.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
+import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
+import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.services.authenticationtoken.dao.AuthenticationTokenDao;
 import com.armedia.acm.services.authenticationtoken.model.AuthenticationToken;
 import com.armedia.acm.services.authenticationtoken.model.AuthenticationTokenConstants;
@@ -42,6 +44,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.security.core.Authentication;
 
@@ -66,11 +69,15 @@ public class AcmEmailContentGeneratorServiceTest
     @Mock
     private Authentication mockAuthentication;
 
+    @Mock
+    private EcmFileDao mockEcmFileDao;
+
     @Before
     public void setUp() throws Exception
     {
         acmEmailContentGeneratorService.setAuthenticationTokenDao(mockAuthenticationTokenDao);
         acmEmailContentGeneratorService.setAuthenticationTokenService(mockAuthenticationTokenService);
+        acmEmailContentGeneratorService.setEcmFileDao(mockEcmFileDao);
     }
 
     @Test
@@ -84,7 +91,8 @@ public class AcmEmailContentGeneratorServiceTest
         final String footer = "footer";
         final long fileId = 1234;
         final String token = "token";
-        final String note = "<br/>" + baseUrl + fileId + "&acm_email_ticket=" + token + "<br/>";
+        final String version = "1.0";
+        final String note = "<br/>" + fileId + "&version=" + version + "&acm_email_ticket=" + token + "<br/>";
 
         List<String> addresses = new ArrayList<>();
         addresses.add(email);
@@ -99,8 +107,12 @@ public class AcmEmailContentGeneratorServiceTest
         inputDTO.setFileIds(fileIds);
         inputDTO.setFooter(footer);
 
+        EcmFile ecmFile = new EcmFile();
+        ecmFile.setActiveVersionTag(version);
+
         when(mockAuthenticationTokenService.generateAndSaveAuthenticationToken(fileId, email, mockAuthentication))
                 .thenReturn(token);
+        when(mockEcmFileDao.find(Mockito.anyLong())).thenReturn(ecmFile);
         AuthenticationToken authenticationToken = new AuthenticationToken();
         authenticationToken.setKey(token);
         authenticationToken.setStatus(AuthenticationTokenConstants.ACTIVE);

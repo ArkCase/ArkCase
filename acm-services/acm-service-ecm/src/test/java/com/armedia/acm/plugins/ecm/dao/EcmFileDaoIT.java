@@ -74,10 +74,18 @@ import java.time.LocalDateTime;
         "/spring/spring-library-object-lock.xml",
         "/spring/spring-library-object-converter.xml",
         "/spring/spring-library-ecm-file-lock.xml",
-        "/spring/spring-library-service-data.xml" })
+        "/spring/spring-library-service-data.xml",
+        "/spring/spring-library-configuration.xml",
+        "/spring/spring-library-acm-email.xml" })
 @TransactionConfiguration(defaultRollback = true, transactionManager = "transactionManager")
 public class EcmFileDaoIT
 {
+    static
+    {
+        String userHomePath = System.getProperty("user.home");
+        System.setProperty("acm.configurationserver.propertyfile", userHomePath + "/.arkcase/acm/conf.yml");
+    }
+
     @Autowired
     private EcmFileDao ecmFileDao;
 

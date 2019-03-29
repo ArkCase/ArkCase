@@ -78,7 +78,9 @@ import java.util.UUID;
         "/spring/spring-library-plugin-manager.xml",
         "/spring/spring-library-audit-service.xml",
         "/spring/spring-library-authentication-token.xml",
-        "/spring/spring-library-configuration.xml"
+        "/spring/spring-library-configuration.xml",
+        "/spring/spring-library-acm-email.xml",
+        "/spring/spring-library-folder-watcher.xml"
 })
 public class MoveToRecordFolderServiceIT
 {

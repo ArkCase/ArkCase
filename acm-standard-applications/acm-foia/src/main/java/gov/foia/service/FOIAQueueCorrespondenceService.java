@@ -37,12 +37,16 @@ import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.core.exceptions.CorrespondenceMergeFieldVersionException;
 import com.armedia.acm.plugins.ecm.exception.AcmFolderException;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
+import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.services.email.model.EmailWithAttachmentsDTO;
 import com.armedia.acm.services.email.service.TemplatingEngine;
+import com.armedia.acm.services.notification.dao.NotificationDao;
+import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.service.NotificationSender;
 import com.armedia.acm.services.users.dao.UserDao;
 
+import com.armedia.acm.services.users.model.AcmUser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -55,6 +59,8 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
 
 import freemarker.template.TemplateException;
 import gov.foia.dao.FOIARequestDao;
@@ -82,6 +88,7 @@ public class FOIAQueueCorrespondenceService
     private FoiaConfigurationService foiaConfigurationService;
     private String emailBodyTemplate;
     private TemplatingEngine templatingEngine;
+    private NotificationDao notificationDao;
 
     public void handleApproveCorrespondence(Long requestId)
     {
@@ -186,8 +193,22 @@ public class FOIAQueueCorrespondenceService
 
             FOIAFile letter = (FOIAFile) documentGenerator.generateAndUpload(documentDescriptor, request,
                     targetFolderId, arkcaseFilename, documentGeneratorService.getReportSubstitutions(request));
+            
+            EcmFileVersion ecmFileVersions = letter.getVersions().get(letter.getVersions().size() - 1);
+            
+            AcmUser user = userDao.findByUserId(request.getAssigneeLdapId()); 
+            
+            Notification notification = new Notification();
+            notification.setTemplateModelName("requestDocumentAttached");
+            notification.setEmailAddresses(user.getMail());
+            notification.setAttachFiles(true);
+            notification.setFiles(Arrays.asList(ecmFileVersions));
+            notification.setParentId(requestId);
+            notification.setParentType(request.getObjectType());
+            notification.setTitle(String.format("%s %s", request.getRequestType(), request.getCaseNumber()));
+            notification.setUser(user.getUserId());
+            notificationDao.save(notification);
 
-            emailCorrespondenceLetter(request, letter);
         }
         catch (Exception e)
         {
@@ -375,5 +396,13 @@ public class FOIAQueueCorrespondenceService
     public void setTemplatingEngine(TemplatingEngine templatingEngine)
     {
         this.templatingEngine = templatingEngine;
+    }
+
+    public NotificationDao getNotificationDao() {
+        return notificationDao;
+    }
+
+    public void setNotificationDao(NotificationDao notificationDao) {
+        this.notificationDao = notificationDao;
     }
 }

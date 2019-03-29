@@ -242,6 +242,11 @@
                         <value>application/octet-stream</value>
                     </list>
                 </entry>
+                <entry key="text/csv">
+                    <list>
+                        <value>application/vnd.ms-excel</value>
+                    </list>
+                </entry>
             </map>
         </property>
         <property name="progressIndicatorService" ref="progressIndicatorService"/>
@@ -300,8 +305,10 @@
         <property name="cmisConfigUtils" ref="cmisConfigUtils"/>
         <property name="fileParticipantService" ref="fileParticipantService"/>
         <property name="ecmFileConfig" ref="ecmFileConfig"/>
+        <property name="recycleBinItemService" ref="recycleBinItemServiceImpl"/>
         <property name="genericMessagesChannel" ref="genericMessagesChannel"/>
         <property name="objectLockService" ref="objectLockService"/>
+        <property name="emailSenderConfig" ref="emailSenderConfig"/>
         <property name="progressIndicatorService" ref="progressIndicatorService"/>
     </bean>
 
@@ -340,6 +347,14 @@
         <property name="ruleSpreadsheetFilename" value="drools-form-business-process-rules.xlsx"/>
     </bean>
 
+    <bean id="recycleBinToSolrTransformer" class="com.armedia.acm.plugins.ecm.service.RecycleBinItemToSolrTransformer">
+        <property name="recycleBinItemDao" ref="recycleBinItemDao"/>
+        <property name="ecmFileDao" ref="ecmFileDao"/>
+        <property name="acmContainerDao" ref="acmContainerFolderDao"/>
+        <property name="folderService" ref="acmFolderService" />
+        <property name="ecmFileService" ref="ecmFileService"/>
+    </bean>
+
     <!--<bean id="ecmFileTagChangeListener" class="com.armedia.acm.plugins.ecm.service.EcmFileAssociatedTagChangeListener">-->
     <!--<property name="ecmFileDao" ref="ecmFileDao"/>-->
     <!--</bean>-->
@@ -368,6 +383,8 @@
     <bean id="fileEventPublisher" class="com.armedia.acm.plugins.ecm.service.FileEventPublisher"/>
 
     <bean id="folderEventPublisher" class="com.armedia.acm.plugins.ecm.service.FolderEventPublisher"/>
+
+    <bean id="recycleBinItemEventPublisher" class="com.armedia.acm.plugins.ecm.service.RecycleBinItemEventPublisher"/>
 
     <bean id="ecmFilePlugin" class="com.armedia.acm.pluginmanager.model.AcmPlugin">
         <property name="pluginName" value="ECM File Plugin"/>
@@ -411,6 +428,18 @@
         <property name="ecmFileService" ref="ecmFileService"/>
         <property name="pdfService" ref="pdfService"/>
         <property name="ecmFileDao" ref="ecmFileDao"/>
+    </bean>
+
+    <bean id="recycleBinItemDao" class="com.armedia.acm.plugins.ecm.dao.RecycleBinItemDao">
+    </bean>
+
+    <bean id="recycleBinItemServiceImpl" class="com.armedia.acm.plugins.ecm.service.impl.RecycleBinItemServiceImpl">
+        <property name="recycleBinItemDao" ref="recycleBinItemDao"/>
+        <property name="ecmFileService" ref="ecmFileService"/>
+        <property name="ecmFileDao" ref="ecmFileDao"/>
+        <property name="searchResults" ref="searchResults"/>
+        <property name="solrQuery" ref="executeSolrQuery"/>
+        <property name="folderService" ref="acmFolderService"/>
     </bean>
 
     <bean id="fileAclSolrUpdateHelper" class="com.armedia.acm.plugins.ecm.service.FileAclSolrUpdateHelper">

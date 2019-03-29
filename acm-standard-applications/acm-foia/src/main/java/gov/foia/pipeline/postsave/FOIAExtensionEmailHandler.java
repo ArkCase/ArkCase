@@ -37,12 +37,16 @@ import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.core.exceptions.CorrespondenceMergeFieldVersionException;
 import com.armedia.acm.plugins.casefile.pipeline.CaseFilePipelineContext;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
+import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.services.email.model.EmailWithAttachmentsDTO;
+import com.armedia.acm.services.notification.dao.NotificationDao;
+import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.service.NotificationSender;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.pipeline.handler.PipelineHandler;
 import com.armedia.acm.services.users.dao.UserDao;
+import com.armedia.acm.services.users.model.AcmUser;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -70,6 +74,7 @@ public class FOIAExtensionEmailHandler implements PipelineHandler<FOIARequest, C
     private EcmFileService ecmFileService;
     private NotificationSender notificationSender;
     private UserDao userDao;
+    private NotificationDao notificationDao;
 
     @Override
     public void execute(FOIARequest entity, CaseFilePipelineContext pipelineContext)
@@ -81,9 +86,11 @@ public class FOIAExtensionEmailHandler implements PipelineHandler<FOIARequest, C
         {
             log.debug("Generating extension document");
             EcmFile file = null;
+            EcmFileVersion ecmFileVersion;
             try
             {
                 file = generateExtensionDocument(entity, pipelineContext);
+                ecmFileVersion = file.getVersions().get(file.getVersions().size() - 1);
             }
             catch (CorrespondenceMergeFieldVersionException e)
             {
@@ -91,7 +98,20 @@ public class FOIAExtensionEmailHandler implements PipelineHandler<FOIARequest, C
             }
 
             log.debug("Emailing extension document");
-            emailRequestExtension(entity, file);
+
+            AcmUser user = userDao.findByUserId(entity.getAssigneeLdapId());
+
+            Notification notification = new Notification();
+            notification.setTemplateModelName("requestExtension");
+            notification.setParentType(entity.getObjectType());
+            notification.setParentId(entity.getId());
+            notification.setTitle(String.format("FOIA Extension Notification %s", entity.getCaseNumber()));
+            notification.setAttachFiles(true);
+            notification.setEmailAddresses(user.getMail());
+            notification.setFiles(Arrays.asList(ecmFileVersion));
+            notification.setUser(user.getUserId());
+            notificationDao.save(notification);
+
         }
 
         log.debug("FOIARequest extension post save handler ended for RequestId={}", entity.getId());
@@ -232,5 +252,15 @@ public class FOIAExtensionEmailHandler implements PipelineHandler<FOIARequest, C
     public void setUserDao(UserDao userDao)
     {
         this.userDao = userDao;
+    }
+
+    public NotificationDao getNotificationDao()
+    {
+        return notificationDao;
+    }
+
+    public void setNotificationDao(NotificationDao notificationDao)
+    {
+        this.notificationDao = notificationDao;
     }
 }

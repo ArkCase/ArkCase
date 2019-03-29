@@ -39,8 +39,7 @@ public interface SearchConstants
     String CORE_QUICK = "QUICK";
     String CORE_ADVANCED = "ADVANCED";
 
-    String DATE_FACET_PRE_KEY = "facet.date.";
-    String FACET_PRE_KEY = "facet.";
+    String DATE_FACET_PRE_KEY = "date.";
 
     String FACET_FILED = "facet.field=";
     String FACET_QUERY = "facet.query=";

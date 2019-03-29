@@ -39,6 +39,7 @@ import org.apache.chemistry.opencmis.client.api.Document;
 import org.apache.chemistry.opencmis.commons.data.ContentStream;
 import org.apache.commons.io.IOUtils;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mule.api.MuleMessage;
@@ -68,9 +69,15 @@ import java.util.UUID;
         "/spring/spring-library-add-file-mule.xml",
         "/spring/spring-library-audit-service.xml",
         "/spring/spring-library-drools-rule-monitor.xml",
-        "/spring/spring-library-object-converter.xml" })
+        "/spring/spring-library-object-converter.xml",
+        "/spring/spring-library-configuration.xml" })
 public class AddFileFlowIT
 {
+    static
+    {
+        String userHomePath = System.getProperty("user.home");
+        System.setProperty("acm.configurationserver.propertyfile", userHomePath + "/.arkcase/acm/conf.yml");
+    }
 
     @Autowired
     private MuleContextManager muleContextManager;
@@ -143,6 +150,7 @@ public class AddFileFlowIT
         }
     }
 
+    @Ignore
     @Test
     public void muleAddFileOpencmis() throws Exception
     {

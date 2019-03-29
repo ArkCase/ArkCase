@@ -18,6 +18,10 @@
         <property name="folderAndFilesUtils" ref="folderAndFilesUtils"/>
         <property name="cmisConfigUtils" ref="cmisConfigUtils"/>
         <property name="objectConverter" ref="objectConverter"/>
+        <property name="propertyFileManager" ref="propertyFileManager"/>
+        <property name="emailSenderProperties" value="${user.home}/.arkcase/acm/acmEmailSender.properties"/>
+        <property name="ecmFileService" ref="ecmFileService"/>
+        <property name="emailSenderConfig" ref="emailSenderConfig"/>
     </bean>
 
    <!-- <bean id="documentUiController" class="com.armedia.acm.plugins.ecm.web.DocumentUiController">
@@ -67,6 +71,8 @@
     <bean id="deleteFileAPIController" class="com.armedia.acm.plugins.ecm.web.api.DeleteFileAPIController">
         <property name="fileService" ref="ecmFileService"/>
         <property name="fileEventPublisher" ref="fileEventPublisher"/>
+        <property name="recycleBinItemService" ref="recycleBinItemServiceImpl"/>
+        <property name="recycleBinItemEventPublisher" ref="recycleBinItemEventPublisher"/>
     </bean>
 
     <bean id="moveFileAPIController" class="com.armedia.acm.plugins.ecm.web.api.MoveFileAPIController">

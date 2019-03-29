@@ -25,4 +25,8 @@
         <property name="folderService" ref="acmFolderService"/>
     </bean>
 
+    <bean id="convertEcmFileEventListener" class="com.armedia.acm.convertfolder.listener.ConvertEcmFileEventListener">
+        <property name="fileConverter" ref="folderConverter" />
+    </bean>
+
 </beans>

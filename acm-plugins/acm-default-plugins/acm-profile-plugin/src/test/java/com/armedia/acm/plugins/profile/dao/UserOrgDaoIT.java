@@ -77,7 +77,9 @@ import java.util.List;
         "/spring/spring-library-service-data.xml",
         "/spring/spring-library-core-api.xml",
         "/spring/spring-library-configuration.xml",
-        "/spring/spring-library-convert-folder-service.xml"
+        "/spring/spring-library-convert-folder-service.xml",
+        "/spring/spring-library-folder-watcher.xml",
+        "/spring/spring-library-calendar-integration-exchange-service.xml"
 })
 @TransactionConfiguration(defaultRollback = true, transactionManager = "transactionManager")
 public class UserOrgDaoIT extends EasyMockSupport

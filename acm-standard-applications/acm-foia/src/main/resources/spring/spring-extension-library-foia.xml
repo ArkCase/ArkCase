@@ -37,6 +37,7 @@
         <beans:bean id="holdedAndAppealedRequestsDueDateUpdate" class="gov.foia.service.HoldedAndAppealedRequestsDueDateUpdate">
             <beans:property name="requestDao" ref="foiaRequestDao"/>
             <beans:property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
+            <beans:property name="foiaConfig" ref="foiaConfig"/>
         </beans:bean>
 
         <beans:bean id="pdfConverter" class="com.armedia.acm.objectdataprocessing.PluggableDocumentConverter">
@@ -232,10 +233,11 @@
         </beans:bean>
 
         <beans:bean id="billingInvoiceEmailSenderService" class="gov.foia.service.BillingInvoiceEmailSenderService">
-            <beans:property name="emailSenderService" ref="smtpService"/>
-            <beans:property name="emailTemplate" value="file:${user.home}/.arkcase/acm/templates/ArkCaseEmailTemplate.html"/>
             <beans:property name="caseFileDao" ref="caseFileDao"/>
             <beans:property name="billingService" ref="billingService"/>
+            <beans:property name="notificationSender" ref="notificationSender"/>
+            <beans:property name="notificationDao" ref="notificationDao"/>
+            <beans:property name="fileService" ref="ecmFileService"/>
         </beans:bean>
 
         <beans:bean id="publicFlagService" class="gov.foia.service.PublicFlagService">
@@ -245,22 +247,20 @@
         </beans:bean>
 
         <beans:bean id="notificationGroupEmailSenderService" class="gov.foia.service.NotificationGroupEmailSenderService">
-            <beans:property name="emailSenderService" ref="smtpService"/>
-            <beans:property name="emailTemplate" value="file:${user.home}/.arkcase/acm/templates/ArkCaseEmailTemplate.html"/>
             <beans:property name="caseFileDao" ref="caseFileDao"/>
             <beans:property name="ecmFileDao" ref="ecmFileDao"/>
             <beans:property name="lookupDao" ref="lookupDao"/>
+            <beans:property name="notificationDao" ref="notificationDao"/>
         </beans:bean>
 
         <beans:bean id="firstAssigneeOwningGroupNotify" class="gov.foia.service.FirstAssigneeOwningGroupNotify">
-            <beans:property name="emailSenderService" ref="smtpService"/>
-            <beans:property name="emailTemplate" value="file:${user.home}/.arkcase/acm/templates/ArkCaseEmailTemplate.html"/>
             <beans:property name="groupService" ref="groupService"/>
             <beans:property name="searchResults" ref="searchResults"/>
             <beans:property name="userDao" ref="userJpaDao"/>
             <beans:property name="notificationUtils" ref="notificationUtils"/>
             <beans:property name="templatingEngine" ref="templatingEngine"/>
-            <beans:property name="emailBodyTemplate" value="file:${user.home}/.arkcase/acm/templates/request-assigned.html"/>
+            <beans:property name="emailBodyTemplate" value="file:${user.home}/.arkcase/acm/templates/requestAssigned.html"/>
+            <beans:property name="notificationDao" ref="notificationDao"/>
         </beans:bean>
 
         <beans:bean id="foiaExecutiveGroupNotificationService" class="gov.foia.service.FOIAExecutiveGroupNotificationService">
@@ -307,13 +307,14 @@
             <beans:property name="folderAndFilesUtils" ref="folderAndFilesUtils"/>
             <beans:property name="cmisConfigUtils" ref="cmisConfigUtils"/>
             <beans:property name="fileParticipantService" ref="fileParticipantService"/>
+            <beans:property name="recycleBinItemService" ref="recycleBinItemServiceImpl"/>
         </beans:bean>
 
         <beans:bean id="foiaConfig" class="gov.foia.model.FoiaConfig" scope="refresh">
             <aop:scoped-proxy/>
         </beans:bean>
 
-        <beans:bean id="foiaRequestBrokerConfig" class="gov.foia.model.FoiaRequestBrokerConfig">
+        <beans:bean id="foiaRequestBrokerConfig" class="gov.foia.model.FoiaRequestBrokerConfig" scope="refresh">
             <aop:scoped-proxy/>
         </beans:bean>
     </beans:beans>

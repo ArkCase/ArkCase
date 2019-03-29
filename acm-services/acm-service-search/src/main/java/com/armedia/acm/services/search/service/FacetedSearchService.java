@@ -128,12 +128,11 @@ public class FacetedSearchService
         {
             for (Map.Entry<String, String> e : searchConfig.getFacets().entrySet())
             {
-                if (e.getKey().contains(SearchConstants.FACET_PRE_KEY))
+                String facetKey = e.getKey();
                 {
-                    String facetKey = e.getKey().replaceFirst(SearchConstants.FACET_PRE_KEY, "");
-                    if (e.getKey().contains(SearchConstants.DATE_FACET_PRE_KEY))
+                    if (facetKey.contains(SearchConstants.DATE_FACET_PRE_KEY))
                     {
-                        facetKey = e.getKey().replaceFirst(SearchConstants.DATE_FACET_PRE_KEY, "");
+                        facetKey = facetKey.replaceFirst(SearchConstants.DATE_FACET_PRE_KEY, "");
                         for (int i = 0; i < timePeriodList.length(); i++)
                         {
                             timePeriodJSONObject = timePeriodList.getJSONObject(i);
@@ -384,7 +383,7 @@ public class FacetedSearchService
 
         for (Map.Entry<String, String> mapElement : searchConfig.getFacets().entrySet())
         {
-            if (searchKey.equals(mapElement.getValue()) && mapElement.getKey().contains(SearchConstants.FACET_PRE_KEY))
+            if (searchKey.equals(mapElement.getValue()))
             {
                 isFacetFilter = true;
 
@@ -472,7 +471,6 @@ public class FacetedSearchService
 
     private String createRegularORQuerySubString(String[] allORFilters, String filterKey)
     {
-        String substitutionName = filterKey.replaceFirst(SearchConstants.FACET_PRE_KEY, "");
         StringBuilder query = new StringBuilder(SearchConstants.SOLR_FILTER_QUERY_ATTRIBUTE_NAME);
         boolean isFirst = true;
         for (String orFilter : allORFilters)
@@ -485,13 +483,13 @@ public class FacetedSearchService
                     // AFDP-1101 The term query parser is not what we want here; we want a field search. so use the
                     // field query parser.
                     query.append(
-                            URLEncoder.encode("_query_:\"{!field f=" + substitutionName + "}", SearchConstants.FACETED_SEARCH_ENCODING))
+                            URLEncoder.encode("_query_:\"{!field f=" + filterKey + "}", SearchConstants.FACETED_SEARCH_ENCODING))
                             .append(URLEncoder.encode(orFilter.trim() + "\"", SearchConstants.FACETED_SEARCH_ENCODING));
                 }
                 else
                 {
                     query.append(
-                            URLEncoder.encode(" OR _query_:\"{!field f=" + substitutionName + "}", SearchConstants.FACETED_SEARCH_ENCODING))
+                            URLEncoder.encode(" OR _query_:\"{!field f=" + filterKey + "}", SearchConstants.FACETED_SEARCH_ENCODING))
                             .append(URLEncoder.encode(orFilter.trim() + "\"", SearchConstants.FACETED_SEARCH_ENCODING));
                 }
             }
@@ -507,12 +505,11 @@ public class FacetedSearchService
     {
 
         String query = SearchConstants.SOLR_FILTER_QUERY_ATTRIBUTE_NAME;
-        String substitutionName = filterKey.replaceFirst(SearchConstants.FACET_PRE_KEY, "");
         try
         {
             // AFDP-1101 The term query parser is not what we want here; we want a field search. so use the field query
             // parser.
-            query += URLEncoder.encode("{!field f=" + substitutionName + "}", SearchConstants.FACETED_SEARCH_ENCODING)
+            query += URLEncoder.encode("{!field f=" + filterKey + "}", SearchConstants.FACETED_SEARCH_ENCODING)
                     + URLEncoder.encode(filterValue, SearchConstants.FACETED_SEARCH_ENCODING);
         }
         catch (UnsupportedEncodingException e)

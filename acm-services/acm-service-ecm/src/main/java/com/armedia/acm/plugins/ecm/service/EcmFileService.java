@@ -35,6 +35,8 @@ import com.armedia.acm.plugins.ecm.model.AcmCmisObjectList;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
+
+import com.armedia.acm.plugins.ecm.model.RecycleBinItem;
 import org.apache.chemistry.opencmis.client.api.CmisObject;
 import org.apache.chemistry.opencmis.client.api.Document;
 import org.springframework.retry.annotation.Backoff;
@@ -46,6 +48,10 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.persistence.PersistenceException;
+import javax.servlet.http.HttpSession;
+
+import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
@@ -228,6 +234,8 @@ public interface EcmFileService
 
     InputStream downloadAsInputStream(Long id) throws AcmUserActionFailedException;
 
+    InputStream downloadAsInputStream(Long id, String version) throws AcmUserActionFailedException;
+
     AcmContainer createContainerFolder(String objectType, Long objectId, String cmisRepositoryId) throws AcmCreateObjectFailedException;
 
     /**
@@ -314,6 +322,8 @@ public interface EcmFileService
 
     void deleteFile(Long fileId) throws AcmUserActionFailedException, AcmObjectNotFoundException;
 
+    RecycleBinItem putFileIntoRecycleBin(Long fileId, Authentication authentication, HttpSession session) throws AcmUserActionFailedException, AcmObjectNotFoundException, AcmCreateObjectFailedException;
+
     void deleteFile(Long fileId, Boolean allVersions) throws AcmUserActionFailedException, AcmObjectNotFoundException;
 
     void deleteCmisObject(CmisObject cmisObject, String cmisRepositoryId) throws Exception;
@@ -370,6 +380,8 @@ public interface EcmFileService
      * @return whether the delete was successful
      */
     boolean deleteTempFile(String uniqueFileName);
+
+    File convertFile(String fileKey, String version, String fileExtension, String fileName, String mimeType, EcmFile ecmFile) throws IOException;
 
     void removeLockAndSendMessage(Long objectId, String message);
 
