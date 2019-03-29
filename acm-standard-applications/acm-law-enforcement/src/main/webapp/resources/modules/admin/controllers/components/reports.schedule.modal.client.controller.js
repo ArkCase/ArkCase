@@ -45,9 +45,9 @@ angular.module('admin').controller(
 
                 })
 
-                $scope.reportRecurrenceList = addProperties($scope.reportRecurrence, allProperties['REPORT_RECURRENCE']);
-                $scope.outputTypesList = addProperties($scope.outputTypes, allProperties['REPORT_OUTPUT_TYPES']);
-
+                $scope.reportRecurrenceList = addProperties($scope.reportRecurrence, allProperties['report.plugin.REPORT_RECURRENCE']);
+                $scope.outputTypesList = addProperties($scope.outputTypes, allProperties['report.plugin.REPORT_OUTPUT_TYPES']);
+                
                 // Initialize variables
                 if (!Util.isArrayEmpty($scope.reportTypesList)) {
                     $scope.reportFile = $scope.reportTypesList[0].value;

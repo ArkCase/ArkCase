@@ -31,72 +31,31 @@ package gov.foia.service;
  */
 
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
-import com.armedia.acm.files.AbstractConfigurationFileEvent;
-import com.armedia.acm.files.ConfigurationFileAddedEvent;
-import com.armedia.acm.files.ConfigurationFileChangedEvent;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.context.ApplicationListener;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-import java.util.Properties;
 
 import gov.foia.dao.FOIARequestDao;
 import gov.foia.model.FOIARequest;
+import gov.foia.model.FoiaConfig;
 
 /**
  * @author riste.tutureski
  */
-public class HoldedAndAppealedRequestsDueDateUpdate implements ApplicationListener<AbstractConfigurationFileEvent>
+public class HoldedAndAppealedRequestsDueDateUpdate
 {
 
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
     private final List<String> STATUSES = Arrays.asList("APPEALED", "HOLD");
-    private boolean enabled;
     private FOIARequestDao requestDao;
     private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
-
-    @Override
-    public void onApplicationEvent(AbstractConfigurationFileEvent event)
-    {
-        if (isPropertyFileChange(event))
-        {
-            File configFile = event.getConfigFile();
-            try (FileInputStream fis = new FileInputStream(configFile))
-            {
-                log.debug("Loading configaration for {} from {} file.", getClass().getName(), configFile.getName());
-
-                Properties billingQueuePurgerProperties = new Properties();
-                billingQueuePurgerProperties.load(fis);
-
-                enabled = Boolean.parseBoolean(billingQueuePurgerProperties.getProperty("holdedAndAppealedRequestsDueDateUpdateEnabled"));
-
-            }
-            catch (IOException e)
-            {
-                log.error("Could not load configuration for {} from {} file.", getClass().getName(), configFile.getName(), e);
-            }
-        }
-    }
-
-    protected boolean isPropertyFileChange(AbstractConfigurationFileEvent abstractConfigurationFileEvent)
-    {
-        return (abstractConfigurationFileEvent instanceof ConfigurationFileAddedEvent
-                || abstractConfigurationFileEvent instanceof ConfigurationFileChangedEvent)
-                && abstractConfigurationFileEvent.getConfigFile().getName().equals("foia.properties");
-    }
+    private FoiaConfig foiaConfig;
 
     public void updateDueDate()
     {
-        if (!enabled)
+        if (getFoiaConfig().getHoldedAndAppealedRequestsDueDateUpdateEnabled())
         {
             return;
         }
@@ -127,6 +86,16 @@ public class HoldedAndAppealedRequestsDueDateUpdate implements ApplicationListen
     public void setAuditPropertyEntityAdapter(AuditPropertyEntityAdapter auditPropertyEntityAdapter)
     {
         this.auditPropertyEntityAdapter = auditPropertyEntityAdapter;
+    }
+
+    public FoiaConfig getFoiaConfig()
+    {
+        return foiaConfig;
+    }
+
+    public void setFoiaConfig(FoiaConfig foiaConfig)
+    {
+        this.foiaConfig = foiaConfig;
     }
 
 }

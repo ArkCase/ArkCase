@@ -17,6 +17,7 @@
     <bean id="taskPlugin" class="com.armedia.acm.pluginmanager.model.AcmPlugin">
         <property name="pluginName" value="Task Plugin"/>
         <property name="configurationPropertyService" ref="configurationPropertyService"/>
+        <property name="pluginConfig" ref="taskConfig"/>
         <property name="suportedObjectTypesNames">
             <list>
                 <value>TASK</value>
@@ -175,17 +176,17 @@
     <bean id="upcomingTasksNotifier" class="com.armedia.acm.plugins.task.service.impl.UpcomingTasksNotifier">
         <property name="activitiTaskService" ref="activitiTaskService"/>
         <property name="activitiTaskDao" ref="acmTaskDao"/>
-        <property name="senderFactory" ref="notificationSenderFactory"/>
         <property name="userDao" ref="userJpaDao"/>
         <property name="notificationDao" ref="notificationDao"/>
+        <property name="taskNotificationConfig" ref="taskNotificationConfig"/>
     </bean>
 
     <bean id="overdueTasksNotifier" class="com.armedia.acm.plugins.task.service.impl.OverdueTasksNotifier">
         <property name="activitiTaskService" ref="activitiTaskService"/>
         <property name="activitiTaskDao" ref="acmTaskDao"/>
-        <property name="senderFactory" ref="notificationSenderFactory"/>
         <property name="userDao" ref="userJpaDao"/>
         <property name="notificationDao" ref="notificationDao"/>
+        <property name="taskNotificationConfig" ref="taskNotificationConfig"/>
     </bean>
 
     <bean id="createAdHocTaskService" class="com.armedia.acm.plugins.task.service.impl.CreateAdHocTaskService">

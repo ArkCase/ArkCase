@@ -82,7 +82,7 @@ public class SolrConfig
     private Boolean enableContentFileIndexing;
 
     @JsonProperty("solr.suggestHandler")
-    @Value("${solr.suggestHandler:''}")
+    @Value("${solr.suggestHandler}")
     private String suggestHandler;
 
     public String getHost()

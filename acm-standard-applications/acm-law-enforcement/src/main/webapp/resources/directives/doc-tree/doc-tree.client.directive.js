@@ -104,9 +104,10 @@ angular
             'Admin.EmailSenderConfigurationService',
             'Helper.LocaleService',
             'LookupService',
+            'MessageService',
             '$timeout',
             function($q, $translate, $modal, $filter, $log, $injector, Store, Util, UtilDateService, ConfigService,
-                     PluginService, UserInfoService, Ecm, EmailSenderConfigurationService, LocaleHelper, LookupService, $timeout) {
+                     PluginService, UserInfoService, Ecm, EmailSenderConfigurationService, LocaleHelper, LookupService, MessageService, $timeout) {
                 var cacheTree = new Store.CacheFifo();
                 var cacheFolderList = new Store.CacheFifo();
 
@@ -2919,6 +2920,8 @@ angular
                                     DocTree.markNodeOk(frNode);
                                     dfd.resolve(moveFileInfo);
                                 }, function(errorData) {
+                                    MessageService.error(errorData.data);
+                                    DocTree.refreshTree();
                                     DocTree.markNodeError(frNode);
                                     dfd.reject();
                                 });
@@ -3061,7 +3064,7 @@ angular
 
                                     var fileId = node.data.objectId;
                                     Util.serviceCall({
-                                        service : Ecm.deleteFile,
+                                        service : Ecm.deleteFileTemporary,
                                         param : {
                                             fileId : fileId
                                         },
@@ -4783,6 +4786,7 @@ angular
 
                         scope.treeControl = {
                             getSelectedNodes : DocTree.getSelectedNodes,
+                            getTopNode: DocTree.getTopNode,
                             refreshTree : DocTree.refreshTree,
                             refreshNode : DocTree.refreshNode,
                             updateNodeData : DocTree.updateNodeData,

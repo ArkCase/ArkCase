@@ -41,8 +41,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.io.IOException;
-
 /**
  * Created by sergey.kolomiets on 6/2/15.
  */
@@ -59,8 +57,7 @@ public class RolesPrivilegesCreateRole implements RolePrivilegesConstants
     })
 
     @ResponseBody
-    public String createRole(
-            @RequestBody String resource) throws IOException, AcmRolesPrivilegesException
+    public String createRole(@RequestBody String resource) throws AcmRolesPrivilegesException
     {
 
         try

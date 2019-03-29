@@ -285,4 +285,11 @@
         <property name="dataAccessControlService" ref="dataAccessControlService"/>
     </bean>
 
+    <bean id="recycleBinItemController" class="com.armedia.acm.plugins.admin.web.api.RecycleBinItemController">
+        <property name="recycleBinItemService" ref="recycleBinItemServiceImpl"/>
+    </bean>
+
+    <bean id="objectTitleConfigurationController" class="com.armedia.acm.plugins.admin.web.api.ObjectTitleConfigurationAPIController">
+        <property name="objectTitleConfigurationService" ref="objectTitleConfigurationService"/>
+    </bean>
 </beans>

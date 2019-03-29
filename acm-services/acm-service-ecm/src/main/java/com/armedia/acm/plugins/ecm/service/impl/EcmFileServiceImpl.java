@@ -51,8 +51,10 @@ import com.armedia.acm.plugins.ecm.model.EcmFileUpdatedEvent;
 import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
 import com.armedia.acm.plugins.ecm.model.EcmFolderDeclareRequestEvent;
 import com.armedia.acm.plugins.ecm.model.event.EcmFileConvertEvent;
+import com.armedia.acm.plugins.ecm.model.RecycleBinItem;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.ecm.service.EcmFileTransaction;
+import com.armedia.acm.plugins.ecm.service.RecycleBinItemService;
 import com.armedia.acm.plugins.ecm.utils.CmisConfigUtils;
 import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
@@ -65,7 +67,6 @@ import com.armedia.acm.services.search.model.SearchConstants;
 import com.armedia.acm.services.search.model.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.search.service.SearchResults;
-
 import org.apache.chemistry.opencmis.client.api.CmisObject;
 import org.apache.chemistry.opencmis.client.api.Document;
 import org.apache.commons.io.FileUtils;
@@ -87,7 +88,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.PersistenceException;
-
+import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -139,6 +140,8 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     private EcmFileParticipantService fileParticipantService;
 
     private AcmParticipantService participantService;
+
+    private RecycleBinItemService recycleBinItemService;
 
     private EcmFileConfig ecmFileConfig;
 
@@ -1571,6 +1574,29 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
 
     @Override
     @AcmAcquireAndReleaseObjectLock(objectIdArgIndex = 0, objectType = "FILE", lockType = "DELETE")
+    public RecycleBinItem putFileIntoRecycleBin(Long objectId, Authentication authentication, HttpSession session)
+            throws AcmObjectNotFoundException, AcmUserActionFailedException, AcmCreateObjectFailedException
+    {
+        EcmFile file = getEcmFileDao().find(objectId);
+        RecycleBinItem recycleBinItem = null;
+        if (file == null)
+        {
+            throw new AcmObjectNotFoundException(EcmFileConstants.OBJECT_FILE_TYPE, objectId, "File not found", null);
+        }
+        try
+        {
+            recycleBinItem = getRecycleBinItemService().putFileIntoRecycleBin(file, authentication, session);
+            log.info("File {} successfully moved into recycle bin by user: {}", objectId, file.getModifier());
+        }
+        catch (PersistenceException e)
+        {
+            log.error("Could not delete file {}, reason {} ", objectId, e.getMessage(), e);
+        }
+        return recycleBinItem;
+    }
+
+    @Override
+    @AcmAcquireAndReleaseObjectLock(objectIdArgIndex = 0, objectType = "FILE", lockType = "DELETE")
     public void deleteFile(Long objectId, Long parentId, String parentType) throws AcmUserActionFailedException, AcmObjectNotFoundException
     {
 
@@ -1919,4 +1945,15 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     {
         this.objectLockService = objectLockService;
     }
+
+    public RecycleBinItemService getRecycleBinItemService()
+    {
+        return recycleBinItemService;
+    }
+
+    public void setRecycleBinItemService(RecycleBinItemService recycleBinItemService)
+    {
+        this.recycleBinItemService = recycleBinItemService;
+    }
+
 }

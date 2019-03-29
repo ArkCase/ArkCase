@@ -4,7 +4,7 @@ angular.module('directives').controller('Directives.CoreParticipantsModalControl
     $scope.participantEdit = {
         participantType: $scope.participant.participantType,
         participantLdapId: $scope.participant.participantLdapId,
-        replaceChildrenParticipant: $scope.participant.showReplaceChildrenParticipants
+        replaceChildrenParticipant: $scope.participant.replaceChildrenParticipant
     };
     $scope.onClickOk = function() {
         $modalInstance.close({

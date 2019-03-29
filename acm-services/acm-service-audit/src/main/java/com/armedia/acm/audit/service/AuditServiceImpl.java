@@ -81,7 +81,7 @@ public class AuditServiceImpl implements AuditService
         {
             convertConfidentialProperties(auditEvent);
 
-            if (auditConfig.getDatabaseChangesLoggingEnabled())
+            if (auditConfig.getDatabaseEnabled())
             {
                 auditDao.save(auditEvent);
             }

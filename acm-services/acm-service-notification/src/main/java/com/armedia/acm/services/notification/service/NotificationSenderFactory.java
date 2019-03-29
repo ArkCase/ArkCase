@@ -28,50 +28,32 @@ package com.armedia.acm.services.notification.service;
  */
 
 import com.armedia.acm.email.model.EmailSenderConfig;
-import com.armedia.acm.files.AbstractConfigurationFileEvent;
-import com.armedia.acm.files.ConfigurationFileChangedEvent;
-import com.armedia.acm.services.email.sender.service.EmailSenderConfigurationServiceImpl;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.context.ApplicationListener;
 
 import java.util.Map;
 
-public class NotificationSenderFactory implements ApplicationListener<AbstractConfigurationFileEvent>
+public class NotificationSenderFactory
 {
-    String flowType = "smtp";
     private Map<String, NotificationSender> notificationSenderMap;
-    private EmailSenderConfigurationServiceImpl emailSenderConfigurationService;
-    private Logger logger = LoggerFactory.getLogger(getClass());
+    
+    private EmailSenderConfig emailSenderConfig;
 
     public NotificationSender getNotificationSender()
     {
-        return notificationSenderMap.get(flowType);
-    }
-
-    @Override
-    public void onApplicationEvent(AbstractConfigurationFileEvent event)
-    {
-
-        if (event instanceof ConfigurationFileChangedEvent && event.getConfigFile().getName().equals("acmEmailSender.properties"))
-        {
-            EmailSenderConfig senderConfigurationUpdated = emailSenderConfigurationService.readConfiguration();
-            flowType = senderConfigurationUpdated.getType();
-        }
-    }
-
-    /**
-     * @param emailSenderConfigurationService
-     *            the emailSenderConfigurationService to set
-     */
-    public void setEmailSenderConfigurationService(EmailSenderConfigurationServiceImpl emailSenderConfigurationService)
-    {
-        this.emailSenderConfigurationService = emailSenderConfigurationService;
+        return notificationSenderMap.get(emailSenderConfig.getType());
     }
 
     public void setNotificationSenderMap(Map<String, NotificationSender> notificationSenderMap)
     {
         this.notificationSenderMap = notificationSenderMap;
+    }
+
+    public EmailSenderConfig getEmailSenderConfig() 
+    {
+        return emailSenderConfig;
+    }
+
+    public void setEmailSenderConfig(EmailSenderConfig emailSenderConfig) 
+    {
+        this.emailSenderConfig = emailSenderConfig;
     }
 }
