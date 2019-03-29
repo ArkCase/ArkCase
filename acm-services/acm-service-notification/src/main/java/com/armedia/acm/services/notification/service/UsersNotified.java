@@ -57,7 +57,10 @@ public interface UsersNotified
         notification.setRelatedObjectId((Long) obj[7]);
         notification.setRelatedObjectType((String) obj[8]);
         notification.setActionDate((Date) obj[9]);
-        notification.setTemplateModelName((String) obj[10]);
+        if(10 < obj.length)
+        {
+            notification.setTemplateModelName((String) obj[10]);    
+        }
         notification.setStatus(NotificationConstants.STATUS_NEW);
         notification.setAction(NotificationConstants.ACTION_DEFAULT);
         notification.setData("{\"usr\":\"/plugin/" + ((String) obj[4]).toLowerCase() + "/" + obj[3] + "\"}");
