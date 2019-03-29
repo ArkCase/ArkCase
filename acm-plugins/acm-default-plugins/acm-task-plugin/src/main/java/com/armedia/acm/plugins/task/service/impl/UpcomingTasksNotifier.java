@@ -27,18 +27,13 @@ package com.armedia.acm.plugins.task.service.impl;
  * #L%
  */
 
-import com.armedia.acm.plugins.task.model.AcmTask;
-import com.armedia.acm.plugins.task.model.TaskNotificationConfig;
 import com.armedia.acm.plugins.task.service.AbstractTaskNotifier;
-import com.armedia.acm.services.users.dao.UserDao;
-import com.armedia.acm.services.users.model.AcmUser;
 
 import org.activiti.engine.task.TaskQuery;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
-import java.util.Map;
 
 /**
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Oct 10, 2016
@@ -46,13 +41,6 @@ import java.util.Map;
 public class UpcomingTasksNotifier extends AbstractTaskNotifier
 {
 
-    private UserDao userDao;
-    private TaskNotificationConfig taskNotificationConfig;
-
-    /*
-     * (non-Javadoc)
-     * @see gov.edtrm.jsapn.alert.service.AbstractTaskNotifier#tasksDueBetween(org.activiti.engine.task.TaskQuery)
-     */
     @Override
     protected TaskQuery tasksDueBetween(TaskQuery query)
     {
@@ -74,46 +62,5 @@ public class UpcomingTasksNotifier extends AbstractTaskNotifier
     {
         return Date.from(LocalDate.now().plusDays(1).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
     }
-
-    /*
-     * (non-Javadoc)
-     * @see com.armedia.acm.services.notification.service.EmailBuilder#buildEmail(java.lang.Object, java.util.Map)
-     */
-    @Override
-    public void buildEmail(AcmTask task, Map<String, Object> properties)
-    {
-        String email = null;
-        if (task.getAssignee() != null)
-        {
-            AcmUser assignee = userDao.findByUserId(task.getAssignee());
-            if (assignee != null)
-            {
-                email = assignee.getMail();
-            }
-        }
-
-        properties.put("to", email);
-        properties.put("subject", taskNotificationConfig.getUpcomingTasksNotificationSubject());
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see com.armedia.acm.services.notification.service.EmailBodyBuilder#buildEmailBody(java.lang.Object)
-     */
-    @Override
-    public String buildEmailBody(AcmTask task)
-    {
-        return String.format(taskNotificationConfig.getUpcomingTasksNotificationBodyTemplate(), task.getTitle(), task.getId(),
-                task.getDueDate());
-    }
-
-    public void setUserDao(UserDao userDao)
-    {
-        this.userDao = userDao;
-    }
-
-    public void setTaskNotificationConfig(TaskNotificationConfig taskNotificationConfig)
-    {
-        this.taskNotificationConfig = taskNotificationConfig;
-    }
+    
 }

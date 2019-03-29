@@ -63,7 +63,8 @@
     <bean id="outlookPasswordDao" class="com.armedia.acm.service.outlook.dao.OutlookPasswordDao"/>
 
     <bean id="exchangeConfigurationService" class="com.armedia.acm.service.outlook.service.impl.ExchangeConfigurationServiceImpl">
-        <property name="exchangePropertiesResource" value="file:${user.home}/.arkcase/acm/msOutlookIntegration.properties"/>
+        <property name="configurationPropertyService" ref="configurationPropertyService"/>
+        <property name="outlookConfig" ref="outlookConfig"/>
     </bean>
 
     <bean id="outlookFolderCreatorDao" class="com.armedia.acm.service.outlook.dao.impl.JPAAcmOutlookFolderCreatorDao">

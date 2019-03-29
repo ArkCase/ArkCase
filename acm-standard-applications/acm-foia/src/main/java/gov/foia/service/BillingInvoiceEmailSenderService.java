@@ -28,58 +28,69 @@ package gov.foia.service;
  */
 
 import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
-import com.armedia.acm.services.billing.exception.GetBillingInvoiceException;
-import com.armedia.acm.services.billing.model.BillingConstants;
+import com.armedia.acm.plugins.ecm.model.EcmFile;
+import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
+import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.services.billing.model.BillingInvoice;
 import com.armedia.acm.services.billing.model.BillingInvoiceRequest;
 import com.armedia.acm.services.billing.service.BillingService;
+import com.armedia.acm.services.notification.dao.NotificationDao;
+import com.armedia.acm.services.notification.model.Notification;
+import com.armedia.acm.services.notification.service.NotificationSender;
 import com.armedia.acm.services.users.model.AcmUser;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.List;
 
 import gov.foia.model.FOIARequest;
 import gov.foia.model.FOIARequestUtils;
 
-public class BillingInvoiceEmailSenderService extends AbstractEmailSenderService
+public class BillingInvoiceEmailSenderService
 {
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     private CaseFileDao caseFileDao;
     private BillingService billingService;
+    private NotificationSender notificationSender;
+    private NotificationDao notificationDao;
+    private EcmFileService fileService;
 
     public void sendBillingInvoiceByEmail(BillingInvoiceRequest billingInvoiceRequest, AcmUser acmUser, Authentication authentication)
             throws Exception
     {
         FOIARequest foiaRequest = (FOIARequest) getCaseFileDao().find(billingInvoiceRequest.getParentObjectId());
-
-        String requesterName = FOIARequestUtils.extractRequestorName(foiaRequest.getOriginator().getPerson());
         String emailAddress = FOIARequestUtils.extractRequestorEmailAddress(foiaRequest.getOriginator().getPerson());
         BillingInvoice billingInvoice = getBillingService().getLatestBillingInvoice(billingInvoiceRequest.getParentObjectType(),
                 billingInvoiceRequest.getParentObjectId());
-
-        if (Objects.isNull(billingInvoice) || Objects.isNull(billingInvoice.getBillingInvoiceEcmFile()))
+        List<EcmFileVersion> notificationFiles = new ArrayList<>();
+        List<Long> filesIds = new ArrayList<>();
+        if (billingInvoice.getBillingInvoiceEcmFile() != null)
         {
-            throw new GetBillingInvoiceException(String.format("Billing Invoice Not Found for [%s] [%s]",
-                    billingInvoiceRequest.getParentObjectType(), billingInvoiceRequest.getParentObjectId()));
+            filesIds = Arrays.asList(billingInvoice.getBillingInvoiceEcmFile().getFileId());
+        }
+        EcmFile file;
+        for (Long fileId : filesIds)
+        {
+            file = getFileService().findById(fileId);
+            notificationFiles.add(file.getVersions().get(file.getVersions().size() - 1));
         }
 
-        String subject = String.format(BillingConstants.BILLING_EMAIL_SUBJECT, billingInvoice.getInvoiceNumber());
+        Notification notification = new Notification();
+        notification.setTemplateModelName("billingInvoice");
+        notification.setParentType(billingInvoice.getParentObjectType());
+        notification.setParentId(billingInvoice.getParentObjectId());
+        notification.setAttachFiles(true);
+        notification.setFiles(notificationFiles);
+        notification.setEmailAddresses(emailAddress);
+        notification.setTitle(String.format("Request%s invoice", foiaRequest.getCaseNumber()));
+        notification.setUser(acmUser.getUserId());
+        getNotificationDao().save(notification);
 
-        Map<String, Object> bodyModel = new HashMap<>();
-        bodyModel.put("header", String.format(BillingConstants.BILLING_EMAIL_HEADER, requesterName));
-        bodyModel.put("body", BillingConstants.BILLING_EMAIL_BODY);
-        bodyModel.put("footer", BillingConstants.BILLING_EMAIL_FOOTER);
-
-        log.debug(String.format("Trying to send Billing Invoice - %s", billingInvoice.getInvoiceNumber()));
-        sendEmailWithAttachment(Arrays.asList(emailAddress), subject, bodyModel,
-                Arrays.asList(billingInvoice.getBillingInvoiceEcmFile().getFileId()), acmUser, authentication);
     }
 
     public CaseFileDao getCaseFileDao()
@@ -100,5 +111,35 @@ public class BillingInvoiceEmailSenderService extends AbstractEmailSenderService
     public void setBillingService(BillingService billingService)
     {
         this.billingService = billingService;
+    }
+
+    public NotificationSender getNotificationSender()
+    {
+        return notificationSender;
+    }
+
+    public void setNotificationSender(NotificationSender notificationSender)
+    {
+        this.notificationSender = notificationSender;
+    }
+
+    public NotificationDao getNotificationDao()
+    {
+        return notificationDao;
+    }
+
+    public void setNotificationDao(NotificationDao notificationDao)
+    {
+        this.notificationDao = notificationDao;
+    }
+
+    public EcmFileService getFileService()
+    {
+        return fileService;
+    }
+
+    public void setFileService(EcmFileService fileService)
+    {
+        this.fileService = fileService;
     }
 }

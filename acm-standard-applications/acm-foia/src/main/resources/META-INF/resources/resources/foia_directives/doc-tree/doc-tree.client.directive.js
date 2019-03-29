@@ -3217,7 +3217,7 @@ angular
 
                                     var fileId = node.data.objectId;
                                     Util.serviceCall({
-                                        service : Ecm.deleteFile,
+                                        service : Ecm.deleteFileTemporary,
                                         param : {
                                             fileId : fileId
                                         },
@@ -5044,6 +5044,7 @@ angular
 
                         scope.treeControl = {
                             getSelectedNodes : DocTree.getSelectedNodes,
+                            getTopNode: DocTree.getTopNode,
                             refreshTree : DocTree.refreshTree,
                             refreshNode : DocTree.refreshNode,
                             updateNodeData : DocTree.updateNodeData,

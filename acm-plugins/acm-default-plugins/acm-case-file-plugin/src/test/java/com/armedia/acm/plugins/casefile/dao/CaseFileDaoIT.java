@@ -78,7 +78,8 @@ import java.util.UUID;
         "/spring/spring-library-ecm-tika.xml",
         "/spring/spring-library-data-access-control.xml",
         "/spring/spring-library-activiti-configuration.xml",
-        "/spring/spring-library-service-data.xml"
+        "/spring/spring-library-service-data.xml",
+        "/spring/spring-library-folder-watcher.xml"
 })
 @TransactionConfiguration(defaultRollback = true)
 public class CaseFileDaoIT

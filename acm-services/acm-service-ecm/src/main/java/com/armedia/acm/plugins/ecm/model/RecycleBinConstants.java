@@ -1,10 +1,10 @@
-package com.armedia.acm.service.outlook.model;
+package com.armedia.acm.plugins.ecm.model;
 
 /*-
  * #%L
- * ACM Service: MS Outlook integration
+ * ACM Default Plugin: Acm Business Process
  * %%
- * Copyright (C) 2014 - 2018 ArkCase LLC
+ * Copyright (C) 2014 - 2019 ArkCase LLC
  * %%
  * This file is part of the ArkCase software. 
  * 
@@ -28,18 +28,12 @@ package com.armedia.acm.service.outlook.model;
  */
 
 /**
- * @author sasko.tanaskoski
- *
+ * @author darko.dimitrievski
  */
-public interface ExchangeConfigurationConstants
+
+public interface RecycleBinConstants
 {
 
-    String INTEGRATION_ENABLED = "outlook.integration.enabled";
-    String SERVER_VERSION = "outlook.exchange.server.version";
-    String ENABLE_AUTODISCOVERY = "outlook.exchange.enable.autodiscovery";
-    String CLIENT_ACCESS_SERVER = "outlook.exchange.client-access-server";
-    String DEFAULT_ACCESS = "outlook.exchange.default_access";
-    String SYSTEM_USER_EMAIL = "outlook.exchange.system_user_email";
-    String SYSTEM_USER_EMAIL_PASSWORD = "outlook.exchange.system_user_email_password";
-    String SYSTEM_USER_ID = "outlook.exchange.system_user_id";
+    String OBJECT_TYPE = "RECYCLE_BIN";
+    String OBJECT_TYPE_ITEM = "RECYCLE_BIN_ITEM";
 }

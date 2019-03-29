@@ -1,10 +1,10 @@
-package com.armedia.acm.services.email.service;
+package com.armedia.acm.plugins.ecm.model.event;
 
 /*-
  * #%L
- * ACM Service: Email
+ * ACM Service: Enterprise Content Management
  * %%
- * Copyright (C) 2014 - 2018 ArkCase LLC
+ * Copyright (C) 2014 - 2019 ArkCase LLC
  * %%
  * This file is part of the ArkCase software. 
  * 
@@ -27,27 +27,20 @@ package com.armedia.acm.services.email.service;
  * #L%
  */
 
-import com.armedia.acm.auth.web.ForgotPasswordEvent;
-import com.armedia.acm.services.users.model.AcmUser;
+import com.armedia.acm.core.model.AcmEvent;
 
-import org.springframework.context.ApplicationListener;
+import java.util.Map;
 
-public class OnForgotPassword implements ApplicationListener<ForgotPasswordEvent>
+public class EcmFileConvertEvent extends AcmEvent
 {
-    private ResetPasswordService resetPasswordService;
-
-    @Override
-    public void onApplicationEvent(ForgotPasswordEvent forgotPasswordEvent)
+    public EcmFileConvertEvent(Object source)
     {
-        if (forgotPasswordEvent.isSucceeded())
-        {
-            AcmUser user = forgotPasswordEvent.getAcmUser();
-            resetPasswordService.sendPasswordResetEmail(user);
-        }
+        super(source);
     }
 
-    public void setResetPasswordService(ResetPasswordService resetPasswordService)
+    public EcmFileConvertEvent(Object source, Map<String, Object> eventProperties)
     {
-        this.resetPasswordService = resetPasswordService;
+        super(source);
+        super.setEventProperties(eventProperties);
     }
 }

@@ -131,7 +131,8 @@ import java.util.UUID;
         "/spring/spring-library-core-api.xml",
         "/spring/spring-library-user-login.xml",
         "/spring/spring-library-plugin-manager.xml",
-        "/spring/spring-library-audit-service.xml"
+        "/spring/spring-library-audit-service.xml",
+        "/spring/spring-library-calendar-integration-exchange-service.xml"
 })
 @TransactionConfiguration(defaultRollback = true)
 public class SplitCaseFileServiceIT extends EasyMock

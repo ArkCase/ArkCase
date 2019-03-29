@@ -57,7 +57,6 @@ public class GetPentahoReportsAPIController
 {
     private final Logger LOG = LoggerFactory.getLogger(getClass());
 
-    private ReportService reportService;
     private PentahoFilePropertiesService pentahoFilePropertiesService;
 
     @RequestMapping(value = "/get/pentaho", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE,
@@ -109,16 +108,6 @@ public class GetPentahoReportsAPIController
         LOG.info("Retrieved {} Pentaho reports.", retval.size());
 
         return retval;
-    }
-
-    public ReportService getReportService()
-    {
-        return reportService;
-    }
-
-    public void setReportService(ReportService reportService)
-    {
-        this.reportService = reportService;
     }
 
     public PentahoFilePropertiesService getPentahoFilePropertiesService()

@@ -28,9 +28,42 @@
     </bean>
 
     <!-- Executors -->
-    <bean id="sendExecutor" class="com.armedia.acm.services.notification.service.SendExecutor">
-        <property name="springContextHolder" ref="acmContextHolder"/>
+    <bean id="acmEntityTemplateModelProvider" class="com.armedia.acm.services.notification.service.provider.AcmEntityTemplateModelProvider">
+        <property name="dataService" ref="acmDataService"/>
     </bean>
+
+    <bean id="acmUserTemplateModelProvider" class="com.armedia.acm.services.notification.service.provider.AcmUserTemplateModelProvider">
+        <property name="userDao" ref="userJpaDao"/>
+    </bean>
+    
+    <bean id="forgotUserNameTamplateModelProvider" class="com.armedia.acm.services.notification.service.provider.ForgotUsernameTemplateModelProvider">
+        <property name="userDao" ref="userJpaDao"/>
+    </bean>
+
+    <bean id="notificationTemplateModelProvider" class="com.armedia.acm.services.notification.service.provider.NotificationTemplateModelProvider">
+        <property name="notificationUtils" ref="notificationUtils"/>
+    </bean>
+    
+    <bean id="acmEntitySendExecutor" class="com.armedia.acm.services.notification.service.SendExecutor">
+        <property name="springContextHolder" ref="acmContextHolder"/>
+        <property name="templateModelProvider" ref="acmEntityTemplateModelProvider"/>
+    </bean>
+    
+    <bean id="notificationSendExecutor" class="com.armedia.acm.services.notification.service.SendExecutor">
+        <property name="springContextHolder" ref="acmContextHolder"/>
+        <property name="templateModelProvider" ref="notificationTemplateModelProvider"/>
+    </bean>
+
+    <bean id="forgotUsernameSendExecutor" class="com.armedia.acm.services.notification.service.SendExecutor">
+        <property name="springContextHolder" ref="acmContextHolder"/>
+        <property name="templateModelProvider" ref="forgotUserNameTamplateModelProvider"/>
+    </bean>
+
+    <bean id="userSendExecutor" class="com.armedia.acm.services.notification.service.SendExecutor">
+        <property name="springContextHolder" ref="acmContextHolder"/>
+        <property name="templateModelProvider" ref="acmUserTemplateModelProvider"/>
+    </bean>
+    
     <bean id="purgeExecutor" class="com.armedia.acm.services.notification.service.PurgeExecutor">
         <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
     </bean>
@@ -65,7 +98,7 @@
         <property name="userDao" ref="userJpaDao"/>
         <property name="dataService" ref="acmDataService"/>
         <property name="templatingEngine" ref="templatingEngine"/>
-        <property name="emailSenderConfig" ref="emailSenderConfig"/>
+        <property name="templateService" ref="filesystemTemplateConfigurationService"/>
     </bean>
 
     <bean id="smtpNotificationSender" class="com.armedia.acm.services.notification.service.SmtpNotificationSender"
@@ -79,13 +112,13 @@
     </bean>
 
     <bean id="notificationSenderFactory" class="com.armedia.acm.services.notification.service.NotificationSenderFactory">
-        <property name="emailSenderConfigurationService" ref="emailSenderConfigurationService"/>
         <property name="notificationSenderMap">
             <map>
                 <entry key="smtp" value-ref="smtpNotificationSender"/>
                 <entry key="outlook" value-ref="microsoftExchangeNotificationSender"/>
             </map>
         </property>
+        <property name="emailSenderConfig" ref="emailSenderConfig"/>
     </bean>
 
     <bean id="notificationPropertyFileLocation" class="java.lang.String">
@@ -106,5 +139,34 @@
 
     <bean id="notificationConfig" class="com.armedia.acm.services.notification.model.NotificationConfig" scope="refresh">
         <aop:scoped-proxy/>
+    </bean>
+
+    <bean id="onForgotPassword" class="com.armedia.acm.services.notification.service.OnForgotPassword">
+        <property name="resetPasswordService" ref="resetPassword"/>
+    </bean>
+
+    <bean id="onSetPassword" class="com.armedia.acm.services.notification.service.OnSetPasswordEmail">
+        <property name="resetPasswordService" ref="resetPassword"/>
+    </bean>
+
+    <bean id="resetPassword" class="com.armedia.acm.services.notification.service.ResetPasswordService">
+        <property name="notificationDao" ref="notificationDao"/>
+        <property name="userDao" ref="userJpaDao"/>
+    </bean>
+
+    <bean id="onForgotUsername" class="com.armedia.acm.services.notification.service.OnForgotUsername">
+        <property name="notificationDao" ref="notificationDao"/>
+        <property name="userDao" ref="userJpaDao"/>
+    </bean>
+
+    <bean id="onLoginCheckPasswordExpiration" class="com.armedia.acm.services.notification.service.OnLoginCheckPasswordExpiration">
+        <property name="resetPasswordService" ref="resetPassword"/>
+        <property name="userDao" ref="userJpaDao"/>
+    </bean>
+
+    <bean id="acmEmailMentionsService" class="com.armedia.acm.services.notification.service.AcmEmailMentionsService">
+        <property name="acmAppConfiguration" ref="acmApplication"/>
+        <property name="templatingEngine" ref="templatingEngine"/>
+        <property name="notificationDao" ref="notificationDao"/>
     </bean>
 </beans>

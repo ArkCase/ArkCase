@@ -136,20 +136,26 @@ angular.module('admin').controller('Admin.SecurityEmailTemplatesController',
             }
 
             emailTemplatesService.getEmailReceiverConfiguration().then(function(result) {
-                $scope.emailReceiverConfiguration = result.data;
-                $scope.emailReceiverConfiguration.user = result.data.user.replace('%40', '@');
-                $scope.emailReceiverConfiguration.user_complaint = result.data.user_complaint.replace('%40', '@');
-            })
+                $scope.emailReceiverConfiguration = {
+                    enableCase: result.data["email.create.case.enabled"],
+                    user_case: result.data["email.CASE_FILE.user"].replace('%40', '@'),
+                    pass_case: result.data["email.CASE_FILE.password"],
+                    enableComplaint: result.data["email.create.complaint.enabled"],
+                    user_complaint: result.data["email.COMPLAINT.user"].replace('%40', '@'),
+                    pass_complaint: result.data["email.COMPLAINT.password"]
+                }
+            });
 
-            $scope.newEmailReceiverConfiguration = {};
             $scope.save = function() {
-                $scope.newEmailReceiverConfiguration.user = $scope.emailReceiverConfiguration.user.replace('@', '%40');
-                $scope.newEmailReceiverConfiguration.password = $scope.emailReceiverConfiguration.pass;
-                $scope.newEmailReceiverConfiguration.user_complaint = $scope.emailReceiverConfiguration.user_complaint.replace('@', '%40');
-                $scope.newEmailReceiverConfiguration.password_complaint = $scope.emailReceiverConfiguration.pass_complaint;
-                $scope.newEmailReceiverConfiguration.enableCase = $scope.emailReceiverConfiguration.enableCase;
-                $scope.newEmailReceiverConfiguration.enableComplaint = $scope.emailReceiverConfiguration.enableComplaint;
-                emailTemplatesService.saveEmailReceiverConfiguration($scope.newEmailReceiverConfiguration).then(function(value) {
+                var newEmailReceiverConfiguration = {
+                    "email.create.case.enabled": $scope.emailReceiverConfiguration.enableCase,
+                    "email.CASE_FILE.user": $scope.emailReceiverConfiguration.user_case.replace('@', '%40'),
+                    "email.CASE_FILE.password": $scope.emailReceiverConfiguration.pass_case,
+                    "email.create.complaint.enabled": $scope.emailReceiverConfiguration.enableComplaint,
+                    "email.COMPLAINT.user": $scope.emailReceiverConfiguration.user_complaint.replace('@', '%40'),
+                    "email.COMPLAINT.password": $scope.emailReceiverConfiguration.pass_complaint
+                };
+                emailTemplatesService.saveEmailReceiverConfiguration(newEmailReceiverConfiguration).then(function(value) {
                     MessageService.succsessAction();
                 }, function(err) {
                     MessageService.errorAction();

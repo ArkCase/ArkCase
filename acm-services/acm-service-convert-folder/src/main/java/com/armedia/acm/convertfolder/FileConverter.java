@@ -45,6 +45,10 @@ public interface FileConverter
 
     File convert(EcmFile file) throws ConversionException;
 
+    File convertAndReturnConvertedFile(EcmFile file) throws ConversionException;
+
+    File convertAndReturnConvertedFile(EcmFile file, String version) throws ConversionException;
+
     default String createFileName(EcmFile file)
     {
         return file.getFileName() + ".pdf";

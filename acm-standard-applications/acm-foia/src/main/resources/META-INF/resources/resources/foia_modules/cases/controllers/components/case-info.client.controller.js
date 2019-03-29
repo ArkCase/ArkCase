@@ -3,8 +3,8 @@
 angular.module('cases').controller(
     'Cases.InfoController',
     [ '$scope', '$stateParams', '$translate', '$timeout', 'UtilService', 'Util.DateService', 'ConfigService', 'Object.LookupService', 'Case.LookupService', 'Case.InfoService', 'Object.ModelService', 'Helper.ObjectBrowserService', 'DueDate.Service', 'Admin.HolidayService',
-        'MessageService', '$modal', 'LookupService', 'Admin.FoiaConfigService',
-        function($scope, $stateParams, $translate, $timeout, Util, UtilDateService, ConfigService, ObjectLookupService, CaseLookupService, CaseInfoService, ObjectModelService, HelperObjectBrowserService, DueDateService, AdminHolidayService, MessageService, $modal, LookupService, AdminFoiaConfigService) {
+        'MessageService', '$modal', 'LookupService', 'Admin.FoiaConfigService', 'Admin.ObjectTitleConfigurationService',
+        function($scope, $stateParams, $translate, $timeout, Util, UtilDateService, ConfigService, ObjectLookupService, CaseLookupService, CaseInfoService, ObjectModelService, HelperObjectBrowserService, DueDateService, AdminHolidayService, MessageService, $modal, LookupService, AdminFoiaConfigService, AdminObjectTitleConfigurationService) {
 
             new HelperObjectBrowserService.Component({
                 scope: $scope,
@@ -126,7 +126,41 @@ angular.module('cases').controller(
                         $scope.receivedDateDisabledLink = false;
                     }
                 });
-                
+
+                AdminObjectTitleConfigurationService.getObjectTitleConfiguration().then(function (value) {
+                    if(!Util.isEmpty(value)) {
+                        var configurationTitle = value.data.CASE_FILE.title;
+                        if(configurationTitle === "objectId")
+                        {
+                            $scope.nodeTitle = $scope.objectInfo.id;
+                        }
+                        else if(configurationTitle === "titleTitle")
+                        {
+                            $scope.nodeTitle = $scope.objectInfo.title;
+                        }
+                        else if(configurationTitle === "objectIdTitle")
+                        {
+                            $scope.nodeTitle = $scope.objectInfo.id + $scope.objectInfo.title;
+                        }
+                        else if(configurationTitle === "titleObjectId")
+                        {
+                            $scope.nodeTitle = $scope.objectInfo.title + $scope.objectInfo.id;
+                        }
+                    }
+                });
+
+
+
+                $scope.isAmendmentAdded = data.amendmentFlag;
+
+            };
+            $scope.userOrGroupSearch = function() {
+                var assigneUserName = _.find($scope.userFullNames, function (user)
+                {
+                    return user.id === $scope.assignee
+                });
+
+
                 $scope.isAmendmentAdded = data.amendmentFlag;
 
             };

@@ -805,6 +805,41 @@
                     "name": "Enter Name of Holiday",
                     "date": "Enter Date of Holiday"
                 }
+            },
+            "recycleBin": {
+                "title": "Recycle Bin",
+                "grid": {
+                    "fileName": "File Name",
+                    "containerObjectTitle": "Original Location (Parent Object Id)",
+                    "dateModified": "Date Deleted",
+                    "fileSizeBytes": "Size",
+                    "fileActiveVersionNameExtension": "Item Type"
+                }
+            },
+            "objectTitleConfiguration": {
+                "title": "Object Title Configuration",
+                "save": "Save",
+                "enableTitleField": "Enable Title Field",
+                "displayOptions": "Title Display Options: ",
+                "objectId": "Use the 'Object ID' as a Title",
+                "titleTitle": "Use the 'Title' as a Title",
+                "titleObjectId": "Use the 'Title - Object ID' as a Title",
+                "objectIdTitle": "Use the 'Object ID - Title' as a Title",
+                "objectType": "Object Type",
+                "titleOption": "Title",
+                "caseFile": "Case File",
+                "complaint": "Complaint",
+                "message": {
+                    "success": "Object Title Configuration is successfully saved",
+                    "error": "Error. Object Title Configuration is not saved.",
+                    "exist": "Configuration for this object type already exist.",
+                    "editRow": "Edit of the row did not succeed"
+                },
+                "button": {
+                    "save": "Save",
+                    "cancel": "Cancel"
+                }
+
             }
         },
         "branding.title": "Branding",
@@ -1103,5 +1138,9 @@
                 "title": "Email templates"
             }
         }
+    },
+    "contextMenu.options": {
+        "restore": "Restore",
+        "delete" : "Delete"
     }
 }

@@ -640,6 +640,17 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
     @Override
     public InputStream downloadFileTransactionAsInputStream(EcmFile ecmFile) throws MuleException
     {
+        return performDownloadFileTransactionAsInputStream(ecmFile, new String());
+    }
+
+    @Override
+    public InputStream downloadFileTransactionAsInputStream(EcmFile ecmFile, String fileVersion) throws MuleException
+    {
+        return performDownloadFileTransactionAsInputStream(ecmFile, fileVersion);
+    }
+
+    private InputStream performDownloadFileTransactionAsInputStream(EcmFile ecmFile, String fileVersion) throws MuleException
+    {
         try
         {
             CMISCloudConnectorConnectionManager manager = cmisConfigUtils.getCmisConfiguration(ecmFile.getCmisRepositoryId());
@@ -659,7 +670,9 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
 
             Map<String, Object> messageProps = new HashMap<>();
             messageProps.put(EcmFileConstants.CONFIGURATION_REFERENCE, manager);
-            MuleMessage message = getMuleContextManager().send("vm://downloadFileFlow.in", ecmFile.getVersionSeriesId(), messageProps);
+            String cmisId = fileVersion.isEmpty() ? ecmFile.getVersionSeriesId() : getFolderAndFilesUtils().getVersionCmisId(ecmFile, fileVersion);
+
+            MuleMessage message = getMuleContextManager().send("vm://downloadFileFlow.in", cmisId, messageProps);
 
             InputStream result = ((ContentStream) message.getPayload()).getStream();
 

@@ -533,8 +533,8 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
         {
             for (Long attachmentId : attachmentIds)
             {
-                InputStream contents = getEcmFileService().downloadAsInputStream(attachmentId);
                 EcmFile ecmFile = getEcmFileService().findById(attachmentId);
+                InputStream contents = getEcmFileService().downloadAsInputStream(attachmentId, ecmFile.getActiveVersionTag());
                 String fileName = ecmFile.getFileName();
                 String fileKey = fileName;
 
@@ -551,13 +551,16 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
                 {
                     try
                     {
-                        pdfConvertedFile = getDefaultFolderAndFileConverter().convert(ecmFile);
-                        pdfConvertedFileInputStream = new FileInputStream(pdfConvertedFile);
-                        contents = pdfConvertedFileInputStream;
-                        fileName = fileKey.concat(".pdf");
+                        pdfConvertedFile = getDefaultFolderAndFileConverter().convertAndReturnConvertedFile(ecmFile);
+                        if(pdfConvertedFile != null)
+                        {
+                            pdfConvertedFileInputStream = new FileInputStream(pdfConvertedFile);
+                            contents = pdfConvertedFileInputStream;
+                            fileName = fileKey.concat(".pdf");
 
-                        tmpFiles.add(pdfConvertedFile);
-                        tmpFilesInputStream.add(pdfConvertedFileInputStream);
+                            tmpFiles.add(pdfConvertedFile);
+                            tmpFilesInputStream.add(pdfConvertedFileInputStream);
+                        }
                     }
                     catch (ConversionException | FileNotFoundException e)
                     {

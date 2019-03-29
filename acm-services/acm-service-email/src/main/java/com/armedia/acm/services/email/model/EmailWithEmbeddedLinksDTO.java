@@ -60,6 +60,8 @@ public class EmailWithEmbeddedLinksDTO extends MessageBodyFactory
 
     private String body;
 
+    private String fileVersion;
+
     public String buildMessageBodyFromTemplate(String body)
     {
         return buildMessageBodyFromTemplate(body, getHeader(), getFooter());
@@ -170,5 +172,15 @@ public class EmailWithEmbeddedLinksDTO extends MessageBodyFactory
     public void setTokens(List<String> tokens)
     {
         this.tokens = tokens;
+    }
+
+    public String getFileVersion()
+    {
+        return fileVersion;
+    }
+
+    public void setFileVersion(String fileVersion)
+    {
+        this.fileVersion = fileVersion;
     }
 }

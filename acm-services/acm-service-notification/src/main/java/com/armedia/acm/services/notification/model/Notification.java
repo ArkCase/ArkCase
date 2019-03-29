@@ -29,6 +29,8 @@ package com.armedia.acm.services.notification.model;
 
 import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.data.AcmEntity;
+import com.armedia.acm.plugins.ecm.model.EcmFile;
+import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.voodoodyne.jackson.jsog.JSOGGenerator;
@@ -36,12 +38,16 @@ import com.voodoodyne.jackson.jsog.JSOGGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.Lob;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 import javax.persistence.Temporal;
@@ -50,6 +56,7 @@ import javax.persistence.Transient;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "acm_notification")
@@ -128,8 +135,32 @@ public class Notification implements Serializable, AcmObject, AcmEntity
     @Column(name = "cm_notification_action_date")
     private Date actionDate;
 
+    @Column(name = "cm_template_model_name")
+    private String templateModelName;
+
+    @Column(name = "cm_attach_files", nullable = false)
+    private Boolean attachFiles = false;
+
     @Transient
     private String userEmail;
+
+    @Column(name = "cm_email_addresses")
+    private String emailAddresses;
+
+    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @JoinTable(name = "acm_notification_files", joinColumns = {
+            @JoinColumn(name = "cm_notification_id", referencedColumnName = "cm_notification_id") }, inverseJoinColumns = {
+                    @JoinColumn(name = "cm_file_id", referencedColumnName = "cm_file_id") })
+    private List<EcmFileVersion> files;
+
+    @Transient
+    private String userAccounts;
+
+    @Transient
+    private int accountsNumber;
+
+    @Transient
+    private String objectLink;
 
     @Override
     public Long getId()
@@ -360,6 +391,16 @@ public class Notification implements Serializable, AcmObject, AcmEntity
         this.userEmail = userEmail;
     }
 
+    public String getEmailAddresses()
+    {
+        return emailAddresses;
+    }
+
+    public void setEmailAddresses(String emailAddresses)
+    {
+        this.emailAddresses = emailAddresses;
+    }
+
     @Override
     @JsonIgnore
     public String getObjectType()
@@ -367,4 +408,63 @@ public class Notification implements Serializable, AcmObject, AcmEntity
         return NotificationConstants.OBJECT_TYPE;
     }
 
+    public String getTemplateModelName()
+    {
+        return templateModelName;
+    }
+
+    public void setTemplateModelName(String templateModelName)
+    {
+        this.templateModelName = templateModelName;
+    }
+
+    public Boolean getAttachFiles()
+    {
+        return attachFiles;
+    }
+
+    public void setAttachFiles(Boolean attachFiles)
+    {
+        this.attachFiles = attachFiles;
+    }
+
+    public List<EcmFileVersion> getFiles()
+    {
+        return files;
+    }
+
+    public void setFiles(List<EcmFileVersion> files)
+    {
+        this.files = files;
+    }
+
+    public String getUserAccounts()
+    {
+        return userAccounts;
+    }
+
+    public void setUserAccounts(String userAccounts)
+    {
+        this.userAccounts = userAccounts;
+    }
+
+    public int getAccountsNumber()
+    {
+        return accountsNumber;
+    }
+
+    public void setAccountsNumber(int accountsNumber)
+    {
+        this.accountsNumber = accountsNumber;
+    }
+
+    public String getObjectLink()
+    {
+        return objectLink;
+    }
+
+    public void setObjectLink(String objectLink)
+    {
+        this.objectLink = objectLink;
+    }
 }

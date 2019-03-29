@@ -110,6 +110,7 @@ public class FOIARequestFileBrokerClient extends AcmFileBrokerClient
         if (!file.exists())
         {
             LOG.error("Required FOIA request release file was not found on file system " + file);
+            return;
         }
 
         Map<String, Object> properties = new HashMap<>();

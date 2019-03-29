@@ -57,7 +57,7 @@ public class PentahoFilePropertiesService
     private static final Logger LOGGER = LoggerFactory.getLogger(PentahoFilePropertiesService.class);
     private PentahoReportFiles pentahoReportFiles;
     private ResponseEntity<PentahoReportFiles> response;
-    private ReportServiceImpl reportService;
+    private ReportService reportService;
     private ConfigurationPropertyService configurationPropertyService;
     private PentahoReportsConfig reportsConfig;
 
@@ -142,8 +142,8 @@ public class PentahoFilePropertiesService
 
     public String buildFilePropertiesUrl()
     {
-        return reportsConfig.getServerUrl()
-                + (reportsConfig.getServerPort() != null ? ":" + reportsConfig.getServerPort() : "")
+        return reportsConfig.getServerInternalUrl()
+                + (reportsConfig.getServerInternalPort() != null ? ":" + reportsConfig.getServerInternalPort() : "")
                 + reportsConfig.getFilePropertiesApi();
     }
 
@@ -167,12 +167,12 @@ public class PentahoFilePropertiesService
         this.response = response;
     }
 
-    public ReportServiceImpl getReportService()
+    public ReportService getReportService()
     {
         return reportService;
     }
 
-    public void setReportService(ReportServiceImpl reportService)
+    public void setReportService(ReportService reportService)
     {
         this.reportService = reportService;
     }
