@@ -14,11 +14,13 @@
 
     <bean id="acmSequenceDatabaseHandler" class="com.armedia.acm.services.sequence.listener.AcmSequenceDatabaseChangeHandler">
         <property name="sequenceAnnotationReader" ref="acmSequenceAnnotationReader"/>
+        <property name="sequenceGeneratorManager" ref="acmSequenceGeneratorManager"/>
         <property name="sequenceService" ref="acmSequenceService"/>
     </bean>
 
     <bean id="acmSequenceDatabaseRollbackHandler" class="com.armedia.acm.services.sequence.listener.AcmSequenceDatabaseRollbackChangesHandler">
         <property name="sequenceAnnotationReader" ref="acmSequenceAnnotationReader"/>
+        <property name="sequenceGeneratorManager" ref="acmSequenceGeneratorManager"/>
         <property name="sequenceService" ref="acmSequenceService"/>
     </bean>
 
