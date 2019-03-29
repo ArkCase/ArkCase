@@ -88,7 +88,6 @@ angular.module('core').controller('UploadManagerModalController',
         function getParams(uuid) {
             var params = {};
             params.uuid = uuid;
-            params.isFileChunk = true;
             params.folderId = $scope.hashMapOfAllFiles[uuid].folderId;
 
             var currentFileDetails = $scope.hashMapOfAllFiles[uuid];
@@ -98,7 +97,6 @@ angular.module('core').controller('UploadManagerModalController',
                 params.parentObjectId = currentFileDetails.objectId;
                 params.folderId = currentFileDetails.folderId;
                 params.fileType = currentFileDetails.fileType;
-                params.isFileChunk = false;
             }
             return params;
         }

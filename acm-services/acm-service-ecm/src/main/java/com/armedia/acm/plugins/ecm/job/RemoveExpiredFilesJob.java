@@ -27,7 +27,7 @@ package com.armedia.acm.plugins.ecm.job;
  * #L%
  */
 
-import com.armedia.acm.plugins.ecm.model.EcmFileConfig;
+import com.armedia.acm.plugins.ecm.model.EcmFileUploaderConfig;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.ecm.service.impl.FileChunkServiceImpl;
 import com.armedia.acm.scheduler.AcmSchedulableBean;
@@ -44,12 +44,12 @@ public class RemoveExpiredFilesJob implements AcmSchedulableBean
     private final Logger LOG = LoggerFactory.getLogger(getClass());
     private FileChunkServiceImpl fileChunkService;
     private EcmFileService ecmFileService;
-    private EcmFileConfig ecmFileConfig;
+    private EcmFileUploaderConfig ecmFileUploaderConfig;
 
     public void deleteExpiredFiles()
     {
         String dirPath = System.getProperty("java.io.tmpdir");
-        String uniqueArkCaseHashFileIdentifier = ecmFileConfig.getUniqueHashFileIdentifier();
+        String uniqueArkCaseHashFileIdentifier = ecmFileUploaderConfig.getUniqueHashFileIdentifier();
         File directory = new File(dirPath);
         LocalDate today = LocalDate.now();
         LocalDate weekAgo = today.minusDays(7);
@@ -106,13 +106,11 @@ public class RemoveExpiredFilesJob implements AcmSchedulableBean
         this.ecmFileService = ecmFileService;
     }
 
-    public EcmFileConfig getEcmFileConfig()
-    {
-        return ecmFileConfig;
+    public EcmFileUploaderConfig getEcmFileUploaderConfig() {
+        return ecmFileUploaderConfig;
     }
 
-    public void setEcmFileConfig(EcmFileConfig ecmFileConfig)
-    {
-        this.ecmFileConfig = ecmFileConfig;
+    public void setEcmFileUploaderConfig(EcmFileUploaderConfig ecmFileUploaderConfig) {
+        this.ecmFileUploaderConfig = ecmFileUploaderConfig;
     }
 }

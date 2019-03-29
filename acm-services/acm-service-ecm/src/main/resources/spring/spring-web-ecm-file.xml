@@ -8,7 +8,7 @@
         <property name="objectConverter" ref="objectConverter"/>
         <property name="arkPermissionEvaluator" ref="arkPermissionEvaluator"/>
         <property name="fileChunkService" ref="fileChunkService"/>
-        <property name="ecmFileConfig" ref="ecmFileConfig"/>
+        <property name="ecmFileUploaderConfig" ref="ecmFileUploaderConfig"/>
         <property name="permissionEvaluator" ref="arkPermissionEvaluator"/>
     </bean>
 
@@ -150,4 +150,7 @@
         <property name="fileParticipantService" ref="fileParticipantService"/>
     </bean>
 
+    <bean id="ecmFileUploaderManagementAPIController" class="com.armedia.acm.plugins.ecm.web.api.EcmFileUploaderManagementAPIController">
+        <property name="ecmFileUploaderConfigurationService" ref="ecmFileUploaderConfigurationService"/>
+    </bean>
 </beans>
