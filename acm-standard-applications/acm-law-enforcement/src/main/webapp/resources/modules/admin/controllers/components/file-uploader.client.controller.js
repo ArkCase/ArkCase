@@ -1,36 +1,37 @@
 'use strict';
 angular.module('admin').controller('Admin.FileUploaderController',
-    ['$scope', '$q', '$modal', '$translate', 'UtilService', 'Admin.ApplicationSettingsService', 'Dialog.BootboxService', 'MessageService', function ($scope, $q, $modal, $translate, Util, ApplicationSettingsService, DialogService, messageService) {
+    ['$scope', '$q', '$modal', '$translate', 'UtilService', 'Dialog.BootboxService', 'MessageService', 'Admin.FileUploaderConfigurationService', function ($scope, $q, $modal, $translate, Util, DialogService, messageService, FileUploaderConfigurationService) {
 
-        var saved = {};
+        var fileUploaderConfigDataModel = {};
 
-        ApplicationSettingsService.getSettings().then(function (response) {
-            var singleChunkFileSizeLimitInBytes = response.data[ApplicationSettingsService.PROPERTIES.SINGLE_CHUNK_FILE_SIZE_LIMIT];
-            $scope.singleChunkFileSizeLimit = Util.bytes(singleChunkFileSizeLimitInBytes);
-            saved.singleChunkFileSizeLimit = $scope.singleChunkFileSizeLimit;
+        //issues were spotted on html level when changing value of a property, child $scope was being created if we have not initiated the $scope.model object
+        $scope.model = {};
 
-            var uploadFileSizeLimitInBytes = response.data[ApplicationSettingsService.PROPERTIES.UPLOAD_FILE_SIZE_LIMIT];
-            $scope.uploadFileSizeLimit = Util.bytes(uploadFileSizeLimitInBytes);
-            saved.uploadFileSizeLimit = $scope.uploadFileSizeLimit;
+        FileUploaderConfigurationService.getFileUploaderConfiguration().then(function (response) {
+            $scope.ecmFileProperties = response.data;
+            var singleChunkFileSizeLimitInBytes = $scope.ecmFileProperties['fileUploader.singleChunkFileSizeLimit'];
+            $scope.model.singleChunkFileSizeLimit = Util.bytes(singleChunkFileSizeLimitInBytes);
+            fileUploaderConfigDataModel.singleChunkFileSizeLimit = $scope.model.singleChunkFileSizeLimit;
 
-            saved.enableFileChunkUpload = response.data[ApplicationSettingsService.PROPERTIES.ENABLE_FILE_CHUNK];
-            $scope.enableFileChunkUpload = saved.enableFileChunkUpload;
+
+            var uploadFileSizeLimitInBytes = $scope.ecmFileProperties['fileUploader.uploadFileSizeLimit'];
+            $scope.model.uploadFileSizeLimit = Util.bytes(uploadFileSizeLimitInBytes);
+            fileUploaderConfigDataModel.uploadFileSizeLimit = $scope.model.uploadFileSizeLimit;
+
+            fileUploaderConfigDataModel.enableFileChunkUpload = $scope.ecmFileProperties['fileUploader.enableFileChunkUpload'];
+            $scope.enableFileChunkUpload = fileUploaderConfigDataModel.enableFileChunkUpload;
         });
 
         $scope.applyChanges = function () {
-            if (saved.uploadFileSizeLimit !== $scope.uploadFileSizeLimit || saved.singleChunkFileSizeLimit !== $scope.singleChunkFileSizeLimit || (!Util.isEmpty(saved.enableFileChunkUpload) && saved.enableFileChunkUpload !== $scope.enableFileChunkUpload)) {
-                var uploadManagerData = {};
-                uploadManagerData[ApplicationSettingsService.PROPERTIES.UPLOAD_FILE_SIZE_LIMIT] = Util.bytes($scope.uploadFileSizeLimit);
-                uploadManagerData[ApplicationSettingsService.PROPERTIES.SINGLE_CHUNK_FILE_SIZE_LIMIT] = Util.bytes($scope.singleChunkFileSizeLimit);
-                uploadManagerData[ApplicationSettingsService.PROPERTIES.ENABLE_FILE_CHUNK] = $scope.enableFileChunkUpload;
+            if (fileUploaderConfigDataModel.uploadFileSizeLimit !== $scope.model.uploadFileSizeLimit || fileUploaderConfigDataModel.singleChunkFileSizeLimit !== $scope.model.singleChunkFileSizeLimit || (!Util.isEmpty(fileUploaderConfigDataModel.enableFileChunkUpload) && fileUploaderConfigDataModel.enableFileChunkUpload !== $scope.enableFileChunkUpload)) {
 
-                ApplicationSettingsService.setSettings(uploadManagerData).then(
-                    function(response){
-                        saved.uploadFileSizeLimit = response.data.uploadFileSizeLimit;
-                        saved.singleChunkFileSizeLimit = response.data.singleChunkFileSizeLimit;
-                        saved.enableFileChunkUpload = response.data.enableFileChunkUpload;
-                    }
-                );
+                var updatedConfigurationData = {
+                    "fileUploader.singleChunkFileSizeLimit": Util.bytes($scope.model.singleChunkFileSizeLimit),
+                    "fileUploader.uploadFileSizeLimit": Util.bytes($scope.model.uploadFileSizeLimit),
+                    "fileUploader.enableFileChunkUpload": $scope.enableFileChunkUpload
+                };
+
+                FileUploaderConfigurationService.saveFileUploaderConfiguration(updatedConfigurationData);
 
                 bootbox.alert({
                     message: $translate.instant("admin.documentManagement.fileUploader.inform"),

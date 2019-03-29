@@ -43,7 +43,6 @@ import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.ecm.service.FileChunkService;
 import com.armedia.acm.services.dataaccess.service.impl.ArkPermissionEvaluator;
 import org.apache.chemistry.opencmis.client.api.Document;
-import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -77,7 +76,7 @@ public class FileUploadAPIController implements ApplicationEventPublisherAware
     private ArkPermissionEvaluator arkPermissionEvaluator;
     private ApplicationEventPublisher applicationEventPublisher;
     private FileChunkService fileChunkService;
-    private EcmFileConfig ecmFileConfig;
+    private EcmFileUploaderConfig ecmFileUploaderConfig;
     private ArkPermissionEvaluator permissionEvaluator;
 
     // #parentObjectType == 'USER_ORG' applies to uploading profile picture
@@ -238,8 +237,7 @@ public class FileUploadAPIController implements ApplicationEventPublisherAware
     @RequestMapping(value = "/uploadChunks", method = RequestMethod.POST, produces = { MediaType.APPLICATION_JSON_VALUE,
             MediaType.TEXT_PLAIN_VALUE })
     @ResponseBody
-    public FileChunkDetails uploadChunks(@RequestParam("isFileChunk") boolean isFileChunk,
-            @RequestParam(value = "parentObjectType", required = false) String parentObjectType,
+    public FileChunkDetails uploadChunks(@RequestParam(value = "parentObjectType", required = false) String parentObjectType,
             @RequestParam(value = "parentObjectId", required = false) Long parentObjectId,
             @RequestParam(value = "folderId", required = false) Long folderId,
             @RequestParam(value = "fileType", required = false) String fileType,
@@ -250,9 +248,9 @@ public class FileUploadAPIController implements ApplicationEventPublisherAware
         log.debug("Starting a file upload by user {}", authentication.getName());
 
         String fileName = "";
-        String uniqueArkCaseHashFileIdentifier = ecmFileConfig.getUniqueHashFileIdentifier();
+        String uniqueArkCaseHashFileIdentifier = ecmFileUploaderConfig.getUniqueHashFileIdentifier();
 
-        if (!isFileChunk)
+        if (!ecmFileUploaderConfig.isEnableFileChunkUpload())
         {
             AcmFolder folder = getParentFolder(parentObjectType, parentObjectId, folderId);
 
@@ -373,14 +371,14 @@ public class FileUploadAPIController implements ApplicationEventPublisherAware
         this.fileChunkService = fileChunkService;
     }
 
-    public EcmFileConfig getEcmFileConfig()
+    public EcmFileUploaderConfig getEcmFileUploaderConfig()
     {
-        return ecmFileConfig;
+        return ecmFileUploaderConfig;
     }
 
-    public void setEcmFileConfig(EcmFileConfig ecmFileConfig)
+    public void setEcmFileUploaderConfig(EcmFileUploaderConfig ecmFileUploaderConfig)
     {
-        this.ecmFileConfig = ecmFileConfig;
+        this.ecmFileUploaderConfig = ecmFileUploaderConfig;
     }
 
     private boolean isActionAllowed(Authentication authentication, String action, Long targetId)

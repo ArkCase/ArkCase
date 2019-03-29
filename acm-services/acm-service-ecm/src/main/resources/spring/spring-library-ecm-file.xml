@@ -431,6 +431,15 @@
         <property name="folderAndFilesUtils" ref="folderAndFilesUtils"/>
         <property name="ecmFileService" ref="ecmFileService"/>
         <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
-        <property name="ecmFileConfig" ref="ecmFileConfig"/>
+        <property name="ecmFileUploaderConfig" ref="ecmFileUploaderConfig"/>
+    </bean>
+
+    <bean id="ecmFileUploaderConfig" class="com.armedia.acm.plugins.ecm.model.EcmFileUploaderConfig" scope="refresh">
+        <aop:scoped-proxy/>
+    </bean>
+
+    <bean id="ecmFileUploaderConfigurationService" class="com.armedia.acm.plugins.ecm.service.impl.EcmFileUploaderConfigurationServiceImpl">
+        <property name="ecmFileUploaderConfig" ref="ecmFileUploaderConfig"/>
+        <property name="configurationPropertyService" ref="configurationPropertyService"/>
     </bean>
 </beans>
