@@ -69,7 +69,7 @@ angular.module('audit').controller(
 
                         $scope.pentahoHost = $scope.acmReportsProperties['report.plugin.PENTAHO_SERVER_URL'];
                         $scope.pentahoPort = $scope.acmReportsProperties['report.plugin.PENTAHO_SERVER_PORT'];
-                        $scope.auditReportUri = $scope.auditPluginProperties['report.plugin.AUDIT_REPORT'];
+                        $scope.auditReportUri = $scope.auditPluginProperties['audit.plugin.AUDIT_REPORT'];
                         $scope.pentahoUser = $scope.acmReportsProperties['report.plugin.PENTAHO_SERVER_USER'];
                         $scope.pentahoPassword = $scope.acmReportsProperties['report.plugin.PENTAHO_SERVER_PASSWORD'];
                         $scope.auditDropdown = data[2];

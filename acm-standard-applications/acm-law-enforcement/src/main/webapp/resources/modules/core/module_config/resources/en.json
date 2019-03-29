@@ -618,6 +618,10 @@
                 "caseType": "case type",
                 "status": "status",
                 "priority": "priority"
+            },
+            "objectTitleTypes": {
+                "caseFile": "Case File",
+                "complaint": "Complaint"
             }
         },
         "userInfo": {

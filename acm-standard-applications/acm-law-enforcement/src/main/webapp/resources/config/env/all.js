@@ -68,7 +68,8 @@ module.exports = {
                     'node_modules/@bower_components/angular-pdfjs-viewer/dist/angular-pdfjs-viewer.js',
                     'node_modules/angular-aria/angular-aria.js',
                     'node_modules/@bower_components/combodate/src/combodate.js',
-                    'node_modules/@bower_components/ment.io/dist/mentio.js']
+                    'node_modules/@bower_components/ment.io/dist/mentio.js',
+                    'node_modules/angular-bootstrap-contextmenu/contextMenu.js']
         },
         css : [ 'assets/css/application.css', 'modules/**/css/*.css', 'assets/css/arkcase-extension.css'],
         scss : [ 'modules/**/scss/*.scss'],

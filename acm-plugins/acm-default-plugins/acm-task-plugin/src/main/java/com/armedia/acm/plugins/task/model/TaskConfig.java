@@ -63,11 +63,6 @@ public class TaskConfig implements SupportsFileTypes, AcmPluginConfigBean
         this.searchTreeSort = searchTreeSort;
     }
 
-    public String getSearchTreeSearchQuery()
-    {
-        return searchTreeSearchQuery;
-    }
-
     public void setSearchTreeSearchQuery(String searchTreeSearchQuery)
     {
         this.searchTreeSearchQuery = searchTreeSearchQuery;
