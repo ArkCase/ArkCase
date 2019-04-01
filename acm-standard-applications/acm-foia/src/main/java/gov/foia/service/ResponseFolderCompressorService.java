@@ -27,6 +27,7 @@ package gov.foia.service;
  * #L%
  */
 
+import com.armedia.acm.auth.AuthenticationUtils;
 import com.armedia.acm.compressfolder.FolderCompressor;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
@@ -34,9 +35,11 @@ import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.ecm.exception.AcmFolderException;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
-import gov.foia.model.event.RequestResponseFolderCompressedEvent;
+
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
+
+import gov.foia.model.event.RequestResponseFolderCompressedEvent;
 
 /**
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Sep 19, 2016
@@ -72,7 +75,8 @@ public class ResponseFolderCompressorService implements ApplicationEventPublishe
 
     private void publishResponseFolderCompressedEvent(CaseFile source)
     {
-        RequestResponseFolderCompressedEvent event = new RequestResponseFolderCompressedEvent(source);
+        RequestResponseFolderCompressedEvent event = new RequestResponseFolderCompressedEvent(source,
+                AuthenticationUtils.getUserIpAddress());
         applicationEventPublisher.publishEvent(event);
     }
 

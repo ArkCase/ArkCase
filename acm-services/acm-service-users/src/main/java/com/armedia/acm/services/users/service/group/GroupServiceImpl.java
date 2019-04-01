@@ -347,7 +347,6 @@ public class GroupServiceImpl implements GroupService
             catch (AcmObjectNotFoundException e)
             {
                 log.warn("Group [{}] cannot be removed", group);
-                e.printStackTrace();
             }
         });
         return result;

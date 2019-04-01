@@ -51,6 +51,7 @@ public class AcmComplaintClosedListenerTest extends EasyMockSupport
     private AlfrescoRecordsService mockService;
     private AcmAuthenticationManager mockAuthenticationManager;
     private AlfrescoRmaConfig rmaConfig;
+    private String ipAddress = "ipAddress";
 
     @Before
     public void setUp()
@@ -71,7 +72,7 @@ public class AcmComplaintClosedListenerTest extends EasyMockSupport
         rmaConfig.setDeclareRecordsOnComplaintClose(false);
         expect(mockService.getRmaConfig()).andReturn(rmaConfig);
 
-        ComplaintClosedEvent event = new ComplaintClosedEvent(new Complaint(), true, "user", new Date());
+        ComplaintClosedEvent event = new ComplaintClosedEvent(new Complaint(), true, "user", new Date(), ipAddress);
 
         replayAll();
 
@@ -97,7 +98,7 @@ public class AcmComplaintClosedListenerTest extends EasyMockSupport
                 anyObject(Date.class),
                 eq(complaint.getComplaintNumber()));
 
-        ComplaintClosedEvent event = new ComplaintClosedEvent(complaint, true, "user", new Date());
+        ComplaintClosedEvent event = new ComplaintClosedEvent(complaint, true, "user", new Date(), ipAddress);
 
         replayAll();
 

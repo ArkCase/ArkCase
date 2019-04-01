@@ -27,6 +27,7 @@ package com.armedia.acm.service.objectlock.service;
  * #L%
  */
 
+import com.armedia.acm.auth.AuthenticationUtils;
 import com.armedia.acm.service.objectlock.dao.AcmObjectLockDao;
 import com.armedia.acm.service.objectlock.model.AcmObjectLock;
 import com.armedia.acm.service.objectlock.model.AcmObjectLockEvent;
@@ -109,7 +110,7 @@ public class AcmObjectLockServiceImpl implements AcmObjectLockService, Applicati
         {
             log.info("Saving lock [{}] for object [{}:{}]", objectLock.getLockType(), objectLock.getObjectType(), objectLock.getObjectId());
             AcmObjectLock lock = acmObjectLockDao.save(objectLock);
-            AcmObjectLockEvent event = new AcmObjectLockEvent(lock, userId, true);
+            AcmObjectLockEvent event = new AcmObjectLockEvent(lock, userId, true, AuthenticationUtils.getUserIpAddress());
             getApplicationEventPublisher().publishEvent(event);
 
             return lock;
@@ -167,7 +168,7 @@ public class AcmObjectLockServiceImpl implements AcmObjectLockService, Applicati
 
         acmObjectLockDao.remove(objectLock);
 
-        AcmObjectUnlockEvent event = new AcmObjectUnlockEvent(objectLock, userId, true);
+        AcmObjectUnlockEvent event = new AcmObjectUnlockEvent(objectLock, userId, true, AuthenticationUtils.getUserIpAddress());
         getApplicationEventPublisher().publishEvent(event);
     }
 
