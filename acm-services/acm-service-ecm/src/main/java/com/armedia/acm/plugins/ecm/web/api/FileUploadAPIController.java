@@ -237,7 +237,8 @@ public class FileUploadAPIController implements ApplicationEventPublisherAware
     @RequestMapping(value = "/uploadChunks", method = RequestMethod.POST, produces = { MediaType.APPLICATION_JSON_VALUE,
             MediaType.TEXT_PLAIN_VALUE })
     @ResponseBody
-    public FileChunkDetails uploadChunks(@RequestParam(value = "parentObjectType", required = false) String parentObjectType,
+    public FileChunkDetails uploadChunks(
+            @RequestParam(value = "parentObjectType", required = false) String parentObjectType,
             @RequestParam(value = "parentObjectId", required = false) Long parentObjectId,
             @RequestParam(value = "folderId", required = false) Long folderId,
             @RequestParam(value = "fileType", required = false) String fileType,

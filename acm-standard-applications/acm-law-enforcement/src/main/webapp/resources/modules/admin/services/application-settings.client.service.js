@@ -17,10 +17,7 @@ angular.module('admin').factory('Admin.ApplicationSettingsService', [ '$http', f
             IDLE_LIMIT: 'idleLimit',
             IDLE_PULL: 'idlePull',
             IDLE_CONFIRM: 'idleConfirm',
-            HISTORY_DAYS: 'historyDays',
-            UPLOAD_FILE_SIZE_LIMIT: 'uploadFileSizeLimit',
-            SINGLE_CHUNK_FILE_SIZE_LIMIT: 'singleChunkFileSizeLimit',
-            ENABLE_FILE_CHUNK: 'enableFileChunkUpload'
+            HISTORY_DAYS: 'historyDays'
         },
 
         /**
