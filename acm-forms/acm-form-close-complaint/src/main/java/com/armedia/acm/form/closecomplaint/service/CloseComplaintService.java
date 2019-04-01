@@ -30,6 +30,7 @@ package com.armedia.acm.form.closecomplaint.service;
  * #L%
  */
 
+import com.armedia.acm.auth.AuthenticationUtils;
 import com.armedia.acm.form.closecomplaint.model.CloseComplaintForm;
 import com.armedia.acm.form.closecomplaint.model.CloseComplaintFormEvent;
 import com.armedia.acm.form.closecomplaint.model.ExistingCase;
@@ -177,7 +178,8 @@ public class CloseComplaintService extends FrevvoFormAbstractService
             complaint.setStatus("IN APPROVAL");
             Complaint updatedComplaint = getComplaintDao().save(complaint);
 
-            ComplaintUpdatedEvent complaintUpdatedEvent = new ComplaintUpdatedEvent(updatedComplaint);
+            ComplaintUpdatedEvent complaintUpdatedEvent = new ComplaintUpdatedEvent(updatedComplaint,
+                    AuthenticationUtils.getUserIpAddress());
             complaintUpdatedEvent.setSucceeded(true);
             getApplicationEventPublisher().publishEvent(complaintUpdatedEvent);
         }

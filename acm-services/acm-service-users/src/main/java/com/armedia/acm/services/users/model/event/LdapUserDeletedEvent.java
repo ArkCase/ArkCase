@@ -34,11 +34,12 @@ public class LdapUserDeletedEvent extends UserPersistenceEvent
 
     private static final String EVENT_TYPE = "com.armedia.acm.ldapUser.deleted";
 
-    public LdapUserDeletedEvent(AcmUser source, String userId)
+    public LdapUserDeletedEvent(AcmUser source, String userId, String ipAddress)
     {
         super(source);
 
         setUserId(userId);
+        setIpAddress(ipAddress);
     }
 
     @Override
