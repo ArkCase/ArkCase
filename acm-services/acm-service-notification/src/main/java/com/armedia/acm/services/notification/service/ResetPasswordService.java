@@ -47,8 +47,7 @@ public class ResetPasswordService {
     {
         if (acmSpringActiveProfile.isSAMLEnabledEnvironment())
         {
-            log.info("Won't send password reset email when SSO environment");
-            return;
+            throw new UnsupportedOperationException("Won't send password reset email when SSO environment");
         }
         user.setPasswordResetToken(new PasswordResetToken());
         userDao.save(user);
