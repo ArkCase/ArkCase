@@ -43,6 +43,10 @@
     <bean id="notificationTemplateModelProvider" class="com.armedia.acm.services.notification.service.provider.NotificationTemplateModelProvider">
         <property name="notificationUtils" ref="notificationUtils"/>
     </bean>
+
+    <bean id="notificationGroupTemplateModelProvider" class="com.armedia.acm.services.notification.service.provider.NotificationGroupTemplateModelProvider">
+        <property name="dataService" ref="acmDataService"/>
+    </bean>
     
     <bean id="acmEntitySendExecutor" class="com.armedia.acm.services.notification.service.SendExecutor">
         <property name="springContextHolder" ref="acmContextHolder"/>
@@ -52,6 +56,11 @@
     <bean id="notificationSendExecutor" class="com.armedia.acm.services.notification.service.SendExecutor">
         <property name="springContextHolder" ref="acmContextHolder"/>
         <property name="templateModelProvider" ref="notificationTemplateModelProvider"/>
+    </bean>
+
+    <bean id="notificationGroupSendExecutor" class="com.armedia.acm.services.notification.service.SendExecutor">
+        <property name="springContextHolder" ref="acmContextHolder"/>
+        <property name="templateModelProvider" ref="notificationGroupTemplateModelProvider"/>
     </bean>
 
     <bean id="forgotUsernameSendExecutor" class="com.armedia.acm.services.notification.service.SendExecutor">
