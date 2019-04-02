@@ -103,6 +103,7 @@ public class AcmObjectLockServiceImpl implements AcmObjectLockService, Applicati
         objectLock.setCreated(new Date());
         objectLock.setCreator(userId);
         objectLock.setLockType(lockType);
+        objectLock.setModifier(userId);
 
         objectLock.setExpiry(new Date(objectLock.getCreated().getTime() + expiry));
 
