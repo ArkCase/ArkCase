@@ -32,13 +32,18 @@ package com.armedia.acm.compressfolder.web.api;
 
 import com.armedia.acm.compressfolder.FolderCompressor;
 import com.armedia.acm.compressfolder.model.CompressNode;
+import com.armedia.acm.core.exceptions.AcmAccessControlException;
 import com.armedia.acm.plugins.ecm.exception.AcmFolderException;
+import com.armedia.acm.services.dataaccess.service.impl.ArkPermissionEvaluator;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.tika.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -47,10 +52,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * A REST endpoint for invoking the <code>FolderCompressor</code> service.
@@ -63,6 +71,7 @@ import java.io.InputStream;
 public class FolderCompressorAPIController
 {
     private FolderCompressor folderCompressor;
+    private ArkPermissionEvaluator arkPermissionEvaluator;
     private Logger log = LoggerFactory.getLogger(getClass());
 
     @RequestMapping(value = "/{folderId}", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE,
@@ -100,6 +109,27 @@ public class FolderCompressorAPIController
         downloadCompressedFolder(filePath, fileName, response);
     }
 
+    @RequestMapping(value = "/download/files", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = "application/zip")
+    @ResponseBody
+    public ResponseEntity<?> downloadCompressedSelectedFiles(@RequestBody List<Long> fileIds,
+            Authentication auth, HttpSession session) throws Exception
+    {
+
+        for (Long fileId : fileIds)
+        {
+            if (!getArkPermissionEvaluator().hasPermission(auth, fileId, "FILE", "write|group-write|read|group-read"))
+            {
+                throw new AcmAccessControlException(Arrays.asList(""),
+                        "The user {" + auth.getName() + "} is not allowed to read a file with id=" + fileId);
+            }
+        }
+
+        folderCompressor.compressFiles(fileIds, session, auth);
+
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
     public void downloadCompressedFolder(String filePath, String fileName, HttpServletResponse response) throws IOException
     {
         if (filePath != null)
@@ -125,6 +155,16 @@ public class FolderCompressorAPIController
                 log.error("Could not close stream: {}", e.getMessage(), e);
             }
         }
+    }
+
+    public ArkPermissionEvaluator getArkPermissionEvaluator()
+    {
+        return arkPermissionEvaluator;
+    }
+
+    public void setArkPermissionEvaluator(ArkPermissionEvaluator arkPermissionEvaluator)
+    {
+        this.arkPermissionEvaluator = arkPermissionEvaluator;
     }
 
     public void setFolderCompressor(FolderCompressor folderCompressor)

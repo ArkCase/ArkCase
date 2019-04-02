@@ -234,6 +234,8 @@ public interface EcmFileService
 
     InputStream downloadAsInputStream(Long id) throws AcmUserActionFailedException;
 
+    InputStream downloadAsInputStream(EcmFile ecmFile) throws AcmUserActionFailedException;
+
     InputStream downloadAsInputStream(Long id, String version) throws AcmUserActionFailedException;
 
     AcmContainer createContainerFolder(String objectType, Long objectId, String cmisRepositoryId) throws AcmCreateObjectFailedException;
@@ -339,6 +341,8 @@ public interface EcmFileService
 
     EcmFile findById(Long fileId);
 
+    List<EcmFile> findByIds(List<Long> ids);
+
     AcmCmisObjectList listAllSubFolderChildren(String category, Authentication auth, AcmContainer container, Long folderId, int startRow,
             int maxRows, String sortBy, String sortDirection) throws AcmListObjectsFailedException, AcmObjectNotFoundException;
 
@@ -380,8 +384,9 @@ public interface EcmFileService
      * @return whether the delete was successful
      */
     boolean deleteTempFile(String uniqueFileName);
-    
-    File convertFile(String fileKey, String version, String fileExtension, String fileName, String mimeType, EcmFile ecmFile) throws IOException;
+
+    File convertFile(String fileKey, String version, String fileExtension, String fileName, String mimeType, EcmFile ecmFile)
+            throws IOException;
 
     void removeLockAndSendMessage(Long objectId, String message);
 }
