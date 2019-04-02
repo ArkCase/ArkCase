@@ -38,7 +38,7 @@ public class RequestResponseFolderCompressedEvent extends AcmEvent
 {
     private static final String EVENT_TYPE = "com.armedia.acm.casefile.response.folder.compressed";
 
-    public RequestResponseFolderCompressedEvent(Object source)
+    public RequestResponseFolderCompressedEvent(Object source, String ipAddress)
     {
         super(source);
 
@@ -53,6 +53,7 @@ public class RequestResponseFolderCompressedEvent extends AcmEvent
             setEventType(EVENT_TYPE);
             setEventDate(new Date());
             setSucceeded(true);
+            setIpAddress(ipAddress);
         }
     }
 
