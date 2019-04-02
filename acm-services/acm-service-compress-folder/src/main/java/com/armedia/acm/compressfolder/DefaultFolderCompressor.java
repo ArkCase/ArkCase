@@ -36,29 +36,39 @@ import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.data.AcmEntity;
+import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.plugins.ecm.dao.AcmFolderDao;
 import com.armedia.acm.plugins.ecm.exception.AcmFolderException;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
+import com.armedia.acm.services.email.service.AcmMailTemplateConfigurationService;
+import com.armedia.acm.services.notification.dao.NotificationDao;
+import com.armedia.acm.services.notification.model.Notification;
+import com.armedia.acm.services.users.model.AcmUser;
 
 import org.apache.commons.io.FileUtils;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.mule.api.MuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.security.core.Authentication;
+
+import javax.servlet.http.HttpSession;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.zip.Deflater;
@@ -113,6 +123,14 @@ public class DefaultFolderCompressor implements FolderCompressor
     private String compressedFileNameFormat;
 
     /**
+     * A formatting string that is used to generate the output file name. It takes 3 parameters, <code>tmpDir</code>,
+     * <code>folderId</code> and <code>folderName</code>, for example <code>
+     *      %1$sacm-%2$s.zip
+     * </code>
+     */
+    private String compressedZipNameFormat = "%1$sacm-%2$s.zip";
+
+    /**
      * Maximum size of the output file expressed in <code>sizeUnit</code>s.
      *
      * @see #sizeUnit
@@ -124,7 +142,20 @@ public class DefaultFolderCompressor implements FolderCompressor
      */
     private SizeUnit sizeUnit = DEFAULT_SIZE_UNIT;
 
+    private static final String PROCESS_USER = "FILES_COMPRESSOR";
+
+    /**
+     * Used for generating unique name
+     */
+    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormat.forPattern("yyyy_M_d_k_m_s");
+
     private AcmFolderDao acmFolderDao;
+
+    private AcmMailTemplateConfigurationService templateService;
+
+    private NotificationDao notificationDao;
+
+    private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
 
     /*
      * (non-Javadoc)
@@ -177,6 +208,92 @@ public class DefaultFolderCompressor implements FolderCompressor
         return filename;
     }
 
+    @Override
+    @Async("fileCompressThreadPoolTaskExecutor")
+    public String compressFiles(List<Long> fileIds, HttpSession session, Authentication auth)
+    {
+
+        String filename = null;
+        getAuditPropertyEntityAdapter().setUserId(PROCESS_USER);
+
+        try
+        {
+            List<String> fileFolderList = new ArrayList<>();
+
+            filename = getCompressedZipPath();
+            log.debug("ZIP creation: using [{}] as temporary file name", filename);
+            File file = new File(filename);
+
+            FileOutputStream fos = new FileOutputStream(file);
+            ZipOutputStream zos = new ZipOutputStream(fos);
+            zos.setLevel(Deflater.BEST_COMPRESSION);
+
+            List<EcmFile> filesForCompression = fileService.findByIds(fileIds);
+
+            List<InputStream> filesContent = filesForCompression.parallelStream().map(fileForCompression -> {
+                try
+                {
+                    InputStream fileByteStream = fileService.downloadAsInputStream(fileForCompression);
+
+                    return fileByteStream;
+                }
+                catch (AcmUserActionFailedException e)
+                {
+                    sendMailWithTheZipFile("error", session);
+                    log.error("Error while downloading stream for object with [{}] id.", file, e);
+                }
+                return null;
+
+            }).collect(Collectors.toList());
+
+            filesForCompression.forEach(fileForCompression -> {
+                try
+                {
+                    String objectName = getUniqueObjectName(fileFolderList, DATE_FORMATTER, fileForCompression,
+                            fileForCompression.getFileName());
+                    fileFolderList.add(objectName);
+
+                    String entryName = concatStrings(objectName +
+                            fileForCompression.getFileActiveVersionNameExtension());
+
+                    ZipEntry zipEntry = new ZipEntry(entryName);
+                    zos.putNextEntry(zipEntry);
+
+                    InputStream inputStream = filesContent.get(filesForCompression.indexOf(fileForCompression));
+                    if (inputStream != null)
+                    {
+                        copy(inputStream, zos);
+                    }
+                }
+                catch (IOException e)
+                {
+                    sendMailWithTheZipFile("error", session);
+                    log.error("ZIP creation: Error while creating zip entry for object with [{}] id.", file, e);
+                }
+            });
+
+            try
+            {
+                zos.close();
+                fos.close();
+            }
+            catch (IOException e)
+            {
+                log.warn("Could not close CMIS content stream: {}", e.getMessage(), e);
+            }
+
+            sendMailWithTheZipFile(filename, session);
+
+        }
+        catch (Exception e)
+        {
+            sendMailWithTheZipFile("error", session);
+        }
+
+
+        return filename;
+    }
+
     /**
      * Recursively traverses the folder and adds in contents to the instance of the <code>ZipOutputStream</code>
      * preserving the folder structure.
@@ -204,7 +321,6 @@ public class DefaultFolderCompressor implements FolderCompressor
         List<AcmObject> folderChildren = folderService.getFolderChildren(folder.getId()).stream().filter(obj -> obj.getObjectType() != null)
                 .collect(Collectors.toList());
         List<String> fileFolderList = new ArrayList<>();
-        DateFormat format = new SimpleDateFormat("yyyy_M_d_k_m_s", Locale.ENGLISH);
 
         // all child objects of OBJECT_FILE_TYPE
         List<AcmObject> files = folderChildren.stream().filter(c -> OBJECT_FILE_TYPE.equals(c.getObjectType().toUpperCase()))
@@ -216,7 +332,7 @@ public class DefaultFolderCompressor implements FolderCompressor
                 if (canBeCompressed(file, files, folder, compressNode))
                 {
 
-                    String objectName = getUniqueObjectName(fileFolderList, format, c, file.getFileName());
+                    String objectName = getUniqueObjectName(fileFolderList, DATE_FORMATTER, c, file.getFileName());
                     fileFolderList.add(objectName);
 
                     String entryName = concatStrings(parentPath, objectName + file.getFileActiveVersionNameExtension());
@@ -228,7 +344,8 @@ public class DefaultFolderCompressor implements FolderCompressor
             }
             catch (IOException e)
             {
-                log.warn("ZIP creation: Error while creating zip entry for object with [{}] id of [{}] type.", c.getId(), c.getObjectType(),
+                log.warn("ZIP creation: Error while creating zip entry for object with [{}] id of [{}] type.", c.getId(),
+                        c.getObjectType(),
                         e);
             }
             catch (AcmUserActionFailedException e)
@@ -245,24 +362,25 @@ public class DefaultFolderCompressor implements FolderCompressor
             {
                 AcmFolder childFolder = AcmFolder.class.cast(c);
 
-                String objectName = getUniqueObjectName(fileFolderList, format, c, childFolder.getName());
+                String objectName = getUniqueObjectName(fileFolderList, DATE_FORMATTER, c, childFolder.getName());
                 String entryName = concatStrings(parentPath, objectName, "/");
-                if(isFolderRequestedToBeCompressed(compressNode, childFolder))
+                if (isFolderRequestedToBeCompressed(compressNode, childFolder))
                 {
-                   fileFolderList.add(objectName);
-                   zos.putNextEntry(new ZipEntry(entryName));
-                   zos.closeEntry();
+                    fileFolderList.add(objectName);
+                    zos.putNextEntry(new ZipEntry(entryName));
+                    zos.closeEntry();
                 }
                 compressFolder(zos, childFolder, entryName, compressNode);
             }
             catch (IOException e)
             {
-                log.warn("ZIP creation: Error while creating zip entry for object with [{}] id of [{}] type.", c.getId(), c.getObjectType(),
+                log.error("ZIP creation: Error while creating zip entry for object with [{}] id of [{}] type.", c.getId(),
+                        c.getObjectType(),
                         e);
             }
             catch (AcmUserActionFailedException | AcmObjectNotFoundException e)
             {
-                log.warn("Error while downloading stream for object with [{}] id of [{}] type.", c.getId(), c.getObjectType(), e);
+                log.error("Error while downloading stream for object with [{}] id of [{}] type.", c.getId(), c.getObjectType(), e);
             }
         });
 
@@ -270,32 +388,33 @@ public class DefaultFolderCompressor implements FolderCompressor
 
     public boolean isFolderRequestedToBeCompressed(CompressNode compressNode, AcmFolder childFolder)
     {
-       if(Objects.nonNull(compressNode) && Objects.nonNull(childFolder))
-       {
-           return compressNode
-                   .getSelectedNodes()
-                   .stream()
-                   .anyMatch(fileFolderNode -> fileFolderNode.getObjectId().equals(childFolder.getId()) && fileFolderNode.isFolder())
-                   ||
-                   isFolderParentSelected(compressNode, childFolder)
-                   ||
-                   isRootFolderSelected(compressNode);
-       }
-       else
-       {
-           return true;
-       }
+        if (Objects.nonNull(compressNode) && Objects.nonNull(childFolder))
+        {
+            return compressNode
+                    .getSelectedNodes()
+                    .stream()
+                    .anyMatch(fileFolderNode -> fileFolderNode.getObjectId().equals(childFolder.getId()) && fileFolderNode.isFolder())
+                    ||
+                    isFolderParentSelected(compressNode, childFolder)
+                    ||
+                    isRootFolderSelected(compressNode);
+        }
+        else
+        {
+            return true;
+        }
     }
 
     private boolean isFolderParentSelected(CompressNode compressNode, AcmFolder childFolder)
     {
-        if(childFolder.getParentFolder() != null)
+        if (childFolder.getParentFolder() != null)
         {
-            if(compressNode.getSelectedNodes().stream().anyMatch(fileFolderNode -> fileFolderNode.getObjectId().equals(childFolder.getParentFolder().getId())))
+            if (compressNode.getSelectedNodes().stream()
+                    .anyMatch(fileFolderNode -> fileFolderNode.getObjectId().equals(childFolder.getParentFolder().getId())))
             {
                 return true;
             }
-           return isFolderParentSelected(compressNode, childFolder.getParentFolder());
+            return isFolderParentSelected(compressNode, childFolder.getParentFolder());
         }
         return false;
     }
@@ -305,12 +424,12 @@ public class DefaultFolderCompressor implements FolderCompressor
      * Otherwise, the zip file errors out.
      * Here we just append an underscore "_" and date the file was created
      */
-    private String getUniqueObjectName(List<String> fileFolderList, DateFormat format, AcmObject obj, String objectName)
+    private String getUniqueObjectName(List<String> fileFolderList, DateTimeFormatter formatter, AcmObject obj, String objectName)
     {
         if (fileFolderList.contains(objectName))
         {
             Date objectnameUniqueness = (obj instanceof AcmEntity) ? AcmEntity.class.cast(obj).getCreated() : new Date();
-            objectName = objectName + "_" + format.format(objectnameUniqueness);
+            objectName = objectName + "_" + DATE_FORMATTER.print(objectnameUniqueness.getTime());
         }
         return objectName;
     }
@@ -397,6 +516,32 @@ public class DefaultFolderCompressor implements FolderCompressor
         return filename;
     }
 
+    public String getCompressedZipPath()
+    {
+        String tmpDir = System.getProperty("java.io.tmpdir");
+        String pathSeparator = System.getProperty("file.separator");
+
+        String filename = String.format(compressedZipNameFormat,
+                tmpDir.endsWith(pathSeparator) ? tmpDir : concatStrings(tmpDir, pathSeparator), UUID.randomUUID());
+        return filename;
+    }
+
+    public void sendMailWithTheZipFile(String message, HttpSession session)
+    {
+        AcmUser user = (AcmUser) session.getAttribute("acm_user");
+
+        Notification notification = new Notification();
+        notification.setTemplateModelName("ArkCaseEmailZipDownloadTemplate");
+        notification.setNote(message);
+        notification.setCreator(user.getFullName());
+        notification.setModifier(user.getFullName());
+        notification.setEmailAddresses(user.getMail());
+        notification.setAttachFiles(false);
+
+        notificationDao.save(notification);
+
+    }
+
     /**
      * Utility method used for string concatenation.
      *
@@ -442,5 +587,35 @@ public class DefaultFolderCompressor implements FolderCompressor
     public void setAcmFolderDao(AcmFolderDao acmFolderDao)
     {
         this.acmFolderDao = acmFolderDao;
+    }
+
+    public AcmMailTemplateConfigurationService getTemplateService()
+    {
+        return templateService;
+    }
+
+    public void setTemplateService(AcmMailTemplateConfigurationService templateService)
+    {
+        this.templateService = templateService;
+    }
+
+    public NotificationDao getNotificationDao()
+    {
+        return notificationDao;
+    }
+
+    public void setNotificationDao(NotificationDao notificationDao)
+    {
+        this.notificationDao = notificationDao;
+    }
+
+    public AuditPropertyEntityAdapter getAuditPropertyEntityAdapter()
+    {
+        return auditPropertyEntityAdapter;
+    }
+
+    public void setAuditPropertyEntityAdapter(AuditPropertyEntityAdapter auditPropertyEntityAdapter)
+    {
+        this.auditPropertyEntityAdapter = auditPropertyEntityAdapter;
     }
 }

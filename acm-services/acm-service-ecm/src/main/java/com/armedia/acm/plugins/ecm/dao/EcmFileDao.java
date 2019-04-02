@@ -34,6 +34,7 @@ import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.FlushModeType;
@@ -308,5 +309,16 @@ public class EcmFileDao extends AcmAbstractDao<EcmFile>
         Query query = getEm().createQuery(queryText);
         query.setParameter("until", Date.from(ZonedDateTime.of(createdUntil, ZoneId.systemDefault()).toInstant()));
         return (Long) query.getSingleResult();
+    }
+
+    @Transactional(propagation = Propagation.SUPPORTS)
+    public List<EcmFile> findByIds(List<Long> fileIds)
+    {
+        TypedQuery<EcmFile> allRecords = getEm().createQuery(
+                "SELECT e FROM " + getPersistenceClass().getSimpleName() + " e WHERE e.fileId IN :ids",
+                getPersistenceClass());
+        allRecords.setParameter("ids", fileIds);
+        List<EcmFile> retval = allRecords.getResultList();
+        return retval;
     }
 }
