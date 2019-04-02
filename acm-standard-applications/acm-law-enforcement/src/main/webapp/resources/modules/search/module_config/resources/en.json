@@ -3,6 +3,8 @@
         "title": "Search",
         "search.btn": "Search",
         "export.btn": "Export",
+        "compress.btn": "Download selected files",
+        "download.ready": "Email with the attached link will be sent when download is ready",
         "search.placeholder": "Type in to search",
         "menus": {
             "leftnav.item": "Search"
