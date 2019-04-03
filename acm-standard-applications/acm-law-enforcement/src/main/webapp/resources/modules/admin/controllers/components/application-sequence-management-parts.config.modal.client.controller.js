@@ -17,6 +17,7 @@ angular.module('admin').controller('Admin.SequenceManagementPartsModalController
             gridHelper.addButton($scope.config, "edit");
             gridHelper.addButton($scope.config, "delete");
             gridHelper.addButton($scope.config, "reset", "fa fa-cog", "resetSequencePart","isResetDisabled");
+            gridHelper.addButton($scope.config, "editSequence", "fa fa-eye", "editSequenceNumber","isResetDisabled");
             gridHelper.setColumnDefs($scope.config);
             gridHelper.setBasicOptions($scope.config);
             gridHelper.disableGridScrolling($scope.config);
@@ -237,5 +238,24 @@ angular.module('admin').controller('Admin.SequenceManagementPartsModalController
                 });
                 return modalInstance.result;
             };
+
+            $scope.editSequenceNumber = function(rowEntity) {
+                var params = {};
+                params.sequenceName = $scope.sequenceName;
+                params.sequencePartName = rowEntity.sequencePartName;
+
+                var modalInstance = $modal.open({
+                    animation: true,
+                    templateUrl: 'modules/admin/views/components/application-sequence-edit-sequence-number.modal.client.view.html',
+                    controller: 'Admin.SequenceEditSequenceNumberController',
+                    size: 'lg',
+                    backdrop: 'static',
+                    resolve: {
+                        params: function() {
+                            return params;
+                        }
+                    }
+                });
+            }
 
         }]);

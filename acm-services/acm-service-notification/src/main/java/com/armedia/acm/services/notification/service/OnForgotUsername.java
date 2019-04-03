@@ -28,21 +28,23 @@ package com.armedia.acm.services.notification.service;
  */
 
 import com.armedia.acm.auth.web.ForgotUsernameEvent;
+import com.armedia.acm.core.AcmSpringActiveProfile;
 import com.armedia.acm.services.notification.dao.NotificationDao;
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;
 
-import java.util.AbstractMap;
-import java.util.ArrayList;
-import java.util.List;
 
 
 public class OnForgotUsername implements ApplicationListener<ForgotUsernameEvent>
 {
     private NotificationDao notificationDao;
     private UserDao userDao;
+    private final Logger log = LoggerFactory.getLogger(getClass());
+    private AcmSpringActiveProfile acmSpringActiveProfile;
 
     @Override
     public void onApplicationEvent(ForgotUsernameEvent forgotUsernameEvent)
@@ -51,8 +53,10 @@ public class OnForgotUsername implements ApplicationListener<ForgotUsernameEvent
         {
             AcmUser user = userDao.findByUserId(forgotUsernameEvent.getUserId());
 
-            AbstractMap.SimpleImmutableEntry<String, List<String>> usernames = (AbstractMap.SimpleImmutableEntry) forgotUsernameEvent.getSource();
-            
+            if (acmSpringActiveProfile.isSAMLEnabledEnvironment())
+            {
+                throw new UnsupportedOperationException("Won't send forgot username email when SSO environment");
+            }
             Notification notification = new Notification();
             notification.setCreator(user.getUserId());
             notification.setModifier(user.getUserId());
@@ -82,5 +86,10 @@ public class OnForgotUsername implements ApplicationListener<ForgotUsernameEvent
 
     public void setUserDao(UserDao userDao) {
         this.userDao = userDao;
+    }
+
+    public void setAcmSpringActiveProfile(AcmSpringActiveProfile acmSpringActiveProfile) 
+    {
+        this.acmSpringActiveProfile = acmSpringActiveProfile;
     }
 }

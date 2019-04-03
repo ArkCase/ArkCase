@@ -609,6 +609,16 @@
                 "monthly": "Monthly",
                 "yearly": "Yearly"
             },
+            "sequenceName": {
+                "caseNumberSequence": "Case Number Sequence",
+                "complaintNumberSequence": "Complaint Number Sequence"
+            },
+            "sequenceObjectProperty": {
+                "id": "id",
+                "caseType": "case type",
+                "status": "status",
+                "priority": "priority"
+            },
             "objectTitleTypes": {
                 "caseFile": "Case File",
                 "complaint": "Complaint"

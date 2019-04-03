@@ -27,11 +27,12 @@ package com.armedia.acm.services.transcribe.service;
  * #L%
  */
 
+import com.armedia.acm.services.mediaengine.service.MediaEngineConfigurationPropertiesService;
 import com.armedia.acm.services.transcribe.model.TranscribeConfiguration;
 
 /**
  * Created by Riste Tutureski <riste.tutureski@armedia.com> on 03/14/2018
  */
-public class TranscribeConfigurationPropertiesService extends ConfigurationPropertiesService<TranscribeConfiguration>
+public class TranscribeConfigurationPropertiesService extends MediaEngineConfigurationPropertiesService<TranscribeConfiguration>
 {
 }
