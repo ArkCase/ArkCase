@@ -1,5 +1,5 @@
-<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="
             http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
     <changeSet id="1-create-transcribe-table" author="riste.tutureski">
@@ -67,7 +67,7 @@
             </column>
             <column name="cm_transcribe_id" type="${idType}">
                 <constraints nullable="false" foreignKeyName="fk_transcribe_id" referencedTableName="acm_transcribe"
-                    referencedColumnNames="cm_transcribe_id"/>
+                             referencedColumnNames="cm_transcribe_id"/>
             </column>
             <column name="cm_transcribe_item_start_time" type="VARCHAR(32)">
                 <constraints nullable="false"/>
@@ -119,6 +119,11 @@
                 <constraints nullable="true"/>
             </column>
         </addColumn>
+    </changeSet>
+
+    <changeSet id="6-rename-columnd-in-transcribe-table" author="vladimir.cherepnalkovski">
+        <renameColumn tableName="acm_transcribe" oldColumnName="cm_transcribe_media_file_version_id"
+                      newColumnName="cm_media_file_version_id" columnDataType="${idType}"/>
     </changeSet>
 
 </databaseChangeLog>

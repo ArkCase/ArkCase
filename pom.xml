@@ -124,6 +124,8 @@
         <snakeyaml.version>1.11</snakeyaml.version>
         <commons-configuration.version>1.10</commons-configuration.version>
         <cdi-api.version>1.0</cdi-api.version>
+        <mockito.core.version>2.20.0</mockito.core.version>
+        <powermock.version2>2.0.0</powermock.version2>
     </properties>
     <organization>
         <name>ArkCase LLC</name>

@@ -32,6 +32,7 @@
                 <ref bean="solrReindexAssignedObjectsExecutor"/>
                 <ref bean="groupAscendantsStringUpdateExecutor"/>
                 <ref bean="ocrSystemUserUpdateExecutor"/>
+                <ref bean="transcribeSystemUserUpdateExecutor"/>
             </list>
         </property>
         <property name="dataUpdateService" ref="dataUpdateService"/>
@@ -99,6 +100,10 @@
     </bean>
 
     <bean id="ocrSystemUserUpdateExecutor" class="com.armedia.acm.services.dataupdate.service.OCRSystemUserUpdateExecutor">
+        <property name="userDao" ref="userJpaDao"/>
+    </bean>
+
+    <bean id="transcribeSystemUserUpdateExecutor" class="com.armedia.acm.services.dataupdate.service.TranscribeSystemUserUpdateExecutor">
         <property name="userDao" ref="userJpaDao"/>
     </bean>
 </beans>
