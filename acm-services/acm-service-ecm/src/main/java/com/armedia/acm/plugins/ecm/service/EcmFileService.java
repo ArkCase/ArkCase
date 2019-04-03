@@ -6,22 +6,22 @@ package com.armedia.acm.plugins.ecm.service;
  * %%
  * Copyright (C) 2014 - 2018 ArkCase LLC
  * %%
- * This file is part of the ArkCase software. 
- * 
- * If the software was purchased under a paid ArkCase license, the terms of 
- * the paid license agreement will prevail.  Otherwise, the software is 
+ * This file is part of the ArkCase software.
+ *
+ * If the software was purchased under a paid ArkCase license, the terms of
+ * the paid license agreement will prevail.  Otherwise, the software is
  * provided under the following open source license terms:
- * 
+ *
  * ArkCase is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *  
+ *
  * ArkCase is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
  * #L%
@@ -45,6 +45,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.persistence.PersistenceException;
 import javax.servlet.http.HttpSession;
@@ -207,11 +208,11 @@ public interface EcmFileService
 
     /**
      * Returns the file with the given Id and acquires a WRITE lock.
-     * 
+     *
      * @param id
      *            the file id
      * @return the file contents as String
-     * 
+     *
      * @throws AcmUserActionFailedException
      */
     String checkout(Long id) throws AcmUserActionFailedException;
@@ -385,8 +386,9 @@ public interface EcmFileService
      */
     boolean deleteTempFile(String uniqueFileName);
 
-    File convertFile(String fileKey, String version, String fileExtension, String fileName, String mimeType, EcmFile ecmFile)
-            throws IOException;
+    File convertFile(String fileKey, String version, String fileExtension, String fileName, String mimeType, EcmFile ecmFile) throws IOException;
 
     void removeLockAndSendMessage(Long objectId, String message);
+
+    String uploadFileChunk(MultipartHttpServletRequest request, String fileName, String uniqueArkCaseHashFileIdentifier);
 }

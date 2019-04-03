@@ -366,4 +366,5 @@ public class EcmFileConfig implements InitializingBean
     {
         this.snowboundEnableOcr = snowboundEnableOcr;
     }
+
 }

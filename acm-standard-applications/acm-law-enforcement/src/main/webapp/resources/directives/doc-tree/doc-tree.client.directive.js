@@ -105,13 +105,15 @@ angular
             'Helper.LocaleService',
             'LookupService',
             'MessageService',
+            'ObjectService',
             '$timeout',
             function($q, $translate, $modal, $filter, $log, $injector, Store, Util, UtilDateService, ConfigService,
-                     PluginService, UserInfoService, Ecm, EmailSenderConfigurationService, LocaleHelper, LookupService, MessageService, $timeout) {
+                     PluginService, UserInfoService, Ecm, EmailSenderConfigurationService, LocaleHelper, LookupService, MessageService, ObjectService, $timeout) {
                 var cacheTree = new Store.CacheFifo();
                 var cacheFolderList = new Store.CacheFifo();
 
                 var DocTree = {
+                    reloading: false,
                     CLIPBOARD : null
 
                     ,
@@ -556,88 +558,92 @@ angular
                      */
                     ,
                     refreshTree : function(nodeToExpand) {
-                        var objType = DocTree.getObjType();
-                        var objId = DocTree.getObjId();
-                        if (!Util.isEmpty(objType) && !Util.isEmpty(objId)) {
-                            //remove tree cache for current obj
-                            DocTree.cacheTree.remove(objType + "." + objId);
-                            //remove individual folder cache for current obj
-                            var keys = DocTree.cacheFolderList.keys();
-                            _.each(keys, function(key) {
-                                // cache key has following format :
-                                // ojType.objId.folderId. (...)
-                                if (!Util.isEmpty(key)) {
-                                    var tokens = key.split(".");
-                                    if (1 < tokens.length) {
-                                        var keyObjId = tokens[1];
-                                        if (Util.compare(objId, keyObjId)) {
-                                            DocTree.cacheFolderList.remove(key);
+                        if (!DocTree.reloading) {
+                            var objType = DocTree.getObjType();
+                            var objId = DocTree.getObjId();
+                            if (!Util.isEmpty(objType) && !Util.isEmpty(objId)) {
+                                //remove tree cache for current obj
+                                DocTree.cacheTree.remove(objType + "." + objId);
+                                //remove individual folder cache for current obj
+                                var keys = DocTree.cacheFolderList.keys();
+                                _.each(keys, function (key) {
+                                    // cache key has following format :
+                                    // ojType.objId.folderId. (...)
+                                    if (!Util.isEmpty(key)) {
+                                        var tokens = key.split(".");
+                                        if (1 < tokens.length) {
+                                            var keyObjId = tokens[1];
+                                            if (Util.compare(objId, keyObjId)) {
+                                                DocTree.cacheFolderList.remove(key);
+                                            }
                                         }
                                     }
-                                }
-                            });
-                            //var cacheFolderList = DocTree.cacheFolderList.cache;
-                            //if (!Util.isEmpty(cacheFolderList)) {
-                            //    for (var cacheKey in cacheFolderList) {
-                            //        if (cacheFolderList.hasOwnProperty(cacheKey)) {
-                            //            var cacheKeySplit = cacheKey.split(".");
-                            //            if (Util.isArray(cacheKeySplit)) {
-                            //                // cache keys have following format :
-                            //                // CASE_FILE.1258.0.0.name.ASC.16
-                            //                // ojType.objId.folderId.pageId.soryBy.sortDirection.maxSize
-                            //                var cacheKeyObjId = cacheKeySplit[1];
-                            //                if (!Util.isEmpty(cacheKeyObjId)) {
-                            //                    if (Util.goodValue(cacheKeyObjId) == Util.goodValue(objId)) {
-                            //                        DocTree.cacheFolderList.remove(cacheKey);
-                            //                    }
-                            //                }
-                            //            }
-                            //        }
-                            //    }
-                            //}
-                        }
+                                });
+                                //var cacheFolderList = DocTree.cacheFolderList.cache;
+                                //if (!Util.isEmpty(cacheFolderList)) {
+                                //    for (var cacheKey in cacheFolderList) {
+                                //        if (cacheFolderList.hasOwnProperty(cacheKey)) {
+                                //            var cacheKeySplit = cacheKey.split(".");
+                                //            if (Util.isArray(cacheKeySplit)) {
+                                //                // cache keys have following format :
+                                //                // CASE_FILE.1258.0.0.name.ASC.16
+                                //                // ojType.objId.folderId.pageId.soryBy.sortDirection.maxSize
+                                //                var cacheKeyObjId = cacheKeySplit[1];
+                                //                if (!Util.isEmpty(cacheKeyObjId)) {
+                                //                    if (Util.goodValue(cacheKeyObjId) == Util.goodValue(objId)) {
+                                //                        DocTree.cacheFolderList.remove(cacheKey);
+                                //                    }
+                                //                }
+                                //            }
+                                //        }
+                                //    }
+                                //}
+                            }
 
-                        var setting = DocTree.Config.getSetting();
-                        if (setting.search.enabled) {
-                            DocTree.tree.reload(DocTree.Source.source()).then(function() {
-                                DocTree.expandTopNode().then(function() {
-                                    var rootNode = DocTree.getTopNode();
-                                    DocTree.expandAfterRefresh(rootNode.children, []);
+                            var setting = DocTree.Config.getSetting();
+                            if (setting.search.enabled) {
+                                DocTree.tree.reload(DocTree.Source.source()).then(function () {
+                                    DocTree.expandTopNode().then(function () {
+                                        var rootNode = DocTree.getTopNode();
+                                        DocTree.expandAfterRefresh(rootNode.children, []);
+                                        DocTree.reloading = false;
+                                    });
                                 });
-                            });
-                        } else if (nodeToExpand) {
-                            DocTree.tree.reload(DocTree.Source.source()).then(
-                                function() {
-                                    DocTree.expandTopNode().then(
-                                        function() {
-                                            var rootNode = DocTree.getTopNode();
-                                            var theChild;
-                                            _.forEach(rootNode.children, function(child) {
-                                                if (child.data.objectId == nodeToExpand.data.objectId
-                                                    && child.data.objectType == nodeToExpand.data.objectType) {
-                                                    theChild = child;
-                                                }
-                                            });
-                                            if (theChild) {
-                                                theChild.load(true).done(function() {
-                                                    theChild.setExpanded();
+                            } else if (nodeToExpand) {
+                                DocTree.tree.reload(DocTree.Source.source()).then(
+                                    function () {
+                                        DocTree.expandTopNode().then(
+                                            function () {
+                                                var rootNode = DocTree.getTopNode();
+                                                var theChild;
+                                                _.forEach(rootNode.children, function (child) {
+                                                    if (child.data.objectId == nodeToExpand.data.objectId
+                                                        && child.data.objectType == nodeToExpand.data.objectType) {
+                                                        theChild = child;
+                                                    }
                                                 });
-                                            }
-                                            DocTree.expandAfterRefresh(rootNode.children, []);
-                                        });
-                                });
-                        } else {
-                            var nodesStatusBeforeRefresh = [];// Array in which the tree structure will be replicated before the reload is started
-                            var rootNode = DocTree.getTopNode();// We want the iteration to start from the root node of the tree
-                            DocTree.saveNodesStatus(rootNode, nodesStatusBeforeRefresh);
-                            DocTree.tree.reload(DocTree.Source.source()).then(function() {
-                                if (rootNode.expanded) {
-                                    DocTree.expandTopNode().then(function() {
+                                                if (theChild) {
+                                                    theChild.load(true).done(function () {
+                                                        theChild.setExpanded();
+                                                    });
+                                                }
+                                                DocTree.expandAfterRefresh(rootNode.children, []);
+                                                DocTree.reloading = false;
+                                            });
+                                    });
+                            } else {
+                                DocTree.reloading = true;
+                                var nodesStatusBeforeRefresh = [];// Array in which the tree structure will be replicated before the reload is started
+                                var rootNode = DocTree.getTopNode();// We want the iteration to start from the root node of the tree
+                                DocTree.saveNodesStatus(rootNode, nodesStatusBeforeRefresh);
+                                DocTree.tree.reload(DocTree.Source.source()).then(function () {
+                                    DocTree.expandTopNode().then(function () {
                                         var rootNode = DocTree.getTopNode();
                                         DocTree.expandAfterRefresh(rootNode.children, nodesStatusBeforeRefresh);
+                                        DocTree.reloading = false;
                                     });
-                                }
-                            });
+                                });
+                            }
                         }
                     }
                     /**
@@ -1359,6 +1365,22 @@ angular
                         }
 
                         ,
+                        executeSubmitChunksOfFile: function (nodes, args) {
+                            if (!DocTree.uploadSetting) {
+                                $log.warn("Warning: No files are selected");
+                                return;
+                            }
+
+                            var files = args.files;
+                            var fileLang = args.fileLang;
+                            var heavyPromiseUploadChunksFile = DocTree.doSubmitFormUploadChunksOfFile(files, fileLang);
+                            $q.when(heavyPromiseUploadChunksFile).then(function (data) {
+                                args.data = data;
+                                DocTree.uploadSetting = null;
+                            });
+                            return heavyPromiseUploadChunksFile;
+                        }
+                        ,
                         getCoreHandlers : function() {
                             return [
                                 {
@@ -1659,7 +1681,7 @@ angular
                                 }, {
                                     name : "selectFiles/",
                                     execute : function(nodes, args) {
-                                        if (DocTree.uploadSetting) {
+                                        if (!Util.isEmpty(DocTree.uploadSetting) && !DocTree.uploadSetting.uploadFileNew) {
                                             $log.warn("Warning: Trying to upload file before previous upload");
                                         }
                                         var node = nodes[0];
@@ -1989,7 +2011,7 @@ angular
                                     newFolderMenu.disabledExpression = disabled || DocTree.readOnly;
                                     newFileMenu.disabledExpression = disabled || DocTree.readOnly;
                                 }
-                                
+
                                 // disable commands based on locks
                                 var currentNode = nodes[0];
                                 var lock = currentNode.data.lock;
@@ -1997,7 +2019,7 @@ angular
                                     var disableCommands = DocTree.treeConfig.disabledFileCommandsOnLock[lock.lockType];
                                     _.each(disableCommands, function(dc) {
                                         var cmdMenu = _.find(menu, {
-                                           cmd: dc
+                                            cmd: dc
                                         });
                                         if (cmdMenu){
                                             cmdMenu.disabledExpression = true;
@@ -2046,7 +2068,7 @@ angular
                                         item.disabled = true;
                                     } else {
                                         if (item.disabledExpression) {
-                                                item.disabled = eval(item.disabledExpression);
+                                            item.disabled = eval(item.disabledExpression);
                                         } else {
                                             item.disabled = false;
                                         }
@@ -2416,6 +2438,8 @@ angular
                             }
                             return dfd.promise();
                         },
+
+                        //THIS IS THE OLD FUNCTION THAT UPLOAD FILES
                         uploadFiles : function(formData, folderNode, names, fileType, fileLang) {
                             var dfd = $.Deferred();
                             if (!DocTree.isFolderNode(folderNode)) {
@@ -3047,7 +3071,7 @@ angular
                         },
                         deleteFile : function(node) {
                             var dfd = $.Deferred();
-                                if (!DocTree.isFileNode(node) || node.data.lock !== "") {
+                            if (!DocTree.isFileNode(node) || node.data.lock !== "") {
                                 dfd.reject();
 
                             } else {
@@ -3677,16 +3701,36 @@ angular
                             }
                         }
 
+                        function getParentObjectNumber() {
+                            var parentObjectNumber = "";
+                            if (DocTree._objType === ObjectService.ObjectTypes.CASE_FILE) {
+                                parentObjectNumber = DocTree.objectInfo.caseNumber;
+                            }
+                            else if (DocTree._objType === ObjectService.ObjectTypes.COMPLAINT) {
+                                parentObjectNumber = DocTree.objectInfo.complaintNumber;
+                            }
+                            else if (DocTree._objType === ObjectService.ObjectTypes.COSTSHEET) {
+                                parentObjectNumber = DocTree.objectInfo.costsheetNumber;
+                            }
+                            return parentObjectNumber;
+                        }
+
                         var cacheKey = DocTree.getCacheKeyByNode(folderNode);
                         if (DocTree.uploadSetting.uploadFileNew) {
-                            DocTree.Op.uploadFiles(fd, folderNode, names, fileType, fileLang).then(function(data) {
-                                _.each(data.nodes, function(node) {
-                                    DocTree.markNodeOk(node)
-                                });
-                                dfd.resolve(data);
-                            }, function(error) {
-                                dfd.reject(error);
-                            });
+
+                            var parentObjectNumber = getParentObjectNumber();
+
+                            var fileDetails = {
+                                files: files,
+                                fileType: fileType,
+                                folderId: folderNode.data.objectId,
+                                originObjectType: folderNode.data.containerObjectType,
+                                originObjectId: folderNode.data.containerObjectId,
+                                parentObjectNumber: parentObjectNumber,
+                                lang: fileLang
+                            };
+
+                            DocTree.scope.$bus.publish('upload-chunk-file', fileDetails);
                         } else {
                             var replaceNode = DocTree.uploadSetting.replaceFileNode;
                             DocTree.Op.replaceFile(fd, replaceNode, names[0]).then(function(data) {
@@ -4899,6 +4943,13 @@ angular
 
                         DocTree.scope.$bus.subscribe('onSearchDocTree', function(data) {
                             DocTree.onSearch(data.searchFilter);
+                        });
+
+                        DocTree.scope.$bus.subscribe('object.changed/' + DocTree.getObjType() + '/' + DocTree.getObjId(), function(message){
+                            if (DocTree.getObjType() === message.parentObjectType && DocTree.getObjId() === message.parentObjectId && message.action === "INSERT" && message.objectType === "FILE")
+                            {
+                                DocTree.refreshTree();
+                            }
                         });
 
                         new LocaleHelper.Locale({

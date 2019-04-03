@@ -54,10 +54,28 @@ public class AcmMultipartFile implements MultipartFile
     private byte[] bytes;
     private InputStream inputStream;
     private String type;
+    private MultipartFile multipartFile;
 
     public AcmMultipartFile()
     {
 
+    }
+
+    public AcmMultipartFile(MultipartFile multipartFile, boolean uniqueFileName)
+    {
+        this.multipartFile = multipartFile;
+
+        if (uniqueFileName)
+        {
+            FolderAndFilesUtils folderAndFilesUtils = new FolderAndFilesUtils();
+            this.name = folderAndFilesUtils.createUniqueIdentificator(this.multipartFile.getName());
+            this.originalFilename = folderAndFilesUtils.createUniqueIdentificator(this.multipartFile.getOriginalFilename());
+        }
+        else
+        {
+            this.name = this.multipartFile.getName();
+            this.originalFilename = this.multipartFile.getOriginalFilename();
+        }
     }
 
     public AcmMultipartFile(String name, String originalFileName, String contentType, boolean empty, long size, byte[] bytes,
@@ -98,6 +116,12 @@ public class AcmMultipartFile implements MultipartFile
     @Override
     public String getName()
     {
+        //AFDP-6153, causes an issue when user tries to write file(AcmMultipartFile) to alfresco, it writes with the file original name, not the file name from the instance
+        /*if (this.multipartFile != null)
+        {
+            return this.multipartFile.getName();
+        }*/
+
         return name;
     }
 
@@ -109,6 +133,12 @@ public class AcmMultipartFile implements MultipartFile
     @Override
     public String getOriginalFilename()
     {
+        //AFDP-6153, causes an issue when user tries to write file(AcmMultipartFile) to alfresco, it writes with the file original name, not the file name from the instance
+        /*if (this.multipartFile != null)
+        {
+            return this.multipartFile.getOriginalFilename();
+        }*/
+
         return originalFilename;
     }
 
@@ -120,6 +150,11 @@ public class AcmMultipartFile implements MultipartFile
     @Override
     public String getContentType()
     {
+        if (this.multipartFile != null)
+        {
+            return this.multipartFile.getContentType();
+        }
+
         return contentType;
     }
 
@@ -131,6 +166,11 @@ public class AcmMultipartFile implements MultipartFile
     @Override
     public boolean isEmpty()
     {
+        if (this.multipartFile != null)
+        {
+            return this.multipartFile.isEmpty();
+        }
+
         return empty;
     }
 
@@ -142,6 +182,11 @@ public class AcmMultipartFile implements MultipartFile
     @Override
     public long getSize()
     {
+        if (this.multipartFile != null)
+        {
+            return this.multipartFile.getSize();
+        }
+
         return size;
     }
 
@@ -153,6 +198,11 @@ public class AcmMultipartFile implements MultipartFile
     @Override
     public byte[] getBytes() throws IOException
     {
+        if (this.multipartFile != null)
+        {
+            return this.multipartFile.getBytes();
+        }
+
         return bytes;
     }
 
@@ -164,6 +214,11 @@ public class AcmMultipartFile implements MultipartFile
     @Override
     public InputStream getInputStream() throws IOException
     {
+        if (this.multipartFile != null)
+        {
+            return this.multipartFile.getInputStream();
+        }
+
         return inputStream;
     }
 
@@ -175,7 +230,14 @@ public class AcmMultipartFile implements MultipartFile
     @Override
     public void transferTo(File dest) throws IOException, IllegalStateException
     {
-        FileCopyUtils.copy(bytes, dest);
+        if (this.multipartFile != null)
+        {
+            FileCopyUtils.copy(this.multipartFile.getBytes(), dest);
+        }
+        else
+        {
+            FileCopyUtils.copy(bytes, dest);
+        }
     }
 
     public String getType()
