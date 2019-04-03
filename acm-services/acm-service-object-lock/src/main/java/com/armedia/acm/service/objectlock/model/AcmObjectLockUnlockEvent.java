@@ -36,7 +36,7 @@ import java.util.Date;
  */
 public class AcmObjectLockUnlockEvent extends AcmEvent
 {
-    public AcmObjectLockUnlockEvent(AcmObjectLock source, String userId, Boolean success)
+    public AcmObjectLockUnlockEvent(AcmObjectLock source, String userId, Boolean success, String ipAddress)
     {
         super(source);
         setObjectId(source.getId());
@@ -46,5 +46,6 @@ public class AcmObjectLockUnlockEvent extends AcmEvent
         setEventDate(new Date());
         setUserId(userId);
         setSucceeded(success);
+        setIpAddress(ipAddress);
     }
 }

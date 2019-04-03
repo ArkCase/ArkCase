@@ -212,6 +212,7 @@ public interface EcmFileService
      * @param id
      *            the file id
      * @return the file contents as String
+     *
      * @throws AcmUserActionFailedException
      */
     String checkout(Long id) throws AcmUserActionFailedException;
@@ -233,6 +234,8 @@ public interface EcmFileService
      */
 
     InputStream downloadAsInputStream(Long id) throws AcmUserActionFailedException;
+
+    InputStream downloadAsInputStream(EcmFile ecmFile) throws AcmUserActionFailedException;
 
     InputStream downloadAsInputStream(Long id, String version) throws AcmUserActionFailedException;
 
@@ -338,6 +341,8 @@ public interface EcmFileService
     EcmFile renameFileInArkcase(EcmFile file, String newFileName);
 
     EcmFile findById(Long fileId);
+
+    List<EcmFile> findByIds(List<Long> ids);
 
     AcmCmisObjectList listAllSubFolderChildren(String category, Authentication auth, AcmContainer container, Long folderId, int startRow,
             int maxRows, String sortBy, String sortDirection) throws AcmListObjectsFailedException, AcmObjectNotFoundException;

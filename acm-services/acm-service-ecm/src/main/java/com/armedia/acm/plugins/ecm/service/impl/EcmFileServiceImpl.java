@@ -462,6 +462,24 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     }
 
     @Override
+    @AcmAcquireAndReleaseObjectLock(acmObjectArgIndex = 0, objectType = "FILE", lockType = "READ")
+    public InputStream downloadAsInputStream(EcmFile ecmFile) throws AcmUserActionFailedException
+    {
+        try
+        {
+            InputStream content = getEcmFileTransaction().downloadFileTransactionAsInputStream(ecmFile);
+
+            return content;
+        }
+        catch (MuleException e)
+        {
+            log.error("Content could not be retrieved from {}. Cause: {} ", ecmFile.getCmisRepositoryId(), e.getMessage(), e);
+            throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_DOWNLOAD_FILE_AS_INPUTSTREAM,
+                    EcmFileConstants.OBJECT_FILE_TYPE, ecmFile.getId(), "Download as InputStream failed", e);
+        }
+    }
+
+    @Override
     public String createFolder(String folderPath) throws AcmCreateObjectFailedException
     {
         return createFolder(folderPath, ecmFileConfig.getDefaultCmisId());
@@ -1736,6 +1754,12 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     public EcmFile findById(Long fileId)
     {
         return getEcmFileDao().find(fileId);
+    }
+
+    @Override
+    public List<EcmFile> findByIds(List<Long> fileIds)
+    {
+        return getEcmFileDao().findByIds(fileIds);
     }
 
     @Override

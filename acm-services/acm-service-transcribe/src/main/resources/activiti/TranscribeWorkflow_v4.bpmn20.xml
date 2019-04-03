@@ -1,11 +1,12 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:activiti="http://activiti.org/bpmn"
-    xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC"
-    xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema"
-    expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.activiti.org/processdef"
-    xmlns:modeler="http://activiti.com/modeler" modeler:version="1.0ev" modeler:exportDateTime="20180430171854" modeler:modelId="1043074"
-    modeler:modelVersion="1" modeler:modelLastUpdated="1525105110298">
+<definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:activiti="http://activiti.org/bpmn"
+             xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+             xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI"
+             xmlns:modeler="http://activiti.com/modeler" xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
+             typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath"
+             targetNamespace="http://www.activiti.org/processdef" modeler:version="1.0ev" modeler:exportDateTime="20180430171854"
+             modeler:modelId="1043074"
+             modeler:modelVersion="1" modeler:modelLastUpdated="1525105110298">
     <process id="TranscribeWorkflow" name="TranscribeWorkflow" isExecutable="true">
         <startEvent id="start" name="Start">
             <extensionElements>
@@ -13,7 +14,7 @@
             </extensionElements>
         </startEvent>
         <serviceTask id="setStatus" name="Set Status to ${STATUS} for all IDS"
-            activiti:expression="#{arkCaseTranscribeService.changeStatusMultiple(IDS, STATUS)}">
+                     activiti:expression="#{arkCaseTranscribeService.changeStatusMultiple(IDS, STATUS)}">
             <extensionElements>
                 <modeler:editor-resource-id><![CDATA[sid-9E41A01A-8B39-4972-B222-733B1A44522E]]></modeler:editor-resource-id>
             </extensionElements>
@@ -29,14 +30,14 @@
             </extensionElements>
         </parallelGateway>
         <serviceTask id="notifyOwnerOfTheMedia"
-            name="Notify owner of the Media file and owner of the parent object for ${ACTION} for all IDS"
-            activiti:expression="#{arkCaseTranscribeService.notifyMultiple(IDS, ACTION)}">
+                     name="Notify owner of the Media file and owner of the parent object for ${ACTION} for all IDS"
+                     activiti:expression="#{arkCaseTranscribeService.notifyMultiple(IDS, ACTION)}">
             <extensionElements>
                 <modeler:editor-resource-id><![CDATA[sid-75FA9C84-3070-48C3-84C2-3FAF9B779393]]></modeler:editor-resource-id>
             </extensionElements>
         </serviceTask>
         <serviceTask id="auditEvent" name="Audit Event for ${ACTION} for all IDS"
-            activiti:expression="#{arkCaseTranscribeService.auditMultiple(IDS, ACTION)}">
+                     activiti:expression="#{arkCaseTranscribeService.auditMultiple(IDS, ACTION)}">
             <extensionElements>
                 <modeler:editor-resource-id><![CDATA[sid-A9799FE5-478C-48E9-A58F-EACC84B1A9F3]]></modeler:editor-resource-id>
             </extensionElements>
@@ -58,8 +59,8 @@
             </extensionElements>
         </exclusiveGateway>
         <serviceTask id="checkProcessing"
-            name="Check if there are less Transcribe objects with status 'PROCESSING' (distinct by process ID) than configured limit in Admin"
-            activiti:expression="${execution.getId()}">
+                     name="Check if there are less Transcribe objects with status 'PROCESSING' (distinct by process ID) than configured limit in Admin"
+                     activiti:expression="${execution.getId()}">
             <extensionElements>
                 <activiti:executionListener event="start" delegateExpression="#{transcribeProcessDelegate}"/>
                 <modeler:editor-resource-id><![CDATA[sid-7AA5CB10-6776-45A9-9C39-15C4EA0D7ECF]]></modeler:editor-resource-id>
@@ -149,19 +150,19 @@
             <conditionExpression xsi:type="tFormalExpression"><![CDATA[${ACTION == 'PROCESSING'}]]></conditionExpression>
         </sequenceFlow>
         <sequenceFlow id="auditEventToParallelOrExclusiveGatewayDecision" sourceRef="auditEvent"
-            targetRef="parallelOrExclusiveGatewayDecision">
+                      targetRef="parallelOrExclusiveGatewayDecision">
             <extensionElements>
                 <modeler:editor-resource-id><![CDATA[sid-1544D200-32CC-40E0-981D-A3E2668E9523]]></modeler:editor-resource-id>
             </extensionElements>
         </sequenceFlow>
         <sequenceFlow id="parallelActionsToEndOrCheckProcessingDecision" sourceRef="parallelActionsEnd"
-            targetRef="endOrCheckProcessingDecision">
+                      targetRef="endOrCheckProcessingDecision">
             <extensionElements>
                 <modeler:editor-resource-id><![CDATA[sid-ADA1197D-598D-423F-980A-290948571B89]]></modeler:editor-resource-id>
             </extensionElements>
         </sequenceFlow>
         <sequenceFlow id="endOrCheckProcessingDecisionToCheckProcessing" sourceRef="endOrCheckProcessingDecision"
-            targetRef="checkProcessing">
+                      targetRef="checkProcessing">
             <extensionElements>
                 <modeler:editor-resource-id><![CDATA[sid-5B8FF7CC-73D5-4B2F-BC59-CB72AF607B72]]></modeler:editor-resource-id>
             </extensionElements>
@@ -179,7 +180,7 @@
             <conditionExpression xsi:type="tFormalExpression"><![CDATA[${ACTION == 'QUEUED'}]]></conditionExpression>
         </sequenceFlow>
         <sequenceFlow id="endOrCheckProcessingDecisionToAutomaticOrManualDecision" sourceRef="endOrCheckProcessingDecision"
-            targetRef="automaticOrManualDecision">
+                      targetRef="automaticOrManualDecision">
             <extensionElements>
                 <modeler:editor-resource-id><![CDATA[sid-51115228-F4CA-4CB2-8591-61A383F3DD62]]></modeler:editor-resource-id>
             </extensionElements>
@@ -192,7 +193,7 @@
             <conditionExpression xsi:type="tFormalExpression"><![CDATA[${ACTION == 'PROCESSING'}]]></conditionExpression>
         </sequenceFlow>
         <sequenceFlow id="auditEventToExclusiveGateway" sourceRef="parallelOrExclusiveGatewayDecision"
-            targetRef="endOrCheckProcessingDecision">
+                      targetRef="endOrCheckProcessingDecision">
             <extensionElements>
                 <modeler:editor-resource-id><![CDATA[sid-D13A294C-8540-415B-8AC0-5854EDD357A7]]></modeler:editor-resource-id>
             </extensionElements>
@@ -253,7 +254,7 @@
             <conditionExpression xsi:type="tFormalExpression"><![CDATA[${TYPE == 'AUTOMATIC'}]]></conditionExpression>
         </sequenceFlow>
         <sequenceFlow id="automaticOrManualDecisionToWaitToComplete" sourceRef="automaticOrManualDecision"
-            targetRef="waitToCompleteForManual">
+                      targetRef="waitToCompleteForManual">
             <extensionElements>
                 <modeler:editor-resource-id><![CDATA[sid-092ED66B-F8EA-49A3-A431-C4F64CE771D4]]></modeler:editor-resource-id>
             </extensionElements>
@@ -387,7 +388,7 @@
                 <omgdc:Bounds height="40.0" width="40.0" x="735.0" y="680.0"/>
             </bpmndi:BPMNShape>
             <bpmndi:BPMNEdge bpmnElement="endOrCheckProcessingDecisionToAutomaticOrManualDecision"
-                id="BPMNEdge_endOrCheckProcessingDecisionToAutomaticOrManualDecision">
+                             id="BPMNEdge_endOrCheckProcessingDecisionToAutomaticOrManualDecision">
                 <omgdi:waypoint x="1006.8008701472556" y="418.4491298527443"/>
                 <omgdi:waypoint x="1155.0532623169108" y="418.0532623169108"/>
             </bpmndi:BPMNEdge>
@@ -409,7 +410,7 @@
                 <omgdi:waypoint x="239.99778761061947" y="378.0"/>
             </bpmndi:BPMNEdge>
             <bpmndi:BPMNEdge bpmnElement="endOrCheckProcessingDecisionToCheckProcessing"
-                id="BPMNEdge_endOrCheckProcessingDecisionToCheckProcessing">
+                             id="BPMNEdge_endOrCheckProcessingDecisionToCheckProcessing">
                 <omgdi:waypoint x="987.625" y="398.375"/>
                 <omgdi:waypoint x="987.2562111801242" y="339.0"/>
             </bpmndi:BPMNEdge>
@@ -432,7 +433,7 @@
                 <omgdi:waypoint x="973.25" y="768.0"/>
             </bpmndi:BPMNEdge>
             <bpmndi:BPMNEdge bpmnElement="automaticOrManualDecisionToWaitToComplete"
-                id="BPMNEdge_automaticOrManualDecisionToWaitToComplete">
+                             id="BPMNEdge_automaticOrManualDecisionToWaitToComplete">
                 <omgdi:waypoint x="1175.4181034482758" y="437.5818965517241"/>
                 <omgdi:waypoint x="1175.1716738197424" y="495.0"/>
             </bpmndi:BPMNEdge>
@@ -452,7 +453,7 @@
                 <omgdi:waypoint x="890.0" y="438.0"/>
             </bpmndi:BPMNEdge>
             <bpmndi:BPMNEdge bpmnElement="automaticOrManualDecisionToWaitToCheckStatus"
-                id="BPMNEdge_automaticOrManualDecisionToWaitToCheckStatus">
+                             id="BPMNEdge_automaticOrManualDecisionToWaitToCheckStatus">
                 <omgdi:waypoint x="1194.612426035503" y="418.38757396449705"/>
                 <omgdi:waypoint x="1245.0002681591309" y="418.09117489318163"/>
             </bpmndi:BPMNEdge>
@@ -516,12 +517,12 @@
                 <omgdi:waypoint x="890.0" y="398.0"/>
             </bpmndi:BPMNEdge>
             <bpmndi:BPMNEdge bpmnElement="auditEventToParallelOrExclusiveGatewayDecision"
-                id="BPMNEdge_auditEventToParallelOrExclusiveGatewayDecision">
+                             id="BPMNEdge_auditEventToParallelOrExclusiveGatewayDecision">
                 <omgdi:waypoint x="780.5" y="547.5"/>
                 <omgdi:waypoint x="810.0" y="547.5"/>
             </bpmndi:BPMNEdge>
             <bpmndi:BPMNEdge bpmnElement="parallelActionsToEndOrCheckProcessingDecision"
-                id="BPMNEdge_parallelActionsToEndOrCheckProcessingDecision">
+                             id="BPMNEdge_parallelActionsToEndOrCheckProcessingDecision">
                 <omgdi:waypoint x="909.5987012987013" y="418.4012987012987"/>
                 <omgdi:waypoint x="967.3528277634962" y="418.1028277634961"/>
             </bpmndi:BPMNEdge>

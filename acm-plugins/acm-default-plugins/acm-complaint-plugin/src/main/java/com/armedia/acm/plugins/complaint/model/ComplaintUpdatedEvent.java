@@ -32,9 +32,10 @@ public class ComplaintUpdatedEvent extends ComplaintPersistenceEvent
     private static final String EVENT_TYPE = "com.armedia.acm.complaint.updated";
     private static final long serialVersionUID = 1717774490004890352L;
 
-    public ComplaintUpdatedEvent(Complaint source)
+    public ComplaintUpdatedEvent(Complaint source, String ipAddress)
     {
         super(source);
+        setIpAddress(ipAddress);
     }
 
     @Override

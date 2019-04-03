@@ -29,8 +29,8 @@ package com.armedia.acm.services.transcribe.model;
 
 import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.data.AcmEntity;
+import com.armedia.acm.data.converter.BigDecimalConverter;
 import com.armedia.acm.data.converter.BooleanToStringConverter;
-import com.armedia.acm.services.transcribe.converter.BigDecimalConverter;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.voodoodyne.jackson.jsog.JSOGGenerator;
