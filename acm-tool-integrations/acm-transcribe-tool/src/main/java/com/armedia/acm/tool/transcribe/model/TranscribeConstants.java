@@ -34,14 +34,10 @@ public interface TranscribeConstants
 {
     String OBJECT_TYPE = "TRANSCRIBE";
     String OBJECT_TYPE_ITEM = "TRANSCRIBE_ITEM";
-    String SERVICE = "TRANSCRIBE_SERVICE";
+    String SERVICE = "TRANSCRIBE";
 
     String TRANSCRIBE_SYSTEM_USER = "TRANSCRIBE_SERVICE";
 
     String UPLOADED_TMP = "UPLOADED_TMP";
 
-    // This should be in yaml configuration. Until yaml is done, those properties will be hardcoded so we can test
-    // transcribe.
-    Long SILENT_BETWEEN_WORDS = 2L;
-    int WORD_COUNT_PER_ITEM = 20;
 }

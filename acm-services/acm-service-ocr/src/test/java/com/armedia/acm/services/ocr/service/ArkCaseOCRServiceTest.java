@@ -32,18 +32,13 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.armedia.acm.files.propertymanager.PropertyFileManager;
 import com.armedia.acm.plugins.ecm.dao.EcmFileVersionDao;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
 import com.armedia.acm.services.mediaengine.exception.CreateMediaEngineException;
-import com.armedia.acm.services.mediaengine.exception.GetConfigurationException;
 import com.armedia.acm.services.mediaengine.model.MediaEngine;
 import com.armedia.acm.services.mediaengine.model.MediaEngineStatusType;
 import com.armedia.acm.services.mediaengine.model.MediaEngineType;
@@ -66,11 +61,6 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import java.math.BigDecimal;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-
 /**
  * Created by Vladimir Cherepnalkovski
  */
@@ -79,10 +69,10 @@ public class ArkCaseOCRServiceTest extends EasyMockSupport
 {
 
     private ArkCaseOCRServiceImpl arkCaseOCRService;
-    private OCRConfigurationPropertiesService ocrConfigurationPropertiesService;
+    private OCRConfigurationService ocrConfigurationService;
 
     @Mock
-    private PropertyFileManager propertyFileManager;
+    private OCRConfiguration ocrConfiguration;
 
     @Mock
     private RuntimeService activitiRuntimeService;
@@ -118,12 +108,17 @@ public class ArkCaseOCRServiceTest extends EasyMockSupport
     @Before
     public void setUp()
     {
-        ocrConfigurationPropertiesService = new OCRConfigurationPropertiesService();
-        ocrConfigurationPropertiesService.setPropertyFileManager(propertyFileManager);
+        ocrConfiguration = new OCRConfiguration();
+        ocrConfiguration.setEnabled(true);
+        ocrConfiguration.setAutomaticEnabled(true);
+        ocrConfiguration.setExcludedFileTypes("");
+
+        ocrConfigurationService = new OCRConfigurationService();
+        ocrConfigurationService.setOcrConfig(ocrConfiguration);
 
         arkCaseOCRService = new ArkCaseOCRServiceImpl();
         arkCaseOCRService.setEcmFileVersionDao(ecmFileVersionDao);
-        arkCaseOCRService.setOcrConfigurationPropertiesService(ocrConfigurationPropertiesService);
+        arkCaseOCRService.setOcrConfigurationService(ocrConfigurationService);
         arkCaseOCRService.setPipelineManager(pipelineManager);
         arkCaseOCRService.setMediaEngineBusinessProcessRulesExecutor(mediaEngineBusinessProcessRulesExecutor);
         arkCaseOCRService.setActivitiRuntimeService(activitiRuntimeService);
@@ -149,9 +144,6 @@ public class ArkCaseOCRServiceTest extends EasyMockSupport
         ocr.setType(MediaEngineType.AUTOMATIC.toString());
         ocr.setMediaEcmFileVersion(version);
 
-        Map<String, Object> properties = getProperties();
-
-        when(propertyFileManager.loadMultiple(any(), any())).thenReturn(properties);
         when(ecmFileVersionDao.find(version.getId())).thenReturn(version);
         when(ocrDao.findByFileIdAndStatus(file.getId(), MediaEngineStatusType.QUEUED)).thenReturn(null);
         when(pipelineManager.executeOperation(any(), any(), any())).thenReturn(ocr);
@@ -159,7 +151,6 @@ public class ArkCaseOCRServiceTest extends EasyMockSupport
         MediaEngine created = arkCaseOCRService.create(version.getId(), MediaEngineType.AUTOMATIC);
 
         verify(ecmFileVersionDao).find(version.getId());
-        verify(propertyFileManager, times(2)).loadMultiple(any(), any());
         verify(ocrDao).findByFileIdAndStatus(file.getId(), MediaEngineStatusType.QUEUED);
         verify(pipelineManager).executeOperation(any(), any(), any());
 
@@ -184,15 +175,11 @@ public class ArkCaseOCRServiceTest extends EasyMockSupport
         ocr.setType(MediaEngineType.AUTOMATIC.toString());
         ocr.setMediaEcmFileVersion(version);
 
-        Map<String, Object> properties = getProperties();
-
-        when(propertyFileManager.loadMultiple(any(), any())).thenReturn(properties);
         when(ocrDao.findByFileIdAndStatus(file.getId(), MediaEngineStatusType.QUEUED)).thenReturn(null);
         when(pipelineManager.executeOperation(any(), any(), any())).thenReturn(ocr);
 
         MediaEngine created = arkCaseOCRService.create(version, MediaEngineType.AUTOMATIC);
 
-        verify(propertyFileManager, times(2)).loadMultiple(any(), any());
         verify(ocrDao).findByFileIdAndStatus(file.getId(), MediaEngineStatusType.QUEUED);
         verify(pipelineManager).executeOperation(any(), any(), any());
 
@@ -217,10 +204,7 @@ public class ArkCaseOCRServiceTest extends EasyMockSupport
         ocr.setType(MediaEngineType.AUTOMATIC.toString());
         ocr.setMediaEcmFileVersion(version);
 
-        Map<String, Object> properties = getProperties();
-        properties.replace("mediaengine.enabled", "false");
-
-        when(propertyFileManager.loadMultiple(any(), any())).thenReturn(properties);
+        ocrConfiguration.setEnabled(false);
 
         try
         {
@@ -228,8 +212,6 @@ public class ArkCaseOCRServiceTest extends EasyMockSupport
         }
         catch (Exception e)
         {
-            verify(propertyFileManager).loadMultiple(any(), any());
-
             assertTrue(e instanceof CreateMediaEngineException);
             assertEquals("OCR service is not allowed.", e.getMessage());
         }
@@ -247,18 +229,12 @@ public class ArkCaseOCRServiceTest extends EasyMockSupport
         version.setVersionMimeType("text/plain");
         version.setFile(file);
 
-        Map<String, Object> properties = getProperties();
-
-        when(propertyFileManager.loadMultiple(any(), any())).thenReturn(properties);
         try
         {
             arkCaseOCRService.create(version, MediaEngineType.AUTOMATIC);
         }
         catch (Exception e)
         {
-
-            verify(propertyFileManager, times(2)).loadMultiple(any(), any());
-
             assertTrue(e instanceof CreateMediaEngineException);
             assertEquals("OCR service is not allowed.", e.getMessage());
         }
@@ -281,75 +257,13 @@ public class ArkCaseOCRServiceTest extends EasyMockSupport
         version.setVersionMimeType(IMAGE_FORMAT);
         version.setFile(file);
 
-        Map<String, Object> properties = getProperties();
-
-        when(propertyFileManager.loadMultiple(any(), any())).thenReturn(properties);
         when(ocrDao.findByFileIdAndStatus(file.getId(), MediaEngineStatusType.QUEUED)).thenReturn(null);
 
         arkCaseOCRService.create(version, MediaEngineType.AUTOMATIC);
 
-        verify(propertyFileManager, times(2)).loadMultiple(any(), any());
         verify(ocrDao).findByFileIdAndStatus(file.getId(), MediaEngineStatusType.QUEUED);
         verify(pipelineManager).executeOperation(any(), any(), any());
 
-    }
-
-    @Test
-    public void isOCRon_true() throws Exception
-    {
-        Map<String, Object> properties = getProperties();
-
-        when(propertyFileManager.loadMultiple(any(), any())).thenReturn(properties);
-
-        boolean allow = arkCaseOCRService.isServiceEnabled();
-
-        verify(propertyFileManager).loadMultiple(any(), any());
-
-        assertTrue(allow);
-    }
-
-    @Test
-    public void isOCROn_false() throws Exception
-    {
-        Map<String, Object> properties = getProperties();
-        properties.replace("mediaengine.enabled", "false");
-
-        when(propertyFileManager.loadMultiple(any(), any())).thenReturn(properties);
-
-        boolean allow = arkCaseOCRService.isServiceEnabled();
-
-        verify(propertyFileManager).loadMultiple(any(), any());
-
-        assertFalse(allow);
-    }
-
-    @Test
-    public void isAutomaticOCROn_true() throws Exception
-    {
-        Map<String, Object> properties = getProperties();
-
-        when(propertyFileManager.loadMultiple(any(), any())).thenReturn(properties);
-
-        boolean allow = arkCaseOCRService.isAutomaticOn();
-
-        verify(propertyFileManager).loadMultiple(any(), any());
-
-        assertTrue(allow);
-    }
-
-    @Test
-    public void isAutomaticOCROn_false() throws Exception
-    {
-        Map<String, Object> properties = getProperties();
-        properties.replace("mediaengine.automatic.enabled", "false");
-
-        when(propertyFileManager.loadMultiple(any(), any())).thenReturn(properties);
-
-        boolean allow = arkCaseOCRService.isAutomaticOn();
-
-        verify(propertyFileManager).loadMultiple(any(), any());
-
-        assertFalse(allow);
     }
 
     @Test
@@ -366,7 +280,7 @@ public class ArkCaseOCRServiceTest extends EasyMockSupport
     }
 
     @Test
-    public void isProcessable_true_false() throws Exception
+    public void isProcessable_false() throws Exception
     {
         EcmFileVersion version = new EcmFileVersion();
         version.setId(101L);
@@ -375,94 +289,5 @@ public class ArkCaseOCRServiceTest extends EasyMockSupport
         boolean result = arkCaseOCRService.isProcessable(version);
 
         assertFalse(result);
-    }
-
-    @Test
-    public void getConfiguration() throws Exception
-    {
-        Map<String, Object> properties = getProperties();
-
-        when(propertyFileManager.loadMultiple(any(), any())).thenReturn(properties);
-
-        OCRConfiguration configuration = ocrConfigurationPropertiesService.get();
-
-        verify(propertyFileManager).loadMultiple(any(), any());
-
-        assertNotNull(configuration);
-        assertEquals(Integer.parseInt((String) properties.get("mediaengine.confidence")), configuration.getConfidence());
-        assertEquals(properties.get("mediaengine.provider"), configuration.getProvider());
-        assertEquals(1, configuration.getProviders().size());
-        assertEquals(properties.get("mediaengine.provider"), configuration.getProviders().get(0));
-    }
-
-    @Test
-    public void getConfiguration_Exception() throws Exception
-    {
-        Map<String, Object> properties = getProperties();
-        properties.replace("mediaengine.cost", "some text");
-
-        when(propertyFileManager.loadMultiple(any(), any())).thenReturn(properties);
-
-        try
-        {
-            ocrConfigurationPropertiesService.get();
-        }
-        catch (Exception e)
-        {
-            verify(propertyFileManager).loadMultiple(any(), any());
-
-            assertNotNull(e);
-            assertTrue(e instanceof GetConfigurationException);
-            assertTrue(e.getCause() instanceof NumberFormatException);
-        }
-    }
-
-    @Test
-    public void saveConfiguration() throws Exception
-    {
-        OCRConfiguration configuration = new OCRConfiguration();
-        configuration.setEnabled(false);
-        configuration.setAutomaticEnabled(false);
-        configuration.setNewMediaEngineForNewVersion(false);
-        configuration.setCopyMediaEngineForNewVersion(true);
-        configuration.setCost(new BigDecimal("0.0000000001"));
-        configuration.setConfidence(80);
-        configuration.setNumberOfFilesForProcessing(10);
-        configuration.setProvider(TESSERACT);
-        configuration.setProviders(Arrays.asList(TESSERACT));
-        configuration.setProviderPurgeAttempts(5);
-
-        doNothing().when(propertyFileManager).storeMultiple(any(), any(), eq(false));
-
-        OCRConfiguration saved = ocrConfigurationPropertiesService.save(configuration);
-
-        verify(propertyFileManager).storeMultiple(any(), any(), eq(false));
-
-        assertNotNull(saved);
-        assertEquals(configuration.getConfidence(), saved.getConfidence());
-        assertEquals(configuration.getProvider(), saved.getProvider());
-        assertEquals(configuration.getProviders().size(), saved.getProviders().size());
-        assertEquals(configuration.getProviders().get(0), saved.getProviders().get(0));
-    }
-
-    private Map<String, Object> getProperties()
-    {
-        // Initialize default ones, override just specific one for given test case.
-        Map<String, Object> properties = new HashMap<>();
-        properties.put("mediaengine.enabled", "true");
-        properties.put("mediaengine.automatic.enabled", "true");
-        properties.put("mediaengine.new.mediaengine.for.new.version", "false");
-        properties.put("mediaengine.copy.mediaengine.for.new.version", "true");
-        properties.put("mediaengine.cost", "10.5");
-        properties.put("mediaengine.confidence", "80");
-        properties.put("mediaengine.number.of.files.for.processing", "10");
-        properties.put("mediaengine.service", OCR);
-        properties.put("mediaengine.provider", TESSERACT);
-        properties.put("mediaengine.providers", TESSERACT);
-        properties.put("mediaengine.provider.purge.attempts", 5);
-        properties.put("mediaengine.excludedFileTypes", "");
-        properties.put("mediaengine.temp.path", "");
-
-        return properties;
     }
 }

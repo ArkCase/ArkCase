@@ -52,7 +52,7 @@ import com.armedia.acm.services.ocr.model.OCR;
 import com.armedia.acm.services.ocr.model.OCRConfiguration;
 import com.armedia.acm.services.ocr.model.OCRConstants;
 import com.armedia.acm.services.ocr.service.ArkCaseOCRServiceImpl;
-import com.armedia.acm.services.ocr.service.OCRConfigurationPropertiesService;
+import com.armedia.acm.services.ocr.service.OCRConfigurationService;
 import com.armedia.acm.tool.mediaengine.model.MediaEngineDTO;
 import com.armedia.acm.tool.ocr.service.TesseractServiceImpl;
 
@@ -83,7 +83,7 @@ public class OCRQueueJobTest
     private ArkCaseOCRServiceImpl arkCaseOCRService;
 
     @Mock
-    private OCRConfigurationPropertiesService ocrConfigurationPropertiesService;
+    private OCRConfigurationService ocrConfigurationService;
 
     @Mock
     private RuntimeService activitiRuntimeService;
@@ -129,7 +129,7 @@ public class OCRQueueJobTest
         ocrQueueJob.setArkCaseOCRService(arkCaseOCRService);
         ocrQueueJob.setActivitiRuntimeService(activitiRuntimeService);
         ocrQueueJob.setAuditPropertyEntityAdapter(auditPropertyEntityAdapter);
-        ocrQueueJob.setOcrConfigurationPropertiesService(ocrConfigurationPropertiesService);
+        ocrQueueJob.setOcrConfigurationService(ocrConfigurationService);
         ocrQueueJob.setObjectLockingManager(objectLockingManager);
         ocrQueueJob.setObjectLockService(objectLockService);
         ocrQueueJob.setOcrProviderFactory(ocrProviderFactory);
@@ -235,7 +235,7 @@ public class OCRQueueJobTest
         AcmObjectLock lock = new AcmObjectLock();
         lock.setCreator(OCRConstants.OCR_SYSTEM_USER);
 
-        when(ocrConfigurationPropertiesService.get()).thenReturn(configuration);
+        when(ocrConfigurationService.loadProperties()).thenReturn(configuration);
 
         when(arkCaseOCRService.getAllByStatus(MediaEngineStatusType.PROCESSING.toString())).thenReturn(ocrs);
         when(activitiRuntimeService.createProcessInstanceQuery()).thenReturn(processInstanceQuery);
@@ -251,7 +251,7 @@ public class OCRQueueJobTest
         when(ocrQueueJob.getObjectLockingManager().acquireObjectLock(105L, EcmFileConstants.OBJECT_FILE_TYPE,
                 MediaEngineConstants.LOCK_TYPE_WRITE, null, true, OCRConstants.OCR_SYSTEM_USER))
                         .thenReturn(lock);
-        when(ocrQueueJob.getMediaEngineMapper().MediaEngineToDTO(ocr, "default")).thenReturn(mediaEngineDTO);
+        when(ocrQueueJob.getMediaEngineMapper().mediaEngineToDTO(ocr, "default")).thenReturn(mediaEngineDTO);
         when(ocrQueueJob.getOcrProviderFactory().getProvider(TESSERACT)).thenReturn(tesseractService);
         doNothing().when(arkCaseOCRService).signal(processInstance1, MediaEngineStatusType.PROCESSING.toString(),
                 MediaEngineActionType.PROCESSING.toString());
@@ -259,7 +259,7 @@ public class OCRQueueJobTest
 
         ocrQueueJob.executeTask();
 
-        verify(ocrConfigurationPropertiesService, times(3)).get();
+        verify(ocrConfigurationService, times(3)).loadProperties();
         verify(arkCaseOCRService).getAllByStatus(MediaEngineStatusType.PROCESSING.toString());
         verify(activitiRuntimeService).createProcessInstanceQuery();
         verify(processInstanceQuery, times(2)).variableValueEqualsIgnoreCase(variableKey, variableValue);

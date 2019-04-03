@@ -31,6 +31,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -102,7 +103,6 @@ public class SaveTranscribeConfigurationAPIControllerTest extends EasyMockSuppor
         ObjectMapper objectMapper = new ObjectMapper();
 
         when(mockAuthentication.getName()).thenReturn("user");
-        when(mockArkCaseTranscribeService.saveConfiguration(any(TranscribeConfiguration.class))).thenReturn(configuration);
 
         MvcResult result = mockMvc.perform(post("/api/v1/plugin/admin/transcribe/configuration")
                 .accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
@@ -118,11 +118,6 @@ public class SaveTranscribeConfigurationAPIControllerTest extends EasyMockSuppor
         LOG.info("Results: " + responseString);
 
         assertEquals(HttpStatus.OK.value(), result.getResponse().getStatus());
-
-        TranscribeConfiguration responseConfiguration = objectMapper.readValue(responseString, TranscribeConfiguration.class);
-
-        assertNotNull(responseConfiguration);
-        assertEquals(configuration, responseConfiguration);
     }
 
     @Test
@@ -144,7 +139,7 @@ public class SaveTranscribeConfigurationAPIControllerTest extends EasyMockSuppor
         SaveConfigurationException exception = new SaveConfigurationException("error");
 
         when(mockAuthentication.getName()).thenReturn("user");
-        when(mockArkCaseTranscribeService.saveConfiguration(any(TranscribeConfiguration.class))).thenThrow(exception);
+        doThrow(exception).when(mockArkCaseTranscribeService).saveConfiguration(any(TranscribeConfiguration.class));
 
         try
         {

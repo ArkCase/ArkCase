@@ -1,17 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns="http://www.springframework.org/schema/beans"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.springframework.org/schema/beans"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
 
     <bean id="ocrDao" class="com.armedia.acm.services.ocr.dao.OCRDao"/>
 
-    <bean id="ocrConfigurationPropertiesService" class="com.armedia.acm.services.ocr.service.OCRConfigurationPropertiesService">
-        <property name="propertyFileManager" ref="propertyFileManager"/>
-    </bean>
-
     <bean id="arkCaseOCRService" class="com.armedia.acm.services.ocr.service.ArkCaseOCRServiceImpl">
-        <property name="ocrConfigurationPropertiesService" ref="ocrConfigurationPropertiesService"/>
-        <property name="mediaEngineConfigurationPropertiesService" ref="mediaEngineConfigurationPropertiesService"/>
         <property name="ocrDao" ref="ocrDao"/>
         <property name="ecmFileVersionDao" ref="ecmFileVersionDao"/>
         <property name="pipelineManager" ref="mediaEnginePipelineManager"/>
@@ -29,6 +23,7 @@
         <property name="mediaEngineServiceFactory" ref="mediaEngineServiceFactory"/>
         <property name="arkCaseBeanUtils" ref="mediaEngineArkCaseBeanUtils"/>
         <property name="ecmFileTransaction" ref="ecmFileTransaction"/>
+        <property name="ocrConfigurationService" ref="ocrConfigurationService"/>
     </bean>
 
     <bean id="ocrQueueJob" class="com.armedia.acm.services.ocr.job.OCRQueueJob">
@@ -37,9 +32,9 @@
         <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
         <property name="objectLockService" ref="objectLockService"/>
         <property name="objectLockingManager" ref="acmObjectLockingManager"/>
-        <property name="ocrConfigurationPropertiesService" ref="ocrConfigurationPropertiesService"/>
         <property name="mediaEngineMapper" ref="mediaEngineMapper"/>
         <property name="ocrProviderFactory" ref="ocrProviderFactory"/>
+        <property name="ocrConfigurationService" ref="ocrConfigurationService"/>
     </bean>
 
     <bean id="ocrBusinessRulesExecutor" class="com.armedia.acm.services.mediaengine.rules.MediaEngineBusinessRulesExecutor"
@@ -77,5 +72,14 @@
 
     <bean id="ocrProviderFactory" class="com.armedia.acm.services.ocr.factory.OCRProviderFactory">
         <property name="providers" ref="ocrProviders"/>
+    </bean>
+
+    <bean id="ocrConfig" class="com.armedia.acm.services.ocr.model.OCRConfiguration" scope="refresh">
+        <aop:scoped-proxy/>
+    </bean>
+
+    <bean id="ocrConfigurationService" class="com.armedia.acm.services.ocr.service.OCRConfigurationService">
+        <property name="configurationPropertyService" ref="configurationPropertyService"/>
+        <property name="ocrConfig" ref="ocrConfig"/>
     </bean>
 </beans>

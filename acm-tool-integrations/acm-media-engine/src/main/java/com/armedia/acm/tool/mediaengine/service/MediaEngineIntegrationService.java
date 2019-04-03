@@ -31,6 +31,8 @@ import com.armedia.acm.tool.mediaengine.exception.CreateMediaEngineToolException
 import com.armedia.acm.tool.mediaengine.exception.GetMediaEngineToolException;
 import com.armedia.acm.tool.mediaengine.model.MediaEngineDTO;
 
+import java.util.Map;
+
 /**
  * Created by Vladimir Cherepnalkovski
  */
@@ -38,7 +40,7 @@ public interface MediaEngineIntegrationService
 {
     void create(MediaEngineDTO mediaEngineDTO) throws CreateMediaEngineToolException;
 
-    MediaEngineDTO get(String remoteId, String tempPath) throws GetMediaEngineToolException;
+    MediaEngineDTO get(String remoteId, Map<String, Object> props) throws GetMediaEngineToolException;
 
     boolean purge(MediaEngineDTO mediaEngine);
 }

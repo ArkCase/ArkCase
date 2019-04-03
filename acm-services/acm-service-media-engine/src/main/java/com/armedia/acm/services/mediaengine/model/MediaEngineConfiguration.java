@@ -27,239 +27,63 @@ package com.armedia.acm.services.mediaengine.model;
  * #L%
  */
 
-import com.armedia.acm.services.mediaengine.annotation.ConfigurationProperty;
-
-import org.apache.commons.lang3.StringUtils;
-
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * Created by Vladimir Cherepnalkovski <vladimir.cherepnalkovski@armedia.com>
  */
-public class MediaEngineConfiguration implements Serializable
+public interface MediaEngineConfiguration
 {
-    @ConfigurationProperty(key = "mediaengine.enabled")
-    private boolean enabled;
+    String getTempPath();
 
-    @ConfigurationProperty(key = "mediaengine.automatic.enabled")
-    private boolean automaticEnabled;
+    void setTempPath(String tempPath);
 
-    @ConfigurationProperty(key = "mediaengine.new.mediaengine.for.new.version")
-    private boolean newMediaEngineForNewVersion;
+    String getProvider();
 
-    @ConfigurationProperty(key = "mediaengine.copy.mediaengine.for.new.version")
-    private boolean copyMediaEngineForNewVersion;
+    void setProvider(String provider);
 
-    @ConfigurationProperty(key = "mediaengine.cost")
-    private BigDecimal cost;
+    boolean isEnabled();
 
-    @ConfigurationProperty(key = "mediaengine.confidence")
-    private int confidence;
+    void setEnabled(boolean enabled);
 
-    @ConfigurationProperty(key = "mediaengine.number.of.files.for.processing")
-    private int numberOfFilesForProcessing;
+    boolean isAutomaticEnabled();
 
-    @ConfigurationProperty(key = "mediaengine.service")
-    private MediaEngineServices service;
+    void setAutomaticEnabled(boolean automaticEnabled);
 
-    @ConfigurationProperty(key = "mediaengine.providers", write = false)
-    private List<String> providers;
+    boolean isNewMediaEngineForNewVersion();
 
-    @ConfigurationProperty(key = "mediaengine.provider.purge.attempts")
-    private int providerPurgeAttempts;
+    void setNewMediaEngineForNewVersion(boolean newMediaEngineForNewVersion);
 
-    @ConfigurationProperty(key = "mediaengine.excludedFileTypes")
-    private String excludedFileTypes;
+    boolean isCopyMediaEngineForNewVersion();
 
-    @ConfigurationProperty(key = "mediaengine.provider")
-    private String provider;
+    void setCopyMediaEngineForNewVersion(boolean copyMediaEngineForNewVersion);
 
-    @ConfigurationProperty(key = "mediaengine.temp.path")
-    private String tempPath;
+    BigDecimal getCost();
 
-    public String getTempPath()
-    {
-        return (tempPath != null && StringUtils.isNotEmpty(tempPath)) ? tempPath : System.getProperty("java.io.tmpdir");
-    }
+    void setCost(BigDecimal cost);
 
-    public void setTempPath(String tempPath)
-    {
-        this.tempPath = tempPath;
-    }
+    int getConfidence();
 
-    public String getProvider()
-    {
-        return provider;
-    }
+    void setConfidence(int confidence);
 
-    public void setProvider(String provider)
-    {
-        this.provider = provider;
-    }
+    int getNumberOfFilesForProcessing();
 
-    public boolean isEnabled()
-    {
-        return enabled;
-    }
+    void setNumberOfFilesForProcessing(int numberOfFilesForProcessing);
 
-    public void setEnabled(boolean enabled)
-    {
-        this.enabled = enabled;
-    }
+    MediaEngineServices getService();
 
-    public boolean isAutomaticEnabled()
-    {
-        return automaticEnabled;
-    }
+    void setService(MediaEngineServices service);
 
-    public void setAutomaticEnabled(boolean automaticEnabled)
-    {
-        this.automaticEnabled = automaticEnabled;
-    }
+    List<String> getProviders();
 
-    public boolean isNewMediaEngineForNewVersion()
-    {
-        return newMediaEngineForNewVersion;
-    }
+    void setProviders(List<String> providers);
 
-    public void setNewMediaEngineForNewVersion(boolean newMediaEngineForNewVersion)
-    {
-        if (newMediaEngineForNewVersion)
-        {
-            setCopyMediaEngineForNewVersion(false);
-        }
-        this.newMediaEngineForNewVersion = newMediaEngineForNewVersion;
-    }
+    int getProviderPurgeAttempts();
 
-    public boolean isCopyMediaEngineForNewVersion()
-    {
-        return copyMediaEngineForNewVersion;
-    }
+    void setProviderPurgeAttempts(int providerPurgeAttempts);
 
-    public void setCopyMediaEngineForNewVersion(boolean copyMediaEngineForNewVersion)
-    {
-        if (copyMediaEngineForNewVersion)
-        {
-            setNewMediaEngineForNewVersion(false);
-        }
-        this.copyMediaEngineForNewVersion = copyMediaEngineForNewVersion;
-    }
+    String getExcludedFileTypes();
 
-    public BigDecimal getCost()
-    {
-        return cost;
-    }
-
-    public void setCost(BigDecimal cost)
-    {
-        this.cost = cost;
-    }
-
-    public int getConfidence()
-    {
-        return confidence;
-    }
-
-    public void setConfidence(int confidence)
-    {
-        this.confidence = confidence;
-    }
-
-    public int getNumberOfFilesForProcessing()
-    {
-        return numberOfFilesForProcessing;
-    }
-
-    public void setNumberOfFilesForProcessing(int numberOfFilesForProcessing)
-    {
-        this.numberOfFilesForProcessing = numberOfFilesForProcessing;
-    }
-
-    public MediaEngineServices getService()
-    {
-        return service;
-    }
-
-    public void setService(MediaEngineServices service)
-    {
-        this.service = service;
-    }
-
-    public List<String> getProviders()
-    {
-        return providers;
-    }
-
-    public void setProviders(List<String> providers)
-    {
-        this.providers = providers;
-    }
-
-    public int getProviderPurgeAttempts()
-    {
-        return providerPurgeAttempts;
-    }
-
-    public void setProviderPurgeAttempts(int providerPurgeAttempts)
-    {
-        this.providerPurgeAttempts = providerPurgeAttempts;
-    }
-
-    public String getExcludedFileTypes()
-    {
-        return excludedFileTypes;
-    }
-
-    public void setExcludedFileTypes(String excludedFileTypes)
-    {
-        this.excludedFileTypes = excludedFileTypes;
-    }
-
-    @Override
-    public boolean equals(Object o)
-    {
-        if (this == o)
-            return true;
-        if (o == null || getClass() != o.getClass())
-            return false;
-        MediaEngineConfiguration that = (MediaEngineConfiguration) o;
-        return enabled == that.enabled &&
-                automaticEnabled == that.automaticEnabled &&
-                newMediaEngineForNewVersion == that.newMediaEngineForNewVersion &&
-                copyMediaEngineForNewVersion == that.copyMediaEngineForNewVersion &&
-                that.cost != null ? that.cost.equals(cost)
-                        : cost == null &&
-                                confidence == that.confidence &&
-                                numberOfFilesForProcessing == that.numberOfFilesForProcessing &&
-                                service == that.service &&
-                                providerPurgeAttempts == that.providerPurgeAttempts &&
-                                excludedFileTypes == that.excludedFileTypes;
-    }
-
-    @Override
-    public int hashCode()
-    {
-        return Objects.hash(enabled, automaticEnabled, newMediaEngineForNewVersion, copyMediaEngineForNewVersion, cost, confidence,
-                numberOfFilesForProcessing, service, providerPurgeAttempts, excludedFileTypes);
-    }
-
-    @Override
-    public String toString()
-    {
-        return "MediaEngineConfiguration{" +
-                "enabled=" + enabled +
-                ", automaticEnabled=" + automaticEnabled +
-                ", newMediaEngineForNewVersion=" + newMediaEngineForNewVersion +
-                ", copyMediaEngineForNewVersion=" + copyMediaEngineForNewVersion +
-                ", cost=" + cost +
-                ", confidence=" + confidence +
-                ", numberOfFilesForProcessing=" + numberOfFilesForProcessing +
-                ", service=" + service +
-                ", providerPurgeAttempts=" + providerPurgeAttempts +
-                ", excludedFileTypes=" + excludedFileTypes +
-                '}';
-    }
+    void setExcludedFileTypes(String excludedFileTypes);
 }

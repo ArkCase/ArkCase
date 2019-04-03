@@ -62,11 +62,6 @@
         <property name="mediaEngineServiceFactory" ref="mediaEngineServiceFactory"/>
     </bean>
 
-    <bean id="mediaEngineConfigurationPropertiesService"
-          class="com.armedia.acm.services.mediaengine.service.MediaEngineConfigurationPropertiesService">
-        <property name="propertyFileManager" ref="propertyFileManager"/>
-    </bean>
-
     <!-- pre-save handlers -->
     <bean id="mediaEngineInitHandler" class="com.armedia.acm.services.mediaengine.pipeline.presave.MediaEngineInitHandler"/>
 

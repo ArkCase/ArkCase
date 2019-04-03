@@ -45,6 +45,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Map;
 import java.util.Scanner;
 import java.util.StringJoiner;
 
@@ -132,7 +133,7 @@ public class TesseractServiceImpl implements OCRIntegrationService
     }
 
     @Override
-    public MediaEngineDTO get(String remoteId, String tempPath) throws GetMediaEngineToolException
+    public MediaEngineDTO get(String remoteId, Map<String, Object> props) throws GetMediaEngineToolException
     {
         if (StringUtils.isNotEmpty(remoteId))
         {
@@ -140,6 +141,7 @@ public class TesseractServiceImpl implements OCRIntegrationService
             {
                 MediaEngineDTO mediaEngineDTO = new OCRDTO();
 
+                String tempPath = (String) props.get("tempPath");
                 Integer processResultStatus = readResultStatusFromFile(remoteId, tempPath);
 
                 if (processResultStatus == null)

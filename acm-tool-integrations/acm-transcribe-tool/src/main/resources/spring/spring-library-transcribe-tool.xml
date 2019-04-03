@@ -1,18 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.springframework.org/schema/beans"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
-
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
 
     <bean id="awsTranscribeService" class="com.armedia.acm.tool.transcribe.service.AWSTranscribeServiceImpl" init-method="init">
-        <property name="awsTranscribeConfigurationPropertiesService" ref="transcribeToolConfigurationPropertiesService"/>
+        <property name="awsTranscribeConfigurationService" ref="awsTranscribeConfigurationService"/>
+        <property name="awsTranscribeCredentialsConfigurationService" ref="awsTranscribeCredentialsConfigurationService"/>
         <property name="muleContextManager" ref="muleContextManager"/>
         <property name="credentialConfigurationFileLocation" value="${user.home}/.arkcase/acm/aws/credentials.properties"/>
         <property name="mediaEngineIntegrationEventPublisher" ref="mediaEngineIntegrationEventPublisher"/>
     </bean>
 
-    <bean id="transcribeToolConfigurationPropertiesService"
-          class="com.armedia.acm.tool.transcribe.service.AWSTranscribeConfigurationPropertiesService">
-        <property name="propertyFileManager" ref="propertyFileManager"/>
+    <bean id="AWSTranscribeConfig" class="com.armedia.acm.tool.transcribe.model.AWSTranscribeConfiguration" scope="refresh">
+        <aop:scoped-proxy/>
     </bean>
 
+    <bean id="AWSCredentialsConfig" class="com.armedia.acm.tool.transcribe.model.AWSCredentialsConfiguration" scope="refresh">
+        <aop:scoped-proxy/>
+    </bean>
+
+    <bean id="awsTranscribeConfigurationService" class="com.armedia.acm.tool.transcribe.service.AWSTranscribeConfigurationService">
+        <property name="configurationPropertyService" ref="configurationPropertyService"/>
+        <property name="AWSTranscribeConfig" ref="AWSTranscribeConfig"/>
+    </bean>
+
+    <bean id="awsTranscribeCredentialsConfigurationService"
+          class="com.armedia.acm.tool.transcribe.service.AWSTranscribeCredentialsConfigurationService">
+        <property name="configurationPropertyService" ref="configurationPropertyService"/>
+        <property name="AWSCredentialsConfig" ref="AWSCredentialsConfig"/>
+        <property name="acmCryptoUtils" ref="acmCryptoUtils"/>
+    </bean>
 </beans>

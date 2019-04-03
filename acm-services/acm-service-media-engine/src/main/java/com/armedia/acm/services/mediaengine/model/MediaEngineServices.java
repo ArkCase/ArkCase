@@ -27,11 +27,15 @@ package com.armedia.acm.services.mediaengine.model;
  * #L%
  */
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * Created by Vladimir Cherepnalkovski <vladimir.cherepnalkovski@armedia.com>
  */
 public enum MediaEngineServices
 {
+    @JsonProperty("TRANSCRIBE")
     TRANSCRIBE,
+    @JsonProperty("OCR")
     OCR
 }
