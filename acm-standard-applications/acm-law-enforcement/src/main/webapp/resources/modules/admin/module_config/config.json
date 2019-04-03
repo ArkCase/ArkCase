@@ -1608,6 +1608,13 @@
                 ]
             },
             {
+                "type": "p/mediaServices/awsManagement",
+                "label": "admin.mediaServices.awsManagement",
+                "components": [
+                    "aws-transcription-management"
+                ]
+            },
+            {
                 "type": "p/stateOfArkcase",
                 "label": "admin.stateOfArkcase.title",
                 "icon": "fa fa-wrench",

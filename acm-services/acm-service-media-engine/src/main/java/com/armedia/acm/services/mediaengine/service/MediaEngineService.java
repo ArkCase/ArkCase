@@ -32,6 +32,7 @@ import com.armedia.acm.services.mediaengine.exception.CreateMediaEngineException
 import com.armedia.acm.services.mediaengine.exception.GetConfigurationException;
 import com.armedia.acm.services.mediaengine.exception.GetMediaEngineException;
 import com.armedia.acm.services.mediaengine.exception.MediaEngineProviderNotFound;
+import com.armedia.acm.services.mediaengine.exception.MediaEngineServiceNotFoundException;
 import com.armedia.acm.services.mediaengine.exception.SaveConfigurationException;
 import com.armedia.acm.services.mediaengine.exception.SaveMediaEngineException;
 import com.armedia.acm.services.mediaengine.factory.MediaEngineServiceFactory;
@@ -51,7 +52,7 @@ import java.util.List;
 /**
  * Created by Vladimir Cherepnalkovski <vladimir.cherepnalkovski@armedia.com>
  */
-public interface MediaEngineService<T extends MediaEngine, K extends MediaEngineConfiguration>
+public interface MediaEngineService<T extends MediaEngine>
 {
     /**
      * This method will create MediaEngine for given media file version ID
@@ -304,7 +305,7 @@ public interface MediaEngineService<T extends MediaEngine, K extends MediaEngine
      * @return Configuration object
      * @throws GetConfigurationException
      */
-    K getConfiguration() throws GetConfigurationException;
+    MediaEngineConfiguration getConfiguration() throws GetConfigurationException;
 
     /**
      * This method will save configuration for MediaEngine service
@@ -314,7 +315,7 @@ public interface MediaEngineService<T extends MediaEngine, K extends MediaEngine
      * @return Saved Configuration object
      * @throws SaveConfigurationException
      */
-    K saveConfiguration(K configuration) throws SaveConfigurationException;
+    void saveConfiguration(MediaEngineConfiguration configuration) throws SaveConfigurationException, MediaEngineServiceNotFoundException;
 
     /**
      * This method will return true if all conditions are reached for proceeding.

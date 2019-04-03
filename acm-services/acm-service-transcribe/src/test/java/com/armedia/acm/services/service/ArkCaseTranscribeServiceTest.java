@@ -34,17 +34,14 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.armedia.acm.files.propertymanager.PropertyFileManager;
 import com.armedia.acm.plugins.ecm.dao.EcmFileVersionDao;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
 import com.armedia.acm.services.mediaengine.dao.MediaEngineDao;
 import com.armedia.acm.services.mediaengine.exception.CreateMediaEngineException;
-import com.armedia.acm.services.mediaengine.exception.GetConfigurationException;
 import com.armedia.acm.services.mediaengine.model.MediaEngine;
 import com.armedia.acm.services.mediaengine.model.MediaEngineActionType;
 import com.armedia.acm.services.mediaengine.model.MediaEngineBusinessProcessModel;
@@ -59,7 +56,7 @@ import com.armedia.acm.services.transcribe.dao.TranscribeDao;
 import com.armedia.acm.services.transcribe.model.Transcribe;
 import com.armedia.acm.services.transcribe.model.TranscribeConfiguration;
 import com.armedia.acm.services.transcribe.service.ArkCaseTranscribeServiceImpl;
-import com.armedia.acm.services.transcribe.service.TranscribeConfigurationPropertiesService;
+import com.armedia.acm.services.transcribe.service.TranscribeConfigurationService;
 import com.armedia.acm.spring.SpringContextHolder;
 
 import org.activiti.engine.RuntimeService;
@@ -75,7 +72,6 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -87,10 +83,7 @@ import java.util.Map;
 public class ArkCaseTranscribeServiceTest extends EasyMockSupport
 {
     private ArkCaseTranscribeServiceImpl arkCaseTranscribeService;
-    private TranscribeConfigurationPropertiesService transcribeConfigurationPropertiesService;
-
-    @Mock
-    private PropertyFileManager propertyFileManager;
+    private TranscribeConfigurationService transcribeConfigurationService;
 
     @Mock
     private TranscribeDao transcribeDao;
@@ -117,7 +110,10 @@ public class ArkCaseTranscribeServiceTest extends EasyMockSupport
     private MediaEngineEventPublisher mediaEngineEventPublisher;
 
     @Mock
-    SpringContextHolder springContextHolder;
+    private SpringContextHolder springContextHolder;
+
+    @Mock
+    private TranscribeConfiguration transcribeConfiguration;
 
     private static String TRANSCRIBE = "TRANSCRIBE";
     private static String AWS_PROVIDER = "AWS";
@@ -127,11 +123,23 @@ public class ArkCaseTranscribeServiceTest extends EasyMockSupport
     @Before
     public void setUp()
     {
-        transcribeConfigurationPropertiesService = new TranscribeConfigurationPropertiesService();
-        transcribeConfigurationPropertiesService.setPropertyFileManager(propertyFileManager);
+        transcribeConfiguration = new TranscribeConfiguration();
+        transcribeConfiguration.setEnabled(true);
+        transcribeConfiguration.setAutomaticEnabled(true);
+        transcribeConfiguration.setNewMediaEngineForNewVersion(false);
+        transcribeConfiguration.setCopyMediaEngineForNewVersion(true);
+        transcribeConfiguration.setAllowedMediaDuration(7200);
+        transcribeConfiguration.setSilentBetweenWords(BigDecimal.valueOf(2));
+        transcribeConfiguration.setProvider(AWS_PROVIDER);
+        transcribeConfiguration.setProviderPurgeAttempts(10);
+        transcribeConfiguration.setConfidence(80);
+        transcribeConfiguration.setTempPath("");
+        transcribeConfiguration.setExcludedFileTypes("default");
+
+        transcribeConfigurationService = new TranscribeConfigurationService();
+        transcribeConfigurationService.setTranscribeConfig(transcribeConfiguration);
 
         arkCaseTranscribeService = new ArkCaseTranscribeServiceImpl();
-        arkCaseTranscribeService.setTranscribeConfigurationPropertiesService(transcribeConfigurationPropertiesService);
         arkCaseTranscribeService.setTranscribeDao(transcribeDao);
         arkCaseTranscribeService.setPipelineManager(pipelineManager);
         arkCaseTranscribeService.setEcmFileVersionDao(ecmFileVersionDao);
@@ -139,6 +147,7 @@ public class ArkCaseTranscribeServiceTest extends EasyMockSupport
         arkCaseTranscribeService.setActivitiRuntimeService(activitiRuntimeService);
         arkCaseTranscribeService.setMediaEngineEventPublisher(mediaEngineEventPublisher);
         arkCaseTranscribeService.setSpringContextHolder(springContextHolder);
+        arkCaseTranscribeService.setTranscribeConfigurationService(transcribeConfigurationService);
     }
 
     @Test
@@ -158,12 +167,9 @@ public class ArkCaseTranscribeServiceTest extends EasyMockSupport
         version.setVersionMimeType(VIDEO_FORMAT);
         version.setFile(file);
 
-        Map<String, Object> properties = getProperties();
-
         Map<String, MediaEngineDao> daos = new HashMap<>();
         daos.put(TRANSCRIBE, transcribeDao);
 
-        when(propertyFileManager.loadMultiple(any(), any())).thenReturn(properties);
         when(transcribeDao.getSupportedObjectType()).thenReturn(TRANSCRIBE);
         when(springContextHolder.getAllBeansOfType(MediaEngineDao.class)).thenReturn(daos);
         when(ecmFileVersionDao.find(version.getId())).thenReturn(version);
@@ -173,7 +179,6 @@ public class ArkCaseTranscribeServiceTest extends EasyMockSupport
         MediaEngine created = arkCaseTranscribeService.create(version.getId(), MediaEngineType.AUTOMATIC);
 
         verify(ecmFileVersionDao).find(version.getId());
-        verify(propertyFileManager, times(3)).loadMultiple(any(), any());
         verify(springContextHolder).getAllBeansOfType(MediaEngineDao.class);
         verify(transcribeDao).getSupportedObjectType();
         verify(transcribeDao).findByMediaVersionId(version.getId());
@@ -200,12 +205,9 @@ public class ArkCaseTranscribeServiceTest extends EasyMockSupport
         version.setVersionMimeType(VIDEO_FORMAT);
         version.setFile(file);
 
-        Map<String, Object> properties = getProperties();
-
         Map<String, MediaEngineDao> daos = new HashMap<>();
         daos.put(TRANSCRIBE, transcribeDao);
 
-        when(propertyFileManager.loadMultiple(any(), any())).thenReturn(properties);
         when(transcribeDao.getSupportedObjectType()).thenReturn(TRANSCRIBE);
         when(springContextHolder.getAllBeansOfType(MediaEngineDao.class)).thenReturn(daos);
         when(transcribeDao.findByMediaVersionId(version.getId())).thenReturn(null);
@@ -213,7 +215,6 @@ public class ArkCaseTranscribeServiceTest extends EasyMockSupport
 
         MediaEngine created = arkCaseTranscribeService.create(version, MediaEngineType.AUTOMATIC);
 
-        verify(propertyFileManager, times(3)).loadMultiple(any(), any());
         verify(springContextHolder).getAllBeansOfType(MediaEngineDao.class);
         verify(transcribeDao).getSupportedObjectType();
         verify(transcribeDao).findByMediaVersionId(version.getId());
@@ -236,13 +237,11 @@ public class ArkCaseTranscribeServiceTest extends EasyMockSupport
         version.setVersionMimeType(VIDEO_FORMAT);
         version.setFile(file);
 
-        Map<String, Object> properties = getProperties();
-        properties.replace("mediaengine.automatic.enabled", "false");
+        transcribeConfiguration.setAutomaticEnabled(false);
 
         Map<String, MediaEngineDao> daos = new HashMap<>();
         daos.put(TRANSCRIBE, transcribeDao);
 
-        when(propertyFileManager.loadMultiple(any(), any())).thenReturn(properties);
         when(transcribeDao.getSupportedObjectType()).thenReturn(TRANSCRIBE);
         when(springContextHolder.getAllBeansOfType(MediaEngineDao.class)).thenReturn(daos);
         when(transcribeDao.findByMediaVersionId(version.getId())).thenReturn(null);
@@ -253,7 +252,6 @@ public class ArkCaseTranscribeServiceTest extends EasyMockSupport
         }
         catch (Exception e)
         {
-            verify(propertyFileManager).loadMultiple(any(), any());
             verify(springContextHolder).getAllBeansOfType(MediaEngineDao.class);
             verify(transcribeDao).getSupportedObjectType();
 
@@ -275,10 +273,7 @@ public class ArkCaseTranscribeServiceTest extends EasyMockSupport
         version.setVersionMimeType(VIDEO_FORMAT);
         version.setFile(file);
 
-        Map<String, Object> properties = getProperties();
-        properties.replace("mediaengine.enabled", "false");
-
-        when(propertyFileManager.loadMultiple(any(), any())).thenReturn(properties);
+        transcribeConfiguration.setEnabled(false);
 
         try
         {
@@ -286,8 +281,6 @@ public class ArkCaseTranscribeServiceTest extends EasyMockSupport
         }
         catch (Exception e)
         {
-            verify(propertyFileManager).loadMultiple(any(), any());
-
             assertTrue(e instanceof CreateMediaEngineException);
             assertEquals("TRANSCRIBE service is not allowed.", e.getMessage());
         }
@@ -296,9 +289,14 @@ public class ArkCaseTranscribeServiceTest extends EasyMockSupport
     @Test
     public void create_By_Version_File_Not_Media() throws Exception
     {
+        EcmFile file = new EcmFile();
+        file.setFileId(101L);
+        file.setFileType("user_signature");
+
         EcmFileVersion version = new EcmFileVersion();
         version.setId(101L);
         version.setVersionMimeType("text/plain");
+        version.setFile(file);
 
         try
         {
@@ -324,18 +322,12 @@ public class ArkCaseTranscribeServiceTest extends EasyMockSupport
         version.setVersionMimeType(VIDEO_FORMAT);
         version.setFile(file);
 
-        Map<String, Object> properties = getProperties();
-
-        when(propertyFileManager.loadMultiple(any(), any())).thenReturn(properties);
-
         try
         {
             arkCaseTranscribeService.create(version, MediaEngineType.AUTOMATIC);
         }
         catch (Exception e)
         {
-            verify(propertyFileManager, times(3)).loadMultiple(any(), any());
-
             assertTrue(e instanceof CreateMediaEngineException);
             assertEquals("TRANSCRIBE service is not allowed.", e.getMessage());
         }
@@ -358,12 +350,9 @@ public class ArkCaseTranscribeServiceTest extends EasyMockSupport
         version.setVersionMimeType(VIDEO_FORMAT);
         version.setFile(file);
 
-        Map<String, Object> properties = getProperties();
-
         Map<String, MediaEngineDao> daos = new HashMap<>();
         daos.put(TRANSCRIBE, transcribeDao);
 
-        when(propertyFileManager.loadMultiple(any(), any())).thenReturn(properties);
         when(transcribeDao.getSupportedObjectType()).thenReturn(TRANSCRIBE);
         when(springContextHolder.getAllBeansOfType(MediaEngineDao.class)).thenReturn(daos);
         when(transcribeDao.findByMediaVersionId(version.getId())).thenReturn(transcribe);
@@ -374,7 +363,6 @@ public class ArkCaseTranscribeServiceTest extends EasyMockSupport
         }
         catch (Exception e)
         {
-            verify(propertyFileManager).loadMultiple(any(), any());
             verify(springContextHolder).getAllBeansOfType(MediaEngineDao.class);
             verify(transcribeDao).getSupportedObjectType();
             verify(transcribeDao).findByMediaVersionId(version.getId());
@@ -402,12 +390,9 @@ public class ArkCaseTranscribeServiceTest extends EasyMockSupport
         version.setVersionMimeType(VIDEO_FORMAT);
         version.setFile(file);
 
-        Map<String, Object> properties = getProperties();
-
         Map<String, MediaEngineDao> daos = new HashMap<>();
         daos.put(TRANSCRIBE, transcribeDao);
 
-        when(propertyFileManager.loadMultiple(any(), any())).thenReturn(properties);
         when(transcribeDao.getSupportedObjectType()).thenReturn(TRANSCRIBE);
         when(springContextHolder.getAllBeansOfType(MediaEngineDao.class)).thenReturn(daos);
         when(transcribeDao.findByMediaVersionId(version.getId())).thenReturn(null);
@@ -419,8 +404,6 @@ public class ArkCaseTranscribeServiceTest extends EasyMockSupport
         }
         catch (Exception e)
         {
-
-            verify(propertyFileManager, times(3)).loadMultiple(any(), any());
             verify(transcribeDao).findByMediaVersionId(version.getId());
             verify(springContextHolder).getAllBeansOfType(MediaEngineDao.class);
             verify(transcribeDao).getSupportedObjectType();
@@ -572,64 +555,6 @@ public class ArkCaseTranscribeServiceTest extends EasyMockSupport
     }
 
     @Test
-    public void isTranscribeOn_true() throws Exception
-    {
-        Map<String, Object> properties = getProperties();
-
-        when(propertyFileManager.loadMultiple(any(), any())).thenReturn(properties);
-
-        boolean allow = arkCaseTranscribeService.isServiceEnabled();
-
-        verify(propertyFileManager).loadMultiple(any(), any());
-
-        assertTrue(allow);
-    }
-
-    @Test
-    public void isTranscribeOn_false() throws Exception
-    {
-        Map<String, Object> properties = getProperties();
-        properties.replace("mediaengine.enabled", "false");
-
-        when(propertyFileManager.loadMultiple(any(), any())).thenReturn(properties);
-
-        boolean allow = arkCaseTranscribeService.isServiceEnabled();
-
-        verify(propertyFileManager).loadMultiple(any(), any());
-
-        assertFalse(allow);
-    }
-
-    @Test
-    public void isAutomaticTranscribeOn_true() throws Exception
-    {
-        Map<String, Object> properties = getProperties();
-
-        when(propertyFileManager.loadMultiple(any(), any())).thenReturn(properties);
-
-        boolean allow = arkCaseTranscribeService.isAutomaticOn();
-
-        verify(propertyFileManager).loadMultiple(any(), any());
-
-        assertTrue(allow);
-    }
-
-    @Test
-    public void isAutomaticTranscribeOn_false() throws Exception
-    {
-        Map<String, Object> properties = getProperties();
-        properties.replace("mediaengine.automatic.enabled", "false");
-
-        when(propertyFileManager.loadMultiple(any(), any())).thenReturn(properties);
-
-        boolean allow = arkCaseTranscribeService.isAutomaticOn();
-
-        verify(propertyFileManager).loadMultiple(any(), any());
-
-        assertFalse(allow);
-    }
-
-    @Test
     public void isMediaDurationAllowed_true() throws Exception
     {
         EcmFileVersion version = new EcmFileVersion();
@@ -637,13 +562,7 @@ public class ArkCaseTranscribeServiceTest extends EasyMockSupport
         version.setDurationSeconds(200d);
         version.setVersionMimeType(VIDEO_FORMAT);
 
-        Map<String, Object> properties = getProperties();
-
-        when(propertyFileManager.loadMultiple(any(), any())).thenReturn(properties);
-
         boolean result = arkCaseTranscribeService.isMediaDurationAllowed(version);
-
-        verify(propertyFileManager).loadMultiple(any(), any());
 
         assertTrue(result);
     }
@@ -656,13 +575,7 @@ public class ArkCaseTranscribeServiceTest extends EasyMockSupport
         version.setDurationSeconds(1000000d);
         version.setVersionMimeType(VIDEO_FORMAT);
 
-        Map<String, Object> properties = getProperties();
-
-        when(propertyFileManager.loadMultiple(any(), any())).thenReturn(properties);
-
         boolean result = arkCaseTranscribeService.isMediaDurationAllowed(version);
-
-        verify(propertyFileManager).loadMultiple(any(), any());
 
         assertFalse(result);
     }
@@ -690,101 +603,5 @@ public class ArkCaseTranscribeServiceTest extends EasyMockSupport
         boolean result = arkCaseTranscribeService.isProcessable(version);
 
         assertFalse(result);
-    }
-
-    @Test
-    public void getConfiguration() throws Exception
-    {
-        Map<String, Object> properties = getProperties();
-
-        when(propertyFileManager.loadMultiple(any(), any())).thenReturn(properties);
-
-        TranscribeConfiguration configuration = transcribeConfigurationPropertiesService.get();
-
-        verify(propertyFileManager).loadMultiple(any(), any());
-
-        assertNotNull(configuration);
-        assertEquals(Integer.parseInt((String) properties.get("mediaengine.confidence")), configuration.getConfidence());
-        assertEquals(properties.get("mediaengine.provider"), configuration.getProvider());
-        assertEquals(1, configuration.getProviders().size());
-        assertEquals(properties.get("mediaengine.provider"), configuration.getProviders().get(0));
-    }
-
-    @Test
-    public void getConfiguration_Exception() throws Exception
-    {
-        // Setting "cost" to some text will throw exception - invalid number format
-        Map<String, Object> properties = getProperties();
-        properties.replace("cost", "some text");
-
-        when(propertyFileManager.loadMultiple(any(), any())).thenReturn(properties);
-
-        try
-        {
-            transcribeConfigurationPropertiesService.get();
-        }
-        catch (Exception e)
-        {
-            verify(propertyFileManager).loadMultiple(any(), any());
-
-            assertNotNull(e);
-            assertTrue(e instanceof GetConfigurationException);
-            assertTrue(e.getCause() instanceof NumberFormatException);
-        }
-    }
-
-    @Test
-    public void saveConfiguration() throws Exception
-    {
-        TranscribeConfiguration configuration = new TranscribeConfiguration();
-        configuration.setEnabled(false);
-        configuration.setAutomaticEnabled(false);
-        configuration.setNewMediaEngineForNewVersion(false);
-        configuration.setCopyMediaEngineForNewVersion(true);
-        configuration.setCost(new BigDecimal("0.0000000001"));
-        configuration.setConfidence(80);
-        configuration.setNumberOfFilesForProcessing(10);
-        configuration.setWordCountPerItem(20);
-        configuration.setProvider(AWS_PROVIDER);
-        configuration.setProviders(Arrays.asList(AWS_PROVIDER));
-        configuration.setProviderPurgeAttempts(5);
-        configuration.setAllowedMediaDuration(7200);
-        configuration.setSilentBetweenWords(new BigDecimal("2"));
-
-        doNothing().when(propertyFileManager).storeMultiple(any(), any(), eq(false));
-
-        TranscribeConfiguration saved = transcribeConfigurationPropertiesService.save(configuration);
-
-        verify(propertyFileManager).storeMultiple(any(), any(), eq(false));
-
-        assertNotNull(saved);
-        assertEquals(configuration.getConfidence(), saved.getConfidence());
-        assertEquals(configuration.getProvider().toString(), saved.getProvider().toString());
-        assertEquals(configuration.getProviders().size(), saved.getProviders().size());
-        assertEquals(configuration.getProviders().get(0).toString(), saved.getProviders().get(0).toString());
-    }
-
-    private Map<String, Object> getProperties()
-    {
-        // Initialize default ones, override just specific one for given test case.
-        Map<String, Object> properties = new HashMap<>();
-        properties.put("mediaengine.enabled", "true");
-        properties.put("mediaengine.automatic.enabled", "true");
-        properties.put("mediaengine.new.mediaengine.for.new.version", "false");
-        properties.put("mediaengine.copy.mediaengine.for.new.version", "true");
-        properties.put("mediaengine.cost", "10.5");
-        properties.put("mediaengine.confidence", "80");
-        properties.put("mediaengine.number.of.files.for.processing", "10");
-        properties.put("transcribe.word.count.per.item", "20");
-        properties.put("mediaengine.service", TRANSCRIBE);
-        properties.put("mediaengine.provider", AWS_PROVIDER);
-        properties.put("mediaengine.providers", AWS_PROVIDER);
-        properties.put("mediaengine.provider.purge.attempts", 5);
-        properties.put("transcribe.allowed.media.duration.in.seconds", 7200);
-        properties.put("transcribe.silent.between.words.in.seconds", "2");
-        properties.put("mediaengine.excludedFileTypes", "");
-        properties.put("mediaengine.temp.path", "");
-
-        return properties;
     }
 }

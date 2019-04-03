@@ -27,27 +27,31 @@ package com.armedia.acm.tool.transcribe.model;
  * #L%
  */
 
-import com.armedia.acm.tool.transcribe.annotation.ConfigurationProperties;
-import com.armedia.acm.tool.transcribe.annotation.ConfigurationProperty;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
-import java.io.Serializable;
+import org.springframework.beans.factory.annotation.Value;
 
 /**
  * Created by Vladimir Cherepnalkovski
  */
-@ConfigurationProperties(path = "${user.home}/.arkcase/acm/aws/config.properties")
-public class AWSTranscribeConfiguration implements Serializable
+@JsonSerialize(as = AWSTranscribeConfiguration.class)
+public class AWSTranscribeConfiguration
 {
-    @ConfigurationProperty(key = "aws.bucket")
+    @JsonProperty("aws.config.bucket")
+    @Value("${aws.config.bucket}")
     private String bucket;
 
-    @ConfigurationProperty(key = "aws.region")
+    @JsonProperty("aws.config.region")
+    @Value("${aws.config.region}")
     private String region;
 
-    @ConfigurationProperty(key = "aws.host")
+    @JsonProperty("aws.config.host")
+    @Value("${aws.config.host}")
     private String host;
 
-    @ConfigurationProperty(key = "aws.profile")
+    @JsonProperty("aws.config.profile")
+    @Value("${aws.config.profile}")
     private String profile;
 
     public String getBucket()

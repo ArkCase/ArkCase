@@ -43,7 +43,6 @@ import com.amazonaws.services.transcribe.model.StartTranscriptionJobResult;
 import com.amazonaws.services.transcribe.model.TranscriptionJobStatus;
 import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.tool.mediaengine.exception.CreateMediaEngineToolException;
-import com.armedia.acm.tool.mediaengine.exception.GetConfigurationException;
 import com.armedia.acm.tool.mediaengine.exception.GetMediaEngineToolException;
 import com.armedia.acm.tool.mediaengine.model.MediaEngineDTO;
 import com.armedia.acm.tool.mediaengine.model.MediaEngineStatusType;
@@ -74,6 +73,7 @@ import java.io.InputStream;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Vladimir Cherepnalkovski
@@ -87,8 +87,9 @@ public class AWSTranscribeServiceImpl implements TranscribeIntegrationService
     private AmazonTranscribe transcribeClient;
     private MuleContextManager muleContextManager;
     private String credentialConfigurationFileLocation;
-    private AWSTranscribeConfigurationPropertiesService awsTranscribeConfigurationPropertiesService;
     private MediaEngineIntegrationEventPublisher mediaEngineIntegrationEventPublisher;
+    private AWSTranscribeConfigurationService awsTranscribeConfigurationService;
+    private AWSTranscribeCredentialsConfigurationService awsTranscribeCredentialsConfigurationService;
 
     public static String extractMediaType(String mimeType)
     {
@@ -100,11 +101,12 @@ public class AWSTranscribeServiceImpl implements TranscribeIntegrationService
         return "";
     }
 
-    public void init() throws GetConfigurationException
+    public void init()
     {
-        AWSTranscribeConfiguration configuration = getConfiguration();
+        AWSTranscribeConfiguration configuration = getAwsTranscribeConfigurationService().getAWSTranscribeConfig();
+
         ArkCaseAWSCredentialsProviderChain credentialsProviderChain = new ArkCaseAWSCredentialsProviderChain(
-                getCredentialConfigurationFileLocation(), configuration.getProfile());
+                getCredentialConfigurationFileLocation(), configuration.getProfile(), getAwsTranscribeCredentialsConfigurationService());
         s3Client = AmazonS3ClientBuilder.standard().withCredentials(credentialsProviderChain)
                 .withRegion(Regions.fromName(configuration.getRegion())).build();
         transcribeClient = AmazonTranscribeClientBuilder.standard().withCredentials(credentialsProviderChain)
@@ -117,17 +119,7 @@ public class AWSTranscribeServiceImpl implements TranscribeIntegrationService
     {
         AWSTranscribeConfiguration configuration = null;
 
-        try
-        {
-            configuration = getConfiguration();
-        }
-        catch (GetConfigurationException e)
-        {
-            getMediaEngineIntegrationEventPublisher().publishFailedEvent(mediaEngineDTO, TranscribeConstants.TRANSCRIBE_SYSTEM_USER, null,
-                    true, TranscribeConstants.SERVICE);
-            throw new CreateMediaEngineToolException(String.format("Transcribe failed to create on Amazon. REASON=[%s]", e.getMessage()),
-                    e);
-        }
+        configuration = getAwsTranscribeConfigurationService().getAWSTranscribeConfig();
 
         checkIfMediaExist(mediaEngineDTO, configuration.getBucket());
         uploadMedia(mediaEngineDTO);
@@ -135,7 +127,7 @@ public class AWSTranscribeServiceImpl implements TranscribeIntegrationService
     }
 
     @Override
-    public MediaEngineDTO get(String remoteId, String tempPath) throws GetMediaEngineToolException
+    public MediaEngineDTO get(String remoteId, Map<String, Object> props) throws GetMediaEngineToolException
     {
         if (StringUtils.isNotEmpty(remoteId))
         {
@@ -150,7 +142,7 @@ public class AWSTranscribeServiceImpl implements TranscribeIntegrationService
                 TranscribeDTO transcribeDTO = new TranscribeDTO();
                 if (TranscriptionJobStatus.COMPLETED.toString().equals(resultStatus))
                 {
-                    transcribeDTO.setTranscribeItems(generateTranscribeItems(result));
+                    transcribeDTO.setTranscribeItems(generateTranscribeItems(result, props));
                     transcribeDTO.setStatus(MediaEngineStatusType.COMPLETED.toString());
                     transcribeDTO.setRemoteId(remoteId);
                 }
@@ -186,7 +178,7 @@ public class AWSTranscribeServiceImpl implements TranscribeIntegrationService
     {
         try
         {
-            AWSTranscribeConfiguration configuration = getConfiguration();
+            AWSTranscribeConfiguration configuration = getAwsTranscribeConfigurationService().getAWSTranscribeConfig();
             String key = mediaEngineDTO.getRemoteId() + mediaEngineDTO.getProperties().get("extension");
             getS3Client().deleteObject(configuration.getBucket(), key);
 
@@ -209,7 +201,7 @@ public class AWSTranscribeServiceImpl implements TranscribeIntegrationService
         {
             try
             {
-                AWSTranscribeConfiguration configuration = getConfiguration();
+                AWSTranscribeConfiguration configuration = getAwsTranscribeConfigurationService().getAWSTranscribeConfig();
 
                 String mediaType = extractMediaType(mediaEngineDTO.getProperties().get("mimeType"));
                 String key = mediaEngineDTO.getRemoteId() + mediaEngineDTO.getProperties().get("extension");
@@ -245,7 +237,7 @@ public class AWSTranscribeServiceImpl implements TranscribeIntegrationService
         {
             try (InputStream inputStream = new FileInputStream(mediaEngineDTO.getMediaEcmFileVersion()))
             {
-                AWSTranscribeConfiguration configuration = getConfiguration();
+                AWSTranscribeConfiguration configuration = getAwsTranscribeConfigurationService().getAWSTranscribeConfig();
 
                 String contentLength = mediaEngineDTO.getProperties().get("fileSize");
                 String mimeType = mediaEngineDTO.getProperties().get("mimeType");
@@ -296,7 +288,8 @@ public class AWSTranscribeServiceImpl implements TranscribeIntegrationService
         }
     }
 
-    private List<TranscribeItemDTO> generateTranscribeItems(GetTranscriptionJobResult result) throws MuleException
+    private List<TranscribeItemDTO> generateTranscribeItems(GetTranscriptionJobResult result, Map<String, Object> props)
+            throws MuleException
     {
         if (result != null && result.getTranscriptionJob().getTranscript() != null)
         {
@@ -316,7 +309,7 @@ public class AWSTranscribeServiceImpl implements TranscribeIntegrationService
 
             try
             {
-                return convertJsonStringToListOfTranscribeItems(message.getPayloadAsString());
+                return convertJsonStringToListOfTranscribeItems(message.getPayloadAsString(), props);
             }
             catch (Exception e)
             {
@@ -327,9 +320,12 @@ public class AWSTranscribeServiceImpl implements TranscribeIntegrationService
         return null;
     }
 
-    private List<TranscribeItemDTO> convertJsonStringToListOfTranscribeItems(String jsonString)
+    private List<TranscribeItemDTO> convertJsonStringToListOfTranscribeItems(String jsonString, Map<String, Object> props)
     {
         List<TranscribeItemDTO> items = new ArrayList<>();
+        Integer wordCountPerItem = (Integer) props.get("wordCountPerItem");
+
+        BigDecimal silentBetweenWords = (BigDecimal) props.get("silentBetweenWords");
 
         try
         {
@@ -368,7 +364,7 @@ public class AWSTranscribeServiceImpl implements TranscribeIntegrationService
 
                 if (!silentDetected)
                 {
-                    silentDetected = isSilentBetweenWordsBiggerThanConfigured(i, size, awsTranscriptItems);
+                    silentDetected = isSilentBetweenWordsBiggerThanConfigured(i, size, awsTranscriptItems, silentBetweenWords);
                 }
 
                 if (awsTranscriptItem.getAlternatives() != null && !awsTranscriptItem.getAlternatives().isEmpty())
@@ -390,7 +386,7 @@ public class AWSTranscribeServiceImpl implements TranscribeIntegrationService
                     }
                 }
 
-                if (counter >= TranscribeConstants.WORD_COUNT_PER_ITEM || i == size - 1 || silentDetected)
+                if (counter >= wordCountPerItem || i == size - 1 || silentDetected)
                 {
                     if (!isNextPunctuation(i, size, awsTranscriptItems))
                     {
@@ -430,7 +426,8 @@ public class AWSTranscribeServiceImpl implements TranscribeIntegrationService
                 && "punctuation".equalsIgnoreCase(awsTranscriptItems.get(i + 1).getType()));
     }
 
-    private boolean isSilentBetweenWordsBiggerThanConfigured(int i, int size, List<AWSTranscriptItem> awsTranscriptItems)
+    private boolean isSilentBetweenWordsBiggerThanConfigured(int i, int size, List<AWSTranscriptItem> awsTranscriptItems,
+            BigDecimal silentBetweenWords)
     {
         if (i <= size - 2 && awsTranscriptItems.get(i) != null && !"punctuation".equalsIgnoreCase(awsTranscriptItems.get(i).getType()))
         {
@@ -443,7 +440,6 @@ public class AWSTranscribeServiceImpl implements TranscribeIntegrationService
             {
                 String currentEndTimeAsString = awsTranscriptItems.get(i).getEndTime();
                 String nextStartTimeAsString = awsTranscriptItems.get(j + 1).getStartTime();
-                BigDecimal silentBetweenWords = BigDecimal.valueOf(TranscribeConstants.SILENT_BETWEEN_WORDS);
                 if (StringUtils.isNotEmpty(currentEndTimeAsString) && StringUtils.isNotEmpty(nextStartTimeAsString)
                         && silentBetweenWords != null)
                 {
@@ -491,11 +487,6 @@ public class AWSTranscribeServiceImpl implements TranscribeIntegrationService
         return 0;
     }
 
-    public AWSTranscribeConfiguration getConfiguration() throws GetConfigurationException
-    {
-        return getAwsTranscribeConfigurationPropertiesService().get();
-    }
-
     public AmazonS3 getS3Client()
     {
         return s3Client;
@@ -536,15 +527,14 @@ public class AWSTranscribeServiceImpl implements TranscribeIntegrationService
         this.credentialConfigurationFileLocation = credentialConfigurationFileLocation;
     }
 
-    public AWSTranscribeConfigurationPropertiesService getAwsTranscribeConfigurationPropertiesService()
+    public AWSTranscribeConfigurationService getAwsTranscribeConfigurationService()
     {
-        return awsTranscribeConfigurationPropertiesService;
+        return awsTranscribeConfigurationService;
     }
 
-    public void setAwsTranscribeConfigurationPropertiesService(
-            AWSTranscribeConfigurationPropertiesService awsTranscribeConfigurationPropertiesService)
+    public void setAwsTranscribeConfigurationService(AWSTranscribeConfigurationService awsTranscribeConfigurationService)
     {
-        this.awsTranscribeConfigurationPropertiesService = awsTranscribeConfigurationPropertiesService;
+        this.awsTranscribeConfigurationService = awsTranscribeConfigurationService;
     }
 
     public String getName()
@@ -560,5 +550,16 @@ public class AWSTranscribeServiceImpl implements TranscribeIntegrationService
     public void setMediaEngineIntegrationEventPublisher(MediaEngineIntegrationEventPublisher mediaEngineIntegrationEventPublisher)
     {
         this.mediaEngineIntegrationEventPublisher = mediaEngineIntegrationEventPublisher;
+    }
+
+    public AWSTranscribeCredentialsConfigurationService getAwsTranscribeCredentialsConfigurationService()
+    {
+        return awsTranscribeCredentialsConfigurationService;
+    }
+
+    public void setAwsTranscribeCredentialsConfigurationService(
+            AWSTranscribeCredentialsConfigurationService awsTranscribeCredentialsConfigurationService)
+    {
+        this.awsTranscribeCredentialsConfigurationService = awsTranscribeCredentialsConfigurationService;
     }
 }

@@ -34,7 +34,6 @@ import com.armedia.acm.scheduler.AcmSchedulableBean;
 import com.armedia.acm.service.objectlock.model.AcmObjectLock;
 import com.armedia.acm.service.objectlock.service.AcmObjectLockService;
 import com.armedia.acm.service.objectlock.service.AcmObjectLockingManager;
-import com.armedia.acm.services.mediaengine.exception.GetConfigurationException;
 import com.armedia.acm.services.mediaengine.exception.GetMediaEngineException;
 import com.armedia.acm.services.mediaengine.exception.MediaEngineProviderNotFound;
 import com.armedia.acm.services.mediaengine.mapper.MediaEngineMapper;
@@ -49,7 +48,7 @@ import com.armedia.acm.services.mediaengine.model.MediaEngineType;
 import com.armedia.acm.services.transcribe.factory.TranscribeProviderFactory;
 import com.armedia.acm.services.transcribe.model.TranscribeConstants;
 import com.armedia.acm.services.transcribe.service.ArkCaseTranscribeService;
-import com.armedia.acm.services.transcribe.service.TranscribeConfigurationPropertiesService;
+import com.armedia.acm.services.transcribe.service.TranscribeConfigurationService;
 import com.armedia.acm.services.transcribe.utils.TranscribeUtils;
 import com.armedia.acm.tool.mediaengine.exception.CreateMediaEngineToolException;
 import com.armedia.acm.tool.mediaengine.model.MediaEngineDTO;
@@ -73,11 +72,11 @@ public class TranscribeQueueJob implements AcmSchedulableBean
     private ArkCaseTranscribeService arkCaseTranscribeService;
     private RuntimeService activitiRuntimeService;
     private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
-    private TranscribeConfigurationPropertiesService transcribeConfigurationPropertiesService;
     private MediaEngineMapper mediaEngineMapper;
     private AcmObjectLockService objectLockService;
     private AcmObjectLockingManager objectLockingManager;
     private TranscribeProviderFactory transcribeProviderFactory;
+    private TranscribeConfigurationService transcribeConfigurationService;
 
     @Override
     public void executeTask()
@@ -86,7 +85,7 @@ public class TranscribeQueueJob implements AcmSchedulableBean
         {
             getAuditPropertyEntityAdapter().setUserId(TranscribeConstants.TRANSCRIBE_SYSTEM_USER);
 
-            MediaEngineConfiguration configuration = getTranscribeConfigurationPropertiesService().get();
+            MediaEngineConfiguration configuration = getTranscribeConfigurationService().loadProperties();
             List<MediaEngine> processingTranscribeObjects = getArkCaseTranscribeService()
                     .getAllByStatus(MediaEngineStatusType.PROCESSING.toString());
             List<MediaEngine> processingTranscribeAutomaticObjects = processingTranscribeObjects.stream()
@@ -113,7 +112,7 @@ public class TranscribeQueueJob implements AcmSchedulableBean
                 moveProcessesFromQueue(processInstances, configuration);
             }
         }
-        catch (GetConfigurationException | GetMediaEngineException e)
+        catch (GetMediaEngineException e)
         {
             LOG.error("Could not move Transcribe from the queue. REASON=[{}]", e.getMessage(), e);
         }
@@ -155,7 +154,7 @@ public class TranscribeQueueJob implements AcmSchedulableBean
 
                 String providerName = configuration.getProvider();
                 String tempPath = configuration.getTempPath();
-                MediaEngineDTO mediaEngineDTO = getMediaEngineMapper().MediaEngineToDTO(mediaEngine, tempPath);
+                MediaEngineDTO mediaEngineDTO = getMediaEngineMapper().mediaEngineToDTO(mediaEngine, tempPath);
                 mediaEngineDTO
                         .setMediaEcmFileVersion(getArkCaseTranscribeService().createTempFile(mediaEngine, tempPath));
                 getTranscribeProviderFactory().getProvider(providerName).create(mediaEngineDTO);
@@ -207,17 +206,6 @@ public class TranscribeQueueJob implements AcmSchedulableBean
         this.auditPropertyEntityAdapter = auditPropertyEntityAdapter;
     }
 
-    public TranscribeConfigurationPropertiesService getTranscribeConfigurationPropertiesService()
-    {
-        return transcribeConfigurationPropertiesService;
-    }
-
-    public void setTranscribeConfigurationPropertiesService(
-            TranscribeConfigurationPropertiesService transcribeConfigurationPropertiesService)
-    {
-        this.transcribeConfigurationPropertiesService = transcribeConfigurationPropertiesService;
-    }
-
     public MediaEngineMapper getMediaEngineMapper()
     {
         return mediaEngineMapper;
@@ -256,5 +244,15 @@ public class TranscribeQueueJob implements AcmSchedulableBean
     public void setTranscribeProviderFactory(TranscribeProviderFactory transcribeProviderFactory)
     {
         this.transcribeProviderFactory = transcribeProviderFactory;
+    }
+
+    public TranscribeConfigurationService getTranscribeConfigurationService()
+    {
+        return transcribeConfigurationService;
+    }
+
+    public void setTranscribeConfigurationService(TranscribeConfigurationService transcribeConfigurationService)
+    {
+        this.transcribeConfigurationService = transcribeConfigurationService;
     }
 }

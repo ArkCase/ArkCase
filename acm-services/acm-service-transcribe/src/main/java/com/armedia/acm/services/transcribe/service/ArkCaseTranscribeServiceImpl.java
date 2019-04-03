@@ -27,6 +27,7 @@ package com.armedia.acm.services.transcribe.service;
  * #L%
  */
 
+import com.armedia.acm.configuration.service.ConfigurationPropertyException;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectLockException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
@@ -41,7 +42,6 @@ import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
 import com.armedia.acm.service.objectlock.model.AcmObjectLock;
 import com.armedia.acm.services.labels.service.LabelManagementService;
 import com.armedia.acm.services.mediaengine.exception.CreateMediaEngineException;
-import com.armedia.acm.services.mediaengine.exception.GetConfigurationException;
 import com.armedia.acm.services.mediaengine.exception.GetMediaEngineException;
 import com.armedia.acm.services.mediaengine.exception.MediaEngineProviderNotFound;
 import com.armedia.acm.services.mediaengine.exception.SaveConfigurationException;
@@ -50,6 +50,7 @@ import com.armedia.acm.services.mediaengine.model.MediaEngine;
 import com.armedia.acm.services.mediaengine.model.MediaEngineActionType;
 import com.armedia.acm.services.mediaengine.model.MediaEngineBusinessProcessModel;
 import com.armedia.acm.services.mediaengine.model.MediaEngineBusinessProcessVariableKey;
+import com.armedia.acm.services.mediaengine.model.MediaEngineConfiguration;
 import com.armedia.acm.services.mediaengine.model.MediaEngineConstants;
 import com.armedia.acm.services.mediaengine.model.MediaEngineStatusType;
 import com.armedia.acm.services.mediaengine.model.MediaEngineType;
@@ -96,6 +97,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -103,19 +105,19 @@ import java.util.stream.Collectors;
 /**
  * Created by Riste Tutureski <riste.tutureski@armedia.com> on 02/28/2018
  */
-public class ArkCaseTranscribeServiceImpl extends ArkCaseMediaEngineServiceImpl<Transcribe, TranscribeConfiguration>
+public class ArkCaseTranscribeServiceImpl extends ArkCaseMediaEngineServiceImpl<Transcribe>
         implements ArkCaseTranscribeService
 {
     private final Logger LOG = LoggerFactory.getLogger(getClass());
 
     private TranscribeDao transcribeDao;
-    private TranscribeConfigurationPropertiesService transcribeConfigurationPropertiesService;
     private UserDao userDao;
     private LabelManagementService labelManagementService;
     private ItemsMapper itemsMapper;
     private TranscribeProviderFactory transcribeProviderFactory;
     private NotificationDao notificationDao;
     private EcmFileDao ecmFileDao;
+    private TranscribeConfigurationService transcribeConfigurationService;
 
     @Override
     public void notify(Long id, String action)
@@ -443,11 +445,11 @@ public class ArkCaseTranscribeServiceImpl extends ArkCaseMediaEngineServiceImpl<
     }
 
     @Override
-    public boolean purge(MediaEngine mediaEngine) throws GetConfigurationException, MediaEngineProviderNotFound
+    public boolean purge(MediaEngine mediaEngine) throws MediaEngineProviderNotFound
     {
-        TranscribeConfiguration configuration = getConfiguration();
+        TranscribeConfiguration configuration = getTranscribeConfigurationService().loadProperties();
         String providerName = configuration.getProvider();
-        MediaEngineDTO mediaEngineDTO = getMediaEngineMapper().MediaEngineToDTO(mediaEngine, configuration.getTempPath());
+        MediaEngineDTO mediaEngineDTO = getMediaEngineMapper().mediaEngineToDTO(mediaEngine, configuration.getTempPath());
         mediaEngineDTO.setMediaEcmFileVersion(
                 new File((String) getActivitiRuntimeService().getVariable(mediaEngineDTO.getProcessId(), "UPLOADED_TMP")));
         return getTranscribeProviderFactory().getProvider(providerName).purge(mediaEngineDTO);
@@ -465,26 +467,18 @@ public class ArkCaseTranscribeServiceImpl extends ArkCaseMediaEngineServiceImpl<
     @Override
     public boolean isMediaDurationAllowed(EcmFileVersion ecmFileVersion)
     {
-        try
-        {
-            TranscribeConfiguration configuration = getTranscribeConfigurationPropertiesService().get();
-            boolean allow = configuration != null && ecmFileVersion != null
-                    && ecmFileVersion.getDurationSeconds() <= configuration.getAllowedMediaDuration();
+        TranscribeConfiguration configuration = getTranscribeConfigurationService().loadProperties();
+        boolean allow = configuration != null && ecmFileVersion != null
+                && ecmFileVersion.getDurationSeconds() <= configuration.getAllowedMediaDuration();
 
-            if (!allow)
-            {
-                LOG.warn(
-                        "The duration of the media file [{}] is more than allowed [{}] seconds. Automatic Transcription will be terminated.",
-                        ecmFileVersion.getDurationSeconds(), configuration != null ? configuration.getAllowedMediaDuration() : "unknown");
-            }
-
-            return allow;
-        }
-        catch (GetConfigurationException e)
+        if (!allow)
         {
-            LOG.warn("Failed to retrieve Transcribe configuration. Automatic Transcribe will be terminated.");
-            return false;
+            LOG.warn(
+                    "The duration of the media file [{}] is more than allowed [{}] seconds. Automatic Transcription will be terminated.",
+                    ecmFileVersion.getDurationSeconds(), configuration != null ? configuration.getAllowedMediaDuration() : "unknown");
         }
+
+        return allow;
     }
 
     @Override
@@ -597,7 +591,7 @@ public class ArkCaseTranscribeServiceImpl extends ArkCaseMediaEngineServiceImpl<
                     }
                 }
             }
-            catch (GetMediaEngineException | GetConfigurationException | GetMediaEngineToolException | MediaEngineProviderNotFound e)
+            catch (GetMediaEngineException | GetMediaEngineToolException | MediaEngineProviderNotFound e)
             {
                 LOG.warn("Could not check if Transcribe should be completed. REASON=[{}]", e.getMessage());
             }
@@ -648,13 +642,16 @@ public class ArkCaseTranscribeServiceImpl extends ArkCaseMediaEngineServiceImpl<
     }
 
     private TranscribeDTO getProviderDTO(MediaEngine mediaEngine)
-            throws GetConfigurationException, GetMediaEngineToolException, MediaEngineProviderNotFound
+            throws GetMediaEngineToolException, MediaEngineProviderNotFound
     {
-        TranscribeConfiguration configuration = getTranscribeConfigurationPropertiesService().get();
+        TranscribeConfiguration configuration = getTranscribeConfigurationService().loadProperties();
         String providerName = configuration.getProvider();
 
+        Map<String, Object> props = new HashMap<>();
+        props.put("silentBetweenWords", configuration.getSilentBetweenWords());
+        props.put("wordCountPerItem", configuration.getWordCountPerItem());
         return (TranscribeDTO) getTranscribeProviderFactory().getProvider(providerName).get(mediaEngine.getRemoteId(),
-                null);
+                props);
     }
 
     @Override
@@ -676,7 +673,7 @@ public class ArkCaseTranscribeServiceImpl extends ArkCaseMediaEngineServiceImpl<
                 MediaEngine mediaEngine = get(ids.get(0));
                 if (MediaEngineStatusType.QUEUED.toString().equals(mediaEngine.getStatus()))
                 {
-                    TranscribeConfiguration configuration = getTranscribeConfigurationPropertiesService().get();
+                    TranscribeConfiguration configuration = getTranscribeConfigurationService().loadProperties();
                     List<MediaEngine> processingTranscribeObjects = getAllByStatus(MediaEngineStatusType.PROCESSING.toString());
                     List<MediaEngine> processingTranscribeAutomaticObjects = processingTranscribeObjects.stream()
                             .filter(t -> MediaEngineType.AUTOMATIC.toString().equalsIgnoreCase(t.getType())).collect(Collectors.toList());
@@ -690,7 +687,7 @@ public class ArkCaseTranscribeServiceImpl extends ArkCaseMediaEngineServiceImpl<
                 }
 
             }
-            catch (GetMediaEngineException | GetConfigurationException e)
+            catch (GetMediaEngineException e)
             {
                 LOG.warn("Could not check if Transcribe should be processed. REASON=[{}]", e.getMessage());
             }
@@ -708,7 +705,7 @@ public class ArkCaseTranscribeServiceImpl extends ArkCaseMediaEngineServiceImpl<
             }
             String providerName = configuration.getProvider();
             // Create Transcribe Job on provider side and set the Status and Action to PROCESSING
-            MediaEngineDTO mediaEngineDTO = getMediaEngineMapper().MediaEngineToDTO(mediaEngine, configuration.getTempPath());
+            MediaEngineDTO mediaEngineDTO = getMediaEngineMapper().mediaEngineToDTO(mediaEngine, configuration.getTempPath());
             mediaEngineDTO.setMediaEcmFileVersion(createTempFile(mediaEngine, configuration.getTempPath()));
             getActivitiRuntimeService().setVariable(mediaEngineDTO.getProcessId(), "UPLOADED_TMP",
                     mediaEngineDTO.getMediaEcmFileVersion().getAbsolutePath());
@@ -761,7 +758,7 @@ public class ArkCaseTranscribeServiceImpl extends ArkCaseMediaEngineServiceImpl<
             try
             {
                 MediaEngine mediaEngine = get(ids.get(0));
-                TranscribeConfiguration configuration = getTranscribeConfigurationPropertiesService().get();
+                TranscribeConfiguration configuration = getTranscribeConfigurationService().loadProperties();
                 int purgeAttempts = 0;
                 int purgeAttemptsInConfiguration = configuration.getProviderPurgeAttempts();
                 if (delegateExecution.hasVariable(MediaEngineBusinessProcessVariableKey.PURGE_ATTEMPTS.toString()))
@@ -853,15 +850,22 @@ public class ArkCaseTranscribeServiceImpl extends ArkCaseMediaEngineServiceImpl<
     }
 
     @Override
-    public TranscribeConfiguration getConfiguration() throws GetConfigurationException
+    public TranscribeConfiguration getConfiguration()
     {
-        return getTranscribeConfigurationPropertiesService().get();
+        return getTranscribeConfigurationService().loadProperties();
     }
 
     @Override
-    public TranscribeConfiguration saveConfiguration(TranscribeConfiguration configuration) throws SaveConfigurationException
+    public void saveConfiguration(MediaEngineConfiguration configuration) throws SaveConfigurationException
     {
-        return getTranscribeConfigurationPropertiesService().save(configuration);
+        try
+        {
+            getTranscribeConfigurationService().saveProperties(configuration);
+        }
+        catch (ConfigurationPropertyException e)
+        {
+            throw new SaveConfigurationException(e);
+        }
     }
 
     public TranscribeDao getTranscribeDao()
@@ -872,17 +876,6 @@ public class ArkCaseTranscribeServiceImpl extends ArkCaseMediaEngineServiceImpl<
     public void setTranscribeDao(TranscribeDao transcribeDao)
     {
         this.transcribeDao = transcribeDao;
-    }
-
-    public TranscribeConfigurationPropertiesService getTranscribeConfigurationPropertiesService()
-    {
-        return transcribeConfigurationPropertiesService;
-    }
-
-    public void setTranscribeConfigurationPropertiesService(
-            TranscribeConfigurationPropertiesService transcribeConfigurationPropertiesService)
-    {
-        this.transcribeConfigurationPropertiesService = transcribeConfigurationPropertiesService;
     }
 
     public UserDao getUserDao()
@@ -943,5 +936,15 @@ public class ArkCaseTranscribeServiceImpl extends ArkCaseMediaEngineServiceImpl<
     public void setEcmFileDao(EcmFileDao ecmFileDao)
     {
         this.ecmFileDao = ecmFileDao;
+    }
+
+    public TranscribeConfigurationService getTranscribeConfigurationService()
+    {
+        return transcribeConfigurationService;
+    }
+
+    public void setTranscribeConfigurationService(TranscribeConfigurationService transcribeConfigurationService)
+    {
+        this.transcribeConfigurationService = transcribeConfigurationService;
     }
 }

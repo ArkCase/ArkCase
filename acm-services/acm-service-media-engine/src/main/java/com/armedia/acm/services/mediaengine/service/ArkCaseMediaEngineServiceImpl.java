@@ -40,7 +40,6 @@ import com.armedia.acm.services.mediaengine.dao.MediaEngineDao;
 import com.armedia.acm.services.mediaengine.exception.CreateMediaEngineException;
 import com.armedia.acm.services.mediaengine.exception.GetConfigurationException;
 import com.armedia.acm.services.mediaengine.exception.GetMediaEngineException;
-import com.armedia.acm.services.mediaengine.exception.SaveConfigurationException;
 import com.armedia.acm.services.mediaengine.exception.SaveMediaEngineException;
 import com.armedia.acm.services.mediaengine.factory.MediaEngineServiceFactory;
 import com.armedia.acm.services.mediaengine.mapper.MediaEngineMapper;
@@ -81,10 +80,9 @@ import java.util.Map;
 /**
  * Created by Vladimir Cherepnalkovski <vladimir.cherepnalkovski@armedia.com>
  */
-public abstract class ArkCaseMediaEngineServiceImpl<T extends MediaEngine, K extends MediaEngineConfiguration>
-        implements MediaEngineService<T, K>
+public abstract class ArkCaseMediaEngineServiceImpl<T extends MediaEngine>
+        implements MediaEngineService<T>
 {
-
     private final Logger LOG = LoggerFactory.getLogger(getClass());
     private SpringContextHolder springContextHolder;
     private FolderAndFilesUtils folderAndFilesUtils;
@@ -93,7 +91,6 @@ public abstract class ArkCaseMediaEngineServiceImpl<T extends MediaEngine, K ext
     private ArkCaseBeanUtils arkCaseBeanUtils;
     private RuntimeService activitiRuntimeService;
     private MediaEngineBusinessProcessRulesExecutor mediaEngineBusinessProcessRulesExecutor;
-    private MediaEngineConfigurationPropertiesService<K> mediaEngineConfigurationPropertiesService;
     private EcmFileVersionDao ecmFileVersionDao;
     private Map<String, MediaEngineBusinessProcessRulesExecutor> processHandlerMap;
     private PipelineManager<MediaEngine, MediaEnginePipelineContext> pipelineManager;
@@ -630,18 +627,6 @@ public abstract class ArkCaseMediaEngineServiceImpl<T extends MediaEngine, K ext
     }
 
     @Override
-    public K getConfiguration() throws GetConfigurationException
-    {
-        return getMediaEngineConfigurationPropertiesService().get();
-    }
-
-    @Override
-    public K saveConfiguration(K configuration) throws SaveConfigurationException
-    {
-        return getMediaEngineConfigurationPropertiesService().save(configuration);
-    }
-
-    @Override
     public boolean isAutomaticOn()
     {
         try
@@ -778,17 +763,6 @@ public abstract class ArkCaseMediaEngineServiceImpl<T extends MediaEngine, K ext
     public void setEcmFileVersionDao(EcmFileVersionDao ecmFileVersionDao)
     {
         this.ecmFileVersionDao = ecmFileVersionDao;
-    }
-
-    public MediaEngineConfigurationPropertiesService<K> getMediaEngineConfigurationPropertiesService()
-    {
-        return mediaEngineConfigurationPropertiesService;
-    }
-
-    public void setMediaEngineConfigurationPropertiesService(
-            MediaEngineConfigurationPropertiesService<K> mediaEngineConfigurationPropertiesService)
-    {
-        this.mediaEngineConfigurationPropertiesService = mediaEngineConfigurationPropertiesService;
     }
 
     public Map<String, MediaEngineBusinessProcessRulesExecutor> getProcessHandlerMap()

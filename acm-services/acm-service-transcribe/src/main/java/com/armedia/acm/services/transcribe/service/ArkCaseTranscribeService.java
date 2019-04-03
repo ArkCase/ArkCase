@@ -32,12 +32,11 @@ import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
 import com.armedia.acm.services.mediaengine.service.MediaEngineService;
 import com.armedia.acm.services.transcribe.exception.CompileMediaEngineException;
 import com.armedia.acm.services.transcribe.model.Transcribe;
-import com.armedia.acm.services.transcribe.model.TranscribeConfiguration;
 
 /**
  * Created by Riste Tutureski <riste.tutureski@armedia.com> on 02/27/2018
  */
-public interface ArkCaseTranscribeService extends MediaEngineService<Transcribe, TranscribeConfiguration>
+public interface ArkCaseTranscribeService extends MediaEngineService<Transcribe>
 {
     /**
      * This method will return if provided media duration is less than configured duration

@@ -261,6 +261,18 @@
         <property name="arkCaseOCRService" ref="arkCaseOCRService"/>
     </bean>
 
+    <bean id="getAWSTranscribeConfigurationApiController"
+          class="com.armedia.acm.plugins.admin.web.api.GetAWSTranscribeConfigurationAPIController">
+        <property name="awsTranscribeCredentialsConfigurationService" ref="awsTranscribeCredentialsConfigurationService"/>
+        <property name="awsTranscribeConfigurationService" ref="awsTranscribeConfigurationService"/>
+    </bean>
+
+    <bean id="saveAWSTranscribeConfigurationApiController"
+          class="com.armedia.acm.plugins.admin.web.api.SaveAWSTranscribeConfigurationAPIController">
+        <property name="awsTranscribeCredentialsConfigurationService" ref="awsTranscribeCredentialsConfigurationService"/>
+        <property name="awsTranscribeConfigurationService" ref="awsTranscribeConfigurationService"/>
+    </bean>
+
     <bean id="saveOCRConfigurationApiController"
           class="com.armedia.acm.plugins.admin.web.api.SaveOCRConfigurationAPIController">
         <property name="arkCaseOCRService" ref="arkCaseOCRService"/>

@@ -1,19 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns="http://www.springframework.org/schema/beans"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.springframework.org/schema/beans"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
 
     <bean id="transcribeDao" class="com.armedia.acm.services.transcribe.dao.TranscribeDao"/>
     <bean id="transcribeItemDao" class="com.armedia.acm.services.transcribe.dao.TranscribeItemDao"/>
 
-    <bean id="transcribeConfigurationPropertiesService"
-          class="com.armedia.acm.services.transcribe.service.TranscribeConfigurationPropertiesService">
-        <property name="propertyFileManager" ref="propertyFileManager"/>
-    </bean>
-
     <bean id="arkCaseTranscribeService" class="com.armedia.acm.services.transcribe.service.ArkCaseTranscribeServiceImpl">
-        <property name="transcribeConfigurationPropertiesService" ref="transcribeConfigurationPropertiesService"/>
-        <property name="mediaEngineConfigurationPropertiesService" ref="mediaEngineConfigurationPropertiesService"/>
         <property name="transcribeDao" ref="transcribeDao"/>
         <property name="ecmFileVersionDao" ref="ecmFileVersionDao"/>
         <property name="pipelineManager" ref="mediaEnginePipelineManager"/>
@@ -35,6 +28,7 @@
         <property name="mediaEngineServiceFactory" ref="mediaEngineServiceFactory"/>
         <property name="transcribeProviderFactory" ref="transcribeProviderFactory"/>
         <property name="ecmFileTransaction" ref="ecmFileTransaction"/>
+        <property name="transcribeConfigurationService" ref="transcribeConfigurationService"/>
     </bean>
 
     <bean id="transcribeToSolrTransformer" class="com.armedia.acm.services.transcribe.transformer.TranscribeToSolrTransformer">
@@ -51,11 +45,21 @@
         <property name="arkCaseTranscribeService" ref="arkCaseTranscribeService"/>
         <property name="activitiRuntimeService" ref="activitiRuntimeService"/>
         <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
-        <property name="transcribeConfigurationPropertiesService" ref="transcribeConfigurationPropertiesService"/>
         <property name="mediaEngineMapper" ref="mediaEngineMapper"/>
         <property name="objectLockingManager" ref="acmObjectLockingManager"/>
         <property name="objectLockService" ref="objectLockService"/>
         <property name="transcribeProviderFactory" ref="transcribeProviderFactory"/>
+        <property name="transcribeConfigurationService" ref="transcribeConfigurationService"/>
+    </bean>
+
+
+    <bean id="transcribeConfig" class="com.armedia.acm.services.transcribe.model.TranscribeConfiguration" scope="refresh">
+        <aop:scoped-proxy/>
+    </bean>
+
+    <bean id="transcribeConfigurationService" class="com.armedia.acm.services.transcribe.service.TranscribeConfigurationService">
+        <property name="configurationPropertyService" ref="configurationPropertyService"/>
+        <property name="transcribeConfig" ref="transcribeConfig"/>
     </bean>
 
     <bean id="transcribeBusinessRulesExecutor" class="com.armedia.acm.services.mediaengine.rules.MediaEngineBusinessRulesExecutor"

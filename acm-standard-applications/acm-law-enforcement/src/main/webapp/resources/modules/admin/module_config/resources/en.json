@@ -1093,6 +1093,24 @@
                 "title": "OCR Services",
                 "save.button": "Save",
                 "enableOCR.checkbox": "Enable OCR"
+            },
+            "awsManagement": "AWS Transcription Management",
+            "awsConfigForm": {
+                "title": "AWS Transcription Service",
+                "save.button": "Save",
+                "awsConfig": {
+                    "bucket.label": "Bucket name",
+                    "region.label": "Region",
+                    "host.label": "Host",
+                    "profile.label": "Profile"
+                },
+                "awsCredentials": {
+                    "accessKeyId.label": "Access Key Id",
+                    "secretAccessKey.label": "Secret Access Key Id"
+                },
+                "validation.messages": {
+                    "requiredErrorMsg": "This field is required"
+                }
             }
         },
         "ocr": {
