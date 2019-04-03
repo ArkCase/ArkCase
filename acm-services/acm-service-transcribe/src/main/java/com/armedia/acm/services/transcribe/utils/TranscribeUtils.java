@@ -115,7 +115,7 @@ public class TranscribeUtils
 
     public static String getText(List<TranscribeItem> items)
     {
-        if (items != null && items.size() > 0)
+        if (items != null && !items.isEmpty())
         {
             return String.join(" ", items.stream().map(item -> item.getText()).collect(Collectors.toList()));
         }

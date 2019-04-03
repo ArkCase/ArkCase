@@ -26,4 +26,11 @@ angular.module('admin').controller('Admin.TranscriptionManagementController', [ 
         });
     };
 
+    $scope.resetMode = function () {
+        if(!$scope.transcribeConfigDataModel.enabled)
+        {
+            $scope.transcribeConfigDataModel.automaticEnabled = false;
+        }
+    }
+
 } ]);
