@@ -35,7 +35,6 @@ import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.ecm.service.FileChunkService;
 import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
 import com.armedia.acm.web.api.MDCConstants;
-import javafx.util.Pair;
 import org.apache.chemistry.opencmis.client.api.Document;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -113,9 +112,9 @@ public class FileChunkServiceImpl implements FileChunkService
         Long size = 0L;
         if (fileDetails != null && fileDetails.getParts() != null && !fileDetails.getParts().isEmpty())
         {
-            Pair pair = getInputStreamsAndSize(fileDetails.getParts());
-            inputStream = new SequenceInputStream((Enumeration<? extends InputStream>) pair.getKey());
-            size = (Long) pair.getValue();
+            AbstractMap.SimpleEntry entry = getInputStreamsAndSize(fileDetails.getParts());
+            inputStream = new SequenceInputStream((Enumeration<? extends InputStream>) entry.getKey());
+            size = (Long) entry.getValue();
         }
 
         holder.setStream(inputStream);
@@ -147,7 +146,7 @@ public class FileChunkServiceImpl implements FileChunkService
         }
     }
 
-    private Pair<Enumeration<InputStream>, Long> getInputStreamsAndSize(List<FileChunkDetails> parts) throws IOException
+    private AbstractMap.SimpleEntry<Enumeration<InputStream>, Long> getInputStreamsAndSize(List<FileChunkDetails> parts) throws IOException
     {
         String dirPath = System.getProperty("java.io.tmpdir");
         String uniqueArkCaseHashFileIdentifier = ecmFileUploaderConfig.getUniqueHashFileIdentifier();
@@ -161,8 +160,8 @@ public class FileChunkServiceImpl implements FileChunkService
             size += file.length();
         }
 
-        Pair pair = new Pair(inputStream.elements(), size);
-        return pair;
+        AbstractMap.SimpleEntry<Enumeration<InputStream>, Long> entry = new AbstractMap.SimpleEntry<>(inputStream.elements(), size);
+        return entry;
     }
 
     public FolderAndFilesUtils getFolderAndFilesUtils()
@@ -195,11 +194,13 @@ public class FileChunkServiceImpl implements FileChunkService
         this.auditPropertyEntityAdapter = auditPropertyEntityAdapter;
     }
 
-    public EcmFileUploaderConfig getEcmFileUploaderConfig() {
+    public EcmFileUploaderConfig getEcmFileUploaderConfig()
+    {
         return ecmFileUploaderConfig;
     }
 
-    public void setEcmFileUploaderConfig(EcmFileUploaderConfig ecmFileUploaderConfig) {
+    public void setEcmFileUploaderConfig(EcmFileUploaderConfig ecmFileUploaderConfig)
+    {
         this.ecmFileUploaderConfig = ecmFileUploaderConfig;
     }
 }
