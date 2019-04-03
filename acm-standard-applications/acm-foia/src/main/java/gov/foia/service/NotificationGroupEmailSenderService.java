@@ -102,7 +102,7 @@ public class NotificationGroupEmailSenderService
 
             if (Objects.nonNull(requestFormFile))
             {
-                String subject = String.format("Request [%s - %s] Form Document", caseFile.getCaseNumber(), caseFile.getTitle());
+                String subject = "Executive Email";
 
                 log.info("Trying to send a Request Form email to Notification Group [%s]", notificationGroupName);
 
@@ -118,6 +118,8 @@ public class NotificationGroupEmailSenderService
                 notification.setFiles(fileVersions);
                 notification.setParentType(caseFile.getObjectType());
                 notification.setParentId(caseId);
+                notification.setParentName(caseFile.getCaseNumber());
+                notification.setParentTitle(caseFile.getTitle());
                 notification.setUser(acmUser.getUserId());
                 notification.setEmailAddresses(emailAddresses.stream().collect(Collectors.joining(",")));
                 notificationDao.save(notification);
