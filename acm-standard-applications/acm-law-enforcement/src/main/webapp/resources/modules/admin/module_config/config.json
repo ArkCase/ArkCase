@@ -1581,6 +1581,15 @@
             {
                 "type": "p/mediaServices",
                 "label": "admin.mediaServices.title",
+                "type": "p/document/fileUploader",
+                "label": "admin.documentManagement.fileUploader.title",
+                "components": [
+                    "file-uploader"
+                ]
+            },
+            {
+                "type": "p/transcription",
+                "label": "admin.transcription.title",
                 "icon": "fa fa-wrench",
                 "components": []
             },

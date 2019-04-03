@@ -22,6 +22,25 @@ angular.module('admin').factory('Admin.ApplicationSettingsService', [ '$http', f
 
         /**
          * @ngdoc method
+         * @name setSettings
+         * @methodOf admin.service:Admin.ApplicationSettingsService
+         *
+         * @description
+         * Performs retrieving all application settings
+         *
+         *
+         * @returns {Object} Application seting structure
+         */
+        setSettings: function(data) {
+            return $http({
+                method: 'PUT',
+                url: 'api/latest/plugin/admin/app-properties',
+                data: data
+            });
+        },
+
+        /**
+         * @ngdoc method
          * @name getSettings
          * @methodOf admin.service:Admin.ApplicationSettingsService
          *

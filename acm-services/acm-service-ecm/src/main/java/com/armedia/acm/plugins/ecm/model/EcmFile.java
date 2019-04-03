@@ -74,6 +74,7 @@ import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -202,6 +203,16 @@ public class EcmFile implements AcmEntity, Serializable, AcmObject, AcmStatefulE
     @Column(name = "cm_file_restricted_flag", nullable = false)
     @Convert(converter = BooleanToStringConverter.class)
     private Boolean restricted = Boolean.FALSE;
+
+    /**
+     * This property is used to be able to make distinction between two or more EcmFile objects before these objects
+     * to be persisted in database (before to take unique identifier from database)
+     *
+     * By default is null and don't need to be set with every creation of EcmFile instance. Developers can use for their
+     * needs
+     */
+    @Transient
+    private String uuid;
 
     @PrePersist
     protected void beforeInsert()
@@ -636,5 +647,15 @@ public class EcmFile implements AcmEntity, Serializable, AcmObject, AcmStatefulE
     public int hashCode()
     {
         return Objects.hashCode(fileId);
+    }
+
+    public String getUuid()
+    {
+        return uuid;
+    }
+
+    public void setUuid(String uuid)
+    {
+        this.uuid = uuid;
     }
 }

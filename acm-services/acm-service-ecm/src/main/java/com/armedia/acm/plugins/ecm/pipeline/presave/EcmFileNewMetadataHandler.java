@@ -121,6 +121,7 @@ public class EcmFileNewMetadataHandler implements PipelineHandler<EcmFile, EcmFi
 
             // Saves new file metadata into ArkCase database
             EcmFile saved = getEcmFileDao().save(entity);
+            saved.setUuid(entity.getUuid());
             pipelineContext.setEcmFile(saved);
         }
         log.debug("metadata pre save handler ended");

@@ -1046,6 +1046,17 @@
                 "update.success": "Successfully updated configuration row.",
                 "update.error": "Error updating configuration row.",
                 "test.conection.success": "Successfully connected."
+            },
+            "fileUploader": {
+                "title": "File Uploader Settings",
+                "uploadFileSizeLimit.label": "Upload in chunks over this file size",
+                "singleChunkFileSizeLimit.label": "Single chunk file size",
+                "enableFileChunkUpload.label": "Enable file chunk upload",
+                "inform": "Settings will take effect for all new files",
+                "apply.label": "Apply",
+                "dialog" : {
+                    "OKBtn": "Confirm"
+                }
             }
         },
         "mediaServices": {
