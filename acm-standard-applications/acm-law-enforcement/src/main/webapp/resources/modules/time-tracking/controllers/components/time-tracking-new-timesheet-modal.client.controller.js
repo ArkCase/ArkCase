@@ -25,15 +25,24 @@ angular.module('time-tracking').controller(
                 'Helper.UiGridService',
                 'Admin.TimesheetConfigurationService',
                 'Mentions.Service',
+            'Admin.CostsheetConfigurationService',
                 function($scope, $q, $stateParams, $translate, $modalInstance, TimeTrackingInfoService, ObjectLookupService, MessageService, $timeout, Util, UtilDateService, $modal, ConfigService, ObjectService, modalParams, PersonInfoService, ObjectModelService, ObjectParticipantService,
-                        UserInfoService, HelperUiGridService, TimesheetConfigurationService, MentionsService) {
+                         UserInfoService, HelperUiGridService, TimesheetConfigurationService, MentionsService, CostsheetConfigurationService) {
 
                     $scope.modalParams = modalParams;
                     $scope.loading = false;
                     $scope.loadingIcon = "fa fa-floppy-o";
                     $scope.isEdit = $scope.modalParams.isEdit;
+                    $scope.timesheetProperties = {};
                     var participantTypeApprover = 'approver';
                     var participantTypeOwningGroup = "owning group";
+
+
+                    CostsheetConfigurationService.getProperties().then(function (response) {
+                        if (!Util.isEmpty(response.data)) {
+                            $scope.timesheetProperties = response.data;
+                        }
+                    });
 
                     ConfigService.getModuleConfig("time-tracking").then(function(moduleConfig) {
                         $scope.config = moduleConfig;

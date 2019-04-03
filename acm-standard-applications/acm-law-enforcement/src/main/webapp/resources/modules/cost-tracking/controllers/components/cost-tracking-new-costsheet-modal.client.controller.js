@@ -21,8 +21,9 @@ angular.module('cost-tracking').controller(
                 'Object.ParticipantService',
                 'Profile.UserInfoService',
                 'Mentions.Service',
+            'Admin.CostsheetConfigurationService',
                 function($scope, $stateParams, $translate, $modalInstance, CostTrackingInfoService, ObjectLookupService, MessageService, $timeout, Util, $modal, ConfigService, ObjectService, modalParams, PersonInfoService, ObjectModelService, ObjectParticipantService, UserInfoService,
-                        MentionsService) {
+                         MentionsService, CostsheetConfigurationService) {
 
                     $scope.modalParams = modalParams;
                     $scope.loading = false;
@@ -30,6 +31,13 @@ angular.module('cost-tracking').controller(
                     $scope.isEdit = $scope.modalParams.isEdit;
                     $scope.sumAmount = 0;
                     $scope.disableCostType = false;
+                    $scope.costsheetProperties = {};
+
+                    CostsheetConfigurationService.getProperties().then(function (response) {
+                        if (!Util.isEmpty(response.data)) {
+                            $scope.costsheetProperties = response.data;
+                        }
+                    });
                     var participantTypeApprover = 'approver';
                     var participantTypeOwningGroup = "owning group";
 
