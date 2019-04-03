@@ -963,15 +963,6 @@
                 "enableOCR.checkbox": "Enable OCR_ZH_TW"
             }
         },
-        "ocr": {
-            "title": "OCR Services_ZH_TW",
-            "ocrManagement": "OCR Management_ZH_TW",
-            "ocrConfigForm": {
-                "save.button": "Save_ZH_TW",
-                "enableOCR.label": "OCR Configuration_ZH_TW",
-                "enableOCR.checkbox": "Enable OCR_ZH_TW"
-            }
-        },
         "stateOfArkcase": {
             "title": "Arkcase的狀態",
             "pickDate": "選擇日期",
