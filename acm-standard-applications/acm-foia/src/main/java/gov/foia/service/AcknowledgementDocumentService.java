@@ -142,7 +142,7 @@ public class AcknowledgementDocumentService
         }
     }
 
-    private void generateAndUploadACK(Long requestId) throws DocumentGeneratorException, CorrespondenceMergeFieldVersionException
+    public void generateAndUploadACK(Long requestId) throws DocumentGeneratorException, CorrespondenceMergeFieldVersionException
 
     {
         FOIARequest request = requestDao.find(requestId);
