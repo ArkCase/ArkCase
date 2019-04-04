@@ -27,7 +27,8 @@
     <bean id="awsTranscribeCredentialsConfigurationService"
           class="com.armedia.acm.tool.transcribe.service.AWSTranscribeCredentialsConfigurationService">
         <property name="configurationPropertyService" ref="configurationPropertyService"/>
-        <property name="AWSCredentialsConfig" ref="AWSCredentialsConfig"/>
+        <property name="awsCredentialsConfig" ref="AWSCredentialsConfig"/>
         <property name="acmCryptoUtils" ref="acmCryptoUtils"/>
+        <property name="encryptionProperties" ref="acmEncryptablePropertyUtils"/>
     </bean>
 </beans>
