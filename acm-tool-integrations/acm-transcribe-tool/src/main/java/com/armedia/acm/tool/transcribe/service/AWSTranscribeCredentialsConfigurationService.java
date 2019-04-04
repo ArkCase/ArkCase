@@ -3,9 +3,8 @@ package com.armedia.acm.tool.transcribe.service;
 import com.armedia.acm.configuration.service.ConfigurationPropertyService;
 import com.armedia.acm.core.exceptions.AcmEncryptionException;
 import com.armedia.acm.crypto.AcmCryptoUtils;
+import com.armedia.acm.crypto.properties.AcmEncryptablePropertyUtilsImpl;
 import com.armedia.acm.tool.transcribe.model.AWSCredentialsConfiguration;
-
-import java.util.Base64;
 
 /**
  * Created by Vladimir Cherepnalkovski
@@ -18,37 +17,27 @@ public class AWSTranscribeCredentialsConfigurationService
 
     private AcmCryptoUtils acmCryptoUtils;
 
-    private static final String sha256Hex = "0954a45393869026bc6a3804771b87aa9c07ad6f6a2a3c0ae030ea4a7ce34743";
+    AcmEncryptablePropertyUtilsImpl encryptionProperties;
 
-    public void saveCredentialsProperties(AWSCredentialsConfiguration AWSCredentialsConfig) throws AcmEncryptionException
+    public void saveCredentialsProperties(AWSCredentialsConfiguration awsCredentialsConfig) throws AcmEncryptionException
     {
-        byte[] encryptedAccessKeyIdBytes = getAcmCryptoUtils().encryptData(sha256Hex.getBytes(),
-                AWSCredentialsConfig.getAwsAccessKeyId().getBytes(), true);
+        String accessKeyId = encryptionProperties.encryptPropertyValue(awsCredentialsConfig.getAwsAccessKeyId());
+        String secretAccessKeyId = encryptionProperties.encryptPropertyValue(awsCredentialsConfig.getAwsSecretAccessKey());
 
-        String encryptedAccessKeyId = Base64.getEncoder().encodeToString(encryptedAccessKeyIdBytes);
+        awsCredentialsConfig.setAwsAccessKeyId(accessKeyId);
+        awsCredentialsConfig.setAwsSecretAccessKey(secretAccessKeyId);
 
-        byte[] encryptedSecurityAccessKeyBytes = getAcmCryptoUtils().encryptData(sha256Hex.getBytes(),
-                AWSCredentialsConfig.getAwsSecretAccessKey().getBytes(), true);
-
-        String encryptedSecurityAccessKey = Base64.getEncoder().encodeToString(encryptedSecurityAccessKeyBytes);
-
-        AWSCredentialsConfig.setAwsAccessKeyId(encryptedAccessKeyId);
-        AWSCredentialsConfig.setAwsSecretAccessKey(encryptedSecurityAccessKey);
-
-        configurationPropertyService.updateProperties(AWSCredentialsConfig);
+        configurationPropertyService.updateProperties(awsCredentialsConfig);
     }
 
     public AWSCredentialsConfiguration loadCredentialsProperties() throws AcmEncryptionException
     {
-        byte[] decryptedAccessKeyId = getAcmCryptoUtils().decryptData(sha256Hex.getBytes(),
-                Base64.getDecoder().decode(getAWSCredentialsConfig().getAwsAccessKeyId().getBytes()), true);
-
-        byte[] decryptedSecretAccessKey = getAcmCryptoUtils().decryptData(sha256Hex.getBytes(),
-                Base64.getDecoder().decode(getAWSCredentialsConfig().getAwsSecretAccessKey().getBytes()), true);
+        String accessKeyId = encryptionProperties.decryptPropertyValue(getAWSCredentialsConfig().getAwsAccessKeyId());
+        String secretAccessKeyId = encryptionProperties.decryptPropertyValue(getAWSCredentialsConfig().getAwsSecretAccessKey());
 
         AWSCredentialsConfiguration config = new AWSCredentialsConfiguration();
-        config.setAwsAccessKeyId(new String(decryptedAccessKeyId));
-        config.setAwsSecretAccessKey(new String(decryptedSecretAccessKey));
+        config.setAwsAccessKeyId(new String(accessKeyId));
+        config.setAwsSecretAccessKey(new String(secretAccessKeyId));
 
         return config;
     }
@@ -81,5 +70,15 @@ public class AWSTranscribeCredentialsConfigurationService
     public void setAcmCryptoUtils(AcmCryptoUtils acmCryptoUtils)
     {
         this.acmCryptoUtils = acmCryptoUtils;
+    }
+
+    public AcmEncryptablePropertyUtilsImpl getEncryptionProperties()
+    {
+        return encryptionProperties;
+    }
+
+    public void setEncryptionProperties(AcmEncryptablePropertyUtilsImpl encryptionProperties)
+    {
+        this.encryptionProperties = encryptionProperties;
     }
 }
