@@ -101,6 +101,16 @@
                 "value": "name ASC"
             },
             {
+                "desc": "cases.tree.sorters.dueDateAsc",
+                "name": "sort-by-due-date-asc",
+                "value": "dueDate_tdt ASC"
+            },
+            {
+                "desc": "cases.tree.sorters.dueDateDesc",
+                "name": "sort-by-due-date-desc",
+                "value": "dueDate_tdt DESC"
+            },
+            {
                 "desc": "cases.tree.sorters.noSort",
                 "name": "",
                 "value": ""

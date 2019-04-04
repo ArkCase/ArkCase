@@ -485,10 +485,12 @@
             "noFilter": "(No Filter)"
         },
         "sorters": {
-            "dateAsc": "Sort Date Asc",
-            "dateDesc": "Sort Date Desc",
+            "dateAsc": "Sort Created Date Asc",
+            "dateDesc": "Sort Created Date Desc",
             "idAsc": "Sort Case ID Asc",
             "idDesc": "Sort Case ID Desc",
+            "dueDateAsc": "Sort Due Date Asc",
+            "dueDateDesc": "Sort Due Date Desc",
             "nameAsc": "Sort By Case Name Asc",
             "noSort": "(No Sort)"
         }
