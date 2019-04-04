@@ -11,7 +11,7 @@ import com.armedia.acm.tool.transcribe.model.AWSCredentialsConfiguration;
  */
 public class AWSTranscribeCredentialsConfigurationService
 {
-    private AWSCredentialsConfiguration AWSCredentialsConfig;
+    private AWSCredentialsConfiguration awsCredentialsConfig;
 
     private ConfigurationPropertyService configurationPropertyService;
 
@@ -30,16 +30,9 @@ public class AWSTranscribeCredentialsConfigurationService
         configurationPropertyService.updateProperties(awsCredentialsConfig);
     }
 
-    public AWSCredentialsConfiguration loadCredentialsProperties() throws AcmEncryptionException
+    public AWSCredentialsConfiguration loadCredentialsProperties()
     {
-        String accessKeyId = encryptionProperties.decryptPropertyValue(getAWSCredentialsConfig().getAwsAccessKeyId());
-        String secretAccessKeyId = encryptionProperties.decryptPropertyValue(getAWSCredentialsConfig().getAwsSecretAccessKey());
-
-        AWSCredentialsConfiguration config = new AWSCredentialsConfiguration();
-        config.setAwsAccessKeyId(accessKeyId);
-        config.setAwsSecretAccessKey(secretAccessKeyId);
-
-        return config;
+        return awsCredentialsConfig;
     }
 
     public ConfigurationPropertyService getConfigurationPropertyService()
@@ -52,14 +45,14 @@ public class AWSTranscribeCredentialsConfigurationService
         this.configurationPropertyService = configurationPropertyService;
     }
 
-    public AWSCredentialsConfiguration getAWSCredentialsConfig()
+    public AWSCredentialsConfiguration getAwsCredentialsConfig()
     {
-        return AWSCredentialsConfig;
+        return awsCredentialsConfig;
     }
 
-    public void setAWSCredentialsConfig(AWSCredentialsConfiguration AWSCredentialsConfig)
+    public void setAwsCredentialsConfig(AWSCredentialsConfiguration awsCredentialsConfig)
     {
-        this.AWSCredentialsConfig = AWSCredentialsConfig;
+        this.awsCredentialsConfig = awsCredentialsConfig;
     }
 
     public AcmCryptoUtils getAcmCryptoUtils()
