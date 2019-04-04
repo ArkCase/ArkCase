@@ -36,7 +36,6 @@ import com.armedia.acm.plugins.report.model.Reports;
 import com.armedia.acm.report.config.ReportsToRolesConfig;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.search.service.SearchResults;
-import com.armedia.acm.services.users.model.ApplicationRolesConfig;
 import com.armedia.acm.services.users.service.AcmUserRoleService;
 
 import org.apache.commons.lang3.StringUtils;
@@ -253,8 +252,8 @@ public class ReportServiceImpl implements ReportService
                 reportsToRolesMapping.remove(item);
             });
 
-            configurationPropertyService.updateProperties(reportToUrlMapping);
-            configurationPropertyService.updateProperties(reportsToRolesMapping);
+            configurationPropertyService.updateProperties(reportsConfig);
+            configurationPropertyService.updateProperties(reportsToRolesConfig);
         }
 
         return reports;
@@ -445,17 +444,25 @@ public class ReportServiceImpl implements ReportService
     @Override
     public List<String> getRolesForReport(Boolean authorized, String reportId)
     {
+        String reportsToRolesConfigString = reportsToRolesConfig.getReportsToRolesMap().get(reportId);
 
-        String[] rolesForReport = reportsToRolesConfig.getReportsToRolesMap().get(reportId).split(",");
-
-        if (!authorized)
+        if (reportsToRolesConfigString != null)
         {
-            return Arrays.stream(rolesForReport)
-                    .filter(role -> Arrays.stream(rolesForReport).noneMatch(r -> r.trim().equals(role)))
-                    .collect(Collectors.toList());
-        }
+            String[] rolesForReport = reportsToRolesConfigString.split(",");
 
-        return Arrays.asList(rolesForReport);
+            if (!authorized)
+            {
+                return Arrays.stream(rolesForReport)
+                        .filter(role -> Arrays.stream(rolesForReport).noneMatch(r -> r.trim().equals(role)))
+                        .collect(Collectors.toList());
+            }
+
+            return Arrays.asList(rolesForReport);
+        }
+        else
+        {
+            return new ArrayList<>();
+        }
     }
 
     public MuleContextManager getMuleContextManager()
