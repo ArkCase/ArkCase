@@ -36,8 +36,8 @@ public class AWSTranscribeCredentialsConfigurationService
         String secretAccessKeyId = encryptionProperties.decryptPropertyValue(getAWSCredentialsConfig().getAwsSecretAccessKey());
 
         AWSCredentialsConfiguration config = new AWSCredentialsConfiguration();
-        config.setAwsAccessKeyId(new String(accessKeyId));
-        config.setAwsSecretAccessKey(new String(secretAccessKeyId));
+        config.setAwsAccessKeyId(accessKeyId);
+        config.setAwsSecretAccessKey(secretAccessKeyId);
 
         return config;
     }
