@@ -52,9 +52,8 @@ import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.tool.mediaengine.exception.CreateMediaEngineToolException;
 import com.armedia.acm.tool.mediaengine.service.MediaEngineIntegrationEventPublisher;
 import com.armedia.acm.tool.transcribe.model.AWSTranscribeConfiguration;
-import com.armedia.acm.tool.transcribe.model.TranscribeConstants;
 import com.armedia.acm.tool.transcribe.model.TranscribeDTO;
-import com.armedia.acm.tool.transcribe.service.AWSTranscribeConfigurationPropertiesService;
+import com.armedia.acm.tool.transcribe.service.AWSTranscribeConfigurationService;
 import com.armedia.acm.tool.transcribe.service.AWSTranscribeServiceImpl;
 
 import org.apache.commons.io.IOUtils;
@@ -85,7 +84,7 @@ public class AWSTranscribeServiceTest
     private AWSTranscribeServiceImpl awsTranscribeService;
 
     @Mock
-    private AWSTranscribeConfigurationPropertiesService awsTranscribeConfigurationPropertiesService;
+    private AWSTranscribeConfigurationService awsTranscribeConfigurationService;
 
     @Mock
     private PropertyFileManager propertyFileManager;
@@ -111,12 +110,10 @@ public class AWSTranscribeServiceTest
     @Before
     public void setUp()
     {
-        awsTranscribeConfigurationPropertiesService.setPropertyFileManager(propertyFileManager);
-
         awsTranscribeService = new AWSTranscribeServiceImpl();
         awsTranscribeService.setS3Client(s3Client);
         awsTranscribeService.setTranscribeClient(transcribeClient);
-        awsTranscribeService.setAwsTranscribeConfigurationPropertiesService(awsTranscribeConfigurationPropertiesService);
+        awsTranscribeService.setAwsTranscribeConfigurationService(awsTranscribeConfigurationService);
         awsTranscribeService.setMediaEngineIntegrationEventPublisher(mediaEngineIntegrationEventPublisher);
         awsTranscribeService.setMuleContextManager(muleContextManager);
     }
@@ -147,7 +144,7 @@ public class AWSTranscribeServiceTest
         configuration.setHost("host");
         configuration.setProfile("profile");
 
-        when(awsTranscribeConfigurationPropertiesService.get()).thenReturn(configuration);
+        when(awsTranscribeConfigurationService.getAWSTranscribeConfig()).thenReturn(configuration);
         PowerMockito.whenNew(FileInputStream.class).withArguments(file).thenReturn(fileStream);
         when(s3Client.doesObjectExist((String) configuration.getBucket(),
                 transcribe.getRemoteId() + transcribe.getProperties().get("extension"))).thenReturn(false);
@@ -158,7 +155,7 @@ public class AWSTranscribeServiceTest
 
         awsTranscribeService.create(transcribe);
 
-        verify(awsTranscribeConfigurationPropertiesService, times(3)).get();
+        verify(awsTranscribeConfigurationService, times(3)).getAWSTranscribeConfig();
         verify(s3Client).doesObjectExist((String) configuration.getBucket(),
                 transcribe.getRemoteId() + transcribe.getProperties().get("extension"));
         verify(s3Client).putObject(eq((String) configuration.getBucket()),
@@ -194,7 +191,7 @@ public class AWSTranscribeServiceTest
         String key = transcribe.getRemoteId() + transcribe.getProperties().get("extension");
         String expectedErrorMessage = "The file with KEY=[" + key + "] already exist on Amazon.";
 
-        when(awsTranscribeConfigurationPropertiesService.get()).thenReturn(configuration);
+        when(awsTranscribeConfigurationService.getAWSTranscribeConfig()).thenReturn(configuration);
         when(s3Client.doesObjectExist((String) configuration.getBucket(),
                 transcribe.getRemoteId() + transcribe.getProperties().get("extension"))).thenReturn(true);
 
@@ -204,7 +201,7 @@ public class AWSTranscribeServiceTest
         }
         catch (Exception e)
         {
-            verify(awsTranscribeConfigurationPropertiesService).get();
+            verify(awsTranscribeConfigurationService).getAWSTranscribeConfig();
             verify(s3Client).doesObjectExist((String) configuration.getBucket(),
                     transcribe.getRemoteId() + transcribe.getProperties().get("extension"));
 
@@ -239,7 +236,7 @@ public class AWSTranscribeServiceTest
 
         String expectedErrorMessage = "Unable to upload media file to Amazon. REASON=[error (Service: null; Status Code: 0; Error Code: null; Request ID: null)].";
 
-        when(awsTranscribeConfigurationPropertiesService.get()).thenReturn(configuration);
+        when(awsTranscribeConfigurationService.getAWSTranscribeConfig()).thenReturn(configuration);
         PowerMockito.whenNew(FileInputStream.class).withArguments(file).thenReturn(fileStream);
         when(s3Client.doesObjectExist((String) configuration.getBucket(),
                 transcribe.getRemoteId() + transcribe.getProperties().get("extension"))).thenReturn(false);
@@ -253,7 +250,7 @@ public class AWSTranscribeServiceTest
         }
         catch (Exception e)
         {
-            verify(awsTranscribeConfigurationPropertiesService, times(1)).get();
+            verify(awsTranscribeConfigurationService, times(1)).getAWSTranscribeConfig();
             verify(s3Client).doesObjectExist((String) configuration.getBucket(),
                     transcribe.getRemoteId() + transcribe.getProperties().get("extension"));
             verify(s3Client).putObject(eq((String) configuration.getBucket()),
@@ -291,7 +288,7 @@ public class AWSTranscribeServiceTest
 
         String expectedErrorMessage = "Unable to start transcribe job on Amazon. REASON=[error (Service: null; Status Code: 0; Error Code: null; Request ID: null)]";
 
-        when(awsTranscribeConfigurationPropertiesService.get()).thenReturn(configuration);
+        when(awsTranscribeConfigurationService.getAWSTranscribeConfig()).thenReturn(configuration);
         PowerMockito.whenNew(FileInputStream.class).withArguments(file).thenReturn(fileStream);
         when(s3Client.doesObjectExist((String) configuration.getBucket(),
                 transcribe.getRemoteId() + transcribe.getProperties().get("extension"))).thenReturn(false);
@@ -306,7 +303,7 @@ public class AWSTranscribeServiceTest
         }
         catch (Exception e)
         {
-            verify(awsTranscribeConfigurationPropertiesService, times(3)).get();
+            verify(awsTranscribeConfigurationService, times(3)).getAWSTranscribeConfig();
             verify(s3Client).doesObjectExist((String) configuration.getBucket(),
                     transcribe.getRemoteId() + transcribe.getProperties().get("extension"));
             verify(s3Client).putObject(eq((String) configuration.getBucket()),
@@ -340,7 +337,11 @@ public class AWSTranscribeServiceTest
         when(muleMessage.getInboundProperty("getProviderTranscribeException")).thenReturn(null);
         when(muleMessage.getPayloadAsString()).thenReturn(jsonString);
 
-        TranscribeDTO transcribe = (TranscribeDTO) awsTranscribeService.get(remoteId, "");
+        Map<String, Object> props = new HashMap<>();
+        props.put("wordCountPerItem", 20);
+        props.put("silentBetweenWords", BigDecimal.valueOf(2));
+
+        TranscribeDTO transcribe = (TranscribeDTO) awsTranscribeService.get(remoteId, props);
 
         verify(transcribeClient).getTranscriptionJob(any());
         verify(muleContextManager).send("vm://getProviderTranscribe.in", "www.amazon.test.example.com");
@@ -360,12 +361,22 @@ public class AWSTranscribeServiceTest
         assertEquals(61, transcribe.getTranscribeItems().get(21).getConfidence());
         assertEquals("Wait", transcribe.getTranscribeItems().get(21).getText());
 
-        assertEquals(TranscribeConstants.WORD_COUNT_PER_ITEM, transcribe.getTranscribeItems().get(0).getText().split(" ").length);
+        assertEquals(props.get("wordCountPerItem"), transcribe.getTranscribeItems().get(0).getText().split(" ").length);
 
         // There is a silent between words, new item is created
         assertEquals(13, transcribe.getTranscribeItems().get(1).getText().split(" ").length);
 
         // ... Also at the end there is silent between words. New item is created
         assertEquals(1, transcribe.getTranscribeItems().get(21).getText().split(" ").length);
+    }
+
+    public AWSTranscribeConfigurationService getAwsTranscribeConfigurationService()
+    {
+        return awsTranscribeConfigurationService;
+    }
+
+    public void setAwsTranscribeConfigurationService(AWSTranscribeConfigurationService awsTranscribeConfigurationService)
+    {
+        this.awsTranscribeConfigurationService = awsTranscribeConfigurationService;
     }
 }

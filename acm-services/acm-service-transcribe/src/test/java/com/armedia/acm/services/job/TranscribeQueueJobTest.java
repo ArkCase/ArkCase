@@ -53,7 +53,7 @@ import com.armedia.acm.services.transcribe.model.Transcribe;
 import com.armedia.acm.services.transcribe.model.TranscribeConfiguration;
 import com.armedia.acm.services.transcribe.model.TranscribeConstants;
 import com.armedia.acm.services.transcribe.service.ArkCaseTranscribeServiceImpl;
-import com.armedia.acm.services.transcribe.service.TranscribeConfigurationPropertiesService;
+import com.armedia.acm.services.transcribe.service.TranscribeConfigurationService;
 import com.armedia.acm.tool.mediaengine.model.MediaEngineDTO;
 import com.armedia.acm.tool.transcribe.service.AWSTranscribeServiceImpl;
 
@@ -84,7 +84,7 @@ public class TranscribeQueueJobTest
     private TranscribeQueueJob transcribeQueueJob;
 
     @Mock
-    TranscribeConfigurationPropertiesService transcribeConfigurationPropertiesService;
+    private TranscribeConfigurationService transcribeConfigurationService;
 
     @Mock
     private ArkCaseTranscribeServiceImpl arkCaseTranscribeService;
@@ -133,11 +133,11 @@ public class TranscribeQueueJobTest
         transcribeQueueJob.setArkCaseTranscribeService(arkCaseTranscribeService);
         transcribeQueueJob.setActivitiRuntimeService(activitiRuntimeService);
         transcribeQueueJob.setAuditPropertyEntityAdapter(auditPropertyEntityAdapter);
-        transcribeQueueJob.setTranscribeConfigurationPropertiesService(transcribeConfigurationPropertiesService);
         transcribeQueueJob.setMediaEngineMapper(mediaEngineMapper);
         transcribeQueueJob.setTranscribeProviderFactory(transcribeProviderFactory);
         transcribeQueueJob.setObjectLockingManager(objectLockingManager);
         transcribeQueueJob.setObjectLockService(objectLockService);
+        transcribeQueueJob.setTranscribeConfigurationService(transcribeConfigurationService);
 
         Calendar calendar1 = Calendar.getInstance();
         calendar1.set(2018, 3, 1);
@@ -240,7 +240,7 @@ public class TranscribeQueueJobTest
         AcmObjectLock lock = new AcmObjectLock();
         lock.setCreator(TranscribeConstants.TRANSCRIBE_SYSTEM_USER);
 
-        when(transcribeConfigurationPropertiesService.get()).thenReturn(configuration);
+        when(transcribeConfigurationService.loadProperties()).thenReturn(configuration);
         when(arkCaseTranscribeService.getAllByStatus(MediaEngineStatusType.PROCESSING.toString())).thenReturn(transcribes);
         when(activitiRuntimeService.createProcessInstanceQuery()).thenReturn(processInstanceQuery);
         when(processInstanceQuery.variableValueEqualsIgnoreCase(variableKey, variableValue))
@@ -255,7 +255,7 @@ public class TranscribeQueueJobTest
         when(transcribeQueueJob.getObjectLockingManager().acquireObjectLock(105L, EcmFileConstants.OBJECT_FILE_TYPE,
                 MediaEngineConstants.LOCK_TYPE_WRITE, null, true, TranscribeConstants.TRANSCRIBE_SYSTEM_USER))
                         .thenReturn(lock);
-        when(transcribeQueueJob.getMediaEngineMapper().MediaEngineToDTO(transcribe1, "default")).thenReturn(mediaEngineDTO);
+        when(transcribeQueueJob.getMediaEngineMapper().mediaEngineToDTO(transcribe1, "default")).thenReturn(mediaEngineDTO);
         when(transcribeQueueJob.getTranscribeProviderFactory().getProvider(AWSprovider)).thenReturn(awsTranscribeService);
 
         doNothing().when(arkCaseTranscribeService).signal(processInstance1, MediaEngineStatusType.PROCESSING.toString(),
@@ -264,7 +264,7 @@ public class TranscribeQueueJobTest
 
         transcribeQueueJob.executeTask();
 
-        verify(transcribeConfigurationPropertiesService, times(1)).get();
+        verify(transcribeConfigurationService, times(1)).loadProperties();
         verify(arkCaseTranscribeService).getAllByStatus(MediaEngineStatusType.PROCESSING.toString());
         verify(activitiRuntimeService).createProcessInstanceQuery();
         verify(processInstanceQuery, times(2)).variableValueEqualsIgnoreCase(variableKey, variableValue);

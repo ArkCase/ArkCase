@@ -34,7 +34,6 @@ import com.armedia.acm.scheduler.AcmSchedulableBean;
 import com.armedia.acm.service.objectlock.model.AcmObjectLock;
 import com.armedia.acm.service.objectlock.service.AcmObjectLockService;
 import com.armedia.acm.service.objectlock.service.AcmObjectLockingManager;
-import com.armedia.acm.services.mediaengine.exception.GetConfigurationException;
 import com.armedia.acm.services.mediaengine.exception.GetMediaEngineException;
 import com.armedia.acm.services.mediaengine.exception.MediaEngineProviderNotFound;
 import com.armedia.acm.services.mediaengine.exception.SaveMediaEngineException;
@@ -50,7 +49,7 @@ import com.armedia.acm.services.mediaengine.model.MediaEngineType;
 import com.armedia.acm.services.ocr.factory.OCRProviderFactory;
 import com.armedia.acm.services.ocr.model.OCRConstants;
 import com.armedia.acm.services.ocr.service.ArkCaseOCRService;
-import com.armedia.acm.services.ocr.service.OCRConfigurationPropertiesService;
+import com.armedia.acm.services.ocr.service.OCRConfigurationService;
 import com.armedia.acm.services.ocr.utils.OCRUtils;
 import com.armedia.acm.tool.mediaengine.exception.CreateMediaEngineToolException;
 import com.armedia.acm.tool.mediaengine.model.MediaEngineDTO;
@@ -76,9 +75,9 @@ public class OCRQueueJob implements AcmSchedulableBean
     private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
     private AcmObjectLockService objectLockService;
     private AcmObjectLockingManager objectLockingManager;
-    private OCRConfigurationPropertiesService ocrConfigurationPropertiesService;
     private MediaEngineMapper mediaEngineMapper;
     private OCRProviderFactory ocrProviderFactory;
+    private OCRConfigurationService ocrConfigurationService;
 
     @Override
     public void executeTask()
@@ -87,7 +86,7 @@ public class OCRQueueJob implements AcmSchedulableBean
         {
             getAuditPropertyEntityAdapter().setUserId(OCRConstants.OCR_SYSTEM_USER);
 
-            MediaEngineConfiguration configuration = getOcrConfigurationPropertiesService().get();
+            MediaEngineConfiguration configuration = getOcrConfigurationService().loadProperties();
             List<MediaEngine> processingOCRObjects = getArkCaseOCRService()
                     .getAllByStatus(MediaEngineStatusType.PROCESSING.toString());
             List<MediaEngine> processingOCRAutomaticObjects = processingOCRObjects.stream()
@@ -115,7 +114,7 @@ public class OCRQueueJob implements AcmSchedulableBean
             }
 
         }
-        catch (GetMediaEngineException | GetConfigurationException e)
+        catch (GetMediaEngineException e)
         {
             LOG.error("Could not move OCR from the queue. REASON=[{}]", e.getMessage(), e);
         }
@@ -139,7 +138,7 @@ public class OCRQueueJob implements AcmSchedulableBean
             {
                 moveSingleProcessInstanceFromQueue(processInstance);
             }
-            catch (GetConfigurationException | AcmObjectLockException | GetMediaEngineException | SaveMediaEngineException
+            catch (AcmObjectLockException | GetMediaEngineException | SaveMediaEngineException
                     | CreateMediaEngineToolException | MediaEngineProviderNotFound | IOException | MuleException e)
             {
                 LOG.error("Could not move OCR from the queue. REASON=[{}]", e.getMessage(), e);
@@ -148,7 +147,7 @@ public class OCRQueueJob implements AcmSchedulableBean
     }
 
     public void moveSingleProcessInstanceFromQueue(ProcessInstance processInstance)
-            throws GetMediaEngineException, SaveMediaEngineException, GetConfigurationException, CreateMediaEngineToolException,
+            throws GetMediaEngineException, SaveMediaEngineException, CreateMediaEngineToolException,
             MediaEngineProviderNotFound, IOException, MuleException
     {
         // For OCR, ids will always return only one id.
@@ -166,9 +165,9 @@ public class OCRQueueJob implements AcmSchedulableBean
                 getObjectLockingManager().acquireObjectLock(mediaEngine.getMediaEcmFileVersion().getFile().getId(),
                         EcmFileConstants.OBJECT_FILE_TYPE,
                         MediaEngineConstants.LOCK_TYPE_WRITE, null, true, OCRConstants.OCR_SYSTEM_USER);
-                String providerName = getOcrConfigurationPropertiesService().get().getProvider();
-                String tempPath = getOcrConfigurationPropertiesService().get().getTempPath();
-                MediaEngineDTO mediaEngineDTO = getMediaEngineMapper().MediaEngineToDTO(mediaEngine, tempPath);
+                String providerName = getOcrConfigurationService().loadProperties().getProvider();
+                String tempPath = getOcrConfigurationService().loadProperties().getTempPath();
+                MediaEngineDTO mediaEngineDTO = getMediaEngineMapper().mediaEngineToDTO(mediaEngine, tempPath);
                 mediaEngineDTO.setMediaEcmFileVersion(getArkCaseOCRService().createTempFile(mediaEngine, tempPath));
                 getOcrProviderFactory().getProvider(providerName).create(mediaEngineDTO);
                 getArkCaseOCRService().save(mediaEngine);
@@ -230,16 +229,6 @@ public class OCRQueueJob implements AcmSchedulableBean
         this.objectLockingManager = objectLockingManager;
     }
 
-    public OCRConfigurationPropertiesService getOcrConfigurationPropertiesService()
-    {
-        return ocrConfigurationPropertiesService;
-    }
-
-    public void setOcrConfigurationPropertiesService(OCRConfigurationPropertiesService ocrConfigurationPropertiesService)
-    {
-        this.ocrConfigurationPropertiesService = ocrConfigurationPropertiesService;
-    }
-
     public MediaEngineMapper getMediaEngineMapper()
     {
         return mediaEngineMapper;
@@ -258,5 +247,15 @@ public class OCRQueueJob implements AcmSchedulableBean
     public void setOcrProviderFactory(OCRProviderFactory ocrProviderFactory)
     {
         this.ocrProviderFactory = ocrProviderFactory;
+    }
+
+    public OCRConfigurationService getOcrConfigurationService()
+    {
+        return ocrConfigurationService;
+    }
+
+    public void setOcrConfigurationService(OCRConfigurationService ocrConfigurationService)
+    {
+        this.ocrConfigurationService = ocrConfigurationService;
     }
 }

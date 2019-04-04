@@ -47,7 +47,7 @@ public class MediaEngineMapper
 {
     private final Logger LOG = LoggerFactory.getLogger(getClass());
 
-    public MediaEngineDTO MediaEngineToDTO(MediaEngine mediaEngine, String tempPath)
+    public MediaEngineDTO mediaEngineToDTO(MediaEngine mediaEngine, String tempPath)
     {
         MediaEngineDTO mediaEngineDTO = null;
         try
@@ -92,7 +92,7 @@ public class MediaEngineMapper
         return mediaEngineDTO;
     }
 
-    public MediaEngine DTOtoMediaEngine(MediaEngineDTO mediaEngineDTO)
+    public MediaEngine dtoToMediaEngine(MediaEngineDTO mediaEngineDTO)
     {
         MediaEngine mediaEngine = null;
         try
