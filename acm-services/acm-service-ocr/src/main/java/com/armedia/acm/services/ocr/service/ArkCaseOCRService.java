@@ -32,12 +32,11 @@ import com.armedia.acm.services.mediaengine.exception.SaveConfigurationException
 import com.armedia.acm.services.mediaengine.model.MediaEngineStatusType;
 import com.armedia.acm.services.mediaengine.service.MediaEngineService;
 import com.armedia.acm.services.ocr.model.OCR;
-import com.armedia.acm.services.ocr.model.OCRConfiguration;
 
 /**
  * Created by Vladimir Cherepnalkovski
  */
-public interface ArkCaseOCRService extends MediaEngineService<OCR, OCRConfiguration>
+public interface ArkCaseOCRService extends MediaEngineService<OCR>
 {
     /**
      * This method will return OCR object for given fileId

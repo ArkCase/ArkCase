@@ -28,13 +28,13 @@ package com.armedia.acm.services.ocr.service;
  */
 
 import com.armedia.acm.auth.AcmAuthentication;
+import com.armedia.acm.configuration.service.ConfigurationPropertyException;
 import com.armedia.acm.core.exceptions.AcmObjectLockException;
 import com.armedia.acm.plugins.ecm.model.AcmMultipartFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
 import com.armedia.acm.service.objectlock.model.AcmObjectLock;
 import com.armedia.acm.services.mediaengine.exception.CreateMediaEngineException;
-import com.armedia.acm.services.mediaengine.exception.GetConfigurationException;
 import com.armedia.acm.services.mediaengine.exception.GetMediaEngineException;
 import com.armedia.acm.services.mediaengine.exception.MediaEngineProviderNotFound;
 import com.armedia.acm.services.mediaengine.exception.SaveConfigurationException;
@@ -73,21 +73,23 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 /**
  * Created by Vladimir Cherepnalkovski
  */
-public class ArkCaseOCRServiceImpl extends ArkCaseMediaEngineServiceImpl<OCR, OCRConfiguration>
+public class ArkCaseOCRServiceImpl extends ArkCaseMediaEngineServiceImpl<OCR>
         implements ArkCaseOCRService
 {
 
     private final Logger LOG = LoggerFactory.getLogger(getClass());
     private OCRDao ocrDao;
-    private OCRConfigurationPropertiesService ocrConfigurationPropertiesService;
     private OCRProviderFactory ocrProviderFactory;
+    private OCRConfigurationService ocrConfigurationService;
 
     @Override
     public OCR getByFileId(Long fileId) throws GetMediaEngineException
@@ -102,20 +104,27 @@ public class ArkCaseOCRServiceImpl extends ArkCaseMediaEngineServiceImpl<OCR, OC
     }
 
     @Override
-    public OCRConfiguration saveConfiguration(OCRConfiguration configuration) throws SaveConfigurationException
+    public void saveConfiguration(MediaEngineConfiguration configuration) throws SaveConfigurationException
     {
         if (configuration.isEnabled())
         {
             verifyOCR();
         }
 
-        return getOcrConfigurationPropertiesService().save(configuration);
+        try
+        {
+            getOcrConfigurationService().saveProperties(configuration);
+        }
+        catch (ConfigurationPropertyException e)
+        {
+            throw new SaveConfigurationException(e);
+        }
     }
 
     @Override
-    public OCRConfiguration getConfiguration() throws GetConfigurationException
+    public OCRConfiguration getConfiguration()
     {
-        return getOcrConfigurationPropertiesService().get();
+        return getOcrConfigurationService().loadProperties();
     }
 
     @Override
@@ -164,7 +173,7 @@ public class ArkCaseOCRServiceImpl extends ArkCaseMediaEngineServiceImpl<OCR, OC
                     delegateExecution.setVariable(MediaEngineBusinessProcessVariableKey.ACTION.toString(), action);
                 }
             }
-            catch (GetMediaEngineException | GetConfigurationException | GetMediaEngineToolException | SaveMediaEngineException
+            catch (GetMediaEngineException | GetMediaEngineToolException | SaveMediaEngineException
                     | MediaEngineProviderNotFound e)
             {
                 LOG.warn("Could not check if OCR should be completed. PROCESS_ID=[{}], REASON=[{}]",
@@ -188,14 +197,17 @@ public class ArkCaseOCRServiceImpl extends ArkCaseMediaEngineServiceImpl<OCR, OC
     }
 
     private MediaEngine getProviderOCR(MediaEngine mediaEngine)
-            throws GetConfigurationException, GetMediaEngineToolException, MediaEngineProviderNotFound
+            throws GetMediaEngineToolException, MediaEngineProviderNotFound
     {
-        MediaEngineConfiguration configuration = getConfiguration();
+        OCRConfiguration configuration = getOcrConfigurationService().loadProperties();
         String providerName = configuration.getProvider();
-        MediaEngineDTO providerDTO = getOcrProviderFactory().getProvider(providerName).get(mediaEngine.getRemoteId(),
-                configuration.getTempPath());
 
-        return getMediaEngineMapper().DTOtoMediaEngine(providerDTO);
+        Map<String, Object> props = new HashMap<>();
+        props.put("tempPath", configuration.getTempPath());
+        MediaEngineDTO providerDTO = getOcrProviderFactory().getProvider(providerName).get(mediaEngine.getRemoteId(),
+                props);
+
+        return getMediaEngineMapper().dtoToMediaEngine(providerDTO);
     }
 
     private String doComplete(List<Long> ids, MediaEngine mediaEngine, DelegateExecution delegateExecution)
@@ -224,7 +236,8 @@ public class ArkCaseOCRServiceImpl extends ArkCaseMediaEngineServiceImpl<OCR, OC
 
             String fileName = mediaEngine.getMediaEcmFileVersion().getFile().getFileName();
 
-            String fileLocation = getConfiguration().getTempPath() + mediaEngine.getRemoteId() + OCRIntegrationConstants.QPDF_TMP
+            String fileLocation = getOcrConfigurationService().loadProperties().getTempPath() + mediaEngine.getRemoteId()
+                    + OCRIntegrationConstants.QPDF_TMP
                     + OCRIntegrationConstants.TEMP_FILE_PDF_SUFFIX;
 
             File file = new File(fileLocation);
@@ -279,7 +292,7 @@ public class ArkCaseOCRServiceImpl extends ArkCaseMediaEngineServiceImpl<OCR, OC
                 MediaEngine mediaEngine = get(ids.get(0));
                 if (MediaEngineStatusType.QUEUED.toString().equals(mediaEngine.getStatus()))
                 {
-                    OCRConfiguration configuration = getConfiguration();
+                    OCRConfiguration configuration = getOcrConfigurationService().loadProperties();
                     List<MediaEngine> processingOCRObjects = getAllByStatus(MediaEngineStatusType.PROCESSING.toString());
                     List<MediaEngine> processingOCRAutomaticObjects = processingOCRObjects.stream()
                             .filter(t -> MediaEngineType.AUTOMATIC.toString().equalsIgnoreCase(t.getType())).collect(Collectors.toList());
@@ -292,7 +305,7 @@ public class ArkCaseOCRServiceImpl extends ArkCaseMediaEngineServiceImpl<OCR, OC
                     }
                 }
             }
-            catch (GetMediaEngineException | GetConfigurationException e)
+            catch (GetMediaEngineException e)
             {
                 LOG.warn("Could not check if OCR should be processed for PROCESS_ID=[{}]. REASON=[{}]",
                         delegateExecution.getProcessInstanceId(), e.getMessage());
@@ -311,7 +324,7 @@ public class ArkCaseOCRServiceImpl extends ArkCaseMediaEngineServiceImpl<OCR, OC
                 mediaEngine.setProcessId(delegateExecution.getProcessInstanceId());
             }
             String providerName = configuration.getProvider();
-            MediaEngineDTO mediaEngineDTO = getMediaEngineMapper().MediaEngineToDTO(mediaEngine, configuration.getTempPath());
+            MediaEngineDTO mediaEngineDTO = getMediaEngineMapper().mediaEngineToDTO(mediaEngine, configuration.getTempPath());
             mediaEngineDTO.setMediaEcmFileVersion(createTempFile(mediaEngine, configuration.getTempPath()));
             getOcrProviderFactory().getProvider(providerName).create(mediaEngineDTO);
             save(mediaEngine);
@@ -373,7 +386,7 @@ public class ArkCaseOCRServiceImpl extends ArkCaseMediaEngineServiceImpl<OCR, OC
             try
             {
                 MediaEngine mediaEngine = get(ids.get(0));
-                OCRConfiguration configuration = getConfiguration();
+                OCRConfiguration configuration = getOcrConfigurationService().loadProperties();
                 int purgeAttempts = 0;
                 int purgeAttemptsInConfiguration = configuration.getProviderPurgeAttempts();
                 if (delegateExecution.hasVariable(MediaEngineBusinessProcessVariableKey.PURGE_ATTEMPTS.toString()))
@@ -538,11 +551,11 @@ public class ArkCaseOCRServiceImpl extends ArkCaseMediaEngineServiceImpl<OCR, OC
     }
 
     @Override
-    public boolean purge(MediaEngine mediaEngine) throws GetConfigurationException, MediaEngineProviderNotFound
+    public boolean purge(MediaEngine mediaEngine) throws MediaEngineProviderNotFound
     {
-        OCRConfiguration configuration = getConfiguration();
+        OCRConfiguration configuration = getOcrConfigurationService().loadProperties();
         String providerName = configuration.getProvider();
-        MediaEngineDTO mediaEngineDTO = getMediaEngineMapper().MediaEngineToDTO(mediaEngine, configuration.getTempPath());
+        MediaEngineDTO mediaEngineDTO = getMediaEngineMapper().mediaEngineToDTO(mediaEngine, configuration.getTempPath());
         return getOcrProviderFactory().getProvider(providerName).purge(mediaEngineDTO);
     }
 
@@ -599,16 +612,6 @@ public class ArkCaseOCRServiceImpl extends ArkCaseMediaEngineServiceImpl<OCR, OC
         this.ocrDao = ocrDao;
     }
 
-    public OCRConfigurationPropertiesService getOcrConfigurationPropertiesService()
-    {
-        return ocrConfigurationPropertiesService;
-    }
-
-    public void setOcrConfigurationPropertiesService(OCRConfigurationPropertiesService ocrConfigurationPropertiesService)
-    {
-        this.ocrConfigurationPropertiesService = ocrConfigurationPropertiesService;
-    }
-
     public OCRProviderFactory getOcrProviderFactory()
     {
         return ocrProviderFactory;
@@ -617,6 +620,16 @@ public class ArkCaseOCRServiceImpl extends ArkCaseMediaEngineServiceImpl<OCR, OC
     public void setOcrProviderFactory(OCRProviderFactory ocrProviderFactory)
     {
         this.ocrProviderFactory = ocrProviderFactory;
+    }
+
+    public OCRConfigurationService getOcrConfigurationService()
+    {
+        return ocrConfigurationService;
+    }
+
+    public void setOcrConfigurationService(OCRConfigurationService ocrConfigurationService)
+    {
+        this.ocrConfigurationService = ocrConfigurationService;
     }
     // </editor-fold>
 }

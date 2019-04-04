@@ -1579,8 +1579,6 @@
                 ]
             },
             {
-                "type": "p/mediaServices",
-                "label": "admin.mediaServices.title",
                 "type": "p/document/fileUploader",
                 "label": "admin.documentManagement.fileUploader.title",
                 "components": [
@@ -1588,8 +1586,8 @@
                 ]
             },
             {
-                "type": "p/transcription",
-                "label": "admin.transcription.title",
+                "type": "p/mediaServices",
+                "label": "admin.mediaServices.title",
                 "icon": "fa fa-wrench",
                 "components": []
             },
@@ -1605,6 +1603,13 @@
                 "label": "admin.mediaServices.ocrManagement",
                 "components": [
                     "ocr-management"
+                ]
+            },
+            {
+                "type": "p/mediaServices/awsManagement",
+                "label": "admin.mediaServices.awsManagement",
+                "components": [
+                    "aws-transcription-management"
                 ]
             },
             {
