@@ -29,13 +29,13 @@ angular.module('admin').controller('Admin.SecurityEmailSenderConfigurationContro
     $scope.changeEncryption = function(encryptionType) {
         switch (encryptionType) {
         case 'off':
-            $scope.emailSenderConfigDataModel[email.sender.port] = 25;
+            $scope.emailSenderConfigDataModel['email.sender.port'] = 25;
             break;
         case 'ssl-tls':
-            $scope.emailSenderConfigDataModel[email.sender.port] = 465;
+            $scope.emailSenderConfigDataModel['email.sender.port'] = 465;
             break;
         case 'starttls':
-            $scope.emailSenderConfigDataModel[email.sender.port] = 587;
+            $scope.emailSenderConfigDataModel['email.sender.port'] = 587;
         }
     };
 
