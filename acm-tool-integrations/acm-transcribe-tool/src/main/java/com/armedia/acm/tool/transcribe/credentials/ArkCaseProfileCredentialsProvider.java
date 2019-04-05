@@ -4,7 +4,6 @@ import com.amazonaws.SdkClientException;
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.AWSCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
-import com.armedia.acm.core.exceptions.AcmEncryptionException;
 import com.armedia.acm.tool.transcribe.model.AWSCredentialsConfiguration;
 import com.armedia.acm.tool.transcribe.service.AWSTranscribeCredentialsConfigurationService;
 
@@ -24,14 +23,7 @@ public class ArkCaseProfileCredentialsProvider implements AWSCredentialsProvider
     public AWSCredentials getCredentials()
     {
         AWSCredentialsConfiguration configuration = null;
-        try
-        {
-            configuration = getAwsTranscribeCredentialsConfigurationService().loadCredentialsProperties();
-        }
-        catch (AcmEncryptionException e)
-        {
-            throw new SdkClientException("Unable to load AWS credentials from configuration server (aws.accessKeyId and aws.secretKey)");
-        }
+        configuration = getAwsTranscribeCredentialsConfigurationService().loadCredentialsProperties();
 
         if (configuration != null)
         {
