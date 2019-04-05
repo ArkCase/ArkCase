@@ -39,6 +39,7 @@ import com.armedia.acm.services.pipeline.handler.PipelineHandler;
 
 import org.apache.chemistry.opencmis.client.api.Document;
 import org.apache.commons.io.input.CountingInputStream;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -72,7 +73,7 @@ public class EcmFileNewContentHandler implements PipelineHandler<EcmFile, EcmFil
             {
                 log.debug("Putting fileInputStream in a decorator stream so that the number of bytes can be counted");
                 CountingInputStream countingInputStream = new CountingInputStream(fileInputStream);
-                if (entity.getUuid() != null)
+                if (StringUtils.isNotEmpty(entity.getUuid()))
                 {
                     ProgressbarDetails progressbarDetails = new ProgressbarDetails();
                     progressbarDetails.setProgressbar(true);
@@ -102,7 +103,7 @@ public class EcmFileNewContentHandler implements PipelineHandler<EcmFile, EcmFil
             {
                 log.error("mule pre save handler failed: {}", e.getMessage(), e);
                 ProgressbarExecutor progressbarExecutor = progressIndicatorService.getExecutor(entity.getUuid());
-                if (entity.getUuid() != null && progressbarExecutor != null && progressbarExecutor.getProgressbarDetails().getStage() == FileUploadStage.UPLOAD_CHUNKS_TO_FILESYSTEM.getValue())
+                if (StringUtils.isNotEmpty(entity.getUuid())&& progressbarExecutor != null && progressbarExecutor.getProgressbarDetails().getStage() == FileUploadStage.UPLOAD_CHUNKS_TO_FILESYSTEM.getValue())
                 {
                     log.debug("Stop progressbar executor in stage 2, for file {} and set file upload success to {}", entity.getUuid(),
                             false);

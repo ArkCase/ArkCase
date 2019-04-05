@@ -268,7 +268,7 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
             CountingInputStream countingInputStream = new CountingInputStream(fileContents);
             // this reports progress on file system. Also should store info for the broker, for which part of the
             // progress it is loading for the filesystem or the activity upload from 50% to 59%
-            if (metadata.getUuid() != null && file != null)
+            if (StringUtils.isNotEmpty(metadata.getUuid()) && file != null)
             {
                 ProgressbarDetails progressbarDetails = new ProgressbarDetails();
                 progressbarDetails.setProgressbar(true);
@@ -338,7 +338,7 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
                 metadata.setFileActiveVersionNameExtension(finalExtension);
 
                 // stop the progressbar executor
-                if (metadata.getUuid() != null)
+                if (StringUtils.isNotEmpty(metadata.getUuid()))
                 {
                     log.debug("Stop progressbar executor in stage 2, for file {} and set file upload success to {}", metadata.getUuid(),
                             false);
@@ -373,7 +373,7 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
         {
             // stop the progressbar executor
             ProgressbarExecutor progressbarExecutor = progressIndicatorService.getExecutor(metadata.getUuid());
-            if (metadata.getUuid() != null && progressbarExecutor != null && progressbarExecutor.getProgressbarDetails().getStage() == FileUploadStage.UPLOAD_CHUNKS_TO_FILESYSTEM.getValue())
+            if (StringUtils.isNotEmpty(metadata.getUuid()) && progressbarExecutor != null && progressbarExecutor.getProgressbarDetails().getStage() == FileUploadStage.UPLOAD_CHUNKS_TO_FILESYSTEM.getValue())
             {
                 log.debug("Stop progressbar executor in stage 2, for file {} and set file upload success to {}", metadata.getUuid(), false);
                 progressIndicatorService.end(metadata.getUuid(), false);
