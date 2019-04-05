@@ -163,5 +163,10 @@
         "op": "add",
         "path": "/core/lookups/objectTitleTypes/request",
         "value": "Request"
+    },
+    {
+        "op": "replace",
+        "path": "/core/lookups/sequenceName/caseNumberSequence",
+        "value": "Request Number Sequence"
     }
 ]
