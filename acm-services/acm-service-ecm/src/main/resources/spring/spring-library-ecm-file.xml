@@ -39,6 +39,16 @@
         <property name="fileParticipantService" ref="fileParticipantService"/>
     </bean>
 
+    <bean id="fileParticipantsChangedEventListener"
+          class="com.armedia.acm.plugins.ecm.service.FileParticipantsChangedEventListener">
+        <property name="sendChangedParticipantsToAlfresco" ref="sendChangedParticipantsToAlfresco"/>
+    </bean>
+
+    <bean id="folderParticipantsChangedEventListener"
+          class="com.armedia.acm.plugins.ecm.service.FolderParticipantsChangedEventListener">
+        <property name="sendChangedParticipantsToAlfresco" ref="sendChangedParticipantsToAlfresco"/>
+    </bean>
+
     <bean id="folderDataAccessUpdateLocator"
           class="com.armedia.acm.plugins.ecm.service.impl.FolderDataAccessUpdateLocator">
         <property name="folderDao" ref="acmFolderDao"/>
@@ -435,5 +445,10 @@
 
     <bean id="updateMetadataConfig" class="com.armedia.acm.plugins.ecm.model.UpdateMetadataConfig" scope="refresh">
         <aop:scoped-proxy/>
+    </bean>
+
+    <bean id="sendChangedParticipantsToAlfresco" class="com.armedia.acm.plugins.ecm.service.SendChangedParticipantsToAlfresco">
+        <property name="objectConverter" ref="objectConverter"/>
+        <property name="jmsConnectionFactory" ref="jmsConnectionFactory"/>
     </bean>
 </beans>
