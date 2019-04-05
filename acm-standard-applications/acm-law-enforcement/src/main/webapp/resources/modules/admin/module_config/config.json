@@ -1062,7 +1062,9 @@
                     "displayName": "admin.application.sequenceManagement.config.grid.sequenceName",
                     "visible": true,
                     "headerCellFilter": "translate",
-                    "cellClass": "ui-grid-cell-contents-auto"
+                    "cellClass": "ui-grid-cell-contents-auto",
+                    "cellTemplate": "<div class='ui-grid-cell-contents'>{{ grid.appScope.utils.getLookupValue(grid.appScope.sequences, row.entity.sequenceName) | translate }}</div>"
+
                 },
                 {
                     "name": "sequenceDescription",
@@ -1115,7 +1117,7 @@
                     {
                         "name": "act",
                         "cellEditableCondition": false,
-                        "width": "70",
+                        "width": "90",
                         "headerCellTemplate": "<span></span>",
                         "cellTemplate": ""
                     }
@@ -1180,12 +1182,55 @@
             }
         },
         {
-            "id": "objectTitleConfiguration",
-            "title": "admin.application.objectTitleConfiguration.title",
+            "id": "sequenceRegistry",
+            "title": "admin.application.sequenceRegistry.title",
             "enabled": true,
             "type": "grid",
             "enableFiltering": false,
             "configurable": true,
+            "paginationPageSizes": [
+            5,
+            10,
+            20,
+            50
+            ],
+            "paginationPageSize": 20,
+            "columnDefs": [
+                {
+                    "name": "sequenceValue",
+                    "displayName": "admin.application.sequenceRegistry.sequenceValue",
+                    "visible": true,
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "sequenceName",
+                    "displayName": "admin.application.sequenceRegistry.sequenceName",
+                    "visible": true,
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "sequencePartName",
+                    "displayName": "admin.application.sequenceRegistry.sequencePartName",
+                    "visible": true,
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "sequencePartValue",
+                    "displayName": "admin.application.sequenceRegistry.sequencePartValue",
+                    "visible": true,
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "sequencePartValueUsedFlag",
+                    "displayName": "admin.application.sequenceRegistry.sequencePartValueUsedFlag",
+                    "visible": true,
+                    "headerCellFilter": "translate"
+                }
+            ]
+        },
+        {
+            "id": "objectTitleConfiguration",
+            "title": "admin.application.objectTitleConfiguration.title",
             "columnDefs": [
                 {
                     "name": "objectType",
@@ -1534,6 +1579,13 @@
                 ]
             },
             {
+                "type": "p/document/fileUploader",
+                "label": "admin.documentManagement.fileUploader.title",
+                "components": [
+                    "file-uploader"
+                ]
+            },
+            {
                 "type": "p/mediaServices",
                 "label": "admin.mediaServices.title",
                 "icon": "fa fa-wrench",
@@ -1551,6 +1603,13 @@
                 "label": "admin.mediaServices.ocrManagement",
                 "components": [
                     "ocr-management"
+                ]
+            },
+            {
+                "type": "p/mediaServices/awsManagement",
+                "label": "admin.mediaServices.awsManagement",
+                "components": [
+                    "aws-transcription-management"
                 ]
             },
             {

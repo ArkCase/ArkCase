@@ -183,7 +183,8 @@ public class AcmUserAPIController extends SecureLdapController
     }
 
     @RequestMapping(value = "{directory:.+}/users/{userId:.+}", method = RequestMethod.DELETE)
-    public ResponseEntity<?> deleteUser(@PathVariable("userId") String userId, @PathVariable("directory") String directory)
+    public ResponseEntity<?> deleteUser(@PathVariable("userId") String userId, @PathVariable("directory") String directory,
+            HttpSession session)
             throws AcmUserActionFailedException, AcmAppErrorJsonMsg
     {
         AcmUser source = getLdapUserService().getUserDao().findByUserId(userId);
@@ -191,7 +192,7 @@ public class AcmUserAPIController extends SecureLdapController
         try
         {
             ldapUserService.deleteAcmUser(userId, directory);
-            getAcmUserEventPublisher().publishLdapUserDeletedEvent(source);
+            getAcmUserEventPublisher().publishLdapUserDeletedEvent(source, (String) session.getAttribute("acm_ip_address"));
 
             return new ResponseEntity<>(HttpStatus.OK);
         }

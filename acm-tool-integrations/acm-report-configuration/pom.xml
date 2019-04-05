@@ -59,10 +59,6 @@
             <artifactId>acm-configuration</artifactId>
             <version>${acm.version}</version>
         </dependency>
-        <dependency>
-            <groupId>org.easymock</groupId>
-            <artifactId>easymock</artifactId>
-        </dependency>
     </dependencies>
 
 </project>

@@ -1,0 +1,13 @@
+<div ng-controller="UploadManagerController">
+    <div class="arkcase-snackbar" ng-show="!hideUploadSnackbar">
+        <ul class="nav nav-main">
+            <li>
+                <i class="navigation-icon fa fa-refresh fa-spin fa-fw" ng-show="!hideUploadSnackbarIcon"></i>
+                <span class="uploadingSnackbarStatus" ng-show="!hideUploadSnackbarIcon" translate>core.progressBar.uploading</span>
+                <button class="btn btn-secondary custom-color;" ng-click="onClickViewDetailsModal()">
+                    <span translate>core.progressBar.viewDetails</span>
+                </button>
+            </li>
+        </ul>
+    </div>
+</div>

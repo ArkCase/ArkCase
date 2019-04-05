@@ -163,7 +163,7 @@ public class PentahoScheduleReportService implements ScheduleReportService
     public String buildScheduleUrl()
     {
 
-        return reportsConfig.getServerUrl() +
+        return reportsConfig.getServerInternalUrl() +
                 ((reportsConfig.getServerInternalPort() != null) ? ":" + reportsConfig.getServerInternalPort() : "")
                 + reportsConfig.getScheduleApi();
     }

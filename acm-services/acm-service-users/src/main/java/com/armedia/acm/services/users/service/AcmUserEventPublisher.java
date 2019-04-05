@@ -41,10 +41,10 @@ public class AcmUserEventPublisher implements ApplicationEventPublisherAware
 
     private ApplicationEventPublisher applicationEventPublisher;
 
-    public void publishLdapUserDeletedEvent(AcmUser source)
+    public void publishLdapUserDeletedEvent(AcmUser source, String ipAddress)
     {
         log.debug("Publishing LDAP User:{} deleted event.", source.getUserId());
-        LdapUserDeletedEvent event = new LdapUserDeletedEvent(source, source.getUserId());
+        LdapUserDeletedEvent event = new LdapUserDeletedEvent(source, source.getUserId(), ipAddress);
         event.setSucceeded(true);
         applicationEventPublisher.publishEvent(event);
     }

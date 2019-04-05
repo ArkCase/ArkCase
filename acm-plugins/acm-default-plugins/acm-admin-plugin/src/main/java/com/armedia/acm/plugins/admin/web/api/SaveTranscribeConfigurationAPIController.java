@@ -27,7 +27,8 @@ package com.armedia.acm.plugins.admin.web.api;
  * #L%
  */
 
-import com.armedia.acm.services.transcribe.exception.SaveConfigurationException;
+import com.armedia.acm.services.mediaengine.exception.MediaEngineServiceNotFoundException;
+import com.armedia.acm.services.mediaengine.exception.SaveConfigurationException;
 import com.armedia.acm.services.transcribe.model.TranscribeConfiguration;
 import com.armedia.acm.services.transcribe.service.ArkCaseTranscribeService;
 
@@ -49,9 +50,10 @@ public class SaveTranscribeConfigurationAPIController
 
     @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public TranscribeConfiguration saveConfiguration(@RequestBody TranscribeConfiguration configuration) throws SaveConfigurationException
+    public void saveConfiguration(@RequestBody TranscribeConfiguration configuration)
+            throws SaveConfigurationException, MediaEngineServiceNotFoundException
     {
-        return getArkCaseTranscribeService().saveConfiguration(configuration);
+        getArkCaseTranscribeService().saveConfiguration(configuration);
     }
 
     public ArkCaseTranscribeService getArkCaseTranscribeService()

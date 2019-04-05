@@ -181,6 +181,35 @@ public class AcmSequenceServiceImpl implements AcmSequenceService
         }
     }
 
+    @Override
+    public List<AcmSequenceRegistry> getSequenceRegistryList() throws AcmSequenceException
+    {
+        log.info("Getting Sequence Registry List");
+        try
+        {
+            return getSequenceRegistryDao().getSequenceRegistryList();
+        }
+        catch (Exception e)
+        {
+            throw new AcmSequenceException(String.format("Unable to get Sequence Registry List"), e);
+        }
+    }
+
+    @Override
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public AcmSequenceEntity updateSequenceEntity(AcmSequenceEntity acmSequenceEntity) throws AcmSequenceException
+    {
+        log.info("Update Sequence Number");
+        try
+        {
+            return getSequenceDao().save(acmSequenceEntity);
+        }
+        catch (Exception e)
+        {
+            throw new AcmSequenceException(String.format("Unable to update Sequence Number"), e);
+        }
+    }
+
     /*
      * (non-Javadoc)
      * @see

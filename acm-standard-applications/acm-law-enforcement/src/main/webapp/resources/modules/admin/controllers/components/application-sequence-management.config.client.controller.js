@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('admin').controller('Admin.SequenceManagement',
-    ['$rootScope', '$scope', '$modal', 'Helper.UiGridService', 'MessageService', 'UtilService', 'Dialog.BootboxService', '$translate', 'Admin.SequenceManagementService'
-        , function ($rootScope, $scope, $modal, HelperUiGridService, MessageService, Util, DialogService, $translate, AdminSequenceManagementService) {
+    ['$rootScope', '$scope', '$modal', 'Helper.UiGridService', 'MessageService', 'UtilService', 'Dialog.BootboxService', '$translate', 'Admin.SequenceManagementService', 'Object.LookupService'
+        , function ($rootScope, $scope, $modal, HelperUiGridService, MessageService, Util, DialogService, $translate, AdminSequenceManagementService, ObjectLookupService) {
 
         var gridHelper = new HelperUiGridService.Grid({
             scope: $scope
@@ -166,5 +166,26 @@ angular.module('admin').controller('Admin.SequenceManagement',
         $scope.$on("reloadParentConfig", function (event, config) {
             reloadGrid(config);
         });
+
+
+        ObjectLookupService.getSequenceName().then(function(sequenceName){
+            $scope.sequences = sequenceName;
+        });
+
+        $scope.checkSequenceRegistry = function() {
+            var params = {};
+            params.sequenceNames = $scope.sequences;
+            $modal.open({
+                templateUrl: 'modules/admin/views/components/application-sequence-registry.modal.client.view.html',
+                controller: 'Admin.SequenceRegistryModalController',
+                size: 'lg',
+                backdrop: 'static',
+                resolve: {
+                    params: function() {
+                        return params;
+                    }
+                }
+            });
+        }
 
     } ]);

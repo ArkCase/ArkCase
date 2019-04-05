@@ -27,7 +27,8 @@ package com.armedia.acm.services.transcribe.web.api;
  * #L%
  */
 
-import com.armedia.acm.services.transcribe.exception.SaveTranscribeException;
+import com.armedia.acm.services.mediaengine.exception.SaveMediaEngineException;
+import com.armedia.acm.services.mediaengine.model.MediaEngine;
 import com.armedia.acm.services.transcribe.model.Transcribe;
 import com.armedia.acm.services.transcribe.service.ArkCaseTranscribeService;
 
@@ -49,7 +50,7 @@ public class UpdateTranscribeAPIController
 
     @RequestMapping(method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public Transcribe updateTranscribe(@RequestBody Transcribe transcribe) throws SaveTranscribeException
+    public MediaEngine updateTranscribe(@RequestBody Transcribe transcribe) throws SaveMediaEngineException
     {
         return getArkCaseTranscribeService().save(transcribe);
     }
