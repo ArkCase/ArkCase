@@ -237,7 +237,7 @@ public class FileUploadAPIController implements ApplicationEventPublisherAware
     @RequestMapping(value = "/uploadChunks", method = RequestMethod.POST, produces = { MediaType.APPLICATION_JSON_VALUE,
             MediaType.TEXT_PLAIN_VALUE })
     @ResponseBody
-    public FileChunkDetails uploadChunks(
+    public FileChunkDetails uploadChunks(@RequestParam("isFileChunk") boolean isFileChunk,
             @RequestParam(value = "parentObjectType", required = false) String parentObjectType,
             @RequestParam(value = "parentObjectId", required = false) Long parentObjectId,
             @RequestParam(value = "folderId", required = false) Long folderId,
@@ -251,7 +251,7 @@ public class FileUploadAPIController implements ApplicationEventPublisherAware
         String fileName = "";
         String uniqueArkCaseHashFileIdentifier = ecmFileUploaderConfig.getUniqueHashFileIdentifier();
 
-        if (!ecmFileUploaderConfig.isEnableFileChunkUpload())
+        if (!isFileChunk)
         {
             AcmFolder folder = getParentFolder(parentObjectType, parentObjectId, folderId);
 
