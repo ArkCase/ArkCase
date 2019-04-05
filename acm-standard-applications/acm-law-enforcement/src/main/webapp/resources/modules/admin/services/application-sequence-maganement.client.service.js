@@ -1,11 +1,13 @@
 'use strict';
 
-angular.module('admin').factory('Admin.SequenceManagementService', [ '$http', function($http) {
+angular.module('admin').factory('Admin.SequenceManagementService', [ '$http', '$httpParamSerializer', function($http, $httpParamSerializer) {
 
     return ({
         getSequences: getSequences,
         saveSequences: saveSequences,
-        updateSequences: updateSequences
+        updateSequences: updateSequences,
+        updateSequenceNumber: updateSequenceNumber,
+        getSequenceEntity: getSequenceEntity
     });
 
     function getSequences() {
@@ -35,4 +37,31 @@ angular.module('admin').factory('Admin.SequenceManagementService', [ '$http', fu
             data: sequenceConfig
         });
     }
+
+    //Save and update sequence number
+    function updateSequenceNumber(sequenceEntityObj) {
+        return $http({
+            method: 'PUT',
+            url: 'api/latest/plugin/sequence/configuration/updateSequenceNumber',
+            cache: false,
+            data: sequenceEntityObj
+        });
+    }
+
+    //Get sequence from acm_sequence table
+    function getSequenceEntity(sequenceName, sequencePartName) {
+        var params = {
+            sequenceName: sequenceName,
+            sequencePartName: sequencePartName
+        };
+
+        var urlArgs = $httpParamSerializer(params);
+
+        return $http({
+            method: 'GET',
+            url: 'api/latest/plugin/sequence/configuration/getSequence' + '?' + urlArgs,
+            cache: false
+        });
+    }
+
 } ]);

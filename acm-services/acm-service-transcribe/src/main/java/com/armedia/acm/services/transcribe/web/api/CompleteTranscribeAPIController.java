@@ -27,8 +27,8 @@ package com.armedia.acm.services.transcribe.web.api;
  * #L%
  */
 
-import com.armedia.acm.services.transcribe.exception.SaveTranscribeException;
-import com.armedia.acm.services.transcribe.model.Transcribe;
+import com.armedia.acm.services.mediaengine.exception.SaveMediaEngineException;
+import com.armedia.acm.services.mediaengine.model.MediaEngine;
 import com.armedia.acm.services.transcribe.service.ArkCaseTranscribeService;
 
 import org.springframework.http.MediaType;
@@ -49,7 +49,7 @@ public class CompleteTranscribeAPIController
 
     @RequestMapping(value = "/{id}/complete", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public Transcribe completeTranscribe(@PathVariable(value = "id") Long id) throws SaveTranscribeException
+    public MediaEngine completeTranscribe(@PathVariable(value = "id") Long id) throws SaveMediaEngineException
     {
         return getArkCaseTranscribeService().complete(id);
     }

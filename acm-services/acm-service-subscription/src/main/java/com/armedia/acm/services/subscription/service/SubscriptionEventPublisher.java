@@ -75,7 +75,8 @@ public class SubscriptionEventPublisher implements ApplicationEventPublisherAwar
     public void publishSubscriptionDeletedEvent(String userId, Long objectId, String objectType, boolean succeeded)
     {
         log.debug("Publishing a subscription deleted event.");
-        SubscriptionDeletedEvent subscriptionDeletedEvent = new SubscriptionDeletedEvent(userId, objectId, objectType);
+        SubscriptionDeletedEvent subscriptionDeletedEvent = new SubscriptionDeletedEvent(userId, objectId, objectType,
+                AuthenticationUtils.getUserIpAddress());
         subscriptionDeletedEvent.setSucceeded(succeeded);
 
         eventPublisher.publishEvent(subscriptionDeletedEvent);

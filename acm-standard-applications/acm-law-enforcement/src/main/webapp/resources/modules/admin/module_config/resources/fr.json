@@ -963,15 +963,6 @@
                 "enableOCR.checkbox": "Enable OCR_FR"
             }
         },
-        "ocr": {
-            "title": "OCR Services_FR",
-            "ocrManagement": "OCR Management_FR",
-            "ocrConfigForm": {
-                "save.button": "Save_FR",
-                "enableOCR.label": "OCR Configuration_FR",
-                "enableOCR.checkbox": "Enable OCR_FR"
-            }
-        },
         "stateOfArkcase": {
             "title": "Etat de Arkcase",
             "pickDate": "Choisir la date",

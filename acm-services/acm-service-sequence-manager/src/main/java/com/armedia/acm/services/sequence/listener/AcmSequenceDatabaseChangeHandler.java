@@ -30,7 +30,9 @@ package com.armedia.acm.services.sequence.listener;
 import com.armedia.acm.data.AcmDatabaseChangesEvent;
 import com.armedia.acm.data.AcmEntity;
 import com.armedia.acm.data.AcmObjectChangelist;
+import com.armedia.acm.services.sequence.annotation.AcmSequence;
 import com.armedia.acm.services.sequence.annotation.AcmSequenceAnnotationReader;
+import com.armedia.acm.services.sequence.generator.AcmSequenceGeneratorManager;
 import com.armedia.acm.services.sequence.service.AcmSequenceService;
 
 import org.apache.commons.beanutils.PropertyUtils;
@@ -50,6 +52,8 @@ public class AcmSequenceDatabaseChangeHandler implements ApplicationListener<Acm
     private transient Logger log = LoggerFactory.getLogger(getClass());
 
     private AcmSequenceAnnotationReader sequenceAnnotationReader;
+
+    private AcmSequenceGeneratorManager sequenceGeneratorManager;
 
     private AcmSequenceService sequenceService;
 
@@ -72,8 +76,12 @@ public class AcmSequenceDatabaseChangeHandler implements ApplicationListener<Acm
                 {
                     try
                     {
-                        String sequenceValue = PropertyUtils.getProperty(object, annotatedField.getName()).toString();
-                        getSequenceService().removeSequenceRegistry(sequenceValue);
+                        String sequenceName = annotatedField.getAnnotation(AcmSequence.class).sequenceName();
+                        if (getSequenceGeneratorManager().isSequenceEnabled(sequenceName))
+                        {
+                            String sequenceValue = PropertyUtils.getProperty(object, annotatedField.getName()).toString();
+                            getSequenceService().removeSequenceRegistry(sequenceValue);
+                        }
                     }
                     catch (Exception e)
                     {
@@ -100,6 +108,23 @@ public class AcmSequenceDatabaseChangeHandler implements ApplicationListener<Acm
     public void setSequenceAnnotationReader(AcmSequenceAnnotationReader sequenceAnnotationReader)
     {
         this.sequenceAnnotationReader = sequenceAnnotationReader;
+    }
+
+    /**
+     * @return the sequenceGeneratorManager
+     */
+    public AcmSequenceGeneratorManager getSequenceGeneratorManager()
+    {
+        return sequenceGeneratorManager;
+    }
+
+    /**
+     * @param sequenceGeneratorManager
+     *            the sequenceGeneratorManager to set
+     */
+    public void setSequenceGeneratorManager(AcmSequenceGeneratorManager sequenceGeneratorManager)
+    {
+        this.sequenceGeneratorManager = sequenceGeneratorManager;
     }
 
     /**

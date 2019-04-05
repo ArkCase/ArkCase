@@ -45,7 +45,7 @@ angular.module('document-details').controller(
                                 id: $scope.details.activeVersion.modifier
                             }), 'name');
                             $scope.details.verModified = _activeVersion.created;
-                            $scope.details.size = $scope.convert($scope.details.activeVersion.fileSizeBytes);
+                            $scope.details.size = UtilService.convertBytesToSize($scope.details.activeVersion.fileSizeBytes);
                             $scope.details.verMediaCreated = _activeVersion.mediaCreated;
 
                             $scope.saveButton.disabled = false;
@@ -80,7 +80,7 @@ angular.module('document-details').controller(
                         return '';
                     };
 
-                    $scope.convert = function(bytes, precision) {
+                    /*$scope.convert = function(bytes, precision) {
                         if (isNaN(parseFloat(bytes)) || !isFinite(bytes)) {
                             return '';
                         }
@@ -91,7 +91,7 @@ angular.module('document-details').controller(
                         var number = Math.floor(Math.log(bytes) / Math.log(1024));
 
                         return (bytes / Math.pow(1024, Math.floor(number))).toFixed(precision) + ' ' + units[number];
-                    };
+                    };*/
 
                     ObjectLookupService.getFileTypes().then(function(fileTypes) {
                         $scope.fileTypes = fileTypes;

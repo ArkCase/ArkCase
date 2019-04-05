@@ -609,6 +609,16 @@
                 "monthly": "Monthly",
                 "yearly": "Yearly"
             },
+            "sequenceName": {
+                "caseNumberSequence": "Case Number Sequence",
+                "complaintNumberSequence": "Complaint Number Sequence"
+            },
+            "sequenceObjectProperty": {
+                "id": "id",
+                "caseType": "case type",
+                "status": "status",
+                "priority": "priority"
+            },
             "objectTitleTypes": {
                 "caseFile": "Case File",
                 "complaint": "Complaint"
@@ -628,6 +638,20 @@
             "toggle.btn": "Toggle Navigation",
             "search.placeholder": "Search ArkCase",
             "locale.updateList": "Refresh Above List"
+        },
+        "progressBar": {
+            "header": "Uploading Details...",
+            "viewDetails": "View Upload Details",
+            "addMoreFiles": "Add more files",
+            "currentFileProgress": "Current File Progress",
+            "totalProgress": "Total Progress",
+            "hide": "Hide",
+            "footer": "File Upload Completed",
+            "done": "Done",
+            "close": "Close",
+            "failed": "File upload failed!",
+            "uploading": "Uploading...",
+            "retry": "RETRY"
         },
         "loginWarning": {
             "btnOK.text": "OK",

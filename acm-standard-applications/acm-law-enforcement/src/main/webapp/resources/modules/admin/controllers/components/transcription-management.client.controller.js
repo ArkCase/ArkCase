@@ -8,15 +8,15 @@ angular.module('admin').controller('Admin.TranscriptionManagementController', [ 
 
     TranscriptionManagementService.getTranscribeConfiguration().then(function(res) {
         $scope.transcribeConfigDataModel = res.data;
-        $scope.transcriptionForNewVersion.value = res.data.newTranscriptionForNewVersion;
+        $scope.transcriptionForNewVersion.value = res.data['transcribe.newMediaEngineForNewVersion'];
     }, function(err) {
         MessageService.error(err.data);
     });
 
     $scope.saveChanges = function() {
         $scope.isLoading = true;
-        $scope.transcribeConfigDataModel.newTranscriptionForNewVersion = $scope.transcriptionForNewVersion.value;
-        $scope.transcribeConfigDataModel.copyTranscriptionForNewVersion = !$scope.transcribeConfigDataModel.newTranscriptionForNewVersion;
+        $scope.transcribeConfigDataModel.newMediaEngineForNewVersion = $scope.transcriptionForNewVersion.value;
+        $scope.transcribeConfigDataModel.copyMediaEngineForNewVersion = !$scope.transcribeConfigDataModel.newMediaEngineForNewVersion;
         TranscriptionManagementService.saveTranscribeConfiguration($scope.transcribeConfigDataModel).then(function(res) {
             $scope.isLoading = false;
             MessageService.succsessAction();
@@ -25,5 +25,12 @@ angular.module('admin').controller('Admin.TranscriptionManagementController', [ 
             MessageService.errorAction();
         });
     };
+
+    $scope.resetMode = function () {
+        if(!$scope.transcribeConfigDataModel.enabled)
+        {
+            $scope.transcribeConfigDataModel.automaticEnabled = false;
+        }
+    }
 
 } ]);

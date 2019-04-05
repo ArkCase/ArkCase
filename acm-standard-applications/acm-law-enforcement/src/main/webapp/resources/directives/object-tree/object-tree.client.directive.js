@@ -482,7 +482,7 @@ angular.module('directives').directive('objectTree', [ '$q', '$translate', 'Util
                     var nodeStatus = obj.nodeStatus;
                     var nodeStatusColor = obj.nodeStatusColor;
                     var nodeTitleLabel = obj.nodeTitleLabel;
-                    if(treeData.configTitleList){
+                    if(!Util.isEmpty(treeData.configTitleList) && !Util.isEmpty(treeData.configTitleList[obj.nodeType])){
                         var configurationTitle = treeData.configTitleList[obj.nodeType].title;
                         if(configurationTitle === "objectId")
                         {
@@ -494,13 +494,14 @@ angular.module('directives').directive('objectTree', [ '$q', '$translate', 'Util
                         }
                         else if(configurationTitle === "objectIdTitle")
                         {
-                            var nodeTitle = obj.nodeId + obj.nodeTitle;
+                            var nodeTitle = obj.nodeId + " - "+ obj.nodeTitle;
                         }
                         else if(configurationTitle === "titleObjectId")
                         {
-                            var nodeTitle = obj.nodeTitle + obj.nodeId;
+                            var nodeTitle = obj.nodeTitle + " - " + obj.nodeId;
                         }
-                    }else
+                    }
+                    else
                     {
                         var nodeTitle = nodeTitleLabel ? $translate.instant(nodeTitleLabel) : obj.nodeTitle;
                     }

@@ -61,14 +61,16 @@
  */
 angular.module('directives').directive(
         'search',
-        [ 'SearchService', '$window', '$q', '$location', '$browser', '$translate', '$interval', 'UtilService', 'Object.LookupService', 'uiGridExporterConstants', 'Tags.TagsService', 'Search.QueryBuilderService', 'ObjectService', 'Search.AutoSuggestService', '$state',
-                function(SearchService, $window, $q, $location, $browser, $translate, $interval, Util, ObjectLookupService, uiGridExporterConstants, TagsService, SearchQueryBuilder, ObjectService, AutoSuggestService, $state) {
+        [ 'SearchService', '$window', '$q', '$location', '$browser', '$translate', '$interval', 'UtilService', 'Object.LookupService', 'uiGridExporterConstants', 'Tags.TagsService', 'Search.QueryBuilderService', 'ObjectService', 'Search.AutoSuggestService', '$state', 'MessageService',
+                'DocTreeExt.DownloadSelectedAsZip',
+                function(SearchService, $window, $q, $location, $browser, $translate, $interval, Util, ObjectLookupService, uiGridExporterConstants, TagsService, SearchQueryBuilder, ObjectService, AutoSuggestService, $state, MessageService, DownloadSelectedAsZip) {
                     return {
                         restrict: 'E', //match only element name
                         scope: {
                             header: '@', //@ : text binding (read-only and only strings)
                             searchBtn: '@',
                             exportBtn: '@',
+                            compressBtn: '@',
                             searchQuery: '@',
                             searchPlaceholder: '@',
                             filter: '@',
@@ -81,8 +83,10 @@ angular.module('directives').directive(
                             scope.facets = [];
                             scope.currentFacetSelection = {};
                             scope.selectedItem = null;
+                            scope.selectedRows = [];
                             scope.emptySearch = true;
                             scope.exportUrl = "";
+                            scope.disableCompressBtn = false;
 
                             scope.facetLimit = 10; //default value for facetLimit
                             if (typeof scope.config.facetLimit !== 'undefined') {
@@ -106,6 +110,7 @@ angular.module('directives').directive(
 
                             scope.search = function() {
                                 scope.filters = '';
+                                scope.selectedRows = [];
 
                                 //reapply default filter if it exists
                                 if (scope.filter) {
@@ -266,6 +271,50 @@ angular.module('directives').directive(
                                 $window.location.href = appUrl + SearchService.exportUrl(scope.query, 'csv', scope.config.reportFileName, fields, titles);
                             };
 
+                            scope.downloadSelectedFiles = function() {
+                                var fileIds = [];
+                                var fileCounter = 0;
+                                scope.disableCompressBtn = true;
+                                _.forEach(scope.selectedRows, function(selectedFile) {
+                                    if (selectedFile.object_type_s === "FILE" && fileCounter <= 50) {
+                                    fileIds.push(parseInt(selectedFile.object_id_s));
+                                        fileCounter++;
+                                    }
+                                });
+                                if (!Util.isArrayEmpty(scope.selectedRows)) {
+                                    DownloadSelectedAsZip.downloadSelectedFiles(fileIds).then(function() {
+                                        MessageService.info($translate.instant("search.download.ready"));
+                                        scope.disableCompressBtn = false;
+                                    });
+                                } else {
+                                    //if there is no selected files for download, download all files in the search result
+                                    var allRecords = [];
+                                    scope.searchQuery = searchObject.searchQuery;
+                                    var query = SearchQueryBuilder.buildFacetedSearchQuerySorted((scope.multiFilter ? "*" : scope.searchQuery + "*"), scope.filters, scope.join, scope.gridOptions.totalItems, scope.start, scope.sort);
+                                    if (query) {
+                                        SearchService.queryFilteredSearch({
+                                            query: query
+                                        }, function(data) {
+                                            allRecords = data.response.docs;
+                                            _.forEach(allRecords, function(item) {
+                                                if (fileCounter === 50) {
+                                                    return false;
+                                                } else {
+                                                    if (item.object_type_s === "FILE") {
+                                                        fileIds.push(parseInt(item.object_id_s));
+                                                        fileCounter++;
+                                                    }
+                                                }
+                                            });
+                                            DownloadSelectedAsZip.downloadSelectedFiles(fileIds).then(function() {
+                                                MessageService.info($translate.instant("search.download.ready"));
+                                                scope.disableCompressBtn = false;
+                                            });
+                                        });
+                                    }
+                                }
+                            };
+
                             function updateFacets(facets) {
                                 if (facets) {
                                     if (scope.facets.length) {
@@ -326,9 +375,9 @@ angular.module('directives').directive(
                                 _.each(facets, function(facet) {
                                     facet.nameTranslated = $translate.data(facet.name, "common.directive.search.facet.names");
                                     _.each(facet.fields, function(field) {
-                                        if(field.name.nameFiltered == ""){
+                                        if (field.name.nameFiltered == "") {
                                             field.name.nameTranslated = $translate.instant("common.directive.search.facet.blankValue");
-                                        }else{
+                                        } else {
                                             field.name.nameTranslated = $translate.data(field.name.nameFiltered, "common.directive.search.facet.fields." + facet.fieldCategory);
                                         }
                                     });
@@ -452,7 +501,7 @@ angular.module('directives').directive(
                                         enableRowSelection: true,
                                         enableRowHeaderSelection: false,
                                         enableFiltering: config.enableFiltering,
-                                        multiSelect: false,
+                                        multiSelect: true,
                                         noUnselect: false,
                                         useExternalPagination: true,
                                         paginationPageSizes: config.paginationPageSizes,
@@ -465,8 +514,36 @@ angular.module('directives').directive(
                                         onRegisterApi: function(gridApi) {
                                             scope.gridApi = gridApi;
 
-                                            gridApi.selection.on.rowSelectionChanged(scope, function(row) {
-                                                scope.selectedItem = row.isSelected ? row.entity : null;
+                                            scope.gridApi.selection.on.rowSelectionChanged(scope, function(selectedRow) {
+                                                scope.selectedItem = selectedRow.isSelected ? selectedRow.entity : null;
+                                                if (selectedRow.isSelected) {
+                                                    if (selectedRow.entity.object_type_s === "FILE") {
+                                                        scope.selectedRows.push(scope.selectedItem);
+                                                    }
+                                                } else {
+                                                    var id = selectedRow.entity.id;
+                                                    var index = _.findIndex(scope.selectedRows, function(foundObject) {
+                                                        return foundObject.id == id;
+                                                    });
+                                                    scope.selectedRows.splice(index, 1);
+                                                }
+                                            });
+
+                                            //mark rendered rows as selected after pagination
+                                            scope.gridApi.core.on.rowsRendered(scope, function() {
+                                                var grid = scope.gridOptions.data;
+                                                if (!Util.isArrayEmpty(scope.selectedRows)) {
+                                                    grid.forEach(function(part, index) {
+                                                        var id = grid[index].id;
+                                                        var found = _.findIndex(scope.selectedRows, function(foundObject) {
+                                                            return foundObject.id == id;
+                                                        });
+                                                        //mark row as selected in the grid list
+                                                        if (found != -1) {
+                                                            scope.gridApi.grid.rows[index].setSelected(true);
+                                                        }
+                                                    });
+                                                }
                                             });
 
                                             // Get the sorting info from UI grid

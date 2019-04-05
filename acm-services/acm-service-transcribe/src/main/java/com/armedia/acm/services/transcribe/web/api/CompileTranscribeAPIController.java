@@ -28,7 +28,7 @@ package com.armedia.acm.services.transcribe.web.api;
  */
 
 import com.armedia.acm.plugins.ecm.model.EcmFile;
-import com.armedia.acm.services.transcribe.exception.CompileTranscribeException;
+import com.armedia.acm.services.transcribe.exception.CompileMediaEngineException;
 import com.armedia.acm.services.transcribe.service.ArkCaseTranscribeService;
 
 import org.springframework.http.MediaType;
@@ -49,7 +49,7 @@ public class CompileTranscribeAPIController
 
     @RequestMapping(value = "/{id}/compile", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public EcmFile compileTranscribe(@PathVariable(value = "id") Long id) throws CompileTranscribeException
+    public EcmFile compileTranscribe(@PathVariable(value = "id") Long id) throws CompileMediaEngineException
     {
         return getArkCaseTranscribeService().compile(id);
     }

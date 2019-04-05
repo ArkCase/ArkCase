@@ -27,20 +27,30 @@ package com.armedia.acm.services.notification.service;
  * #L%
  */
 
+import com.armedia.acm.core.AcmSpringActiveProfile;
 import com.armedia.acm.services.notification.dao.NotificationDao;
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
+import com.armedia.acm.services.users.model.PasswordResetToken;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ResetPasswordService {
 
     private NotificationDao notificationDao;
     private UserDao userDao;
+    private AcmSpringActiveProfile acmSpringActiveProfile;
+    private final Logger log = LoggerFactory.getLogger(getClass());
     
     public void sendPasswordResetNotification(AcmUser user)
     {
-        
-        
+        if (acmSpringActiveProfile.isSAMLEnabledEnvironment())
+        {
+            throw new UnsupportedOperationException("Won't send password reset email when SSO environment");
+        }
+        user.setPasswordResetToken(new PasswordResetToken());
+        userDao.save(user);
         Notification notification = new Notification();
         notification.setCreator(user.getUserId());
         notification.setModifier(user.getUserId());
@@ -76,5 +86,10 @@ public class ResetPasswordService {
     public void setUserDao(UserDao userDao)
     {
         this.userDao = userDao;
+    }
+
+    public void setAcmSpringActiveProfile(AcmSpringActiveProfile acmSpringActiveProfile) 
+    {
+        this.acmSpringActiveProfile = acmSpringActiveProfile;
     }
 }
