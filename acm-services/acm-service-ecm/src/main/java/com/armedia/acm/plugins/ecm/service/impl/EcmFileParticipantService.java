@@ -34,6 +34,7 @@ import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileConfig;
+import com.armedia.acm.plugins.ecm.model.EcmFolderParticipantChangedEvent;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.plugins.ecm.utils.EcmFileParticipantServiceHelper;
 import com.armedia.acm.services.participants.model.AcmAssignedObject;
@@ -43,6 +44,8 @@ import com.armedia.acm.services.participants.service.AcmParticipantService;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
@@ -56,7 +59,7 @@ import java.util.stream.Collectors;
 /**
  * Created by bojan.milenkoski on 06.10.2017
  */
-public class EcmFileParticipantService
+public class EcmFileParticipantService implements ApplicationEventPublisherAware
 {
     private static List<String> fileParticipantTypes = Arrays.asList("*", "group-write", "group-read", "group-no-access", "write", "read",
             "no-access");
@@ -67,6 +70,7 @@ public class EcmFileParticipantService
     private AcmParticipantService participantService;
     private EcmFileParticipantServiceHelper fileParticipantServiceHelper;
     private EcmFileConfig ecmFileConfig;
+    private ApplicationEventPublisher applicationEventPublisher;
 
     /**
      * Sets the file's participants from the parent folder's participants and persists the file instance with the
@@ -182,7 +186,7 @@ public class EcmFileParticipantService
     }
 
     /**
-     * Inherits participants and restricted flag from assigned object to files and folders recursively. Mapps the
+     * Inherits participants and restricted flag from assigned object to files and folders recursively. Maps the
      * assigned object participant types to file participant types using the mapping in 'ecmFileService.properties'.
      * 
      * @param assignedObjectParticipants
@@ -440,9 +444,15 @@ public class EcmFileParticipantService
             if (containsParticipantWithLdapId(participants, existingParticipant.getParticipantLdapId()))
             {
                 // remove participant from current folder
-                folder.getParticipants()
+                boolean removed = folder.getParticipants()
                         .removeIf(participant -> participant.getParticipantLdapId().equals(existingParticipant.getParticipantLdapId())
                                 && participant.getParticipantType().equals(existingParticipant.getParticipantType()));
+                if (removed)
+                {
+                    EcmFolderParticipantChangedEvent folderParticipantChangedEvent = new EcmFolderParticipantChangedEvent(folder);
+                    folderParticipantChangedEvent.setDeletedParticipant(existingParticipant);
+                    getApplicationEventPublisher().publishEvent(folderParticipantChangedEvent);
+                }
             }
         }
 
@@ -568,5 +578,16 @@ public class EcmFileParticipantService
     public void setEcmFileConfig(EcmFileConfig ecmFileConfig)
     {
         this.ecmFileConfig = ecmFileConfig;
+    }
+
+    public ApplicationEventPublisher getApplicationEventPublisher()
+    {
+        return applicationEventPublisher;
+    }
+
+    @Override
+    public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher)
+    {
+        this.applicationEventPublisher = applicationEventPublisher;
     }
 }
