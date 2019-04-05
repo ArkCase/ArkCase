@@ -72,6 +72,7 @@ import com.armedia.acm.services.search.service.SearchResults;
 import org.apache.chemistry.opencmis.client.api.CmisObject;
 import org.apache.chemistry.opencmis.client.api.Document;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.mule.api.MuleException;
@@ -345,7 +346,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
             EcmFile uploaded = getEcmFileTransaction().addFileTransaction(authentication, file.getOriginalFilename(), container,
                     targetCmisFolderId, fileInputStream, metadata, file);
 
-            if (uploaded.getUuid() != null)
+            if (StringUtils.isNotEmpty(uploaded.getUuid()))
             {
                 log.debug("Stop progressbar executor in stage 3, for file {} and set file upload success to {}", uploaded.getUuid(), true);
                 progressIndicatorService.end(uploaded.getUuid(), true);
