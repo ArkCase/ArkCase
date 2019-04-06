@@ -66,9 +66,10 @@ public class ConvertEcmFileEventListener implements ApplicationListener<EcmFileC
             convertedFile = getFileConverter().convertAndReturnConvertedFile(ecmFile, version);
             FileUtils.copyFile(convertedFile, tmpPdfConvertedFile);
         }
-        catch (IOException | ConversionException e)
+        catch (IOException | ConversionException | NullPointerException e)
         {
             log.warn(String.format("Could not convert file [%s] to PDF", ecmFile.getFileName()), e);
+            FileUtils.deleteQuietly(tmpPdfConvertedFile);
         }
         finally
         {
