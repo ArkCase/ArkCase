@@ -248,7 +248,7 @@
             },
 			"searchFilter.placeholder": "खोज"
         },
-        "security.selectPrivileges": "भूमिका बनाएं / विशेषाधिकारों का चयन करें",
+        "security.selectPrivileges": "विशेषाधिकार चुनें",
         "security.selectPrivileges.applicationRole": "आवेदन भूमिका",
         "security.selectPrivileges.createRole": "रोल बनाएं",
         "security.selectPrivileges.editRole": "भूमिका संपादित करें",

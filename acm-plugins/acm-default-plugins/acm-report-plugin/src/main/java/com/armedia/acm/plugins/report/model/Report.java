@@ -127,6 +127,7 @@ public class Report implements Serializable
                 {
                     // convert camelCase to underscore-separated, e.g. ReportName becoems Report_Name
                     goodPropertyName = goodPropertyName.replaceAll("(?<!^)([a-z])([A-Z])", "$1_$2");
+                    goodPropertyName = goodPropertyName.replaceAll("\\+", "_");
                 }
                 goodPropertyName = goodPropertyName.toUpperCase();
 
