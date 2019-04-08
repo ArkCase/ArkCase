@@ -256,7 +256,7 @@
             },
             "searchFilter.placeholder": "Search"
         },
-        "security.selectPrivileges": "Create Role/Select Privileges",
+        "security.selectPrivileges": "Select Privileges",
         "security.selectPrivileges.applicationRole": "Application Role",
         "security.selectPrivileges.createRole": "Create Role",
         "security.selectPrivileges.editRole": "Edit Role",

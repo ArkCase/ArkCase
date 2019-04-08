@@ -248,9 +248,9 @@
             },
             "searchFilter.placeholder": "Búsqueda"
         },
-        "security.selectPrivileges": "Crear funciones e instaurar privilegios",
+        "security.selectPrivileges": "Seleccionar privilegios",
         "security.selectPrivileges.applicationRole": "una función en la aplicación",
-        "security.selectPrivileges.createRole": "Cree la función",
+        "security.selectPrivileges.createRole": "Seleccionar rol",
         "security.selectPrivileges.editRole": "Edite la función",
         "security.selectPrivileges.applyChanges": "Aplique los cambios",
         "security.selectPrivileges.enterRoleName": "Ingrese el nombre de la función en el cuadro a continuación",
