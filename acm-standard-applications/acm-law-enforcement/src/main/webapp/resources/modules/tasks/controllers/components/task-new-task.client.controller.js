@@ -83,8 +83,8 @@ angular.module('tasks').controller(
 
                         $scope.userName = $scope.userFullName;
                         $scope.config.data.assignee = "";
-                        $scope.config.data.taskStartDate = new Date();
-                        $scope.config.data.dueDate = new Date();
+                        $scope.config.data.taskStartDate = moment.utc().format("YYYY-MM-DDTHH:mm:ss.sss");
+                        $scope.config.data.dueDate = moment.utc().format("YYYY-MM-DDTHH:mm:ss.sss");
                         $scope.config.data.priority = $scope.config.priority[1].id;
                         $scope.config.data.percentComplete = 0;
 
@@ -127,36 +127,23 @@ angular.module('tasks').controller(
                     };
 
                     $scope.startDateChanged = function() {
-                        var todayDate = new Date();
-                        if (Util.isEmpty($scope.config.data.taskStartDate) || moment($scope.config.data.taskStartDate).isBefore(todayDate)) {
+                        var todayDate = moment.utc().format("YYYY-MM-DDTHH:mm:ss.sss");
+                        if (Util.isEmpty($scope.config.data.taskStartDate) || moment($scope.config.data.taskStartDate).isBefore(todayDate) || moment($scope.config.data.taskStartDate).isAfter($scope.config.data.dueDate)) {
                             $scope.config.data.taskStartDate = todayDate;
                         } else {
-                            $scope.config.data.taskStartDate = UtilDateService.convertToCurrentTime($scope.config.data.taskStartDate);
+                            $scope.config.data.taskStartDate = $scope.config.data.taskStartDate;
                         }
 
-                        if (moment($scope.config.data.taskStartDate).isAfter($scope.config.data.dueDate)) {
-                            $scope.config.data.dueDate = UtilDateService.convertToCurrentTime($scope.config.data.taskStartDate);
-                        }
-
-                        $scope.config.data.dueDate = UtilDateService.setSameTime($scope.config.data.dueDate, $scope.config.data.taskStartDate);
-                        $scope.minDueDate = $scope.config.data.taskStartDate;
                     };
 
                     $scope.dueDateChanged = function() {
-                        var todayDate = new Date();
-                        if (Util.isEmpty($scope.config.data.dueDate)) {
+                        var todayDate = moment.utc().format("YYYY-MM-DDTHH:mm:ss.sss");
+                        if (Util.isEmpty($scope.config.data.dueDate) || moment($scope.config.data.dueDate).isBefore($scope.config.data.taskStartDate)) {
                             $scope.config.data.dueDate = todayDate;
                         } else {
-                            $scope.config.data.dueDate = UtilDateService.convertToCurrentTime($scope.config.data.dueDate);
+                            $scope.config.data.dueDate = $scope.config.data.dueDate;
                         }
 
-                        if (moment($scope.config.data.dueDate).isBefore($scope.config.data.taskStartDate)) {
-                            $scope.config.data.dueDate = UtilDateService.convertToCurrentTime($scope.config.data.taskStartDate);
-                            //it is commented because after showing the dialog the modal is not scrollable
-                            // DialogService.alert($translate.instant('tasks.comp.info.alertMessage' ) + $filter("date")($scope.config.data.taskStartDate, $translate.instant('common.defaultDateTimeUIFormat')));
-                        }
-
-                        $scope.config.data.taskStartDate = UtilDateService.setSameTime($scope.config.data.taskStartDate, $scope.config.data.dueDate);
                     };
 
                     $scope.saveNewTask = function() {
@@ -170,8 +157,8 @@ angular.module('tasks').controller(
                             $scope.config.data.assignee = $scope.userId;
                         }
                         var taskData = angular.copy($scope.config.data);
-                        taskData.dueDate = moment.utc(UtilDateService.dateToIso($scope.config.data.dueDate)).toDate();
-                        taskData.taskStartDate = moment.utc(UtilDateService.dateToIso($scope.config.data.taskStartDate)).toDate();
+                        taskData.dueDate = $scope.config.data.dueDate;
+                        taskData.taskStartDate = $scope.config.data.taskStartDate;
                         if ($scope.documentsToReview && $scope.selectedBusinessProcessType != 'acmDocumentTaskWorkflow') {
                             taskData.documentsToReview = processDocumentsUnderReview();
                             $scope.selectedBusinessProcessType = "acmDocumentTaskWorkflow";
