@@ -46,27 +46,20 @@ public class FileParticipantChangedEventListener implements ApplicationListener<
     @Override
     public void onApplicationEvent(EcmFileParticipantChangedEvent event)
     {
-        EcmFile file = (EcmFile) event.getSource();
+        AcmParticipant changeParticipant = event.getChangedParticipant();
 
-        AcmParticipant changeParticipant = null;
-        if (event.getChangedParticipant() != null)
+        if (changeParticipant != null)
         {
-            changeParticipant = event.getChangedParticipant();
-        }
-        else if (event.getAddedNewParticipant() != null)
-        {
-            changeParticipant = event.getAddedNewParticipant();
-        }
-        else if (event.getDeletedParticipant() != null)
-        {
-            changeParticipant = event.getDeletedParticipant();
-        }
+            EcmFile file = (EcmFile) event.getSource();
 
-        // send jms messages with the file/folder id and the changed participant informationN
-        ChangedParticipant changedParticipant = new ChangedParticipant();
-        changedParticipant.setCmisObjectId(file.getVersionSeriesId());
-        changedParticipant.setChangedParticipant(changeParticipant);
-        getSendChangedParticipantToAlfresco().sendChangedParticipant(changedParticipant);
+            // send jms messages with the file id, the changed participant information and the type of change
+            ChangedParticipant changedParticipant = new ChangedParticipant();
+            changedParticipant.setCmisObjectId(file.getVersionSeriesId());
+            changedParticipant.setChangedParticipant(changeParticipant);
+            changedParticipant.setChangeType(event.getChangeType());
+
+            getSendChangedParticipantToAlfresco().sendChangedParticipant(changedParticipant);
+        }
     }
 
     public SendChangedParticipantToAlfresco getSendChangedParticipantToAlfresco()

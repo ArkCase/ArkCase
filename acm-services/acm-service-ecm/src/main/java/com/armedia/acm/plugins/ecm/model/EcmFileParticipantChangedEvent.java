@@ -37,9 +37,8 @@ import java.util.Date;
  */
 public class EcmFileParticipantChangedEvent extends AcmEvent
 {
-    private AcmParticipant addedNewParticipant;
+    private String changeType;
     private AcmParticipant changedParticipant;
-    private AcmParticipant deletedParticipant;
 
     public EcmFileParticipantChangedEvent(EcmFile source)
     {
@@ -53,14 +52,14 @@ public class EcmFileParticipantChangedEvent extends AcmEvent
         setParentObjectId(source.getContainer().getContainerObjectId());
     }
 
-    public AcmParticipant getAddedNewParticipant()
+    public String getChangeType()
     {
-        return addedNewParticipant;
+        return changeType;
     }
 
-    public void setAddedNewParticipant(AcmParticipant addedNewParticipant)
+    public void setChangeType(String changeType)
     {
-        this.addedNewParticipant = addedNewParticipant;
+        this.changeType = changeType;
     }
 
     public AcmParticipant getChangedParticipant()
@@ -71,15 +70,5 @@ public class EcmFileParticipantChangedEvent extends AcmEvent
     public void setChangedParticipant(AcmParticipant changedParticipant)
     {
         this.changedParticipant = changedParticipant;
-    }
-
-    public AcmParticipant getDeletedParticipant()
-    {
-        return deletedParticipant;
-    }
-
-    public void setDeletedParticipant(AcmParticipant deletedParticipant)
-    {
-        this.deletedParticipant = deletedParticipant;
     }
 }

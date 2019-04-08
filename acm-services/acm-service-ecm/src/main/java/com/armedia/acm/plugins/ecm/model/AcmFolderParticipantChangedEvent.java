@@ -38,9 +38,8 @@ import java.util.Date;
  */
 public class AcmFolderParticipantChangedEvent extends AcmEvent
 {
-    private AcmParticipant addedNewParticipant;
+    private String changeType;
     private AcmParticipant changedParticipant;
-    private AcmParticipant deletedParticipant;
 
     public AcmFolderParticipantChangedEvent(AcmFolder source)
     {
@@ -50,21 +49,24 @@ public class AcmFolderParticipantChangedEvent extends AcmEvent
         setObjectType("FOLDER");
         setObjectId(source.getId());
         setEventDate(new Date());
-        setParentObjectType(source.getParentFolder().getObjectType());
-        setParentObjectId(source.getParentFolder().getId());
+        if (source.getParentFolder() != null)
+        {
+            setParentObjectType(source.getParentFolder().getObjectType());
+            setParentObjectId(source.getParentFolder().getId());
+        }
         setSucceeded(true);
         setUserId(AuthenticationUtils.getUsername());
         setIpAddress(AuthenticationUtils.getUserIpAddress());
     }
 
-    public AcmParticipant getAddedNewParticipant()
+    public String getChangeType()
     {
-        return addedNewParticipant;
+        return changeType;
     }
 
-    public void setAddedNewParticipant(AcmParticipant addedNewParticipant)
+    public void setChangeType(String changeType)
     {
-        this.addedNewParticipant = addedNewParticipant;
+        this.changeType = changeType;
     }
 
     public AcmParticipant getChangedParticipant()
@@ -75,15 +77,5 @@ public class AcmFolderParticipantChangedEvent extends AcmEvent
     public void setChangedParticipant(AcmParticipant changedParticipant)
     {
         this.changedParticipant = changedParticipant;
-    }
-
-    public AcmParticipant getDeletedParticipant()
-    {
-        return deletedParticipant;
-    }
-
-    public void setDeletedParticipant(AcmParticipant deletedParticipant)
-    {
-        this.deletedParticipant = deletedParticipant;
     }
 }
