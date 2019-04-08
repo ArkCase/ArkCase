@@ -28,7 +28,7 @@ package com.armedia.acm.plugins.ecm.service;
  */
 
 import com.armedia.acm.objectonverter.ObjectConverter;
-import com.armedia.acm.plugins.ecm.model.ChangedParticipants;
+import com.armedia.acm.plugins.ecm.model.ChangedParticipant;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,7 +41,7 @@ import javax.jms.ConnectionFactory;
 /**
  * @author ivana.shekerova on 03/04/2019.
  */
-public class SendChangedParticipantsToAlfresco implements InitializingBean
+public class SendChangedParticipantToAlfresco implements InitializingBean
 {
     private transient final Logger log = LoggerFactory.getLogger(getClass());
     private ObjectConverter objectConverter;
@@ -54,23 +54,20 @@ public class SendChangedParticipantsToAlfresco implements InitializingBean
         jmsTemplate = new JmsTemplate(getJmsConnectionFactory());
     }
 
-    public void sendChangedParticipants(ChangedParticipants changedParticipants)
+    public void sendChangedParticipant(ChangedParticipant changedParticipant)
     {
-        sendToJmsQueue(changedParticipants, "sendChangedParticipantsToAlfresco");
+        sendToJmsQueue(changedParticipant, "sendChangedParticipantsToAlfresco");
     }
 
-    private void sendToJmsQueue(ChangedParticipants changedParticipants, String queueName)
+    private void sendToJmsQueue(ChangedParticipant changedParticipant, String queueName)
     {
         try
         {
-            String json = objectConverter.getJsonMarshaller().marshal(changedParticipants);
-
-            log.debug("Sending JSON with hash {}", json.hashCode());
+            String json = objectConverter.getJsonMarshaller().marshal(changedParticipant);
 
             getJmsTemplate().convertAndSend(queueName, json);
-            log.debug("Sent JSON with hash {}", json.hashCode());
 
-            log.trace("Returning JSON: {}", json);
+            log.debug("Returning JSON: {}", json);
 
         }
         catch (JmsException e)
