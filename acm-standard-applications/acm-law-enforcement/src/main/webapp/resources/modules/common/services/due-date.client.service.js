@@ -83,26 +83,60 @@ angular.module('services').service('DueDate.Service', [ '$translate', function($
         var dueDate = moment(dueDate);
         var momentDate = moment();
         var days = 0;
-        while (momentDate < dueDate) {
-            momentDate.add(1, 'days');
-            if (!isWeekend(momentDate) && !isHoliday(holidays, momentDate)) {
-                days += 1;
+        if (dueDate > momentDate) { //calculate days remaining
+            while (momentDate < dueDate) {
+                momentDate.add(1, 'days');
+                if (!isWeekend(momentDate) && !isHoliday(holidays, momentDate)) {
+                    days += 1;
+                }
+            }
+            return {
+                days: days,
+                isOverdue: false
+            }
+        } else { //otherwise calculate overdue days
+            while (dueDate.isBefore(momentDate, 'day')) {
+                dueDate.add(1, 'days');
+                if (!isWeekend(dueDate) && !isHoliday(holidays, dueDate)) {
+                    days += 1;
+                }
+            }
+            return {
+                days: days,
+                isOverdue: true
             }
         }
-        return days;
     }
+
 
     function daysLeftWithWeekends(holidays, dueDate) {
         var dueDate = moment(dueDate);
         var momentDate = moment();
         var days = 0;
-        while (momentDate < dueDate) {
-            momentDate.add(1, 'days');
-            if (!isHoliday(holidays, momentDate)) {
-                days += 1;
+        if(dueDate > momentDate) { //calculate days remaining
+            while (momentDate < dueDate) {
+                momentDate.add(1, 'days');
+                if (!isHoliday(holidays, momentDate)) {
+                    days += 1;
+                }
+            }
+            return {
+                days: days,
+                isOverdue: false
             }
         }
-        return days;
+        else { //otherwise calculate overdue days
+            while (dueDate.isBefore(today, 'day')) {
+                dueDate.add(1, 'days');
+                if (!isHoliday(holidays, dueDate)) {
+                    days += 1;
+                }
+            }
+            return {
+                days: days,
+                isOverdue: true
+            }
+        }
     }
 
     function isWeekend(momentObject) {
