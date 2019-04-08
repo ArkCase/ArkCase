@@ -248,7 +248,7 @@
             },
 			"searchFilter.placeholder": "搜索"
         },
-        "security.selectPrivileges": "创建角色并选择特权",
+        "security.selectPrivileges": "选择权限",
         "security.selectPrivileges.applicationRole": "应用角色",
         "security.selectPrivileges.createRole": "创建角色",
         "security.selectPrivileges.editRole": "编辑角色",
