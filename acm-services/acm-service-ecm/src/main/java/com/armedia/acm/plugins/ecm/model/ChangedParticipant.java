@@ -9,6 +9,7 @@ public class ChangedParticipant
 {
 
     private String cmisObjectId;
+    private String changeType;
     private AcmParticipant changedParticipant;
 
     public String getCmisObjectId()
@@ -19,6 +20,16 @@ public class ChangedParticipant
     public void setCmisObjectId(String cmisObjectId)
     {
         this.cmisObjectId = cmisObjectId;
+    }
+
+    public String getChangeType()
+    {
+        return changeType;
+    }
+
+    public void setChangeType(String changeType)
+    {
+        this.changeType = changeType;
     }
 
     public AcmParticipant getChangedParticipant()

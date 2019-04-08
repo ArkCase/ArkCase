@@ -32,6 +32,7 @@ import com.armedia.acm.plugins.ecm.dao.AcmFolderDao;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.AcmFolderParticipantChangedEvent;
+import com.armedia.acm.plugins.ecm.model.ChangedParticipantConstants;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.model.EcmFileParticipantChangedEvent;
@@ -220,7 +221,9 @@ public class EcmFileParticipantServiceHelper implements ApplicationEventPublishe
             AcmParticipant participant = new AcmParticipant();
             participant.setParticipantLdapId(participantLdapId);
             participant.setParticipantType(participantType);
-            acmFolderParticipantChangedEvent.setDeletedParticipant(participant);
+
+            acmFolderParticipantChangedEvent.setChangedParticipant(participant);
+            acmFolderParticipantChangedEvent.setChangeType(ChangedParticipantConstants.REMOVED);
             getApplicationEventPublisher().publishEvent(acmFolderParticipantChangedEvent);
         }
 
@@ -249,7 +252,8 @@ public class EcmFileParticipantServiceHelper implements ApplicationEventPublishe
                             AcmParticipant participant = new AcmParticipant();
                             participant.setParticipantLdapId(participantLdapId);
                             participant.setParticipantType(participantType);
-                            ecmFileParticipantChangedEvent.setDeletedParticipant(participant);
+                            ecmFileParticipantChangedEvent.setChangedParticipant(participant);
+                            ecmFileParticipantChangedEvent.setChangeType(ChangedParticipantConstants.REMOVED);
                             getApplicationEventPublisher().publishEvent(ecmFileParticipantChangedEvent);
                         }
                         // modify the instance to trigger the Solr transformers
@@ -291,6 +295,7 @@ public class EcmFileParticipantServiceHelper implements ApplicationEventPublishe
             {
                 existingFileParticipant.get().setParticipantType(participant.getParticipantType());
                 ecmFileParticipantChangedEvent.setChangedParticipant(participant);
+                ecmFileParticipantChangedEvent.setChangeType(ChangedParticipantConstants.CHANGED);
             }
         }
         else
@@ -301,7 +306,8 @@ public class EcmFileParticipantServiceHelper implements ApplicationEventPublishe
             newParticipant.setObjectType(EcmFileConstants.OBJECT_FILE_TYPE);
             newParticipant.setObjectId(file.getId());
             file.getParticipants().add(newParticipant);
-            ecmFileParticipantChangedEvent.setAddedNewParticipant(newParticipant);
+            ecmFileParticipantChangedEvent.setChangedParticipant(newParticipant);
+            ecmFileParticipantChangedEvent.setChangeType(ChangedParticipantConstants.ADDED);
         }
         getApplicationEventPublisher().publishEvent(ecmFileParticipantChangedEvent);
     }
@@ -331,6 +337,7 @@ public class EcmFileParticipantServiceHelper implements ApplicationEventPublishe
                 existingFolderParticipant.get().setParticipantType(participant.getParticipantType());
 
                 folderParticipantChangedEvent.setChangedParticipant(existingFolderParticipant.get());
+                folderParticipantChangedEvent.setChangeType(ChangedParticipantConstants.CHANGED);
             }
         }
         else
@@ -342,7 +349,8 @@ public class EcmFileParticipantServiceHelper implements ApplicationEventPublishe
             newParticipant.setObjectId(folder.getId());
             folder.getParticipants().add(newParticipant);
 
-            folderParticipantChangedEvent.setAddedNewParticipant(newParticipant);
+            folderParticipantChangedEvent.setChangedParticipant(newParticipant);
+            folderParticipantChangedEvent.setChangeType(ChangedParticipantConstants.ADDED);
         }
         getApplicationEventPublisher().publishEvent(folderParticipantChangedEvent);
     }
