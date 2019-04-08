@@ -142,13 +142,11 @@ angular.module('cases').controller(
                     $scope.objectInfo.dueDate = $scope.originalDueDate;
                     $rootScope.$broadcast('dueDate-changed', $scope.originalDueDate);
                 } else {
-                    if (!$scope.extendedDueDate) {
                         if ($scope.includeWeekends) {
                             $scope.extendedDueDate = DueDateService.dueDateWithWeekends($scope.originalDueDate, $scope.extensionWorkingDays, $scope.holidays);
                         } else {
                             $scope.extendedDueDate = DueDateService.dueDateWorkingDays($scope.originalDueDate, $scope.extensionWorkingDays, $scope.holidays);
                         }
-                    }
                     $scope.objectInfo.dueDate = $scope.extendedDueDate;
                     $rootScope.$broadcast('dueDate-changed', $scope.extendedDueDate);
                 }
