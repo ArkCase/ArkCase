@@ -27,50 +27,55 @@ package com.armedia.acm.plugins.ecm.service;
  * #L%
  */
 
-import com.armedia.acm.plugins.ecm.model.ChangedParticipants;
-import com.armedia.acm.plugins.ecm.model.EcmFile;
-import com.armedia.acm.plugins.ecm.model.EcmFileParticipantChangedEvent;
+import com.armedia.acm.plugins.ecm.model.AcmFolder;
+import com.armedia.acm.plugins.ecm.model.AcmFolderParticipantChangedEvent;
+import com.armedia.acm.plugins.ecm.model.ChangedParticipant;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;
 
-public class FileParticipantsChangedEventListener implements ApplicationListener<EcmFileParticipantChangedEvent>
+public class FolderParticipantChangedEventListener implements ApplicationListener<AcmFolderParticipantChangedEvent>
 {
 
     private final transient Logger log = LoggerFactory.getLogger(getClass());
 
-    private SendChangedParticipantsToAlfresco sendChangedParticipantsToAlfresco;
+    private SendChangedParticipantToAlfresco sendChangedParticipantToAlfresco;
 
     @Override
-    public void onApplicationEvent(EcmFileParticipantChangedEvent event)
+    public void onApplicationEvent(AcmFolderParticipantChangedEvent event)
     {
-        EcmFile file = (EcmFile) event.getSource();
+        AcmFolder folder = (AcmFolder) event.getSource();
 
         AcmParticipant changeParticipant = null;
-        if(event.getChangedParticipant() != null){
+        if (event.getChangedParticipant() != null)
+        {
             changeParticipant = event.getChangedParticipant();
-        }else if(event.getAddedNewParticipant() != null){
+        }
+        else if (event.getAddedNewParticipant() != null)
+        {
             changeParticipant = event.getAddedNewParticipant();
-        }else if(event.getDeletedParticipant() != null){
+        }
+        else if (event.getDeletedParticipant() != null)
+        {
             changeParticipant = event.getDeletedParticipant();
         }
 
         // send jms messages with the file/folder id and the changed participant informationN
-        ChangedParticipants changedParticipants = new ChangedParticipants();
-        changedParticipants.setCmisObjectId(file.getVersionSeriesId());
-        changedParticipants.setChangedParticipant(changeParticipant);
-        getSendChangedParticipantsToAlfresco().sendChangedParticipants(changedParticipants);
+        ChangedParticipant changedParticipant = new ChangedParticipant();
+        changedParticipant.setCmisObjectId(folder.getCmisFolderId());
+        changedParticipant.setChangedParticipant(changeParticipant);
+        getSendChangedParticipantToAlfresco().sendChangedParticipant(changedParticipant);
     }
 
-    public SendChangedParticipantsToAlfresco getSendChangedParticipantsToAlfresco()
+    public SendChangedParticipantToAlfresco getSendChangedParticipantToAlfresco()
     {
-        return sendChangedParticipantsToAlfresco;
+        return sendChangedParticipantToAlfresco;
     }
 
-    public void setSendChangedParticipantsToAlfresco(SendChangedParticipantsToAlfresco sendChangedParticipantsToAlfresco)
+    public void setSendChangedParticipantToAlfresco(SendChangedParticipantToAlfresco sendChangedParticipantToAlfresco)
     {
-        this.sendChangedParticipantsToAlfresco = sendChangedParticipantsToAlfresco;
+        this.sendChangedParticipantToAlfresco = sendChangedParticipantToAlfresco;
     }
 }

@@ -53,27 +53,33 @@ public class EcmFileParticipantChangedEvent extends AcmEvent
         setParentObjectId(source.getContainer().getContainerObjectId());
     }
 
-    public AcmParticipant getAddedNewParticipant() {
+    public AcmParticipant getAddedNewParticipant()
+    {
         return addedNewParticipant;
     }
 
-    public void setAddedNewParticipant(AcmParticipant addedNewParticipant) {
+    public void setAddedNewParticipant(AcmParticipant addedNewParticipant)
+    {
         this.addedNewParticipant = addedNewParticipant;
     }
 
-    public AcmParticipant getChangedParticipant() {
+    public AcmParticipant getChangedParticipant()
+    {
         return changedParticipant;
     }
 
-    public void setChangedParticipant(AcmParticipant changedParticipant) {
+    public void setChangedParticipant(AcmParticipant changedParticipant)
+    {
         this.changedParticipant = changedParticipant;
     }
 
-    public AcmParticipant getDeletedParticipant() {
+    public AcmParticipant getDeletedParticipant()
+    {
         return deletedParticipant;
     }
 
-    public void setDeletedParticipant(AcmParticipant deletedParticipant) {
+    public void setDeletedParticipant(AcmParticipant deletedParticipant)
+    {
         this.deletedParticipant = deletedParticipant;
     }
 }

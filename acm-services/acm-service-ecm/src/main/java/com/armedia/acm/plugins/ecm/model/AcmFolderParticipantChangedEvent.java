@@ -36,13 +36,13 @@ import java.util.Date;
 /**
  * @author ivana.shekerova on 04/04/2019.
  */
-public class EcmFolderParticipantChangedEvent extends AcmEvent
+public class AcmFolderParticipantChangedEvent extends AcmEvent
 {
     private AcmParticipant addedNewParticipant;
     private AcmParticipant changedParticipant;
     private AcmParticipant deletedParticipant;
 
-    public EcmFolderParticipantChangedEvent(AcmFolder source)
+    public AcmFolderParticipantChangedEvent(AcmFolder source)
     {
         super(source);
 
@@ -57,27 +57,33 @@ public class EcmFolderParticipantChangedEvent extends AcmEvent
         setIpAddress(AuthenticationUtils.getUserIpAddress());
     }
 
-    public AcmParticipant getAddedNewParticipant() {
+    public AcmParticipant getAddedNewParticipant()
+    {
         return addedNewParticipant;
     }
 
-    public void setAddedNewParticipant(AcmParticipant addedNewParticipant) {
+    public void setAddedNewParticipant(AcmParticipant addedNewParticipant)
+    {
         this.addedNewParticipant = addedNewParticipant;
     }
 
-    public AcmParticipant getChangedParticipant() {
+    public AcmParticipant getChangedParticipant()
+    {
         return changedParticipant;
     }
 
-    public void setChangedParticipant(AcmParticipant changedParticipant) {
+    public void setChangedParticipant(AcmParticipant changedParticipant)
+    {
         this.changedParticipant = changedParticipant;
     }
 
-    public AcmParticipant getDeletedParticipant() {
+    public AcmParticipant getDeletedParticipant()
+    {
         return deletedParticipant;
     }
 
-    public void setDeletedParticipant(AcmParticipant deletedParticipant) {
+    public void setDeletedParticipant(AcmParticipant deletedParticipant)
+    {
         this.deletedParticipant = deletedParticipant;
     }
 }

@@ -32,9 +32,9 @@ import com.armedia.acm.plugins.ecm.dao.AcmFolderDao;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
+import com.armedia.acm.plugins.ecm.model.AcmFolderParticipantChangedEvent;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileConfig;
-import com.armedia.acm.plugins.ecm.model.EcmFolderParticipantChangedEvent;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.plugins.ecm.utils.EcmFileParticipantServiceHelper;
 import com.armedia.acm.services.participants.model.AcmAssignedObject;
@@ -449,7 +449,7 @@ public class EcmFileParticipantService implements ApplicationEventPublisherAware
                                 && participant.getParticipantType().equals(existingParticipant.getParticipantType()));
                 if (removed)
                 {
-                    EcmFolderParticipantChangedEvent folderParticipantChangedEvent = new EcmFolderParticipantChangedEvent(folder);
+                    AcmFolderParticipantChangedEvent folderParticipantChangedEvent = new AcmFolderParticipantChangedEvent(folder);
                     folderParticipantChangedEvent.setDeletedParticipant(existingParticipant);
                     getApplicationEventPublisher().publishEvent(folderParticipantChangedEvent);
                 }

@@ -31,10 +31,10 @@ import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.plugins.ecm.dao.AcmFolderDao;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
+import com.armedia.acm.plugins.ecm.model.AcmFolderParticipantChangedEvent;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.model.EcmFileParticipantChangedEvent;
-import com.armedia.acm.plugins.ecm.model.EcmFolderParticipantChangedEvent;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.web.api.MDCConstants;
 
@@ -214,14 +214,14 @@ public class EcmFileParticipantServiceHelper implements ApplicationEventPublishe
         boolean removed = folder.getParticipants().removeIf(participant -> participant.getParticipantLdapId().equals(participantLdapId)
                 && participant.getParticipantType().equals(participantType));
 
-        EcmFolderParticipantChangedEvent ecmFolderParticipantChangedEvent = new EcmFolderParticipantChangedEvent(folder);
+        AcmFolderParticipantChangedEvent acmFolderParticipantChangedEvent = new AcmFolderParticipantChangedEvent(folder);
         if (removed)
         {
             AcmParticipant participant = new AcmParticipant();
             participant.setParticipantLdapId(participantLdapId);
             participant.setParticipantType(participantType);
-            ecmFolderParticipantChangedEvent.setDeletedParticipant(participant);
-            getApplicationEventPublisher().publishEvent(ecmFolderParticipantChangedEvent);
+            acmFolderParticipantChangedEvent.setDeletedParticipant(participant);
+            getApplicationEventPublisher().publishEvent(acmFolderParticipantChangedEvent);
         }
 
         // modify the instance to trigger the Solr transformers
@@ -239,11 +239,11 @@ public class EcmFileParticipantServiceHelper implements ApplicationEventPublishe
             // remove participants from files in folder
             getFileDao().findByFolderId(folder.getId(), FlushModeType.COMMIT)
                     .forEach(file -> {
-                        boolean removedFile = file.getParticipants()
+                        boolean removedFileParticipant = file.getParticipants()
                                 .removeIf(participant -> participant.getParticipantLdapId().equals(participantLdapId)
-                                && participant.getParticipantType().equals(participantType));
+                                        && participant.getParticipantType().equals(participantType));
 
-                        if (removedFile)
+                        if (removedFileParticipant)
                         {
                             EcmFileParticipantChangedEvent ecmFileParticipantChangedEvent = new EcmFileParticipantChangedEvent(file);
                             AcmParticipant participant = new AcmParticipant();
@@ -315,7 +315,7 @@ public class EcmFileParticipantServiceHelper implements ApplicationEventPublishe
      */
     public void setParticipantToFolder(AcmFolder folder, AcmParticipant participant)
     {
-        EcmFolderParticipantChangedEvent folderParticipantChangedEvent = new EcmFolderParticipantChangedEvent(folder);
+        AcmFolderParticipantChangedEvent folderParticipantChangedEvent = new AcmFolderParticipantChangedEvent(folder);
 
         // set participant to current folder
         Optional<AcmParticipant> existingFolderParticipant = folder.getParticipants().stream()
