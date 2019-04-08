@@ -28,29 +28,34 @@ package com.armedia.acm.report.config;
  */
 
 import com.armedia.acm.objectonverter.json.JSONUnmarshaller;
-
-import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import org.json.JSONObject;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
 
 import java.util.Map;
 
-public class ReportsToRolesConfig
+public class ReportsToRolesConfig implements InitializingBean
 {
+    @JsonProperty("report.config.reportsToRoles")
     @Value("${report.config.reportsToRoles}")
     private String reportsToRoles;
 
     private JSONUnmarshaller jsonUnmarshaller;
 
-    @JsonAnyGetter
+    private Map<String, String> reportsToRolesMap;
+
+    @JsonIgnore
     public Map<String, String> getReportsToRolesMap()
     {
-        return jsonUnmarshaller.unmarshall(reportsToRoles, Map.class);
+        return reportsToRolesMap;
     }
 
     public String getReportsToRoles()
     {
-        return reportsToRoles;
+        return new JSONObject(reportsToRolesMap).toString();
     }
 
     public void setReportsToRoles(String reportsToRoles)
@@ -67,5 +72,11 @@ public class ReportsToRolesConfig
     public void setJsonUnmarshaller(JSONUnmarshaller jsonUnmarshaller)
     {
         this.jsonUnmarshaller = jsonUnmarshaller;
+    }
+
+    @Override
+    public void afterPropertiesSet() throws Exception
+    {
+        reportsToRolesMap = jsonUnmarshaller.unmarshall(reportsToRoles, Map.class);
     }
 }

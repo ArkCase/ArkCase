@@ -33,7 +33,7 @@
                     "name": "name",
                     "displayName": "search.comp.grid.columns.name",
                     "headerCellFilter": "translate",
-                    "cellTemplate": "<a arkcase-href object-data='row.entity' is-parent='false' data-toggle='tooltip' data-placement='bottom' ng-class='{\"no-link\": row.entity.object_type_s == \"NOTE\" || row.entity.object_type_s == \"PERSON-ASSOCIATION\"}' title={{row.entity.name}}>{{row.entity.name}}</a>"
+                    "cellTemplate": "<a arkcase-href object-data='row.entity' is-parent='false' data-toggle='tooltip' data-placement='bottom' ng-class='{\"no-link\": row.entity.object_type_s == \"NOTE\" || row.entity.object_type_s == \"PERSON-ASSOCIATION\"}' title={{row.entity.name}} target='_blank'>{{row.entity.name}}</a>"
                 },
                 {
                     "name": "object_type_s",
@@ -46,13 +46,13 @@
                     "sortField": "title_parseable_lcs",
                     "displayName": "search.comp.grid.columns.title",
                     "headerCellFilter": "translate",
-                    "cellTemplate": "<a arkcase-href ng-click='grid.appScope.onClick(row.entity.object_type_s, row.entity.title_parseable)' object-data='row.entity' is-parent='false' is-viewer-link='true' data-toggle='tooltip' data-placement='bottom' ng-class='{\"no-link\": row.entity.object_type_s == \"NOTE\" || row.entity.object_type_s == \"PERSON-ASSOCIATION\"}' title={{row.entity.title_parseable}}>{{row.entity.title_parseable}}</a>"
+                    "cellTemplate": "<a arkcase-href ng-click='grid.appScope.onClick(row.entity.object_type_s, row.entity.title_parseable)' object-data='row.entity' is-parent='false' is-viewer-link='true' data-toggle='tooltip' data-placement='bottom' ng-class='{\"no-link\": row.entity.object_type_s == \"NOTE\" || row.entity.object_type_s == \"PERSON-ASSOCIATION\"}' title={{row.entity.title_parseable}} target='_blank'>{{row.entity.title_parseable}}</a>"
                 },
                 {
                     "name": "parent_number_lcs",
                     "displayName": "search.comp.grid.columns.parent",
                     "headerCellFilter": "translate",
-                    "cellTemplate": "<a arkcase-href object-data='row.entity' is-parent='true' data-toggle='tooltip' data-placement='bottom' ng-class='{\"no-link\": row.entity.object_type_s == \"ASSOCIATED_TAG\"}' title={{row.entity.parent_number_lcs}}>{{row.entity.parent_number_lcs}}</a>"
+                    "cellTemplate": "<a arkcase-href object-data='row.entity' is-parent='true' data-toggle='tooltip' data-placement='bottom' ng-class='{\"no-link\": row.entity.object_type_s == \"ASSOCIATED_TAG\"}' title={{row.entity.parent_number_lcs}} target='_blank'>{{row.entity.parent_number_lcs}}</a>"
                 },
                 {
                     "name": "assignee_full_name_lcs",

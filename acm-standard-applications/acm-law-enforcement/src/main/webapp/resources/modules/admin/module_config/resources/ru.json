@@ -248,7 +248,7 @@
             },
 			"searchFilter.placeholder": "Поиск"
         },
-        "security.selectPrivileges": "Создание роли / выбора привилегий",
+        "security.selectPrivileges": "Выберите привилегии",
         "security.selectPrivileges.applicationRole": "Роль приложения",
         "security.selectPrivileges.createRole": "Создать роль",
         "security.selectPrivileges.editRole": "Изменить роль",
