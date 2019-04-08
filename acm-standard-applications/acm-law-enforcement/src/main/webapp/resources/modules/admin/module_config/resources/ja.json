@@ -248,7 +248,7 @@
             },
 			 "searchFilter.placeholder": "サーチ"
         },
-        "security.selectPrivileges": "役割の作成/特権の選択",
+        "security.selectPrivileges": "特権を選択",
         "security.selectPrivileges.applicationRole": "役割の適用",
         "security.selectPrivileges.createRole": "役割の作成",
         "security.selectPrivileges.editRole": "役割の編集",

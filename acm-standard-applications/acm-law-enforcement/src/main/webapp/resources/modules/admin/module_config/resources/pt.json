@@ -248,7 +248,7 @@
             },
 			"searchFilter.placeholder": "Pesquisa"
         },
-        "security.selectPrivileges": "Criar privilégios de função / seleção",
+        "security.selectPrivileges": "Selecione privilégios",
         "security.selectPrivileges.applicationRole": "Função de aplicação",
         "security.selectPrivileges.createRole": "Criar papel",
         "security.selectPrivileges.editRole": "Editar papel",
