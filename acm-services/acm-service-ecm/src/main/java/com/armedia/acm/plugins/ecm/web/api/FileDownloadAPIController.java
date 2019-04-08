@@ -213,7 +213,7 @@ public class FileDownloadAPIController implements ApplicationEventPublisherAware
             {
                 tmpPdfConvertedFile = ecmFileService.convertFile(fileKey,version,fileExtension,fileName,mimeType,ecmFile);
 
-                if(tmpPdfConvertedFile.exists())
+                if(tmpPdfConvertedFile.exists() && tmpPdfConvertedFile.length() > 0)
                 {
                     pdfConvertedIs = new FileInputStream(tmpPdfConvertedFile);
                     fileIs = pdfConvertedIs;

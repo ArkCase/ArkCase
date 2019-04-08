@@ -81,5 +81,6 @@
     <bean id="ocrConfigurationService" class="com.armedia.acm.services.ocr.service.OCRConfigurationService">
         <property name="configurationPropertyService" ref="configurationPropertyService"/>
         <property name="ocrConfig" ref="ocrConfig"/>
+        <property name="ecmFileConfig" ref="ecmFileConfig"/>
     </bean>
 </beans>
