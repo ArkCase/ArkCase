@@ -19,6 +19,10 @@
         <property name="userDao" ref="userJpaDao"/>
     </bean>
 
+    <bean id="assigneeDueDateNotifier" class="com.armedia.acm.services.notification.service.AssigneeDueDateNotifier">
+        <property name="userDao" ref="userJpaDao"/>
+    </bean>
+
     <bean id="notificationEventPublisher" class="com.armedia.acm.services.notification.service.NotificationEventPublisher"/>
 
     <bean id="notificationToSolrTransformer" class="com.armedia.acm.services.notification.service.NotificationToSolrTransformer">
@@ -47,6 +51,9 @@
     <bean id="notificationGroupTemplateModelProvider" class="com.armedia.acm.services.notification.service.provider.NotificationGroupTemplateModelProvider">
         <property name="dataService" ref="acmDataService"/>
     </bean>
+
+    <bean id="dueDateReminderModelProvider" class="com.armedia.acm.services.notification.service.provider.DueDateReminderModelProvider">
+    </bean>
     
     <bean id="acmEntitySendExecutor" class="com.armedia.acm.services.notification.service.SendExecutor">
         <property name="springContextHolder" ref="acmContextHolder"/>
@@ -71,6 +78,11 @@
     <bean id="userSendExecutor" class="com.armedia.acm.services.notification.service.SendExecutor">
         <property name="springContextHolder" ref="acmContextHolder"/>
         <property name="templateModelProvider" ref="acmUserTemplateModelProvider"/>
+    </bean>
+
+    <bean id="dueDateReminderExecutor" class="com.armedia.acm.services.notification.service.SendExecutor">
+        <property name="springContextHolder" ref="acmContextHolder"/>
+        <property name="templateModelProvider" ref="dueDateReminderModelProvider"/>
     </bean>
     
     <bean id="purgeExecutor" class="com.armedia.acm.services.notification.service.PurgeExecutor">
