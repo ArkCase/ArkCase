@@ -8,7 +8,9 @@
         <startEvent id="startDocumentApproval" name="Document Author Submits Request to Approve Document"></startEvent>
         <userTask id="approverReviewsDocument" name="${taskName}"
             activiti:candidateGroups="${execution.getVariable('candidateGroups') == null ? '' : candidateGroups}"
-            activiti:assignee="${currentReviewer}" activiti:dueDate="P3D" activiti:priority="50">
+            activiti:assignee="${currentReviewer}" 
+                  activiti:dueDate=" ${execution.getVariable('dueDate') != null ? dueDate : P3D}"
+                  activiti:priority="50">
             <extensionElements>
                 <activiti:formProperty id="reviewOutcome" name="Review Outcome" type="enum" required="true">
                     <activiti:value id="APPROVE" name="Approve Document"></activiti:value>
