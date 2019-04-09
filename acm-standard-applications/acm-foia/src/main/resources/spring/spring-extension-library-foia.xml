@@ -137,6 +137,10 @@
             <beans:property name="timesheetService" ref="timesheetService"/>
         </beans:bean>
 
+        <beans:bean id="dueDateReminderSentListener" class="gov.foia.listener.DueDateReminderSentListener">
+            <beans:property name="foiaRequestDao" ref="foiaRequestDao"/>
+        </beans:bean>
+
         <beans:bean id="newRequestDocumentDescriptor" class="gov.foia.model.FOIADocumentDescriptor">
             <beans:property name="type" value="New Request"/>
             <beans:property name="reqAck" value="REQ"/>
