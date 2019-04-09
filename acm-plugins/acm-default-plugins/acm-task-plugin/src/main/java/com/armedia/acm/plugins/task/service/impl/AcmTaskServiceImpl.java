@@ -586,7 +586,7 @@ public class AcmTaskServiceImpl implements AcmTaskService
                 pVars.put("pdfRenditionId", documentToReview.getFileId());
                 pVars.put("formXmlId", null);
                 pVars.put("candidateGroups", String.join(",", task.getCandidateGroups()));
-
+                pVars.put("DETAILS", task.getDetails());
                 pVars.put("OBJECT_TYPE", "FILE");
                 pVars.put("OBJECT_ID", documentToReview.getFileId());
                 pVars.put("OBJECT_NAME", documentToReview.getFileName());
