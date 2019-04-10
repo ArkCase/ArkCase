@@ -440,6 +440,7 @@
         <property name="searchResults" ref="searchResults"/>
         <property name="solrQuery" ref="executeSolrQuery"/>
         <property name="folderService" ref="acmFolderService"/>
+        <property name="fileEventPublisher"  ref="fileEventPublisher"/>
     </bean>
 
     <bean id="fileAclSolrUpdateHelper" class="com.armedia.acm.plugins.ecm.service.FileAclSolrUpdateHelper">
