@@ -109,9 +109,13 @@ angular.module('directives').directive(
                                         participantType: "assignee"
                                     });
 
-                                    var assigneeObj = _.find(scope.userFullNames, function(user) {
-                                        return assignee.participantLdapId === user.id
-                                    });
+                                    var assigneeObj;
+
+                                    if(assignee){
+                                        assigneeObj = _.find(scope.userFullNames, function(user) {
+                                            return assignee.participantLdapId === user.id
+                                        });
+                                    }
 
                                     var owningGroup = _.find(scope.objectInfo.participants, {
                                         participantType: "owning group"
