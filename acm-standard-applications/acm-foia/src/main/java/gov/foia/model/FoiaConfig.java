@@ -58,6 +58,11 @@ public class FoiaConfig
     @Value("${notification.groups.enabled}")
     private Boolean notificationGroupsEnabled;
 
+     @Value("${moveToBillingQueueEnabled}")
+    private Boolean moveToBillingQueueEnabled;
+
+
+
     public Integer getMaxDaysInHoldQueue()
     {
         return maxDaysInHoldQueue;
@@ -146,5 +151,15 @@ public class FoiaConfig
     public void setNotificationGroupsEnabled(Boolean notificationGroupsEnabled)
     {
         this.notificationGroupsEnabled = notificationGroupsEnabled;
+    }
+
+    public Boolean getMoveToBillingQueueEnabled()
+    {
+        return moveToBillingQueueEnabled;
+    }
+
+    public void setMoveToBillingQueueEnabled(Boolean moveToBillingQueueEnabled)
+    {
+        this.moveToBillingQueueEnabled = moveToBillingQueueEnabled;
     }
 }

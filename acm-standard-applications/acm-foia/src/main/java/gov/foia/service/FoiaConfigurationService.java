@@ -49,6 +49,7 @@ public class FoiaConfigurationService extends SystemConfigurationService
         foiaConfig.setNotificationGroupsEnabled(foiaConfiguration.getNotificationGroupsEnabled());
         foiaConfig.setRequestExtensionWorkingDaysEnabled(foiaConfiguration.getRequestExtensionWorkingDaysEnabled());
         foiaConfig.setPurgeRequestEnabled(foiaConfiguration.getPurgeRequestWhenInHoldEnabled());
+        foiaConfig.setMoveToBillingQueueEnabled(foiaConfiguration.getMoveToBillingQueueEnabled());
         configurationPropertyService.updateProperties(foiaConfiguration);
     }
 
@@ -65,6 +66,7 @@ public class FoiaConfigurationService extends SystemConfigurationService
         foiaConfiguration.setNotificationGroupsEnabled(foiaConfig.getNotificationGroupsEnabled());
         foiaConfiguration.setRequestExtensionWorkingDaysEnabled(foiaConfig.getRequestExtensionWorkingDaysEnabled());
         foiaConfiguration.setPurgeRequestWhenInHoldEnabled(foiaConfig.getPurgeRequestEnabled());
+        foiaConfiguration.setMoveToBillingQueueEnabled(foiaConfig.getMoveToBillingQueueEnabled());
         return foiaConfiguration;
     }
 
