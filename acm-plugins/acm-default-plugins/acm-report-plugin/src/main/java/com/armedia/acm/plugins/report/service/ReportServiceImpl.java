@@ -439,7 +439,7 @@ public class ReportServiceImpl implements ReportService
                 .collect(Collectors.toList());
 
         reportsToRolesMapping.put(reportName, String.join(",", updatedRolesForReport));
-        configurationPropertyService.updateProperties(reportsToRolesMapping);
+        configurationPropertyService.updateProperties(reportsToRolesConfig);
         return updatedRolesForReport;
     }
 
