@@ -777,7 +777,8 @@
                     "editTitle": "Edit Autoincrement Reset",
                     "resetStartDate": "Reset Start Date",
                     "repeatReset": "Repeat reset",
-                    "repeatResetPeriod": "Repeat reset period (days)"
+                    "repeatResetPeriod": "Repeat reset period (days)",
+                    "sequenceResetScheduledWarning": "Sequence reset scheduled for today"
                 }
             },
             "sequenceRegistry": {
