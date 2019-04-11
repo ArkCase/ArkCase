@@ -324,14 +324,15 @@ angular.module('document-details').controller(
 
                     }
 
-                    // Release editing lock on window unload, if acquired
-                    $window.addEventListener('beforeunload', function() {
-                        if ($scope.editingMode) {
-                            ObjectLockingService.unlockObject($scope.ecmFile.fileId, ObjectService.ObjectTypes.FILE, ObjectService.LockTypes.WRITE, true);
-                        }
-                    });
+                // Release editing lock on window unload, if acquired
+                $scope.onWindowClose = function () {
+                    if ($scope.editingMode) {
+                        return ObjectLockingService.unlockObject($scope.ecmFile.fileId, ObjectService.ObjectTypes.FILE, ObjectService.LockTypes.WRITE, true);
+                    }
+                };
+                $window.onunload = $scope.onWindowClose;
 
-                    $rootScope.$bus.subscribe("object.changed/FILE/" + $stateParams.id, function() {
+                $rootScope.$bus.subscribe("object.changed/FILE/" + $stateParams.id, function () {
                         DialogService.alert($translate.instant("documentDetails.fileChangedAlert")).then(function() {
                             $scope.openSnowboundViewer();
                             $scope.$broadcast('refresh-ocr');
