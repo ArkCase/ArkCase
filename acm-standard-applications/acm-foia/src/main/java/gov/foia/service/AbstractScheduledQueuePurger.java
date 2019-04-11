@@ -79,12 +79,12 @@ public abstract class AbstractScheduledQueuePurger implements AcmSchedulableBean
     /**
      * @return
      */
-    protected abstract Boolean getPurgeRequestWhenInHoldEnabled();
+    protected abstract Boolean getPurgeRequestEnabled();
 
     @Override
     public void executeTask()
     {
-        if (getPurgeRequestWhenInHoldEnabled())
+        if (getPurgeRequestEnabled())
         {
             if (getMaxDaysInQueueProperty() == 0)
             {
