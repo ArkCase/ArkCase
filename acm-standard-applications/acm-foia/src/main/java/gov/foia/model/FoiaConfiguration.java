@@ -40,6 +40,7 @@ public class FoiaConfiguration extends SystemConfiguration
     private Boolean notificationGroupsEnabled;
     private Boolean requestExtensionWorkingDaysEnabled;
     private Boolean purgeRequestWhenInHoldEnabled;
+    private Boolean moveToBillingQueueEnabled;
 
     public Integer getMaxDaysInBillingQueue()
     {
@@ -129,5 +130,15 @@ public class FoiaConfiguration extends SystemConfiguration
     public void setPurgeRequestWhenInHoldEnabled(Boolean purgeRequestWhenInHoldEnabled)
     {
         this.purgeRequestWhenInHoldEnabled = purgeRequestWhenInHoldEnabled;
+    }
+
+    public Boolean getMoveToBillingQueueEnabled()
+    {
+        return moveToBillingQueueEnabled;
+    }
+
+    public void setMoveToBillingQueueEnabled(Boolean moveToBillingQueueEnabled)
+    {
+        this.moveToBillingQueueEnabled = moveToBillingQueueEnabled;
     }
 }

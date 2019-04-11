@@ -48,7 +48,8 @@ public class FoiaConfigurationService extends SystemConfigurationService
         foiaConfig.setReceivedDateEnabled(foiaConfiguration.getReceivedDateEnabled());
         foiaConfig.setNotificationGroupsEnabled(foiaConfiguration.getNotificationGroupsEnabled());
         foiaConfig.setRequestExtensionWorkingDaysEnabled(foiaConfiguration.getRequestExtensionWorkingDaysEnabled());
-        foiaConfig.setPurgeRequestEnabled(foiaConfiguration.getPurgeRequestWhenInHoldEnabled());
+        foiaConfig.setPurgeRequestWhenInHoldEnabled(foiaConfiguration.getPurgeRequestWhenInHoldEnabled());
+        foiaConfig.setMoveToBillingQueueEnabled(foiaConfiguration.getMoveToBillingQueueEnabled());
         configurationPropertyService.updateProperties(foiaConfiguration);
     }
 
@@ -64,7 +65,8 @@ public class FoiaConfigurationService extends SystemConfigurationService
         foiaConfiguration.setReceivedDateEnabled(foiaConfig.getReceivedDateEnabled());
         foiaConfiguration.setNotificationGroupsEnabled(foiaConfig.getNotificationGroupsEnabled());
         foiaConfiguration.setRequestExtensionWorkingDaysEnabled(foiaConfig.getRequestExtensionWorkingDaysEnabled());
-        foiaConfiguration.setPurgeRequestWhenInHoldEnabled(foiaConfig.getPurgeRequestEnabled());
+        foiaConfiguration.setPurgeRequestWhenInHoldEnabled(foiaConfig.getPurgeRequestWhenInHoldEnabled());
+        foiaConfiguration.setMoveToBillingQueueEnabled(foiaConfig.getMoveToBillingQueueEnabled());
         return foiaConfiguration;
     }
 
