@@ -210,13 +210,15 @@ angular.module('tasks').controller(
                         $scope.loading = false;
                         MentionsService.sendEmailToMentionedUsers($scope.params.emailAddresses, $scope.params.usersMentioned, ObjectService.ObjectTypes.TASK, ObjectService.ObjectTypes.TASK, data.data.taskId, data.data.title);
                         MentionsService.sendEmailToMentionedUsers($scope.paramsSummernote.emailAddresses, $scope.paramsSummernote.usersMentioned, ObjectService.ObjectTypes.TASK, "DETAILS", data.data.taskId, data.data.details);
-                        if ($scope.modalParams.returnState != null && $scope.modalParams.returnState != ':returnState') {
-                            $state.go($scope.modalParams.returnState, {
-                                type: $scope.modalParams.parentType,
-                                id: $scope.modalParams.parentId
-                            });
-                        } else {
-                            ObjectService.showObject(ObjectService.ObjectTypes.ADHOC_TASK, data.data.taskId);
+                        if(data.data.attachedToObjectId == null) {
+                            if ($scope.modalParams.returnState != null && $scope.modalParams.returnState != ':returnState') {
+                                $state.go($scope.modalParams.returnState, {
+                                    type: $scope.modalParams.parentType,
+                                    id: $scope.modalParams.parentId
+                                });
+                            } else {
+                                ObjectService.showObject(ObjectService.ObjectTypes.ADHOC_TASK, data.data.taskId);
+                            }
                         }
                         $scope.onModalClose();
                     }
