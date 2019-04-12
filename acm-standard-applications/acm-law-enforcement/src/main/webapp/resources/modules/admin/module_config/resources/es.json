@@ -217,7 +217,6 @@
                     "cancelBtn": "Cancelar",
                     "deleteBtn": "Eliminar",
                     "headerText": "Está a punto de eliminar el grupo: ",
-                    "controlGroupHeaderWarning": "You are about to delete {{groupName}} group which is a member in the control group {{controlGroupName}}",
                     "bodyText": "¿Está seguro?"
                 }
             },

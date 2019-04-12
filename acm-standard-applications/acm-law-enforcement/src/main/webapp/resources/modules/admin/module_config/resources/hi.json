@@ -217,7 +217,6 @@
                     "cancelBtn": "रद्द करना",
                     "deleteBtn": "हटाना",
                     "headerText": "आप समूह को हटाना चाहते हैं:",
-                    "controlGroupHeaderWarning": "You are about to delete {{groupName}} group which is a member in the control group {{controlGroupName}}",
                     "bodyText": "क्या आपको यकीन है?"
                 }
             },
