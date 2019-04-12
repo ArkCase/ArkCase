@@ -101,6 +101,10 @@ public class EcmFileConfig implements InitializingBean
     @Value("${ecm.viewer.js}")
     private String viewerJs;
 
+    @JsonProperty("ecm.viewer.snowbound.tabHeader")
+    @Value("${ecm.viewer.snowbound.tabHeader}")
+    private String snowboundTabHeader;
+
     @JsonProperty("ecm.viewer.snowbound")
     @Value("${ecm.viewer.snowbound}")
     private String snowboundUrl;
@@ -305,6 +309,23 @@ public class EcmFileConfig implements InitializingBean
     public void setViewerJs(String viewerJs)
     {
         this.viewerJs = viewerJs;
+    }
+
+    /**
+     * @return the snowboundTabHeader
+     */
+    public String getSnowboundTabHeader()
+    {
+        return snowboundTabHeader;
+    }
+
+    /**
+     * @param snowboundTabHeader
+     *            the snowboundTabHeader to set
+     */
+    public void setSnowboundTabHeader(String snowboundTabHeader)
+    {
+        this.snowboundTabHeader = snowboundTabHeader;
     }
 
     public String getSnowboundUrl()
