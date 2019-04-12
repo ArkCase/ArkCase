@@ -17,8 +17,8 @@
 
 angular.module('tasks').factory(
         'Helper.TaskListParentNode',
-        [ 'UtilService', 'Helper.ObjectBrowserService', 'CostTracking.InfoService', 'Helper.UiGridService', 'Object.TaskService', 'Task.AlertsService', 'ObjectService', 'Task.WorkflowService', 'ModalDialogService',
-                function(Util, HelperObjectBrowserService, CostTrackingInfoService, HelperUiGridService, ObjectTaskService, TaskAlertsService, ObjectService, TaskWorkflowService, ModalDialogService) {
+        [ 'UtilService', 'Helper.ObjectBrowserService', 'CostTracking.InfoService', 'Helper.UiGridService', 'Object.TaskService', 'Task.AlertsService', 'ObjectService', 'Task.WorkflowService', 'ModalDialogService', '$timeout',
+                function(Util, HelperObjectBrowserService, CostTrackingInfoService, HelperUiGridService, ObjectTaskService, TaskAlertsService, ObjectService, TaskWorkflowService, ModalDialogService, $timeout) {
 
                     var Service = {
 
@@ -81,6 +81,7 @@ angular.module('tasks').factory(
                             that.scope.populateGridData = arg.populateGridData || function() {
                                 var currentObjectId = Util.goodMapValue(that.scope.objectInfo, "id");
                                 if (Util.goodPositive(currentObjectId, false)) {
+                                    ObjectTaskService.resetChildTasks(that.objectType, currentObjectId);
                                     ObjectTaskService.queryChildTasks(that.objectType, currentObjectId, Util.goodValue(that.scope.start, 0), Util.goodValue(that.scope.pageSize, 10), Util.goodMapValue(that.scope.sort, "by"), Util.goodMapValue(that.scope.sort, "dir")).then(function(data) {
                                         var tasks = data.response.docs;
                                         angular.forEach(tasks, function(task) {
@@ -131,7 +132,12 @@ angular.module('tasks').factory(
                                     taskType: 'ACM_TASK'
                                 }
                             };
-                            ModalDialogService.showModal(modalMetadata);
+                            ModalDialogService.showModal(modalMetadata).then(function (value) {
+                                $timeout(function() {
+                                    that.scope.populateGridData();
+                                    //3 seconds delay so solr can index the new task
+                                }, 3000);
+                            });
                         };
                     };
 
