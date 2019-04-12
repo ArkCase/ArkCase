@@ -132,8 +132,7 @@ angular.module('admin').service('Admin.OrganizationalHierarchyService', [ '$http
         createLdapSubgroup: createLdapSubgroup,
         deleteLdapUserMember: deleteLdapUserMember,
         deleteLdapGroup: deleteLdapGroup,
-        removeLdapGroupMembership: removeLdapGroupMembership,
-        getControlGroup: getControlGroup
+        removeLdapGroupMembership: removeLdapGroupMembership
     });
 
     /**
@@ -661,13 +660,6 @@ angular.module('admin').service('Admin.OrganizationalHierarchyService', [ '$http
             onSuccess: function(data) {
                 return data;
             }
-        });
-    }
-
-    function getControlGroup(directoryName) {
-        return $http({
-            method: 'GET',
-            url: 'api/latest/ldap/' + base64.urlencode(directoryName)
         });
     }
 

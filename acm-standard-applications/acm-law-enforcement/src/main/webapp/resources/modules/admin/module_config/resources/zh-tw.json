@@ -217,7 +217,6 @@
                     "cancelBtn": "取消",
                     "deleteBtn": "刪除",
                     "headerText": "您即將刪除組：",
-                    "controlGroupHeaderWarning": "You are about to delete {{groupName}} group which is a member in the control group {{controlGroupName}}",
                     "bodyText": "你確定？"
                 }
             },
