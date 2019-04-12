@@ -415,6 +415,12 @@
         </dependency>
 
         <dependency>
+            <groupId>com.armedia.acm.acm-tool-integrations</groupId>
+            <artifactId>acm-hazelcast-integration</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+
+        <dependency>
             <groupId>com.armedia.acm.acm-plugins.acm-default-plugins</groupId>
             <artifactId>acm-category-plugin</artifactId>
             <version>${acm.version}</version>
