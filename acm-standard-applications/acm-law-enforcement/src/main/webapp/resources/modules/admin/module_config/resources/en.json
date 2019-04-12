@@ -225,6 +225,7 @@
                     "cancelBtn": "Cancel",
                     "deleteBtn": "Delete",
                     "headerText": "You are about to delete group: ",
+                    "controlGroupHeaderWarning": "You are about to delete {{groupName}} group which is a member in the control group {{controlGroupName}}",
                     "bodyText": "Are you sure?"
                 }
             },
@@ -256,7 +257,7 @@
             },
             "searchFilter.placeholder": "Search"
         },
-        "security.selectPrivileges": "Create Role/Select Privileges",
+        "security.selectPrivileges": "Select Privileges",
         "security.selectPrivileges.applicationRole": "Application Role",
         "security.selectPrivileges.createRole": "Create Role",
         "security.selectPrivileges.editRole": "Edit Role",
@@ -777,7 +778,8 @@
                     "editTitle": "Edit Autoincrement Reset",
                     "resetStartDate": "Reset Start Date",
                     "repeatReset": "Repeat reset",
-                    "repeatResetPeriod": "Repeat reset period (days)"
+                    "repeatResetPeriod": "Repeat reset period (days)",
+                    "sequenceResetScheduledWarning": "Sequence reset scheduled for today"
                 }
             },
             "sequenceRegistry": {

@@ -217,6 +217,7 @@
                     "cancelBtn": "Cancel",
                     "deleteBtn": "Delete",
                     "headerText": "You are about to delete group: ",
+                    "controlGroupHeaderWarning": "You are about to delete {{groupName}} group which is a member in the control group {{controlGroupName}}",
                     "bodyText": "Are you sure?"
                 }
             },
@@ -248,7 +249,7 @@
             },
             "searchFilter.placeholder": "Search"
         },
-        "security.selectPrivileges": "Create Role/Select Privileges",
+        "security.selectPrivileges": "Select Privileges",
         "security.selectPrivileges.applicationRole": "Application Role",
         "security.selectPrivileges.createRole": "Create Role",
         "security.selectPrivileges.editRole": "Edit Role",
@@ -710,6 +711,29 @@
                         "sequencePartName": "Enter sequence part name",
                         "sequencePartType": "Select part type"
                     }
+                }
+            },
+            "sequenceManagementReset": {
+                "title": "Reset List",
+                "editBtn": "Edit",
+                "viewBtn": "View",
+                "removeBtn": "Remove",
+                "cancelBtn": "Cancel",
+                "saveBtn": "Save",
+                "grid": {
+                    "startResetDate": "Start Reset Date",
+                    "executedDate": "Executed Date",
+                    "repeat": "Repeat",
+                    "repeatPeriod": "Repeat Period"
+                },
+                "detailsModal": {
+                    "title": "Autoincrement Reset",
+                    "addTitle": "Add Autoincrement Reset",
+                    "editTitle": "Edit Autoincrement Reset",
+                    "resetStartDate": "Reset Start Date",
+                    "repeatReset": "Repeat reset",
+                    "repeatResetPeriod": "Repeat reset period (days)",
+                    "sequenceResetScheduledWarning": "Sequence reset scheduled for today"
                 }
             },
             "login.config": {

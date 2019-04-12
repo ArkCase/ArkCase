@@ -91,6 +91,21 @@ angular.module('services').factory('Object.LookupService', [ '$q', '$resource', 
     Service.getSequenceName = function() {
         return Service.getLookupByLookupName("sequenceName");
     };
+
+    /**
+     * @ngdoc method
+     * @name getSequenceObjectProperty
+     * @methodOf services:Object.LookupService
+     *
+     * @description
+     * Returns a list of sequence object properties
+     *
+     * @returns {Object} An array returned by $resource
+     */
+
+    Service.getSequenceObjectProperty = function() {
+        return Service.getLookupByLookupName("sequenceObjectProperty");
+    };
     
     /**
      * @ngdoc method

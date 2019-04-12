@@ -1,14 +1,4 @@
 <div ng-controller="Admin.SelectPrivilegesController">
-    <div class="pull-right well">
-        <div class="btn-group">
-            <button class="btn btn-xs btn-link" ng-click="editRole()"><i class="fa fa-edit" />
-                <span translate>admin.security.selectPrivileges.editRole</span>
-            </button>
-            <button class="btn btn-xs btn-link" ng-click="newRole()"><i class="fa fa-gears text" />
-                <span translate>admin.security.selectPrivileges.createRole</span>
-            </button>
-        </div>
-    </div>
     <panel-view header="{{'admin.security.selectPrivileges' | translate}}" collapsible="false">
         <div class="row">
             <object-authorization data="rolesData" object-display-name="name" on-object-selected="onObjSelect"

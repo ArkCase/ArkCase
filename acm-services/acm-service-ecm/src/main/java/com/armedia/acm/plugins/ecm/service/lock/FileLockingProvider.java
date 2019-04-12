@@ -252,9 +252,10 @@ public class FileLockingProvider implements ObjectLockingProvider
         if (!existingLock.getLockType().equals(FileLockType.READ.name())
                 && (errorOnSameExistingLockType || !existingLock.getLockType().equals(lockType)))
         {
-            throw new AcmObjectLockException(String.format(
-                    "%s not able to acquire object lock[objectId=%s, objectType=%s, lockType=%s]. Reason: Object already has a lock of type %s by user: [%s]",
-                    userId, objectId, objectType, lockType, existingLock.getLockType(), existingLock.getCreator()));
+            log.error(
+                    " {} not able to release object lock[objectId={}, objectType={}, lockType={}]. Reason: Object already has a lock of type {} by user: {}",
+                    userId, objectId, objectType, lockType, existingLock.getLockType(), existingLock.getCreator());
+            throw new AcmObjectLockException(String.format("This document is locked by %s", existingLock.getCreator()));
         }
     }
 

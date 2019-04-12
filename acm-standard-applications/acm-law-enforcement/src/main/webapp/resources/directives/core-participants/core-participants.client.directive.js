@@ -102,6 +102,13 @@ angular.module('directives').directive(
                                 });
                             });
 
+
+                            ConfigService.getModuleConfig("common").then(function(moduleConfig) {
+                                scope.groupSearchConfig = _.find(moduleConfig.components, {
+                                    id: "groupSearch"
+                                });
+                            });
+
                             var showModal = function(participant, isEdit, showReplaceChildrenParticipants) {
 
                                 if (participant.participantType == "assignee" || participant.participantType == "owning group") {
@@ -109,9 +116,13 @@ angular.module('directives').directive(
                                         participantType: "assignee"
                                     });
 
-                                    var assigneeObj = _.find(scope.userFullNames, function(user) {
-                                        return assignee.participantLdapId === user.id
-                                    });
+                                    var assigneeObj;
+
+                                    if(assignee){
+                                        assigneeObj = _.find(scope.userFullNames, function(user) {
+                                            return assignee.participantLdapId === user.id
+                                        });
+                                    }
 
                                     var owningGroup = _.find(scope.objectInfo.participants, {
                                         participantType: "owning group"
@@ -143,7 +154,6 @@ angular.module('directives').directive(
                                         }
                                     });
                                     modalInstance.result.then(function(selection) {
-
                                         if (selection) {
                                             var selectedObjectType = selection.masterSelectedItem.object_type_s;
                                             if (selectedObjectType === 'USER') { // Selected user
@@ -198,7 +208,52 @@ angular.module('directives').directive(
                                         }
 
                                     });
-                                } else {
+                                }
+                                else if(participant.participantType == "collaborator group"){
+                                    var collaboratorGroup = _.find(scope.objectInfo.participants, {
+                                        participantType: "collaborator group"
+                                    });
+
+                                    var params = {
+                                        collaboratorGroup: collaboratorGroup.participantLdapId
+                                    };
+
+
+                                    var groupModalInstance =  $modal.open({
+                                        templateUrl: 'modules/common/views/group-picker-modal.client.view.html',
+                                        controller: 'Common.GroupPickerController',
+                                        size: 'lg',
+                                        backdrop: 'static',
+                                        resolve: {
+                                            $filter: function() {
+                                                return scope.groupSearchConfig.groupSearchFilters.groupFacetFilter;
+                                            },
+                                            $extraFilter: function() {
+                                                return scope.groupSearchConfig.groupSearchFilters.groupFacetExtraFilter;
+                                            },
+                                            $config: function() {
+                                                return scope.groupSearchConfig;
+                                            },
+                                            $params: function() {
+                                                return params;
+                                            }
+                                        }
+                                    });
+
+                                    groupModalInstance.result.then(function(selection) {
+                                        if (selection) {
+                                            var selectedObjectType = selection.object_type_s;
+                                            if (selectedObjectType === 'GROUP') { // Selected group
+                                                var selectedGroup = selection.object_id_s;
+                                                scope.collaboratoreGroup = selectedGroup;
+                                                scope.updateCollaborateGroup();
+                                                saveObjectInfoAndRefresh();
+                                                return;
+                                            }
+                                        }
+                                    });
+                                }
+                                else {
                                     var modalScope = scope.$new();
                                     participant.replaceChildrenParticipant = true;
                                     modalScope.participant = participant || {};
@@ -291,6 +346,11 @@ angular.module('directives').directive(
                             scope.updateOwningGroup = function() {
                                 ObjectModelService.setGroup(scope.objectInfo, scope.owningGroup);
                             };
+
+                            scope.updateCollaborateGroup = function() {
+                                ObjectModelService.setCollaboratorGroup(scope.objectInfo, scope.collaboratoreGroup);
+                            };
+
                             scope.updateAssignee = function() {
                                 ObjectModelService.setAssignee(scope.objectInfo, scope.assignee);
                             };

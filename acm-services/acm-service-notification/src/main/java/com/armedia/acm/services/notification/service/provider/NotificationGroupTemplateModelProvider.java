@@ -31,7 +31,7 @@ import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.data.service.AcmDataService;
 import com.armedia.acm.services.notification.model.Notification;
-import com.armedia.acm.services.notification.service.provider.model.NotificationGroupModel;
+import com.armedia.acm.services.notification.service.provider.model.GenericTemplateModel;
 import com.armedia.acm.services.participants.model.AcmAssignedObject;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 
@@ -44,10 +44,10 @@ public class NotificationGroupTemplateModelProvider implements TemplateModelProv
     @Override
     public Object getModel(Notification notification)
     {
-        NotificationGroupModel notificationGroupModelData = new NotificationGroupModel();
+        GenericTemplateModel genericTemplateModelData = new GenericTemplateModel();
 
-        notificationGroupModelData.setObjectNumber(notification.getParentName());
-        notificationGroupModelData.setObjectTitle(notification.getParentTitle());
+        genericTemplateModelData.setObjectNumber(notification.getParentName());
+        genericTemplateModelData.setObjectTitle(notification.getParentTitle());
 
         AcmAbstractDao<AcmObject> dao = getDataService().getDaoByObjectType(notification.getParentType());
         AcmObject acmObject = dao.find(notification.getParentId());
@@ -58,10 +58,10 @@ public class NotificationGroupTemplateModelProvider implements TemplateModelProv
             AcmParticipant assignee = acmAssignedObject.getParticipants().stream().filter(acmParticipant -> acmParticipant.getParticipantType()
                     .equals("assignee")).findFirst().orElse(null);
 
-            notificationGroupModelData.setAssignee(Objects.nonNull(assignee) ? assignee.getParticipantLdapId() : "");
+            genericTemplateModelData.setOtherObjectValue(Objects.nonNull(assignee) ? assignee.getParticipantLdapId() : "");
         }
 
-        return notificationGroupModelData;
+        return genericTemplateModelData;
     }
 
     public AcmDataService getDataService()

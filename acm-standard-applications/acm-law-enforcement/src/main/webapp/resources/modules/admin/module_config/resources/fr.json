@@ -217,6 +217,7 @@
                     "cancelBtn": "Annuler",
                     "deleteBtn": "Effacer",
                     "headerText": "Vous êtes sur le point de supprimer le groupe:",
+                    "controlGroupHeaderWarning": "You are about to delete {{groupName}} group which is a member in the control group {{controlGroupName}}",
                     "bodyText": "Êtes-vous sûr?"
                 }
             },
@@ -248,7 +249,7 @@
             },
 			"searchFilter.placeholder": "Chercher"
         },
-        "security.selectPrivileges": "Créer des privilèges de rôle / sélection",
+        "security.selectPrivileges": "Sélectionner des privilèges",
         "security.selectPrivileges.applicationRole": "Rôle d'application",
         "security.selectPrivileges.createRole": "Créer un rôle",
         "security.selectPrivileges.editRole": "Modifier le rôle",
@@ -707,6 +708,29 @@
                         "sequencePartName": "Enter sequence part name",
                         "sequencePartType": "Select part type"
                     }
+                }
+            },
+            "sequenceManagementReset": {
+                "title": "Reset List",
+                "editBtn": "Edit",
+                "viewBtn": "View",
+                "removeBtn": "Remove",
+                "cancelBtn": "Cancel",
+                "saveBtn": "Save",
+                "grid": {
+                    "startResetDate": "Start Reset Date",
+                    "executedDate": "Executed Date",
+                    "repeat": "Repeat",
+                    "repeatPeriod": "Repeat Period"
+                },
+                "detailsModal": {
+                    "title": "Autoincrement Reset",
+                    "addTitle": "Add Autoincrement Reset",
+                    "editTitle": "Edit Autoincrement Reset",
+                    "resetStartDate": "Reset Start Date",
+                    "repeatReset": "Repeat reset",
+                    "repeatResetPeriod": "Repeat reset period (days)",
+                    "sequenceResetScheduledWarning": "Sequence reset scheduled for today"
                 }
             },
             "login.config": {

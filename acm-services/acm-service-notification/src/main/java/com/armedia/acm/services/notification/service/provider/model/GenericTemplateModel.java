@@ -1,8 +1,8 @@
-package com.armedia.acm.tool.transcribe.model;
+package com.armedia.acm.services.notification.service.provider.model;
 
 /*-
  * #%L
- * acm-transcribe-tool
+ * ACM Service: Notification
  * %%
  * Copyright (C) 2014 - 2019 ArkCase LLC
  * %%
@@ -27,31 +27,34 @@ package com.armedia.acm.tool.transcribe.model;
  * #L%
  */
 
-/**
- * Created by Vladimir Cherepnalkovski
- */
-public class AWSConfiguration
+public class GenericTemplateModel
 {
-    private AWSCredentialsConfiguration credentialsConfiguration;
-    private AWSTranscribeConfiguration awsTranscribeConfiguration;
+    private String objectNumber;
+    private String objectTitle;
 
-    public AWSCredentialsConfiguration getCredentialsConfiguration()
+    private String otherObjectValue;
+
+    public String getObjectNumber()
     {
-        return credentialsConfiguration;
+        return objectNumber;
     }
 
-    public void setCredentialsConfiguration(AWSCredentialsConfiguration credentialsConfiguration)
+    public void setObjectNumber(String objectNumber)
     {
-        this.credentialsConfiguration = credentialsConfiguration;
+        this.objectNumber = objectNumber;
     }
 
-    public AWSTranscribeConfiguration getAwsTranscribeConfiguration()
+    public String getObjectTitle()
     {
-        return awsTranscribeConfiguration;
+        return objectTitle;
     }
 
-    public void setAwsTranscribeConfiguration(AWSTranscribeConfiguration awsTranscribeConfiguration)
+    public void setObjectTitle(String objectTitle)
     {
-        this.awsTranscribeConfiguration = awsTranscribeConfiguration;
+        this.objectTitle = objectTitle;
     }
+
+    public String getOtherObjectValue() { return otherObjectValue; }
+
+    public void setOtherObjectValue(String otherObjectValue) { this.otherObjectValue = otherObjectValue; }
 }
