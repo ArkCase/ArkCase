@@ -616,6 +616,15 @@ public class AcmTaskServiceImpl implements AcmTaskService
         AcmFolder folder = container.getAttachmentFolder();
 
         List<EcmFile> uploadedFiles = new ArrayList<>();
+        
+        String fileParentObjectType = businessProcess.getObjectType();
+        Long fileParentObjectId = businessProcess.getId();
+        
+        if(StringUtils.isNotBlank(task.getAttachedToObjectType()) && task.getAttachedToObjectId() != null)
+        {
+            fileParentObjectType = task.getAttachedToObjectType();
+            fileParentObjectId = task.getAttachedToObjectId();
+        }
 
         if(filesToUpload != null)
         {
@@ -623,7 +632,7 @@ public class AcmTaskServiceImpl implements AcmTaskService
             for (MultipartFile file : filesToUpload) {
 
                 EcmFile temp = ecmFileService.upload(file.getOriginalFilename(), "Other", file, authentication,
-                        folder.getCmisFolderId(), businessProcess.getObjectType(), businessProcess.getId());
+                        folder.getCmisFolderId(), fileParentObjectType, fileParentObjectId);
                 uploadedFiles.add(temp);
             }
         }
