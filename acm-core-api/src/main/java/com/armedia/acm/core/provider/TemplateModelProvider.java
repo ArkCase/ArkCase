@@ -1,4 +1,4 @@
-package com.armedia.acm.services.notification.service.provider;
+package com.armedia.acm.core.provider;
 
 /*-
  * #%L
@@ -27,9 +27,9 @@ package com.armedia.acm.services.notification.service.provider;
  * #L%
  */
 
-import com.armedia.acm.services.notification.model.Notification;
-
-public interface TemplateModelProvider
+public interface TemplateModelProvider<T>
 {
-    Object getModel(Notification notification);
+    T getModel(Object object);
+
+    Class<T> getType();
 }
