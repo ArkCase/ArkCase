@@ -225,6 +225,7 @@
                     "cancelBtn": "Cancel",
                     "deleteBtn": "Delete",
                     "headerText": "You are about to delete group: ",
+                    "controlGroupHeaderWarning": "You are about to delete {{groupName}} group which is a member in the control group {{controlGroupName}}",
                     "bodyText": "Are you sure?"
                 }
             },
