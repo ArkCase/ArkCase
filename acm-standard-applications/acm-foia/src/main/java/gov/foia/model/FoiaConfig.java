@@ -49,14 +49,19 @@ public class FoiaConfig
     @Value("${holdedAndAppealedRequestsDueDateUpdateEnabled}")
     private Boolean holdedAndAppealedRequestsDueDateUpdateEnabled;
 
-    @Value("${purgeRequestEnabled}")
-    private Boolean purgeRequestEnabled;
+    @Value("${purgeRequestWhenInHoldEnabled}")
+    private Boolean purgeRequestWhenInHoldEnabled;
 
     @Value("${request.extensionWorkingDays}")
     private Integer requestExtensionWorkingDays;
 
     @Value("${notification.groups.enabled}")
     private Boolean notificationGroupsEnabled;
+
+     @Value("${moveToBillingQueueEnabled}")
+    private Boolean moveToBillingQueueEnabled;
+
+
 
     public Integer getMaxDaysInHoldQueue()
     {
@@ -118,14 +123,14 @@ public class FoiaConfig
         this.holdedAndAppealedRequestsDueDateUpdateEnabled = holdedAndAppealedRequestsDueDateUpdateEnabled;
     }
 
-    public Boolean getPurgeRequestEnabled()
+    public Boolean getPurgeRequestWhenInHoldEnabled()
     {
-        return purgeRequestEnabled;
+        return purgeRequestWhenInHoldEnabled;
     }
 
-    public void setPurgeRequestEnabled(Boolean purgeRequestEnabled)
+    public void setPurgeRequestWhenInHoldEnabled(Boolean purgeRequestWhenInHoldEnabled)
     {
-        this.purgeRequestEnabled = purgeRequestEnabled;
+        this.purgeRequestWhenInHoldEnabled = purgeRequestWhenInHoldEnabled;
     }
 
     public Integer getRequestExtensionWorkingDays()
@@ -146,5 +151,15 @@ public class FoiaConfig
     public void setNotificationGroupsEnabled(Boolean notificationGroupsEnabled)
     {
         this.notificationGroupsEnabled = notificationGroupsEnabled;
+    }
+
+    public Boolean getMoveToBillingQueueEnabled()
+    {
+        return moveToBillingQueueEnabled;
+    }
+
+    public void setMoveToBillingQueueEnabled(Boolean moveToBillingQueueEnabled)
+    {
+        this.moveToBillingQueueEnabled = moveToBillingQueueEnabled;
     }
 }

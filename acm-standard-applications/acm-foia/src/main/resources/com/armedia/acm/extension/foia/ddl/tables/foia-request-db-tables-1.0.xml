@@ -509,5 +509,19 @@ LANGUAGE plpgsql;
             <column name="fo_amendment_flag" type="VARCHAR(10)" defaultValue="false"/>
         </addColumn>
     </changeSet>
+
+    <changeSet id="29-acm-case-file-one-day-reminder-column" author="marko.stojanoski"
+               logicalFilePath="/ddl/tables/foia-request-db-tables-1.0.xml">
+        <addColumn tableName="acm_case_file">
+            <column name="fo_one_day_reminder_sent" type="VARCHAR(10)" defaultValue="false"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="30-acm-case-file-five-days-reminder-column" author="marko.stojanoski"
+               logicalFilePath="/ddl/tables/foia-request-db-tables-1.0.xml">
+        <addColumn tableName="acm_case_file">
+            <column name="fo_five_days_reminder_sent" type="VARCHAR(10)" defaultValue="false"/>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>
 

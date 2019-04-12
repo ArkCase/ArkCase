@@ -30,4 +30,16 @@ angular.module('organizations').controller('Organizations.PhonesModalController'
             usersMentioned: $scope.params.usersMentioned
         });
     };
+
+    $scope.validateInput = function () {
+        var regex = /^\d{3}[\-]\d{3}[\-]\d{4}$/;
+        var value = $scope.phone.value;
+        if (regex.test(value)) {
+            $scope.showPhoneError = false;
+            $scope.phone.value = value;
+        } else {
+            $scope.showPhoneError = true;
+            $scope.phone.value = null;
+        }
+    };
 } ]);

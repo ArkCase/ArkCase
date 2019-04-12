@@ -36,6 +36,7 @@ import com.armedia.acm.plugins.report.model.Reports;
 import com.armedia.acm.report.config.ReportsToRolesConfig;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.search.service.SearchResults;
+import com.armedia.acm.services.users.model.ApplicationRolesConfig;
 import com.armedia.acm.services.users.service.AcmUserRoleService;
 
 import org.apache.commons.lang3.StringUtils;
@@ -86,6 +87,7 @@ public class ReportServiceImpl implements ReportService
     private ReportsToRolesConfig reportsToRolesConfig;
     private ConfigurationPropertyService configurationPropertyService;
     private AcmUserRoleService userRoleService;
+    private ApplicationRolesConfig rolesConfig;
 
     @Override
     public List<Report> getPentahoReports() throws Exception
@@ -422,7 +424,7 @@ public class ReportServiceImpl implements ReportService
         updatedRolesForReport.addAll(roles);
 
         reportsToRolesMapping.put(reportName, String.join(",", updatedRolesForReport));
-        configurationPropertyService.updateProperties(reportsToRolesMapping);
+        configurationPropertyService.updateProperties(reportsToRolesConfig);
         return new ArrayList<>(updatedRolesForReport);
     }
 
@@ -437,7 +439,7 @@ public class ReportServiceImpl implements ReportService
                 .collect(Collectors.toList());
 
         reportsToRolesMapping.put(reportName, String.join(",", updatedRolesForReport));
-        configurationPropertyService.updateProperties(reportsToRolesMapping);
+        configurationPropertyService.updateProperties(reportsToRolesConfig);
         return updatedRolesForReport;
     }
 
@@ -452,7 +454,7 @@ public class ReportServiceImpl implements ReportService
 
             if (!authorized)
             {
-                return Arrays.stream(rolesForReport)
+                return rolesConfig.getApplicationRoles().stream()
                         .filter(role -> Arrays.stream(rolesForReport).noneMatch(r -> r.trim().equals(role)))
                         .collect(Collectors.toList());
             }
@@ -543,5 +545,15 @@ public class ReportServiceImpl implements ReportService
     public void setUserRoleService(AcmUserRoleService userRoleService)
     {
         this.userRoleService = userRoleService;
+    }
+
+    public ApplicationRolesConfig getRolesConfig()
+    {
+        return rolesConfig;
+    }
+
+    public void setRolesConfig(ApplicationRolesConfig rolesConfig)
+    {
+        this.rolesConfig = rolesConfig;
     }
 }

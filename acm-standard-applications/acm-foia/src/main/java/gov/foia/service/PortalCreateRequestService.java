@@ -204,14 +204,19 @@ public class PortalCreateRequestService
 
         // the UI expects the contact methods in this order: Phone, Fax, Email
         ContactMethod phone = buildContactMethod("phone", in.getPhone());
-        requester.getContactMethods().add(phone);
+        if(phone.getValue() != null){
+            requester.getContactMethods().add(phone);
+        }
         ContactMethod fax = buildContactMethod("fax", null);
-        requester.getContactMethods().add(fax);
+        if(fax.getValue() != null){
+            requester.getContactMethods().add(fax);
+        }
         ContactMethod email = buildContactMethod("email", in.getEmail());
-        requester.getContactMethods().add(email);
+        if(email.getValue() != null){
+            requester.getContactMethods().add(email);
+        }
 
         return request;
-
     }
 
     private ContactMethod buildContactMethod(String type, String value)

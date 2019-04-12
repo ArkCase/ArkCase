@@ -1,4 +1,4 @@
-package com.armedia.acm.services.notification.service.provider.model;
+package com.armedia.acm.services.notification.event;
 
 /*-
  * #%L
@@ -27,39 +27,24 @@ package com.armedia.acm.services.notification.service.provider.model;
  * #L%
  */
 
-public class NotificationGroupModel
+import com.armedia.acm.core.model.AcmEvent;
+
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+
+public class DueDateReminderSentEvent extends AcmEvent
 {
-    private String objectNumber;
-    private String objectTitle;
-    private String assignee;
-
-    public String getObjectNumber()
+    public DueDateReminderSentEvent(Object source, String parentObjectType, Long parentObjectId, Long dueDateRemainingDays)
     {
-        return objectNumber;
-    }
+        super(source);
+        setEventDate(new Date());
+        setParentObjectType(parentObjectType);
+        setParentObjectId(parentObjectId);
 
-    public void setObjectNumber(String objectNumber)
-    {
-        this.objectNumber = objectNumber;
-    }
+        Map<String, Object> eventProperties = new HashMap<>();
+        eventProperties.put("dueDateRemainingDays", dueDateRemainingDays);
 
-    public String getObjectTitle()
-    {
-        return objectTitle;
-    }
-
-    public void setObjectTitle(String objectTitle)
-    {
-        this.objectTitle = objectTitle;
-    }
-
-    public String getAssignee()
-    {
-        return assignee;
-    }
-
-    public void setAssignee(String assignee)
-    {
-        this.assignee = assignee;
+        setEventProperties(eventProperties);
     }
 }
