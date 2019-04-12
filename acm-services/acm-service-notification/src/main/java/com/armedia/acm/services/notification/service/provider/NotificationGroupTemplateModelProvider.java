@@ -28,6 +28,7 @@ package com.armedia.acm.services.notification.service.provider;
  */
 
 import com.armedia.acm.core.AcmObject;
+import com.armedia.acm.core.provider.TemplateModelProvider;
 import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.data.service.AcmDataService;
 import com.armedia.acm.services.notification.model.Notification;
@@ -37,15 +38,15 @@ import com.armedia.acm.services.participants.model.AcmParticipant;
 
 import java.util.Objects;
 
-public class NotificationGroupTemplateModelProvider implements TemplateModelProvider
+public class NotificationGroupTemplateModelProvider implements TemplateModelProvider<GenericTemplateModel>
 {
     private AcmDataService dataService;
 
     @Override
-    public Object getModel(Notification notification)
+    public GenericTemplateModel getModel(Object notificationObject)
     {
         GenericTemplateModel genericTemplateModelData = new GenericTemplateModel();
-
+        Notification notification = (Notification) notificationObject;
         genericTemplateModelData.setObjectNumber(notification.getParentName());
         genericTemplateModelData.setObjectTitle(notification.getParentTitle());
 
@@ -62,6 +63,12 @@ public class NotificationGroupTemplateModelProvider implements TemplateModelProv
         }
 
         return genericTemplateModelData;
+    }
+
+    @Override
+    public Class<GenericTemplateModel> getType()
+    {
+        return GenericTemplateModel.class;
     }
 
     public AcmDataService getDataService()
