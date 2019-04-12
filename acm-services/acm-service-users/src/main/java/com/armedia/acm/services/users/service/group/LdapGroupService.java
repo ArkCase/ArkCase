@@ -206,6 +206,14 @@ public class LdapGroupService
     {
         AcmLdapSyncConfig ldapSyncConfig = getLdapSyncConfig(directoryName);
 
+        // prevent removing the user from the control group if configured
+        String controlGroup = ldapSyncConfig.getGroupControlGroup();
+        if (parentGroupName.equals(ldapSyncConfig.getGroupControlGroup()))
+        {
+            throw new AcmLdapActionFailedException(
+                    String.format("'%s' group is a required parent system group and group can't be removed from it.", controlGroup));
+        }
+
         AcmGroup acmGroup = groupService.removeGroupMembership(groupName, parentGroupName, true);
         AcmGroup parentGroup = groupService.findByName(parentGroupName);
 
@@ -228,11 +236,6 @@ public class LdapGroupService
     {
         String cnRdn = String.format("cn=%s", cn);
         return MapperUtils.appendToDn(cnRdn, ldapSyncConfig.getGroupSearchBase(), ldapSyncConfig.getBaseDC());
-    }
-
-    public String getControlGroup(String directory)
-    {
-        return getLdapSyncConfig(directory).getGroupControlGroup();
     }
 
     public GroupService getGroupService()
