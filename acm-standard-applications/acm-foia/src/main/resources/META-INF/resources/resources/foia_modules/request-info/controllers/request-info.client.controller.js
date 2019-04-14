@@ -1440,9 +1440,25 @@ angular.module('request-info').controller(
 
             // Release editing lock on window unload, if acquired
             $window.addEventListener('beforeunload', function () {
+
                 if ($scope.editingMode) {
-                    ObjectLockingService.unlockObject($scope.fileInfo.fileId, ObjectService.ObjectTypes.FILE, ObjectService.LockTypes.WRITE, true);
+                    // AFDP-7608, angular $http service always makes asynchronous calls
+                    $scope.data = {
+                        objectId: $scope.ecmFile.fileId,
+                        objectType: ObjectService.ObjectTypes.FILE,
+                        lockType: ObjectService.LockTypes.WRITE
+                    };
+
+                    var data = angular.toJson($scope.data);
+                    
+                    var url = 'api/v1/plugin/' + ObjectService.ObjectTypes.FILE + '/' + $scope.ecmFile.fileId + '/lock?lockType=' + ObjectService.LockTypes.WRITE
+                    
+                    var xmlhttp = new XMLHttpRequest();
+                    xmlhttp.open("DELETE", url, false); //false - synchronous call
+                    xmlhttp.setRequestHeader("Content-type", "application/json");
+                    xmlhttp.send(data);
                 }
+                
             });
             
             $rootScope.$bus.subscribe("object.changed/FILE/" + $stateParams.fileId, function() {
