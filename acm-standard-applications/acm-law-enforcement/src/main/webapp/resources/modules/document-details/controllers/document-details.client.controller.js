@@ -324,15 +324,30 @@ angular.module('document-details').controller(
 
                     }
 
-                // Release editing lock on window unload, if acquired
-                $scope.onWindowClose = function () {
-                    if ($scope.editingMode) {
-                        return ObjectLockingService.unlockObject($scope.ecmFile.fileId, ObjectService.ObjectTypes.FILE, ObjectService.LockTypes.WRITE, true);
-                    }
-                };
-                $window.onunload = $scope.onWindowClose;
+                    // Release editing lock on window unload, if acquired
+                    $window.addEventListener('beforeunload', function () {
 
-                $rootScope.$bus.subscribe("object.changed/FILE/" + $stateParams.id, function () {
+                        if ($scope.editingMode) {
+                            // AFDP-7608, angular $http service always makes asynchronous calls
+                            $scope.data = {
+                                objectId: $scope.ecmFile.fileId,
+                                objectType: ObjectService.ObjectTypes.FILE,
+                                lockType: ObjectService.LockTypes.WRITE
+                            };
+
+                            var data = angular.toJson($scope.data);
+                            
+                            var url = 'api/v1/plugin/' + ObjectService.ObjectTypes.FILE + '/' + $scope.ecmFile.fileId + '/lock?lockType=' + ObjectService.LockTypes.WRITE
+                            
+                            var xmlhttp = new XMLHttpRequest();
+                            xmlhttp.open("DELETE", url, false); //false - synchronous call
+                            xmlhttp.setRequestHeader("Content-type", "application/json");
+                            xmlhttp.send(data);
+                        }
+                        
+                    });
+
+                    $rootScope.$bus.subscribe("object.changed/FILE/" + $stateParams.id, function () {
                         DialogService.alert($translate.instant("documentDetails.fileChangedAlert")).then(function() {
                             $scope.openSnowboundViewer();
                             $scope.$broadcast('refresh-ocr');
