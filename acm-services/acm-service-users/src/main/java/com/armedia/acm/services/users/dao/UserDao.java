@@ -41,19 +41,11 @@ import com.jayway.jsonpath.spi.mapper.JacksonMappingProvider;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.cache.Cache;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
-import javax.persistence.NonUniqueResultException;
-import javax.persistence.PersistenceContext;
-import javax.persistence.PersistenceException;
-import javax.persistence.Query;
-import javax.persistence.TypedQuery;
-
+import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -68,7 +60,6 @@ public class UserDao extends AcmAbstractDao<AcmUser>
     private static String DEFAULT_LOCALE_CODE = null;
     @PersistenceContext
     private EntityManager entityManager;
-    private Cache quietUserLookupCache;
     private List<AcmConfig> configList;
     private Logger log = LoggerFactory.getLogger(getClass());
 
@@ -159,22 +150,11 @@ public class UserDao extends AcmAbstractDao<AcmUser>
 
         try
         {
-            Cache.ValueWrapper found = getQuietUserLookupCache().get(userId);
-
-            if (found != null && found.get() != null)
+            AcmUser user = findByUserId(userId);
+            if (user != null)
             {
-                return (AcmUser) found.get();
+                return user;
             }
-            else
-            {
-                AcmUser user = findByUserId(userId);
-                if (user != null)
-                {
-                    getQuietUserLookupCache().put(userId, user);
-                    return user;
-                }
-            }
-
         }
         catch (PersistenceException pe)
         {
@@ -223,7 +203,7 @@ public class UserDao extends AcmAbstractDao<AcmUser>
     public void deleteAcmRole(String roleName)
     {
         AcmRole existing = entityManager.find(AcmRole.class, roleName);
-        if(existing != null)
+        if (existing != null)
         {
             entityManager.remove(existing);
         }
@@ -355,16 +335,6 @@ public class UserDao extends AcmAbstractDao<AcmUser>
     protected Class getPersistenceClass()
     {
         return AcmUser.class;
-    }
-
-    public Cache getQuietUserLookupCache()
-    {
-        return quietUserLookupCache;
-    }
-
-    public void setQuietUserLookupCache(Cache quietUserLookupCache)
-    {
-        this.quietUserLookupCache = quietUserLookupCache;
     }
 
     public List<AcmConfig> getConfigList()
