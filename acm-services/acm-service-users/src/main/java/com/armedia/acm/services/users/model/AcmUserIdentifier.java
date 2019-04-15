@@ -27,17 +27,13 @@ package com.armedia.acm.services.users.model;
  * #L%
  */
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.TableGenerator;
+import javax.persistence.*;
+
+import java.io.Serializable;
 
 @Entity
 @Table(name = "acm_user_identifier")
-public class AcmUserIdentifier
+public class AcmUserIdentifier implements Serializable
 {
     @Id
     @TableGenerator(name = "user_identifier_generator", table = "acm_user_identifier_id", pkColumnName = "cm_seq_name", valueColumnName = "cm_seq_num", pkColumnValue = "acm_user_identifier", initialValue = 100, allocationSize = 1)
