@@ -204,23 +204,30 @@ public class PortalCreateRequestService
         List<ContactMethod> contactMethod = new ArrayList<>();
         requester.setContactMethods(contactMethod);
         ContactMethod phone = buildContactMethod("phone", in.getPhone());
-        if(phone.getValue() != null){
+        if (phone.getValue() != null)
+        {
             requester.getContactMethods().add(0, phone);
         }
-        else {
+        else
+        {
             requester.getContactMethods().add(0, null);
         }
         ContactMethod fax = buildContactMethod("fax", null);
-        if(fax.getValue() != null){
+        if (fax.getValue() != null)
+        {
             requester.getContactMethods().add(1, fax);
-        }else {
+        }
+        else
+        {
             requester.getContactMethods().add(1, null);
         }
         ContactMethod email = buildContactMethod("email", in.getEmail());
-        if(email.getValue() != null){
+        if (email.getValue() != null)
+        {
             requester.getContactMethods().add(2, email);
         }
-        else {
+        else
+        {
             requester.getContactMethods().add(2, null);
         }
 

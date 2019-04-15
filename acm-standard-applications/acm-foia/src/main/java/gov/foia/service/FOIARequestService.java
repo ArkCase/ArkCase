@@ -174,23 +174,31 @@ public class FOIARequestService
         for (int i=0; i < person.getContactMethods().size(); i++)
         {
             ContactMethod contact = person.getContactMethods().get(i);
-            if(contact != null) {
-                if(contact.getType() == null){
-                    if(i == 0){
+            if (contact != null)
+            {
+                if (contact.getType() == null)
+                {
+                    if (i == 0)
+                    {
                         contact.setType("phone");
                      }
-                    else if(i == 1){
+                    else if (i == 1)
+                    {
                         contact.setType("fax");
                     }
-                    else {
+                    else
+                    {
                         contact.setType("email");
                     }
                 }
                 String type = contact.getType();
                 String value = contact.getValue();
-                if (type.toLowerCase().equals("phone") && value != null && !value.isEmpty()) {
+                if (type.toLowerCase().equals("phone") && value != null && !value.isEmpty())
+                {
                     person.setDefaultPhone(contact);
-                } else if (type.toLowerCase().equals("email") && value != null && !value.isEmpty()) {
+                }
+                else if (type.toLowerCase().equals("email") && value != null && !value.isEmpty())
+                {
                     person.setDefaultEmail(contact);
                 }
             }
@@ -200,9 +208,10 @@ public class FOIARequestService
     private void setDefaultAddressType(CaseFile saved)
     {
         Person person = saved.getOriginator().getPerson();
-        if( person.getAddresses().size() != 0) {
+        if ( person.getAddresses().size() != 0)
+        {
             PostalAddress address = person.getAddresses().get(0);
-            if(address.getType() == null)
+            if (address.getType() == null)
             {
                 address.setType("Business");
             }
