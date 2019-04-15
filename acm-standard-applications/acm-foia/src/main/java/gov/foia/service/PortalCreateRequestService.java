@@ -179,10 +179,6 @@ public class PortalCreateRequestService
             organization.setOrganizationType("Corporation");
             requester.getOrganizations().add(organization);
 
-            PostalAddress orgAddress = new PostalAddress();
-            orgAddress.setType("Business");
-            organization.getAddresses().add(orgAddress);
-
             List<PersonOrganizationAssociation> personOrganizationAssociations = new ArrayList<>();
             PersonOrganizationAssociation personOrganizationAssociation = new PersonOrganizationAssociation();
             personOrganizationAssociation.setOrganization(organization);
@@ -200,20 +196,39 @@ public class PortalCreateRequestService
         address.setStreetAddress2(in.getAddress2());
         address.setZip(in.getZip());
         address.setType("Business");
-        requester.getAddresses().add(address);
+        if(address.getStreetAddress() != null || address.getStreetAddress2() != null || address.getCity() != null || address.getZip() != null || address.getState() != null){
+            requester.getAddresses().add(address);
+        }
 
         // the UI expects the contact methods in this order: Phone, Fax, Email
+        List<ContactMethod> contactMethod = new ArrayList<>();
+        requester.setContactMethods(contactMethod);
         ContactMethod phone = buildContactMethod("phone", in.getPhone());
-        if(phone.getValue() != null){
-            requester.getContactMethods().add(phone);
+        if (phone.getValue() != null)
+        {
+            requester.getContactMethods().add(0, phone);
+        }
+        else
+        {
+            requester.getContactMethods().add(0, null);
         }
         ContactMethod fax = buildContactMethod("fax", null);
-        if(fax.getValue() != null){
-            requester.getContactMethods().add(fax);
+        if (fax.getValue() != null)
+        {
+            requester.getContactMethods().add(1, fax);
+        }
+        else
+        {
+            requester.getContactMethods().add(1, null);
         }
         ContactMethod email = buildContactMethod("email", in.getEmail());
-        if(email.getValue() != null){
-            requester.getContactMethods().add(email);
+        if (email.getValue() != null)
+        {
+            requester.getContactMethods().add(2, email);
+        }
+        else
+        {
+            requester.getContactMethods().add(2, null);
         }
 
         return request;
