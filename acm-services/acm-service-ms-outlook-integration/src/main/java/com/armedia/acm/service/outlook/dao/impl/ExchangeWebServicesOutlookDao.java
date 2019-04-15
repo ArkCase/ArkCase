@@ -27,52 +27,29 @@ package com.armedia.acm.service.outlook.dao.impl;
  * #L%
  */
 
-import com.armedia.acm.core.exceptions.AcmOutlookConnectionFailedException;
-import com.armedia.acm.core.exceptions.AcmOutlookCreateItemFailedException;
-import com.armedia.acm.core.exceptions.AcmOutlookException;
-import com.armedia.acm.core.exceptions.AcmOutlookFindItemsFailedException;
-import com.armedia.acm.core.exceptions.AcmOutlookItemNotDeletedException;
-import com.armedia.acm.core.exceptions.AcmOutlookItemNotFoundException;
-import com.armedia.acm.core.exceptions.AcmOutlookModifyItemFailedException;
+import com.armedia.acm.core.exceptions.*;
 import com.armedia.acm.files.AbstractConfigurationFileEvent;
 import com.armedia.acm.files.ConfigurationFileChangedEvent;
 import com.armedia.acm.service.outlook.dao.OutlookDao;
-import com.armedia.acm.service.outlook.model.AcmOutlookUser;
-import com.armedia.acm.service.outlook.model.ExchangeConfiguration;
-import com.armedia.acm.service.outlook.model.OutlookCalendarItem;
-import com.armedia.acm.service.outlook.model.OutlookContactItem;
-import com.armedia.acm.service.outlook.model.OutlookFolder;
-import com.armedia.acm.service.outlook.model.OutlookFolderPermission;
-import com.armedia.acm.service.outlook.model.OutlookItem;
-import com.armedia.acm.service.outlook.model.OutlookTaskItem;
+import com.armedia.acm.service.outlook.model.*;
 import com.armedia.acm.service.outlook.service.impl.ExchangeConfigurationServiceImpl;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.cache.Cache;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.ApplicationListener;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
-import java.util.TimeZone;
+import java.util.*;
 
 import microsoft.exchange.webservices.data.core.ExchangeService;
 import microsoft.exchange.webservices.data.core.PropertySet;
 import microsoft.exchange.webservices.data.core.enumeration.misc.ExchangeVersion;
 import microsoft.exchange.webservices.data.core.enumeration.permission.folder.FolderPermissionLevel;
-import microsoft.exchange.webservices.data.core.enumeration.property.BasePropertySet;
-import microsoft.exchange.webservices.data.core.enumeration.property.EmailAddressKey;
-import microsoft.exchange.webservices.data.core.enumeration.property.PhoneNumberKey;
-import microsoft.exchange.webservices.data.core.enumeration.property.StandardUser;
-import microsoft.exchange.webservices.data.core.enumeration.property.WellKnownFolderName;
+import microsoft.exchange.webservices.data.core.enumeration.property.*;
 import microsoft.exchange.webservices.data.core.enumeration.search.SortDirection;
 import microsoft.exchange.webservices.data.core.enumeration.service.DeleteMode;
 import microsoft.exchange.webservices.data.core.enumeration.service.SendCancellationsMode;
@@ -87,11 +64,7 @@ import microsoft.exchange.webservices.data.core.service.schema.FolderSchema;
 import microsoft.exchange.webservices.data.core.service.schema.ItemSchema;
 import microsoft.exchange.webservices.data.credential.ExchangeCredentials;
 import microsoft.exchange.webservices.data.credential.WebCredentials;
-import microsoft.exchange.webservices.data.property.complex.EmailAddress;
-import microsoft.exchange.webservices.data.property.complex.FolderId;
-import microsoft.exchange.webservices.data.property.complex.FolderPermission;
-import microsoft.exchange.webservices.data.property.complex.ItemId;
-import microsoft.exchange.webservices.data.property.complex.MessageBody;
+import microsoft.exchange.webservices.data.property.complex.*;
 import microsoft.exchange.webservices.data.property.complex.recurrence.pattern.Recurrence;
 import microsoft.exchange.webservices.data.property.complex.time.OlsonTimeZoneDefinition;
 import microsoft.exchange.webservices.data.property.definition.PropertyDefinition;
@@ -113,7 +86,6 @@ public class ExchangeWebServicesOutlookDao implements OutlookDao, ApplicationLis
             FolderSchema.Permissions);
     private ExchangeVersion exchangeVersion = ExchangeVersion.Exchange2007_SP1;
     private Map<String, PropertyDefinition> sortFields;
-    private Cache outlookUserConnectionCache;
     private String defaultAccess;
     private ExchangeConfigurationServiceImpl exchangeConfigurationService;
     private boolean autodiscoveryEnabled;
@@ -126,18 +98,6 @@ public class ExchangeWebServicesOutlookDao implements OutlookDao, ApplicationLis
         Objects.requireNonNull(user, "User cannot be null");
         Objects.requireNonNull(user.getOutlookPassword(), "Password cannot be null");
         Objects.requireNonNull(user.getEmailAddress(), "E-mail address cannot be null");
-
-        Cache.ValueWrapper found = getOutlookUserConnectionCache().get(user.getEmailAddress());
-
-        if (found == null || found.get() == null)
-        {
-            log.debug("Exchange service not found in cache for user({}), continue with authentication", user.getEmailAddress());
-        }
-        else
-        {
-            log.debug("Exchange service found in cache for user({})", user.getEmailAddress());
-            return (ExchangeService) found.get();
-        }
 
         ExchangeCredentials credentials = new WebCredentials(user.getEmailAddress(), user.getOutlookPassword());
 
@@ -152,7 +112,7 @@ public class ExchangeWebServicesOutlookDao implements OutlookDao, ApplicationLis
             {
                 service.setUrl(getClientAccessServer());
             }
-            getOutlookUserConnectionCache().put(user.getEmailAddress(), service);
+
             return service;
         }
         catch (Exception e)
@@ -163,11 +123,11 @@ public class ExchangeWebServicesOutlookDao implements OutlookDao, ApplicationLis
     }
 
     @Override
+    @CacheEvict(value = "outlook-connection-cache", key = "#user.emailAddress")
     public void disconnect(AcmOutlookUser user)
     {
         // EWS apparently has no concept of "logging out" so the whole point of this method is to
         // remove the connection from the connection cache.
-        getOutlookUserConnectionCache().evict(user.getEmailAddress());
         log.info("Exchange session for user({}) has been removed from session cache", user.getEmailAddress());
     }
 
@@ -700,16 +660,6 @@ public class ExchangeWebServicesOutlookDao implements OutlookDao, ApplicationLis
     public void setClientAccessServer(URI clientAccessServer)
     {
         this.clientAccessServer = clientAccessServer;
-    }
-
-    public Cache getOutlookUserConnectionCache()
-    {
-        return outlookUserConnectionCache;
-    }
-
-    public void setOutlookUserConnectionCache(Cache outlookUserConnectionCache)
-    {
-        this.outlookUserConnectionCache = outlookUserConnectionCache;
     }
 
     public String getDefaultAccess()
