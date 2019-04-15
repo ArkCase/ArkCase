@@ -1451,7 +1451,7 @@ angular.module('request-info').controller(
 
                     var data = angular.toJson($scope.data);
                     
-                    var url = 'api/v1/plugin/' + ObjectService.ObjectTypes.FILE + '/' + $scope.ecmFile.fileId + '/lock?lockType=' + ObjectService.LockTypes.WRITE
+                    var url = 'api/v1/plugin/' + ObjectService.ObjectTypes.FILE + '/' + $scope.ecmFile.fileId + '/lock?lockType=' + ObjectService.LockTypes.WRITE;
                     
                     var xmlhttp = new XMLHttpRequest();
                     xmlhttp.open("DELETE", url, false); //false - synchronous call
