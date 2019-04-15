@@ -3032,6 +3032,7 @@ angular.module('directives').directive(
                                         }).then(function(deletedFileId) {
                                             dfd.resolve(deletedFileId);
                                         }, function(errorData) {
+                                            MessageService.error(errorData.data);
                                             DocTree.markNodeError(node);
                                             dfd.reject();
                                         });
@@ -3101,6 +3102,7 @@ angular.module('directives').directive(
                                             DocTree.markNodeOk(node);
                                             dfd.resolve(renamedInfo);
                                         }, function(errorData) {
+                                            MessageService.error(errorData.data);
                                             DocTree.markNodeError(node);
                                             dfd.reject();
                                         });
@@ -3151,6 +3153,7 @@ angular.module('directives').directive(
                                             DocTree.markNodeOk(node);
                                             dfd.resolve(renamedInfo);
                                         }, function(errorData) {
+                                            MessageService.error(errorData.data);
                                             DocTree.markNodeError(node);
                                             dfd.reject();
                                         });
@@ -4588,7 +4591,7 @@ angular.module('directives').directive(
                             }
                             return true;
                         },
-                        validateMoveFolderInfo: function(data) {
+                           validateMoveFolderInfo: function(data) {
                             if (Util.isEmpty(data)) {
                                 return false;
                             }
