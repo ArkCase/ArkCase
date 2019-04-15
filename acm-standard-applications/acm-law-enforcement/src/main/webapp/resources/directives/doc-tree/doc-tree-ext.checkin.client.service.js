@@ -130,7 +130,7 @@ angular.module('services').factory(
                                             }
                                         }
                                     }, function(errorMessage) {
-                                        MessageService.error(errorMessage);
+                                        MessageService.error(errorMessage.data);
                                     });
                                 }
                             }, {
