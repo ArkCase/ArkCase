@@ -145,6 +145,11 @@ public class PortalCreateRequestService
         request.setRequestCategory(in.getRequestCategory());
         request.setDeliveryMethodOfResponse(in.getDeliveryMethodOfResponse());
 
+        if(in.getTitle() != null)
+        {
+            request.setTitle(in.getTitle());
+        }
+
         request.setDetails(in.getSubject());
         request.setRecordSearchDateFrom(in.getRecordSearchDateFrom());
         request.setRecordSearchDateTo(in.getRecordSearchDateTo());
@@ -169,7 +174,7 @@ public class PortalCreateRequestService
         requester.setFamilyName(in.getLastName());
         requester.setMiddleName(in.getMiddleName());
         requester.setTitle(in.getPrefix());
-        requester.setPosition(in.getTitle());
+        requester.setPosition(in.getPosition());
         // requester.setCompany(in.getOrganization());
 
         if (in.getOrganization() != null && in.getOrganization().length() > 0)
