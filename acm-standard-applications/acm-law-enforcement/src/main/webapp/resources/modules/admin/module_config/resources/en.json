@@ -603,6 +603,9 @@
                 "title": "Locale Configuration",
                 "defaultLabel": "Default Locale:"
             },
+            "version.config": {
+                "title": "Application Version"
+            },
             "labels.config": {
                 "title": "Label Configuration",
                 "progressMessage": "Updating labels...Please wait",
