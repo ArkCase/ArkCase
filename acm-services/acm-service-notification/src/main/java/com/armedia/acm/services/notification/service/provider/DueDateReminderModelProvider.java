@@ -26,20 +26,21 @@ package com.armedia.acm.services.notification.service.provider;
  * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
  * #L%
  */
-
+import com.armedia.acm.core.provider.TemplateModelProvider;
 import com.armedia.acm.services.notification.event.DueDateReminderSentEvent;
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.service.provider.model.GenericTemplateModel;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 
-public class DueDateReminderModelProvider implements TemplateModelProvider, ApplicationEventPublisherAware
+public class DueDateReminderModelProvider implements TemplateModelProvider<GenericTemplateModel>, ApplicationEventPublisherAware
 {
     private ApplicationEventPublisher applicationEventPublisher;
 
     @Override
-    public Object getModel(Notification notification)
+    public GenericTemplateModel getModel(Object notificationObject)
     {
+        Notification notification = (Notification) notificationObject;
         GenericTemplateModel genericTemplateModel = new GenericTemplateModel();
 
         genericTemplateModel.setObjectNumber(notification.getParentName());
@@ -49,6 +50,12 @@ public class DueDateReminderModelProvider implements TemplateModelProvider, Appl
         generateDueDateReminderSentEvent(notification);
 
         return genericTemplateModel;
+    }
+
+    @Override
+    public Class<GenericTemplateModel> getType()
+    {
+        return GenericTemplateModel.class;
     }
 
     private void generateDueDateReminderSentEvent(Notification notification)

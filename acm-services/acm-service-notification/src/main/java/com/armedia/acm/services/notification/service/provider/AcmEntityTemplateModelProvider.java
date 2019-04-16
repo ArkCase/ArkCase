@@ -28,19 +28,27 @@ package com.armedia.acm.services.notification.service.provider;
  */
 
 import com.armedia.acm.core.AcmObject;
+import com.armedia.acm.core.provider.TemplateModelProvider;
 import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.data.service.AcmDataService;
 import com.armedia.acm.services.notification.model.Notification;
 
-public class AcmEntityTemplateModelProvider implements TemplateModelProvider
+public class AcmEntityTemplateModelProvider implements TemplateModelProvider<AcmObject>
 {
     private AcmDataService dataService;
 
     @Override
-    public Object getModel(Notification notification)
+    public AcmObject getModel(Object object)
     {
+        Notification notification = (Notification) object;
         AcmAbstractDao<AcmObject> dao = getDataService().getDaoByObjectType(notification.getParentType());
         return dao.find(notification.getParentId());
+    }
+
+    @Override
+    public Class<AcmObject> getType()
+    {
+        return AcmObject.class;
     }
 
     public AcmDataService getDataService()
