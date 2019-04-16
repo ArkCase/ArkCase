@@ -28,11 +28,18 @@ package gov.foia.service;
  */
 
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
+import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
+import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.casefile.service.GetCaseByNumberService;
+import com.armedia.acm.services.notification.dao.NotificationDao;
+import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.search.model.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.search.service.SearchResults;
 
+import com.armedia.acm.services.users.dao.UserDao;
+import com.armedia.acm.services.users.model.AcmUser;
+import com.armedia.acm.services.users.service.group.GroupService;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -44,19 +51,25 @@ import org.springframework.security.core.Authentication;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import gov.foia.dao.FOIARequestDao;
 import gov.foia.model.FOIARequest;
 import gov.foia.model.PortalFOIAReadingRoom;
 import gov.foia.model.PortalFOIARequest;
 import gov.foia.model.PortalFOIARequestStatus;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 /**
  * @author sasko.tanaskoski
  *
  */
-public class PortalRequestService
+public class  PortalRequestService
 {
     private final Logger log = LoggerFactory.getLogger(getClass());
 
@@ -65,6 +78,14 @@ public class PortalRequestService
     private ExecuteSolrQuery executeSolrQuery;
 
     private GetCaseByNumberService getCaseByNumberService;
+
+    private UserDao userDao;
+
+    private NotificationDao notificationDao;
+
+    private GroupService groupService;
+
+    private SearchResults searchResults;
 
     public List<PortalFOIARequestStatus> getExternalRequests(PortalFOIARequestStatus portalRequestStatus) throws AcmObjectNotFoundException
     {
@@ -142,6 +163,50 @@ public class PortalRequestService
 
     }
 
+    public void sendRequestDownloadedEmailToOfficersGroup(Long requestId)
+    {
+        FOIARequest request = getRequestDao().find(requestId);
+        AcmUser user = getUserDao().findByUserId(request.getAssigneeLdapId());
+
+        Set<String> officersGroupMemberEmailAddresses = new HashSet<>();
+
+        String members = null;
+        try
+        {
+            members = getGroupService().getUserMembersForGroup("OFFICERS@ARMEDIA.COM", Optional.empty(), SecurityContextHolder.getContext().getAuthentication());
+        }
+        catch (MuleException e)
+        {
+            log.warn("Could not read members of OFFICERS group");
+        }
+
+        JSONArray membersArray = getSearchResults().getDocuments(members);
+
+        for (int i = 0; i < membersArray.length(); i++)
+        {
+            JSONObject memberObject = membersArray.getJSONObject(i);
+            String emailAddress = getSearchResults().extractString(memberObject, "email_lcs");
+
+            officersGroupMemberEmailAddresses.add(emailAddress);
+        }
+
+        if(!officersGroupMemberEmailAddresses.isEmpty())
+        {
+            Notification notification = new Notification();
+
+            notification.setTitle(String.format("Request:%s assigned to %s", request.getCaseNumber(), user.getFullName()));
+            notification.setTemplateModelName("requestDownloaded");
+            notification.setParentId(requestId);
+            notification.setParentType(request.getRequestType());
+            notification.setParentName(request.getCaseNumber());
+            notification.setParentTitle(request.getTitle());
+            notification.setEmailAddresses(officersGroupMemberEmailAddresses.stream().collect(Collectors.joining(",")));
+            notification.setUser(SecurityContextHolder.getContext().getAuthentication().getName());
+
+            getNotificationDao().save(notification);
+        }
+    }
+
     private void setParentData(PortalFOIAReadingRoom portalReadingRoom, String parent_ref, Authentication auth) throws MuleException
     {
         log.info("Searching for corresponding request of file '{}'", portalReadingRoom.getFile().getFileName());
@@ -206,5 +271,45 @@ public class PortalRequestService
     public void setGetCaseByNumberService(GetCaseByNumberService getCaseByNumberService)
     {
         this.getCaseByNumberService = getCaseByNumberService;
+    }
+
+    public UserDao getUserDao()
+    {
+        return userDao;
+    }
+
+    public void setUserDao(UserDao userDao)
+    {
+        this.userDao = userDao;
+    }
+
+    public NotificationDao getNotificationDao()
+    {
+        return notificationDao;
+    }
+
+    public void setNotificationDao(NotificationDao notificationDao)
+    {
+        this.notificationDao = notificationDao;
+    }
+
+    public GroupService getGroupService()
+    {
+        return groupService;
+    }
+
+    public void setGroupService(GroupService groupService)
+    {
+        this.groupService = groupService;
+    }
+
+    public SearchResults getSearchResults()
+    {
+        return searchResults;
+    }
+
+    public void setSearchResults(SearchResults searchResults)
+    {
+        this.searchResults = searchResults;
     }
 }
