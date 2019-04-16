@@ -29,7 +29,18 @@ package com.armedia.acm.core.provider;
 
 public interface TemplateModelProvider<T>
 {
+    /**
+     * Specify the type of model created by the template provider. The generated object is used as a model into the templates.
+     * @param object
+     *
+     * @return T
+     */
     T getModel(Object object);
 
+    /**
+     * Specify the classPath of the object that is used by the template provider to generate a model.
+     *
+     * @return Class<T>
+     */
     Class<T> getType();
 }
