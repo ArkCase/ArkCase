@@ -9,11 +9,11 @@ angular.module('admin').factory('Admin.PDFConversionService', [ '$http', functio
         });
     };
 
-    var _saveProperties = function(costsheetProperties) {
+    var _saveProperties = function(pdfProperties) {
         return $http({
             method: 'POST',
             url: 'api/latest/plugin/admin/pdfConversion',
-            data: costsheetProperties,
+            data: pdfProperties,
             headers: {
                 "Content-Type": "application/json"
             }
