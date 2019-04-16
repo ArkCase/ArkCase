@@ -29,7 +29,7 @@
             activiti:expression="#{foiaRequestFileBrokerClient.sendReleaseFile(OBJECT_ID)}"/>
         <sequenceFlow id="sid-3348156b-6d27-4e6f-9a8a-760829098468" sourceRef="sid-e81ce45d-afdf-4c11-aadf-c70166212249"
             targetRef="Task_1ue461c"/>
-        <serviceTask id="Task_1ue461c" name="Send Email notification" activiti:expression="#{responseFolderNotifyService.sendEmailResponseCompressNotification(OBJECT_ID)}"/>
+        <serviceTask id="Task_1ue461c" name="Send Email notification" activiti:expression="#{responseFolderNotifyService.sendEmailNotification(OBJECT_ID)}"/>
         <sequenceFlow id="SequenceFlow_1vtxmx2" sourceRef="Task_1ue461c" targetRef="sid-2158CAAD-78C1-465F-B109-70C2FCF1FF39"/>
         <endEvent id="sid-2158CAAD-78C1-465F-B109-70C2FCF1FF39"/>
         <textAnnotation id="sid-A4DD8BA4-1458-4B2D-A55F-9098105D10A5">
