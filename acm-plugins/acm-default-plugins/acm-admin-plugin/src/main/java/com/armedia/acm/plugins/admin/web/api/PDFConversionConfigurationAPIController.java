@@ -58,9 +58,9 @@ public class PDFConversionConfigurationAPIController
 
     @RequestMapping(value = "/pdfConversion", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public void savePDFConversionProperties(@RequestBody Map<String, Object> costsheetProperties)
+    public void savePDFConversionProperties(@RequestBody Map<String, Object> pdfProperties)
     {
-        getPdfConversionConfigurationService().saveProperties(costsheetProperties);
+        getPdfConversionConfigurationService().saveProperties(pdfProperties);
     }
 
     public PDFConversionConfigurationService getPdfConversionConfigurationService()
