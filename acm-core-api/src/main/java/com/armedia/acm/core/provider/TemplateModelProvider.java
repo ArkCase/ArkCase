@@ -1,4 +1,4 @@
-package com.armedia.acm.services.notification.service.provider;
+package com.armedia.acm.core.provider;
 
 /*-
  * #%L
@@ -27,9 +27,20 @@ package com.armedia.acm.services.notification.service.provider;
  * #L%
  */
 
-import com.armedia.acm.services.notification.model.Notification;
-
-public interface TemplateModelProvider
+public interface TemplateModelProvider<T>
 {
-    Object getModel(Notification notification);
+    /**
+     * Specify the type of model created by the template provider. The generated object is used as a model into the templates.
+     * @param object
+     *
+     * @return T
+     */
+    T getModel(Object object);
+
+    /**
+     * Specify the classPath of the object that is used by the template provider to generate a model.
+     *
+     * @return Class<T>
+     */
+    Class<T> getType();
 }

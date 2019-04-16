@@ -30,8 +30,8 @@ package com.armedia.acm.services.notification.service;
  * #L%
  */
 
+import com.armedia.acm.core.provider.TemplateModelProvider;
 import com.armedia.acm.services.notification.model.Notification;
-import com.armedia.acm.services.notification.service.provider.TemplateModelProvider;
 import com.armedia.acm.spring.SpringContextHolder;
 
 import java.util.Map;
@@ -45,7 +45,7 @@ public class SendExecutor implements Executor
 
     private SpringContextHolder springContextHolder;
 
-    private TemplateModelProvider templateModelProvider;
+    private TemplateModelProvider<Notification> templateModelProvider;
 
     @Override
     public Notification execute(Notification notification)
