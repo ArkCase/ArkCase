@@ -84,7 +84,7 @@ public class ResponseFolderNotifyService
             Notification responseFolderNotifier = new Notification();
             responseFolderNotifier.setEmailAddresses(emailAddress);
             responseFolderNotifier.setTitle(String.format("%s %s", EMAIL_RELEASE_SUBJECT, request.getCaseNumber()));
-            responseFolderNotifier.setTemplateModelName("portalDocumentsLink");
+            responseFolderNotifier.setTemplateModelName("portalRequestCompleteLink");
             responseFolderNotifier.setParentType(request.getObjectType());
             responseFolderNotifier.setParentId(request.getId());
             responseFolderNotifier.setAttachFiles(false);
