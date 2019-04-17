@@ -27,6 +27,7 @@ package com.armedia.acm.audit.service.systemlogger;
  * #L%
  */
 
+import com.armedia.acm.audit.model.AuditConfig;
 import com.armedia.acm.core.AcmApplication;
 
 import org.apache.commons.io.Charsets;
@@ -57,10 +58,8 @@ public class SyslogLogger implements ISystemLogger
     private static final String SYSLOG_LOGGER_NAME = SyslogLogger.class.getName();
     private static Logger logger;
 
-    private String host;
-    private int port;
-    private String protocol;
     private AcmApplication acmApplication;
+    private AuditConfig auditConfig;
 
     @Override
     public void log(String message)
@@ -83,8 +82,9 @@ public class SyslogLogger implements ISystemLogger
         LoggerContext ctx = (LoggerContext) LogManager.getContext(false);
         AbstractConfiguration config = (AbstractConfiguration) ctx.getConfiguration();
 
-        SyslogAppender syslogAppender = SyslogAppender.createAppender(getHost(), getPort(), getProtocol(), null, 0, 0, true,
-                SYSLOG_LOGGER_APPENDER_NAME, true, true,
+        SyslogAppender syslogAppender = SyslogAppender.createAppender(auditConfig.getSystemLogSysLogHost(),
+                auditConfig.getSystemLogSysLogPort(), auditConfig.getSystemLogSysLogProtocol(), null,
+                0, 0, true, SYSLOG_LOGGER_APPENDER_NAME, true, true,
                 Facility.LOG_AUDIT, "App", Rfc5424Layout.DEFAULT_ENTERPRISE_NUMBER, true, Rfc5424Layout.DEFAULT_MDCID, null, "acm", true,
                 null,
                 getAcmApplication().getApplicationName(), "ACMAudit", null, null, null, "RFC5424", null, new DefaultConfiguration(),
@@ -102,36 +102,6 @@ public class SyslogLogger implements ISystemLogger
         logger = LoggerFactory.getLogger(SYSLOG_LOGGER_NAME);
     }
 
-    public String getHost()
-    {
-        return host;
-    }
-
-    public void setHost(String host)
-    {
-        this.host = host;
-    }
-
-    public int getPort()
-    {
-        return port;
-    }
-
-    public void setPort(int port)
-    {
-        this.port = port;
-    }
-
-    public String getProtocol()
-    {
-        return protocol;
-    }
-
-    public void setProtocol(String protocol)
-    {
-        this.protocol = protocol;
-    }
-
     public AcmApplication getAcmApplication()
     {
         return acmApplication;
@@ -140,5 +110,15 @@ public class SyslogLogger implements ISystemLogger
     public void setAcmApplication(AcmApplication acmApplication)
     {
         this.acmApplication = acmApplication;
+    }
+
+    public AuditConfig getAuditConfig()
+    {
+        return auditConfig;
+    }
+
+    public void setAuditConfig(AuditConfig auditConfig)
+    {
+        this.auditConfig = auditConfig;
     }
 }
