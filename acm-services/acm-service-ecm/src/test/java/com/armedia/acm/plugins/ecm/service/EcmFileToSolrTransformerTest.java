@@ -38,10 +38,12 @@ import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
+import com.armedia.acm.services.dataaccess.model.DataAccessControlConfig;
 import com.armedia.acm.services.dataaccess.service.SearchAccessControlFields;
 import com.armedia.acm.services.participants.model.AcmAssignedObject;
 import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
 import com.armedia.acm.services.search.model.solr.SolrBaseDocument;
+import com.armedia.acm.services.search.model.solr.SolrConfig;
 import com.armedia.acm.services.search.model.solr.SolrContentDocument;
 import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.services.tag.model.AcmAssociatedTag;
@@ -69,6 +71,8 @@ public class EcmFileToSolrTransformerTest extends EasyMockSupport
     private UserDao mockUserDao;
     private EcmFileToSolrTransformer unit;
 
+    private SolrConfig solrConfig;
+
     @Before
     public void setUp() throws Exception
     {
@@ -83,7 +87,13 @@ public class EcmFileToSolrTransformerTest extends EasyMockSupport
         unit = new EcmFileToSolrTransformer();
         unit.setSearchAccessControlFields(mockSearchAccessControlFields);
         unit.setUserDao(mockUserDao);
-        unit.setEnableDocumentACL(true);
+
+        DataAccessControlConfig dacConfig = new DataAccessControlConfig();
+        dacConfig.setEnableDocumentACL(true);
+        unit.setDacConfig(dacConfig);
+
+        solrConfig = new SolrConfig();
+        unit.setSolrConfig(solrConfig);
     }
 
     private void setupEcmFile(EcmFile in)
@@ -171,7 +181,7 @@ public class EcmFileToSolrTransformerTest extends EasyMockSupport
     @Test
     public void toContentFileIndex()
     {
-        unit.setEnableContentFileIndexing(true);
+        solrConfig.setEnableContentFileIndexing(true);
 
         mockSearchAccessControlFields.setAccessControlFields(anyObject(SolrBaseDocument.class), anyObject(AcmAssignedObject.class));
         expectLastCall();
@@ -190,7 +200,7 @@ public class EcmFileToSolrTransformerTest extends EasyMockSupport
     @Test
     public void toSolrAdvancedSearch()
     {
-        unit.setEnableContentFileIndexing(false);
+        solrConfig.setEnableContentFileIndexing(false);
 
         mockSearchAccessControlFields.setAccessControlFields(anyObject(SolrBaseDocument.class), anyObject(AcmAssignedObject.class));
         expectLastCall();
@@ -208,7 +218,7 @@ public class EcmFileToSolrTransformerTest extends EasyMockSupport
     @Test
     public void toSolrQuickSearch()
     {
-        unit.setEnableContentFileIndexing(false);
+        solrConfig.setEnableContentFileIndexing(false);
 
         mockSearchAccessControlFields.setAccessControlFields(anyObject(SolrBaseDocument.class), anyObject(AcmAssignedObject.class));
         expectLastCall();

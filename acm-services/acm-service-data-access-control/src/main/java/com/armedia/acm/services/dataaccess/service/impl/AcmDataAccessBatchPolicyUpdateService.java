@@ -31,6 +31,7 @@ import com.armedia.acm.core.exceptions.AcmAccessControlException;
 import com.armedia.acm.core.exceptions.AcmEncryptionException;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.files.propertymanager.PropertyFileManager;
+import com.armedia.acm.services.dataaccess.model.DataAccessControlConfig;
 import com.armedia.acm.services.dataaccess.model.DataAccessControlConstants;
 import com.armedia.acm.services.dataaccess.service.AcmObjectDataAccessBatchUpdateLocator;
 import com.armedia.acm.services.participants.model.AcmAssignedObject;
@@ -62,22 +63,18 @@ public class AcmDataAccessBatchPolicyUpdateService
      */
     private static final String DAC_LAST_RUN_DATE_PROPERTY_KEY = "dac.last.run.date";
     private final Logger log = LoggerFactory.getLogger(getClass());
-    private boolean batchUpdateBasedOnLastModifiedEnabled;
     private String lastBatchUpdatePropertyFileLocation;
     private PropertyFileManager propertyFileManager;
     private SpringContextHolder springContextHolder;
-    private int batchSize;
     private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
     private AcmDataAccessBatchUpdater dataAccessBatchUpdater;
+    private DataAccessControlConfig dacConfig;
 
     public void batchPolicyUpdate() throws AcmEncryptionException
     {
-        if (log.isDebugEnabled())
-        {
-            log.debug("DAC batch update enabled: " + isBatchUpdateBasedOnLastModifiedEnabled());
-        }
+            log.debug("DAC batch update enabled: {}", dacConfig.getBatchUpdateBasedOnLastModifiedEnabled());
 
-        if (!isBatchUpdateBasedOnLastModifiedEnabled())
+        if (!dacConfig.getBatchUpdateBasedOnLastModifiedEnabled())
         {
             return;
         }
@@ -154,7 +151,7 @@ public class AcmDataAccessBatchPolicyUpdateService
         }
 
         int current = 0;
-        int batchSize = getBatchSize();
+        int batchSize = dacConfig.getBatchUpdateBatchSize();
 
         // keep retrieving another batch of objects modified since the last update, until we find no more objects.
         List<AcmAssignedObject> updatedObjects;
@@ -173,16 +170,6 @@ public class AcmDataAccessBatchPolicyUpdateService
             }
         } while (!updatedObjects.isEmpty());
 
-    }
-
-    public boolean isBatchUpdateBasedOnLastModifiedEnabled()
-    {
-        return batchUpdateBasedOnLastModifiedEnabled;
-    }
-
-    public void setBatchUpdateBasedOnLastModifiedEnabled(boolean batchUpdateBasedOnLastModifiedEnabled)
-    {
-        this.batchUpdateBasedOnLastModifiedEnabled = batchUpdateBasedOnLastModifiedEnabled;
     }
 
     public String getLastBatchUpdatePropertyFileLocation()
@@ -215,16 +202,6 @@ public class AcmDataAccessBatchPolicyUpdateService
         this.springContextHolder = springContextHolder;
     }
 
-    public int getBatchSize()
-    {
-        return batchSize;
-    }
-
-    public void setBatchSize(int batchSize)
-    {
-        this.batchSize = batchSize;
-    }
-
     public AuditPropertyEntityAdapter getAuditPropertyEntityAdapter()
     {
         return auditPropertyEntityAdapter;
@@ -243,5 +220,15 @@ public class AcmDataAccessBatchPolicyUpdateService
     public void setDataAccessBatchUpdater(AcmDataAccessBatchUpdater dataAccessBatchUpdater)
     {
         this.dataAccessBatchUpdater = dataAccessBatchUpdater;
+    }
+
+    public DataAccessControlConfig getDacConfig()
+    {
+        return dacConfig;
+    }
+
+    public void setDacConfig(DataAccessControlConfig dacConfig)
+    {
+        this.dacConfig = dacConfig;
     }
 }

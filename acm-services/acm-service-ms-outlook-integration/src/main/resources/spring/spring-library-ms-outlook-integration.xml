@@ -12,10 +12,6 @@
         <property name="acmContainerDao" ref="acmContainerFolderDao"/>
         <property name="ecmFileService" ref="ecmFileService"/>
         <property name="outlookEventPublisher" ref="outlookEventPublisher"/>
-        <property name="sendFromSystemUser" value="#{outlookConfig.sendNotificationFromSystemUser}"/>
-        <property name="systemUserEmail" value="#{outlookConfig.systemUserEmail}"/>
-        <property name="systemUserPass" value="#{outlookConfig.systemUserPassword}"/>
-        <property name="systemUserId" value="#{outlookConfig.systemUserId}"/>
         <property name="acmCryptoUtils" ref="acmCryptoUtils"/>
         <property name="outlookPasswordDao" ref="outlookPasswordDao"/>
         <property name="acmEmailContentGeneratorService" ref="acmEmailContentGeneratorService"/>
@@ -23,6 +19,7 @@
         <property name="templatingEngine" ref="templatingEngine"/>
         <property name="emailSenderConfigurationService" ref="emailSenderConfigurationService"/>
         <property name="defaultFolderAndFileConverter" ref="folderConverter"/>
+        <property name="outlookConfig" ref="outlookConfig"/>
     </bean>
 
     <bean id="outlookCacheManager" class="org.springframework.cache.ehcache.EhCacheCacheManager">
@@ -41,11 +38,8 @@
 
     <bean id="exchangeWebServicesOutlookDao" class="com.armedia.acm.service.outlook.dao.impl.ExchangeWebServicesOutlookDao">
         <property name="exchangeConfigurationService" ref="exchangeConfigurationService"/>
-        <property name="exchangeVersion" value="#{outlookConfig.serverVersion}"/>
-        <property name="autodiscoveryEnabled" value="#{outlookConfig.enableAutoDiscovery}"/>
-        <property name="clientAccessServer" value="#{outlookConfig.clientAccessServer}"/>
+        <property name="outlookConfig" ref="outlookConfig"/>
         <property name="outlookUserConnectionCache" ref="outlookUserConnectionCache"/>
-        <property name="defaultAccess" value="#{outlookConfig.defaultAccess}"/>
         <property name="sortFields">
             <map>
                 <entry key="subject" value-ref="propertyDefinitionSubject"/>
@@ -87,11 +81,7 @@
     <bean id="outlookFolderRecreator" class="com.armedia.acm.service.outlook.service.impl.DefaultOutlookFolderRecreator">
         <property name="userDao" ref="userJpaDao"/>
         <property name="outlookFolderService" ref="outlookService"/>
-        <property name="participantsTypesForOutlookFolder" value="#{outlookConfig.participantsTypesAsOutlookPermission}"/>
-        <property name="defaultAccess" value="#{outlookConfig.defaultAccess}"/>
-        <property name="approverAccess" value="#{outlookConfig.approverAccess}"/>
-        <property name="assigneeAccess" value="#{outlookConfig.followerAccess}"/>
-        <property name="followerAccess" value="#{outlookConfig.assigneeAccess}"/>
+        <property name="outlookConfig" ref="outlookConfig"/>
         <property name="folderHandlers">
             <map>
                 <entry key="CASE_FILE" value-ref="caseFileCalendarFolderHandler"/>

@@ -13,7 +13,7 @@
         <property name="eventPublisher" ref="profileEventPublisher"/>
         <property name="groupDao" ref="groupDao"/>
         <property name="groupService" ref="groupService"/>
-        <property name="defaultCmisId" value="#{ecmFileConfig.defaultCmisId}"/>
+        <property name="ecmFileConfig" ref="ecmFileConfig"/>
         <property name="profileConfig" ref="profileConfig"/>
     </bean>
 

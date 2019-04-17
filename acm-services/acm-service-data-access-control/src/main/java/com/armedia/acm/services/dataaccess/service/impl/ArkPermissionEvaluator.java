@@ -97,7 +97,6 @@ public class ArkPermissionEvaluator implements PermissionEvaluator, Initializing
     private AcmGroupDao groupDao;
     private UserDao userDao;
     private AccessControlRuleChecker accessControlRuleChecker;
-    private boolean enableDocumentACL;
     private AcmDataService acmDataService;
     private SpringContextHolder springContextHolder;
     private JSONMarshaller jsonMarshaller;
@@ -126,7 +125,8 @@ public class ArkPermissionEvaluator implements PermissionEvaluator, Initializing
             return false;
         }
 
-        if (!isEnableDocumentACL() && (targetType == null || targetType.equals("FILE") || targetType.equals("FOLDER")))
+        if (!dataAccessControlConfig.getEnableDocumentACL()
+                && (targetType == null || targetType.equals("FILE") || targetType.equals("FOLDER")))
         {
             return true;
         }
@@ -437,12 +437,7 @@ public class ArkPermissionEvaluator implements PermissionEvaluator, Initializing
 
     public boolean isEnableDocumentACL()
     {
-        return enableDocumentACL;
-    }
-
-    public void setEnableDocumentACL(boolean enableDocumentACL)
-    {
-        this.enableDocumentACL = enableDocumentACL;
+        return dataAccessControlConfig.getEnableDocumentACL();
     }
 
     public AcmDataService getAcmDataService()

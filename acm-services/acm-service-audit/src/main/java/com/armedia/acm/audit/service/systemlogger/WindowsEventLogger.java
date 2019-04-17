@@ -27,6 +27,7 @@ package com.armedia.acm.audit.service.systemlogger;
  * #L%
  */
 
+import com.armedia.acm.audit.model.AuditConfig;
 import com.armedia.acm.core.AcmApplication;
 
 import org.slf4j.Logger;
@@ -48,7 +49,7 @@ public class WindowsEventLogger implements ISystemLogger
     private static final String level = "Information";
     private Logger log = LoggerFactory.getLogger(getClass());
     private AcmApplication acmApplication;
-    private int eventId;
+    private AuditConfig auditConfig;
 
     @Override
     public void log(String message)
@@ -57,7 +58,7 @@ public class WindowsEventLogger implements ISystemLogger
                 + " /l APPLICATION"
                 + " /so \"" + getAcmApplication().getApplicationName() + "\""
                 + " /t " + level
-                + " /id " + getEventId()
+                + " /id " + auditConfig.getSystemLogWindowsEventLogEventId()
                 + " /d \"" + message + "\"";
 
         try
@@ -80,13 +81,13 @@ public class WindowsEventLogger implements ISystemLogger
         this.acmApplication = acmApplication;
     }
 
-    public int getEventId()
+    public AuditConfig getAuditConfig()
     {
-        return eventId;
+        return auditConfig;
     }
 
-    public void setEventId(int eventId)
+    public void setAuditConfig(AuditConfig auditConfig)
     {
-        this.eventId = eventId;
+        this.auditConfig = auditConfig;
     }
 }
