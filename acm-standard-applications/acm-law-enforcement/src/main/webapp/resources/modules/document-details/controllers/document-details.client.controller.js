@@ -329,12 +329,21 @@ angular.module('document-details').controller(
 
                         if ($scope.editingMode) {
 
+                            // AFDP-7608, angular $http service always makes asynchronous calls
+                            $scope.data = {
+                                objectId: $scope.ecmFile.fileId,
+                                objectType: ObjectService.ObjectTypes.FILE,
+                                lockType: ObjectService.LockTypes.WRITE
+                            };
+
+                            var data = angular.toJson($scope.data);
+
                             var url = 'api/v1/plugin/' + ObjectService.ObjectTypes.FILE + '/' + $scope.ecmFile.fileId + '/lock?lockType=' + ObjectService.LockTypes.WRITE;
 
-                            window.fetch(url, {
-                                method: "DELETE",
-                                keepAlive: true
-                            });
+                            var xmlhttp = new XMLHttpRequest();
+                            xmlhttp.open("DELETE", url, false); //false - synchronous call
+                            xmlhttp.setRequestHeader("Content-type", "application/json");
+                            xmlhttp.send(data);
                         }
                     });
 
