@@ -187,6 +187,11 @@
                         <value>audio/mp3</value>
                     </list>
                 </entry>
+                <entry key="audio/mpga">
+                    <list>
+                        <value>audio/mp3</value>
+                    </list>
+                </entry>
                 <entry key="audio/x-aac">
                     <list>
                         <value>audio/vnd.dlna.adts</value>
