@@ -107,10 +107,8 @@ public class NotificationGroupEmailSenderService
                 log.info("Trying to send a Request Form email to Notification Group [%s]", notificationGroupName);
 
                 List<EcmFileVersion> fileVersions = new ArrayList<>();
-                for (EcmFile file : requestFiles)
-                {
-                    fileVersions.add(file.getVersions().get(file.getVersions().size() - 1));
-                }
+                fileVersions.add(requestFormFile.getVersions().get(requestFormFile.getVersions().size() - 1));
+
                 Notification notification = new Notification();
                 notification.setTemplateModelName("notificationGroup");
                 notification.setAttachFiles(true);
@@ -119,7 +117,7 @@ public class NotificationGroupEmailSenderService
                 notification.setParentType(caseFile.getObjectType());
                 notification.setParentId(caseId);
                 notification.setParentName(caseFile.getCaseNumber());
-                notification.setParentTitle(caseFile.getTitle());
+                notification.setParentTitle(caseFile.getDetails());
                 notification.setUser(acmUser.getUserId());
                 notification.setEmailAddresses(emailAddresses.stream().collect(Collectors.joining(",")));
                 notificationDao.save(notification);
