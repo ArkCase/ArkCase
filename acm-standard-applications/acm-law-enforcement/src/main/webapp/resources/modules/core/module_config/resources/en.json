@@ -533,13 +533,20 @@
                     "hotel": "Hotel",
                     "overtime": "Overtime",
                     "food": "Food"
+                },
+                "statuses": {
+                    "draft": "Draft",
+                    "inapproval": "In Approval",
+                    "approved": "Approved",
+                    "final": "Final"
                 }
             },
             "timesheet": {
                 "statuses": {
                     "draft": "Draft",
                     "inapproval": "In Approval",
-                    "approved": "Approved"
+                    "approved": "Approved",
+                    "final": "Final"
                 },
                 "other": {
                     "leap": "LEAP",
