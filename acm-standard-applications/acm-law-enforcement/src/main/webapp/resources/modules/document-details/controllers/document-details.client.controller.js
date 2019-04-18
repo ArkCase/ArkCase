@@ -161,7 +161,7 @@ angular.module('document-details').controller(
                                 $log.warn("Browser does not support TextTrackCue");
                             }
                         }
-                    }
+                    };
 
                     $scope.playAt = function(seconds) {
                         var videoElement = angular.element(document.getElementsByTagName("video")[0])[0];
@@ -170,7 +170,7 @@ angular.module('document-details').controller(
                             videoElement.currentTime = seconds;
                             videoElement.play();
                         }
-                    }
+                    };
 
                     /**
                      * Builds the snowbound url based on the parameters passed into the controller state and opens the specified document in
@@ -285,7 +285,7 @@ angular.module('document-details').controller(
 
                     $scope.onPlayerReady = function(API) {
                         $scope.videoAPI = API;
-                    }
+                    };
 
                     $scope.enableEditing = function() {
                         ObjectLockingService.lockObject($scope.ecmFile.fileId, ObjectService.ObjectTypes.FILE, ObjectService.LockTypes.WRITE, true).then(function(lockedFile) {
@@ -322,29 +322,20 @@ angular.module('document-details').controller(
                             MessageService.error(errorMessage.data);
                         });
 
-                    }
+                    };
 
                     // Release editing lock on window unload, if acquired
                     $window.addEventListener('beforeunload', function () {
 
                         if ($scope.editingMode) {
-                            // AFDP-7608, angular $http service always makes asynchronous calls
-                            $scope.data = {
-                                objectId: $scope.ecmFile.fileId,
-                                objectType: ObjectService.ObjectTypes.FILE,
-                                lockType: ObjectService.LockTypes.WRITE
-                            };
 
-                            var data = angular.toJson($scope.data);
-                            
                             var url = 'api/v1/plugin/' + ObjectService.ObjectTypes.FILE + '/' + $scope.ecmFile.fileId + '/lock?lockType=' + ObjectService.LockTypes.WRITE;
-                            
-                            var xmlhttp = new XMLHttpRequest();
-                            xmlhttp.open("DELETE", url, false); //false - synchronous call
-                            xmlhttp.setRequestHeader("Content-type", "application/json");
-                            xmlhttp.send(data);
+
+                            window.fetch(url, {
+                                method: "DELETE",
+                                keepAlive: true
+                            });
                         }
-                        
                     });
 
                     $rootScope.$bus.subscribe("object.changed/FILE/" + $stateParams.id, function () {
