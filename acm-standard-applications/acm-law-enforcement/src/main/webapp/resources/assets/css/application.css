@@ -1847,4 +1847,5 @@ a.primary {
 	position: absolute;
 	left: 592px;
 	margin-top: 35px;
+	z-index: 1001;
 }
