@@ -109,7 +109,8 @@ public class ExecuteSolrQuery
             int maxRows, String sort)
             throws MuleException
     {
-        return CompletableFuture.completedFuture(getResultsByPredefinedQuery(auth, core, solrQuery, firstRow, maxRows, sort, true));
+        return CompletableFuture.completedFuture(
+                getResultsByPredefinedQuery(auth, core, solrQuery, firstRow, maxRows, sort, true, "", true, false, "", false, ""));
     }
 
     /**
