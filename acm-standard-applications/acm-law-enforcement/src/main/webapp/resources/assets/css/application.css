@@ -1841,3 +1841,10 @@ a.primary {
 .btn .btn-secondary .custom-color {
     color: #000000
 }
+
+
+.enableEditing {
+	position: absolute;
+	left: 592px;
+	margin-top: 35px;
+}
