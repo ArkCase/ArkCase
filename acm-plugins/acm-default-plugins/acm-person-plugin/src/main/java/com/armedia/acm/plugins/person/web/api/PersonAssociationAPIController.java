@@ -81,7 +81,7 @@ public class PersonAssociationAPIController
             @RequestParam(value = "sort", required = false, defaultValue = "id asc") String sort) throws AcmObjectNotFoundException
     {
 
-        return personAssociationService.getPersonAssociations(personId, parentType, start, 100000, sort, auth);
+        return personAssociationService.getPersonAssociations(personId, parentType, start, n, sort, auth);
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
