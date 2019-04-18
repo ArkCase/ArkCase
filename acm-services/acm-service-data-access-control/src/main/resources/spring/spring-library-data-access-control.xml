@@ -28,7 +28,7 @@
         <property name="participantsBusinessRule" ref="participantsBusinessRule"/>
         <property name="participantService" ref="acmParticipantService"/>
         <property name="entityParticipantsChangedEventPublisher" ref="entityParticipantsChangedEventPublisher"/>
-        <property name="documentACLEnabled" value="#{dacConfig.enableDocumentACL}"/>
+        <property name="dacConfig" ref="dacConfig"/>
     </bean>
 
     <bean id="participantAccessChecker" class="com.armedia.acm.services.dataaccess.service.ParticipantAccessChecker"/>
@@ -46,7 +46,6 @@
         <property name="groupDao" ref="groupDao"/>
         <property name="userDao" ref="userJpaDao"/>
         <property name="accessControlRuleChecker" ref="accessControlRuleChecker"/>
-        <property name="enableDocumentACL" value="#{dacConfig.enableDocumentACL}"/>
         <property name="acmDataService" ref="acmDataService"/>
         <property name="springContextHolder" ref="acmContextHolder"/>
         <property name="jsonMarshaller" ref="jsonMarshaller"/>
@@ -69,10 +68,9 @@
         <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
         <property name="dataAccessBatchUpdater" ref="acmDataAccessBatchUpdater"/>
         <property name="springContextHolder" ref="acmContextHolder"/>
-        <property name="batchSize" value="#{dacConfig.batchUpdateBatchSize}"/>
-        <property name="batchUpdateBasedOnLastModifiedEnabled" value="#{dacConfig.batchUpdateBasedOnLastModifiedEnabled}"/>
         <property name="lastBatchUpdatePropertyFileLocation" value="${user.home}/.arkcase/acm/dataAccessPolicyLastBatchUpdate.properties"/>
         <property name="propertyFileManager" ref="propertyFileManager"/>
+        <property name="dacConfig" ref="dacConfig"/>
     </bean>
 
     <bean id="rulesConfigurationFile" class="java.io.File">
