@@ -31,6 +31,9 @@
                     <label translate>admin.application.sequenceManagementReset.detailsModal.repeatResetPeriod</label>
                     <input type="number" ng-model="sequenceReset.resetRepeatablePeriod" onkeypress="return event.charCode > 48" min="1">
                 </div>
+                 <div class="alert alert-warning" ng-if="sameDateWarning">
+                     <label translate>admin.application.sequenceManagementReset.detailsModal.sequenceResetScheduledWarning</label>
+                 </div>
             </div>
         </fieldset>
     </div>

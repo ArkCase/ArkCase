@@ -225,6 +225,7 @@
                     "cancelBtn": "Cancel",
                     "deleteBtn": "Delete",
                     "headerText": "You are about to delete group: ",
+                    "controlGroupHeaderWarning": "You are about to delete {{groupName}} group which is a member in the control group {{controlGroupName}}",
                     "bodyText": "Are you sure?"
                 }
             },
@@ -602,6 +603,9 @@
                 "title": "Locale Configuration",
                 "defaultLabel": "Default Locale:"
             },
+            "version.config": {
+                "title": "Application Version"
+            },
             "labels.config": {
                 "title": "Label Configuration",
                 "progressMessage": "Updating labels...Please wait",
@@ -777,7 +781,8 @@
                     "editTitle": "Edit Autoincrement Reset",
                     "resetStartDate": "Reset Start Date",
                     "repeatReset": "Repeat reset",
-                    "repeatResetPeriod": "Repeat reset period (days)"
+                    "repeatResetPeriod": "Repeat reset period (days)",
+                    "sequenceResetScheduledWarning": "Sequence reset scheduled for today"
                 }
             },
             "sequenceRegistry": {

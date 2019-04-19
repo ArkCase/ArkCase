@@ -179,6 +179,14 @@ public class LdapGroupAPIController extends SecureLdapController
         }
     }
 
+    @RequestMapping(value = "/{directoryName}", method = RequestMethod.GET, produces = MediaType.TEXT_PLAIN_VALUE)
+    @ResponseBody
+    public String getControlGroup(@PathVariable("directoryName") String directoryName)
+    {
+        directoryName = new String(Base64.getUrlDecoder().decode(directoryName.getBytes()));
+        return getLdapGroupService().getControlGroup(directoryName);
+    }
+
     public LdapGroupService getLdapGroupService()
     {
         return ldapGroupService;

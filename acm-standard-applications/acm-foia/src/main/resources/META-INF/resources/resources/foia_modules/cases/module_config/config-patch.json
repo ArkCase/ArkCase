@@ -75,7 +75,7 @@
     {
         "op": "replace",
         "path": "/tree/filters/?@.name=='my-assigned-cases'/value",
-        "value": "fq=assignee_s:${user}&fq=-status_s:Released"
+        "value": "fq=assignee_s:${user} AND -status_s:Released"
     },
     {
         "op": "add",

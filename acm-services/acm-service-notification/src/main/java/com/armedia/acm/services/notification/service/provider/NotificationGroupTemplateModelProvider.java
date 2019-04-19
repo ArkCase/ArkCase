@@ -28,26 +28,27 @@ package com.armedia.acm.services.notification.service.provider;
  */
 
 import com.armedia.acm.core.AcmObject;
+import com.armedia.acm.core.provider.TemplateModelProvider;
 import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.data.service.AcmDataService;
 import com.armedia.acm.services.notification.model.Notification;
-import com.armedia.acm.services.notification.service.provider.model.NotificationGroupModel;
+import com.armedia.acm.services.notification.service.provider.model.GenericTemplateModel;
 import com.armedia.acm.services.participants.model.AcmAssignedObject;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 
 import java.util.Objects;
 
-public class NotificationGroupTemplateModelProvider implements TemplateModelProvider
+public class NotificationGroupTemplateModelProvider implements TemplateModelProvider<GenericTemplateModel>
 {
     private AcmDataService dataService;
 
     @Override
-    public Object getModel(Notification notification)
+    public GenericTemplateModel getModel(Object notificationObject)
     {
-        NotificationGroupModel notificationGroupModelData = new NotificationGroupModel();
-
-        notificationGroupModelData.setObjectNumber(notification.getParentName());
-        notificationGroupModelData.setObjectTitle(notification.getParentTitle());
+        GenericTemplateModel genericTemplateModelData = new GenericTemplateModel();
+        Notification notification = (Notification) notificationObject;
+        genericTemplateModelData.setObjectNumber(notification.getParentId().toString());
+        genericTemplateModelData.setObjectTitle(notification.getParentTitle());
 
         AcmAbstractDao<AcmObject> dao = getDataService().getDaoByObjectType(notification.getParentType());
         AcmObject acmObject = dao.find(notification.getParentId());
@@ -58,10 +59,16 @@ public class NotificationGroupTemplateModelProvider implements TemplateModelProv
             AcmParticipant assignee = acmAssignedObject.getParticipants().stream().filter(acmParticipant -> acmParticipant.getParticipantType()
                     .equals("assignee")).findFirst().orElse(null);
 
-            notificationGroupModelData.setAssignee(Objects.nonNull(assignee) ? assignee.getParticipantLdapId() : "");
+            genericTemplateModelData.setOtherObjectValue(Objects.nonNull(assignee) ? assignee.getParticipantLdapId() : "");
         }
 
-        return notificationGroupModelData;
+        return genericTemplateModelData;
+    }
+
+    @Override
+    public Class<GenericTemplateModel> getType()
+    {
+        return GenericTemplateModel.class;
     }
 
     public AcmDataService getDataService()

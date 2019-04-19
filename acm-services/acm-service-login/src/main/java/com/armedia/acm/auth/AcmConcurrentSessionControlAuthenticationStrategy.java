@@ -47,8 +47,6 @@ public class AcmConcurrentSessionControlAuthenticationStrategy extends Concurren
 
     private final AuthenticationTokenService authenticationTokenService;
 
-    private SessionControlConfig sessionControlConfig;
-
     /**
      * @param sessionRegistry
      *            the session registry which should be updated when the authenticated session is changed.
@@ -136,25 +134,4 @@ public class AcmConcurrentSessionControlAuthenticationStrategy extends Concurren
         allowableSessionsExceeded(sessions, allowedSessions, sessionRegistry);
     }
 
-    public SessionControlConfig getSessionControlConfig()
-    {
-        return sessionControlConfig;
-    }
-
-    public void setSessionControlConfig(SessionControlConfig sessionControlConfig)
-    {
-        this.sessionControlConfig = sessionControlConfig;
-    }
-
-    @Override
-    public void setMaximumSessions(int maximumSessions)
-    {
-        super.setMaximumSessions(sessionControlConfig.getMaximumSessions());
-    }
-
-    @Override
-    public void setExceptionIfMaximumExceeded(boolean exceptionIfMaximumExceeded)
-    {
-        super.setExceptionIfMaximumExceeded(sessionControlConfig.getExceptionIfMaximumExceeded());
-    }
 }

@@ -1456,6 +1456,13 @@
                 "components": []
             },
             {
+                "type": "p/application/applicationVersion",
+                "label": "admin.application.version.config.title",
+                "components": [
+                    "application.version.config"
+                ]
+            },
+            {
                 "type": "p/application/labels",
                 "label": "admin.application.labels.config.title",
                 "components": [

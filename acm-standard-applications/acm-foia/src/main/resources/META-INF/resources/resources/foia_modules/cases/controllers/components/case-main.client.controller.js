@@ -2,8 +2,8 @@
 
 angular.module('cases').controller(
     'Cases.MainController',
-    ['$scope', '$state', '$stateParams', '$translate', '$rootScope', 'Case.InfoService', 'Helper.ObjectBrowserService', 'ConfigService', 'UtilService', 'Util.DateService', 'Object.LookupService', 'LookupService', 'DueDate.Service', 'Admin.HolidayService', 'Admin.FoiaConfigService',
-        function ($scope, $state, $stateParams, $translate, $rootScope, CaseInfoService, HelperObjectBrowserService, ConfigService, Util, UtilDateService, ObjectLookupService, LookupService, DueDateService, AdminHolidayService, AdminFoiaConfigService) {
+    ['$scope', '$state', '$stateParams', '$translate', '$rootScope', 'Case.InfoService', 'Helper.ObjectBrowserService', 'ConfigService', 'UtilService', 'Util.DateService', 'Object.LookupService', 'LookupService', 'DueDate.Service', 'Admin.HolidayService', 'Admin.FoiaConfigService', 'Admin.ObjectTitleConfigurationService',
+        function ($scope, $state, $stateParams, $translate, $rootScope, CaseInfoService, HelperObjectBrowserService, ConfigService, Util, UtilDateService, ObjectLookupService, LookupService, DueDateService, AdminHolidayService, AdminFoiaConfigService, AdminObjectTitleConfigurationService) {
 
             new HelperObjectBrowserService.Component({
                 scope: $scope,
@@ -37,6 +37,11 @@ angular.module('cases').controller(
                         $scope.objectInfo.payFee = $scope.payFees[0].key;
                     }
 
+                });
+                AdminObjectTitleConfigurationService.getObjectTitleConfiguration().then(function (configTitle){
+                    if(!Util.isEmpty(configTitle)) {
+                        $scope.enableTitle = configTitle.data.CASE_FILE.enableTitleField;
+                    }
                 });
 
                 ObjectLookupService.getDeliveryMethodOfResponses().then(function (deliveryMethodOfResponses) {
@@ -142,13 +147,11 @@ angular.module('cases').controller(
                     $scope.objectInfo.dueDate = $scope.originalDueDate;
                     $rootScope.$broadcast('dueDate-changed', $scope.originalDueDate);
                 } else {
-                    if (!$scope.extendedDueDate) {
                         if ($scope.includeWeekends) {
                             $scope.extendedDueDate = DueDateService.dueDateWithWeekends($scope.originalDueDate, $scope.extensionWorkingDays, $scope.holidays);
                         } else {
                             $scope.extendedDueDate = DueDateService.dueDateWorkingDays($scope.originalDueDate, $scope.extensionWorkingDays, $scope.holidays);
                         }
-                    }
                     $scope.objectInfo.dueDate = $scope.extendedDueDate;
                     $rootScope.$broadcast('dueDate-changed', $scope.extendedDueDate);
                 }

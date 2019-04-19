@@ -22,15 +22,13 @@
     </task:scheduled-tasks>
 
     <bean id="auditSyslogLogger" class="com.armedia.acm.audit.service.systemlogger.SyslogLogger">
-        <property name="protocol" value="#{auditConfig.systemLogSysLogProtocol}"/>
-        <property name="host" value="#{auditConfig.systemLogSysLogHost}"/>
-        <property name="port" value="#{auditConfig.systemLogSysLogPort}"/>
+        <property name="auditConfig" ref="auditConfig"/>
         <property name="acmApplication" ref="acmApplication"/>
     </bean>
 
     <bean id="auditWindowsEventLogger" class="com.armedia.acm.audit.service.systemlogger.WindowsEventLogger">
         <property name="acmApplication" ref="acmApplication"/>
-        <property name="eventId" value="#{auditConfig.systemLogWindowsEventLogEventId}"/>
+        <property name="auditConfig" ref="auditConfig"/>
     </bean>
 
     <bean id="auditSystemLoggerFactory" class="com.armedia.acm.audit.service.systemlogger.SystemLoggerFactory">
