@@ -2,10 +2,8 @@
 
 angular.module('admin').controller('Admin.CostsheetController',
         [ '$scope', 'Admin.CostsheetConfigurationService', 'MessageService', 'UtilService', function($scope, CostsheetConfigurationService, MessageService, Util) {
-
-            $scope.costsheetProperties = {
-                "cost.plugin.useApprovalWorkflow": "true"
-            };
+            debugger
+            $scope.costsheetProperties;
 
             CostsheetConfigurationService.getProperties().then(function(response) {
                 if (!Util.isEmpty(response.data)) {
