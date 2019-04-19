@@ -25,9 +25,8 @@ angular.module('time-tracking').controller(
                 'Helper.UiGridService',
                 'Admin.TimesheetConfigurationService',
                 'Mentions.Service',
-            'Admin.CostsheetConfigurationService',
                 function($scope, $q, $stateParams, $translate, $modalInstance, TimeTrackingInfoService, ObjectLookupService, MessageService, $timeout, Util, UtilDateService, $modal, ConfigService, ObjectService, modalParams, PersonInfoService, ObjectModelService, ObjectParticipantService,
-                         UserInfoService, HelperUiGridService, TimesheetConfigurationService, MentionsService, CostsheetConfigurationService) {
+                         UserInfoService, HelperUiGridService, TimesheetConfigurationService, MentionsService) {
 
                     $scope.modalParams = modalParams;
                     $scope.loading = false;
@@ -36,13 +35,6 @@ angular.module('time-tracking').controller(
                     $scope.timesheetProperties = {};
                     var participantTypeApprover = 'approver';
                     var participantTypeOwningGroup = "owning group";
-
-
-                    CostsheetConfigurationService.getProperties().then(function (response) {
-                        if (!Util.isEmpty(response.data)) {
-                            $scope.timesheetProperties = response.data;
-                        }
-                    });
 
                     ConfigService.getModuleConfig("time-tracking").then(function(moduleConfig) {
                         $scope.config = moduleConfig;
@@ -114,6 +106,26 @@ angular.module('time-tracking').controller(
                     });
                     ObjectLookupService.getTimesheetStatuses().then(function(timesheetStatuses) {
                         $scope.timesheetStatuses = timesheetStatuses;
+                        TimesheetConfigurationService.getProperties().then(function (response) {
+                            if (!Util.isEmpty(response.data)) {
+                                $scope.timesheetProperties = response.data;
+                            }
+
+                            if (!$scope.timesheetProperties['time.plugin.useApprovalWorkflow']) {
+                                for (var i = $scope.timesheetStatuses.length - 1; i >= 0; i--) {
+                                    if ($scope.timesheetStatuses[i].key !== "DRAFT" && $scope.timesheetStatuses[i].key !== "FINAL") {
+                                        $scope.timesheetStatuses.splice(i, 1);
+                                    }
+                                }
+                            }
+                            else {
+                                for (var i = $scope.timesheetStatuses.length - 1; i >= 0; i--) {
+                                    if ($scope.timesheetStatuses[i].key == "FINAL") {
+                                        $scope.timesheetStatuses.splice(i, 1);
+                                    }
+                                }
+                            }
+                        });
                     });
 
                     // ---------------------   mention   ---------------------------------
@@ -586,6 +598,7 @@ angular.module('time-tracking').controller(
                     //-----------------------------------------------------------------------------------------------
 
                     $scope.save = function(submissionName) {
+                        debugger
                         $q.when(timesheetConfig).then(function(response) {
                             $scope.timesheetConfiguration = response.data;
 
@@ -593,6 +606,9 @@ angular.module('time-tracking').controller(
                                 $scope.loading = true;
                                 $scope.loadingIcon = "fa fa-circle-o-notch fa-spin";
                                 fillTimes($scope.timesheet);
+                                if ($scope.timesheet.status === "FINAL") {
+                                    submissionName = "SaveFinal";
+                                }
                                 TimeTrackingInfoService.saveNewTimesheetInfo(clearNotFilledElements(_.cloneDeep($scope.timesheet)), submissionName).then(function(objectInfo) {
                                     var objectTypeString = $translate.instant('common.objectTypes.' + ObjectService.ObjectTypes.TIMESHEET);
                                     var timesheetUpdatedMessage = $translate.instant('{{objectType}} {{timesheetTitle}} was created.', {
@@ -624,6 +640,9 @@ angular.module('time-tracking').controller(
                                 checkForChanges($scope.objectInfo);
                                 if (TimeTrackingInfoService.validateTimesheet($scope.objectInfo)) {
                                     var objectInfo = Util.omitNg($scope.objectInfo);
+                                    if ($scope.timesheet.status === "FINAL") {
+                                        submissionName = "SaveFinal";
+                                    }
                                     promiseSaveInfo = TimeTrackingInfoService.saveTimesheetInfo(objectInfo, submissionName);
                                     promiseSaveInfo.then(function(timesheetInfo) {
                                         $scope.$emit("report-object-updated", timesheetInfo);
