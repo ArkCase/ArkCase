@@ -127,6 +127,7 @@
         <cdi-api.version>1.0</cdi-api.version>
         <mockito.core.version>2.20.0</mockito.core.version>
         <powermock.version2>2.0.0</powermock.version2>
+        <jaudiotagger.version>2.0.3</jaudiotagger.version>
     </properties>
     <organization>
         <name>ArkCase LLC</name>

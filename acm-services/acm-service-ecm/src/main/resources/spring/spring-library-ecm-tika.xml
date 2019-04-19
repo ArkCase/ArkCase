@@ -23,6 +23,7 @@
             <map>
                 <entry key="audio/vnd.wave" value="audio/wav"/>
                 <entry key="audio/mpeg" value="audio/mp3"/>
+                <entry key="audio/x-flac" value="audio/flac"/>
             </map>
         </property>
         <property name="nameExtensionFixes">

@@ -39,6 +39,11 @@ public interface TranscribeConstants
     String MEDIA_TYPE_VIDEO_RECOGNITION_KEY = "video/";
     String MEDIA_TYPE_AUDIO_RECOGNITION_KEY = "audio/";
 
+    String EXTENSION_MP3 = ".mp3";
+    String EXTENSION_MP4 = ".mp4";
+    String EXTENSION_WAV = ".wav";
+    String EXTENSION_FLAC = ".flac";
+
     String TEMP_FILE_PREFIX = "transcribe-";
     String TEMP_FILE_SUFFIX = ".docx";
     String WORD_MIME_TYPE = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
