@@ -49,6 +49,8 @@ import org.apache.tika.mime.MimeType;
 import org.apache.tika.parser.AutoDetectParser;
 import org.apache.tika.parser.ParseContext;
 import org.apache.tika.parser.Parser;
+import org.jaudiotagger.audio.AudioFile;
+import org.jaudiotagger.audio.AudioFileIO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
@@ -224,7 +226,6 @@ public class EcmTikaFileServiceImpl implements EcmTikaFileService
 
         try (InputStream inputStream = new FileInputStream(file))
         {
-
             Parser parser = new AutoDetectParser();
             ParseContext parseContext = new ParseContext();
 
@@ -313,8 +314,33 @@ public class EcmTikaFileServiceImpl implements EcmTikaFileService
             enrichGpsFields(fileMetadata, gpsPoint);
         }
 
-        return fileMetadata;
+        // Tika returns milliseconds instead of seconds, so we need to convert to seconds before we save this
+        // information in DB.
+        if (".mp3".equals(extension))
+        {
+            Double duration = Double.parseDouble(fileMetadata.get("xmpDM:duration").toString());
+            fileMetadata.replace("xmpDM:duration", duration / 1000);
+        }
 
+        // Tika do not return duration for .wav files. So we use "jaudiotagger" to get this information.
+        if (".wav".equals(extension))
+        {
+            AudioFile f = null;
+            try
+            {
+                f = AudioFileIO.read(file);
+
+                int duration = f.getAudioHeader().getTrackLength();
+
+                fileMetadata.put("xmpDM:duration", duration);
+            }
+            catch (Exception e)
+            {
+                logger.warn("Could not extract duration in seconds for file: [{}], Reason: [{}]", file.getName(), e.getMessage());
+            }
+        }
+
+        return fileMetadata;
     }
 
     private String fixContentType(String contentType)
