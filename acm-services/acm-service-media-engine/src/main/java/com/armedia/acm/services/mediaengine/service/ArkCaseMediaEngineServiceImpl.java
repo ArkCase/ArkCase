@@ -30,6 +30,7 @@ package com.armedia.acm.services.mediaengine.service;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.objectonverter.ArkCaseBeanUtils;
 import com.armedia.acm.plugins.ecm.dao.EcmFileVersionDao;
+import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.ecm.service.EcmFileTransaction;
@@ -48,6 +49,7 @@ import com.armedia.acm.services.mediaengine.model.MediaEngineActionType;
 import com.armedia.acm.services.mediaengine.model.MediaEngineBusinessProcessModel;
 import com.armedia.acm.services.mediaengine.model.MediaEngineBusinessProcessVariableKey;
 import com.armedia.acm.services.mediaengine.model.MediaEngineConfiguration;
+import com.armedia.acm.services.mediaengine.model.MediaEngineConstants;
 import com.armedia.acm.services.mediaengine.model.MediaEngineStatusType;
 import com.armedia.acm.services.mediaengine.model.MediaEngineType;
 import com.armedia.acm.services.mediaengine.pipeline.MediaEnginePipelineContext;
@@ -383,6 +385,11 @@ public abstract class ArkCaseMediaEngineServiceImpl<T extends MediaEngine>
                 getActivitiRuntimeService().setVariable(processInstance.getId(), actionKey, action);
 
                 mediaEngine.setStatus(MediaEngineStatusType.FAILED.toString());
+
+                getObjectLockingManager().releaseObjectLock(mediaEngine.getMediaEcmFileVersion().getFile().getId(),
+                        EcmFileConstants.OBJECT_FILE_TYPE, MediaEngineConstants.LOCK_TYPE_WRITE,
+                        true,
+                        getSystemUser(), null);
 
                 return mediaEngine;
             }

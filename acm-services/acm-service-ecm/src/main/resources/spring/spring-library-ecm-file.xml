@@ -217,6 +217,16 @@
                         <value>audio/ogg</value>
                     </list>
                 </entry>
+                <entry key="audio/vorbis">
+                    <list>
+                        <value>audio/ogg</value>
+                    </list>
+                </entry>
+                <entry key="video/theora">
+                    <list>
+                        <value>video/ogg</value>
+                    </list>
+                </entry>
                 <entry key="audio/mp4">
                     <list>
                         <value>audio/x-m4a</value>
