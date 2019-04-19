@@ -47,7 +47,7 @@ public class NotificationGroupTemplateModelProvider implements TemplateModelProv
     {
         GenericTemplateModel genericTemplateModelData = new GenericTemplateModel();
         Notification notification = (Notification) notificationObject;
-        genericTemplateModelData.setObjectNumber(notification.getParentName());
+        genericTemplateModelData.setObjectNumber(notification.getParentId().toString());
         genericTemplateModelData.setObjectTitle(notification.getParentTitle());
 
         AcmAbstractDao<AcmObject> dao = getDataService().getDaoByObjectType(notification.getParentType());
