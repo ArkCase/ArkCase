@@ -146,6 +146,7 @@
             <artifactId>jaudiotagger</artifactId>
             <version>${jaudiotagger.version}</version>
         </dependency>
+        
 
         <!-- spring -->
         <dependency>
