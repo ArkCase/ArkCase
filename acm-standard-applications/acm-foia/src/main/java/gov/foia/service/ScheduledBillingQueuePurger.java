@@ -69,9 +69,9 @@ public class ScheduledBillingQueuePurger extends AbstractScheduledQueuePurger
     }
 
     @Override
-    protected Boolean getPurgeRequestWhenInHoldEnabled()
+    protected Boolean getPurgeRequestEnabled()
     {
-        return getFoiaConfigurationService().getFoiaConfig().getPurgeRequestEnabled();
+        return getFoiaConfigurationService().getFoiaConfig().getMoveToBillingQueueEnabled();
     }
 
     @Override

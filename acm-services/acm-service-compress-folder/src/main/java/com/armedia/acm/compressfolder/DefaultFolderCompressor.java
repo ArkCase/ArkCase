@@ -32,6 +32,7 @@ import static com.armedia.acm.plugins.ecm.model.EcmFileConstants.OBJECT_FOLDER_T
 import static org.apache.commons.io.IOUtils.copy;
 
 import com.armedia.acm.compressfolder.model.CompressNode;
+import com.armedia.acm.compressfolder.model.CompressorServiceConfig;
 import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
@@ -114,13 +115,7 @@ public class DefaultFolderCompressor implements FolderCompressor
      */
     private EcmFileService fileService;
 
-    /**
-     * A formatting string that is used to generate the output file name. It takes 3 parameters, <code>tmpDir</code>,
-     * <code>folderId</code> and <code>folderName</code>, for example <code>
-     *      %1$sacm-%2$d-%3$s.zip
-     * </code>
-     */
-    private String compressedFileNameFormat;
+    private CompressorServiceConfig compressorServiceConfig;
 
     /**
      * A formatting string that is used to generate the output file name. It takes 3 parameters, <code>tmpDir</code>,
@@ -511,7 +506,7 @@ public class DefaultFolderCompressor implements FolderCompressor
         String tmpDir = System.getProperty("java.io.tmpdir");
         String pathSeparator = System.getProperty("file.separator");
 
-        String filename = String.format(compressedFileNameFormat,
+        String filename = String.format(compressorServiceConfig.getFileNameFormat(),
                 tmpDir.endsWith(pathSeparator) ? tmpDir : concatStrings(tmpDir, pathSeparator), folder.getId(), folder.getName());
         return filename;
     }
@@ -564,11 +559,6 @@ public class DefaultFolderCompressor implements FolderCompressor
         this.fileService = fileService;
     }
 
-    public void setCompressedFileNameFormat(String compressedFileNameFormat)
-    {
-        this.compressedFileNameFormat = compressedFileNameFormat;
-    }
-
     public void setMaxSize(long maxSize)
     {
         this.maxSize = maxSize;
@@ -617,5 +607,15 @@ public class DefaultFolderCompressor implements FolderCompressor
     public void setAuditPropertyEntityAdapter(AuditPropertyEntityAdapter auditPropertyEntityAdapter)
     {
         this.auditPropertyEntityAdapter = auditPropertyEntityAdapter;
+    }
+
+    public CompressorServiceConfig getCompressorServiceConfig()
+    {
+        return compressorServiceConfig;
+    }
+
+    public void setCompressorServiceConfig(CompressorServiceConfig compressorServiceConfig)
+    {
+        this.compressorServiceConfig = compressorServiceConfig;
     }
 }

@@ -63,21 +63,28 @@
                 <div class="row">
                     <div class="col-lg-4"></div>
                     <div class="col-lg-4">
-                        <label translate>admin.application.foia.config.labels.moveToBillingQueueEnabled</label>
+                        <label>
+                            <span translate>
+                                admin.application.foia.config.labels.moveToBillingQueueEnabled
+                            </span>
+                        </label>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-lg-4">
                         <div class="checkbox">
                             <label>
+                                <input type="checkbox" ng-model="configDataModel.moveToBillingQueueEnabled"
+                                        ng-change="configDataModel.maxDaysInBillingQueue= !configDataModel.moveToBillingQueueEnabled ? configDataModel.maxDaysInBillingQueue : configDataModel.maxDaysInBillingQueue">
                                 <span translate>
-                                    admin.application.foia.config.labels.moveRequestToBillingQueue
-                                </span>
+                                admin.application.foia.config.labels.moveRequestToBillingQueue
+                            </span>
                             </label>
                         </div>
                     </div>
                     <div class="col-lg-4">
-                        <input type="number" min="1" ng-model="configDataModel.maxDaysInBillingQueue" class="form-control">
+                        <input type="number" min="1" ng-model="configDataModel.maxDaysInBillingQueue"
+                                ng-disabled="!configDataModel.moveToBillingQueueEnabled" class="form-control">
                     </div>
                 </div>
                 <div class="row">
@@ -132,4 +139,5 @@
         </div>
     </ng-form>
 </div>
+
 <div ng-include="'modules/admin/views/components/time-to-complete.client.view.html'"></div>

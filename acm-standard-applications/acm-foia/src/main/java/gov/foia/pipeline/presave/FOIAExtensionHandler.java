@@ -39,6 +39,7 @@ import org.slf4j.LoggerFactory;
 import gov.foia.dao.FOIARequestDao;
 import gov.foia.model.FOIAConstants;
 import gov.foia.model.FOIARequest;
+import gov.foia.model.FoiaConfig;
 
 public class FOIAExtensionHandler implements PipelineHandler<FOIARequest, CaseFilePipelineContext>
 {
@@ -47,15 +48,14 @@ public class FOIAExtensionHandler implements PipelineHandler<FOIARequest, CaseFi
     private FOIARequestDao foiaRequestDao;
     private HolidayConfigurationService holidayConfigurationService;
     private ArkPermissionEvaluator arkPermissionEvaluator;
-    private int extensionWorkingDays;
-    private String requestExtensionWorkingDaysEnabled;
+    private FoiaConfig foiaConfig;
 
     @Override
     public void execute(FOIARequest entity, CaseFilePipelineContext pipelineContext) throws PipelineProcessException
     {
         log.debug("FOIARequest extension pre save handler called for RequestId={}", entity.getId());
 
-        if (Boolean.parseBoolean(requestExtensionWorkingDaysEnabled))
+        if (foiaConfig.getRequestExtensionWorkingDaysEnabled())
         {
             if (entity.getId() != null)
             {
@@ -76,8 +76,8 @@ public class FOIAExtensionHandler implements PipelineHandler<FOIARequest, CaseFi
                                         + "} is not allowed to extend request due date!");
                     }
 
-                    entity.setDueDate(
-                            getHolidayConfigurationService().addWorkingDaysToDate(originalRequest.getDueDate(), extensionWorkingDays));
+                    entity.setDueDate(getHolidayConfigurationService().addWorkingDaysToDate(originalRequest.getDueDate(),
+                            foiaConfig.getRequestExtensionWorkingDays()));
 
                     // we set this property, so we can send a correspondence email to the requester in the postsave
                     // FOIAExtensionEmailHandler
@@ -115,26 +115,6 @@ public class FOIAExtensionHandler implements PipelineHandler<FOIARequest, CaseFi
         this.holidayConfigurationService = holidayConfigurationService;
     }
 
-    public int getExtensionWorkingDays()
-    {
-        return extensionWorkingDays;
-    }
-
-    public void setExtensionWorkingDays(int extensionWorkingDays)
-    {
-        this.extensionWorkingDays = extensionWorkingDays;
-    }
-
-    public String getRequestExtensionWorkingDaysEnabled()
-    {
-        return requestExtensionWorkingDaysEnabled;
-    }
-
-    public void setRequestExtensionWorkingDaysEnabled(String requestExtensionWorkingDaysEnabled)
-    {
-        this.requestExtensionWorkingDaysEnabled = requestExtensionWorkingDaysEnabled;
-    }
-
     public ArkPermissionEvaluator getArkPermissionEvaluator()
     {
         return arkPermissionEvaluator;
@@ -143,5 +123,15 @@ public class FOIAExtensionHandler implements PipelineHandler<FOIARequest, CaseFi
     public void setArkPermissionEvaluator(ArkPermissionEvaluator arkPermissionEvaluator)
     {
         this.arkPermissionEvaluator = arkPermissionEvaluator;
+    }
+
+    public FoiaConfig getFoiaConfig()
+    {
+        return foiaConfig;
+    }
+
+    public void setFoiaConfig(FoiaConfig foiaConfig)
+    {
+        this.foiaConfig = foiaConfig;
     }
 }

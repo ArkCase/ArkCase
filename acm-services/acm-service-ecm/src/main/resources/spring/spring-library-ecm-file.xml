@@ -153,7 +153,7 @@
         <property name="ecmFileUploadPipelineManager" ref="ecmFileUploadPipelineManager"/>
         <property name="ecmFileUpdatePipelineManager" ref="ecmFileUpdatePipelineManager"/>
         <property name="cmisConfigUtils" ref="cmisConfigUtils"/>
-        <property name="ocrEnabled" value="#{ecmFileConfig.snowboundEnableOcr}"/>
+        <property name="ecmFileConfig" ref="ecmFileConfig"/>
         <property name="mimeTypesByTika">
             <map>
                 <entry key="text/plain">
@@ -197,6 +197,11 @@
                         <value>audio/mp3</value>
                     </list>
                 </entry>
+                <entry key="audio/mpga">
+                    <list>
+                        <value>audio/mp3</value>
+                    </list>
+                </entry>
                 <entry key="audio/x-aac">
                     <list>
                         <value>audio/vnd.dlna.adts</value>
@@ -220,6 +225,16 @@
                 <entry key="audio/x-oggflac">
                     <list>
                         <value>audio/ogg</value>
+                    </list>
+                </entry>
+                <entry key="audio/vorbis">
+                    <list>
+                        <value>audio/ogg</value>
+                    </list>
+                </entry>
+                <entry key="video/theora">
+                    <list>
+                        <value>video/ogg</value>
                     </list>
                 </entry>
                 <entry key="audio/mp4">
@@ -324,11 +339,12 @@
 
     <bean id="ecmFileToSolrTrasnformer" class="com.armedia.acm.plugins.ecm.service.EcmFileToSolrTransformer">
         <property name="ecmFileDao" ref="ecmFileDao"/>
-        <property name="enableDocumentACL" value="#{dacConfig.enableDocumentACL}"/>
-        <property name="enableContentFileIndexing" value="#{solrConfig.enableContentFileIndexing}"/>
+        <property name="dacConfig" ref="dacConfig"/>
+        <property name="solrConfig" ref="solrConfig"/>
         <property name="userDao" ref="userJpaDao"/>
         <property name="searchAccessControlFields" ref="searchAccessControlFields"/>
         <property name="acmDataService" ref="acmDataService"/>
+
     </bean>
 
     <bean id="acmContainerToSolrTransformer" class="com.armedia.acm.plugins.ecm.service.AcmContainerToSolrTransformer">
@@ -344,7 +360,6 @@
         <property name="ecmFileService" ref="ecmFileService"/>
         <property name="objectConverter" ref="objectConverter"/>
         <property name="cmisConfigUtils" ref="cmisConfigUtils"/>
-        <property name="solrContentFileHandler" value="#{solrConfig.contentFileHandler}"/>
         <property name="solrRestClient" ref="solrRestClient"/>
     </bean>
 
@@ -450,12 +465,13 @@
         <property name="searchResults" ref="searchResults"/>
         <property name="solrQuery" ref="executeSolrQuery"/>
         <property name="folderService" ref="acmFolderService"/>
+        <property name="fileEventPublisher" ref="fileEventPublisher"/>
     </bean>
 
     <bean id="fileAclSolrUpdateHelper" class="com.armedia.acm.plugins.ecm.service.FileAclSolrUpdateHelper">
         <property name="ecmFileDao" ref="ecmFileDao"/>
-        <property name="enableDocumentACL" value="#{dacConfig.enableDocumentACL}"/>
         <property name="searchAccessControlFields" ref="searchAccessControlFields"/>
+        <property name="dacConfig" ref="dacConfig"/>
     </bean>
 
     <bean id="ecmFileConfig" class="com.armedia.acm.plugins.ecm.model.EcmFileConfig" scope="refresh">

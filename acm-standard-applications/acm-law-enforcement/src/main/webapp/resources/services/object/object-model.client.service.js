@@ -174,6 +174,22 @@ angular.module('services').factory('Object.ModelService', [ '$q', '$resource', '
                 //objectInfo.participants.push(participant);
             }
         }
+        ,
+        setCollaboratorGroup: function(objectInfo, group) {
+            if (Util.isArray(objectInfo.participants)) {
+                var found = _.find(objectInfo.participants, {
+                    participantType: "collaborator group"
+                });
+                if (found) {
+                    found.participantLdapId = group;
+                } else {
+                    objectInfo.participants.push({
+                        participantType: "collaborator group",
+                        participantLdapId: group
+                    });
+                }
+            }
+        }
 
         /**
          * @ngdoc method
