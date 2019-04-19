@@ -258,6 +258,7 @@ angular.module('cost-tracking').controller(
                                 $scope.filter = params.filter;
                                 $scope.config = params.config;
                                 $scope.secondGrid = params.secondGrid;
+                                $scope.extraFilter = params.extraFilter;
                             } ],
                             animation: true,
                             size: 'lg',
