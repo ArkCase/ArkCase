@@ -487,8 +487,7 @@ public class ArkCaseTranscribeServiceImpl extends ArkCaseMediaEngineServiceImpl<
 
         boolean allow = ecmFileVersion != null &&
                 ecmFileVersion.getVersionMimeType() != null &&
-                (ecmFileVersion.getVersionMimeType().startsWith(TranscribeConstants.MEDIA_TYPE_AUDIO_RECOGNITION_KEY) ||
-                        ecmFileVersion.getVersionMimeType().startsWith(TranscribeConstants.MEDIA_TYPE_VIDEO_RECOGNITION_KEY));
+                isSupportedMediaType(ecmFileVersion.getVersionFileNameExtension());
 
         if (!allow)
         {
@@ -496,6 +495,14 @@ public class ArkCaseTranscribeServiceImpl extends ArkCaseMediaEngineServiceImpl<
         }
 
         return allow;
+    }
+
+    public boolean isSupportedMediaType(String extension)
+    {
+        return extension.equals(TranscribeConstants.EXTENSION_MP3) ||
+                extension.equals(TranscribeConstants.EXTENSION_MP4) ||
+                extension.equals(TranscribeConstants.EXTENSION_WAV) ||
+                extension.equals(TranscribeConstants.EXTENSION_FLAC);
     }
 
     @Override
