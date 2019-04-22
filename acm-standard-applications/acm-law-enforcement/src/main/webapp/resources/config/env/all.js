@@ -51,7 +51,7 @@ module.exports = {
                     'node_modules/@bower_components/fancytree/dist/src/jquery.fancytree.dnd.js', 'node_modules/@bower_components/fancytree/dist/src/jquery.fancytree.filter.js',
                     'node_modules/@bower_components/ng-file-upload/ng-file-upload.min.js', 'node_modules/@bower_components/ng-file-upload-shim/ng-file-upload-shim.min.js',
                     'node_modules/@bower_components/ng-tags-input/ng-tags-input.min.js', 'node_modules/@bower_components/summernote/dist/summernote.min.js',
-                    'node_modules/@bower_components/ui-contextmenu/jquery.ui-contextmenu.min.js', 'node_modules/@bower_components/bootbox/bootbox.js', 'node_modules/@bower_components/ngBootbox/ngBootbox.js', // Don't use minified version here. It is broken.
+                    'node_modules/@bower_components/ui-contextmenu/jquery.ui-contextmenu.min.js', 'node_modules/bootbox/bootbox.js', 'node_modules/@bower_components/ngBootbox/ngBootbox.js', // Don't use minified version here. It is broken.
                     'node_modules/@bower_components/handsontable/dist/handsontable.full.min.js', 'node_modules/@bower_components/ngHandsontable/dist/ngHandsontable.min.js',
                     'node_modules/@bower_components/ace-builds/src-min-noconflict/ace.js', 'node_modules/@bower_components/angular-ui-ace/ui-ace.min.js',
                     'node_modules/@bower_components/fullcalendar/dist/fullcalendar.min.js', 'node_modules/@bower_components/fullcalendar/dist/gcal.js',
