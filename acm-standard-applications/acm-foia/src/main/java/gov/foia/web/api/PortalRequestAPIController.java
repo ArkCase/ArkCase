@@ -36,6 +36,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -82,6 +83,12 @@ public class PortalRequestAPIController
     public PortalFOIARequest checkRequestStatus(PortalFOIARequest portalFOIARequest) throws JSONException
     {
         return getPortalRequestService().checkRequestStatus(portalFOIARequest);
+    }
+
+    @RequestMapping(value = "/external/requestDownloadTriggered/{requestId}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    public void requestDownloadTriggered(@PathVariable("requestId") Long requestId)
+    {
+        getPortalRequestService().sendRequestDownloadedEmailToOfficersGroup(requestId);
     }
 
     /**
