@@ -326,11 +326,14 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
                         detectedMetadata, ecmUniqueFilename);
 
                 boolean searchablePDF = false;
+                log.debug("SNOWBOUND ENABLED OCR = [{}]", ecmFileConfig.getSnowboundEnableOcr());
                 if (ecmFileConfig.getSnowboundEnableOcr())
                 {
                     searchablePDF = folderAndFilesUtils.isSearchablePDF(tempFileContents, finalMimeType);
+                    log.debug("SearchablePDF = [{}]", searchablePDF);
                 }
                 pipelineContext.setSearchablePDF(searchablePDF);
+
 
                 String fileName = getFolderAndFilesUtils().getBaseFileName(metadata.getFileName(), finalExtension);
                 metadata.setFileName(fileName);

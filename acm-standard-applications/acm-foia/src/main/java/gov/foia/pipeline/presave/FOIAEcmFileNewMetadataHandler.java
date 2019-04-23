@@ -87,6 +87,7 @@ public class FOIAEcmFileNewMetadataHandler extends EcmFileNewMetadataHandler
             version.setReviewStatus(new String());
             version.setRedactionStatus(new String());
             version.setSearchablePDF(pipelineContext.isSearchablePDF());
+            log.debug("SearchablePDF = [{}]", pipelineContext.isSearchablePDF());
 
             // file metadata
             if (pipelineContext.getDetectedFileMetadata() != null)
