@@ -67,7 +67,7 @@ public class AcmCalendarManagementAPIController
     @ResponseBody
     public CalendarConfigurationsByObjectType getConfiguration() throws CalendarConfigurationException
     {
-        return calendarService.readConfiguration(false);
+        return calendarService.readConfiguration(true);
     }
 
     @RequestMapping(method = RequestMethod.PUT)
