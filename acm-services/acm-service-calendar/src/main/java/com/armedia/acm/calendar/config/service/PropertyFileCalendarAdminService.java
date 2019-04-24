@@ -84,10 +84,21 @@ public class PropertyFileCalendarAdminService implements CalendarAdminService, A
                 .entrySet().stream()
                 .map(entry -> {
                     CalendarConfiguration configuration = entry.getValue();
-                    if (!includePassword)
-                    {
+                    if (!includePassword) {
                         configuration.setPassword("");
                     }
+
+                    String password = configuration.getPassword();
+                    try
+                    {
+                        password = encryptablePropertyUtils.decryptPropertyValue(configuration.getPassword());
+                    }catch (AcmEncryptionException e)
+                    {
+                        log.warn("Could not decrypt outlook password.");
+                    }
+
+                    configuration.setPassword(password);
+
                     return new SimpleImmutableEntry<>(entry.getKey(), configuration);
 
                 }).collect(Collectors.toMap(Entry::getKey, Entry::getValue));

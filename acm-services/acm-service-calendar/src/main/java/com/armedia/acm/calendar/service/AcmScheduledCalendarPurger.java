@@ -78,7 +78,7 @@ public class AcmScheduledCalendarPurger implements AcmSchedulableBean
     {
         try
         {
-            CalendarConfigurationsByObjectType configurations = calendarAdminService.readConfiguration(false);
+            CalendarConfigurationsByObjectType configurations = calendarAdminService.readConfiguration(true);
             Map<String, CalendarConfiguration> configurationsByType = configurations.getConfigurationsByType();
             configurationsByType.forEach((k, v) -> {
                 log.debug("Purging calendar events for [{}].", k);
