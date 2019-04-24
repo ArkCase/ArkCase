@@ -6,9 +6,9 @@
             <span class="required-asterisk">*</span>
         </label>
         <textarea name="textarea" name="attendees" ng-model="requiredAttendeesViewModel"
-                class="user-picker-input input-md form-control"
-                placeholder="{{ 'common.directive.coreCalendar.addNewEventDialog.form.requiredAttendees.placeholder' | translate }}"
-                ng-click="chooseAttendees('REQUIRED')" readonly required></textarea>
+                  class="user-picker-input input-md form-control"
+                  placeholder="{{ 'common.directive.coreCalendar.addNewEventDialog.form.requiredAttendees.placeholder' | translate }}"
+                  ng-click="chooseAttendees('REQUIRED')" readonly required></textarea>
     </div>
 </div>
 <div class="row">
@@ -17,9 +17,9 @@
             <span translate>common.directive.coreCalendar.addNewEventDialog.form.optionalAttendees.label</span>
         </label>
         <textarea name="textarea" name="attendees" ng-model="optionalAttendeesViewModel"
-                class="user-picker-input input-md form-control"
-                placeholder="{{ 'common.directive.coreCalendar.addNewEventDialog.form.optionalAttendees.placeholder' | translate }}"
-                ng-click="chooseAttendees('OPTIONAL')" readonly></textarea>
+                  class="user-picker-input input-md form-control"
+                  placeholder="{{ 'common.directive.coreCalendar.addNewEventDialog.form.optionalAttendees.placeholder' | translate }}"
+                  ng-click="chooseAttendees('OPTIONAL')" readonly></textarea>
     </div>
 </div><!-- Subject -->
 <div class="row">
@@ -29,8 +29,8 @@
             <span class="required-asterisk">*</span>
         </label>
         <input name="subject" type="text" class="form-control" ng-model="eventDataModel.subject"
-                placeholder="{{'common.directive.coreCalendar.addNewEventDialog.form.subject.placeholder' | translate}}"
-                required>
+               placeholder="{{'common.directive.coreCalendar.addNewEventDialog.form.subject.placeholder' | translate}}"
+               required>
     </div>
 </div><!-- Location -->
 <div class="row">
@@ -39,7 +39,7 @@
             <span translate>common.directive.coreCalendar.addNewEventDialog.form.location.label</span>
         </label>
         <input name="location" type="text" class="form-control" ng-model="eventDataModel.location"
-                placeholder="{{'common.directive.coreCalendar.addNewEventDialog.form.location.placeholder' | translate}}">
+               placeholder="{{'common.directive.coreCalendar.addNewEventDialog.form.location.placeholder' | translate}}">
     </div>
 </div><!-- Start Date Time and Priority -->
 <div class="row">
@@ -48,9 +48,36 @@
             <span translate>common.directive.coreCalendar.addNewEventDialog.form.startDate.label</span>
             <span class="required-asterisk">*</span>
         </label>
-        <date-time-picker data="eventDataModel.start" property="eventDataModel.start" date-picker-id="eventDataModel.start"
-                time-format-disabled="{{eventDataModel.allDayEvent}}"></date-time-picker>
+        <div class="input-group" name="startDate">
+            <input type="text" class="form-control" datepicker-popup="{{locale.DATETIME_FORMATS.shortDate}}"
+                   ng-model="eventDataModel.start" is-open="openedStartDate.openedEnd" close-on-date-selection="true"
+                   show-button-bar="true" on-open-focus="false"
+                   close-text="{{'common.directive.coreCalendar.addNewEventDialog.form.datePickerClose.button' | translate}}"
+                   current-text="{{'common.directive.coreCalendar.addNewEventDialog.form.datePickerCurrent.button' | translate}}"
+                   clear-text="{{'common.directive.coreCalendar.addNewEventDialog.form.datePickerClear.button' | translate}}"
+                   min-date="minEndDate" ng-model-options="{ updateOn: 'blur' }" ng-change="startDateChanged()"
+                   placeholder="{{'common.directive.coreCalendar.addNewEventDialog.form.startDate.placeholder' | translate}}"
+                   required />
+            <span class="input-group-btn">
+                    <button type="button" class="btn btn-default"
+                            ng-click="openedStartDate.openedEnd = !openedStartDate.openedEnd">
+                          <i class="fa fa-calendar"></i>
+                    </button>
+                </span>
+        </div>
     </div>
+    <div class="col-sm-4 form-group" ng-if="!recurrentEvent">
+        <label for="startTime">
+            <span translate>common.directive.coreCalendar.addNewEventDialog.form.startTime.label</span>
+            <span class="required-asterisk">*</span>
+        </label>
+        <fieldset ng-disabled="eventDataModel.allDayEvent">
+            <timepicker ng-model="eventDataModel.start" hour-step="1" minute-step="1" show-spinners="false"
+                        show-meridian="false"
+                        ng-change="onTimeChanged(eventDataModel.start, eventDataModel.end)"></timepicker>
+        </fieldset>
+    </div>
+
     <div class="col-sm-4 form-group">
         <label for="priority">
             <span translate>common.directive.coreCalendar.addNewEventDialog.form.priority.label</span>
@@ -70,8 +97,31 @@
         <label for="endDate">
             <span translate>common.directive.coreCalendar.addNewEventDialog.form.endDate.label</span>
         </label>
-        <date-time-picker data="eventDataModel.end" property="eventDataModel.end" date-picker-id="eventDataModel.end"
-                time-format-disabled="{{eventDataModel.allDayEvent}}"></date-time-picker>
+        <div class="input-group" name="endDate">
+            <input type="text" class="form-control" datepicker-popup="{{locale.DATETIME_FORMATS.shortDate}}"
+                   ng-model="eventDataModel.end" is-open="openedEndDate.openedEnd" close-on-date-selection="true"
+                   show-button-bar="true" on-open-focus="false"
+                   close-text="{{'common.directive.coreCalendar.addNewEventDialog.form.datePickerClose.button' | translate}}"
+                   current-text="{{'common.directive.coreCalendar.addNewEventDialog.form.datePickerCurrent.button' | translate}}"
+                   clear-text="{{'common.directive.coreCalendar.addNewEventDialog.form.datePickerClear.button' | translate}}"
+                   min-date="minEndDate" ng-model-options="{ updateOn: 'blur' }" ng-change="endDateChanged()"
+                   placeholder="{{'common.directive.coreCalendar.addNewEventDialog.form.endDate.placeholder' | translate}}" />
+            <span class="input-group-btn">
+                    <button type="button" class="btn btn-default"
+                            ng-click="openedEndDate.openedEnd = !openedEndDate.openedEnd">
+                            <i class="fa fa-calendar"></i>
+                    </button>
+                </span>
+        </div>
+    </div>
+    <div class="col-sm-4 form-group" ng-if="!recurrentEvent">
+        <label for="endTime">
+            <span translate>common.directive.coreCalendar.addNewEventDialog.form.endTime.label</span>
+        </label>
+        <fieldset ng-disabled="eventDataModel.allDayEvent">
+            <timepicker ng-model="eventDataModel.end" hour-step="1" minute-step="1" min="eventDataModel.start"
+                        show-meridian="false" show-spinners="false"></timepicker>
+        </fieldset>
     </div>
     <div class="col-sm-4 form-group">
         <label for="reminder">
@@ -99,7 +149,7 @@
             <div class="col-sm-4">
                 <label class="checkbox-inline">
                     <input type="checkbox" ng-model="eventDataModel.sensitivity" ng-true-value="'PRIVATE'"
-                            ng-false-value="'NORMAL'">
+                           ng-false-value="'NORMAL'">
                     <span translate>
                         common.directive.coreCalendar.addNewEventDialog.form.privateEvent.checkbox
                     </span>
