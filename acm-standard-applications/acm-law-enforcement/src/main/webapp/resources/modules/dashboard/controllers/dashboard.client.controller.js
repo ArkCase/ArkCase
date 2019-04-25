@@ -22,23 +22,23 @@ angular.module('dashboard').controller('DashboardController', [ '$rootScope', '$
         }
     });
 
-    var widgetsPerRoles;
+    var widgetsPerRoles = [];
     var isEditMode = false;
 
     var onDashboardConfigRetrieved = function(data) {
         DashboardService.getWidgetsPerRoles(function(widgets) {
             widgetsPerRoles = widgets;
         });
+    };
 
-        $scope.widgetFilter = function(widget, type) {
-            var result = false;
-            angular.forEach(widgetsPerRoles, function(w) {
-                if (type === w.widgetName) {
-                    result = true;
-                }
-            });
-            return result;
-        };
+    $scope.widgetFilter = function(widget, type) {
+        var result = false;
+        angular.forEach(widgetsPerRoles, function(w) {
+            if (type === w.widgetName) {
+                result = true;
+            }
+        });
+        return result;
     };
 
     $scope.saveDashboard = function(nextUrl) {

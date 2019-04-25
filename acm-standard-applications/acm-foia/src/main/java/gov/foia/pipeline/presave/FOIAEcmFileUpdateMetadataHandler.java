@@ -30,18 +30,19 @@ package gov.foia.pipeline.presave;
 import com.armedia.acm.plugins.ecm.dao.AcmFolderDao;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
-import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
 import com.armedia.acm.plugins.ecm.pipeline.EcmFileTransactionPipelineContext;
 import com.armedia.acm.plugins.ecm.service.PageCountService;
 import com.armedia.acm.plugins.ecm.service.impl.EcmTikaFile;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.pipeline.handler.PipelineHandler;
-import gov.foia.model.FOIAEcmFileVersion;
+
 import org.apache.chemistry.opencmis.client.api.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+
+import gov.foia.model.FOIAEcmFileVersion;
 
 /**
  * Created by sasko.tanaskoski
@@ -88,6 +89,7 @@ public class FOIAEcmFileUpdateMetadataHandler implements PipelineHandler<EcmFile
             version.setFileSizeBytes(fileSizeBytes);
             version.setReviewStatus(new String());
             version.setRedactionStatus(new String());
+            version.setSearchablePDF(pipelineContext.isSearchablePDF());
 
             // file metadata
             if (pipelineContext.getDetectedFileMetadata() != null)
