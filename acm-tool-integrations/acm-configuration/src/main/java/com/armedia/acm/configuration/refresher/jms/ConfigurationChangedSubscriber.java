@@ -56,13 +56,14 @@ public class ConfigurationChangedSubscriber
     public void onConfigurationChanged(Message message)
     {
         log.info("Refresh beans on configuration change...");
-        if (refreshScopeFacade != null)
-        {
-            refreshScopeFacade.refresh();
-        }
         if (configurationFacade != null)
         {
             configurationFacade.refresh();
+        }
+
+        if (refreshScopeFacade != null)
+        {
+            refreshScopeFacade.refresh();
         }
     }
 }

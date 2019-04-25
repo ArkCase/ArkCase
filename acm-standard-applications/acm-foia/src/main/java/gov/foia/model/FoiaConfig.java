@@ -27,37 +27,48 @@ package gov.foia.model;
  * #L%
  */
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.beans.factory.annotation.Value;
 
 public class FoiaConfig
 {
+    @JsonProperty("maxDaysInHoldQueue")
     @Value("${maxDaysInHoldQueue}")
     private Integer maxDaysInHoldQueue;
 
+    @JsonProperty("dashboard.banner.enable")
     @Value("${dashboard.banner.enable}")
     private Boolean dashboardBannerEnabled;
 
+    @JsonProperty("requestExtensionWorkingDaysEnabled")
     @Value("${requestExtensionWorkingDaysEnabled}")
     private Boolean requestExtensionWorkingDaysEnabled;
 
+    @JsonProperty("maxDaysInBillingQueue")
     @Value("${maxDaysInBillingQueue}")
     private Integer maxDaysInBillingQueue;
 
+    @JsonProperty("receivedDateEnabled")
     @Value("${receivedDateEnabled}")
     private Boolean receivedDateEnabled;
 
+    @JsonProperty("holdedAndAppealedRequestsDueDateUpdateEnabled")
     @Value("${holdedAndAppealedRequestsDueDateUpdateEnabled}")
     private Boolean holdedAndAppealedRequestsDueDateUpdateEnabled;
 
+    @JsonProperty("purgeRequestWhenInHoldEnabled")
     @Value("${purgeRequestWhenInHoldEnabled}")
     private Boolean purgeRequestWhenInHoldEnabled;
 
+    @JsonProperty("request.extensionWorkingDays")
     @Value("${request.extensionWorkingDays}")
     private Integer requestExtensionWorkingDays;
 
+    @JsonProperty("notification.groups.enabled")
     @Value("${notification.groups.enabled}")
     private Boolean notificationGroupsEnabled;
 
+    @JsonProperty("moveToBillingQueueEnabled")
      @Value("${moveToBillingQueueEnabled}")
     private Boolean moveToBillingQueueEnabled;
 
