@@ -30,6 +30,7 @@ package com.armedia.acm.services.dataaccess.service.impl;
 import com.armedia.acm.core.exceptions.AcmAccessControlException;
 import com.armedia.acm.data.AcmBeforeInsertListener;
 import com.armedia.acm.data.AcmBeforeUpdateListener;
+import com.armedia.acm.services.dataaccess.model.DataAccessControlConfig;
 import com.armedia.acm.services.dataaccess.service.EntityParticipantsChangedEventPublisher;
 import com.armedia.acm.services.participants.model.AcmAssignedObject;
 import com.armedia.acm.services.participants.model.AcmParticipant;
@@ -57,7 +58,7 @@ public class DataAccessPrivilegeListener implements AcmBeforeUpdateListener, Acm
     private ParticipantsBusinessRule participantsBusinessRule;
     private AcmParticipantService participantService;
     private EntityParticipantsChangedEventPublisher entityParticipantsChangedEventPublisher;
-    private boolean documentACLEnabled;
+    private DataAccessControlConfig dacConfig;
 
     @Override
     public void beforeInsert(Object object) throws AcmAccessControlException
@@ -90,7 +91,7 @@ public class DataAccessPrivilegeListener implements AcmBeforeUpdateListener, Acm
             // changes to be applied. This code should still be fixed such that the participant differences are found
             // via Nebojsha's object-diff algorithm, or by the acm_object_history table, or some other way that doesn't
             // issue a SELECT against the same rows that are being updated in this transaction.
-            if (isDocumentACLEnabled())
+            if (dacConfig.getEnableDocumentACL())
             {
                 handleParticipantsChanged(assignedObject);
             }
@@ -247,14 +248,13 @@ public class DataAccessPrivilegeListener implements AcmBeforeUpdateListener, Acm
         this.entityParticipantsChangedEventPublisher = entityParticipantsChangedEventPublisher;
     }
 
-    public boolean isDocumentACLEnabled()
+    public DataAccessControlConfig getDacConfig()
     {
-        return documentACLEnabled;
+        return dacConfig;
     }
 
-    public void setDocumentACLEnabled(boolean documentACLEnabled)
+    public void setDacConfig(DataAccessControlConfig dacConfig)
     {
-        this.documentACLEnabled = documentACLEnabled;
+        this.dacConfig = dacConfig;
     }
-
 }

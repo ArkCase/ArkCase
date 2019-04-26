@@ -90,7 +90,7 @@ public class OutlookConfig
     private String participantsTypesAsOutlookPermission;
 
     @JsonProperty("outlook.exchange.integration.send.notification.from.system.user")
-    @Value("${outlook.exchange.integration.send.notification.from.system.user}")
+    @Value("${outlook.exchange.integration.send.notification.from.system.user:false}")
     private Boolean sendNotificationFromSystemUser;
 
     public String getDefaultAccess()

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.armedia</groupId>
     <artifactId>acm</artifactId>
@@ -128,6 +129,7 @@
         <mockito.core.version>2.20.0</mockito.core.version>
         <powermock.version2>2.0.0</powermock.version2>
         <hazelcast.version>3.11.2</hazelcast.version>
+        <jaudiotagger.version>2.0.3</jaudiotagger.version>
     </properties>
     <organization>
         <name>ArkCase LLC</name>
@@ -1612,6 +1614,11 @@
                 <groupId>com.hazelcast</groupId>
                 <artifactId>hazelcast</artifactId>
                 <version>${hazelcast.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.hazelcast</groupId>
+                <artifactId>hazelcast-wm</artifactId>
+                <version>3.8.3</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

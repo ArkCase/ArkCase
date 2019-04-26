@@ -12,10 +12,6 @@
         <property name="acmContainerDao" ref="acmContainerFolderDao"/>
         <property name="ecmFileService" ref="ecmFileService"/>
         <property name="outlookEventPublisher" ref="outlookEventPublisher"/>
-        <property name="sendFromSystemUser" value="#{outlookConfig.sendNotificationFromSystemUser}"/>
-        <property name="systemUserEmail" value="#{outlookConfig.systemUserEmail}"/>
-        <property name="systemUserPass" value="#{outlookConfig.systemUserPassword}"/>
-        <property name="systemUserId" value="#{outlookConfig.systemUserId}"/>
         <property name="acmCryptoUtils" ref="acmCryptoUtils"/>
         <property name="outlookPasswordDao" ref="outlookPasswordDao"/>
         <property name="acmEmailContentGeneratorService" ref="acmEmailContentGeneratorService"/>
@@ -72,11 +68,7 @@
     <bean id="outlookFolderRecreator" class="com.armedia.acm.service.outlook.service.impl.DefaultOutlookFolderRecreator">
         <property name="userDao" ref="userJpaDao"/>
         <property name="outlookFolderService" ref="outlookService"/>
-        <property name="participantsTypesForOutlookFolder" value="#{outlookConfig.participantsTypesAsOutlookPermission}"/>
-        <property name="defaultAccess" value="#{outlookConfig.defaultAccess}"/>
-        <property name="approverAccess" value="#{outlookConfig.approverAccess}"/>
-        <property name="assigneeAccess" value="#{outlookConfig.followerAccess}"/>
-        <property name="followerAccess" value="#{outlookConfig.assigneeAccess}"/>
+        <property name="outlookConfig" ref="outlookConfig"/>
         <property name="folderHandlers">
             <map>
                 <entry key="CASE_FILE" value-ref="caseFileCalendarFolderHandler"/>
@@ -121,5 +113,4 @@
     <bean id="outlookConfig" class="com.armedia.acm.service.outlook.model.OutlookConfig" scope="refresh">
         <aop:scoped-proxy/>
     </bean>
-
 </beans>

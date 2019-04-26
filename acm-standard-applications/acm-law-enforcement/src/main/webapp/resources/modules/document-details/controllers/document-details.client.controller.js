@@ -161,7 +161,7 @@ angular.module('document-details').controller(
                                 $log.warn("Browser does not support TextTrackCue");
                             }
                         }
-                    }
+                    };
 
                     $scope.playAt = function(seconds) {
                         var videoElement = angular.element(document.getElementsByTagName("video")[0])[0];
@@ -170,7 +170,7 @@ angular.module('document-details').controller(
                             videoElement.currentTime = seconds;
                             videoElement.play();
                         }
-                    }
+                    };
 
                     /**
                      * Builds the snowbound url based on the parameters passed into the controller state and opens the specified document in
@@ -242,7 +242,7 @@ angular.module('document-details').controller(
                         // default view == snowbound
                         $scope.view = "modules/document-details/views/document-viewer-snowbound.client.view.html";
 
-                        $scope.transcribeEnabled = $scope.transcriptionConfiguration.data.enabled;
+                        $scope.transcribeEnabled = $scope.transcriptionConfiguration.data['transcribe.enabled'];
 
                         $timeout(function() {
                             $scope.$broadcast('document-data', $scope.ecmFile);
@@ -285,7 +285,7 @@ angular.module('document-details').controller(
 
                     $scope.onPlayerReady = function(API) {
                         $scope.videoAPI = API;
-                    }
+                    };
 
                     $scope.enableEditing = function() {
                         ObjectLockingService.lockObject($scope.ecmFile.fileId, ObjectService.ObjectTypes.FILE, ObjectService.LockTypes.WRITE, true).then(function(lockedFile) {
@@ -322,17 +322,34 @@ angular.module('document-details').controller(
                             MessageService.error(errorMessage.data);
                         });
 
-                    }
+                    };
 
-                // Release editing lock on window unload, if acquired
-                $scope.onWindowClose = function () {
-                    if ($scope.editingMode) {
-                        return ObjectLockingService.unlockObject($scope.ecmFile.fileId, ObjectService.ObjectTypes.FILE, ObjectService.LockTypes.WRITE, true);
-                    }
-                };
-                $window.onunload = $scope.onWindowClose;
+                    // Release editing lock on window unload, if acquired
+                    $window.addEventListener('unload', function () {
+                    	$scope.data = {
+                                objectId: $scope.ecmFile.fileId,
+                                objectType: ObjectService.ObjectTypes.FILE,
+                                lockType: ObjectService.LockTypes.WRITE
+                            };
 
-                $rootScope.$bus.subscribe("object.changed/FILE/" + $stateParams.id, function () {
+                        var data = angular.toJson($scope.data);
+                    	
+                        var url = 'api/v1/plugin/' + ObjectService.ObjectTypes.FILE + '/' + $scope.ecmFile.fileId + '/lock?lockType=' + ObjectService.LockTypes.WRITE;
+                        
+                        if ($scope.editingMode) {
+                        	if("sendBeacon" in navigator)
+                            {
+                        		navigator.sendBeacon(url, data);
+                            } else {
+	                            var xmlhttp = new XMLHttpRequest();
+	                            xmlhttp.open("POST", url, false); //false - synchronous call
+	                            xmlhttp.setRequestHeader("Content-type", "application/json");
+	                            xmlhttp.send(data);
+                            }
+                        }                        
+                    });
+
+                    $rootScope.$bus.subscribe("object.changed/FILE/" + $stateParams.id, function () {
                         DialogService.alert($translate.instant("documentDetails.fileChangedAlert")).then(function() {
                             $scope.openSnowboundViewer();
                             $scope.$broadcast('refresh-ocr');

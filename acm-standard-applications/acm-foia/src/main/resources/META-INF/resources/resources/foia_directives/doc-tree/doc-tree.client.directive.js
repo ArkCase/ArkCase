@@ -3074,6 +3074,7 @@ angular
                                     DocTree.markNodeOk(frNode);
                                     dfd.resolve(moveFileInfo);
                                 }, function(errorData) {
+                                    MessageService.error(errorData.data);
                                     DocTree.markNodeError(frNode);
                                     dfd.reject();
                                 });
@@ -3241,6 +3242,7 @@ angular
                                     }).then(function(deletedFileId) {
                                         dfd.resolve(deletedFileId);
                                     }, function(errorData) {
+                                        MessageService.error(errorData.data);
                                         DocTree.markNodeError(node);
                                         dfd.reject();
                                     });
@@ -3310,6 +3312,7 @@ angular
                                         DocTree.markNodeOk(node);
                                         dfd.resolve(renamedInfo);
                                     }, function(errorData) {
+                                        MessageService.error(errorData.data);
                                         DocTree.markNodeError(node);
                                         dfd.reject();
                                     });
@@ -3360,6 +3363,7 @@ angular
                                         DocTree.markNodeOk(node);
                                         dfd.resolve(renamedInfo);
                                     }, function(errorData) {
+                                        MessageService.error(errorData.data);
                                         DocTree.markNodeError(node);
                                         dfd.reject();
                                     });

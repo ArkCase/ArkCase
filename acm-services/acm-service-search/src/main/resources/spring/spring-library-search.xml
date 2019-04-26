@@ -14,7 +14,6 @@
     </bean>
 
     <bean id="solrPostClient" class="com.armedia.acm.services.search.service.solr.DefaultSolrPostClient">
-        <property name="solrUpdateHandler" value="#{solrConfig.updateHandler}"/>
         <property name="solrRestClient" ref="solrRestClient"/>
     </bean>
 
@@ -40,11 +39,9 @@
     </task:scheduled-tasks>
 
     <bean id="acmJpaBatchUpdateService" class="com.armedia.acm.services.search.service.AcmJpaBatchUpdateService">
-        <property name="batchUpdateBasedOnLastModifiedEnabled" value="#{solrConfig.enableBatchUpdateBasedOnLastModified}"/>
         <property name="lastBatchUpdatePropertyFileLocation" value="${user.home}/.arkcase/acm/solrLastBatchUpdate.properties"/>
         <property name="propertyFileManager" ref="propertyFileManager"/>
         <property name="springContextHolder" ref="acmContextHolder"/>
-        <property name="batchSize" value="#{solrConfig.batchUpdateBatchSize}"/>
         <property name="objectsToSearchService" ref="jpaObjectsToSearchService"/>
         <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
         <property name="solrConfig" ref="solrConfig"/>

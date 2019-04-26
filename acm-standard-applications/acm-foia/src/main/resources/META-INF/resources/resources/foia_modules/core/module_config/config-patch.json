@@ -10,5 +10,15 @@
                 "expression": "/request-info/"
             }
         ]
+    },
+    {
+        "op": "replace",
+        "path": "/tree/sorters/?@.name=='sort-by-due-date-asc'/value",
+        "value": "request_due_date_tdt ASC"
+    },
+    {
+        "op": "replace",
+        "path": "/tree/sorters/?@.name=='sort-by-due-date-desc'/value",
+        "value": "request_due_date_tdt DESC"
     }
 ]
