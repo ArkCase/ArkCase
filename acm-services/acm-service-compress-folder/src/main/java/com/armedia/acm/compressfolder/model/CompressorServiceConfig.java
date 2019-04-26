@@ -31,6 +31,12 @@ import org.springframework.beans.factory.annotation.Value;
 
 public class CompressorServiceConfig
 {
+    /**
+     * A formatting string that is used to generate the output file name. It takes 3 parameters, <code>tmpDir</code>,
+     * <code>folderId</code> and <code>folderName</code>, for example <code>
+     *      %1$sacm-%2$d-%3$s.zip
+     * </code>
+     */
     @Value("${compressor.fileNameFormat}")
     private String fileNameFormat;
 

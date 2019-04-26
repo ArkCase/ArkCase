@@ -15,7 +15,7 @@
                     <div class="col-sm-6 form-group">
                         <label for="status" translate>timeTracking.comp.newTimesheet.status</label>
                         <select id="status" ng-model="timesheet.status" class="form-control input-md"
-                                ng-disabled="timesheetProperties['cost.plugin.useApprovalWorkflow'] === 'true' || !isEdit"" required>
+                                ng-disabled="timesheetProperties['cost.plugin.useApprovalWorkflow'] === 'true' || !isEdit" required>
                             <option ng-repeat="option in timesheetStatuses" value="{{option.key}}">
                                 {{option.value | translate}}
                             </option>
@@ -182,7 +182,7 @@
                 </div>
             </div>
         </div>
-        <div class="panel panel-default">
+        <div class="panel panel-default" ng-if="timesheetProperties['time.plugin.useApprovalWorkflow']">
             <div class="panel-heading">
                 <h4 class="panel-title">
                     <a data-toggle="collapse" data-parent="#accordion4" href="#collapseApprovers" translate>timeTracking.comp.newTimesheet.approver.title</a>
@@ -214,7 +214,7 @@
                 data-title="Send for Approval" ng-click="sendForApproval()" ng-show="isApproverAdded">
             <span translate>timeTracking.comp.newTimesheet.sendForApproval</span>
         </button>
-        <button type="submit" ng-disabled="timesheetForm.$invalid || loading" class="btn btn-primary btn-sm" data-toggle="tooltip"
+        <button type="submit" ng-disabled="timesheetForm.$invalid || loading " class="btn btn-primary btn-sm" data-toggle="tooltip"
                 id="saveButton" data-title="Save">
             <i class="{{loadingIcon}}"></i>
             <span ng-show="!isEdit" translate>timeTracking.comp.newTimesheet.saveButton</span>

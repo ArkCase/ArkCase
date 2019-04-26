@@ -27,16 +27,8 @@ package com.armedia.acm.services.notification.service;
  * #L%
  */
 
-import static org.easymock.EasyMock.anyLong;
-import static org.easymock.EasyMock.anyString;
-import static org.easymock.EasyMock.capture;
-import static org.easymock.EasyMock.contains;
-import static org.easymock.EasyMock.eq;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.expectLastCall;
-import static org.junit.Assert.assertEquals;
-
 import com.armedia.acm.core.exceptions.AcmEncryptionException;
+import com.armedia.acm.core.provider.TemplateModelProvider;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.email.model.EmailSenderConfig;
 import com.armedia.acm.files.propertymanager.PropertyFileManager;
@@ -52,10 +44,8 @@ import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.model.NotificationConfig;
 import com.armedia.acm.services.notification.model.NotificationRule;
 import com.armedia.acm.services.notification.model.QueryType;
-import com.armedia.acm.services.notification.service.provider.TemplateModelProvider;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.spring.SpringContextHolder;
-
 import org.easymock.Capture;
 import org.easymock.EasyMock;
 import org.easymock.EasyMockSupport;
@@ -68,6 +58,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static org.easymock.EasyMock.anyLong;
+import static org.easymock.EasyMock.anyString;
+import static org.easymock.EasyMock.capture;
+import static org.easymock.EasyMock.contains;
+import static org.easymock.EasyMock.eq;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.expectLastCall;
+import static org.junit.Assert.assertEquals;
 
 public class NotificationServiceTest extends EasyMockSupport
 {
@@ -85,7 +84,7 @@ public class NotificationServiceTest extends EasyMockSupport
     private NotificationFormatter mockNotificationFormatter;
     private NotificationConfig notificationConfig;
     private EmailSenderConfig emailSenderConfig;
-    private TemplateModelProvider mockTemplateModelProvider;
+    private TemplateModelProvider<Notification> mockTemplateModelProvider;
     private AcmMailTemplateConfigurationService mockTemplateService;
     private TemplatingEngine mockTemplatingEngine;
     private UserDao mockUserDao;

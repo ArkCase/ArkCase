@@ -51,7 +51,7 @@ public class PortalFOIARequest implements Serializable
 
     private String lastName;
 
-    private String title;
+    private String position;
 
     private String email;
 
@@ -74,6 +74,8 @@ public class PortalFOIARequest implements Serializable
     private String zip;
 
     private String subject;
+
+    private String title;
 
     private LocalDateTime recordSearchDateFrom;
 
@@ -552,8 +554,30 @@ public class PortalFOIARequest implements Serializable
     }
 
     /**
+     *
+     * @return person position
+     */
+
+    public String getPosition()
+    {
+        return position;
+    }
+
+    /**
+     *
+     * @param position
+     */
+    public void setPosition(String position)
+    {
+        this.position = position;
+    }
+
+    /**
      * @return the originalRequestNumber
      */
+
+
+
 
     public String getOriginalRequestNumber()
     {
@@ -594,7 +618,7 @@ public class PortalFOIARequest implements Serializable
     public String toString()
     {
         return "PortalFOIARequest [originalRequestNumber=" + originalRequestNumber + ", prefix=" + prefix + ", firstName=" + firstName
-                + ", middleName=" + middleName + ", lastName=" + lastName + ", title=" + title + ", email=" + email + ", phone=" + phone + ", organization=" + organization + ", requestType="
+                + ", middleName=" + middleName + ", lastName=" + lastName + ", position=" + position + ", title=" + title + ", email=" + email + ", phone=" + phone + ", organization=" + organization + ", requestType="
                 + requestType + ", requestCategory=" + requestCategory + ", deliveryMethodOfResponse=" + deliveryMethodOfResponse
                 + ", address1=" + address1 + ", address2=" + address2 + ", city=" + city + ", state=" + state + ", country=" + country
                 + ", zip=" + zip + ", subject=" + subject + ", recordSearchDateFrom=" + recordSearchDateFrom + ", recordSearchDateTo="

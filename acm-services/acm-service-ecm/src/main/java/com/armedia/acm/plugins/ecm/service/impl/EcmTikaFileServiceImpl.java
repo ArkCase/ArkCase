@@ -33,6 +33,7 @@ import com.coremedia.iso.boxes.UserDataBox;
 import com.googlecode.mp4parser.DataSource;
 import com.googlecode.mp4parser.FileDataSourceImpl;
 import com.googlecode.mp4parser.boxes.apple.AppleGPSCoordinatesBox;
+
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.beanutils.ConversionException;
 import org.apache.commons.beanutils.ConvertUtils;
@@ -48,19 +49,12 @@ import org.apache.tika.mime.MimeType;
 import org.apache.tika.parser.AutoDetectParser;
 import org.apache.tika.parser.ParseContext;
 import org.apache.tika.parser.Parser;
+import org.jaudiotagger.audio.AudioFile;
+import org.jaudiotagger.audio.AudioFileIO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
-import us.fatehi.pointlocation6709.Angle;
-import us.fatehi.pointlocation6709.Latitude;
-import us.fatehi.pointlocation6709.Longitude;
-import us.fatehi.pointlocation6709.PointLocation;
-import us.fatehi.pointlocation6709.format.FormatterException;
-import us.fatehi.pointlocation6709.format.PointLocationFormatType;
-import us.fatehi.pointlocation6709.format.PointLocationFormatter;
-import us.fatehi.pointlocation6709.parse.ParserException;
-import us.fatehi.pointlocation6709.parse.PointLocationParser;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -75,6 +69,16 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import us.fatehi.pointlocation6709.Angle;
+import us.fatehi.pointlocation6709.Latitude;
+import us.fatehi.pointlocation6709.Longitude;
+import us.fatehi.pointlocation6709.PointLocation;
+import us.fatehi.pointlocation6709.format.FormatterException;
+import us.fatehi.pointlocation6709.format.PointLocationFormatType;
+import us.fatehi.pointlocation6709.format.PointLocationFormatter;
+import us.fatehi.pointlocation6709.parse.ParserException;
+import us.fatehi.pointlocation6709.parse.PointLocationParser;
+
 public class EcmTikaFileServiceImpl implements EcmTikaFileService
 {
 
@@ -87,6 +91,7 @@ public class EcmTikaFileServiceImpl implements EcmTikaFileService
     private transient final Logger logger = LoggerFactory.getLogger(getClass());
     private Map<String, String> tikaMetadataToFilePropertiesMap;
     private Map<String, String> contentTypeFixes;
+    private Map<String, String> nameExtensionFixes;
 
     private final static String UNIX_EPOCH = "1970-01-01T00:00:00Z";
 
@@ -214,14 +219,13 @@ public class EcmTikaFileServiceImpl implements EcmTikaFileService
             MediaType mediaType = detector.detect(stream, metadata);
             MimeType mimeType = defaultConfig.getMimeRepository().forName(mediaType.toString());
             contentType = fixContentType(mediaType.toString());
-            extension = mimeType.getExtension();
+            extension = fixNameExtension(mimeType.getExtension());
         }
 
         Map<String, Object> fileMetadata = null;
 
         try (InputStream inputStream = new FileInputStream(file))
         {
-
             Parser parser = new AutoDetectParser();
             ParseContext parseContext = new ParseContext();
 
@@ -310,8 +314,33 @@ public class EcmTikaFileServiceImpl implements EcmTikaFileService
             enrichGpsFields(fileMetadata, gpsPoint);
         }
 
-        return fileMetadata;
+        // Tika returns milliseconds instead of seconds, so we need to convert to seconds before we save this
+        // information in DB.
+        if (".mp3".equals(extension))
+        {
+            Double duration = Double.parseDouble(fileMetadata.get("xmpDM:duration").toString());
+            fileMetadata.replace("xmpDM:duration", duration / 1000);
+        }
 
+        // Tika do not return duration for .wav files. So we use "jaudiotagger" to get this information.
+        if (".wav".equals(extension))
+        {
+            AudioFile f = null;
+            try
+            {
+                f = AudioFileIO.read(file);
+
+                int duration = f.getAudioHeader().getTrackLength();
+
+                fileMetadata.put("xmpDM:duration", duration);
+            }
+            catch (Exception e)
+            {
+                logger.warn("Could not extract duration in seconds for file: [{}], Reason: [{}]", file.getName(), e.getMessage());
+            }
+        }
+
+        return fileMetadata;
     }
 
     private String fixContentType(String contentType)
@@ -322,6 +351,16 @@ public class EcmTikaFileServiceImpl implements EcmTikaFileService
         }
 
         return contentType;
+    }
+
+    private String fixNameExtension(String nameExtension)
+    {
+        if (getNameExtensionFixes() != null && getNameExtensionFixes().containsKey(nameExtension))
+        {
+            return getNameExtensionFixes().get(nameExtension);
+        }
+
+        return nameExtension;
     }
 
     protected PointLocation pointLocationFromLatLong(Map<String, Object> extractedFromStream)
@@ -409,5 +448,15 @@ public class EcmTikaFileServiceImpl implements EcmTikaFileService
     public void setContentTypeFixes(Map<String, String> contentTypeFixes)
     {
         this.contentTypeFixes = contentTypeFixes;
+    }
+
+    public Map<String, String> getNameExtensionFixes()
+    {
+        return nameExtensionFixes;
+    }
+
+    public void setNameExtensionFixes(Map<String, String> nameExtensionFixes)
+    {
+        this.nameExtensionFixes = nameExtensionFixes;
     }
 }

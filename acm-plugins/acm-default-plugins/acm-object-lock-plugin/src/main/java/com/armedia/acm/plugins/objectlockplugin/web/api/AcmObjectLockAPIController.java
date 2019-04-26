@@ -107,7 +107,7 @@ public class AcmObjectLockAPIController
      */
     @PreAuthorize("hasPermission(#objectId, #objectType, 'unlock')")
     @RequestMapping(value = { "/api/v1/plugin/{objectType}/{objectId}/lock",
-            "/api/latest/plugin/{objectType}/{objectId}/lock" }, method = RequestMethod.DELETE)
+            "/api/latest/plugin/{objectType}/{objectId}/lock" }, method = { RequestMethod.DELETE, RequestMethod.POST })
     @ResponseStatus(value = HttpStatus.OK)
     public void unlockObject(@PathVariable(value = "objectType") String objectType, @PathVariable(value = "objectId") Long objectId,
             @RequestParam(value = "lockType", required = false, defaultValue = "OBJECT_LOCK") String lockType,
