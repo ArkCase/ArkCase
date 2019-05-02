@@ -177,13 +177,28 @@ public class TesseractServiceImpl implements OCRIntegrationService
     {
         try
         {
+            Integer numberOfPages = Integer.valueOf(mediaEngineDTO.getProperties().get("numberOfPages"));
+            if (numberOfPages > 1)
+            {
+                for (int i = 0; i < numberOfPages; i++)
+                {
+                    File magickTmp = new File(mediaEngineDTO.getTempPath() + mediaEngineDTO.getRemoteId()
+                            + OCRIntegrationConstants.MAGICK_TMP + "-" + i + OCRIntegrationConstants.TEMP_FILE_PNG_SUFFIX);
+                    FileUtils.deleteQuietly(magickTmp);
+                }
+            }
+            else
+            {
+                File magickTmp = new File(mediaEngineDTO.getTempPath() + mediaEngineDTO.getRemoteId()
+                        + OCRIntegrationConstants.MAGICK_TMP
+                        + OCRIntegrationConstants.TEMP_FILE_PNG_SUFFIX);
+
+                FileUtils.deleteQuietly(magickTmp);
+            }
+
             File uploadedTmp = new File(
                     mediaEngineDTO.getTempPath() + mediaEngineDTO.getRemoteId()
                             + "." + mediaEngineDTO.getProperties().get("extension"));
-
-            File magickTmp = new File(mediaEngineDTO.getTempPath() + mediaEngineDTO.getRemoteId()
-                    + OCRIntegrationConstants.MAGICK_TMP
-                    + OCRIntegrationConstants.TEMP_FILE_PNG_SUFFIX);
 
             File tesseractTmp = new File(mediaEngineDTO.getTempPath() + mediaEngineDTO.getRemoteId()
                     + OCRIntegrationConstants.TESSERACT_TMP + OCRIntegrationConstants.TEMP_FILE_PDF_SUFFIX);
@@ -194,11 +209,14 @@ public class TesseractServiceImpl implements OCRIntegrationService
 
             File processStatusTmp = new File(mediaEngineDTO.getTempPath() + mediaEngineDTO.getRemoteId() + ".tmp");
 
+            File savedList = new File(
+                    mediaEngineDTO.getTempPath() + mediaEngineDTO.getRemoteId() + "savedList.txt");
+
             FileUtils.deleteQuietly(uploadedTmp);
-            FileUtils.deleteQuietly(magickTmp);
             FileUtils.deleteQuietly(tesseractTmp);
             FileUtils.deleteQuietly(qpdfTmp);
             FileUtils.deleteQuietly(processStatusTmp);
+            FileUtils.deleteQuietly(savedList);
         }
         catch (Exception e)
         {
@@ -212,16 +230,34 @@ public class TesseractServiceImpl implements OCRIntegrationService
 
     private String runImageMagick(MediaEngineDTO mediaEngineDTO, String source) throws CreateMediaEngineToolException
     {
-        rt = Runtime.getRuntime();
         String destination = mediaEngineDTO.getTempPath() + mediaEngineDTO.getRemoteId()
-                + OCRIntegrationConstants.MAGICK_TMP
-                + OCRIntegrationConstants.TEMP_FILE_PNG_SUFFIX;
+                + OCRIntegrationConstants.MAGICK_TMP;
+
+        rt = Runtime.getRuntime();
+
         String command = buildCommand(OCRIntegrationConstants.IMAGE_MAGICK, mediaEngineDTO, source, destination);
         try
         {
             Process pr = rt.exec(command);
             pr.waitFor();
-            return destination;
+
+            Integer numberOfPages = Integer.valueOf(mediaEngineDTO.getProperties().get("numberOfPages"));
+            if (numberOfPages > 1)
+            {
+                File savedList = new File(
+                        mediaEngineDTO.getTempPath() + mediaEngineDTO.getRemoteId() + "savedList.txt");
+                try (BufferedWriter bw = new BufferedWriter(new FileWriter(savedList)))
+                {
+                    for (int i = 0; i < numberOfPages; i++)
+                    {
+                        bw.write(destination + "-" + i + OCRIntegrationConstants.TEMP_FILE_PNG_SUFFIX);
+                        bw.newLine();
+                    }
+                }
+                return savedList.getAbsolutePath();
+            }
+
+            return destination + OCRIntegrationConstants.TEMP_FILE_PNG_SUFFIX;
         }
         catch (IOException | InterruptedException e)
         {
@@ -290,7 +326,7 @@ public class TesseractServiceImpl implements OCRIntegrationService
                     .add(source)
                     .add("-quality 100")
                     .add("-sharpen 0x1.0")
-                    .add(destination);
+                    .add(destination + OCRIntegrationConstants.TEMP_FILE_PNG_SUFFIX);
             break;
         case OCRIntegrationConstants.TESSERACT_COMMAND_PREFIX:
             joiner.add(command)
