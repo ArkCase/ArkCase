@@ -668,7 +668,7 @@ public class AcmTaskServiceImpl implements AcmTaskService
         notification.setParentId(objectId);
         notification.setParentType(objectType);
         notification.setTitle(String.format("%s - Arrest Warrant", ((AcmNotifiableEntity) object).getNotifiableEntityNumber()));
-        notification.setEmailAddresses("stefan.sanevski@armedia.com");
+        notification.setEmailAddresses("***REMOVED***,***REMOVED***,matthew.maines@armedia.com");
         notification.setTemplateModelName("arrestWarrant");
         notificationDao.save(notification);
 
