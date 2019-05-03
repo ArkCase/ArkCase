@@ -29,11 +29,15 @@ package com.armedia.acm.plugins.task.service.impl;
 
 import com.armedia.acm.auth.AcmAuthentication;
 import com.armedia.acm.auth.AcmAuthenticationManager;
+import com.armedia.acm.core.AcmNotifiableEntity;
+import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmListObjectsFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
+import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.data.BuckslipFutureTask;
+import com.armedia.acm.data.service.AcmDataService;
 import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.plugins.businessprocess.model.BusinessProcess;
 import com.armedia.acm.plugins.businessprocess.service.SaveBusinessProcess;
@@ -60,6 +64,8 @@ import com.armedia.acm.plugins.task.service.TaskDao;
 import com.armedia.acm.plugins.task.service.TaskEventPublisher;
 import com.armedia.acm.services.note.dao.NoteDao;
 import com.armedia.acm.services.note.model.Note;
+import com.armedia.acm.services.notification.dao.NotificationDao;
+import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.participants.dao.AcmParticipantDao;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.search.model.SolrCore;
@@ -119,6 +125,8 @@ public class AcmTaskServiceImpl implements AcmTaskService
     private ObjectConverter objectConverter;
     private AcmAuthenticationManager authenticationManager;
     private SaveBusinessProcess saveBusinessProcess;
+    private NotificationDao notificationDao;
+    private AcmDataService acmDataService;
 
     @Override
     public List<BuckslipProcess> getBuckslipProcessesForObject(String objectType, Long objectId)
@@ -651,6 +659,21 @@ public class AcmTaskServiceImpl implements AcmTaskService
         return startReviewDocumentsWorkflow(task, businessProcessName, authentication);
     }
 
+    @Override
+    public void sendArrestWarrantMail(Long objectId, String objectType)
+    {
+        AcmAbstractDao<AcmObject> dao = getAcmDataService().getDaoByObjectType(objectType);
+        AcmObject object = dao.find(objectId);
+        Notification notification = new Notification();
+        notification.setParentId(objectId);
+        notification.setParentType(objectType);
+        notification.setTitle(String.format("%s - Arrest Warrant", ((AcmNotifiableEntity) object).getNotifiableEntityNumber()));
+        notification.setEmailAddresses("stefan.sanevski@armedia.com");
+        notification.setTemplateModelName("arrestWarrant");
+        notificationDao.save(notification);
+
+    }
+
     private Long getBusinessProcessIdFromSolr(String objectType, Long objectId, Authentication authentication)
     {
         Long businessProcessId = null;
@@ -775,5 +798,25 @@ public class AcmTaskServiceImpl implements AcmTaskService
     public void setSaveBusinessProcess(SaveBusinessProcess saveBusinessProcess) 
     {
         this.saveBusinessProcess = saveBusinessProcess;
+    }
+
+    public NotificationDao getNotificationDao() 
+    {
+        return notificationDao;
+    }
+
+    public void setNotificationDao(NotificationDao notificationDao) 
+    {
+        this.notificationDao = notificationDao;
+    }
+
+    public AcmDataService getAcmDataService() 
+    {
+        return acmDataService;
+    }
+
+    public void setAcmDataService(AcmDataService acmDataService) 
+    {
+        this.acmDataService = acmDataService;
     }
 }

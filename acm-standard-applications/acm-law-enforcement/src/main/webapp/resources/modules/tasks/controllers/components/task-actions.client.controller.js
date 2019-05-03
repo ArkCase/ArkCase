@@ -29,6 +29,7 @@ angular.module('tasks').controller(
                         $scope.showBtnComplete = false;
                         $scope.showBtnReject = false;
                         $scope.showBtnOutcomes = false;
+                        $scope.showBtnApprove = false;
 
                         promiseQueryUser.then(function(userInfo) {
                             $scope.userId = userInfo.userId;
@@ -38,14 +39,17 @@ angular.module('tasks').controller(
                             if (!Util.isEmpty($scope.objectInfo.assignee)) {
                                 if (Util.compare($scope.userId, $scope.objectInfo.assignee)) {
                                     if ($scope.objectInfo.adhocTask || Util.isArrayEmpty($scope.objectInfo.availableOutcomes)) {
-                                        if (!Util.goodValue($scope.objectInfo.completed, false)) {
+                                        if($scope.objectInfo.businessProcessName == 'arrestWarrant' && !Util.goodValue($scope.objectInfo.completed, false)) {
+                                            $scope.showBtnApprove = true;
+                                        }
+                                        if (!Util.goodValue($scope.objectInfo.completed, false) && $scope.objectInfo.businessProcessName != 'arrestWarrant') {
                                             $scope.showBtnSignature = true;
                                             $scope.showBtnDelete = true;
                                             $scope.showBtnComplete = true;
                                         }
 
                                         if (!Util.isEmpty($scope.objectInfo.owner) && !Util.isEmpty($scope.objectInfo.assignee)) {
-                                            if (($scope.objectInfo.owner != $scope.objectInfo.assignee)) {
+                                            if (($scope.objectInfo.owner != $scope.objectInfo.assignee) && $scope.objectInfo.businessProcessName != 'arrestWarrant') {
                                                 $scope.showBtnSignature = true;
                                                 $scope.showBtnReject = true;
                                             }

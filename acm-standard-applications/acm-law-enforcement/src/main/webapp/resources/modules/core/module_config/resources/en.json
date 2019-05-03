@@ -585,7 +585,8 @@
             },
             "businessProcessTypes": {
                 "acmDocumentWorkflow": "ACM Document Workflow",
-                "notDefinedWorkflow": "Ad-Hoc Task"
+                "notDefinedWorkflow": "Ad-Hoc Task",
+                "arrestWarrant": "Arrest Warrant"
             },
             "reportStates": {
                 "draft": "Draft",
