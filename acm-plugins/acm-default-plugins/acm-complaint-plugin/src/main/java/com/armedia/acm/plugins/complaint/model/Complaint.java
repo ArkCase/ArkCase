@@ -711,6 +711,12 @@ public class Complaint implements Serializable, AcmAssignedObject, AcmEntity, Ac
         return groupName;
     }
 
+    @Override
+    @JsonIgnore
+    public String getNotifiableEntityNumber() {
+        return complaintNumber;
+    }
+
     public List<OrganizationAssociation> getOrganizationAssociations()
     {
         return organizationAssociations;
