@@ -25,7 +25,6 @@
     <bean id="exchangeWebServicesOutlookDao" class="com.armedia.acm.service.outlook.dao.impl.ExchangeWebServicesOutlookDao">
         <property name="exchangeConfigurationService" ref="exchangeConfigurationService"/>
         <property name="outlookConfig" ref="outlookConfig"/>
-        <property name="outlookUserConnectionCache" ref="outlookUserConnectionCache"/>
         <property name="sortFields">
             <map>
                 <entry key="subject" value-ref="propertyDefinitionSubject"/>
