@@ -62,7 +62,7 @@ public class TimesheetConfig implements AcmPluginConfigBean
         this.searchTreeSort = searchTreeSort;
     }
 
-    public Boolean isUseApprovalWorkflow()
+    public Boolean getUseApprovalWorkflow()
     {
         return useApprovalWorkflow;
     }
