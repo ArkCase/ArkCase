@@ -27,9 +27,33 @@ package com.armedia.acm.services.notification.service.provider;
  * #L%
  */
 
+import com.armedia.acm.core.provider.TemplateModelProvider;
+import com.armedia.acm.services.notification.event.DueDateReminderSentEvent;
 import com.armedia.acm.services.notification.model.Notification;
+import com.armedia.acm.services.notification.service.provider.model.GenericTemplateModel;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.ApplicationEventPublisherAware;
 
-public interface TemplateModelProvider
+import java.time.LocalDateTime;
+
+public class RequestDownloadedModelProvider implements TemplateModelProvider<GenericTemplateModel>
 {
-    Object getModel(Notification notification);
+    @Override
+    public GenericTemplateModel getModel(Object object)
+    {
+        Notification notification = (Notification)object;
+        GenericTemplateModel genericTemplateModel = new GenericTemplateModel();
+
+        genericTemplateModel.setObjectNumber(notification.getParentName());
+        genericTemplateModel.setObjectTitle(notification.getParentTitle());
+        genericTemplateModel.setOtherObjectValue(LocalDateTime.now().toString());
+
+        return genericTemplateModel;
+    }
+
+    @Override
+    public Class getType()
+    {
+        return GenericTemplateModel.class;
+    }
 }

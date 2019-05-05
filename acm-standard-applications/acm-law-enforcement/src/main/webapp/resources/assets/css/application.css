@@ -1019,7 +1019,7 @@ a.editable.editable-click {
     position: fixed;
     padding-top: 0px;
     padding-right: 510px;
-    padding-bottom: 115px;
+    padding-bottom: 145px;
     width: 100%;
     height: 100%;
     overflow-x: hidden;
@@ -1840,4 +1840,12 @@ a.primary {
 
 .btn .btn-secondary .custom-color {
     color: #000000
+}
+
+
+.enableEditing {
+	position: absolute;
+	left: 592px;
+	margin-top: 35px;
+	z-index: 1001;
 }

@@ -145,6 +145,11 @@ public class PortalCreateRequestService
         request.setRequestCategory(in.getRequestCategory());
         request.setDeliveryMethodOfResponse(in.getDeliveryMethodOfResponse());
 
+        if(in.getTitle() != null)
+        {
+            request.setTitle(in.getTitle());
+        }
+
         request.setDetails(in.getSubject());
         request.setRecordSearchDateFrom(in.getRecordSearchDateFrom());
         request.setRecordSearchDateTo(in.getRecordSearchDateTo());
@@ -169,7 +174,7 @@ public class PortalCreateRequestService
         requester.setFamilyName(in.getLastName());
         requester.setMiddleName(in.getMiddleName());
         requester.setTitle(in.getPrefix());
-        requester.setPosition(in.getTitle());
+        requester.setPosition(in.getPosition());
         // requester.setCompany(in.getOrganization());
 
         if (in.getOrganization() != null && in.getOrganization().length() > 0)
@@ -178,10 +183,6 @@ public class PortalCreateRequestService
             organization.setOrganizationValue(in.getOrganization());
             organization.setOrganizationType("Corporation");
             requester.getOrganizations().add(organization);
-
-            PostalAddress orgAddress = new PostalAddress();
-            orgAddress.setType("Business");
-            organization.getAddresses().add(orgAddress);
 
             List<PersonOrganizationAssociation> personOrganizationAssociations = new ArrayList<>();
             PersonOrganizationAssociation personOrganizationAssociation = new PersonOrganizationAssociation();
@@ -200,20 +201,43 @@ public class PortalCreateRequestService
         address.setStreetAddress2(in.getAddress2());
         address.setZip(in.getZip());
         address.setType("Business");
-        requester.getAddresses().add(address);
+        if((address.getStreetAddress() != null && !address.getStreetAddress().equals(""))
+                || (address.getStreetAddress2() != null && !address.getStreetAddress2().equals(""))
+                || (address.getCity() != null && !address.getCity().equals(""))
+                || (address.getZip() != null && !address.getZip().equals(""))
+                || (address.getState() != null && !address.getState().equals(""))){
+            requester.getAddresses().add(address);
+        }
 
         // the UI expects the contact methods in this order: Phone, Fax, Email
+        List<ContactMethod> contactMethod = new ArrayList<>();
+        requester.setContactMethods(contactMethod);
         ContactMethod phone = buildContactMethod("phone", in.getPhone());
-        if(phone.getValue() != null){
-            requester.getContactMethods().add(phone);
+        if (phone.getValue() != null && !phone.getValue().equals(""))
+        {
+            requester.getContactMethods().add(0, phone);
+        }
+        else
+        {
+            requester.getContactMethods().add(0, null);
         }
         ContactMethod fax = buildContactMethod("fax", null);
-        if(fax.getValue() != null){
-            requester.getContactMethods().add(fax);
+        if (fax.getValue() != null && !fax.getValue().equals(""))
+        {
+            requester.getContactMethods().add(1, fax);
+        }
+        else
+        {
+            requester.getContactMethods().add(1, null);
         }
         ContactMethod email = buildContactMethod("email", in.getEmail());
-        if(email.getValue() != null){
-            requester.getContactMethods().add(email);
+        if (email.getValue() != null && !email.getValue().equals(""))
+        {
+            requester.getContactMethods().add(2, email);
+        }
+        else
+        {
+            requester.getContactMethods().add(2, null);
         }
 
         return request;

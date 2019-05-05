@@ -35,6 +35,7 @@ import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import com.armedia.acm.compressfolder.model.CompressorServiceConfig;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.ecm.exception.AcmFolderException;
@@ -115,9 +116,12 @@ public class FolderCompressorTest extends EasyMockSupport
         compressor = new DefaultFolderCompressor();
         compressor.setFolderService(mockedFolderService);
         compressor.setFileService(mockedFileService);
-        compressor.setCompressedFileNameFormat(COMPRESSED_FILENAME_FORMAT);
         compressor.setMaxSize(2);
         compressor.setSizeUnit(SizeUnit.GIGA.name());
+
+        CompressorServiceConfig compressorServiceConfig = new CompressorServiceConfig();
+        compressorServiceConfig.setFileNameFormat(COMPRESSED_FILENAME_FORMAT);
+        compressor.setCompressorServiceConfig(compressorServiceConfig);
     }
 
     @After

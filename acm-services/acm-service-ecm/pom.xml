@@ -140,6 +140,14 @@
             <version>${acm.version}</version>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/org/jaudiotagger -->
+        <dependency>
+            <groupId>org</groupId>
+            <artifactId>jaudiotagger</artifactId>
+            <version>${jaudiotagger.version}</version>
+        </dependency>
+        
+
         <!-- spring -->
         <dependency>
             <groupId>org.springframework.security</groupId>

@@ -66,24 +66,21 @@ public class AcmJpaBatchUpdateService
      */
     private static final String DEFAULT_LAST_RUN_DATE = "1970-01-01T00:00:00Z";
     private final Logger log = LoggerFactory.getLogger(getClass());
-    private boolean batchUpdateBasedOnLastModifiedEnabled;
     private String lastBatchUpdatePropertyFileLocation;
     private PropertyFileManager propertyFileManager;
     private SpringContextHolder springContextHolder;
     private JpaObjectsToSearchService objectsToSearchService;
-    private int batchSize;
     private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
     private SolrConfig solrConfig;
 
     public void jpaBatchUpdate() throws AcmEncryptionException, InterruptedException
     {
-        log.debug("JPA batch update enabled: [{}]", isBatchUpdateBasedOnLastModifiedEnabled());
+        log.debug("JPA batch update enabled: [{}]", solrConfig.getEnableBatchUpdateBasedOnLastModified());
 
-        if (!isBatchUpdateBasedOnLastModifiedEnabled())
-            if (!solrConfig.getEnableBatchUpdateBasedOnLastModified())
-            {
-                return;
-            }
+        if (!solrConfig.getEnableBatchUpdateBasedOnLastModified())
+        {
+            return;
+        }
 
         // Wait for all IJpaBatchUpdatePrerequisite implementations to finish their work
         while (!prerequisitesFinished())
@@ -172,7 +169,7 @@ public class AcmJpaBatchUpdateService
         log.debug("Handling transformer type: {}, last mod date: {}", transformer.getClass().getName(), lastUpdate);
 
         int current = 0;
-        int batchSize = getBatchSize();
+        int batchSize = solrConfig.getBatchUpdateBatchSize();
 
         // keep retrieving another batch of objects modified since the last update, until we find no more objects.
         List<Object> updatedObjects;
@@ -180,7 +177,7 @@ public class AcmJpaBatchUpdateService
         {
             updatedObjects = transformer.getObjectsModifiedSince(lastUpdate, current, batchSize);
 
-            log.debug("Number of objects for {} : ", transformer.getClass().getName(), updatedObjects.size());
+            log.debug("Number of objects for {} : {}", transformer.getClass().getName(), updatedObjects.size());
 
             if (!updatedObjects.isEmpty())
             {
@@ -192,16 +189,6 @@ public class AcmJpaBatchUpdateService
             }
         } while (!updatedObjects.isEmpty());
 
-    }
-
-    public boolean isBatchUpdateBasedOnLastModifiedEnabled()
-    {
-        return batchUpdateBasedOnLastModifiedEnabled;
-    }
-
-    public void setBatchUpdateBasedOnLastModifiedEnabled(boolean batchUpdateBasedOnLastModifiedEnabled)
-    {
-        this.batchUpdateBasedOnLastModifiedEnabled = batchUpdateBasedOnLastModifiedEnabled;
     }
 
     public String getLastBatchUpdatePropertyFileLocation()
@@ -232,16 +219,6 @@ public class AcmJpaBatchUpdateService
     public void setSpringContextHolder(SpringContextHolder springContextHolder)
     {
         this.springContextHolder = springContextHolder;
-    }
-
-    public int getBatchSize()
-    {
-        return batchSize;
-    }
-
-    public void setBatchSize(int batchSize)
-    {
-        this.batchSize = batchSize;
     }
 
     public JpaObjectsToSearchService getObjectsToSearchService()

@@ -38,9 +38,9 @@
             <beans:property name="foiaRequestDao" ref="foiaRequestDao"/>
             <beans:property name="holidayConfigurationService" ref="holidayConfigurationService"/>
             <beans:property name="arkPermissionEvaluator" ref="arkPermissionEvaluator"/>
-            <beans:property name="extensionWorkingDays" value="#{foiaConfig.requestExtensionWorkingDays}"/>
-            <beans:property name="requestExtensionWorkingDaysEnabled" value="#{foiaConfig.requestExtensionWorkingDaysEnabled}"/>
+            <beans:property name="foiaConfig" ref="foiaConfig"/>
         </beans:bean>
+
         <beans:bean id="foiaConfigurationHandler" class="gov.foia.pipeline.postsave.FOIAConfigurationHandler">
             <beans:property name="foiaConfigurationService" ref="foiaConfigurationService"/>
         </beans:bean>

@@ -58,10 +58,13 @@ public class AcmUserRoleService
         Set<AcmGroup> userGroups = user.getGroups();
 
         Set<String> userGroupNames = Stream
-                .concat(userGroups.stream().map(AcmGroup::getName), userGroups.stream().flatMap(AcmGroup::getAscendantsStream))
+                .concat(userGroups.stream().map(AcmGroup::getName).map(String::toUpperCase),
+                        userGroups.stream().flatMap(AcmGroup::getAscendantsStream).map(String::toUpperCase))
                 .collect(Collectors.toSet());
 
-        return userGroupNames.stream().filter(groupToRoleMap::containsKey).flatMap(g -> groupToRoleMap.get(g).stream())
+        return userGroupNames.stream()
+                .filter(groupToRoleMap::containsKey)
+                .flatMap(g -> groupToRoleMap.get(g).stream())
                 .collect(Collectors.toSet());
     }
 
