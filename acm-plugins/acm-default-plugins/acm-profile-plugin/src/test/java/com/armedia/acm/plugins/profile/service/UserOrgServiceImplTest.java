@@ -37,6 +37,7 @@ import static org.easymock.EasyMock.expectLastCall;
 
 import com.armedia.acm.auth.AcmAuthentication;
 import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
+import com.armedia.acm.plugins.ecm.model.EcmFileConfig;
 import com.armedia.acm.plugins.person.model.Organization;
 import com.armedia.acm.plugins.person.service.OrganizationService;
 import com.armedia.acm.plugins.profile.dao.UserOrgDao;
@@ -99,7 +100,10 @@ public class UserOrgServiceImplTest extends EasyMockSupport
         userOrgService.setOrganizationService(mockOrganizationService);
         userOrgService.setEventPublisher(mockEventPublisher);
         userOrgService.setMuleContextManager(mockMuleContextManager);
-        userOrgService.setDefaultCmisId(DEFAULT_CMIS_ID);
+
+        EcmFileConfig ecmFileConfig = new EcmFileConfig();
+        ecmFileConfig.setDefaultCmisId(DEFAULT_CMIS_ID);
+        userOrgService.setEcmFileConfig(ecmFileConfig);
 
         muleMessageProps = new LinkedHashMap<>();
         muleMessageProps.put("acmUser", mockAuthentication);

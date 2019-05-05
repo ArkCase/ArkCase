@@ -85,9 +85,9 @@ public class SolrJoinDocumentsServiceImpl implements SolrJoinDocumentsService
         {
             // Execute all request in parallel to minimize chances for wrong responses
             CompletableFuture<String> targetResponse = executeSolrQuery.getResultsByPredefinedQueryAsync(auth, SolrCore.ADVANCED_SEARCH,
-                    targetQuery.toString(), start, limit, sort);
+                    targetQuery.toString(), start, 10000, sort);
             CompletableFuture<String> associationsResponse = executeSolrQuery.getResultsByPredefinedQueryAsync(auth,
-                    SolrCore.ADVANCED_SEARCH, associationsQuery.toString(), start, limit, sort);
+                    SolrCore.ADVANCED_SEARCH, associationsQuery.toString(), start, 10000, sort);
             // wait all completable features to finish
             CompletableFuture.allOf(targetResponse, associationsResponse);
 

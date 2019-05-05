@@ -276,13 +276,13 @@ public class TimesheetServiceImpl implements TimesheetService
     @Override
     public Map<String, AcmTime> accumulateTimesheetByTypeAndChangeCode(AcmTimesheet timesheet)
     {
-        Map totalAcmTimesPerType = new HashMap<String, AcmTime>();
+        Map<String, AcmTime> totalAcmTimesPerType = new HashMap<>();
 
         timesheet.getTimes().forEach(acmTime -> {
             String timeKey = acmTime.getType() + "_" + acmTime.getObjectId();
             if(totalAcmTimesPerType.containsKey(timeKey))
             {
-                AcmTime finalAcmTime = (AcmTime) totalAcmTimesPerType.get(timeKey);
+                AcmTime finalAcmTime = totalAcmTimesPerType.get(timeKey);
                 finalAcmTime.setTotalCost(finalAcmTime.getTotalCost() + acmTime.getTotalCost());
             }
             else

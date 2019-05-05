@@ -77,10 +77,9 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-sm-3">
+                <div class="col-sm-3" ng-if="enableTitle">
                     <label for="title" translate> cases.comp.main.title.label </label>
-                    <input type="text" id="title" ng-model="objectInfo.title" class="input-md form-control" permission="editRequestData" permission-object-type="CASE_FILE"
-                            permission-properties="objectInfo" permission-action="disable" maxlength="50"/>
+                    <input type="text" id="title" ng-model="objectInfo.title" class="input-md form-control" ng-disabled="true" maxlength="50"/>
                 </div>
                 <div class="col-sm-3">
                     <label translate> cases.comp.main.description.label </label>

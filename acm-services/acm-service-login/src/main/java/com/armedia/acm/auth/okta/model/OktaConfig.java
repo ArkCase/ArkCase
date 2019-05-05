@@ -46,7 +46,7 @@ public class OktaConfig
     @Value("${okta.selectMethodTargetUrl}")
     private String selectMethodTargetUrl;
 
-    @Value("${verifyMethodTargetUrl}")
+    @Value("${okta.verifyMethodTargetUrl}")
     private String verifyMethodTargetUrl;
 
     @Value("true")

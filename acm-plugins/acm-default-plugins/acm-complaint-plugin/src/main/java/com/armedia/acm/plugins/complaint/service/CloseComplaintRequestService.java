@@ -27,6 +27,7 @@ package com.armedia.acm.plugins.complaint.service;
  * #L%
  */
 
+import com.armedia.acm.auth.AcmAuthentication;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmListObjectsFailedException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
@@ -58,7 +59,6 @@ import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -111,7 +111,7 @@ public class CloseComplaintRequestService
         }
 
         boolean shouldComplaintBeAddedToExistingCase = shallWeAddComplaintToExistingCase(updatedRequest);
-        log.debug("Add to existing case file? " + shouldComplaintBeAddedToExistingCase);
+        log.debug("Add to existing case file? [{}]", shouldComplaintBeAddedToExistingCase);
 
         if (shouldComplaintBeAddedToExistingCase)
         {
@@ -169,7 +169,7 @@ public class CloseComplaintRequestService
         addOrganizationsToCaseFile(updatedComplaint.getOrganizationAssociations(), existingCaseFile);
 
         // here we need a full Authentication object
-        Authentication auth = new UsernamePasswordAuthenticationToken(userId, userId);
+        Authentication auth = new AcmAuthentication(new ArrayList<>(), userId, userId, true, userId);
         existingCaseFile = getSaveCaseService().saveCase(existingCaseFile, auth, null);
 
         addChildObjectsToCaseFile(updatedComplaint, existingCaseFile, auth);
@@ -199,7 +199,7 @@ public class CloseComplaintRequestService
             AcmContainer containerCaseFile = getEcmFileService().getOrCreateContainer(existingCaseFile.getObjectType(),
                     existingCaseFile.getId());
 
-            String complaintFolderName = complaintFolderName = String.format(getComplaintFolderNameFormat(),
+            String complaintFolderName = String.format(getComplaintFolderNameFormat(),
                     updatedComplaint.getComplaintNumber());
 
             container.getFolder().setParentFolder(containerCaseFile.getFolder());
@@ -308,10 +308,10 @@ public class CloseComplaintRequestService
         addPersonsToCaseFile(updatedComplaint.getPersonAssociations(), caseFile);
         addOrganizationsToCaseFile(updatedComplaint.getOrganizationAssociations(), caseFile);
 
-        log.debug("About to save case file");
+        log.debug("About to save Case File from opened investigation on Complaint: [{}]", updatedComplaint.getComplaintId());
 
         // here we need a full Authentication object
-        Authentication auth = new UsernamePasswordAuthenticationToken(userId, userId);
+        Authentication auth = new AcmAuthentication(new ArrayList<>(), userId, userId, true, userId);
         CaseFile fullInvestigation = getSaveCaseService().saveCase(caseFile, auth, null, SaveCaseServiceCaller.CLOSE_COMPLAINT);
 
         addChildObjectsToCaseFile(updatedComplaint, fullInvestigation, auth);

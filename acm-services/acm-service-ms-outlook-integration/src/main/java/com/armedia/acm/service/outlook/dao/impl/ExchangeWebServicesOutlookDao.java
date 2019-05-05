@@ -27,11 +27,22 @@ package com.armedia.acm.service.outlook.dao.impl;
  * #L%
  */
 
-import com.armedia.acm.core.exceptions.*;
-import com.armedia.acm.files.AbstractConfigurationFileEvent;
-import com.armedia.acm.files.ConfigurationFileChangedEvent;
+import com.armedia.acm.core.exceptions.AcmOutlookConnectionFailedException;
+import com.armedia.acm.core.exceptions.AcmOutlookCreateItemFailedException;
+import com.armedia.acm.core.exceptions.AcmOutlookException;
+import com.armedia.acm.core.exceptions.AcmOutlookFindItemsFailedException;
+import com.armedia.acm.core.exceptions.AcmOutlookItemNotDeletedException;
+import com.armedia.acm.core.exceptions.AcmOutlookItemNotFoundException;
+import com.armedia.acm.core.exceptions.AcmOutlookModifyItemFailedException;
 import com.armedia.acm.service.outlook.dao.OutlookDao;
-import com.armedia.acm.service.outlook.model.*;
+import com.armedia.acm.service.outlook.model.AcmOutlookUser;
+import com.armedia.acm.service.outlook.model.OutlookCalendarItem;
+import com.armedia.acm.service.outlook.model.OutlookConfig;
+import com.armedia.acm.service.outlook.model.OutlookContactItem;
+import com.armedia.acm.service.outlook.model.OutlookFolder;
+import com.armedia.acm.service.outlook.model.OutlookFolderPermission;
+import com.armedia.acm.service.outlook.model.OutlookItem;
+import com.armedia.acm.service.outlook.model.OutlookTaskItem;
 import com.armedia.acm.service.outlook.service.impl.ExchangeConfigurationServiceImpl;
 
 import org.apache.commons.lang3.StringUtils;
@@ -39,11 +50,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.context.ApplicationListener;
 
 import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
+import java.util.TimeZone;
 
 import microsoft.exchange.webservices.data.core.ExchangeService;
 import microsoft.exchange.webservices.data.core.PropertySet;
@@ -77,19 +92,16 @@ import microsoft.exchange.webservices.data.search.filter.SearchFilter;
 /**
  * Created by armdev on 4/20/15.
  */
-public class ExchangeWebServicesOutlookDao implements OutlookDao, ApplicationListener<AbstractConfigurationFileEvent>
+public class ExchangeWebServicesOutlookDao implements OutlookDao
 {
     private transient final Logger log = LoggerFactory.getLogger(getClass());
     private final PropertySet standardProperties = new PropertySet(BasePropertySet.IdOnly, ItemSchema.Subject, ItemSchema.DateTimeSent,
             ItemSchema.DateTimeCreated, ItemSchema.DateTimeReceived, ItemSchema.LastModifiedTime, ItemSchema.Body, ItemSchema.Size);
     private final PropertySet folderProperties = new PropertySet(FolderSchema.Id, FolderSchema.DisplayName, FolderSchema.ParentFolderId,
             FolderSchema.Permissions);
-    private ExchangeVersion exchangeVersion = ExchangeVersion.Exchange2007_SP1;
     private Map<String, PropertyDefinition> sortFields;
-    private String defaultAccess;
     private ExchangeConfigurationServiceImpl exchangeConfigurationService;
-    private boolean autodiscoveryEnabled;
-    private URI clientAccessServer;
+    private OutlookConfig outlookConfig;
 
     @Override
     @Cacheable(value = "outlook-connection-cache", key = "#user.emailAddress")
@@ -101,23 +113,35 @@ public class ExchangeWebServicesOutlookDao implements OutlookDao, ApplicationLis
 
         ExchangeCredentials credentials = new WebCredentials(user.getEmailAddress(), user.getOutlookPassword());
 
-        try (ExchangeService service = new ExchangeService(getExchangeVersion()))
+        String exchangeVersion = outlookConfig.getServerVersion();
+        ExchangeVersion version;
+        try
+        {
+            version = ExchangeVersion.valueOf(exchangeVersion);
+        }
+        catch (IllegalArgumentException e)
+        {
+            version = ExchangeVersion.Exchange2007_SP1;
+            log.warn("Configured exchange version [{}] is not valid. Use default [{}]", exchangeVersion, version);
+        }
+
+        try (ExchangeService service = new ExchangeService(version))
         {
             service.setCredentials(credentials);
-            if (isAutodiscoveryEnabled())
+            if (outlookConfig.getEnableAutoDiscovery())
             {
                 service.autodiscoverUrl(user.getEmailAddress(), redirectionUrl -> true);
             }
             else
             {
-                service.setUrl(getClientAccessServer());
+                service.setUrl(URI.create(outlookConfig.getClientAccessServer()));
             }
 
             return service;
         }
         catch (Exception e)
         {
-            log.error("Could not connect to Exchange: " + e.getMessage(), e);
+            log.error("Could not connect to Exchange: [{}]", e.getMessage(), e);
             throw new AcmOutlookConnectionFailedException(e.getMessage(), e);
         }
     }
@@ -371,9 +395,10 @@ public class ExchangeWebServicesOutlookDao implements OutlookDao, ApplicationLis
             folder.setDisplayName(newFolder.getDisplayName());
             // add default permissions
             folder.getPermissions().add(new FolderPermission(StandardUser.Anonymous, FolderPermissionLevel.None));
-            if (getDefaultAccess() != null)
+            if (outlookConfig.getDefaultAccess() != null)
             {
-                folder.getPermissions().add(new FolderPermission(StandardUser.Default, FolderPermissionLevel.valueOf(getDefaultAccess())));
+                folder.getPermissions()
+                        .add(new FolderPermission(StandardUser.Default, FolderPermissionLevel.valueOf(outlookConfig.getDefaultAccess())));
             }
             else
             {
@@ -601,27 +626,6 @@ public class ExchangeWebServicesOutlookDao implements OutlookDao, ApplicationLis
         return fp;
     }
 
-    @Override
-    public void onApplicationEvent(AbstractConfigurationFileEvent event)
-    {
-
-        if (event instanceof ConfigurationFileChangedEvent && event.getConfigFile().getName().equals("msOutlookIntegration.properties"))
-        {
-            ExchangeConfiguration exchangeConfigurationUpdated = getExchangeConfigurationService().readConfiguration();
-            setAutodiscoveryEnabled(exchangeConfigurationUpdated.isEnableAutodiscovery());
-            try
-            {
-                setClientAccessServer(new URI(exchangeConfigurationUpdated.getClientAccessServer()));
-            }
-            catch (URISyntaxException e)
-            {
-            }
-            setDefaultAccess(exchangeConfigurationUpdated.getDefaultAccess());
-            setExchangeVersion(ExchangeVersion.valueOf(exchangeConfigurationUpdated.getServerVersion()));
-        }
-
-    }
-
     public Map<String, PropertyDefinition> getSortFields()
     {
         return sortFields;
@@ -630,46 +634,6 @@ public class ExchangeWebServicesOutlookDao implements OutlookDao, ApplicationLis
     public void setSortFields(Map<String, PropertyDefinition> sortFields)
     {
         this.sortFields = sortFields;
-    }
-
-    public ExchangeVersion getExchangeVersion()
-    {
-        return exchangeVersion;
-    }
-
-    public void setExchangeVersion(ExchangeVersion exchangeVersion)
-    {
-        this.exchangeVersion = exchangeVersion;
-    }
-
-    public boolean isAutodiscoveryEnabled()
-    {
-        return autodiscoveryEnabled;
-    }
-
-    public void setAutodiscoveryEnabled(boolean autodiscoveryEnabled)
-    {
-        this.autodiscoveryEnabled = autodiscoveryEnabled;
-    }
-
-    public URI getClientAccessServer()
-    {
-        return clientAccessServer;
-    }
-
-    public void setClientAccessServer(URI clientAccessServer)
-    {
-        this.clientAccessServer = clientAccessServer;
-    }
-
-    public String getDefaultAccess()
-    {
-        return defaultAccess;
-    }
-
-    public void setDefaultAccess(String defaultAccess)
-    {
-        this.defaultAccess = defaultAccess;
     }
 
     /**
@@ -687,5 +651,15 @@ public class ExchangeWebServicesOutlookDao implements OutlookDao, ApplicationLis
     public void setExchangeConfigurationService(ExchangeConfigurationServiceImpl exchangeConfigurationService)
     {
         this.exchangeConfigurationService = exchangeConfigurationService;
+    }
+
+    public OutlookConfig getOutlookConfig()
+    {
+        return outlookConfig;
+    }
+
+    public void setOutlookConfig(OutlookConfig outlookConfig)
+    {
+        this.outlookConfig = outlookConfig;
     }
 }

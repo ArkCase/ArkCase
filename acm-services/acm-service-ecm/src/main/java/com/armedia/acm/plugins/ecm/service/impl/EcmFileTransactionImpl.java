@@ -33,6 +33,7 @@ import com.armedia.acm.plugins.ecm.dao.AcmFolderDao;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
+import com.armedia.acm.plugins.ecm.model.EcmFileConfig;
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.model.FileUploadStage;
 import com.armedia.acm.plugins.ecm.model.ProgressbarDetails;
@@ -91,7 +92,7 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
     private CmisConfigUtils cmisConfigUtils;
     private Logger log = LoggerFactory.getLogger(getClass());
     private Map<String, List<String>> mimeTypesByTika;
-    private boolean ocrEnabled;
+    private EcmFileConfig ecmFileConfig;
     private ProgressIndicatorService progressIndicatorService;
 
     public static List<String> getAllTikaMimeTypesForFile(Map<String, List<String>> mimeTypesByTika, String value)
@@ -166,7 +167,7 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
                         detectedMetadata, ecmUniqueFilename);
 
                 boolean searchablePDF = false;
-                if (ocrEnabled)
+                if (ecmFileConfig.getSnowboundEnableOcr())
                 {
                     searchablePDF = folderAndFilesUtils.isSearchablePDF(tempFileContents, finalMimeType);
                 }
@@ -218,12 +219,11 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
 
     }
 
-
     @Override
     @Deprecated
     public EcmFile addFileTransaction(String originalFileName, Authentication authentication, String fileType,
-                                      String fileCategory, InputStream fileInputStream, String mimeType, String fileName,
-                                      String cmisFolderId, AcmContainer container, String cmisRepositoryId)
+            String fileCategory, InputStream fileInputStream, String mimeType, String fileName,
+            String cmisFolderId, AcmContainer container, String cmisRepositoryId)
             throws MuleException, IOException
     {
         Document existingCmisDocument = null;
@@ -234,9 +234,9 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
     @Override
     @Deprecated
     public EcmFile addFileTransaction(String originalFileName, Authentication authentication, String fileType,
-                                      String fileCategory, InputStream fileContents, String fileContentType,
-                                      String fileName, String targetCmisFolderId, AcmContainer container,
-                                      String cmisRepositoryId, Document existingCmisDocument) throws MuleException, IOException
+            String fileCategory, InputStream fileContents, String fileContentType,
+            String fileName, String targetCmisFolderId, AcmContainer container,
+            String cmisRepositoryId, Document existingCmisDocument) throws MuleException, IOException
     {
 
         log.debug("Creating ecm file pipeline context");
@@ -326,11 +326,14 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
                         detectedMetadata, ecmUniqueFilename);
 
                 boolean searchablePDF = false;
-                if (ocrEnabled)
+                log.debug("SNOWBOUND ENABLED OCR = [{}]", ecmFileConfig.getSnowboundEnableOcr());
+                if (ecmFileConfig.getSnowboundEnableOcr())
                 {
                     searchablePDF = folderAndFilesUtils.isSearchablePDF(tempFileContents, finalMimeType);
+                    log.debug("SearchablePDF = [{}]", searchablePDF);
                 }
                 pipelineContext.setSearchablePDF(searchablePDF);
+
 
                 String fileName = getFolderAndFilesUtils().getBaseFileName(metadata.getFileName(), finalExtension);
                 metadata.setFileName(fileName);
@@ -373,7 +376,8 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
         {
             // stop the progressbar executor
             ProgressbarExecutor progressbarExecutor = progressIndicatorService.getExecutor(metadata.getUuid());
-            if (StringUtils.isNotEmpty(metadata.getUuid()) && progressbarExecutor != null && progressbarExecutor.getProgressbarDetails().getStage() == FileUploadStage.UPLOAD_CHUNKS_TO_FILESYSTEM.getValue())
+            if (StringUtils.isNotEmpty(metadata.getUuid()) && progressbarExecutor != null
+                    && progressbarExecutor.getProgressbarDetails().getStage() == FileUploadStage.UPLOAD_CHUNKS_TO_FILESYSTEM.getValue())
             {
                 log.debug("Stop progressbar executor in stage 2, for file {} and set file upload success to {}", metadata.getUuid(), false);
                 progressIndicatorService.end(metadata.getUuid(), false);
@@ -572,7 +576,7 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
             ecmFile.setFileActiveVersionNameExtension(ecmTikaFile.getNameExtension());
 
             boolean searchablePDF = false;
-            if (ocrEnabled)
+            if (ecmFileConfig.getSnowboundEnableOcr())
             {
                 searchablePDF = folderAndFilesUtils.isSearchablePDF(file, ecmFile.getFileActiveVersionMimeType());
             }
@@ -670,7 +674,8 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
 
             Map<String, Object> messageProps = new HashMap<>();
             messageProps.put(EcmFileConstants.CONFIGURATION_REFERENCE, manager);
-            String cmisId = fileVersion.isEmpty() ? ecmFile.getVersionSeriesId() : getFolderAndFilesUtils().getVersionCmisId(ecmFile, fileVersion);
+            String cmisId = fileVersion.isEmpty() ? ecmFile.getVersionSeriesId()
+                    : getFolderAndFilesUtils().getVersionCmisId(ecmFile, fileVersion);
 
             MuleMessage message = getMuleContextManager().send("vm://downloadFileFlow.in", cmisId, messageProps);
 
@@ -819,16 +824,6 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
         this.mimeTypesByTika = mimeTypesByTika;
     }
 
-    public boolean isOcrEnabled()
-    {
-        return ocrEnabled;
-    }
-
-    public void setOcrEnabled(boolean ocrEnabled)
-    {
-        this.ocrEnabled = ocrEnabled;
-    }
-
     public ProgressIndicatorService getProgressIndicatorService()
     {
         return progressIndicatorService;
@@ -837,5 +832,15 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
     public void setProgressIndicatorService(ProgressIndicatorService progressIndicatorService)
     {
         this.progressIndicatorService = progressIndicatorService;
+    }
+
+    public EcmFileConfig getEcmFileConfig()
+    {
+        return ecmFileConfig;
+    }
+
+    public void setEcmFileConfig(EcmFileConfig ecmFileConfig)
+    {
+        this.ecmFileConfig = ecmFileConfig;
     }
 }
