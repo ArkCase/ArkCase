@@ -54,6 +54,9 @@
 
     <bean id="dueDateReminderModelProvider" class="com.armedia.acm.services.notification.service.provider.DueDateReminderModelProvider">
     </bean>
+
+    <bean id="requestDownloadedModelProvider" class="com.armedia.acm.services.notification.service.provider.RequestDownloadedModelProvider">
+    </bean>
     
     <bean id="acmEntitySendExecutor" class="com.armedia.acm.services.notification.service.SendExecutor">
         <property name="springContextHolder" ref="acmContextHolder"/>
@@ -83,6 +86,11 @@
     <bean id="dueDateReminderExecutor" class="com.armedia.acm.services.notification.service.SendExecutor">
         <property name="springContextHolder" ref="acmContextHolder"/>
         <property name="templateModelProvider" ref="dueDateReminderModelProvider"/>
+    </bean>
+
+    <bean id="requestDownloadedExecutor" class="com.armedia.acm.services.notification.service.SendExecutor">
+        <property name="springContextHolder" ref="acmContextHolder"/>
+        <property name="templateModelProvider" ref="requestDownloadedModelProvider"/>
     </bean>
     
     <bean id="purgeExecutor" class="com.armedia.acm.services.notification.service.PurgeExecutor">

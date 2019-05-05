@@ -19,14 +19,12 @@
         <property name="templatingEngine" ref="templatingEngine"/>
         <property name="emailSenderConfigurationService" ref="emailSenderConfigurationService"/>
         <property name="defaultFolderAndFileConverter" ref="folderConverter"/>
+        <property name="outlookConfig" ref="outlookConfig"/>
     </bean>
 
     <bean id="exchangeWebServicesOutlookDao" class="com.armedia.acm.service.outlook.dao.impl.ExchangeWebServicesOutlookDao">
         <property name="exchangeConfigurationService" ref="exchangeConfigurationService"/>
-        <property name="exchangeVersion" value="#{outlookConfig.serverVersion}"/>
-        <property name="autodiscoveryEnabled" value="#{outlookConfig.enableAutoDiscovery}"/>
-        <property name="clientAccessServer" value="#{outlookConfig.clientAccessServer}"/>
-        <property name="defaultAccess" value="#{outlookConfig.defaultAccess}"/>
+        <property name="outlookConfig" ref="outlookConfig"/>
         <property name="sortFields">
             <map>
                 <entry key="subject" value-ref="propertyDefinitionSubject"/>
@@ -113,4 +111,5 @@
     <bean id="outlookConfig" class="com.armedia.acm.service.outlook.model.OutlookConfig" scope="refresh">
         <aop:scoped-proxy/>
     </bean>
+
 </beans>

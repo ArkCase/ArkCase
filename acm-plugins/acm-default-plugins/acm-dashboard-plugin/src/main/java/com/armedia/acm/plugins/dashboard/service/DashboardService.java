@@ -28,7 +28,6 @@ package com.armedia.acm.plugins.dashboard.service;
  */
 
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
-import com.armedia.acm.pluginmanager.model.AcmPlugin;
 import com.armedia.acm.plugins.dashboard.dao.DashboardDao;
 import com.armedia.acm.plugins.dashboard.dao.WidgetDao;
 import com.armedia.acm.plugins.dashboard.exception.AcmWidgetException;
@@ -181,22 +180,17 @@ public class DashboardService
     public Dashboard prepareDashboardStringBasedOnUserRoles(String userId, String moduleName) throws AcmObjectNotFoundException
     {
         AcmUser user = userDao.findByUserId(userId);
-        Dashboard dashboard;
-        try
-        {
-            dashboard = dashboardDao.getDashboardConfigForUserAndModuleName(user, moduleName);
-        }
-        catch (AcmObjectNotFoundException e)
-        {
-            throw e;
-        }
+
+        Dashboard dashboard = dashboardDao.getDashboardConfigForUserAndModuleName(user, moduleName);
+
         String dashboardModifiedString = dashboard.getDashboardConfig();
         Set<String> roles = userRoleService.getUserRoles(userId);
         try
         {
             List<Widget> result = onlyUniqueValues(widgetDao.getAllWidgetsByRoles(roles));
             List<Widget> listOfDashboardWidgetsOnly = dashboardPropertyReader.getDashboardWidgetsOnly();
-            List<Widget> dashboardWidgetsOnly = result.stream().filter(w -> listOfDashboardWidgetsOnly.contains(w))
+            List<Widget> dashboardWidgetsOnly = result.stream()
+                    .filter(listOfDashboardWidgetsOnly::contains)
                     .collect(Collectors.toList());
 
             JSONObject dashboardJSONObject = new JSONObject(dashboard.getDashboardConfig());

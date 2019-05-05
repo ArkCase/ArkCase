@@ -93,8 +93,6 @@ public class ConfigurationContainer implements ConfigurationFacade
 
     private synchronized void initializeConfigurationMap()
     {
-        if (this.configurationMap == null)
-        {
             String url = this.environment.getProperty(CONFIGURATION_SERVER_URL);
             Map<String, Object> configurationMap = this.configurationServiceBootClient.loadConfiguration(url);
             this.configurationMap = configurationMap.entrySet()
@@ -117,7 +115,6 @@ public class ConfigurationContainer implements ConfigurationFacade
                             return it.getValue();
                         }
                     }));
-        }
     }
 
     @Override
@@ -136,7 +133,6 @@ public class ConfigurationContainer implements ConfigurationFacade
     @Override
     public void refresh()
     {
-        this.configurationMap = null;
         initializeConfigurationMap();
     }
 

@@ -50,7 +50,7 @@ public class FoiaConfigurationService extends SystemConfigurationService
         foiaConfig.setRequestExtensionWorkingDaysEnabled(foiaConfiguration.getRequestExtensionWorkingDaysEnabled());
         foiaConfig.setPurgeRequestWhenInHoldEnabled(foiaConfiguration.getPurgeRequestWhenInHoldEnabled());
         foiaConfig.setMoveToBillingQueueEnabled(foiaConfiguration.getMoveToBillingQueueEnabled());
-        configurationPropertyService.updateProperties(foiaConfiguration);
+        configurationPropertyService.updateProperties(foiaConfig);
     }
 
     @Override

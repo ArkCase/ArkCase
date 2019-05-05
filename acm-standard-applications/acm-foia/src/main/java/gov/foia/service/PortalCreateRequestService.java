@@ -201,7 +201,11 @@ public class PortalCreateRequestService
         address.setStreetAddress2(in.getAddress2());
         address.setZip(in.getZip());
         address.setType("Business");
-        if(address.getStreetAddress() != null || address.getStreetAddress2() != null || address.getCity() != null || address.getZip() != null || address.getState() != null){
+        if((address.getStreetAddress() != null && !address.getStreetAddress().equals(""))
+                || (address.getStreetAddress2() != null && !address.getStreetAddress2().equals(""))
+                || (address.getCity() != null && !address.getCity().equals(""))
+                || (address.getZip() != null && !address.getZip().equals(""))
+                || (address.getState() != null && !address.getState().equals(""))){
             requester.getAddresses().add(address);
         }
 
@@ -209,7 +213,7 @@ public class PortalCreateRequestService
         List<ContactMethod> contactMethod = new ArrayList<>();
         requester.setContactMethods(contactMethod);
         ContactMethod phone = buildContactMethod("phone", in.getPhone());
-        if (phone.getValue() != null)
+        if (phone.getValue() != null && !phone.getValue().equals(""))
         {
             requester.getContactMethods().add(0, phone);
         }
@@ -218,7 +222,7 @@ public class PortalCreateRequestService
             requester.getContactMethods().add(0, null);
         }
         ContactMethod fax = buildContactMethod("fax", null);
-        if (fax.getValue() != null)
+        if (fax.getValue() != null && !fax.getValue().equals(""))
         {
             requester.getContactMethods().add(1, fax);
         }
@@ -227,7 +231,7 @@ public class PortalCreateRequestService
             requester.getContactMethods().add(1, null);
         }
         ContactMethod email = buildContactMethod("email", in.getEmail());
-        if (email.getValue() != null)
+        if (email.getValue() != null && !email.getValue().equals(""))
         {
             requester.getContactMethods().add(2, email);
         }
