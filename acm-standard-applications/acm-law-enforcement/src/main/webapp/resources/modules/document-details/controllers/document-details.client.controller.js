@@ -31,7 +31,25 @@ angular.module('document-details').controller(
                         }
                     };
 
+                                                            
+                     function onShowLoader() {
+                        var loaderModal = $modal.open({
+                            animation: true,
+                            templateUrl: 'modules/common/views/object.modal.loading-spinner.html',
+                            size: 'md',
+                            backdrop: 'static'
+                        });
+                        $scope.loaderModal = loaderModal;
+                    }
+
+                    function onHideLoader() {
+                        $scope.loaderModal.close();
+                    }
+
                     $scope.iframeLoaded = function() {
+                        ArkCaseCrossWindowMessagingService.addHandler('show-loader', onShowLoader);
+                        ArkCaseCrossWindowMessagingService.addHandler('hide-loader', onHideLoader);
+                        
                         ObjectLookupService.getLookupByLookupName("annotationTags").then(function (allAnnotationTags) {
                             $scope.allAnnotationTags = allAnnotationTags;
                             ArkCaseCrossWindowMessagingService.addHandler('select-annotation-tags', onSelectAnnotationTags);
