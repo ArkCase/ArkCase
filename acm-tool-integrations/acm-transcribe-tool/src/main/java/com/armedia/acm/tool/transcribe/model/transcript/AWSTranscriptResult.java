@@ -42,6 +42,9 @@ public class AWSTranscriptResult
     @JsonProperty("items")
     private List<AWSTranscriptItem> items;
 
+    @JsonProperty("speaker_labels")
+    private AWSSpeakerLabel speakerLabels;
+
     public List<AWSTranscriptText> getTranscripts()
     {
         return transcripts;
@@ -60,5 +63,15 @@ public class AWSTranscriptResult
     public void setItems(List<AWSTranscriptItem> items)
     {
         this.items = items;
+    }
+
+    public AWSSpeakerLabel getSpeakerLabels()
+    {
+        return speakerLabels;
+    }
+
+    public void setSpeakerLabels(AWSSpeakerLabel speakerLabels)
+    {
+        this.speakerLabels = speakerLabels;
     }
 }
