@@ -4,8 +4,8 @@
 
 angular.module('audit').controller(
         'AuditController',
-        [ '$scope', '$sce', '$q', 'ConfigService', 'LookupService', 'AuditController.BuildUrl', 'UtilService', 'Util.DateService', '$window', 'Helper.LocaleService', 'Object.LookupService',
-                function($scope, $sce, $q, ConfigService, LookupService, BuildUrl, Util, UtilDateService, $window, LocaleHelper, ObjectLookupService) {
+    ['$scope', '$sce', '$q', '$modal', 'ConfigService', 'LookupService', 'AuditController.BuildUrl', 'UtilService', 'Util.DateService', '$window', 'Helper.LocaleService', 'Object.LookupService',
+        function ($scope, $sce, $q, $modal, ConfigService, LookupService, BuildUrl, Util, UtilDateService, $window, LocaleHelper, ObjectLookupService) {
                     new LocaleHelper.Locale({
                         scope: $scope
                     });
@@ -14,6 +14,10 @@ angular.module('audit').controller(
                         $scope.config = config;
                         return config;
                     });
+
+                    $scope.iframeLoadedCallBack = function () {
+                         $scope.modalInstance.close();
+                    };
 
                     $scope.showXmlReport = false;
 
@@ -76,6 +80,15 @@ angular.module('audit').controller(
                     });
 
                     $scope.showIframe = function() {
+
+                        var modalInstance = $modal.open({
+                            animation: true,
+                            templateUrl: 'modules/common/views/object.modal.loading-spinner.html',
+                            size: 'md',
+                            backdrop: 'static'
+                        });
+                        $scope.modalInstance = modalInstance;
+
                         var reportUri = $scope.auditReportUri;
                         if ($scope.showXmlReport) {
                             reportUri = reportUri.substring(0, reportUri.indexOf('viewer')) + 'report';
@@ -84,4 +97,4 @@ angular.module('audit').controller(
                             $scope.auditReportUrl = BuildUrl.getUrl($scope.pentahoHost, $scope.pentahoPort, $scope.auditReportUri, $scope.dateFrom, $scope.dateTo, $scope.objectType, $scope.objectId, true, $scope.pentahoUser, $scope.pentahoPassword, $scope.showXmlReport);
                         }
                     }
-                } ]);
+        }]);
