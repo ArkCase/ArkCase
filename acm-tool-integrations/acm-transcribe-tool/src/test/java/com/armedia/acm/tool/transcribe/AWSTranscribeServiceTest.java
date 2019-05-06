@@ -317,13 +317,17 @@ public class AWSTranscribeServiceTest
     }
 
     @Test
-    public void get() throws Exception
+    public void getMultipleSpeakers() throws Exception
     {
         String remoteId = "transcribe-remote-id";
-        String jsonString = IOUtils.toString(getClass().getClassLoader().getResourceAsStream("aws/output/asrOutput.json"));
+        String jsonString = IOUtils.toString(getClass().getClassLoader().getResourceAsStream("aws/output/asrOutputMultipleSpeakers.json"));
 
         Transcript transcript = new Transcript();
         transcript.setTranscriptFileUri("https://www.amazon.test.example.com");
+
+        AWSTranscribeConfiguration configuration = new AWSTranscribeConfiguration();
+        configuration.setShowSpeakerLabels(true);
+        configuration.setMaxSpeakerLabels(10);
 
         TranscriptionJob transcriptionJob = new TranscriptionJob();
         transcriptionJob.setTranscriptionJobStatus(TranscriptionJobStatus.COMPLETED.toString());
@@ -332,6 +336,67 @@ public class AWSTranscribeServiceTest
         GetTranscriptionJobResult getTranscriptionJobResult = new GetTranscriptionJobResult();
         getTranscriptionJobResult.setTranscriptionJob(transcriptionJob);
 
+        when(awsTranscribeConfigurationService.getAWSTranscribeConfig()).thenReturn(configuration);
+        when(transcribeClient.getTranscriptionJob(any())).thenReturn(getTranscriptionJobResult);
+        when(muleContextManager.send("vm://getProviderTranscribe.in", "www.amazon.test.example.com")).thenReturn(muleMessage);
+        when(muleMessage.getInboundProperty("getProviderTranscribeException")).thenReturn(null);
+        when(muleMessage.getPayloadAsString()).thenReturn(jsonString);
+
+        Map<String, Object> props = new HashMap<>();
+        props.put("wordCountPerItem", 20);
+        props.put("silentBetweenWords", BigDecimal.valueOf(2));
+
+        TranscribeDTO transcribe = (TranscribeDTO) awsTranscribeService.get(remoteId, props);
+
+        verify(transcribeClient).getTranscriptionJob(any());
+        verify(muleContextManager).send("vm://getProviderTranscribe.in", "www.amazon.test.example.com");
+        verify(muleMessage).getInboundProperty("getProviderTranscribeException");
+        verify(muleMessage).getPayloadAsString();
+
+        assertNotNull(transcribe);
+        assertNotNull(transcribe.getTranscribeItems());
+        assertEquals(8, transcribe.getTranscribeItems().size());
+        assertEquals(new BigDecimal("1.44"), transcribe.getTranscribeItems().get(0).getStartTime());
+        assertEquals(new BigDecimal("8.45"), transcribe.getTranscribeItems().get(0).getEndTime());
+        assertEquals(99, transcribe.getTranscribeItems().get(0).getConfidence());
+        assertEquals("[spk_0] welcome to English in a minute. Most of us know it's better to do or say something after we think",
+                transcribe.getTranscribeItems().get(0).getText());
+        assertEquals(new BigDecimal("56.01"), transcribe.getTranscribeItems().get(7).getStartTime());
+        assertEquals(new BigDecimal("58.94"), transcribe.getTranscribeItems().get(7).getEndTime());
+        assertEquals(99, transcribe.getTranscribeItems().get(7).getConfidence());
+        assertEquals("[spk_0] activity. And that's English in a minute.",
+                transcribe.getTranscribeItems().get(7).getText());
+
+        // There is one item plus, because of the speaker label
+        assertEquals(21, transcribe.getTranscribeItems().get(0).getText().split(" ").length);
+
+        // There is a silent between words, new item is created + speaker label
+        assertEquals(11, transcribe.getTranscribeItems().get(4).getText().split(" ").length);
+
+        // ... Last item length + speaker label
+        assertEquals(8, transcribe.getTranscribeItems().get(7).getText().split(" ").length);
+    }
+
+    @Test
+    public void getSingleSpeaker() throws Exception
+    {
+        String remoteId = "transcribe-remote-id";
+        String jsonString = IOUtils.toString(getClass().getClassLoader().getResourceAsStream("aws/output/asrOutputSingleSpeaker.json"));
+
+        Transcript transcript = new Transcript();
+        transcript.setTranscriptFileUri("https://www.amazon.test.example.com");
+
+        TranscriptionJob transcriptionJob = new TranscriptionJob();
+        transcriptionJob.setTranscriptionJobStatus(TranscriptionJobStatus.COMPLETED.toString());
+        transcriptionJob.setTranscript(transcript);
+
+        AWSTranscribeConfiguration configuration = new AWSTranscribeConfiguration();
+        configuration.setShowSpeakerLabels(false);
+
+        GetTranscriptionJobResult getTranscriptionJobResult = new GetTranscriptionJobResult();
+        getTranscriptionJobResult.setTranscriptionJob(transcriptionJob);
+
+        when(awsTranscribeConfigurationService.getAWSTranscribeConfig()).thenReturn(configuration);
         when(transcribeClient.getTranscriptionJob(any())).thenReturn(getTranscriptionJobResult);
         when(muleContextManager.send("vm://getProviderTranscribe.in", "www.amazon.test.example.com")).thenReturn(muleMessage);
         when(muleMessage.getInboundProperty("getProviderTranscribeException")).thenReturn(null);
