@@ -1,10 +1,10 @@
-package com.armedia.acm.plugins.admin.web.api;
+package com.armedia.acm.services.holiday.service.web.api;
 
 /*-
  * #%L
  * ACM Default Plugin: admin
  * %%
- * Copyright (C) 2014 - 2018 ArkCase LLC
+ * Copyright (C) 2014 - 2019 ArkCase LLC
  * %%
  * This file is part of the ArkCase software. 
  * 
@@ -26,9 +26,8 @@ package com.armedia.acm.plugins.admin.web.api;
  * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
  * #L%
  */
-
-import com.armedia.acm.plugins.admin.model.HolidayConfiguration;
-import com.armedia.acm.plugins.admin.service.HolidayConfigurationService;
+import com.armedia.acm.services.holiday.model.HolidayConfiguration;
+import com.armedia.acm.services.holiday.service.HolidayConfigurationService;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;

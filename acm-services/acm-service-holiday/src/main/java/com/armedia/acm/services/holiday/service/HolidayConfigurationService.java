@@ -1,4 +1,4 @@
-package com.armedia.acm.plugins.admin.service;
+package com.armedia.acm.services.holiday.service;
 
 /*-
  * #%L
@@ -28,7 +28,7 @@ package com.armedia.acm.plugins.admin.service;
  */
 
 import com.armedia.acm.objectonverter.ObjectConverter;
-import com.armedia.acm.plugins.admin.model.HolidayConfiguration;
+import com.armedia.acm.services.holiday.model.HolidayConfiguration;
 
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
@@ -107,7 +107,8 @@ public class HolidayConfigurationService
 
     public boolean isWeekendNonWorkingDay(LocalDate date)
     {
-        return (((date.getDayOfWeek().equals(DayOfWeek.SATURDAY)) || date.getDayOfWeek().equals(DayOfWeek.SUNDAY)) && !getHolidayConfiguration().getIncludeWeekends());
+        return (((date.getDayOfWeek().equals(DayOfWeek.SATURDAY)) || date.getDayOfWeek().equals(DayOfWeek.SUNDAY))
+                && !getHolidayConfiguration().getIncludeWeekends());
     }
 
     public boolean isHoliday(LocalDate date)
