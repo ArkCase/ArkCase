@@ -1849,3 +1849,8 @@ a.primary {
 	margin-top: 35px;
 	z-index: 1001;
 }
+
+/* Allows a long list of documents to be scrollable */
+.ui-menu.ui-widget.ui-widget-content.ui-front {
+    top: -1px !important;
+}
