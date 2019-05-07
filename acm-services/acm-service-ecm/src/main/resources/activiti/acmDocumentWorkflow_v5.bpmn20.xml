@@ -4,7 +4,7 @@
     xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI"
     typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath"
     targetNamespace="http://www.activiti.org/processdef">
-    <process id="acmDocumentWorkflow" name="ACM Document Approval Process" isExecutable="true">
+    <process id="acmDocumentWorkflow" name="ACM Document Approval Process - Review" isExecutable="true">
         <startEvent id="startDocumentApproval" name="Document Author Submits Request to Approve Document"></startEvent>
         <userTask id="approverReviewsDocument" name="Review ${taskName}"
             activiti:candidateGroups="${execution.getVariable('candidateGroups') == null ? '' : candidateGroups}"
