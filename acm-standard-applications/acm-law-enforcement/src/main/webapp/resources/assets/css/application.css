@@ -1854,3 +1854,8 @@ a.primary {
     font-size: 36px;
     margin-left: 277px;
 }
+
+/* Allows a long list of documents to be scrollable */
+.ui-menu.ui-widget.ui-widget-content.ui-front {
+    top: -1px !important;
+}
