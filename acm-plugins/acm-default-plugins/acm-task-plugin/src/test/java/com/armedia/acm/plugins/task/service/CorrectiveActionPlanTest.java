@@ -76,7 +76,7 @@ public class CorrectiveActionPlanTest
     {
         // deploy
         repo.createDeployment()
-                .addClasspathResource("activiti/Corrective Action Plan_v2.bpmn20.xml")
+                .addClasspathResource("activiti/Corrective Action Plan_v3.bpmn20.xml")
                 .deploy();
     }
 
