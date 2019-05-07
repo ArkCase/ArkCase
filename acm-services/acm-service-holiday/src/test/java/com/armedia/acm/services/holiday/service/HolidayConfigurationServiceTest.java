@@ -1,4 +1,4 @@
-package com.armedia.acm.plugins.admin.web.api;
+package com.armedia.acm.services.holiday.service;
 
 /*-
  * #%L
@@ -29,7 +29,7 @@ package com.armedia.acm.plugins.admin.web.api;
 
 import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.objectonverter.json.JSONUnmarshaller;
-import com.armedia.acm.plugins.admin.service.HolidayConfigurationService;
+import com.armedia.acm.services.holiday.service.HolidayConfigurationService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;

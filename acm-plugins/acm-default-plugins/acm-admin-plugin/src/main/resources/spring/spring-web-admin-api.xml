@@ -278,11 +278,6 @@
         <property name="arkCaseOCRService" ref="arkCaseOCRService"/>
     </bean>
 
-    <bean id="holidayConfigurationAPIController"
-          class="com.armedia.acm.plugins.admin.web.api.HolidayConfigurationAPIController">
-        <property name="holidayConfigurationService" ref="holidayConfigurationService"/>
-    </bean>
-
     <bean id="pdfConversionConfigurationAPIController"
           class="com.armedia.acm.plugins.admin.web.api.PDFConversionConfigurationAPIController">
         <property name="pdfConversionConfigurationService" ref="pdfConversionConfigurationService"/>
