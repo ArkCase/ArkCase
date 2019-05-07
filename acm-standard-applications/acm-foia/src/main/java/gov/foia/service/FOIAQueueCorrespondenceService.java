@@ -196,11 +196,13 @@ public class FOIAQueueCorrespondenceService
             
             EcmFileVersion ecmFileVersions = letter.getVersions().get(letter.getVersions().size() - 1);
             
-            AcmUser user = userDao.findByUserId(request.getAssigneeLdapId()); 
+            AcmUser user = userDao.findByUserId(request.getAssigneeLdapId());
+
+            String emailAddress = extractRequestorEmailAddress(request.getOriginator().getPerson());
             
             Notification notification = new Notification();
             notification.setTemplateModelName("requestDocumentAttached");
-            notification.setEmailAddresses(user.getMail());
+            notification.setEmailAddresses(emailAddress);
             notification.setAttachFiles(true);
             notification.setFiles(Arrays.asList(ecmFileVersions));
             notification.setParentId(requestId);
