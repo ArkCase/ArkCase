@@ -5,7 +5,7 @@
     expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.activiti.org/processdef"
     xmlns:modeler="http://activiti.com/modeler" modeler:version="1.0ev" modeler:exportDateTime="20180106214344" modeler:modelId="1039064"
     modeler:modelVersion="1" modeler:modelLastUpdated="1515275019192">
-    <process id="CorrectiveActionPlan" name="Corrective Action Plan" isExecutable="true">
+    <process id="CorrectiveActionPlan" name="Corrective Action Plan - Review" isExecutable="true">
         <documentation>First task assignee reviews a document, then the workflow originator finalizes the document.</documentation>
         <startEvent id="startEvent1">
             <extensionElements>
