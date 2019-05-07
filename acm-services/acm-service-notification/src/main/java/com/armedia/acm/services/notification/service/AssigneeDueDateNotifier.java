@@ -1,5 +1,7 @@
 package com.armedia.acm.services.notification.service;
 
+import com.armedia.acm.services.holiday.service.HolidayConfigurationService;
+
 /*-
  * #%L
  * ACM Service: Notification
@@ -29,9 +31,7 @@ package com.armedia.acm.services.notification.service;
 
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.model.NotificationConstants;
-import com.armedia.acm.services.notification.service.UsersNotified;
 import com.armedia.acm.services.users.dao.UserDao;
-import org.joda.time.DateTime;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -42,19 +42,22 @@ import java.util.concurrent.TimeUnit;
 public class AssigneeDueDateNotifier implements UsersNotified
 {
     private UserDao userDao;
+    private HolidayConfigurationService holidayConfigurationService;
 
     @Override
     public List<Notification> getNotifications(Object[] notification, Long parentObjectId, String parentObjectType)
     {
-        if("CASE_FILE".equals(notification[4]))
+        if ("CASE_FILE".equals(notification[4]))
         {
-            Date caseDueDate = (Date)notification[12];
+            Date caseDueDate = (Date) notification[12];
             String dueDateReminderDays = (String) notification[1];
-            Boolean dueDateReminderSent = (Boolean)notification[13];
+            Boolean dueDateReminderSent = (Boolean) notification[13];
 
-            Long dateDiff = TimeUnit.DAYS.convert(Math.abs(caseDueDate.getTime() - new Date().getTime()), TimeUnit.MILLISECONDS);
+            Long dateDiff = TimeUnit.DAYS.convert(caseDueDate.getTime() - getHolidayConfigurationService()
+                    .addWorkingDaysToDate(new Date(), Integer.valueOf(dueDateReminderDays)).getTime(),
+                    TimeUnit.MILLISECONDS);
 
-            if(dateDiff.equals(Long.valueOf(dueDateReminderDays)) && dueDateReminderSent != true)
+            if (dateDiff.equals(0L) && dueDateReminderSent != true)
             {
                 Notification customNotification = new Notification();
 
@@ -73,7 +76,8 @@ public class AssigneeDueDateNotifier implements UsersNotified
                 customNotification.setTemplateModelName((String) notification[11]);
                 customNotification.setStatus(NotificationConstants.STATUS_NEW);
                 customNotification.setAction(NotificationConstants.ACTION_DEFAULT);
-                customNotification.setData("{\"usr\":\"/plugin/" + ((String) notification[4]).toLowerCase() + "/" + notification[3] + "\"}");
+                customNotification
+                        .setData("{\"usr\":\"/plugin/" + ((String) notification[4]).toLowerCase() + "/" + notification[3] + "\"}");
                 customNotification.setAttachFiles(false);
 
                 return Arrays.asList(customNotification);
@@ -103,5 +107,22 @@ public class AssigneeDueDateNotifier implements UsersNotified
     public void setUserDao(UserDao userDao)
     {
         this.userDao = userDao;
+    }
+
+    /**
+     * @return the holidayConfigurationService
+     */
+    public HolidayConfigurationService getHolidayConfigurationService()
+    {
+        return holidayConfigurationService;
+    }
+
+    /**
+     * @param holidayConfigurationService
+     *            the holidayConfigurationService to set
+     */
+    public void setHolidayConfigurationService(HolidayConfigurationService holidayConfigurationService)
+    {
+        this.holidayConfigurationService = holidayConfigurationService;
     }
 }

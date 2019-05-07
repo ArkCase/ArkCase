@@ -28,7 +28,7 @@ package gov.foia.service;
  */
 
 import com.armedia.acm.objectonverter.ObjectConverter;
-import com.armedia.acm.plugins.admin.service.HolidayConfigurationService;
+import com.armedia.acm.services.holiday.service.HolidayConfigurationService;
 
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;

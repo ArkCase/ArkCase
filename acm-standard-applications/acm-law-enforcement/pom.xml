@@ -508,6 +508,12 @@
             <artifactId>acm-service-ocr</artifactId>
             <version>${acm.version}</version>
         </dependency>
+        
+        <dependency>
+            <groupId>com.armedia.acm.acm-services</groupId>
+            <artifactId>acm-service-holiday</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
 
         <dependency>
             <groupId>com.armedia.acm.acm-tool-integrations</groupId>
