@@ -18,13 +18,13 @@
                         <div class="h4 font-bold">{{ecmFile.fileName || 'common.value.unknown' | translate}}</div>
                         <!--<small class="text-muted" translate>documentDetails.name</small>-->
                     </div>
-                    <div class="col-sm-6 col-md-3">
+                    <div class="col-sm-6 col-md-2">
                         <div class="h4 font-bold">{{::ecmFile.creator | mapKeyValue: userList:'object_id_s':'name' || 'common.value.unknown'
                             | translate}}
                         </div>
                         <small class="text-muted" translate>documentDetails.creator</small>
                     </div>
-                    <div class="col-sm-6 col-md-3">
+                    <div class="col-sm-6 col-md-2">
                         <div class="h4 font-bold">{{::ecmFile.created | date : locale.DATETIME_FORMATS.shortDate}}</div>
                         <small class="text-muted" translate>documentDetails.created</small>
                     </div>
@@ -32,31 +32,31 @@
                         <div class="h4 font-bold">{{::assignee | mapKeyValue: userList:'object_id_s':'name' || 'common.value.unknown' | translate}}</div>
                         <small class="text-muted" translate>documentDetails.assignee</small>
                     </div>-->
-                    <div class="col-sm-6 col-md-3">
+                    <div class="col-sm-6 col-md-2">
                         <div class="h4 font-bold">{{fileType || 'common.value.unknown' | translate}}</div>
                         <small class="text-muted" translate>documentDetails.name</small>
                     </div>
-                    <div class="col-sm-6 col-md-3">
+                    <div class="col-sm-6 col-md-2">
                         <div class="h4 font-bold">{{ecmFile.status || 'common.value.unknown' | translate}}</div>
                         <small class="text-muted" translate>documentDetails.status</small>
                     </div>
                 </div>
 
                 <div class="row" ng-if="transcribeEnabled && showVideoPlayer">
-                    <div class="col-sm-6 col-md-3">
+                    <div class="col-sm-6 col-md-2">
                         <div class="h4 font-bold">{{transcribeObjectModel.language || 'common.value.unknown' | translate}}</div>
                         <small class="text-muted" translate>documentDetails.comp.transcription.mediaViewer.language</small>
                     </div>
 
-                    <div class="col-sm-6 col-md-3">
+                    <div class="col-sm-6 col-md-2">
                         <div class="h4 font-bold">{{transcribeObjectModel.wordCount || 0}}</div>
                         <small class="text-muted" translate>documentDetails.comp.transcription.mediaViewer.wordCount</small>
                     </div>
-                    <div class="col-sm-6 col-md-3">
+                    <div class="col-sm-6 col-md-2">
                         <div class="h4 font-bold">{{transcribeObjectModel.confidence || 0}}%</div>
                         <small class="text-muted" translate>documentDetails.comp.transcription.mediaViewer.confidence</small>
                     </div>
-                    <div class="col-sm-6 col-md-3">
+                    <div class="col-sm-6 col-md-2">
                         <div class="h4 font-bold" ng-style="{'color': colorTranscribeStatus}">{{transcribeObjectModel.status ||
                             'documentDetails.comp.transcription.mediaViewer.readyForTranscription' | translate}}
 
@@ -68,8 +68,8 @@
 
                     </div>
                 </div>
-                <div class="row" ng-show="ocrInfoActive">
-                    <div class="col-sm-6 col-md-3" ng-controller="Document.OCRController">
+                <div class="row align-items-end" ng-show="ocrInfoActive">
+                    <div class="col-sm-6 col-sm-offset-6 col-md-2" ng-controller="Document.OCRController">
                         <div class="h4 font-bold" ng-style="{'color': colorOcrStatus}">{{ocrObjectModel.status
                             || 'documentDetails.comp.ocr.readyForOCR' | translate}}
                         </div>
