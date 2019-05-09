@@ -27,7 +27,6 @@ package com.armedia.acm.services.transcribe.web.api;
  * #L%
  */
 
-import com.armedia.acm.audit.dao.AuditDao;
 import com.armedia.acm.services.mediaengine.exception.GetMediaEngineException;
 import com.armedia.acm.services.mediaengine.model.MediaEngine;
 import com.armedia.acm.services.transcribe.service.ArkCaseTranscribeService;
@@ -49,7 +48,6 @@ import java.util.Map;
 public class GetTranscribeAPIController
 {
     private ArkCaseTranscribeService arkCaseTranscribeService;
-    private AuditDao auditDao;
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
@@ -80,15 +78,5 @@ public class GetTranscribeAPIController
     public void setArkCaseTranscribeService(ArkCaseTranscribeService arkCaseTranscribeService)
     {
         this.arkCaseTranscribeService = arkCaseTranscribeService;
-    }
-
-    public AuditDao getAuditDao()
-    {
-        return auditDao;
-    }
-
-    public void setAuditDao(AuditDao auditDao)
-    {
-        this.auditDao = auditDao;
     }
 }
