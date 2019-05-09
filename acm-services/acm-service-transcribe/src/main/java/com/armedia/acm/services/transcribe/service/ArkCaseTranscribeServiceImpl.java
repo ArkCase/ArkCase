@@ -371,7 +371,7 @@ public class ArkCaseTranscribeServiceImpl extends ArkCaseMediaEngineServiceImpl<
                 {
                     transcribe.setTranscribeEcmFile(ecmFile);
                     Transcribe saved = getTranscribeDao().save(transcribe);
-                    getMediaEngineEventPublisher().publish(saved, MediaEngineActionType.COMPILED.toString(), getServiceName());
+                    getMediaEngineEventPublisher().publish(saved, MediaEngineActionType.COMPILED.toString(), getServiceName(), "");
                     return ecmFile;
                 }
 
@@ -588,6 +588,8 @@ public class ArkCaseTranscribeServiceImpl extends ArkCaseMediaEngineServiceImpl<
 
                         delegateExecution.setVariable(MediaEngineBusinessProcessVariableKey.STATUS.toString(), status);
                         delegateExecution.setVariable(MediaEngineBusinessProcessVariableKey.ACTION.toString(), action);
+                        delegateExecution.setVariable(MediaEngineBusinessProcessVariableKey.MESSAGE.toString(),
+                                providerDTO.getMessage());
                     }
                 }
             }

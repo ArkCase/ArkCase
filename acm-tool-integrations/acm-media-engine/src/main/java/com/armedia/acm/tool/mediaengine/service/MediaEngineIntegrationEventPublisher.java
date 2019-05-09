@@ -41,7 +41,7 @@ public class MediaEngineIntegrationEventPublisher implements ApplicationEventPub
     private ApplicationEventPublisher applicationEventPublisher;
 
     public void publishFailedEvent(MediaEngineDTO source, String user, String ipAddress, boolean succeeded,
-            String service)
+            String service, String message)
     {
 
         MediaEngineIntegrationFailedEvent failedEventParentRoot = new MediaEngineIntegrationFailedEvent(source);
@@ -56,11 +56,12 @@ public class MediaEngineIntegrationEventPublisher implements ApplicationEventPub
         MediaEngineIntegrationFailedEvent failedEventParentFile = new MediaEngineIntegrationFailedEvent(source);
         failedEventParentFile.setUserId(user);
         failedEventParentFile.setIpAddress(ipAddress);
-        failedEventParentRoot.setParentObjectId(Long.valueOf(source.getProperties().get("fileId")));
-        failedEventParentRoot.setParentObjectType(source.getProperties().get("fileObjectType"));
-        failedEventParentRoot.setParentObjectName(source.getProperties().get("fileName"));
+        failedEventParentFile.setParentObjectId(Long.valueOf(source.getProperties().get("fileId")));
+        failedEventParentFile.setParentObjectType(source.getProperties().get("fileObjectType"));
+        failedEventParentFile.setParentObjectName(source.getProperties().get("fileName"));
         failedEventParentFile.setSucceeded(succeeded);
-        failedEventParentRoot.setServiceName(service);
+        failedEventParentFile.setServiceName(service);
+        failedEventParentFile.setEventDescription(message);
 
         getApplicationEventPublisher().publishEvent(failedEventParentRoot);
         getApplicationEventPublisher().publishEvent(failedEventParentFile);

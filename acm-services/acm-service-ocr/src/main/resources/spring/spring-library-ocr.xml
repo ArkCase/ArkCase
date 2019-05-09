@@ -24,6 +24,7 @@
         <property name="arkCaseBeanUtils" ref="mediaEngineArkCaseBeanUtils"/>
         <property name="ecmFileTransaction" ref="ecmFileTransaction"/>
         <property name="ocrConfigurationService" ref="ocrConfigurationService"/>
+        <property name="auditDao" ref="auditDao"/>
     </bean>
 
     <bean id="ocrQueueJob" class="com.armedia.acm.services.ocr.job.OCRQueueJob">
