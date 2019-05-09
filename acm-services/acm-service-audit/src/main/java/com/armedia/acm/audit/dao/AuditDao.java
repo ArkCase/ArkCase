@@ -295,7 +295,7 @@ public class AuditDao extends AcmAbstractDao<AuditEvent>
         return count;
     }
 
-    public AuditEvent getLastAuditEventByObjectIdAndTrackId(Long objectId, String trackId) throws NoResultException
+    public AuditEvent getLastAuditEventByObjectIdAndTrackId(Long objectId, String trackId)
     {
         String queryText = "SELECT ae " +
                 "FROM   AuditEvent ae " +
@@ -306,8 +306,9 @@ public class AuditDao extends AcmAbstractDao<AuditEvent>
         Query findAudits = getEm().createQuery(queryText);
         findAudits.setParameter("objectId", objectId);
         findAudits.setParameter("trackId", trackId);
-        List<AuditEvent> resultList = findAudits.getResultList();
+        findAudits.setMaxResults(1);
 
+        List<AuditEvent> resultList = findAudits.getResultList();
         if (!resultList.isEmpty())
         {
             return resultList.get(0);

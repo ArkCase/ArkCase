@@ -26,7 +26,6 @@
         </exclusiveGateway>
         <serviceTask id="notifyOwnerOfTheMedia"
                      name="Notify owner of the Media file and owner of the parent object for ${ACTION} for all IDS"
-                     name="Notify owner of the Media file and owner of the parent object for ${ACTION} for all IDS"
                      activiti:expression="#{mediaEngineActivitiService.notifyMultiple(IDS, ACTION, SERVICE_NAME)}">
             <extensionElements>
                 <modeler:editor-resource-id><![CDATA[notifyOwnerOfTheMedia]]></modeler:editor-resource-id>
