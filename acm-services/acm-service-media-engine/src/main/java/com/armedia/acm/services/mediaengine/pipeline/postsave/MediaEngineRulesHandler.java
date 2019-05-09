@@ -70,7 +70,7 @@ public class MediaEngineRulesHandler implements PipelineHandler<MediaEngine, Med
     {
         String serviceName = (String) getActivitiRuntimeService().getVariable(pipelineContext.getProcessId(),
                 MediaEngineBusinessProcessVariableKey.SERVICE_NAME.toString());
-        getMediaEngineEventPublisher().publish(entity, MediaEngineActionType.ROLLBACK.toString(), serviceName);
+        getMediaEngineEventPublisher().publish(entity, MediaEngineActionType.ROLLBACK.toString(), serviceName, "");
     }
 
     public MediaEngineEventPublisher getMediaEngineEventPublisher()

@@ -32,5 +32,5 @@ package com.armedia.acm.tool.mediaengine.model;
  */
 public interface MediaEngineIntegrationConstants
 {
-    public static final String FAILED_EVENT = "com.armedia.acm.tool.[SERVICE].failed";
+    public static final String FAILED_EVENT = "com.armedia.acm.services.[SERVICE].failed";
 }

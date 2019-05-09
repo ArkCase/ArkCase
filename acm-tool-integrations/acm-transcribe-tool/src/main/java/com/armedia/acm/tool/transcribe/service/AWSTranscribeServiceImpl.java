@@ -138,6 +138,7 @@ public class AWSTranscribeServiceImpl implements TranscribeIntegrationService
 
                 GetTranscriptionJobResult result = getTranscribeClient().getTranscriptionJob(request);
                 String resultStatus = result.getTranscriptionJob().getTranscriptionJobStatus();
+                String failureReason = result.getTranscriptionJob().getFailureReason();
 
                 TranscribeDTO transcribeDTO = new TranscribeDTO();
                 if (TranscriptionJobStatus.COMPLETED.toString().equals(resultStatus))
@@ -158,6 +159,7 @@ public class AWSTranscribeServiceImpl implements TranscribeIntegrationService
                         status = MediaEngineStatusType.FAILED.toString();
                         break;
                     }
+                    transcribeDTO.setMessage(failureReason);
                     transcribeDTO.setStatus(status);
                     transcribeDTO.setRemoteId(remoteId);
                 }
@@ -219,12 +221,12 @@ public class AWSTranscribeServiceImpl implements TranscribeIntegrationService
             }
             catch (Exception e)
             {
+                String message = String.format("Unable to start transcribe job on Amazon. REASON=[%s]", e.getMessage());
                 getMediaEngineIntegrationEventPublisher().publishFailedEvent(mediaEngineDTO, TranscribeConstants.TRANSCRIBE_SYSTEM_USER,
                         null,
-                        true, TranscribeConstants.SERVICE);
+                        true, TranscribeConstants.SERVICE, message);
                 throw new CreateMediaEngineToolException(
-                        String.format("Unable to start transcribe job on Amazon. REASON=[%s]", e.getMessage()),
-                        e);
+                        message, e);
             }
         }
 
@@ -252,12 +254,12 @@ public class AWSTranscribeServiceImpl implements TranscribeIntegrationService
             }
             catch (Exception e)
             {
+                String message = String.format("Unable to upload media file to Amazon. REASON=[%s].", e.getMessage());
                 getMediaEngineIntegrationEventPublisher().publishFailedEvent(mediaEngineDTO, TranscribeConstants.TRANSCRIBE_SYSTEM_USER,
                         null,
-                        true, TranscribeConstants.SERVICE);
+                        true, TranscribeConstants.SERVICE, message);
                 throw new CreateMediaEngineToolException(
-                        String.format("Unable to upload media file to Amazon. REASON=[%s].", e.getMessage()),
-                        e);
+                        message, e);
             }
         }
 
@@ -275,16 +277,18 @@ public class AWSTranscribeServiceImpl implements TranscribeIntegrationService
         }
         catch (Exception e)
         {
+            String message = String.format("Unable to create Transcribe. REASON=[%s].", e.getMessage());
             getMediaEngineIntegrationEventPublisher().publishFailedEvent(mediaEngineDTO, TranscribeConstants.TRANSCRIBE_SYSTEM_USER, null,
-                    true, TranscribeConstants.SERVICE);
-            throw new CreateMediaEngineToolException(String.format("Unable to create Transcribe. REASON=[%s].", e.getMessage()), e);
+                    true, TranscribeConstants.SERVICE, message);
+            throw new CreateMediaEngineToolException(message, e);
         }
 
         if (exist)
         {
+            String message = String.format("The file with KEY=[%s] already exist on Amazon.", key);
             getMediaEngineIntegrationEventPublisher().publishFailedEvent(mediaEngineDTO, TranscribeConstants.TRANSCRIBE_SYSTEM_USER, null,
-                    true, TranscribeConstants.SERVICE);
-            throw new CreateMediaEngineToolException(String.format("The file with KEY=[%s] already exist on Amazon.", key));
+                    true, TranscribeConstants.SERVICE, message);
+            throw new CreateMediaEngineToolException(message);
         }
     }
 

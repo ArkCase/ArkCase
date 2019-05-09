@@ -26,13 +26,14 @@
         </exclusiveGateway>
         <serviceTask id="notifyOwnerOfTheMedia"
                      name="Notify owner of the Media file and owner of the parent object for ${ACTION} for all IDS"
+                     name="Notify owner of the Media file and owner of the parent object for ${ACTION} for all IDS"
                      activiti:expression="#{mediaEngineActivitiService.notifyMultiple(IDS, ACTION, SERVICE_NAME)}">
             <extensionElements>
                 <modeler:editor-resource-id><![CDATA[notifyOwnerOfTheMedia]]></modeler:editor-resource-id>
             </extensionElements>
         </serviceTask>
         <serviceTask id="auditEvent" name="Audit Event for ${ACTION} for all IDS"
-                     activiti:expression="#{mediaEngineActivitiService.auditMultiple(IDS, ACTION, SERVICE_NAME)}">
+                     activiti:expression="#{mediaEngineActivitiService.auditMultiple(IDS, ACTION, SERVICE_NAME, MESSAGE)}">
             <extensionElements>
                 <modeler:editor-resource-id><![CDATA[auditEvent]]></modeler:editor-resource-id>
             </extensionElements>
