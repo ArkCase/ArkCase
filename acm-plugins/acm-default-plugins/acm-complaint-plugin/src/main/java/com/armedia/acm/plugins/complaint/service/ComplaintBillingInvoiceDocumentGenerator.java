@@ -1,4 +1,4 @@
-package gov.foia.service;
+package com.armedia.acm.plugins.complaint.service;
 
 /*-
  * #%L
@@ -31,7 +31,9 @@ import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.pdf.PdfServiceException;
 import com.armedia.acm.pdf.service.PdfService;
-import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
+import com.armedia.acm.plugins.casefile.model.CaseFileAndComplaintUtils;
+import com.armedia.acm.plugins.complaint.dao.ComplaintDao;
+import com.armedia.acm.plugins.complaint.model.Complaint;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
@@ -65,17 +67,14 @@ import java.time.ZoneId;
 import java.util.List;
 import java.util.Optional;
 
-import gov.foia.model.FOIARequest;
-import gov.foia.model.FOIARequestUtils;
-
 /**
  * @author sasko.tanaskoski
  *
  */
-public class BillingInvoiceDocumentGenerator
+public class ComplaintBillingInvoiceDocumentGenerator
 {
 
-    private CaseFileDao caseFileDao;
+    private ComplaintDao complaintDao;
 
     private BillingService billingService;
 
@@ -92,16 +91,16 @@ public class BillingInvoiceDocumentGenerator
     public void generatePdf(String objectType, Long requestId)
     {
 
-        FOIARequest request = (FOIARequest) getCaseFileDao().find(requestId);
+        Complaint complaint = getComplaintDao().find(requestId);
 
-        if (request != null)
+        if (complaint != null)
         {
             String filename = null;
             try
             {
                 BillingInvoice billingInvoice = getBillingService().getLatestBillingInvoice(objectType, requestId);
 
-                Document document = buildDocument(request, billingInvoice);
+                Document document = buildDocument(complaint, billingInvoice);
                 Source source = new DOMSource(document);
 
                 filename = getPdfService().generatePdf(new File(BillingConstants.INVOICE_DOCUMENT_STYLESHEET), source);
@@ -109,10 +108,10 @@ public class BillingInvoiceDocumentGenerator
 
                 String arkcaseFilename = billingInvoice.getInvoiceNumber();
 
-                String targetFolderId = request.getContainer().getFolder().getCmisFolderId();
-                if (!request.getContainer().getFolder().getChildrenFolders().isEmpty())
+                String targetFolderId = complaint.getContainer().getFolder().getCmisFolderId();
+                if (!complaint.getContainer().getFolder().getChildrenFolders().isEmpty())
                 {
-                    Optional<AcmFolder> invoiceFolder = request.getContainer().getFolder().getChildrenFolders().stream()
+                    Optional<AcmFolder> invoiceFolder = complaint.getContainer().getFolder().getChildrenFolders().stream()
                             .filter(acmFolder -> acmFolder.getName().contains("Invoice")).findFirst();
                     if (invoiceFolder.isPresent())
                     {
@@ -129,7 +128,7 @@ public class BillingInvoiceDocumentGenerator
                     EcmFile billingInvoiceEcmFile = ecmFileService.upload(arkcaseFilename, BillingConstants.INVOICE_DOCUMENT_TYPE,
                             "Document", fis,
                             BillingConstants.INVOICE_DOCUMENT_MIME_TYPE_PDF, arkcaseFilename, authentication, targetFolderId,
-                            objectType, request.getId());
+                            objectType, complaint.getId());
 
                     billingInvoice.setBillingInvoiceEcmFile(billingInvoiceEcmFile);
                     getBillingInvoiceDao().save(billingInvoice);
@@ -139,7 +138,7 @@ public class BillingInvoiceDocumentGenerator
                     | ParserConfigurationException | GetBillingInvoiceException e)
             {
                 log.error("Unable to create {} document for request [{}]",
-                        BillingConstants.INVOICE_DOCUMENT_TYPE, request.getId(), e);
+                        BillingConstants.INVOICE_DOCUMENT_TYPE, complaint.getId(), e);
             }
             finally
             {
@@ -149,7 +148,7 @@ public class BillingInvoiceDocumentGenerator
 
     }
 
-    public Document buildDocument(FOIARequest foiaRequest, BillingInvoice billingInvoice) throws ParserConfigurationException
+    public Document buildDocument(Complaint complaint, BillingInvoice billingInvoice) throws ParserConfigurationException
     {
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         DocumentBuilder docBuilder = dbf.newDocumentBuilder();
@@ -163,11 +162,10 @@ public class BillingInvoiceDocumentGenerator
                 billingInvoice.getCreated().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().toString(),
                 true);
         addElement(document, rootElem, "invoiceNumber", billingInvoice.getInvoiceNumber(), true);
-        addElement(document, rootElem, "requesterName", FOIARequestUtils.extractRequestorName(foiaRequest.getOriginator().getPerson()),
-                true);
+        addElement(document, rootElem, "requesterName", CaseFileAndComplaintUtils.extractRequestorName(complaint.getOriginator().getPerson()),true);
 
         addElement(document, rootElem, "requesterAddress",
-                FOIARequestUtils.extractRequestorAddress(foiaRequest.getOriginator().getPerson()), true);
+                CaseFileAndComplaintUtils.extractRequestorAddress(complaint.getOriginator().getPerson()), true);
 
         Double totalAmount = 0.0;
 
@@ -221,20 +219,20 @@ public class BillingInvoiceDocumentGenerator
     }
 
     /**
-     * @return the caseFileDao
+     * @return the complaintDao
      */
-    public CaseFileDao getCaseFileDao()
+    public ComplaintDao getComplaintDao()
     {
-        return caseFileDao;
+        return complaintDao;
     }
 
     /**
-     * @param caseFileDao
-     *            the caseFileDao to set
+     * @param complaintDao
+     *            the complaintDao to set
      */
-    public void setCaseFileDao(CaseFileDao caseFileDao)
+    public void setComplaintDao(ComplaintDao complaintDao)
     {
-        this.caseFileDao = caseFileDao;
+        this.complaintDao = complaintDao;
     }
 
     /**

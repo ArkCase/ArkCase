@@ -295,6 +295,11 @@
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.armedia.acm.acm-plugins.acm-default-plugins</groupId>
+            <artifactId>acm-billing-plugin</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
 
     </dependencies>
 
