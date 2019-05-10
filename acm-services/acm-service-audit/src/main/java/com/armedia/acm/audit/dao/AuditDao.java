@@ -301,7 +301,8 @@ public class AuditDao extends AcmAbstractDao<AuditEvent>
                 "FROM   AuditEvent ae " +
                 "WHERE  ae.objectId = :objectId " +
                 "AND 	ae.trackId = :trackId " +
-                "ORDER BY ae.id desc ";
+                "AND 	ae.parentObjectType = 'FILE' " +
+                "ORDER BY ae.eventDate desc ";
 
         Query findAudits = getEm().createQuery(queryText);
         findAudits.setParameter("objectId", objectId);

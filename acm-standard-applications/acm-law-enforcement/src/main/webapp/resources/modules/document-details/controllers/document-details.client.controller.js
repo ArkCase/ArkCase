@@ -32,7 +32,7 @@ angular.module('document-details').controller(
                     };
 
                     $scope.showFailureMessage = function showFailureMessage() {
-                        DialogService.alert($scope.failureReason);
+                        DialogService.alert($scope.transcribeObjectModel.failureReason);
                     }
 
                      function onShowLoader() {
@@ -110,7 +110,6 @@ angular.module('document-details').controller(
                     $scope.showPdfJs = false;
                     $scope.transcriptionTabActive = false;
                     $scope.ocrInfoActive = false;
-                    $scope.failureReason = "";
 
                     var scopeToColor =
                         {
@@ -151,11 +150,6 @@ angular.module('document-details').controller(
                                 addCue(track, value);
                             }
                         });
-
-                        TranscriptionManagementService.getTranscriptionFailureReason($scope.transcribeObjectModel.id)
-                            .then(function(response) {
-                                $scope.failureReason = response.data.failureReason;
-                            });
 
                         // color the status
                         $scope.colorTranscribeStatus = scopeToColor[$scope.transcribeObjectModel.status];

@@ -199,7 +199,7 @@ public interface MediaEngineService<T extends MediaEngine>
      * @return Updated MediaEngine object
      * @throws SaveMediaEngineException
      */
-    MediaEngine fail(Long id, String eventDescription) throws SaveMediaEngineException;
+    MediaEngine fail(Long id, String message) throws SaveMediaEngineException;
 
     /**
      * This method will purge MediaEngine information
