@@ -47,6 +47,7 @@ public class MediaEngineIntegrationFailedEvent extends ApplicationEvent
     private String parentObjectType;
     private String parentObjectName;
     private boolean succeeded;
+    private String eventDescription;
 
     public MediaEngineIntegrationFailedEvent(MediaEngineDTO source)
     {
@@ -162,5 +163,15 @@ public class MediaEngineIntegrationFailedEvent extends ApplicationEvent
     public void setSucceeded(boolean succeeded)
     {
         this.succeeded = succeeded;
+    }
+
+    public String getEventDescription()
+    {
+        return eventDescription;
+    }
+
+    public void setEventDescription(String eventDescription)
+    {
+        this.eventDescription = eventDescription;
     }
 }

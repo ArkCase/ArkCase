@@ -32,7 +32,7 @@
             </extensionElements>
         </serviceTask>
         <serviceTask id="auditEvent" name="Audit Event for ${ACTION} for all IDS"
-                     activiti:expression="#{mediaEngineActivitiService.auditMultiple(IDS, ACTION, SERVICE_NAME)}">
+                     activiti:expression="#{mediaEngineActivitiService.auditMultiple(IDS, ACTION, SERVICE_NAME, MESSAGE)}">
             <extensionElements>
                 <modeler:editor-resource-id><![CDATA[auditEvent]]></modeler:editor-resource-id>
             </extensionElements>
