@@ -372,7 +372,7 @@ public abstract class ArkCaseMediaEngineServiceImpl<T extends MediaEngine>
     }
 
     @Override
-    public MediaEngine fail(Long id, String eventDescription) throws SaveMediaEngineException
+    public MediaEngine fail(Long id, String message) throws SaveMediaEngineException
     {
         MediaEngine mediaEngine = getMediaEntityDao(getServiceName()).find(id);
         if (mediaEngine != null && StringUtils.isNotEmpty(mediaEngine.getProcessId()))
@@ -389,7 +389,7 @@ public abstract class ArkCaseMediaEngineServiceImpl<T extends MediaEngine>
 
                 getActivitiRuntimeService().setVariable(processInstance.getId(), statusKey, status);
                 getActivitiRuntimeService().setVariable(processInstance.getId(), actionKey, action);
-                getActivitiRuntimeService().setVariable(processInstance.getId(), messageKey, eventDescription);
+                getActivitiRuntimeService().setVariable(processInstance.getId(), messageKey, message);
 
                 mediaEngine.setStatus(MediaEngineStatusType.FAILED.toString());
 
