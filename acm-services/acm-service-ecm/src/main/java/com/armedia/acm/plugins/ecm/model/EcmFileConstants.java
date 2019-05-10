@@ -68,6 +68,8 @@ public interface EcmFileConstants
 
     String SUCCESS_DELETE_MSG = "File deleted successfully: ";
 
+    String SUCCESS_TEMPORARY_DELETE_MSG = "Temporary file deleted successfully: ";
+
     String SUCCESS_CHANGE_STATUS_TO_RECORD_MSG = "DECLARED AS RECORD";
 
     String FIND_CONTAINER_QUERY_BY_FOLDER_ID = "SELECT e FROM AcmContainer e WHERE e.folder.id = :folderId";
