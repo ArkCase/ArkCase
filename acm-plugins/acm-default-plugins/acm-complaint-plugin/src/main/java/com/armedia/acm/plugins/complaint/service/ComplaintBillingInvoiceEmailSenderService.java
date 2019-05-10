@@ -1,4 +1,4 @@
-package gov.foia.service;
+package com.armedia.acm.plugins.complaint.service;
 
 /*-
  * #%L
@@ -27,7 +27,9 @@ package gov.foia.service;
  * #L%
  */
 
-import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
+import com.armedia.acm.plugins.casefile.model.CaseFileAndComplaintUtils;
+import com.armedia.acm.plugins.complaint.dao.ComplaintDao;
+import com.armedia.acm.plugins.complaint.model.Complaint;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
@@ -47,14 +49,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import gov.foia.model.FOIARequest;
-import gov.foia.model.FOIARequestUtils;
-
-public class BillingInvoiceEmailSenderService
+public class ComplaintBillingInvoiceEmailSenderService
 {
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-    private CaseFileDao caseFileDao;
+    private ComplaintDao complaintDao;
     private BillingService billingService;
     private NotificationSender notificationSender;
     private NotificationDao notificationDao;
@@ -63,8 +62,8 @@ public class BillingInvoiceEmailSenderService
     public void sendBillingInvoiceByEmail(BillingInvoiceRequest billingInvoiceRequest, AcmUser acmUser, Authentication authentication)
             throws Exception
     {
-        FOIARequest foiaRequest = (FOIARequest) getCaseFileDao().find(billingInvoiceRequest.getParentObjectId());
-        String emailAddress = FOIARequestUtils.extractRequestorEmailAddress(foiaRequest.getOriginator().getPerson());
+        Complaint complaint = getComplaintDao().find(billingInvoiceRequest.getParentObjectId());
+        String emailAddress = CaseFileAndComplaintUtils.extractRequestorEmailAddress(complaint.getOriginator().getPerson());
         BillingInvoice billingInvoice = getBillingService().getLatestBillingInvoice(billingInvoiceRequest.getParentObjectType(),
                 billingInvoiceRequest.getParentObjectId());
         List<EcmFileVersion> notificationFiles = new ArrayList<>();
@@ -87,20 +86,18 @@ public class BillingInvoiceEmailSenderService
         notification.setAttachFiles(true);
         notification.setFiles(notificationFiles);
         notification.setEmailAddresses(emailAddress);
-        notification.setTitle(String.format("Request%s invoice", foiaRequest.getCaseNumber()));
+        notification.setTitle(String.format("Complaint%s invoice", complaint.getComplaintNumber()));
         notification.setUser(acmUser.getUserId());
         getNotificationDao().save(notification);
 
     }
 
-    public CaseFileDao getCaseFileDao()
-    {
-        return caseFileDao;
+    public ComplaintDao getComplaintDao() {
+        return complaintDao;
     }
 
-    public void setCaseFileDao(CaseFileDao caseFileDao)
-    {
-        this.caseFileDao = caseFileDao;
+    public void setComplaintDao(ComplaintDao complaintDao) {
+        this.complaintDao = complaintDao;
     }
 
     public BillingService getBillingService()

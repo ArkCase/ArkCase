@@ -119,6 +119,10 @@ angular.module('cases').config([ '$stateProvider', function($stateProvider) {
         templateUrl: 'modules/cases/views/components/case-approval-routing.client.view.html'
     })
 
+        .state('cases.billing', {
+            url: '/:id/billing',
+            templateUrl: 'modules/cases/views/components/case-billing.client.view.html'
+        })
 } ]).run([ 'Helper.DashboardService', function(DashboardHelper) {
     DashboardHelper.addLocales();
 } ]);

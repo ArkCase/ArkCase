@@ -29,6 +29,7 @@ package com.armedia.acm.plugins.complaint.model;
 
 import com.armedia.acm.core.AcmNotifiableEntity;
 import com.armedia.acm.core.AcmNotificationReceiver;
+import com.armedia.acm.core.AcmObjectNumber;
 import com.armedia.acm.core.AcmStatefulEntity;
 import com.armedia.acm.core.AcmTitleEntity;
 import com.armedia.acm.data.AcmEntity;
@@ -40,6 +41,7 @@ import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.AcmContainerEntity;
 import com.armedia.acm.plugins.objectassociation.model.AcmChildObjectEntity;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
+import com.armedia.acm.plugins.person.model.AcmObjectOriginator;
 import com.armedia.acm.plugins.person.model.OrganizationAssociation;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
 import com.armedia.acm.services.participants.model.AcmAssignedObject;
@@ -103,7 +105,7 @@ import java.util.Set;
 @JsonPropertyOrder(value = { "complaintId", "personAssociations", "originator" })
 @JsonIdentityInfo(generator = JSOGGenerator.class)
 public class Complaint implements Serializable, AcmAssignedObject, AcmEntity, AcmContainerEntity, AcmChildObjectEntity,
-        AcmLegacySystemEntity, AcmNotifiableEntity, AcmStatefulEntity, AcmTitleEntity
+        AcmLegacySystemEntity, AcmNotifiableEntity, AcmStatefulEntity, AcmTitleEntity, AcmObjectNumber, AcmObjectOriginator
 {
     private static final long serialVersionUID = -1154137631399833851L;
     private transient final Logger log = LoggerFactory.getLogger(getClass());
@@ -719,5 +721,17 @@ public class Complaint implements Serializable, AcmAssignedObject, AcmEntity, Ac
     public void setOrganizationAssociations(List<OrganizationAssociation> organizationAssociations)
     {
         this.organizationAssociations = organizationAssociations;
+    }
+
+    @Override
+    public String getAcmObjectNumber()
+    {
+        return getComplaintNumber();
+    }
+
+    @Override
+    public PersonAssociation getAcmObjectOriginator()
+    {
+        return getOriginator();
     }
 }
