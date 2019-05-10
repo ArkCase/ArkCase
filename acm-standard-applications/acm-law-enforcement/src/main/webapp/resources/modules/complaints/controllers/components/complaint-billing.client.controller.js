@@ -1,14 +1,14 @@
 'use strict';
 
-angular.module('cases').controller('Cases.BillingController', ['$scope', '$modal', 'ConfigService', '$stateParams', 'Case.InfoService', 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'Case.BillingService', 'MessageService',
-    function($scope, $modal, ConfigService, $stateParams, CaseInfoService, HelperUiGridService, HelperObjectBrowserService, CaseBillingService, MessageService){
+angular.module('complaints').controller('Complaints.BillingController', ['$scope', '$modal', 'ConfigService', '$stateParams', 'Complaint.InfoService', 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'Complaint.BillingService', 'MessageService',
+    function($scope, $modal, ConfigService, $stateParams, ComplaintInfoService, HelperUiGridService, HelperObjectBrowserService, ComplaintBillingService, MessageService){
         new HelperObjectBrowserService.Component({
             scope: $scope,
             stateParams: $stateParams,
-            moduleId: "cases",
+            moduleId: "complaints",
             componentId: "billing",
-            retrieveObjectInfo: CaseInfoService.getCaseInfo,
-            validateObjectInfo: CaseInfoService.validateCaseInfo,
+            retrieveObjectInfo: ComplaintInfoService.getComplaintInfo,
+            validateObjectInfo: ComplaintInfoService.validateComplaintInfo,
             onConfigRetrieved: function(componentConfig) {
                 return onConfigRetrieved(componentConfig);
             },
@@ -45,8 +45,8 @@ angular.module('cases').controller('Cases.BillingController', ['$scope', '$modal
         function retrieveGridData(){
             var params = {};
             params.objectId = $stateParams.id;
-            params.objectType = 'CASE_FILE';
-            CaseBillingService.getBillingItems(params.objectId,  params.objectType).then(function(data){
+            params.objectType = 'COMPLAINT';
+            ComplaintBillingService.getBillingItems(params.objectId,  params.objectType).then(function(data){
                 $scope.items = data.data;
                 $scope.gridOptions = $scope.gridOptions || {};
                 $scope.gridOptions.data = $scope.items;
@@ -58,7 +58,7 @@ angular.module('cases').controller('Cases.BillingController', ['$scope', '$modal
             $scope.objectInfo = objectInfo;
         };
 
-        ConfigService.getModuleConfig("cases").then(function(moduleConfig) {
+        ConfigService.getModuleConfig("complaints").then(function(moduleConfig) {
             $scope.listInvoiceConfig = _.find(moduleConfig.components, {
                 id: "listInvoices"
             });
@@ -66,11 +66,11 @@ angular.module('cases').controller('Cases.BillingController', ['$scope', '$modal
 
         var invoiceData = {
             parentObjectId : $stateParams.id,
-            parentObjectType : 'CASE_FILE'
+            parentObjectType : 'COMPLAINT'
         };
 
         $scope.emailInvoice = function() {
-            CaseBillingService.sendBillingInvoiceByEmail(invoiceData).then(function() {
+            ComplaintBillingService.sendBillingInvoiceByEmail(invoiceData).then(function() {
                 MessageService.succsessAction();
             }, function() {
                 MessageService.errorAction();
@@ -82,10 +82,10 @@ angular.module('cases').controller('Cases.BillingController', ['$scope', '$modal
             params.billingConfig = $scope.config;
             params.gridData = $scope.gridOptions.data;
             params.objectId = $stateParams.id;
-            params.objectType = 'CASE_FILE';
+            params.objectType = 'COMPLAINT';
             $modal.open({
-                templateUrl: 'modules/cases/views/components/case-list-invoices-modal.client.view.html',
-                controller: 'Cases.ListInvoicesModalController',
+                templateUrl: 'modules/complaints/views/components/complaint-list-invoices-modal.client.view.html',
+                controller: 'Complaints.ListInvoicesModalController',
                 size: 'lg',
                 backdrop: 'static',
                 resolve: {
@@ -100,7 +100,7 @@ angular.module('cases').controller('Cases.BillingController', ['$scope', '$modal
         };
         
         $scope.generateInvoice = function() {
-            CaseBillingService.createBillingInvoiceForRequest(invoiceData).then(function() {
+            ComplaintBillingService.createBillingInvoiceForComplaint(invoiceData).then(function() {
                 MessageService.succsessAction();    
             }, function() {
                 MessageService.errorAction();
@@ -111,8 +111,8 @@ angular.module('cases').controller('Cases.BillingController', ['$scope', '$modal
             var params = {};
             params.gridData = $scope.gridOptions.data;
             var modalInstance = $modal.open({
-                templateUrl: 'modules/cases/views/components/case-billing-modal.client.view.html',
-                controller: 'Cases.BillingModalController',
+                templateUrl: 'modules/complaints/views/components/complaint-billing-modal.client.view.html',
+                controller: 'Complaints.BillingModalController',
                 size: 'lg',
                 backdrop: 'static',
                 resolve: {
@@ -132,8 +132,8 @@ angular.module('cases').controller('Cases.BillingController', ['$scope', '$modal
         function saveItem(){
             var itemData = $scope.entry;
             itemData.parentObjectId = $stateParams.id;
-            itemData.parentObjectType = 'CASE_FILE';
-            CaseBillingService.addBillingItemForRequest(itemData);
+            itemData.parentObjectType = 'COMPLAINT';
+            ComplaintBillingService.addBillingItemForComplaint(itemData);
         }
 
     }]);

@@ -134,6 +134,12 @@
         <property name="caseFileDao" ref="caseFileDao"/>
     </bean>
 
+    <bean id="caseFileBillingInvoiceCreatedHandler"
+        class="com.armedia.acm.plugins.casefile.listener.CaseFileBillingInvoiceCreatedHandler">
+        <property name="caseFileBillingInvoiceDocumentGenerator" ref="billingInvoiceDocumentGenerator"/>
+        <property name="caseFileDao" ref="caseFileDao"/>
+    </bean>
+
     <bean id="caseFileDataAccessUpdateLocator"
           class="com.armedia.acm.plugins.casefile.service.CaseFileDataAccessUpdateLocator">
         <property name="caseFileDao" ref="caseFileDao"/>
@@ -222,4 +228,9 @@
     <bean id="caseConfig" class="com.armedia.acm.plugins.casefile.model.CaseFileConfig" scope="refresh">
         <aop:scoped-proxy/>
     </bean>
+
+    <bean id="getCaseService" class="com.armedia.acm.plugins.casefile.service.GetCaseServiceImpl">
+        <property name="caseFileDao" ref="caseFileDao"/>
+    </bean>
+
 </beans>

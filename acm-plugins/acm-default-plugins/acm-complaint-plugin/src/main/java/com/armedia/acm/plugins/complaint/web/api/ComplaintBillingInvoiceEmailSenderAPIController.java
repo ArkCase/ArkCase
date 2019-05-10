@@ -1,4 +1,4 @@
-package gov.foia.web.api;
+package com.armedia.acm.plugins.complaint.web.api;
 
 /*-
  * #%L
@@ -6,27 +6,30 @@ package gov.foia.web.api;
  * %%
  * Copyright (C) 2014 - 2018 ArkCase LLC
  * %%
- * This file is part of the ArkCase software. 
- * 
- * If the software was purchased under a paid ArkCase license, the terms of 
- * the paid license agreement will prevail.  Otherwise, the software is 
+ * This file is part of the ArkCase software.
+ *
+ * If the software was purchased under a paid ArkCase license, the terms of
+ * the paid license agreement will prevail.  Otherwise, the software is
  * provided under the following open source license terms:
- * 
+ *
  * ArkCase is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *  
+ *
  * ArkCase is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
  * #L%
  */
 
+import com.armedia.acm.plugins.billing.service.BillingInvoiceEmailSenderService;
+import com.armedia.acm.plugins.complaint.model.Complaint;
+import com.armedia.acm.plugins.complaint.service.GetComplaintServiceImpl;
 import com.armedia.acm.services.billing.model.BillingInvoiceRequest;
 import com.armedia.acm.services.users.model.AcmUser;
 
@@ -41,14 +44,15 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
 
-import gov.foia.service.BillingInvoiceEmailSenderService;
-
 @Controller
-@RequestMapping({ "/api/v1/plugin/billing/invoices", "/api/latest/plugin/billing/invoices" })
-public class BillingInvoiceEmailSenderAPIController
+@RequestMapping({ "/api/v1/plugin/complaint/billing/invoices", "/api/latest/plugin/complaint/billing/invoices" })
+public class ComplaintBillingInvoiceEmailSenderAPIController
 {
     private final Logger log = LoggerFactory.getLogger(this.getClass());
-    private BillingInvoiceEmailSenderService billingInvoiceEmailSenderService;
+
+    private BillingInvoiceEmailSenderService<Complaint> complaintBillingInvoiceEmailSenderService;
+
+    private GetComplaintServiceImpl getComplaintService;
 
     @RequestMapping(value = "/document/email", method = RequestMethod.PUT)
     @ResponseBody
@@ -57,7 +61,9 @@ public class BillingInvoiceEmailSenderAPIController
         AcmUser user = (AcmUser) session.getAttribute("acm_user");
         try
         {
-            getBillingInvoiceEmailSenderService().sendBillingInvoiceByEmail(billingInvoiceRequest, user, authentication);
+            getComplaintBillingInvoiceEmailSenderService()
+                    .setParentObject(getGetComplaintService().getComplaintById(billingInvoiceRequest.getParentObjectId()));
+            getComplaintBillingInvoiceEmailSenderService().sendBillingInvoiceByEmail(billingInvoiceRequest, user, authentication);
         }
         catch (Exception e)
         {
@@ -66,13 +72,24 @@ public class BillingInvoiceEmailSenderAPIController
         }
     }
 
-    public BillingInvoiceEmailSenderService getBillingInvoiceEmailSenderService()
+    public BillingInvoiceEmailSenderService<Complaint> getComplaintBillingInvoiceEmailSenderService()
     {
-        return billingInvoiceEmailSenderService;
+        return complaintBillingInvoiceEmailSenderService;
     }
 
-    public void setBillingInvoiceEmailSenderService(BillingInvoiceEmailSenderService billingInvoiceEmailSenderService)
+    public void setComplaintBillingInvoiceEmailSenderService(
+            BillingInvoiceEmailSenderService<Complaint> complaintBillingInvoiceEmailSenderService)
     {
-        this.billingInvoiceEmailSenderService = billingInvoiceEmailSenderService;
+        this.complaintBillingInvoiceEmailSenderService = complaintBillingInvoiceEmailSenderService;
+    }
+
+    public GetComplaintServiceImpl getGetComplaintService()
+    {
+        return getComplaintService;
+    }
+
+    public void setGetComplaintService(GetComplaintServiceImpl getComplaintService)
+    {
+        this.getComplaintService = getComplaintService;
     }
 }

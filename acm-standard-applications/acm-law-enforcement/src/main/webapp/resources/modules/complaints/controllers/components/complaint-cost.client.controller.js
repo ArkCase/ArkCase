@@ -32,12 +32,16 @@ angular.module('complaints').controller(
                         $scope.isFrevvoFormType = isFrevvoFormType;
                     });
 
+                    $scope.isEditDisabled = function (rowEntity) {
+                        return rowEntity.status !== "DRAFT";
+                    };
+
                     var onConfigRetrieved = function(config) {
                         $scope.config = config;
                         gridHelper.setColumnDefs(config);
                         gridHelper.setBasicOptions(config);
                         gridHelper.disableGridScrolling(config);
-                        gridHelper.addButton(config, "edit");
+                        gridHelper.addButton(config, "edit", null, null, "isEditDisabled");
 
                         for (var i = 0; i < $scope.config.columnDefs.length; i++) {
                             if ("name" == $scope.config.columnDefs[i].name) {

@@ -151,6 +151,12 @@
             <version>${acm.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.armedia.acm.acm-plugins.acm-default-plugins</groupId>
+            <artifactId>acm-billing-plugin</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+
         <!-- JSON -->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
@@ -215,6 +221,11 @@
         <dependency>
             <groupId>org.easymock</groupId>
             <artifactId>easymock</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.armedia.acm.acm-services</groupId>
+            <artifactId>acm-service-billing</artifactId>
+            <version>${acm.version}</version>
         </dependency>
 
     </dependencies>

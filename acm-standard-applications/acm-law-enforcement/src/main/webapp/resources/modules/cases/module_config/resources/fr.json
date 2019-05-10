@@ -373,6 +373,38 @@
             "approverDecision": "Décision d'approbation"
         }
     },
+    "cases.comp.billing": {
+        "title": "Billing",
+        "table.columns": {
+            "item": "Item #",
+            "description": "Description",
+            "amount": "Amount",
+            "total": "Total: ",
+            "buttons": {
+                "listInvoices": "List Invoices",
+                "emailInvoice": "Email Invoice",
+                "generateInvoice": "Generate Invoice"
+            }
+        },
+        "modal": {
+            "title": "Add Billing Item",
+            "cancel.btn": "Cancel",
+            "save.btn": "Save",
+            "billingItems.title": "Billing items for"
+        },
+        "invoice": {
+            "title": "Invoices",
+            "table.columns": {
+                "invoiceNumber": "Invoice Number",
+                "status": "Status",
+                "creator": "Creator",
+                "created": "Created",
+                "view": "View"
+            }
+        },
+        "amount.title": "Please enter billing amount",
+        "description.title": "Please enter billing description"
+    },
     "cases.comp.change.status": {
         "title": "fr_Change Case Status",
         "description.label": "fr_Description",
@@ -461,7 +493,8 @@
             "cost.label": "Coût",
             "tags.label": "Mots clés",
             "calendar.label": "Calendrier",
-            "approvalRouting.label": "Routage d'approbation"
+            "approvalRouting.label": "Routage d'approbation",
+            "billing.label": "Billing"
         },
         "filters": {
             "opened": "Tous les cas ouverts",

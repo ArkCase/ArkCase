@@ -1,4 +1,4 @@
-package gov.foia.listener;
+package com.armedia.acm.services.billing.listener;
 
 /*-
  * #%L
@@ -30,51 +30,60 @@ package gov.foia.listener;
 import com.armedia.acm.services.billing.exception.CreateBillingItemException;
 import com.armedia.acm.services.billing.model.BillingItem;
 import com.armedia.acm.services.billing.service.BillingService;
-import com.armedia.acm.services.costsheet.dao.AcmCostsheetDao;
-import com.armedia.acm.services.costsheet.model.AcmCostsheet;
-import com.armedia.acm.services.costsheet.model.AcmCostsheetEvent;
+import com.armedia.acm.services.timesheet.dao.AcmTimesheetDao;
+import com.armedia.acm.services.timesheet.model.AcmTimesheet;
+import com.armedia.acm.services.timesheet.model.AcmTimesheetEvent;
+import com.armedia.acm.services.timesheet.service.TimesheetService;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;
 
-public class FOIACostsheetBillingListener implements ApplicationListener<AcmCostsheetEvent>
+public class TimesheetBillingListener implements ApplicationListener<AcmTimesheetEvent>
 {
     private Logger log = LoggerFactory.getLogger(getClass());
 
-    private AcmCostsheetDao acmCostsheetDao;
+    private AcmTimesheetDao acmTimesheetDao;
     private BillingService billingService;
+    private TimesheetService timesheetService;
 
     @Override
-    public void onApplicationEvent(AcmCostsheetEvent acmCostsheetEvent)
+    public void onApplicationEvent(AcmTimesheetEvent acmTimesheetEvent)
     {
-        if (acmCostsheetEvent != null && !acmCostsheetEvent.isStartWorkflow())
+        if (acmTimesheetEvent != null && !acmTimesheetEvent.isStartWorkflow())
         {
-            AcmCostsheet costsheet = (AcmCostsheet)acmCostsheetEvent.getSource();
-            if("FINAL".equals(costsheet.getStatus()))
+            AcmTimesheet timesheet = (AcmTimesheet) acmTimesheetEvent.getSource();
+            if ("FINAL".equals(timesheet.getStatus()))
             {
-                generateBillingItems(acmCostsheetEvent);
+                generateBillingItems(acmTimesheetEvent);
             }
         }
     }
 
-    private void generateBillingItems(AcmCostsheetEvent acmCostsheetEvent)
+    private void generateBillingItems(AcmTimesheetEvent event)
     {
-        AcmCostsheet costsheet = (AcmCostsheet)acmCostsheetEvent.getSource();
-        BillingItem costsheetBillingItem = populateBillingItem(acmCostsheetEvent.getUserId(), costsheet.getTitle(), costsheet.getParentId(), costsheet.getParentType(), costsheet.calculateBalance());
+        AcmTimesheet timesheet = (AcmTimesheet) event.getSource();
 
+        getTimesheetService().accumulateTimesheetByTypeAndChangeCode(timesheet).values().forEach(acmTime -> {
+            createBillingItem(event.getUserId(), timesheet.getTitle(), acmTime.getObjectId(), acmTime.getType(), acmTime.getTotalCost());
+        });
+    }
+
+    private void createBillingItem(String userId, String title, Long parentObjectId, String parentObjectType, double balance)
+    {
         try
         {
-            getBillingService().createBillingItem(costsheetBillingItem);
+            getBillingService().createBillingItem(populateBillingItem(userId, title, parentObjectId, parentObjectType, balance));
         }
         catch (CreateBillingItemException e)
         {
-            log.error("Could not create Billing Item for objectType = [{}] and objectId = [{}]", costsheet.getParentType(),
-                    costsheet.getParentId());
+            log.error("Can not add Billing Item from [{}] for objectType = [{}] and objectId = [{}]", title, parentObjectType,
+                    parentObjectId);
         }
     }
 
-    private BillingItem populateBillingItem(String creator, String itemDescription, Long parentObjectId, String parentObjectType, Double itemAmount)
+    private BillingItem populateBillingItem(String creator, String itemDescription, Long parentObjectId, String parentObjectType,
+            Double itemAmount)
     {
         BillingItem billingItem = new BillingItem();
         billingItem.setCreator(creator);
@@ -83,18 +92,17 @@ public class FOIACostsheetBillingListener implements ApplicationListener<AcmCost
         billingItem.setParentObjectId(parentObjectId);
         billingItem.setParentObjectType(parentObjectType);
         billingItem.setItemAmount(itemAmount);
-
         return billingItem;
     }
 
-    public AcmCostsheetDao getAcmCostsheetDao()
+    public AcmTimesheetDao getAcmTimesheetDao()
     {
-        return acmCostsheetDao;
+        return acmTimesheetDao;
     }
 
-    public void setAcmCostsheetDao(AcmCostsheetDao acmCostsheetDao)
+    public void setAcmTimesheetDao(AcmTimesheetDao acmTimesheetDao)
     {
-        this.acmCostsheetDao = acmCostsheetDao;
+        this.acmTimesheetDao = acmTimesheetDao;
     }
 
     public BillingService getBillingService()
@@ -105,5 +113,15 @@ public class FOIACostsheetBillingListener implements ApplicationListener<AcmCost
     public void setBillingService(BillingService billingService)
     {
         this.billingService = billingService;
+    }
+
+    public TimesheetService getTimesheetService()
+    {
+        return timesheetService;
+    }
+
+    public void setTimesheetService(TimesheetService timesheetService)
+    {
+        this.timesheetService = timesheetService;
     }
 }

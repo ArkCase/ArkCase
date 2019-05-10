@@ -2,7 +2,6 @@
 
 angular.module('admin').controller('Admin.CostsheetController',
         [ '$scope', 'Admin.CostsheetConfigurationService', 'MessageService', 'UtilService', function($scope, CostsheetConfigurationService, MessageService, Util) {
-            debugger
             $scope.costsheetProperties;
 
             CostsheetConfigurationService.getProperties().then(function(response) {

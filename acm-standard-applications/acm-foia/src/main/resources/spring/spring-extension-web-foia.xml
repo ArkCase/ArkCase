@@ -36,10 +36,6 @@
             <beans:property name="foiaConfigurationService" ref="foiaConfigurationService"/>
         </beans:bean>
 
-        <beans:bean id="billingInvoiceEmailSenderAPIController" class="gov.foia.web.api.BillingInvoiceEmailSenderAPIController">
-            <beans:property name="billingInvoiceEmailSenderService" ref="billingInvoiceEmailSenderService"/>
-        </beans:bean>
-
         <beans:bean id="publicFlagAPIController" class="gov.foia.web.api.PublicFlagAPIController">
             <beans:property name="publicFlagService" ref="publicFlagService"/>
         </beans:bean>
