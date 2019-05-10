@@ -100,7 +100,7 @@ public class DeleteFileAPIController
     @PreAuthorize("hasPermission(#objectId, 'FILE', 'write|group-write')")
     @RequestMapping(value = "temporary/id/{fileId}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public void putFileIntoRecycleBin(@PathVariable("fileId") Long objectId, Authentication authentication, HttpSession session)
+    public String putFileIntoRecycleBin(@PathVariable("fileId") Long objectId, Authentication authentication, HttpSession session)
             throws AcmUserActionFailedException, AcmCreateObjectFailedException
     {
         log.info("File with id: {} will be temporary deleted, by user:", objectId, authentication.getName());
@@ -111,6 +111,7 @@ public class DeleteFileAPIController
             getFileService().putFileIntoRecycleBin(objectId, authentication, session);
             log.info("File with id: {} temporary deleted, by {}", objectId, source.getModifier());
             getRecycleBinItemEventPublisher().publishFileMovedToRecycleBinEvent(source, authentication, ipAddress, true);
+            return prepareJsonReturnMsg(EcmFileConstants.SUCCESS_TEMPORARY_DELETE_MSG, objectId, source.getFileName());
         }
         catch (AcmUserActionFailedException e)
         {
@@ -121,6 +122,7 @@ public class DeleteFileAPIController
         catch (AcmObjectNotFoundException e)
         {
             log.debug("File with id: {} not found in the DB, reason {}", objectId, e.getMessage(), e);
+            return prepareJsonReturnMsg(EcmFileConstants.SUCCESS_TEMPORARY_DELETE_MSG, objectId);
         }
     }
 
