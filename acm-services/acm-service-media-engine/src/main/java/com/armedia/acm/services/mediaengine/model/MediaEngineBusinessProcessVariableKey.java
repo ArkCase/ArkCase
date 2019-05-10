@@ -39,5 +39,6 @@ public enum MediaEngineBusinessProcessVariableKey
     TYPE,
     CREATED,
     PURGE_ATTEMPTS,
-    SERVICE_NAME
+    SERVICE_NAME,
+    MESSAGE
 }

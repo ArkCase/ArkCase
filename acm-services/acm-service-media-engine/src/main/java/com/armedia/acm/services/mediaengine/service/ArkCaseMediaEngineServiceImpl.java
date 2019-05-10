@@ -27,6 +27,8 @@ package com.armedia.acm.services.mediaengine.service;
  * #L%
  */
 
+import com.armedia.acm.audit.dao.AuditDao;
+import com.armedia.acm.audit.model.AuditEvent;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.objectonverter.ArkCaseBeanUtils;
 import com.armedia.acm.plugins.ecm.dao.EcmFileVersionDao;
@@ -68,6 +70,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.NoResultException;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -102,6 +106,7 @@ public abstract class ArkCaseMediaEngineServiceImpl<T extends MediaEngine>
     private MediaEngineMapper mediaEngineMapper;
     private EcmFileService ecmFileService;
     private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
+    private AuditDao auditDao;
 
     @Override
     @Transactional
@@ -240,7 +245,7 @@ public abstract class ArkCaseMediaEngineServiceImpl<T extends MediaEngine>
         MediaEngine saved = getMediaEntityDao(getServiceName()).save(mediaEngine);
         String action = mediaEngine.getId() == null ? MediaEngineActionType.CREATED.toString() : MediaEngineActionType.UPDATED.toString();
         String serviceName = getServiceName();
-        getMediaEngineEventPublisher().publish(saved, action, serviceName);
+        getMediaEngineEventPublisher().publish(saved, action, serviceName, "");
 
         LOG.debug("{} with ID=[{}], VERSION=[{}], successfully saved.", mediaEngine.getObjectType(), mediaEngine.getId(),
                 mediaEngine.getMediaEcmFileVersion().getVersionTag());
@@ -367,7 +372,7 @@ public abstract class ArkCaseMediaEngineServiceImpl<T extends MediaEngine>
     }
 
     @Override
-    public MediaEngine fail(Long id) throws SaveMediaEngineException
+    public MediaEngine fail(Long id, String message) throws SaveMediaEngineException
     {
         MediaEngine mediaEngine = getMediaEntityDao(getServiceName()).find(id);
         if (mediaEngine != null && StringUtils.isNotEmpty(mediaEngine.getProcessId()))
@@ -378,11 +383,13 @@ public abstract class ArkCaseMediaEngineServiceImpl<T extends MediaEngine>
             {
                 String statusKey = MediaEngineBusinessProcessVariableKey.STATUS.toString();
                 String actionKey = MediaEngineBusinessProcessVariableKey.ACTION.toString();
+                String messageKey = MediaEngineBusinessProcessVariableKey.MESSAGE.toString();
                 String status = MediaEngineStatusType.FAILED.toString();
                 String action = MediaEngineActionType.FAILED.toString();
 
                 getActivitiRuntimeService().setVariable(processInstance.getId(), statusKey, status);
                 getActivitiRuntimeService().setVariable(processInstance.getId(), actionKey, action);
+                getActivitiRuntimeService().setVariable(processInstance.getId(), messageKey, message);
 
                 mediaEngine.setStatus(MediaEngineStatusType.FAILED.toString());
 
@@ -463,24 +470,24 @@ public abstract class ArkCaseMediaEngineServiceImpl<T extends MediaEngine>
     }
 
     @Override
-    public void audit(Long id, String action)
+    public void audit(Long id, String action, String message)
     {
         if (id != null && action != null)
         {
             MediaEngine mediaEngine = getMediaEntityDao(getServiceName()).find(id);
             if (mediaEngine != null)
             {
-                getMediaEngineEventPublisher().publish(mediaEngine, action, getServiceName());
+                getMediaEngineEventPublisher().publish(mediaEngine, action, getServiceName(), message);
             }
         }
     }
 
     @Override
-    public void auditMultiple(List<Long> ids, String action)
+    public void auditMultiple(List<Long> ids, String action, String message)
     {
         if (ids != null)
         {
-            ids.forEach(id -> audit(id, action));
+            ids.forEach(id -> audit(id, action, message));
         }
     }
 
@@ -569,6 +576,7 @@ public abstract class ArkCaseMediaEngineServiceImpl<T extends MediaEngine>
         processVariables.put(MediaEngineBusinessProcessVariableKey.TYPE.toString(), mediaEngine.getType());
         processVariables.put(MediaEngineBusinessProcessVariableKey.CREATED.toString(), new Date());
         processVariables.put(MediaEngineBusinessProcessVariableKey.SERVICE_NAME.toString(), getServiceName());
+        processVariables.put(MediaEngineBusinessProcessVariableKey.MESSAGE.toString(), "");
 
         ProcessInstance processInstance = getActivitiRuntimeService().startProcessInstanceByKey(mediaEngineBusinessProcessModel.getName(),
                 processVariables);
@@ -696,6 +704,31 @@ public abstract class ArkCaseMediaEngineServiceImpl<T extends MediaEngine>
         }
 
         return null;
+    }
+
+    @Override
+    public Map<String, String> getFailureReasonMessage(Long mediaVersionId)
+    {
+        String auditTrackId = "MEDIA_SERVICE|" + MediaEngineConstants.FAILED_EVENT.replace("[SERVICE]", getServiceName().toLowerCase());
+        Map<String, String> failureResult = new HashMap<>();
+        try
+        {
+            AuditEvent event = getAuditDao().getLastAuditEventByObjectIdAndTrackId(mediaVersionId, auditTrackId);
+            if (StringUtils.isNotEmpty(event.getEventDescription()))
+            {
+                failureResult.put("failureReason", event.getEventDescription());
+            }
+            else
+            {
+                failureResult.put("failureReason", "Unknown reason");
+            }
+        }
+        catch (NoResultException e)
+        {
+            failureResult.put("failureReason", "Unknown reason");
+        }
+
+        return failureResult;
     }
 
     protected abstract MediaEngine createEntity();
@@ -850,5 +883,15 @@ public abstract class ArkCaseMediaEngineServiceImpl<T extends MediaEngine>
     public void setAuditPropertyEntityAdapter(AuditPropertyEntityAdapter auditPropertyEntityAdapter)
     {
         this.auditPropertyEntityAdapter = auditPropertyEntityAdapter;
+    }
+
+    public AuditDao getAuditDao()
+    {
+        return auditDao;
+    }
+
+    public void setAuditDao(AuditDao auditDao)
+    {
+        this.auditDao = auditDao;
     }
 }

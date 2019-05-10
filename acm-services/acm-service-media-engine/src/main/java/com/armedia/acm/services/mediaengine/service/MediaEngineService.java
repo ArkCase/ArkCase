@@ -48,6 +48,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Vladimir Cherepnalkovski <vladimir.cherepnalkovski@armedia.com>
@@ -198,7 +199,7 @@ public interface MediaEngineService<T extends MediaEngine>
      * @return Updated MediaEngine object
      * @throws SaveMediaEngineException
      */
-    MediaEngine fail(Long id) throws SaveMediaEngineException;
+    MediaEngine fail(Long id, String message) throws SaveMediaEngineException;
 
     /**
      * This method will purge MediaEngine information
@@ -260,8 +261,10 @@ public interface MediaEngineService<T extends MediaEngine>
      *            - ID of the MediaEngine object
      * @param action
      *            - Action that is performed
+     * @param message
+     *            - Descriptive message for mediaEngine status
      */
-    void audit(Long id, String action);
+    void audit(Long id, String action, String message);
 
     /**
      * This method will audit performed action for list of MediaEngine objects
@@ -270,8 +273,10 @@ public interface MediaEngineService<T extends MediaEngine>
      *            - List of IDs of the MediaEngine objects
      * @param action
      *            - Action that is performed
+     * @param message
+     *            - Descriptive message for mediaEngine status
      */
-    void auditMultiple(List<Long> ids, String action);
+    void auditMultiple(List<Long> ids, String action, String message);
 
     /**
      * This method will start business process defined for MediaEngine object
@@ -424,4 +429,12 @@ public interface MediaEngineService<T extends MediaEngine>
      * @throws MuleException
      */
     File createTempFile(MediaEngine mediaEngine, String tempPath) throws IOException, MuleException;
+
+    /**
+     *
+     * @param mediaVersionId
+     *            - ID of the media file version
+     * @return Failure reason message
+     */
+    Map<String, String> getFailureReasonMessage(Long mediaVersionId);
 }

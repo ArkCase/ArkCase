@@ -92,7 +92,7 @@ public class MediaEngineBusinessProcessHandler implements PipelineHandler<MediaE
             getActivitiRuntimeService().deleteProcessInstance(pipelineContext.getProcessId(), "Pipeline rollback action.");
         }
 
-        getMediaEngineEventPublisher().publish(entity, MediaEngineActionType.ROLLBACK.toString(), serviceName);
+        getMediaEngineEventPublisher().publish(entity, MediaEngineActionType.ROLLBACK.toString(), serviceName, "");
 
     }
 
