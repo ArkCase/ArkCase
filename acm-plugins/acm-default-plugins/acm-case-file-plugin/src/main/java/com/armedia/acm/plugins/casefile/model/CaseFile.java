@@ -53,6 +53,7 @@ import com.armedia.acm.services.sequence.annotation.AcmSequence;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.voodoodyne.jackson.jsog.JSOGGenerator;
@@ -109,6 +110,8 @@ import java.util.Set;
 @DiscriminatorValue("com.armedia.acm.plugins.casefile.model.CaseFile")
 @JsonPropertyOrder(value = { "id", "personAssociations", "originator" })
 @JsonIdentityInfo(generator = JSOGGenerator.class)
+@JsonIgnoreProperties(ignoreUnknown = true)
+
 public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity,
         AcmContainerEntity, AcmChildObjectEntity, AcmLegacySystemEntity, AcmNotifiableEntity, AcmStatefulEntity, AcmTitleEntity,
         AcmObjectNumber, AcmObjectOriginator
