@@ -25,8 +25,10 @@ angular.module('time-tracking').controller(
                 'Helper.UiGridService',
                 'Admin.TimesheetConfigurationService',
                 'Mentions.Service',
+                'Case.InfoService',
+                'Complaint.InfoService',
                 function($scope, $q, $stateParams, $translate, $modalInstance, TimeTrackingInfoService, ObjectLookupService, MessageService, $timeout, Util, UtilDateService, $modal, ConfigService, ObjectService, modalParams, PersonInfoService, ObjectModelService, ObjectParticipantService,
-                         UserInfoService, HelperUiGridService, TimesheetConfigurationService, MentionsService) {
+                         UserInfoService, HelperUiGridService, TimesheetConfigurationService, MentionsService, CaseInfoService, ComplaintInfoService) {
 
                     $scope.modalParams = modalParams;
                     $scope.loading = false;
@@ -46,7 +48,7 @@ angular.module('time-tracking').controller(
                         UserInfoService.getUserInfo().then(function(infoData) {
                             if (!$scope.isEdit) {
                                 //new timesheet with predefined values
-                                $scope.isTypeSelected = false;
+                                $scope.isTypeSelected = true;
                                 $scope.isApproverAdded = false;
                                 $scope.timesheet = {
                                     className: $scope.config.className,
@@ -62,15 +64,19 @@ angular.module('time-tracking').controller(
                                 $scope.selectedWeek = updateChoosedWeekText($scope.selectedDate);
 
                                 $scope.timesForms = [ {
+                                    type: 'CASE_FILE',
                                     totalWeekHours: 0,
                                     totalCost: 0,
                                     dayHours: [ 0, 0, 0, 0, 0, 0, 0 ]
                                 } ];
 
+                                $scope.timeTypeLabel = 'Case';
+
                                 if (!Util.isEmpty($scope.modalParams.timeType) && !Util.isEmpty($scope.modalParams.timeNumber) && !Util.isEmpty($scope.modalParams.timeId)) {
                                     $scope.timesForms[0].objectId = $scope.modalParams.timeId;
                                     $scope.timesForms[0].type = $scope.modalParams.timeType;
                                     $scope.timesForms[0].code = $scope.modalParams.timeNumber;
+                                    $scope.timesForms[0].typesName = $scope.modalParams.typesName;
                                     $scope.isTypeSelected = true;
                                 }
                             }
@@ -117,8 +123,7 @@ angular.module('time-tracking').controller(
                                         $scope.timesheetStatuses.splice(i, 1);
                                     }
                                 }
-                            }
-                            else {
+                            } else {
                                 for (var i = $scope.timesheetStatuses.length - 1; i >= 0; i--) {
                                     if ($scope.timesheetStatuses[i].key == "FINAL") {
                                         $scope.timesheetStatuses.splice(i, 1);
@@ -227,14 +232,51 @@ angular.module('time-tracking').controller(
                                         startDate = addOneDay(startDate);
                                     }
 
-                                    var timesForm = {
-                                        type: timeArray[0].type,
-                                        code: timeArray[0].code,
-                                        chargeRole: timeArray[0].chargeRole,
-                                        dayHours: dayHours,
-                                    };
-                                    $scope.updateTotalWeekHours(timesForm);
-                                    $scope.timesForms.push(timesForm);
+                                    if (timeArray[0].type == ObjectService.ObjectTypes.CASE_FILE) {
+                                        CaseInfoService.getCaseInfoByNumber(timeArray[0].code).then(function(caseInfo) {
+                                            var timesForm = {
+                                                type: timeArray[0].type,
+                                                code: timeArray[0].code,
+                                                chargeRole: timeArray[0].chargeRole,
+                                                typesName: caseInfo.title,
+                                                dayHours: dayHours,
+                                            };
+
+                                            changeTimeTypeLabel(timeArray[0]);
+
+                                            $scope.updateTotalWeekHours(timesForm);
+                                            $scope.timesForms.push(timesForm);
+                                        });
+                                    } else if (timeArray[0].type == ObjectService.ObjectTypes.COMPLAINT) {
+                                        ComplaintInfoService.getComplaintByNumber(timeArray[0].code).then(function(complaint) {
+                                            var timesForm = {
+                                                type: timeArray[0].type,
+                                                code: timeArray[0].code,
+                                                chargeRole: timeArray[0].chargeRole,
+                                                typesName: complaint.complaintTitle,
+                                                dayHours: dayHours,
+                                            };
+
+                                            changeTimeTypeLabel(timeArray[0]);
+
+                                            $scope.updateTotalWeekHours(timesForm);
+                                            $scope.timesForms.push(timesForm);
+                                        });
+                                    } else {
+                                        var timesForm = {
+                                            type: timeArray[0].type,
+                                            code: timeArray[0].code,
+                                            chargeRole: timeArray[0].chargeRole,
+                                            typesName: " ",
+                                            dayHours: dayHours,
+                                        };
+
+                                        changeTimeTypeLabel(timeArray[0]);
+
+                                        $scope.updateTotalWeekHours(timesForm);
+                                        $scope.timesForms.push(timesForm);
+                                    }
+
                                 });
 
                             } else {
@@ -310,13 +352,26 @@ angular.module('time-tracking').controller(
                     }
 
                     // -----------------------------------------------------------------------------------------------
+                    function changeTimeTypeLabel(time) {
+                        if (time.type == ObjectService.ObjectTypes.CASE_FILE) {
+                            $scope.timeTypeLabel = "Case";
+                        } else if (time.type == ObjectService.ObjectTypes.COMPLAINT) {
+                            $scope.timeTypeLabel = "Complaint";
+                        } else {
+                            $scope.timeTypeLabel = "Other";
+                        }
+                    }
+
                     $scope.updateIsTypeSelected = function(time) {
                         if (time.type == undefined) {
                             $scope.isTypeSelected = false;
                         } else {
                             $scope.isTypeSelected = true;
+
+                            changeTimeTypeLabel(time);
                         }
                         time.code = "";
+                        time.typesName = "";
                     };
 
                     $scope.chooseChargeCode = function(time) {
@@ -364,6 +419,7 @@ angular.module('time-tracking').controller(
                             if (!Util.isEmpty(selected)) {
                                 time.code = selected.name;
                                 time.objectId = selected.object_id_s;
+                                time.typesName = selected.title_parseable;
                             }
                         });
 
@@ -599,7 +655,6 @@ angular.module('time-tracking').controller(
                     //-----------------------------------------------------------------------------------------------
 
                     $scope.save = function(submissionName) {
-                        debugger
                         $q.when(timesheetConfig).then(function(response) {
                             $scope.timesheetConfiguration = response.data;
 
