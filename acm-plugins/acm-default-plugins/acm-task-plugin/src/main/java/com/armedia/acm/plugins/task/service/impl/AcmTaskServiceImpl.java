@@ -52,6 +52,8 @@ import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
+import com.armedia.acm.plugins.ecm.service.impl.FileWorkflowBusinessRule;
+import com.armedia.acm.plugins.ecm.workflow.EcmFileWorkflowConfiguration;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import com.armedia.acm.plugins.objectassociation.service.ObjectAssociationService;
 import com.armedia.acm.plugins.task.exception.AcmTaskException;
@@ -71,10 +73,12 @@ import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.search.model.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.search.service.SearchResults;
+import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.web.api.MDCConstants;
 import com.google.common.collect.ImmutableMap;
 
 import org.activiti.engine.ActivitiException;
+import org.activiti.engine.RuntimeService;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -96,6 +100,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -103,6 +108,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * Created by nebojsha on 22.06.2015.
@@ -127,6 +133,8 @@ public class AcmTaskServiceImpl implements AcmTaskService
     private SaveBusinessProcess saveBusinessProcess;
     private NotificationDao notificationDao;
     private AcmDataService acmDataService;
+    private FileWorkflowBusinessRule fileWorkflowBusinessRule;
+    private RuntimeService activitiRuntimeService;
 
     @Override
     public List<BuckslipProcess> getBuckslipProcessesForObject(String objectType, Long objectId)
@@ -660,7 +668,7 @@ public class AcmTaskServiceImpl implements AcmTaskService
     }
 
     @Override
-    public void sendArrestWarrantMail(Long objectId, String objectType)
+    public void sendArrestWarrantMail(Long objectId, String objectType, String approvers)
     {
         AcmAbstractDao<AcmObject> dao = getAcmDataService().getDaoByObjectType(objectType);
         AcmObject object = dao.find(objectId);
@@ -668,10 +676,60 @@ public class AcmTaskServiceImpl implements AcmTaskService
         notification.setParentId(objectId);
         notification.setParentType(objectType);
         notification.setTitle(String.format("%s - Arrest Warrant", ((AcmNotifiableEntity) object).getNotifiableEntityNumber()));
-        notification.setEmailAddresses("ian-acm@armedia.com,ann-acm@armedia.com,matthew.maines@armedia.com");
+        notification.setEmailAddresses(approvers);
         notification.setTemplateModelName("arrestWarrant");
         notificationDao.save(notification);
 
+    }
+
+    @Override
+    public void startArrestWarrantWorkflow(AcmTask task) 
+    {
+        EcmFile source = task.getDocumentsToReview().get(0);
+
+        EcmFileWorkflowConfiguration configuration = new EcmFileWorkflowConfiguration();
+        source.setFileType("file");
+        configuration.setEcmFile(source);
+        
+
+
+        configuration = getFileWorkflowBusinessRule().applyRules(configuration);
+        if (!configuration.isBuckslipProcess())
+        {
+            return;
+        }
+
+
+        if (configuration.isStartProcess())
+        {
+            String processName = configuration.getProcessName();
+
+            Map<String, Object> pvars = new HashMap<>();
+
+            String approversCsv = configuration.getApprovers();
+            List<String> approvers = approversCsv == null ? new ArrayList<>()
+                    : Arrays.stream(approversCsv.split(",")).filter(s -> s != null).map(s -> s.trim()).collect(Collectors.toList());
+            pvars.put("approvers", approversCsv);
+            pvars.put("taskName", configuration.getTaskName());
+
+            pvars.put("PARENT_OBJECT_TYPE", task.getAttachedToObjectType());
+            pvars.put("PARENT_OBJECT_ID", task.getAttachedToObjectId());
+
+            pvars.put("taskDueDateExpression", configuration.getTaskDueDateExpression());
+            pvars.put("taskPriority", configuration.getTaskPriority());
+
+
+            pvars.put("approver1", approvers.get(0));
+            pvars.put("approver2", approvers.get(1));
+            pvars.put("approver3", approvers.get(2));
+            
+            pvars.put("currentTaskName", configuration.getTaskName());
+            pvars.put("owningGroup", "");
+            pvars.put("dueDate", configuration.getTaskDueDateExpression());
+            
+            getActivitiRuntimeService().startProcessInstanceByKey(processName, pvars);
+            
+        }
     }
 
     private Long getBusinessProcessIdFromSolr(String objectType, Long objectId, Authentication authentication)
@@ -818,5 +876,25 @@ public class AcmTaskServiceImpl implements AcmTaskService
     public void setAcmDataService(AcmDataService acmDataService) 
     {
         this.acmDataService = acmDataService;
+    }
+
+    public FileWorkflowBusinessRule getFileWorkflowBusinessRule() 
+    {
+        return fileWorkflowBusinessRule;
+    }
+
+    public void setFileWorkflowBusinessRule(FileWorkflowBusinessRule fileWorkflowBusinessRule) 
+    {
+        this.fileWorkflowBusinessRule = fileWorkflowBusinessRule;
+    }
+
+    public RuntimeService getActivitiRuntimeService() 
+    {
+        return activitiRuntimeService;
+    }
+
+    public void setActivitiRuntimeService(RuntimeService activitiRuntimeService) 
+    {
+        this.activitiRuntimeService = activitiRuntimeService;
     }
 }
