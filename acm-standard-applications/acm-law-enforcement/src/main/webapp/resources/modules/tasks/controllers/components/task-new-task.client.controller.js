@@ -159,9 +159,8 @@ angular.module('tasks').controller(
                         var taskData = angular.copy($scope.config.data);
                         taskData.dueDate = $scope.config.data.dueDate;
                         taskData.taskStartDate = $scope.config.data.taskStartDate;
-                        if ($scope.documentsToReview && $scope.selectedBusinessProcessType != 'acmDocumentTaskWorkflow') {
+                        if ($scope.documentsToReview && $scope.selectedBusinessProcessType != 'notDefinedWorkflow') {
                             taskData.documentsToReview = processDocumentsUnderReview();
-                            $scope.selectedBusinessProcessType = "acmDocumentTaskWorkflow";
                             TaskNewTaskService.reviewDocuments(taskData, $scope.selectedBusinessProcessType).then(reviewDocumentTaskSuccessCallback, errorCallback);
                         }
                         else if($scope.documentsToReview && $scope.selectedBusinessProcessType == 'acmDocumentTaskWorkflow' && $scope.filesToUpload){
