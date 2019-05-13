@@ -3238,6 +3238,9 @@ angular
                                                     }
                                                 }
                                             }
+                                        },
+                                        onError: function(error) {
+                                            MessageService.error(error.data.message);
                                         }
                                     }).then(function(deletedFileId) {
                                         dfd.resolve(deletedFileId);
