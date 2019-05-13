@@ -14,7 +14,7 @@ angular.module('services').factory('Complaint.BillingService', ['$http', functio
                 }
             });
         },
-        addBillingItemForComplaint: function(data) {
+        addBillingItem: function(data) {
             return $http({
                 url: 'api/latest/plugin/billing/items',
                 method: 'POST',
@@ -32,7 +32,7 @@ angular.module('services').factory('Complaint.BillingService', ['$http', functio
                 }
             });
         },
-        createBillingInvoiceForComplaint: function(data) {
+        createBillingInvoice: function(data) {
             return $http({
                 url: 'api/latest/plugin/billing/invoices',
                 method: 'POST',
