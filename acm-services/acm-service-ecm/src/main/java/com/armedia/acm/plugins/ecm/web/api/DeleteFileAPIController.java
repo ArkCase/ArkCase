@@ -123,7 +123,7 @@ public class DeleteFileAPIController
         catch (AcmObjectNotFoundException e)
         {
             log.debug("File with id: {} not found in the DB, reason {}", objectId, e.getMessage(), e);
-            throw new AcmAppErrorJsonMsg(EcmFileConstants.FILE_NOT_FOUND_DB, EcmFileConstants.FILE, "fileId", null);
+            throw new AcmAppErrorJsonMsg(EcmFileConstants.FILE_NOT_FOUND_DB, EcmFileConstants.FILE, "fileId", e);
         }
     }
 
