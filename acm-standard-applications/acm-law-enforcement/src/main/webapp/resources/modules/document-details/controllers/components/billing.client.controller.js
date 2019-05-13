@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('cases').controller('BillingItemController', ['$scope', '$modal', '$stateParams', 'Case.InfoService', 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'Case.BillingService', 'MessageService',
-    function($scope, $modal, $stateParams, CaseInfoService, HelperUiGridService, HelperObjectBrowserService, CaseBillingService, MessageService){
+angular.module('cases').controller('BillingItemController', ['$scope', '$modal', '$stateParams', 'Case.InfoService', 'Complaint.InfoService', 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'Case.BillingService', 'Complaint.BillingService', 'MessageService', 'Complaint.InfoService',
+    function($scope, $modal, $stateParams, CaseInfoService, ComplaintInfoService, HelperUiGridService, HelperObjectBrowserService, CaseBillingService, ComplaintBillingService, MessageService){
 
         $scope.parentObjectType = $stateParams.containerType;
         function setCaseOrComplaintConfiguration(parentObjectType) {
@@ -9,11 +9,17 @@ angular.module('cases').controller('BillingItemController', ['$scope', '$modal',
                 $scope.templateUrl = 'modules/cases/views/components/case-billing-modal.client.view.html';
                 $scope.controller = 'Cases.BillingModalController';
                 $scope.moduleId = 'cases';
+                $scope.billingService = CaseBillingService;
+                $scope.infoService = CaseInfoService.getCaseInfo;
+                $scope.validateInfo = ComplaintInfoService.validateCaseInfo;
             }
             else if (parentObjectType === 'COMPLAINT') {
                 $scope.templateUrl = 'modules/complaints/views/components/complaint-billing-modal.client.view.html';
                 $scope.controller = 'Complaints.BillingModalController';
                 $scope.moduleId = 'complaints';
+                $scope.billingService = ComplaintBillingService;
+                $scope.infoService = ComplaintInfoService.getComplaintInfo;
+                $scope.validateInfo = ComplaintInfoService.validateComplaintInfo;
             }
         }
         setCaseOrComplaintConfiguration($scope.parentObjectType);
@@ -23,8 +29,8 @@ angular.module('cases').controller('BillingItemController', ['$scope', '$modal',
             stateParams: $stateParams,
             moduleId: $scope.moduleId,
             componentId: "billing",
-            retrieveObjectInfo: CaseInfoService.getCaseInfo,
-            validateObjectInfo: CaseInfoService.validateCaseInfo,
+            retrieveObjectInfo: $scope.infoService,
+            validateObjectInfo: $scope.validateInfo,
             onConfigRetrieved: function(componentConfig) {
                 return onConfigRetrieved(componentConfig);
             },
@@ -62,7 +68,7 @@ angular.module('cases').controller('BillingItemController', ['$scope', '$modal',
             var params = {};
             params.objectId = $stateParams.containerId;
             params.objectType = $scope.parentObjectType;
-            CaseBillingService.getBillingItems(params.objectId,  params.objectType).then(function(data){
+            $scope.billingService.getBillingItems(params.objectId,  params.objectType).then(function(data){
                 $scope.items = data.data;
                 $scope.gridOptions = $scope.gridOptions || {};
                 $scope.gridOptions.data = $scope.items;
@@ -80,7 +86,7 @@ angular.module('cases').controller('BillingItemController', ['$scope', '$modal',
         };
 
         $scope.emailInvoice = function(){
-            CaseBillingService.sendBillingInvoiceByEmail(invoiceData).then(function() {
+            $scope.billingService.sendBillingInvoiceByEmail(invoiceData).then(function() {
                 MessageService.succsessAction();
             }, function() {
                 MessageService.errorAction();
@@ -88,7 +94,7 @@ angular.module('cases').controller('BillingItemController', ['$scope', '$modal',
         };
 
         $scope.generateInvoice = function(){
-            CaseBillingService.createBillingInvoiceForRequest(invoiceData).then(function() {
+            $scope.billingService.createBillingInvoice(invoiceData).then(function() {
                 MessageService.succsessAction();
             }, function() {
                 MessageService.errorAction();
@@ -121,7 +127,7 @@ angular.module('cases').controller('BillingItemController', ['$scope', '$modal',
             var itemData = $scope.entry;
             itemData.parentObjectId = $stateParams.containerId;
             itemData.parentObjectType = $scope.parentObjectType;
-            CaseBillingService.addBillingItemForRequest(itemData);
+            $scope.billingService.addBillingItem(itemData);
         }
 
 
