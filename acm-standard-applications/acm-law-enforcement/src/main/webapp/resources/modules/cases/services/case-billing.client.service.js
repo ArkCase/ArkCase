@@ -14,7 +14,7 @@ angular.module('services').factory('Case.BillingService', ['$http', function($ht
                 }
             });
         },
-        addBillingItemForCaseFile: function(data) {
+        addBillingItem: function(data) {
             return $http({
                 url: 'api/latest/plugin/billing/items',
                 method: 'POST',
@@ -32,7 +32,7 @@ angular.module('services').factory('Case.BillingService', ['$http', function($ht
                 }
             });
         },
-        createBillingInvoiceForCaseFile: function(data) {
+        createBillingInvoice: function(data) {
             return $http({
                 url: 'api/latest/plugin/billing/invoices',
                 method: 'POST',
