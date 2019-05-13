@@ -102,9 +102,9 @@ public class DeleteFileAPIController
     @RequestMapping(value = "temporary/id/{fileId}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public String putFileIntoRecycleBin(@PathVariable("fileId") Long objectId, Authentication authentication, HttpSession session)
-            throws AcmUserActionFailedException, AcmCreateObjectFailedException
+            throws AcmUserActionFailedException, AcmCreateObjectFailedException, AcmAppErrorJsonMsg
     {
-        log.info("File with id: {} will be temporary deleted, by user:", objectId, authentication.getName());
+        log.info("File with id: {} will be temporary deleted, by user: {}", objectId, authentication.getName());
         String ipAddress = (String) session.getAttribute(EcmFileConstants.IP_ADDRESS_ATTRIBUTE);
         EcmFile source = getFileService().findById(objectId);
         try
@@ -123,7 +123,7 @@ public class DeleteFileAPIController
         catch (AcmObjectNotFoundException e)
         {
             log.debug("File with id: {} not found in the DB, reason {}", objectId, e.getMessage(), e);
-            return prepareJsonReturnMsg(EcmFileConstants.SUCCESS_TEMPORARY_DELETE_MSG, objectId);
+            throw new AcmAppErrorJsonMsg(EcmFileConstants.FILE_NOT_FOUND_DB, EcmFileConstants.FILE, "fileId", null);
         }
     }
 
