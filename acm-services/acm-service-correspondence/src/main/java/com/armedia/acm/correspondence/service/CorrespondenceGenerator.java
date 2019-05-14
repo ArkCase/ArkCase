@@ -2,11 +2,10 @@ package com.armedia.acm.correspondence.service;
 
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
-import com.armedia.acm.core.exceptions.CorrespondenceMergeFieldVersionException;
 import com.armedia.acm.correspondence.model.CorrespondenceMergeField;
 import com.armedia.acm.correspondence.model.CorrespondenceQuery;
 import com.armedia.acm.correspondence.model.CorrespondenceTemplate;
-import com.armedia.acm.correspondence.utils.PoiWordGenerator;
+import com.armedia.acm.correspondence.utils.WordGenerator;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
@@ -79,7 +78,7 @@ public class CorrespondenceGenerator
     private transient final Logger log = LogManager.getLogger(getClass());
     @PersistenceContext
     private EntityManager entityManager;
-    private PoiWordGenerator wordGenerator;
+    private WordGenerator wordGenerator;
     private EcmFileService ecmFileService;
     private EcmFileDao ecmFileDao;
     private String correspondenceFolderName;
@@ -122,7 +121,7 @@ public class CorrespondenceGenerator
     public EcmFile generateCorrespondence(Authentication user, String parentObjectType, Long parentObjectId, String targetFolderCmisId,
             CorrespondenceTemplate template, Object[] queryArguments, OutputStream correspondenceOutputStream,
             InputStream correspondenceInputStream)
-            throws IOException, AcmCreateObjectFailedException, AcmUserActionFailedException, CorrespondenceMergeFieldVersionException
+            throws IOException, AcmCreateObjectFailedException, AcmUserActionFailedException
     {
         Map<String, Object> queryResult = query(template, queryArguments);
 
@@ -131,13 +130,11 @@ public class CorrespondenceGenerator
             throw new IllegalStateException("Database query returned no results");
         }
 
-        Map<String, String> substitutions = prepareSubstitutionMap(template, queryResult);
-
         Resource templateFile = new FileSystemResource(getCorrespondenceFolderName() + File.separator + template.getTemplateFilename());
 
         log.debug("Generating correspondence from template '{}'", templateFile.getFile().getAbsolutePath());
 
-        getWordGenerator().generate(templateFile, correspondenceOutputStream, substitutions);
+        getWordGenerator().generate(templateFile, correspondenceOutputStream, template.getObjectType(), parentObjectId);
 
         EcmFile retval = null;
 
@@ -163,7 +160,7 @@ public class CorrespondenceGenerator
     }
 
     public OutputStream generateCorrespondenceOutputStream(CorrespondenceTemplate template, Object[] queryArguments,
-            OutputStream correspondenceOutputStream) throws IOException, CorrespondenceMergeFieldVersionException
+            OutputStream correspondenceOutputStream, Long parentObjectId) throws IOException
     {
 
         Map<String, Object> queryResult = query(template, queryArguments);
@@ -172,11 +169,10 @@ public class CorrespondenceGenerator
             throw new IllegalStateException("Database query returned no results");
         }
 
-        Map<String, String> substitutions = prepareSubstitutionMap(template, queryResult);
         Resource templateFile = new FileSystemResource(getCorrespondenceFolderName() + File.separator + template.getTemplateFilename());
 
         log.debug("Generating correspondence from template '{}'", templateFile.getFile().getAbsolutePath());
-        getWordGenerator().generate(templateFile, correspondenceOutputStream, substitutions);
+        getWordGenerator().generate(templateFile, correspondenceOutputStream, template.getObjectType(), parentObjectId);
 
         return correspondenceOutputStream;
     }
@@ -185,32 +181,6 @@ public class CorrespondenceGenerator
     {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMdd-HHmmss-SSS");
         return template.getDocumentType() + " " + sdf.format(new Date()) + ".docx";
-    }
-
-    private Map<String, String> prepareSubstitutionMap(CorrespondenceTemplate template, Map<String, Object> queryResult)
-            throws IOException, CorrespondenceMergeFieldVersionException
-    {
-        Map<String, String> retval = new HashMap<>();
-
-        List<CorrespondenceMergeField> mergeFields = getCorrespondenceService().getActiveVersionMergeFieldsByType(template.getObjectType());
-
-        for (CorrespondenceMergeField mergeField : mergeFields)
-        {
-            Object value = queryResult.get(mergeField.getFieldId());
-            value = formatValue(value, Date.class, new SimpleDateFormat(template.getDateFormatString()), mergeField);
-            value = formatValue(value, Number.class, new DecimalFormat(template.getNumberFormatString()), mergeField);
-
-            // Remove all HTML elements if the value is not null
-            String columnValue = value == null ? null : Jsoup.parse(value.toString()).text();
-            if (columnValue != null && !columnValue.isEmpty())
-            {
-                columnValue = getTranslationService().translate(getLookupValue(columnValue));
-            }
-            retval.put(mergeField.getFieldValue(), columnValue);
-
-        }
-
-        return retval;
     }
 
     private String getLookupValue(String key)
@@ -391,12 +361,12 @@ public class CorrespondenceGenerator
         this.entityManager = entityManager;
     }
 
-    public PoiWordGenerator getWordGenerator()
+    public WordGenerator getWordGenerator()
     {
         return wordGenerator;
     }
 
-    public void setWordGenerator(PoiWordGenerator wordGenerator)
+    public void setWordGenerator(WordGenerator wordGenerator)
     {
         this.wordGenerator = wordGenerator;
     }

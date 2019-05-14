@@ -4,16 +4,9 @@
                 ng-change="changeType()"
                 required>
         </select>
-        <div class="btn-group">
-            <button class="btn btn-xs btn-link" ng-click="showVersion()">
-                <i class="glyphicon glyphicon-info-sign"></i>
-                <span translate>admin.correspondenceManagement.mergefields.versionMergeFields</span>
-            </button>
-            <button class="btn btn-xs btn-link" ng-click="save()">
-                <i class="fa fa-save"></i>
-                <span translate>admin.correspondenceManagement.mergefields.saveMergeFields</span>
-            </button>
-        </div>
+        <button class="btn btn-default btn-xs" ng-click="addNewMergeField()" style="margin-top: 5px">
+            <i class="fa fa-lg fa-plus"></i>
+        </button>
     </div>
     <panel-view header="{{'admin.correspondenceManagement.mergefields' | translate}}" collapsible="false">
         <div ui-grid="gridOptions" ui-grid-resize-columns adjust-table-height="gridOptions.data.length" ui-grid-auto-resize

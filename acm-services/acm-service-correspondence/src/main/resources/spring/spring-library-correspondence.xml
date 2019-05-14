@@ -7,7 +7,13 @@
         <property name="configurationPropertyService" ref="configurationPropertyService"/>
     </bean>
 
-    <bean id="poiWordGenerator" class="com.armedia.acm.correspondence.utils.ParagraphRunPoiWordGenerator"/>
+    <bean id="poiWordGenerator" class="com.armedia.acm.correspondence.utils.ParagraphRunPoiWordGenerator">
+        <property name="correspondenceService" ref="correspondenceService"/>
+        <property name="ecmFileDao" ref="ecmFileDao"/>
+        <property name="correspondenceMergeFieldsConfiguration" value="file:${user.home}/.arkcase/acm/correspondence-merge-fields.json"/>
+        <property name="objectConverter" ref="objectConverter" />
+        <property name="mergeFieldManager" ref="correspondenceMergeFieldManager"/>
+    </bean>
 
     <bean id="correspondenceGenerator" class="com.armedia.acm.correspondence.service.CorrespondenceGenerator">
         <property name="wordGenerator" ref="poiWordGenerator"/>
@@ -20,7 +26,7 @@
         <property name="translationService" ref="translationService"/>
     </bean>
 
-    <bean id="correspondenceService" class="com.armedia.acm.correspondence.service.CorrespondenceService">
+    <bean id="correspondenceService" class="com.armedia.acm.correspondence.service.CorrespondenceServiceImpl">
         <property name="correspondenceGenerator" ref="correspondenceGenerator"/>
         <property name="springContextHolder" ref="acmContextHolder"/>
         <property name="eventPublisher" ref="correspondenceEventPublisher"/>
@@ -37,8 +43,6 @@
 
     <bean id="correspondenceMergeFieldManager" class="com.armedia.acm.correspondence.service.CorrespondenceMergeFieldManager">
         <property name="correspondenceMergeFieldsConfiguration" value="file:${user.home}/.arkcase/acm/correspondence-merge-fields.json"/>
-        <property name="correspondenceMergeFieldsVersionConfiguration"
-                  value="file:${user.home}/.arkcase/acm/correspondence-merge-fields-version.json"/>
         <property name="springContextHolder" ref="acmContextHolder"/>
         <property name="objectConverter" ref="objectConverter"/>
     </bean>

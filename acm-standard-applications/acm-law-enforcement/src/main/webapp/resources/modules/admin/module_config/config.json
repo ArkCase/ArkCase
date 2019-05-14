@@ -225,6 +225,14 @@
                     "width": 120
                 },
                 {
+                    "name": "templateModelProvider",
+                    "displayName": "admin.correspondenceManagement.templates.grid.templateModelProvider",
+                    "visible": true,
+                    "headerCellFilter": "translate",
+                    "width": 320,
+                    "cellTemplate": "<div><span>{{ row.entity.templateModelProvider.substr(row.entity.templateModelProvider.lastIndexOf(\".\") + 1) }}</span> <i class='fa fa-info-circle' style='cursor :pointer' ng-click='grid.appScope.getNavBarTree(row.entity.templateModelProvider)'></i> </div>"
+                },
+                {
                     "name": "modified",
                     "displayName": "admin.correspondenceManagement.templates.grid.modified",
                     "visible": true,

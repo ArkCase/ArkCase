@@ -28,13 +28,11 @@ package gov.foia.service;
  */
 
 import com.armedia.acm.core.AcmObject;
-import com.armedia.acm.core.exceptions.CorrespondenceMergeFieldVersionException;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
-
-import java.util.Map;
-
 import gov.foia.model.FOIADocumentDescriptor;
 import gov.foia.model.FOIAObject;
+
+import java.util.Map;
 
 /**
  * Interface for document generation based on templates.
@@ -64,5 +62,5 @@ public interface DocumentGenerator
      */
     EcmFile generateAndUpload(FOIADocumentDescriptor documentDescriptor, FOIAObject acmObject, String targetCmisFolderId,
             String targetFilename, Map<String, String> substitutions)
-            throws DocumentGeneratorException, CorrespondenceMergeFieldVersionException;
+            throws DocumentGeneratorException;
 }

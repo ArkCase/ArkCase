@@ -1,10 +1,10 @@
-package com.armedia.acm.correspondence.utils;
+package com.armedia.acm.plugins.casefile.model.provider;
 
 /*-
  * #%L
- * ACM Service: Correspondence Library
+ * ACM Default Plugin: Case File
  * %%
- * Copyright (C) 2014 - 2018 ArkCase LLC
+ * Copyright (C) 2014 - 2019 ArkCase LLC
  * %%
  * This file is part of the ArkCase software. 
  * 
@@ -27,16 +27,37 @@ package com.armedia.acm.correspondence.utils;
  * #L%
  */
 
-import org.springframework.core.io.Resource;
-
-import java.io.IOException;
-import java.io.OutputStream;
-import java.util.Map;
+import com.armedia.acm.core.provider.TemplateModelProvider;
+import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
+import com.armedia.acm.plugins.casefile.model.CaseFile;
 
 /**
- * Created by armdev on 12/15/14.
+ * @author darko.dimitrievski
  */
-public interface PoiWordGenerator
+public class CaseFileTemplateModelProvider implements TemplateModelProvider<CaseFile>
 {
-    void generate(Resource wordTemplate, OutputStream targetStream, Map<String, String> substitutions) throws IOException;
+    private CaseFileDao caseFileDao;
+
+    @Override
+    public CaseFile getModel(Object caseFile)
+    {
+        return caseFileDao.findByCaseNumber(((CaseFile) caseFile).getCaseNumber());
+
+    }
+
+    @Override
+    public Class<CaseFile> getType()
+    {
+        return CaseFile.class;
+    }
+
+    public CaseFileDao getCaseFileDao()
+    {
+        return caseFileDao;
+    }
+
+    public void setCaseFileDao(CaseFileDao caseFileDao)
+    {
+        this.caseFileDao = caseFileDao;
+    }
 }
