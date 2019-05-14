@@ -35,6 +35,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
@@ -292,5 +293,28 @@ public class AuditDao extends AcmAbstractDao<AuditEvent>
 
         Long count = (Long) query.getSingleResult();
         return count;
+    }
+
+    public AuditEvent getLastAuditEventByObjectIdAndTrackId(Long objectId, String trackId)
+    {
+        String queryText = "SELECT ae " +
+                "FROM   AuditEvent ae " +
+                "WHERE  ae.objectId = :objectId " +
+                "AND 	ae.trackId = :trackId " +
+                "AND 	ae.parentObjectType = 'FILE' " +
+                "ORDER BY ae.eventDate desc ";
+
+        Query findAudits = getEm().createQuery(queryText);
+        findAudits.setParameter("objectId", objectId);
+        findAudits.setParameter("trackId", trackId);
+        findAudits.setMaxResults(1);
+
+        List<AuditEvent> resultList = findAudits.getResultList();
+        if (!resultList.isEmpty())
+        {
+            return resultList.get(0);
+        }
+
+        throw new NoResultException();
     }
 }

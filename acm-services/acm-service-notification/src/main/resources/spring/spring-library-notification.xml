@@ -21,6 +21,7 @@
 
     <bean id="assigneeDueDateNotifier" class="com.armedia.acm.services.notification.service.AssigneeDueDateNotifier">
         <property name="userDao" ref="userJpaDao"/>
+        <property name="holidayConfigurationService" ref="holidayConfigurationService"/>
     </bean>
 
     <bean id="notificationEventPublisher" class="com.armedia.acm.services.notification.service.NotificationEventPublisher"/>

@@ -63,7 +63,7 @@ public class MediaEngineProviderFailedListener implements ApplicationListener<Me
             try
             {
                 MediaEngineService service = getMediaEngineServiceFactory().getService(serviceName);
-                service.fail(mediaEngine.getId());
+                service.fail(mediaEngine.getId(), event.getEventDescription());
             }
             catch (SaveMediaEngineException | MediaEngineServiceNotFoundException e)
             {

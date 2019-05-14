@@ -162,7 +162,8 @@
                 data-title="Send for Approval" ng-click="sendForApproval()" ng-show="isApproverAdded">
             <span translate>costTracking.comp.newCostsheet.sendForApproval</span>
         </button>
-        <button type="submit" ng-disabled="costForm.$invalid || loading || !costsheet.costs.date" class="btn btn-primary btn-sm"
+
+        <button type="submit" ng-disabled="costForm.$invalid || loading" class="btn btn-primary btn-sm"
                 data-toggle="tooltip"
                 id="saveButton" data-title="Save">
             <i class="{{loadingIcon}}"></i>

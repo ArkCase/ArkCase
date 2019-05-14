@@ -31,7 +31,28 @@ angular.module('document-details').controller(
                         }
                     };
 
+                    $scope.showFailureMessage = function showFailureMessage() {
+                        DialogService.alert($scope.transcribeObjectModel.failureReason);
+                    }
+
+                     function onShowLoader() {
+                        var loaderModal = $modal.open({
+                            animation: true,
+                            templateUrl: 'modules/common/views/object.modal.loading-spinner.html',
+                            size: 'md',
+                            backdrop: 'static'
+                        });
+                        $scope.loaderModal = loaderModal;
+                    }
+
+                    function onHideLoader() {
+                        $scope.loaderModal.close();
+                    }
+
                     $scope.iframeLoaded = function() {
+                        ArkCaseCrossWindowMessagingService.addHandler('show-loader', onShowLoader);
+                        ArkCaseCrossWindowMessagingService.addHandler('hide-loader', onHideLoader);
+
                         ObjectLookupService.getLookupByLookupName("annotationTags").then(function (allAnnotationTags) {
                             $scope.allAnnotationTags = allAnnotationTags;
                             ArkCaseCrossWindowMessagingService.addHandler('select-annotation-tags', onSelectAnnotationTags);
@@ -291,7 +312,7 @@ angular.module('document-details').controller(
                         ObjectLockingService.lockObject($scope.ecmFile.fileId, ObjectService.ObjectTypes.FILE, ObjectService.LockTypes.WRITE, true).then(function(lockedFile) {
                             $scope.editingMode = true;
                             $scope.openSnowboundViewer();
-                            
+
                             // count user idle time. When user is idle for more then 1 minute, don't acquire lock
                             $scope._idleSecondsCounter = 0;
                             document.onclick = function() {
@@ -302,12 +323,12 @@ angular.module('document-details').controller(
                             };
                             document.onkeypress = function() {
                                 $scope._idleSecondsCounter = 0;
-                            };                            
+                            };
                             function incrementIdleSecondsCounter() {
                                 $scope._idleSecondsCounter++;
                             }
                             window.setInterval(incrementIdleSecondsCounter, 1000);
-                            
+
                             // Refresh editing lock on timer
                             UtilTimerService.useTimer('refreshFileEditingLock', 60000 // every 1 minute
                             , function() {
@@ -333,9 +354,9 @@ angular.module('document-details').controller(
                             };
 
                         var data = angular.toJson($scope.data);
-                    	
+
                         var url = 'api/v1/plugin/' + ObjectService.ObjectTypes.FILE + '/' + $scope.ecmFile.fileId + '/lock?lockType=' + ObjectService.LockTypes.WRITE;
-                        
+
                         if ($scope.editingMode) {
                         	if("sendBeacon" in navigator)
                             {
@@ -346,7 +367,7 @@ angular.module('document-details').controller(
 	                            xmlhttp.setRequestHeader("Content-type", "application/json");
 	                            xmlhttp.send(data);
                             }
-                        }                        
+                        }
                     });
 
                     $rootScope.$bus.subscribe("object.changed/FILE/" + $stateParams.id, function () {
@@ -365,7 +386,7 @@ angular.module('document-details').controller(
  * 2018-06-01 David Miller. This block is needed to tell the PDF.js angular module, where the PDF.js library is. Without this, on minified
  * systems the PDF.js viewer will not work. I copied this from the project web page,
  * https://github.com/legalthings/angular-pdfjs-viewer#advanced-configuration.
- * 
+ *
  * @param pdfjsViewerConfigProvider
  * @returns
  */

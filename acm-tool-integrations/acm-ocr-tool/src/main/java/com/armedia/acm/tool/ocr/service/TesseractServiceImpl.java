@@ -84,7 +84,7 @@ public class TesseractServiceImpl implements OCRIntegrationService
             catch (Exception e)
             {
                 getMediaEngineIntegrationEventPublisher().publishFailedEvent(mediaEngineDTO, OCRIntegrationConstants.OCR_SYSTEM_USER, null,
-                        true, OCRIntegrationConstants.SERVICE);
+                        true, OCRIntegrationConstants.SERVICE, "");
                 String message = "Error while running Tesseract for FILE_ID=" + fileId + ". Reason: " + e.getMessage();
                 LOG.error(message, e);
                 throw new CreateMediaEngineToolException(message, e);
