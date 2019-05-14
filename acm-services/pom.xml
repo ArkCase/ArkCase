@@ -66,6 +66,7 @@
         <module>acm-service-ocr</module>
         <module>acm-service-media-engine</module>
         <module>acm-service-holiday</module>
+        <module>acm-service-convert-file</module>
   </modules>
 
 </project>

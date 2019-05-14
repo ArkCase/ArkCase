@@ -478,6 +478,12 @@
         </dependency>
 
         <dependency>
+            <groupId>com.armedia.acm.acm-services</groupId>
+            <artifactId>acm-service-convert-file</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+
+        <dependency>
             <groupId>com.armedia.acm.acm-plugins.acm-extra-plugins</groupId>
             <artifactId>acm-onlyoffice-plugin</artifactId>
             <version>${acm.version}</version>

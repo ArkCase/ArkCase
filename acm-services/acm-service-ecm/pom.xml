@@ -139,6 +139,12 @@
             <artifactId>acm-file-folder-watcher</artifactId>
             <version>${acm.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.armedia.acm.acm-services</groupId>
+            <artifactId>acm-service-convert-file</artifactId>
+            <version>${acm.version}</version>
+            <scope>compile</scope>
+        </dependency>
 
         <!-- https://mvnrepository.com/artifact/org/jaudiotagger -->
         <dependency>
@@ -311,6 +317,7 @@
             <version>${acm.version}</version>
             <scope>compile</scope>
         </dependency>
+
 
     </dependencies>
 
