@@ -29,7 +29,12 @@ package com.armedia.acm.services.search.service;
 
 import com.armedia.acm.data.AcmDatabaseChangesEvent;
 import com.armedia.acm.data.AcmObjectChangelist;
-import com.armedia.acm.services.search.model.solr.*;
+import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
+import com.armedia.acm.services.search.model.solr.SolrBaseDocument;
+import com.armedia.acm.services.search.model.solr.SolrContentDocument;
+import com.armedia.acm.services.search.model.solr.SolrDeleteDocumentByIdRequest;
+import com.armedia.acm.services.search.model.solr.SolrDocument;
+import com.armedia.acm.services.search.model.solr.SolrDocumentId;
 import com.armedia.acm.spring.SpringContextHolder;
 
 import org.json.JSONArray;

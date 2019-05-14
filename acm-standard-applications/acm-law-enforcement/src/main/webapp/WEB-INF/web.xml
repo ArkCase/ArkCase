@@ -182,19 +182,6 @@
     <!--
 		SPRING SECURITY
 	-->
-
-    <!-- Following the guide(https://github.com/hazelcast/hazelcast-wm) for configuration
-            of hazelcast session replication we need to remove HttpSessionEventPublisher.
-            //TODO After testing is done, we should remove commented out lines bellow.
-    -->
-
-    <!-- To use concurrent session support -->
-    <!--    <listener>-->
-    <!--        <listener-class>-->
-    <!--            org.springframework.security.web.session.HttpSessionEventPublisher-->
-    <!--        </listener-class>-->
-    <!--    </listener>-->
-
     <filter>
         <filter-name>springSecurityFilterChain</filter-name>
         <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
