@@ -116,4 +116,39 @@ angular.module('admin').controller('Admin.CMMergeFieldsController',
                 });
             }
 
+            $scope.addNewMergeField = function() {
+                var modalInstance = $modal.open({
+                    scope: $scope,
+                    animation: true,
+                    templateUrl: 'modules/admin/views/components/correspondence-management-add-edit-merge-field.modal.client.view.html',
+                    controller: [ '$scope', '$modalInstance', '$translate', function($scope, $modalInstance, $translate) {
+                        $scope.onClickCancel = function() {
+                            $modalInstance.dismiss('Cancel');
+                        };
+
+                        $scope.addMergeField = function () {
+                            var mergeField = {
+                                "fieldId" : $scope.fieldId,
+                                "fieldValue" : $scope.fieldValue,
+                                "fieldDescription" : $scope.fieldDescription,
+                                "fieldObjectType" : $scope.fieldObjectType
+                            };
+
+                            var mergeFieldArray = [];
+                            mergeFieldArray.push(mergeField);
+
+                            correspondenceMergeFieldsService.saveMergeFieldsData(mergeFieldArray).then(function() {
+                                messageService.succsessAction();
+                                ReloadGrid();
+                                $modalInstance.close();
+                            }, function() {
+                                messageService.errorAction();
+                            });
+                        }
+                    } ],
+                    size: 'md',
+                    backdrop: 'static'
+                });
+            };
+
         } ]);

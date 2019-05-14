@@ -1170,6 +1170,16 @@
                 <artifactId>jackson-datatype-jsr310</artifactId>
                 <version>${fasterxml-jackson-core.version}</version>
             </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.module</groupId>
+                <artifactId>jackson-module-jsonSchema</artifactId>
+                <version>${fasterxml-jackson-core.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.datatype</groupId>
+                <artifactId>jackson-datatype-hibernate5</artifactId>
+                <version>${fasterxml-jackson-core.version}</version>
+            </dependency>
             <!-- https://mvnrepository.com/artifact/com.voodoodyne.jackson.jsog/jackson-jsog -->
             <dependency>
                 <groupId>com.voodoodyne.jackson.jsog</groupId>

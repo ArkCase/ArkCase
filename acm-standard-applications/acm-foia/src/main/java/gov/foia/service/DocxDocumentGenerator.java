@@ -29,8 +29,7 @@ package gov.foia.service;
 
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
-import com.armedia.acm.core.exceptions.CorrespondenceMergeFieldVersionException;
-import com.armedia.acm.correspondence.utils.PoiWordGenerator;
+import com.armedia.acm.correspondence.utils.WordGenerator;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
@@ -62,14 +61,13 @@ public class DocxDocumentGenerator implements DocumentGenerator
     private Logger log = LogManager.getLogger(getClass());
     private Random random = new Random();
 
-    private PoiWordGenerator wordGenerator;
+    private WordGenerator wordGenerator;
     private EcmFileDao ecmFileDao;
     private EcmFileService ecmFileService;
 
     @Override
     public EcmFile generateAndUpload(FOIADocumentDescriptor documentDescriptor, FOIAObject acmObject, String targetCmisFolderId,
-            String targetFilename, Map<String, String> substitutions)
-            throws DocumentGeneratorException, CorrespondenceMergeFieldVersionException
+            String targetFilename, Map<String, String> substitutions) throws DocumentGeneratorException
     {
         try
         {
@@ -106,12 +104,12 @@ public class DocxDocumentGenerator implements DocumentGenerator
         }
     }
 
-    public PoiWordGenerator getWordGenerator()
+    public WordGenerator getWordGenerator()
     {
         return wordGenerator;
     }
 
-    public void setWordGenerator(PoiWordGenerator wordGenerator)
+    public void setWordGenerator(WordGenerator wordGenerator)
     {
         this.wordGenerator = wordGenerator;
     }

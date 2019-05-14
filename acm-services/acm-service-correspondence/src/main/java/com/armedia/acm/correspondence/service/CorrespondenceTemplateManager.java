@@ -27,15 +27,10 @@ package com.armedia.acm.correspondence.service;
  * #L%
  */
 
-import static com.armedia.acm.correspondence.service.CorrespondenceMapper.mapConfigurationFromTemplate;
-import static com.armedia.acm.correspondence.service.CorrespondenceMapper.mapTemplateFromConfiguration;
-
 import com.armedia.acm.correspondence.model.CorrespondenceQuery;
 import com.armedia.acm.correspondence.model.CorrespondenceTemplate;
-import com.armedia.acm.correspondence.model.CorrespondenceTemplateConfiguration;
 import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.spring.SpringContextHolder;
-
 import org.apache.commons.io.FileUtils;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
@@ -55,6 +50,9 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+
+import static com.armedia.acm.correspondence.service.CorrespondenceMapper.mapConfigurationFromTemplate;
+import static com.armedia.acm.correspondence.service.CorrespondenceMapper.mapTemplateFromConfiguration;
 
 /**
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Jan 26, 2017
@@ -110,8 +108,8 @@ public class CorrespondenceTemplateManager implements ApplicationListener<Contex
                 resource = "[]";
             }
 
-            List<CorrespondenceTemplateConfiguration> templateConfigurations = getObjectConverter().getJsonUnmarshaller()
-                    .unmarshallCollection(resource, List.class, CorrespondenceTemplateConfiguration.class);
+            List<CorrespondenceTemplate> templateConfigurations = getObjectConverter().getJsonUnmarshaller()
+                    .unmarshallCollection(resource, List.class, CorrespondenceTemplate.class);
 
             templateConfigurations.stream().forEach(configuration -> {
                 CorrespondenceTemplate template = mapTemplateFromConfiguration(configuration);
@@ -299,6 +297,7 @@ public class CorrespondenceTemplateManager implements ApplicationListener<Contex
             template.setNumberFormatString(existingTemplate.getNumberFormatString());
             template.setDocumentType(existingTemplate.getDocumentType());
             template.setObjectType(existingTemplate.getObjectType());
+            template.setTemplateModelProvider(existingTemplate.getTemplateModelProvider());
         }
         else
         {
@@ -390,7 +389,7 @@ public class CorrespondenceTemplateManager implements ApplicationListener<Contex
      */
     private void updateConfiguration(Collection<CorrespondenceTemplate> templates) throws IOException
     {
-        List<CorrespondenceTemplateConfiguration> configurations = templates.stream()
+        List<CorrespondenceTemplate> configurations = templates.stream()
                 .map(template -> mapConfigurationFromTemplate(template)).collect(Collectors.toList());
 
         String configurationsOutput = getObjectConverter().getIndentedJsonMarshaller().marshal(configurations);

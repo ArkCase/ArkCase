@@ -1,0 +1,34 @@
+<div class="modal-header">
+    <h3>
+        <span translate>admin.correspondenceManagement.templates.modal.navigationBar</span>
+    </h3>
+</div>
+<tabset justified="true">
+    <tab heading="Correspondence Object Tree View">
+        <div class="modal-body" context-menu="contextMenuOptions()">
+            <abn-tree
+                    tree-data="myData"
+                    tree-control="myTree"
+            ></abn-tree>
+        </div>
+    </tab>
+    <tab heading="Merge Fields">
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col">Merge Field</th>
+                <th scope="col">Merge Field Description</th>
+            </tr>
+            </thead>
+            <tr ng-repeat="mergeField in mergeFieldsByType">
+                <td context-menu="contextMenuMergeFields(mergeField.fieldId)">{{ mergeField.fieldId }}</td>
+                <td>{{ mergeField.fieldDescription }}</td>
+            </tr>
+        </table>
+    </tab>
+</tabset>
+<div class="modal-footer">
+    <button class="btn btn-secondary" ng-click="onClickCancel()">
+        <span translate>admin.correspondenceManagement.templates.modal.btnCancel.text</span>
+    </button>
+</div>

@@ -27,6 +27,15 @@ package com.armedia.acm.correspondence.utils;
  * #L%
  */
 
+import com.armedia.acm.correspondence.model.CorrespondenceMergeField;
+import com.armedia.acm.correspondence.service.CorrespondenceMergeFieldManager;
+import com.armedia.acm.correspondence.service.CorrespondenceService;
+import com.armedia.acm.data.AcmAbstractDao;
+import com.armedia.acm.data.AcmEntity;
+import com.armedia.acm.objectonverter.ObjectConverter;
+import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
+import com.armedia.acm.plugins.ecm.model.EcmFile;
+import org.apache.commons.io.FileUtils;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
@@ -35,43 +44,100 @@ import org.apache.poi.xwpf.usermodel.XWPFTableCell;
 import org.apache.poi.xwpf.usermodel.XWPFTableRow;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.springframework.context.ApplicationListener;
+import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.core.io.Resource;
+import org.springframework.expression.spel.standard.SpelExpression;
+import org.springframework.expression.spel.standard.SpelExpressionParser;
+import org.springframework.expression.spel.support.StandardEvaluationContext;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.StringJoiner;
+import java.util.stream.Collectors;
+
+import static com.armedia.acm.correspondence.service.CorrespondenceMapper.mapMergeFieldFromConfiguration;
 
 /**
  * Created by armdev on 12/11/14.
  */
-public class ParagraphRunPoiWordGenerator implements PoiWordGenerator
+public class ParagraphRunPoiWordGenerator implements WordGenerator, ApplicationListener<ContextRefreshedEvent>
 {
+    public static final String DATE_FORMAT = "MM/dd/yyyy";
+    public static final String DATE_TYPE = "Date";
+
+    public static final String CURRENT_DATE = "currentDate";
+    public static final String BASE_URL = "baseUrl";
+    public static final String FILES = "files";
+
     public static final String substitutionPrefix = "${";
     public static final String substitutionSuffix = "}";
     private transient final Logger log = LogManager.getLogger(getClass());
+
+    private CorrespondenceService correspondenceService;
+    private EcmFileDao ecmFileDao;
+    private Resource correspondenceMergeFieldsConfiguration;
+    private ObjectConverter objectConverter;
+    private CorrespondenceMergeFieldManager mergeFieldManager;
+    private List<CorrespondenceMergeField> mergeFields = new ArrayList<>();
 
     /**
      * Generate the Word document via direct manipulation of Word paragraph texts. This works seamlessly (user sees
      * no prompt to update document fields) but loses all formatting in paragraphs with substitution variables.
      */
     @Override
-    public void generate(Resource wordTemplate, OutputStream targetStream, Map<String, String> substitutions) throws IOException
+    public void onApplicationEvent(ContextRefreshedEvent event)
     {
-        Map<String, String> substitutionsWithPrefixSufix = new HashMap<>();
-        substitutions.forEach((k, v) -> substitutionsWithPrefixSufix.putIfAbsent(substitutionPrefix + k + substitutionSuffix, v));
+        try
+        {
+            File file = correspondenceMergeFieldsConfiguration.getFile();
+            if (!file.exists())
+            {
+                file.createNewFile();
+            }
+            String resource = FileUtils.readFileToString(file);
+            if (resource.isEmpty())
+            {
+                resource = "[]";
+            }
 
+            List<CorrespondenceMergeField> mergeFieldsConfigurations = getObjectConverter().getJsonUnmarshaller()
+                    .unmarshallCollection(resource, List.class, CorrespondenceMergeField.class);
+
+            mergeFields = new ArrayList<>(mergeFieldsConfigurations.stream()
+                    .map(configuration -> mapMergeFieldFromConfiguration(configuration)).collect(Collectors.toList()));
+
+            if (mergeFields.isEmpty())
+            {
+                getMergeFieldManager().createDefaultMergeFieldRescords();
+            }
+        }
+        catch (IOException ioe)
+        {
+            throw new IllegalStateException(ioe);
+        }
+    }
+
+    @Override
+    public void generate(Resource wordTemplate, OutputStream targetStream, String objectType, Long parentObjectId) throws IOException
+    {
         try (XWPFDocument template = new XWPFDocument(wordTemplate.getInputStream()))
         {
             List<XWPFParagraph> graphs = template.getParagraphs();
             List<XWPFTable> tables = template.getTables();
 
             // Update all plain text in the word document who is outside any tables
-            updateGraphs(graphs, substitutionsWithPrefixSufix);
+            updateGraphs(graphs, objectType, parentObjectId);
 
             // Update all text in the word document who is inside tables/rows/cells
-            updateTables(tables, substitutionsWithPrefixSufix);
+            updateTables(tables, objectType, parentObjectId);
 
             log.debug("writing correspondence to stream: " + targetStream);
 
@@ -94,35 +160,54 @@ public class ParagraphRunPoiWordGenerator implements PoiWordGenerator
         }
     }
 
-    private List<XWPFParagraph> updateGraphs(List<XWPFParagraph> graphs, Map<String, String> substitutions)
+    @Override
+    public void generate(Resource wordTemplate, OutputStream targetStream, Map<String, String> substitutions) {
+        log.info("This method is not implemented");
+    }
+
+    private List<XWPFParagraph> updateGraphs(List<XWPFParagraph> graphs, String objectType, Long parentObjectId)
     {
         for (XWPFParagraph graph : graphs)
         {
-            replace(graph, substitutions);
+            replace(graph, objectType, parentObjectId);
         }
 
         return graphs;
     }
 
-    private <V> void replace(XWPFParagraph paragraph, String searchText, V replacement)
+    private <V> void replace(XWPFParagraph paragraph, String objectType, Long parentObjectId)
     {
         boolean found = true;
         while (found)
         {
             found = false;
-            int pos = paragraph.getText().indexOf(searchText);
+            int pos = paragraph.getText().indexOf(substitutionPrefix);
             if (pos >= 0)
             {
                 found = true;
                 Map<Integer, XWPFRun> posToRuns = getPosToRuns(paragraph);
                 XWPFRun run = posToRuns.get(pos);
-                XWPFRun lastRun = posToRuns.get(pos + searchText.length() - 1);
+                XWPFRun lastRun = posToRuns.get(paragraph.getText().indexOf(substitutionSuffix));
                 int runNum = paragraph.getRuns().indexOf(run);
                 int lastRunNum = paragraph.getRuns().indexOf(lastRun);
                 String texts[] = { "" };
-                if (replacement != null)
+                StringBuilder sb = new StringBuilder();
+
+                //if the both suffix and prefix are in the same run
+                if (runNum == lastRunNum) {
+                    sb.append(paragraph.getRuns().get(runNum).getText(0));
+                }
+                else
                 {
-                    texts = replacement.toString().split("\n");
+                    for (int runNums = runNum + 1; runNums < lastRunNum; runNums++)
+                    {
+                        sb.append(paragraph.getRuns().get(runNums).getText(0));
+                    }
+                }
+                String spelExpressionToBeEvaluted = sb.toString();
+                if (spelExpressionToBeEvaluted != null)
+                {
+                    texts = generateSpelExpression(objectType, parentObjectId, spelExpressionToBeEvaluted).split("\n");
                 }
 
                 // Snowbound throws error on runs with empty text (see AFDP-6414). So we just delete these runs
@@ -201,51 +286,174 @@ public class ParagraphRunPoiWordGenerator implements PoiWordGenerator
         return (map);
     }
 
-    private <V> void replace(XWPFParagraph paragraph, Map<String, V> map)
-    {
-        for (Map.Entry<String, V> entry : map.entrySet())
-        {
-            replace(paragraph, entry.getKey(), entry.getValue());
-        }
-    }
-
-    private List<XWPFTable> updateTables(List<XWPFTable> tables, Map<String, String> substitutions)
+    private List<XWPFTable> updateTables(List<XWPFTable> tables, String objectType, Long parentObjectId)
     {
         if (tables != null)
         {
             tables.stream().forEach(table -> {
                 List<XWPFTableRow> rows = table.getRows();
-                updateRows(rows, substitutions);
+                updateRows(rows, objectType, parentObjectId);
             });
         }
 
         return tables;
     }
 
-    private List<XWPFTableRow> updateRows(List<XWPFTableRow> rows, Map<String, String> substitutions)
+    private List<XWPFTableRow> updateRows(List<XWPFTableRow> rows, String objectType, Long parentObjectId)
     {
         if (rows != null)
         {
             rows.stream().forEach(row -> {
                 List<XWPFTableCell> cells = row.getTableCells();
-                updateCells(cells, substitutions);
+                updateCells(cells, objectType, parentObjectId);
             });
         }
 
         return rows;
     }
 
-    private List<XWPFTableCell> updateCells(List<XWPFTableCell> cells, Map<String, String> substitutions)
+    private List<XWPFTableCell> updateCells(List<XWPFTableCell> cells, String objectType, Long parentObjectId)
     {
         if (cells != null)
         {
             cells.stream().forEach(cell -> {
                 List<XWPFParagraph> graphs = cell.getParagraphs();
-                updateGraphs(graphs, substitutions);
+                updateGraphs(graphs, objectType, parentObjectId);
             });
         }
 
         return cells;
     }
 
+    public String generateSpelExpression(String objectType, Long parentObjectId, String spelExpression)
+    {
+        String generatedExpression;
+        boolean isExistingMergeField = false;
+        SimpleDateFormat formatter = new SimpleDateFormat(DATE_FORMAT);
+
+        AcmAbstractDao<AcmEntity> correspondedObjectDao = getCorrespondenceService().getAcmAbstractDao(objectType);
+        Object correspondenedObject = correspondedObjectDao.find(parentObjectId);
+
+        //Passing the object of Corresponded Object class to StandardEvaluationContext, which is going to evaluate the expressions in the context of this object.
+        StandardEvaluationContext stContext = new StandardEvaluationContext(correspondenedObject);
+
+        //Creating an object of SpelExpressionParser class, used to parse the SpEL expression
+        SpelExpressionParser parser = new SpelExpressionParser();
+
+        for (CorrespondenceMergeField mergeField : mergeFields)
+        {
+            if (mergeField.getFieldObjectType().equalsIgnoreCase(objectType) && mergeField.getFieldId().equalsIgnoreCase(spelExpression))
+            {
+                spelExpression = mergeField.getFieldValue();
+                isExistingMergeField = true;
+            }
+        }
+
+        //Calling parseRaw() method of SpelExpressionParser, which parses the expression and returns an SpelEpression object
+        SpelExpression expression = parser.parseRaw(spelExpression);
+
+        if (isExistingMergeField)
+        {
+            if (expression.getValue(stContext).getClass().getSimpleName().equalsIgnoreCase(DATE_TYPE))
+            {
+                generatedExpression = formatter.format(expression.getValue(stContext));
+            }
+            else
+            {
+                generatedExpression = String.valueOf(expression.getValue(stContext));
+            }
+        }
+
+        else
+        {
+
+            //check if the expression is currentDate, files or baseURL
+            if (CURRENT_DATE.equalsIgnoreCase(spelExpression))
+            {
+                generatedExpression = formatter.format(new Date());
+            }
+            else if (BASE_URL.equalsIgnoreCase(spelExpression))
+            {
+                generatedExpression = "http://cloud.arkcase.com/arkcase/";
+            }
+            else if (FILES.equalsIgnoreCase(spelExpression))
+            {
+                String spelExpressionForContainerId = "container.id";
+                Long containerId = Long.valueOf(String.valueOf(parser.parseRaw(spelExpressionForContainerId).getValue(stContext)));
+
+                List<EcmFile> allFiles = getEcmFileDao().findForContainer(containerId);
+                StringJoiner joiner = new StringJoiner(",");
+                for (EcmFile file : allFiles)
+                {
+                    joiner.add(file.getFileName());
+                }
+                generatedExpression = joiner.toString();
+            }
+            else
+            {
+                if (expression.getValue(stContext).getClass().getSimpleName().equalsIgnoreCase(DATE_TYPE))
+                {
+                    generatedExpression = formatter.format(expression.getValue(stContext));
+                }
+                else
+                {
+                    generatedExpression = String.valueOf(expression.getValue(stContext));
+                }
+            }
+        }
+        return generatedExpression;
+    }
+
+    public CorrespondenceService getCorrespondenceService()
+    {
+        return correspondenceService;
+    }
+
+    /**
+     * @param correspondenceService
+     *            the correspondenceService to set
+     */
+    public void setCorrespondenceService(CorrespondenceService correspondenceService)
+    {
+        this.correspondenceService = correspondenceService;
+    }
+
+    public EcmFileDao getEcmFileDao()
+    {
+        return ecmFileDao;
+    }
+
+    public void setEcmFileDao(EcmFileDao ecmFileDao)
+    {
+        this.ecmFileDao = ecmFileDao;
+    }
+
+    /**
+     * @param correspondenceMergeFieldsConfiguration
+     *            the correspondenceMergeFieldsConfiguration to set
+     */
+    public void setCorrespondenceMergeFieldsConfiguration(Resource correspondenceMergeFieldsConfiguration)
+    {
+        this.correspondenceMergeFieldsConfiguration = correspondenceMergeFieldsConfiguration;
+    }
+
+    public ObjectConverter getObjectConverter()
+    {
+        return objectConverter;
+    }
+
+    public void setObjectConverter(ObjectConverter objectConverter)
+    {
+        this.objectConverter = objectConverter;
+    }
+
+    public CorrespondenceMergeFieldManager getMergeFieldManager()
+    {
+        return mergeFieldManager;
+    }
+
+    public void setMergeFieldManager(CorrespondenceMergeFieldManager mergeFieldManager)
+    {
+        this.mergeFieldManager = mergeFieldManager;
+    }
 }

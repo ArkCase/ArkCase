@@ -1,10 +1,10 @@
-package com.armedia.acm.core.exceptions;
+package com.armedia.acm.plugins.complaint.model.provider;
 
 /*-
  * #%L
- * ACM Core API
+ * ACM Default Plugin: Complaints
  * %%
- * Copyright (C) 2014 - 2018 ArkCase LLC
+ * Copyright (C) 2014 - 2019 ArkCase LLC
  * %%
  * This file is part of the ArkCase software. 
  * 
@@ -27,9 +27,36 @@ package com.armedia.acm.core.exceptions;
  * #L%
  */
 
-public class CorrespondenceMergeFieldVersionException extends Exception
+import com.armedia.acm.core.provider.TemplateModelProvider;
+import com.armedia.acm.plugins.complaint.dao.ComplaintDao;
+import com.armedia.acm.plugins.complaint.model.Complaint;
+
+/**
+ * @author darko.dimitrievski
+ */
+public class ComplaintTemplateModelProvider implements TemplateModelProvider<Complaint>
 {
-    public CorrespondenceMergeFieldVersionException(String message) {
-        super(message);
+    private ComplaintDao complaintDao;
+
+    @Override
+    public Complaint getModel(Object complaint)
+    {
+        return getComplaintDao().findByComplaintNumber(((Complaint) complaint).getComplaintNumber());
+    }
+
+    @Override
+    public Class<Complaint> getType()
+    {
+        return Complaint.class;
+    }
+
+    public ComplaintDao getComplaintDao()
+    {
+        return complaintDao;
+    }
+
+    public void setComplaintDao(ComplaintDao complaintDao)
+    {
+        this.complaintDao = complaintDao;
     }
 }
