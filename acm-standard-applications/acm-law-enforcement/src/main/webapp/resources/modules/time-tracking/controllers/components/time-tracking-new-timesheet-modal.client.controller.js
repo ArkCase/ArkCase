@@ -533,8 +533,8 @@ angular.module('time-tracking').controller(
                                     } else {
                                         var alreadyExists = false;
                                         _.forEach(timesheet.times, function(timesheetTime) {
-                                            if (moment(timesheetTime.date).format("YYYY-MM-DD") == moment(time.date).format("YYYY-MM-DD") && timesheetTime.type == time.type && timesheetTime.code == time.code && timesheetTime.chargeRole == time.chargeRole) {
-                                                if (timesheetTime.value != time.value) {
+                                            if (moment(timesheetTime.date).format("YYYY-MM-DD") === moment(time.date).format("YYYY-MM-DD") && timesheetTime.type === time.type && timesheetTime.code === time.code && timesheetTime.chargeRole === time.chargeRole) {
+                                                if (timesheetTime.value !== time.value) {
                                                     timesheetTime.value = time.value;
                                                     timesheetTime.totalCost = time.totalCost;
                                                 }
