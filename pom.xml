@@ -1300,12 +1300,6 @@
                 <artifactId>google-collections</artifactId>
                 <version>${google-collections.version}</version>
             </dependency>
-            <!-- caching -->
-            <dependency>
-                <groupId>net.sf.ehcache</groupId>
-                <artifactId>ehcache-core</artifactId>
-                <version>${ehcache.version}</version>
-            </dependency>
             <!-- logging -->
             <dependency>
                 <groupId>org.apache.logging.log4j</groupId>
