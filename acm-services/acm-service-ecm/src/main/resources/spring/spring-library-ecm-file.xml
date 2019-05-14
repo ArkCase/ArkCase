@@ -101,6 +101,12 @@
           class="com.armedia.acm.plugins.ecm.pipeline.postsave.EcmFileParticipantsHandler">
         <property name="fileParticipantService" ref="fileParticipantService"/>
     </bean>
+    <bean id="fileUploadConversionHandler" class="com.armedia.acm.plugins.ecm.pipeline.postsave.FileUploadConversionHandler" scope="refresh">
+        <aop:scoped-proxy/>
+        <property name="fileConverterFactory" ref="fileConverterFactory"/>
+        <property name="ecmFileService" ref="ecmFileService"/>
+        <property name="ecmFileDao" ref="ecmFileDao"/>
+    </bean>
     <!-- This pipeline uploads document content to Alfresco and the metadata to the acm3 database -->
     <bean id="ecmFileUploadPipelineManager" class="com.armedia.acm.services.pipeline.PipelineManager">
         <property name="preSaveHandlers">
@@ -116,6 +122,7 @@
         <property name="postSaveHandlers">
             <list>
                 <ref bean="ecmFileParticipantsHandler"/>
+                <ref bean="fileUploadConversionHandler"/>
             </list>
         </property>
     </bean>

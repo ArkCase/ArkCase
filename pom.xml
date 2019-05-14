@@ -1602,6 +1602,32 @@
                 <artifactId>freemarker</artifactId>
                 <version>${freemarker.version}</version>
             </dependency>
+            <!-- PDF Converter dependencies -->
+            <dependency>
+                <groupId>com.itextpdf</groupId>
+                <artifactId>itextpdf</artifactId>
+                <version>5.5.10</version>
+            </dependency>
+            <dependency>
+                <groupId>com.itextpdf.tool</groupId>
+                <artifactId>xmlworker</artifactId>
+                <version>5.5.10</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.poi</groupId>
+                <artifactId>poi</artifactId>
+                <version>4.1.0</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.poi</groupId>
+                <artifactId>poi-scratchpad</artifactId>
+                <version>4.1.0</version>
+            </dependency>
+            <dependency>
+                <groupId>net.sf.jtidy</groupId>
+                <artifactId>jtidy</artifactId>
+                <version>r938</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
     <dependencies>

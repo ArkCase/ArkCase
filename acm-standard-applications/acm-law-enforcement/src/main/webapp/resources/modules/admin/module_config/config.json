@@ -1371,6 +1371,13 @@
                 ]
             },
             {
+                "type": "p/security/documentUploadPolicy",
+                "label": "admin.security.documentUploadPolicy.title",
+                "components": [
+                    "document-upload-policy-configuration"
+                ]
+            },
+            {
                 "type": "p/dashboard",
                 "label": "admin.dashboard.title",
                 "icon": "fa fa-wrench",
