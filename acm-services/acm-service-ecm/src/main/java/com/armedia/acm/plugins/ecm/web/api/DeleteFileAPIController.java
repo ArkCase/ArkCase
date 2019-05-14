@@ -27,6 +27,7 @@ package com.armedia.acm.plugins.ecm.web.api;
  * #L%
  */
 
+import com.armedia.acm.core.exceptions.AcmAppErrorJsonMsg;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
@@ -100,10 +101,10 @@ public class DeleteFileAPIController
     @PreAuthorize("hasPermission(#objectId, 'FILE', 'write|group-write')")
     @RequestMapping(value = "temporary/id/{fileId}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public void putFileIntoRecycleBin(@PathVariable("fileId") Long objectId, Authentication authentication, HttpSession session)
-            throws AcmUserActionFailedException, AcmCreateObjectFailedException
+    public String putFileIntoRecycleBin(@PathVariable("fileId") Long objectId, Authentication authentication, HttpSession session)
+            throws AcmUserActionFailedException, AcmCreateObjectFailedException, AcmAppErrorJsonMsg
     {
-        log.info("File with id: {} will be temporary deleted, by user:", objectId, authentication.getName());
+        log.info("File with id: {} will be temporary deleted, by user: {}", objectId, authentication.getName());
         String ipAddress = (String) session.getAttribute(EcmFileConstants.IP_ADDRESS_ATTRIBUTE);
         EcmFile source = getFileService().findById(objectId);
         try
@@ -111,6 +112,7 @@ public class DeleteFileAPIController
             getFileService().putFileIntoRecycleBin(objectId, authentication, session);
             log.info("File with id: {} temporary deleted, by {}", objectId, source.getModifier());
             getRecycleBinItemEventPublisher().publishFileMovedToRecycleBinEvent(source, authentication, ipAddress, true);
+            return prepareJsonReturnMsg(EcmFileConstants.SUCCESS_TEMPORARY_DELETE_MSG, objectId, source.getFileName());
         }
         catch (AcmUserActionFailedException e)
         {
@@ -121,6 +123,7 @@ public class DeleteFileAPIController
         catch (AcmObjectNotFoundException e)
         {
             log.debug("File with id: {} not found in the DB, reason {}", objectId, e.getMessage(), e);
+            throw new AcmAppErrorJsonMsg(EcmFileConstants.FILE_NOT_FOUND_DB, EcmFileConstants.FILE, "fileId", e);
         }
     }
 

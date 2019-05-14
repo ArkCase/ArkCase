@@ -82,10 +82,10 @@
         "buckslip.add.title": "New Buck Slip"
     },
     "cases.comp.details": {
-        "title": "Details",
+        "title": "Main",
         "informSaved": "Case details saved",
         "table.columns": {
-            "title": "Details",
+            "title": "Main",
             "modified": "Date Last Modified",
             "modifier": "User Last Modified"
         }
@@ -171,7 +171,7 @@
         }
     },
     "cases.comp.tasks": {
-        "title": "Tasks",
+        "title": "Manage Tasks",
         "table.columns": {
             "title": "Title",
             "assignee": "Assignee",
@@ -377,6 +377,38 @@
             "approverDecision": "Approver Decision"
         }
     },
+    "cases.comp.billing": {
+        "title": "Billing",
+        "table.columns": {
+            "item": "Item #",
+            "description": "Description",
+            "amount": "Amount",
+            "total": "Total: ",
+            "buttons": {
+                "listInvoices": "List Invoices",
+                "emailInvoice": "Email Invoice",
+                "generateInvoice": "Generate Invoice"
+            }
+        },
+        "modal": {
+            "title": "Add Billing Item",
+            "cancel.btn": "Cancel",
+            "save.btn": "Save",
+            "billingItems.title": "Billing items for"
+        },
+        "invoice": {
+            "title": "Invoices",
+            "table.columns": {
+                "invoiceNumber": "Invoice Number",
+                "status": "Status",
+                "creator": "Creator",
+                "created": "Created",
+                "view": "View"
+            }
+        },
+        "amount.title": "Please enter billing amount",
+        "description.title": "Please enter billing description"
+    },
     "cases.comp.change.status": {
         "title": "Change Case Status",
         "description.label": "Description",
@@ -461,20 +493,21 @@
     },
     "cases.tree": {
         "nodeTypes": {
-            "details.label": "Details",
+            "details.label": "Main",
             "people.label": "People",
             "organizations.label": "Organizations",
             "documents.label": "Documents",
             "participants.label": "Participants",
             "notes.label": "Notes",
-            "tasks.label": "Tasks",
+            "tasks.label": "Manage Tasks",
             "references.label": "References",
             "history.label": "History",
             "time.label": "Time",
             "cost.label": "Cost",
             "tags.label": "Tags",
             "calendar.label": "Calendar",
-            "approvalRouting.label": "Approval Routing"
+            "approvalRouting.label": "Approval Routing",
+            "billing.label": "Billing"
         },
         "filters": {
             "opened": "All Open Cases",

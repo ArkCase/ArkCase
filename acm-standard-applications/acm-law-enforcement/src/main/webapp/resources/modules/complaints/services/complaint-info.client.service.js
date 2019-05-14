@@ -45,10 +45,10 @@ angular.module('services').factory('Complaint.InfoService', [ '$resource', '$tra
         /**
          * @ngdoc method
          * @name get
-         * @methodOf services:Case.InfoService
+         * @methodOf services:Complaint.InfoService
          *
          * @description
-         * Query case data from database.
+         * Query complaint data from database.
          *
          * @param {Object} params Map of input parameter.
          * @param {Number} params.id  Object ID
@@ -61,6 +61,27 @@ angular.module('services').factory('Complaint.InfoService', [ '$resource', '$tra
             method: 'GET',
             url: complaintGetUrl + ':id',
             cache: complaintCache,
+            isArray: false
+        },
+
+        /**
+         * @ngdoc method
+         * @name get
+         * @methodOf services:Complaint.InfoService
+         *
+         * @description
+         * Query complaint data from database.
+         *
+         * @param {String} complaintNumber  complaintNumber
+         * @param {Function} onSuccess (Optional)Callback function of success query.
+         * @param {Function} onError (Optional) Callback function when fail.
+         *
+         * @returns {Object} Object returned by $resource
+         */
+        getByNumber: {
+            method: 'GET',
+            url: complaintUrl + "bynumber",
+            cache: false,
             isArray: false
         },
 
@@ -129,6 +150,32 @@ angular.module('services').factory('Complaint.InfoService', [ '$resource', '$tra
             onError: function(error) {
                 MessageService.error(error.data);
                 return error;
+            }
+        });
+    };
+
+    /**
+     * @ngdoc method
+     * @name getComplaintByNumber
+     * @methodOf services:Complaint.InfoService
+     *
+     * @description
+     * Query complaint data by number
+     *
+     * @param {String} complaintNumber complaintNumber
+     *
+     * @returns {Object} Promise
+     */
+    Service.getComplaintByNumber = function(complaintNumber) {
+        return Util.serviceCall({
+            service: Service.getByNumber,
+            param: {
+                complaintNumber: complaintNumber
+            },
+            onSuccess: function(data) {
+                if (Service.validateComplaintInfo(data)) {
+                    return data;
+                }
             }
         });
     };

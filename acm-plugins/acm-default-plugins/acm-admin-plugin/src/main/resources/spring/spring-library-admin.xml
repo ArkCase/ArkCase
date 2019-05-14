@@ -160,17 +160,21 @@
         </property>
     </bean>
 
-    <bean id="holidayConfigurationService" class="com.armedia.acm.plugins.admin.service.HolidayConfigurationService">
-        <property name="holidayFile" value="file:${user.home}/.arkcase/acm/holidayFile.json"/>
-        <property name="objectConverter" ref="objectConverter"/>
-    </bean>
-
     <bean id="pdfConversionConfigurationService" class="com.armedia.acm.plugins.admin.service.PDFConversionConfigurationService">
         <property name="pdfConversionConfig" ref="pdfConversionConfig"/>
         <property name="configurationPropertyService" ref="configurationPropertyService"/>
     </bean>
 
+    <bean id="documentUploadPolicyConfigurationService" class="com.armedia.acm.plugins.admin.service.DocumentUploadPolicyConfigurationService">
+        <property name="documentUploadPolicyConfig" ref="documentUploadPolicyConfig"/>
+        <property name="configurationPropertyService" ref="configurationPropertyService"/>
+    </bean>
+
     <bean id="pdfConversionConfig" class="com.armedia.acm.plugins.admin.model.PdfConversionConfig" scope="refresh">
+        <aop:scoped-proxy/>
+    </bean>
+
+    <bean id="documentUploadPolicyConfig" class="com.armedia.acm.plugins.admin.model.DocumentUploadPolicyConfig" scope="refresh">
         <aop:scoped-proxy/>
     </bean>
 
