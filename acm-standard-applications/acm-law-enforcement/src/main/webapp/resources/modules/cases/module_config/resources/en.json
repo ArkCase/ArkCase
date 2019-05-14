@@ -82,10 +82,10 @@
         "buckslip.add.title": "New Buck Slip"
     },
     "cases.comp.details": {
-        "title": "Main",
+        "title": "Details",
         "informSaved": "Case details saved",
         "table.columns": {
-            "title": "Main",
+            "title": "Details",
             "modified": "Date Last Modified",
             "modifier": "User Last Modified"
         }
@@ -171,7 +171,7 @@
         }
     },
     "cases.comp.tasks": {
-        "title": "Manage Tasks",
+        "title": "Tasks",
         "table.columns": {
             "title": "Title",
             "assignee": "Assignee",
@@ -493,13 +493,13 @@
     },
     "cases.tree": {
         "nodeTypes": {
-            "details.label": "Main",
+            "details.label": "Details",
             "people.label": "People",
             "organizations.label": "Organizations",
             "documents.label": "Documents",
             "participants.label": "Participants",
             "notes.label": "Notes",
-            "tasks.label": "Manage Tasks",
+            "tasks.label": "Tasks",
             "references.label": "References",
             "history.label": "History",
             "time.label": "Time",
