@@ -50,6 +50,9 @@ import org.springframework.security.core.Authentication;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -201,12 +204,16 @@ public class  PortalRequestService
         {
             Notification notification = new Notification();
 
+            OffsetDateTime downloadedDateTime = OffsetDateTime.now(ZoneOffset.UTC);
+            String downloadedDateTimeFormatted = DateTimeFormatter.ofPattern("yyyy-MM-dd / HH:mm:ss").format(downloadedDateTime);
+
             notification.setTitle(String.format("Request:%s Downloaded", request.getCaseNumber()));
             notification.setTemplateModelName("requestDownloaded");
             notification.setParentId(request.getId());
             notification.setParentType(request.getRequestType());
             notification.setParentName(request.getCaseNumber());
-            notification.setParentTitle(request.getTitle());
+            notification.setParentTitle(request.getDetails());
+            notification.setNote(downloadedDateTimeFormatted);
             notification.setEmailAddresses(officersGroupMemberEmailAddresses.stream().collect(Collectors.joining(",")));
             notification.setUser(SecurityContextHolder.getContext().getAuthentication().getName());
 
