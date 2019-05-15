@@ -43,9 +43,10 @@ angular.module('document-details').controller('Document.TranscriptionController'
                                             $scope.$emit('transcribe-data-model', transcribeResult);
                                         });
                                 }
-
-                                $scope.transcribeConfidence = configResult.data['transcribe.confidence'];
-
+                                else {
+                                        $scope.transcribeConfidence = configResult.data['transcribe.confidence'];
+                                        $scope.$emit('transcribe-data-model', transcribeResult);
+                                }
 
                                 $scope.transcribeDataModel = transcribeResult;
                                 //disable editing on time inputs
