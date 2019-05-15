@@ -3,7 +3,6 @@
     xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
 
     <bean id="plainFormService" class="com.armedia.acm.form.plain.service.PlainFormService" parent="frevvoFormService" scope="prototype">
-        <property name="applicationEventPublisher" ref="frevvoApplicationEventPublisher"/>
     </bean>
 
 </beans>
