@@ -172,8 +172,8 @@ public class JpaObjectsToSearchService implements ApplicationListener<AcmDatabas
                         }
                         catch (Exception e)
                         {
-                            log.error("[{}]: unable to generate Advanced search document for [{}]", transformer.getClass(),
-                                    jpaObject.toString());
+                            log.error("[{}]: unable to generate Advanced search document for [{}]. Reason: [{}]", transformer.getClass(),
+                                    jpaObject.toString(), e.getMessage());
                         }
 
                         try
@@ -186,8 +186,8 @@ public class JpaObjectsToSearchService implements ApplicationListener<AcmDatabas
                         }
                         catch (Exception e)
                         {
-                            log.error("[{}]: unable to generate Quick search document for [{}]", transformer.getClass(),
-                                    jpaObject.toString());
+                            log.error("[{}]: unable to generate Quick search document for [{}]. Reason: [{}]", transformer.getClass(),
+                                    jpaObject.toString(), e.getMessage());
                         }
 
                         try
@@ -201,8 +201,8 @@ public class JpaObjectsToSearchService implements ApplicationListener<AcmDatabas
                         }
                         catch (Exception e)
                         {
-                            log.error("[{}]: unable to add index updates for [{}]", transformer.getClass(),
-                                    jpaObject.toString());
+                            log.error("[{}]: unable to add index updates for [{}]. Reason: [{}]", transformer.getClass(),
+                                    jpaObject.toString(), e.getMessage());
                         }
 
                         try
@@ -215,7 +215,8 @@ public class JpaObjectsToSearchService implements ApplicationListener<AcmDatabas
                         }
                         catch (Exception e)
                         {
-                            log.error("[{}]: unable to generate Content file index for [{}]", transformer.getClass(), jpaObject.toString());
+                            log.error("[{}]: unable to generate Content file index for [{}]. Reason: [{}]", transformer.getClass(),
+                                    jpaObject.toString(), e.getMessage());
                         }
                     }
                 }
