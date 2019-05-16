@@ -31,6 +31,8 @@ import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.AcmFolderParticipantChangedEvent;
 import com.armedia.acm.plugins.ecm.model.ChangedParticipant;
 import com.armedia.acm.services.participants.model.AcmParticipant;
+import com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig;
+import com.armedia.acm.spring.SpringContextHolder;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,6 +44,8 @@ public class FolderParticipantChangedEventListener implements ApplicationListene
     private final transient Logger log = LoggerFactory.getLogger(getClass());
 
     private SendChangedParticipantToAlfresco sendChangedParticipantToAlfresco;
+    private SpringContextHolder acmContextHolder;
+    private String directoryName;
 
     @Override
     public void onApplicationEvent(AcmFolderParticipantChangedEvent event)
@@ -58,7 +62,20 @@ public class FolderParticipantChangedEventListener implements ApplicationListene
             changedParticipant.setChangedParticipant(changeParticipant);
             changedParticipant.setChangeType(event.getChangeType());
 
-            getSendChangedParticipantToAlfresco().sendChangedParticipant(changedParticipant);
+            AcmLdapSyncConfig ldapSyncConfig = acmContextHolder.getAllBeansOfType(AcmLdapSyncConfig.class)
+                    .get(String.format("%s_sync", directoryName));
+            changedParticipant.setUserDomain(ldapSyncConfig.getUserDomain());
+
+            if (event.getOldParticipant() != null)
+            {
+                changedParticipant.setOldParticipant(event.getOldParticipant());
+            }
+
+            if (changeParticipant.getParticipantLdapId() != null && changeParticipant.getParticipantType() != null
+                    && changeParticipant.getObjectType() != null && changedParticipant.getCmisObjectId() != null)
+            {
+                getSendChangedParticipantToAlfresco().sendChangedParticipant(changedParticipant);
+            }
         }
     }
 
@@ -70,5 +87,25 @@ public class FolderParticipantChangedEventListener implements ApplicationListene
     public void setSendChangedParticipantToAlfresco(SendChangedParticipantToAlfresco sendChangedParticipantToAlfresco)
     {
         this.sendChangedParticipantToAlfresco = sendChangedParticipantToAlfresco;
+    }
+
+    public SpringContextHolder getAcmContextHolder()
+    {
+        return acmContextHolder;
+    }
+
+    public void setAcmContextHolder(SpringContextHolder acmContextHolder)
+    {
+        this.acmContextHolder = acmContextHolder;
+    }
+
+    public String getDirectoryName()
+    {
+        return directoryName;
+    }
+
+    public void setDirectoryName(String directoryName)
+    {
+        this.directoryName = directoryName;
     }
 }

@@ -42,11 +42,15 @@
     <bean id="fileParticipantsChangedEventListener"
           class="com.armedia.acm.plugins.ecm.service.FileParticipantChangedEventListener">
         <property name="sendChangedParticipantToAlfresco" ref="sendChangedParticipantToAlfresco"/>
+        <property name="acmContextHolder" ref="acmContextHolder"/>
+        <property name="directoryName" value="armedia"/>
     </bean>
 
     <bean id="folderParticipantsChangedEventListener"
           class="com.armedia.acm.plugins.ecm.service.FolderParticipantChangedEventListener">
         <property name="sendChangedParticipantToAlfresco" ref="sendChangedParticipantToAlfresco"/>
+        <property name="acmContextHolder" ref="acmContextHolder"/>
+        <property name="directoryName" value="armedia"/>
     </bean>
 
     <bean id="folderDataAccessUpdateLocator"
