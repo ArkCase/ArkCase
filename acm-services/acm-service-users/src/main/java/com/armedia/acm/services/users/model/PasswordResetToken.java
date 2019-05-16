@@ -33,11 +33,12 @@ import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Embeddable;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Embeddable
-public class PasswordResetToken
+public class PasswordResetToken implements Serializable
 {
     private static final long EXPIRATION_HOURS = 24L;
 
