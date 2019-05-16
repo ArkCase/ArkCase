@@ -127,6 +127,7 @@
         <cdi-api.version>1.0</cdi-api.version>
         <mockito.core.version>2.20.0</mockito.core.version>
         <powermock.version2>2.0.0</powermock.version2>
+        <quartz.version>2.3.0</quartz.version>
         <jaudiotagger.version>2.0.3</jaudiotagger.version>
     </properties>
     <organization>
@@ -796,6 +797,12 @@
                 <groupId>org.activiti</groupId>
                 <artifactId>activiti-bpmn-layout</artifactId>
                 <version>${activiti.version}</version>
+            </dependency>
+            <!-- quartz -->
+            <dependency>
+                <groupId>org.quartz-scheduler</groupId>
+                <artifactId>quartz</artifactId>
+                <version>${quartz.version}</version>
             </dependency>
             <!-- activemq -->
             <dependency>
