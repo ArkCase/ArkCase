@@ -50,10 +50,14 @@ import org.springframework.security.core.Authentication;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -74,6 +78,8 @@ public class  PortalRequestService
     private final Logger log = LoggerFactory.getLogger(getClass());
 
     private FOIARequestDao requestDao;
+
+    private CaseFileDao caseFileDao;
 
     private ExecuteSolrQuery executeSolrQuery;
 
@@ -163,10 +169,14 @@ public class  PortalRequestService
 
     }
 
-    public void sendRequestDownloadedEmailToOfficersGroup(Long requestId)
+    public void sendRequestDownloadedEmailToOfficersGroup(String requestNumber)
     {
-        FOIARequest request = getRequestDao().find(requestId);
-        AcmUser user = getUserDao().findByUserId(request.getAssigneeLdapId());
+        FOIARequest request = (FOIARequest) getCaseFileDao().findByCaseNumber(requestNumber);
+
+        if(Objects.isNull(request))
+        {
+            return;
+        }
 
         Set<String> officersGroupMemberEmailAddresses = new HashSet<>();
 
@@ -194,12 +204,16 @@ public class  PortalRequestService
         {
             Notification notification = new Notification();
 
-            notification.setTitle(String.format("Request:%s assigned to %s", request.getCaseNumber(), user.getFullName()));
+            OffsetDateTime downloadedDateTime = OffsetDateTime.now(ZoneOffset.UTC);
+            String downloadedDateTimeFormatted = DateTimeFormatter.ofPattern("yyyy-MM-dd / HH:mm:ss").format(downloadedDateTime);
+
+            notification.setTitle(String.format("Request:%s Downloaded", request.getCaseNumber()));
             notification.setTemplateModelName("requestDownloaded");
-            notification.setParentId(requestId);
+            notification.setParentId(request.getId());
             notification.setParentType(request.getRequestType());
             notification.setParentName(request.getCaseNumber());
-            notification.setParentTitle(request.getTitle());
+            notification.setParentTitle(request.getDetails());
+            notification.setNote(downloadedDateTimeFormatted);
             notification.setEmailAddresses(officersGroupMemberEmailAddresses.stream().collect(Collectors.joining(",")));
             notification.setUser(SecurityContextHolder.getContext().getAuthentication().getName());
 
@@ -249,6 +263,16 @@ public class  PortalRequestService
     public void setRequestDao(FOIARequestDao requestDao)
     {
         this.requestDao = requestDao;
+    }
+
+    public CaseFileDao getCaseFileDao()
+    {
+        return caseFileDao;
+    }
+
+    public void setCaseFileDao(CaseFileDao caseFileDao)
+    {
+        this.caseFileDao = caseFileDao;
     }
 
     /**

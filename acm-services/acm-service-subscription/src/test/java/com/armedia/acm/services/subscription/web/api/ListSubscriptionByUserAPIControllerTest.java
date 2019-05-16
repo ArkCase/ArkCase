@@ -1,4 +1,4 @@
-package web.api;
+package com.armedia.acm.services.subscription.web.api;
 
 /*-
  * #%L
@@ -36,7 +36,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import com.armedia.acm.pluginmanager.model.AcmPlugin;
 import com.armedia.acm.services.subscription.model.AcmSubscription;
 import com.armedia.acm.services.subscription.service.SubscriptionService;
-import com.armedia.acm.services.subscription.web.api.ListSubscriptionByUserAPIController;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.easymock.EasyMockSupport;

@@ -27,6 +27,7 @@ package com.armedia.acm.audit.model;
  * #L%
  */
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -67,10 +68,6 @@ public class AuditConfig
     @JsonProperty("audit.plugin.purge.days")
     @Value("${audit.plugin.purge.days}")
     private Integer purgeDays;
-
-    @JsonProperty("audit.plugin.batch.frequency")
-    @Value("${audit.plugin.batch.frequency}")
-    private Integer batchFrequency;
 
     @JsonProperty("audit.plugin.requests.logging.enabled")
     @Value("${audit.plugin.requests.logging.enabled}")
@@ -234,16 +231,6 @@ public class AuditConfig
     public void setPurgeDays(Integer purgeDays)
     {
         this.purgeDays = purgeDays;
-    }
-
-    public Integer getBatchFrequency()
-    {
-        return batchFrequency;
-    }
-
-    public void setBatchFrequency(Integer batchFrequency)
-    {
-        this.batchFrequency = batchFrequency;
     }
 
     public Boolean getRequestsLoggingEnabled()
@@ -459,5 +446,20 @@ public class AuditConfig
     public void setOrganizationaHistroyEventsArrayString(String organizationaHistroyEventsArrayString)
     {
         this.organizationaHistroyEventsArrayString = organizationaHistroyEventsArrayString;
+    }
+    @JsonIgnore
+    public String getEventTypeByKey(String objectType)
+    {
+        switch (objectType) {
+            case "COMPLAINT":
+                return complaintHistoryEventsArrayString;
+            case "CASE_FILE":
+                return caseFileHistoryEventsArrayString;
+            case "TASK":
+                return taskHistoryEventsArrayString;
+            case "DOC_REPO":
+                return docRepoHistoryEventsArrayString;
+        }
+        return "";
     }
 }

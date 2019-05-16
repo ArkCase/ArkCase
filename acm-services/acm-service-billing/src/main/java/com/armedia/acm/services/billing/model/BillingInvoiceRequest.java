@@ -38,6 +38,7 @@ public class BillingInvoiceRequest
 
     private Long parentObjectId;
 
+    private String objectSubtype;
     /**
      * @return the parentObjectType
      */
@@ -72,4 +73,11 @@ public class BillingInvoiceRequest
         this.parentObjectId = parentObjectId;
     }
 
+    public String getObjectSubtype() {
+        return objectSubtype;
+    }
+
+    public void setObjectSubtype(String objectSubtype) {
+        this.objectSubtype = objectSubtype;
+    }
 }

@@ -28,11 +28,10 @@ package com.armedia.acm.plugins.report.service;
  */
 
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
+import com.armedia.acm.pentaho.config.PentahoReportsConfig;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.report.model.PentahoFileProperties;
 import com.armedia.acm.plugins.report.model.PentahoReportFiles;
-import com.armedia.acm.pentaho.config.PentahoReportsConfig;
-import com.armedia.acm.scheduler.AcmSchedulableBean;
 
 import org.apache.commons.ssl.Base64;
 import org.slf4j.Logger;
@@ -46,7 +45,7 @@ import java.io.InputStream;
 /**
  * Created by dwu on 6/9/2017.
  */
-public class PentahoScheduleGeneratedReportServiceImpl implements AcmSchedulableBean
+public class PentahoScheduleGeneratedReportServiceImpl
 {
     private static final Logger LOGGER = LoggerFactory.getLogger(PentahoScheduleGeneratedReportServiceImpl.class);
     private HttpHeaders headers;
@@ -57,7 +56,6 @@ public class PentahoScheduleGeneratedReportServiceImpl implements AcmSchedulable
     private PentahoUploadGeneratedReportService uploadService;
     private PentahoReportsConfig reportsConfig;
 
-    @Override
     public void executeTask()
     {
         // create credential for auth

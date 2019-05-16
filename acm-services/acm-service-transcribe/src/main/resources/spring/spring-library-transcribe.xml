@@ -42,7 +42,7 @@
         <property name="transcribeItemDao" ref="transcribeItemDao"/>
     </bean>
 
-    <bean id="transcribeQueueJob" class="com.armedia.acm.services.transcribe.job.TranscribeQueueJob">
+    <bean id="transcribeQueueJobService" class="com.armedia.acm.services.transcribe.job.TranscribeQueueJob">
         <property name="arkCaseTranscribeService" ref="arkCaseTranscribeService"/>
         <property name="activitiRuntimeService" ref="activitiRuntimeService"/>
         <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
@@ -61,6 +61,11 @@
     <bean id="transcribeConfigurationService" class="com.armedia.acm.services.transcribe.service.TranscribeConfigurationService">
         <property name="configurationPropertyService" ref="configurationPropertyService"/>
         <property name="transcribeConfig" ref="transcribeConfig"/>
+    </bean>
+
+    <bean id="transcribeQueueJobDescriptor" class="com.armedia.acm.services.transcribe.job.TranscribeQueueJobDescriptor"
+          parent="acmJobDescriptor">
+        <property name="transcribeQueueJob" ref="transcribeQueueJobService"/>
     </bean>
 
     <bean id="transcribeBusinessRulesExecutor" class="com.armedia.acm.services.mediaengine.rules.MediaEngineBusinessRulesExecutor"
