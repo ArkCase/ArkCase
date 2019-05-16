@@ -37,7 +37,11 @@
 
     <bean id="acmObjectLockingManager" class="com.armedia.acm.service.objectlock.service.AcmObjectLockingManager">
         <property name="defaultObjectLockingProvider" ref="defaultObjectLockingProvider"/>
-        <property name="acmObjectLockService" ref="objectLockService"/>
         <property name="springContextHolder" ref="acmContextHolder"/>
+    </bean>
+
+    <bean id="releaseExpiredLocksJobDescriptor"
+          class="com.armedia.acm.service.objectlock.service.ReleaseExpiredLocksJobDescriptor" parent="acmJobDescriptor">
+        <property name="objectLockService" ref="objectLockService"/>
     </bean>
 </beans>

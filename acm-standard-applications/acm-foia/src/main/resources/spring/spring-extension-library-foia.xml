@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans:beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
              xmlns:beans="http://www.springframework.org/schema/beans"
-             xmlns:task="http://www.springframework.org/schema/task" xmlns:aop="http://www.springframework.org/schema/aop"
+             xmlns:aop="http://www.springframework.org/schema/aop"
              xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-            http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+              http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
 
     <beans:beans profile="extension-foia">
 
@@ -45,6 +45,10 @@
             <beans:property name="foiaConfig" ref="foiaConfig"/>
         </beans:bean>
 
+        <beans:bean id="dueDateUpdateJobDescriptor" class="gov.foia.service.DueDateUpdateJobDescriptor" parent="acmJobDescriptor">
+            <beans:property name="holdedAndAppealedRequestsDueDateUpdate" ref="holdedAndAppealedRequestsDueDateUpdate"/>
+        </beans:bean>
+
         <beans:bean id="pdfConverter" class="com.armedia.acm.objectdataprocessing.PluggableDocumentConverter">
             <beans:property name="outputMimeType" value="application/pdf"/>
         </beans:bean>
@@ -60,13 +64,6 @@
         <beans:bean id="folderNamePredicate" class="gov.foia.service.JavaScriptEvaluatingPredicate">
             <beans:property name="javaScript" ref="releaseFolderRule"/>
         </beans:bean> -->
-
-        <task:scheduler id="dueDateUpdateScheduler" pool-size="1"/>
-        <task:scheduled-tasks scheduler="dueDateUpdateScheduler">
-            <!-- updates due date of requests in appeal and hold queue at 00:00 AM-->
-            <task:scheduled ref="holdedAndAppealedRequestsDueDateUpdate" method="updateDueDate" cron="0 0 0 * * *"/>
-            <!-- <task:scheduled ref="holdedAndAppealedRequestsDueDateUpdate" method="updateDueDate" initial-delay="120000" fixed-rate="60000"/> -->
-        </task:scheduled-tasks>
 
         <beans:bean id="foiaDocumentPrintService" class="gov.foia.service.FoiaDocumentPrintService">
             <beans:property name="acmContainerDao" ref="acmContainerFolderDao"/>

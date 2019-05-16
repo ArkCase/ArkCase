@@ -44,5 +44,4 @@ public interface AcmLdapConstants
     String LDAP_GID_NUMBER_ATTR = "gidNumber";
     String LDAP_HOME_DIRECTORY_ATTR = "homeDirectory";
     String LDAP_OBJECT_CLASS_ATTR = "objectClass";
-    String LDAP_LAST_SYNC_PROPERTY_KEY = "ldap.sync.last.run.date";
 }

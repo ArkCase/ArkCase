@@ -27,15 +27,14 @@ package com.armedia.acm.services.search.service;
  * #L%
  */
 
-import com.armedia.acm.core.exceptions.AcmEncryptionException;
 import com.armedia.acm.data.AcmObjectChangelist;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
-import com.armedia.acm.files.propertymanager.PropertyFileManager;
 import com.armedia.acm.services.search.model.SearchConstants;
 import com.armedia.acm.services.search.model.solr.SolrConfig;
 import com.armedia.acm.spring.SpringContextHolder;
 import com.armedia.acm.web.api.MDCConstants;
 
+import org.quartz.JobDataMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
@@ -55,25 +54,19 @@ import java.util.UUID;
  */
 public class AcmJpaBatchUpdateService
 {
-    /**
-     * The property key to use in the properties file that stores the last run date.
-     */
-    public static final String SOLR_LAST_RUN_DATE_PROPERTY_KEY = "solr.last.run.date";
+    private final Logger log = LoggerFactory.getLogger(getClass());
+    private SpringContextHolder springContextHolder;
+    private JpaObjectsToSearchService objectsToSearchService;
+    private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
+    private SolrConfig solrConfig;
     /**
      * The default run date to use if this generator has never run before (or if the properties file that stores the
      * last run date is
      * missing)
      */
     private static final String DEFAULT_LAST_RUN_DATE = "1970-01-01T00:00:00Z";
-    private final Logger log = LoggerFactory.getLogger(getClass());
-    private String lastBatchUpdatePropertyFileLocation;
-    private PropertyFileManager propertyFileManager;
-    private SpringContextHolder springContextHolder;
-    private JpaObjectsToSearchService objectsToSearchService;
-    private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
-    private SolrConfig solrConfig;
 
-    public void jpaBatchUpdate() throws AcmEncryptionException, InterruptedException
+    public void jpaBatchUpdate(JobDataMap lastRunDatePerObject) throws InterruptedException
     {
         log.debug("JPA batch update enabled: [{}]", solrConfig.getEnableBatchUpdateBasedOnLastModified());
 
@@ -86,7 +79,7 @@ public class AcmJpaBatchUpdateService
         while (!prerequisitesFinished())
         {
             log.debug("Waiting for the IJpaBatchUpdatePrerequisite implementations to finish...");
-            Thread.sleep(1000l);
+            Thread.sleep(1000L);
         }
 
         // The Alfresco user id to use, to retrieve the files to be indexed
@@ -95,39 +88,31 @@ public class AcmJpaBatchUpdateService
 
         getAuditPropertyEntityAdapter().setUserId("SOLR-BATCH-UPDATE");
 
+        Collection<? extends AcmObjectToSolrDocTransformer> transformers = getSpringContextHolder()
+                .getAllBeansOfType(AcmObjectToSolrDocTransformer.class).values();
+
+        log.debug("[{}] object transformers found.", transformers.size());
+
         DateFormat solrDateFormat = new SimpleDateFormat(SearchConstants.SOLR_DATE_FORMAT);
 
-        try
+        for (AcmObjectToSolrDocTransformer transformer : transformers)
         {
-            Collection<? extends AcmObjectToSolrDocTransformer> transformers = getSpringContextHolder()
-                    .getAllBeansOfType(AcmObjectToSolrDocTransformer.class).values();
-
-            log.debug("[{}] object transformers found.", transformers.size());
-
-            for (AcmObjectToSolrDocTransformer transformer : transformers)
+            String acmObjectClassName = transformer.getAcmObjectTypeSupported().getCanonicalName();
+            try
             {
-                String acmObjectClassName = transformer.getAcmObjectTypeSupported().getCanonicalName();
-                String lastRunDateKey = String.format("%s.%s", SOLR_LAST_RUN_DATE_PROPERTY_KEY, acmObjectClassName);
-                String lastRunDate = getPropertyFileManager().load(getLastBatchUpdatePropertyFileLocation(), lastRunDateKey,
-                        DEFAULT_LAST_RUN_DATE);
-                Date lastBatchRunDate = getLastBatchRunDate(lastRunDate, solrDateFormat);
-                storeCurrentDateForNextBatchRun(lastRunDateKey, solrDateFormat);
+                Date lastBatchRunDate = getLastBatchRunDate(lastRunDatePerObject.getString(acmObjectClassName),
+                        solrDateFormat);
+
+                String solrNow = solrDateFormat.format(new Date());
+                lastRunDatePerObject.put(acmObjectClassName, solrNow);
 
                 log.debug("Checking for [{}] objects modified since [{}]", acmObjectClassName, lastBatchRunDate);
-
-                try
-                {
-                    sendUpdatedObjectsToSolr(lastBatchRunDate, transformer);
-                }
-                catch (Exception exception)
-                {
-                    log.error("Could not send index updates to SOLR for transformer [{}]", transformer.getClass(), exception);
-                }
+                sendUpdatedObjectsToSolr(lastBatchRunDate, transformer);
             }
-        }
-        catch (ParseException e)
-        {
-            log.error("Could not send index updates to SOLR: [{}]", e.getMessage(), e);
+            catch (Exception exception)
+            {
+                log.error("Could not send index updates to SOLR for transformer [{}]", transformer.getClass(), exception);
+            }
         }
     }
 
@@ -144,16 +129,12 @@ public class AcmJpaBatchUpdateService
         return true;
     }
 
-    private void storeCurrentDateForNextBatchRun(String lastRunDateKey, DateFormat solrDateFormat)
-    {
-        // store the current time as the last run date to use the next time this job runs. This allows us to
-        // scan only for objects updated since this date.
-        String solrNow = solrDateFormat.format(new Date());
-        getPropertyFileManager().store(lastRunDateKey, solrNow, getLastBatchUpdatePropertyFileLocation(), false);
-    }
-
     private Date getLastBatchRunDate(String lastRunDate, DateFormat solrDateFormat) throws ParseException
     {
+        if (lastRunDate == null)
+        {
+            lastRunDate = DEFAULT_LAST_RUN_DATE;
+        }
         Date sinceWhen = solrDateFormat.parse(lastRunDate);
 
         // back up one minute just to be sure we get everything
@@ -189,26 +170,6 @@ public class AcmJpaBatchUpdateService
             }
         } while (!updatedObjects.isEmpty());
 
-    }
-
-    public String getLastBatchUpdatePropertyFileLocation()
-    {
-        return lastBatchUpdatePropertyFileLocation;
-    }
-
-    public void setLastBatchUpdatePropertyFileLocation(String lastBatchUpdatePropertyFileLocation)
-    {
-        this.lastBatchUpdatePropertyFileLocation = lastBatchUpdatePropertyFileLocation;
-    }
-
-    public PropertyFileManager getPropertyFileManager()
-    {
-        return propertyFileManager;
-    }
-
-    public void setPropertyFileManager(PropertyFileManager propertyFileManager)
-    {
-        this.propertyFileManager = propertyFileManager;
     }
 
     public SpringContextHolder getSpringContextHolder()

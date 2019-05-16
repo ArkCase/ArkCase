@@ -1,4 +1,4 @@
-package web.api;
+package com.armedia.acm.services.subscription.web.api;
 
 /*-
  * #%L
@@ -33,7 +33,6 @@ import static org.junit.Assert.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 
 import com.armedia.acm.services.subscription.service.SubscriptionService;
-import com.armedia.acm.services.subscription.web.api.RemovingSubscriptionAPIController;
 
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
