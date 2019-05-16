@@ -10,7 +10,9 @@ public class ChangedParticipant
 
     private String cmisObjectId;
     private String changeType;
+    private String userDomain;
     private AcmParticipant changedParticipant;
+    private AcmParticipant oldParticipant;
 
     public String getCmisObjectId()
     {
@@ -40,5 +42,25 @@ public class ChangedParticipant
     public void setChangedParticipant(AcmParticipant changedParticipant)
     {
         this.changedParticipant = changedParticipant;
+    }
+
+    public AcmParticipant getOldParticipant()
+    {
+        return oldParticipant;
+    }
+
+    public void setOldParticipant(AcmParticipant oldParticipant)
+    {
+        this.oldParticipant = oldParticipant;
+    }
+
+    public String getUserDomain()
+    {
+        return userDomain;
+    }
+
+    public void setUserDomain(String userDomain)
+    {
+        this.userDomain = userDomain;
     }
 }

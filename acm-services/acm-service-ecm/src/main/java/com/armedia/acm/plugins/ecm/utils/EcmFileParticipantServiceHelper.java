@@ -293,9 +293,10 @@ public class EcmFileParticipantServiceHelper implements ApplicationEventPublishe
             // change the role of the existing participant if needed
             if (!existingFileParticipant.get().getParticipantType().equals(participant.getParticipantType()))
             {
-                existingFileParticipant.get().setParticipantType(participant.getParticipantType());
                 ecmFileParticipantChangedEvent.setChangedParticipant(participant);
+                ecmFileParticipantChangedEvent.setOldParticipant(existingFileParticipant.get());
                 ecmFileParticipantChangedEvent.setChangeType(ChangedParticipantConstants.CHANGED);
+                existingFileParticipant.get().setParticipantType(participant.getParticipantType());
             }
         }
         else
@@ -334,10 +335,12 @@ public class EcmFileParticipantServiceHelper implements ApplicationEventPublishe
             // change the role of the existing participant if needed
             if (!existingFolderParticipant.get().getParticipantType().equals(participant.getParticipantType()))
             {
-                existingFolderParticipant.get().setParticipantType(participant.getParticipantType());
 
-                folderParticipantChangedEvent.setChangedParticipant(existingFolderParticipant.get());
+                folderParticipantChangedEvent.setChangedParticipant(participant);
+                folderParticipantChangedEvent.setOldParticipant(existingFolderParticipant.get());
                 folderParticipantChangedEvent.setChangeType(ChangedParticipantConstants.CHANGED);
+
+                existingFolderParticipant.get().setParticipantType(participant.getParticipantType());
             }
         }
         else

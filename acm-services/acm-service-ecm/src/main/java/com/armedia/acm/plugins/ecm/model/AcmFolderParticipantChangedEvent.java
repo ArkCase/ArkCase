@@ -40,6 +40,7 @@ public class AcmFolderParticipantChangedEvent extends AcmEvent
 {
     private String changeType;
     private AcmParticipant changedParticipant;
+    private AcmParticipant oldParticipant;
 
     public AcmFolderParticipantChangedEvent(AcmFolder source)
     {
@@ -77,5 +78,15 @@ public class AcmFolderParticipantChangedEvent extends AcmEvent
     public void setChangedParticipant(AcmParticipant changedParticipant)
     {
         this.changedParticipant = changedParticipant;
+    }
+
+    public AcmParticipant getOldParticipant()
+    {
+        return oldParticipant;
+    }
+
+    public void setOldParticipant(AcmParticipant oldParticipant)
+    {
+        this.oldParticipant = oldParticipant;
     }
 }
