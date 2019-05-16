@@ -528,7 +528,7 @@ public class LdapConfigurationService implements InitializingBean
         return new File(fileName).exists();
     }
 
-    public void createLdapDirectoryConfigurations(String id, String directoryType, HashMap<String, Object> props)
+    public void createLdapDirectoryConfigurations(String id, String directoryType, Map<String, Object> props)
             throws AcmLdapConfigurationException
     {
         createLdapDirectory(id, props);
