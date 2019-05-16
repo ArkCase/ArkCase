@@ -67,8 +67,7 @@
         <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
     </bean>
     <bean id="solrReindexService" class="com.armedia.acm.services.dataupdate.service.SolrReindexService">
-        <property name="lastBatchUpdatePropertyFileLocation" value="${user.home}/.arkcase/acm/solrLastBatchUpdate.properties"/>
-        <property name="propertyFileManager" ref="propertyFileManager"/>
+        <property name="schedulerService" ref="acmSchedulerService"/>
     </bean>
 
     <bean id="triggerSolrUpdateExecutor" class="com.armedia.acm.services.dataupdate.service.TriggerSolrUpdateExecutor">

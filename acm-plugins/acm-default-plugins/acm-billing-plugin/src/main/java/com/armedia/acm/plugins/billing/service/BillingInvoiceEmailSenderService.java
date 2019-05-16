@@ -66,9 +66,20 @@ public class BillingInvoiceEmailSenderService<T extends AcmContainerEntity & Acm
         BillingInvoice billingInvoice = getBillingService().getLatestBillingInvoice(billingInvoiceRequest.getParentObjectType(),
                 billingInvoiceRequest.getParentObjectId());
 
-        StringBuilder notificationTitle = new StringBuilder(String.format(billingInvoice.getParentObjectType()));
-        notificationTitle.append(" : ");
-        notificationTitle.append(parentObject.getAcmObjectNumber());
+        StringBuilder notificationTitle;
+        if(billingInvoiceRequest.getObjectSubtype() != null)
+        {
+            notificationTitle = new StringBuilder(String.format(billingInvoiceRequest.getObjectSubtype()));
+            notificationTitle.append(": ");
+            notificationTitle.append(parentObject.getAcmObjectNumber());
+            notificationTitle.append(" Invoice");
+        }
+        else
+        {
+            notificationTitle = new StringBuilder(String.format(billingInvoice.getParentObjectType()));
+            notificationTitle.append(" : ");
+            notificationTitle.append(parentObject.getAcmObjectNumber());
+        }
 
         List<EcmFileVersion> notificationFiles = new ArrayList<>();
         List<Long> filesIds = new ArrayList<>();

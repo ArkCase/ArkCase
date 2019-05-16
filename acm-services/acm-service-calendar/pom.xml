@@ -35,8 +35,8 @@
         </dependency>
 
         <dependency>
-            <groupId>com.armedia.acm.acm-services</groupId>
-            <artifactId>acm-service-scheduler</artifactId>
+            <groupId>com.armedia.acm.acm-tool-integrations</groupId>
+            <artifactId>acm-quartz-scheduler</artifactId>
             <version>${acm.version}</version>
         </dependency>
 

@@ -99,6 +99,7 @@ angular.module('services').factory('Ecm.EmailService', [ '$resource', '$translat
             },
             data: emailData,
             onSuccess: function(data) {
+                MessageService.info($translate.instant("common.directive.docTree.email.successMessage"));
                 if (Service.validateSentEmails(data)) {
                     for (var i = 0; i < data.length; i++) {
                         if ("NOT_SENT" == data[i].state) {

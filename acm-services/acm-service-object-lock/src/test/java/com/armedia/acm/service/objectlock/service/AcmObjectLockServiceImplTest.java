@@ -46,7 +46,6 @@ import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.search.service.SearchResults;
 
 import org.easymock.Capture;
-import org.easymock.EasyMock;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -104,7 +103,7 @@ public class AcmObjectLockServiceImplTest
 
         authMock = createMock(Authentication.class);
         mockRequest = createMock(HttpServletRequest.class);
-        EasyMock.expect(authMock.getName()).andReturn(authName).anyTimes();
+        expect(authMock.getName()).andReturn(authName).anyTimes();
 
         SecurityContextHolder.getContext().setAuthentication(authMock);
 
