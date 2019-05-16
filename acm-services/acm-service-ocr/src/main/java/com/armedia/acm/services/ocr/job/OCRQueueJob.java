@@ -30,7 +30,6 @@ package com.armedia.acm.services.ocr.job;
 import com.armedia.acm.core.exceptions.AcmObjectLockException;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
-import com.armedia.acm.scheduler.AcmSchedulableBean;
 import com.armedia.acm.service.objectlock.model.AcmObjectLock;
 import com.armedia.acm.service.objectlock.service.AcmObjectLockService;
 import com.armedia.acm.service.objectlock.service.AcmObjectLockingManager;
@@ -67,7 +66,7 @@ import java.util.stream.Collectors;
 /**
  * Created by Vladimir Cherepnalkovski
  */
-public class OCRQueueJob implements AcmSchedulableBean
+public class OCRQueueJob
 {
     private final Logger LOG = LoggerFactory.getLogger(getClass());
     private ArkCaseOCRService arkCaseOCRService;
@@ -79,7 +78,6 @@ public class OCRQueueJob implements AcmSchedulableBean
     private OCRProviderFactory ocrProviderFactory;
     private OCRConfigurationService ocrConfigurationService;
 
-    @Override
     public void executeTask()
     {
         try

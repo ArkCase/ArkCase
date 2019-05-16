@@ -140,14 +140,12 @@ public class AngularResourceCopier implements ServletContextAware
 
             for (String profile : activeProfiles)
             {
-                copyFilesAndExecuteCommands(profile, resolver, rootPath, tmpDir, copiedFiles, activeProfiles, libFolderPath);
+                copyFilesAndExecuteCommands(profile, resolver, rootPath, tmpDir, copiedFiles);
             }
-
 
             List<String> tmpFilesFound = findAllFilesInFolder(tmpDir);
 
             log.debug("Found {} files in tmp folder", tmpFilesFound.size());
-
 
             // delete all files that exist in the tmp dir, but we didn't copy them there; such files must have been
             // removed from the project. Exceptions are files managed by yarn and grunt: lib folder, node_modules
@@ -192,7 +190,7 @@ public class AngularResourceCopier implements ServletContextAware
     }
 
     private void copyFilesAndExecuteCommands(String profile, ServletContextResourcePatternResolver resolver, String rootPath,
-            File tmpDir, List<String> copiedFiles, List<String> activeProfiles, String libFolderPath)
+            File tmpDir, List<String> copiedFiles)
             throws IOException
     {
 
@@ -204,6 +202,7 @@ public class AngularResourceCopier implements ServletContextAware
         }
         runFrontEndBuildCommand(tmpDir, mergeConfigFrontendTask);
     }
+
     private String createProfilesJsFileInDir(List<String> profiles, File parentDir) throws IOException
     {
         String exportProfiles = String.format("module.exports = %s", profiles.stream()
