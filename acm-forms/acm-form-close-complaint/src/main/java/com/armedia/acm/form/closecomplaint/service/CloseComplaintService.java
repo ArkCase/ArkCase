@@ -53,6 +53,7 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -61,7 +62,7 @@ import java.util.Date;
 /**
  * @author riste.tutureski
  */
-public class CloseComplaintService extends FrevvoFormAbstractService
+public class CloseComplaintService extends FrevvoFormAbstractService implements ApplicationEventPublisherAware
 {
 
     private Logger LOG = LoggerFactory.getLogger(CloseComplaintService.class);
@@ -321,6 +322,7 @@ public class CloseComplaintService extends FrevvoFormAbstractService
         return applicationEventPublisher;
     }
 
+    @Override
     public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher)
     {
         this.applicationEventPublisher = applicationEventPublisher;
