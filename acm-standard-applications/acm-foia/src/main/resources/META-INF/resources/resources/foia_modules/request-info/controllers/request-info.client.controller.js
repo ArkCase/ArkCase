@@ -60,7 +60,7 @@ angular.module('request-info').controller(
                   HelperObjectBrowserService, ObjectLookupService, ObjectModelService, CaseLookupService, UtilDateService, QueuesSvc, ObjectSubscriptionService, Util, SnowboundService, EcmService, DocumentPrintingService, NotesService, UserInfoService, MessageService, $translate,
                   DueDateService, AdminHolidayService, AdminFoiaConfigService, TranscriptionManagementService, $window, ArkCaseCrossWindowMessagingService, ObjectLockingService, UtilTimerService, DialogService) {
 
-            // $scope.openOtherDocuments = [];
+            $scope.openOtherDocuments = [];
             // $scope.fileChangeEvents = [];
             // $scope.fileChangeDate = null;
             // $scope.versionChangeRequest = false;
@@ -92,12 +92,17 @@ angular.module('request-info').controller(
             };
 
             $scope.iframeLoaded = function () {
+                ArkCaseCrossWindowMessagingService.addHandler('close-document', onCloseDocument);
                 ObjectLookupService.getLookupByLookupName("annotationTags").then(function (allAnnotationTags) {
                     $scope.allAnnotationTags = allAnnotationTags;
                     ArkCaseCrossWindowMessagingService.addHandler('select-annotation-tags', onSelectAnnotationTags);
                     ArkCaseCrossWindowMessagingService.start('snowbound', $scope.ecmFileProperties['ecm.viewer.snowbound']);
                 });
             };
+
+            function onCloseDocument(data) {
+                $scope.$bus.publish('remove-from-opened-documents-list', {id: data.id, version: data.version});
+            }
 
             function onSelectAnnotationTags(data) {
                 var params = $scope.allAnnotationTags;
@@ -357,6 +362,7 @@ angular.module('request-info').controller(
             $scope.expandPreview = expandPreview;
 
             $scope.acmTicket = '';
+            $scope.ecmFileProperties = '';
             $scope.userId = '';
             $scope.userFullName = '';
             $scope.ecmFileProperties = {};
@@ -636,6 +642,7 @@ angular.module('request-info').controller(
                 $scope.transcriptionConfiguration = data[8];
                 $scope.fileInfo = buildFileInfo($scope.ecmFile, $scope.ecmFile.container.id);
                 $scope.requestInfo.caseNumber = data[9].caseNumber;
+                $scope.openOtherDocuments.push($scope.fileInfo);
 
                 // default view == snowbound
                 $scope.view = "modules/document-details/views/document-viewer-snowbound.client.view.html";
@@ -778,6 +785,7 @@ angular.module('request-info').controller(
              */
             $scope.loadViewerIframe = function (url) {
                 $scope.$broadcast('change-viewer-document', url);
+                $scope.documentViewerUrl = $sce.trustAsResourceUrl(url);
             };
 
             /**
@@ -802,7 +810,7 @@ angular.module('request-info').controller(
                 // Generates and loads a url that will open the selected documents in the viewer
                 if ($scope.openOtherDocuments.length > 0) {
                     registerFileChangeEvents();
-                    var snowUrl = buildViewerUrlMultiple($scope.ecmFileConfig, $scope.acmTicket, $scope.userId, $scope.userFullName, $scope.openOtherDocuments, !$scope.editingMode, $scope.requestInfo.caseNumber);
+                    var snowUrl = buildViewerUrlMultiple($scope.ecmFileProperties, $scope.acmTicket, $scope.userId, $scope.userFullName, $scope.openOtherDocuments, !$scope.editingMode, $scope.requestInfo.caseNumber);
                     if (snowUrl) {
                         $scope.loadViewerIframe(snowUrl);
                     }

@@ -65,6 +65,8 @@ public class MediaEngineMapper
 
             mediaEngineDTO.setTempPath(tempPath);
 
+            Integer numberOfPages = mediaEngine.getMediaEcmFileVersion().getFile().getPageCount();
+
             Map<String, String> props = new HashMap<>();
             props.put("extension", mediaEngine.getMediaEcmFileVersion().getFile().getFileExtension());
             props.put("mimeType", mediaEngine.getMediaEcmFileVersion().getVersionMimeType());
@@ -80,7 +82,7 @@ public class MediaEngineMapper
                     mediaEngine.getMediaEcmFileVersion().getFile().getContainer().getContainerObjectId().toString());
             props.put("containerObjectTitle",
                     mediaEngine.getMediaEcmFileVersion().getFile().getContainer().getContainerObjectId().toString());
-
+            props.put("numberOfPages", numberOfPages.toString());
             mediaEngineDTO.setProperties(props);
         }
         catch (IllegalAccessException | InvocationTargetException e)

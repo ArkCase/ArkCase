@@ -106,7 +106,7 @@ public class DocumentApprovalProcessIT
 
         // deploy
         repo.createDeployment()
-                .addClasspathResource("activiti/acmDocumentWorkflow_v4.bpmn20.xml")
+                .addClasspathResource("activiti/acmDocumentWorkflow_v5.bpmn20.xml")
                 .deploy();
 
         Map<String, Object> pvars = new HashMap<>();

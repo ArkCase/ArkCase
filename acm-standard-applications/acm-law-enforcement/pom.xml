@@ -478,6 +478,12 @@
         </dependency>
 
         <dependency>
+            <groupId>com.armedia.acm.acm-services</groupId>
+            <artifactId>acm-service-convert-file</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+
+        <dependency>
             <groupId>com.armedia.acm.acm-plugins.acm-extra-plugins</groupId>
             <artifactId>acm-onlyoffice-plugin</artifactId>
             <version>${acm.version}</version>
@@ -508,6 +514,12 @@
             <artifactId>acm-service-ocr</artifactId>
             <version>${acm.version}</version>
         </dependency>
+        
+        <dependency>
+            <groupId>com.armedia.acm.acm-services</groupId>
+            <artifactId>acm-service-holiday</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
 
         <dependency>
             <groupId>com.armedia.acm.acm-tool-integrations</groupId>
@@ -518,6 +530,18 @@
         <dependency>
             <groupId>com.armedia.acm.acm-tool-integrations</groupId>
             <artifactId>acm-transcribe-tool</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.armedia.acm.acm-plugins.acm-default-plugins</groupId>
+            <artifactId>acm-billing-plugin</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.armedia.acm.acm-services</groupId>
+            <artifactId>acm-service-billing</artifactId>
             <version>${acm.version}</version>
         </dependency>
 

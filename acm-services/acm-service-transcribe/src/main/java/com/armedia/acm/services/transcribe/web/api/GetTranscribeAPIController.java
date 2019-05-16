@@ -38,6 +38,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.Map;
+
 /**
  * Created by Riste Tutureski <riste.tutureski@armedia.com> on 03/06/2018
  */
@@ -59,6 +61,13 @@ public class GetTranscribeAPIController
     public MediaEngine getTranscribeByMediaId(@PathVariable(value = "mediaVersionId") Long mediaVersionId) throws GetMediaEngineException
     {
         return getArkCaseTranscribeService().getByMediaVersionId(mediaVersionId);
+    }
+
+    @RequestMapping(value = "/mediaFailure/{mediaVersionId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public Map<String, String> getFailureMessage(@PathVariable(value = "mediaVersionId") Long mediaVersionId) throws GetMediaEngineException
+    {
+        return getArkCaseTranscribeService().getFailureReasonMessage(mediaVersionId);
     }
 
     public ArkCaseTranscribeService getArkCaseTranscribeService()

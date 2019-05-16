@@ -79,4 +79,10 @@
     <bean class="com.armedia.acm.plugins.casefile.web.api.ChangeCaseStatusApiController">
         <property name="changeCaseFileStateService" ref="changeCaseFileStateService"/>
     </bean>
+
+    <bean id="caseFileBillingInvoiceEmailSenderAPIController"
+        class="com.armedia.acm.plugins.casefile.web.api.CaseFileBillingInvoiceEmailSenderAPIController">
+        <property name="caseFileBillingInvoiceEmailSenderService" ref="billingInvoiceEmailSenderService"/>
+        <property name="getCaseService" ref="getCaseService"/>
+    </bean>
 </beans>

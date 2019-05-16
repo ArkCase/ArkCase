@@ -42,6 +42,7 @@ public class TranscribeDTO extends MediaEngineDTO
     private InputStream transcribeEcmFile;
     private long wordCount;
     private int confidence;
+    private String message;
 
     @Override
     public Long getId()
@@ -93,5 +94,15 @@ public class TranscribeDTO extends MediaEngineDTO
     public void setTranscribeItems(List<TranscribeItemDTO> transcribeItems)
     {
         this.transcribeItems = transcribeItems;
+    }
+
+    public String getMessage()
+    {
+        return message;
+    }
+
+    public void setMessage(String message)
+    {
+        this.message = message;
     }
 }

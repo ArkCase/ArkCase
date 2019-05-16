@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.springframework.org/schema/beans"
-       xmlns:aop="http://www.springframework.org/schema/aop"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+    xmlns:aop="http://www.springframework.org/schema/aop" xmlns:task="http://www.springframework.org/schema/task"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd">
 
     <!-- Notification Service is defined under $HOME/.acm/spring folder -->
 
@@ -21,6 +21,7 @@
 
     <bean id="assigneeDueDateNotifier" class="com.armedia.acm.services.notification.service.AssigneeDueDateNotifier">
         <property name="userDao" ref="userJpaDao"/>
+        <property name="holidayConfigurationService" ref="holidayConfigurationService"/>
     </bean>
 
     <bean id="notificationEventPublisher" class="com.armedia.acm.services.notification.service.NotificationEventPublisher"/>
@@ -39,16 +40,19 @@
     <bean id="acmUserTemplateModelProvider" class="com.armedia.acm.services.notification.service.provider.AcmUserTemplateModelProvider">
         <property name="userDao" ref="userJpaDao"/>
     </bean>
-    
-    <bean id="forgotUserNameTamplateModelProvider" class="com.armedia.acm.services.notification.service.provider.ForgotUsernameTemplateModelProvider">
+
+    <bean id="forgotUserNameTamplateModelProvider"
+        class="com.armedia.acm.services.notification.service.provider.ForgotUsernameTemplateModelProvider">
         <property name="userDao" ref="userJpaDao"/>
     </bean>
 
-    <bean id="notificationTemplateModelProvider" class="com.armedia.acm.services.notification.service.provider.NotificationTemplateModelProvider">
+    <bean id="notificationTemplateModelProvider"
+        class="com.armedia.acm.services.notification.service.provider.NotificationTemplateModelProvider">
         <property name="notificationUtils" ref="notificationUtils"/>
     </bean>
 
-    <bean id="notificationGroupTemplateModelProvider" class="com.armedia.acm.services.notification.service.provider.NotificationGroupTemplateModelProvider">
+    <bean id="notificationGroupTemplateModelProvider"
+        class="com.armedia.acm.services.notification.service.provider.NotificationGroupTemplateModelProvider">
         <property name="dataService" ref="acmDataService"/>
     </bean>
 
@@ -57,12 +61,12 @@
 
     <bean id="requestDownloadedModelProvider" class="com.armedia.acm.services.notification.service.provider.RequestDownloadedModelProvider">
     </bean>
-    
+
     <bean id="acmEntitySendExecutor" class="com.armedia.acm.services.notification.service.SendExecutor">
         <property name="springContextHolder" ref="acmContextHolder"/>
         <property name="templateModelProvider" ref="acmEntityTemplateModelProvider"/>
     </bean>
-    
+
     <bean id="notificationSendExecutor" class="com.armedia.acm.services.notification.service.SendExecutor">
         <property name="springContextHolder" ref="acmContextHolder"/>
         <property name="templateModelProvider" ref="notificationTemplateModelProvider"/>
@@ -92,7 +96,7 @@
         <property name="springContextHolder" ref="acmContextHolder"/>
         <property name="templateModelProvider" ref="requestDownloadedModelProvider"/>
     </bean>
-    
+
     <bean id="purgeExecutor" class="com.armedia.acm.services.notification.service.PurgeExecutor">
         <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
     </bean>
@@ -131,12 +135,12 @@
     </bean>
 
     <bean id="smtpNotificationSender" class="com.armedia.acm.services.notification.service.SmtpNotificationSender"
-          parent="baseNotificationSender">
+        parent="baseNotificationSender">
         <property name="emailSenderService" ref="smtpService"/>
     </bean>
 
     <bean id="microsoftExchangeNotificationSender" class="com.armedia.acm.services.notification.service.MicrosoftExchangeNotificationSender"
-          parent="baseNotificationSender">
+        parent="baseNotificationSender">
         <property name="emailSenderService" ref="outlookService"/>
     </bean>
 
@@ -200,4 +204,7 @@
         <property name="templatingEngine" ref="templatingEngine"/>
         <property name="notificationDao" ref="notificationDao"/>
     </bean>
+
+    <!-- Task Scheduler -->
+    <task:scheduler id="notificationTaskScheduler" pool-size="1"/>
 </beans>

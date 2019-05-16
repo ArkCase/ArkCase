@@ -33,4 +33,14 @@
         <property name="eventPublisher" ref="complaintEventPublisher"/>
     </bean>
 
+    <bean id="complaintBillingInvoiceEmailSenderAPIController"
+        class="com.armedia.acm.plugins.complaint.web.api.ComplaintBillingInvoiceEmailSenderAPIController">
+        <property name="complaintBillingInvoiceEmailSenderService" ref="billingInvoiceEmailSenderService"/>
+        <property name="getComplaintService" ref="getComplaintService"/>
+    </bean>
+
+    <bean id="findComplaintByNumberAPIController" class="com.armedia.acm.plugins.complaint.web.api.FindComplaintByNumberAPIController">
+        <property name="getComplaintByNumberService" ref="getComplaintByNumberService"/>
+        <property name="arkPermissionEvaluator" ref="arkPermissionEvaluator"/>
+    </bean>
 </beans>
