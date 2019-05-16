@@ -1,4 +1,4 @@
-package web.api;
+package com.armedia.acm.services.subscription.web.api;
 
 /*-
  * #%L
@@ -27,24 +27,16 @@ package web.api;
  * #L%
  */
 
-import static org.easymock.EasyMock.capture;
 import static org.easymock.EasyMock.expect;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
-import com.armedia.acm.pluginmanager.model.AcmPlugin;
-import com.armedia.acm.services.search.model.SolrCore;
-import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.subscription.model.AcmSubscription;
-import com.armedia.acm.services.subscription.model.SubscriptionConfig;
-import com.armedia.acm.services.subscription.service.SubscriptionEventPublisher;
 import com.armedia.acm.services.subscription.service.SubscriptionService;
-import com.armedia.acm.services.subscription.web.api.CreateSubscriptionAPIController;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import org.easymock.Capture;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
@@ -63,29 +55,26 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Created by marjan.stefanoski on 12.02.2015.
  */
+
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
         "classpath:/spring/spring-web-acm-web.xml",
         "classpath:/spring/spring-library-subscription-web-api-test.xml"
 })
-public class CreateSubscriptionAPIControllerTest extends EasyMockSupport
+public class GetUserSubscriptionAPIControllerTest extends EasyMockSupport
 {
-
     private MockMvc mockMvc;
     private Authentication mockAuthentication;
     private MockHttpSession mockHttpSession;
 
-    private CreateSubscriptionAPIController mockCreateSubscriptionAPIController;
+    private GetUserSubscriptionAPIController mockGetUserSubscriptionAPIController;
     private SubscriptionService mockSubscriptionService;
-    private SubscriptionEventPublisher mockSubscriptionEventPublisher;
-    private ExecuteSolrQuery mockExecuteSolrQuery;
-    private SubscriptionConfig subscriptionConfig;
 
     @Autowired
     private ExceptionHandlerExceptionResolver exceptionResolver;
@@ -93,54 +82,34 @@ public class CreateSubscriptionAPIControllerTest extends EasyMockSupport
     private Logger log = LoggerFactory.getLogger(getClass());
 
     @Before
-    public void setUp()
+    public void setUp() throws Exception
     {
-        mockCreateSubscriptionAPIController = new CreateSubscriptionAPIController();
 
         mockSubscriptionService = createMock(SubscriptionService.class);
-        mockSubscriptionEventPublisher = createMock(SubscriptionEventPublisher.class);
-        mockAuthentication = createMock(Authentication.class);
-        mockExecuteSolrQuery = createMock(ExecuteSolrQuery.class);
+        mockGetUserSubscriptionAPIController = new GetUserSubscriptionAPIController();
         mockHttpSession = new MockHttpSession();
-        subscriptionConfig = new SubscriptionConfig();
+        mockGetUserSubscriptionAPIController.setSubscriptionService(mockSubscriptionService);
 
-        mockCreateSubscriptionAPIController.setSubscriptionService(mockSubscriptionService);
-        mockCreateSubscriptionAPIController.setSubscriptionEventPublisher(mockSubscriptionEventPublisher);
-        mockCreateSubscriptionAPIController.setExecuteSolrQuery(mockExecuteSolrQuery);
-        mockCreateSubscriptionAPIController.setSubscriptionConfig(subscriptionConfig);
-
-        mockMvc = MockMvcBuilders.standaloneSetup(mockCreateSubscriptionAPIController).setHandlerExceptionResolvers(exceptionResolver)
+        mockMvc = MockMvcBuilders.standaloneSetup(mockGetUserSubscriptionAPIController).setHandlerExceptionResolvers(exceptionResolver)
                 .build();
+        mockAuthentication = createMock(Authentication.class);
     }
 
     @Test
-    public void createSubscription() throws Exception
+    public void getUserSubscription() throws Exception
     {
 
         String userId = "user-acm";
         Long objectId = 100L;
         String objectType = "NEW_OBJ_TYPE";
-        String ipAddress = "ipAddress";
-        String solrQuery = "q=id:100-NEW_OBJ_TYPE&fq=-status_s:COMPLETE&fq=-status_s:DELETE&fq=-status_s:CLOSED";
 
         AcmSubscription subscription = new AcmSubscription();
-        subscription.setSubscriptionId(500L);
         subscription.setSubscriptionObjectType(objectType);
         subscription.setUserId(userId);
         subscription.setObjectId(objectId);
 
-        subscriptionConfig.setGetObjectByIdQuery("q=id:?&fq=-status_s:COMPLETE&fq=-status_s:DELETE&fq=-status_s:CLOSED");
-        mockHttpSession.setAttribute("acm_ip_address", ipAddress);
-
-        String jsonString = "{response:{docs:[{name:a,title_parseable:aa},{name:d,title_parseable:bb}]}}";
-
-        Capture<AcmSubscription> subscriptionToSave = new Capture<>();
-
-        expect(mockExecuteSolrQuery.getResultsByPredefinedQuery(mockAuthentication, SolrCore.QUICK_SEARCH, solrQuery, 0, 1, ""))
-                .andReturn(jsonString).once();
-        expect(mockSubscriptionService.saveSubscription(capture(subscriptionToSave))).andReturn(subscription).anyTimes();
-
-        mockSubscriptionEventPublisher.publishSubscriptionCreatedEvent(subscription, mockAuthentication, true);
+        expect(mockSubscriptionService.getSubscriptionsByUserObjectIdAndType(userId, objectId, objectType))
+                .andReturn(Arrays.asList(subscription)).anyTimes();
 
         // MVC test classes must call getName() somehow
         expect(mockAuthentication.getName()).andReturn(userId).atLeastOnce();
@@ -148,7 +117,7 @@ public class CreateSubscriptionAPIControllerTest extends EasyMockSupport
         replayAll();
 
         MvcResult result = mockMvc.perform(
-                put("/api/latest/service/subscription/{userId}/{objType}/{objId}", userId, objectType, objectId)
+                get("/api/latest/service/subscription/{userId}/{objType}/{objId}", userId, objectType, objectId)
                         .accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
                         .session(mockHttpSession)
                         .principal(mockAuthentication))
@@ -164,13 +133,16 @@ public class CreateSubscriptionAPIControllerTest extends EasyMockSupport
         log.info("results: " + json);
 
         ObjectMapper objectMapper = new ObjectMapper();
-        AcmSubscription foundSubscription = objectMapper.readValue(json, AcmSubscription.class);
+        List<AcmSubscription> foundSubscription = objectMapper.readValue(json,
+                objectMapper.getTypeFactory().constructParametricType(List.class, AcmSubscription.class));
 
         assertNotNull(foundSubscription);
 
-        assertEquals(subscription.getObjectId(), foundSubscription.getObjectId());
-        assertEquals(subscription.getObjectType(), foundSubscription.getObjectType());
-        assertEquals(subscription.getUserId(), foundSubscription.getUserId());
+        assertEquals(1, foundSubscription.size());
+
+        assertEquals(subscription.getObjectId(), foundSubscription.get(0).getObjectId());
+        assertEquals(subscription.getObjectType(), foundSubscription.get(0).getObjectType());
+        assertEquals(subscription.getUserId(), foundSubscription.get(0).getUserId());
 
     }
 
@@ -203,4 +175,5 @@ public class CreateSubscriptionAPIControllerTest extends EasyMockSupport
     {
         this.exceptionResolver = exceptionResolver;
     }
+
 }

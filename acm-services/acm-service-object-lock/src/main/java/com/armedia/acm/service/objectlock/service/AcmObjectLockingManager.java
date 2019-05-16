@@ -29,7 +29,6 @@ package com.armedia.acm.service.objectlock.service;
 
 import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.core.exceptions.AcmObjectLockException;
-import com.armedia.acm.scheduler.AcmSchedulableBean;
 import com.armedia.acm.service.objectlock.model.AcmObjectLock;
 import com.armedia.acm.spring.SpringContextHolder;
 
@@ -47,11 +46,10 @@ import java.util.stream.Collectors;
  * 
  * Created by bojan.milenkoski on 03/05/20186.
  */
-public class AcmObjectLockingManager implements AcmSchedulableBean, InitializingBean
+public class AcmObjectLockingManager implements InitializingBean
 {
     private Map<String, ObjectLockingProvider> objectLockingProvidersMap;
     private ObjectLockingProvider defaultObjectLockingProvider;
-    private AcmObjectLockService acmObjectLockService;
     private SpringContextHolder springContextHolder;
 
     /**
@@ -163,17 +161,6 @@ public class AcmObjectLockingManager implements AcmSchedulableBean, Initializing
     public void setDefaultObjectLockingProvider(ObjectLockingProvider defaultObjectLockingProvider)
     {
         this.defaultObjectLockingProvider = defaultObjectLockingProvider;
-    }
-
-    public void setAcmObjectLockService(AcmObjectLockService acmObjectLockService)
-    {
-        this.acmObjectLockService = acmObjectLockService;
-    }
-
-    @Override
-    public void executeTask()
-    {
-        acmObjectLockService.removeExpiredLocks();
     }
 
     public SpringContextHolder getSpringContextHolder()

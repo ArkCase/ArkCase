@@ -41,8 +41,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.io.IOException;
-import java.util.HashMap;
+import java.util.Map;
 
 @Controller
 @RequestMapping({ "/api/v1/plugin/admin", "/api/latest/plugin/admin" })
@@ -56,7 +55,7 @@ public class LdapConfigurationCreateDirectory
             MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE
     })
     @ResponseBody
-    public String createDirectory(@RequestBody String resource) throws IOException, AcmLdapConfigurationException
+    public String createDirectory(@RequestBody String resource) throws AcmLdapConfigurationException
     {
         try
         {
@@ -69,7 +68,7 @@ public class LdapConfigurationCreateDirectory
                 throw new AcmLdapConfigurationException("ID is undefined");
             }
 
-            HashMap<String, Object> props = ldapConfigurationService.getProperties(newLdapObject);
+            Map<String, Object> props = ldapConfigurationService.getProperties(newLdapObject);
             ldapConfigurationService.createLdapDirectoryConfigurations(id, directoryType, props);
             return newLdapObject.toString();
         }
@@ -83,5 +82,10 @@ public class LdapConfigurationCreateDirectory
     public void setLdapConfigurationService(LdapConfigurationService ldapConfigurationService)
     {
         this.ldapConfigurationService = ldapConfigurationService;
+    }
+
+    public LdapConfigurationService getLdapConfigurationService()
+    {
+        return ldapConfigurationService;
     }
 }

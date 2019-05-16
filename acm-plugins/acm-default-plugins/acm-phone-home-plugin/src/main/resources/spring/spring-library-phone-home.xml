@@ -43,11 +43,8 @@
         <property name="stateOfArkcaseService" ref="acmStateOfArkcaseService"/>
     </bean>
 
-    <!-- Scheduler -->
-    <task:scheduled-tasks scheduler="phoneHomeStateOfArkcaseScheduler">
-        <!-- checks and removes expired url from database every day at 04:00 AM-->
-        <task:scheduled ref="phoneHomeService" method="generateAndUploadReportFile" cron="0 5 0 * * ?"/>
-    </task:scheduled-tasks>
+    <bean id="phoneHomeJobDescriptor" class="com.armedia.acm.plugins.phonehome.service.PhoneHomeJobDescriptor" parent="acmJobDescriptor">
+        <property name="phoneHomeService" ref="phoneHomeService"/>
+    </bean>
 
-    <task:scheduler id="phoneHomeStateOfArkcaseScheduler" pool-size="1"/>
 </beans>
