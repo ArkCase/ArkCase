@@ -71,11 +71,11 @@ public class MediaEngineActivitiService
         }
     }
 
-    public void auditMultiple(List<Long> ids, String action, String serviceName)
+    public void auditMultiple(List<Long> ids, String action, String serviceName, String message)
     {
         try
         {
-            getMediaEngineServiceFactory().getService(serviceName).auditMultiple(ids, action);
+            getMediaEngineServiceFactory().getService(serviceName).auditMultiple(ids, action, message);
         }
         catch (MediaEngineServiceNotFoundException e)
         {

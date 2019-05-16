@@ -148,6 +148,38 @@
                 "cancel": "Cancel"
             }
         },
+        "comp.billing": {
+            "title": "Billing",
+            "table.columns": {
+                "item": "Item #",
+                "description": "Description",
+                "amount": "Amount",
+                "total": "Total: ",
+                "buttons": {
+                    "listInvoices": "List Invoices",
+                    "emailInvoice": "Email Invoice",
+                    "generateInvoice": "Generate Invoice"
+                }
+            },
+            "modal": {
+                "title": "Add Billing Item",
+                "cancel.btn": "Cancel",
+                "save.btn": "Save",
+                "billingItems.title": "Billing items for"
+            },
+            "invoice": {
+                "title": "Invoices",
+                "table.columns": {
+                    "invoiceNumber": "Invoice Number",
+                    "status": "Status",
+                    "creator": "Creator",
+                    "created": "Created",
+                    "view": "View"
+                }
+            },
+            "amount.title": "Please enter billing amount",
+            "description.title": "Please enter billing description"
+        },
         "transcribe":{
             "email": {
                 "subject": "Transcription Status",

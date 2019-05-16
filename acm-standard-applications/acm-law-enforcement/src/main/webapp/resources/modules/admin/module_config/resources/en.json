@@ -65,6 +65,14 @@
             "cancel": "Cancel",
             "ok": "Save"
         },
+        "security.documentUploadPolicy": {
+            "title": "Document Upload Policy",
+            "table.title": "File Conversion to PDF Before Upload",
+            "convertHtml.checkbox": "Convert HTML to PDF",
+            "convertMsg.checkbox": "Convert MSG to PDF",
+            "convertEml.checkbox": "Convert EML to PDF",
+            "save.button": "Save"
+        },
         "menus": {
             "leftnav.item": "Admin"
         },

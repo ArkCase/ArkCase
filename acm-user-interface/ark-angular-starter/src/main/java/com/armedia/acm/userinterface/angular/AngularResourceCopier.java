@@ -152,12 +152,14 @@ public class AngularResourceCopier implements ServletContextAware
             // delete all files that exist in the tmp dir, but we didn't copy them there; such files must have been
             // removed from the project. Exceptions are files managed by yarn and grunt: lib folder, node_modules
             // folder, bower_components folder, yarn.lock
+            
             List<File> oldFilesInTmpFolder = tmpFilesFound.stream()
                     .filter(p -> !p.contains("node_modules"))
                     .filter(p -> !p.contains("bower_components"))
                     .filter(p -> !p.endsWith("yarn.lock"))
                     .filter(p -> !p.startsWith(libFolderPath))
                     .filter(p -> !copiedFiles.contains(p))
+                    .peek(p -> log.debug("File to be removed: {}", p))
                     .map(File::new)
                     .collect(Collectors.toList());
             log.debug("Found {} files to be removed from tmp folder", oldFilesInTmpFolder.size());
@@ -244,7 +246,8 @@ public class AngularResourceCopier implements ServletContextAware
 
         Files.copy(r.getInputStream(), target.toPath(), StandardCopyOption.REPLACE_EXISTING);
         target.setLastModified(r.lastModified());
-
+        log.debug("Copying file to: {}", target.toPath());
+        log.debug("Copying file to: {}", target.getCanonicalPath());
         return target.getCanonicalPath();
 
     }

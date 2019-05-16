@@ -206,7 +206,7 @@ public class MediaEngineEventPublisher implements ApplicationEventPublisherAware
     }
 
     public void publishMediaEngineFailedEvent(MediaEngine source, Authentication authentication, String ipAddress, boolean succeeded,
-            String service)
+            String service, String message)
     {
         String user = authentication != null && authentication.getName() != null ? authentication.getName()
                 : MediaEngineConstants.SYSTEM_USER;
@@ -229,6 +229,7 @@ public class MediaEngineEventPublisher implements ApplicationEventPublisherAware
         failedEventParentFile.setParentObjectType(source.getMediaEcmFileVersion().getFile().getObjectType());
         failedEventParentFile.setParentObjectName(source.getMediaEcmFileVersion().getFile().getFileName());
         failedEventParentFile.setSucceeded(succeeded);
+        failedEventParentFile.setEventDescription(message);
 
         getApplicationEventPublisher().publishEvent(failedEventParentRoot);
         getApplicationEventPublisher().publishEvent(failedEventParentFile);
@@ -293,8 +294,7 @@ public class MediaEngineEventPublisher implements ApplicationEventPublisherAware
     }
 
     public void publishMediaEngineProviderFailedEvent(MediaEngine source, Authentication authentication, String ipAddress,
-            boolean succeeded,
-            String service)
+            boolean succeeded, String service, String message)
     {
         String user = authentication != null && authentication.getName() != null ? authentication.getName()
                 : MediaEngineConstants.SYSTEM_USER;
@@ -309,6 +309,7 @@ public class MediaEngineEventPublisher implements ApplicationEventPublisherAware
         providerFailedEvent.setParentObjectType(source.getMediaEcmFileVersion().getObjectType());
         providerFailedEvent.setParentObjectName(source.getMediaEcmFileVersion().getId().toString());
         providerFailedEvent.setSucceeded(succeeded);
+        providerFailedEvent.setEventDescription(message);
 
         getApplicationEventPublisher().publishEvent(providerFailedEvent);
     }
@@ -342,7 +343,7 @@ public class MediaEngineEventPublisher implements ApplicationEventPublisherAware
         getApplicationEventPublisher().publishEvent(rollbackEventParentFile);
     }
 
-    public void publish(MediaEngine mediaEngine, String action, String service)
+    public void publish(MediaEngine mediaEngine, String action, String service, String message)
     {
         MediaEngineActionType mediaEngineActionType = null;
         try
@@ -383,7 +384,7 @@ public class MediaEngineEventPublisher implements ApplicationEventPublisherAware
             break;
 
         case FAILED:
-            publishMediaEngineFailedEvent(mediaEngine, authentication, MediaEngineConstants.SYSTEM_IP_ADDRESS, true, service);
+            publishMediaEngineFailedEvent(mediaEngine, authentication, MediaEngineConstants.SYSTEM_IP_ADDRESS, true, service, message);
             break;
 
         case CANCELLED:
@@ -399,7 +400,8 @@ public class MediaEngineEventPublisher implements ApplicationEventPublisherAware
             break;
 
         case PROVIDER_FAILED:
-            publishMediaEngineProviderFailedEvent(mediaEngine, authentication, MediaEngineConstants.SYSTEM_IP_ADDRESS, true, service);
+            publishMediaEngineProviderFailedEvent(mediaEngine, authentication, MediaEngineConstants.SYSTEM_IP_ADDRESS, true, service,
+                    message);
             break;
         }
     }

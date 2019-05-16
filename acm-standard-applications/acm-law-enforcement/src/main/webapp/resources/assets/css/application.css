@@ -1849,3 +1849,8 @@ a.primary {
 	margin-top: 35px;
 	z-index: 1001;
 }
+
+.loadingSpinner {
+    font-size: 36px;
+    margin-left: 277px;
+}

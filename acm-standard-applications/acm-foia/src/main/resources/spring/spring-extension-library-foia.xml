@@ -30,6 +30,7 @@
 
         <beans:bean id="portalRequestService" class="gov.foia.service.PortalRequestService">
             <beans:property name="requestDao" ref="foiaRequestDao"/>
+            <beans:property name="caseFileDao" ref="caseFileDao"/>
             <beans:property name="executeSolrQuery" ref="executeSolrQuery"/>
             <beans:property name="getCaseByNumberService" ref="getCaseByNumberService"/>
             <beans:property name="userDao" ref="userJpaDao"/>
@@ -130,17 +131,6 @@
             <beans:property name="requestDao" ref="foiaRequestDao"/>
         </beans:bean>
 
-        <beans:bean id="foiaCostsheetBillingListener" class="gov.foia.listener.FOIACostsheetBillingListener">
-            <beans:property name="acmCostsheetDao" ref="acmCostsheetDao"/>
-            <beans:property name="billingService" ref="billingService"/>
-        </beans:bean>
-
-        <beans:bean id="foiaTimesheetBillingListener" class="gov.foia.listener.FOIATimesheetBillingListener">
-            <beans:property name="acmTimesheetDao" ref="acmTimesheetDao"/>
-            <beans:property name="billingService" ref="billingService"/>
-            <beans:property name="timesheetService" ref="timesheetService"/>
-        </beans:bean>
-
         <beans:bean id="dueDateReminderSentListener" class="gov.foia.listener.DueDateReminderSentListener">
             <beans:property name="foiaRequestDao" ref="foiaRequestDao"/>
         </beans:bean>
@@ -225,27 +215,6 @@
             <beans:property name="filenameFormat" value="ExtensionLetter-%s.docx"/>
             <beans:property name="targetFileExtension" value="docx"/>
             <beans:property name="template" value="Request Extension Letter"/>
-        </beans:bean>
-
-        <beans:bean id="billingInvoiceCreatedHandler" class="gov.foia.listener.BillingInvoiceCreatedHandler">
-            <beans:property name="billingInvoiceDocumentGenerator" ref="billingInvoiceDocumentGenerator"/>
-        </beans:bean>
-
-        <beans:bean id="billingInvoiceDocumentGenerator" class="gov.foia.service.BillingInvoiceDocumentGenerator">
-            <beans:property name="caseFileDao" ref="caseFileDao"/>
-            <beans:property name="billingService" ref="billingService"/>
-            <beans:property name="ecmFileService" ref="ecmFileService"/>
-            <beans:property name="ecmFileDao" ref="ecmFileDao"/>
-            <beans:property name="billingInvoiceDao" ref="billingInvoiceDao"/>
-            <beans:property name="pdfService" ref="pdfService"/>
-        </beans:bean>
-
-        <beans:bean id="billingInvoiceEmailSenderService" class="gov.foia.service.BillingInvoiceEmailSenderService">
-            <beans:property name="caseFileDao" ref="caseFileDao"/>
-            <beans:property name="billingService" ref="billingService"/>
-            <beans:property name="notificationSender" ref="notificationSender"/>
-            <beans:property name="notificationDao" ref="notificationDao"/>
-            <beans:property name="fileService" ref="ecmFileService"/>
         </beans:bean>
 
         <beans:bean id="publicFlagService" class="gov.foia.service.PublicFlagService">

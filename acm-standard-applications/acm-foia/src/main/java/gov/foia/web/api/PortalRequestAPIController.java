@@ -33,7 +33,9 @@ import org.json.JSONException;
 import org.mule.api.MuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -86,9 +88,18 @@ public class PortalRequestAPIController
     }
 
     @RequestMapping(value = "/external/requestDownloadTriggered/{requestId}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public void requestDownloadTriggered(@PathVariable("requestId") Long requestId)
+    @ResponseBody
+    public ResponseEntity<Boolean> requestDownloadTriggered(@PathVariable("requestId") String requestNumber)
     {
-        getPortalRequestService().sendRequestDownloadedEmailToOfficersGroup(requestId);
+        try
+        {
+            getPortalRequestService().sendRequestDownloadedEmailToOfficersGroup(requestNumber);
+            return new ResponseEntity<>(true, HttpStatus.OK);
+        }
+        catch (Exception e)
+        {
+            return new ResponseEntity<>(false, HttpStatus.BAD_REQUEST);
+        }
     }
 
     /**

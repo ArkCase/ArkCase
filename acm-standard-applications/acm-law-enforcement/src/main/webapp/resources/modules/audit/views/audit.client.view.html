@@ -37,7 +37,8 @@
                         </div>
 
                         <div>
-                            <button class="btn btn-sm btn-primary" type="button" ng-disabled="auditForm.$invalid" ng-click="showIframe()">
+                            <button class="btn btn-sm btn-primary" id="generateReportButton" type="button" ng-disabled="auditForm.$invalid"
+                                    ng-click="showIframe()">
                                 <span translate>audit.navigation.button.generateAuditReport.btn</span>
                             </button>
                         </div>
@@ -48,7 +49,8 @@
         <div class="content-body">
             <div ng-switch on="showXmlReport">
                 <div ng-switch-when="false">
-                    <iframe name="audit-iframe" class="audit-iframe" iframeborder="0" ng-src="{{auditReportUrl}}"></iframe>
+                    <iframe name="audit-iframe" iframe-onload="iframeLoadedCallBack()" class="audit-iframe" iframeborder="0"
+                            ng-src="{{auditReportUrl}}"></iframe>
                 </div>
             </div>
         </div>

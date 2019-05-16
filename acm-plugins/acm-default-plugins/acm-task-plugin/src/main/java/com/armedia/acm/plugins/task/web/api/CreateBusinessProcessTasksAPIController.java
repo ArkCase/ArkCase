@@ -74,7 +74,16 @@ public class CreateBusinessProcessTasksAPIController
     {
         try
         {
-            List<AcmTask> acmTasks = getTaskService().startReviewDocumentsWorkflow(in, businessProcessName, authentication);
+            List<AcmTask> acmTasks = null;
+            if(businessProcessName.equals("arrestWarrant"))
+            {
+                getTaskService().startArrestWarrantWorkflow(in);
+            }
+            else
+            {
+                acmTasks = getTaskService().startReviewDocumentsWorkflow(in, businessProcessName, authentication);   
+            }
+             
             return acmTasks;
         }
         catch (AcmTaskException e)

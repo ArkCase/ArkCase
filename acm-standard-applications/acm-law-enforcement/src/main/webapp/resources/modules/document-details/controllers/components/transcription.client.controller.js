@@ -35,9 +35,19 @@ angular.module('document-details').controller('Document.TranscriptionController'
                                     return;
                                 }
 
-                                $scope.transcribeConfidence = configResult.data['transcribe.confidence'];
+                                if(transcribeResult.status == 'FAILED')
+                                {
+                                    TranscriptionManagementService.getTranscriptionFailureReason(transcribeResult.id)
+                                        .then(function(response) {
+                                            transcribeResult.failureReason = response.data.failureReason;
+                                            $scope.$emit('transcribe-data-model', transcribeResult);
+                                        });
+                                }
+                                else {
+                                        $scope.transcribeConfidence = configResult.data['transcribe.confidence'];
+                                        $scope.$emit('transcribe-data-model', transcribeResult);
+                                }
 
-                                $scope.$emit('transcribe-data-model', transcribeResult);
                                 $scope.transcribeDataModel = transcribeResult;
                                 //disable editing on time inputs
                                 if ($scope.transcribeDataModel.type === 'AUTOMATIC') {
