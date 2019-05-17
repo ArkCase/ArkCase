@@ -32,12 +32,13 @@ import com.armedia.acm.services.holiday.service.HolidayConfigurationService;
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.model.NotificationConstants;
 import com.armedia.acm.services.users.dao.UserDao;
+import org.joda.time.Days;
+import org.joda.time.LocalDate;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 public class AssigneeDueDateNotifier implements UsersNotified
 {
@@ -49,15 +50,15 @@ public class AssigneeDueDateNotifier implements UsersNotified
     {
         if ("CASE_FILE".equals(notification[4]))
         {
-            Date caseDueDate = (Date) notification[12];
             String dueDateReminderDays = (String) notification[1];
             Boolean dueDateReminderSent = (Boolean) notification[13];
 
-            Long dateDiff = TimeUnit.DAYS.convert(caseDueDate.getTime() - getHolidayConfigurationService()
-                    .addWorkingDaysToDate(new Date(), Integer.valueOf(dueDateReminderDays)).getTime(),
-                    TimeUnit.MILLISECONDS);
+            Date caseDueDate = (Date) notification[12];
+            Date targetDate = getHolidayConfigurationService().addWorkingDaysToDate(new Date(), Integer.valueOf(dueDateReminderDays));
 
-            if (dateDiff.equals(0L) && dueDateReminderSent != true)
+            int daysDiff = Days.daysBetween(new LocalDate(targetDate), new LocalDate(caseDueDate)).getDays();
+
+            if (daysDiff == 0 && dueDateReminderSent != true)
             {
                 Notification customNotification = new Notification();
 
