@@ -27,6 +27,7 @@ package com.armedia.acm.pentaho.config;
  * #L%
  */
 
+import com.armedia.acm.objectonverter.json.JSONMarshaller;
 import com.armedia.acm.objectonverter.json.JSONUnmarshaller;
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -143,6 +144,8 @@ public class PentahoReportsConfig implements InitializingBean
     private Map<String, String> reportToUrlMap = new HashMap<>();
 
     private JSONUnmarshaller jsonUnmarshaller;
+
+    private JSONMarshaller jsonMarshaller;
 
     @JsonIgnore
     public Map<String, String> getReportToUrlMap()
@@ -392,7 +395,7 @@ public class PentahoReportsConfig implements InitializingBean
 
     public String getReports()
     {
-        return reports;
+        return jsonMarshaller.marshal(getReportToUrlMap());
     }
 
     public void setReports(String reports)
@@ -409,6 +412,15 @@ public class PentahoReportsConfig implements InitializingBean
     public void setJsonUnmarshaller(JSONUnmarshaller jsonUnmarshaller)
     {
         this.jsonUnmarshaller = jsonUnmarshaller;
+    }
+
+    @JsonIgnore
+    public JSONMarshaller getJsonMarshaller() {
+        return jsonMarshaller;
+    }
+
+    public void setJsonMarshaller(JSONMarshaller jsonMarshaller) {
+        this.jsonMarshaller = jsonMarshaller;
     }
 
     @Override
