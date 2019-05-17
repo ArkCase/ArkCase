@@ -56,9 +56,13 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -67,6 +71,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.stream.Collectors;
 
 public class ReportServiceImpl implements ReportService
@@ -165,6 +172,23 @@ public class ReportServiceImpl implements ReportService
         return retval;
     }
 
+    private String createReportKeyFromTitle(String title) throws RuntimeException
+    {
+        String reportKey = "";
+
+        if(title != null && !title.isEmpty())
+        {
+            String[] titleArray =  title.replaceAll("\\s","").split("(?=[A-Z])");
+            List<String> titleList = Arrays.asList(titleArray);
+            reportKey = titleList.stream().map(element -> StringUtils.capitalize(element.toUpperCase())).collect(Collectors.joining("_"));
+        }
+        else
+        {
+            throw new RuntimeException("Report title must not be empty");
+        }
+        return reportKey;
+    }
+
     @Override
     public List<Report> getAcmReports(String userId)
     {
@@ -236,6 +260,13 @@ public class ReportServiceImpl implements ReportService
         {
             List<String> propertiesToDelete = new ArrayList<>();
             Map<String, String> reportToUrlMapping = reportsConfig.getReportToUrlMap();
+            List<Report> missgingReports = reports.stream()
+                    .filter(item ->!reportToUrlMapping.containsKey(item.getPropertyName()))
+                    .collect(Collectors.toList());
+            for (Report report : missgingReports)
+            {
+                updateReportsConfig(report, report.getTitle());
+            }
             for (Entry<String, String> entry : reportToUrlMapping.entrySet())
             {
                 Report found = reports.stream()
@@ -249,6 +280,7 @@ public class ReportServiceImpl implements ReportService
             }
 
             Map<String, String> reportsToRolesMapping = reportsToRolesConfig.getReportsToRolesMap();
+
             propertiesToDelete.forEach(item -> {
                 reportToUrlMapping.remove(item);
                 reportsToRolesMapping.remove(item);
@@ -359,6 +391,13 @@ public class ReportServiceImpl implements ReportService
                         entry -> Arrays.stream(entry.getValue().split(","))
                                 .collect(Collectors.toList())));
     }
+
+    private void updateReportsConfig(Report report, String title)
+    {
+        reportsConfig.getReportToUrlMap().put(createReportKeyFromTitle(title), createPentahoReportUri(report));
+        reportsToRolesConfig.getReportsToRolesMap().put(createReportKeyFromTitle(title), "");
+    }
+
 
     @Override
     public Map<String, List<String>> getReportToRolesMap()
@@ -556,4 +595,5 @@ public class ReportServiceImpl implements ReportService
     {
         this.rolesConfig = rolesConfig;
     }
+
 }
