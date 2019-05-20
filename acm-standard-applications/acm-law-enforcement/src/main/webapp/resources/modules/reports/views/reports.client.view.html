@@ -10,10 +10,10 @@
                 <div class="panel-body">
 
                     <div ng-include="'modules/reports/views/components/reports-selection.client.view.html'"></div>
-                    <div ng-include="'modules/reports/views/components/reports-state.client.view.html'"></div>
-                    <div ng-include="'modules/reports/views/components/reports-datepickers.client.view.html'"></div>
+                    <div ng-show="showReportParameters" ng-include="'modules/reports/views/components/reports-state.client.view.html'"></div>
+                    <div ng-show="showReportParameters" ng-include="'modules/reports/views/components/reports-datepickers.client.view.html'"></div>
 
-                    <div class="checkbox">
+                    <div class="checkbox" ng-show="showReportParameters">
                         <label>
                             <input type="checkbox" ng-model="showXmlReport">
                             <span translate>
