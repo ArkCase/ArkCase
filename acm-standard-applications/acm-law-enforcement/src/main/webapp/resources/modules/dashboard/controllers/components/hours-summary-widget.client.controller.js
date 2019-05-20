@@ -48,7 +48,7 @@ angular.module('dashboard.hoursSummary', [ 'adf.provider' ]).config(function(das
                         return objectInfo;
                     };
                     var onObjectInfoRetrieved = function(objectInfo) {
-                        $scope.data = objectInfo.times;
+                        $scope.data = angular.copy(objectInfo.times);
 
                         _.forEach($scope.data, function(object) {
                             var getAdditionalDataInfo = _.find(modules, function(module) {
