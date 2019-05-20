@@ -100,6 +100,7 @@ public class FOIAExtensionEmailHandler implements PipelineHandler<FOIARequest, C
             log.debug("Emailing extension document");
 
             AcmUser user = userDao.findByUserId(entity.getAssigneeLdapId());
+            String emailAddress = extractRequestorEmailAddress(entity.getOriginator().getPerson());
 
             Notification notification = new Notification();
             notification.setTemplateModelName("requestExtension");
@@ -107,7 +108,7 @@ public class FOIAExtensionEmailHandler implements PipelineHandler<FOIARequest, C
             notification.setParentId(entity.getId());
             notification.setTitle(String.format("FOIA Extension Notification %s", entity.getCaseNumber()));
             notification.setAttachFiles(true);
-            notification.setEmailAddresses(user.getMail());
+            notification.setEmailAddresses(emailAddress);
             notification.setFiles(Arrays.asList(ecmFileVersion));
             notification.setUser(user.getUserId());
             notificationDao.save(notification);
