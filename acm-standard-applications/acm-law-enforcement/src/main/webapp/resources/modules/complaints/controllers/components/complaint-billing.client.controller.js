@@ -100,7 +100,7 @@ angular.module('complaints').controller('Complaints.BillingController', ['$scope
         };
         
         $scope.generateInvoice = function() {
-            ComplaintBillingService.createBillingInvoiceForComplaint(invoiceData).then(function() {
+            ComplaintBillingService.createBillingInvoice(invoiceData).then(function() {
                 MessageService.succsessAction();    
             }, function() {
                 MessageService.errorAction();
