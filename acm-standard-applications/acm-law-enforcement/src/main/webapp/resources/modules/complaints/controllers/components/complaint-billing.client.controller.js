@@ -133,7 +133,7 @@ angular.module('complaints').controller('Complaints.BillingController', ['$scope
             var itemData = $scope.entry;
             itemData.parentObjectId = $stateParams.id;
             itemData.parentObjectType = 'COMPLAINT';
-            ComplaintBillingService.addBillingItemForComplaint(itemData);
+            ComplaintBillingService.addBillingItem(itemData);
         }
 
     }]);
