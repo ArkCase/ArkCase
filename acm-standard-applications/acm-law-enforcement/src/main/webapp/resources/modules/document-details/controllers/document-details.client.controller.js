@@ -141,6 +141,12 @@ angular.module('document-details').controller(
                         if (videoElement) {
                             track = videoElement.addTextTrack("subtitles", "Transcription", $scope.transcribeObjectModel.language);
                             videoElement.addEventListener("play", function() {
+                                var numberOfTracks = videoElement.textTracks.length;
+                                for (var i = 0; i < numberOfTracks; i++)
+                                {
+                                    var currentTrack = videoElement.textTracks[i];
+                                    currentTrack.mode = "hidden";
+                                }
                                 track.mode = "showing";
                             });
                         }
