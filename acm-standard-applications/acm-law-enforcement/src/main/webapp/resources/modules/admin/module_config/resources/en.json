@@ -870,6 +870,14 @@
                     "cancel": "Cancel"
                 }
 
+            },
+            "scheduled.jobs": {
+                "title": "Scheduled Jobs",
+                "column": {
+                    "jobName.title": "Job Name",
+                    "trigger.title": "Trigger interval(seconds) / cron",
+                    "lastRun.title": "Last Run"
+                }
             }
         },
         "branding.title": "Branding",

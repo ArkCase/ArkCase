@@ -27,12 +27,14 @@ package com.armedia.acm.quartz.scheduler;
  * #L%
  */
 
+import org.quartz.CronTrigger;
 import org.quartz.JobDataMap;
 import org.quartz.JobDetail;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobKey;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
+import org.quartz.SimpleTrigger;
 import org.quartz.Trigger;
 import org.quartz.TriggerKey;
 import org.quartz.impl.matchers.GroupMatcher;
@@ -45,6 +47,8 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -70,13 +74,49 @@ public class AcmSchedulerService
         }
     }
 
-    public List<JobDetail> getAllCurrentlyExecutingJobs()
+    public List<AcmJobDTO> getAllScheduledJobDetails()
+    {
+        try
+        {
+            Set<AcmJobDTO> currentlyExecutingJobs = new HashSet<>(getAllCurrentlyExecutingJobs());
+
+            return scheduler.getJobKeys(GroupMatcher.anyJobGroup())
+                    .stream()
+                    .flatMap(it -> {
+                        try
+                        {
+                            return scheduler.getTriggersOfJob(it).stream();
+                        }
+                        catch (SchedulerException e)
+                        {
+                            return Stream.empty();
+                        }
+                    })
+                    .map(triggerToAcmJobDTO)
+                    .map(it -> {
+                        if (currentlyExecutingJobs.contains(it))
+                        {
+                            it.setRunning(true);
+                        }
+                        return it;
+                    })
+                    .sorted((o1, o2) -> String.CASE_INSENSITIVE_ORDER.compare(o1.getJobName(), o2.getJobName()))
+                    .collect(Collectors.toList());
+        }
+        catch (SchedulerException e)
+        {
+            return new ArrayList<>();
+        }
+    }
+
+    public List<AcmJobDTO> getAllCurrentlyExecutingJobs()
     {
         try
         {
             return scheduler.getCurrentlyExecutingJobs()
                     .stream()
-                    .map(JobExecutionContext::getJobDetail)
+                    .map(JobExecutionContext::getTrigger)
+                    .map(triggerToAcmJobDTO)
                     .collect(Collectors.toList());
         }
         catch (SchedulerException e)
@@ -84,6 +124,36 @@ public class AcmSchedulerService
             logger.warn("Failed to list all currently executing jobs. [{}]", e.getMessage());
             return new ArrayList<>();
         }
+    }
+
+    private Function<Trigger, AcmJobDTO> triggerToAcmJobDTO = it -> {
+        AcmJobDTO job = new AcmJobDTO();
+        String jobName = it.getJobKey().getName();
+        job.setJobName(jobName);
+        if (it instanceof CronTrigger)
+        {
+            job.setCronExpression(((CronTrigger) it).getCronExpression());
+        }
+        else
+        {
+            job.setRepeatIntervalInSeconds(((SimpleTrigger) it).getRepeatInterval());
+        }
+        job.setLastRun(it.getPreviousFireTime());
+        job.setPaused(getTriggerState(it.getKey().getName()) == Trigger.TriggerState.PAUSED);
+        return job;
+    };
+
+    public Trigger.TriggerState getTriggerState(String triggerName)
+    {
+        try
+        {
+            return scheduler.getTriggerState(TriggerKey.triggerKey(triggerName));
+        }
+        catch (SchedulerException e)
+        {
+            logger.warn("Could not read trigger [{}] state. Cause: [{}]", triggerName, e.getMessage());
+        }
+        return Trigger.TriggerState.NONE;
     }
 
     public boolean isJobScheduled(String triggerName)
@@ -103,8 +173,8 @@ public class AcmSchedulerService
     {
         try
         {
+            logger.debug("Delete [{}] job from scheduler.", name);
             scheduler.deleteJob(JobKey.jobKey(name));
-            logger.debug("Deleted [{}] job from scheduler.", name);
             publishSchedulerActionEvent(String.format("Job %s is deleted from the scheduler.", name),
                     AcmJobEventPublisher.JOB_DELETED, name);
         }
@@ -119,8 +189,8 @@ public class AcmSchedulerService
         String jobName = jobDetail.getKey().getName();
         try
         {
+            logger.debug("Schedule [{}] with trigger [{}].", jobName, trigger.getKey().getName());
             scheduler.scheduleJob(jobDetail, trigger);
-            logger.debug("Scheduled [{}] with trigger [{}].", jobName, trigger.getKey().getName());
             publishSchedulerActionEvent(String.format("Job %s is scheduled.", jobDetail.getKey().getName()),
                     AcmJobEventPublisher.JOB_SCHEDULED, jobName);
         }
@@ -134,9 +204,9 @@ public class AcmSchedulerService
     {
         try
         {
-            scheduler.rescheduleJob(TriggerKey.triggerKey(oldTriggerName), newTrigger);
-            logger.debug("Rescheduled job with old trigger [{}] with trigger [{}].",
+            logger.debug("Reschedule job with old trigger [{}] with trigger [{}].",
                     oldTriggerName, newTrigger.getKey().getName());
+            scheduler.rescheduleJob(TriggerKey.triggerKey(oldTriggerName), newTrigger);
             publishSchedulerActionEvent(String.format("Rescheduled job with old trigger %s with trigger %s", oldTriggerName,
                     newTrigger.getKey().getName()), AcmJobEventPublisher.JOB_RESCHEDULED, oldTriggerName);
         }
@@ -169,8 +239,8 @@ public class AcmSchedulerService
     {
         try
         {
+            logger.debug("Pause job [{}].", name);
             scheduler.pauseJob(JobKey.jobKey(name));
-            logger.debug("Paused job [{}].", name);
             publishSchedulerActionEvent(String.format("Job %s is paused.", name), AcmJobEventPublisher.JOB_PAUSED, name);
         }
         catch (SchedulerException e)
@@ -183,10 +253,10 @@ public class AcmSchedulerService
     {
         try
         {
+            logger.debug("Resume job [{}] with execution.", name);
+            scheduler.resumeJob(JobKey.jobKey(name));
             publishSchedulerActionEvent(String.format("Job %s is resumed with execution.", name),
                     AcmJobEventPublisher.JOB_RESUMED, name);
-            scheduler.resumeJob(JobKey.jobKey(name));
-            logger.debug("Resumed job [{}] with execution.", name);
         }
         catch (SchedulerException e)
         {
@@ -224,6 +294,7 @@ public class AcmSchedulerService
     {
         try
         {
+            logger.debug("Trigger job [{}].", jobName);
             scheduler.triggerJob(JobKey.jobKey(jobName));
         }
         catch (SchedulerException e)
@@ -236,6 +307,7 @@ public class AcmSchedulerService
     {
         try
         {
+            logger.debug("Trigger job [{}].", jobName);
             scheduler.triggerJob(JobKey.jobKey(jobName), jobDataMap);
         }
         catch (SchedulerException e)

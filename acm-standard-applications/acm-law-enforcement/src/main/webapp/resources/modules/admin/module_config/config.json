@@ -1263,6 +1263,52 @@
                 "CASE_FILE": "admin.application.objectTitleConfiguration.caseFile",
                 "COMPLAINT": "admin.application.objectTitleConfiguration.complaint"
             }
+        },
+        {
+            "id": "scheduledJobs",
+            "title": "admin.application.scheduled.jobs.title",
+            "enabled": true,
+            "type": "grid",
+            "enableFiltering": false,
+            "configurable": true,
+            "columnDefs": [
+              {
+                  "name": "jobName",
+                  "displayName": "admin.application.scheduled.jobs.column.jobName.title",
+                  "visible": true,
+                  "headerCellFilter": "translate",
+                  "width": "25%"
+              },
+              {
+                  "name": "trigger",
+                  "displayName": "admin.application.scheduled.jobs.column.trigger.title",
+                  "visible": true,
+                  "headerCellFilter": "translate",
+                  "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.cronExpression != null ? row.entity.cronExpression : row.entity.repeatIntervalInSeconds}}</div>",
+                  "width": "25%"
+              },
+              {
+                  "name": "lastRun",
+                  "displayName": "admin.application.scheduled.jobs.column.lastRun.title",
+                  "headerCellFilter": "translate",
+                  "visible": true,
+                  "width": "25%"
+              },
+              {
+                  "name": "act",
+                  "cellEditableCondition": false,
+                  "width": "25%",
+                  "headerCellTemplate": "<span></span>",
+                  "cellTemplate": ""
+              }
+            ],
+            "paginationPageSizes": [
+                5,
+                10,
+                20,
+                50
+            ],
+            "paginationPageSize": 20
         }
     ],
     "tree": {
