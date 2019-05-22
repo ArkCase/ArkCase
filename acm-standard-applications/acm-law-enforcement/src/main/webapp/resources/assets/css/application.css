@@ -387,6 +387,7 @@ span.fancytree-title {
 
 .docTreeMenu ul {
     width: 240px;
+    top: 0 !important;
 }
 
 .docTreeMenu ul li {
