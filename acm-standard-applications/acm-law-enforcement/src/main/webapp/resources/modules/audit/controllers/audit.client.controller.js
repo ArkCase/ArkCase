@@ -84,7 +84,7 @@ angular.module('audit').controller(
                         var modalInstance = $modal.open({
                             animation: true,
                             templateUrl: 'modules/common/views/object.modal.loading-spinner.html',
-                            size: 'md',
+                            size: 'sm',
                             backdrop: 'static'
                         });
                         $scope.modalInstance = modalInstance;
