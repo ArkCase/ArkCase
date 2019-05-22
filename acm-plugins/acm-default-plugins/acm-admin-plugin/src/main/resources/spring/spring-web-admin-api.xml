@@ -283,7 +283,8 @@
         <property name="pdfConversionConfigurationService" ref="pdfConversionConfigurationService"/>
     </bean>
 
-    <bean id="documentUploadPolicyConfigurationAPIController" class="com.armedia.acm.plugins.admin.web.api.DocumentUploadPolicyConfigurationAPIController">
+    <bean id="documentUploadPolicyConfigurationAPIController"
+          class="com.armedia.acm.plugins.admin.web.api.DocumentUploadPolicyConfigurationAPIController">
         <property name="documentUploadPolicyConfigurationService" ref="documentUploadPolicyConfigurationService"/>
     </bean>
 
@@ -292,7 +293,7 @@
     </bean>
 
     <bean id="dataAccessControlAPIController"
-        class="com.armedia.acm.plugins.admin.web.api.DataAccessControlAPIController">
+          class="com.armedia.acm.plugins.admin.web.api.DataAccessControlAPIController">
         <property name="dataAccessControlService" ref="dataAccessControlService"/>
     </bean>
 
@@ -305,7 +306,11 @@
     </bean>
 
     <bean id="getApplicationVersionAPIController"
-        class="com.armedia.acm.plugins.admin.web.api.GetApplicationVersionAPIController">
+          class="com.armedia.acm.plugins.admin.web.api.GetApplicationVersionAPIController">
         <property name="applicationMetaInfoService" ref="applicationMetaInfoService"/>
+    </bean>
+
+    <bean id="acmSchedulerAPIController" class="com.armedia.acm.plugins.admin.web.api.AcmSchedulerAPIController">
+        <property name="schedulerService" ref="acmSchedulerService"/>
     </bean>
 </beans>
