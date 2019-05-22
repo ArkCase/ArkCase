@@ -119,7 +119,7 @@ angular.module('admin').controller('Admin.ObjectTitleConfigurationController', [
                 }
 
                 if (itemExist == false) {
-                    $scope.objectTitleConfiguration.objectTitleTypes.push(data.objectTitleElement);
+                    $scope.objectTitleConfiguration.objectTitleTypes.push(data.objectTitleTypes);
                     reloadGrid();
                     saveConfig();
                 } else {
