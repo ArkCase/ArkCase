@@ -24,7 +24,7 @@ angular.module('services').service('DueDate.Service', [ '$translate', function($
     });
 
     function dueDateWorkingDays(startDate, days, holidays) {
-        var momentObject = moment(startDate);
+        var momentObject = moment(startDate.replace(/(\d{4})\-(\d{2})\-(\d{2}).*/, '$1/$2/$3'));
         var count = 0;
         while (count < days) {
             momentObject.add(1, 'days');
@@ -38,7 +38,7 @@ angular.module('services').service('DueDate.Service', [ '$translate', function($
     }
 
     function dueDateWithWeekends(startDate, days, holidays) {
-        var momentObject = moment(startDate);
+        var momentObject = moment(startDate.replace(/(\d{4})\-(\d{2})\-(\d{2}).*/, '$1/$2/$3'));
         var count = 0;
         while (count < days) {
             momentObject.add(1, 'days');
@@ -52,7 +52,7 @@ angular.module('services').service('DueDate.Service', [ '$translate', function($
     }
 
     function workingDays(startDate, holidays) {
-        var momentObject = moment(startDate);
+        var momentObject = moment(startDate.replace(/(\d{4})\-(\d{2})\-(\d{2}).*/, '$1/$2/$3'));
         var today = moment();
         var days = -1;
         while (momentObject < today) {
@@ -66,7 +66,7 @@ angular.module('services').service('DueDate.Service', [ '$translate', function($
     }
 
     function workingDaysWithWeekends(startDate, holidays) {
-        var momentObject = moment(startDate);
+        var momentObject = moment(startDate.replace(/(\d{4})\-(\d{2})\-(\d{2}).*/, '$1/$2/$3'));
         var today = moment();
         var days = -1;
         while (momentObject < today) {
@@ -80,7 +80,7 @@ angular.module('services').service('DueDate.Service', [ '$translate', function($
     }
 
     function daysLeft(holidays, dueDate) {
-        var dueDate = moment(dueDate);
+        var dueDate = moment(dueDate.replace(/(\d{4})\-(\d{2})\-(\d{2}).*/, '$1/$2/$3'));
         var momentDate = moment();
         var days = 0;
         if (dueDate > momentDate) { //calculate days remaining
@@ -110,7 +110,7 @@ angular.module('services').service('DueDate.Service', [ '$translate', function($
 
 
     function daysLeftWithWeekends(holidays, dueDate) {
-        var dueDate = moment(dueDate);
+        var dueDate = moment(dueDate.replace(/(\d{4})\-(\d{2})\-(\d{2}).*/, '$1/$2/$3'));
         var momentDate = moment();
         var days = 0;
         if(dueDate > momentDate) { //calculate days remaining
@@ -151,7 +151,7 @@ angular.module('services').service('DueDate.Service', [ '$translate', function($
 
     function calculateOverdueDays(dueDate, remainingDays, holidays){
         var today = moment(new Date());
-        var momentDueDate = moment(dueDate);
+        var momentDueDate = moment(dueDate.replace(/(\d{4})\-(\d{2})\-(\d{2}).*/, '$1/$2/$3'));
         var countOverdueDays = 0;
         while (momentDueDate.isBefore(today, 'day')) {
             momentDueDate.add(1, 'days');
@@ -172,7 +172,7 @@ angular.module('services').service('DueDate.Service', [ '$translate', function($
 
     function calculateOverdueDaysWithWeekends(dueDate, remainingDays, holidays){
         var today = moment(new Date());
-        var momentDueDate = moment(dueDate);
+        var momentDueDate = moment(dueDate.replace(/(\d{4})\-(\d{2})\-(\d{2}).*/, '$1/$2/$3'));
         var countOverdueDays = 0;
         while (momentDueDate.isBefore(today, 'day')) {
             momentDueDate.add(1, 'days');
