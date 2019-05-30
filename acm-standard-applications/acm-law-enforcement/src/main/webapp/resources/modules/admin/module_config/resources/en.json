@@ -62,6 +62,8 @@
             "changedGroupSearchPageFilter": "Changed Group Search Page Filter",
             "enableEditingLdapUsers": "Enable managing users and groups",
             "syncEnabled": "Enable synchronize users",
+            "fullSync": "Full Sync Cron Expression",
+            "partialSync": "Partial Sync Cron Expression",
             "cancel": "Cancel",
             "ok": "Save"
         },
@@ -105,7 +107,9 @@
             "changedGroupSearchPageFilter": "Enter filter including sort-attribute for all changed groups",
             "groupSearchPageFilter": "Enter filter including sort-attribute (e.g. (&(objectClass=group)(gidNumber>=%s)))",
             "enableEditingLdapUsers": "Check if managing users and groups to your DS is allowed",
-            "syncEnabled": "Check if synchronize users to your DS is allowed"
+            "syncEnabled": "Check if synchronize users to your DS is allowed",
+            "fullSync": "Enter cron expression for full sync job",
+            "partialSync": "Enter cron expression for partial sync job"
         },
         "security.ldapConfig.messages": {
             "delete.success": "Successfully deleted row.",
