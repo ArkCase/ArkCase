@@ -1269,7 +1269,7 @@
             "title": "admin.application.scheduled.jobs.title",
             "enabled": true,
             "type": "grid",
-            "enableFiltering": false,
+            "enableFiltering": true,
             "configurable": true,
             "columnDefs": [
               {
