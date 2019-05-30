@@ -42,7 +42,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import java.util.List;
 
 @Controller
-@RequestMapping(value = { "/api/v1/plugin/admin", "/api/latest/plugin/admin/scheduler" }, produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = { "/api/latest/plugin/admin/scheduler" }, produces = MediaType.APPLICATION_JSON_VALUE)
 public class AcmSchedulerAPIController
 {
     private AcmSchedulerService schedulerService;
