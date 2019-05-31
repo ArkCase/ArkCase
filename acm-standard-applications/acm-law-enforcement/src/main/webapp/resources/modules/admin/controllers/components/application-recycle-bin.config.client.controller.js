@@ -123,6 +123,7 @@ angular.module('admin').controller('Admin.RecycleBin',
                         });
                         reloadGrid($scope.gridData);
                     });
+                    $scope.selectedRows = [];
                 }]);
 
                 contextMenuData.push([deleteOption, function() {
@@ -132,6 +133,7 @@ angular.module('admin').controller('Admin.RecycleBin',
                         });
                         reloadGrid($scope.gridData);
                     });
+                    $scope.selectedRows = [];
                 }]);
                 return contextMenuData;
             };
