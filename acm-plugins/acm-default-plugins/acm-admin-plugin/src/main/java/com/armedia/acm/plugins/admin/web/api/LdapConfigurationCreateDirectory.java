@@ -27,6 +27,7 @@ package com.armedia.acm.plugins.admin.web.api;
  * #L%
  */
 
+import com.armedia.acm.core.exceptions.AcmEncryptionException;
 import com.armedia.acm.plugins.admin.exception.AcmLdapConfigurationException;
 import com.armedia.acm.plugins.admin.model.LdapConfigurationProperties;
 import com.armedia.acm.plugins.admin.service.LdapConfigurationService;
@@ -57,26 +58,26 @@ public class LdapConfigurationCreateDirectory
     @ResponseBody
     public String createDirectory(@RequestBody String resource) throws AcmLdapConfigurationException
     {
+        JSONObject newLdapObject = new JSONObject(resource);
+        String id = newLdapObject.getString(LdapConfigurationProperties.LDAP_PROP_ID);
+        String directoryType = newLdapObject.getString(LdapConfigurationProperties.LDAP_PROP_DIRECTORY_TYPE);
+
+        if (id == null)
+        {
+            throw new AcmLdapConfigurationException("ID is undefined");
+        }
+
+        Map<String, Object> props;
         try
         {
-            JSONObject newLdapObject = new JSONObject(resource);
-            String id = newLdapObject.getString(LdapConfigurationProperties.LDAP_PROP_ID);
-            String directoryType = newLdapObject.getString(LdapConfigurationProperties.LDAP_PROP_DIRECTORY_TYPE);
-
-            if (id == null)
-            {
-                throw new AcmLdapConfigurationException("ID is undefined");
-            }
-
-            Map<String, Object> props = ldapConfigurationService.getProperties(newLdapObject);
-            ldapConfigurationService.createLdapDirectoryConfigurations(id, directoryType, props);
-            return newLdapObject.toString();
+            props = ldapConfigurationService.getProperties(newLdapObject);
         }
-        catch (Exception e)
+        catch (AcmEncryptionException e)
         {
-            log.error("Can't create LDAP directory", e);
-            throw new AcmLdapConfigurationException("Create LDAP directory error", e);
+            throw new AcmLdapConfigurationException("Encryption failed. Cause is: ", e);
         }
+        ldapConfigurationService.createLdapDirectoryConfigurations(id, directoryType, props);
+        return newLdapObject.toString();
     }
 
     public void setLdapConfigurationService(LdapConfigurationService ldapConfigurationService)

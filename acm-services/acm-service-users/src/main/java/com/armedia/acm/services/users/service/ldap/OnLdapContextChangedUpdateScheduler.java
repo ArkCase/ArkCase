@@ -27,7 +27,10 @@ package com.armedia.acm.services.users.service.ldap;
  * #L%
  */
 
+import com.armedia.acm.quartz.scheduler.AcmJobConfig;
+import com.armedia.acm.quartz.scheduler.AcmJobFactory;
 import com.armedia.acm.quartz.scheduler.AcmSchedulerService;
+import com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig;
 import com.armedia.acm.spring.SpringContextHolder;
 import com.armedia.acm.spring.events.AbstractContextHolderEvent;
 import com.armedia.acm.spring.events.ContextAddedEvent;
@@ -50,6 +53,8 @@ public class OnLdapContextChangedUpdateScheduler implements ApplicationListener<
 
     private SpringContextHolder contextHolder;
 
+    private AcmJobFactory jobFactory;
+
     private Pattern pattern = Pattern.compile(".*spring-config(-\\w+)+-ldap\\.xml");
 
     private static final Logger logger = LoggerFactory.getLogger(OnLdapContextChangedUpdateScheduler.class);
@@ -64,6 +69,9 @@ public class OnLdapContextChangedUpdateScheduler implements ApplicationListener<
             String directoryId = StringUtils.substringBeforeLast(contextName, "-ldap.xml");
             directoryId = StringUtils.substringAfter(directoryId, "spring-config-");
 
+            AcmLdapSyncConfig ldapSyncConfig = contextHolder.getBeanByNameIncludingChildContexts(String.format("%s_sync", directoryId),
+                    AcmLdapSyncConfig.class);
+
             String ldapSyncJobName = String.format("%s_ldapSyncJob", directoryId);
             String ldapSyncTriggerName = String.format("%s_ldapSyncJobTrigger", directoryId);
 
@@ -74,29 +82,23 @@ public class OnLdapContextChangedUpdateScheduler implements ApplicationListener<
             {
                 if (!schedulerService.isJobScheduled(ldapSyncTriggerName))
                 {
-                    scheduleJob(ldapSyncJobName, ldapSyncTriggerName);
+                    scheduleJob(ldapSyncJobName, ldapSyncConfig.getFullSyncCron());
                     logger.info("Schedule ldap sync job [{}] for directory [{}].", ldapSyncJobName, directoryId);
                 }
                 if (!schedulerService.isJobScheduled(ldapPartialSyncTriggerName))
                 {
-                    scheduleJob(ldapPartialSyncJobName, ldapPartialSyncTriggerName);
+                    scheduleJob(ldapPartialSyncJobName, ldapSyncConfig.getPartialSyncCron());
                     logger.info("Schedule ldap partial sync job [{}] for directory [{}].", ldapPartialSyncJobName, directoryId);
                 }
             }
             else if (event instanceof ContextReplacedEvent)
             {
-                if (schedulerService.isJobScheduled(ldapSyncTriggerName))
-                {
-                    rescheduleJob(ldapSyncJobName, ldapSyncTriggerName);
-                    logger.info("On ldap context replaced, reschedule job [{}] with trigger [{}].", ldapSyncJobName, ldapSyncTriggerName);
-                }
+                rescheduleJob(ldapSyncJobName, ldapSyncConfig.getFullSyncCron());
+                logger.info("On ldap context replaced, reschedule job [{}] with trigger [{}].", ldapSyncJobName, ldapSyncTriggerName);
 
-                if (schedulerService.isJobScheduled(ldapPartialSyncTriggerName))
-                {
-                    rescheduleJob(ldapPartialSyncJobName, ldapPartialSyncTriggerName);
-                    logger.info("On ldap context replaced, reschedule job [{}] with trigger [{}].",
-                            ldapPartialSyncJobName, ldapPartialSyncJobName);
-                }
+                rescheduleJob(ldapPartialSyncJobName, ldapSyncConfig.getPartialSyncCron());
+                logger.info("On ldap context replaced, reschedule job [{}] with trigger [{}].",
+                        ldapPartialSyncJobName, ldapPartialSyncJobName);
             }
             else if (event instanceof ContextRemovedEvent)
             {
@@ -109,18 +111,26 @@ public class OnLdapContextChangedUpdateScheduler implements ApplicationListener<
         }
     }
 
-    private void rescheduleJob(String syncJobName, String syncTriggerName)
+    private void rescheduleJob(String syncJobName, String cronExpression)
     {
         JobDetail jobDetail = contextHolder.getBeanByNameIncludingChildContexts(syncJobName, JobDetail.class);
-        Trigger trigger = contextHolder.getBeanByNameIncludingChildContexts(syncTriggerName, Trigger.class);
+        Trigger trigger = jobFactory.createTrigger(getJobConfig(cronExpression, syncJobName), jobDetail);
         schedulerService.rescheduleJob(jobDetail, trigger);
     }
 
-    private void scheduleJob(String jobDetailName, String jobTriggerName)
+    private void scheduleJob(String syncJobName, String cronExpression)
     {
-        JobDetail jobDetail = contextHolder.getBeanByNameIncludingChildContexts(jobDetailName, JobDetail.class);
-        Trigger trigger = contextHolder.getBeanByNameIncludingChildContexts(jobTriggerName, Trigger.class);
+        JobDetail jobDetail = contextHolder.getBeanByNameIncludingChildContexts(syncJobName, JobDetail.class);
+        Trigger trigger = jobFactory.createTrigger(getJobConfig(cronExpression, syncJobName), jobDetail);
         schedulerService.scheduleJob(jobDetail, trigger);
+    }
+
+    private AcmJobConfig getJobConfig(String cronExpression, String syncJobName)
+    {
+        AcmJobConfig jobConfig = new AcmJobConfig();
+        jobConfig.setName(syncJobName);
+        jobConfig.setCronExpression(cronExpression);
+        return jobConfig;
     }
 
     private boolean isSpringLdapConfigFile(String name)
@@ -147,5 +157,15 @@ public class OnLdapContextChangedUpdateScheduler implements ApplicationListener<
     public void setContextHolder(SpringContextHolder contextHolder)
     {
         this.contextHolder = contextHolder;
+    }
+
+    public AcmJobFactory getJobFactory()
+    {
+        return jobFactory;
+    }
+
+    public void setJobFactory(AcmJobFactory jobFactory)
+    {
+        this.jobFactory = jobFactory;
     }
 }

@@ -120,7 +120,7 @@ public class AcmJobFactory extends SpringBeanJobFactory implements InitializingB
 
         triggerList = jobConfigurations.stream()
                 .filter(notImplementedConfiguredJob)
-                .map(this::createTrigger)
+                .map(jobConfig -> createTrigger(jobConfig, jobDetailsMap.get(jobConfig.getName())))
                 .collect(Collectors.toList());
     }
 
@@ -169,11 +169,11 @@ public class AcmJobFactory extends SpringBeanJobFactory implements InitializingB
         this.jobsJsonConfig = jobsJsonConfig;
     }
 
-    private Trigger createTrigger(AcmJobConfig jobConfig)
+    public Trigger createTrigger(AcmJobConfig jobConfig, JobDetail jobDetail)
     {
         TriggerBuilder triggerBuilder = newTrigger()
                 .withIdentity(jobConfig.getName() + "Trigger")
-                .forJob(jobDetailsMap.get(jobConfig.getName()));
+                .forJob(jobDetail);
 
         if (StringUtils.isNotBlank(jobConfig.getCronExpression()))
         {

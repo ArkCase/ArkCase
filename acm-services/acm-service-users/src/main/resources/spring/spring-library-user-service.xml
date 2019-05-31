@@ -269,6 +269,7 @@
     <bean id="ldapContextChangedUpdateScheduler" class="com.armedia.acm.services.users.service.ldap.OnLdapContextChangedUpdateScheduler">
         <property name="schedulerService" ref="acmSchedulerService"/>
         <property name="contextHolder" ref="acmContextHolder"/>
+        <property name="jobFactory" ref="acmJobFactory"/>
     </bean>
 
 </beans>
