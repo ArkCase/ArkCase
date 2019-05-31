@@ -32,6 +32,8 @@ import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.quartz.PersistJobDataAfterExecution;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @DisallowConcurrentExecution
 @PersistJobDataAfterExecution
@@ -39,23 +41,28 @@ public abstract class AcmJobDescriptor implements Job
 {
     private AcmJobEventPublisher jobEventPublisher;
 
+    private static final Logger logger = LoggerFactory.getLogger(AcmJobDescriptor.class);
+
     @Override
     public void execute(JobExecutionContext context) throws JobExecutionException
     {
-        jobEventPublisher.publishJobEvent(String.format("Start execution of job %s", getJobName()),
-                AcmJobEventPublisher.JOB_TRIGGERED, context.getFireInstanceId(), getJobName());
+        String startInfo = String.format("Start execution of job %s.", getJobName());
+        logger.debug(startInfo);
+        jobEventPublisher.publishJobEvent(startInfo, AcmJobEventPublisher.JOB_TRIGGERED, context.getFireInstanceId(), getJobName());
         try
         {
             executeJob(context);
         }
         catch (JobExecutionException e)
         {
-            jobEventPublisher.publishJobEvent(String.format("Job %s failed to complete. Cause: %s", getJobName(), e.getMessage()),
+            String completeFailedInfo = String.format("Job %s failed to complete. Cause: %s", getJobName(), e.getMessage());
+            jobEventPublisher.publishJobEvent(completeFailedInfo,
                     AcmJobEventPublisher.JOB_FAILED, context.getFireInstanceId(), getJobName());
             throw e;
         }
 
-        jobEventPublisher.publishJobEvent(String.format("Job %s finished execution", getJobName()),
+        String completeInfo = String.format("Job %s finished execution.", getJobName());
+        jobEventPublisher.publishJobEvent(completeInfo,
                 AcmJobEventPublisher.JOB_COMPLETED, context.getFireInstanceId(), getJobName());
     }
 
