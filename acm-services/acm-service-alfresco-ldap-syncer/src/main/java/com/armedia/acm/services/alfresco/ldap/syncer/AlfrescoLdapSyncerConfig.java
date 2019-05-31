@@ -31,13 +31,13 @@ import org.springframework.beans.factory.annotation.Value;
 
 public class AlfrescoLdapSyncerConfig
 {
-    @Value("${alfresco.admin.baseurl:'https://acm-arkcase/alfresco/s/enterprise/admin/admin-sync'}")
+    @Value("${alfresco.admin.baseurl:https://acm-arkcase/alfresco/s/enterprise/admin/admin-sync}")
     private String adminBaseUrl;
 
-    @Value("${alfresco.admin.username:'admin'}")
+    @Value("${alfresco.admin.username:admin}")
     private String adminUsername;
 
-    @Value("${alfresco.admin.password:'admin'}")
+    @Value("${alfresco.admin.password:admin}")
     private String adminPassword;
 
     public String getAdminBaseUrl()
