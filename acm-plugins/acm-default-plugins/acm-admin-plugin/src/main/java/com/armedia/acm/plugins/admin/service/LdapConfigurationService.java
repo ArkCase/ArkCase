@@ -40,6 +40,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.quartz.CronExpression;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
@@ -410,7 +411,8 @@ public class LdapConfigurationService implements InitializingBean
      * @throws AcmEncryptionException
      * @throws JSONException
      */
-    public HashMap<String, Object> getProperties(JSONObject jsonObj) throws JSONException, AcmEncryptionException
+    public HashMap<String, Object> getProperties(JSONObject jsonObj)
+            throws JSONException, AcmEncryptionException, AcmLdapConfigurationException
     {
         HashMap<String, Object> props = new HashMap<>();
         props.put(LdapConfigurationProperties.LDAP_PROP_ID, jsonObj.getString(LdapConfigurationProperties.LDAP_PROP_ID));
@@ -455,6 +457,31 @@ public class LdapConfigurationService implements InitializingBean
         props.put("groupControlGroup", jsonObj.has(LdapConfigurationProperties.LDAP_PROP_GROUP_CONTROL_GROUP)
                 ? jsonObj.getString(LdapConfigurationProperties.LDAP_PROP_GROUP_CONTROL_GROUP)
                 : "");
+        if (jsonObj.has(LdapConfigurationProperties.LDAP_PARTIAL_SYNC_CRON))
+        {
+            String partialSyncCron = jsonObj.getString(LdapConfigurationProperties.LDAP_PARTIAL_SYNC_CRON);
+            if (CronExpression.isValidExpression(partialSyncCron))
+            {
+                props.put("partialSyncCron", partialSyncCron);
+            }
+            else
+            {
+                throw new AcmLdapConfigurationException("Partial sync Cron: " + partialSyncCron + " is not valid.");
+            }
+        }
+        if (jsonObj.has(LdapConfigurationProperties.LDAP_FULL_SYNC_CRON))
+        {
+            String fullSyncCron = jsonObj.getString(LdapConfigurationProperties.LDAP_FULL_SYNC_CRON);
+            if (CronExpression.isValidExpression(fullSyncCron))
+            {
+                props.put("fullSyncCron", fullSyncCron);
+            }
+            else
+            {
+                throw new AcmLdapConfigurationException("Full sync Cron: " + fullSyncCron + " is not valid");
+            }
+        }
+
         return props;
     }
 

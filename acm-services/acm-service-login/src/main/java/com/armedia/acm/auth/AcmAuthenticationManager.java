@@ -146,6 +146,7 @@ public class AcmAuthenticationManager implements AuthenticationManager
         }
         catch (RuntimeException e)
         {
+            log.debug("Runtime exception: ", e);
             if (e instanceof NoProviderFoundException)
                 throw e;
             else if (lastException != null)
