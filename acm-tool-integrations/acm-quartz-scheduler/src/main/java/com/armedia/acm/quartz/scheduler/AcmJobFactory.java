@@ -38,6 +38,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.quartz.Job;
+import org.quartz.JobDataMap;
 import org.quartz.JobDetail;
 import org.quartz.Trigger;
 import org.quartz.TriggerBuilder;
@@ -174,6 +175,17 @@ public class AcmJobFactory extends SpringBeanJobFactory implements InitializingB
         TriggerBuilder triggerBuilder = newTrigger()
                 .withIdentity(jobConfig.getName() + "Trigger")
                 .forJob(jobDetail);
+
+        AcmJobDescriptor acmJobDescriptor = acmSimpleJobDescriptorMap.get(jobConfig.getName());
+        if (acmJobDescriptor != null)
+        {
+            Map<String, String> jobData = acmJobDescriptor.getJobData();
+            if (jobData != null)
+            {
+                JobDataMap jobDataMap = new JobDataMap(jobData);
+                triggerBuilder.usingJobData(jobDataMap);
+            }
+        }
 
         if (StringUtils.isNotBlank(jobConfig.getCronExpression()))
         {

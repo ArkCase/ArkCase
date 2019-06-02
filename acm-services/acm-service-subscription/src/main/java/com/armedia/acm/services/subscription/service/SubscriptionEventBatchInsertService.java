@@ -88,7 +88,7 @@ public class SubscriptionEventBatchInsertService
 
     private Date getLastBatchRunDate(Date lastRunDate)
     {
-        lastRunDate = lastRunDate == null ? new Date(0) : lastRunDate;
+        lastRunDate = lastRunDate == null ? new Date() : lastRunDate;
 
         // back up one minute just to be sure we get everything
         Calendar cal = Calendar.getInstance();

@@ -1586,6 +1586,13 @@
                 ]
             },
             {
+                "type": "p/application/scheduledJobs",
+                "label": "admin.application.scheduled.jobs.title",
+                "components": [
+                    "application-scheduled-jobs-management"
+                ]
+            },
+            {
                 "type": "p/branding",
                 "label": "admin.branding.title",
                 "icon": "fa fa-wrench",

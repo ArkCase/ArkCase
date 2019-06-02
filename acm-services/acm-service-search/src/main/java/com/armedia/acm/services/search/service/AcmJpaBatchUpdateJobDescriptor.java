@@ -28,14 +28,25 @@ package com.armedia.acm.services.search.service;
  */
 
 import com.armedia.acm.quartz.scheduler.AcmJobDescriptor;
+import com.armedia.acm.services.search.model.SearchConstants;
+import com.armedia.acm.spring.SpringContextHolder;
 
 import org.quartz.JobDataMap;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Collection;
+import java.util.Date;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
 public class AcmJpaBatchUpdateJobDescriptor extends AcmJobDescriptor
 {
     private AcmJpaBatchUpdateService jpaBatchUpdateService;
+    private SpringContextHolder springContextHolder;
 
     @Override
     public String getJobName()
@@ -68,6 +79,20 @@ public class AcmJpaBatchUpdateJobDescriptor extends AcmJobDescriptor
         }
     }
 
+    @Override
+    public Map<String, String> getJobData()
+    {
+        Collection<? extends AcmObjectToSolrDocTransformer> transformers = getSpringContextHolder()
+                .getAllBeansOfType(AcmObjectToSolrDocTransformer.class).values();
+
+        DateFormat solrDateFormat = new SimpleDateFormat(SearchConstants.SOLR_DATE_FORMAT);
+
+        return transformers.stream()
+                .map(it -> it.getAcmObjectTypeSupported().getCanonicalName())
+                .collect(Collectors.toMap(Function.identity(),
+                        it -> solrDateFormat.format(new Date())));
+    }
+
     public AcmJpaBatchUpdateService getJpaBatchUpdateService()
     {
         return jpaBatchUpdateService;
@@ -76,5 +101,15 @@ public class AcmJpaBatchUpdateJobDescriptor extends AcmJobDescriptor
     public void setJpaBatchUpdateService(AcmJpaBatchUpdateService jpaBatchUpdateService)
     {
         this.jpaBatchUpdateService = jpaBatchUpdateService;
+    }
+
+    public SpringContextHolder getSpringContextHolder()
+    {
+        return springContextHolder;
+    }
+
+    public void setSpringContextHolder(SpringContextHolder springContextHolder)
+    {
+        this.springContextHolder = springContextHolder;
     }
 }
