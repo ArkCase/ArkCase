@@ -35,6 +35,8 @@ import org.quartz.PersistJobDataAfterExecution;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Map;
+
 @DisallowConcurrentExecution
 @PersistJobDataAfterExecution
 public abstract class AcmJobDescriptor implements Job
@@ -47,7 +49,7 @@ public abstract class AcmJobDescriptor implements Job
     public void execute(JobExecutionContext context) throws JobExecutionException
     {
         String startInfo = String.format("Start execution of job %s.", getJobName());
-        logger.debug(startInfo);
+        logger.info(startInfo);
         jobEventPublisher.publishJobEvent(startInfo, AcmJobEventPublisher.JOB_TRIGGERED, context.getFireInstanceId(), getJobName());
         try
         {
@@ -62,6 +64,7 @@ public abstract class AcmJobDescriptor implements Job
         }
 
         String completeInfo = String.format("Job %s finished execution.", getJobName());
+        logger.info(completeInfo);
         jobEventPublisher.publishJobEvent(completeInfo,
                 AcmJobEventPublisher.JOB_COMPLETED, context.getFireInstanceId(), getJobName());
     }
@@ -69,6 +72,11 @@ public abstract class AcmJobDescriptor implements Job
     public abstract String getJobName();
 
     public abstract void executeJob(JobExecutionContext context) throws JobExecutionException;
+
+    public Map<String, String> getJobData()
+    {
+        return null;
+    }
 
     public AcmJobEventPublisher getJobEventPublisher()
     {
