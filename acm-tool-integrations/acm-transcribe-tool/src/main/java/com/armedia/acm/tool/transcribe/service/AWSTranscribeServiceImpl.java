@@ -220,7 +220,8 @@ public class AWSTranscribeServiceImpl implements TranscribeIntegrationService
                 request.setMediaFormat(mediaType);
                 request.setMedia(media);
 
-                if (configuration.isShowSpeakerLabels())
+                if (configuration.isShowSpeakerLabels() && configuration.getMaxSpeakerLabels() > 1
+                        && configuration.getMaxSpeakerLabels() < 11)
                 {
                     Settings settings = new Settings();
                     settings.setShowSpeakerLabels(configuration.isShowSpeakerLabels());
