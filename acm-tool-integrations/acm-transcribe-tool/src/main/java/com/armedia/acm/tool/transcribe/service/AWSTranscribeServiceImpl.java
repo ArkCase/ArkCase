@@ -220,6 +220,8 @@ public class AWSTranscribeServiceImpl implements TranscribeIntegrationService
                 request.setMediaFormat(mediaType);
                 request.setMedia(media);
 
+                // According to Amazon, valid range for MaxSpeakerLabels field is minimum value of 2,
+                // maximum value of 10.
                 if (configuration.isShowSpeakerLabels() && configuration.getMaxSpeakerLabels() > 1
                         && configuration.getMaxSpeakerLabels() < 11)
                 {
