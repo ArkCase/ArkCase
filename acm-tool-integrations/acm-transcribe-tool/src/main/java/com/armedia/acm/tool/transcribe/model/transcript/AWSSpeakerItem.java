@@ -2,9 +2,9 @@ package com.armedia.acm.tool.transcribe.model.transcript;
 
 /*-
  * #%L
- * ACM Service: Transcribe
+ * acm-transcribe-tool
  * %%
- * Copyright (C) 2014 - 2018 ArkCase LLC
+ * Copyright (C) 2014 - 2019 ArkCase LLC
  * %%
  * This file is part of the ArkCase software. 
  * 
@@ -29,49 +29,48 @@ package com.armedia.acm.tool.transcribe.model.transcript;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.util.List;
-
 /**
- * Created by Riste Tutureski <riste.tutureski@armedia.com> on 03/17/2018
+ * Created by Vladimir Cherepnalkovski
  */
-public class AWSTranscriptResult
+public class AWSSpeakerItem
 {
-    @JsonProperty("transcripts")
-    private List<AWSTranscriptText> transcripts;
 
-    @JsonProperty("items")
-    private List<AWSTranscriptItem> items;
+    @JsonProperty("start_time")
+    private String startTime;
 
-    @JsonProperty("speaker_labels")
-    private AWSSpeakerLabel speakerLabels;
+    @JsonProperty("end_time")
+    private String endTime;
 
-    public List<AWSTranscriptText> getTranscripts()
+    @JsonProperty("speaker_label")
+    private String speakerLabel;
+
+    public String getStartTime()
     {
-        return transcripts;
+        return startTime;
     }
 
-    public void setTranscripts(List<AWSTranscriptText> transcripts)
+    public void setStartTime(String startTime)
     {
-        this.transcripts = transcripts;
+        this.startTime = startTime;
     }
 
-    public List<AWSTranscriptItem> getItems()
+    public String getEndTime()
     {
-        return items;
+        return endTime;
     }
 
-    public void setItems(List<AWSTranscriptItem> items)
+    public void setEndTime(String endTime)
     {
-        this.items = items;
+        this.endTime = endTime;
     }
 
-    public AWSSpeakerLabel getSpeakerLabels()
+    public String getSpeakerLabel()
     {
-        return speakerLabels;
+        return speakerLabel;
     }
 
-    public void setSpeakerLabels(AWSSpeakerLabel speakerLabels)
+    public void setSpeakerLabel(String speakerLabel)
     {
-        this.speakerLabels = speakerLabels;
+        this.speakerLabel = speakerLabel;
     }
 }

@@ -2,9 +2,9 @@ package com.armedia.acm.tool.transcribe.model.transcript;
 
 /*-
  * #%L
- * ACM Service: Transcribe
+ * acm-transcribe-tool
  * %%
- * Copyright (C) 2014 - 2018 ArkCase LLC
+ * Copyright (C) 2014 - 2019 ArkCase LLC
  * %%
  * This file is part of the ArkCase software. 
  * 
@@ -32,46 +32,59 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
 /**
- * Created by Riste Tutureski <riste.tutureski@armedia.com> on 03/17/2018
+ * Created by Vladimir Cherepnalkovski
  */
-public class AWSTranscriptResult
+public class AWSSegment
 {
-    @JsonProperty("transcripts")
-    private List<AWSTranscriptText> transcripts;
+    @JsonProperty("start_time")
+    private String startTime;
+
+    @JsonProperty("speaker_label")
+    private String speakerLabel;
+
+    @JsonProperty("end_time")
+    private String endTime;
 
     @JsonProperty("items")
-    private List<AWSTranscriptItem> items;
+    private List<AWSSpeakerItem> items;
 
-    @JsonProperty("speaker_labels")
-    private AWSSpeakerLabel speakerLabels;
-
-    public List<AWSTranscriptText> getTranscripts()
+    public String getStartTime()
     {
-        return transcripts;
+        return startTime;
     }
 
-    public void setTranscripts(List<AWSTranscriptText> transcripts)
+    public void setStartTime(String startTime)
     {
-        this.transcripts = transcripts;
+        this.startTime = startTime;
     }
 
-    public List<AWSTranscriptItem> getItems()
+    public String getSpeakerLabel()
+    {
+        return speakerLabel;
+    }
+
+    public void setSpeakerLabel(String speakerLabel)
+    {
+        this.speakerLabel = speakerLabel;
+    }
+
+    public String getEndTime()
+    {
+        return endTime;
+    }
+
+    public void setEndTime(String endTime)
+    {
+        this.endTime = endTime;
+    }
+
+    public List<AWSSpeakerItem> getItems()
     {
         return items;
     }
 
-    public void setItems(List<AWSTranscriptItem> items)
+    public void setItems(List<AWSSpeakerItem> items)
     {
         this.items = items;
-    }
-
-    public AWSSpeakerLabel getSpeakerLabels()
-    {
-        return speakerLabels;
-    }
-
-    public void setSpeakerLabels(AWSSpeakerLabel speakerLabels)
-    {
-        this.speakerLabels = speakerLabels;
     }
 }

@@ -2,9 +2,9 @@ package com.armedia.acm.tool.transcribe.model.transcript;
 
 /*-
  * #%L
- * ACM Service: Transcribe
+ * acm-transcribe-tool
  * %%
- * Copyright (C) 2014 - 2018 ArkCase LLC
+ * Copyright (C) 2014 - 2019 ArkCase LLC
  * %%
  * This file is part of the ArkCase software. 
  * 
@@ -32,46 +32,34 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
 /**
- * Created by Riste Tutureski <riste.tutureski@armedia.com> on 03/17/2018
+ * Created by Vladimir Cherepnalkovski
  */
-public class AWSTranscriptResult
+public class AWSSpeakerLabel
 {
-    @JsonProperty("transcripts")
-    private List<AWSTranscriptText> transcripts;
 
-    @JsonProperty("items")
-    private List<AWSTranscriptItem> items;
+    @JsonProperty("speakers")
+    private Integer numberOfSpeakers;
 
-    @JsonProperty("speaker_labels")
-    private AWSSpeakerLabel speakerLabels;
+    @JsonProperty("segments")
+    private List<AWSSegment> segments;
 
-    public List<AWSTranscriptText> getTranscripts()
+    public Integer getNumberOfSpeakers()
     {
-        return transcripts;
+        return numberOfSpeakers;
     }
 
-    public void setTranscripts(List<AWSTranscriptText> transcripts)
+    public void setNumberOfSpeakers(Integer numberOfSpeakers)
     {
-        this.transcripts = transcripts;
+        this.numberOfSpeakers = numberOfSpeakers;
     }
 
-    public List<AWSTranscriptItem> getItems()
+    public List<AWSSegment> getSegments()
     {
-        return items;
+        return segments;
     }
 
-    public void setItems(List<AWSTranscriptItem> items)
+    public void setSegments(List<AWSSegment> segments)
     {
-        this.items = items;
-    }
-
-    public AWSSpeakerLabel getSpeakerLabels()
-    {
-        return speakerLabels;
-    }
-
-    public void setSpeakerLabels(AWSSpeakerLabel speakerLabels)
-    {
-        this.speakerLabels = speakerLabels;
+        this.segments = segments;
     }
 }
