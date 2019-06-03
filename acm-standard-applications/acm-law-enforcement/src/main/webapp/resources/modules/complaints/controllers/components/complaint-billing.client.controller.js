@@ -100,7 +100,7 @@ angular.module('complaints').controller('Complaints.BillingController', ['$scope
         };
         
         $scope.generateInvoice = function() {
-            ComplaintBillingService.createBillingInvoiceForComplaint(invoiceData).then(function() {
+            ComplaintBillingService.createBillingInvoice(invoiceData).then(function() {
                 MessageService.succsessAction();    
             }, function() {
                 MessageService.errorAction();
@@ -133,7 +133,7 @@ angular.module('complaints').controller('Complaints.BillingController', ['$scope
             var itemData = $scope.entry;
             itemData.parentObjectId = $stateParams.id;
             itemData.parentObjectType = 'COMPLAINT';
-            ComplaintBillingService.addBillingItemForComplaint(itemData);
+            ComplaintBillingService.addBillingItem(itemData);
         }
 
     }]);

@@ -39,7 +39,7 @@ angular.module('document-details').controller(
                         var loaderModal = $modal.open({
                             animation: true,
                             templateUrl: 'modules/common/views/object.modal.loading-spinner.html',
-                            size: 'md',
+                            size: 'sm',
                             backdrop: 'static'
                         });
                         $scope.loaderModal = loaderModal;
@@ -58,6 +58,8 @@ angular.module('document-details').controller(
                             ArkCaseCrossWindowMessagingService.addHandler('select-annotation-tags', onSelectAnnotationTags);
                             ArkCaseCrossWindowMessagingService.start('snowbound', $scope.ecmFileProperties['ecm.viewer.snowbound']);
                         });
+                        onHideLoader();
+                        $scope.loaderOpened = false;
                     };
 
                     function onSelectAnnotationTags(data) {
@@ -110,6 +112,7 @@ angular.module('document-details').controller(
                     $scope.showPdfJs = false;
                     $scope.transcriptionTabActive = false;
                     $scope.ocrInfoActive = false;
+                    $scope.loaderOpened = false;
 
                     var scopeToColor =
                         {
@@ -141,6 +144,12 @@ angular.module('document-details').controller(
                         if (videoElement) {
                             track = videoElement.addTextTrack("subtitles", "Transcription", $scope.transcribeObjectModel.language);
                             videoElement.addEventListener("play", function() {
+                                var numberOfTracks = videoElement.textTracks.length;
+                                for (var i = 0; i < numberOfTracks; i++)
+                                {
+                                    var currentTrack = videoElement.textTracks[i];
+                                    currentTrack.mode = "hidden";
+                                }
                                 track.mode = "showing";
                             });
                         }
@@ -198,6 +207,13 @@ angular.module('document-details').controller(
                      * an iframe which points to snowbound
                      */
                     $scope.openSnowboundViewer = function() {
+                        if ($scope.loaderOpened == false) {
+                            onShowLoader();
+                            $scope.loaderOpened == true;
+                        } else {
+                            onHideLoader();
+                            $scope.loaderOpened == false;
+                        }
                         var viewerUrl = SnowboundService.buildSnowboundUrl($scope.ecmFileProperties, $scope.acmTicket, $scope.userId, $scope.userFullName, $scope.fileInfo, !$scope.editingMode, $scope.caseInfo.caseNumber);
                         $scope.documentViewerUrl = $sce.trustAsResourceUrl(viewerUrl);
                     };
@@ -375,6 +391,8 @@ angular.module('document-details').controller(
                             $scope.openSnowboundViewer();
                             $scope.$broadcast('refresh-ocr');
                         });
+                        onHideLoader();
+                        $scope.loaderOpened = true;
                     });
 
                     $scope.$bus.subscribe('sync-progress', function(data) {
