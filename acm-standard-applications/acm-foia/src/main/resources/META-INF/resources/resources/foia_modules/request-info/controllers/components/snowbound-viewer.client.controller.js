@@ -31,7 +31,7 @@ angular.module('request-info').controller('RequestInfo.SnowBoundViewer', [ '$roo
         var loaderModal = $modal.open({
             animation: true,
             templateUrl: 'modules/common/views/object.modal.loading-spinner.html',
-            size: 'md',
+            size: 'sm',
             backdrop: 'static'
         });
         $scope.loaderModal = loaderModal;

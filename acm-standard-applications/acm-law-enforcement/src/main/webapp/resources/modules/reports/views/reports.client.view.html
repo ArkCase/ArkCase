@@ -13,7 +13,7 @@
                     <div ng-show="showReportParameters" ng-include="'modules/reports/views/components/reports-state.client.view.html'"></div>
                     <div ng-show="showReportParameters" ng-include="'modules/reports/views/components/reports-datepickers.client.view.html'"></div>
 
-                    <div ng-show="showReportParameters" class="checkbox">
+                    <div class="checkbox" ng-show="showReportParameters">
                         <label>
                             <input type="checkbox" ng-model="showXmlReport">
                             <span translate>
@@ -23,7 +23,7 @@
                     </div>
 
                     <div>
-                        <button class="btn btn-sm" ng-show="showReportParameters" id="generateReportButton" ng-click="generateReport()"
+                        <button class="btn btn-sm" id="generateReportButton" ng-click="generateReport()"
                                 ng-disabled="!data.reportSelected">
                             <span translate>reports.btn.generateReport</span>
                         </button>
