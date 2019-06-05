@@ -34,6 +34,7 @@ import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
+import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.pipeline.AbstractPipelineContext;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
@@ -73,6 +74,8 @@ public abstract class PDFDocumentGenerator<T>
 
     private PdfService pdfService;
 
+    private FolderAndFilesUtils folderAndFilesUtils;
+
     private Logger log = LoggerFactory.getLogger(getClass());
 
     public void generatePdf(String objectType, Long objectId, AbstractPipelineContext ctx, Authentication authentication,
@@ -92,6 +95,7 @@ public abstract class PDFDocumentGenerator<T>
                 log.debug("Created {} document [{}]", documentName, filename);
 
                 String arkcaseFilename = String.format(fileNameFormat, objectId);
+                String uniqueFileName = folderAndFilesUtils.createUniqueIdentificator(arkcaseFilename);
 
                 AcmFolder targetFolder = container.getAttachmentFolder() == null
                         ? container.getFolder()
@@ -109,7 +113,7 @@ public abstract class PDFDocumentGenerator<T>
                     {
                         EcmFile ecmFile = ecmFileService.upload(arkcaseFilename,
                                 documentName, "Document", fis, MIME_TYPE_PDF,
-                                arkcaseFilename, authentication, targetFolderId, objectType, objectId);
+                                uniqueFileName, authentication, targetFolderId, objectType, objectId);
                         if (ctx != null)
                         {
                             ctx.addProperty(NEW_FILE, true);
@@ -246,5 +250,15 @@ public abstract class PDFDocumentGenerator<T>
     public void setEcmFileDao(EcmFileDao ecmFileDao)
     {
         this.ecmFileDao = ecmFileDao;
+    }
+
+    public FolderAndFilesUtils getFolderAndFilesUtils()
+    {
+        return folderAndFilesUtils;
+    }
+
+    public void setFolderAndFilesUtils(FolderAndFilesUtils folderAndFilesUtils)
+    {
+        this.folderAndFilesUtils = folderAndFilesUtils;
     }
 }
