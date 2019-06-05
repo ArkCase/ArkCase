@@ -359,12 +359,12 @@ public class AWSTranscribeServiceTest
         assertEquals(new BigDecimal("1.44"), transcribe.getTranscribeItems().get(0).getStartTime());
         assertEquals(new BigDecimal("8.45"), transcribe.getTranscribeItems().get(0).getEndTime());
         assertEquals(99, transcribe.getTranscribeItems().get(0).getConfidence());
-        assertEquals("[spk_0] welcome to English in a minute. Most of us know it's better to do or say something after we think",
+        assertEquals("[spk_0]: welcome to English in a minute. Most of us know it's better to do or say something after we think",
                 transcribe.getTranscribeItems().get(0).getText());
         assertEquals(new BigDecimal("56.01"), transcribe.getTranscribeItems().get(7).getStartTime());
         assertEquals(new BigDecimal("58.94"), transcribe.getTranscribeItems().get(7).getEndTime());
         assertEquals(99, transcribe.getTranscribeItems().get(7).getConfidence());
-        assertEquals("[spk_0] activity. And that's English in a minute.",
+        assertEquals("[spk_0]: activity. And that's English in a minute.",
                 transcribe.getTranscribeItems().get(7).getText());
 
         // There is one item plus, because of the speaker label
