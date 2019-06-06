@@ -862,7 +862,8 @@
                 "message": {
                     "success": "Object Title Configuration is successfully saved",
                     "error": "Error. Object Title Configuration is not saved.",
-                    "exist": "Configuration for this object type already exist.",
+                    "exist1": "Object Title Configuration for ",
+                    "exist2": " already exist.",
                     "editRow": "Edit of the row did not succeed"
                 },
                 "button": {
