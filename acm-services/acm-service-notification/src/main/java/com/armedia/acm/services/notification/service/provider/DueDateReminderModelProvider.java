@@ -61,7 +61,8 @@ public class DueDateReminderModelProvider implements TemplateModelProvider<Gener
     private void generateDueDateReminderSentEvent(Notification notification)
     {
         DueDateReminderSentEvent dueDateReminderSentEvent =
-                new DueDateReminderSentEvent(notification, notification.getParentType(), notification.getParentId(), Long.valueOf(notification.getNote()));
+                new DueDateReminderSentEvent(notification, notification.getParentType(), notification.getParentId(), Long.valueOf(notification.getNote()), notification.getUser());
+        dueDateReminderSentEvent.setSucceeded(true);
         applicationEventPublisher.publishEvent(dueDateReminderSentEvent);
     }
 
