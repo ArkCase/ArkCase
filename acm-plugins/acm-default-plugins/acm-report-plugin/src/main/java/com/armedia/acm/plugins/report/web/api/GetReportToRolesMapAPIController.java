@@ -118,7 +118,7 @@ public class GetReportToRolesMapAPIController
     {
 
         LOG.debug("Taking roles from property file for specific report");
-        return reportService.getRolesForReport(authorized, reportId);
+        return reportService.getRolesForReport(authorized, reportId, startRow, maxRows, sortBy, sortDirection);
     }
 
     public ReportService getReportService()
