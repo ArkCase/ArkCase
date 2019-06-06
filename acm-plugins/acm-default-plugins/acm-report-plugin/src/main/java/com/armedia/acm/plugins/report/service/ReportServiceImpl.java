@@ -506,6 +506,41 @@ public class ReportServiceImpl implements ReportService
         }
     }
 
+    @Override
+    public List<String> getRolesForReport(Boolean authorized, String reportId, int startRow, int maxRows, String sortBy, String sortDirection) {
+        String reportsToRolesConfigString = reportsToRolesConfig.getReportsToRolesMap().get(reportId);
+
+        if (reportsToRolesConfigString != null) {
+            String[] rolesForReport = reportsToRolesConfigString.split(",");
+            List<String> result = null;
+
+            if (!authorized) {
+                result = rolesConfig.getApplicationRoles().stream()
+                        .filter(role -> Arrays.stream(rolesForReport).noneMatch(r -> r.trim().equals(role)))
+                        .collect(Collectors.toList());
+            } else {
+                result = Arrays.asList(rolesForReport);
+            }
+
+
+            if (sortDirection.contains("DESC")) {
+                Collections.sort(result, Collections.reverseOrder());
+            } else {
+                Collections.sort(result);
+            }
+
+            if (startRow > result.size()) {
+                return result;
+            }
+            maxRows = maxRows > result.size() ? result.size() : maxRows;
+
+            return result.stream().skip(startRow).limit(maxRows).collect(Collectors.toList());
+        } else {
+            return new ArrayList<>();
+        }
+    }
+
+
     public MuleContextManager getMuleContextManager()
     {
         return muleContextManager;
