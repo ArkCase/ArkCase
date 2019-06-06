@@ -40,8 +40,8 @@ public class DueDateReminderSentListener implements ApplicationListener<DueDateR
     @Override
     public void onApplicationEvent(DueDateReminderSentEvent dueDateReminderSentEvent)
     {
-        String parentObjectType = dueDateReminderSentEvent.getParentObjectType();
-        Long parentObjectId = dueDateReminderSentEvent.getParentObjectId();
+        String parentObjectType = dueDateReminderSentEvent.getObjectType();
+        Long parentObjectId = dueDateReminderSentEvent.getObjectId();
         Long dueDateRemainingDays = (Long) dueDateReminderSentEvent.getEventProperties().getOrDefault("dueDateRemainingDays", 0);
 
         if("CASE_FILE".equals(parentObjectType) && dueDateRemainingDays > 0)
