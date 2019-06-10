@@ -96,6 +96,7 @@
             <beans:property name="ecmFileService" ref="ecmFileService"/>
             <beans:property name="pdfService" ref="pdfService"/>
             <beans:property name="ecmFileDao" ref="ecmFileDao"/>
+            <beans:property name="folderAndFilesUtils" ref="folderAndFilesUtils"/>
         </beans:bean>
 
         <beans:bean id="correspondenceDocumentGenerator" class="gov.foia.service.CorrespondenceDocumentGenerator">
