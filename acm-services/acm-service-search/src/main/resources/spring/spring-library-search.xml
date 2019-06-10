@@ -42,6 +42,7 @@
     <bean id="acmJpaBatchUpdateJob" class="com.armedia.acm.services.search.service.AcmJpaBatchUpdateJobDescriptor"
           parent="acmJobDescriptor">
         <property name="jpaBatchUpdateService" ref="acmJpaBatchUpdateService"/>
+        <property name="springContextHolder" ref="acmContextHolder"/>
     </bean>
 
     <bean id="executeSolrQuery" class="com.armedia.acm.services.search.service.ExecuteSolrQuery">

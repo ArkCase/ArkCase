@@ -47,7 +47,7 @@ public class NotificationJobDescriptor extends AcmJobDescriptor
     @Override
     public void executeJob(JobExecutionContext context) throws JobExecutionException
     {
-        Date lastRun = context.getPreviousFireTime() == null ? new Date(0) : context.getPreviousFireTime();
+        Date lastRun = context.getPreviousFireTime() == null ? new Date() : context.getPreviousFireTime();
         notificationService.run(lastRun);
     }
 
