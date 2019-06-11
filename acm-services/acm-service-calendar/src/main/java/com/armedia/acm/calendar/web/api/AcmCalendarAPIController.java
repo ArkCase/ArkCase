@@ -219,7 +219,7 @@ public class AcmCalendarAPIController
     public ResponseEntity<String> isIntegrationEnabled(@PathVariable(value = "objectType") String objectType)
             throws CalendarConfigurationException
     {
-        CalendarConfiguration configuration = calendarAdminService.readConfiguration(true).getConfiguration(objectType);
+        CalendarConfiguration configuration = calendarAdminService.readConfiguration(false).getConfiguration(objectType);
         return ResponseEntity.status(HttpStatus.OK).body(Boolean.toString(configuration.isIntegrationEnabled()));
     }
 
