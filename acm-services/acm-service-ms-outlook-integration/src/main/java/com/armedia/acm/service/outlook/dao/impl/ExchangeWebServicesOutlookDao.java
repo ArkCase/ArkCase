@@ -146,8 +146,9 @@ public class ExchangeWebServicesOutlookDao implements OutlookDao
             log.warn("Configured exchange version [{}] is not valid. Use default [{}]", exchangeVersion, version);
         }
 
-        try (ExchangeService service = new ExchangeService(version))
+        try
         {
+            ExchangeService service = new ExchangeService(version);
             service.setCredentials(credentials);
             if (outlookConfig.getEnableAutoDiscovery())
             {
