@@ -172,8 +172,8 @@ public class ComplaintEventListener implements ApplicationListener<AcmObjectHist
         boolean purgeOption;
         try
         {
-            purgeOption = PurgeOptions.CLOSED.equals(
-                    calendarAdminService.readConfiguration(false).getConfiguration(ComplaintConstants.OBJECT_TYPE).getPurgeOptions());
+            purgeOption = PurgeOptions.CLOSED.equals(calendarAdminService.readConfiguration(false)
+                    .getConfiguration(ComplaintConstants.OBJECT_TYPE).getPurgeOptions());
         }
         catch (CalendarConfigurationException e)
         {

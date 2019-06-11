@@ -183,8 +183,8 @@ public class CaseFileEventListener implements ApplicationListener<AcmObjectHisto
         boolean purgeOption;
         try
         {
-            purgeOption = PurgeOptions.CLOSED.equals(
-                    calendarAdminService.readConfiguration(false).getConfiguration(CaseFileConstants.OBJECT_TYPE).getPurgeOptions());
+            purgeOption = PurgeOptions.CLOSED.equals(calendarAdminService.readConfiguration(false)
+                    .getConfiguration(CaseFileConstants.OBJECT_TYPE).getPurgeOptions());
         }
         catch (CalendarConfigurationException e)
         {
