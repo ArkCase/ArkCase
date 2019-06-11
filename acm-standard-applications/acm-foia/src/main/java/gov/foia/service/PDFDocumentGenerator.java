@@ -38,6 +38,7 @@ import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 
+import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -64,6 +65,7 @@ public class PDFDocumentGenerator implements DocumentGenerator
     private EcmFileService ecmFileService;
     private EcmFileDao ecmFileDao;
     private PdfService pdfService;
+    private FolderAndFilesUtils folderAndFilesUtils;
 
     @Override
     public EcmFile generateAndUpload(FOIADocumentDescriptor documentDescriptor, FOIAObject acmObject, String targetCmisFolderId,
@@ -145,5 +147,13 @@ public class PDFDocumentGenerator implements DocumentGenerator
     public void setEcmFileDao(EcmFileDao ecmFileDao)
     {
         this.ecmFileDao = ecmFileDao;
+    }
+
+    public FolderAndFilesUtils getFolderAndFilesUtils() {
+        return folderAndFilesUtils;
+    }
+
+    public void setFolderAndFilesUtils(FolderAndFilesUtils folderAndFilesUtils) {
+        this.folderAndFilesUtils = folderAndFilesUtils;
     }
 }
