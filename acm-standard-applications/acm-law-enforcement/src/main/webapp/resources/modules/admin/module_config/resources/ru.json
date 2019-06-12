@@ -1037,6 +1037,43 @@
             "emailTemplates": {
                 "title": "Шаблоны электронной почты"
             }
+        },
+        "portals.portalsConfiguration": {
+            "nodeTitle": "ru_Portals Service",
+            "title": "ru_Portals Configuration",
+            "url": "ru_URL",
+            "id": "ru_ID",
+            "portalId": "ru_Portal ID",
+            "portalDescription": "ru_Description",
+            "portalUser": "ru_User",
+            "save": "ru_Save",
+            "cancel": "ru_Cancel",
+            "placeholder": {
+                "portalUrl": "ru_Enter Portal URL",
+                "portalId": "ru_ID will be generate",
+                "portalDescription": "ru_Enter Portal Description",
+                "portalUser": "ru_Select Portal User"
+            },
+            "message": {
+                "edit": "ru_Portal is successfully edited",
+                "add": "ru_Portal is successfully added",
+                "delete": "ru_Portal is successfully deleted"
+            }
+        },
+        "userSearch": {
+            "title": "ru_User Search",
+            "cancelButton": "ru_Cancel",
+            "confirmButton": "ru_Save",
+            "search": {
+                "placeholder": "ru_Search for the user to assign to this portal",
+                "btn": "ru_Search"
+            },
+            "assigneeGridColumns": {
+                "name": "ru_Name",
+                "type": "ru_Type",
+                "title": "ru_Title",
+                "username": "ru_Username"
+            }
         }
     }
 }

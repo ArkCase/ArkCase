@@ -22,6 +22,42 @@
             </beans:property>
         </beans:bean>
 
+        <!-- property placeholder for all properties needed for the proxy -->
+        <beans:bean id="arkCasePropertyConfigurerFOIA" class="com.armedia.acm.crypto.properties.AcmEncryptablePropertySourcesPlaceholderConfigurer">
+            <beans:property name="encryptablePropertyUtils" ref="acmEncryptablePropertyUtils"/>
+            <beans:property name="ignoreResourceNotFound" value="true"/>
+            <beans:property name="localOverride" value="false"/>
+            <beans:property name="order" value="42"/>
+            <beans:property name="ignoreUnresolvablePlaceholders" value="true"/>
+            <beans:property name="locations">
+                <beans:list>
+                    <beans:value>file:${user.home}/.arkcase/acm/foiaPortalProvider.properties</beans:value>
+                </beans:list>
+            </beans:property>
+        </beans:bean>
+        
+        <beans:bean id="foiaPortalRequestServiceProvider" class="gov.foia.service.FOIAPortalRequestServiceProvider">
+            <beans:property name="createRequestService" ref="portalCreateRequestService"/>
+            <beans:property name="portalRequestService" ref="portalRequestService"/>
+        </beans:bean>
+    
+        <beans:bean id="userRegistrationRequestDao" class="gov.foia.dao.UserRegistrationRequestDao"/>
+    
+        <beans:bean id="userResetRequestDao" class="gov.foia.dao.UserResetRequestDao"/>
+    
+        <beans:bean id="portalFOIAPersonDao" class="gov.foia.dao.PortalFOIAPersonDao"/>
+    
+        <beans:bean id="foiaPortalUserServiceProvider" class="gov.foia.service.FOIAPortalUserServiceProvider">
+            <beans:property name="emailSenderService" ref="configurableEmailSenderService"/>
+            <beans:property name="registrationDao" ref="userRegistrationRequestDao"/>
+            <beans:property name="resetDao" ref="userResetRequestDao"/>
+            <beans:property name="portalPersonDao" ref="portalFOIAPersonDao"/>
+            <beans:property name="portalInfoDAO" ref="portalInfoDAO"/>
+            <beans:property name="ldapUserService" ref="ldapUserService"/>
+            <beans:property name="ldapAuthenticateService" ref="foiaportal_ldapAuthenticateService"/>
+        </beans:bean>
+        
+
         <beans:bean id="portalCreateRequestService" class="gov.foia.service.PortalCreateRequestService">
             <beans:property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
             <beans:property name="userTrackerService" ref="userTrackerService"/>

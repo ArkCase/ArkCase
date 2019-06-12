@@ -493,6 +493,60 @@
             "workflow": "Approval Workflow Configuration",
             "useWorkflowCheckbox": "Use Approval Workflow"
         },
+        "portals.portalsConfiguration": {
+            "nodeTitle": "Portals Service",
+            "title": "Portals Configuration",
+            "url": "URL",
+            "id": "ID",
+            "portalId": "Portal ID",
+            "portalDescription": "Description",
+            "portalUser": "User",
+            "groupName": "Group",
+            "save": "Save",
+            "cancel": "Cancel",
+            "placeholder": {
+                "portalUrl": "Enter Portal URL",
+                "portalId": "ID will be generate",
+                "portalDescription": "Enter Portal Description",
+                "portalUser": "Select Portal User",
+                "groupName": "Select Group"
+            },
+            "message": {
+                "edit": "Portal is successfully edited",
+                "add": "Portal is successfully added",
+                "delete": "Portal is successfully deleted"
+            }
+        },
+        "userSearch": {
+            "title": "User Search",
+            "cancelButton": "Cancel",
+            "confirmButton": "Save",
+            "search": {
+                "placeholder": "Search for the user to assign to this portal",
+                "btn": "Search"
+            },
+            "assigneeGridColumns": {
+                "name": "Name",
+                "type": "Type",
+                "title": "Title",
+                "username": "Username"
+            }
+        },
+        "groupSearch": {
+            "title": "Group Search",
+            "cancelButton": "Cancel",
+            "confirmButton": "Save",
+            "search": {
+                "placeholder": "Search for the group where to add portal users",
+                "btn": "Search"
+            },
+            "assigneeGridColumns": {
+                "name": "Name",
+                "type": "Type",
+                "title": "Title",
+                "username": "Username"
+            }
+        },
         "dashboard.title": "Dashboard",
         "dashboard.config": "Dashboard Configuration",
         "dashboard.widgets": "Widgets",
