@@ -38,7 +38,10 @@ public class UserOrgPersistentEvent extends AcmEvent
     {
         super(source);
         setEventDate(new Date());
-        setUserId(source.getUser().getUserId());
+        if (source.getUser() != null)
+        {
+            setUserId(source.getUser().getUserId());
+        }
         setObjectId(source.getUserOrgId());
     }
 
