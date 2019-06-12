@@ -1037,6 +1037,43 @@
             "emailTemplates": {
                 "title": "メールテンプレート"
             }
+        },
+        "portals.portalsConfiguration": {
+            "nodeTitle": "ja_Portals Service",
+            "title": "ja_Portals Configuration",
+            "url": "ja_URL",
+            "id": "ja_ID",
+            "portalId": "ja_Portal ID",
+            "portalDescription": "ja_Description",
+            "portalUser": "ja_User",
+            "save": "ja_Save",
+            "cancel": "ja_Cancel",
+            "placeholder": {
+                "portalUrl": "ja_Enter Portal URL",
+                "portalId": "ja_ID will be generate",
+                "portalDescription": "ja_Enter Portal Description",
+                "portalUser": "ja_Select Portal User"
+            },
+            "message": {
+                "edit": "ja_Portal is successfully edited",
+                "add": "ja_Portal is successfully added",
+                "delete": "ja_Portal is successfully deleted"
+            }
+        },
+        "userSearch": {
+            "title": "ja_User Search",
+            "cancelButton": "ja_Cancel",
+            "confirmButton": "ja_Save",
+            "search": {
+                "placeholder": "ja_Search for the user to assign to this portal",
+                "btn": "ja_Search"
+            },
+            "assigneeGridColumns": {
+                "name": "ja_Name",
+                "type": "ja_Type",
+                "title": "ja_Title",
+                "username": "ja_Username"
+            }
         }
     }
 }

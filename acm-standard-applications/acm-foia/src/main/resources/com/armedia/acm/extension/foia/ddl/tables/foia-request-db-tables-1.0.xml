@@ -509,7 +509,7 @@ LANGUAGE plpgsql;
             <column name="fo_amendment_flag" type="VARCHAR(10)" defaultValue="false"/>
         </addColumn>
     </changeSet>
-
+    
     <changeSet id="29-acm-case-file-one-day-reminder-column" author="marko.stojanoski"
                logicalFilePath="/ddl/tables/foia-request-db-tables-1.0.xml">
         <addColumn tableName="acm_case_file">
@@ -523,5 +523,72 @@ LANGUAGE plpgsql;
             <column name="fo_five_days_reminder_sent" type="VARCHAR(10)" defaultValue="false"/>
         </addColumn>
     </changeSet>
+    
+    <changeSet id="31-create-table-acm_foia_portal_registration" author="lazo.lazarev" dbms="oracle,postgresql,mssql,mysql">
+        <createTable tableName="acm_foia_portal_registration">
+            <column name="cm_registration_id" type="${idType}">
+                <constraints primaryKeyName="pk_cm_registration" primaryKey="true"/>
+            </column>
+            <column name="cm_email_address" type="VARCHAR(1000)">
+                <constraints unique="true" uniqueConstraintName="uk_email_address" nullable="false"/>
+            </column>
+            <column name="cm_registration_key" type="VARCHAR(128)">
+                <constraints unique="true" uniqueConstraintName="uk_registration_key" nullable="false"/>
+            </column>
+            <column name="cm_registration_time" type="LONG"/>
+        </createTable>
+        <createIndex tableName="acm_foia_portal_registration" indexName="foia_portal_registration_unique_registration_id" unique="true">
+            <column name="cm_registration_id"/>
+        </createIndex>
+        <createTable tableName="acm_foia_portal_registration_id">
+            <column name="cm_seq_num" type="${idType}"/>
+            <column name="cm_seq_name" type="VARCHAR(255)"/>
+        </createTable>
+        <insert tableName="acm_foia_portal_registration_id">
+            <column name="cm_seq_num" value="100"/>
+            <column name="cm_seq_name" value="acm_foia_portal_registration"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="32-create-table-acm_foia_portal_reset" author="lazo.lazarev" dbms="oracle,postgresql,mssql,mysql">
+        <createTable tableName="acm_foia_portal_reset">
+            <column name="cm_reset_id" type="${idType}">
+                <constraints primaryKeyName="pk_cm_reset" primaryKey="true"/>
+            </column>
+            <column name="cm_email_address" type="VARCHAR(1000)">
+                <constraints unique="true" uniqueConstraintName="uk_email_address" nullable="false"/>
+            </column>
+            <column name="cm_reset_key" type="VARCHAR(128)">
+                <constraints unique="true" uniqueConstraintName="uk_reset_key" nullable="false"/>
+            </column>
+            <column name="cm_request_time" type="LONG"/>
+        </createTable>
+        <createIndex tableName="acm_foia_portal_reset" indexName="foia_portal_reset_unique_reset_id" unique="true">
+            <column name="cm_reset_id"/>
+        </createIndex>
+        <createTable tableName="acm_foia_portal_reset_id">
+            <column name="cm_seq_num" type="${idType}"/>
+            <column name="cm_seq_name" type="VARCHAR(255)"/>
+        </createTable>
+        <insert tableName="acm_foia_portal_reset_id">
+            <column name="cm_seq_num" value="100"/>
+            <column name="cm_seq_name" value="acm_foia_portal_reset"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="33-alter-table-acm_foia_portal_registration" author="lazo.lazarev" dbms="oracle,postgresql,mssql,mysql">
+        <addColumn tableName="acm_foia_portal_registration">
+            <column name="cm_portal_id" type="VARCHAR(128)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="34-create-table-acm_foia_person_portal_roles" author="lazo.lazarev" dbms="oracle,postgresql,mssql,mysql">
+        <createTable tableName="acm_foia_person_portal_roles">
+            <column name="cm_person_id" type="${idType}"/>
+            <column name="cm_portal_id" type="VARCHAR(128)"/>
+            <column name="cm_user_role" type="VARCHAR(64)"/>
+        </createTable>
+    </changeSet>
+    
 </databaseChangeLog>
 
