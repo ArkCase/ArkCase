@@ -107,6 +107,34 @@ public class  PortalRequestService
         return responseRequests;
     }
 
+    /**
+     * @param portalUserId
+     * @return
+     * @throws AcmObjectNotFoundException
+     */
+    public List<PortalFOIARequestStatus> getExternalRequests(String portalUserId) throws AcmObjectNotFoundException
+    {
+        List<PortalFOIARequestStatus> responseRequests = requestDao.getExternalRequests(portalUserId);
+        if (responseRequests.isEmpty())
+        {
+            log.info("FOIA Requests not found for user with id [{}].", portalUserId);
+            throw new AcmObjectNotFoundException("PortalFOIARequestStatus", null,
+                    "FOIA Requests not found for the user with id [" + portalUserId + "].");
+        }
+        return responseRequests;
+    }
+
+    /**
+     * @param portalUserId
+     * @param requestId
+     * @return
+     */
+    public PortalFOIARequestStatus getExternalRequest(String portalUserId, String requestId)
+    {
+        PortalFOIARequestStatus status = requestDao.getExternalRequest(portalUserId, requestId);
+        return status;
+    }
+
     public PortalFOIARequest checkRequestStatus(PortalFOIARequest portalFOIARequest)
     {
         FOIARequest foiaRequest = (FOIARequest) getCaseByNumberService.getCaseByNumber(portalFOIARequest.getOriginalRequestNumber());
