@@ -49,7 +49,8 @@ public class AcmUserDetailsContextMapper extends LdapUserDetailsMapper
     private static final Logger log = LoggerFactory.getLogger(AcmUserContextMapper.class);
 
     /**
-     * @param acmLdapSyncConfig LDAP directory properties configuration
+     * @param acmLdapSyncConfig
+     *            LDAP directory properties configuration
      */
     public AcmUserDetailsContextMapper(AcmLdapSyncConfig acmLdapSyncConfig)
     {

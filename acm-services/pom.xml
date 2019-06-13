@@ -68,6 +68,7 @@
         <module>acm-service-holiday</module>
         <module>acm-service-convert-file</module>
         <module>acm-service-case-suggestion</module>
+        <module>acm-service-portal-gateway</module>
     </modules>
 
 </project>
