@@ -52,14 +52,14 @@ public class SimilarCasesServiceImpl implements SimilarCasesService
     private ExecuteSolrQuery executeSolrQuery;
 
     @Override
-    public List<SuggestedCase> findSimilarCases(String title, Boolean isExtension, Authentication auth) throws MuleException, ParseException {
+    public List<SuggestedCase> findSimilarCases(String title, Boolean isPortal, Authentication auth) throws MuleException, ParseException {
 
         List<SuggestedCase> similarCases = new ArrayList<>();
 
-        similarCases.addAll(findSolrCasesByTitle(title, isExtension, auth));
-        similarCases.addAll(findSolrCasesByFileContent(title, isExtension, auth));
+        similarCases.addAll(findSolrCasesByTitle(title, isPortal, auth));
+        similarCases.addAll(findSolrCasesByFileContent(title, isPortal, auth));
 
-        if(isExtension)
+        if(isPortal)
         {
             return similarCases;
         }
@@ -69,14 +69,14 @@ public class SimilarCasesServiceImpl implements SimilarCasesService
         }
     }
 
-    private List<SuggestedCase> findSolrCasesByTitle(String title, Boolean isExtension, Authentication auth) throws MuleException, ParseException
+    private List<SuggestedCase> findSolrCasesByTitle(String title, Boolean isPortal, Authentication auth) throws MuleException, ParseException
     {
         List<SuggestedCase> records = new ArrayList<>();
 
         log.debug(String.format("Finding similar cases by title to [%s]", title));
 
         String query;
-        if(isExtension)
+        if(isPortal)
         {
             query = String.format("object_type_s:CASE_FILE AND request_status_lcs:Released AND title_parseable:*%s*", title);
         }
@@ -117,14 +117,14 @@ public class SimilarCasesServiceImpl implements SimilarCasesService
         return records;
     }
 
-    private List<SuggestedCase> findSolrCasesByFileContent(String title, Boolean isExtension, Authentication auth) throws MuleException, ParseException
+    private List<SuggestedCase> findSolrCasesByFileContent(String title, Boolean isPortal, Authentication auth) throws MuleException, ParseException
     {
         List<SuggestedCase> records = new ArrayList<>();
 
         log.debug(String.format("Finding similar cases in content to [%s]", title));
 
         String fileQuery;
-        if(isExtension)
+        if(isPortal)
         {
             fileQuery = String.format("*%s* AND object_type_s:FILE AND parent_ref_s:*CASE_FILE AND public_flag_b:true", title);
         }
@@ -159,7 +159,7 @@ public class SimilarCasesServiceImpl implements SimilarCasesService
         {
             String caseQuery;
 
-            if(isExtension)
+            if(isPortal)
             {
                 caseQuery = String.format("object_type_s:CASE_FILE AND request_status_lcs:Released AND name:*%s*", sc.getCaseNumber());
             }

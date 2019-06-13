@@ -37,6 +37,6 @@ import java.util.List;
 public interface SimilarCasesService
 {
 
-    List<SuggestedCase> findSimilarCases(String title, Boolean isExtension, Authentication auth) throws MuleException, ParseException;
+    List<SuggestedCase> findSimilarCases(String title, Boolean isPortal, Authentication auth) throws MuleException, ParseException;
 
 }
