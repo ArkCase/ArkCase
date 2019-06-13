@@ -44,8 +44,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.mule.api.MuleException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.security.core.Authentication;
 
 import java.text.ParseException;
@@ -75,7 +75,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
  */
 public class  PortalRequestService
 {
-    private final Logger log = LoggerFactory.getLogger(getClass());
+    private final Logger log = LogManager.getLogger(getClass());
 
     private FOIARequestDao requestDao;
 

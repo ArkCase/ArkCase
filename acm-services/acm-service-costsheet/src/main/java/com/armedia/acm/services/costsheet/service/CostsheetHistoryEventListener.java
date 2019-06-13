@@ -35,14 +35,14 @@ import com.armedia.acm.services.costsheet.model.AcmCostsheet;
 import com.armedia.acm.services.costsheet.model.AcmCostsheetAssociatedEvent;
 import com.armedia.acm.services.costsheet.model.AcmCostsheetEvent;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.context.ApplicationListener;
 
 public class CostsheetHistoryEventListener implements ApplicationListener<AcmCostsheetEvent>
 {
 
-    private final Logger LOG = LoggerFactory.getLogger(getClass());
+    private final Logger LOG = LogManager.getLogger(getClass());
     private AcmDataServiceImpl acmDataService;
     private CostsheetAssociatedEventPublisher costsheetAssociatedEventPublisher;
 

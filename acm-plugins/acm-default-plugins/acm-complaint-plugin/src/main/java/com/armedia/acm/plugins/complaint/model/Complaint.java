@@ -54,8 +54,8 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.voodoodyne.jackson.jsog.JSOGGenerator;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -110,7 +110,7 @@ public class Complaint implements Serializable, AcmAssignedObject, AcmEntity, Ac
         AcmLegacySystemEntity, AcmNotifiableEntity, AcmStatefulEntity, AcmTitleEntity, AcmObjectNumber, AcmObjectOriginator
 {
     private static final long serialVersionUID = -1154137631399833851L;
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private transient final Logger log = LogManager.getLogger(getClass());
 
     @Id
     @TableGenerator(name = "complaint_gen", table = "acm_complaint_id", pkColumnName = "cm_seq_name", valueColumnName = "cm_seq_num", pkColumnValue = "acm_complaint", initialValue = 100, allocationSize = 1)

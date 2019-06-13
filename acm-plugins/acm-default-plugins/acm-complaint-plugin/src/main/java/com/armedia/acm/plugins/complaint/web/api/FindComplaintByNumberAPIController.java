@@ -32,8 +32,8 @@ import com.armedia.acm.plugins.complaint.model.Complaint;
 import com.armedia.acm.plugins.complaint.service.GetComplaintByNumberService;
 import com.armedia.acm.services.dataaccess.service.impl.ArkPermissionEvaluator;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -52,7 +52,7 @@ import java.util.Arrays;
 public class FindComplaintByNumberAPIController
 {
 
-    private final Logger log = LoggerFactory.getLogger(getClass());
+    private final Logger log = LogManager.getLogger(getClass());
 
     private GetComplaintByNumberService getComplaintByNumberService;
 

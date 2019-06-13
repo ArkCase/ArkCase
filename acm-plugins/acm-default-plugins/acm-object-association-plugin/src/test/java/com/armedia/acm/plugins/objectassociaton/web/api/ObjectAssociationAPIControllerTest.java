@@ -47,8 +47,8 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
@@ -69,7 +69,7 @@ public class ObjectAssociationAPIControllerTest implements HandlerExceptionResol
 {
     @InjectMocks
     ObjectAssociationAPIController objectAssociationAPIController = new ObjectAssociationAPIController();
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
     private MockMvc mockMvc;
     @InjectMocks
     private ObjectAssociationService objectAssociationService = new ObjectAssociationServiceImpl();

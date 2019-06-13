@@ -38,8 +38,8 @@ import com.armedia.acm.plugins.dashboard.service.DashboardPropertyReader;
 import com.armedia.acm.plugins.dashboard.service.DashboardService;
 import com.armedia.acm.services.users.model.AcmUser;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -61,7 +61,7 @@ public class SetDashboardConfigAPIController
     private DashboardService dashboardService;
     private DashboardPropertyReader dashboardPropertyReader;
     private DashboardEventPublisher eventPublisher;
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
 
     @RequestMapping(value = "/set", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody

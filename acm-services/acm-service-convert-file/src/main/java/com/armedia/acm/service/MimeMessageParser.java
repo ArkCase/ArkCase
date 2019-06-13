@@ -31,8 +31,8 @@ import com.google.common.base.Strings;
 import com.google.common.io.BaseEncoding;
 import com.google.common.io.ByteStreams;
 import com.sun.mail.util.BASE64DecoderStream;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import javax.mail.MessagingException;
 import javax.mail.Multipart;
@@ -58,7 +58,7 @@ public class MimeMessageParser {
 	 * @throws Exception
 	 */
 	
-	private static Logger log = LoggerFactory.getLogger(MimeMessageParser.class);
+	private static Logger log = LogManager.getLogger(MimeMessageParser.class);
 	
 	private static void walkMimeStructure(Part p, int level, WalkMimeCallback callback) throws Exception {
 		callback.walkMimeCallback(p, level);

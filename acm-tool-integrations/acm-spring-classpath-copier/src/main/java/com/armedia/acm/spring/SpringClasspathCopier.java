@@ -27,8 +27,8 @@ package com.armedia.acm.spring;
  * #L%
  */
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -51,7 +51,7 @@ public class SpringClasspathCopier implements ApplicationContextAware
 
     private PathMatchingResourcePatternResolver resolver;
 
-    private transient Logger log = LoggerFactory.getLogger(getClass());
+    private transient Logger log = LogManager.getLogger(getClass());
 
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException

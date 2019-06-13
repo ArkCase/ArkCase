@@ -33,8 +33,8 @@ import com.armedia.acm.services.notification.dao.NotificationDao;
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.context.ApplicationListener;
 
 
@@ -43,7 +43,7 @@ public class OnForgotUsername implements ApplicationListener<ForgotUsernameEvent
 {
     private NotificationDao notificationDao;
     private UserDao userDao;
-    private final Logger log = LoggerFactory.getLogger(getClass());
+    private final Logger log = LogManager.getLogger(getClass());
     private AcmSpringActiveProfile acmSpringActiveProfile;
 
     @Override

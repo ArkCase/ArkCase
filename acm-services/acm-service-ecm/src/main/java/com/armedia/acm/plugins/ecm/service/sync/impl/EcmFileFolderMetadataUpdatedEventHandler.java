@@ -43,8 +43,8 @@ import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.context.ApplicationListener;
 
 import java.util.HashMap;
@@ -56,7 +56,7 @@ import java.util.Map;
 public class EcmFileFolderMetadataUpdatedEventHandler implements ApplicationListener<EcmEvent>
 {
 
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private transient final Logger log = LogManager.getLogger(getClass());
     private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
     private AcmFolderDao folderDao;
     private EcmFileDao fileDao;

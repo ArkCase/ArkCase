@@ -32,8 +32,8 @@ package com.armedia.acm.portalgateway.service;
 
 import com.armedia.acm.portalgateway.model.PortalInfo;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 /**
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Jun 13, 2018
@@ -41,7 +41,7 @@ import org.slf4j.LoggerFactory;
  */
 public class DefaultPortalCheckUserAssignementService implements PortalCheckUserAssignementService
 {
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private transient final Logger log = LogManager.getLogger(getClass());
 
     private PortalInfoDAO portalInfoDao;
 

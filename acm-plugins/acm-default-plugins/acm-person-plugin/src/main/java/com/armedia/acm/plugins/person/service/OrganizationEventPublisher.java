@@ -34,14 +34,14 @@ import com.armedia.acm.plugins.person.model.Organization;
 import com.armedia.acm.plugins.person.model.OrganizationEvent;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 
 public class OrganizationEventPublisher implements ApplicationEventPublisherAware
 {
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private transient final Logger log = LogManager.getLogger(getClass());
     private ApplicationEventPublisher eventPublisher;
     private AcmDiffService acmDiffService;
 

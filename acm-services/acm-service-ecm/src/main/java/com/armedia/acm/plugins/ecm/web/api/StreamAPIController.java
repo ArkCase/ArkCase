@@ -33,8 +33,8 @@ import com.armedia.acm.plugins.ecm.service.StreamService;
 
 import org.apache.catalina.connector.ClientAbortException;
 import org.mule.api.MuleException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -56,7 +56,7 @@ import java.io.IOException;
 @RequestMapping({ "/api/v1/plugin/ecm", "/api/latest/plugin/ecm" })
 public class StreamAPIController
 {
-    private final Logger LOG = LoggerFactory.getLogger(getClass());
+    private final Logger LOG = LogManager.getLogger(getClass());
 
     private StreamService streamService;
 

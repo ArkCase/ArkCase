@@ -27,8 +27,8 @@ package com.armedia.acm.plugins.dashboard.model.widget;
  * #L%
  */
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -46,7 +46,7 @@ import javax.persistence.TableGenerator;
 public class Widget
 {
     private static final long serialVersionUID = -1154137631399833851L;
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private transient final Logger log = LogManager.getLogger(getClass());
 
     @Id
     @TableGenerator(name = "acm_widget_gen", table = "acm_widget_id", pkColumnName = "cm_seq_name", valueColumnName = "cm_seq_num", pkColumnValue = "acm_widget", initialValue = 100, allocationSize = 1)

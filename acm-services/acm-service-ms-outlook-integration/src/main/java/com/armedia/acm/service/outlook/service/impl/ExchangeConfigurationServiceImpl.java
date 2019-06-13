@@ -32,8 +32,8 @@ import com.armedia.acm.service.outlook.model.ExchangeConfiguration;
 import com.armedia.acm.service.outlook.model.OutlookConfig;
 import com.armedia.acm.service.outlook.service.ExchangeConfigurationService;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.core.io.Resource;
 import org.springframework.security.core.Authentication;
 
@@ -48,7 +48,7 @@ import java.util.concurrent.locks.Lock;
 public class ExchangeConfigurationServiceImpl implements ExchangeConfigurationService
 {
 
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
 
     private OutlookConfig outlookConfig;
 

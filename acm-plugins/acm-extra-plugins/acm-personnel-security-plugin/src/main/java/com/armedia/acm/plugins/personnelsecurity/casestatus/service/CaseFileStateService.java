@@ -31,8 +31,8 @@ import com.armedia.acm.auth.AcmAuthenticationDetails;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.casefile.service.ChangeCaseFileStateService;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
@@ -42,7 +42,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
  */
 public class CaseFileStateService
 {
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private transient final Logger log = LogManager.getLogger(getClass());
 
     private ChangeCaseFileStateService changeCaseFileStateService;
 

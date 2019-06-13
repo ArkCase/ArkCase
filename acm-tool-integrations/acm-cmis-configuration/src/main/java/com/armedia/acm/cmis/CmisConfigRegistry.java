@@ -27,8 +27,8 @@ package com.armedia.acm.cmis;
  * #L%
  */
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -43,7 +43,7 @@ public class CmisConfigRegistry
     /**
      * Logger instance.
      */
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
 
     /**
      * Map of CMIS configurations.

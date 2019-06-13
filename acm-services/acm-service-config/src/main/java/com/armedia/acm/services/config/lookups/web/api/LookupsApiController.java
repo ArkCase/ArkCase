@@ -33,8 +33,8 @@ import com.armedia.acm.core.exceptions.InvalidLookupException;
 import com.armedia.acm.services.config.lookups.model.LookupDefinition;
 import com.armedia.acm.services.config.lookups.service.LookupDao;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -54,7 +54,7 @@ import java.io.IOException;
         "/api/latest/service/config/lookups" })
 public class LookupsApiController
 {
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private transient final Logger log = LogManager.getLogger(getClass());
 
     private LookupDao lookupDao;
 

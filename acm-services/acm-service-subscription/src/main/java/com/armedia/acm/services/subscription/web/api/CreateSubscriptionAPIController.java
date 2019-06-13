@@ -40,8 +40,8 @@ import org.apache.commons.lang.exception.ExceptionUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.mule.api.MuleException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -80,7 +80,7 @@ public class CreateSubscriptionAPIController
     private ExecuteSolrQuery executeSolrQuery;
     private SubscriptionEventPublisher subscriptionEventPublisher;
 
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
 
     @PreAuthorize("hasPermission(#objectId, #objectType, 'subscribe')")
     @RequestMapping(value = "/{userId}/{objType}/{objId}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)

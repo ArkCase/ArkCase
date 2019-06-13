@@ -47,8 +47,8 @@ import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.AcmUserActionName;
 
 import org.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -62,7 +62,7 @@ import java.util.List;
 public class ComplaintService extends FrevvoFormAbstractService implements FrevvoFormService
 {
 
-    private Logger LOG = LoggerFactory.getLogger(ComplaintService.class);
+    private Logger LOG = LogManager.getLogger(ComplaintService.class);
 
     private SaveComplaintTransaction saveComplaintTransaction;
     private PersonDao personDao;

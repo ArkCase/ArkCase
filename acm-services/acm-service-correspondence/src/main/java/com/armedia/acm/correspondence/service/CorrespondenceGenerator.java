@@ -17,8 +17,8 @@ import com.armedia.acm.spring.SpringContextHolder;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.jsoup.Jsoup;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.security.core.Authentication;
@@ -76,7 +76,7 @@ public class CorrespondenceGenerator
 {
     protected static final String WORD_MIME_TYPE = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
     protected static final String CORRESPONDENCE_CATEGORY = "Correspondence";
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private transient final Logger log = LogManager.getLogger(getClass());
     @PersistenceContext
     private EntityManager entityManager;
     private PoiWordGenerator wordGenerator;

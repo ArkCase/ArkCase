@@ -65,8 +65,8 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.scheduling.annotation.Async;
 
 import java.io.File;
@@ -85,7 +85,7 @@ public class AWSTranscribeServiceImpl implements TranscribeIntegrationService
 {
 
     private static final String AWS_TRANSCRIBE_PLUGIN = "AWS_TRANSCRIBE";
-    private final Logger LOG = LoggerFactory.getLogger(getClass());
+    private final Logger LOG = LogManager.getLogger(getClass());
     private AmazonS3 s3Client;
     private AmazonTranscribe transcribeClient;
     private MuleContextManager muleContextManager;

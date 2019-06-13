@@ -39,8 +39,8 @@ import com.armedia.acm.services.participants.model.CheckParticipantListModel;
 import com.armedia.acm.services.participants.service.AcmParticipantService;
 import com.armedia.acm.services.participants.service.ParticipantsBusinessRule;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import javax.persistence.FlushModeType;
 
@@ -52,7 +52,7 @@ import java.util.List;
  */
 public class DataAccessPrivilegeListener implements AcmBeforeUpdateListener, AcmBeforeInsertListener
 {
-    private final transient Logger log = LoggerFactory.getLogger(getClass());
+    private final transient Logger log = LogManager.getLogger(getClass());
     private AcmAssignedObjectBusinessRule assignmentBusinessRule;
     private AcmAssignedObjectBusinessRule accessControlBusinessRule;
     private ParticipantsBusinessRule participantsBusinessRule;

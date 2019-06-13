@@ -33,8 +33,8 @@ import com.armedia.acm.services.tag.service.TagEventPublisher;
 import com.armedia.acm.services.tag.service.TagService;
 
 import org.activiti.engine.impl.util.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -57,7 +57,7 @@ public class RemoveExistingTagAPIController
 
     private final static String SUCCESS_MSG = "Tag removed successfully: ";
     private final static String USER_ACTION = "DELETE";
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private transient final Logger log = LogManager.getLogger(getClass());
     private TagService tagService;
     private TagEventPublisher tagEventPublisher;
 

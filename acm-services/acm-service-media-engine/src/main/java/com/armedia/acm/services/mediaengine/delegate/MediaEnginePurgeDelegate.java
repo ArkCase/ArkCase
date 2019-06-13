@@ -32,15 +32,15 @@ import com.armedia.acm.services.mediaengine.model.MediaEngineBusinessProcessVari
 
 import org.activiti.engine.delegate.DelegateExecution;
 import org.activiti.engine.delegate.JavaDelegate;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 /**
  * Created by Vladimir Cherepnalkovski <vladimir.cherepnalkovski@armedia.com>
  */
 public class MediaEnginePurgeDelegate implements JavaDelegate
 {
-    private final Logger LOG = LoggerFactory.getLogger(getClass());
+    private final Logger LOG = LogManager.getLogger(getClass());
     private MediaEngineServiceFactory mediaEngineServiceFactory;
 
     @Override

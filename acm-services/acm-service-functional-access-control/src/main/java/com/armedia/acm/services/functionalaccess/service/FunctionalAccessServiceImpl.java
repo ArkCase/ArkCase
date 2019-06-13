@@ -43,8 +43,8 @@ import com.armedia.acm.services.users.model.group.AcmGroup;
 
 import org.json.JSONArray;
 import org.mule.api.MuleException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.security.core.Authentication;
@@ -64,7 +64,7 @@ import java.util.stream.Stream;
  */
 public class FunctionalAccessServiceImpl implements FunctionalAccessService, ApplicationListener<ApplicationEvent>
 {
-    private transient final Logger LOG = LoggerFactory.getLogger(getClass());
+    private transient final Logger LOG = LogManager.getLogger(getClass());
 
     private AcmRoleToGroupMapping roleToGroupMapping;
     private FunctionalAccessEventPublisher eventPublisher;

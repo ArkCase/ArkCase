@@ -36,8 +36,8 @@ import org.apache.chemistry.opencmis.commons.data.ContentStream;
 import org.mule.api.ExceptionPayload;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.io.InputStream;
 import java.util.HashMap;
@@ -48,7 +48,7 @@ import java.util.Map;
  */
 public class EcmFileMuleUtils
 {
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private transient final Logger log = LogManager.getLogger(getClass());
 
     private MuleContextManager muleContextManager;
 

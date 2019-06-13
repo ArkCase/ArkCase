@@ -27,8 +27,8 @@ package gov.foia.service;
  * #L%
  */
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -42,7 +42,7 @@ public class ScheduledHoldQueuePurger extends AbstractScheduledQueuePurger
 {
 
     private static final String PROCESS_USER = "HOLD_QUEUE_PURGER";
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private transient final Logger log = LogManager.getLogger(getClass());
 
     /**
      * @return the log

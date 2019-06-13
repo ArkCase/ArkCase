@@ -41,8 +41,8 @@ import com.armedia.acm.services.users.service.ldap.LdapEntryTransformer;
 import com.armedia.acm.spring.SpringContextHolder;
 
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.ldap.NameAlreadyBoundException;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -63,7 +63,7 @@ public class LdapGroupService
 
     private AcmGroupEventPublisher acmGroupEventPublisher;
 
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
 
     @Transactional(rollbackFor = Exception.class)
     public AcmGroup createLdapGroup(AcmGroup group, String directoryName) throws AcmLdapActionFailedException,

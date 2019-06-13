@@ -44,8 +44,8 @@ import com.armedia.acm.services.users.service.group.GroupService;
 import org.apache.commons.lang3.StringUtils;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -57,7 +57,7 @@ import java.util.stream.Collectors;
 
 public class UserOrgServiceImpl implements UserOrgService
 {
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
 
     private UserOrgDao userOrgDao;
 

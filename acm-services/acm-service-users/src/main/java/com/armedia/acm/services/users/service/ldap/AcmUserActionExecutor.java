@@ -33,8 +33,8 @@ package com.armedia.acm.services.users.service.ldap;
 import com.armedia.acm.services.users.dao.UserActionDao;
 import com.armedia.acm.services.users.model.AcmUserAction;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 /**
  * @author riste.tutureski
@@ -43,7 +43,7 @@ import org.slf4j.LoggerFactory;
 public class AcmUserActionExecutor
 {
 
-    private Logger LOG = LoggerFactory.getLogger(getClass());
+    private Logger LOG = LogManager.getLogger(getClass());
     private UserActionDao userActionDao;
 
     public boolean execute(Long objectId, String actionName, String userId)

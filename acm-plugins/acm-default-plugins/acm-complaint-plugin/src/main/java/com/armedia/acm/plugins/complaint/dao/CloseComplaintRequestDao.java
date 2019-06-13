@@ -32,8 +32,8 @@ import com.armedia.acm.plugins.complaint.model.CloseComplaintConstants;
 import com.armedia.acm.plugins.complaint.model.CloseComplaintRequest;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.Query;
@@ -51,7 +51,7 @@ import java.util.List;
  */
 public class CloseComplaintRequestDao extends AcmAbstractDao<CloseComplaintRequest>
 {
-    private Logger LOG = LoggerFactory.getLogger(getClass());
+    private Logger LOG = LogManager.getLogger(getClass());
 
     @Override
     protected Class<CloseComplaintRequest> getPersistenceClass()

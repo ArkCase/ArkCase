@@ -37,8 +37,8 @@ import com.armedia.acm.plugins.ecm.utils.PDFUtils;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.pipeline.handler.PipelineHandler;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.io.FileInputStream;
 import java.io.InputStream;
@@ -49,7 +49,7 @@ import java.util.List;
  */
 public class EcmFileMergeHandler implements PipelineHandler<EcmFile, EcmFileTransactionPipelineContext>
 {
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private transient final Logger log = LogManager.getLogger(getClass());
 
     private CaptureConfig captureConfig;
     private EcmFileDao ecmFileDao;

@@ -40,8 +40,8 @@ import com.armedia.acm.services.users.service.ldap.LdapSyncService;
 import com.armedia.acm.spring.SpringContextHolder;
 
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
@@ -60,7 +60,7 @@ import java.util.stream.Collectors;
  */
 public class UserIdGroupNameDomainUpdateExecutor implements AcmDataUpdateExecutor
 {
-    private static final Logger log = LoggerFactory.getLogger(UserIdGroupNameDomainUpdateExecutor.class);
+    private static final Logger log = LogManager.getLogger(UserIdGroupNameDomainUpdateExecutor.class);
 
     private UserDao userDao;
 

@@ -42,8 +42,8 @@ import com.armedia.acm.services.users.service.AcmUserRoleService;
 import org.apache.commons.lang3.StringUtils;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.w3c.dom.Document;
@@ -81,7 +81,7 @@ public class ReportServiceImpl implements ReportService
     private static final String PENTAHO_DASHBOARD_REPORT_EXTENSION = ".xdash";
     private static final String PENTAHO_ANALYSIS_REPORT_EXTENSION = ".xanalyzer";
     private static final String PENTAHO_INTERACTIVE_REPORT_EXTENSION = ".prpti";
-    private final Logger LOG = LoggerFactory.getLogger(getClass());
+    private final Logger LOG = LogManager.getLogger(getClass());
     private final String PENTAHO_REPORT_URL_TEMPLATE_DEFAULT = "/pentaho/api/repos/{path}/viewer";
     private final String PENTAHO_VIEW_REPORT_URL_PRPTI_TEMPLATE_DEFAULT = "/pentaho/api/repos/{path}/prpti.view";
     private final String PENTAHO_VIEW_DASHBOARD_REPORT_URL_TEMPLATE_DEFAULT = "/pentaho/api/repos/{path}/viewer?ts={timestamp}";
@@ -361,7 +361,12 @@ public class ReportServiceImpl implements ReportService
         try
         {
             InputStream inputStream = new ByteArrayInputStream(xml.getBytes());
-            DocumentBuilder documentBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+            DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+            dbf.setFeature( "http://apache.org/xml/features/disallow-doctype-decl", true);
+            dbf.setFeature("http://xml.org/sax/features/external-general-entities", false);
+            dbf.setFeature("http://xml.org/sax/features/external-parameter-entities", false);
+            dbf.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
+            DocumentBuilder documentBuilder = dbf.newDocumentBuilder();
             Document document = documentBuilder.parse(inputStream);
             Element element = document.getDocumentElement();
             JAXBContext context = JAXBContext.newInstance(c);

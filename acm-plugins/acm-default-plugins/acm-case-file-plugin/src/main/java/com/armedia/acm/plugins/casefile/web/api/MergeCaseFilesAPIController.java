@@ -37,8 +37,8 @@ import com.armedia.acm.plugins.casefile.service.MergeCaseService;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 
 import org.mule.api.MuleException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -55,7 +55,7 @@ import java.util.Objects;
 @RequestMapping({ "/api/v1/plugin/merge-casefiles", "/api/latest/plugin/merge-casefiles" })
 public class MergeCaseFilesAPIController
 {
-    private final Logger log = LoggerFactory.getLogger(getClass());
+    private final Logger log = LogManager.getLogger(getClass());
 
     private MergeCaseService mergeCaseService;
 

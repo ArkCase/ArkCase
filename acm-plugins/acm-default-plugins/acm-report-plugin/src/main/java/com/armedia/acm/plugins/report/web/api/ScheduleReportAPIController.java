@@ -35,8 +35,8 @@ import com.armedia.acm.plugins.report.model.ScheduleReportException;
 import com.armedia.acm.plugins.report.service.ScheduleReportService;
 
 import org.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -58,7 +58,7 @@ import java.util.Date;
 @RequestMapping({ "/api/v1/plugin/report", "/api/latest/plugin/report" })
 public class ScheduleReportAPIController
 {
-    private static final Logger LOGGER = LoggerFactory.getLogger(ScheduleReportAPIController.class);
+    private static final Logger LOGGER = LogManager.getLogger(ScheduleReportAPIController.class);
     private ScheduleReportService scheduleReportService;
     private PentahoReportsConfig pentahoReportsConfig;
 

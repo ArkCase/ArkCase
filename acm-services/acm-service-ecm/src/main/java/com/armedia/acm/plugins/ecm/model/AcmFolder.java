@@ -38,8 +38,8 @@ import com.google.common.base.Objects;
 import com.voodoodyne.jackson.jsog.JSOGGenerator;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -73,7 +73,7 @@ public class AcmFolder implements AcmEntity, Serializable, AcmObject, AcmAssigne
 
     private static final long serialVersionUID = -1087924246860797061L;
 
-    private transient final Logger LOG = LoggerFactory.getLogger(getClass());
+    private transient final Logger LOG = LogManager.getLogger(getClass());
 
     @Id
     @TableGenerator(name = "acm_folder_gen", table = "acm_folder_id", pkColumnName = "cm_seq_name", valueColumnName = "cm_seq_num", pkColumnValue = "acm_folder", initialValue = 100, allocationSize = 1)

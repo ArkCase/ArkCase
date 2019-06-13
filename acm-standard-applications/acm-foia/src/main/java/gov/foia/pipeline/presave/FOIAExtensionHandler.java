@@ -32,8 +32,8 @@ import com.armedia.acm.services.holiday.service.HolidayConfigurationService;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.pipeline.handler.PipelineHandler;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import gov.foia.dao.FOIARequestDao;
 import gov.foia.model.FOIAConstants;
@@ -42,7 +42,7 @@ import gov.foia.model.FoiaConfig;
 
 public class FOIAExtensionHandler implements PipelineHandler<FOIARequest, CaseFilePipelineContext>
 {
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private transient final Logger log = LogManager.getLogger(getClass());
 
     private FOIARequestDao foiaRequestDao;
     private HolidayConfigurationService holidayConfigurationService;

@@ -29,8 +29,8 @@ package com.armedia.acm.plugins.ecm.service.impl;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 
@@ -39,7 +39,7 @@ import org.springframework.core.io.Resource;
  */
 public class PageCountServiceImplTest
 {
-    private static final Logger LOGGER = LoggerFactory.getLogger(PageCountServiceImplTest.class);
+    private static final Logger LOGGER = LogManager.getLogger(PageCountServiceImplTest.class);
     private PageCountServiceImpl unit;
 
     @Before

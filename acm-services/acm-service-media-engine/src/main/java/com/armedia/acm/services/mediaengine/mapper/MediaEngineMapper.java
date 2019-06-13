@@ -31,8 +31,8 @@ import com.armedia.acm.objectonverter.ArkCaseBeanUtils;
 import com.armedia.acm.services.mediaengine.model.MediaEngine;
 import com.armedia.acm.tool.mediaengine.model.MediaEngineDTO;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -45,7 +45,7 @@ import java.util.Map;
  */
 public class MediaEngineMapper
 {
-    private final Logger LOG = LoggerFactory.getLogger(getClass());
+    private final Logger LOG = LogManager.getLogger(getClass());
 
     public MediaEngineDTO mediaEngineToDTO(MediaEngine mediaEngine, String tempPath)
     {

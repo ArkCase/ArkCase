@@ -39,8 +39,8 @@ import com.armedia.acm.plugins.casefile.model.CaseFileConstants;
 import com.armedia.acm.plugins.casefile.model.TimePeriod;
 import com.armedia.acm.services.participants.model.ParticipantTypes;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -64,7 +64,7 @@ import java.util.List;
 @Transactional
 public class CaseFileDao extends AcmAbstractDao<CaseFile> implements AcmNotificationDao, AcmNameDao
 {
-    private Logger LOG = LoggerFactory.getLogger(getClass());
+    private Logger LOG = LogManager.getLogger(getClass());
 
     @Transactional(propagation = Propagation.REQUIRED)
     @Override

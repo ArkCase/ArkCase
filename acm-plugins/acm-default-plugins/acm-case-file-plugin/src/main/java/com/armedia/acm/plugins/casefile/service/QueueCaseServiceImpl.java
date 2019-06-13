@@ -39,8 +39,8 @@ import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.users.service.tracker.UserTrackerService;
 import com.armedia.acm.web.api.MDCConstants;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.slf4j.MDC;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
@@ -57,7 +57,7 @@ import java.util.Date;
  */
 public class QueueCaseServiceImpl implements QueueCaseService, ApplicationEventPublisherAware
 {
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private transient final Logger log = LogManager.getLogger(getClass());
     private PipelineManager<CaseFile, CaseFilePipelineContext> queuePipelineManager;
     private CaseFileDao caseFileDao;
     private UserTrackerService userTrackerService;

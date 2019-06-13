@@ -42,8 +42,8 @@ import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
 
 import org.eclipse.persistence.dynamic.DynamicEntity;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -56,7 +56,7 @@ import java.util.stream.Collectors;
  */
 public class ComplaintCaptureFileEventListener extends AbstractBatchXMLFileListener
 {
-    private Logger LOG = LoggerFactory.getLogger(getClass());
+    private Logger LOG = LogManager.getLogger(getClass());
     private Long loadingDocumentsSeconds;
     private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
     private SaveComplaintTransaction saveComplaintTransaction;

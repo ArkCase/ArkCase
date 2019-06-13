@@ -31,8 +31,8 @@ import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.services.users.service.tracker.UserTrackerService;
 
 import org.mule.util.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -62,7 +62,7 @@ import gov.foia.service.FOIAFileService;
 @RequestMapping({ "/api/v1/service/ecm/file", "/api/latest/service/ecm/file" })
 public class ExemptionCodesAPIController
 {
-    private final Logger log = LoggerFactory.getLogger(getClass());
+    private final Logger log = LogManager.getLogger(getClass());
 
     private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
 
