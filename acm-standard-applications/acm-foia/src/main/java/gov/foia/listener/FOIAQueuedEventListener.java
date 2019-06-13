@@ -33,8 +33,8 @@ package gov.foia.listener;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.casefile.model.QueuedEvent;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.context.ApplicationListener;
 
 import java.time.LocalDateTime;
@@ -48,7 +48,7 @@ import gov.foia.model.FOIARequest;
  */
 public class FOIAQueuedEventListener implements ApplicationListener<QueuedEvent>
 {
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
 
     private FOIARequestDao requestDao;
 

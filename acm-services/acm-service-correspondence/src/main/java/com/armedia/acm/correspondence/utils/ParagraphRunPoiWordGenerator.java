@@ -33,8 +33,8 @@ import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.apache.poi.xwpf.usermodel.XWPFTable;
 import org.apache.poi.xwpf.usermodel.XWPFTableCell;
 import org.apache.poi.xwpf.usermodel.XWPFTableRow;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.core.io.Resource;
 
 import java.io.IOException;
@@ -50,7 +50,7 @@ public class ParagraphRunPoiWordGenerator implements PoiWordGenerator
 {
     public static final String substitutionPrefix = "${";
     public static final String substitutionSuffix = "}";
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private transient final Logger log = LogManager.getLogger(getClass());
 
     /**
      * Generate the Word document via direct manipulation of Word paragraph texts. This works seamlessly (user sees

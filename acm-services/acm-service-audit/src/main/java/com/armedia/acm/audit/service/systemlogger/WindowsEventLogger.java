@@ -30,8 +30,10 @@ package com.armedia.acm.audit.service.systemlogger;
 import com.armedia.acm.audit.model.AuditConfig;
 import com.armedia.acm.core.AcmApplication;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.commons.exec.DefaultExecutor;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.commons.exec.CommandLine;
 
 import java.io.IOException;
 
@@ -47,7 +49,7 @@ import java.io.IOException;
 public class WindowsEventLogger implements ISystemLogger
 {
     private static final String level = "Information";
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
     private AcmApplication acmApplication;
     private AuditConfig auditConfig;
 
@@ -63,11 +65,16 @@ public class WindowsEventLogger implements ISystemLogger
 
         try
         {
-            Runtime.getRuntime().exec(command);
+            CommandLine commandToBeExecuted = CommandLine.parse(command);
+            DefaultExecutor executor = new DefaultExecutor();
+            executor.execute(commandToBeExecuted);
+            executor.wait();
         }
         catch (IOException e)
         {
             log.error("Error writing to Windows Event Log!", e);
+        } catch (InterruptedException e) {
+           log.error("Command cannot be executed");
         }
     }
 

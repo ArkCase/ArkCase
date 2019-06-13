@@ -30,8 +30,8 @@ package com.armedia.acm.services.billing.dao;
 import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.services.billing.model.BillingInvoice;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
@@ -47,7 +47,7 @@ import java.util.List;
  */
 public class BillingInvoiceDao extends AcmAbstractDao<BillingInvoice>
 {
-    private final Logger log = LoggerFactory.getLogger(getClass());
+    private final Logger log = LogManager.getLogger(getClass());
 
     @PersistenceContext
     private EntityManager entityManager;

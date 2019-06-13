@@ -33,8 +33,8 @@ import com.armedia.acm.portalgateway.service.PortalRequestService;
 import com.armedia.acm.portalgateway.service.PortalRequestServiceException;
 import com.armedia.acm.portalgateway.service.PortalServiceExceptionMapper;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -56,7 +56,7 @@ import java.util.List;
 @RequestMapping(value = { "/api/v1/service/portalgateway/{portalId}/requests", "/api/latest/service/portalgateway/{portalId}/requests" })
 public class ArkCasePortalGatewayRequestAPIController
 {
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private transient final Logger log = LogManager.getLogger(getClass());
 
     private PortalRequestService portalRequestService;
 

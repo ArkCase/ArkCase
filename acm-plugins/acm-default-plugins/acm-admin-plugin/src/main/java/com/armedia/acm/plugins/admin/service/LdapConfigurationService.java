@@ -40,8 +40,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.InitializingBean;
 
 import java.io.File;
@@ -72,7 +72,7 @@ import freemarker.template.TemplateException;
  */
 public class LdapConfigurationService implements InitializingBean
 {
-    private Logger log = LoggerFactory.getLogger(LdapConfigurationService.class);
+    private Logger log = LogManager.getLogger(LdapConfigurationService.class);
 
     private AcmEncryptablePropertyUtils encryptablePropertyUtils;
 

@@ -39,8 +39,8 @@ import com.armedia.acm.plugins.ecm.model.RecycleBinItem;
 import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
 import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.util.Date;
 import java.util.List;
@@ -53,7 +53,7 @@ import java.util.Optional;
 
 public class RecycleBinItemToSolrTransformer implements AcmObjectToSolrDocTransformer<RecycleBinItem>
 {
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private transient final Logger log = LogManager.getLogger(getClass());
     private RecycleBinItemDao recycleBinItemDao;
     private EcmFileDao ecmFileDao;
     private AcmContainerDao acmContainerDao;

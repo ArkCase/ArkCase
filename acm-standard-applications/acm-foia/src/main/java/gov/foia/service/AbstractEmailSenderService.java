@@ -31,8 +31,8 @@ import com.armedia.acm.services.email.model.EmailWithAttachmentsDTO;
 import com.armedia.acm.services.email.service.AcmEmailSenderService;
 import com.armedia.acm.services.users.model.AcmUser;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.core.io.Resource;
 import org.springframework.security.core.Authentication;
 
@@ -46,7 +46,7 @@ import java.util.Map;
 @Deprecated
 public abstract class AbstractEmailSenderService
 {
-    private transient final Logger log = LoggerFactory.getLogger(this.getClass());
+    private transient final Logger log = LogManager.getLogger(this.getClass());
     private AcmEmailSenderService emailSenderService;
     private String emailTemplate;
 

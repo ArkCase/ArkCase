@@ -40,8 +40,8 @@ import com.armedia.acm.services.mediaengine.model.MediaEngineConfiguration;
 import com.armedia.acm.services.mediaengine.model.MediaEngineType;
 import com.armedia.acm.services.mediaengine.service.MediaEngineService;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.context.ApplicationListener;
 
 import java.util.Map;
@@ -51,7 +51,7 @@ import java.util.Map;
  */
 public class EcmFileReplacedListener implements ApplicationListener<EcmFileReplacedEvent>
 {
-    private final Logger LOG = LoggerFactory.getLogger(getClass());
+    private final Logger LOG = LogManager.getLogger(getClass());
 
     private FolderAndFilesUtils folderAndFilesUtils;
     private MediaEngineServiceFactory mediaEngineServiceFactory;

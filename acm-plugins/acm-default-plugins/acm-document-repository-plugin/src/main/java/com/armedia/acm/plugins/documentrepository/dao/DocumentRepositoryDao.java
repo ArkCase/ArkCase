@@ -33,8 +33,8 @@ import com.armedia.acm.data.AcmNotificationDao;
 import com.armedia.acm.plugins.documentrepository.model.DocumentRepository;
 import com.armedia.acm.plugins.documentrepository.model.DocumentRepositoryConstants;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.NoResultException;
@@ -43,7 +43,7 @@ import javax.persistence.TypedQuery;
 @Transactional
 public class DocumentRepositoryDao extends AcmAbstractDao<DocumentRepository> implements AcmNotificationDao
 {
-    final private Logger log = LoggerFactory.getLogger(getClass());
+    final private Logger log = LogManager.getLogger(getClass());
 
     @Override
     protected Class<DocumentRepository> getPersistenceClass()

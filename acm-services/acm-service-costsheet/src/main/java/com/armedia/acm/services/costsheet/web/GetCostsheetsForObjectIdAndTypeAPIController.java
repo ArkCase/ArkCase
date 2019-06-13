@@ -35,8 +35,8 @@ import com.armedia.acm.services.costsheet.model.AcmCostsheet;
 import com.armedia.acm.services.costsheet.model.CostsheetConstants;
 import com.armedia.acm.services.costsheet.service.CostsheetService;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -57,7 +57,7 @@ import java.util.List;
 public class GetCostsheetsForObjectIdAndTypeAPIController
 {
 
-    private Logger LOG = LoggerFactory.getLogger(getClass());
+    private Logger LOG = LogManager.getLogger(getClass());
     private CostsheetService costsheetService;
 
     @RequestMapping(value = "/objectId/{objectId}/objectType/{objectType}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)

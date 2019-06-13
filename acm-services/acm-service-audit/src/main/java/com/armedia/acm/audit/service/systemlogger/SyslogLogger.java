@@ -41,8 +41,8 @@ import org.apache.logging.log4j.core.config.DefaultConfiguration;
 import org.apache.logging.log4j.core.config.LoggerConfig;
 import org.apache.logging.log4j.core.layout.Rfc5424Layout;
 import org.apache.logging.log4j.core.net.Facility;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 /**
  * Syslog implementation of {@link ISystemLogger}.
@@ -99,7 +99,7 @@ public class SyslogLogger implements ISystemLogger
         config.addLogger(SYSLOG_LOGGER_NAME, loggerConfig);
         ctx.updateLoggers();
 
-        logger = LoggerFactory.getLogger(SYSLOG_LOGGER_NAME);
+        logger = LogManager.getLogger(SYSLOG_LOGGER_NAME);
     }
 
     public AcmApplication getAcmApplication()

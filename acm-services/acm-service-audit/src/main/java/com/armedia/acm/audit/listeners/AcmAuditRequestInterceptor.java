@@ -33,8 +33,8 @@ import com.armedia.acm.audit.model.AuditEvent;
 import com.armedia.acm.audit.service.AuditService;
 import com.armedia.acm.web.api.MDCConstants;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.slf4j.MDC;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
@@ -61,7 +61,7 @@ import java.util.UUID;
 public class AcmAuditRequestInterceptor extends HandlerInterceptorAdapter
 {
     public static final String EVENT_TYPE = "com.armedia.acm.audit.request";
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
     private AuditService auditService;
     private AuditConfig auditConfig;
 

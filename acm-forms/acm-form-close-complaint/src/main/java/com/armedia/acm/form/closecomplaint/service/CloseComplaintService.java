@@ -50,8 +50,8 @@ import com.armedia.acm.plugins.complaint.model.ComplaintUpdatedEvent;
 import com.armedia.acm.services.users.model.AcmUserActionName;
 
 import org.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.util.MultiValueMap;
@@ -65,7 +65,7 @@ import java.util.Date;
 public class CloseComplaintService extends FrevvoFormAbstractService implements ApplicationEventPublisherAware
 {
 
-    private Logger LOG = LoggerFactory.getLogger(CloseComplaintService.class);
+    private Logger LOG = LogManager.getLogger(CloseComplaintService.class);
     private ComplaintDao complaintDao;
     private CaseFileDao caseFileDao;
     private CloseComplaintRequestDao closeComplaintRequestDao;

@@ -34,8 +34,8 @@ import com.armedia.acm.services.email.service.TemplatingEngine;
 import com.armedia.acm.services.notification.dao.NotificationDao;
 import com.armedia.acm.services.notification.model.Notification;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -46,7 +46,7 @@ import java.util.stream.Collectors;
 public class AcmEmailMentionsService
 {
 
-    private final Logger log = LoggerFactory.getLogger(getClass());
+    private final Logger log = LogManager.getLogger(getClass());
 
     private AcmApplication acmAppConfiguration;
     private TemplatingEngine templatingEngine;

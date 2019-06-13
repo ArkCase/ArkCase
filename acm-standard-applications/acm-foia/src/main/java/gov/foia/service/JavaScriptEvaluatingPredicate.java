@@ -27,8 +27,8 @@ package gov.foia.service;
  * #L%
  */
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import javax.script.Invocable;
 import javax.script.ScriptEngine;
@@ -81,7 +81,7 @@ public class JavaScriptEvaluatingPredicate<T> implements Predicate<T>
     /**
      * Logger instance.
      */
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
 
     private ScriptEngine engine;
 

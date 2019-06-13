@@ -31,8 +31,8 @@ import com.armedia.acm.services.sequence.exception.AcmSequenceException;
 import com.armedia.acm.services.sequence.model.AcmSequencePart;
 
 import org.apache.commons.beanutils.PropertyUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
@@ -43,7 +43,7 @@ import java.util.Map;
  */
 public class AcmObjectPropertySequenceGenerator implements AcmSequenceGenerator
 {
-    private final Logger log = LoggerFactory.getLogger(getClass());
+    private final Logger log = LogManager.getLogger(getClass());
 
     private AcmSequenceGeneratorManager sequenceGeneratorManager;
 

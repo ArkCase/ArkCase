@@ -30,8 +30,8 @@ package com.armedia.acm.services.dataupdate.dao;
 import com.armedia.acm.services.users.model.group.AcmGroup;
 import com.armedia.acm.services.users.model.group.AcmGroupStatus;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
@@ -44,7 +44,7 @@ import java.util.List;
 
 public class GroupUUIDUpdateDao
 {
-    private final Logger log = LoggerFactory.getLogger(GroupUUIDUpdateDao.class);
+    private final Logger log = LogManager.getLogger(GroupUUIDUpdateDao.class);
 
     @PersistenceContext
     private EntityManager em;

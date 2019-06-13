@@ -35,8 +35,8 @@ import com.armedia.acm.service.FileConverterFactory;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.pipeline.handler.PipelineHandler;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Value;
 
 import java.io.File;
@@ -46,7 +46,7 @@ import java.util.Objects;
 
 public class FileUploadConversionHandler implements PipelineHandler<EcmFile, EcmFileTransactionPipelineContext> {
 
-	private final Logger log = LoggerFactory.getLogger(getClass());
+	private final Logger log = LogManager.getLogger(getClass());
 
 	private FileConverterFactory fileConverterFactory;
 	private EcmFileService ecmFileService;

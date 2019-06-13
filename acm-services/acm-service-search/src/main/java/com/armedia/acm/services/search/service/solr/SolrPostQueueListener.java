@@ -29,8 +29,8 @@ package com.armedia.acm.services.search.service.solr;
 
 import com.armedia.acm.services.search.model.SolrCore;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.jms.annotation.JmsListener;
 
 /**
@@ -38,7 +38,7 @@ import org.springframework.jms.annotation.JmsListener;
  */
 public class SolrPostQueueListener
 {
-    private transient final Logger logger = LoggerFactory.getLogger(getClass());
+    private transient final Logger logger = LogManager.getLogger(getClass());
 
     private SolrPostClient solrPostClient;
 

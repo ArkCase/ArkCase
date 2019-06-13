@@ -28,8 +28,8 @@ package com.armedia.acm.form.config;
  */
 
 import org.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -44,7 +44,7 @@ import javax.servlet.http.HttpServletResponse;
 @RequestMapping({ "/api/v1/service/forms/type", "/api/latest/service/forms/type" })
 public class FormsTypeConfigurationController
 {
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
     private FormsTypeManagementService formsTypeManagementService;
 
     @RequestMapping(method = RequestMethod.GET, produces = {

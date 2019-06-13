@@ -35,8 +35,8 @@ import com.armedia.acm.service.stateofarkcase.service.ErrorsLogFileService;
 import com.armedia.acm.service.stateofarkcase.service.StateOfArkcaseReportGenerator;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -58,7 +58,7 @@ import java.util.Map;
 
 public class AcmStateOfArkcaseServiceImpl implements AcmStateOfArkcaseService
 {
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
     private StateOfArkcaseReportGenerator stateOfArkcaseReportGenerator;
     private ErrorsLogFileService errorsLogFileService;
     private int deleteReportsOlderThanDays = 7;

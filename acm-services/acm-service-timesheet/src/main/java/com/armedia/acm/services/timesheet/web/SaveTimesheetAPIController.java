@@ -36,8 +36,8 @@ import com.armedia.acm.services.timesheet.model.AcmTimesheet;
 import com.armedia.acm.services.timesheet.model.TimesheetConstants;
 import com.armedia.acm.services.timesheet.service.TimesheetService;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -56,7 +56,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class SaveTimesheetAPIController
 {
 
-    private Logger LOG = LoggerFactory.getLogger(getClass());
+    private Logger LOG = LogManager.getLogger(getClass());
     private TimesheetService timesheetService;
 
     @RequestMapping(value = "/{submissionName}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)

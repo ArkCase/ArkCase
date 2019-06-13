@@ -40,8 +40,8 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.vfs2.FileObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.slf4j.MDC;
 import org.springframework.context.ApplicationListener;
 import org.springframework.security.core.Authentication;
@@ -68,7 +68,7 @@ public class AttachmentCaptureFileListener implements ApplicationListener<Abstra
     private final String PARENT_ID_FILE_ID_PATTERN = "^\\d+_\\d+$";
     private final String FILE_ID_PATTERN = "^\\d+$";
 
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
 
     private EcmFileService ecmFileService;
     private AuditPropertyEntityAdapter auditPropertyEntityAdapter;

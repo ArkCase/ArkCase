@@ -37,15 +37,15 @@ import com.armedia.acm.plugins.person.model.PersonOrganizationConstants;
 import com.armedia.acm.services.search.service.SolrJoinDocumentsServiceImpl;
 
 import org.mule.api.MuleException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.TransactionException;
 
 public class PersonAssociationServiceImpl implements PersonAssociationService
 {
     SolrJoinDocumentsServiceImpl solrJoinDocumentsService;
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
     private SavePersonAssociationTransaction personAssociationTransaction;
     private PersonAssociationDao personAssociationDao;
     private PersonAssociationEventPublisher personAssociationEventPublisher;

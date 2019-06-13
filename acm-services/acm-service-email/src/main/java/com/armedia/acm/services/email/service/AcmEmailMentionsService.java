@@ -34,8 +34,8 @@ import com.armedia.acm.services.email.model.EmailBuilder;
 import com.armedia.acm.services.email.model.EmailMentionsDTO;
 import com.armedia.acm.services.email.model.MentionsEmailConfig;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.util.AbstractMap;
 import java.util.ArrayList;
@@ -50,7 +50,7 @@ import java.util.stream.Stream;
 public class AcmEmailMentionsService
 {
 
-    private final Logger log = LoggerFactory.getLogger(getClass());
+    private final Logger log = LogManager.getLogger(getClass());
 
     private AcmEmailSenderService emailSenderService;
     private AcmApplication acmAppConfiguration;

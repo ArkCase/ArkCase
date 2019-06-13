@@ -30,8 +30,8 @@ package com.armedia.acm.service.identity.dao;
 import com.armedia.acm.service.identity.exceptions.AcmIdentityException;
 
 import org.apache.commons.codec.binary.Base64;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -53,7 +53,7 @@ public class AcmArkcaseLocalIdentityDao implements AcmArkcaseIdentityDao
     public static final String PROPERTY_DIGEST = "digest";
     public static final String PROPERTY_DATE_CREATED = "date_created";
     public static final String HASH_ALGORITHM = "SHA-256";
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private transient final Logger log = LogManager.getLogger(getClass());
     private Path identityFilePath;
 
     @Override

@@ -30,8 +30,8 @@ package com.armedia.acm.plugins.stateofarkcaseplugin.web.api;
 import com.armedia.acm.core.exceptions.AcmStateOfArkcaseGenerateReportException;
 import com.armedia.acm.plugins.stateofarkcaseplugin.service.AcmStateOfArkcaseService;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpHeaders;
@@ -56,7 +56,7 @@ import java.time.LocalDate;
         "/api/latest/plugin/state-of-arkcase" })
 public class AcmStateOfArkcaseAPIController
 {
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
 
     private AcmStateOfArkcaseService acmStateOfArkcaseService;
 

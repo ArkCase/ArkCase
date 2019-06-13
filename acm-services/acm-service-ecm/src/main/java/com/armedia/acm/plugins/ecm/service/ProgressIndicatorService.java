@@ -29,8 +29,8 @@ package com.armedia.acm.plugins.ecm.service;
 
 import com.armedia.acm.plugins.ecm.model.ProgressbarDetails;
 import org.apache.commons.io.input.CountingInputStream;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import java.util.HashMap;
@@ -38,7 +38,7 @@ import java.util.Map;
 
 public class ProgressIndicatorService
 {
-    private Logger LOG = LoggerFactory.getLogger(getClass());
+    private Logger LOG = LogManager.getLogger(getClass());
 
     private Map<String, ProgressbarExecutor> progressBars = new HashMap<>();
     @Autowired

@@ -29,8 +29,8 @@ package com.armedia.acm.plugins.ecm.service;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import javax.json.JsonException;
 
@@ -39,7 +39,7 @@ import java.util.Set;
 
 public interface SupportsFileTypes
 {
-    Logger log = LoggerFactory.getLogger(SupportsFileTypes.class);
+    Logger log = LogManager.getLogger(SupportsFileTypes.class);
 
     Set<String> getFileTypes();
 

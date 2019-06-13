@@ -30,8 +30,8 @@ package com.armedia.acm.correspondence.utils;
 import org.apache.poi.POIXMLProperties;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.openxmlformats.schemas.officeDocument.x2006.customProperties.CTProperty;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.core.io.Resource;
 
 import java.io.IOException;
@@ -44,7 +44,7 @@ import java.util.Map;
  */
 public class CustomPropertyPoiWordGenerator implements PoiWordGenerator
 {
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private transient final Logger log = LogManager.getLogger(getClass());
 
     /**
      * Generate the Word document via setting custom Word property values. The template must have custom

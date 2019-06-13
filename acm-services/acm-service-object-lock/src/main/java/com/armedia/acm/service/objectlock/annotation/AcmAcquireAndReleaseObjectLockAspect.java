@@ -37,8 +37,8 @@ import com.armedia.acm.web.api.MDCConstants;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.slf4j.MDC;
 import org.springframework.stereotype.Component;
 
@@ -55,7 +55,7 @@ import java.util.List;
 @Component
 public class AcmAcquireAndReleaseObjectLockAspect
 {
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
 
     private AcmObjectLockingManager objectLockingManager;
     private AcmObjectLockService objectLockService;

@@ -34,8 +34,8 @@ import com.armedia.acm.form.config.FormUrl;
 import com.armedia.acm.frevvo.model.FrevvoFormConstants;
 import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenService;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.context.request.RequestAttributes;
@@ -58,7 +58,7 @@ import java.util.stream.Collectors;
 public class FrevvoFormUrl implements FormUrl
 {
 
-    private Logger LOG = LoggerFactory.getLogger(FrevvoFormUrl.class);
+    private Logger LOG = LogManager.getLogger(FrevvoFormUrl.class);
 
     private Map<String, Object> properties;
     private Properties plainFormProperties;

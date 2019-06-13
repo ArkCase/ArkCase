@@ -31,15 +31,15 @@ import com.armedia.acm.plugins.task.model.TaskConstants;
 
 import org.activiti.engine.delegate.DelegateExecution;
 import org.activiti.engine.delegate.ExecutionListener;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 /**
  * Created by dmiller on 1/16/2017.
  */
 public class BuckslipWorkflowStartedListener implements ExecutionListener
 {
-    private transient final Logger LOG = LoggerFactory.getLogger(getClass());
+    private transient final Logger LOG = LogManager.getLogger(getClass());
 
     @Override
     public void notify(DelegateExecution delegateExecution) throws Exception

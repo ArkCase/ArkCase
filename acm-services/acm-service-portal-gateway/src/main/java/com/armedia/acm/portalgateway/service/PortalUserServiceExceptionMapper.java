@@ -34,8 +34,8 @@ import static com.armedia.acm.portalgateway.service.PortalRequestServiceProvider
 import static com.armedia.acm.portalgateway.service.PortalRequestServiceProvider.SUBMIT_REQUEST_METHOD_CREATE_REQUEST;
 import static com.armedia.acm.portalgateway.service.PortalRequestServiceProvider.SUBMIT_REQUEST_METHOD_DESERIALIZE;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.http.HttpStatus;
 
 import java.util.HashMap;
@@ -48,7 +48,7 @@ import java.util.Map;
 public class PortalUserServiceExceptionMapper implements PortalServiceExceptionMapper
 {
 
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private transient final Logger log = LogManager.getLogger(getClass());
 
     private PortalUserServiceException exception;
 

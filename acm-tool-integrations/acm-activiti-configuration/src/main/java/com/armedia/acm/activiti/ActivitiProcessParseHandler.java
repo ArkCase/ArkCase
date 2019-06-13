@@ -31,8 +31,8 @@ import org.activiti.bpmn.model.ActivitiListener;
 import org.activiti.bpmn.model.BaseElement;
 import org.activiti.engine.impl.bpmn.parser.BpmnParse;
 import org.activiti.engine.impl.bpmn.parser.handler.AbstractBpmnParseHandler;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.util.List;
 
@@ -42,7 +42,7 @@ import java.util.List;
 public class ActivitiProcessParseHandler extends AbstractBpmnParseHandler<org.activiti.bpmn.model.Process>
 {
     private List<ActivitiListener> listenersToAdd;
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
 
     @Override
     protected void executeParse(BpmnParse bpmnParse, org.activiti.bpmn.model.Process element)

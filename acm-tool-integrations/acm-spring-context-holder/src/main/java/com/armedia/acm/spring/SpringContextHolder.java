@@ -36,8 +36,8 @@ import com.armedia.acm.spring.events.ContextRemovedEvent;
 import com.armedia.acm.spring.events.ContextReplacedEvent;
 import com.armedia.acm.spring.exceptions.AcmContextHolderException;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.aop.scope.ScopedProxyUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
@@ -69,7 +69,7 @@ public class SpringContextHolder
     private ApplicationContext toplevelContext;
     private Map<String, AbstractApplicationContext> childContextMap = new ConcurrentHashMap<>();
 
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
     private ApplicationEventPublisher applicationEventPublisher;
 
     // parent folder is "spring" and name is like spring-config-*[-*].xml

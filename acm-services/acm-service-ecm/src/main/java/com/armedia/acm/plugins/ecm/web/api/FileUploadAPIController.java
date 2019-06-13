@@ -45,8 +45,8 @@ import com.armedia.acm.services.dataaccess.service.impl.ArkPermissionEvaluator;
 import org.apache.chemistry.opencmis.client.api.Document;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.http.HttpStatus;
@@ -69,7 +69,7 @@ import java.util.*;
 public class FileUploadAPIController implements ApplicationEventPublisherAware
 {
     private final String uploadFileType = "attachment";
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
     private EcmFileService ecmFileService;
     private AcmFolderService acmFolderService;
     private ObjectConverter objectConverter;

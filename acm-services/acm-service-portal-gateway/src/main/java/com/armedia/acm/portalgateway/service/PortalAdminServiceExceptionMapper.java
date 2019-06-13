@@ -32,8 +32,8 @@ import static com.armedia.acm.portalgateway.service.PortalAdminService.UNREGISTE
 import static com.armedia.acm.portalgateway.service.PortalAdminService.UPDATE_METHOD_PORTAL;
 import static com.armedia.acm.portalgateway.service.PortalAdminService.UPDATE_METHOD_USER;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.http.HttpStatus;
 
 import java.util.HashMap;
@@ -45,7 +45,7 @@ import java.util.Map;
  */
 public class PortalAdminServiceExceptionMapper implements PortalServiceExceptionMapper
 {
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private transient final Logger log = LogManager.getLogger(getClass());
 
     private PortalAdminServiceException exception;
 

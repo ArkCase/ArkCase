@@ -32,8 +32,8 @@ import static com.armedia.acm.portalgateway.model.PortalInfo.FIND_PORTAL_INFO_BY
 import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.portalgateway.model.PortalInfo;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.transaction.annotation.Transactional;
@@ -45,7 +45,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class PortalInfoDAO extends AcmAbstractDao<PortalInfo>
 {
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private transient final Logger log = LogManager.getLogger(getClass());
 
     /*
      * (non-Javadoc)

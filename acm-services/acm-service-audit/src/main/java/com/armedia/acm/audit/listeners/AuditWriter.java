@@ -35,8 +35,8 @@ import com.armedia.acm.core.model.AcmEvent;
 import com.armedia.acm.web.api.AsyncApplicationListener;
 import com.armedia.acm.web.api.MDCConstants;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.slf4j.MDC;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;
@@ -54,7 +54,7 @@ import java.util.UUID;
 @AsyncApplicationListener
 public class AuditWriter implements ApplicationListener<ApplicationEvent>
 {
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
 
     private AuditEventDescriptionConfig auditEventDescriptionConfig;
 

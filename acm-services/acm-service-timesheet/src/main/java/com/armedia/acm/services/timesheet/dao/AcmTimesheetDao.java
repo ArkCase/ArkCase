@@ -35,8 +35,8 @@ import com.armedia.acm.services.timesheet.model.AcmTime;
 import com.armedia.acm.services.timesheet.model.AcmTimesheet;
 import com.armedia.acm.services.timesheet.model.TimesheetConstants;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
@@ -57,7 +57,7 @@ import java.util.List;
 public class AcmTimesheetDao extends AcmAbstractDao<AcmTimesheet>
 {
 
-    private Logger LOG = LoggerFactory.getLogger(getClass());
+    private Logger LOG = LogManager.getLogger(getClass());
 
     @Override
     protected Class<AcmTimesheet> getPersistenceClass()

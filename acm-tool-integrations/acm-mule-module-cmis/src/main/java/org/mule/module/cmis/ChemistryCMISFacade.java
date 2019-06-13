@@ -75,7 +75,7 @@ import org.apache.chemistry.opencmis.commons.impl.dataobjects.ContentStreamImpl;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.Validate;
 import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.Logger;;
 import org.mule.module.cmis.exception.CMISConnectorConnectionException;
 
 import java.io.ByteArrayInputStream;

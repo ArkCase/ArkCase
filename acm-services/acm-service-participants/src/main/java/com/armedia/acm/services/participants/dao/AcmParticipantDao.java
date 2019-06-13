@@ -32,8 +32,8 @@ import com.armedia.acm.services.participants.model.AcmAssignedObject;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 
 import org.apache.commons.lang3.reflect.FieldUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -53,7 +53,7 @@ import java.util.Set;
 public class AcmParticipantDao extends AcmAbstractDao<AcmParticipant>
 {
 
-    private final transient Logger log = LoggerFactory.getLogger(getClass());
+    private final transient Logger log = LogManager.getLogger(getClass());
 
     @Override
     protected Class<AcmParticipant> getPersistenceClass()
