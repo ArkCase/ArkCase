@@ -159,7 +159,7 @@ public class ExchangeCalendarService
         if (!configurationsByType.containsKey(objectType) || !configurationsByType.get(objectType).isIntegrationEnabled())
         {
             log.warn("Calendar integration is not enabled for [{}] object type.", objectType);
-            return Optional.ofNullable(null);
+            return Optional.empty();
         }
 
         CalendarEntityHandler handler = Optional.ofNullable(findEntityHandlerByObjectType(objectType))
@@ -398,7 +398,7 @@ public class ExchangeCalendarService
             throws ServiceLocalException, Exception
     {
         List<String> attachmentsIds = calendarEvent.getFiles().stream().map(att -> att.getAttachmentId()).collect(Collectors.toList());
-        if (attachmentsIds != null && !attachmentsIds.isEmpty())
+        if (!attachmentsIds.isEmpty())
         {
             List<Attachment> attachmentsToRemove = appointment.getAttachments().getItems().stream()
                     .filter(attachment -> attachmentsIds.contains(attachment.getId())).collect(Collectors.toList());
