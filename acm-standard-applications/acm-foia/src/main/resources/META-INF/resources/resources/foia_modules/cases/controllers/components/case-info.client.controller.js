@@ -2,9 +2,9 @@
 
 angular.module('cases').controller(
     'Cases.InfoController',
-    [ '$scope', '$stateParams', '$translate', '$timeout', 'UtilService', 'Util.DateService', 'ConfigService', 'Object.LookupService', 'Case.LookupService', 'Case.InfoService', 'Object.ModelService', 'Helper.ObjectBrowserService', 'DueDate.Service', 'Admin.HolidayService',
-        'MessageService', '$modal', 'LookupService', 'Admin.FoiaConfigService', 'Admin.ObjectTitleConfigurationService',
-        function($scope, $stateParams, $translate, $timeout, Util, UtilDateService, ConfigService, ObjectLookupService, CaseLookupService, CaseInfoService, ObjectModelService, HelperObjectBrowserService, DueDateService, AdminHolidayService, MessageService, $modal, LookupService, AdminFoiaConfigService, AdminObjectTitleConfigurationService) {
+    [ '$scope', '$stateParams', '$state', '$translate', '$timeout', 'UtilService', 'Util.DateService', 'ConfigService', 'Object.LookupService', 'Case.LookupService', 'Case.InfoService', 'Object.ModelService', 'Helper.ObjectBrowserService', 'DueDate.Service', 'Admin.HolidayService',
+        'MessageService', '$modal', 'LookupService', 'Admin.FoiaConfigService', 'Admin.ObjectTitleConfigurationService', 'Cases.SuggestedCases',
+        function($scope, $stateParams, $state, $translate, $timeout, Util, UtilDateService, ConfigService, ObjectLookupService, CaseLookupService, CaseInfoService, ObjectModelService, HelperObjectBrowserService, DueDateService, AdminHolidayService, MessageService, $modal, LookupService, AdminFoiaConfigService, AdminObjectTitleConfigurationService, SuggestedCasesService) {
 
             new HelperObjectBrowserService.Component({
                 scope: $scope,
@@ -150,6 +150,10 @@ angular.module('cases').controller(
 
 
                 $scope.isAmendmentAdded = data.amendmentFlag;
+
+                SuggestedCasesService.getSuggestedCases($scope.objectInfo.title).then(function (value) {
+                    $scope.hasSuggestedCases = value.data.length > 0 ? true : false;
+                });
 
             };
             $scope.userOrGroupSearch = function() {
@@ -310,5 +314,12 @@ angular.module('cases').controller(
                 } else {
                 }
             }
+
+            $scope.suggestedCases = function () {
+                $state.go('cases.suggestedCases',{
+                    id: $scope.objectInfo.id
+                });
+            };
+            
 
         } ]);
