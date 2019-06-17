@@ -27,8 +27,8 @@ package com.armedia.acm.data;
  * #L%
  */
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.context.ApplicationListener;
 import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.support.MessageBuilder;
@@ -43,7 +43,7 @@ import java.util.Map;
 public class AcmServiceLdapSyncNotifier implements ApplicationListener<AcmServiceLdapSyncEvent>
 {
 
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
 
     private MessageChannel genericMessagesChannel;
 

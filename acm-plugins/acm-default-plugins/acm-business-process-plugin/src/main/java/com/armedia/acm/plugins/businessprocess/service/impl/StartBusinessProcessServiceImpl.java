@@ -31,15 +31,15 @@ import com.armedia.acm.plugins.businessprocess.service.StartBusinessProcessServi
 
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.runtime.ProcessInstance;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.util.Map;
 
 public class StartBusinessProcessServiceImpl implements StartBusinessProcessService
 {
 
-    private final Logger log = LoggerFactory.getLogger(getClass());
+    private final Logger log = LogManager.getLogger(getClass());
 
     private RuntimeService activitiRuntimeService;
 

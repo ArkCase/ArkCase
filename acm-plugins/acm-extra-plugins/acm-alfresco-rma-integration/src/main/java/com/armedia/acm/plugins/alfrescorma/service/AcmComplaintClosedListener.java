@@ -36,8 +36,8 @@ import com.armedia.acm.plugins.alfrescorma.model.AlfrescoRmaConfig;
 import com.armedia.acm.plugins.complaint.model.Complaint;
 import com.armedia.acm.plugins.complaint.model.ComplaintClosedEvent;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.context.ApplicationListener;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -51,7 +51,7 @@ import java.util.Collections;
 public class AcmComplaintClosedListener implements ApplicationListener<ComplaintClosedEvent>
 {
 
-    private transient Logger LOG = LoggerFactory.getLogger(getClass());
+    private transient Logger LOG = LogManager.getLogger(getClass());
     private AlfrescoRecordsService alfrescoRecordsService;
     private AcmAuthenticationManager authenticationManager;
 

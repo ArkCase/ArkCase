@@ -38,8 +38,8 @@ import com.armedia.acm.service.outlook.service.OutlookService;
 import com.armedia.acm.services.users.model.AcmUser;
 
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -61,7 +61,7 @@ import microsoft.exchange.webservices.data.search.filter.SearchFilter;
 @RequestMapping({ "/api/v1/plugin/outlook", "/api/latest/plugin/outlook" })
 public class ListCalendarItemsAPIController
 {
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private transient final Logger log = LogManager.getLogger(getClass());
     private DateTimeFormatter searchDateFormat = DateTimeFormatter.ofPattern(DateFormats.DEFAULT_DATE_FORMAT);
     private OutlookService outlookService;
     private UserOrgService userOrgService;

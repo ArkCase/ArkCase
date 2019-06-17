@@ -31,8 +31,8 @@ package com.armedia.acm.plugins.person.dao;
 import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.plugins.person.model.Person;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
@@ -49,7 +49,7 @@ import java.util.List;
 public class PersonDao extends AcmAbstractDao<Person>
 {
 
-    private Logger LOG = LoggerFactory.getLogger(getClass());
+    private Logger LOG = LogManager.getLogger(getClass());
 
     @PersistenceContext
     private EntityManager entityManager;

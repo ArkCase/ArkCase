@@ -41,8 +41,8 @@ import com.armedia.acm.plugins.complaint.model.Complaint;
 import com.armedia.acm.services.users.model.AcmUserActionName;
 
 import org.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -55,7 +55,7 @@ import java.util.Date;
 public class ElectronicCommunicationService extends FrevvoFormAbstractService
 {
 
-    private Logger LOG = LoggerFactory.getLogger(getClass());
+    private Logger LOG = LogManager.getLogger(getClass());
     private ComplaintDao complaintDao;
     private CaseFileDao caseFileDao;
 

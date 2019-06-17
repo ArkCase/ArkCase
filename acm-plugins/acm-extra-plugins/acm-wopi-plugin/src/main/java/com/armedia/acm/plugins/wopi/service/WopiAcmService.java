@@ -49,8 +49,8 @@ import com.armedia.acm.services.dataaccess.service.impl.ArkPermissionEvaluator;
 import com.armedia.acm.services.users.model.AcmUser;
 
 import org.mule.api.MuleException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.security.core.Authentication;
 
@@ -69,7 +69,7 @@ public class WopiAcmService implements AcmConfigurablePlugin
     private EcmFileTransaction fileTransaction;
     private ArkPermissionEvaluator permissionEvaluator;
     private AuthenticationTokenService tokenService;
-    private static final Logger log = LoggerFactory.getLogger(WopiAcmService.class);
+    private static final Logger log = LogManager.getLogger(WopiAcmService.class);
     private static final String WOPI_PLUGIN = "WOPI";
 
     public WopiSessionInfo getSessionInfo(Authentication authentication, Long fileId, String accessToken)

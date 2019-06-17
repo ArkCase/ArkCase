@@ -32,8 +32,8 @@ import com.armedia.acm.services.users.model.ldap.AcmLdapActionFailedException;
 import com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig;
 import com.armedia.acm.services.users.service.ldap.LdapEntryTransformer;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.ldap.core.DirContextAdapter;
 import org.springframework.ldap.core.DirContextOperations;
 
@@ -47,7 +47,7 @@ public class SpringLdapGroupDao
 
     private LdapCrudDao ldapCrudDao;
 
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
 
     public void createGroup(AcmGroup group, AcmLdapSyncConfig ldapSyncConfig) throws AcmLdapActionFailedException
     {

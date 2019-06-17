@@ -45,8 +45,8 @@ import org.eclipse.persistence.dynamic.DynamicEntity;
 import org.eclipse.persistence.jaxb.JAXBContextProperties;
 import org.eclipse.persistence.jaxb.dynamic.DynamicJAXBContext;
 import org.eclipse.persistence.jaxb.dynamic.DynamicJAXBContextFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.slf4j.MDC;
 import org.springframework.security.core.Authentication;
 
@@ -73,7 +73,7 @@ import java.util.UUID;
  */
 public abstract class AbstractBatchXMLFileListener extends FileEventListener
 {
-    private Logger LOG = LoggerFactory.getLogger(getClass());
+    private Logger LOG = LogManager.getLogger(getClass());
     private EcmFileService ecmFileService;
     private String OXMFilePath;
 

@@ -35,8 +35,8 @@ import com.armedia.acm.plugins.ecm.utils.CmisConfigUtils;
 import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
 import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenService;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -53,7 +53,7 @@ import io.milton.resource.Resource;
 public class AcmFileSystemResourceFactory implements ResourceFactory
 {
 
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private transient final Logger log = LogManager.getLogger(getClass());
     private EcmFileDao fileDao;
     private EcmFileTransaction ecmFileTransaction;
     private FolderAndFilesUtils folderAndFilesUtils;

@@ -39,8 +39,8 @@ import com.frevvo.forms.client.ApplicationEntry;
 import com.frevvo.forms.client.FormTypeEntry;
 import com.frevvo.forms.client.SchemaEntry;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,7 +54,7 @@ import java.util.Properties;
 public class PlainConfigurationFormFactory
 {
 
-    private Logger LOG = LoggerFactory.getLogger(getClass());
+    private Logger LOG = LogManager.getLogger(getClass());
     private FrevvoService frevvoService;
     private Properties formProperties;
     private Properties plainFormProperties;

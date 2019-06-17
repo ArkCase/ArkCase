@@ -36,8 +36,8 @@ import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.AcmFolderConstants;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -57,7 +57,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class SubFolderListAPIController
 {
 
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private transient final Logger log = LogManager.getLogger(getClass());
     private EcmFileService fileService;
 
     @PreAuthorize("hasPermission(#objectId, #objectType, 'read|group-read|write|group-write')")

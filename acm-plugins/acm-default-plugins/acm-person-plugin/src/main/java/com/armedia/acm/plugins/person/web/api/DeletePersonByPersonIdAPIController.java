@@ -33,8 +33,8 @@ import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.person.dao.PersonAssociationDao;
 import com.armedia.acm.plugins.person.dao.PersonDao;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -51,7 +51,7 @@ public class DeletePersonByPersonIdAPIController
     private PersonDao personDao;
     private PersonAssociationDao personAssociationDao;
 
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
 
     @RequestMapping(value = "/delete/{personId}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody

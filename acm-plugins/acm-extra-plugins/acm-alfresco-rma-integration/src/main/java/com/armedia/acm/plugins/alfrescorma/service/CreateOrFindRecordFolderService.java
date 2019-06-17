@@ -33,8 +33,8 @@ import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import org.apache.chemistry.opencmis.client.api.CmisObject;
 import org.apache.chemistry.opencmis.client.api.Folder;
 import org.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.HttpServerErrorException;
@@ -48,7 +48,7 @@ public class CreateOrFindRecordFolderService extends AlfrescoService<String>
 {
 
     private final String service = "/s/api/type/rma%3arecordFolder/formprocessor";
-    private transient final Logger LOG = LoggerFactory.getLogger(getClass());
+    private transient final Logger LOG = LogManager.getLogger(getClass());
     private EcmFileService ecmFileService;
 
     /**

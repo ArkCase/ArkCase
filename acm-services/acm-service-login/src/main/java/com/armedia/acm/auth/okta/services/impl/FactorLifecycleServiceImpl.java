@@ -41,8 +41,8 @@ import com.google.common.base.Preconditions;
 
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 
@@ -52,7 +52,7 @@ import java.util.Optional;
 
 public class FactorLifecycleServiceImpl implements FactorLifecycleService
 {
-    private static final Logger LOGGER = LoggerFactory.getLogger(FactorLifecycleServiceImpl.class);
+    private static final Logger LOGGER = LogManager.getLogger(FactorLifecycleServiceImpl.class);
     private OktaRestService oktaRestService;
     private FactorService factorService;
 

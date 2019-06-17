@@ -33,8 +33,8 @@ import com.armedia.acm.services.protecturl.exception.AcmUrlNotFoundException;
 import com.armedia.acm.services.protecturl.model.ProtectedUrl;
 import com.armedia.acm.services.protecturl.service.ProtectUrlService;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -54,7 +54,7 @@ public class ProtectUrlController
     /**
      * Logger instance.
      */
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
 
     /**
      * ProtectUrlService instance

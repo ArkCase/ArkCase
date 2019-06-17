@@ -33,8 +33,8 @@ import com.armedia.acm.plugins.task.model.AcmTask;
 import com.armedia.acm.plugins.task.service.TaskDao;
 import com.armedia.acm.services.dataaccess.service.AcmObjectDataAccessBatchUpdateLocator;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.util.Date;
 import java.util.List;
@@ -44,7 +44,7 @@ import java.util.List;
  */
 public class TaskDataAccessUpdateLocator implements AcmObjectDataAccessBatchUpdateLocator<AcmTask>
 {
-    private final transient Logger log = LoggerFactory.getLogger(getClass());
+    private final transient Logger log = LogManager.getLogger(getClass());
     private TaskDao taskDao;
 
     @Override

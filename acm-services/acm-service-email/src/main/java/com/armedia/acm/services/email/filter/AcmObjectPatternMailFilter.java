@@ -28,8 +28,8 @@ package com.armedia.acm.services.email.filter;
  */
 
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.util.StringUtils;
 
 import javax.mail.Message;
@@ -47,7 +47,7 @@ import java.util.regex.Pattern;
  */
 public class AcmObjectPatternMailFilter
 {
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private transient final Logger log = LogManager.getLogger(getClass());
 
     private final String objectIdRegexPattern;
     private final String objectTypeRegexPattern;

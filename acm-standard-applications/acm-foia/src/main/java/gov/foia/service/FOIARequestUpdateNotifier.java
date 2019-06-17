@@ -34,8 +34,8 @@ import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.context.ApplicationListener;
 
 import javax.jms.JMSException;
@@ -52,7 +52,7 @@ import gov.foia.model.PortalFOIARequestStatus;
  */
 public class FOIARequestUpdateNotifier implements ApplicationListener<CaseEvent>
 {
-    private transient Logger LOG = LoggerFactory.getLogger(getClass());
+    private transient Logger LOG = LogManager.getLogger(getClass());
 
     private FOIARequestBrokerClient brokerClient;
 

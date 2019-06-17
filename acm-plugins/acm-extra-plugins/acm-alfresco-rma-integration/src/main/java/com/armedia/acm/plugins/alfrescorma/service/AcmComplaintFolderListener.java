@@ -33,8 +33,8 @@ import com.armedia.acm.plugins.complaint.model.ComplaintConstants;
 import com.armedia.acm.plugins.complaint.model.ComplaintCreatedEvent;
 
 import org.apache.chemistry.opencmis.client.api.Folder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.context.ApplicationListener;
 
 /**
@@ -42,7 +42,7 @@ import org.springframework.context.ApplicationListener;
  */
 public class AcmComplaintFolderListener implements ApplicationListener<ComplaintCreatedEvent>
 {
-    private transient Logger log = LoggerFactory.getLogger(getClass());
+    private transient Logger log = LogManager.getLogger(getClass());
     private AlfrescoRecordsService alfrescoRecordsService;
 
     @Override

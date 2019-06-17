@@ -32,8 +32,8 @@ import com.armedia.acm.portalgateway.service.PortalAdminService;
 import com.armedia.acm.portalgateway.service.PortalAdminServiceException;
 import com.armedia.acm.portalgateway.service.PortalServiceExceptionMapper;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -56,7 +56,7 @@ import java.util.stream.Collectors;
 @RequestMapping(value = { "/api/v1/service/portalgateway/admin", "/api/latest/service/portalgateway/admin" })
 public class ArkCasePortalAdminAPIController
 {
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private transient final Logger log = LogManager.getLogger(getClass());
 
     private PortalAdminService portalAdminService;
 

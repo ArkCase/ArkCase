@@ -29,8 +29,8 @@ package com.armedia.acm.service.stateofarkcase.dao;
 
 import com.armedia.acm.service.stateofarkcase.interfaces.StateOfModuleProvider;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
@@ -42,7 +42,7 @@ import java.util.Map;
 
 public class StateOfArkcaseRegistryImpl implements StateOfArkcaseRegistry, ApplicationListener<ContextRefreshedEvent>
 {
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private transient final Logger log = LogManager.getLogger(getClass());
     private Map<String, StateOfModuleProvider> moduleStateProviders = new HashMap();
 
     @Override

@@ -28,14 +28,14 @@ package com.armedia.acm.plugins.ecm.model.event;
  */
 
 import com.armedia.acm.plugins.ecm.model.EcmFile;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 public class RecycleBinItemDeletedEvent extends EcmFilePersistenceEvent
 {
 
     private static final String EVENT_TYPE = "com.armedia.acm.recyclebinitem.deleted";
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private transient final Logger log = LogManager.getLogger(getClass());
 
     public RecycleBinItemDeletedEvent(EcmFile source, String userId, String ipAddress)
     {

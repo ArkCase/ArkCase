@@ -32,8 +32,8 @@ import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.services.timesheet.model.TimesheetConfig;
 import com.armedia.acm.services.timesheet.model.TimesheetConfigDTO;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -47,7 +47,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class TimesheetConfigurationService
 {
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
 
     private String configurationFile;
     private ObjectConverter objectConverter;

@@ -36,8 +36,8 @@ import com.armedia.acm.frevvo.config.FrevvoFormAbstractService;
 import com.armedia.acm.frevvo.config.FrevvoFormFactory;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 /**
  * @author riste.tutureski
@@ -46,7 +46,7 @@ import org.slf4j.LoggerFactory;
 public class ProjectFactory extends FrevvoFormFactory
 {
 
-    private Logger LOG = LoggerFactory.getLogger(getClass());
+    private Logger LOG = LogManager.getLogger(getClass());
 
     public CaseFile asAcmCaseFile(ProjectForm form, CaseFile caseFile)
     {

@@ -45,8 +45,8 @@ import org.apache.commons.io.FileUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.BeanNotOfRequiredTypeException;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.context.ApplicationListener;
@@ -92,7 +92,7 @@ import java.util.concurrent.TimeUnit;
 public class AcmScheduler implements ApplicationListener<AbstractConfigurationFileEvent>
 {
 
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private transient final Logger log = LogManager.getLogger(getClass());
 
     /**
      * Task scheduler contains a single thread that runs periodically and is responsible for assigning tasks to the

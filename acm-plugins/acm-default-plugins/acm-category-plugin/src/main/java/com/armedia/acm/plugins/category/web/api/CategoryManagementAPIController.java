@@ -44,8 +44,8 @@ import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.fasterxml.jackson.databind.JsonNode;
 
 import org.mule.api.MuleException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -75,7 +75,7 @@ import java.util.stream.Collectors;
 @RequestMapping({ "/api/service/category/v1", "/api/service/category/latest" })
 public class CategoryManagementAPIController
 {
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
 
     private CategoryService categoryService;
 

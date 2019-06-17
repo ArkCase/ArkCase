@@ -34,8 +34,8 @@ import com.armedia.acm.plugins.task.model.AcmTask;
 import com.armedia.acm.plugins.task.service.TaskDao;
 import com.armedia.acm.plugins.task.service.TaskEventPublisher;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -54,7 +54,7 @@ import javax.servlet.http.HttpSession;
 @RequestMapping({ "/api/v1/plugin/task", "/api/latest/plugin/task" })
 public class ClaimTaskAPIController
 {
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
     private TaskDao taskDao;
     private TaskEventPublisher taskEventPublisher;
 

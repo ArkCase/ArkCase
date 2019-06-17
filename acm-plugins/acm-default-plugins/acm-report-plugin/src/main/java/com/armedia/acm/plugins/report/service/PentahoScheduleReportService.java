@@ -32,8 +32,8 @@ import com.armedia.acm.plugins.report.model.ScheduleReportException;
 
 import org.apache.commons.ssl.Base64;
 import org.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -47,7 +47,7 @@ import org.springframework.web.client.RestTemplate;
  */
 public class PentahoScheduleReportService implements ScheduleReportService
 {
-    private static final Logger LOGGER = LoggerFactory.getLogger(PentahoScheduleReportService.class);
+    private static final Logger LOGGER = LogManager.getLogger(PentahoScheduleReportService.class);
     private HttpHeaders headers;
     private RestTemplate restTemplate;
     private ResponseEntity<String> response;

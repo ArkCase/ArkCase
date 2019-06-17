@@ -30,8 +30,8 @@ package com.armedia.acm.plugins.admin.web.api;
 
 import com.armedia.acm.plugins.admin.model.DocumentUploadPolicyConfig;
 import com.armedia.acm.plugins.admin.service.DocumentUploadPolicyConfigurationService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -47,7 +47,7 @@ import java.util.Map;
 @RequestMapping({"/api/v1/plugin/admin", "/api/latest/plugin/admin"})
 public class DocumentUploadPolicyConfigurationAPIController
 {
-    private Logger log = LoggerFactory.getLogger(getClass().getName());
+    private Logger log = LogManager.getLogger(getClass().getName());
     private DocumentUploadPolicyConfigurationService documentUploadPolicyConfigurationService;
 
     @RequestMapping(value = "/documentUploadPolicy", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)

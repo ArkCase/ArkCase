@@ -36,8 +36,8 @@ import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -55,7 +55,7 @@ import java.util.Objects;
 @RequestMapping({ "/api/v1/service/correspondence", "/api/latest/service/correspondence" })
 public class GenerateCorrespondenceAPIController
 {
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private transient final Logger log = LogManager.getLogger(getClass());
 
     private CorrespondenceService correspondenceService;
     private AcmFolderService acmFolderService;

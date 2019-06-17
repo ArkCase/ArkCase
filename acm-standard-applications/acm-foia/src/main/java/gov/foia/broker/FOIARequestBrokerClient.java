@@ -34,8 +34,8 @@ import com.armedia.acm.web.api.MDCConstants;
 import com.armedia.broker.AcmObjectBrokerClient;
 
 import org.apache.activemq.ActiveMQConnectionFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Value;
 
@@ -52,7 +52,7 @@ import gov.foia.service.PortalCreateRequestService;
 public class FOIARequestBrokerClient extends AcmObjectBrokerClient<PortalFOIARequest>
 {
 
-    private static final Logger LOG = LoggerFactory.getLogger(FOIARequestBrokerClient.class);
+    private static final Logger LOG = LogManager.getLogger(FOIARequestBrokerClient.class);
     private PortalCreateRequestService createRequestService;
     @Value("${external.integration.enable}")
     private boolean externalEnable;

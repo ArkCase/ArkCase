@@ -38,8 +38,8 @@ import com.armedia.acm.services.sequence.model.AcmSequenceRegistry;
 import com.armedia.acm.services.sequence.model.AcmSequenceReset;
 import com.armedia.acm.services.sequence.model.AcmSequenceResetId;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -53,7 +53,7 @@ import java.util.List;
  */
 public class AcmSequenceServiceImpl implements AcmSequenceService
 {
-    private final Logger log = LoggerFactory.getLogger(getClass());
+    private final Logger log = LogManager.getLogger(getClass());
 
     private AcmSequenceDao sequenceDao;
 

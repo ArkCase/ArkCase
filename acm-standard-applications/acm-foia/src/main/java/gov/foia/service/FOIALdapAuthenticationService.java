@@ -36,8 +36,8 @@ import com.armedia.acm.services.users.model.ldap.AcmLdapAuthenticateConfig;
 import com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig;
 import com.armedia.acm.services.users.model.ldap.LdapUser;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.ldap.AuthenticationException;
 import org.springframework.ldap.core.LdapTemplate;
 
@@ -48,7 +48,7 @@ import org.springframework.ldap.core.LdapTemplate;
 public class FOIALdapAuthenticationService
 {
 
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
 
     private UserDao userDao;
 

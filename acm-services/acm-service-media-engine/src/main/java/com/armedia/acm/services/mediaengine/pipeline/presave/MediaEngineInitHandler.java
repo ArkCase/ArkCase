@@ -32,15 +32,15 @@ import com.armedia.acm.services.mediaengine.pipeline.MediaEnginePipelineContext;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.pipeline.handler.PipelineHandler;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 /**
  * Created by Vladimir Cherepnalkovski <vladimir.cherepnalkovski@armedia.com>
  */
 public class MediaEngineInitHandler implements PipelineHandler<MediaEngine, MediaEnginePipelineContext>
 {
-    private final Logger LOG = LoggerFactory.getLogger(getClass());
+    private final Logger LOG = LogManager.getLogger(getClass());
 
     @Override
     public void execute(MediaEngine entity, MediaEnginePipelineContext pipelineContext) throws PipelineProcessException

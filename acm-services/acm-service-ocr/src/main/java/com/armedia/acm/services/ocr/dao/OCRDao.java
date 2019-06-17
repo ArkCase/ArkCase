@@ -33,8 +33,8 @@ import com.armedia.acm.services.mediaengine.model.MediaEngineStatusType;
 import com.armedia.acm.services.ocr.model.OCR;
 import com.armedia.acm.services.ocr.model.OCRConstants;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import javax.persistence.NoResultException;
 import javax.persistence.NonUniqueResultException;
@@ -47,7 +47,7 @@ import java.util.List;
  */
 public class OCRDao extends MediaEngineDao<OCR>
 {
-    private final Logger LOG = LoggerFactory.getLogger(getClass());
+    private final Logger LOG = LogManager.getLogger(getClass());
 
     @Override
     public OCR findByMediaVersionId(Long ecmFileVersionId) throws GetMediaEngineException

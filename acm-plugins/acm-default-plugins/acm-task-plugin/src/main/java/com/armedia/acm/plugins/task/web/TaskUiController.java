@@ -33,8 +33,8 @@ import com.armedia.acm.pluginmanager.model.AcmPlugin;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -46,7 +46,7 @@ import java.util.Map;
 @RequestMapping("/plugin/task")
 public class TaskUiController
 {
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
     private AcmPlugin plugin;
     private FormUrl formUrl;
     private Map<String, Object> notificationProperties;

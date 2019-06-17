@@ -42,8 +42,8 @@ import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.pipeline.handler.PipelineHandler;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import gov.foia.dao.FOIARequestDao;
 import gov.foia.model.FOIAConstants;
@@ -66,7 +66,7 @@ public class RequestDocumentHandler implements PipelineHandler<FOIARequest, Case
     /**
      * Logger instance.
      */
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private transient final Logger log = LogManager.getLogger(getClass());
 
     @Override
     public void execute(FOIARequest request, CaseFilePipelineContext ctx)
