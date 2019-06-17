@@ -143,7 +143,8 @@
                     "tags",
                     "calendar",
                     "approvalRouting",
-                    "billing"
+                    "billing",
+                    "suggestedCases"
                 ]
             },
             {
@@ -264,6 +265,14 @@
                 "icon": "fa fa-pencil-square-o",
                 "components": [
                     "billing"
+                ]
+            },
+            {
+                "type": "p/CASE_FILE/suggestedCases",
+                "label": "cases.tree.nodeTypes.suggestedCases.label",
+                "icon": "fa fa-files-o",
+                "components": [
+                    "suggestedCases"
                 ]
             },
             {
@@ -1579,6 +1588,52 @@
                     "enableColumnMenu": false
                 }
             ]
+        },
+        {
+            "id": "suggestedCases",
+            "title": "cases.comp.suggestedCases.title",
+            "icon": "fa fa-files-o",
+            "enabled": true,
+            "configurable": true,
+            "type": "grid",
+            "enableFiltering": true,
+            "paginationPageSizes": [
+                5,
+                10,
+                20,
+                50
+            ],
+            "paginationPageSize": 10,
+            "columnDefs": [
+                {
+                    "name": "caseNumber",
+                    "displayName": "cases.comp.suggestedCases.table.columns.number",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "caseTitle",
+                    "displayName": "cases.comp.suggestedCases.table.columns.title",
+                    "headerCellFilter": "translate"
+
+                },
+                {
+                    "name": "referenceType",
+                    "displayName": "cases.comp.suggestedCases.table.columns.referenceType",
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<div class='ui-grid-cell-contents'>{{ common.objectTypes.CASE_FILE | translate }}</div>"
+                },
+                {
+                    "name": "modifiedDate",
+                    "displayName": "cases.comp.suggestedCases.table.columns.modified",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "caseStatus",
+                    "displayName": "cases.comp.suggestedCases.table.columns.status",
+                    "headerCellFilter": "translate"
+                }
+            ]
         }
+
     ]
 }

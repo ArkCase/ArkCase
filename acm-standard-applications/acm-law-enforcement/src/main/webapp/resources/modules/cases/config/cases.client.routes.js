@@ -123,6 +123,10 @@ angular.module('cases').config([ '$stateProvider', function($stateProvider) {
             url: '/:id/billing',
             templateUrl: 'modules/cases/views/components/case-billing.client.view.html'
         })
+    .state('cases.suggestedCases', {
+        url: '/:id/suggested',
+        templateUrl: 'modules/cases/views/components/case-suggested-cases.client.view.html'
+    })
 } ]).run([ 'Helper.DashboardService', function(DashboardHelper) {
     DashboardHelper.addLocales();
 } ]);
