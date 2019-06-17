@@ -27,12 +27,11 @@ package com.armedia.broker;
  * #L%
  */
 
-
 import com.armedia.acm.objectonverter.AcmUnmarshaller;
 import com.armedia.acm.objectonverter.ObjectConverter;
 
 import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;;
+import org.apache.logging.log4j.Logger;
 
 import javax.jms.JMSException;
 import javax.jms.Message;
