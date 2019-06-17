@@ -34,13 +34,13 @@ import com.armedia.acm.plugins.person.model.OrganizationAssociation;
 import com.armedia.acm.plugins.person.model.PersonOrganizationConstants;
 import com.armedia.acm.services.search.service.SolrJoinDocumentsService;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.security.core.Authentication;
 
 public class OrganizationAssociationServiceImpl implements OrganizationAssociationService
 {
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
     private OrganizationAssociationDao organizationAssociationDao;
     private OrganizationAssociationEventPublisher organizationAssociationEventPublisher;
     private SolrJoinDocumentsService solrJoinDocumentsService;

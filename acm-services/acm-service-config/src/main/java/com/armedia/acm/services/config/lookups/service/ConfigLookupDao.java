@@ -55,8 +55,8 @@ import com.jayway.jsonpath.spi.mapper.JacksonMappingProvider;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -74,7 +74,7 @@ public class ConfigLookupDao implements LookupDao
             .mappingProvider(new JacksonMappingProvider()).build();
     private static final Configuration configurationWithSuppressedExceptions = Configuration.builder().options(Option.SUPPRESS_EXCEPTIONS)
             .jsonProvider(new JacksonJsonNodeJsonProvider()).mappingProvider(new JacksonMappingProvider()).build();
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private transient final Logger log = LogManager.getLogger(getClass());
     private ObjectConverter objectConverter;
 
     private String lookups;

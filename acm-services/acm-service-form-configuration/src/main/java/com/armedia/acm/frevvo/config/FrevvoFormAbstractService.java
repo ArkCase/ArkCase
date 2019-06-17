@@ -66,8 +66,8 @@ import com.google.gson.GsonBuilder;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.mule.api.MuleException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.multipart.MultipartFile;
@@ -92,7 +92,7 @@ import java.util.stream.Collectors;
 public abstract class FrevvoFormAbstractService implements FrevvoFormService
 {
 
-    private Logger LOG = LoggerFactory.getLogger(FrevvoFormAbstractService.class);
+    private Logger LOG = LogManager.getLogger(FrevvoFormAbstractService.class);
 
     private Map<String, Object> properties;
     private HttpServletRequest request;

@@ -37,8 +37,8 @@ import com.armedia.acm.service.objectlock.model.AcmObjectLock;
 import com.armedia.acm.service.objectlock.service.AcmObjectLockService;
 import com.armedia.acm.service.objectlock.service.ObjectLockingProvider;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
@@ -51,7 +51,7 @@ import java.util.List;
  */
 public class FolderLockingProvider implements ObjectLockingProvider
 {
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
 
     private AcmObjectLockService objectLockService;
     private AcmFolderService folderService;

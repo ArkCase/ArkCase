@@ -34,8 +34,8 @@ import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.plugins.ecm.exception.AcmFolderException;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -48,7 +48,7 @@ public class ConvertAndCompressResponseFolderFileUpdateService implements Respon
     /**
      * Logger instance.
      */
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
 
     private FileConverter converter;
 

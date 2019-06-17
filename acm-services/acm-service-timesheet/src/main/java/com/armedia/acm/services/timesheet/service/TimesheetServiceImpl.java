@@ -45,8 +45,8 @@ import com.armedia.acm.services.timesheet.pipeline.TimesheetPipelineContext;
 
 import org.codehaus.plexus.util.StringUtils;
 import org.mule.api.MuleException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -59,7 +59,7 @@ import java.util.*;
 public class TimesheetServiceImpl implements TimesheetService
 {
 
-    private Logger LOG = LoggerFactory.getLogger(getClass());
+    private Logger LOG = LogManager.getLogger(getClass());
 
     private TimesheetConfig configuration;
     private AcmTimesheetDao acmTimesheetDao;

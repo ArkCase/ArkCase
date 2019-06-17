@@ -27,8 +27,8 @@ package com.armedia.acm.data.converter;
  * #L%
  */
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternResolver;
@@ -57,7 +57,7 @@ public class ConverterScanPostProcessor implements PersistenceUnitPostProcessor
 {
     private static final String ENTITY_CLASS_RESOURCE_PATTERN = "/**/*.class";
     private final TypeFilter converterFilter = new AnnotationTypeFilter(Converter.class, false);
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private transient final Logger log = LogManager.getLogger(getClass());
     private String[] packagesToScan;
     private ResourcePatternResolver resourcePatternResolver = new PathMatchingResourcePatternResolver();
 

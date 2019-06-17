@@ -52,8 +52,8 @@ import com.armedia.acm.service.outlook.service.OutlookFolderRecreator;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 
 import org.apache.commons.codec.binary.Base64;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.core.task.TaskExecutor;
@@ -77,7 +77,7 @@ public class OutlookCalendarAdminService implements OutlookCalendarAdminServiceE
     /**
      * Logger instance.
      */
-    private final Logger log = LoggerFactory.getLogger(getClass());
+    private final Logger log = LogManager.getLogger(getClass());
 
     private CalendarAdminService extendedService;
 

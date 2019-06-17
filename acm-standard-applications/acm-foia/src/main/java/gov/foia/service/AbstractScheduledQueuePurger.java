@@ -35,7 +35,7 @@ import com.armedia.acm.plugins.businessprocess.service.StartBusinessProcessServi
 import com.armedia.acm.scheduler.AcmSchedulableBean;
 import com.armedia.acm.web.api.MDCConstants;
 
-import org.slf4j.Logger;
+import org.apache.logging.log4j.Logger;
 import org.slf4j.MDC;
 
 import java.time.LocalDate;

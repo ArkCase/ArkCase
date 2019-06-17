@@ -33,8 +33,8 @@ import com.armedia.acm.email.model.EmailSenderConfig;
 import org.apache.commons.net.smtp.AuthenticatingSMTPClient;
 import org.apache.commons.net.smtp.SMTPClient;
 import org.apache.commons.net.smtp.SMTPReply;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.io.IOException;
 
@@ -44,7 +44,7 @@ import java.io.IOException;
 public class EmailSenderConfigurationServiceImpl implements EmailSenderConfigurationService
 {
 
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
 
     private EmailSenderConfig emailSenderConfig;
 

@@ -33,8 +33,8 @@ import com.armedia.acm.core.exceptions.AcmEncryptionException;
 import com.armedia.acm.crypto.properties.AcmEncryptablePropertyUtils;
 
 import org.bouncycastle.crypto.RuntimeCryptoException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -57,7 +57,7 @@ import java.util.stream.Collectors;
 @Configuration
 public class ConfigurationContainer implements ConfigurationFacade
 {
-    private static final Logger log = LoggerFactory.getLogger(ConfigurationContainer.class);
+    private static final Logger log = LogManager.getLogger(ConfigurationContainer.class);
 
     private volatile static ConfigurationContainer INSTANCE;
     private final static String CONFIGURATION_SERVER_URL = "configuration.server.url";

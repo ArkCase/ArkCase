@@ -27,8 +27,8 @@ package com.armedia.acm.spring;
  * #L%
  */
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -88,7 +88,7 @@ public class ConfigurationComparator implements ApplicationContextAware
     /**
      * Logger instance.
      */
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
 
     /**
      * Constructor.
@@ -100,6 +100,10 @@ public class ConfigurationComparator implements ApplicationContextAware
     public ConfigurationComparator() throws ParserConfigurationException
     {
         DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
+        docBuilderFactory.setFeature( "http://apache.org/xml/features/disallow-doctype-decl", true);
+        docBuilderFactory.setFeature("http://xml.org/sax/features/external-general-entities", false);
+        docBuilderFactory.setFeature("http://xml.org/sax/features/external-parameter-entities", false);
+        docBuilderFactory.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
         docBuilderFactory.setIgnoringElementContentWhitespace(true);
         docBuilder = docBuilderFactory.newDocumentBuilder();
     }

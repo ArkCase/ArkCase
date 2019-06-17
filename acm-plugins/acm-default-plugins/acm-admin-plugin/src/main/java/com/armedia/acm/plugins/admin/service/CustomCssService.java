@@ -30,8 +30,8 @@ package com.armedia.acm.plugins.admin.service;
 import com.armedia.acm.plugins.admin.exception.AcmCustomCssException;
 
 import org.apache.commons.io.FileUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.io.File;
 
@@ -40,7 +40,7 @@ import java.io.File;
  */
 public class CustomCssService
 {
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
 
     private String customCssFile;
 

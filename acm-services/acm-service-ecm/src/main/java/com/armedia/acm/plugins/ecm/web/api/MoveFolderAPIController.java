@@ -35,8 +35,8 @@ import com.armedia.acm.plugins.ecm.model.AcmFolderConstants;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.plugins.ecm.service.FolderEventPublisher;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -56,7 +56,7 @@ import javax.servlet.http.HttpSession;
 public class MoveFolderAPIController
 {
 
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private transient final Logger log = LogManager.getLogger(getClass());
     private AcmFolderService folderService;
     private FolderEventPublisher folderEventPublisher;
 

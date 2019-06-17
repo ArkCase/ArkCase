@@ -32,8 +32,8 @@ import com.armedia.acm.plugins.admin.model.RolePrivilegesConstants;
 import com.armedia.acm.plugins.admin.service.RolesPrivilegesService;
 
 import org.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -48,7 +48,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @RequestMapping({ "/api/v1/plugin/admin", "/api/latest/plugin/admin" })
 public class RolesPrivilegesCreateRole implements RolePrivilegesConstants
 {
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
 
     private RolesPrivilegesService rolesPrivilegesService;
 

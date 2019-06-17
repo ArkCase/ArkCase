@@ -41,8 +41,8 @@ import com.armedia.acm.web.api.MDCConstants;
 import org.apache.chemistry.opencmis.client.api.Document;
 import org.apache.chemistry.opencmis.commons.data.ContentStream;
 import org.mule.module.cmis.connectivity.CMISCloudConnectorConnectionManager;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.slf4j.MDC;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
@@ -56,7 +56,7 @@ import java.util.UUID;
 
 public class ContentFileSolrPostClient implements SolrPostClient, ApplicationEventPublisherAware
 {
-    private transient final Logger logger = LoggerFactory.getLogger(getClass());
+    private transient final Logger logger = LogManager.getLogger(getClass());
     private ObjectConverter objectConverter;
     private EcmFileService ecmFileService;
     private CmisConfigUtils cmisConfigUtils;

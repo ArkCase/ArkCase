@@ -29,8 +29,8 @@ package com.armedia.acm.auth;
 
 import com.armedia.acm.services.users.model.ldap.MapperUtils;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.providers.ExpiringUsernameAuthenticationToken;
@@ -41,7 +41,7 @@ public class AcmSamlAuthenticationProvider extends SAMLAuthenticationProvider
     private String userDomain;
     private String userPrefix;
 
-    private final static Logger log = LoggerFactory.getLogger(AcmSamlAuthenticationProvider.class);
+    private final static Logger log = LogManager.getLogger(AcmSamlAuthenticationProvider.class);
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException

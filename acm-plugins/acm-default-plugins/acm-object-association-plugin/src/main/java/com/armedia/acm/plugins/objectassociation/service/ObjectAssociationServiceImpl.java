@@ -41,8 +41,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -55,7 +55,7 @@ import java.util.concurrent.CompletableFuture;
 
 public class ObjectAssociationServiceImpl implements ObjectAssociationService
 {
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
     private SpringContextHolder springContextHolder;
 
     private ObjectAssociationDao objectAssociationDao;

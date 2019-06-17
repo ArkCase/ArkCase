@@ -27,8 +27,8 @@ package com.armedia.acm.websockets.configuration;
  * #L%
  */
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.context.ApplicationContext;
@@ -75,7 +75,7 @@ public class StompBrokerRelayMessageHandlerBeanPostProcessor implements BeanPost
 {
     private static final String RELAY_PROTOCOL_SSL = "ssl";
     private static final String RELAY_PROTOCOL_TCP = "tcp";
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
     private ApplicationContext applicationContext;
     private String relayProtocol;
     private String keyStore;

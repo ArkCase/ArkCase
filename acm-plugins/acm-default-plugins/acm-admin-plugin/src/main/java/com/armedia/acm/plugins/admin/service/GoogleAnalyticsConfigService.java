@@ -30,8 +30,8 @@ package com.armedia.acm.plugins.admin.service;
 import com.armedia.acm.configuration.service.ConfigurationPropertyService;
 import com.armedia.acm.plugins.admin.model.GoogleAnalyticsConfig;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.io.IOException;
 import java.io.StringWriter;
@@ -51,7 +51,7 @@ public class GoogleAnalyticsConfigService
     /**
      * Logger instance.
      */
-    private Logger logger = LoggerFactory.getLogger(getClass());
+    private Logger logger = LogManager.getLogger(getClass());
 
     private GoogleAnalyticsConfig config;
 

@@ -84,8 +84,8 @@ import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.mule.api.MuleException;
 import org.mule.util.FileUtils;
 import org.mule.util.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
@@ -110,7 +110,7 @@ import java.util.stream.Collectors;
 public class ArkCaseTranscribeServiceImpl extends ArkCaseMediaEngineServiceImpl<Transcribe>
         implements ArkCaseTranscribeService
 {
-    private final Logger LOG = LoggerFactory.getLogger(getClass());
+    private final Logger LOG = LogManager.getLogger(getClass());
 
     private TranscribeDao transcribeDao;
     private UserDao userDao;

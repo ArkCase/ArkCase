@@ -2,8 +2,8 @@ package com.armedia.acm.services.email.model;
 
 import com.armedia.acm.services.email.service.TemplatingEngine;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.io.IOException;
 
@@ -47,7 +47,7 @@ import freemarker.template.TemplateException;
  */
 public class MessageBodyFactory
 {
-    private final Logger LOG = LoggerFactory.getLogger(getClass());
+    private final Logger LOG = LogManager.getLogger(getClass());
 
     private static final String DEFAULT_TEMPLATE = "${model.header} \n\n ${model.body} \n\n\n ${model.footer}";
 

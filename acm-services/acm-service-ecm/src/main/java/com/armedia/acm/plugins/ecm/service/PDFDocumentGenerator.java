@@ -40,8 +40,8 @@ import com.armedia.acm.services.pipeline.AbstractPipelineContext;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 
 import org.apache.commons.io.FileUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.security.core.Authentication;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -76,7 +76,7 @@ public abstract class PDFDocumentGenerator<T>
 
     private FolderAndFilesUtils folderAndFilesUtils;
 
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
 
     public void generatePdf(String objectType, Long objectId, AbstractPipelineContext ctx, Authentication authentication,
             T businessObject, AcmContainer container,

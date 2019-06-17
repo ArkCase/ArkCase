@@ -34,8 +34,8 @@ import com.armedia.mule.cmis.basic.auth.HttpInvokerUtil;
 
 import org.apache.commons.codec.binary.Base64;
 import org.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -54,7 +54,7 @@ public abstract class AlfrescoService<T>
 {
     private static final String KERBEROS_USERNAME_PREFIX = "KERBEROS/";
     private static final String APP_CONFIGURATION_ENTRY_NAME = "MuleAlfrescoLogin";
-    private final Logger LOG = LoggerFactory.getLogger(getClass());
+    private final Logger LOG = LogManager.getLogger(getClass());
     private RestTemplate restTemplate;
     private String basicAuthenticationHeaderValue;
     private short maxAttempts = 10;

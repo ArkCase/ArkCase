@@ -63,8 +63,8 @@ import com.armedia.acm.web.api.MDCConstants;
 import org.activiti.engine.delegate.DelegateExecution;
 import org.apache.commons.lang.NotImplementedException;
 import org.mule.api.MuleException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.slf4j.MDC;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -86,7 +86,7 @@ public class ArkCaseOCRServiceImpl extends ArkCaseMediaEngineServiceImpl<OCR>
         implements ArkCaseOCRService
 {
 
-    private final Logger LOG = LoggerFactory.getLogger(getClass());
+    private final Logger LOG = LogManager.getLogger(getClass());
     private OCRDao ocrDao;
     private OCRProviderFactory ocrProviderFactory;
     private OCRConfigurationService ocrConfigurationService;
@@ -485,7 +485,7 @@ public class ArkCaseOCRServiceImpl extends ArkCaseMediaEngineServiceImpl<OCR>
         Process pr;
         try
         {
-            pr = rt.exec("tesseract --version");
+            pr = rt.exec("cmd /c tesseract --version");
 
             pr.waitFor();
         }
@@ -496,7 +496,7 @@ public class ArkCaseOCRServiceImpl extends ArkCaseMediaEngineServiceImpl<OCR>
 
         try
         {
-            pr = rt.exec("qpdf --version");
+            pr = rt.exec("cmd /c qpdf --version");
 
             pr.waitFor();
         }
@@ -507,7 +507,7 @@ public class ArkCaseOCRServiceImpl extends ArkCaseMediaEngineServiceImpl<OCR>
 
         try
         {
-            pr = rt.exec("magick --version");
+            pr = rt.exec("cmd /c magick --version");
 
             pr.waitFor();
         }

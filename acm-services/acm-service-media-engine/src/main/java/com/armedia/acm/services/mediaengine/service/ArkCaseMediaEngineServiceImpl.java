@@ -66,8 +66,8 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.NotImplementedException;
 import org.mule.api.MuleException;
 import org.mule.util.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.NoResultException;
@@ -89,7 +89,7 @@ import java.util.Map;
 public abstract class ArkCaseMediaEngineServiceImpl<T extends MediaEngine>
         implements MediaEngineService<T>
 {
-    private final Logger LOG = LoggerFactory.getLogger(getClass());
+    private final Logger LOG = LogManager.getLogger(getClass());
     private SpringContextHolder springContextHolder;
     private FolderAndFilesUtils folderAndFilesUtils;
     private MediaEngineServiceFactory mediaEngineServiceFactory;

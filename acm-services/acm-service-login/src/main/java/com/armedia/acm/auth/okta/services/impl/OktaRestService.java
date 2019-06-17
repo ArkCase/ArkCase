@@ -28,8 +28,8 @@ package com.armedia.acm.auth.okta.services.impl;
  */
 
 import com.armedia.acm.auth.okta.model.OktaConfig;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -41,7 +41,7 @@ import java.util.Collections;
 
 public class OktaRestService
 {
-    private static final Logger LOGGER = LoggerFactory.getLogger(OktaRestService.class);
+    private static final Logger LOGGER = LogManager.getLogger(OktaRestService.class);
     private RestTemplate restTemplate;
     private OktaConfig oktaConfig;
 

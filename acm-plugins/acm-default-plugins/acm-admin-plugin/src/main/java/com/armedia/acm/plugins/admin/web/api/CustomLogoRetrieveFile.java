@@ -30,8 +30,8 @@ package com.armedia.acm.plugins.admin.web.api;
 import com.armedia.acm.plugins.admin.exception.AcmCustomLogoException;
 import com.armedia.acm.plugins.admin.service.CustomLogoService;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -46,7 +46,7 @@ import java.io.OutputStream;
 @RequestMapping(value = { "/branding" })
 public class CustomLogoRetrieveFile
 {
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
     private CustomLogoService customLogoService;
 
     @RequestMapping(value = "/headerlogo.png", method = RequestMethod.GET)

@@ -32,8 +32,8 @@ import com.armedia.acm.plugins.person.service.PersonAssociationToSolrTransformer
 import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
 import com.armedia.acm.services.search.model.solr.SolrDocument;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.util.Map;
 
@@ -41,7 +41,7 @@ import gov.foia.model.FOIARequesterAssociation;
 
 public class FOIARequesterAssociationToSolrTransformer extends PersonAssociationToSolrTransformer
 {
-    private final Logger log = LoggerFactory.getLogger(getClass());
+    private final Logger log = LogManager.getLogger(getClass());
 
     @Override
     public boolean isAcmObjectTypeSupported(Class acmObjectType)

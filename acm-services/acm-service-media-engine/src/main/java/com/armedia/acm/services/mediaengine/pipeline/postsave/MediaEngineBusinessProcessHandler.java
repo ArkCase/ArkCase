@@ -40,15 +40,15 @@ import com.armedia.acm.services.pipeline.handler.PipelineHandler;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 /**
  * Created by Vladimir Cherepnalkovski <vladimir.cherepnalkovski@armedia.com>
  */
 public class MediaEngineBusinessProcessHandler implements PipelineHandler<MediaEngine, MediaEnginePipelineContext>
 {
-    private final Logger LOG = LoggerFactory.getLogger(getClass());
+    private final Logger LOG = LogManager.getLogger(getClass());
 
     private RuntimeService activitiRuntimeService;
     private MediaEngineEventPublisher mediaEngineEventPublisher;

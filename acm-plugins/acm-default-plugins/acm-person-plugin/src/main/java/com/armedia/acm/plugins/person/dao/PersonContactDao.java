@@ -30,8 +30,8 @@ package com.armedia.acm.plugins.person.dao;
 import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.plugins.person.model.PersonContact;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -39,7 +39,7 @@ import javax.persistence.PersistenceContext;
 public class PersonContactDao extends AcmAbstractDao<PersonContact>
 {
 
-    private Logger LOG = LoggerFactory.getLogger(getClass());
+    private Logger LOG = LogManager.getLogger(getClass());
 
     @PersistenceContext
     private EntityManager entityManager;

@@ -32,8 +32,8 @@ import com.armedia.acm.plugins.casefile.model.ChangeCaseStateContants;
 import com.armedia.acm.plugins.casefile.model.ChangeCaseStatus;
 import com.armedia.acm.plugins.casefile.service.ChangeCaseFileStateService;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -53,7 +53,7 @@ import java.util.Map;
 @RequestMapping({ "/api/v1/plugin/casefile", "/api/latest/plugin/casefile" })
 public class ChangeCaseStatusApiController
 {
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
 
     private ChangeCaseFileStateService changeCaseFileStateService;
 

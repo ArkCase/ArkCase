@@ -31,8 +31,8 @@ import com.armedia.acm.plugins.dashboard.model.module.Module;
 import com.armedia.acm.plugins.dashboard.model.module.ModuleConstants;
 import com.armedia.acm.plugins.dashboard.model.module.ModuleCreatedEvent;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.security.core.Authentication;
@@ -42,7 +42,7 @@ import org.springframework.security.core.Authentication;
  */
 public class ModuleEventPublisher implements ApplicationEventPublisherAware
 {
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private transient final Logger log = LogManager.getLogger(getClass());
     private ApplicationEventPublisher eventPublisher;
 
     @Override

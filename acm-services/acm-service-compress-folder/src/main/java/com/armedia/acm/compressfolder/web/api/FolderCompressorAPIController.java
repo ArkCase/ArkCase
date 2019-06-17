@@ -38,8 +38,8 @@ import com.armedia.acm.services.dataaccess.service.impl.ArkPermissionEvaluator;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.tika.io.FilenameUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -72,7 +72,7 @@ public class FolderCompressorAPIController
 {
     private FolderCompressor folderCompressor;
     private ArkPermissionEvaluator arkPermissionEvaluator;
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
 
     @RequestMapping(value = "/{folderId}", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE,
             MediaType.TEXT_PLAIN_VALUE })

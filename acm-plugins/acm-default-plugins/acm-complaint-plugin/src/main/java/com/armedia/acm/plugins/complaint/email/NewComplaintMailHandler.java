@@ -45,8 +45,8 @@ import com.armedia.acm.services.email.handler.AcmObjectMailHandler;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.web.api.MDCConstants;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.slf4j.MDC;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -68,7 +68,7 @@ import java.util.UUID;
 
 public class NewComplaintMailHandler extends AcmObjectMailHandler
 {
-    private final Logger log = LoggerFactory.getLogger(getClass());
+    private final Logger log = LogManager.getLogger(getClass());
 
     private SaveComplaintTransaction saveComplaintTransaction;
     private LookupDao lookupDao;

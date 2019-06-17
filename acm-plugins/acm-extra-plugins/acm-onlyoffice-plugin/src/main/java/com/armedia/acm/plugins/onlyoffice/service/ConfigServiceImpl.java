@@ -43,15 +43,15 @@ import com.armedia.acm.plugins.onlyoffice.util.DocumentTypeResolver;
 import com.armedia.acm.services.dataaccess.service.impl.ArkPermissionEvaluator;
 import com.armedia.acm.services.users.model.AcmUser;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.security.core.Authentication;
 
 import java.text.SimpleDateFormat;
 
 public class ConfigServiceImpl implements ConfigService, AcmConfigurablePlugin
 {
-    private Logger logger = LoggerFactory.getLogger(getClass());
+    private Logger logger = LogManager.getLogger(getClass());
     private EcmFileDao ecmFileDao;
     private ArkPermissionEvaluator arkPermissionEvaluator;
     private DocumentTypeResolver documentTypeResolver;

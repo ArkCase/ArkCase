@@ -35,8 +35,8 @@ import com.armedia.acm.services.note.model.Note;
 import com.armedia.acm.services.note.service.NoteEventPublisher;
 
 import org.activiti.engine.impl.util.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -54,7 +54,7 @@ public class DeleteNoteByIdAPIController
 
     private NoteDao noteDao;
     private NoteEventPublisher noteEventPublisher;
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
 
     @RequestMapping(value = "/{noteId}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody

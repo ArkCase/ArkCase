@@ -36,8 +36,8 @@ import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.data.service.AcmDataService;
 import com.armedia.acm.services.users.service.tracker.UserTrackerService;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
@@ -49,7 +49,7 @@ import javax.persistence.PersistenceContext;
 public class ChangeObjectStatusServiceImpl implements ChangeObjectStatusService
 {
 
-    private final Logger log = LoggerFactory.getLogger(getClass());
+    private final Logger log = LogManager.getLogger(getClass());
     private AcmDataService acmDataService;
     private UserTrackerService userTrackerService;
     @PersistenceContext

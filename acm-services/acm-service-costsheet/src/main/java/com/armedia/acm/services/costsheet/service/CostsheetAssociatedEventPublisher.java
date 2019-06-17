@@ -29,15 +29,15 @@ package com.armedia.acm.services.costsheet.service;
 
 import com.armedia.acm.services.costsheet.model.AcmCostsheetAssociatedEvent;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 
 public class CostsheetAssociatedEventPublisher implements ApplicationEventPublisherAware
 {
 
-    private Logger LOG = LoggerFactory.getLogger(getClass());
+    private Logger LOG = LogManager.getLogger(getClass());
 
     private ApplicationEventPublisher applicationEventPublisher;
 

@@ -34,8 +34,8 @@ import com.armedia.acm.plugins.casefile.model.CaseFileConstants;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -51,7 +51,7 @@ import java.util.Properties;
 @RequestMapping("/plugin/casefile")
 public class CaseFileUiController
 {
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
     private Properties properties;
     private AcmPlugin plugin;
     private FormUrl formUrl;

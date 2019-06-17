@@ -31,8 +31,8 @@ import org.activiti.engine.HistoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.history.HistoricTaskInstance;
 import org.activiti.engine.runtime.ProcessInstance;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 
@@ -44,7 +44,7 @@ import java.util.Map;
  */
 public class AcmProcessEventHandler implements ApplicationEventPublisherAware
 {
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
     private RuntimeService runtimeService;
     private ApplicationEventPublisher applicationEventPublisher;
     private HistoryService historyService;

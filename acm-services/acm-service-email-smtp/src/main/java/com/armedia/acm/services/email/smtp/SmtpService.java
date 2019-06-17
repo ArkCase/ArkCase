@@ -51,8 +51,8 @@ import com.armedia.acm.services.users.model.AcmUser;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.mule.util.FileUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.security.core.Authentication;
@@ -77,7 +77,7 @@ import java.util.stream.Stream;
 public class SmtpService implements AcmEmailSenderService, ApplicationEventPublisherAware
 {
 
-    private final Logger LOG = LoggerFactory.getLogger(getClass());
+    private final Logger LOG = LogManager.getLogger(getClass());
 
     private EcmFileService ecmFileService;
 

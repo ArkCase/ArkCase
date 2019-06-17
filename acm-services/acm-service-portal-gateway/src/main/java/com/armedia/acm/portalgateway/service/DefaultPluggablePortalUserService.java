@@ -33,8 +33,8 @@ import com.armedia.acm.portalgateway.model.UserResetRequest;
 import com.armedia.acm.portalgateway.model.UserResetResponse;
 import com.armedia.acm.spring.SpringContextHolder;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.util.Map;
 import java.util.Optional;
@@ -45,7 +45,7 @@ import java.util.Optional;
  */
 public class DefaultPluggablePortalUserService implements PortalUserService
 {
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private transient final Logger log = LogManager.getLogger(getClass());
 
     private SpringContextHolder springContextHolder;
 

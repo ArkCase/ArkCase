@@ -32,8 +32,8 @@ import com.armedia.acm.plugins.casefile.service.GetCaseServiceImpl;
 import com.armedia.acm.services.billing.model.BillingInvoiceRequest;
 import com.armedia.acm.services.users.model.AcmUser;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -47,7 +47,7 @@ import javax.servlet.http.HttpSession;
 @RequestMapping({ "/api/v1/plugin/casefile/billing/invoices", "/api/latest/plugin/casefile/billing/invoices" })
 public class CaseFileBillingInvoiceEmailSenderAPIController
 {
-    private final Logger log = LoggerFactory.getLogger(this.getClass());
+    private final Logger log = LogManager.getLogger(this.getClass());
 
     private BillingInvoiceEmailSenderService caseFileBillingInvoiceEmailSenderService;
 

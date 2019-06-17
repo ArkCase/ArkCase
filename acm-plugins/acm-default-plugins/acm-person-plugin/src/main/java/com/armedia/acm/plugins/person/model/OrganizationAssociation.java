@@ -33,8 +33,8 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.voodoodyne.jackson.jsog.JSOGGenerator;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -68,7 +68,7 @@ import java.util.Objects;
 public class OrganizationAssociation implements Serializable, AcmEntity
 {
     private static final long serialVersionUID = 7413755227864370548L;
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private transient final Logger log = LogManager.getLogger(getClass());
 
     @Id
     @TableGenerator(name = "acm_organization_assoc_gen", table = "acm_organization_assoc_id", pkColumnName = "cm_seq_name", valueColumnName = "cm_seq_num", pkColumnValue = "acm_organization_assoc", initialValue = 100, allocationSize = 1)

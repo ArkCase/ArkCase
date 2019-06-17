@@ -48,8 +48,8 @@ import com.armedia.acm.services.pipeline.handler.PipelineHandler;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
@@ -64,7 +64,7 @@ import gov.foia.service.FOIADocumentGeneratorService;
 
 public class FOIAExtensionEmailHandler implements PipelineHandler<FOIARequest, CaseFilePipelineContext>
 {
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private transient final Logger log = LogManager.getLogger(getClass());
 
     private static final String NEW_EXTENSION_FILE = "NEW_EXTENSION_FILE";
     private static final String EXTENSION_FILE_ID = "EXTENSION_FILE_ID";

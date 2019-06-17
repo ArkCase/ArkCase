@@ -40,8 +40,8 @@ import com.armedia.acm.plugins.ecm.service.EcmFileService;
 
 import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
 import org.apache.commons.io.FileUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
@@ -59,7 +59,7 @@ import gov.foia.model.FOIAObject;
  */
 public class PDFDocumentGenerator implements DocumentGenerator
 {
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
     private final DateTimeFormatter datePattern = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     private EcmFileService ecmFileService;

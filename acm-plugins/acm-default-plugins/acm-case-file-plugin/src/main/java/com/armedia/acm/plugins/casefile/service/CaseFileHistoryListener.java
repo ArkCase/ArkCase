@@ -31,8 +31,8 @@ import com.armedia.acm.plugins.casefile.model.CaseEvent;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.service.objecthistory.service.AcmObjectHistoryService;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.context.ApplicationListener;
 
 import java.util.List;
@@ -45,7 +45,7 @@ public class CaseFileHistoryListener implements ApplicationListener<CaseEvent>
 {
 
     private static final String OBJECT_TYPE = "CASE_FILE";
-    private final Logger LOG = LoggerFactory.getLogger(getClass());
+    private final Logger LOG = LogManager.getLogger(getClass());
     private AcmObjectHistoryService acmObjectHistoryService;
 
     private List<String> nonHistoryGeneratingEvents;

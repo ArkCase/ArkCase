@@ -37,8 +37,8 @@ import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import javax.persistence.NoResultException;
 import javax.persistence.NonUniqueResultException;
@@ -56,7 +56,7 @@ import gov.foia.model.PortalFOIARequestStatus;
  */
 public class FOIAPortalRequestServiceProvider implements PortalRequestServiceProvider
 {
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private transient final Logger log = LogManager.getLogger(getClass());
 
     private PortalCreateRequestService createRequestService;
 

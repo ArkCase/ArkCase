@@ -30,8 +30,8 @@ package com.armedia.acm.services.users.dao;
 import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.services.users.model.AcmUserAction;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -47,7 +47,7 @@ import java.util.List;
 public class UserActionDao extends AcmAbstractDao<AcmUserAction>
 {
 
-    private Logger LOG = LoggerFactory.getLogger(getClass());
+    private Logger LOG = LogManager.getLogger(getClass());
 
     public List<AcmUserAction> findByUserId(String userId)
     {
