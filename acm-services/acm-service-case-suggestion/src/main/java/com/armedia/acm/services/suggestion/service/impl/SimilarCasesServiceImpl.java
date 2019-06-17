@@ -56,17 +56,18 @@ public class SimilarCasesServiceImpl implements SimilarCasesService
 
         List<SuggestedCase> similarCases = new ArrayList<>();
 
-        similarCases.addAll(findSolrCasesByTitle(title, isPortal, auth));
-        similarCases.addAll(findSolrCasesByFileContent(title, isPortal, auth));
-
         if(isPortal)
         {
+            similarCases.addAll(findSolrCasesByFileContent(title, isPortal, auth));
             return similarCases;
         }
         else
         {
+            similarCases.addAll(findSolrCasesByTitle(title, isPortal, auth));
+            similarCases.addAll(findSolrCasesByFileContent(title, isPortal, auth));
             return filterCaseRecordDuplicates(similarCases);
         }
+
     }
 
     private List<SuggestedCase> findSolrCasesByTitle(String title, Boolean isPortal, Authentication auth) throws MuleException, ParseException
