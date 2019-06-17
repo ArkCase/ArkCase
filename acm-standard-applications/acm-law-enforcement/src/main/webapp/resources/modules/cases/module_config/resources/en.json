@@ -466,6 +466,16 @@
         "removeButton": "Remove",
         "addButton": "Add Another"
     },
+    "cases.comp.suggestedCases": {
+        "title": "Suggested Cases",
+        "table.columns": {
+            "number": "Number",
+            "title": "Title",
+            "referenceType": "Reference Type",
+            "modified": "Modified",
+            "status": "Status"
+        }
+    },
     "cases.userOrGroupSearch": {
         "id": "userSearch",
         "title": "User/Group Search",
@@ -507,7 +517,8 @@
             "tags.label": "Tags",
             "calendar.label": "Calendar",
             "approvalRouting.label": "Approval Routing",
-            "billing.label": "Billing"
+            "billing.label": "Billing",
+            "suggestedCases.label": "Suggested Cases"
         },
         "filters": {
             "opened": "All Open Cases",

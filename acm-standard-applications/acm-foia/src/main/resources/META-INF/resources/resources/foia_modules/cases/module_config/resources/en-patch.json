@@ -762,5 +762,15 @@
         "op": "replace",
         "path": "/cases.tree/sorters/nameAsc",
         "value": "Sort By Request Name"
+    },
+    {
+        "op": "replace",
+        "path": "/cases.comp.suggestedCases/title",
+        "value": "Suggested Requests"
+    },
+    {
+        "op": "replace",
+        "path": "/cases.tree/nodeTypes/suggestedCases.label",
+        "value": "Suggested Requests"
     }
 ]
