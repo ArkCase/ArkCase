@@ -28,7 +28,6 @@ package com.armedia.acm.plugins.casefile.model.provider;
  */
 
 import com.armedia.acm.core.provider.TemplateModelProvider;
-import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 
 /**
@@ -36,28 +35,15 @@ import com.armedia.acm.plugins.casefile.model.CaseFile;
  */
 public class CaseFileTemplateModelProvider implements TemplateModelProvider<CaseFile>
 {
-    private CaseFileDao caseFileDao;
-
     @Override
     public CaseFile getModel(Object caseFile)
     {
-        return caseFileDao.findByCaseNumber(((CaseFile) caseFile).getCaseNumber());
-
+        return (CaseFile)caseFile;
     }
 
     @Override
     public Class<CaseFile> getType()
     {
         return CaseFile.class;
-    }
-
-    public CaseFileDao getCaseFileDao()
-    {
-        return caseFileDao;
-    }
-
-    public void setCaseFileDao(CaseFileDao caseFileDao)
-    {
-        this.caseFileDao = caseFileDao;
     }
 }

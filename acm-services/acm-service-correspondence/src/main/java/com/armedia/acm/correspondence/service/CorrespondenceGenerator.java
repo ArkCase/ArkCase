@@ -3,7 +3,6 @@ package com.armedia.acm.correspondence.service;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.correspondence.model.CorrespondenceMergeField;
-import com.armedia.acm.correspondence.model.CorrespondenceQuery;
 import com.armedia.acm.correspondence.model.CorrespondenceTemplate;
 import com.armedia.acm.correspondence.utils.WordGenerator;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
@@ -12,12 +11,10 @@ import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.services.config.lookups.service.LookupDao;
 import com.armedia.acm.services.labels.service.TranslationService;
 import com.armedia.acm.spring.SpringContextHolder;
-
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.jsoup.Jsoup;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.security.core.Authentication;
@@ -25,21 +22,14 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.text.DecimalFormat;
 import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
 /*-
  * #%L
@@ -123,13 +113,6 @@ public class CorrespondenceGenerator
             InputStream correspondenceInputStream)
             throws IOException, AcmCreateObjectFailedException, AcmUserActionFailedException
     {
-        Map<String, Object> queryResult = query(template, queryArguments);
-
-        if (queryResult == null || queryResult.isEmpty())
-        {
-            throw new IllegalStateException("Database query returned no results");
-        }
-
         Resource templateFile = new FileSystemResource(getCorrespondenceFolderName() + File.separator + template.getTemplateFilename());
 
         log.debug("Generating correspondence from template '{}'", templateFile.getFile().getAbsolutePath());
@@ -162,13 +145,6 @@ public class CorrespondenceGenerator
     public OutputStream generateCorrespondenceOutputStream(CorrespondenceTemplate template, Object[] queryArguments,
             OutputStream correspondenceOutputStream, Long parentObjectId) throws IOException
     {
-
-        Map<String, Object> queryResult = query(template, queryArguments);
-        if (queryResult == null || queryResult.isEmpty())
-        {
-            throw new IllegalStateException("Database query returned no results");
-        }
-
         Resource templateFile = new FileSystemResource(getCorrespondenceFolderName() + File.separator + template.getTemplateFilename());
 
         log.debug("Generating correspondence from template '{}'", templateFile.getFile().getAbsolutePath());
@@ -302,53 +278,6 @@ public class CorrespondenceGenerator
         }
 
         return 0;
-    }
-
-    private Map<String, Object> query(CorrespondenceTemplate template, Object[] queryArguments)
-    {
-        Map<String, CorrespondenceQuery> correspondenceQueryBeansMap = springContextHolder.getAllBeansOfType(CorrespondenceQuery.class);
-        Optional<CorrespondenceQuery> optionalCorrespondenceQuery = correspondenceQueryBeansMap.values().stream()
-                .filter(cQuery -> cQuery.getType().toString().equals(template.getObjectType())).findFirst();
-
-        CorrespondenceQuery correspondenceQuery;
-        if (optionalCorrespondenceQuery.isPresent())
-        {
-            correspondenceQuery = optionalCorrespondenceQuery.get();
-        }
-        else
-        {
-            return new HashMap<>();
-        }
-
-        Query select = getEntityManager().createNativeQuery(correspondenceQuery.getSqlQuery());
-
-        for (int a = 0; a < queryArguments.length; a++)
-        {
-            // parameter indexes are 1-based
-            select = select.setParameter(a + 1, queryArguments[a]);
-        }
-
-        List<Object[]> results = select.getResultList();
-
-        Map<String, Object> resultMap = new HashMap<>();
-        List<String> queryFields = correspondenceQuery.getFieldNames();
-        if (results != null && !results.isEmpty() && queryFields != null && !queryFields.isEmpty())
-        {
-            Object[] queryValues = results.get(0);
-            if (queryValues != null)
-            {
-                if (queryValues.length != queryFields.size())
-                {
-                    throw new IllegalStateException("Query must have as many columns as defined fieldNames.");
-                }
-
-                for (int i = 0; i < queryValues.length; i++)
-                {
-                    resultMap.put(queryFields.get(i), queryValues[i]);
-                }
-            }
-        }
-        return resultMap;
     }
 
     public EntityManager getEntityManager()

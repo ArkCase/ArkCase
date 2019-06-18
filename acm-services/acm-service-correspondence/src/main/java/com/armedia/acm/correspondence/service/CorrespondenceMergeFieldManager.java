@@ -28,11 +28,9 @@ package com.armedia.acm.correspondence.service;
  */
 
 import com.armedia.acm.correspondence.model.CorrespondenceMergeField;
-import com.armedia.acm.correspondence.model.CorrespondenceQuery;
 import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.spring.SpringContextHolder;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.core.io.Resource;
@@ -43,10 +41,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
-import static com.armedia.acm.correspondence.service.CorrespondenceMapper.mapConfigurationFromMergeField;
 import static com.armedia.acm.correspondence.service.CorrespondenceMapper.mapMergeFieldFromConfiguration;
 
 /**
@@ -89,10 +85,6 @@ public class CorrespondenceMergeFieldManager implements ApplicationListener<Cont
             mergeFields = new ArrayList<>(mergeFieldsConfigurations.stream()
                     .map(configuration -> mapMergeFieldFromConfiguration(configuration)).collect(Collectors.toList()));
 
-            if (mergeFields.isEmpty())
-            {
-                createDefaultMergeFieldRescords();
-            }
         }
         catch (IOException ioe)
         {
@@ -109,18 +101,18 @@ public class CorrespondenceMergeFieldManager implements ApplicationListener<Cont
     }
 
     /**
-     * @param objectType
+     * @param fieldObjectType
      * @return mergeFields
      */
-    public List<CorrespondenceMergeField> getActiveVersionMergeFieldsByType(String objectType)
+    public List<CorrespondenceMergeField> getMergeFieldsByType(String fieldObjectType)
     {
-        List<CorrespondenceMergeField> mergeFieldsInActiveVersion = new ArrayList<>();
+        List<CorrespondenceMergeField> mergeFieldsByType = new ArrayList<>();
         for (CorrespondenceMergeField mergeField : mergeFields)
         {
-            mergeFieldsInActiveVersion.add(mergeField);
+            mergeFieldsByType.add(mergeField);
         }
-        return mergeFieldsInActiveVersion.stream()
-                .filter(mergeField -> mergeField.getFieldObjectType().equals(objectType)).collect(Collectors.toList());
+        return mergeFieldsByType.stream()
+                .filter(mergeField -> mergeField.getFieldObjectType().equals(fieldObjectType)).collect(Collectors.toList());
     }
 
 
@@ -171,34 +163,13 @@ public class CorrespondenceMergeFieldManager implements ApplicationListener<Cont
     private void updateMergeFieldConfiguration(Collection<CorrespondenceMergeField> mergeFields) throws IOException
     {
         List<CorrespondenceMergeField> configurations = mergeFields.stream()
-                .map(mergeField -> mapConfigurationFromMergeField(mergeField)).collect(Collectors.toList());
+                .map(mergeField -> mapMergeFieldFromConfiguration(mergeField)).collect(Collectors.toList());
 
         String configurationsOutput = getObjectConverter().getIndentedJsonMarshaller().marshal(configurations);
 
         File file = correspondenceMergeFieldsConfiguration.getFile();
         FileUtils.writeStringToFile(file, configurationsOutput);
 
-    }
-
-    public void createDefaultMergeFieldRescords() throws IOException
-    {
-        Map<String, CorrespondenceQuery> correspondenceQueryBeansMap = springContextHolder.getAllBeansOfType(CorrespondenceQuery.class);
-        correspondenceQueryBeansMap.values().stream().forEach(cq -> {
-            if (!cq.getFieldNames().isEmpty())
-            {
-                for (String fieldName : cq.getFieldNames())
-                {
-                    CorrespondenceMergeField defaultMergeField = new CorrespondenceMergeField();
-                    defaultMergeField.setFieldId(fieldName);
-                    defaultMergeField.setFieldDescription(
-                            StringUtils.join(StringUtils.splitByCharacterTypeCamelCase(fieldName), ' ') + " Place Holder");
-                    defaultMergeField.setFieldObjectType(cq.getType().name());
-                    defaultMergeField.setFieldValue(fieldName);
-                    mergeFields.add(defaultMergeField);
-                }
-            }
-        });
-        updateMergeFieldConfiguration(mergeFields);
     }
 
     /**

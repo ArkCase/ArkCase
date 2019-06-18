@@ -59,7 +59,7 @@ angular.module('admin').controller('Admin.CMTemplatesController',
                     gridHelper.setUserNameFilterToConfig(promiseUsers, configVersions);
                     $scope.configVersions = configVersions;
 
-                    ReloadGrid();
+                    reloadGrid();
                 });
             });
 
@@ -97,7 +97,7 @@ angular.module('admin').controller('Admin.CMTemplatesController',
                                     correspondenceService.saveTemplateData(template).then(function() {
                                         clearCachedForms(template);
                                         messageService.succsessAction();
-                                        ReloadGrid();
+                                        reloadGrid();
                                         $modalInstance.close();
                                     }, function() {
                                         messageService.errorAction();
@@ -375,7 +375,7 @@ angular.module('admin').controller('Admin.CMTemplatesController',
                 angular.forEach($scope.selectedRows, function(row, index) {
                     correspondenceService.deleteTemplate(row.templateId).then(function() {
                         clearCachedForms(row);
-                        ReloadGrid();
+                        reloadGrid();
                         messageService.succsessAction();
                     }, function() {
                         messageService.errorAction();
@@ -390,7 +390,7 @@ angular.module('admin').controller('Admin.CMTemplatesController',
                 correspondenceService.saveTemplateData(template).then(function() {
                     clearCachedForms(template);
                     messageService.succsessAction();
-                    ReloadGrid();
+                    reloadGrid();
                 }, function() {
                     messageService.errorAction();
                 });
@@ -406,7 +406,7 @@ angular.module('admin').controller('Admin.CMTemplatesController',
                 }
                 cacheConfigMap.set(configMap);
             }
-            function ReloadGrid() {
+            function reloadGrid() {
                 var templatesPromise = correspondenceService.retrieveActiveVersionTemplatesList();
                 templatesPromise.then(function(templates) {
                     angular.forEach(templates.data, function(row, index) {

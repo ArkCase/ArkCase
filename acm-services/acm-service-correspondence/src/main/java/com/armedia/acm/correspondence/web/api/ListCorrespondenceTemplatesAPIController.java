@@ -27,13 +27,9 @@ package com.armedia.acm.correspondence.web.api;
  * #L%
  */
 
-import com.armedia.acm.core.provider.TemplateModelProvider;
 import com.armedia.acm.correspondence.model.CorrespondenceTemplate;
+import com.armedia.acm.correspondence.service.CorrespondenceService;
 import com.armedia.acm.spring.SpringContextHolder;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
-import com.fasterxml.jackson.module.jsonSchema.JsonSchema;
-import com.fasterxml.jackson.module.jsonSchema.JsonSchemaGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -44,11 +40,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -57,6 +51,7 @@ import java.util.Map;
 public class ListCorrespondenceTemplatesAPIController
 {
     private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private CorrespondenceService correspondenceService;
     private SpringContextHolder contextHolder;
 
     @RequestMapping(value = "/listTemplates", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -83,45 +78,15 @@ public class ListCorrespondenceTemplatesAPIController
     @ResponseBody
     public Map<String, String> listTemplateModelProviders()
     {
-
-        Collection<TemplateModelProvider> templateModelProviders = getContextHolder().getAllBeansOfType(TemplateModelProvider.class).values();
-
-        Map<String, String> mapTemplateModelProviders = new HashMap<>();
-        for (TemplateModelProvider modelProvider : templateModelProviders)
-        {
-            String[] splittedTemplateProviderClassPath = modelProvider.getClass().getName().split("\\.");
-            String templateModelProviderShortName = splittedTemplateProviderClassPath[splittedTemplateProviderClassPath.length-1];
-
-            mapTemplateModelProviders.put(modelProvider.getClass().getName(), templateModelProviderShortName);
-        }
-        return mapTemplateModelProviders;
+        return getCorrespondenceService().listTemplateModelProviders();
     }
 
 
     @RequestMapping(value = "/listAllProperties", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public String getDeclaredFields(String classPath)
+    public String getTemplateModelProviderDeclaredFields(String classPath)
     {
-        String jsonSchemaProperties = null;
-        try
-        {
-            Class templateModelProviderClass = Class.forName(classPath);
-            TemplateModelProvider instance = (TemplateModelProvider) templateModelProviderClass.newInstance();
-            Class clazz = instance.getType();
-
-            ObjectMapper mapper = new ObjectMapper();
-            ObjectWriter writer = mapper.writer().withDefaultPrettyPrinter();
-
-            JsonSchemaGenerator jsg = new JsonSchemaGenerator(mapper);
-            JsonSchema jsonSchema = jsg.generateSchema(clazz);
-            jsonSchemaProperties = writer.writeValueAsString(jsonSchema);
-
-        }
-        catch (Exception e)
-        {
-            log.error("The provided classpath is invalid. Because of: {}", e.getMessage());
-        }
-        return jsonSchemaProperties;
+        return getCorrespondenceService().getTemplateModelProviderDeclaredFields(classPath);
     }
 
     public SpringContextHolder getContextHolder()
@@ -132,5 +97,15 @@ public class ListCorrespondenceTemplatesAPIController
     public void setContextHolder(SpringContextHolder contextHolder)
     {
         this.contextHolder = contextHolder;
+    }
+
+    public CorrespondenceService getCorrespondenceService()
+    {
+        return correspondenceService;
+    }
+
+    public void setCorrespondenceService(CorrespondenceService correspondenceService)
+    {
+        this.correspondenceService = correspondenceService;
     }
 }

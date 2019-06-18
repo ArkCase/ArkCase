@@ -27,11 +27,13 @@ package com.armedia.acm.correspondence.utils;
  * #L%
  */
 
+import com.armedia.acm.core.AcmApplication;
 import com.armedia.acm.correspondence.model.CorrespondenceMergeField;
 import com.armedia.acm.correspondence.service.CorrespondenceMergeFieldManager;
 import com.armedia.acm.correspondence.service.CorrespondenceService;
 import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.data.AcmEntity;
+import com.armedia.acm.objectonverter.DateFormats;
 import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
@@ -70,15 +72,13 @@ import static com.armedia.acm.correspondence.service.CorrespondenceMapper.mapMer
  */
 public class ParagraphRunPoiWordGenerator implements WordGenerator, ApplicationListener<ContextRefreshedEvent>
 {
-    public static final String DATE_FORMAT = "MM/dd/yyyy";
     public static final String DATE_TYPE = "Date";
-
     public static final String CURRENT_DATE = "currentDate";
     public static final String BASE_URL = "baseUrl";
     public static final String FILES = "files";
 
-    public static final String substitutionPrefix = "${";
-    public static final String substitutionSuffix = "}";
+    public static final String SUBSTITUTION_PREFIX = "${";
+    public static final String SUBSTITUTION_SUFFIX = "}";
     private transient final Logger log = LogManager.getLogger(getClass());
 
     private CorrespondenceService correspondenceService;
@@ -87,6 +87,7 @@ public class ParagraphRunPoiWordGenerator implements WordGenerator, ApplicationL
     private ObjectConverter objectConverter;
     private CorrespondenceMergeFieldManager mergeFieldManager;
     private List<CorrespondenceMergeField> mergeFields = new ArrayList<>();
+    private AcmApplication acmApplication;
 
     /**
      * Generate the Word document via direct manipulation of Word paragraph texts. This works seamlessly (user sees
@@ -114,10 +115,6 @@ public class ParagraphRunPoiWordGenerator implements WordGenerator, ApplicationL
             mergeFields = new ArrayList<>(mergeFieldsConfigurations.stream()
                     .map(configuration -> mapMergeFieldFromConfiguration(configuration)).collect(Collectors.toList()));
 
-            if (mergeFields.isEmpty())
-            {
-                getMergeFieldManager().createDefaultMergeFieldRescords();
-            }
         }
         catch (IOException ioe)
         {
@@ -181,13 +178,13 @@ public class ParagraphRunPoiWordGenerator implements WordGenerator, ApplicationL
         while (found)
         {
             found = false;
-            int pos = paragraph.getText().indexOf(substitutionPrefix);
+            int pos = paragraph.getText().indexOf(SUBSTITUTION_PREFIX);
             if (pos >= 0)
             {
                 found = true;
                 Map<Integer, XWPFRun> posToRuns = getPosToRuns(paragraph);
                 XWPFRun run = posToRuns.get(pos);
-                XWPFRun lastRun = posToRuns.get(paragraph.getText().indexOf(substitutionSuffix));
+                XWPFRun lastRun = posToRuns.get(paragraph.getText().indexOf(SUBSTITUTION_SUFFIX));
                 int runNum = paragraph.getRuns().indexOf(run);
                 int lastRunNum = paragraph.getRuns().indexOf(lastRun);
                 String texts[] = { "" };
@@ -207,7 +204,7 @@ public class ParagraphRunPoiWordGenerator implements WordGenerator, ApplicationL
                 String spelExpressionToBeEvaluted = sb.toString();
                 if (spelExpressionToBeEvaluted != null)
                 {
-                    texts = generateSpelExpression(objectType, parentObjectId, spelExpressionToBeEvaluted).split("\n");
+                    texts = evaluateSpelExpression(objectType, parentObjectId, spelExpressionToBeEvaluted).split("\n");
                 }
 
                 // Snowbound throws error on runs with empty text (see AFDP-6414). So we just delete these runs
@@ -325,11 +322,11 @@ public class ParagraphRunPoiWordGenerator implements WordGenerator, ApplicationL
         return cells;
     }
 
-    public String generateSpelExpression(String objectType, Long parentObjectId, String spelExpression)
+    public String evaluateSpelExpression(String objectType, Long parentObjectId, String spelExpression)
     {
         String generatedExpression;
         boolean isExistingMergeField = false;
-        SimpleDateFormat formatter = new SimpleDateFormat(DATE_FORMAT);
+        SimpleDateFormat formatter = new SimpleDateFormat(DateFormats.WORKFLOW_DATE_FORMAT);
 
         AcmAbstractDao<AcmEntity> correspondedObjectDao = getCorrespondenceService().getAcmAbstractDao(objectType);
         Object correspondenedObject = correspondedObjectDao.find(parentObjectId);
@@ -374,7 +371,7 @@ public class ParagraphRunPoiWordGenerator implements WordGenerator, ApplicationL
             }
             else if (BASE_URL.equalsIgnoreCase(spelExpression))
             {
-                generatedExpression = "http://cloud.arkcase.com/arkcase/";
+                generatedExpression = getAcmApplication().getBaseUrl();
             }
             else if (FILES.equalsIgnoreCase(spelExpression))
             {
@@ -455,5 +452,15 @@ public class ParagraphRunPoiWordGenerator implements WordGenerator, ApplicationL
     public void setMergeFieldManager(CorrespondenceMergeFieldManager mergeFieldManager)
     {
         this.mergeFieldManager = mergeFieldManager;
+    }
+
+    public AcmApplication getAcmApplication()
+    {
+        return acmApplication;
+    }
+
+    public void setAcmApplication(AcmApplication acmApplication)
+    {
+        this.acmApplication = acmApplication;
     }
 }

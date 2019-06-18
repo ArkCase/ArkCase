@@ -58,27 +58,6 @@ public class CorrespondenceMapper
         return template;
     }
 
-    public static CorrespondenceTemplate mapConfigurationFromTemplate(CorrespondenceTemplate template)
-    {
-        CorrespondenceTemplate configuration = new CorrespondenceTemplate();
-
-        configuration.setTemplateId(template.getTemplateId());
-        configuration.setTemplateVersion(template.getTemplateVersion());
-        configuration.setTemplateVersionActive(template.isTemplateVersionActive());
-        configuration.setLabel(template.getLabel());
-        configuration.setDocumentType(template.getDocumentType());
-        configuration.setTemplateFilename(template.getTemplateFilename());
-        configuration.setObjectType(template.getObjectType());
-        configuration.setDateFormatString(template.getDateFormatString());
-        configuration.setNumberFormatString(template.getNumberFormatString());
-        configuration.setActivated(template.isActivated());
-        configuration.setModifier(template.getModifier());
-        configuration.setModified(template.getModified());
-        configuration.setTemplateModelProvider(template.getTemplateModelProvider());
-
-        return configuration;
-    }
-
     public static CorrespondenceMergeField mapMergeFieldFromConfiguration(CorrespondenceMergeField configuration)
     {
         CorrespondenceMergeField mergeField = new CorrespondenceMergeField();
@@ -89,18 +68,6 @@ public class CorrespondenceMapper
         mergeField.setFieldObjectType(configuration.getFieldObjectType());
 
         return mergeField;
-    }
-
-    public static CorrespondenceMergeField mapConfigurationFromMergeField(CorrespondenceMergeField mergeField)
-    {
-        CorrespondenceMergeField configuration = new CorrespondenceMergeField();
-
-        configuration.setFieldId(mergeField.getFieldId());
-        configuration.setFieldValue(mergeField.getFieldValue());
-        configuration.setFieldDescription(mergeField.getFieldDescription());
-        configuration.setFieldObjectType(mergeField.getFieldObjectType());
-
-        return configuration;
     }
 
 }

@@ -35,26 +35,26 @@ angular.module('admin').controller('Admin.CMMergeFieldsController',
                         gridHelper.setUserNameFilterToConfig(promiseUsers, configVersions);
                         $scope.configVersions = configVersions;
 
-                        ReloadGrid();
+                        reloadGrid();
                     });
                 });
             });
 
             $scope.changeType = function() {
-                ReloadGrid();
+                reloadGrid();
             }
 
             $scope.save = function() {
                 correspondenceMergeFieldsService.saveMergeFieldsData($scope.gridOptions.data).then(function() {
                     messageService.succsessAction();
-                    ReloadGrid();
+                    reloadGrid();
                 }, function() {
                     messageService.errorAction();
                 });
             }
 
             $scope.$on('reloadMergeFieldGrid', function() {
-                ReloadGrid();
+                reloadGrid();
             });
 
             $scope.showVersion = function() {
@@ -109,7 +109,7 @@ angular.module('admin').controller('Admin.CMMergeFieldsController',
 
             }
 
-            function ReloadGrid() {
+            function reloadGrid() {
                 var mergeFieldsPromise = correspondenceMergeFieldsService.retrieveActiveMergeFieldsByType($scope.mergingType);
                 mergeFieldsPromise.then(function(mergeFields) {
                     $scope.gridOptions.data = mergeFields.data;
@@ -139,7 +139,7 @@ angular.module('admin').controller('Admin.CMMergeFieldsController',
 
                             correspondenceMergeFieldsService.saveMergeFieldsData(mergeFieldArray).then(function() {
                                 messageService.succsessAction();
-                                ReloadGrid();
+                                reloadGrid();
                                 $modalInstance.close();
                             }, function() {
                                 messageService.errorAction();
