@@ -28,9 +28,7 @@ package com.armedia.acm.correspondence.service;
  */
 
 import com.armedia.acm.correspondence.model.CorrespondenceMergeField;
-import com.armedia.acm.correspondence.model.CorrespondenceQuery;
 import com.armedia.acm.correspondence.model.CorrespondenceTemplate;
-import com.armedia.acm.correspondence.model.QueryType;
 import com.armedia.acm.correspondence.utils.WordGenerator;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
@@ -47,7 +45,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import javax.persistence.EntityManager;
-import javax.persistence.Query;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
@@ -70,12 +67,10 @@ public class CorrespondenceGeneratorTest extends EasyMockSupport
 {
     private CorrespondenceGenerator unit;
 
-    private CorrespondenceQuery correspondenceQuery;
     private CorrespondenceTemplate correspondenceTemplate;
     private EcmFile ecmFile;
 
     private EntityManager mockEntityManager;
-    private Query mockQuery;
     private WordGenerator mockWordGenerator;
     private OutputStream mockOutputStream;
     private InputStream mockInputStream;
@@ -153,7 +148,6 @@ public class CorrespondenceGeneratorTest extends EasyMockSupport
     public void setUp() throws Exception
     {
         mockEntityManager = createMock(EntityManager.class);
-        mockQuery = createMock(Query.class);
         mockWordGenerator = createMock(WordGenerator.class);
         mockOutputStream = createMock(OutputStream.class);
         mockInputStream = createMock(InputStream.class);
@@ -180,7 +174,6 @@ public class CorrespondenceGeneratorTest extends EasyMockSupport
 
         String doctype = "doctype";
         String templateName = "templateName";
-        String sqlQuery = "sqlQuery";
         String dateFormat = "MM/dd/YYYY";
         String numberFormat = "#,###";
 
@@ -201,11 +194,6 @@ public class CorrespondenceGeneratorTest extends EasyMockSupport
         substitutionVars.put(key2, var2);
         substitutionVars.put(key3, var3);
         substitutionVars.put(key4, var4);
-
-        correspondenceQuery = new CorrespondenceQuery();
-        correspondenceQuery.setSqlQuery(sqlQuery);
-        correspondenceQuery.setFieldNames(fieldNames);
-        correspondenceQuery.setType(QueryType.CASE_FILE);
 
         correspondenceTemplate = new CorrespondenceTemplate();
         correspondenceTemplate.setDocumentType(doctype);
@@ -228,17 +216,7 @@ public class CorrespondenceGeneratorTest extends EasyMockSupport
 
         Capture<Resource> captureResourceTemplate = new Capture<>();
 
-        Map<String, CorrespondenceQuery> correspondenceQueryBeansMap = new HashMap<>();
-        correspondenceQueryBeansMap.put("caseFileCorrespondenceQueryBean", correspondenceQuery);
-
         Capture<String> filename = new Capture<>();
-
-        expect(mockSpringContextHolder.getAllBeansOfType(CorrespondenceQuery.class)).andReturn(correspondenceQueryBeansMap);
-        correspondenceQueryBeansMap.values().stream()
-                .filter(cQuery -> cQuery.getType().toString().equals(correspondenceTemplate.getObjectType())).findFirst().get();
-        expect(mockEntityManager.createNativeQuery(correspondenceQuery.getSqlQuery())).andReturn(mockQuery);
-        expect(mockQuery.setParameter(1, queryArgs[0])).andReturn(mockQuery);
-        expect(mockQuery.getResultList()).andReturn(resultsData());
 
         expect(mockLookupDao.getMergedLookups()).andReturn(lookupData()).anyTimes();
 
@@ -275,17 +253,7 @@ public class CorrespondenceGeneratorTest extends EasyMockSupport
 
         Capture<Resource> captureResourceTemplate = new Capture<>();
 
-        Map<String, CorrespondenceQuery> correspondenceQueryBeansMap = new HashMap<>();
-        correspondenceQueryBeansMap.put("caseFileCorrespondenceQueryBean", correspondenceQuery);
-
         Capture<String> filename = new Capture<>();
-
-        expect(mockSpringContextHolder.getAllBeansOfType(CorrespondenceQuery.class)).andReturn(correspondenceQueryBeansMap);
-        correspondenceQueryBeansMap.values().stream()
-                .filter(cQuery -> cQuery.getType().toString().equals(correspondenceTemplate.getObjectType())).findFirst().get();
-        expect(mockEntityManager.createNativeQuery(correspondenceQuery.getSqlQuery())).andReturn(mockQuery);
-        expect(mockQuery.setParameter(1, queryArgs[0])).andReturn(mockQuery);
-        expect(mockQuery.getResultList()).andReturn(resultsData());
 
         expect(mockLookupDao.getMergedLookups()).andReturn(lookupData()).anyTimes();
 

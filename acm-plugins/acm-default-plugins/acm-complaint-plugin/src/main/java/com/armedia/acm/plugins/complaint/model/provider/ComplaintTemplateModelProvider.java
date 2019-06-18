@@ -28,7 +28,6 @@ package com.armedia.acm.plugins.complaint.model.provider;
  */
 
 import com.armedia.acm.core.provider.TemplateModelProvider;
-import com.armedia.acm.plugins.complaint.dao.ComplaintDao;
 import com.armedia.acm.plugins.complaint.model.Complaint;
 
 /**
@@ -36,27 +35,15 @@ import com.armedia.acm.plugins.complaint.model.Complaint;
  */
 public class ComplaintTemplateModelProvider implements TemplateModelProvider<Complaint>
 {
-    private ComplaintDao complaintDao;
-
     @Override
     public Complaint getModel(Object complaint)
     {
-        return getComplaintDao().findByComplaintNumber(((Complaint) complaint).getComplaintNumber());
+        return (Complaint)complaint;
     }
 
     @Override
     public Class<Complaint> getType()
     {
         return Complaint.class;
-    }
-
-    public ComplaintDao getComplaintDao()
-    {
-        return complaintDao;
-    }
-
-    public void setComplaintDao(ComplaintDao complaintDao)
-    {
-        this.complaintDao = complaintDao;
     }
 }

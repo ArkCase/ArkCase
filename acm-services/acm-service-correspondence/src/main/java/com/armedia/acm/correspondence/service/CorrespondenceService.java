@@ -27,58 +27,18 @@ package com.armedia.acm.correspondence.service;
  * #L%
  */
 
-import static com.armedia.acm.correspondence.service.CorrespondenceGenerator.CORRESPONDENCE_CATEGORY;
-import static com.armedia.acm.correspondence.service.CorrespondenceGenerator.WORD_MIME_TYPE;
-
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.correspondence.model.CorrespondenceMergeField;
-import com.armedia.acm.correspondence.model.CorrespondenceQuery;
 import com.armedia.acm.correspondence.model.CorrespondenceTemplate;
-import com.armedia.acm.correspondence.model.QueryType;
 import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.data.AcmEntity;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
-import com.armedia.acm.spring.SpringContextHolder;
-
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
-import org.docx4j.dml.CTBlip;
-import org.docx4j.jaxb.XPathBinderAssociationIsPartialException;
-import org.docx4j.model.structure.SectionWrapper;
-import org.docx4j.openpackaging.exceptions.Docx4JException;
-import org.docx4j.openpackaging.exceptions.InvalidFormatException;
-import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
-import org.docx4j.openpackaging.parts.Part;
-import org.docx4j.openpackaging.parts.PartName;
-import org.docx4j.openpackaging.parts.WordprocessingML.FooterPart;
-import org.docx4j.openpackaging.parts.WordprocessingML.HeaderPart;
-import org.docx4j.openpackaging.parts.relationships.RelationshipsPart;
-import org.docx4j.relationships.Relationship;
-import org.docx4j.wml.CTRel;
-import org.docx4j.wml.FooterReference;
-import org.docx4j.wml.HdrFtrRef;
-import org.docx4j.wml.HeaderReference;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 
-import javax.xml.bind.JAXBException;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -135,20 +95,6 @@ public interface CorrespondenceService
     EcmFile generate(String templateName, String parentObjectType, Long parentObjectId, String targetCmisFolderId)
             throws IOException, IllegalArgumentException, AcmCreateObjectFailedException, AcmUserActionFailedException;
 
-    Map<String, CorrespondenceQuery> getAllQueries();
-
-    /**
-     * @param queryType
-     * @return
-     */
-    Map<String, CorrespondenceQuery> getQueriesByType(QueryType queryType);
-
-    /**
-     * @param queryBeanId
-     * @return
-     */
-    Optional<CorrespondenceQuery> getQueryByBeanId(String queryBeanId);
-
     List<CorrespondenceTemplate> getAllTemplates();
 
     List<CorrespondenceTemplate> getActiveVersionTemplates();
@@ -197,7 +143,7 @@ public interface CorrespondenceService
      * @return
      * @throws IOException, CorrespondenceMergeFieldVersionException
      */
-    List<CorrespondenceMergeField> getActiveVersionMergeFieldsByType(String objectType);
+    List<CorrespondenceMergeField> getMergeFieldsByType(String objectType);
 
     /**
      * @param mergeFields
@@ -219,4 +165,14 @@ public interface CorrespondenceService
      * @param objectType
      */
     AcmAbstractDao<AcmEntity> getAcmAbstractDao(String objectType);
+
+    /**
+     * Listing all template model providers
+     */
+    Map<String, String> listTemplateModelProviders();
+
+    /**
+     * Listing all declared fields for given template model provider classpath
+     */
+    String getTemplateModelProviderDeclaredFields(String classPath);
 }

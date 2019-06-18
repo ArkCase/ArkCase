@@ -29,14 +29,17 @@ package com.armedia.acm.correspondence.service;
 
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
+import com.armedia.acm.core.provider.TemplateModelProvider;
 import com.armedia.acm.correspondence.model.CorrespondenceMergeField;
-import com.armedia.acm.correspondence.model.CorrespondenceQuery;
 import com.armedia.acm.correspondence.model.CorrespondenceTemplate;
-import com.armedia.acm.correspondence.model.QueryType;
 import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.data.AcmEntity;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.spring.SpringContextHolder;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
+import com.fasterxml.jackson.module.jsonSchema.JsonSchema;
+import com.fasterxml.jackson.module.jsonSchema.JsonSchemaGenerator;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.docx4j.dml.CTBlip;
@@ -71,6 +74,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -92,6 +96,7 @@ public class CorrespondenceServiceImpl implements CorrespondenceService
     private CorrespondenceEventPublisher eventPublisher;
     private CorrespondenceTemplateManager templateManager;
     private CorrespondenceMergeFieldManager mergeFieldManager;
+    private SpringContextHolder contextHolder;
 
     /**
      * For use from MVC controllers and any other client with an Authentication object.
@@ -241,36 +246,6 @@ public class CorrespondenceServiceImpl implements CorrespondenceService
      * @return
      */
     @Override
-    public Map<String, CorrespondenceQuery> getAllQueries()
-    {
-        return springContextHolder.getAllBeansOfType(CorrespondenceQuery.class);
-    }
-
-    /**
-     * @param queryType
-     * @return
-     */
-    @Override
-    public Map<String, CorrespondenceQuery> getQueriesByType(QueryType queryType)
-    {
-        return getAllQueries().entrySet().stream().filter(entry -> entry.getValue().getType().equals(queryType))
-                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
-    }
-
-    /**
-     * @param queryBeanId
-     * @return
-     */
-    @Override
-    public Optional<CorrespondenceQuery> getQueryByBeanId(String queryBeanId)
-    {
-        return Optional.ofNullable(springContextHolder.getAllBeansOfType(CorrespondenceQuery.class).get(queryBeanId));
-    }
-
-    /**
-     * @return
-     */
-    @Override
     public List<CorrespondenceTemplate> getAllTemplates()
     {
         return templateManager.getAllTemplates();
@@ -365,9 +340,9 @@ public class CorrespondenceServiceImpl implements CorrespondenceService
      *             CorrespondenceMergeFieldVersionException
      */
     @Override
-    public List<CorrespondenceMergeField> getActiveVersionMergeFieldsByType(String objectType)
+    public List<CorrespondenceMergeField> getMergeFieldsByType(String objectType)
     {
-        return mergeFieldManager.getActiveVersionMergeFieldsByType(objectType);
+        return mergeFieldManager.getMergeFieldsByType(objectType);
     }
 
     /**
@@ -413,6 +388,45 @@ public class CorrespondenceServiceImpl implements CorrespondenceService
         }
 
         return null;
+    }
+
+    @Override
+    public Map<String, String> listTemplateModelProviders() {
+        Collection<TemplateModelProvider> templateModelProviders = getContextHolder().getAllBeansOfType(TemplateModelProvider.class).values();
+
+        Map<String, String> mapTemplateModelProviders = new HashMap<>();
+        for (TemplateModelProvider modelProvider : templateModelProviders)
+        {
+            String[] splittedTemplateProviderClassPath = modelProvider.getClass().getName().split("\\.");
+            String templateModelProviderShortName = splittedTemplateProviderClassPath[splittedTemplateProviderClassPath.length-1];
+
+            mapTemplateModelProviders.put(modelProvider.getClass().getName(), templateModelProviderShortName);
+        }
+        return mapTemplateModelProviders;
+    }
+
+    @Override
+    public String getTemplateModelProviderDeclaredFields(String classPath) {
+        String jsonSchemaProperties = null;
+        try
+        {
+            Class templateModelProviderClass = Class.forName(classPath);
+            TemplateModelProvider instance = (TemplateModelProvider) templateModelProviderClass.newInstance();
+            Class clazz = instance.getType();
+
+            ObjectMapper mapper = new ObjectMapper();
+            ObjectWriter writer = mapper.writer().withDefaultPrettyPrinter();
+
+            JsonSchemaGenerator jsg = new JsonSchemaGenerator(mapper);
+            JsonSchema jsonSchema = jsg.generateSchema(clazz);
+            jsonSchemaProperties = writer.writeValueAsString(jsonSchema);
+
+        }
+        catch (Exception e)
+        {
+            log.error("The provided classpath is invalid. Because of: {}", e.getMessage());
+        }
+        return jsonSchemaProperties;
     }
 
     private void mergeTemplates(List<File> templateFiles, OutputStream dest) throws Docx4JException, JAXBException
@@ -579,4 +593,13 @@ public class CorrespondenceServiceImpl implements CorrespondenceService
         this.mergeFieldManager = mergeFieldManager;
     }
 
+    public SpringContextHolder getContextHolder()
+    {
+        return contextHolder;
+    }
+
+    public void setContextHolder(SpringContextHolder contextHolder)
+    {
+        this.contextHolder = contextHolder;
+    }
 }

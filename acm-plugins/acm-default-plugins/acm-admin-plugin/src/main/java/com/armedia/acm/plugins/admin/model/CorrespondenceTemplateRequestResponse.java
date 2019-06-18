@@ -53,8 +53,6 @@ public class CorrespondenceTemplateRequestResponse
 
     private String templateFilename;
 
-    private String correspondenceQueryBeanId;
-
     private String objectType;
 
     private String dateFormatString;
@@ -170,23 +168,6 @@ public class CorrespondenceTemplateRequestResponse
     public void setTemplateFilename(String templateFilename)
     {
         this.templateFilename = templateFilename;
-    }
-
-    /**
-     * @return the correspondenceQueryBeanId
-     */
-    public String getCorrespondenceQueryBeanId()
-    {
-        return correspondenceQueryBeanId;
-    }
-
-    /**
-     * @param correspondenceQueryBeanId
-     *            the correspondenceQueryBeanId to set
-     */
-    public void setCorrespondenceQueryBeanId(String correspondenceQueryBeanId)
-    {
-        this.correspondenceQueryBeanId = correspondenceQueryBeanId;
     }
 
     /**

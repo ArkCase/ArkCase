@@ -1855,3 +1855,7 @@ a.primary {
     font-size: 16px;
     margin-left: 80px;
 }
+
+.addMergeFieldButton {
+    margin-top: 5px
+}

@@ -27,7 +27,6 @@ package com.armedia.acm.correspondence.service;
  * #L%
  */
 
-import com.armedia.acm.correspondence.model.CorrespondenceQuery;
 import com.armedia.acm.correspondence.model.CorrespondenceTemplate;
 import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.spring.SpringContextHolder;
@@ -44,14 +43,12 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import static com.armedia.acm.correspondence.service.CorrespondenceMapper.mapConfigurationFromTemplate;
 import static com.armedia.acm.correspondence.service.CorrespondenceMapper.mapTemplateFromConfiguration;
 
 /**
@@ -166,25 +163,6 @@ public class CorrespondenceTemplateManager implements ApplicationListener<Contex
         });
 
         return list;
-    }
-
-    /**
-     * @param query
-     * @return
-     */
-    String getQueryId(CorrespondenceQuery query)
-    {
-        Map<String, CorrespondenceQuery> queryBeans = springContextHolder.getAllBeansOfType(CorrespondenceQuery.class);
-        if (queryBeans.values().contains(query))
-        {
-            Optional<Entry<String, CorrespondenceQuery>> searchResult = queryBeans.entrySet().stream()
-                    .filter(entry -> entry.getValue().equals(query)).findFirst();
-            if (searchResult.isPresent())
-            {
-                return searchResult.get().getKey();
-            }
-        }
-        return null;
     }
 
     /**
@@ -390,7 +368,7 @@ public class CorrespondenceTemplateManager implements ApplicationListener<Contex
     private void updateConfiguration(Collection<CorrespondenceTemplate> templates) throws IOException
     {
         List<CorrespondenceTemplate> configurations = templates.stream()
-                .map(template -> mapConfigurationFromTemplate(template)).collect(Collectors.toList());
+                .map(template -> mapTemplateFromConfiguration(template)).collect(Collectors.toList());
 
         String configurationsOutput = getObjectConverter().getIndentedJsonMarshaller().marshal(configurations);
 

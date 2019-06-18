@@ -64,7 +64,7 @@ public class CorrespondenceMergeFieldAPIController
     public List<CorrespondenceMergeField> getActiveVersionMergeFieldsByType(@PathVariable(value = "objectType") String objectType)
             throws IOException
     {
-        return correspondenceService.getActiveVersionMergeFieldsByType(objectType);
+        return correspondenceService.getMergeFieldsByType(objectType);
     }
 
     @RequestMapping(value = "/mergefields", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
