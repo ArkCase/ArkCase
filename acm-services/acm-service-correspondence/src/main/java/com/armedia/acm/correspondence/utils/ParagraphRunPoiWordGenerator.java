@@ -70,7 +70,7 @@ import static com.armedia.acm.correspondence.service.CorrespondenceMapper.mapMer
 /**
  * Created by armdev on 12/11/14.
  */
-public class ParagraphRunPoiWordGenerator implements WordGenerator, ApplicationListener<ContextRefreshedEvent>
+public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, ApplicationListener<ContextRefreshedEvent>
 {
     public static final String DATE_TYPE = "Date";
     public static final String CURRENT_DATE = "currentDate";
@@ -155,11 +155,6 @@ public class ParagraphRunPoiWordGenerator implements WordGenerator, ApplicationL
                 }
             }
         }
-    }
-
-    @Override
-    public void generate(Resource wordTemplate, OutputStream targetStream, Map<String, String> substitutions) {
-        log.info("This method is not implemented");
     }
 
     private List<XWPFParagraph> updateGraphs(List<XWPFParagraph> graphs, String objectType, Long parentObjectId)
