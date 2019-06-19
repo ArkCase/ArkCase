@@ -1620,7 +1620,7 @@
                     "name": "objectType",
                     "displayName": "cases.comp.suggestedCases.table.columns.referenceType",
                     "headerCellFilter": "translate",
-                    "cellTemplate": "<div class='ui-grid-cell-contents'>{{ common.objectTypes.CASE_FILE | translate }}</div>"
+                    "cellTemplate": "<div class='ui-grid-cell-contents'>{{ grid.appScope.getObjectTypeValue(row.entity.objectType) | translate }}</div>"
                 },
                 {
                     "name": "modifiedDate",
@@ -1632,7 +1632,12 @@
                     "displayName": "cases.comp.suggestedCases.table.columns.status",
                     "headerCellFilter": "translate"
                 }
-            ]
+
+            ],
+            "objectTypeValue":{
+                "CASE_FILE": "admin.application.objectTitleConfiguration.caseFile",
+                "COMPLAINT": "admin.application.objectTitleConfiguration.complaint"
+            }
         }
 
     ]

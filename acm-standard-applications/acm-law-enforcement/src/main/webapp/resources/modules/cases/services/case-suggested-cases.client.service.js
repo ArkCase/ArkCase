@@ -11,7 +11,7 @@ angular.module('services').factory('Cases.SuggestedCases', [ '$http', function($
             url: 'api/latest/service/suggestion/' + title,
             method: 'GET',
             params:{
-                id: id
+                objectId: id
             }
         });
     }
