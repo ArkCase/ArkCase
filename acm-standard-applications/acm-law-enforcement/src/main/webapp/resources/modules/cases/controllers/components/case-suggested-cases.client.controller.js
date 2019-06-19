@@ -25,6 +25,7 @@ angular.module('cases').controller('Cases.SuggestedCasesController', ['$scope','
         var onConfigRetrieved = function(config) {
 
             $scope.config = config;
+            $scope.objectTypeValue = config.objectTypeValue;
 
             gridHelper.setColumnDefs(config);
             gridHelper.setBasicOptions(config);
@@ -52,6 +53,11 @@ angular.module('cases').controller('Cases.SuggestedCasesController', ['$scope','
                 $scope.gridOptions.data = $scope.suggestedCases;
                 $scope.gridOptions.totalItems = $scope.suggestedCases.length;
             });
+        }
+
+
+        $scope.getObjectTypeValue = function (key) {
+            return $scope.objectTypeValue[key];
         }
         var onObjectInfoRetrieved = function(objectInfo) {
             $scope.objectInfo = objectInfo;
