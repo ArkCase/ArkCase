@@ -1,18 +1,17 @@
 'use strict';
 
-angular.module('cases').factory('Cases.SuggestedCases', [ '$http', function($http) {
+angular.module('services').factory('Cases.SuggestedCases', [ '$http', function($http) {
 
     return ({
-        getSuggestedCases: getSuggestedCases,
+        getSuggestedCases: getSuggestedCases
     });
 
-    function getSuggestedCases(title) {
+    function getSuggestedCases(title, id) {
         return $http({
-            url: '/api/v1/service/suggestion',
+            url: 'api/latest/service/suggestion/' + title,
             method: 'GET',
-            isArray: true,
-            params: {
-                title:title
+            params:{
+                id: id
             }
         });
     }
