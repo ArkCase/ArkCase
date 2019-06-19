@@ -1617,7 +1617,7 @@
 
                 },
                 {
-                    "name": "referenceType",
+                    "name": "objectType",
                     "displayName": "cases.comp.suggestedCases.table.columns.referenceType",
                     "headerCellFilter": "translate",
                     "cellTemplate": "<div class='ui-grid-cell-contents'>{{ common.objectTypes.CASE_FILE | translate }}</div>"

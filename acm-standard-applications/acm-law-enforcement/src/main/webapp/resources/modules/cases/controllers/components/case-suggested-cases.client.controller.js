@@ -46,7 +46,7 @@ angular.module('cases').controller('Cases.SuggestedCasesController', ['$scope','
         };
 
         function retrieveGridData(){
-            SuggestedCasesService.getSuggestedCases($scope.objectInfo.title).then(function(data){
+            SuggestedCasesService.getSuggestedCases($scope.objectInfo.title, $scope.objectInfo.id).then(function(data){
                 $scope.suggestedCases = data.data;
                 $scope.gridOptions = $scope.gridOptions || {};
                 $scope.gridOptions.data = $scope.suggestedCases;
