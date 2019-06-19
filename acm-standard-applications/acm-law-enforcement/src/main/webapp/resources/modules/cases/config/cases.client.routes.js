@@ -13,6 +13,7 @@ angular.module('cases').config([ '$stateProvider', function($stateProvider) {
                 $translatePartialLoader.addPart('cases');
                 $translatePartialLoader.addPart('document-details');
                 $translatePartialLoader.addPart('preference');
+                $translatePartialLoader.addPart('admin');
                 $translate.resetDataDict().addDataDictFromLabels(LocaleService.getLabelResources([ "cases", "common" ], "en")).addDataDictFromLookup(ObjectLookupService.getLookupByLookupName("caseFileTypes")).addDataDictFromLookup(ObjectLookupService.getLookupByLookupName("priorities"));
                 return $translate.refresh();
             } ]
