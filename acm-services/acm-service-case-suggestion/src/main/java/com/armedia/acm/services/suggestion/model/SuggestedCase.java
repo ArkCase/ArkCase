@@ -71,6 +71,8 @@ public class SuggestedCase
 
     public String caseStatus;
 
+    public String objectType;
+
     @JsonSerialize(using = JsonDateSerializer.class)
     private Date modifiedDate;
 
@@ -124,6 +126,16 @@ public class SuggestedCase
     public void setCaseStatus(String caseStatus)
     {
         this.caseStatus = caseStatus;
+    }
+
+    public String getObjectType()
+    {
+        return objectType;
+    }
+
+    public void setObjectType(String objectType)
+    {
+        this.objectType = objectType;
     }
 
     public Date getModifiedDate()

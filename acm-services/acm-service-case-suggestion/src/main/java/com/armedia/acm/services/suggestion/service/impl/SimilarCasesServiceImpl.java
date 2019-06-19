@@ -52,25 +52,25 @@ public class SimilarCasesServiceImpl implements SimilarCasesService
     private ExecuteSolrQuery executeSolrQuery;
 
     @Override
-    public List<SuggestedCase> findSimilarCases(String title, Boolean isPortal, Authentication auth) throws MuleException, ParseException {
+    public List<SuggestedCase> findSimilarCases(String title, Boolean isPortal, Long objectId, Authentication auth) throws MuleException, ParseException {
 
         List<SuggestedCase> similarCases = new ArrayList<>();
 
         if(isPortal)
         {
-            similarCases.addAll(findSolrCasesByFileContent(title, isPortal, auth));
+            similarCases.addAll(findSolrCasesByFileContent(title, isPortal, objectId, auth));
             return similarCases;
         }
         else
         {
-            similarCases.addAll(findSolrCasesByTitle(title, isPortal, auth));
-            similarCases.addAll(findSolrCasesByFileContent(title, isPortal, auth));
+            similarCases.addAll(findSolrCasesByTitle(title, isPortal, objectId, auth));
+            similarCases.addAll(findSolrCasesByFileContent(title, isPortal, objectId, auth));
             return filterCaseRecordDuplicates(similarCases);
         }
 
     }
 
-    private List<SuggestedCase> findSolrCasesByTitle(String title, Boolean isPortal, Authentication auth) throws MuleException, ParseException
+    private List<SuggestedCase> findSolrCasesByTitle(String title, Boolean isPortal, Long objectId, Authentication auth) throws MuleException, ParseException
     {
         List<SuggestedCase> records = new ArrayList<>();
 
@@ -98,6 +98,11 @@ public class SimilarCasesServiceImpl implements SimilarCasesService
         {
             JSONObject docFile = docFiles.getJSONObject(i);
 
+            if(Long.valueOf(docFile.getString("object_id_s")).equals(objectId))
+            {
+                continue;
+            }
+
             SuggestedCase suggestedCase = new SuggestedCase();
 
             suggestedCase.setCaseId(Long.valueOf(docFile.getString("object_id_s")));
@@ -106,6 +111,7 @@ public class SimilarCasesServiceImpl implements SimilarCasesService
             suggestedCase.setModifiedDate(formatter.parse(docFile.getString("modified_date_tdt")));
             suggestedCase.setCaseStatus(docFile.getString("status_lcs"));
             suggestedCase.setCaseDescription("");
+            suggestedCase.setObjectType(docFile.getString("object_type_s"));
 
             if (!docFile.isNull("description_no_html_tags_parseable"))
             {
@@ -118,7 +124,7 @@ public class SimilarCasesServiceImpl implements SimilarCasesService
         return records;
     }
 
-    private List<SuggestedCase> findSolrCasesByFileContent(String title, Boolean isPortal, Authentication auth) throws MuleException, ParseException
+    private List<SuggestedCase> findSolrCasesByFileContent(String title, Boolean isPortal, Long objectId, Authentication auth) throws MuleException, ParseException
     {
         List<SuggestedCase> records = new ArrayList<>();
 
@@ -181,11 +187,17 @@ public class SimilarCasesServiceImpl implements SimilarCasesService
             {
                 JSONObject caseDocFile = caseDocFiles.getJSONObject(i);
 
+                if(Long.valueOf(caseDocFile.getString("object_id_s")).equals(objectId))
+                {
+                    continue;
+                }
+
                 sc.setCaseId(Long.valueOf(caseDocFile.getString("object_id_s")));
                 sc.setCaseTitle(caseDocFile.getString("title_parseable"));
                 sc.setModifiedDate(formatter.parse(caseDocFile.getString("modified_date_tdt")));
                 sc.setCaseStatus(caseDocFile.getString("status_lcs"));
                 sc.setCaseDescription("");
+                sc.setObjectType(caseDocFile.getString("object_type_s"));
 
                 if (!caseDocFile.isNull("description_no_html_tags_parseable"))
                 {
