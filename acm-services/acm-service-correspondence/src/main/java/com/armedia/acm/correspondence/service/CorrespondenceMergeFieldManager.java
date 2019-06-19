@@ -51,9 +51,6 @@ import static com.armedia.acm.correspondence.service.CorrespondenceMapper.mapMer
  */
 public class CorrespondenceMergeFieldManager implements ApplicationListener<ContextRefreshedEvent>
 {
-
-    private static final String DEFAULT_MERGE_FIELD_VERSION = "1.0";
-    private static final String DEFAULT_MERGE_FIELD_MODIFIER = "System User";
     private Resource correspondenceMergeFieldsConfiguration;
     private SpringContextHolder springContextHolder;
     private ObjectConverter objectConverter;
