@@ -1608,7 +1608,8 @@
                 {
                     "name": "caseNumber",
                     "displayName": "cases.comp.suggestedCases.table.columns.number",
-                    "headerCellFilter": "translate"
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity, true)'>{{row.entity.caseNumber}}</a>"
                 },
                 {
                     "name": "caseTitle",
