@@ -35,28 +35,27 @@ import com.armedia.acm.compressfolder.model.CompressNode;
 import com.armedia.acm.core.exceptions.AcmAccessControlException;
 import com.armedia.acm.plugins.ecm.exception.AcmFolderException;
 import com.armedia.acm.services.dataaccess.service.impl.ArkPermissionEvaluator;
-
 import org.apache.commons.io.FileUtils;
-import org.apache.tika.io.FilenameUtils;
-import org.apache.logging.log4j.Logger;
+import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.tika.io.FilenameUtils;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URLEncoder;
 import java.util.Arrays;
 import java.util.List;
 
@@ -109,10 +108,10 @@ public class FolderCompressorAPIController
         downloadCompressedFolder(filePath, fileName, response);
     }
 
-    @RequestMapping(value = "/download/files", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = "application/zip")
+    @RequestMapping(value = "/download/files", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity<?> downloadCompressedSelectedFiles(@RequestBody List<Long> fileIds,
-            Authentication auth, HttpSession session) throws Exception
+    public ResponseEntity<?> downloadCompressedSelectedFiles(
+            @RequestParam(value = "fileIds") List<Long> fileIds, Authentication auth) throws Exception
     {
 
         for (Long fileId : fileIds)
@@ -124,10 +123,23 @@ public class FolderCompressorAPIController
             }
         }
 
-        folderCompressor.compressFiles(fileIds, session, auth);
+        String zipFilePath = folderCompressor.compressFiles(fileIds);
+        String fileName = zipFilePath.substring(zipFilePath.lastIndexOf(File.separator) + 1);
+        File zipFile = new File(zipFilePath);
 
-
-        return new ResponseEntity<>(HttpStatus.OK);
+        if(zipFile.exists())
+        {
+            return ResponseEntity
+                    .ok()
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + fileName)
+                    .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                    .contentLength(zipFile.length())
+                    .body(new InputStreamResource(new FileInputStream(zipFile)));
+        }
+        else
+        {
+            return new ResponseEntity(HttpStatus.OK);
+        }
     }
 
     public void downloadCompressedFolder(String filePath, String fileName, HttpServletResponse response) throws IOException
