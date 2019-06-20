@@ -36,14 +36,14 @@ import org.apache.fop.apps.FOUserAgent;
 import org.apache.fop.apps.Fop;
 import org.apache.fop.apps.FopFactory;
 import org.apache.fop.apps.MimeConstants;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.pdfbox.io.MemoryUsageSetting;
 import org.apache.pdfbox.multipdf.PDFMergerUtility;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.rendering.ImageType;
 import org.apache.pdfbox.rendering.PDFRenderer;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
 
 import javax.imageio.IIOImage;
 import javax.imageio.ImageIO;
@@ -128,10 +128,6 @@ public class PdfServiceImpl implements PdfService
 
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
 
-            transformerFactory.setFeature( "http://apache.org/xml/features/disallow-doctype-decl", true);
-            transformerFactory.setFeature("http://xml.org/sax/features/external-general-entities", false);
-            transformerFactory.setFeature("http://xml.org/sax/features/external-parameter-entities", false);
-            transformerFactory.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
             Transformer transformer = transformerFactory.newTransformer(new StreamSource(xslFile));
 
             try (OutputStream os = new BufferedOutputStream(new FileOutputStream(filename)))
@@ -254,10 +250,6 @@ public class PdfServiceImpl implements PdfService
             FOUserAgent foUserAgent = fopFactory.newFOUserAgent();
 
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
-            transformerFactory.setFeature( "http://apache.org/xml/features/disallow-doctype-decl", true);
-            transformerFactory.setFeature("http://xml.org/sax/features/external-general-entities", false);
-            transformerFactory.setFeature("http://xml.org/sax/features/external-parameter-entities", false);
-            transformerFactory.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
             Transformer transformer = transformerFactory.newTransformer(new StreamSource(xslFile));
 
             parameters.forEach((name, value) -> transformer.setParameter(name, value != null ? value : "N/A"));
