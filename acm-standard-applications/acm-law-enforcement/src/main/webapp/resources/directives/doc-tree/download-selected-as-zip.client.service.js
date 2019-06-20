@@ -16,13 +16,12 @@ angular.module('services').factory('DocTreeExt.DownloadSelectedAsZip', [ '$http'
 
     var _downloadSelectedFiles = function(selectedNodes) {
         return $http({
-            method: 'POST',
+            method: 'GET',
             url: 'api/latest/service/compressor/download/files',
-            data: JSON.stringify(selectedNodes),
-            responseType: 'arraybuffer',
-            headers: {
-                'Content-Type': 'application/json'
+            params: {
+                "fileIds": selectedNodes
             },
+            responseType: 'arraybuffer'
         });
     };
 
