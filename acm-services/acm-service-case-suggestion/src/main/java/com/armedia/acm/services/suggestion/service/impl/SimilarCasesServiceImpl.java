@@ -187,7 +187,7 @@ public class SimilarCasesServiceImpl implements SimilarCasesService
             {
                 JSONObject caseDocFile = caseDocFiles.getJSONObject(i);
 
-                if(Long.valueOf(caseDocFile.getString("object_id_s")).equals(objectId))
+                if(objectId != null || Long.valueOf(caseDocFile.getString("object_id_s")).equals(objectId))
                 {
                     continue;
                 }
