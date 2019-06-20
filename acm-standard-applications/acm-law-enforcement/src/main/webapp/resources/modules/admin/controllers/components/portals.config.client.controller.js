@@ -75,7 +75,8 @@ angular.module('admin').controller(
                             portalDescription: '',
                             fullName: '',
                             userId: '',
-                            groupName: ''
+                            groupName: '',
+                            portalAuthenticationFlag: false
                         };
 
                         showModal(portal).then(function(data) {
@@ -99,7 +100,8 @@ angular.module('admin').controller(
                             portalDescription: rowEntity.portalDescription,
                             fullName: rowEntity.fullName,
                             userId: rowEntity.userId,
-                            groupName: rowEntity.groupName
+                            groupName: rowEntity.groupName,
+                            portalAuthenticationFlag: rowEntity.portalAuthenticationFlag
                         };
                         showModal(portal).then(function(data) {
 
