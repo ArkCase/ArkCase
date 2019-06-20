@@ -27,6 +27,7 @@ package com.armedia.acm.plugins.ecm.utils;
  * #L%
  */
 
+import com.armedia.acm.auth.ExternalAuthenticationUtils;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.plugins.ecm.dao.AcmFolderDao;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
@@ -62,6 +63,7 @@ public class EcmFileParticipantServiceHelper implements ApplicationEventPublishe
     private AcmFolderDao folderDao;
     private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
     private ApplicationEventPublisher applicationEventPublisher;
+    private ExternalAuthenticationUtils externalAuthenticationUtils;
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     @Async("fileParticipantsThreadPoolTaskExecutor")
@@ -219,8 +221,11 @@ public class EcmFileParticipantServiceHelper implements ApplicationEventPublishe
         if (removed)
         {
             AcmParticipant participant = new AcmParticipant();
-            participant.setParticipantLdapId(participantLdapId);
+            String ldapId = getExternalAuthenticationUtils().getAlfrescoUserIdByParticipantLdapId(participantLdapId);
+            participant.setParticipantLdapId(ldapId);
             participant.setParticipantType(participantType);
+            participant.setObjectType(EcmFileConstants.OBJECT_FOLDER_TYPE);
+            participant.setObjectId(folder.getId());
 
             acmFolderParticipantChangedEvent.setChangedParticipant(participant);
             acmFolderParticipantChangedEvent.setChangeType(ChangedParticipantConstants.REMOVED);
@@ -250,8 +255,13 @@ public class EcmFileParticipantServiceHelper implements ApplicationEventPublishe
                         {
                             EcmFileParticipantChangedEvent ecmFileParticipantChangedEvent = new EcmFileParticipantChangedEvent(file);
                             AcmParticipant participant = new AcmParticipant();
-                            participant.setParticipantLdapId(participantLdapId);
+
+                            String ldapId = getExternalAuthenticationUtils().getAlfrescoUserIdByParticipantLdapId(participantLdapId);
+                            participant.setParticipantLdapId(ldapId);
                             participant.setParticipantType(participantType);
+                            participant.setObjectType(EcmFileConstants.OBJECT_FILE_TYPE);
+                            participant.setObjectId(file.getFileId());
+
                             ecmFileParticipantChangedEvent.setChangedParticipant(participant);
                             ecmFileParticipantChangedEvent.setChangeType(ChangedParticipantConstants.REMOVED);
                             getApplicationEventPublisher().publishEvent(ecmFileParticipantChangedEvent);
@@ -293,9 +303,19 @@ public class EcmFileParticipantServiceHelper implements ApplicationEventPublishe
             // change the role of the existing participant if needed
             if (!existingFileParticipant.get().getParticipantType().equals(participant.getParticipantType()))
             {
-                ecmFileParticipantChangedEvent.setChangedParticipant(participant);
-                ecmFileParticipantChangedEvent.setOldParticipant(existingFileParticipant.get());
+                AcmParticipant changedParticipant = AcmParticipant.createRulesTestParticipant(participant);
+                String ldapId = getExternalAuthenticationUtils()
+                        .getAlfrescoUserIdByParticipantLdapId(changedParticipant.getParticipantLdapId());
+                changedParticipant.setParticipantLdapId(ldapId);
+                ecmFileParticipantChangedEvent.setChangedParticipant(changedParticipant);
+
+                AcmParticipant oldParticipant = AcmParticipant.createRulesTestParticipant(existingFileParticipant.get());
+                String ldapIdOldParticipant = getExternalAuthenticationUtils()
+                        .getAlfrescoUserIdByParticipantLdapId(oldParticipant.getParticipantLdapId());
+                oldParticipant.setParticipantLdapId(ldapIdOldParticipant);
+                ecmFileParticipantChangedEvent.setOldParticipant(oldParticipant);
                 ecmFileParticipantChangedEvent.setChangeType(ChangedParticipantConstants.CHANGED);
+
                 existingFileParticipant.get().setParticipantType(participant.getParticipantType());
             }
         }
@@ -307,7 +327,12 @@ public class EcmFileParticipantServiceHelper implements ApplicationEventPublishe
             newParticipant.setObjectType(EcmFileConstants.OBJECT_FILE_TYPE);
             newParticipant.setObjectId(file.getId());
             file.getParticipants().add(newParticipant);
-            ecmFileParticipantChangedEvent.setChangedParticipant(newParticipant);
+
+            AcmParticipant changedParticipant = AcmParticipant.createRulesTestParticipant(newParticipant);
+            String ldapId = getExternalAuthenticationUtils()
+                    .getAlfrescoUserIdByParticipantLdapId(changedParticipant.getParticipantLdapId());
+            changedParticipant.setParticipantLdapId(ldapId);
+            ecmFileParticipantChangedEvent.setChangedParticipant(changedParticipant);
             ecmFileParticipantChangedEvent.setChangeType(ChangedParticipantConstants.ADDED);
         }
         getApplicationEventPublisher().publishEvent(ecmFileParticipantChangedEvent);
@@ -335,9 +360,17 @@ public class EcmFileParticipantServiceHelper implements ApplicationEventPublishe
             // change the role of the existing participant if needed
             if (!existingFolderParticipant.get().getParticipantType().equals(participant.getParticipantType()))
             {
+                AcmParticipant changedParticipant = AcmParticipant.createRulesTestParticipant(participant);
+                String ldapId = getExternalAuthenticationUtils()
+                        .getAlfrescoUserIdByParticipantLdapId(changedParticipant.getParticipantLdapId());
+                changedParticipant.setParticipantLdapId(ldapId);
+                folderParticipantChangedEvent.setChangedParticipant(changedParticipant);
 
-                folderParticipantChangedEvent.setChangedParticipant(participant);
-                folderParticipantChangedEvent.setOldParticipant(existingFolderParticipant.get());
+                AcmParticipant oldParticipant = AcmParticipant.createRulesTestParticipant(existingFolderParticipant.get());
+                String ldapIdOldParticipant = getExternalAuthenticationUtils()
+                        .getAlfrescoUserIdByParticipantLdapId(oldParticipant.getParticipantLdapId());
+                oldParticipant.setParticipantLdapId(ldapIdOldParticipant);
+                folderParticipantChangedEvent.setOldParticipant(oldParticipant);
                 folderParticipantChangedEvent.setChangeType(ChangedParticipantConstants.CHANGED);
 
                 existingFolderParticipant.get().setParticipantType(participant.getParticipantType());
@@ -352,7 +385,11 @@ public class EcmFileParticipantServiceHelper implements ApplicationEventPublishe
             newParticipant.setObjectId(folder.getId());
             folder.getParticipants().add(newParticipant);
 
-            folderParticipantChangedEvent.setChangedParticipant(newParticipant);
+            AcmParticipant changedParticipant = AcmParticipant.createRulesTestParticipant(newParticipant);
+            String ldapId = getExternalAuthenticationUtils()
+                    .getAlfrescoUserIdByParticipantLdapId(changedParticipant.getParticipantLdapId());
+            changedParticipant.setParticipantLdapId(ldapId);
+            folderParticipantChangedEvent.setChangedParticipant(changedParticipant);
             folderParticipantChangedEvent.setChangeType(ChangedParticipantConstants.ADDED);
         }
         getApplicationEventPublisher().publishEvent(folderParticipantChangedEvent);
@@ -404,5 +441,15 @@ public class EcmFileParticipantServiceHelper implements ApplicationEventPublishe
     public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher)
     {
         this.applicationEventPublisher = applicationEventPublisher;
+    }
+
+    public ExternalAuthenticationUtils getExternalAuthenticationUtils()
+    {
+        return externalAuthenticationUtils;
+    }
+
+    public void setExternalAuthenticationUtils(ExternalAuthenticationUtils externalAuthenticationUtils)
+    {
+        this.externalAuthenticationUtils = externalAuthenticationUtils;
     }
 }

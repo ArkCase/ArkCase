@@ -27,6 +27,7 @@ package com.armedia.acm.plugins.ecm.service.impl;
  * #L%
  */
 
+import com.armedia.acm.auth.ExternalAuthenticationUtils;
 import com.armedia.acm.core.exceptions.AcmParticipantsException;
 import com.armedia.acm.plugins.ecm.dao.AcmFolderDao;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
@@ -72,6 +73,7 @@ public class EcmFileParticipantService implements ApplicationEventPublisherAware
     private EcmFileParticipantServiceHelper fileParticipantServiceHelper;
     private EcmFileConfig ecmFileConfig;
     private ApplicationEventPublisher applicationEventPublisher;
+    private ExternalAuthenticationUtils externalAuthenticationUtils;
 
     /**
      * Sets the file's participants from the parent folder's participants and persists the file instance with the
@@ -177,7 +179,8 @@ public class EcmFileParticipantService implements ApplicationEventPublisherAware
 
             // for files and folders we allow only one AcmParticipant for one user
             if (participants.stream()
-                    .noneMatch(existingParticipant -> existingParticipant.getParticipantLdapId().equals(participant.getParticipantLdapId())))
+                    .noneMatch(
+                            existingParticipant -> existingParticipant.getParticipantLdapId().equals(participant.getParticipantLdapId())))
             {
                 participants.add(participant);
             }
@@ -450,8 +453,12 @@ public class EcmFileParticipantService implements ApplicationEventPublisherAware
                                 && participant.getParticipantType().equals(existingParticipant.getParticipantType()));
                 if (removed)
                 {
+                    AcmParticipant changedParticipant = AcmParticipant.createRulesTestParticipant(existingParticipant);
                     AcmFolderParticipantChangedEvent folderParticipantChangedEvent = new AcmFolderParticipantChangedEvent(folder);
-                    folderParticipantChangedEvent.setChangedParticipant(existingParticipant);
+                    String ldapId = getExternalAuthenticationUtils()
+                            .getAlfrescoUserIdByParticipantLdapId(changedParticipant.getParticipantLdapId());
+                    changedParticipant.setParticipantLdapId(ldapId);
+                    folderParticipantChangedEvent.setChangedParticipant(changedParticipant);
                     folderParticipantChangedEvent.setChangeType(ChangedParticipantConstants.REMOVED);
                     getApplicationEventPublisher().publishEvent(folderParticipantChangedEvent);
                 }
@@ -591,5 +598,15 @@ public class EcmFileParticipantService implements ApplicationEventPublisherAware
     public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher)
     {
         this.applicationEventPublisher = applicationEventPublisher;
+    }
+
+    public ExternalAuthenticationUtils getExternalAuthenticationUtils()
+    {
+        return externalAuthenticationUtils;
+    }
+
+    public void setExternalAuthenticationUtils(ExternalAuthenticationUtils externalAuthenticationUtils)
+    {
+        this.externalAuthenticationUtils = externalAuthenticationUtils;
     }
 }

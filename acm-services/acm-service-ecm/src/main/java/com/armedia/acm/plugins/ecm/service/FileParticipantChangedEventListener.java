@@ -31,8 +31,6 @@ import com.armedia.acm.plugins.ecm.model.ChangedParticipant;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileParticipantChangedEvent;
 import com.armedia.acm.services.participants.model.AcmParticipant;
-import com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig;
-import com.armedia.acm.spring.SpringContextHolder;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,8 +41,7 @@ public class FileParticipantChangedEventListener implements ApplicationListener<
 
     private final transient Logger log = LoggerFactory.getLogger(getClass());
 
-    private SendChangedParticipantToAlfresco sendChangedParticipantToAlfresco;
-    private SpringContextHolder acmContextHolder;
+    private ChangedParticipantToJmsSender changedParticipantToJmsSender;
     private String directoryName;
 
     @Override
@@ -56,47 +53,33 @@ public class FileParticipantChangedEventListener implements ApplicationListener<
         {
             EcmFile file = (EcmFile) event.getSource();
 
-            // send jms messages with the file id, the changed participant information and the type of change
-            ChangedParticipant changedParticipant = new ChangedParticipant();
-            changedParticipant.setCmisObjectId(file.getVersionSeriesId());
-            changedParticipant.setChangedParticipant(changeParticipant);
-            changedParticipant.setChangeType(event.getChangeType());
-
-            AcmLdapSyncConfig ldapSyncConfig = acmContextHolder.getAllBeansOfType(AcmLdapSyncConfig.class)
-                    .get(String.format("%s_sync", directoryName));
-            changedParticipant.setUserDomain(ldapSyncConfig.getUserDomain());
-
-            if (event.getOldParticipant() != null)
-            {
-                changedParticipant.setOldParticipant(event.getOldParticipant());
-            }
-
             if (changeParticipant.getParticipantLdapId() != null && changeParticipant.getParticipantType() != null
-                    && changeParticipant.getObjectType() != null && changedParticipant.getCmisObjectId() != null)
+                    && changeParticipant.getObjectType() != null && file.getVersionSeriesId() != null)
             {
-                getSendChangedParticipantToAlfresco().sendChangedParticipant(changedParticipant);
+                // send jms messages with the file id, the changed participant information and the type of change
+                ChangedParticipant changedParticipant = new ChangedParticipant();
+                changedParticipant.setCmisObjectId(file.getVersionSeriesId());
+                changedParticipant.setChangedParticipant(changeParticipant);
+                changedParticipant.setChangeType(event.getChangeType());
+
+                if (event.getOldParticipant() != null)
+                {
+                    changedParticipant.setOldParticipant(event.getOldParticipant());
+                }
+
+                getChangedParticipantToJmsSender().sendChangedParticipant(changedParticipant);
             }
         }
     }
 
-    public SendChangedParticipantToAlfresco getSendChangedParticipantToAlfresco()
+    public ChangedParticipantToJmsSender getChangedParticipantToJmsSender()
     {
-        return sendChangedParticipantToAlfresco;
+        return changedParticipantToJmsSender;
     }
 
-    public void setSendChangedParticipantToAlfresco(SendChangedParticipantToAlfresco sendChangedParticipantToAlfresco)
+    public void setChangedParticipantToJmsSender(ChangedParticipantToJmsSender changedParticipantToJmsSender)
     {
-        this.sendChangedParticipantToAlfresco = sendChangedParticipantToAlfresco;
-    }
-
-    public SpringContextHolder getAcmContextHolder()
-    {
-        return acmContextHolder;
-    }
-
-    public void setAcmContextHolder(SpringContextHolder acmContextHolder)
-    {
-        this.acmContextHolder = acmContextHolder;
+        this.changedParticipantToJmsSender = changedParticipantToJmsSender;
     }
 
     public String getDirectoryName()
