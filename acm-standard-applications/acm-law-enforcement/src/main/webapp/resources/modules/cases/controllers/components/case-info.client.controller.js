@@ -195,7 +195,7 @@ angular.module('cases').controller(
                             return approvers;
                         });
 
-                        SuggestedCasesService.getSuggestedCases($scope.objectInfo.title).then(function (value) {
+                        SuggestedCasesService.getSuggestedCases($scope.objectInfo.title, $scope.objectInfo.id).then(function (value) {
                             $scope.hasSuggestedCases = value.data.length > 0 ? true : false;
                         });
                     };
