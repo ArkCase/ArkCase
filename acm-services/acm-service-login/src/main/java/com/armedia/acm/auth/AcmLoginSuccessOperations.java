@@ -64,6 +64,7 @@ public class AcmLoginSuccessOperations
     private UserDao userDao;
     private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
     private ObjectConverter objectConverter;
+    private ExternalAuthenticationUtils externalAuthenticationUtils;
 
     public void onSuccessfulAuthentication(HttpServletRequest request, Authentication authentication)
     {
@@ -137,30 +138,12 @@ public class AcmLoginSuccessOperations
         HttpSession session = request.getSession(true);
         AcmUser acmUser = (AcmUser) session.getAttribute("acm_user");
 
-        String alfrescoUserId = getAlfrescoUserIdLdapAttributeValue(acmUser);
+        String alfrescoUserId = getExternalAuthenticationUtils().getAlfrescoUserIdLdapAttributeValue(acmUser);
         session.setAttribute("acm_alfresco_username", alfrescoUserId);
 
         log.debug("Session 'acm_alfresco_username' set to '{}'", alfrescoUserId);
 
         MDC.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, alfrescoUserId);
-    }
-
-    private String getAlfrescoUserIdLdapAttributeValue(AcmUser acmUser)
-    {
-        switch (getAcmApplication().getAlfrescoUserIdLdapAttribute().toLowerCase())
-        {
-        case "samaccountname":
-            return acmUser.getsAMAccountName();
-        case "userprincipalname":
-            return acmUser.getUserPrincipalName();
-        case "uid":
-            return acmUser.getUid();
-        case "dn":
-        case "distinguishedname":
-            return acmUser.getDistinguishedName();
-        default:
-            return acmUser.getsAMAccountName();
-        }
     }
 
     protected void addIpAddressToSession(HttpServletRequest request, Authentication authentication)
@@ -284,5 +267,15 @@ public class AcmLoginSuccessOperations
     public void setObjectConverter(ObjectConverter objectConverter)
     {
         this.objectConverter = objectConverter;
+    }
+
+    public ExternalAuthenticationUtils getExternalAuthenticationUtils()
+    {
+        return externalAuthenticationUtils;
+    }
+
+    public void setExternalAuthenticationUtils(ExternalAuthenticationUtils externalAuthenticationUtils)
+    {
+        this.externalAuthenticationUtils = externalAuthenticationUtils;
     }
 }

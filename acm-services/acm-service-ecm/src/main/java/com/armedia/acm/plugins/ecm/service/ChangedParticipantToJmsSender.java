@@ -41,7 +41,7 @@ import javax.jms.ConnectionFactory;
 /**
  * @author ivana.shekerova on 03/04/2019.
  */
-public class SendChangedParticipantToAlfresco implements InitializingBean
+public class ChangedParticipantToJmsSender implements InitializingBean
 {
     private transient final Logger log = LoggerFactory.getLogger(getClass());
     private ObjectConverter objectConverter;
@@ -56,7 +56,7 @@ public class SendChangedParticipantToAlfresco implements InitializingBean
 
     public void sendChangedParticipant(ChangedParticipant changedParticipant)
     {
-        sendToJmsQueue(changedParticipant, "sendChangedParticipantsToAlfresco");
+        sendToJmsQueue(changedParticipant, "com.armedia.acm.v1.arkcaseParticipantChange.queue");
     }
 
     private void sendToJmsQueue(ChangedParticipant changedParticipant, String queueName)
@@ -67,12 +67,12 @@ public class SendChangedParticipantToAlfresco implements InitializingBean
 
             getJmsTemplate().convertAndSend(queueName, json);
 
-            log.debug("Returning JSON: {}", json);
+            log.debug("Changed participant sent to JMS queue: {}. JSON: {}", queueName, json);
 
         }
         catch (JmsException e)
         {
-            log.error("Could not send changed participants to Alfresco: {}", e.getMessage(), e);
+            log.error("Could not send changed participants to JMS queue: {}, {}", queueName, e.getMessage(), e);
         }
     }
 
