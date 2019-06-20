@@ -60,16 +60,8 @@ import org.springframework.security.core.Authentication;
 
 import javax.servlet.http.HttpSession;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.UUID;
+import java.io.*;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.zip.Deflater;
@@ -204,87 +196,76 @@ public class DefaultFolderCompressor implements FolderCompressor
     }
 
     @Override
-    @Async("fileCompressThreadPoolTaskExecutor")
-    public String compressFiles(List<Long> fileIds, HttpSession session, Authentication auth)
+    public String compressFiles(List<Long> fileIds)
     {
 
-        String filename = null;
         getAuditPropertyEntityAdapter().setUserId(PROCESS_USER);
 
+        String filename = getCompressedZipPath();
+
+        List<String> fileFolderList = new ArrayList<>();
+
+        log.debug("ZIP creation: using [{}] as temporary file name", filename);
+
+        FileOutputStream fos;
         try
         {
-            List<String> fileFolderList = new ArrayList<>();
+            fos = new FileOutputStream(new File(filename));
+        }
+        catch (FileNotFoundException e)
+        {
+            log.error(String.format("ZIP creation: the target zip file [%s] does not exist", filename), e);
+            return "";
+        }
 
-            filename = getCompressedZipPath();
-            log.debug("ZIP creation: using [{}] as temporary file name", filename);
-            File file = new File(filename);
+        ZipOutputStream zos = new ZipOutputStream(fos);
+        zos.setLevel(Deflater.BEST_COMPRESSION);
 
-            FileOutputStream fos = new FileOutputStream(file);
-            ZipOutputStream zos = new ZipOutputStream(fos);
-            zos.setLevel(Deflater.BEST_COMPRESSION);
+        List<EcmFile> filesForCompression = fileService.findByIds(fileIds);
+        Map<EcmFile, InputStream> filesToCompressMap = new HashMap<>();
 
-            List<EcmFile> filesForCompression = fileService.findByIds(fileIds);
+        filesForCompression.forEach(ecmFile -> {
+            try
+            {
+                InputStream inputStream = fileService.downloadAsInputStream(ecmFile);
+                filesToCompressMap.put(ecmFile, inputStream);
+            }
+            catch (AcmUserActionFailedException e)
+            {
+                log.error(String.format("Error while downloading stream for EcmFile with id [%s].", ecmFile.getId()), e);
+            }
+        });
 
-            List<InputStream> filesContent = filesForCompression.parallelStream().map(fileForCompression -> {
-                try
-                {
-                    InputStream fileByteStream = fileService.downloadAsInputStream(fileForCompression);
+        filesToCompressMap.forEach((ecmFile, inputStream) -> {
 
-                    return fileByteStream;
-                }
-                catch (AcmUserActionFailedException e)
-                {
-                    sendMailWithTheZipFile("error", session);
-                    log.error("Error while downloading stream for object with [{}] id.", file, e);
-                }
-                return null;
+            String objectName = getUniqueObjectName(fileFolderList, DATE_FORMATTER, ecmFile, ecmFile.getFileName());
+            fileFolderList.add(objectName);
 
-            }).collect(Collectors.toList());
-
-            filesForCompression.forEach(fileForCompression -> {
-                try
-                {
-                    String objectName = getUniqueObjectName(fileFolderList, DATE_FORMATTER, fileForCompression,
-                            fileForCompression.getFileName());
-                    fileFolderList.add(objectName);
-
-                    String entryName = concatStrings(objectName +
-                            fileForCompression.getFileActiveVersionNameExtension());
-
-                    ZipEntry zipEntry = new ZipEntry(entryName);
-                    zos.putNextEntry(zipEntry);
-
-                    InputStream inputStream = filesContent.get(filesForCompression.indexOf(fileForCompression));
-                    if (inputStream != null)
-                    {
-                        copy(inputStream, zos);
-                    }
-                }
-                catch (IOException e)
-                {
-                    sendMailWithTheZipFile("error", session);
-                    log.error("ZIP creation: Error while creating zip entry for object with [{}] id.", file, e);
-                }
-            });
+            String entryName = concatStrings(objectName +
+                    ecmFile.getFileActiveVersionNameExtension());
 
             try
             {
-                zos.close();
-                fos.close();
+                ZipEntry zipEntry = new ZipEntry(entryName);
+                zos.putNextEntry(zipEntry);
+                copy(inputStream, zos);
             }
             catch (IOException e)
             {
-                log.warn("Could not close CMIS content stream: {}", e.getMessage(), e);
+                log.error(String.format("ZIP Creation: could not add file with name [%s] to the zip archive", entryName), e);
             }
 
-            sendMailWithTheZipFile(filename, session);
+        });
 
-        }
-        catch (Exception e)
+        try
         {
-            sendMailWithTheZipFile("error", session);
+            zos.close();
+            fos.close();
         }
-
+        catch (IOException e)
+        {
+            log.warn("Could not close CMIS content stream: {}", e.getMessage(), e);
+        }
 
         return filename;
     }
@@ -519,22 +500,6 @@ public class DefaultFolderCompressor implements FolderCompressor
         String filename = String.format(compressedZipNameFormat,
                 tmpDir.endsWith(pathSeparator) ? tmpDir : concatStrings(tmpDir, pathSeparator), UUID.randomUUID());
         return filename;
-    }
-
-    public void sendMailWithTheZipFile(String message, HttpSession session)
-    {
-        AcmUser user = (AcmUser) session.getAttribute("acm_user");
-
-        Notification notification = new Notification();
-        notification.setTemplateModelName("ArkCaseEmailZipDownloadTemplate");
-        notification.setNote(message);
-        notification.setCreator(user.getFullName());
-        notification.setModifier(user.getFullName());
-        notification.setEmailAddresses(user.getMail());
-        notification.setAttachFiles(false);
-
-        notificationDao.save(notification);
-
     }
 
     /**
