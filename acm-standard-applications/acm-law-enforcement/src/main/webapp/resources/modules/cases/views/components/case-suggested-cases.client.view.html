@@ -1,0 +1,14 @@
+<div ng-controller="Cases.SuggestedCasesController">
+    <div class="panel panel-success panel-grid">
+        <div class="panel-heading">
+            <div class="panel-title">
+                <span translate>cases.comp.suggestedCases.title</span>
+            </div>
+        </div>
+        <div class="panel-body">
+            <div ui-grid="gridOptions" ui-grid-resize-columns ui-grid-auto-resize ui-grid-pagination
+                    adjust-table-height="gridOptions.data.length" class="grid"></div>
+        </div>
+    </div>
+</div>
+

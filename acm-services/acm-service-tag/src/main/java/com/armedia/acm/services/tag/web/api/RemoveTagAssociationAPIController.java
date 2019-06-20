@@ -35,8 +35,8 @@ import com.armedia.acm.services.tag.service.AssociatedTagEventPublisher;
 import com.armedia.acm.services.tag.service.AssociatedTagService;
 
 import org.activiti.engine.impl.util.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -57,7 +57,7 @@ public class RemoveTagAssociationAPIController
 
     private final static String SUCCESS_MSG = "Associated Tag Removed Successfully";
     private final static int NO_ROW_DELETED = 0;
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private transient final Logger log = LogManager.getLogger(getClass());
     private AssociatedTagService associatedTagService;
     private AssociatedTagEventPublisher associatedTagEventPublisher;
 

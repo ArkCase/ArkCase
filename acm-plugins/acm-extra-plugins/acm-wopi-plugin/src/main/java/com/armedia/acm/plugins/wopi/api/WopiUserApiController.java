@@ -32,8 +32,8 @@ import com.armedia.acm.plugins.wopi.model.WopiUserInfo;
 import com.armedia.acm.plugins.wopi.service.WopiAcmService;
 import com.armedia.acm.services.users.model.AcmUser;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -49,7 +49,7 @@ import javax.servlet.http.HttpSession;
 @RequestMapping(value = "/api/latest/plugin/wopi/users")
 public class WopiUserApiController
 {
-    private static final Logger log = LoggerFactory.getLogger(WopiUserApiController.class);
+    private static final Logger log = LogManager.getLogger(WopiUserApiController.class);
     private WopiAcmService wopiService;
 
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)

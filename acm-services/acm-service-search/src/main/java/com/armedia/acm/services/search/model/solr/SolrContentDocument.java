@@ -28,8 +28,8 @@ package com.armedia.acm.services.search.model.solr;
  */
 
 import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -41,7 +41,7 @@ import java.util.stream.Collectors;
 
 public class SolrContentDocument extends SolrAdvancedSearchDocument
 {
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private transient final Logger log = LogManager.getLogger(getClass());
 
     private List<String> skipAdditionalPropertiesInURL;
 

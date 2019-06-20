@@ -30,13 +30,13 @@ package com.armedia.acm.plugins.ecm.service.impl;
 import com.armedia.acm.configuration.service.ConfigurationPropertyService;
 import com.armedia.acm.plugins.ecm.model.EcmFileUploaderConfig;
 import com.armedia.acm.plugins.ecm.service.EcmFileUploaderConfigurationService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 public class EcmFileUploaderConfigurationServiceImpl implements EcmFileUploaderConfigurationService
 {
 
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
 
     private EcmFileUploaderConfig ecmFileUploaderConfig;
 

@@ -27,15 +27,15 @@ package com.armedia.acm.data;
  * #L%
  */
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 /**
  * Created by nebojsha on 10.05.2016.
  */
 public class AcmObjectChangedLogger
 {
-    private transient Logger log = LoggerFactory.getLogger(getClass());
+    private transient Logger log = LogManager.getLogger(getClass());
 
     public void logObject(AcmObjectEvent event)
     {

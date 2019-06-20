@@ -30,8 +30,8 @@ package com.armedia.acm.auth.okta.auth;
 import com.armedia.acm.auth.AcmLoginSuccessOperations;
 import com.armedia.acm.auth.okta.model.OktaConfig;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
@@ -45,7 +45,7 @@ import java.io.IOException;
 
 public class AcmMultiFactorLoginSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler
 {
-    private Logger LOGGER = LoggerFactory.getLogger(AcmMultiFactorLoginSuccessHandler.class);
+    private Logger LOGGER = LogManager.getLogger(AcmMultiFactorLoginSuccessHandler.class);
     private SessionRegistry sessionRegistry;
     private SessionAuthenticationStrategy sessionAuthenticationStrategy;
     private AcmLoginSuccessOperations loginSuccessOperations;

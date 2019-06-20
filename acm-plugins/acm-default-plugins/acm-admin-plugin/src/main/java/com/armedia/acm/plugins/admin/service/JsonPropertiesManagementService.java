@@ -31,8 +31,8 @@ import com.armedia.acm.plugins.admin.exception.AcmPropertiesManagementException;
 
 import org.apache.commons.io.FileUtils;
 import org.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.io.File;
 import java.util.Iterator;
@@ -42,7 +42,7 @@ import java.util.Iterator;
  */
 public class JsonPropertiesManagementService
 {
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
     private String propertiesFileLocation;
 
     /**

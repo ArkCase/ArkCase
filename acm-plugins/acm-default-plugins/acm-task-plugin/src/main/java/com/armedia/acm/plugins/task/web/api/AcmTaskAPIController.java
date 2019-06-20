@@ -32,8 +32,8 @@ import com.armedia.acm.plugins.task.model.BuckslipProcess;
 import com.armedia.acm.plugins.task.model.TaskConstants;
 import com.armedia.acm.plugins.task.service.AcmTaskService;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -52,7 +52,7 @@ import java.util.ArrayList;
 @RequestMapping({ "/api/v1/plugin/task", "/api/latest/plugin/task" })
 public class AcmTaskAPIController
 {
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
 
     private AcmTaskService acmTaskService;
 

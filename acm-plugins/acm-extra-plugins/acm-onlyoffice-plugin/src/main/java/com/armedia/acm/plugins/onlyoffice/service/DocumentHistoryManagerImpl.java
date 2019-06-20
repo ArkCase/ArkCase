@@ -40,8 +40,8 @@ import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Value;
 
 import java.io.File;
@@ -62,7 +62,7 @@ public class DocumentHistoryManagerImpl implements DocumentHistoryManager
 {
     private final String JSON_EXTENSION = ".json";
     private final String ZIP_EXTENSION = ".zip";
-    private Logger logger = LoggerFactory.getLogger(getClass());
+    private Logger logger = LogManager.getLogger(getClass());
     private EcmFileDao ecmFileDao;
     private UserDao userDao;
     private ObjectMapper mapper;

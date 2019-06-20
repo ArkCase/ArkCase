@@ -57,8 +57,8 @@ import com.armedia.acm.service.outlook.service.OutlookFolderRecreator;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.spring.SpringContextHolder;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ApplicationListener;
 import org.springframework.http.HttpStatus;
@@ -96,7 +96,7 @@ public class ExchangeCalendarService
 {
 
     static final String PROCESS_USER = "CALENDAR_SERVICE_PURGER";
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
     private CalendarAdminService calendarAdminService;
     private OutlookDao outlookDao;
     private AcmOutlookFolderCreatorDao folderCreatorDao;
@@ -159,7 +159,7 @@ public class ExchangeCalendarService
         if (!configurationsByType.containsKey(objectType) || !configurationsByType.get(objectType).isIntegrationEnabled())
         {
             log.warn("Calendar integration is not enabled for [{}] object type.", objectType);
-            return Optional.ofNullable(null);
+            return Optional.empty();
         }
 
         CalendarEntityHandler handler = Optional.ofNullable(findEntityHandlerByObjectType(objectType))
@@ -398,7 +398,7 @@ public class ExchangeCalendarService
             throws ServiceLocalException, Exception
     {
         List<String> attachmentsIds = calendarEvent.getFiles().stream().map(att -> att.getAttachmentId()).collect(Collectors.toList());
-        if (attachmentsIds != null && !attachmentsIds.isEmpty())
+        if (!attachmentsIds.isEmpty())
         {
             List<Attachment> attachmentsToRemove = appointment.getAttachments().getItems().stream()
                     .filter(attachment -> attachmentsIds.contains(attachment.getId())).collect(Collectors.toList());

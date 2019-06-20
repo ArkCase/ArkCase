@@ -31,8 +31,8 @@ import com.armedia.acm.audit.dao.AuditDao;
 import com.armedia.acm.service.stateofarkcase.interfaces.StateOfModule;
 import com.armedia.acm.service.stateofarkcase.interfaces.StateOfModuleProvider;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -40,7 +40,7 @@ import java.time.temporal.ChronoUnit;
 
 public class AcmLoginStateProvider implements StateOfModuleProvider
 {
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private transient final Logger log = LogManager.getLogger(getClass());
     public static final String COM_ARMEDIA_ACM_LOGIN_STATE = "com.armedia.acm.login";
     private AuditDao auditDao;
 

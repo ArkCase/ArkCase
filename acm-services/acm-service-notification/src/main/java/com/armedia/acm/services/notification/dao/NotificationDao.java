@@ -35,8 +35,8 @@ import com.armedia.acm.services.notification.service.CustomTitleFormatter;
 import com.armedia.acm.services.notification.service.NotificationUtils;
 import com.armedia.acm.services.notification.service.UsersNotified;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
@@ -53,7 +53,7 @@ import java.util.Set;
 
 public class NotificationDao extends AcmAbstractDao<Notification>
 {
-    private final Logger LOG = LoggerFactory.getLogger(getClass());
+    private final Logger LOG = LogManager.getLogger(getClass());
 
     @PersistenceContext
     private EntityManager entityManager;

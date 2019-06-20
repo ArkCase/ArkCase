@@ -27,7 +27,6 @@ package com.armedia.broker;
  * #L%
  */
 
-
 import com.armedia.acm.objectonverter.AcmMarshaller;
 import com.armedia.acm.objectonverter.ObjectConverter;
 import com.fasterxml.jackson.core.JsonProcessingException;

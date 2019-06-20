@@ -47,8 +47,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.security.core.Authentication;
 
 import javax.servlet.http.HttpSession;
@@ -64,7 +64,7 @@ import java.util.stream.Collectors;
  */
 public class DashboardService
 {
-    private transient static final Logger log = LoggerFactory.getLogger(DashboardService.class);
+    private transient static final Logger log = LogManager.getLogger(DashboardService.class);
     private DashboardConfig dashboardConfig;
     private DashboardDao dashboardDao;
     private UserDao userDao;

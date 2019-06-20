@@ -33,8 +33,8 @@ import com.armedia.acm.services.participants.model.AcmAssignedObject;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.participants.model.CheckParticipantListModel;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import javax.persistence.FlushModeType;
 import javax.persistence.metamodel.EntityType;
@@ -51,7 +51,7 @@ import java.util.stream.Collectors;
 public class AcmParticipantService
 {
 
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private transient final Logger log = LogManager.getLogger(getClass());
     private AcmParticipantDao participantDao;
     private ParticipantsBusinessRule participantsBusinessRule;
     private AcmParticipantEventPublisher acmParticipantEventPublisher;

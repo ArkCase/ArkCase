@@ -47,8 +47,8 @@ import com.armedia.acm.service.outlook.service.OutlookCalendarAdminServiceExtens
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.participants.utils.ParticipantUtils;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.context.ApplicationListener;
 
 import java.util.Arrays;
@@ -63,7 +63,7 @@ public class CaseFileEventListener implements ApplicationListener<AcmObjectHisto
     /**
      * Logger instance.
      */
-    private final Logger log = LoggerFactory.getLogger(getClass());
+    private final Logger log = LogManager.getLogger(getClass());
 
     private AcmObjectHistoryService acmObjectHistoryService;
     private AcmObjectHistoryEventPublisher acmObjectHistoryEventPublisher;
@@ -183,8 +183,8 @@ public class CaseFileEventListener implements ApplicationListener<AcmObjectHisto
         boolean purgeOption;
         try
         {
-            purgeOption = PurgeOptions.CLOSED.equals(
-                    calendarAdminService.readConfiguration(false).getConfiguration(CaseFileConstants.OBJECT_TYPE).getPurgeOptions());
+            purgeOption = PurgeOptions.CLOSED.equals(calendarAdminService.readConfiguration(false)
+                    .getConfiguration(CaseFileConstants.OBJECT_TYPE).getPurgeOptions());
         }
         catch (CalendarConfigurationException e)
         {

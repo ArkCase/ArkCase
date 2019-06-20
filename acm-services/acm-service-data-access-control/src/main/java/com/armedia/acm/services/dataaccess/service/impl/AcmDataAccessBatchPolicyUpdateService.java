@@ -37,8 +37,8 @@ import com.armedia.acm.services.dataaccess.service.AcmObjectDataAccessBatchUpdat
 import com.armedia.acm.services.participants.model.AcmAssignedObject;
 import com.armedia.acm.spring.SpringContextHolder;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -62,7 +62,7 @@ public class AcmDataAccessBatchPolicyUpdateService
      * The property key to use in the properties file that stores the last run date.
      */
     private static final String DAC_LAST_RUN_DATE_PROPERTY_KEY = "dac.last.run.date";
-    private final Logger log = LoggerFactory.getLogger(getClass());
+    private final Logger log = LogManager.getLogger(getClass());
     private String lastBatchUpdatePropertyFileLocation;
     private PropertyFileManager propertyFileManager;
     private SpringContextHolder springContextHolder;

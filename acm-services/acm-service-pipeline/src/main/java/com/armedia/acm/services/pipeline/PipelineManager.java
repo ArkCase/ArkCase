@@ -30,8 +30,8 @@ package com.armedia.acm.services.pipeline;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.pipeline.handler.PipelineHandler;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.util.List;
 import java.util.ListIterator;
@@ -63,7 +63,7 @@ public class PipelineManager<T, S extends AbstractPipelineContext>
     /**
      * Logger instance.
      */
-    private final Logger log = LoggerFactory.getLogger(getClass());
+    private final Logger log = LogManager.getLogger(getClass());
     /**
      * List of handlers executed before saving the entity to database.
      */

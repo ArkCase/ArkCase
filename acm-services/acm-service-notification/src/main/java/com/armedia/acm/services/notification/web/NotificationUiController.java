@@ -29,8 +29,8 @@ package com.armedia.acm.services.notification.web;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
@@ -41,7 +41,7 @@ import java.util.Map;
 @RequestMapping("/plugin/notification")
 public class NotificationUiController
 {
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
     private Map<String, Object> pluginProperties = new HashMap<>();
 
     @RequestMapping(method = RequestMethod.GET)

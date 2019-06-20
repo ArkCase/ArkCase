@@ -46,8 +46,8 @@ import com.armedia.acm.services.billing.model.BillingItem;
 import com.armedia.acm.services.billing.service.BillingService;
 
 import org.apache.commons.io.FileUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.w3c.dom.Document;
@@ -86,7 +86,7 @@ public class ComplaintBillingInvoiceDocumentGenerator
 
     private PdfService pdfService;
 
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
 
     public void generatePdf(String objectType, Long requestId)
     {

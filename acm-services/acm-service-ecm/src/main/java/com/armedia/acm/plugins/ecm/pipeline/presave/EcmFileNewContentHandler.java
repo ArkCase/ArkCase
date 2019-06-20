@@ -40,8 +40,8 @@ import com.armedia.acm.services.pipeline.handler.PipelineHandler;
 import org.apache.chemistry.opencmis.client.api.Document;
 import org.apache.commons.io.input.CountingInputStream;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.io.FileInputStream;
 import java.io.InputStream;
@@ -51,7 +51,7 @@ import java.io.InputStream;
  */
 public class EcmFileNewContentHandler implements PipelineHandler<EcmFile, EcmFileTransactionPipelineContext>
 {
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private transient final Logger log = LogManager.getLogger(getClass());
 
     private EcmFileMuleUtils ecmFileMuleUtils;
     private ProgressIndicatorService progressIndicatorService;

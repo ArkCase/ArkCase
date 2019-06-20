@@ -1037,6 +1037,43 @@
             "emailTemplates": {
                 "title": "ईमेल टेम्पलेट्स"
             }
+        },
+        "portals.portalsConfiguration": {
+            "nodeTitle": "hi_Portals Service",
+            "title": "hi_Portals Configuration",
+            "url": "hi_URL",
+            "id": "hi_ID",
+            "portalId": "hi_Portal ID",
+            "portalDescription": "hi_Description",
+            "portalUser": "hi_User",
+            "save": "hi_Save",
+            "cancel": "hi_Cancel",
+            "placeholder": {
+                "portalUrl": "hi_Enter Portal URL",
+                "portalId": "hi_ID will be generate",
+                "portalDescription": "hi_Enter Portal Description",
+                "portalUser": "hi_Select Portal User"
+            },
+            "message": {
+                "edit": "hi_Portal is successfully edited",
+                "add": "hi_Portal is successfully added",
+                "delete": "hi_Portal is successfully deleted"
+            }
+        },
+        "userSearch": {
+            "title": "hi_User Search",
+            "cancelButton": "hi_Cancel",
+            "confirmButton": "hi_Save",
+            "search": {
+                "placeholder": "hi_Search for the user to assign to this portal",
+                "btn": "hi_Search"
+            },
+            "assigneeGridColumns": {
+                "name": "hi_Name",
+                "type": "hi_Type",
+                "title": "hi_Title",
+                "username": "hi_Username"
+            }
         }
     }
 }

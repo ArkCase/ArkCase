@@ -38,6 +38,11 @@ angular.module('services').factory(
                             "clickFn": "deleteRow",
                             "icon": "fa fa-trash-o",
                             "readOnlyFn": "isReadOnly"
+                        }, {
+                            "name": "copy",
+                            "clickFn": "copyRow",
+                            "icon": "fa fa-copy",
+                            "readOnlyFn": "isReadOnly"
                         } ]
 
                         /**
@@ -672,7 +677,7 @@ angular.module('services').factory(
                                     //, enableSorting: false
                                     //, enableColumnResizing: false
                                     ,
-                                    width: 50,
+                                    width: 65,
                                     headerCellTemplate: "<span></span>",
                                     cellTemplate: cellTemplate
                                 };

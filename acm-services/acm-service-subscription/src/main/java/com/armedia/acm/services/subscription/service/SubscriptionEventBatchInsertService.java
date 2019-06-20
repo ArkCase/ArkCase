@@ -40,8 +40,8 @@ import com.armedia.acm.spring.SpringContextHolder;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.xmlbeans.SystemProperties;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -68,7 +68,7 @@ public class SubscriptionEventBatchInsertService
     private SpringContextHolder springContextHolder;
     private SubscriptionConfig subscriptionConfig;
 
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
 
     // this method is used by scheduled jobs in Spring beans loaded dynamically from the ACM configuration
     // folder ($HOME/.acm).

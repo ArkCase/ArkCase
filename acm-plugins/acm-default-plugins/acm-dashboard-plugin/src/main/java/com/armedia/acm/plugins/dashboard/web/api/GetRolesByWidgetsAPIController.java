@@ -36,8 +36,8 @@ import com.armedia.acm.plugins.dashboard.service.DashboardService;
 import com.armedia.acm.plugins.dashboard.service.WidgetEventPublisher;
 import com.armedia.acm.services.users.dao.UserDao;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -61,7 +61,7 @@ public class GetRolesByWidgetsAPIController
     private WidgetDao widgetDao;
     private WidgetEventPublisher eventPublisher;
     private DashboardService dashboardService;
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
 
     @RequestMapping(value = "/rolesByWidget/all", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody

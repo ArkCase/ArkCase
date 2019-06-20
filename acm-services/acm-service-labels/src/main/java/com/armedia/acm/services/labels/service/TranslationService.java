@@ -34,8 +34,8 @@ import com.armedia.acm.web.api.MDCConstants;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.slf4j.MDC;
 
 /**
@@ -43,7 +43,7 @@ import org.slf4j.MDC;
  */
 public class TranslationService
 {
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
     private UserDao userDao;
     private LabelManagementService labelManagementService;
 

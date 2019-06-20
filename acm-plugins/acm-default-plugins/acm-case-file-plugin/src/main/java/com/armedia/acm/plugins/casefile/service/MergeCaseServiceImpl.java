@@ -49,8 +49,8 @@ import com.armedia.acm.services.participants.service.AcmParticipantService;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 
 import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -60,7 +60,7 @@ import java.util.List;
 
 public class MergeCaseServiceImpl implements MergeCaseService
 {
-    private final Logger log = LoggerFactory.getLogger(getClass());
+    private final Logger log = LogManager.getLogger(getClass());
 
     private SaveCaseService saveCaseService;
     private CaseFileDao caseFileDao;

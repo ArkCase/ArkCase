@@ -30,15 +30,15 @@ package com.armedia.acm.services.config.model;
 import com.armedia.acm.core.AcmApplication;
 import com.armedia.acm.objectonverter.ObjectConverter;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.io.Serializable;
 
 public class AppConfig implements AcmConfig, Serializable
 {
     private static final long serialVersionUID = -1L;
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private transient final Logger log = LogManager.getLogger(getClass());
     private String configName;
     private AcmApplication acmApplication;
     private String configDescription;

@@ -31,8 +31,8 @@ import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.services.holiday.model.HolidayConfiguration;
 
 import org.apache.commons.io.FileUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.core.io.Resource;
 
 import java.io.IOException;
@@ -46,7 +46,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class HolidayConfigurationService
 {
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
     private Resource holidayFile;
     private ObjectConverter objectConverter;
     private ReadWriteLock lock = new ReentrantReadWriteLock();

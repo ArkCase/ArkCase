@@ -39,8 +39,8 @@ import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.service.NotificationSender;
 import com.armedia.acm.services.users.dao.UserDao;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import gov.foia.model.FOIARequest;
 
@@ -54,7 +54,7 @@ public class ResponseFolderNotifyService
     private ResponseFolderService responseFolderService;
     private NotificationSender notificationSender;
     private UserDao userDao;
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
     private AcmApplication acmAppConfiguration;
     private NotificationDao notificationDao;
 
