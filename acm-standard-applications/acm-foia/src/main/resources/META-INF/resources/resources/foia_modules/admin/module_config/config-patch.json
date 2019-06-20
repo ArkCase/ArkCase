@@ -44,37 +44,38 @@
                     "name": "portalUrl",
                     "displayName": "admin.portals.portalsConfiguration.url",
                     "visible": true,
-                    "headerCellFilter": "translate",
-                    "width": 100
+                    "headerCellFilter": "translate"
                 },
                 {
                     "name": "portalId",
                     "displayName": "admin.portals.portalsConfiguration.portalId",
                     "visible": true,
                     "headerCellFilter": "translate",
-                    "cellTemplate": "<div class='ui-grid-cell-contents' id='{{row.entity.portalId}}'>{{row.entity.portalId}}</div>",
-                    "width": 250
+                    "cellTemplate": "<div class='ui-grid-cell-contents' id='{{row.entity.portalId}}'>{{row.entity.portalId}}</div>"
                 },
                 {
                     "name": "groupName",
                     "displayName": "admin.portals.portalsConfiguration.groupName",
                     "visible": true,
-                    "headerCellFilter": "translate",
-                    "width": 250
+                    "headerCellFilter": "translate"
                 },
                 {
                     "name": "portalDescription",
                     "displayName": "admin.portals.portalsConfiguration.portalDescription",
                     "visible": true,
-                    "headerCellFilter": "translate",
-                    "width": 100
+                    "headerCellFilter": "translate"
                 },
                 {
                     "name": "fullName",
                     "displayName": "admin.portals.portalsConfiguration.portalUser",
                     "visible": true,
-                    "headerCellFilter": "translate",
-                    "width": 150
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "portalAuthenticationFlag",
+                    "displayName": "admin.portals.portalsConfiguration.enablePortalAuthentication",
+                    "visible": true,
+                    "headerCellFilter": "translate"
                 }
             ],
             "paginationPageSizes": [
