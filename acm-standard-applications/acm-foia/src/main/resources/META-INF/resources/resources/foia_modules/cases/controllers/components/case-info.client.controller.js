@@ -153,6 +153,7 @@ angular.module('cases').controller(
 
                 SuggestedCasesService.getSuggestedCases($scope.objectInfo.title, $scope.objectInfo.id).then(function (value) {
                     $scope.hasSuggestedCases = value.data.length > 0 ? true : false;
+                    $scope.numberOfSuggestedCases = value.data.length;
                 });
 
             };
