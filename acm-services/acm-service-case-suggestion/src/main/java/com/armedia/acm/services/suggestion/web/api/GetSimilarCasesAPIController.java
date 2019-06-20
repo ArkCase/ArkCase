@@ -51,12 +51,16 @@ public class GetSimilarCasesAPIController
 
     @RequestMapping(value = "/{title}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<SuggestedCase> findSimilarCases(@PathVariable("title") String title,
-                                                          @RequestParam(value = "objectId") String objectId,
+                                                          @RequestParam(value = "objectId", required = false) String objectId,
                                                           @RequestParam(value = "portal", required = false, defaultValue = "false") Boolean isPortal,
                                                           Authentication authentication) throws MuleException, ParseException
     {
+        Long id = null;
+        if(objectId != null){
+             id = Long.valueOf(objectId);
+        }
 
-        return new ResponseEntity(getSimilarCasesService().findSimilarCases(title, isPortal, Long.valueOf(objectId), authentication), HttpStatus.OK);
+        return new ResponseEntity(getSimilarCasesService().findSimilarCases(title, isPortal, id, authentication), HttpStatus.OK);
     }
 
 

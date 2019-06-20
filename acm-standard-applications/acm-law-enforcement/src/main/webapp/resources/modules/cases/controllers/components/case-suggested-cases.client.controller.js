@@ -62,5 +62,13 @@ angular.module('cases').controller('Cases.SuggestedCasesController', ['$scope','
         var onObjectInfoRetrieved = function(objectInfo) {
             $scope.objectInfo = objectInfo;
         };
+
+        $scope.onClickObjLink = function(event, rowEntity) {
+            event.preventDefault();
+
+            var targetType = Util.goodMapValue(rowEntity, "objectType");
+            var targetId = Util.goodMapValue(rowEntity, "caseId");
+            gridHelper.showObject(targetType, targetId);
+        };
        
     }]);
