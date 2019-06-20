@@ -35,8 +35,8 @@ import com.armedia.acm.services.notification.model.Notification;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -86,7 +86,7 @@ public class NotificationIT
 
     @Autowired
     private NotificationDao notificationDao;
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
 
     @Autowired
     private AuditPropertyEntityAdapter auditPropertyEntityAdapter;

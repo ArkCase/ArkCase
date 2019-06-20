@@ -40,8 +40,8 @@ import com.armedia.acm.services.timesheet.model.AcmTimesheet;
 import com.armedia.acm.services.timesheet.model.TimesheetConstants;
 
 import com.armedia.acm.services.timesheet.service.TimesheetService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.context.ApplicationListener;
 import org.springframework.scheduling.annotation.Async;
 
@@ -59,7 +59,7 @@ public class BillingAcmTaskActivitiEventHandler implements ApplicationListener<A
     private AcmCostsheetDao acmCostsheetDao;
     private BillingService billingService;
     private TimesheetService timesheetService;
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
 
     @Override
     @Async

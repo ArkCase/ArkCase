@@ -34,8 +34,8 @@ import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.group.AcmGroup;
 import com.armedia.acm.services.users.service.group.GroupService;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.security.core.Authentication;
 
 import javax.servlet.http.HttpSession;
@@ -55,7 +55,7 @@ public class RequestAssignmentService
     private SaveCaseService saveCaseService;
     private GroupService groupService;
 
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
 
     public FOIARequest startWorking(Long queueId, Authentication auth, HttpSession session)
     {

@@ -30,8 +30,8 @@ package com.armedia.acm.plugins.admin.web.api;
 import com.armedia.acm.email.model.EmailSenderConfig;
 import com.armedia.acm.services.email.sender.service.EmailSenderConfigurationServiceImpl;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -48,7 +48,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class EmailSenderConfigurationAPIController
 {
 
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
 
     private EmailSenderConfigurationServiceImpl emailSenderConfigurationService;
 

@@ -44,8 +44,8 @@ import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.participants.service.AcmParticipantService;
 
 import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.transaction.annotation.Transactional;
@@ -65,7 +65,7 @@ public class EcmFileParticipantService implements ApplicationEventPublisherAware
 {
     private static List<String> fileParticipantTypes = Arrays.asList("*", "group-write", "group-read", "group-no-access", "write", "read",
             "no-access");
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private transient final Logger log = LogManager.getLogger(getClass());
     private EcmFileDao fileDao;
     private AcmFolderDao folderDao;
     private AcmFolderService folderService;

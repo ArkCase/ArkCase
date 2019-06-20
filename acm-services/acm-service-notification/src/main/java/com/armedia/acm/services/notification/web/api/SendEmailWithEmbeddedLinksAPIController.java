@@ -34,8 +34,8 @@ import com.armedia.acm.services.notification.exception.AcmNotificationException;
 import com.armedia.acm.services.notification.service.NotificationSenderFactory;
 import com.armedia.acm.services.users.model.AcmUser;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -53,7 +53,7 @@ import java.util.List;
 public class SendEmailWithEmbeddedLinksAPIController
 {
 
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
     private NotificationSenderFactory notificationSenderFactory;
 
     @RequestMapping(value = "/withembeddedlinks", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)

@@ -36,8 +36,8 @@ import com.armedia.acm.plugins.ecm.service.impl.EcmTikaFile;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 
 import org.apache.chemistry.opencmis.client.api.Document;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -48,7 +48,7 @@ import gov.foia.model.FOIAFile;
 public class FOIAEcmFileNewMetadataHandler extends EcmFileNewMetadataHandler
 {
 
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private transient final Logger log = LogManager.getLogger(getClass());
     private ArkCaseBeanUtils arkCaseBeanUtils;
 
     @Override

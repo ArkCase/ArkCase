@@ -34,8 +34,8 @@ import com.armedia.acm.services.users.model.AcmRoleType;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.group.AcmGroup;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -48,7 +48,7 @@ public class AcmUserRoleService
 {
     private UserDao userDao;
     private AcmRoleToGroupMapping roleToGroupConfig;
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
 
     public Set<String> getUserRoles(String userId)
     {

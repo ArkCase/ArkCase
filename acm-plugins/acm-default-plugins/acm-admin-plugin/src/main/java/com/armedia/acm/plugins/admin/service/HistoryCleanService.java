@@ -36,8 +36,8 @@ import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 
 import org.json.JSONException;
 import org.mule.api.MuleException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -53,7 +53,7 @@ public class HistoryCleanService
     private NotificationDao notificationDao;
     private ExecuteSolrQuery executeSolrQuery;
 
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
 
     public void cleanHistory()
     {

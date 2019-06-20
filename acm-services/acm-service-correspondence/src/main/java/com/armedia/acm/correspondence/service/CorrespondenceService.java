@@ -59,8 +59,8 @@ import org.docx4j.wml.CTRel;
 import org.docx4j.wml.FooterReference;
 import org.docx4j.wml.HdrFtrRef;
 import org.docx4j.wml.HeaderReference;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
@@ -88,7 +88,7 @@ public class CorrespondenceService
     private static final String TEMP_FILE_SUFFIX = ".docx";
     private static final String MULTITEMPLATE_DOC_TYPE = "Multi Correspondence";
 
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private transient final Logger log = LogManager.getLogger(getClass());
     private SpringContextHolder springContextHolder;
     private CorrespondenceGenerator correspondenceGenerator;
     private CorrespondenceEventPublisher eventPublisher;

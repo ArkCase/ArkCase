@@ -6,22 +6,22 @@ package com.armedia.acm.tool.transcribe.service;
  * %%
  * Copyright (C) 2014 - 2019 ArkCase LLC
  * %%
- * This file is part of the ArkCase software. 
- * 
- * If the software was purchased under a paid ArkCase license, the terms of 
- * the paid license agreement will prevail.  Otherwise, the software is 
+ * This file is part of the ArkCase software.
+ *
+ * If the software was purchased under a paid ArkCase license, the terms of
+ * the paid license agreement will prevail.  Otherwise, the software is
  * provided under the following open source license terms:
- * 
+ *
  * ArkCase is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *  
+ *
  * ArkCase is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
  * #L%
@@ -38,6 +38,7 @@ import com.amazonaws.services.transcribe.AmazonTranscribeClientBuilder;
 import com.amazonaws.services.transcribe.model.GetTranscriptionJobRequest;
 import com.amazonaws.services.transcribe.model.GetTranscriptionJobResult;
 import com.amazonaws.services.transcribe.model.Media;
+import com.amazonaws.services.transcribe.model.Settings;
 import com.amazonaws.services.transcribe.model.StartTranscriptionJobRequest;
 import com.amazonaws.services.transcribe.model.StartTranscriptionJobResult;
 import com.amazonaws.services.transcribe.model.TranscriptionJobStatus;
@@ -52,6 +53,8 @@ import com.armedia.acm.tool.transcribe.model.AWSTranscribeConfiguration;
 import com.armedia.acm.tool.transcribe.model.TranscribeConstants;
 import com.armedia.acm.tool.transcribe.model.TranscribeDTO;
 import com.armedia.acm.tool.transcribe.model.TranscribeItemDTO;
+import com.armedia.acm.tool.transcribe.model.transcript.AWSSegment;
+import com.armedia.acm.tool.transcribe.model.transcript.AWSSpeakerItem;
 import com.armedia.acm.tool.transcribe.model.transcript.AWSTranscript;
 import com.armedia.acm.tool.transcribe.model.transcript.AWSTranscriptAlternative;
 import com.armedia.acm.tool.transcribe.model.transcript.AWSTranscriptItem;
@@ -62,8 +65,8 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.scheduling.annotation.Async;
 
 import java.io.File;
@@ -82,7 +85,7 @@ public class AWSTranscribeServiceImpl implements TranscribeIntegrationService
 {
 
     private static final String AWS_TRANSCRIBE_PLUGIN = "AWS_TRANSCRIBE";
-    private final Logger LOG = LoggerFactory.getLogger(getClass());
+    private final Logger LOG = LogManager.getLogger(getClass());
     private AmazonS3 s3Client;
     private AmazonTranscribe transcribeClient;
     private MuleContextManager muleContextManager;
@@ -217,6 +220,18 @@ public class AWSTranscribeServiceImpl implements TranscribeIntegrationService
                 request.setMediaFormat(mediaType);
                 request.setMedia(media);
 
+                // According to Amazon, valid range for MaxSpeakerLabels field is minimum value of 2,
+                // maximum value of 10.
+                if (configuration.isShowSpeakerLabels() && configuration.getMaxSpeakerLabels() > 1
+                        && configuration.getMaxSpeakerLabels() < 11)
+                {
+                    Settings settings = new Settings();
+                    settings.setShowSpeakerLabels(configuration.isShowSpeakerLabels());
+                    settings.setMaxSpeakerLabels(configuration.getMaxSpeakerLabels());
+
+                    request.setSettings(settings);
+                }
+
                 return getTranscribeClient().startTranscriptionJob(request);
             }
             catch (Exception e)
@@ -337,6 +352,19 @@ public class AWSTranscribeServiceImpl implements TranscribeIntegrationService
             objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
             AWSTranscript awsTranscript = objectMapper.readValue(jsonString, AWSTranscript.class);
 
+            AWSTranscribeConfiguration configuration = getAwsTranscribeConfigurationService().getAWSTranscribeConfig();
+
+            List<AWSSpeakerItem> speakerItems = new ArrayList<>();
+            List<AWSSegment> segments;
+            if (configuration.isShowSpeakerLabels())
+            {
+                segments = awsTranscript.getResult().getSpeakerLabels().getSegments();
+                for (AWSSegment segment : segments)
+                {
+                    speakerItems.addAll(segment.getItems());
+                }
+            }
+
             int counter = 0;
             BigDecimal startTime = null;
             BigDecimal endTime = null;
@@ -346,10 +374,32 @@ public class AWSTranscribeServiceImpl implements TranscribeIntegrationService
             List<AWSTranscriptItem> awsTranscriptItems = awsTranscript.getResult().getItems();
             int size = awsTranscriptItems.size();
             boolean silentDetected = false;
+            String prevSpeaker = "";
+            String currentSpeaker = "";
+            String currentSpeakerText = "";
             for (int i = 0; i < size; i++)
             {
                 AWSTranscriptItem awsTranscriptItem = awsTranscriptItems.get(i);
                 boolean punctuation = "punctuation".equalsIgnoreCase(awsTranscriptItem.getType());
+
+                for (AWSSpeakerItem speakerItem : speakerItems)
+                {
+                    if (!punctuation && awsTranscriptItem.getStartTime().equals(speakerItem.getStartTime())
+                            && awsTranscriptItem.getEndTime().equals(speakerItem.getEndTime()))
+                    {
+                        currentSpeaker = speakerItem.getSpeakerLabel();
+                        if (currentSpeaker.equals(prevSpeaker))
+                        {
+                            currentSpeakerText = "";
+                        }
+                        else
+                        {
+                            prevSpeaker = currentSpeaker;
+                            currentSpeakerText = " [" + currentSpeaker + "]:";
+                        }
+                        break;
+                    }
+                }
 
                 if (!punctuation && !silentDetected)
                 {
@@ -386,7 +436,8 @@ public class AWSTranscribeServiceImpl implements TranscribeIntegrationService
                     String textDelimiter = !punctuation ? " " : "";
                     if (awsTranscriptAlternative != null && StringUtils.isNotEmpty(awsTranscriptAlternative.getContent()))
                     {
-                        text = (text + textDelimiter + awsTranscriptAlternative.getContent()).trim();
+                        text = (text + currentSpeakerText + textDelimiter + awsTranscriptAlternative.getContent()).trim();
+                        currentSpeakerText = "";
                     }
                 }
 
@@ -412,6 +463,7 @@ public class AWSTranscribeServiceImpl implements TranscribeIntegrationService
                         confidenceCounter = 0;
                         text = "";
                         silentDetected = false;
+                        prevSpeaker = "";
                     }
                 }
             }

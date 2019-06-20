@@ -21,7 +21,7 @@ package com.armedia.acm.tool.ocr.service;
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
- *
+ *WindowsEventLogger
  * You should have received a copy of the GNU Lesser General Public License
  * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
  * #L%
@@ -33,11 +33,14 @@ import com.armedia.acm.tool.mediaengine.model.MediaEngineDTO;
 import com.armedia.acm.tool.mediaengine.service.MediaEngineIntegrationEventPublisher;
 import com.armedia.acm.tool.ocr.model.OCRDTO;
 import com.armedia.acm.tool.ocr.model.OCRIntegrationConstants;
+import org.apache.commons.exec.CommandLine;
 
+import org.apache.commons.exec.DefaultExecuteResultHandler;
+import org.apache.commons.exec.DefaultExecutor;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.scheduling.annotation.Async;
 
 import java.io.BufferedWriter;
@@ -55,9 +58,8 @@ import java.util.StringJoiner;
 public class TesseractServiceImpl implements OCRIntegrationService
 {
 
-    private final Logger LOG = LoggerFactory.getLogger(getClass());
+    private final Logger LOG = LogManager.getLogger(getClass());
     private MediaEngineIntegrationEventPublisher mediaEngineIntegrationEventPublisher;
-    private Runtime rt;
 
     @Override
     @Async
@@ -140,9 +142,9 @@ public class TesseractServiceImpl implements OCRIntegrationService
             try
             {
                 MediaEngineDTO mediaEngineDTO = new OCRDTO();
-
                 String tempPath = (String) props.get("tempPath");
                 Integer processResultStatus = readResultStatusFromFile(remoteId, tempPath);
+                //Integer processResultStatus = -1;
 
                 if (processResultStatus == null)
                 {
@@ -233,13 +235,15 @@ public class TesseractServiceImpl implements OCRIntegrationService
         String destination = mediaEngineDTO.getTempPath() + mediaEngineDTO.getRemoteId()
                 + OCRIntegrationConstants.MAGICK_TMP;
 
-        rt = Runtime.getRuntime();
-
         String command = buildCommand(OCRIntegrationConstants.IMAGE_MAGICK, mediaEngineDTO, source, destination);
         try
         {
-            Process pr = rt.exec(command);
-            pr.waitFor();
+            DefaultExecuteResultHandler resultHandler = new DefaultExecuteResultHandler();
+            CommandLine commandToBeExecuted = CommandLine.parse(command);
+            DefaultExecutor executor = new DefaultExecutor();
+            executor.setWorkingDirectory(new File(mediaEngineDTO.getTempPath()));
+            executor.execute(commandToBeExecuted, resultHandler);
+            resultHandler.waitFor();
 
             Integer numberOfPages = Integer.valueOf(mediaEngineDTO.getProperties().get("numberOfPages"));
             if (numberOfPages > 1)
@@ -270,14 +274,17 @@ public class TesseractServiceImpl implements OCRIntegrationService
 
     private String runTesseract(MediaEngineDTO mediaEngineDTO, String source) throws CreateMediaEngineToolException
     {
-        rt = Runtime.getRuntime();
         String destination = mediaEngineDTO.getTempPath() + mediaEngineDTO.getRemoteId()
                 + OCRIntegrationConstants.TESSERACT_TMP;
         String command = buildCommand(OCRIntegrationConstants.TESSERACT_COMMAND_PREFIX, mediaEngineDTO, source, destination);
         try
         {
-            Process pr = rt.exec(command);
-            pr.waitFor();
+            DefaultExecuteResultHandler resultHandler = new DefaultExecuteResultHandler();
+            CommandLine commandToBeExecuted = CommandLine.parse(command);
+            DefaultExecutor executor = new DefaultExecutor();
+            executor.setWorkingDirectory(new File(mediaEngineDTO.getTempPath()));
+            executor.execute(commandToBeExecuted, resultHandler);
+            resultHandler.waitFor();
             return destination + OCRIntegrationConstants.TEMP_FILE_PDF_SUFFIX;
         }
         catch (InterruptedException | IOException e)
@@ -291,17 +298,19 @@ public class TesseractServiceImpl implements OCRIntegrationService
 
     private int runQPDF(MediaEngineDTO mediaEngineDTO, String source) throws CreateMediaEngineToolException
     {
-        rt = Runtime.getRuntime();
         String destination = (mediaEngineDTO.getTempPath() + mediaEngineDTO.getRemoteId()
                 + OCRIntegrationConstants.QPDF_TMP
                 + OCRIntegrationConstants.TEMP_FILE_PDF_SUFFIX);
         String command = buildCommand(OCRIntegrationConstants.QPDF, mediaEngineDTO, source, destination);
         try
         {
-
-            Process pr = rt.exec(command);
-            pr.waitFor();
-            return pr.exitValue();
+            DefaultExecuteResultHandler resultHandler = new DefaultExecuteResultHandler();
+            CommandLine commandToBeExecuted = CommandLine.parse(command);
+            DefaultExecutor executor = new DefaultExecutor();
+            executor.setWorkingDirectory(new File(mediaEngineDTO.getTempPath()));
+            executor.execute(commandToBeExecuted, resultHandler);
+            resultHandler.waitFor();
+            return resultHandler.getExitValue();
         }
         catch (IOException | InterruptedException e)
         {
@@ -316,7 +325,6 @@ public class TesseractServiceImpl implements OCRIntegrationService
     private String buildCommand(String command, MediaEngineDTO mediaEngineDTO, String source, String destination)
     {
         StringJoiner joiner = new StringJoiner(" ");
-
         switch (command)
         {
         case OCRIntegrationConstants.IMAGE_MAGICK:

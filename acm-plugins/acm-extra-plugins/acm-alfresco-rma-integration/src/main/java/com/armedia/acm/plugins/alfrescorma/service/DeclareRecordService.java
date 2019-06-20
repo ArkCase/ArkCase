@@ -30,8 +30,8 @@ package com.armedia.acm.plugins.alfrescorma.service;
 import com.armedia.acm.plugins.alfrescorma.exception.AlfrescoServiceException;
 
 import org.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -46,7 +46,7 @@ public class DeclareRecordService extends AlfrescoService<String>
 {
     private final String service = "/s/api/actionQueue";
 
-    private transient final Logger LOG = LoggerFactory.getLogger(getClass());
+    private transient final Logger LOG = LogManager.getLogger(getClass());
 
     /**
      * The context must have:

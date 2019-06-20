@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('admin').controller('Admin.ObjectTitleConfigurationController', ['$scope','$translate', '$modal', 'Helper.UiGridService', 'Admin.ObjectTitleConfigurationService', 'MessageService', 'Object.LookupService', 'UtilService',
-    function ($scope, $translate, $modal, HelperUiGridService, AdminObjectTitleConfigurationService, MessageService, ObjectLookupService, Util) {
+angular.module('admin').controller('Admin.ObjectTitleConfigurationController', ['$scope','$translate', '$modal', 'Helper.UiGridService', 'Admin.ObjectTitleConfigurationService', 'MessageService', 'Object.LookupService', 'UtilService', 'Dialog.BootboxService',
+    function ($scope, $translate, $modal, HelperUiGridService, AdminObjectTitleConfigurationService, MessageService, ObjectLookupService, Util, DialogService) {
 
 
         var gridHelper = new HelperUiGridService.Grid({
@@ -123,7 +123,7 @@ angular.module('admin').controller('Admin.ObjectTitleConfigurationController', [
                     reloadGrid();
                     saveConfig();
                 } else {
-                    MessageService.errorAction("admin.application.objectTitleConfiguration.message.exist");
+                    DialogService.alert($translate.instant("admin.application.objectTitleConfiguration.message.exist1") + $translate.instant($scope.getObjectTypeValue(data.objectTitleTypes.objectType)) + $translate.instant("admin.application.objectTitleConfiguration.message.exist2"));
                 }
             });
         };

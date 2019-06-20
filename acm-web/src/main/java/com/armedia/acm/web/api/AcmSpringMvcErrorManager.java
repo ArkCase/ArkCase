@@ -47,8 +47,8 @@ import com.armedia.acm.core.exceptions.InvalidLookupException;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.AccessDeniedException;
@@ -66,7 +66,7 @@ import java.util.Map;
 @ControllerAdvice
 public class AcmSpringMvcErrorManager
 {
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
 
     @ExceptionHandler(AcmParticipantsException.class)
     public void handleException(HttpServletResponse response, AcmParticipantsException e)

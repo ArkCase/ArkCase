@@ -35,8 +35,8 @@ import org.apache.chemistry.opencmis.commons.data.ContentStream;
 import org.apache.commons.io.IOUtils;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -62,7 +62,7 @@ import io.milton.resource.ReplaceableResource;
  */
 public class AcmFileResource extends AcmFileSystemResource implements PropFindableResource, ReplaceableResource, DigestResource
 {
-    private static final Logger LOGGER = LoggerFactory.getLogger(AcmFileResource.class);
+    private static final Logger LOGGER = LogManager.getLogger(AcmFileResource.class);
 
     private EcmFile acmFile;
     private String fileType;

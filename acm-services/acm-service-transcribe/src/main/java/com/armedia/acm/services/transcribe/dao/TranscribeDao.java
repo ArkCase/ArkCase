@@ -34,8 +34,8 @@ import com.armedia.acm.services.transcribe.model.Transcribe;
 import com.armedia.acm.services.transcribe.model.TranscribeConstants;
 
 import org.apache.commons.lang.NotImplementedException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import javax.persistence.NoResultException;
 import javax.persistence.NonUniqueResultException;
@@ -49,7 +49,7 @@ import java.util.List;
  */
 public class TranscribeDao extends MediaEngineDao<Transcribe>
 {
-    private final Logger LOG = LoggerFactory.getLogger(getClass());
+    private final Logger LOG = LogManager.getLogger(getClass());
 
     @Override
     public Transcribe findByMediaVersionId(Long mediaVersionId) throws GetMediaEngineException

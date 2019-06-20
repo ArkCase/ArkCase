@@ -41,8 +41,8 @@ import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.service.NotificationSender;
 import com.armedia.acm.services.users.model.AcmUser;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.security.core.Authentication;
 
 import java.util.ArrayList;
@@ -51,7 +51,7 @@ import java.util.List;
 
 public class ComplaintBillingInvoiceEmailSenderService
 {
-    private final Logger log = LoggerFactory.getLogger(this.getClass());
+    private final Logger log = LogManager.getLogger(this.getClass());
 
     private ComplaintDao complaintDao;
     private BillingService billingService;

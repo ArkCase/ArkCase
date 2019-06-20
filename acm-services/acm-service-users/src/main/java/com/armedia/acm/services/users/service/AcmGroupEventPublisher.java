@@ -32,8 +32,8 @@ import com.armedia.acm.services.users.model.event.LdapGroupCreatedEvent;
 import com.armedia.acm.services.users.model.event.LdapGroupDeletedEvent;
 import com.armedia.acm.services.users.model.group.AcmGroup;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.scheduling.annotation.Async;
@@ -41,7 +41,7 @@ import org.springframework.scheduling.annotation.Async;
 public class AcmGroupEventPublisher implements ApplicationEventPublisherAware
 {
 
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private transient final Logger log = LogManager.getLogger(getClass());
 
     private ApplicationEventPublisher applicationEventPublisher;
 

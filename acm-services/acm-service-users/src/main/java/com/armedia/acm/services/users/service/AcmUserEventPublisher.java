@@ -30,14 +30,14 @@ package com.armedia.acm.services.users.service;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.event.LdapUserDeletedEvent;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 
 public class AcmUserEventPublisher implements ApplicationEventPublisherAware
 {
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private transient final Logger log = LogManager.getLogger(getClass());
 
     private ApplicationEventPublisher applicationEventPublisher;
 

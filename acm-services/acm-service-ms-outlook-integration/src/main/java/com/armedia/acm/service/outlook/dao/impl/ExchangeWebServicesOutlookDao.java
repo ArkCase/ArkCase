@@ -46,8 +46,8 @@ import com.armedia.acm.service.outlook.model.OutlookTaskItem;
 import com.armedia.acm.service.outlook.service.impl.ExchangeConfigurationServiceImpl;
 
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.cache.Cache;
 import org.springframework.cache.annotation.Cacheable;
 
@@ -102,7 +102,7 @@ import microsoft.exchange.webservices.data.search.filter.SearchFilter;
  */
 public class ExchangeWebServicesOutlookDao implements OutlookDao
 {
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private transient final Logger log = LogManager.getLogger(getClass());
     private final PropertySet standardProperties = new PropertySet(BasePropertySet.IdOnly, ItemSchema.Subject, ItemSchema.DateTimeSent,
             ItemSchema.DateTimeCreated, ItemSchema.DateTimeReceived, ItemSchema.LastModifiedTime, ItemSchema.Body, ItemSchema.Size);
     private final PropertySet folderProperties = new PropertySet(FolderSchema.Id, FolderSchema.DisplayName, FolderSchema.ParentFolderId,
@@ -146,8 +146,9 @@ public class ExchangeWebServicesOutlookDao implements OutlookDao
             log.warn("Configured exchange version [{}] is not valid. Use default [{}]", exchangeVersion, version);
         }
 
-        try (ExchangeService service = new ExchangeService(version))
+        try
         {
+            ExchangeService service = new ExchangeService(version);
             service.setCredentials(credentials);
             if (outlookConfig.getEnableAutoDiscovery())
             {

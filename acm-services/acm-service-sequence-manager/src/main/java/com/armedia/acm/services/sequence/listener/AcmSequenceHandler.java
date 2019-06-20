@@ -35,8 +35,8 @@ import com.armedia.acm.services.sequence.annotation.AcmSequenceAnnotationReader;
 import com.armedia.acm.services.sequence.generator.AcmSequenceGeneratorManager;
 
 import org.apache.commons.beanutils.PropertyUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.context.ApplicationListener;
 import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.support.MessageBuilder;
@@ -52,7 +52,7 @@ import java.util.Map;
  */
 public class AcmSequenceHandler implements AcmBeforeInsertListener, ApplicationListener<AcmSequenceEvent>
 {
-    private final Logger log = LoggerFactory.getLogger(getClass());
+    private final Logger log = LogManager.getLogger(getClass());
 
     private AcmSequenceAnnotationReader sequenceAnnotationReader;
     private AcmSequenceGeneratorManager sequenceGeneratorManager;

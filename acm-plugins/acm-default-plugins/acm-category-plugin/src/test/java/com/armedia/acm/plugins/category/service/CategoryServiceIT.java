@@ -55,8 +55,8 @@ import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.modules.junit4.PowerMockRunnerDelegate;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -85,7 +85,7 @@ import java.util.List;
 })
 @TransactionConfiguration(defaultRollback = true)
 @Transactional
-@PrepareForTest(LoggerFactory.class)
+@PrepareForTest(LogManager.class)
 @PowerMockIgnore({ "javax.management.*", "javax.net.ssl.*" })
 @Ignore
 public class CategoryServiceIT
@@ -117,9 +117,9 @@ public class CategoryServiceIT
         assertNotNull(entityManager);
         assertNotNull(auditAdapter);
 
-        mockStatic(LoggerFactory.class);
-        expect(LoggerFactory.getLogger(CategoryServiceImpl.class)).andReturn(mockedLogger);
-        replay(LoggerFactory.class);
+        mockStatic(LogManager.class);
+        expect(LogManager.getLogger(CategoryServiceImpl.class)).andReturn(mockedLogger);
+        replay(LogManager.class);
 
         auditAdapter.setUserId("creator");
 

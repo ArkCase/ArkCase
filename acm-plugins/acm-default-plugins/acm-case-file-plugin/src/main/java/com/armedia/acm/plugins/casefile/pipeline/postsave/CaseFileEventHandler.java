@@ -33,8 +33,8 @@ import com.armedia.acm.plugins.casefile.utility.CaseFileEventUtility;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.pipeline.handler.PipelineHandler;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 /**
  * Publish new case file is created
@@ -46,7 +46,7 @@ public class CaseFileEventHandler implements PipelineHandler<CaseFile, CaseFileP
     /**
      * Logger instance.
      */
-    private final Logger log = LoggerFactory.getLogger(getClass());
+    private final Logger log = LogManager.getLogger(getClass());
     private CaseFileEventUtility caseFileEventUtility;
 
     @Override

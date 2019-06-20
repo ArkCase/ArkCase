@@ -36,8 +36,8 @@ import com.armedia.acm.services.mediaengine.service.MediaEngineService;
 import com.armedia.acm.tool.mediaengine.model.MediaEngineDTO;
 import com.armedia.acm.tool.mediaengine.model.MediaEngineIntegrationFailedEvent;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.context.ApplicationListener;
 
 /**
@@ -45,7 +45,7 @@ import org.springframework.context.ApplicationListener;
  */
 public class MediaEngineIntegrationProviderFailedListener implements ApplicationListener<MediaEngineIntegrationFailedEvent>
 {
-    private final Logger LOG = LoggerFactory.getLogger(getClass());
+    private final Logger LOG = LogManager.getLogger(getClass());
 
     private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
     private MediaEngineServiceFactory mediaEngineServiceFactory;

@@ -32,8 +32,8 @@ import com.armedia.acm.services.mediaengine.exception.SaveMediaEngineException;
 import com.armedia.acm.services.mediaengine.factory.MediaEngineServiceFactory;
 import com.armedia.acm.services.mediaengine.model.MediaEngine;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.util.List;
 
@@ -42,7 +42,7 @@ import java.util.List;
  */
 public class MediaEngineActivitiService
 {
-    private final Logger LOG = LoggerFactory.getLogger(getClass());
+    private final Logger LOG = LogManager.getLogger(getClass());
     private MediaEngineServiceFactory mediaEngineServiceFactory;
 
     public List<MediaEngine> changeStatusMultiple(List<Long> ids, String status, String serviceName)

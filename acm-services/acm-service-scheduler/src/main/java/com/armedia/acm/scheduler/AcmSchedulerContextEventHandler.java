@@ -29,8 +29,8 @@ package com.armedia.acm.scheduler;
 
 import com.armedia.acm.spring.events.AbstractContextHolderEvent;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.context.ApplicationListener;
 
 /**
@@ -39,7 +39,7 @@ import org.springframework.context.ApplicationListener;
  */
 public class AcmSchedulerContextEventHandler implements ApplicationListener<AbstractContextHolderEvent>
 {
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private transient final Logger log = LogManager.getLogger(getClass());
     private AcmScheduler scheduler;
 
     @Override

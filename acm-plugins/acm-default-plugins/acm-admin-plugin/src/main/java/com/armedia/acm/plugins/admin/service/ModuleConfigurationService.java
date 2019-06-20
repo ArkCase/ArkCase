@@ -32,8 +32,8 @@ import com.armedia.acm.plugins.admin.exception.AcmModuleConfigurationException;
 import com.armedia.acm.plugins.admin.model.ModuleConfigurationConstants;
 import com.armedia.acm.plugins.admin.model.ModuleItem;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -46,7 +46,7 @@ import java.util.stream.Collectors;
  */
 public class ModuleConfigurationService implements ModuleConfigurationConstants
 {
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
     private ConfigurationContainer configurationContainer;
 
     public List<ModuleItem> retrieveModules() throws AcmModuleConfigurationException

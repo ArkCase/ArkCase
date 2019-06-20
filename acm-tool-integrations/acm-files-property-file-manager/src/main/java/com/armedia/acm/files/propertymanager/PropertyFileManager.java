@@ -30,8 +30,8 @@ package com.armedia.acm.files.propertymanager;
 import com.armedia.acm.core.exceptions.AcmEncryptionException;
 import com.armedia.acm.crypto.properties.AcmEncryptablePropertyUtils;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -50,7 +50,7 @@ import java.util.Properties;
  */
 public class PropertyFileManager
 {
-    private final Logger log = LoggerFactory.getLogger(getClass());
+    private final Logger log = LogManager.getLogger(getClass());
     private AcmEncryptablePropertyUtils encryptablePropertyUtils;
 
     public Properties readFromFile(File propertiesFile) throws IOException

@@ -36,8 +36,8 @@ import com.armedia.acm.services.search.service.SearchResults;
 
 import org.json.JSONObject;
 import org.mule.api.MuleException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -57,7 +57,7 @@ import java.util.List;
 @RequestMapping({ "/api/v1/plugin/task", "/api/latest/plugin/task" })
 public class RetrieveTasksAPIController
 {
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
 
     private ExecuteSolrQuery executeSolrQuery;
 
