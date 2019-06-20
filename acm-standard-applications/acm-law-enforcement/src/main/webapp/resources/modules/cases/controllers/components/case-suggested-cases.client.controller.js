@@ -55,10 +55,10 @@ angular.module('cases').controller('Cases.SuggestedCasesController', ['$scope','
             });
         }
 
-
         $scope.getObjectTypeValue = function (key) {
             return $scope.objectTypeValue[key];
-        }
+        };
+
         var onObjectInfoRetrieved = function(objectInfo) {
             $scope.objectInfo = objectInfo;
         };
