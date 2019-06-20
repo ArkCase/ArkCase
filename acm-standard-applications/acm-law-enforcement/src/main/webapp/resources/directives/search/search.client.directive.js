@@ -62,8 +62,9 @@
 angular.module('directives').directive(
         'search',
         [ 'SearchService', '$window', '$q', '$location', '$browser', '$translate', '$interval', 'UtilService', 'Object.LookupService', 'uiGridExporterConstants', 'Tags.TagsService', 'Search.QueryBuilderService', 'ObjectService', 'Search.AutoSuggestService', '$state', 'MessageService',
-                'DocTreeExt.DownloadSelectedAsZip',
-                function(SearchService, $window, $q, $location, $browser, $translate, $interval, Util, ObjectLookupService, uiGridExporterConstants, TagsService, SearchQueryBuilder, ObjectService, AutoSuggestService, $state, MessageService, DownloadSelectedAsZip) {
+                'DocTreeExt.DownloadSelectedAsZip', 'FileSaver', 'Blob', '$filter',
+                function(SearchService, $window, $q, $location, $browser, $translate, $interval, Util, ObjectLookupService, uiGridExporterConstants, TagsService, SearchQueryBuilder, ObjectService, AutoSuggestService, $state, MessageService
+                         , DownloadSelectedAsZip, FileSaver, Blob, $filter) {
                     return {
                         restrict: 'E', //match only element name
                         scope: {
@@ -282,9 +283,13 @@ angular.module('directives').directive(
                                     }
                                 });
                                 if (!Util.isArrayEmpty(scope.selectedRows)) {
-                                    DownloadSelectedAsZip.downloadSelectedFiles(fileIds).then(function() {
-                                        MessageService.info($translate.instant("search.download.ready"));
+                                    DownloadSelectedAsZip.downloadSelectedFiles(fileIds).then(function(result) {
                                         scope.disableCompressBtn = false;
+                                        var dateStr = $filter('date')(new Date(), 'HH:mm:ss');
+                                        var data = new Blob([ result.data ], {
+                                            type : 'application/octet-stream'
+                                        });
+                                        FileSaver.saveAs(data, 'search-files-' + dateStr + '.zip');
                                     });
                                 } else {
                                     //if there is no selected files for download, download all files in the search result
@@ -307,8 +312,12 @@ angular.module('directives').directive(
                                                 }
                                             });
                                             DownloadSelectedAsZip.downloadSelectedFiles(fileIds).then(function() {
-                                                MessageService.info($translate.instant("search.download.ready"));
                                                 scope.disableCompressBtn = false;
+                                                var dateStr = $filter('date')(new Date(), 'HH:mm:ss');
+                                                var data = new Blob([ result.data ], {
+                                                    type : 'application/octet-stream'
+                                                });
+                                                FileSaver.saveAs(data, 'search-files-' + dateStr + '.zip');
                                             });
                                         });
                                     }

@@ -28,8 +28,8 @@
                 <label for="groupName" translate>admin.portals.portalsConfiguration.groupName</label><span
                     class="required-asterisk">*</span><br />
                 <input type="text" id="groupName" name="groupName" ng-model="portal.groupName" class="input-md form-control"
-                       placeholder="{{'admin.portals.portalsConfiguration.placeholder.groupName' | translate}}"
-                       style="background-color: white;" ng-click="groupSearch()"  required>
+                        placeholder="{{'admin.portals.portalsConfiguration.placeholder.groupName' | translate}}"
+                        style="background-color: white;" ng-click="groupSearch()" required>
             </div>
             <div class="col-sm-12 form-group">
                 <label for="portalDescription" translate>admin.portals.portalsConfiguration.portalDescription</label>
@@ -37,6 +37,18 @@
                         placeholder="{{'admin.portals.portalsConfiguration.placeholder.portalDescription' | translate}}"></textarea>
             </div>
         </div>
+        <div class="row">
+            <div class="col-sm-12 form-group">
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" ng-model="portal.portalAuthenticationFlag" />
+                        <span translate>admin.portals.portalsConfiguration.enablePortalAuthentication</span>
+                    </label>
+                </div>
+
+            </div>
+        </div>
+
     </form>
 </div>
 <div class="modal-footer">

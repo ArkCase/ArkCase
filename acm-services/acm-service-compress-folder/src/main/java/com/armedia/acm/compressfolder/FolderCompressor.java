@@ -101,7 +101,7 @@ public interface FolderCompressor
 
     String compressFolder(Long folderId, CompressNode compressNode, long size, SizeUnit sizeUnit) throws AcmFolderException;
 
-    String compressFiles(List<Long> fileIds, HttpSession session, Authentication authentication) throws Exception;
+    String compressFiles(List<Long> fileIds) throws Exception;
 
     /**
      * Returns path for the compressed folder file
