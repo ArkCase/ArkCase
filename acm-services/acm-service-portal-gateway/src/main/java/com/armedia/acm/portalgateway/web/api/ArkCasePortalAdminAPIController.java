@@ -60,8 +60,7 @@ public class ArkCasePortalAdminAPIController
 
     private PortalAdminService portalAdminService;
 
-    @RequestMapping(value = "/portals", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE,
-            MediaType.TEXT_PLAIN_VALUE })
+    @RequestMapping(value = "/portals", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public List<PortalInfoDTO> listRegisteredPortals(Authentication auth)
     {
@@ -131,6 +130,7 @@ public class ArkCasePortalAdminAPIController
     {
         portalInfo.setPortalDescription(portalInfoDTO.getPortalDescription());
         portalInfo.setPortalUrl(portalInfoDTO.getPortalUrl());
+        portalInfo.setPortalAuthenticationFlag(portalInfoDTO.getPortalAuthenticationFlag());
     }
 
     /**
