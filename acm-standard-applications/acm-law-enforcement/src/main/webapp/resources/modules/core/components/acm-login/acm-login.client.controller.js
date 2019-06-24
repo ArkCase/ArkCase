@@ -4,7 +4,7 @@ var AcmLoginController = [ "$q", "$scope", "$document", "$state", "$translate", 
         function($q, $scope, $document, $state, $translate, Util, UtilTimerService, Authentication, AcmLoginService, Dialog, AuditService, ConfigService, ApplicationSettingsService) {
             var ctrl = this;
 
-            var promiseAppSetting = ApplicationSettingsService.getProperty(ApplicationSettingsService.PROPERTIES.IDLE_LIMIT).then(function(response) {
+            var promiseAppSetting = ApplicationSettingsService.getApplicationPropertiesConfig().then(function (response) {
                 ctrl.idleLimit = Util.goodValue(response.data[ApplicationSettingsService.PROPERTIES.IDLE_LIMIT], 600000);
                 ctrl.idlePull = Util.goodValue(response.data[ApplicationSettingsService.PROPERTIES.IDLE_PULL], 5000);
                 ctrl.idleConfirm = Util.goodValue(response.data[ApplicationSettingsService.PROPERTIES.IDLE_CONFIRM], 15000);
