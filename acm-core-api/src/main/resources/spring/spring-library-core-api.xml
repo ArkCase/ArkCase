@@ -8,4 +8,8 @@
     <bean id="fiscalYearConfig" class="com.armedia.acm.core.FiscalYearConfig" scope="refresh">
         <aop:scoped-proxy/>
     </bean>
+
+    <bean id="acmObjectUtils" class="com.armedia.acm.core.utils.AcmObjectUtilsImpl">
+        <property name="packagesToScan" value="#{dataSourceConfig.jpaModelPackages}"/>
+    </bean>
 </beans>
