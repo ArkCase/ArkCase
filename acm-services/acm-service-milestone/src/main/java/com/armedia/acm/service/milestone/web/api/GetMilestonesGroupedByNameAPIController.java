@@ -31,8 +31,8 @@ import com.armedia.acm.core.exceptions.AcmListObjectsFailedException;
 import com.armedia.acm.service.milestone.dao.MilestoneDao;
 import com.armedia.acm.service.milestone.model.MilestoneByNameDto;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -53,7 +53,7 @@ import java.util.List;
 public class GetMilestonesGroupedByNameAPIController
 {
 
-    private final Logger log = LoggerFactory.getLogger(getClass());
+    private final Logger log = LogManager.getLogger(getClass());
     private MilestoneDao milestoneDao;
 
     @RequestMapping(value = "/{objectType}", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })

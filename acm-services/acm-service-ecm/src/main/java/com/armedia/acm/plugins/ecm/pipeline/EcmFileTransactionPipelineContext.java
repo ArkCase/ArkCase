@@ -34,8 +34,8 @@ import com.armedia.acm.services.pipeline.AbstractPipelineContext;
 
 import org.apache.chemistry.opencmis.client.api.Document;
 import org.apache.commons.io.FileUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.security.core.Authentication;
 
 import java.io.File;
@@ -47,7 +47,7 @@ import java.io.IOException;
 public class EcmFileTransactionPipelineContext extends AbstractPipelineContext
 {
 
-    private static final Logger LOG = LoggerFactory.getLogger(EcmFileTransactionPipelineContext.class);
+    private static final Logger LOG = LogManager.getLogger(EcmFileTransactionPipelineContext.class);
     private String originalFileName;
     private Authentication authentication;
     private File fileContents;

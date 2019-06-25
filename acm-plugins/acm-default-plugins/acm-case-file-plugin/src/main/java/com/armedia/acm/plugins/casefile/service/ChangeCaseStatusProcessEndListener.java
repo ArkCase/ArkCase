@@ -33,8 +33,8 @@ package com.armedia.acm.plugins.casefile.service;
 import com.armedia.acm.activiti.AcmBusinessProcessEvent;
 import com.armedia.acm.plugins.task.model.BuckslipProcessStateEvent;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.context.ApplicationListener;
@@ -48,7 +48,7 @@ import java.util.Map;
 public class ChangeCaseStatusProcessEndListener implements ApplicationListener<AcmBusinessProcessEvent>, ApplicationEventPublisherAware
 {
 
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private transient final Logger log = LogManager.getLogger(getClass());
     private ChangeCaseFileStateService changeCaseFileStateService;
     private ApplicationEventPublisher applicationEventPublisher;
 

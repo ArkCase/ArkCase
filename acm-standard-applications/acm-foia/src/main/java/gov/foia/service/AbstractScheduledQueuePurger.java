@@ -34,7 +34,7 @@ import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.plugins.businessprocess.service.StartBusinessProcessService;
 import com.armedia.acm.web.api.MDCConstants;
 
-import org.slf4j.Logger;
+import org.apache.logging.log4j.Logger;
 import org.slf4j.MDC;
 
 import java.time.LocalDate;

@@ -30,8 +30,8 @@ package com.armedia.acm.plugins.complaint.service;
 import com.armedia.acm.activiti.AcmBusinessProcessEvent;
 
 import org.apache.commons.collections.Predicate;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.util.Map;
 
@@ -40,7 +40,7 @@ import java.util.Map;
  */
 public class ComplaintUpdateStatusPredicate implements Predicate
 {
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
 
     @Override
     public boolean evaluate(Object object)

@@ -1037,6 +1037,43 @@
             "emailTemplates": {
                 "title": "电邮模板"
             }
+        },
+        "portals.portalsConfiguration": {
+            "nodeTitle": "zh-cn_Portals Service",
+            "title": "zh-cn_Portals Configuration",
+            "url": "zh-cn_URL",
+            "id": "zh-cn_ID",
+            "portalId": "zh-cn_Portal ID",
+            "portalDescription": "zh-cn_Description",
+            "portalUser": "zh-cn_User",
+            "save": "zh-cn_Save",
+            "cancel": "zh-cn_Cancel",
+            "placeholder": {
+                "portalUrl": "zh-cn_Enter Portal URL",
+                "portalId": "zh-cn_ID will be generate",
+                "portalDescription": "zh-cn_Enter Portal Description",
+                "portalUser": "zh-cn_Select Portal User"
+            },
+            "message": {
+                "edit": "zh-cn_Portal is successfully edited",
+                "add": "zh-cn_Portal is successfully added",
+                "delete": "zh-cn_Portal is successfully deleted"
+            }
+        },
+        "userSearch": {
+            "title": "zh-cn_User Search",
+            "cancelButton": "zh-cn_Cancel",
+            "confirmButton": "zh-cn_Save",
+            "search": {
+                "placeholder": "zh-cn_Search for the user to assign to this portal",
+                "btn": "zh-cn_Search"
+            },
+            "assigneeGridColumns": {
+                "name": "zh-cn_Name",
+                "type": "zh-cn_Type",
+                "title": "zh-cn_Title",
+                "username": "zh-cn_Username"
+            }
         }
     }
 }

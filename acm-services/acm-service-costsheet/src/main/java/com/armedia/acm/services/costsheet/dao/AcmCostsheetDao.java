@@ -34,8 +34,8 @@ import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.services.costsheet.model.AcmCostsheet;
 import com.armedia.acm.services.costsheet.model.CostsheetConstants;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -51,7 +51,7 @@ import java.util.List;
 public class AcmCostsheetDao extends AcmAbstractDao<AcmCostsheet>
 {
 
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
 
     @Override
     protected Class<AcmCostsheet> getPersistenceClass()

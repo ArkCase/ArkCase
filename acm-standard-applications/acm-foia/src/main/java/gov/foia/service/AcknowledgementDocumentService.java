@@ -40,8 +40,8 @@ import com.armedia.acm.services.email.service.TemplatingEngine;
 import com.armedia.acm.services.notification.service.NotificationSender;
 import com.armedia.acm.services.users.dao.UserDao;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.core.io.Resource;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -62,7 +62,7 @@ import gov.foia.model.FOIARequest;
  */
 public class AcknowledgementDocumentService
 {
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
     private NotificationSender notificationSender;
     private UserDao userDao;
     private EcmFileDao ecmFileDao;

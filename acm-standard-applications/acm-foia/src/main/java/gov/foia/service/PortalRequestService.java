@@ -44,8 +44,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.mule.api.MuleException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.security.core.Authentication;
 
 import java.text.ParseException;
@@ -75,7 +75,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
  */
 public class  PortalRequestService
 {
-    private final Logger log = LoggerFactory.getLogger(getClass());
+    private final Logger log = LogManager.getLogger(getClass());
 
     private FOIARequestDao requestDao;
 
@@ -105,6 +105,34 @@ public class  PortalRequestService
                             + portalRequestStatus.getLastName() + "]");
         }
         return responseRequests;
+    }
+
+    /**
+     * @param portalUserId
+     * @return
+     * @throws AcmObjectNotFoundException
+     */
+    public List<PortalFOIARequestStatus> getExternalRequests(String portalUserId) throws AcmObjectNotFoundException
+    {
+        List<PortalFOIARequestStatus> responseRequests = requestDao.getExternalRequests(portalUserId);
+        if (responseRequests.isEmpty())
+        {
+            log.info("FOIA Requests not found for user with id [{}].", portalUserId);
+            throw new AcmObjectNotFoundException("PortalFOIARequestStatus", null,
+                    "FOIA Requests not found for the user with id [" + portalUserId + "].");
+        }
+        return responseRequests;
+    }
+
+    /**
+     * @param portalUserId
+     * @param requestId
+     * @return
+     */
+    public PortalFOIARequestStatus getExternalRequest(String portalUserId, String requestId)
+    {
+        PortalFOIARequestStatus status = requestDao.getExternalRequest(portalUserId, requestId);
+        return status;
     }
 
     public PortalFOIARequest checkRequestStatus(PortalFOIARequest portalFOIARequest)

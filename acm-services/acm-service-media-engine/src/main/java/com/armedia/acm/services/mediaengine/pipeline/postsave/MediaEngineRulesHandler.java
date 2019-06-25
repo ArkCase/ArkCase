@@ -37,8 +37,8 @@ import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.pipeline.handler.PipelineHandler;
 
 import org.activiti.engine.RuntimeService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.util.Map;
 
@@ -47,7 +47,7 @@ import java.util.Map;
  */
 public class MediaEngineRulesHandler implements PipelineHandler<MediaEngine, MediaEnginePipelineContext>
 {
-    private final Logger LOG = LoggerFactory.getLogger(getClass());
+    private final Logger LOG = LogManager.getLogger(getClass());
 
     private RuntimeService activitiRuntimeService;
     private MediaEngineEventPublisher mediaEngineEventPublisher;

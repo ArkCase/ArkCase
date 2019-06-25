@@ -32,8 +32,8 @@ import com.armedia.acm.convertfolder.FileConverter;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.event.EcmFileConvertEvent;
 import org.apache.commons.io.FileUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.context.ApplicationListener;
 
 import java.io.File;
@@ -42,7 +42,7 @@ import java.util.Objects;
 
 public class ConvertEcmFileEventListener implements ApplicationListener<EcmFileConvertEvent>
 {
-    private final Logger log = LoggerFactory.getLogger(getClass().getName());
+    private final Logger log = LogManager.getLogger(getClass().getName());
 
     private FileConverter fileConverter;
 

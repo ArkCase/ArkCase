@@ -33,8 +33,8 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.voodoodyne.jackson.jsog.JSOGGenerator;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorColumn;
@@ -73,7 +73,7 @@ public class ContactMethod implements Serializable, AcmEntity, AcmObject
             Pattern.CASE_INSENSITIVE);
     public static final Pattern PHONE_REGEX = Pattern.compile("^\\d{3}[\\-]\\d{3}[\\-]\\d{4}$", Pattern.CASE_INSENSITIVE);
     private static final long serialVersionUID = 1827685289454605556L;
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private transient final Logger log = LogManager.getLogger(getClass());
     @Id
     @TableGenerator(name = "contact_method_gen", table = "acm_contact_method_id", pkColumnName = "cm_seq_name", valueColumnName = "cm_seq_num", pkColumnValue = "acm_contact_method", initialValue = 100, allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "contact_method_gen")

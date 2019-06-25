@@ -1,5 +1,7 @@
 package gov.foia.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 /*-
  * #%L
  * ACM Standard Application: Freedom of Information Act
@@ -36,6 +38,7 @@ import java.util.Map;
  * This class represents an HTML form request from an external port site. The HTML form fields must have the same names
  * as the field names in this class.
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class PortalFOIARequest implements Serializable
 {
 
@@ -511,11 +514,13 @@ public class PortalFOIARequest implements Serializable
         this.requestExpediteReason = requestExpediteReason;
     }
 
-    public Map<String, List<PortalFOIARequestFile>> getFiles() {
+    public Map<String, List<PortalFOIARequestFile>> getFiles()
+    {
         return files;
     }
 
-    public void setFiles(Map<String, List<PortalFOIARequestFile>> files) {
+    public void setFiles(Map<String, List<PortalFOIARequestFile>> files)
+    {
         this.files = files;
     }
 
@@ -576,9 +581,6 @@ public class PortalFOIARequest implements Serializable
      * @return the originalRequestNumber
      */
 
-
-
-
     public String getOriginalRequestNumber()
     {
         return originalRequestNumber;
@@ -594,19 +596,23 @@ public class PortalFOIARequest implements Serializable
         this.originalRequestNumber = originalRequestNumber;
     }
 
-    public String getPhone() {
+    public String getPhone()
+    {
         return phone;
     }
 
-    public void setPhone(String phone) {
+    public void setPhone(String phone)
+    {
         this.phone = phone;
     }
 
-    public String getOrganization() {
+    public String getOrganization()
+    {
         return organization;
     }
 
-    public void setOrganization(String organization) {
+    public void setOrganization(String organization)
+    {
         this.organization = organization;
     }
 
@@ -618,7 +624,8 @@ public class PortalFOIARequest implements Serializable
     public String toString()
     {
         return "PortalFOIARequest [originalRequestNumber=" + originalRequestNumber + ", prefix=" + prefix + ", firstName=" + firstName
-                + ", middleName=" + middleName + ", lastName=" + lastName + ", position=" + position + ", title=" + title + ", email=" + email + ", phone=" + phone + ", organization=" + organization + ", requestType="
+                + ", middleName=" + middleName + ", lastName=" + lastName + ", position=" + position + ", title=" + title + ", email="
+                + email + ", phone=" + phone + ", organization=" + organization + ", requestType="
                 + requestType + ", requestCategory=" + requestCategory + ", deliveryMethodOfResponse=" + deliveryMethodOfResponse
                 + ", address1=" + address1 + ", address2=" + address2 + ", city=" + city + ", state=" + state + ", country=" + country
                 + ", zip=" + zip + ", subject=" + subject + ", recordSearchDateFrom=" + recordSearchDateFrom + ", recordSearchDateTo="

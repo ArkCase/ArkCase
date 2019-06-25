@@ -34,8 +34,8 @@ import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.plugins.casefile.model.ChangeCaseStatus;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.Query;
@@ -54,7 +54,7 @@ import java.util.List;
  */
 public class ChangeCaseStatusDao extends AcmAbstractDao<ChangeCaseStatus>
 {
-    private Logger LOG = LoggerFactory.getLogger(getClass());
+    private Logger LOG = LogManager.getLogger(getClass());
 
     @Override
     protected Class<ChangeCaseStatus> getPersistenceClass()

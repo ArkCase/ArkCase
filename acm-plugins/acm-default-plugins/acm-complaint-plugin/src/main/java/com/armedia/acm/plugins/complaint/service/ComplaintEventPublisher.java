@@ -46,8 +46,8 @@ import com.armedia.acm.plugins.complaint.model.FindComplaintByIdEvent;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.security.core.Authentication;
@@ -59,7 +59,7 @@ import java.util.Date;
  */
 public class ComplaintEventPublisher implements ApplicationEventPublisherAware
 {
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private transient final Logger log = LogManager.getLogger(getClass());
 
     private AcmDiffService acmDiffService;
     private ApplicationEventPublisher eventPublisher;

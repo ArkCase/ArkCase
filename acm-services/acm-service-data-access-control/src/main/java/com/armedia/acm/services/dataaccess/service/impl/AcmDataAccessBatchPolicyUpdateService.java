@@ -34,8 +34,8 @@ import com.armedia.acm.services.dataaccess.service.AcmObjectDataAccessBatchUpdat
 import com.armedia.acm.services.participants.model.AcmAssignedObject;
 import com.armedia.acm.spring.SpringContextHolder;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.Calendar;
 import java.util.Collection;
@@ -47,7 +47,7 @@ import java.util.List;
  */
 public class AcmDataAccessBatchPolicyUpdateService
 {
-    private final Logger log = LoggerFactory.getLogger(getClass());
+    private final Logger log = LogManager.getLogger(getClass());
     private SpringContextHolder springContextHolder;
     private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
     private AcmDataAccessBatchUpdater dataAccessBatchUpdater;

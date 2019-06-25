@@ -29,8 +29,8 @@ package com.armedia.acm.auth;
 
 import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenService;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.context.ApplicationListener;
 import org.springframework.security.core.session.SessionDestroyedEvent;
 
@@ -39,7 +39,7 @@ import org.springframework.security.core.session.SessionDestroyedEvent;
  **/
 public class SessionDestroyedListener implements ApplicationListener<SessionDestroyedEvent>
 {
-    private transient final Logger LOG = LoggerFactory.getLogger(getClass());
+    private transient final Logger LOG = LogManager.getLogger(getClass());
     private AuthenticationTokenService authenticationTokenService;
 
     @Override

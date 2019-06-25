@@ -35,16 +35,26 @@ import java.util.Map;
 
 public class DueDateReminderSentEvent extends AcmEvent
 {
-    public DueDateReminderSentEvent(Object source, String parentObjectType, Long parentObjectId, Long dueDateRemainingDays)
+    
+    private static final String EVENT_TYPE = "com.armedia.acm.smtp.event.sent.dueDateReminder";
+
+    public DueDateReminderSentEvent(Object source, String parentObjectType, Long parentObjectId, Long dueDateRemainingDays, String userId)
     {
         super(source);
         setEventDate(new Date());
-        setParentObjectType(parentObjectType);
-        setParentObjectId(parentObjectId);
+        setObjectType(parentObjectType);
+        setObjectId(parentObjectId);
+        setUserId(userId);
 
         Map<String, Object> eventProperties = new HashMap<>();
         eventProperties.put("dueDateRemainingDays", dueDateRemainingDays);
 
         setEventProperties(eventProperties);
+    }
+
+    @Override
+    public String getEventType() 
+    {
+        return EVENT_TYPE;
     }
 }

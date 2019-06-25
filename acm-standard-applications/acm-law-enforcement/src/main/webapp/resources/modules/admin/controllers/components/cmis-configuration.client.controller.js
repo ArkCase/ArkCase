@@ -73,7 +73,7 @@ angular.module('admin').controller(
                                 })
                             } else {
                                 if (result.cmisConfig.useAlfrescoExtension != true) {
-                                    result.cmisConfig.useAlfrescoExtension = "false"
+                                    result.cmisConfig['cmis.useAlfrescoExtension'] = "false";
                                 }
                                 CmisConfigService.createCmisConfiguration(result.cmisConfig).then(function() {
                                     reloadGrid();

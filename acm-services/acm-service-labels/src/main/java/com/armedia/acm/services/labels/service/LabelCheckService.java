@@ -30,8 +30,8 @@ package com.armedia.acm.services.labels.service;
 import com.armedia.acm.services.labels.exception.AcmLabelManagementException;
 import org.apache.commons.io.FileUtils;
 import org.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -53,7 +53,7 @@ import java.util.stream.Collectors;
 
 public class LabelCheckService
 {
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
     private String modulesLocation;
     private String resourcesLocation;
 

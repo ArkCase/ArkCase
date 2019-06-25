@@ -33,8 +33,8 @@ package com.armedia.acm.service.objecthistory.dao;
 import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.service.objecthistory.model.AcmObjectHistory;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import javax.persistence.Query;
 
@@ -47,7 +47,7 @@ import java.util.List;
 public class AcmObjectHistoryDao extends AcmAbstractDao<AcmObjectHistory>
 {
 
-    private final Logger LOG = LoggerFactory.getLogger(getClass());
+    private final Logger LOG = LogManager.getLogger(getClass());
 
     @Override
     protected Class<AcmObjectHistory> getPersistenceClass()

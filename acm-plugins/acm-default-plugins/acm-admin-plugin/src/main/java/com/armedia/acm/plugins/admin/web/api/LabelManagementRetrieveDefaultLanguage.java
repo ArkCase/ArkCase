@@ -31,8 +31,8 @@ import com.armedia.acm.services.labels.exception.AcmLabelManagementException;
 import com.armedia.acm.services.labels.service.LabelManagementService;
 
 import org.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -50,7 +50,7 @@ import javax.servlet.http.HttpServletResponse;
         "/api/latest/plugin/admin" })
 public class LabelManagementRetrieveDefaultLanguage
 {
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
     private LabelManagementService labelManagementService;
 
     @RequestMapping(value = "/labelmanagement/default-language", method = RequestMethod.GET, produces = {

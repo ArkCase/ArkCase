@@ -44,8 +44,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mule.api.MuleMessage;
 import org.mule.api.transformer.TransformerException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
@@ -84,7 +84,7 @@ public class AddFileFlowIT
 
     private String testFolderId;
 
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
 
     @Before
     public void setUp() throws Exception

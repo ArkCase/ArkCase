@@ -45,8 +45,8 @@ import com.armedia.acm.services.search.model.SearchConstants;
 import com.armedia.acm.services.users.model.AcmUser;
 
 import org.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -59,7 +59,7 @@ import java.util.List;
 public class CostService extends FrevvoFormChargeAbstractService
 {
 
-    private Logger LOG = LoggerFactory.getLogger(getClass());
+    private Logger LOG = LogManager.getLogger(getClass());
 
     private CostsheetService costsheetService;
     private AcmCostsheetDao acmCostsheetDao;

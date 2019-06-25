@@ -1037,6 +1037,43 @@
             "emailTemplates": {
                 "title": "Modelos de e-mail"
             }
+        },
+        "portals.portalsConfiguration": {
+            "nodeTitle": "pt_Portals Service",
+            "title": "pt_Portals Configuration",
+            "url": "pt_URL",
+            "id": "pt_ID",
+            "portalId": "pt_Portal ID",
+            "portalDescription": "pt_Description",
+            "portalUser": "pt_User",
+            "save": "pt_Save",
+            "cancel": "pt_Cancel",
+            "placeholder": {
+                "portalUrl": "pt_Enter Portal URL",
+                "portalId": "pt_ID will be generate",
+                "portalDescription": "pt_Enter Portal Description",
+                "portalUser": "pt_Select Portal User"
+            },
+            "message": {
+                "edit": "pt_Portal is successfully edited",
+                "add": "pt_Portal is successfully added",
+                "delete": "pt_Portal is successfully deleted"
+            }
+        },
+        "userSearch": {
+            "title": "pt_User Search",
+            "cancelButton": "pt_Cancel",
+            "confirmButton": "pt_Save",
+            "search": {
+                "placeholder": "pt_Search for the user to assign to this portal",
+                "btn": "pt_Search"
+            },
+            "assigneeGridColumns": {
+                "name": "pt_Name",
+                "type": "pt_Type",
+                "title": "pt_Title",
+                "username": "pt_Username"
+            }
         }
     }
 }

@@ -36,8 +36,8 @@ import com.armedia.acm.services.subscription.model.SubscriptionConfig;
 import com.armedia.acm.services.subscription.model.SubscriptionConstants;
 
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.Arrays;
 import java.util.Calendar;
@@ -55,7 +55,7 @@ public class SubscriptionEventBatchInsertService
     private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
     private SubscriptionConfig subscriptionConfig;
 
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
 
     public void insertNewSubscriptionEvents(Date lastRunDate)
     {

@@ -56,8 +56,8 @@ import com.armedia.acm.tool.mediaengine.model.MediaEngineDTO;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.mule.api.MuleException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.io.IOException;
 import java.util.List;
@@ -68,7 +68,7 @@ import java.util.stream.Collectors;
  */
 public class OCRQueueJob
 {
-    private final Logger LOG = LoggerFactory.getLogger(getClass());
+    private final Logger LOG = LogManager.getLogger(getClass());
     private ArkCaseOCRService arkCaseOCRService;
     private RuntimeService activitiRuntimeService;
     private AuditPropertyEntityAdapter auditPropertyEntityAdapter;

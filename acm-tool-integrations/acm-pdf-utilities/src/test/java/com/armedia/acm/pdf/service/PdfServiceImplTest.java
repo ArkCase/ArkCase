@@ -40,8 +40,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.test.context.ContextConfiguration;
@@ -63,7 +63,7 @@ public class PdfServiceImplTest
 {
     @Autowired
     PdfService pdfService;
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
     private String tiffOutputFileName = System.getProperty("java.io.tmpdir") + File.separator + "multipageImage.tif";
     private File tiffOutputFile = new File(tiffOutputFileName);
 

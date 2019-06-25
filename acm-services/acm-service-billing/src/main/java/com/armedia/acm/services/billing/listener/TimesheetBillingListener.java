@@ -35,13 +35,13 @@ import com.armedia.acm.services.timesheet.model.AcmTimesheet;
 import com.armedia.acm.services.timesheet.model.AcmTimesheetEvent;
 import com.armedia.acm.services.timesheet.service.TimesheetService;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.context.ApplicationListener;
 
 public class TimesheetBillingListener implements ApplicationListener<AcmTimesheetEvent>
 {
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
 
     private AcmTimesheetDao acmTimesheetDao;
     private BillingService billingService;

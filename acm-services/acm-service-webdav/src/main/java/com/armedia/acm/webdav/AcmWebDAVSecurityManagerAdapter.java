@@ -31,8 +31,8 @@ import com.armedia.acm.auth.AcmAuthenticationDetails;
 import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenService;
 import com.armedia.acm.web.api.MDCConstants;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.slf4j.MDC;
 import org.springframework.security.core.Authentication;
 
@@ -52,7 +52,7 @@ import io.milton.resource.Resource;
 public class AcmWebDAVSecurityManagerAdapter implements AcmWebDAVSecurityManager
 {
 
-    private transient final Logger LOG = LoggerFactory.getLogger(getClass());
+    private transient final Logger LOG = LogManager.getLogger(getClass());
 
     private SecurityManager wrapped = new NullSecurityManager();
 

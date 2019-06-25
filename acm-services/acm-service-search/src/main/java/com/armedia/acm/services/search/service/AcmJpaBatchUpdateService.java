@@ -34,9 +34,9 @@ import com.armedia.acm.services.search.model.solr.SolrConfig;
 import com.armedia.acm.spring.SpringContextHolder;
 import com.armedia.acm.web.api.MDCConstants;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.quartz.JobDataMap;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 
 import java.text.DateFormat;
@@ -54,7 +54,7 @@ import java.util.UUID;
  */
 public class AcmJpaBatchUpdateService
 {
-    private final Logger log = LoggerFactory.getLogger(getClass());
+    private final Logger log = LogManager.getLogger(getClass());
     private SpringContextHolder springContextHolder;
     private JpaObjectsToSearchService objectsToSearchService;
     private AuditPropertyEntityAdapter auditPropertyEntityAdapter;

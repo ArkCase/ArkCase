@@ -33,8 +33,8 @@ import com.armedia.acm.plugins.documentrepository.service.SaveDocumentRepository
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.pipeline.handler.PipelineHandler;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 /**
  * Apply business rules to a Document Repository
@@ -45,7 +45,7 @@ public class DocumentRepositoryRulesHandler implements PipelineHandler<DocumentR
     /**
      * Logger instance.
      */
-    private final Logger log = LoggerFactory.getLogger(getClass());
+    private final Logger log = LogManager.getLogger(getClass());
     /**
      * Business rule manager.
      */

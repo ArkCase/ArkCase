@@ -28,8 +28,8 @@ package com.armedia.acm.objectonverter;
  */
 
 import org.apache.commons.lang3.ClassUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -42,7 +42,7 @@ import java.util.List;
  */
 public class ArkCaseBeanUtils extends org.apache.commons.beanutils.BeanUtilsBean
 {
-    private Logger LOG = LoggerFactory.getLogger(getClass());
+    private Logger LOG = LogManager.getLogger(getClass());
     private List<String> excludeFields;
 
     /**

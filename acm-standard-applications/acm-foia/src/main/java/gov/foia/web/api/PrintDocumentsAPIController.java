@@ -30,8 +30,8 @@ package gov.foia.web.api;
 import com.armedia.acm.objectdataprocessing.BinaryDataProvider;
 import com.armedia.acm.objectdataprocessing.ObjectDataExtractingProcessor;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -63,7 +63,7 @@ public class PrintDocumentsAPIController
     /**
      * Logger instance.
      */
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
 
     /**
      * Printing service that does the extraction and merging of the documents into single PDF file.

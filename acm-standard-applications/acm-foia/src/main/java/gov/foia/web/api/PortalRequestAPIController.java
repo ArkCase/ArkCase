@@ -31,8 +31,8 @@ import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 
 import org.json.JSONException;
 import org.mule.api.MuleException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -60,7 +60,7 @@ import gov.foia.service.PortalRequestService;
 @RequestMapping({ "/api/v1/plugin/casefile", "/api/latest/plugin/casefile" })
 public class PortalRequestAPIController
 {
-    private final Logger log = LoggerFactory.getLogger(getClass());
+    private final Logger log = LogManager.getLogger(getClass());
 
     private PortalRequestService portalRequestService;
 

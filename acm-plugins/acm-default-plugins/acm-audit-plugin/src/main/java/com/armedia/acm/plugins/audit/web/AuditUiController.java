@@ -27,8 +27,8 @@ package com.armedia.acm.plugins.audit.web;
  * #L%
  */
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
@@ -38,7 +38,7 @@ import java.util.Map;
 @RequestMapping("/plugin/audit")
 public class AuditUiController
 {
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
 
     private Map<String, String> auditProperties;
     private Map<String, String> reportsProperties;

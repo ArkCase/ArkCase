@@ -34,8 +34,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import org.apache.activemq.command.ActiveMQTopic;
 import org.apache.commons.io.input.CountingInputStream;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.jms.core.JmsTemplate;
 
 import javax.jms.*;
@@ -55,7 +55,7 @@ public class ProgressbarExecutor
     private ConnectionFactory activeMQConnectionFactory;
     private ProgressbarDetails progressbarDetails;
 
-    private Logger LOG = LoggerFactory.getLogger(getClass());
+    private Logger LOG = LogManager.getLogger(getClass());
 
     public ProgressbarExecutor() {
     }

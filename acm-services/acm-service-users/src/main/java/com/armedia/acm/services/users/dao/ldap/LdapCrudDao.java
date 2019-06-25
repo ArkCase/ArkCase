@@ -32,8 +32,8 @@ import com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig;
 import com.armedia.acm.services.users.model.ldap.MapperUtils;
 import com.armedia.acm.services.users.service.RetryExecutor;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.ldap.NameAlreadyBoundException;
 import org.springframework.ldap.NoPermissionException;
 import org.springframework.ldap.core.DirContextAdapter;
@@ -44,7 +44,7 @@ class LdapCrudDao
 {
     private SpringLdapDao ldapDao;
 
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
 
     public void create(DirContextAdapter context, AcmLdapSyncConfig ldapSyncConfig) throws AcmLdapActionFailedException
     {

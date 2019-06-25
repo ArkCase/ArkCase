@@ -30,8 +30,8 @@ package com.armedia.acm.services.dataupdate.dao;
 import com.armedia.acm.data.AcmEntity;
 import com.armedia.acm.services.users.model.AcmUser;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
@@ -45,7 +45,7 @@ import java.util.stream.Collectors;
 
 public class UserIdGroupNameDomainUpdateDao
 {
-    private static final Logger log = LoggerFactory.getLogger(UserIdGroupNameDomainUpdateDao.class);
+    private static final Logger log = LogManager.getLogger(UserIdGroupNameDomainUpdateDao.class);
     @PersistenceContext
     private EntityManager em;
 

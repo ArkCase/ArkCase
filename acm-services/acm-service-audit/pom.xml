@@ -135,6 +135,12 @@
             <groupId>com.voodoodyne.jackson.jsog</groupId>
             <artifactId>jackson-jsog</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-exec</artifactId>
+            <version>${apache-commons-exec.version}</version>
+        </dependency>
     </dependencies>
 
 </project>

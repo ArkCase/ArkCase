@@ -33,8 +33,8 @@ import com.armedia.acm.services.labels.model.ModuleConfig;
 import org.apache.commons.io.FileUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.context.ApplicationEventPublisher;
 
 import java.io.File;
@@ -50,7 +50,7 @@ import java.util.Map;
 public class LabelManagementService
 {
     private final String MODULE_CORE_ID = "core";
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
     private String customResourcesLocation;
     private String customResourceFile;
     private String modulesLocation;

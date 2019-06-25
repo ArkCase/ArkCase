@@ -33,8 +33,8 @@ import com.armedia.acm.services.labels.service.LabelManagementService;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -62,7 +62,7 @@ import java.util.Set;
 public class LabelManagementUpdateResource
 {
     private static final Set<String> ISO_LANGUAGES = new HashSet<String>(Arrays.asList(Locale.getISOLanguages()));
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
     private LabelManagementService labelManagementService;
 
     @RequestMapping(value = "/labelmanagement/admin-resource", method = RequestMethod.PUT, produces = {

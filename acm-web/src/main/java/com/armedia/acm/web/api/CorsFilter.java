@@ -38,6 +38,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
+import java.net.URLEncoder;
 
 /**
  * @author riste.tutureski
@@ -54,10 +55,11 @@ public class CorsFilter extends OncePerRequestFilter
 
         response.addHeader("Access-Control-Allow-Origin", "*");
 
+
         if (request.getHeader("Access-Control-Request-Method") != null && "OPTIONS".equals(request.getMethod()))
         {
             response.addHeader("Access-Control-Allow-Method", "GET,POST,PUT,DELETE");
-            response.addHeader("Access-Control-Allow-Headers", request.getHeader("Access-Control-Request-Headers"));
+            response.addHeader("Access-Control-Allow-Headers", URLEncoder.encode(request.getHeader("Access-Control-Request-Headers"), "UTF-8"));
         }
 
         filterChain.doFilter(request, response);
