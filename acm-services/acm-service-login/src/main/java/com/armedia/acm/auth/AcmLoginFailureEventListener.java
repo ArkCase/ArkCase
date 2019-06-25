@@ -29,8 +29,8 @@ package com.armedia.acm.auth;
 
 import com.armedia.acm.core.model.AcmEvent;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.context.ApplicationListener;
@@ -40,7 +40,7 @@ import org.springframework.security.core.Authentication;
 public class AcmLoginFailureEventListener implements ApplicationEventPublisherAware, ApplicationListener<AbstractAuthenticationFailureEvent>
 {
     private ApplicationEventPublisher applicationEventPublisher;
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
 
     @Override
     public void onApplicationEvent(AbstractAuthenticationFailureEvent authenticationFailureEvent)

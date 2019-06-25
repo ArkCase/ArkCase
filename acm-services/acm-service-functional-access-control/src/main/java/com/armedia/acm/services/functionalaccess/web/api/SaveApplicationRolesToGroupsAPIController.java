@@ -30,8 +30,8 @@ package com.armedia.acm.services.functionalaccess.web.api;
 import com.armedia.acm.core.exceptions.AcmEncryptionException;
 import com.armedia.acm.services.functionalaccess.service.FunctionalAccessService;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -54,7 +54,7 @@ import java.util.Map;
 public class SaveApplicationRolesToGroupsAPIController
 {
 
-    private Logger LOG = LoggerFactory.getLogger(getClass());
+    private Logger LOG = LogManager.getLogger(getClass());
     private FunctionalAccessService functionalAccessService;
 
     @RequestMapping(value = "/rolestogroups", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)

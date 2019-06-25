@@ -31,8 +31,8 @@ import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.plugins.casefile.model.AcmQueue;
 import com.armedia.acm.plugins.casefile.service.AcmQueueService;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.core.Authentication;
@@ -47,7 +47,7 @@ import java.util.List;
 @RequestMapping({ "/api/v1/plugin/queues", "/api/latest/plugin/queues" })
 public class GetQueuesAPIController
 {
-    private final Logger log = LoggerFactory.getLogger(getClass());
+    private final Logger log = LogManager.getLogger(getClass());
 
     private AcmQueueService acmQueueService;
 

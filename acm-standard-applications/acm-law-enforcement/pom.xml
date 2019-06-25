@@ -482,10 +482,16 @@
             <artifactId>acm-service-convert-folder</artifactId>
             <version>${acm.version}</version>
         </dependency>
-
+        
         <dependency>
             <groupId>com.armedia.acm.acm-services</groupId>
             <artifactId>acm-service-convert-file</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>com.armedia.acm.acm-services</groupId>
+            <artifactId>acm-service-portal-gateway</artifactId>
             <version>${acm.version}</version>
         </dependency>
 
@@ -549,6 +555,12 @@
         <dependency>
             <groupId>com.armedia.acm.acm-services</groupId>
             <artifactId>acm-service-billing</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.armedia.acm.acm-services</groupId>
+            <artifactId>acm-service-case-suggestion</artifactId>
             <version>${acm.version}</version>
         </dependency>
 

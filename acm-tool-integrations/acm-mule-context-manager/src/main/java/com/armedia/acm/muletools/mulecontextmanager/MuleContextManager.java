@@ -45,8 +45,8 @@ import org.mule.config.spring.SpringXmlConfigurationBuilder;
 import org.mule.context.DefaultMuleContextBuilder;
 import org.mule.context.DefaultMuleContextFactory;
 import org.mule.context.notification.MessageProcessorNotification;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.slf4j.MDC;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.context.ApplicationContext;
@@ -66,7 +66,7 @@ public class MuleContextManager implements ApplicationContextAware
 {
 
     private MuleContext muleContext;
-    private transient Logger log = LoggerFactory.getLogger(getClass());
+    private transient Logger log = LogManager.getLogger(getClass());
     private String muleConfigFilePattern;
     private List<String> specificConfigFiles;
     private AcmMuleConfig acmMuleConfig;

@@ -36,8 +36,8 @@ import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
 import org.mule.api.MuleException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -59,7 +59,7 @@ import java.nio.charset.StandardCharsets;
 public class SearchUsersAPIController
 {
 
-    private transient final Logger LOG = LoggerFactory.getLogger(getClass());
+    private transient final Logger LOG = LogManager.getLogger(getClass());
 
     private ExecuteSolrQuery executeSolrQuery;
 

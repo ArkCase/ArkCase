@@ -33,8 +33,8 @@ import com.armedia.acm.files.ConfigurationFileAddedEvent;
 import com.armedia.acm.files.ConfigurationFileChangedEvent;
 import com.armedia.acm.plugins.casefile.model.AcmQueue;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.context.ApplicationListener;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionStatus;
@@ -59,7 +59,7 @@ public class QueuePropertyFileChangeWatcher implements ApplicationListener<Abstr
 {
     // What should be the value of the user?
     private static final String QUEUE_CREATOR = "SYSTEM_USER";
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private transient final Logger log = LogManager.getLogger(getClass());
     private AcmQueueDao acmQueueDao;
     private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
 

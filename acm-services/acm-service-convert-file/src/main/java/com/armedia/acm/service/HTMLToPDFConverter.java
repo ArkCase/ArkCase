@@ -31,8 +31,8 @@ import com.itextpdf.text.Document;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.itextpdf.tool.xml.XMLWorkerHelper;
 import org.apache.commons.io.FileUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.w3c.tidy.Tidy;
 
 import java.io.ByteArrayInputStream;
@@ -43,7 +43,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 public class HTMLToPDFConverter implements FileConverter {
-	Logger log = LoggerFactory.getLogger(getClass().getName());
+	Logger log = LogManager.getLogger(getClass().getName());
 
 	@Override
 	public File convert(InputStream fileInputStream, String fileName) {

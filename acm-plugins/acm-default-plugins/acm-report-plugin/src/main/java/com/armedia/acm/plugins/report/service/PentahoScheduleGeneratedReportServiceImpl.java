@@ -34,8 +34,8 @@ import com.armedia.acm.plugins.report.model.PentahoFileProperties;
 import com.armedia.acm.plugins.report.model.PentahoReportFiles;
 
 import org.apache.commons.ssl.Base64;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.client.RestTemplate;
 
@@ -47,7 +47,7 @@ import java.io.InputStream;
  */
 public class PentahoScheduleGeneratedReportServiceImpl
 {
-    private static final Logger LOGGER = LoggerFactory.getLogger(PentahoScheduleGeneratedReportServiceImpl.class);
+    private static final Logger LOGGER = LogManager.getLogger(PentahoScheduleGeneratedReportServiceImpl.class);
     private HttpHeaders headers;
     private RestTemplate restTemplate;
     private PentahoDownloadGeneratedReportService downloadService;

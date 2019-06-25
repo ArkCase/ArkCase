@@ -30,8 +30,8 @@ package com.armedia.acm.services.users.web.api;
 import com.armedia.acm.services.users.service.ldap.LdapSyncService;
 import com.armedia.acm.spring.SpringContextHolder;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -47,7 +47,7 @@ import java.util.Collections;
 @RequestMapping({ "/api/v1/ldap", "/api/latest/ldap" })
 public class LdapSyncAPIController
 {
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
 
     private SpringContextHolder acmContextHolder;
 

@@ -36,8 +36,8 @@ import com.armedia.acm.services.timesheet.model.AcmTimesheet;
 import com.armedia.acm.services.timesheet.model.AcmTimesheetAssociatedEvent;
 import com.armedia.acm.services.timesheet.model.AcmTimesheetEvent;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.context.ApplicationListener;
 
 import java.util.List;
@@ -45,7 +45,7 @@ import java.util.List;
 public class TimesheetHistoryEventListener implements ApplicationListener<AcmTimesheetEvent>
 {
 
-    private final Logger LOG = LoggerFactory.getLogger(getClass());
+    private final Logger LOG = LogManager.getLogger(getClass());
     private AcmDataServiceImpl acmDataService;
     private TimesheetAssociatedEventPublisher timesheetAssociatedEventPublisher;
 

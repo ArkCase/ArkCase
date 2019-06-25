@@ -37,8 +37,8 @@ import com.armedia.acm.auth.okta.services.OktaUserService;
 import com.google.common.base.Preconditions;
 
 import org.json.simple.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -50,7 +50,7 @@ import java.util.Map;
  */
 public class OktaUserServiceImpl implements OktaUserService
 {
-    private Logger LOGGER = LoggerFactory.getLogger(OktaUserServiceImpl.class);
+    private Logger LOGGER = LogManager.getLogger(OktaUserServiceImpl.class);
     private OktaRestService oktaRestService;
 
     @Override

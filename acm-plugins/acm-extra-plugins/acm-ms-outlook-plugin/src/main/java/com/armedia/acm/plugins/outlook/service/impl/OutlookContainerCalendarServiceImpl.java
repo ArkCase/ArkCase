@@ -43,8 +43,8 @@ import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -61,7 +61,7 @@ import microsoft.exchange.webservices.data.core.enumeration.service.DeleteMode;
 public class OutlookContainerCalendarServiceImpl implements OutlookContainerCalendarService
 {
 
-    private final Logger log = LoggerFactory.getLogger(getClass());
+    private final Logger log = LogManager.getLogger(getClass());
 
     private OutlookFolderService outlookFolderService;
     private AcmContainerDao acmContainerDao;

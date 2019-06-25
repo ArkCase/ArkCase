@@ -37,12 +37,12 @@ import com.armedia.acm.spring.SpringContextHolder;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.quartz.CronExpression;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 
 import java.io.File;
@@ -73,7 +73,7 @@ import freemarker.template.TemplateException;
  */
 public class LdapConfigurationService implements InitializingBean
 {
-    private Logger log = LoggerFactory.getLogger(LdapConfigurationService.class);
+    private Logger log = LogManager.getLogger(LdapConfigurationService.class);
 
     private AcmEncryptablePropertyUtils encryptablePropertyUtils;
 

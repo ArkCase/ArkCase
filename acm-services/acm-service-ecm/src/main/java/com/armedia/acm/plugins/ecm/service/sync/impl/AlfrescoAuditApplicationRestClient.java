@@ -31,9 +31,9 @@ import com.armedia.acm.plugins.ecm.service.sync.AlfrescoSyncConfig;
 import com.armedia.mule.cmis.basic.auth.HttpInvokerUtil;
 
 import org.apache.commons.codec.binary.Base64;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -50,8 +50,9 @@ public class AlfrescoAuditApplicationRestClient
 {
     private static final String KERBEROS_USERNAME_PREFIX = "KERBEROS/";
     private static final String APP_CONFIGURATION_ENTRY_NAME = "MuleAlfrescoLogin";
-    private transient final Logger LOG = LoggerFactory.getLogger(getClass());
+    private transient final Logger LOG = LogManager.getLogger(getClass());
     private AlfrescoSyncConfig alfrescoSyncConfig;
+
     private RestTemplate restTemplate;
     private String basicAuthenticationHeaderValue;
 

@@ -33,8 +33,8 @@ import com.armedia.acm.services.users.model.ldap.UserDTO;
 import com.armedia.acm.services.users.service.ldap.PasswordValidationService;
 import com.armedia.acm.spring.SpringContextHolder;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -45,7 +45,7 @@ import java.util.stream.Collectors;
 public class SecureLdapController
 {
     protected SpringContextHolder acmContextHolder;
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
     private PasswordValidationService passwordValidationService;
 
     protected void validateLdapPassword(UserDTO userDTO) throws AcmAppErrorJsonMsg

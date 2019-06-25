@@ -23,8 +23,8 @@ import com.armedia.acm.spring.SpringContextHolder;
 import org.apache.commons.lang3.StringUtils;
 import org.mule.api.MuleException;
 import org.reflections.Reflections;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.security.access.PermissionEvaluator;
 import org.springframework.security.core.Authentication;
@@ -89,7 +89,7 @@ import java.util.stream.Stream;
  */
 public class ArkPermissionEvaluator implements PermissionEvaluator, InitializingBean
 {
-    private final transient Logger log = LoggerFactory.getLogger(getClass());
+    private final transient Logger log = LogManager.getLogger(getClass());
 
     private ExecuteSolrQuery executeSolrQuery;
     private SearchResults searchResults;

@@ -34,8 +34,8 @@ import com.armedia.acm.plugins.complaint.model.Complaint;
 import com.armedia.acm.plugins.complaint.model.ComplaintPersistenceEvent;
 import com.armedia.acm.service.objecthistory.service.AcmObjectHistoryService;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.context.ApplicationListener;
 
 /**
@@ -46,7 +46,7 @@ public class ComplaintHistoryListener implements ApplicationListener<ComplaintPe
 {
 
     private static final String OBJECT_TYPE = "COMPLAINT";
-    private final Logger LOG = LoggerFactory.getLogger(getClass());
+    private final Logger LOG = LogManager.getLogger(getClass());
     private AcmObjectHistoryService acmObjectHistoryService;
 
     @Override

@@ -30,8 +30,8 @@ package com.armedia.acm.services.dataupdate.service;
 import com.armedia.acm.services.dataupdate.model.AcmDataUpdateExecutorLog;
 import com.armedia.acm.services.search.service.IJpaBatchUpdatePrerequisite;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationListener;
@@ -52,7 +52,7 @@ import java.util.stream.Collectors;
  */
 public class AcmDataUpdateManager implements ApplicationListener<ContextRefreshedEvent>, IJpaBatchUpdatePrerequisite
 {
-    private static final Logger log = LoggerFactory.getLogger(AcmDataUpdateManager.class);
+    private static final Logger log = LogManager.getLogger(AcmDataUpdateManager.class);
     private AcmDataUpdateService dataUpdateService;
     private final Consumer<AcmDataUpdateExecutor> dataUpdateExecutor = service -> {
         log.debug("Execute updates from: [{}]", service.getUpdateId());

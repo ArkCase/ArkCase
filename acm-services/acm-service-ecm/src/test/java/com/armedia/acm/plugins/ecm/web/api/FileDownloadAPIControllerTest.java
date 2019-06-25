@@ -56,8 +56,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mule.api.MuleMessage;
 import org.mule.module.cmis.connectivity.CMISCloudConnectorConnectionManager;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.core.io.ClassPathResource;
@@ -73,6 +73,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver;
 
 import java.io.InputStream;
+import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -99,7 +100,7 @@ public class FileDownloadAPIControllerTest extends EasyMockSupport
     @Autowired
     private ExceptionHandlerExceptionResolver exceptionResolver;
 
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
 
     @Before
     public void setUp() throws Exception
@@ -282,7 +283,7 @@ public class FileDownloadAPIControllerTest extends EasyMockSupport
         assertEquals(log4jsize, returned.length());
 
         // assert file metadata header
-        JSONObject fileMetadata = new JSONObject(result.getResponse().getHeader("X-ArkCase-File-Metadata"));
+        JSONObject fileMetadata = new JSONObject(URLDecoder.decode(result.getResponse().getHeader("X-ArkCase-File-Metadata"), "UTF-8"));
         assertEquals(fileName, fileMetadata.getString("fileName"));
         assertEquals(fileType, fileMetadata.getString("fileType"));
     }

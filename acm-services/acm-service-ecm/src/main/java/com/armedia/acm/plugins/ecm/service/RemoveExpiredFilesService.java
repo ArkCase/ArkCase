@@ -31,8 +31,8 @@ import com.armedia.acm.plugins.ecm.model.EcmFileUploaderConfig;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.ecm.service.impl.FileChunkServiceImpl;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.io.File;
 import java.io.FileFilter;
@@ -40,7 +40,7 @@ import java.time.LocalDate;
 
 public class RemoveExpiredFilesService
 {
-    private final Logger LOG = LoggerFactory.getLogger(getClass());
+    private final Logger LOG = LogManager.getLogger(getClass());
     private FileChunkServiceImpl fileChunkService;
     private EcmFileService ecmFileService;
     private EcmFileUploaderConfig ecmFileUploaderConfig;

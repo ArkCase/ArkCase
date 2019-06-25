@@ -54,6 +54,14 @@ public class AWSTranscribeConfiguration
     @Value("${aws.config.profile}")
     private String profile;
 
+    @JsonProperty("aws.config.maxSpeakerLabels")
+    @Value("${aws.config.maxSpeakerLabels}")
+    private int maxSpeakerLabels;
+
+    @JsonProperty("aws.config.showSpeakerLabels")
+    @Value("${aws.config.showSpeakerLabels}")
+    private boolean showSpeakerLabels;
+
     public String getBucket()
     {
         return bucket;
@@ -92,5 +100,25 @@ public class AWSTranscribeConfiguration
     public void setProfile(String profile)
     {
         this.profile = profile;
+    }
+
+    public int getMaxSpeakerLabels()
+    {
+        return maxSpeakerLabels;
+    }
+
+    public void setMaxSpeakerLabels(int maxSpeakerLabels)
+    {
+        this.maxSpeakerLabels = maxSpeakerLabels;
+    }
+
+    public boolean isShowSpeakerLabels()
+    {
+        return showSpeakerLabels;
+    }
+
+    public void setShowSpeakerLabels(boolean showSpeakerLabels)
+    {
+        this.showSpeakerLabels = showSpeakerLabels;
     }
 }

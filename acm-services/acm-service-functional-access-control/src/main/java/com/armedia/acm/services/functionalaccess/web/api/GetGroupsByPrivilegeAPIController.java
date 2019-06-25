@@ -32,8 +32,8 @@ import com.armedia.acm.services.functionalaccess.service.FunctionalAccessService
 import com.armedia.acm.services.users.dao.UserDao;
 
 import org.mule.api.MuleException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -50,7 +50,7 @@ import java.util.Map;
 @RequestMapping(value = { "/api/v1/service/functionalaccess", "/api/latest/service/functionalaccess" })
 public class GetGroupsByPrivilegeAPIController
 {
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
     private AcmPluginManager pluginManager;
     private UserDao userDao;
     private FunctionalAccessService functionalAccessService;

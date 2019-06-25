@@ -51,8 +51,8 @@ import org.apache.tika.parser.ParseContext;
 import org.apache.tika.parser.Parser;
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
@@ -88,7 +88,7 @@ public class EcmTikaFileServiceImpl implements EcmTikaFileService
         ConvertUtils.register(new DateConverter(null), Date.class);
     }
 
-    private transient final Logger logger = LoggerFactory.getLogger(getClass());
+    private transient final Logger logger = LogManager.getLogger(getClass());
     private Map<String, String> tikaMetadataToFilePropertiesMap;
     private Map<String, String> contentTypeFixes;
     private Map<String, String> nameExtensionFixes;

@@ -55,10 +55,6 @@
         <property name="configurationPropertyService" ref="configurationPropertyService"/>
     </bean>
 
-    <bean id="angularPropertiesManagementService" class="com.armedia.acm.plugins.admin.service.JsonPropertiesManagementService">
-        <property name="propertiesFileLocation" value="#{ systemProperties ['user.home'] }/.arkcase/acm/app-properties/properties.json"/>
-    </bean>
-
     <!-- Roles Privileges API-->
     <bean id="rolesPrivilegesService" class="com.armedia.acm.plugins.admin.service.RolesPrivilegesService">
         <property name="applicationRolesPrivilegesTemplatesLocation"
@@ -74,10 +70,11 @@
     </bean>
 
     <bean id="historyCleanJob" class="com.armedia.acm.plugins.admin.service.HistoryCleanService">
-        <property name="jsonPropertiesManagementService" ref="angularPropertiesManagementService"/>
+        <property name="applicationPropertiesManagementService" ref="applicationPropertiesManagementService"/>
         <property name="auditDao" ref="auditDao"/>
         <property name="notificationDao" ref="notificationDao"/>
         <property name="executeSolrQuery" ref="executeSolrQuery"/>
+        <property name="applicationProperties" ref="applicationProperties"/>
     </bean>
 
     <bean id="cleanHistoryJobDescriptor" class="com.armedia.acm.plugins.admin.service.CleanHistoryJobDescriptor" parent="acmJobDescriptor">
@@ -188,4 +185,14 @@
     <bean id="googleAnalyticsConfig" class="com.armedia.acm.plugins.admin.model.GoogleAnalyticsConfig" scope="refresh">
         <aop:scoped-proxy/>
     </bean>
+
+    <bean id="applicationProperties" class="com.armedia.acm.plugins.admin.model.ApplicationProperties" scope="refresh">
+        <aop:scoped-proxy/>
+    </bean>
+
+    <bean id="applicationPropertiesManagementService" class="com.armedia.acm.plugins.admin.service.ApplicationPropertiesManagementService">
+        <property name="confApplicationProperties" ref="applicationProperties"/>
+        <property name="configurationPropertyService" ref="configurationPropertyService"/>
+    </bean>
+
 </beans>

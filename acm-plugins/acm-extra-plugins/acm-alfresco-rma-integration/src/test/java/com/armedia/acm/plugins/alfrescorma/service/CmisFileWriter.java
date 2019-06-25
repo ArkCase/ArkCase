@@ -37,8 +37,8 @@ import com.armedia.acm.plugins.ecm.utils.CmisConfigUtils;
 import org.apache.chemistry.opencmis.client.api.CmisObject;
 import org.apache.chemistry.opencmis.client.api.Document;
 import org.mule.api.MuleMessage;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 
@@ -51,7 +51,7 @@ import java.util.Map;
  */
 public class CmisFileWriter
 {
-    private transient final Logger LOG = LoggerFactory.getLogger(getClass());
+    private transient final Logger LOG = LogManager.getLogger(getClass());
 
     public Document writeTestFile(MuleContextManager muleContextManager) throws Exception
     {

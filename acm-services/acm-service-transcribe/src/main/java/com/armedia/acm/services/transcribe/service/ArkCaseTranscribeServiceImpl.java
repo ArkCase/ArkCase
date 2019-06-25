@@ -84,8 +84,8 @@ import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.mule.api.MuleException;
 import org.mule.util.FileUtils;
 import org.mule.util.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
@@ -97,8 +97,10 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -108,7 +110,7 @@ import java.util.stream.Collectors;
 public class ArkCaseTranscribeServiceImpl extends ArkCaseMediaEngineServiceImpl<Transcribe>
         implements ArkCaseTranscribeService
 {
-    private final Logger LOG = LoggerFactory.getLogger(getClass());
+    private final Logger LOG = LogManager.getLogger(getClass());
 
     private TranscribeDao transcribeDao;
     private UserDao userDao;
@@ -347,7 +349,29 @@ public class ArkCaseTranscribeServiceImpl extends ArkCaseMediaEngineServiceImpl<
             {
                 XWPFParagraph paragraph = document.createParagraph();
                 XWPFRun run = paragraph.createRun();
-                run.setText(TranscribeUtils.getText(transcribe.getTranscribeItems()));
+                String text = TranscribeUtils.getText(transcribe.getTranscribeItems());
+                List<String> words = new ArrayList(Arrays.asList(text.split(" ")));
+                String previousSpeaker = "";
+                String currentSpeaker = "";
+
+                for (ListIterator<String> iter = words.listIterator(); iter.hasNext();)
+                {
+                    String word = iter.next();
+                    if (word.startsWith("[") && word.endsWith("]:"))
+                    {
+                        currentSpeaker = word;
+                        if (currentSpeaker.equals(previousSpeaker))
+                        {
+                            iter.remove();
+                        }
+                        previousSpeaker = currentSpeaker;
+                        currentSpeaker = "";
+                    }
+                }
+
+                text = words.stream()
+                        .collect(Collectors.joining(" "));
+                run.setText(text);
                 document.write(out);
 
                 String fileName = transcribe.getMediaEcmFileVersion().getFile().getFileName() + "_v"

@@ -36,8 +36,8 @@ import com.armedia.acm.services.users.model.group.AcmGroupType;
 import com.armedia.acm.services.users.service.group.AcmGroupUtils;
 
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
@@ -55,7 +55,7 @@ import java.util.stream.Collectors;
  */
 public class GroupRemoveUUIDExecutor implements AcmDataUpdateExecutor
 {
-    private final Logger log = LoggerFactory.getLogger(getClass());
+    private final Logger log = LogManager.getLogger(getClass());
     private AcmGroupDao groupDao;
     private GroupUUIDUpdateDao uuidUpdateDao;
     private AuditPropertyEntityAdapter auditPropertyEntityAdapter;

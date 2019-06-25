@@ -28,8 +28,8 @@ package com.armedia.acm.files;
  */
 
 import org.apache.commons.vfs2.FileObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.context.ApplicationListener;
 
 /**
@@ -39,7 +39,7 @@ import org.springframework.context.ApplicationListener;
  */
 public abstract class FileEventListener implements ApplicationListener<FileEvent>
 {
-    private Logger LOG = LoggerFactory.getLogger(getClass());
+    private Logger LOG = LogManager.getLogger(getClass());
 
     private FileObject watchFolder;
     private FileObject workingFolder;

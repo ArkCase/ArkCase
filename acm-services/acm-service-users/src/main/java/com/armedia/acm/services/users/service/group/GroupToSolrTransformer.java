@@ -35,8 +35,8 @@ import com.armedia.acm.services.users.dao.group.AcmGroupDao;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.group.AcmGroup;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.util.Date;
 import java.util.List;
@@ -47,7 +47,7 @@ import java.util.stream.Collectors;
  */
 public class GroupToSolrTransformer implements AcmObjectToSolrDocTransformer<AcmGroup>
 {
-    private final Logger LOG = LoggerFactory.getLogger(getClass());
+    private final Logger LOG = LogManager.getLogger(getClass());
 
     private AcmGroupDao groupDao;
     private UserDao userDao;

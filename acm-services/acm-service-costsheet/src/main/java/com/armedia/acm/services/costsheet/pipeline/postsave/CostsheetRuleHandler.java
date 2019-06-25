@@ -33,13 +33,13 @@ import com.armedia.acm.services.costsheet.service.SaveCostsheetBusinessRule;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.pipeline.handler.PipelineHandler;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 public class CostsheetRuleHandler implements PipelineHandler<AcmCostsheet, CostsheetPipelineContext>
 {
 
-    private final Logger log = LoggerFactory.getLogger(getClass());
+    private final Logger log = LogManager.getLogger(getClass());
     private SaveCostsheetBusinessRule costsheetBusinessRule;
 
     @Override

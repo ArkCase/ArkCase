@@ -38,12 +38,12 @@ import com.armedia.acm.services.timesheet.pipeline.TimesheetPipelineContext;
 import com.armedia.acm.services.timesheet.service.TimesheetEventPublisher;
 import com.armedia.acm.services.timesheet.service.TimesheetService;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 public class TimesheetEventHandler implements PipelineHandler<AcmTimesheet, TimesheetPipelineContext>
 {
-    private final Logger log = LoggerFactory.getLogger(getClass());
+    private final Logger log = LogManager.getLogger(getClass());
     private TimesheetEventPublisher timesheetEventPublisher;
     private TimesheetService timesheetService;
     private FormsTypeCheckService formsTypeCheckService;

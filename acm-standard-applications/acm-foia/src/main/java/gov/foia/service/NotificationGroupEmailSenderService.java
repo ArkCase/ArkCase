@@ -40,8 +40,8 @@ import com.armedia.acm.services.notification.dao.NotificationDao;
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.users.model.AcmUser;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.security.core.Authentication;
 
 import java.io.FileNotFoundException;
@@ -54,7 +54,7 @@ public class NotificationGroupEmailSenderService
 {
     private final String REQUEST_FORM_TYPE = "Request Form";
 
-    private final transient Logger log = LoggerFactory.getLogger(this.getClass());
+    private final transient Logger log = LogManager.getLogger(this.getClass());
 
     private CaseFileDao caseFileDao;
     private EcmFileDao ecmFileDao;

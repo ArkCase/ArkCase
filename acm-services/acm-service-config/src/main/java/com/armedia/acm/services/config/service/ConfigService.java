@@ -29,8 +29,8 @@ package com.armedia.acm.services.config.service;
 
 import com.armedia.acm.services.config.model.AcmConfig;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -46,7 +46,7 @@ import java.util.stream.Collectors;
  */
 public class ConfigService
 {
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private transient final Logger log = LogManager.getLogger(getClass());
 
     private List<AcmConfig> configList;
 

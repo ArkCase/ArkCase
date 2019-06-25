@@ -2,9 +2,9 @@
 
 angular.module('cases').controller(
     'Cases.InfoController',
-    [ '$scope', '$stateParams', '$translate', '$timeout', 'UtilService', 'Util.DateService', 'ConfigService', 'Object.LookupService', 'Case.LookupService', 'Case.InfoService', 'Object.ModelService', 'Helper.ObjectBrowserService', 'DueDate.Service', 'Admin.HolidayService',
-        'MessageService', '$modal', 'LookupService', 'Admin.FoiaConfigService', 'Admin.ObjectTitleConfigurationService',
-        function($scope, $stateParams, $translate, $timeout, Util, UtilDateService, ConfigService, ObjectLookupService, CaseLookupService, CaseInfoService, ObjectModelService, HelperObjectBrowserService, DueDateService, AdminHolidayService, MessageService, $modal, LookupService, AdminFoiaConfigService, AdminObjectTitleConfigurationService) {
+    [ '$scope', '$stateParams', '$state', '$translate', '$timeout', 'UtilService', 'Util.DateService', 'ConfigService', 'Object.LookupService', 'Case.LookupService', 'Case.InfoService', 'Object.ModelService', 'Helper.ObjectBrowserService', 'DueDate.Service', 'Admin.HolidayService',
+        'MessageService', '$modal', 'LookupService', 'Admin.FoiaConfigService', 'Admin.ObjectTitleConfigurationService', 'Cases.SuggestedCases',
+        function($scope, $stateParams, $state, $translate, $timeout, Util, UtilDateService, ConfigService, ObjectLookupService, CaseLookupService, CaseInfoService, ObjectModelService, HelperObjectBrowserService, DueDateService, AdminHolidayService, MessageService, $modal, LookupService, AdminFoiaConfigService, AdminObjectTitleConfigurationService, SuggestedCasesService) {
 
             new HelperObjectBrowserService.Component({
                 scope: $scope,
@@ -80,13 +80,13 @@ angular.module('cases').controller(
                     $scope.calculateDaysObj = {};
                     $scope.owningGroup = ObjectModelService.getGroup(data);
                     $scope.assignee = ObjectModelService.getAssignee(data);
-                    $scope.objectInfo.dueDate = UtilDateService.dateToIso(UtilDateService.isoToDate($scope.objectInfo.dueDate));
                     if (!$scope.includeWeekends) {
                         $scope.calculateDaysObj = DueDateService.daysLeft($scope.holidays, $scope.objectInfo.dueDate);
                     }
                     else {
                         $scope.calculateDaysObj = DueDateService.daysLeftWithWeekends($scope.holidays, $scope.objectInfo.dueDate);
                     }
+                    $scope.dueDate = $scope.objectInfo.dueDate.replace(/(\d{4})\-(\d{2})\-(\d{2}).*/, '$2/$3/$1');
                     CaseLookupService.getApprovers($scope.owningGroup, $scope.assignee).then(function (approvers) {
                         var options = [];
                         _.each(approvers, function (approver) {
@@ -150,6 +150,11 @@ angular.module('cases').controller(
 
 
                 $scope.isAmendmentAdded = data.amendmentFlag;
+
+                SuggestedCasesService.getSuggestedCases($scope.objectInfo.title, $scope.objectInfo.id).then(function (value) {
+                    $scope.hasSuggestedCases = value.data.length > 0 ? true : false;
+                    $scope.numberOfSuggestedCases = value.data.length;
+                });
 
             };
             $scope.userOrGroupSearch = function() {
@@ -285,6 +290,7 @@ angular.module('cases').controller(
 
             function dueDateChanged(e, newDueDate) {
                 $scope.objectInfo.dueDate = UtilDateService.dateToIso(UtilDateService.isoToDate(newDueDate));
+                $scope.dueDate = newDueDate.replace(/(\d{4})\-(\d{2})\-(\d{2}).*/, '$2/$3/$1');
                 if(!$scope.includeWeekends) {
                     $scope.calculateDaysObj = DueDateService.daysLeft($scope.holidays, $scope.objectInfo.dueDate);
                 }
@@ -309,5 +315,12 @@ angular.module('cases').controller(
                 } else {
                 }
             }
+
+            $scope.suggestedCases = function () {
+                $state.go('cases.suggestedCases',{
+                    id: $scope.objectInfo.id
+                });
+            };
+            
 
         } ]);

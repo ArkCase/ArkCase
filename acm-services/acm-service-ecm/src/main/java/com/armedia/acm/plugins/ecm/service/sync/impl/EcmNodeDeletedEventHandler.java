@@ -37,8 +37,8 @@ import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.context.ApplicationListener;
 
 import javax.persistence.PersistenceException;
@@ -49,7 +49,7 @@ import javax.persistence.PersistenceException;
 public class EcmNodeDeletedEventHandler implements ApplicationListener<EcmEvent>
 {
 
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private transient final Logger log = LogManager.getLogger(getClass());
     private static String DELETE_MESSAGE = "The %s you were working on was deleted from the content repository.";
     private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
     private AcmFolderService folderService;

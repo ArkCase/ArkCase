@@ -32,8 +32,8 @@ package com.armedia.acm.objectonverter.xml;
 
 import com.armedia.acm.objectonverter.AcmMarshaller;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
@@ -48,7 +48,7 @@ import java.io.OutputStream;
 public class XMLMarshaller implements AcmMarshaller
 {
 
-    private Logger LOG = LoggerFactory.getLogger(getClass());
+    private Logger LOG = LogManager.getLogger(getClass());
 
     @Override
     public String marshal(Object obj)

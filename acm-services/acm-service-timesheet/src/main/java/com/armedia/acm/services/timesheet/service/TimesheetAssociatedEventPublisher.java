@@ -29,15 +29,15 @@ package com.armedia.acm.services.timesheet.service;
 
 import com.armedia.acm.services.timesheet.model.AcmTimesheetAssociatedEvent;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 
 public class TimesheetAssociatedEventPublisher implements ApplicationEventPublisherAware
 {
 
-    private Logger LOG = LoggerFactory.getLogger(getClass());
+    private Logger LOG = LogManager.getLogger(getClass());
     private ApplicationEventPublisher applicationEventPublisher;
 
     public void publishEvent(AcmTimesheetAssociatedEvent event)

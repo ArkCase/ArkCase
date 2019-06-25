@@ -29,8 +29,8 @@ package com.armedia.acm.plugins.ecm.web.api;
 
 import com.armedia.acm.plugins.ecm.model.EcmFileUploaderConfig;
 import com.armedia.acm.plugins.ecm.service.impl.EcmFileUploaderConfigurationServiceImpl;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -45,7 +45,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class EcmFileUploaderManagementAPIController
 {
 
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
     private EcmFileUploaderConfigurationServiceImpl ecmFileUploaderConfigurationService;
 
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
