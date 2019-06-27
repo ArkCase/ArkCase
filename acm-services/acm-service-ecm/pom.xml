@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>acm-services</artifactId>
         <groupId>com.armedia.acm</groupId>
@@ -106,11 +107,6 @@
         </dependency>
         <dependency>
             <groupId>com.armedia.acm.acm-services</groupId>
-            <artifactId>acm-service-scheduler</artifactId>
-            <version>${acm.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.armedia.acm.acm-services</groupId>
             <artifactId>acm-service-participants</artifactId>
             <version>${acm.version}</version>
         </dependency>
@@ -140,6 +136,11 @@
             <version>${acm.version}</version>
         </dependency>
         <dependency>
+            <groupId>com.armedia.acm.acm-tool-integrations</groupId>
+            <artifactId>acm-quartz-scheduler</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+        <dependency>
             <groupId>com.armedia.acm.acm-services</groupId>
             <artifactId>acm-service-convert-file</artifactId>
             <version>${acm.version}</version>
@@ -152,7 +153,6 @@
             <artifactId>jaudiotagger</artifactId>
             <version>${jaudiotagger.version}</version>
         </dependency>
-        
 
         <!-- spring -->
         <dependency>

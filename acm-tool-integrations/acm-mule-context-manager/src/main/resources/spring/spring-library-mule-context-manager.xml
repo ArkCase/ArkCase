@@ -1,8 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
 
     <bean id="muleContextManager" class="com.armedia.acm.muletools.mulecontextmanager.MuleContextManager" destroy-method="shutdownBean">
         <property name="muleConfigFilePattern" value="classpath*:flows/*Flow.xml"/>
+        <property name="acmMuleConfig" ref="acmMuleConfig"/>
+    </bean>
+
+    <bean id="acmMuleConfig" class="com.armedia.acm.muletools.mulecontextmanager.AcmMuleConfig" scope="refresh">
+        <aop:scoped-proxy/>
     </bean>
 </beans>

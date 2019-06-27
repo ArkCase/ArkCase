@@ -30,7 +30,6 @@ package com.armedia.acm.services.transcribe.job;
 import com.armedia.acm.core.exceptions.AcmObjectLockException;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
-import com.armedia.acm.scheduler.AcmSchedulableBean;
 import com.armedia.acm.service.objectlock.model.AcmObjectLock;
 import com.armedia.acm.service.objectlock.service.AcmObjectLockService;
 import com.armedia.acm.service.objectlock.service.AcmObjectLockingManager;
@@ -66,7 +65,7 @@ import java.util.stream.Collectors;
 /**
  * Created by Riste Tutureski <riste.tutureski@armedia.com> on 03/15/2018
  */
-public class TranscribeQueueJob implements AcmSchedulableBean
+public class TranscribeQueueJob
 {
     private final Logger LOG = LogManager.getLogger(getClass());
     private ArkCaseTranscribeService arkCaseTranscribeService;
@@ -78,7 +77,6 @@ public class TranscribeQueueJob implements AcmSchedulableBean
     private TranscribeProviderFactory transcribeProviderFactory;
     private TranscribeConfigurationService transcribeConfigurationService;
 
-    @Override
     public void executeTask()
     {
         try

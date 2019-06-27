@@ -125,7 +125,7 @@ public class ConfigurationPropertyService implements InitializingBean
         catch (RestClientException e)
         {
             log.warn("Failed to update property due to {}", e.getMessage());
-            throw new ConfigurationPropertyException("Failed to update configuration");
+            throw new ConfigurationPropertyException("Failed to update configuration", e);
         }
     }
 }

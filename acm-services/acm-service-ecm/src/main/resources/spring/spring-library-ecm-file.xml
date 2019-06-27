@@ -495,4 +495,15 @@
         <property name="ecmFileUploaderConfig" ref="ecmFileUploaderConfig"/>
         <property name="configurationPropertyService" ref="configurationPropertyService"/>
     </bean>
+
+    <bean id="removeExpiredFilesService" class="com.armedia.acm.plugins.ecm.service.RemoveExpiredFilesService">
+        <property name="fileChunkService" ref="fileChunkService"/>
+        <property name="ecmFileService" ref="ecmFileService"/>
+        <property name="ecmFileUploaderConfig" ref="ecmFileUploaderConfig"/>
+    </bean>
+
+    <bean id="removeExpiredFilesJobDescriptor" class="com.armedia.acm.plugins.ecm.service.RemoveExpiredFilesJobDescriptor"
+          parent="acmJobDescriptor">
+        <property name="removeExpiredFilesService" ref="removeExpiredFilesService"/>
+    </bean>
 </beans>

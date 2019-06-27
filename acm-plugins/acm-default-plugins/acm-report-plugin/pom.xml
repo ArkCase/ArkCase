@@ -110,6 +110,11 @@
             <artifactId>acm-document-repository-plugin</artifactId>
             <version>${acm.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.armedia.acm.acm-tool-integrations</groupId>
+            <artifactId>acm-quartz-scheduler</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
 
         <!-- date time -->
         <dependency>

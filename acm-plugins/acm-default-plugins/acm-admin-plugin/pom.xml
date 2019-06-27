@@ -155,7 +155,11 @@
             <artifactId>acm-service-ocr</artifactId>
             <version>${acm.version}</version>
         </dependency>
-
+        <dependency>
+            <groupId>com.armedia.acm.acm-tool-integrations</groupId>
+            <artifactId>acm-quartz-scheduler</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
         <!-- date time -->
         <dependency>
             <groupId>joda-time</groupId>
