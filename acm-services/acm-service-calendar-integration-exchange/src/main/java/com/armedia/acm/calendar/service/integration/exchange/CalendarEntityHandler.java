@@ -366,7 +366,6 @@ public class CalendarEntityHandler
         query.select(acmObject);
         Join join = acmObject.join("container");
 
-        query.where(cb.and(acmObject.<String>get("status").in(closedStates), cb.isNotNull(join.get("id"))));
         if (daysClosed == null)
         {
             query.where(cb.and(acmObject.<String>get("status").in(closedStates), cb.isNotNull(join.get("id"))));
