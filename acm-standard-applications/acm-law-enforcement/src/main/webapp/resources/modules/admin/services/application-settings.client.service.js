@@ -53,7 +53,7 @@ angular.module('admin').factory('Admin.ApplicationSettingsService', [ '$http', f
          *
          * @returns {Object} updated Application settings value
          */
-        getApplicationPropertiesConfig() {
+        getApplicationPropertiesConfig: function () {
             return $http({
                 method: "GET",
                 url: "api/latest/plugin/admin/app-properties"
