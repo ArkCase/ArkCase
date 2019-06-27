@@ -556,6 +556,14 @@ angular.module('directives').directive('objectTree', [ '$q', '$translate', 'Util
             var nodeTypes = Util.goodMapValue(Tree, "treeConfig.nodeTypes", []);
             var key = data.node.key;
             var nodeId = Tree.Key.getNodeIdByKey(key);
+            var hasBillingPrivilege = Tree.scope.listBillingPrivilege;
+            if(hasBillingPrivilege && !hasBillingPrivilege.billingItemPrivilege){
+                for(var i = 0; i < nodeTypes.length; i++){
+                    if(nodeTypes[i].type.indexOf("billing") !== -1){
+                        nodeTypes.splice(i,1);
+                    }
+                }
+            }
             var nodeTypePath = Tree.Key.getNodeTypeByKey(key);
             var arr = nodeTypePath.split(Tree.Key.KEY_SEPARATOR);
             if (Util.isArray(arr) && 2 == arr.length) {
@@ -856,7 +864,8 @@ angular.module('directives').directive('objectTree', [ '$q', '$translate', 'Util
             onReset: '&',
             onLoad: '&',
             onSelect: '&',
-            treeControl: '='
+            treeControl: '=',
+            listBillingPrivilege: '=?'
         }
 
         ,

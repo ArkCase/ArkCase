@@ -13,6 +13,8 @@ import com.armedia.acm.services.billing.model.BillingItem;
 import com.armedia.acm.services.billing.rules.BillingInvoiceBusinessRule;
 import com.armedia.acm.services.billing.service.BillingService;
 
+import com.armedia.acm.services.users.model.ApplicationRolesToPrivilegesConfig;
+import com.armedia.acm.services.users.service.AcmUserRoleService;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 
@@ -20,6 +22,8 @@ import javax.persistence.PersistenceException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /*-
  * #%L
@@ -59,6 +63,8 @@ public class BillingServiceImpl implements BillingService
     private BillingInvoiceDao billingInvoiceDao;
     private BillingInvoiceBusinessRule billingInvoiceBusinessRule;
     private BillingEventPublisher billingEventPublisher;
+    private AcmUserRoleService userRoleService;
+    private ApplicationRolesToPrivilegesConfig rolesToPrivilegesConfig;
 
     /**
      * @return the billingEventPublisher
@@ -194,6 +200,18 @@ public class BillingServiceImpl implements BillingService
         return updated;
     }
 
+    @Override
+    public boolean hasListBillingItemPrivilege(String userId) {
+        String billingItemPrivilegeName = "acmListBillingItemsPrivilege";
+        Set<String> userRoles = getUserRoleService().getUserRoles(userId);
+        Map<String, String> rolesPrivileges = getRolesToPrivilegesConfig().getRolesToPrivileges();
+        for (Map.Entry<String, String> entry : rolesPrivileges.entrySet())
+        {
+            if(userRoles.contains(entry.getKey()) && entry.getValue().contains(billingItemPrivilegeName))
+                return true;
+        }
+        return false;
+    }
     /**
      * @return the billingItemDao
      */
@@ -245,4 +263,19 @@ public class BillingServiceImpl implements BillingService
         this.billingInvoiceBusinessRule = billingInvoiceBusinessRule;
     }
 
+    public AcmUserRoleService getUserRoleService() {
+        return userRoleService;
+    }
+
+    public void setUserRoleService(AcmUserRoleService userRoleService) {
+        this.userRoleService = userRoleService;
+    }
+
+    public ApplicationRolesToPrivilegesConfig getRolesToPrivilegesConfig() {
+        return rolesToPrivilegesConfig;
+    }
+
+    public void setRolesToPrivilegesConfig(ApplicationRolesToPrivilegesConfig rolesToPrivilegesConfig) {
+        this.rolesToPrivilegesConfig = rolesToPrivilegesConfig;
+    }
 }
