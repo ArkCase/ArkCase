@@ -5,10 +5,4 @@
     <bean id="notificationExceptionResolver"
         class="org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver"/>
 
-    <bean id="muleContextManager" class="com.armedia.acm.muletools.mulecontextmanager.MuleContextManager" destroy-method="shutdownBean">
-        <property name="specificConfigFiles">
-            <list/>
-        </property>
-    </bean>
-
 </beans>
