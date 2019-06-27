@@ -56,7 +56,7 @@ public class LdapSyncAPIController
     public ResponseEntity initiatePartialSync(@PathVariable String directory, Authentication authentication)
     {
         LdapSyncService ldapSyncService = acmContextHolder.getAllBeansOfType(LdapSyncService.class)
-                .get(String.format("%s_ldapSyncJob", directory));
+                .get(String.format("%s_ldapSyncService", directory));
         if (ldapSyncService != null)
         {
             log.debug("User [{}] initiated partial sync of directory [{}]", authentication.getName(), directory);
@@ -72,7 +72,7 @@ public class LdapSyncAPIController
     public ResponseEntity initiateFullSync(@PathVariable String directory, Authentication authentication)
     {
         LdapSyncService ldapSyncService = acmContextHolder.getAllBeansOfType(LdapSyncService.class)
-                .get(String.format("%s_ldapSyncJob", directory));
+                .get(String.format("%s_ldapSyncService", directory));
         if (ldapSyncService != null)
         {
             log.debug("User [{}] initiated full sync of directory [{}]", authentication.getName(), directory);

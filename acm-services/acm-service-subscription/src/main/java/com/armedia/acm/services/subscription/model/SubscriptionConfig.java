@@ -28,14 +28,11 @@ package com.armedia.acm.services.subscription.model;
  */
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+
 import org.springframework.beans.factory.annotation.Value;
 
 public class SubscriptionConfig
 {
-    @JsonProperty("subscription.plugin.batchUpdateFrequencyInMilliseconds")
-    @Value("${subscription.plugin.batchUpdateFrequencyInMilliseconds}")
-    private int batchUpdateFrequencyInMilliseconds;
-
     /**
      * Events that should not be saved as AcmSubscriptionEvent.
      */
@@ -46,16 +43,6 @@ public class SubscriptionConfig
     @JsonProperty("subscription.plugin.get.object.byId")
     @Value("${subscription.plugin.get.object.byId}")
     private String getObjectByIdQuery;
-
-    public int getBatchUpdateFrequencyInMilliseconds()
-    {
-        return batchUpdateFrequencyInMilliseconds;
-    }
-
-    public void setBatchUpdateFrequencyInMilliseconds(int batchUpdateFrequencyInMilliseconds)
-    {
-        this.batchUpdateFrequencyInMilliseconds = batchUpdateFrequencyInMilliseconds;
-    }
 
     public String getRemovedEventTypes()
     {

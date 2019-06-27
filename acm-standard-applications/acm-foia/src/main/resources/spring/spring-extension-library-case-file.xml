@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans:beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.springframework.org/schema/beans"
-    xmlns:beans="http://www.springframework.org/schema/beans"
-    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
+             xmlns:beans="http://www.springframework.org/schema/beans"
+             xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
 
     <beans:beans profile="extension-foia">
         <beans:bean id="caseFileStartBusinessProcessBusinessRule"
@@ -260,6 +260,14 @@
             <beans:property name="responseFolderCompressorService" ref="responseFolderCompressorService"/>
             <beans:property name="foiaRequestFileBrokerClient" ref="foiaRequestFileBrokerClient"/>
             <beans:property name="responseFolderNotifyService" ref="responseFolderNotifyService"/>
+        </beans:bean>
+
+        <beans:bean id="billingQueuePurgerJobDescriptor" class="gov.foia.service.BillingQueuePurgerJobDescriptor" parent="acmJobDescriptor">
+            <beans:property name="billingQueuePurger" ref="scheduledBillingQueuePurger"/>
+        </beans:bean>
+
+        <beans:bean id="holdQueuePurgerJobDescriptor" class="gov.foia.service.HoldQueuePurgerJobDescriptor" parent="acmJobDescriptor">
+            <beans:property name="holdQueuePurger" ref="scheduledHoldQueuePurger"/>
         </beans:bean>
 
     </beans:beans>

@@ -48,16 +48,6 @@ public interface NotificationConstants
      */
     String SYSTEM_USER = "NOTIFICATION-BATCH-INSERT";
 
-    /**
-     * The default run date to use if this generator has never run before (or if the properties file that stores the
-     * last run date is missing)
-     */
-    String DEFAULT_LAST_RUN_DATE = "1970-01-01T00:00:00Z";
-
-    /**
-     * The property key to use in the properties file that stores the last run date.
-     */
-    String SOLR_LAST_RUN_DATE_PROPERTY_KEY = "notification.user.last.run.date";
 
     /**
      * Date format that is needed for converting string to date
@@ -121,8 +111,6 @@ public interface NotificationConstants
      * or TASK appropriate
      */
     String NAME_LABEL = "${nameLabel}";
-
-    String LAST_BATCH_RUN_PROPERTY_FILE = System.getProperty("user.home") + "/.arkcase/acm/notificationLastBatchUpdate.properties";
 
     String PARTICIPANT_TYPE_GROUP = "owning group";
     String SPECIAL_PARTICIPANT_TYPE = "*";

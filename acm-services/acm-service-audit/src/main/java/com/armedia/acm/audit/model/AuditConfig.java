@@ -69,10 +69,6 @@ public class AuditConfig
     @Value("${audit.plugin.purge.days}")
     private Integer purgeDays;
 
-    @JsonProperty("audit.plugin.batch.frequency")
-    @Value("${audit.plugin.batch.frequency}")
-    private Integer batchFrequency;
-
     @JsonProperty("audit.plugin.requests.logging.enabled")
     @Value("${audit.plugin.requests.logging.enabled}")
     private Boolean requestsLoggingEnabled;
@@ -235,16 +231,6 @@ public class AuditConfig
     public void setPurgeDays(Integer purgeDays)
     {
         this.purgeDays = purgeDays;
-    }
-
-    public Integer getBatchFrequency()
-    {
-        return batchFrequency;
-    }
-
-    public void setBatchFrequency(Integer batchFrequency)
-    {
-        this.batchFrequency = batchFrequency;
     }
 
     public Boolean getRequestsLoggingEnabled()

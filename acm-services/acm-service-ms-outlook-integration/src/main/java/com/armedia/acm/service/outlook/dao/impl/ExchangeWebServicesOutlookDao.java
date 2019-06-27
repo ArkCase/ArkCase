@@ -46,9 +46,9 @@ import com.armedia.acm.service.outlook.model.OutlookTaskItem;
 import com.armedia.acm.service.outlook.service.impl.ExchangeConfigurationServiceImpl;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
-import org.springframework.cache.Cache;
+import org.apache.logging.log4j.Logger;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 
 import java.net.URI;
@@ -108,7 +108,6 @@ public class ExchangeWebServicesOutlookDao implements OutlookDao
     private final PropertySet folderProperties = new PropertySet(FolderSchema.Id, FolderSchema.DisplayName, FolderSchema.ParentFolderId,
             FolderSchema.Permissions);
     private Map<String, PropertyDefinition> sortFields;
-    private Cache outlookUserConnectionCache;
     private ExchangeConfigurationServiceImpl exchangeConfigurationService;
     private OutlookConfig outlookConfig;
 
@@ -119,18 +118,6 @@ public class ExchangeWebServicesOutlookDao implements OutlookDao
         Objects.requireNonNull(user, "User cannot be null");
         Objects.requireNonNull(user.getOutlookPassword(), "Password cannot be null");
         Objects.requireNonNull(user.getEmailAddress(), "E-mail address cannot be null");
-
-        Cache.ValueWrapper found = getOutlookUserConnectionCache().get(user.getEmailAddress());
-
-        if (found == null || found.get() == null)
-        {
-            log.debug("Exchange service not found in cache for user({}), continue with authentication", user.getEmailAddress());
-        }
-        else
-        {
-            log.debug("Exchange service found in cache for user({})", user.getEmailAddress());
-            return (ExchangeService) found.get();
-        }
 
         ExchangeCredentials credentials = new WebCredentials(user.getEmailAddress(), user.getOutlookPassword());
 
@@ -158,7 +145,7 @@ public class ExchangeWebServicesOutlookDao implements OutlookDao
             {
                 service.setUrl(URI.create(outlookConfig.getClientAccessServer()));
             }
-            getOutlookUserConnectionCache().put(user.getEmailAddress(), service);
+
             return service;
         }
         catch (Exception e)
@@ -169,11 +156,11 @@ public class ExchangeWebServicesOutlookDao implements OutlookDao
     }
 
     @Override
+    @CacheEvict(value = "outlook-connection-cache", key = "#user.emailAddress")
     public void disconnect(AcmOutlookUser user)
     {
         // EWS apparently has no concept of "logging out" so the whole point of this method is to
         // remove the connection from the connection cache.
-        getOutlookUserConnectionCache().evict(user.getEmailAddress());
         log.info("Exchange session for user({}) has been removed from session cache", user.getEmailAddress());
     }
 
@@ -656,16 +643,6 @@ public class ExchangeWebServicesOutlookDao implements OutlookDao
     public void setSortFields(Map<String, PropertyDefinition> sortFields)
     {
         this.sortFields = sortFields;
-    }
-
-    public Cache getOutlookUserConnectionCache()
-    {
-        return outlookUserConnectionCache;
-    }
-
-    public void setOutlookUserConnectionCache(Cache outlookUserConnectionCache)
-    {
-        this.outlookUserConnectionCache = outlookUserConnectionCache;
     }
 
     /**

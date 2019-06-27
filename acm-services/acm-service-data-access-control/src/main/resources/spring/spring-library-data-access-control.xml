@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:task="http://www.springframework.org/schema/task" xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:aop="http://www.springframework.org/schema/aop"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
-          http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-4.1.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+            http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
 
     <bean id="dataAccessPlugin" class="com.armedia.acm.pluginmanager.model.AcmPlugin">
         <property name="pluginName" value="Data Access Control Plugin"/>
@@ -57,20 +57,17 @@
         <property name="dataAccessPrivilegeListener" ref="dataAccessPrivilegeListener"/>
     </bean>
 
-    <task:scheduler id="dataAccessControlTaskScheduler" pool-size="1"/>
-    <task:scheduled-tasks scheduler="dataAccessControlTaskScheduler">
-        <task:scheduled ref="acmDataAccessBatchPolicyUpdateService" method="batchPolicyUpdate"
-                        fixed-delay="#{dacConfig.batchUpdateFrequencyInMilliseconds}"/>
-    </task:scheduled-tasks>
-
     <bean id="acmDataAccessBatchPolicyUpdateService"
           class="com.armedia.acm.services.dataaccess.service.impl.AcmDataAccessBatchPolicyUpdateService">
         <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
         <property name="dataAccessBatchUpdater" ref="acmDataAccessBatchUpdater"/>
         <property name="springContextHolder" ref="acmContextHolder"/>
-        <property name="lastBatchUpdatePropertyFileLocation" value="${user.home}/.arkcase/acm/dataAccessPolicyLastBatchUpdate.properties"/>
-        <property name="propertyFileManager" ref="propertyFileManager"/>
         <property name="dacConfig" ref="dacConfig"/>
+    </bean>
+
+    <bean id="dataAccessPolicyUpdateJobDescriptor"
+          class="com.armedia.acm.services.dataaccess.service.AcmDataAccessPolicyUpdateJobDescriptor" parent="acmJobDescriptor">
+        <property name="dataAccessBatchPolicyUpdateService" ref="acmDataAccessBatchPolicyUpdateService"/>
     </bean>
 
     <bean id="rulesConfigurationFile" class="java.io.File">

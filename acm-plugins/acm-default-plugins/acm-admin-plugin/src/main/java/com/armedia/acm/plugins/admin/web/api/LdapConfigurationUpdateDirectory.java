@@ -41,7 +41,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.io.IOException;
 import java.util.Map;
 
 /**
@@ -62,21 +61,20 @@ public class LdapConfigurationUpdateDirectory
     @ResponseBody
     public String updateDirectory(
             @RequestBody String resource,
-            @PathVariable("directoryId") String directoryId) throws IOException, AcmLdapConfigurationException
+            @PathVariable("directoryId") String directoryId) throws AcmLdapConfigurationException
     {
+
+        if (directoryId == null)
+        {
+            throw new AcmLdapConfigurationException("Directory Id is undefined");
+        }
 
         try
         {
 
             JSONObject ldapObject = new JSONObject(resource);
-            if (directoryId == null)
-            {
-                throw new AcmLdapConfigurationException("Directory Id is undefined");
-            }
-
             Map<String, Object> props = ldapConfigurationService.getProperties(ldapObject);
             ldapConfigurationService.updateLdapDirectory(directoryId, props);
-
         }
         catch (Exception e)
         {
