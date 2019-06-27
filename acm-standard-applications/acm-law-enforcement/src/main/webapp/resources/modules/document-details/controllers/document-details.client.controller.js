@@ -3,14 +3,15 @@
 angular.module('document-details').controller(
         'DocumentDetailsController',
         [ '$rootScope', '$scope', '$stateParams', '$sce', '$q', '$timeout', '$window', '$modal', 'TicketService', 'ConfigService', 'LookupService', 'SnowboundService', 'Authentication', 'EcmService', 'Helper.LocaleService', 'Admin.TranscriptionManagementService', 'MessageService', 'UtilService', 'Util.TimerService',
-            'Object.LockingService', 'ObjectService', '$log', 'Dialog.BootboxService', '$translate', 'ArkCaseCrossWindowMessagingService', 'Object.LookupService', 'Case.InfoService',
-            function ($rootScope, $scope, $stateParams, $sce, $q, $timeout, $window, $modal, TicketService, ConfigService, LookupService, SnowboundService, Authentication, EcmService, LocaleHelper, TranscriptionManagementService, MessageService, Util, UtilTimerService, ObjectLockingService, ObjectService, $log, DialogService, $translate, ArkCaseCrossWindowMessagingService, ObjectLookupService, CaseInfoService) {
+            'Object.LockingService', 'ObjectService', '$log', 'Dialog.BootboxService', '$translate', 'ArkCaseCrossWindowMessagingService', 'Object.LookupService', 'Case.InfoService', 'DocumentDetails.BillingItemPrivilegeService',
+            function ($rootScope, $scope, $stateParams, $sce, $q, $timeout, $window, $modal, TicketService, ConfigService, LookupService, SnowboundService, Authentication, EcmService, LocaleHelper, TranscriptionManagementService, MessageService, Util, UtilTimerService, ObjectLockingService, ObjectService, $log, DialogService, $translate, ArkCaseCrossWindowMessagingService, ObjectLookupService, CaseInfoService, BillingItemPrivilegeService) {
 
                     new LocaleHelper.Locale({
                         scope: $scope
                     });
 
                     $scope.viewerOnly = false;
+                    var billingInvoicePromise =  BillingItemPrivilegeService.getBillingItemPrivilege();
                     $scope.documentExpand = function() {
                         $scope.viewerOnly = true;
                     };
@@ -264,7 +265,7 @@ angular.module('document-details').controller(
                         $scope.caseInfo.caseNumber = '';
                     }
 
-                    $q.all([ ticketInfo, userInfo, totalUserInfo, ecmFileConfig, ecmFileInfo.$promise, ecmFileEvents.$promise, ecmFileParticipants.$promise, formsConfig, transcriptionConfigurationPromise]).then(function(data) {
+                    $q.all([ ticketInfo, userInfo, totalUserInfo, ecmFileConfig, ecmFileInfo.$promise, ecmFileEvents.$promise, ecmFileParticipants.$promise, formsConfig, transcriptionConfigurationPromise, billingInvoicePromise]).then(function(data) {
                         $scope.acmTicket = data[0].data;
                         $scope.userId = data[1].userId;
                         $scope.userFullName = data[1].fullName;
@@ -280,6 +281,8 @@ angular.module('document-details').controller(
                         $scope.view = "modules/document-details/views/document-viewer-snowbound.client.view.html";
 
                         $scope.transcribeEnabled = $scope.transcriptionConfiguration.data['transcribe.enabled'];
+
+                        $scope.billingPrivilege = data[9].data["billingItemPrivilege"];
 
                         $timeout(function() {
                             $scope.$broadcast('document-data', $scope.ecmFile);

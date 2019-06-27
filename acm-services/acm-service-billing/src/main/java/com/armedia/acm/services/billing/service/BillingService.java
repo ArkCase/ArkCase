@@ -55,4 +55,7 @@ public interface BillingService
 
     BillingInvoice createBillingInvoice(BillingInvoiceRequest billingInvoiceRequest)
             throws CreateBillingInvoiceException;
+
+    boolean hasListBillingItemPrivilege(String userId);
+
 }

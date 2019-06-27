@@ -2,8 +2,8 @@
 
 angular.module('cases').controller(
         'CasesListController',
-        [ '$scope', '$state', '$stateParams', '$translate', 'UtilService', 'ObjectService', 'Case.ListService', 'Case.InfoService', 'Helper.ObjectBrowserService', 'ServCommService', 'MessageService', 'Object.CalendarService',
-                function($scope, $state, $stateParams, $translate, Util, ObjectService, CaseListService, CaseInfoService, HelperObjectBrowserService, ServCommService, MessageService, CalendarService) {
+        [ '$scope', '$state', '$stateParams', '$translate', 'UtilService', 'ObjectService', 'Case.ListService', 'Case.InfoService', 'Helper.ObjectBrowserService', 'ServCommService', 'MessageService', 'Object.CalendarService', 'DocumentDetails.BillingItemPrivilegeService',
+                function($scope, $state, $stateParams, $translate, Util, ObjectService, CaseListService, CaseInfoService, HelperObjectBrowserService, ServCommService, MessageService, CalendarService, BillingItemPrivilegeService) {
 
                     /*//
                      // Check to see if complaint page is shown as a result returned by Frevvo
@@ -23,6 +23,13 @@ angular.module('cases').controller(
                     //when we will get a callback for them we will check the ServCommService if it is current user
                     //subscribe to the bus for the object
                     var eventName = "object.inserted";
+                    $scope.billingPrivilege = true;
+                    BillingItemPrivilegeService.getBillingItemPrivilege().then(function (result) {
+                        $scope.billingPrivilege = result.data;
+                    });
+                    BillingItemPrivilegeService.getBillingItemPrivilege().then(function(result) {
+                        $scope.hasBillingItemPrivilege = result.data;
+                    });
                     $scope.$bus.subscribe(eventName, function(data) {
                         if (data.objectType === ObjectService.ObjectTypes.CASE_FILE) {
                             var frevvoRequest = ServCommService.popRequest("frevvo", "new-case");
