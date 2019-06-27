@@ -39,9 +39,8 @@ import com.jayway.jsonpath.Option;
 import com.jayway.jsonpath.spi.json.JacksonJsonNodeJsonProvider;
 import com.jayway.jsonpath.spi.mapper.JacksonMappingProvider;
 
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
-import org.springframework.cache.Cache;
+import org.apache.logging.log4j.Logger;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -68,7 +67,6 @@ public class UserDao extends AcmAbstractDao<AcmUser>
     private static String DEFAULT_LOCALE_CODE = null;
     @PersistenceContext
     private EntityManager entityManager;
-    private Cache quietUserLookupCache;
     private List<AcmConfig> configList;
     private Logger log = LogManager.getLogger(getClass());
 
@@ -159,22 +157,11 @@ public class UserDao extends AcmAbstractDao<AcmUser>
 
         try
         {
-            Cache.ValueWrapper found = getQuietUserLookupCache().get(userId);
-
-            if (found != null && found.get() != null)
+            AcmUser user = findByUserId(userId);
+            if (user != null)
             {
-                return (AcmUser) found.get();
+                return user;
             }
-            else
-            {
-                AcmUser user = findByUserId(userId);
-                if (user != null)
-                {
-                    getQuietUserLookupCache().put(userId, user);
-                    return user;
-                }
-            }
-
         }
         catch (PersistenceException pe)
         {
@@ -223,7 +210,7 @@ public class UserDao extends AcmAbstractDao<AcmUser>
     public void deleteAcmRole(String roleName)
     {
         AcmRole existing = entityManager.find(AcmRole.class, roleName);
-        if(existing != null)
+        if (existing != null)
         {
             entityManager.remove(existing);
         }
@@ -355,16 +342,6 @@ public class UserDao extends AcmAbstractDao<AcmUser>
     protected Class getPersistenceClass()
     {
         return AcmUser.class;
-    }
-
-    public Cache getQuietUserLookupCache()
-    {
-        return quietUserLookupCache;
-    }
-
-    public void setQuietUserLookupCache(Cache quietUserLookupCache)
-    {
-        this.quietUserLookupCache = quietUserLookupCache;
     }
 
     public List<AcmConfig> getConfigList()

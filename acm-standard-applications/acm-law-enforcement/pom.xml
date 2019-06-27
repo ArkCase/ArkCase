@@ -415,6 +415,12 @@
         </dependency>
 
         <dependency>
+            <groupId>com.armedia.acm.acm-tool-integrations</groupId>
+            <artifactId>acm-hazelcast-integration</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+
+        <dependency>
             <groupId>com.armedia.acm.acm-plugins.acm-default-plugins</groupId>
             <artifactId>acm-category-plugin</artifactId>
             <version>${acm.version}</version>
@@ -514,25 +520,26 @@
             <artifactId>acm-foia</artifactId>
             <version>${acm.version}</version>
         </dependency>
-
         <dependency>
             <groupId>com.armedia.acm.acm-services</groupId>
             <artifactId>acm-service-ocr</artifactId>
             <version>${acm.version}</version>
         </dependency>
-        
+        <dependency>
+            <groupId>com.armedia.acm.acm-tool-integrations</groupId>
+            <artifactId>acm-quartz-scheduler</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
         <dependency>
             <groupId>com.armedia.acm.acm-services</groupId>
             <artifactId>acm-service-holiday</artifactId>
             <version>${acm.version}</version>
         </dependency>
-
         <dependency>
             <groupId>com.armedia.acm.acm-tool-integrations</groupId>
             <artifactId>acm-ocr-tool</artifactId>
             <version>${acm.version}</version>
         </dependency>
-
         <dependency>
             <groupId>com.armedia.acm.acm-tool-integrations</groupId>
             <artifactId>acm-transcribe-tool</artifactId>

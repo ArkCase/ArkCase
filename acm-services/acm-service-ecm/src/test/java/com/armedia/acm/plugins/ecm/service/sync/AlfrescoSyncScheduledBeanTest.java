@@ -27,56 +27,68 @@ package com.armedia.acm.plugins.ecm.service.sync;
  * #L%
  */
 
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.expectLastCall;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
 
 import com.armedia.acm.plugins.ecm.service.sync.impl.AlfrescoSyncScheduledBean;
 import com.armedia.acm.plugins.ecm.service.sync.impl.AlfrescoSyncService;
 
-import org.easymock.EasyMock;
+import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
+import org.quartz.JobDataMap;
+import org.quartz.JobDetail;
+import org.quartz.JobExecutionContext;
 
 /**
  * Created by dmiller on 5/15/17.
  */
-public class AlfrescoSyncScheduledBeanTest
+public class AlfrescoSyncScheduledBeanTest extends EasyMockSupport
 {
-    private AlfrescoSyncService service = EasyMock.createMock(AlfrescoSyncService.class);
+    private AlfrescoSyncService service;
 
     private AlfrescoSyncScheduledBean unit;
+    private AlfrescoSyncConfig syncConfig;
 
     @Before
     public void setUp() throws Exception
     {
+        service = createMock(AlfrescoSyncService.class);
         unit = new AlfrescoSyncScheduledBean();
-
         unit.setAlfrescoSyncService(service);
+
+        syncConfig = new AlfrescoSyncConfig();
+        unit.setAlfrescoSyncConfig(syncConfig);
     }
 
     @Test
     public void executeTask_ifDisabled_thenReturnImmediately() throws Exception
     {
-        unit.setEnabled(false);
+        syncConfig.setEnabled(false);
 
-        replay(service);
-
-        unit.executeTask();
-
-        verify(service);
+        unit.executeJob(null);
     }
 
     @Test
     public void executeTask_ifEnabled_thenCallServiceOncePerAlfrescoAuditApplication() throws Exception
     {
-        unit.setEnabled(true);
+        syncConfig.setEnabled(true);
 
-        service.queryAlfrescoAuditApplications();
+        JobExecutionContext mockContext = createMock(JobExecutionContext.class);
+        JobDetail jobDetail = createMock(JobDetail.class);
+        JobDataMap jobDataMap = createMock(JobDataMap.class);
 
-        replay(service);
+        expect(mockContext.getJobDetail()).andReturn(jobDetail);
+        expect(jobDetail.getJobDataMap()).andReturn(jobDataMap);
+        service.queryAlfrescoAuditApplications(jobDataMap);
+        expectLastCall().once();
 
-        unit.executeTask();
+        replay(service, mockContext, jobDataMap, jobDetail);
 
-        verify(service);
+        unit.executeJob(mockContext);
+
+        verify(service, mockContext, jobDataMap, jobDetail);
     }
 }
