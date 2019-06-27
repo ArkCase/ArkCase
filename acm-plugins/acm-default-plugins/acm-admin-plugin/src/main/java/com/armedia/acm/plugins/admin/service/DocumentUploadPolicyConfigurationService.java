@@ -2,9 +2,9 @@ package com.armedia.acm.plugins.admin.service;
 
 /*-
  * #%L
- * ACM Default Plugin: admin
+ * ACM Service: Enterprise Content Management
  * %%
- * Copyright (C) 2014 - 2019 ArkCase LLC
+ * Copyright (C) 2014 - 2018 ArkCase LLC
  * %%
  * This file is part of the ArkCase software.
  *

@@ -27,9 +27,11 @@ package com.armedia.acm.services.dataupdate.web;
  * #L%
  */
 
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.expectLastCall;
 import static org.junit.Assert.assertEquals;
 
-import com.armedia.acm.files.propertymanager.PropertyFileManager;
+import com.armedia.acm.quartz.scheduler.AcmSchedulerService;
 import com.armedia.acm.services.dataupdate.service.SolrReindexService;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.group.AcmGroup;
@@ -37,80 +39,49 @@ import com.armedia.acm.services.users.model.group.AcmGroup;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
+import org.quartz.JobDataMap;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 
 public class SolrReindexServiceTests extends EasyMockSupport
 {
-    private static final String SOLR_LAST_RUN_DATE_PROPERTY_KEY = "solr.last.run.date";
-    private final String filePath = getClass().getClassLoader().getResource("properties/solrBatchUpdate.properties").getPath();
-    private PropertyFileManager propertyFileManager;
-    private List<String> solrList;
+    private List<Class> solrList;
     private Map<String, String> solrMap;
     private SolrReindexService solrReindexService;
+    private AcmSchedulerService mockSchedulerService;
 
     @Before
-    public void setUp() throws Exception
+    public void setUp()
     {
-        propertyFileManager = new PropertyFileManager();
-
         solrReindexService = new SolrReindexService();
-        solrReindexService.setLastBatchUpdatePropertyFileLocation(filePath);
-        solrReindexService.setPropertyFileManager(propertyFileManager);
+        mockSchedulerService = createMock(AcmSchedulerService.class);
+        solrReindexService.setSchedulerService(mockSchedulerService);
 
-        solrList = Arrays.asList(SOLR_LAST_RUN_DATE_PROPERTY_KEY + "." + AcmUser.class.getName(),
-                SOLR_LAST_RUN_DATE_PROPERTY_KEY + "." + AcmGroup.class.getName());
+        solrList = Arrays.asList(AcmUser.class, AcmGroup.class);
 
         solrMap = new HashMap<>();
-        solrMap.put(SOLR_LAST_RUN_DATE_PROPERTY_KEY + "." + AcmUser.class.getName(), "testValueUser");
-        solrMap.put(SOLR_LAST_RUN_DATE_PROPERTY_KEY + "." + AcmGroup.class.getName(), "testValueGroup");
-
-        fillFile(solrMap);
-    }
-
-    private void fillFile(Map<String, String> solrMap) throws IOException
-    {
-        Properties properties = new Properties();
-        for (Map.Entry<String, String> entry : solrMap.entrySet())
-        {
-            properties.put(entry.getKey(), entry.getValue());
-        }
-        properties.store(new FileOutputStream(filePath), null);
-    }
-
-    private String takePropertiesValueByKey(String key) throws IOException
-    {
-        String retval = "";
-        Properties properties = new Properties();
-        try (InputStream fis = new FileInputStream(filePath))
-        {
-            properties.load(fis);
-            retval = properties.getProperty(key);
-        }
-        catch (Exception e)
-        {
-            e.getMessage();
-        }
-        return retval;
+        solrMap.put(AcmUser.class.getName(), "testValueUser");
+        solrMap.put(AcmGroup.class.getName(), "testValueGroup");
     }
 
     @Test
-    public void validateRemovedLines() throws Exception
+    public void validateRemovedEntities()
     {
-        solrReindexService.reindex(Arrays.asList(AcmUser.class, AcmGroup.class));
+        JobDataMap jobDataMap = new JobDataMap(solrMap);
+        expect(mockSchedulerService.getJobDataMap("jpaBatchUpdateJob")).andReturn(jobDataMap);
+        mockSchedulerService.triggerJob("jpaBatchUpdateJob", jobDataMap);
+        expectLastCall().once();
 
-        for (String key : solrList)
-        {
-            assertEquals(null, takePropertiesValueByKey(key));
-        }
+        replayAll();
+
+        solrReindexService.reindex(solrList);
+
+        verifyAll();
+
+        assertEquals(0, jobDataMap.size());
     }
 
 }

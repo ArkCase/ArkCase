@@ -184,6 +184,18 @@
             <input class="form-control" type="text" ng-model="dir.changedGroupSearchPageFilter"
                     placeholder="{{ 'admin.security.ldapConfig.data.placeholders.changedGroupSearchPageFilter' | translate }}" required>
         </div>
+        <div class="form-group">
+            <label>{{ 'admin.security.ldapConfig.data.fullSync' | translate }}</label>
+            <span class="required-asterisk">*</span>
+            <input name="fullSyncCron" class="form-control" type="text" ng-model="dir.fullSyncCron"
+                   placeholder="{{ 'admin.security.ldapConfig.data.placeholders.fullSync' | translate }}" required>
+        </div>
+        <div class="form-group">
+            <label>{{ 'admin.security.ldapConfig.data.partialSync' | translate }}</label>
+            <span class="required-asterisk">*</span>
+            <input name="partialSyncCron" class="form-control" type="text" ng-model="dir.partialSyncCron"
+                   placeholder="{{ 'admin.security.ldapConfig.data.placeholders.partialSync' | translate }}" required>
+        </div>
         <div class="form-check">
             <label class="form-check-label">
                 <input type="checkbox" class="form-check-input" ng-model="dir.enableEditingLdapUsers"
