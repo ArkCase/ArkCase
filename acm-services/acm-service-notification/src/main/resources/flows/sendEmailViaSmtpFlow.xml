@@ -20,8 +20,8 @@ http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mul
         <scripting:transformer name="urlEncodeTransformer">
             <scripting:script engine="groovy">
                 <scripting:text><![CDATA[
-                    message.setInboundProperty("user", URLEncoder.encode(message.getInboundProperty("user"), "UTF-8"));
-                    message.setInboundProperty("password", URLEncoder.encode(message.getInboundProperty("password"), "UTF-8"));
+                    message.setInboundProperty("userEncoded", URLEncoder.encode(message.getInboundProperty("user"), "UTF-8"));
+                    message.setInboundProperty("passwordEncoded", URLEncoder.encode(message.getInboundProperty("password"), "UTF-8"));
 
                     return payload;
                     ]]>
@@ -31,15 +31,15 @@ http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mul
         <choice>
             <when expression="#[message.inboundProperties['encryption'] == 'starttls']">
                 <smtp:outbound-endpoint connector-ref="smtpStartTLSConnector" host="#[message.inboundProperties.host]"
-                    port="#[message.inboundProperties.port]" user="#[message.inboundProperties.user]"
-                    password="#[message.inboundProperties.password]" from="#[message.inboundProperties.from]"
+                    port="#[message.inboundProperties.port]" user="#[message.inboundProperties.userEncoded]"
+                    password="#[message.inboundProperties.passwordEncoded]" from="#[message.inboundProperties.from]"
                     to="#[message.inboundProperties.to]" subject="#[message.inboundProperties.subject]" mimeType="text/html"
                     responseTimeout="30000"/>
             </when>
             <otherwise>
                 <smtp:outbound-endpoint connector-ref="smtpConnector" host="#[message.inboundProperties.host]"
-                    port="#[message.inboundProperties.port]" user="#[message.inboundProperties.user]"
-                    password="#[message.inboundProperties.password]" from="#[message.inboundProperties.from]"
+                    port="#[message.inboundProperties.port]" user="#[message.inboundProperties.userEncoded]"
+                    password="#[message.inboundProperties.passwordEncoded]" from="#[message.inboundProperties.from]"
                     to="#[message.inboundProperties.to]" subject="#[message.inboundProperties.subject]" mimeType="text/html"
                     responseTimeout="30000"/>
             </otherwise>
