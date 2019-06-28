@@ -63,7 +63,7 @@ public class AcmDataAccessBatchPolicyUpdateService
         }
         getAuditPropertyEntityAdapter().setUserId("DAC-BATCH-UPDATE");
 
-        lastRunDate = lastRunDate == null ? new Date(0) : lastRunDate;
+        lastRunDate = lastRunDate == null ? new Date() : lastRunDate;
 
         Date lastBatchRunDate = getLastBatchRunDate(lastRunDate);
 
