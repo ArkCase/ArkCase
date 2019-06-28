@@ -76,7 +76,8 @@ import java.util.UUID;
         "/spring/spring-library-service-data.xml",
         "/spring/spring-library-configuration.xml",
         "/spring/spring-library-object-converter.xml",
-        "/spring/spring-library-acm-email.xml"
+        "/spring/spring-library-acm-email.xml",
+        "/spring/spring-test-quartz-scheduler.xml"
 })
 public class ContentFileToSolrFlowIT
 {
