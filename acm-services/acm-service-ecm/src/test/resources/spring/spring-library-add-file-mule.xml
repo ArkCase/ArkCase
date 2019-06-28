@@ -13,8 +13,11 @@
                 <value>/flows/getObjectByIdFlow.xml</value>
             </list>
         </property>
+        <property name="acmMuleConfig" ref="acmMuleConfig"/>
     </bean>
-    
+
+    <bean id="acmMuleConfig" class="com.armedia.acm.muletools.mulecontextmanager.AcmMuleConfig"/>
+
     <bean id="logoutUrl" class="java.lang.String" factory-method="valueOf">
         <constructor-arg value="logoutUrl"/>
     </bean>
