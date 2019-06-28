@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
+
+    <bean id="jobsJsonConfig" class="java.lang.String">
+        <constructor-arg>
+            <value>{jobs:[]}</value>
+        </constructor-arg>
+    </bean>
+
+    <bean id="acmSchedulerService" class="com.armedia.acm.quartz.scheduler.AcmSchedulerService">
+        <property name="scheduler" ref="testQuartzScheduler"/>
+        <property name="jobEventPublisher" ref="jobEventPublisher"/>
+    </bean>
+
+    <bean id="jobEventPublisher" class="com.armedia.acm.quartz.scheduler.AcmJobEventPublisher"/>
+
+    <bean id="acmJobDescriptor" class="com.armedia.acm.quartz.scheduler.AcmJobDescriptor" abstract="true">
+        <property name="jobEventPublisher" ref="jobEventPublisher"/>
+    </bean>
+
+    <bean id="testQuartzScheduler" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+        <property name="dataSource" ref="acmDataSource"/>
+        <property name="transactionManager" ref="transactionManager"/>
+        <property name="schedulerName" value="testScheduler"/>
+    </bean>
+
+    <bean id="acmJobFactory" class="com.armedia.acm.quartz.scheduler.AcmJobFactory">
+        <property name="unmarshaller" ref="jsonUnmarshaller"/>
+        <property name="springContextHolder" ref="acmContextHolder"/>
+        <property name="jobsJsonConfig" ref="jobsJsonConfig"/>
+    </bean>
+</beans>

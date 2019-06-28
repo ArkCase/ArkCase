@@ -81,7 +81,8 @@ import java.util.Date;
         "/spring/spring-library-service-data.xml",
         "/spring/spring-library-person-plugin-test.xml",
         "/spring/spring-library-folder-watcher.xml",
-        "/spring/spring-library-acm-email.xml"
+        "/spring/spring-library-acm-email.xml",
+        "/spring/spring-test-quartz-scheduler.xml"
 })
 @TransactionConfiguration(defaultRollback = true, transactionManager = "transactionManager")
 public class OrganizationIT

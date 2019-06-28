@@ -84,7 +84,8 @@ import java.util.Date;
         "/spring/spring-library-configuration.xml",
         "/spring/spring-library-person-plugin-test.xml",
         "/spring/spring-library-folder-watcher.xml",
-        "/spring/spring-library-acm-email.xml"
+        "/spring/spring-library-acm-email.xml",
+        "/spring/spring-test-quartz-scheduler.xml"
 })
 @TransactionConfiguration(defaultRollback = false, transactionManager = "transactionManager")
 public class OrganizationPipelineIT
