@@ -65,7 +65,7 @@ import java.util.Map;
 import java.util.StringJoiner;
 import java.util.stream.Collectors;
 
-import static com.armedia.acm.correspondence.service.CorrespondenceMapper.mapMergeFieldFromConfiguration;
+import static com.armedia.acm.correspondence.service.CorrespondenceMapper.generateCorrespodencenMergeField;
 
 /**
  * Created by armdev on 12/11/14.
@@ -113,7 +113,7 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, Applicat
                     .unmarshallCollection(resource, List.class, CorrespondenceMergeField.class);
 
             mergeFields = new ArrayList<>(mergeFieldsConfigurations.stream()
-                    .map(configuration -> mapMergeFieldFromConfiguration(configuration)).collect(Collectors.toList()));
+                    .map(configuration -> generateCorrespodencenMergeField(configuration)).collect(Collectors.toList()));
 
         }
         catch (IOException ioe)

@@ -5,6 +5,8 @@ angular.module('admin').controller('Admin.NavigationTreeCMTemplateController', [
             $scope.myTree.collapse_all();
         });
 
+        var copyVariablePath = $translate.instant("contextMenu.options.copyVariablePath");
+
         $scope.onClickCancel = function () {
             $modalInstance.dismiss('Cancel');
         };
@@ -13,7 +15,6 @@ angular.module('admin').controller('Admin.NavigationTreeCMTemplateController', [
             $scope.variablePath = '${';
 
             $scope.navigationTreeMilestones = [];
-            index = 0;
 
             var menuOptions = [
                 {
@@ -52,6 +53,7 @@ angular.module('admin').controller('Admin.NavigationTreeCMTemplateController', [
 
         $scope.selectParentBranch = function (branch) {
             var parent;
+            var index = 0;
             if (branch == null) {
                 branch = $scope.myTree.get_selected_branch();
                 var branchLabel = branch.label;

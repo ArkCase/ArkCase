@@ -11,11 +11,26 @@ angular.module('admin').controller('Admin.CMMergeFieldsController',
             $scope.mergingType = {};
             $scope.configVersions = {};
 
+            $scope.gridOptions = {
+                enableRowSelection: true,
+                enableFiltering: false,
+                enableRowHeaderSelection: true,
+                enableFullRowSelection: true,
+                data: [],
+                onRegisterApi: function(gridApi) {
+                    $scope.gridApi = gridApi;
+                    gridApi.selection.on.rowSelectionChanged($scope, function(row) {
+                        $scope.selectedRows = gridApi.selection.getSelectedRows();
+                    });
+
+                    gridApi.selection.on.rowSelectionChangedBatch($scope, function(rows) {
+                        $scope.selectedRows = gridApi.selection.getSelectedRows();
+                    });
+                }
+            };
+
             //get config and init grid settings
             $scope.config.$promise.then(function(config) {
-                var configVersions = _.find(config.components, {
-                    id: 'correspondenceManagementMergeFieldsVersions'
-                });
                 var config = _.find(config.components, {
                     id: 'correspondenceManagementMergeFields'
                 });
@@ -32,9 +47,6 @@ angular.module('admin').controller('Admin.CMMergeFieldsController',
                         $scope.objectTypes = $scope.correspondenceObjectTypes;
                         $scope.mergingType = $scope.objectTypes[0].key;
 
-                        gridHelper.setUserNameFilterToConfig(promiseUsers, configVersions);
-                        $scope.configVersions = configVersions;
-
                         reloadGrid();
                     });
                 });
@@ -42,7 +54,18 @@ angular.module('admin').controller('Admin.CMMergeFieldsController',
 
             $scope.changeType = function() {
                 reloadGrid();
-            }
+            };
+
+            $scope.deleteMergeFields = function() {
+                angular.forEach($scope.selectedRows, function(row, index) {
+                    correspondenceMergeFieldsService.deleteMergeFields(row.fieldId).then(function() {
+                        reloadGrid();
+                        messageService.succsessAction();
+                    }, function() {
+                        messageService.errorAction();
+                    });
+                });
+            };
 
             $scope.save = function() {
                 correspondenceMergeFieldsService.saveMergeFieldsData($scope.gridOptions.data).then(function() {
@@ -51,63 +74,11 @@ angular.module('admin').controller('Admin.CMMergeFieldsController',
                 }, function() {
                     messageService.errorAction();
                 });
-            }
+            };
 
             $scope.$on('reloadMergeFieldGrid', function() {
                 reloadGrid();
             });
-
-            $scope.showVersion = function() {
-                var modalScope = $scope.$new();
-                modalScope.config = $scope.configVersions;
-                var mergeFieldVersionsPromise = correspondenceMergeFieldsService.retrieveMergeFieldsVersionsByType($scope.mergingType);
-
-                mergeFieldVersionsPromise.then(function(mergeFieldVersionsData) {
-                    var modalInstance = $modal.open({
-                        scope: modalScope,
-                        animation: true,
-                        templateUrl: 'modules/admin/views/components/correspondence-management-mergefield-versions.modal.client.view.html',
-                        controller: function($scope, $modalInstance) {
-
-                            $scope.gridOptions = {
-                                enableColumnResizing: true,
-                                enableRowSelection: true,
-                                pinSelectionCheckbox: false,
-                                enableColumnMenus: false,
-                                enableRowHeaderSelection: false,
-                                multiSelect: false,
-                                noUnselect: false,
-                                columnDefs: $scope.config.columnDefs,
-                                paginationPageSizes: $scope.config.paginationPageSizes,
-                                paginationPageSize: $scope.config.paginationPageSize,
-                                data: mergeFieldVersionsData.data,
-                                onRegisterApi: function(gridApi) {
-                                    $scope.modalGridApi = gridApi;
-                                }
-                            };
-
-                            $scope.onClickLoadVersion = function() {
-                                var selectedRow = $scope.modalGridApi.selection.getSelectedRows();
-                                if (selectedRow.length == 1) {
-                                    correspondenceMergeFieldsService.setActiveMergingVersion(selectedRow[0]).then(function() {
-                                        messageService.succsessAction();
-                                        $rootScope.$broadcast('reloadMergeFieldGrid');
-                                        $modalInstance.close();
-                                    }, function() {
-                                        messageService.errorAction();
-                                    });
-                                }
-                            };
-                            $scope.onClickCancel = function() {
-                                $modalInstance.dismiss('cancel');
-                            };
-                        },
-                        size: 'md',
-                        backdrop: 'static'
-                    });
-                });
-
-            }
 
             function reloadGrid() {
                 var mergeFieldsPromise = correspondenceMergeFieldsService.retrieveActiveMergeFieldsByType($scope.mergingType);
@@ -127,6 +98,7 @@ angular.module('admin').controller('Admin.CMMergeFieldsController',
                         };
 
                         $scope.addMergeField = function () {
+
                             var mergeField = {
                                 "fieldId" : $scope.fieldId,
                                 "fieldValue" : $scope.fieldValue,
@@ -134,10 +106,7 @@ angular.module('admin').controller('Admin.CMMergeFieldsController',
                                 "fieldObjectType" : $scope.fieldObjectType
                             };
 
-                            var mergeFieldArray = [];
-                            mergeFieldArray.push(mergeField);
-
-                            correspondenceMergeFieldsService.saveMergeFieldsData(mergeFieldArray).then(function() {
+                            correspondenceMergeFieldsService.addMergeField(mergeField).then(function() {
                                 messageService.succsessAction();
                                 reloadGrid();
                                 $modalInstance.close();

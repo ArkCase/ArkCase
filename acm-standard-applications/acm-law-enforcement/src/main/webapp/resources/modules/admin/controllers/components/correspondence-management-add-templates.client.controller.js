@@ -1,11 +1,33 @@
 'use strict';
 
-angular.module('admin').controller('Admin.AddCMTemplateController', [ '$scope', '$modal', '$modalInstance', 'Admin.CMTemplatesService', 'ObjectService', 'Admin.CMMergeFieldsService'
-    function($scope, $modal, $modalInstance, correspondenceService, ObjectService, correspondenceMergeFieldsService) {
+angular.module('admin').controller('Admin.AddCMTemplateController', [ '$scope', '$modal', '$modalInstance', 'LookupService', 'Acm.StoreService', 'Admin.CMTemplatesService', 'ObjectService', 'Admin.CMMergeFieldsService', 'MessageService',
+    function($scope, $modal, $modalInstance, LookupService, Store, correspondenceService, ObjectService, correspondenceMergeFieldsService, messageService) {
 
         $scope.objectTypes = $scope.config.objectTypes;
         $scope.selectedFiles = [];
         $scope.template = {};
+
+        function clearCachedForms(template) {
+            var cacheConfigMap = new Store.SessionData(LookupService.SessionCacheNames.CONFIG_MAP);
+            var configMap = cacheConfigMap.get();
+            if (template.objectType == 'CASE_FILE') {
+                delete configMap['caseCorrespondenceForms'];
+            } else if (template.objectType == 'COMPLAINT') {
+                delete configMap['complaintCorrespondenceForms'];
+            }
+            cacheConfigMap.set(configMap);
+        }
+
+        function reloadGrid() {
+            var templatesPromise = correspondenceService.retrieveActiveVersionTemplatesList();
+            templatesPromise.then(function(templates) {
+                angular.forEach(templates.data, function(row, index) {
+                    row.downloadFileName = correspondenceService.downloadByFilename(row.templateFilename);
+                });
+                $scope.gridOptions.data = templates.data;
+                $scope.selectedRows = [];
+            });
+        }
 
         $scope.upload = function upload(files) {
             $scope.selectedFiles = files;
@@ -35,17 +57,6 @@ angular.module('admin').controller('Admin.AddCMTemplateController', [ '$scope', 
                 });
             });
         };
-
-        function clearCachedForms(template) {
-            var cacheConfigMap = new Store.SessionData(LookupService.SessionCacheNames.CONFIG_MAP);
-            var configMap = cacheConfigMap.get();
-            if (template.objectType == 'CASE_FILE') {
-                delete configMap['caseCorrespondenceForms'];
-            } else if (template.objectType == 'COMPLAINT') {
-                delete configMap['complaintCorrespondenceForms'];
-            }
-            cacheConfigMap.set(configMap);
-        }
 
         $scope.onClickCancel = function() {
             $modalInstance.dismiss('cancel');
@@ -157,6 +168,6 @@ angular.module('admin').controller('Admin.AddCMTemplateController', [ '$scope', 
                 size: 'md',
                 backdrop: 'static'
             });
-        }
+        };
     }
 ]);

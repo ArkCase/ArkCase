@@ -49,7 +49,6 @@ import java.util.List;
 @RequestMapping({ "/api/v1/plugin/admin", "/api/latest/plugin/admin" })
 public class CorrespondenceMergeFieldAPIController
 {
-
     private CorrespondenceService correspondenceService;
 
     @RequestMapping(value = "/mergefields", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -61,7 +60,7 @@ public class CorrespondenceMergeFieldAPIController
 
     @RequestMapping(value = "/mergefields/active/{objectType}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public List<CorrespondenceMergeField> getActiveVersionMergeFieldsByType(@PathVariable(value = "objectType") String objectType)
+    public List<CorrespondenceMergeField> getMergeFieldsByType(@PathVariable(value = "objectType") String objectType)
             throws IOException
     {
         return correspondenceService.getMergeFieldsByType(objectType);
@@ -73,6 +72,21 @@ public class CorrespondenceMergeFieldAPIController
             throws IOException
     {
         return correspondenceService.saveMergeFieldsData(mergeFields, auth);
+    }
+
+    @RequestMapping(value = "/mergefields/addMergeField", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public void addMergeField(@RequestBody CorrespondenceMergeField newMergeField) throws IOException
+    {
+        correspondenceService.addMergeField(newMergeField);
+    }
+
+    @RequestMapping(value = "/mergefields/{mergeFieldId}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public void deleteMergeFields(@PathVariable(value = "mergeFieldId") String mergeFieldId) throws IOException
+    {
+
+        correspondenceService.deleteMergeFields(mergeFieldId);
     }
 
     /**
