@@ -346,6 +346,30 @@ public class CorrespondenceServiceImpl implements CorrespondenceService
     }
 
     /**
+     * @param mergeFieldId
+     * @return
+     * @throws IOException,
+     *             CorrespondenceMergeFieldVersionException
+     */
+    @Override
+    public List<CorrespondenceMergeField> getMergeFieldByMergeFieldId(String mergeFieldId)
+    {
+        return mergeFieldManager.getMergeFieldByMergeFieldId(mergeFieldId);
+    }
+
+
+    @Override
+    public void deleteMergeFields(String mergeFieldId) throws IOException
+    {
+        mergeFieldManager.deleteMergeFields(mergeFieldId);
+    }
+
+    @Override
+    public void addMergeField (CorrespondenceMergeField newMergeField) throws IOException
+    {
+        mergeFieldManager.addMergeField(newMergeField);
+    }
+    /**
      * @param mergeFields
      * @param auth
      * @return

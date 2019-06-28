@@ -111,7 +111,7 @@ public class CorrespondenceMergeField
 
     /**
      * @param fieldObjectType
-     *            the fieldDescription to set
+     *            the fieldObjectType to set
      */
     public void setFieldObjectType(String fieldObjectType)
     {

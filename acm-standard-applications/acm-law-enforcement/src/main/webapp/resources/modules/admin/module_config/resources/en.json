@@ -1016,7 +1016,7 @@
             },
             "mergefields": "Merge Fields Configuration",
             "mergefields.saveMergeFields": "Save",
-            "mergefields.versionMergeFields": "Versions",
+            "mergefields.deleteMergeFields": "Delete",
             "mergefields.grid": {
                 "fieldId": "ID",
                 "fieldValue": "Value",

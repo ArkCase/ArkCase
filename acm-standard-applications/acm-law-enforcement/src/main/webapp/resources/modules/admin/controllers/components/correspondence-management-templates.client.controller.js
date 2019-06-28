@@ -14,10 +14,9 @@ angular.module('admin').controller('Admin.CMTemplatesController',
             $scope.map = {};
             $scope.myTree = {};
 
-            var copyVariablePath = $translate.instant("contextMenu.options.copyVariablePath");
+            var copyVariablePath = $translate.instant('contextMenu.options.copyVariablePath');
 
             $scope.navigationTreeMilestones = [];
-            var index = 0;
 
             $scope.gridOptions = {
                 enableRowSelection: true,
@@ -90,7 +89,7 @@ angular.module('admin').controller('Admin.CMTemplatesController',
 
             $scope.copyMergeFieldToClipboard = function (str) {
                 var el = document.createElement('textarea');
-                el.value = "${" + str + "}";
+                el.value = '${' + str + '}';
                 document.body.appendChild(el);
                 el.select();
                 document.execCommand('copy');
@@ -127,7 +126,7 @@ angular.module('admin').controller('Admin.CMTemplatesController',
                         backdrop: 'static'
                     });
                 });
-            }
+            };
 
             $scope.deleteTemplate = function() {
 

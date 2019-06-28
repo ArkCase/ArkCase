@@ -29,7 +29,7 @@ package com.armedia.acm.correspondence.service;
 
 import com.armedia.acm.correspondence.model.CorrespondenceMergeField;
 import com.armedia.acm.correspondence.model.CorrespondenceTemplate;
-import com.armedia.acm.correspondence.utils.WordGenerator;
+import com.armedia.acm.correspondence.utils.SpELWordEvaluator;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
@@ -71,7 +71,7 @@ public class CorrespondenceGeneratorTest extends EasyMockSupport
     private EcmFile ecmFile;
 
     private EntityManager mockEntityManager;
-    private WordGenerator mockWordGenerator;
+    private SpELWordEvaluator mockWordGenerator;
     private OutputStream mockOutputStream;
     private InputStream mockInputStream;
     private Authentication mockAuthentication;
@@ -148,7 +148,7 @@ public class CorrespondenceGeneratorTest extends EasyMockSupport
     public void setUp() throws Exception
     {
         mockEntityManager = createMock(EntityManager.class);
-        mockWordGenerator = createMock(WordGenerator.class);
+        mockWordGenerator = createMock(SpELWordEvaluator.class);
         mockOutputStream = createMock(OutputStream.class);
         mockInputStream = createMock(InputStream.class);
         mockAuthentication = createMock(Authentication.class);
@@ -163,7 +163,7 @@ public class CorrespondenceGeneratorTest extends EasyMockSupport
 
         unit = new CorrespondenceGenerator();
         unit.setEntityManager(mockEntityManager);
-        unit.setWordGenerator(mockWordGenerator);
+        unit.setSpelWordGenerator(mockWordGenerator);
         unit.setEcmFileService(mockEcmFileService);
         unit.setEcmFileDao(mockEcmFileDao);
         unit.setCorrespondenceFolderName(correspondenceFolder);

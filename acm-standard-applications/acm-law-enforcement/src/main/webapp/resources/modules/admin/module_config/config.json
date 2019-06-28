@@ -106,6 +106,9 @@
             "enabled": true,
             "type": "grid",
             "enableFiltering": false,
+            "enableRowSelection": true,
+            "enableRowHeaderSelection": true,
+            "enableFullRowSelection": true,
             "configurable": true,
             "columnDefs": [
                 {
@@ -136,55 +139,6 @@
                 50
             ],
             "paginationPageSize": 20
-        },
-        {
-            "id": "correspondenceManagementMergeFieldsVersions",
-            "title": "admin.comp.correspondenceManagementMergeFieldsVersions.title",
-            "enabled": true,
-            "type": "grid",
-            "enableFiltering": false,
-            "configurable": true,
-            "columnDefs": [
-                {
-                    "name": "mergingActiveVersion",
-                    "displayName": "admin.correspondenceManagement.mergefields.version.grid.mergingActiveVersion",
-                    "visible": true,
-                    "headerCellFilter": "translate",
-                    "cellTemplate": "<div align='center'><span ng-if='!row.entity.mergingActiveVersion' class='label label-warning'>No</span><span ng-if='row.entity.mergingActiveVersion' class='label label-success'>Yes</span></div>'",
-                    "width": 70
-                },
-                {
-                    "name": "mergingVersion",
-                    "displayName": "admin.correspondenceManagement.mergefields.version.grid.mergingVersion",
-                    "visible": true,
-                    "headerCellFilter": "translate",
-                    "sort": {
-                        "direction": "desc"
-                    },
-                    "width": 80
-                },
-                {
-                    "name": "modified",
-                    "displayName": "admin.correspondenceManagement.mergefields.version.grid.modified",
-                    "visible": true,
-                    "cellTemplate": "<div>{{ row.entity.modified | date : 'shortDate' }}</div>",
-                    "headerCellFilter": "translate"
-                },
-                {
-                    "name": "modifier",
-                    "displayName": "admin.correspondenceManagement.mergefields.version.grid.modifier",
-                    "visible": true,
-                    "headerCellFilter": "translate",
-                    "lookup": "userFullNames"
-                }
-            ],
-            "paginationPageSizes": [
-                5,
-                10,
-                20,
-                50
-            ],
-            "paginationPageSize": 10
         },
         {
             "id": "correspondenceManagementTemplates",

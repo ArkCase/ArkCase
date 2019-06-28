@@ -58,7 +58,7 @@ public class CorrespondenceMapper
         return template;
     }
 
-    public static CorrespondenceMergeField mapMergeFieldFromConfiguration(CorrespondenceMergeField configuration)
+    public static CorrespondenceMergeField generateCorrespodencenMergeField(CorrespondenceMergeField configuration)
     {
         CorrespondenceMergeField mergeField = new CorrespondenceMergeField();
 

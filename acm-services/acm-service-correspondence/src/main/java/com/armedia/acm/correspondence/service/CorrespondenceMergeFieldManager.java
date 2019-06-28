@@ -6,22 +6,22 @@ package com.armedia.acm.correspondence.service;
  * %%
  * Copyright (C) 2014 - 2018 ArkCase LLC
  * %%
- * This file is part of the ArkCase software. 
- * 
- * If the software was purchased under a paid ArkCase license, the terms of 
- * the paid license agreement will prevail.  Otherwise, the software is 
+ * This file is part of the ArkCase software.
+ *
+ * If the software was purchased under a paid ArkCase license, the terms of
+ * the paid license agreement will prevail.  Otherwise, the software is
  * provided under the following open source license terms:
- * 
+ *
  * ArkCase is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *  
+ *
  * ArkCase is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
  * #L%
@@ -43,7 +43,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.armedia.acm.correspondence.service.CorrespondenceMapper.mapMergeFieldFromConfiguration;
+import static com.armedia.acm.correspondence.service.CorrespondenceMapper.generateCorrespodencenMergeField;
 
 /**
  * @author sasko.tanaskoski
@@ -63,6 +63,11 @@ public class CorrespondenceMergeFieldManager implements ApplicationListener<Cont
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event)
     {
+        getCorrespondenceMergeFields();
+    }
+
+    private void getCorrespondenceMergeFields()
+    {
         try
         {
             File file = correspondenceMergeFieldsConfiguration.getFile();
@@ -80,7 +85,7 @@ public class CorrespondenceMergeFieldManager implements ApplicationListener<Cont
                     .unmarshallCollection(resource, List.class, CorrespondenceMergeField.class);
 
             mergeFields = new ArrayList<>(mergeFieldsConfigurations.stream()
-                    .map(configuration -> mapMergeFieldFromConfiguration(configuration)).collect(Collectors.toList()));
+                    .map(configuration -> generateCorrespodencenMergeField(configuration)).collect(Collectors.toList()));
 
         }
         catch (IOException ioe)
@@ -103,15 +108,60 @@ public class CorrespondenceMergeFieldManager implements ApplicationListener<Cont
      */
     public List<CorrespondenceMergeField> getMergeFieldsByType(String fieldObjectType)
     {
+        getCorrespondenceMergeFields();
         List<CorrespondenceMergeField> mergeFieldsByType = new ArrayList<>();
         for (CorrespondenceMergeField mergeField : mergeFields)
         {
-            mergeFieldsByType.add(mergeField);
+                mergeFieldsByType.add(mergeField);
         }
         return mergeFieldsByType.stream()
                 .filter(mergeField -> mergeField.getFieldObjectType().equals(fieldObjectType)).collect(Collectors.toList());
     }
 
+    /**
+     * @param mergeFieldId
+     * @return mergeFields
+     */
+    public List<CorrespondenceMergeField> getMergeFieldByMergeFieldId(String mergeFieldId)
+    {
+        List<CorrespondenceMergeField> mergeFieldByMergeFieldId = new ArrayList<>();
+        for (CorrespondenceMergeField mergeField : mergeFields)
+        {
+            mergeFieldByMergeFieldId.add(mergeField);
+        }
+        return mergeFieldByMergeFieldId.stream()
+                .filter(mergeField -> mergeField.getFieldId().equals(mergeFieldId)).collect(Collectors.toList());
+    }
+
+    public void deleteMergeFields(String mergeFieldId) throws IOException
+    {
+        for (int i=0; i<mergeFields.size(); i++)
+        {
+            if (mergeFields.get(i).getFieldId().equals(mergeFieldId))
+            {
+                mergeFields.remove(i);
+            }
+        }
+
+        updateMergeFieldConfiguration(mergeFields);
+    }
+
+    public void addMergeField(CorrespondenceMergeField newMergeField) throws IOException
+    {
+        boolean isDuplicate = false;
+        for (CorrespondenceMergeField mergeField : mergeFields)
+        {
+            if(mergeField.getFieldId().equals(newMergeField.getFieldId()))
+            {
+               isDuplicate = true;
+            }
+        }
+        if (!isDuplicate)
+        {
+            mergeFields.add(newMergeField);
+        }
+        updateMergeFieldConfiguration(mergeFields);
+    }
 
     /**
      * @param newMergeFields
@@ -122,36 +172,15 @@ public class CorrespondenceMergeFieldManager implements ApplicationListener<Cont
     public List<CorrespondenceMergeField> saveMergeFieldsData(List<CorrespondenceMergeField> newMergeFields, Authentication auth)
             throws IOException
     {
-        List<CorrespondenceMergeField> result = new ArrayList<>();
+        List<CorrespondenceMergeField> mergeFieldsByObjectType = new ArrayList<>();
+        String mergeFieldObjectType = newMergeFields.get(0).getFieldObjectType();
 
-        for (int numNewMergeFields=0; numNewMergeFields<newMergeFields.size(); numNewMergeFields++)
-        {
-            for (int numExistingMergeField=0; numExistingMergeField<mergeFields.size(); numExistingMergeField++)
-            {
-                CorrespondenceMergeField newMergeField = newMergeFields.get(numNewMergeFields);
-                CorrespondenceMergeField existingMergeField = mergeFields.get(numExistingMergeField);
+        mergeFieldsByObjectType = getMergeFieldsByType(mergeFieldObjectType);
 
-                //Adding new merge field
-                if (!newMergeField.getFieldId().equalsIgnoreCase(existingMergeField.getFieldId()) &&
-                        !newMergeField.getFieldId().equalsIgnoreCase(mergeFields.get(mergeFields.size()-1).getFieldId()) &&
-                        newMergeField.getFieldObjectType().equalsIgnoreCase(existingMergeField.getFieldObjectType()))
-                {
-                    newMergeFields.forEach(mergeField -> {
-                        CorrespondenceMergeField addMergeField = new CorrespondenceMergeField();
-                        addMergeField.setFieldId(mergeField.getFieldId());
-                        addMergeField.setFieldDescription(mergeField.getFieldDescription());
-                        addMergeField.setFieldObjectType(mergeField.getFieldObjectType());
-                        addMergeField.setFieldValue(mergeField.getFieldValue());
-                        result.add(addMergeField);
-                        mergeFields.add(addMergeField);
-                    });
-                }
-            }
-        }
-
+        mergeFields.removeAll(mergeFieldsByObjectType);
+        mergeFields.addAll(newMergeFields);
         updateMergeFieldConfiguration(mergeFields);
-
-        return result;
+        return mergeFields;
     }
     /**
      * @param mergeFields
@@ -160,7 +189,7 @@ public class CorrespondenceMergeFieldManager implements ApplicationListener<Cont
     private void updateMergeFieldConfiguration(Collection<CorrespondenceMergeField> mergeFields) throws IOException
     {
         List<CorrespondenceMergeField> configurations = mergeFields.stream()
-                .map(mergeField -> mapMergeFieldFromConfiguration(mergeField)).collect(Collectors.toList());
+                .map(mergeField -> generateCorrespodencenMergeField(mergeField)).collect(Collectors.toList());
 
         String configurationsOutput = getObjectConverter().getIndentedJsonMarshaller().marshal(configurations);
 

@@ -19,7 +19,7 @@
     <import resource="file:${user.home}/.arkcase/acm/app-config.xml"/>
 
     <bean id="correspondenceGenerator" class="com.armedia.acm.correspondence.service.CorrespondenceGenerator">
-        <property name="wordGenerator" ref="poiWordGenerator"/>
+        <property name="spelWordGenerator" ref="poiWordGenerator"/>
         <property name="ecmFileService" ref="ecmFileService"/>
         <property name="ecmFileDao" ref="ecmFileDao"/>
         <property name="correspondenceFolderName" value="${user.home}/.arkcase/acm/correspondenceTemplates"/>
