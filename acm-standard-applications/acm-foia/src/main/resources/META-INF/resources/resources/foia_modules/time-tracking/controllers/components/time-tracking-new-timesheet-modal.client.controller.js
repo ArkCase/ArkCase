@@ -606,7 +606,6 @@ angular.module('time-tracking').controller(
                                 timesheetTitle: objectInfo.title
                             });
                             MessageService.info(timesheetUpdatedMessage);
-                            ObjectService.showObject(ObjectService.ObjectTypes.TIMESHEET, objectInfo.id);
                             $modalInstance.close(objectInfo);
                             $scope.loading = false;
                             $scope.loadingIcon = "fa fa-floppy-o";
