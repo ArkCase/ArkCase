@@ -364,7 +364,6 @@ angular.module('cost-tracking').controller(
                                 }
                                 MentionsService.sendEmailToMentionedUsers($scope.paramsSummernote.emailAddresses, $scope.paramsSummernote.usersMentioned, ObjectService.ObjectTypes.COSTSHEET, "DETAILS", objectInfo.id, objectInfo.details);
                                 MessageService.info(costsheetUpdatedMessage);
-                                ObjectService.showObject(ObjectService.ObjectTypes.COSTSHEET, objectInfo.id);
                                 $modalInstance.close(objectInfo);
                                 $scope.loading = false;
                                 $scope.loadingIcon = "fa fa-floppy-o";

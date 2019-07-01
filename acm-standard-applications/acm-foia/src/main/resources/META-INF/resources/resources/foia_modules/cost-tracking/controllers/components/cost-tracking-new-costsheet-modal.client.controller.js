@@ -330,7 +330,6 @@ angular.module('cost-tracking').controller(
                                     costsheetTitle: objectInfo.title
                                 });
                                 MessageService.info(costsheetUpdatedMessage);
-                                ObjectService.showObject(ObjectService.ObjectTypes.COSTSHEET, objectInfo.id);
                                 $modalInstance.close(objectInfo);
                                 $scope.loading = false;
                                 $scope.loadingIcon = "fa fa-floppy-o";
