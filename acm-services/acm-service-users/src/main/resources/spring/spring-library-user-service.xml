@@ -28,6 +28,8 @@
     <bean id="acmUserService" class="com.armedia.acm.services.users.service.AcmUserServiceImpl">
         <property name="userDao" ref="userJpaDao"/>
         <property name="executeSolrQuery" ref="executeSolrQuery"/>
+        <property name="userRoleService" ref="userRoleService"/>
+        <property name="rolesToPrivilegesConfig" ref="rolesToPrivileges"/>
     </bean>
 
     <bean id="userRoleService" class="com.armedia.acm.services.users.service.AcmUserRoleService">

@@ -265,7 +265,10 @@
                 "icon": "fa fa-pencil-square-o",
                 "components": [
                     "billing"
-                ]
+                ],
+                "requiredPrivileges": [
+                    "acmListBillingItemsPrivilege"
+                    ]
             },
             {
                 "type": "p/CASE_FILE/suggestedCases",
