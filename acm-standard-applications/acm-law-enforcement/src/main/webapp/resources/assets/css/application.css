@@ -383,6 +383,7 @@ span.fancytree-title {
 
 .docTreeMenu {
     font-size: 100%;
+    top: 40% !important;
 }
 
 .docTreeMenu ul {
