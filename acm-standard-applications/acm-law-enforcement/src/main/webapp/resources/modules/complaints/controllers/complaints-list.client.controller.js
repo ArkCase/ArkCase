@@ -2,14 +2,14 @@
 
 angular.module('complaints').controller(
         'ComplaintsListController',
-        [ '$scope', '$state', '$stateParams', '$translate', 'UtilService', 'ObjectService', 'Complaint.ListService', 'Complaint.InfoService', 'Helper.ObjectBrowserService', 'ServCommService', 'MessageService', 'DocumentDetails.BillingItemPrivilegeService',
-                function($scope, $state, $stateParams, $translate, Util, ObjectService, ComplaintListService, ComplaintInfoService, HelperObjectBrowserService, ServCommService, MessageService, BillingItemPrivilegeService) {
+        [ '$scope', '$state', '$stateParams', '$translate', 'UtilService', 'ObjectService', 'Complaint.ListService', 'Complaint.InfoService', 'Helper.ObjectBrowserService', 'ServCommService', 'MessageService', 'Authentication',
+                function($scope, $state, $stateParams, $translate, Util, ObjectService, ComplaintListService, ComplaintInfoService, HelperObjectBrowserService, ServCommService, MessageService, Authentication) {
 
                     // maybe optional listener for "close-complaint"?
                     var eventName = "object.inserted";
-                    $scope.billingPrivilege = true;
-                    BillingItemPrivilegeService.getBillingItemPrivilege().then(function (result) {
-                        $scope.billingPrivilege = result.data;
+                    $scope.userPrivileges = [];
+                    Authentication.getUserPrivileges().then(function (data) {
+                        $scope.userPrivileges = data;
                     });
                     $scope.$bus.subscribe(eventName, function(data) {
                         if (data.objectType === ObjectService.ObjectTypes.COMPLAINT) {

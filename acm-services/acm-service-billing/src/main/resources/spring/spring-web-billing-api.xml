@@ -17,8 +17,4 @@
     <bean id="createBillingInvoice" class="com.armedia.acm.services.billing.web.api.CreateBillingInvoiceAPIController">
         <property name="billingService" ref="billingService"/>
     </bean>
-
-    <bean id="getBillingItemPrivilege" class="com.armedia.acm.services.billing.web.api.GetBillingItemPrivilegeAPIController">
-        <property name="billingService" ref="billingService"/>
-    </bean>
 </beans>

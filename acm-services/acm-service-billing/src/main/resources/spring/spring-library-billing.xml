@@ -13,8 +13,6 @@
         <property name="billingInvoiceDao" ref="billingInvoiceDao"/>
         <property name="billingEventPublisher" ref="billingEventPublisher"/>
         <property name="billingInvoiceBusinessRule" ref="billingInvoiceBusinessRule"/>
-        <property name="userRoleService" ref="userRoleService"/>
-        <property name="rolesToPrivilegesConfig" ref="rolesToPrivileges"/>
     </bean>
 
     <bean id="billingInvoiceBusinessRule" class="com.armedia.acm.services.billing.rules.BillingInvoiceBusinessRule"

@@ -63,8 +63,6 @@ public class BillingServiceImpl implements BillingService
     private BillingInvoiceDao billingInvoiceDao;
     private BillingInvoiceBusinessRule billingInvoiceBusinessRule;
     private BillingEventPublisher billingEventPublisher;
-    private AcmUserRoleService userRoleService;
-    private ApplicationRolesToPrivilegesConfig rolesToPrivilegesConfig;
 
     /**
      * @return the billingEventPublisher
@@ -199,19 +197,6 @@ public class BillingServiceImpl implements BillingService
         getBillingEventPublisher().publishBillingInvoiceCreatedEvent(updated);
         return updated;
     }
-
-    @Override
-    public boolean hasListBillingItemPrivilege(String userId) {
-        String billingItemPrivilegeName = "acmListBillingItemsPrivilege";
-        Set<String> userRoles = getUserRoleService().getUserRoles(userId);
-        Map<String, String> rolesPrivileges = getRolesToPrivilegesConfig().getRolesToPrivileges();
-        for (Map.Entry<String, String> entry : rolesPrivileges.entrySet())
-        {
-            if(userRoles.contains(entry.getKey()) && entry.getValue().contains(billingItemPrivilegeName))
-                return true;
-        }
-        return false;
-    }
     /**
      * @return the billingItemDao
      */
@@ -261,21 +246,5 @@ public class BillingServiceImpl implements BillingService
     public void setBillingInvoiceBusinessRule(BillingInvoiceBusinessRule billingInvoiceBusinessRule)
     {
         this.billingInvoiceBusinessRule = billingInvoiceBusinessRule;
-    }
-
-    public AcmUserRoleService getUserRoleService() {
-        return userRoleService;
-    }
-
-    public void setUserRoleService(AcmUserRoleService userRoleService) {
-        this.userRoleService = userRoleService;
-    }
-
-    public ApplicationRolesToPrivilegesConfig getRolesToPrivilegesConfig() {
-        return rolesToPrivilegesConfig;
-    }
-
-    public void setRolesToPrivilegesConfig(ApplicationRolesToPrivilegesConfig rolesToPrivilegesConfig) {
-        this.rolesToPrivilegesConfig = rolesToPrivilegesConfig;
     }
 }

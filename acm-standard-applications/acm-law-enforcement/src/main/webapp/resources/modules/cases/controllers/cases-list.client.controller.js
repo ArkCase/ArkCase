@@ -2,8 +2,8 @@
 
 angular.module('cases').controller(
         'CasesListController',
-        [ '$scope', '$state', '$stateParams', '$translate', 'UtilService', 'ObjectService', 'Case.ListService', 'Case.InfoService', 'Helper.ObjectBrowserService', 'ServCommService', 'MessageService', 'DocumentDetails.BillingItemPrivilegeService',
-                function($scope, $state, $stateParams, $translate, Util, ObjectService, CaseListService, CaseInfoService, HelperObjectBrowserService, ServCommService, MessageService, BillingItemPrivilegeService) {
+        [ '$scope', '$state', '$stateParams', '$translate', 'UtilService', 'ObjectService', 'Case.ListService', 'Case.InfoService', 'Helper.ObjectBrowserService', 'ServCommService', 'MessageService', 'Authentication',
+                function($scope, $state, $stateParams, $translate, Util, ObjectService, CaseListService, CaseInfoService, HelperObjectBrowserService, ServCommService, MessageService, Authentication) {
 
                     /*//
                      // Check to see if complaint page is shown as a result returned by Frevvo
@@ -23,9 +23,9 @@ angular.module('cases').controller(
                     //when we will get a callback for them we will check the ServCommService if it is current user
                     //subscribe to the bus for the object
                     var eventName = "object.inserted";
-                    $scope.billingPrivilege = true;
-                        BillingItemPrivilegeService.getBillingItemPrivilege().then(function (result) {
-                            $scope.billingPrivilege = result.data;
+                    $scope.userPrivileges = [];
+                        Authentication.getUserPrivileges().then(function (data) {
+                            $scope.userPrivileges = data;
                         });
 
                     $scope.$bus.subscribe(eventName, function(data) {

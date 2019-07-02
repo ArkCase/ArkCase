@@ -137,8 +137,8 @@
  </file>
  </example>
  */
-angular.module('directives').directive('objectTree', [ '$q', '$translate', 'UtilService', 'Acm.StoreService', 'Helper.ObjectBrowserService', 'ObjectService',
-    function($q, $translate, Util, Store, HelperObjectBrowserService, ObjectService) {
+angular.module('directives').directive('objectTree', [ '$q', '$translate', 'UtilService', 'Acm.StoreService', 'Helper.ObjectBrowserService', 'Authentication',
+    function($q, $translate, Util, Store, HelperObjectBrowserService, Authentication) {
     var Tree = {
         create: function(treeArgs) {
             Tree.Info.create({
@@ -556,11 +556,15 @@ angular.module('directives').directive('objectTree', [ '$q', '$translate', 'Util
             var nodeTypes = Util.goodMapValue(Tree, "treeConfig.nodeTypes", []);
             var key = data.node.key;
             var nodeId = Tree.Key.getNodeIdByKey(key);
-            var hasBillingPrivilege = Tree.scope.listBillingPrivilege;
-            if(hasBillingPrivilege && !hasBillingPrivilege.billingItemPrivilege){
-                for(var i = 0; i < nodeTypes.length; i++){
-                    if(nodeTypes[i].type.indexOf("billing") !== -1){
-                        nodeTypes.splice(i,1);
+            var userPrivileges = Tree.scope.userPrivileges;
+
+            for(var i = 0; i < nodeTypes.length; i++){
+                if(nodeTypes[i].requiredPrivileges ){
+                    for (var j = 0; j < nodeTypes[i].requiredPrivileges.length; j++){
+                        if(!userPrivileges.includes(nodeTypes[i].requiredPrivileges[j])) {
+                            nodeTypes.splice(i,1);
+                            break;
+                        }
                     }
                 }
             }
@@ -865,7 +869,7 @@ angular.module('directives').directive('objectTree', [ '$q', '$translate', 'Util
             onLoad: '&',
             onSelect: '&',
             treeControl: '=',
-            listBillingPrivilege: '=?'
+            userPrivileges: '=?'
         }
 
         ,
