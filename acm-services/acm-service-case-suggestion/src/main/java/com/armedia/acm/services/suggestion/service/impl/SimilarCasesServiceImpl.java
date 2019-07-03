@@ -79,11 +79,11 @@ public class SimilarCasesServiceImpl implements SimilarCasesService
         String query;
         if(isPortal)
         {
-            query = String.format("object_type_s:CASE_FILE AND request_status_lcs:Released AND title_parseable:*%s*", title);
+            query = String.format("object_type_s:CASE_FILE AND request_status_lcs:Released AND title_parseable:*\"%s\"*", title);
         }
         else
         {
-            query = String.format("object_type_s:CASE_FILE AND title_parseable:*%s*", title);
+            query = String.format("object_type_s:CASE_FILE AND title_parseable:*\"%s\"*", title);
         }
 
         String results = getExecuteSolrQuery().getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, query, 0, 99999, "", true, "",
@@ -168,11 +168,11 @@ public class SimilarCasesServiceImpl implements SimilarCasesService
 
             if(isPortal)
             {
-                caseQuery = String.format("object_type_s:CASE_FILE AND request_status_lcs:Released AND name:*%s*", sc.getCaseNumber());
+                caseQuery = String.format("object_type_s:CASE_FILE AND request_status_lcs:Released AND name:*\"%s\"*", sc.getCaseNumber());
             }
             else
             {
-                caseQuery = String.format("object_type_s:CASE_FILE AND name:*%s*", sc.getCaseNumber());
+                caseQuery = String.format("object_type_s:CASE_FILE AND name:*\"%s\"*", sc.getCaseNumber());
             }
 
             String caseResults = getExecuteSolrQuery().getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, caseQuery, 0, 99999, "", true, "",
