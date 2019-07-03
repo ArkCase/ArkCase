@@ -547,7 +547,6 @@ angular.module('directives').directive('objectTree', [ '$q', '$translate', 'Util
                         folder: false
                     });
                 }
-
                 return builder.getTree();
             }
             ,
@@ -561,7 +560,7 @@ angular.module('directives').directive('objectTree', [ '$q', '$translate', 'Util
             for(var i = 0; i < nodeTypes.length; i++){
                 if(nodeTypes[i].requiredPrivileges ){
                     for (var j = 0; j < nodeTypes[i].requiredPrivileges.length; j++){
-                        if(!userPrivileges.includes(nodeTypes[i].requiredPrivileges[j])) {
+                        if(userPrivileges && !userPrivileges.includes(nodeTypes[i].requiredPrivileges[j])) {
                             nodeTypes.splice(i,1);
                             break;
                         }
