@@ -156,7 +156,7 @@ public class ErrorsLogFileService
         StringBuilder fileName = new StringBuilder();
         filePatternProcessor.getNextTime(System.currentTimeMillis(), days, false);
         filePatternProcessor.updateTime();
-        filePatternProcessor.formatFileName(fileName, true, new Object[] {});
+        filePatternProcessor.formatFileName(fileName, false, new Object[] {});
         return fileName.toString();
     }
 
