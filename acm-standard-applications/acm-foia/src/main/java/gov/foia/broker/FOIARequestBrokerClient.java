@@ -34,8 +34,8 @@ import com.armedia.acm.web.api.MDCConstants;
 import com.armedia.broker.AcmObjectBrokerClient;
 
 import org.apache.activemq.ActiveMQConnectionFactory;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Value;
 
@@ -88,7 +88,7 @@ public class FOIARequestBrokerClient extends AcmObjectBrokerClient<PortalFOIAReq
 
                 if (isExternalEnable())
                 {
-                    if (entity.getUserId() == null)
+                    if (entity.getUserId() == null || entity.getUserId().equals("anonymousUser"))
                     {
                         entity.setUserId(getExternalUserId());
                     }
