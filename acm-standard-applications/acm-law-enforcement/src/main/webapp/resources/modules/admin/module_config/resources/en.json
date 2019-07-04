@@ -983,7 +983,8 @@
                 "statusActivated": "Activated",
                 "objectType": "Object Type",
                 "version": "Version",
-                "templateVersionActive": "Active"
+                "templateVersionActive": "Active",
+                "templateModelProvider": "Template Model Provider"
             },
             "templates.fieldNames.label": "Map fields to values from the template",
             "templates.querySelect": {
@@ -1002,14 +1003,20 @@
                 "querySelect.label": "Query Select",
                 "label.label": "Display Name",
                 "btnCancel.text": "Cancel",
-                "btnOk.text": "Upload Template"
+                "btnOk.text": "Upload Template",
+                "templateModelProvider.label": "Template Model Provider",
+                "navigationBar": "Correspondence Templates Fields"
             },
             "templates.version.modal": {
                 "btnOk.text": "Confirm"
             },
+            "templates.tabs": {
+                "firstTab" : "Correspondence Object Tree View",
+                "secondTab" : "Merge Fields"
+            },
             "mergefields": "Merge Fields Configuration",
             "mergefields.saveMergeFields": "Save",
-            "mergefields.versionMergeFields": "Versions",
+            "mergefields.deleteMergeFields": "Delete",
             "mergefields.grid": {
                 "fieldId": "ID",
                 "fieldValue": "Value",
@@ -1024,6 +1031,19 @@
             "mergefields.version.modal": {
                 "btnLoadVersion.text": "Load Version",
                 "btnCancel.text": "Cancel"
+            },
+            "mergefields.addModal": {
+                "fieldId": "Field Id",
+                "fieldValue": "Field Value",
+                "fieldDescription": "Field Description",
+                "objectType": "Object Type",
+                "mergeFieldForm": "Merge Field Configuration",
+                "addMergeField": "Add Merge Field"
+            },
+            "mergefields.addModal.placeHolders": {
+                "fieldId": "Enter Merge Field Id",
+                "fieldValue": "Enter Merge Field Value",
+                "fieldDescription": "Enter Merge Field Description"
             }
         },
         "forms.defaultValue": "Select Target",
@@ -1247,6 +1267,7 @@
     },
     "contextMenu.options": {
         "restore": "Restore",
-        "delete": "Delete"
+        "delete" : "Delete",
+        "copyVariablePath": "Copy Variable Path"
     }
 }

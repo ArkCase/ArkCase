@@ -107,7 +107,8 @@
     "@bower_components/pdf.js-viewer": "legalthings/pdf.js-viewer#^1.6.211",
     "@bower_components/combodate": "vitalets/combodate#~1.1.0",
     "@bower_components/ment.io": "jeff-collins/ment.io#~0.9.24",
-    "angular-bootstrap-contextmenu": "^1.2.0"
+    "angular-bootstrap-contextmenu": "^1.2.0",
+    "angular-bootstrap-nav-tree": "^0.2.1"
   },
   "devDependencies": {
     "grunt": "^0.4.5"

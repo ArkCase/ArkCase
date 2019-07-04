@@ -27,14 +27,12 @@ package com.armedia.acm.plugins.casefile.web.api;
  * #L%
  */
 
-import com.armedia.acm.core.exceptions.CorrespondenceMergeFieldVersionException;
 import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.casefile.pipeline.CaseFilePipelineContext;
 import com.armedia.acm.plugins.casefile.service.EnqueueCaseFileService;
 import com.armedia.acm.plugins.casefile.utility.CaseFileEventUtility;
 import com.armedia.acm.services.users.service.tracker.UserTrackerService;
-
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -45,7 +43,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
-
 import java.util.Date;
 
 @Controller
@@ -64,7 +61,7 @@ public class CaseFileEnqueueAPIController
     public CaseFileEnqueueResponse enqueue(@PathVariable("caseId") Long caseId,
             @RequestParam(value = "nextQueue", required = true) String nextQueue,
             @RequestParam(value = "nextQueueAction") String nextQueueAction,
-            HttpSession session, Authentication auth) throws CorrespondenceMergeFieldVersionException
+            HttpSession session, Authentication auth)
     {
 
         CaseFilePipelineContext context = new CaseFilePipelineContext();

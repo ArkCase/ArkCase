@@ -1,10 +1,10 @@
-package com.armedia.acm.plugins.admin.exception;
+package gov.foia.model.provider;
 
 /*-
  * #%L
- * ACM Default Plugin: admin
+ * ACM Default Plugin: Case File
  * %%
- * Copyright (C) 2014 - 2018 ArkCase LLC
+ * Copyright (C) 2014 - 2019 ArkCase LLC
  * %%
  * This file is part of the ArkCase software. 
  * 
@@ -27,33 +27,23 @@ package com.armedia.acm.plugins.admin.exception;
  * #L%
  */
 
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import com.armedia.acm.core.provider.TemplateModelProvider;
+import gov.foia.model.FOIARequest;
 
 /**
- * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Jan 30, 2017
+ * @author darko.dimitrievski
  */
-@ResponseStatus(value = HttpStatus.NOT_FOUND, reason = "Error while retreiving correspondence query.")
-public class CorrespondenceQueryNotFoundException extends RuntimeException
+public class FOIARequestTemplateModelProvider implements TemplateModelProvider<FOIARequest>
 {
-
-    private static final long serialVersionUID = -4225575694894026598L;
-
-    public CorrespondenceQueryNotFoundException()
+    @Override
+    public FOIARequest getModel(Object foiaRequest)
     {
+        return (FOIARequest)foiaRequest;
     }
 
-    public CorrespondenceQueryNotFoundException(Throwable t)
+    @Override
+    public Class<FOIARequest> getType()
     {
-        super(t);
+        return FOIARequest.class;
     }
-
-    /**
-     * @param message
-     */
-    public CorrespondenceQueryNotFoundException(String message)
-    {
-        super(message);
-    }
-
 }
