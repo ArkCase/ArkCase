@@ -206,6 +206,8 @@ public class PortalCreateRequestService
             personOrganizationAssociation.setOrganization(organization);
             personOrganizationAssociation.setDefaultOrganization(true);
             personOrganizationAssociation.setPerson(requester);
+            personOrganizationAssociation.setPersonToOrganizationAssociationType("owner");
+            personOrganizationAssociation.setOrganizationToPersonAssociationType("owned");
             personOrganizationAssociations.add(personOrganizationAssociation);
             requester.setOrganizationAssociations(personOrganizationAssociations);
         }
