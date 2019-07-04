@@ -122,7 +122,7 @@ public class SimilarCasesServiceImpl implements SimilarCasesService
                     {
                         JSONObject docFile = docFiles.getJSONObject(i);
 
-                        if (Long.valueOf(docFile.getString("object_id_s")).equals(objectId))
+                        if (objectId != null && Long.valueOf(docFile.getString("object_id_s")).equals(objectId))
                         {
                             continue;
                         }
@@ -169,6 +169,7 @@ public class SimilarCasesServiceImpl implements SimilarCasesService
         {
             if (word.length() >= 3)
             {
+                List<SuggestedCase> suggestedCaseList = new ArrayList<>();
                 if (isPortal)
                 {
                     fileQuery = String.format("\"%s\" AND object_type_s:FILE AND parent_ref_s:*CASE_FILE AND public_flag_b:true", word);
@@ -201,10 +202,10 @@ public class SimilarCasesServiceImpl implements SimilarCasesService
                     suggestedCase.setCaseNumber(docFile.getString("parent_number_lcs"));
                     suggestedCase.setFile(file);
 
-                    records.add(suggestedCase);
+                    suggestedCaseList.add(suggestedCase);
                 }
 
-                for (SuggestedCase sc : records)
+                for (SuggestedCase sc : suggestedCaseList)
                 {
                     String caseQuery;
 
@@ -235,7 +236,7 @@ public class SimilarCasesServiceImpl implements SimilarCasesService
                         {
                             JSONObject caseDocFile = caseDocFiles.getJSONObject(i);
 
-                            if (objectId != null || Long.valueOf(caseDocFile.getString("object_id_s")).equals(objectId))
+                            if (objectId != null && Long.valueOf(caseDocFile.getString("object_id_s")).equals(objectId))
                             {
                                 continue;
                             }
@@ -254,6 +255,7 @@ public class SimilarCasesServiceImpl implements SimilarCasesService
                         }
                     }
                 }
+                records.addAll(suggestedCaseList);
             }
         }
 
