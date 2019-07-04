@@ -126,7 +126,7 @@ angular.module('services').service('DueDate.Service', [ '$translate', function($
             }
         }
         else { //otherwise calculate overdue days
-            while (dueDate.isBefore(today, 'day')) {
+            while (dueDate.isBefore(momentDate, 'day')) {
                 dueDate.add(1, 'days');
                 if (!isHoliday(holidays, dueDate)) {
                     days += 1;
