@@ -21,6 +21,8 @@
                 <constraints unique="true" uniqueConstraintName="uk_portal_url" nullable="false"/>
             </column>
             <column name="cm_user_id" type="VARCHAR(${cmUserIdLength})">
+                <constraints foreignKeyName="fk_user_id" referencedColumnNames="cm_user_id" referencedTableName="acm_user"
+                             nullable="false"/>
             </column>
         </createTable>
         <createIndex tableName="acm_portal_info" indexName="portal_info_unique_portal_id" unique="true">
@@ -39,6 +41,8 @@
     <changeSet id="02-alter-table-acm_portal_info-add-cm_group_name" author="lazo.lazarev" dbms="oracle,postgresql,mssql,mysql">
         <addColumn tableName="acm_portal_info">
             <column name="cm_group_name" type="VARCHAR(${cmGroupNameLength}))" defaultValue="0">
+                <constraints foreignKeyName="fk_pi_group_name" referencedColumnNames="cm_group_name" referencedTableName="acm_group"
+                             nullable="false"/>
             </column>
         </addColumn>
     </changeSet>
