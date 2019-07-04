@@ -75,7 +75,7 @@ angular.module('admin').controller('Admin.AddCMTemplateController', [ '$scope', 
             if (templateModelProviderName == 'ComplaintTemplateModelProvider'){
                 $scope.mergingType = ObjectService.ObjectTypes.COMPLAINT;
             }
-            else if (templateModelProvider == 'CaseFileTemplateModelProvider'){
+            else if (templateModelProvider == 'CaseFileTemplateModelProvider' || templateModelProvider =='FOIARequestTemplateModelProvider'){
                 $scope.mergingType = ObjectService.ObjectTypes.CASE_FILE;
             }
 
