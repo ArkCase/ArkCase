@@ -80,13 +80,15 @@ angular.module('cases').controller(
                     $scope.calculateDaysObj = {};
                     $scope.owningGroup = ObjectModelService.getGroup(data);
                     $scope.assignee = ObjectModelService.getAssignee(data);
-                    if (!$scope.includeWeekends) {
-                        $scope.calculateDaysObj = DueDateService.daysLeft($scope.holidays, $scope.objectInfo.dueDate);
+                    if ($scope.objectInfo.dueDate != null) {
+                        if (!$scope.includeWeekends) {
+                            $scope.calculateDaysObj = DueDateService.daysLeft($scope.holidays, $scope.objectInfo.dueDate);
+                        }
+                        else {
+                            $scope.calculateDaysObj = DueDateService.daysLeftWithWeekends($scope.holidays, $scope.objectInfo.dueDate);
+                        }
+                        $scope.dueDate = $scope.objectInfo.dueDate.replace(/(\d{4})\-(\d{2})\-(\d{2}).*/, '$2/$3/$1');
                     }
-                    else {
-                        $scope.calculateDaysObj = DueDateService.daysLeftWithWeekends($scope.holidays, $scope.objectInfo.dueDate);
-                    }
-                    $scope.dueDate = $scope.objectInfo.dueDate.replace(/(\d{4})\-(\d{2})\-(\d{2}).*/, '$2/$3/$1');
                     CaseLookupService.getApprovers($scope.owningGroup, $scope.assignee).then(function (approvers) {
                         var options = [];
                         _.each(approvers, function (approver) {
