@@ -31,7 +31,6 @@ import static gov.foia.model.FOIAConstants.MIME_TYPE_PDF;
 
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
-import com.armedia.acm.core.exceptions.CorrespondenceMergeFieldVersionException;
 import com.armedia.acm.pdf.PdfServiceException;
 import com.armedia.acm.pdf.service.PdfService;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
@@ -69,8 +68,7 @@ public class PDFDocumentGenerator implements DocumentGenerator
 
     @Override
     public EcmFile generateAndUpload(FOIADocumentDescriptor documentDescriptor, FOIAObject acmObject, String targetCmisFolderId,
-            String targetFilename, Map<String, String> substitutions)
-            throws DocumentGeneratorException, CorrespondenceMergeFieldVersionException
+            String targetFilename, Map<String, String> substitutions) throws DocumentGeneratorException
     {
         String filename = null;
 

@@ -1,10 +1,10 @@
-package com.armedia.acm.correspondence.utils;
+package com.armedia.acm.plugins.complaint.model.provider;
 
 /*-
  * #%L
- * ACM Service: Correspondence Library
+ * ACM Default Plugin: Complaints
  * %%
- * Copyright (C) 2014 - 2018 ArkCase LLC
+ * Copyright (C) 2014 - 2019 ArkCase LLC
  * %%
  * This file is part of the ArkCase software. 
  * 
@@ -27,16 +27,23 @@ package com.armedia.acm.correspondence.utils;
  * #L%
  */
 
-import org.springframework.core.io.Resource;
-
-import java.io.IOException;
-import java.io.OutputStream;
-import java.util.Map;
+import com.armedia.acm.core.provider.TemplateModelProvider;
+import com.armedia.acm.plugins.complaint.model.Complaint;
 
 /**
- * Created by armdev on 12/15/14.
+ * @author darko.dimitrievski
  */
-public interface PoiWordGenerator
+public class ComplaintTemplateModelProvider implements TemplateModelProvider<Complaint>
 {
-    void generate(Resource wordTemplate, OutputStream targetStream, Map<String, String> substitutions) throws IOException;
+    @Override
+    public Complaint getModel(Object complaint)
+    {
+        return (Complaint)complaint;
+    }
+
+    @Override
+    public Class<Complaint> getType()
+    {
+        return Complaint.class;
+    }
 }

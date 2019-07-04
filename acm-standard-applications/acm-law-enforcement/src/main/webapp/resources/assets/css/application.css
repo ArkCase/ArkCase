@@ -1856,3 +1856,7 @@ a.primary {
     font-size: 16px;
     margin-left: 80px;
 }
+
+.marginTop {
+    margin-top: 5px
+}

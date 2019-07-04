@@ -1,10 +1,10 @@
-package com.armedia.acm.core.exceptions;
+package com.armedia.acm.plugins.casefile.model.provider;
 
 /*-
  * #%L
- * ACM Core API
+ * ACM Default Plugin: Case File
  * %%
- * Copyright (C) 2014 - 2018 ArkCase LLC
+ * Copyright (C) 2014 - 2019 ArkCase LLC
  * %%
  * This file is part of the ArkCase software. 
  * 
@@ -27,9 +27,23 @@ package com.armedia.acm.core.exceptions;
  * #L%
  */
 
-public class CorrespondenceMergeFieldVersionException extends Exception
+import com.armedia.acm.core.provider.TemplateModelProvider;
+import com.armedia.acm.plugins.casefile.model.CaseFile;
+
+/**
+ * @author darko.dimitrievski
+ */
+public class CaseFileTemplateModelProvider implements TemplateModelProvider<CaseFile>
 {
-    public CorrespondenceMergeFieldVersionException(String message) {
-        super(message);
+    @Override
+    public CaseFile getModel(Object caseFile)
+    {
+        return (CaseFile)caseFile;
+    }
+
+    @Override
+    public Class<CaseFile> getType()
+    {
+        return CaseFile.class;
     }
 }

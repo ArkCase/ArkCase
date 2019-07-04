@@ -53,8 +53,6 @@ public class CorrespondenceTemplateRequestResponse
 
     private String templateFilename;
 
-    private String correspondenceQueryBeanId;
-
     private String objectType;
 
     private String dateFormatString;
@@ -69,6 +67,7 @@ public class CorrespondenceTemplateRequestResponse
 
     private String downloadFileName;
 
+    private String templateModelProvider;
     /**
      * @return the templateId
      */
@@ -169,23 +168,6 @@ public class CorrespondenceTemplateRequestResponse
     public void setTemplateFilename(String templateFilename)
     {
         this.templateFilename = templateFilename;
-    }
-
-    /**
-     * @return the correspondenceQueryBeanId
-     */
-    public String getCorrespondenceQueryBeanId()
-    {
-        return correspondenceQueryBeanId;
-    }
-
-    /**
-     * @param correspondenceQueryBeanId
-     *            the correspondenceQueryBeanId to set
-     */
-    public void setCorrespondenceQueryBeanId(String correspondenceQueryBeanId)
-    {
-        this.correspondenceQueryBeanId = correspondenceQueryBeanId;
     }
 
     /**
@@ -307,4 +289,20 @@ public class CorrespondenceTemplateRequestResponse
         this.downloadFileName = downloadFileName;
     }
 
+    /**
+     * @return the templateModelProvider
+     */
+    public String getTemplateModelProvider()
+    {
+        return templateModelProvider;
+    }
+
+    /**
+     * @param templateModelProvider
+     *            the templateModelProvider to set
+     */
+    public void setTemplateModelProvider(String templateModelProvider)
+    {
+        this.templateModelProvider = templateModelProvider;
+    }
 }

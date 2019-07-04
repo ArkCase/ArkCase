@@ -34,7 +34,6 @@ import static gov.foia.model.FOIARequestUtils.extractRequestorEmailAddress;
 
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
-import com.armedia.acm.core.exceptions.CorrespondenceMergeFieldVersionException;
 import com.armedia.acm.plugins.casefile.pipeline.CaseFilePipelineContext;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
@@ -92,7 +91,7 @@ public class FOIAExtensionEmailHandler implements PipelineHandler<FOIARequest, C
                 file = generateExtensionDocument(entity, pipelineContext);
                 ecmFileVersion = file.getVersions().get(file.getVersions().size() - 1);
             }
-            catch (CorrespondenceMergeFieldVersionException e)
+            catch (Exception e)
             {
                 throw new PipelineProcessException(e);
             }
@@ -141,7 +140,7 @@ public class FOIAExtensionEmailHandler implements PipelineHandler<FOIARequest, C
     }
 
     private EcmFile generateExtensionDocument(FOIARequest entity, CaseFilePipelineContext pipelineContext)
-            throws PipelineProcessException, CorrespondenceMergeFieldVersionException
+            throws PipelineProcessException
     {
         FOIADocumentDescriptor documentDescriptor = getDocumentGeneratorService().getDocumentDescriptor(entity,
                 FOIAConstants.REQ_EXTENSION);

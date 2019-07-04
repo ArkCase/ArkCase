@@ -1,13 +1,10 @@
-/**
- *
- */
-package com.armedia.acm.correspondence.model;
+package com.armedia.acm.correspondence.utils;
 
 /*-
  * #%L
  * ACM Service: Correspondence Library
  * %%
- * Copyright (C) 2014 - 2018 ArkCase LLC
+ * Copyright (C) 2014 - 2019 ArkCase LLC
  * %%
  * This file is part of the ArkCase software. 
  * 
@@ -30,11 +27,25 @@ package com.armedia.acm.correspondence.model;
  * #L%
  */
 
+import org.springframework.core.io.Resource;
+
+import java.io.IOException;
+import java.io.OutputStream;
+
 /**
- * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Jan 25, 2017
- *
+ * @author darko.dimitrievski
  */
-public enum QueryType
+public interface SpELWordEvaluator
 {
-    CASE_FILE, COMPLAINT;
+    /**
+     * Generating correspondence template, where the merge fields values are mapped by the SPEL expressions generated results
+     *
+     * @param wordTemplate - the correspondence template
+     * @param targetStream
+     * @param objectType
+     * @param parentObjectId
+     *
+     * @throws IOException
+     */
+    void generate(Resource wordTemplate, OutputStream targetStream, String objectType, Long parentObjectId) throws IOException;
 }
