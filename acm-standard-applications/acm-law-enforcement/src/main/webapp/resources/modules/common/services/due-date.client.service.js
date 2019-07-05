@@ -24,6 +24,9 @@ angular.module('services').service('DueDate.Service', [ '$translate', function($
     });
 
     function dueDateWorkingDays(startDate, days, holidays) {
+        if(typeof(startDate) == "object") {
+            startDate = startDate.toISOString();
+        }
         var momentObject = moment(startDate.replace(/(\d{4})\-(\d{2})\-(\d{2}).*/, '$1/$2/$3'));
         var count = 0;
         while (count < days) {
@@ -38,6 +41,9 @@ angular.module('services').service('DueDate.Service', [ '$translate', function($
     }
 
     function dueDateWithWeekends(startDate, days, holidays) {
+        if(typeof(startDate) == "object") {
+            startDate = startDate.toISOString();
+        }
         var momentObject = moment(startDate.replace(/(\d{4})\-(\d{2})\-(\d{2}).*/, '$1/$2/$3'));
         var count = 0;
         while (count < days) {
@@ -52,6 +58,9 @@ angular.module('services').service('DueDate.Service', [ '$translate', function($
     }
 
     function workingDays(startDate, holidays) {
+        if(typeof(startDate) == "object") {
+            startDate = startDate.toISOString();
+        }
         var momentObject = moment(startDate.replace(/(\d{4})\-(\d{2})\-(\d{2}).*/, '$1/$2/$3'));
         var today = moment();
         var days = -1;
@@ -66,6 +75,9 @@ angular.module('services').service('DueDate.Service', [ '$translate', function($
     }
 
     function workingDaysWithWeekends(startDate, holidays) {
+        if(typeof(startDate) == "object") {
+            startDate = startDate.toISOString();
+        }
         var momentObject = moment(startDate.replace(/(\d{4})\-(\d{2})\-(\d{2}).*/, '$1/$2/$3'));
         var today = moment();
         var days = -1;
@@ -80,10 +92,13 @@ angular.module('services').service('DueDate.Service', [ '$translate', function($
     }
 
     function daysLeft(holidays, dueDate) {
-        var dueDate = moment(dueDate.replace(/(\d{4})\-(\d{2})\-(\d{2}).*/, '$1/$2/$3'));
+        if(typeof(dueDate) == "object") {
+            dueDate = dueDate.toISOString();
+        }
+        var momentDueDate = moment(dueDate.replace(/(\d{4})\-(\d{2})\-(\d{2}).*/, '$1/$2/$3'));
         var momentDate = moment();
         var days = 0;
-        if (dueDate > momentDate) { //calculate days remaining
+        if (momentDueDate > momentDate) { //calculate days remaining
             while (momentDate < dueDate) {
                 momentDate.add(1, 'days');
                 if (!isWeekend(momentDate) && !isHoliday(holidays, momentDate)) {
@@ -95,9 +110,9 @@ angular.module('services').service('DueDate.Service', [ '$translate', function($
                 isOverdue: false
             }
         } else { //otherwise calculate overdue days
-            while (dueDate.isBefore(momentDate, 'day')) {
-                dueDate.add(1, 'days');
-                if (!isWeekend(dueDate) && !isHoliday(holidays, dueDate)) {
+            while (momentDueDate.isBefore(momentDate, 'day')) {
+                momentDueDate.add(1, 'days');
+                if (!isWeekend(momentDueDate) && !isHoliday(holidays, momentDueDate)) {
                     days += 1;
                 }
             }
@@ -110,10 +125,13 @@ angular.module('services').service('DueDate.Service', [ '$translate', function($
 
 
     function daysLeftWithWeekends(holidays, dueDate) {
-        var dueDate = moment(dueDate.replace(/(\d{4})\-(\d{2})\-(\d{2}).*/, '$1/$2/$3'));
+        if(typeof(dueDate) == "object") {
+            dueDate = dueDate.toISOString();
+        }
+        var momentDueDate = moment(dueDate.replace(/(\d{4})\-(\d{2})\-(\d{2}).*/, '$1/$2/$3'));
         var momentDate = moment();
         var days = 0;
-        if(dueDate > momentDate) { //calculate days remaining
+        if(momentDueDate > momentDate) { //calculate days remaining
             while (momentDate < dueDate) {
                 momentDate.add(1, 'days');
                 if (!isHoliday(holidays, momentDate)) {
@@ -126,9 +144,9 @@ angular.module('services').service('DueDate.Service', [ '$translate', function($
             }
         }
         else { //otherwise calculate overdue days
-            while (dueDate.isBefore(momentDate, 'day')) {
-                dueDate.add(1, 'days');
-                if (!isHoliday(holidays, dueDate)) {
+            while (momentDueDate.isBefore(momentDate, 'day')) {
+                momentDueDate.add(1, 'days');
+                if (!isHoliday(holidays, momentDueDate)) {
                     days += 1;
                 }
             }
@@ -150,6 +168,9 @@ angular.module('services').service('DueDate.Service', [ '$translate', function($
     }
 
     function calculateOverdueDays(dueDate, remainingDays, holidays){
+        if(typeof(dueDate) == "object") {
+            dueDate = dueDate.toISOString();
+        }
         var today = moment(new Date());
         var momentDueDate = moment(dueDate.replace(/(\d{4})\-(\d{2})\-(\d{2}).*/, '$1/$2/$3'));
         var countOverdueDays = 0;
@@ -171,6 +192,9 @@ angular.module('services').service('DueDate.Service', [ '$translate', function($
     }
 
     function calculateOverdueDaysWithWeekends(dueDate, remainingDays, holidays){
+        if(typeof(dueDate) == "object") {
+            dueDate = dueDate.toISOString();
+        }
         var today = moment(new Date());
         var momentDueDate = moment(dueDate.replace(/(\d{4})\-(\d{2})\-(\d{2}).*/, '$1/$2/$3'));
         var countOverdueDays = 0;
