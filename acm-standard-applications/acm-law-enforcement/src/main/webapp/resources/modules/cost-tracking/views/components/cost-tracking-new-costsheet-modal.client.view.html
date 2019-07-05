@@ -15,7 +15,7 @@
                     <div class="col-sm-6 form-group">
                         <label for="status" translate>costTracking.comp.newCostsheet.status</label>
                         <select id="status" ng-model="costsheet.status" class="form-control input-md"
-                                ng-disabled="costsheetProperties['cost.plugin.useApprovalWorkflow'] === 'true' || !isEdit" required>
+                                ng-disabled="costsheetProperties['cost.plugin.useApprovalWorkflow']" required>
                             <option ng-repeat="option in costsheetStatuses" value="{{option.key}}">
                                 {{option.value | translate}}
                             </option>
