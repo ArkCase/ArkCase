@@ -98,9 +98,9 @@
             "cost",
             "tags",
             "calendar",
+            "suggestedCases",
             "exemption",
-            "billing",
-            "suggestedCases"
+            "billing"
         ]
     },
     {
