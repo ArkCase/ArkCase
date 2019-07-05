@@ -12,6 +12,7 @@ angular.module('cases').config([ '$stateProvider', function($stateProvider) {
                 $translatePartialLoader.addPart('common');
                 $translatePartialLoader.addPart('cases');
                 $translatePartialLoader.addPart('request-info');
+                $translatePartialLoader.addPart('admin');
                 return $translate.refresh();
             } ]
         }
