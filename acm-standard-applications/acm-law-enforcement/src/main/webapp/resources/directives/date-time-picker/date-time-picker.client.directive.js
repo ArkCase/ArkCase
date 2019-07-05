@@ -7,7 +7,8 @@ angular.module('directives').directive('dateTimePicker', ['moment', 'Util.DateSe
             property: '@',
             timeFormatDisabled: '@',
             datePickerId: '@',
-            afterSave : '&onAfterSave'
+            afterSave : '&onAfterSave',
+            isRequired: '=?'
         },
         link: function ($scope, element) {
             $scope.editable = false;
