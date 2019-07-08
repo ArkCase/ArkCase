@@ -144,8 +144,8 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
             }
             catch (Exception e)
             {
-                log.error("Failed to send email to [{}].", emailAddress, exception);
                 exception = e;
+                log.error("Failed to send email to [{}].", emailAddress, exception);
             }
         }
         for (SmtpEventSentEvent event : sentEvents)

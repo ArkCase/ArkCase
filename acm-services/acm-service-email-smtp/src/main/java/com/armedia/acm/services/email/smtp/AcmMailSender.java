@@ -76,6 +76,15 @@ public class AcmMailSender
         this.smtpsMailSender = smtpsMailSender;
     }
 
+    /**
+     * Returns preconfigured mail sender instance depending on weather we use encryption or not.
+     * The host, port, username and password values are set each time the sender is required since
+     * the mail configuration can be changed on runtime.
+     *
+     * NOTE: The method is not thread safe but it is correct since EmailSenderConfig is the same for all threads.
+     *
+     * @return JavaMailSenderImpl
+     */
     private JavaMailSenderImpl getMailSender()
     {
         log.debug("Mail sender configured with: encryption: [{}], host: [{}], port: [{}], username: [{}]",
