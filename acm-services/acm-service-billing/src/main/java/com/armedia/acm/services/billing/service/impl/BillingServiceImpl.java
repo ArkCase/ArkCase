@@ -13,8 +13,6 @@ import com.armedia.acm.services.billing.model.BillingItem;
 import com.armedia.acm.services.billing.rules.BillingInvoiceBusinessRule;
 import com.armedia.acm.services.billing.service.BillingService;
 
-import com.armedia.acm.services.users.model.ApplicationRolesToPrivilegesConfig;
-import com.armedia.acm.services.users.service.AcmUserRoleService;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 
@@ -22,8 +20,6 @@ import javax.persistence.PersistenceException;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 /*-
  * #%L

@@ -114,7 +114,7 @@ public class UserInfoAPIController
         return lang;
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/getUserPrivileges", produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(method = RequestMethod.GET, value = "/userPrivileges", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public Set<String> getUserPrivileges(Authentication authentication)
     {

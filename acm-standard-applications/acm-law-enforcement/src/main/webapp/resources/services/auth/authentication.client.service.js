@@ -34,7 +34,7 @@ angular.module('services').factory('Authentication', [ '$resource', 'Acm.StoreSe
 
         _getUserPrivileges: {
             method: 'GET',
-            url: 'api/v1/users/getUserPrivileges',
+            url: 'api/v1/users/userPrivileges',
             isArray: true
         }
     });
