@@ -77,7 +77,7 @@ public class AcmMailSender
     }
 
     /**
-     * Returns preconfigured mail sender instance depending on weather we use encryption or not.
+     * Returns preconfigured mail sender instance depending on whether we use encryption or not.
      * The host, port, username and password values are set each time the sender is required since
      * the mail configuration can be changed on runtime.
      *
