@@ -79,8 +79,8 @@ public class PentahoDownloadGeneratedReportService
 
     public String buildDownloadUrl(String fileName)
     {
-        return reportsConfig.getServerUrl()
-                + ((reportsConfig.getServerPort() != null ? ":" + reportsConfig.getServerPort() : ""))
+        return reportsConfig.getServerInternalUrl()
+                + ((reportsConfig.getServerInternalPort() != null ? ":" + reportsConfig.getServerInternalPort() : ""))
                 + reportsConfig.getDownloadApi().replace("{reportFileName}", fileName);
     }
 
