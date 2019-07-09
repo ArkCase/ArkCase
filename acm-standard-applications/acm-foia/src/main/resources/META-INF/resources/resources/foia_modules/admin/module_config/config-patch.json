@@ -70,12 +70,6 @@
                     "displayName": "admin.portals.portalsConfiguration.portalUser",
                     "visible": true,
                     "headerCellFilter": "translate"
-                },
-                {
-                    "name": "portalAuthenticationFlag",
-                    "displayName": "admin.portals.portalsConfiguration.enablePortalAuthentication",
-                    "visible": true,
-                    "headerCellFilter": "translate"
                 }
             ],
             "paginationPageSizes": [

@@ -75,8 +75,7 @@ angular.module('admin').controller(
                             portalDescription: '',
                             fullName: '',
                             userId: '',
-                            groupName: '',
-                            portalAuthenticationFlag: false
+                            groupName: ''
                         };
 
                         showModal(portal).then(function(data) {
@@ -100,8 +99,7 @@ angular.module('admin').controller(
                             portalDescription: rowEntity.portalDescription,
                             fullName: rowEntity.fullName,
                             userId: rowEntity.userId,
-                            groupName: rowEntity.groupName,
-                            portalAuthenticationFlag: rowEntity.portalAuthenticationFlag
+                            groupName: rowEntity.groupName
                         };
                         showModal(portal).then(function(data) {
 
@@ -138,5 +136,6 @@ angular.module('admin').controller(
                         window.getSelection().removeAllRanges();
 
                     }
+
 
                 } ]);
