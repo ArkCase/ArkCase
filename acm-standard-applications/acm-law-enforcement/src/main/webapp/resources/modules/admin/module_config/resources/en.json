@@ -500,7 +500,6 @@
         "portals.portalsConfiguration": {
             "nodeTitle": "Portals Service",
             "title": "Portals Configuration",
-            "enablePortalAuthentication": " Enable Portal Authentication",
             "url": "URL",
             "id": "ID",
             "portalId": "Portal ID",

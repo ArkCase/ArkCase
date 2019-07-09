@@ -31,7 +31,6 @@ import com.armedia.acm.portalgateway.model.PortalInfo;
 
 /**
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity May 30, 2018
- *
  */
 public class PortalInfoDTO
 {
@@ -62,7 +61,6 @@ public class PortalInfoDTO
 
     private String groupName;
 
-    private Boolean portalAuthenticationFlag;
 
     /**
      *
@@ -79,7 +77,6 @@ public class PortalInfoDTO
         userId = portalInfo.getUser().getUserId();
         fullName = portalInfo.getUser().getFullName();
         groupName = portalInfo.getGroup().getName();
-        portalAuthenticationFlag = portalInfo.getPortalAuthenticationFlag();
     }
 
     /**
@@ -182,15 +179,5 @@ public class PortalInfoDTO
     public void setGroupName(String groupName)
     {
         this.groupName = groupName;
-    }
-
-    public Boolean getPortalAuthenticationFlag()
-    {
-        return portalAuthenticationFlag;
-    }
-
-    public void setPortalAuthenticationFlag(Boolean portalAuthenticationFlag)
-    {
-        this.portalAuthenticationFlag = portalAuthenticationFlag;
     }
 }
