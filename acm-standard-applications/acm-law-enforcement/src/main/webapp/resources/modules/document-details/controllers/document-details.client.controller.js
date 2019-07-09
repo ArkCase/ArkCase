@@ -11,6 +11,7 @@ angular.module('document-details').controller(
                     });
 
                     $scope.viewerOnly = false;
+                    var userPrivilegesPromise =  Authentication.getUserPrivileges();
                     $scope.documentExpand = function() {
                         $scope.viewerOnly = true;
                     };
@@ -264,7 +265,7 @@ angular.module('document-details').controller(
                         $scope.caseInfo.caseNumber = '';
                     }
 
-                    $q.all([ ticketInfo, userInfo, totalUserInfo, ecmFileConfig, ecmFileInfo.$promise, ecmFileEvents.$promise, ecmFileParticipants.$promise, formsConfig, transcriptionConfigurationPromise]).then(function(data) {
+                    $q.all([ ticketInfo, userInfo, totalUserInfo, ecmFileConfig, ecmFileInfo.$promise, ecmFileEvents.$promise, ecmFileParticipants.$promise, formsConfig, transcriptionConfigurationPromise, userPrivilegesPromise]).then(function(data) {
                         $scope.acmTicket = data[0].data;
                         $scope.userId = data[1].userId;
                         $scope.userFullName = data[1].fullName;
@@ -280,6 +281,15 @@ angular.module('document-details').controller(
                         $scope.view = "modules/document-details/views/document-viewer-snowbound.client.view.html";
 
                         $scope.transcribeEnabled = $scope.transcriptionConfiguration.data['transcribe.enabled'];
+
+                        var privilegesList = data[9];
+                        $scope.billingPrivilege = false;
+                        for(var i = 0; i < privilegesList.length; i++){
+                            if(privilegesList[i] === 'acmListBillingItemsPrivilege'){
+                                $scope.billingPrivilege = true;
+                                break;
+                            }
+                        }
 
                         $timeout(function() {
                             $scope.$broadcast('document-data', $scope.ecmFile);

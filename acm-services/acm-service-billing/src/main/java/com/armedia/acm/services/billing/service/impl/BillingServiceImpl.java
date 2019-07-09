@@ -193,7 +193,6 @@ public class BillingServiceImpl implements BillingService
         getBillingEventPublisher().publishBillingInvoiceCreatedEvent(updated);
         return updated;
     }
-
     /**
      * @return the billingItemDao
      */
@@ -244,5 +243,4 @@ public class BillingServiceImpl implements BillingService
     {
         this.billingInvoiceBusinessRule = billingInvoiceBusinessRule;
     }
-
 }
