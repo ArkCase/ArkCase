@@ -123,17 +123,17 @@ public class AcmUserServiceImpl implements AcmUserService
     }
 
     @Override
-    public Set<String> getUserPrivileges(String name) {
+    public Set<String> getUserPrivileges(String name)
+    {
         Set<String> userPrivileges = new HashSet<>();
         Set<String> userRoles = getUserRoleService().getUserRoles(name);
         Map<String, String> rolesPrivileges = getRolesToPrivilegesConfig().getRolesToPrivileges();
-        boolean hasRole = false;
         for (Map.Entry<String, String> entry : rolesPrivileges.entrySet())
         {
-            String[] privileges = entry.getValue().split(",");
-            for(int i = 0; i < privileges.length; i++ )
+            if(userRoles.contains(entry.getKey()))
             {
-                if(!userPrivileges.contains(privileges[i]))
+                String[] privileges = entry.getValue().split(",");
+                for(int i = 0; i < privileges.length; i++ )
                 {
                     userPrivileges.add(privileges[i]);
                 }

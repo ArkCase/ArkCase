@@ -27,7 +27,6 @@ angular.module('cases').controller(
                         $scope.userPrivileges = data;
                     });
                     var eventName = "object.inserted";
-                    $scope.billingPrivilege = true;
                     $scope.$bus.subscribe(eventName, function(data) {
                         if (data.objectType === ObjectService.ObjectTypes.CASE_FILE) {
                             var frevvoRequest = ServCommService.popRequest("frevvo", "new-case");
