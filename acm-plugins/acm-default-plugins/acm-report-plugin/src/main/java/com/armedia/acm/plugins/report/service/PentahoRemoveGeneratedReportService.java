@@ -77,8 +77,8 @@ public class PentahoRemoveGeneratedReportService
 
     public String buildRemoveFileUrl()
     {
-        return reportsConfig.getServerUrl()
-                + (reportsConfig.getServerPort() != null ? ":" + reportsConfig.getServerPort() : "")
+        return reportsConfig.getServerInternalUrl()
+                + (reportsConfig.getServerInternalPort() != null ? ":" + reportsConfig.getServerInternalPort() : "")
                 + reportsConfig.getRemoveFileApi();
     }
 
