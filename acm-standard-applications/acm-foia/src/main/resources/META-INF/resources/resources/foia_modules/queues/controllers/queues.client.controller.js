@@ -34,7 +34,7 @@ angular.module('queues').controller(
 
                     function assignSelectedQueues() {
                         if ($scope.selectedRequests.length === 0) {
-                            return MessageService.info($translate.instant("selectRequest"));
+                            return MessageService.info($translate.instant("queues.selectRequest.selectMinOneRequest"));
                         } else {
                             $scope.userOrGroupSearch();
                         }
