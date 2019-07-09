@@ -42,5 +42,10 @@ public interface AttachmentsProcessableDTO
     List<Long> getAttachmentIds();
 
     List<String> getFilePaths();
+    
+    default List<String> getEmailAddresses()
+    {
+        return null;
+    }
 
 }
