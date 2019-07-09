@@ -30,6 +30,12 @@ angular.module('services').factory('Authentication', [ '$resource', 'Acm.StoreSe
         _updateUserLang: {
             method: 'POST',
             url: 'api/v1/users/lang/:lang'
+        },
+
+        _getUserPrivileges: {
+            method: 'GET',
+            url: 'api/v1/users/userPrivileges',
+            isArray: true
         }
     });
 
@@ -112,6 +118,16 @@ angular.module('services').factory('Authentication', [ '$resource', 'Acm.StoreSe
                     }
                     return data;
                 }
+            }
+        });
+    };
+
+    Service.getUserPrivileges = function(lang) {
+        return Util.serviceCall({
+            service: Service._getUserPrivileges,
+            data: {},
+            onSuccess: function(data) {
+                return data
             }
         });
     };

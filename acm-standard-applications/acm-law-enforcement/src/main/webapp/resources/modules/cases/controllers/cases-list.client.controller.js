@@ -2,8 +2,8 @@
 
 angular.module('cases').controller(
         'CasesListController',
-        [ '$scope', '$state', '$stateParams', '$translate', 'UtilService', 'ObjectService', 'Case.ListService', 'Case.InfoService', 'Helper.ObjectBrowserService', 'ServCommService', 'MessageService',
-                function($scope, $state, $stateParams, $translate, Util, ObjectService, CaseListService, CaseInfoService, HelperObjectBrowserService, ServCommService, MessageService) {
+        [ '$scope', '$state', '$stateParams', '$translate', 'UtilService', 'ObjectService', 'Case.ListService', 'Case.InfoService', 'Helper.ObjectBrowserService', 'ServCommService', 'MessageService', 'Authentication',
+                function($scope, $state, $stateParams, $translate, Util, ObjectService, CaseListService, CaseInfoService, HelperObjectBrowserService, ServCommService, MessageService, Authentication) {
 
                     /*//
                      // Check to see if complaint page is shown as a result returned by Frevvo
@@ -23,6 +23,11 @@ angular.module('cases').controller(
                     //when we will get a callback for them we will check the ServCommService if it is current user
                     //subscribe to the bus for the object
                     var eventName = "object.inserted";
+                    $scope.userPrivileges = [];
+                        Authentication.getUserPrivileges().then(function (data) {
+                            $scope.userPrivileges = data;
+                        });
+
                     $scope.$bus.subscribe(eventName, function(data) {
                         if (data.objectType === ObjectService.ObjectTypes.CASE_FILE) {
                             var frevvoRequest = ServCommService.popRequest("frevvo", "new-case");
