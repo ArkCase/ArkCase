@@ -54,9 +54,5 @@
         </addColumn>
     </changeSet>
 
-    <changeSet id="04-alter-table-acm_portal_info-drop-cm_portal_authentication_flag" author="ana.serafimoska"
-               dbms="oracle,postgresql,mssql,mysql">
-        <dropColumn tableName="acm_portal_info" columnName="cm_portal_authentication_flag"/>
-    </changeSet>
 
 </databaseChangeLog>

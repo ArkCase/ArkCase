@@ -131,6 +131,7 @@ public class ArkCasePortalAdminAPIController
     {
         portalInfo.setPortalDescription(portalInfoDTO.getPortalDescription());
         portalInfo.setPortalUrl(portalInfoDTO.getPortalUrl());
+        portalInfo.setPortalAuthenticationFlag(portalInfoDTO.getPortalAuthenticationFlag());
     }
 
     /**

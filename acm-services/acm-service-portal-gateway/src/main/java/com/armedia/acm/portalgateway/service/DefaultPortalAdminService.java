@@ -141,6 +141,7 @@ public class DefaultPortalAdminService implements PortalAdminService
             existing.setPortalDescription(portalInfo.getPortalDescription());
             existing.setPortalUrl(portalInfo.getPortalUrl());
             existing.setUser(user);
+            existing.setPortalAuthenticationFlag(portalInfo.getPortalAuthenticationFlag());
 
             return portalInfoDao.save(existing);
         }
