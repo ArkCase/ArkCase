@@ -98,6 +98,9 @@ public class PortalInfo implements Serializable
     @JoinColumn(name = "cm_group_name")
     private AcmGroup group;
 
+    @Column(name = "cm_portal_authentication_flag")
+    private Boolean portalAuthenticationFlag;
+
     /**
      * @return the id
      */
@@ -200,4 +203,13 @@ public class PortalInfo implements Serializable
         this.group = group;
     }
 
+    public Boolean getPortalAuthenticationFlag()
+    {
+        return portalAuthenticationFlag;
+    }
+
+    public void setPortalAuthenticationFlag(Boolean portalAuthenticationFlag)
+    {
+        this.portalAuthenticationFlag = portalAuthenticationFlag;
+    }
 }
