@@ -1,5 +1,7 @@
 package com.armedia.acm.correspondence.utils;
 
+import static com.armedia.acm.correspondence.service.CorrespondenceMapper.generateCorrespodencenMergeField;
+
 /*-
  * #%L
  * ACM Service: Correspondence Library
@@ -37,17 +39,16 @@ import com.armedia.acm.objectonverter.DateFormats;
 import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
+
 import org.apache.commons.io.FileUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.apache.poi.xwpf.usermodel.XWPFTable;
 import org.apache.poi.xwpf.usermodel.XWPFTableCell;
 import org.apache.poi.xwpf.usermodel.XWPFTableRow;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
-import org.springframework.context.ApplicationListener;
-import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.core.io.Resource;
 import org.springframework.expression.spel.SpelParserConfiguration;
 import org.springframework.expression.spel.standard.SpelExpression;
@@ -66,12 +67,10 @@ import java.util.Map;
 import java.util.StringJoiner;
 import java.util.stream.Collectors;
 
-import static com.armedia.acm.correspondence.service.CorrespondenceMapper.generateCorrespodencenMergeField;
-
 /**
  * Created by armdev on 12/11/14.
  */
-public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGenerator, ApplicationListener<ContextRefreshedEvent>
+public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGenerator
 {
     public static final String DATE_TYPE = "Date";
     public static final String CURRENT_DATE = "currentDate";
@@ -94,8 +93,8 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGene
      * Generate the Word document via direct manipulation of Word paragraph texts. This works seamlessly (user sees
      * no prompt to update document fields) but loses all formatting in paragraphs with substitution variables.
      */
-    @Override
-    public void onApplicationEvent(ContextRefreshedEvent event)
+
+    private void updateMergeFields()
     {
         try
         {
@@ -324,8 +323,9 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGene
                 String texts[] = { "" };
                 StringBuilder sb = new StringBuilder();
 
-                //if the both suffix and prefix are in the same run
-                if (runNum == lastRunNum) {
+                // if the both suffix and prefix are in the same run
+                if (runNum == lastRunNum)
+                {
                     sb.append(paragraph.getRuns().get(runNum).getText(0));
                 }
                 else
@@ -497,6 +497,7 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGene
 
     private String evaluateSpelExpression(String objectType, Long parentObjectId, String spelExpression)
     {
+        updateMergeFields();
         String generatedExpression;
         boolean isExistingMergeField = false;
         SimpleDateFormat formatter = new SimpleDateFormat(DateFormats.WORKFLOW_DATE_FORMAT);
@@ -504,10 +505,11 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGene
         AcmAbstractDao<AcmEntity> correspondedObjectDao = getCorrespondenceService().getAcmAbstractDao(objectType);
         Object correspondenedObject = correspondedObjectDao.find(parentObjectId);
 
-        //Passing the object of Corresponded Object class to StandardEvaluationContext, which is going to evaluate the expressions in the context of this object.
+        // Passing the object of Corresponded Object class to StandardEvaluationContext, which is going to evaluate the
+        // expressions in the context of this object.
         StandardEvaluationContext stContext = new StandardEvaluationContext(correspondenedObject);
 
-        //Creating an object of SpelExpressionParser class, used to parse the SpEL expression
+        // Creating an object of SpelExpressionParser class, used to parse the SpEL expression
         SpelParserConfiguration config = new SpelParserConfiguration(true, true);
         SpelExpressionParser parser = new SpelExpressionParser(config);
 
@@ -520,7 +522,8 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGene
             }
         }
 
-        //Calling parseRaw() method of SpelExpressionParser, which parses the expression and returns an SpelEpression object
+        // Calling parseRaw() method of SpelExpressionParser, which parses the expression and returns an SpelEpression
+        // object
         SpelExpression expression = parser.parseRaw(spelExpression);
 
         if (isExistingMergeField)
@@ -551,7 +554,7 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGene
         else
         {
 
-            //check if the expression is currentDate, files or baseURL
+            // check if the expression is currentDate, files or baseURL
             if (CURRENT_DATE.equalsIgnoreCase(spelExpression))
             {
                 generatedExpression = formatter.format(new Date());
@@ -590,7 +593,7 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGene
                 }
                 else
                 {
-                     generatedExpression = "";
+                    generatedExpression = "";
                 }
             }
         }
