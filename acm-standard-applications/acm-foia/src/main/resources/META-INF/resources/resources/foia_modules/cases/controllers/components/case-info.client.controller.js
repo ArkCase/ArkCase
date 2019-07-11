@@ -127,30 +127,6 @@ angular.module('cases').controller(
                     }
                 });
 
-                AdminObjectTitleConfigurationService.getObjectTitleConfiguration().then(function (value) {
-                    if(!Util.isEmpty(value)) {
-                        var configurationTitle = value.data.CASE_FILE.title;
-                        if(configurationTitle === "objectId")
-                        {
-                            $scope.nodeTitle = $scope.objectInfo.id;
-                        }
-                        else if(configurationTitle === "titleTitle")
-                        {
-                            $scope.nodeTitle = $scope.objectInfo.title;
-                        }
-                        else if(configurationTitle === "objectIdTitle")
-                        {
-                            $scope.nodeTitle = $scope.objectInfo.id + $scope.objectInfo.title;
-                        }
-                        else if(configurationTitle === "titleObjectId")
-                        {
-                            $scope.nodeTitle = $scope.objectInfo.title + $scope.objectInfo.id;
-                        }
-                    }
-                });
-
-
-
                 $scope.isAmendmentAdded = data.amendmentFlag;
 
                 SuggestedCasesService.getSuggestedCases($scope.objectInfo.title, $scope.objectInfo.id).then(function (value) {
