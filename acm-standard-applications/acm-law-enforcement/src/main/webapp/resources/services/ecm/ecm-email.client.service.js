@@ -145,6 +145,7 @@ angular.module('services').factory('Ecm.EmailService', [ '$resource', '$translat
                 }
             },
             onInvalid: function(data) {
+                MessageService.error($translate.instant("common.directive.docTree.email.unsuccessMessage"));
                 return failed;
             }
         });
@@ -178,6 +179,7 @@ angular.module('services').factory('Ecm.EmailService', [ '$resource', '$translat
                 }
             },
             onInvalid: function(data) {
+                MessageService.error($translate.instant("common.directive.docTree.email.unsuccessMessage"));
                 return failed;
             }
         });
@@ -206,6 +208,7 @@ angular.module('services').factory('Ecm.EmailService', [ '$resource', '$translat
                 }
             },
             onInvalid: function(data) {
+                MessageService.error($translate.instant("common.directive.docTree.email.unsuccessMessage"));
                 return data;
             }
         });
