@@ -214,6 +214,9 @@ public class EcmFile implements AcmEntity, Serializable, AcmObject, AcmStatefulE
     @Transient
     private String uuid;
 
+    @Transient
+    private String mailAddress;
+    
     @PrePersist
     protected void beforeInsert()
     {
@@ -657,5 +660,15 @@ public class EcmFile implements AcmEntity, Serializable, AcmObject, AcmStatefulE
     public void setUuid(String uuid)
     {
         this.uuid = uuid;
+    }
+
+    public String getMailAddress()
+    {
+        return mailAddress;
+    }
+
+    public void setMailAddress(String mailAddress)
+    {
+        this.mailAddress = mailAddress;
     }
 }
