@@ -11,7 +11,10 @@
                 <value>/flows/searchTestFlow.xml</value>
             </list>
         </property>
+        <property name="acmMuleConfig" ref="acmMuleConfig"/>
     </bean>
+
+    <bean id="acmMuleConfig" class="com.armedia.acm.muletools.mulecontextmanager.AcmMuleConfig"/>
 
     <bean id="solrConfig" class="com.armedia.acm.services.search.model.solr.SolrConfig"/>
 </beans>

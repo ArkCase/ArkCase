@@ -673,7 +673,6 @@ angular.module('time-tracking').controller(
                                     });
                                     MentionsService.sendEmailToMentionedUsers($scope.paramsSummernote.emailAddresses, $scope.paramsSummernote.usersMentioned, ObjectService.ObjectTypes.TIMESHEET, "DETAILS", objectInfo.id, objectInfo.details);
                                     MessageService.info(timesheetUpdatedMessage);
-                                    ObjectService.showObject(ObjectService.ObjectTypes.TIMESHEET, objectInfo.id);
                                     $modalInstance.close(objectInfo);
                                     $scope.loading = false;
                                     $scope.loadingIcon = "fa fa-floppy-o";

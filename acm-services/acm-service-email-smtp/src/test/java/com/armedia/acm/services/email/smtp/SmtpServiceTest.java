@@ -32,14 +32,14 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.mockito.internal.verification.VerificationModeFactory.times;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
 
-import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.email.model.EmailSenderConfig;
-import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
@@ -57,10 +57,7 @@ import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.mule.api.MuleException;
-import org.mule.api.MuleMessage;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
@@ -71,7 +68,6 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.regex.Pattern;
 
 /**
@@ -83,18 +79,6 @@ public class SmtpServiceTest
 
     @InjectMocks
     private SmtpService service;
-
-    @Mock
-    private MuleContextManager mockMuleContextManager;
-
-    @Mock
-    private AuditPropertyEntityAdapter mockAuditPropertyEntityAdapter;
-
-    @Mock
-    private MuleException mockMuleException;
-
-    @Mock
-    private MuleMessage mockMuleMessage;
 
     @Mock
     private Authentication mockAuthentication;
@@ -126,6 +110,9 @@ public class SmtpServiceTest
     @Mock
     private ApplicationEventPublisher mockApplicationEventPublisher;
 
+    @Mock
+    private AcmMailSender mockMailSender;
+
     private EmailSenderConfig senderConfig;
 
     /**
@@ -134,8 +121,6 @@ public class SmtpServiceTest
     @Before
     public void setUp() throws Exception
     {
-        
-        service.setFlow("vm://sendEmailViaSmtp.in");
         senderConfig = new EmailSenderConfig();
         senderConfig.setHost("host_value");
         senderConfig.setPort(0);
@@ -173,13 +158,6 @@ public class SmtpServiceTest
 
         senderConfig.setEncryption("off");
 
-        ArgumentCaptor<String> capturedNote = ArgumentCaptor.forClass(String.class);
-
-        when(mockMuleContextManager.send(eq("vm://sendEmailViaSmtp.in"), capturedNote.capture(), any(Map.class)))
-                .thenReturn(mockMuleMessage);
-
-        when(mockMuleMessage.getInboundProperty("sendEmailException")).thenReturn(null);
-
         when(mockAcmEmailContentGeneratorService.generateEmailBody(inputDTO, email, mockAuthentication)).thenReturn(note);
 
         when(mockAcmUser.getUserId()).thenReturn("ann-acm");
@@ -195,62 +173,8 @@ public class SmtpServiceTest
         EmailWithEmbeddedLinksResultDTO resultDTO = results.get(0);
         assertThat(resultDTO.isState(), is(true));
         assertThat(resultDTO.getEmailAddress(), is(email));
+        verify(mockMailSender, times(1)).sendEmail(eq(email), anyString(), eq(note));
         verify(mockApplicationEventPublisher).publishEvent(any(SmtpSentEventHyperlink.class));
-
-    }
-
-    @Test
-    public void testSendEmailWithEmbeddedLinksSTARTTLS() throws Exception
-    {
-        // given
-        final String email = "user_email";
-        final String header = "header";
-        final String baseUrl = "base_url";
-        final String title = "title";
-        final String footer = "footer";
-        final long fileId = 1234;
-        final String token = "token";
-        final String note = header + "\\s*" + "<br/>" + baseUrl + fileId + "&acm_email_ticket=" + token + "<br/>" + "\\s*" + footer;
-
-        List<String> addresses = new ArrayList<>();
-        addresses.add(email);
-        List<Long> fileIds = new ArrayList<>();
-        fileIds.add(fileId);
-        EmailWithEmbeddedLinksDTO inputDTO = new EmailWithEmbeddedLinksDTO();
-        inputDTO.setTitle(title);
-        inputDTO.setHeader(header);
-        inputDTO.setEmailAddresses(addresses);
-        inputDTO.setBaseUrl(baseUrl);
-        inputDTO.setFileIds(fileIds);
-        inputDTO.setFooter(footer);
-
-        senderConfig.setEncryption("starttls");
-
-        ArgumentCaptor<Map> messagePropsCaptor = ArgumentCaptor.forClass(Map.class);
-        ArgumentCaptor<String> capturedNote = ArgumentCaptor.forClass(String.class);
-
-        when(mockMuleContextManager.send(eq("vm://sendEmailViaSmtp.in"), capturedNote.capture(), messagePropsCaptor.capture()))
-                .thenReturn(mockMuleMessage);
-
-        when(mockMuleMessage.getInboundProperty("sendEmailException")).thenReturn(null);
-
-        when(mockAcmEmailContentGeneratorService.generateEmailBody(inputDTO, email, mockAuthentication)).thenReturn(note);
-
-        when(mockAcmUser.getUserId()).thenReturn("ann-acm");
-
-        when(mockEcmFileService.findById(fileIds.get(0))).thenReturn(mockEcmFile);
-
-        // when
-        List<EmailWithEmbeddedLinksResultDTO> results = service.sendEmailWithEmbeddedLinks(inputDTO, mockAuthentication, mockAcmUser);
-
-        // then
-        assertThat(results.size(), is(1));
-
-        EmailWithEmbeddedLinksResultDTO resultDTO = results.get(0);
-        assertThat(resultDTO.isState(), is(true));
-        assertThat(resultDTO.getEmailAddress(), is(email));
-        verify(mockApplicationEventPublisher).publishEvent(any(SmtpSentEventHyperlink.class));
-        assertThat(messagePropsCaptor.getValue().get("encryption"), is("starttls"));
 
     }
 
@@ -283,14 +207,9 @@ public class SmtpServiceTest
         filePaths.add(resource.getFile().getAbsolutePath());
         inputDTO.setFilePaths(filePaths);
 
-        ArgumentCaptor<Map> messagePropsCaptor = ArgumentCaptor.forClass(Map.class);
         ArgumentCaptor<String> capturedNote = ArgumentCaptor.forClass(String.class);
-        ArgumentCaptor<Map> capturedAttachments = ArgumentCaptor.forClass(Map.class);
+        ArgumentCaptor<ArrayList<InputStreamDataSource>> capturedAttachments = ArgumentCaptor.forClass((Class) ArrayList.class);
         when(mockEmailSenderConfigurationService.readConfiguration()).thenReturn(senderConfig);
-        when(mockMuleContextManager.send(eq("vm://sendEmailViaSmtp.in"), capturedNote.capture(), capturedAttachments.capture(),
-                messagePropsCaptor.capture())).thenReturn(mockMuleMessage);
-
-        when(mockMuleMessage.getInboundProperty("sendEmailException")).thenReturn(null);
 
         ArgumentCaptor<byte[]> read = ArgumentCaptor.forClass(byte[].class);
         when(mockEcmFileService.downloadAsInputStream(attachmentIds.get(0))).thenReturn(mockInputStream);
@@ -319,89 +238,15 @@ public class SmtpServiceTest
         service.sendEmailWithAttachments(inputDTO, mockAuthentication, mockAcmUser);
 
         // then
+        verify(mockMailSender).sendMultipartEmail(eq(email), anyString(), capturedNote.capture(), capturedAttachments.capture());
         assertThat(Pattern.compile(note).matcher(capturedNote.getValue()).matches(), is(true));
-
         assertThat(capturedAttachments.getValue(), notNullValue());
         assertThat(capturedAttachments.getValue().size(), is(2));
-        assertThat(capturedAttachments.getValue().get("fileName"), notNullValue());
-        assertThat(capturedAttachments.getValue().get("temp.zip"), notNullValue());
+        assertThat(capturedAttachments.getValue().get(0).getName(), notNullValue());
+        assertThat(capturedAttachments.getValue().get(0).getContentType(), notNullValue());
+        assertThat(capturedAttachments.getValue().get(1).getName(), notNullValue());
+        assertThat(capturedAttachments.getValue().get(1).getContentType(), notNullValue());
         mockApplicationEventPublisher.publishEvent(any(SmtpEventSentEvent.class));
-    }
-
-    @Test
-    public void testSendEmailWithAttachmentsSTARTTLS() throws Exception
-    {
-        // given
-        final String email = "user_email";
-        final String header = "header";
-        final String body = "body";
-        final String footer = "footer";
-        final String note = header + "\\s*" + body + "\\s*" + footer;
-
-        List<String> addresses = new ArrayList<>();
-        addresses.add(email);
-        EmailWithAttachmentsDTO inputDTO = new EmailWithAttachmentsDTO();
-        inputDTO.setEmailAddresses(addresses);
-        inputDTO.setHeader(header);
-        inputDTO.setBody(body);
-        inputDTO.setFooter(footer);
-
-        List<Long> attachmentIds = new ArrayList<>();
-        attachmentIds.add(999L);
-        inputDTO.setAttachmentIds(attachmentIds);
-
-        List<String> filePaths = new ArrayList<>();
-        Resource resource = new ClassPathResource("temp.zip");
-        filePaths.add(resource.getFile().getAbsolutePath());
-        inputDTO.setFilePaths(filePaths);
-
-        senderConfig.setEncryption("starttls");
-
-        ArgumentCaptor<Map> messagePropsCaptor = ArgumentCaptor.forClass(Map.class);
-        ArgumentCaptor<String> capturedNote = ArgumentCaptor.forClass(String.class);
-        ArgumentCaptor<Map> capturedAttachments = ArgumentCaptor.forClass(Map.class);
-
-        when(mockEmailSenderConfigurationService.readConfiguration()).thenReturn(senderConfig);
-        when(mockMuleContextManager.send(eq("vm://sendEmailViaSmtp.in"), capturedNote.capture(), capturedAttachments.capture(),
-                messagePropsCaptor.capture())).thenReturn(mockMuleMessage);
-
-        when(mockMuleMessage.getInboundProperty("sendEmailException")).thenReturn(null);
-
-        ArgumentCaptor<byte[]> read = ArgumentCaptor.forClass(byte[].class);
-        when(mockEcmFileService.downloadAsInputStream(attachmentIds.get(0))).thenReturn(mockInputStream);
-        when(mockEcmFileService.downloadAsInputStream(attachmentIds.get(0), null)).thenReturn(mockInputStream);
-        when(mockEcmFileService.findById(attachmentIds.get(0))).thenReturn(mockEcmFile);
-        when(mockInputStream.read(read.capture(), eq(0), eq(16384))).thenReturn(-1);
-
-        when(mockEcmFile.getFileName()).thenReturn("fileName");
-        when(mockEcmFile.getFileActiveVersionNameExtension()).thenReturn(".extension");
-
-        mockInputStream.close();
-
-        when(mockAcmUser.getUserId()).thenReturn("ann-acm");
-        when(mockEcmFile.getParentObjectId()).thenReturn(103L);
-        when(mockEcmFile.getParentObjectType()).thenReturn("COMPLAINT");
-
-        // expected calls to raise the file emailed event on the file itself - AFDP-3029
-        when(mockEcmFile.getId()).thenReturn(attachmentIds.get(0));
-        when(mockEcmFile.getObjectType()).thenReturn(EcmFileConstants.OBJECT_FILE_TYPE);
-
-        whenNew(File.class).withArguments(filePaths.get(0)).thenReturn(mockFile);
-        whenNew(FileInputStream.class).withArguments(mockFile).thenReturn(mockFileInputStream);
-        when(mockFile.getName()).thenReturn("temp.zip");
-
-        // when
-        service.sendEmailWithAttachments(inputDTO, mockAuthentication, mockAcmUser);
-
-        // then
-        assertThat(Pattern.compile(note).matcher(capturedNote.getValue()).matches(), is(true));
-
-        assertThat(capturedAttachments.getValue(), notNullValue());
-        assertThat(capturedAttachments.getValue().size(), is(2));
-        assertThat(capturedAttachments.getValue().get("fileName"), notNullValue());
-        assertThat(capturedAttachments.getValue().get("temp.zip"), notNullValue());
-        mockApplicationEventPublisher.publishEvent(any(SmtpEventSentEvent.class));
-        assertThat(messagePropsCaptor.getValue().get("encryption"), is("starttls"));
     }
 
     @Test
@@ -439,16 +284,10 @@ public class SmtpServiceTest
 
         senderConfig.setEncryption("off");
 
-        ArgumentCaptor<Map> messagePropsCaptor = ArgumentCaptor.forClass(Map.class);
         ArgumentCaptor<String> capturedNote = ArgumentCaptor.forClass(String.class);
-        ArgumentCaptor<Map> capturedAttachments = ArgumentCaptor.forClass(Map.class);
+        ArgumentCaptor<ArrayList<InputStreamDataSource>> capturedAttachments = ArgumentCaptor.forClass((Class) ArrayList.class);
 
         when(mockEmailSenderConfigurationService.readConfiguration()).thenReturn(senderConfig);
-        when(mockMuleContextManager.send(eq("vm://sendEmailViaSmtp.in"), capturedNote.capture(), capturedAttachments.capture(),
-                messagePropsCaptor.capture())).thenReturn(mockMuleMessage);
-
-        when(mockMuleMessage.getInboundProperty("sendEmailException")).thenReturn(null);
-
         when(mockAcmEmailContentGeneratorService.generateEmailBody(inputDTO, email, mockAuthentication)).thenReturn(note);
 
         ArgumentCaptor<byte[]> read = ArgumentCaptor.forClass(byte[].class);
@@ -479,99 +318,14 @@ public class SmtpServiceTest
         service.sendEmailWithAttachmentsAndLinks(inputDTO, mockAuthentication, mockAcmUser);
 
         // then
+        verify(mockMailSender).sendMultipartEmail(eq(email), anyString(), capturedNote.capture(), capturedAttachments.capture());
         assertEquals(note, capturedNote.getValue());
-
         assertThat(capturedAttachments.getValue(), notNullValue());
         assertThat(capturedAttachments.getValue().size(), is(2));
-        assertThat(capturedAttachments.getValue().get("fileName"), notNullValue());
-        assertThat(capturedAttachments.getValue().get("temp.zip"), notNullValue());
+        assertThat(capturedAttachments.getValue().get(0).getName(), notNullValue());
+        assertThat(capturedAttachments.getValue().get(0).getContentType(), notNullValue());
+        assertThat(capturedAttachments.getValue().get(1).getName(), notNullValue());
+        assertThat(capturedAttachments.getValue().get(1).getContentType(), notNullValue());
         mockApplicationEventPublisher.publishEvent(any(SmtpEventSentEvent.class));
     }
-
-    @Test
-    public void testSendEmailWithEmbeddedLinksAndAttachmentsSTARTTLS() throws Exception
-    {
-        // given
-        final String email = "user_email";
-        final String header = "header";
-        final String baseUrl = "base_url";
-        final String title = "title";
-        final String footer = "footer";
-        final long fileId = 1234;
-        final String token = "token";
-        final String note = header + "\\s*" + "<br/>" + baseUrl + fileId + "&acm_email_ticket=" + token + "<br/>" + "\\s*" + footer;
-
-        List<String> addresses = new ArrayList<>();
-        addresses.add(email);
-        List<Long> fileIds = new ArrayList<>();
-        fileIds.add(fileId);
-        EmailWithAttachmentsAndLinksDTO inputDTO = new EmailWithAttachmentsAndLinksDTO();
-        inputDTO.setTitle(title);
-        inputDTO.setHeader(header);
-        inputDTO.setEmailAddresses(addresses);
-        inputDTO.setBaseUrl(baseUrl);
-        inputDTO.setFileIds(fileIds);
-        inputDTO.setFooter(footer);
-        List<Long> attachmentIds = new ArrayList<>();
-        attachmentIds.add(999L);
-        inputDTO.setAttachmentIds(attachmentIds);
-
-        List<String> filePaths = new ArrayList<>();
-        Resource resource = new ClassPathResource("temp.zip");
-        filePaths.add(resource.getFile().getAbsolutePath());
-        inputDTO.setFilePaths(filePaths);
-
-        senderConfig.setEncryption("starttls");
-
-        ArgumentCaptor<Map> messagePropsCaptor = ArgumentCaptor.forClass(Map.class);
-        ArgumentCaptor<String> capturedNote = ArgumentCaptor.forClass(String.class);
-        ArgumentCaptor<Map> capturedAttachments = ArgumentCaptor.forClass(Map.class);
-
-        when(mockEmailSenderConfigurationService.readConfiguration()).thenReturn(senderConfig);
-        when(mockMuleContextManager.send(eq("vm://sendEmailViaSmtp.in"), capturedNote.capture(), capturedAttachments.capture(),
-                messagePropsCaptor.capture())).thenReturn(mockMuleMessage);
-
-        when(mockMuleMessage.getInboundProperty("sendEmailException")).thenReturn(null);
-
-        when(mockAcmEmailContentGeneratorService.generateEmailBody(inputDTO, email, mockAuthentication)).thenReturn(note);
-
-        ArgumentCaptor<byte[]> read = ArgumentCaptor.forClass(byte[].class);
-        when(mockEcmFileService.downloadAsInputStream(attachmentIds.get(0))).thenReturn(mockInputStream);
-        when(mockEcmFileService.downloadAsInputStream(attachmentIds.get(0), null)).thenReturn(mockInputStream);
-        when(mockEcmFileService.findById(attachmentIds.get(0))).thenReturn(mockEcmFile);
-
-        when(mockEcmFileService.findById(fileId)).thenReturn(mockEcmFile);
-        when(mockInputStream.read(read.capture(), eq(0), eq(16384))).thenReturn(-1);
-
-        when(mockEcmFile.getFileName()).thenReturn("fileName");
-        when(mockEcmFile.getFileActiveVersionNameExtension()).thenReturn(".extension");
-
-        mockInputStream.close();
-
-        when(mockAcmUser.getUserId()).thenReturn("ann-acm");
-        when(mockEcmFile.getParentObjectId()).thenReturn(103L);
-        when(mockEcmFile.getParentObjectType()).thenReturn("COMPLAINT");
-
-        // expected calls to raise the file emailed event on the file itself - AFDP-3029
-        when(mockEcmFile.getId()).thenReturn(attachmentIds.get(0));
-        when(mockEcmFile.getObjectType()).thenReturn(EcmFileConstants.OBJECT_FILE_TYPE);
-
-        whenNew(File.class).withArguments(filePaths.get(0)).thenReturn(mockFile);
-        whenNew(FileInputStream.class).withArguments(mockFile).thenReturn(mockFileInputStream);
-        when(mockFile.getName()).thenReturn("temp.zip");
-
-        // when
-        service.sendEmailWithAttachmentsAndLinks(inputDTO, mockAuthentication, mockAcmUser);
-
-        // then
-        assertEquals(note, capturedNote.getValue());
-
-        assertThat(capturedAttachments.getValue(), notNullValue());
-        assertThat(capturedAttachments.getValue().size(), is(2));
-        assertThat(capturedAttachments.getValue().get("fileName"), notNullValue());
-        assertThat(capturedAttachments.getValue().get("temp.zip"), notNullValue());
-        mockApplicationEventPublisher.publishEvent(any(SmtpEventSentEvent.class));
-        assertThat(messagePropsCaptor.getValue().get("encryption"), is("starttls"));
-    }
-
 }

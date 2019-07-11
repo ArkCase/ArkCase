@@ -280,6 +280,9 @@
                 "icon": "fa fa-pencil-square-o",
                 "components": [
                     "billing"
+                ],
+                "requiredPrivileges": [
+                    "acmListBillingItemsPrivilege"
                 ]
             },
             {

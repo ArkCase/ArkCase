@@ -48,6 +48,7 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.Arrays;
 import java.util.Date;
@@ -74,7 +75,8 @@ public class FileLockingProviderTest extends EasyMockSupport
 
         fileObjectLockingProvider = new FileLockingProvider();
         fileObjectLockingProvider.setObjectLockService(objectLockService);
-        fileObjectLockingProvider.setExpiryTimeInMilliseconds(10_000l);
+        fileObjectLockingProvider.setExpiryTimeInMilliseconds(10_000L);
+        SecurityContextHolder.getContext().setAuthentication(null);
     }
 
     @Test(expected = AcmObjectLockException.class)

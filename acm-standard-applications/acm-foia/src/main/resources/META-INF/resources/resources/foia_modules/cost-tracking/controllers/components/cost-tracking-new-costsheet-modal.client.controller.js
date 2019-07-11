@@ -323,6 +323,9 @@ angular.module('cost-tracking').controller(
                         if (!$scope.isEdit) {
                             $scope.loading = true;
                             $scope.loadingIcon = "fa fa-circle-o-notch fa-spin";
+                            if($scope.costsheet.status === "FINAL") {
+                                submissionName = "SaveFinal";
+                            }
                             CostTrackingInfoService.saveNewCostsheetInfo(clearNotFilledElements(_.cloneDeep($scope.costsheet)), submissionName).then(function(objectInfo) {
                                 var objectTypeString = $translate.instant('common.objectTypes.' + ObjectService.ObjectTypes.COSTSHEET);
                                 var costsheetUpdatedMessage = $translate.instant('{{objectType}} {{costsheetTitle}} was created.', {
@@ -330,7 +333,6 @@ angular.module('cost-tracking').controller(
                                     costsheetTitle: objectInfo.title
                                 });
                                 MessageService.info(costsheetUpdatedMessage);
-                                ObjectService.showObject(ObjectService.ObjectTypes.COSTSHEET, objectInfo.id);
                                 $modalInstance.close(objectInfo);
                                 $scope.loading = false;
                                 $scope.loadingIcon = "fa fa-floppy-o";

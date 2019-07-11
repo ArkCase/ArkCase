@@ -31,7 +31,6 @@ import com.armedia.acm.portalgateway.model.PortalInfo;
 
 /**
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity May 30, 2018
- *
  */
 public class PortalInfoDTO
 {
@@ -61,6 +60,7 @@ public class PortalInfoDTO
     private String fullName;
 
     private String groupName;
+
 
     private Boolean portalAuthenticationFlag;
 

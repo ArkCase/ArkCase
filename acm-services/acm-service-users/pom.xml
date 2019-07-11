@@ -77,12 +77,6 @@
             <artifactId>spring-context-support</artifactId>
         </dependency>
 
-        <!-- caching -->
-        <dependency>
-            <groupId>net.sf.ehcache</groupId>
-            <artifactId>ehcache-core</artifactId>
-        </dependency>
-
         <!-- bean validation -->
         <dependency>
             <groupId>javax.validation</groupId>

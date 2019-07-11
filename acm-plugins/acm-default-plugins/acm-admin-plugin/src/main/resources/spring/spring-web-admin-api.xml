@@ -10,10 +10,6 @@
 
     <bean id="listCorrespondenceTemplates" class="com.armedia.acm.plugins.admin.web.api.ListAllTemplatesControllerAPI"></bean>
 
-    <bean id="correspondenceQueryController" class="com.armedia.acm.plugins.admin.web.api.CorrespondenceQueryAPIController">
-        <property name="correspondenceService" ref="correspondenceService"/>
-    </bean>
-
     <bean id="correspondenceTemplateController" class="com.armedia.acm.plugins.admin.web.api.CorrespondenceTemplateAPIController">
         <property name="correspondenceService" ref="correspondenceService"/>
         <property name="correspondenceFolderName" value="${user.home}/.arkcase/acm/correspondenceTemplates"/>
@@ -61,19 +57,10 @@
     </bean>
 
     <!-- Application properties management-->
-    <bean id="angularPropertiesManagementRetrieveProperties"
-          class="com.armedia.acm.plugins.admin.web.api.AngularPropertiesManagementRetrieveProperties">
-        <property name="jsonPropertiesManagementService" ref="angularPropertiesManagementService"/>
-    </bean>
 
-    <bean id="angularPropertiesManagementRetrieveProperty"
-          class="com.armedia.acm.plugins.admin.web.api.AngularPropertiesManagementRetrieveProperty">
-        <property name="jsonPropertiesManagementService" ref="angularPropertiesManagementService"/>
-    </bean>
-
-    <bean id="angularPropertiesManagementUpdateProperty"
-          class="com.armedia.acm.plugins.admin.web.api.AngularPropertiesManagementUpdateProperty">
-        <property name="jsonPropertiesManagementService" ref="angularPropertiesManagementService"/>
+    <bean id="ApplicationPropertiesAPIController"
+        class="com.armedia.acm.plugins.admin.web.api.ApplicationPropertiesAPIController">
+        <property name="applicationPropertiesManagementService" ref="applicationPropertiesManagementService"/>
     </bean>
 
     <bean id="ldapConfigurationRetrieveDirectories" class="com.armedia.acm.plugins.admin.web.api.LdapConfigurationRetrieveDirectories">
@@ -283,7 +270,8 @@
         <property name="pdfConversionConfigurationService" ref="pdfConversionConfigurationService"/>
     </bean>
 
-    <bean id="documentUploadPolicyConfigurationAPIController" class="com.armedia.acm.plugins.admin.web.api.DocumentUploadPolicyConfigurationAPIController">
+    <bean id="documentUploadPolicyConfigurationAPIController"
+          class="com.armedia.acm.plugins.admin.web.api.DocumentUploadPolicyConfigurationAPIController">
         <property name="documentUploadPolicyConfigurationService" ref="documentUploadPolicyConfigurationService"/>
     </bean>
 
@@ -292,7 +280,7 @@
     </bean>
 
     <bean id="dataAccessControlAPIController"
-        class="com.armedia.acm.plugins.admin.web.api.DataAccessControlAPIController">
+          class="com.armedia.acm.plugins.admin.web.api.DataAccessControlAPIController">
         <property name="dataAccessControlService" ref="dataAccessControlService"/>
     </bean>
 
@@ -305,7 +293,11 @@
     </bean>
 
     <bean id="getApplicationVersionAPIController"
-        class="com.armedia.acm.plugins.admin.web.api.GetApplicationVersionAPIController">
+          class="com.armedia.acm.plugins.admin.web.api.GetApplicationVersionAPIController">
         <property name="applicationMetaInfoService" ref="applicationMetaInfoService"/>
+    </bean>
+
+    <bean id="acmSchedulerAPIController" class="com.armedia.acm.plugins.admin.web.api.AcmSchedulerAPIController">
+        <property name="schedulerService" ref="acmSchedulerService"/>
     </bean>
 </beans>

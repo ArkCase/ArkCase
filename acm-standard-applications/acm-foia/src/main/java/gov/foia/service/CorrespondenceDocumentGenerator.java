@@ -29,18 +29,16 @@ package gov.foia.service;
 
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
-import com.armedia.acm.core.exceptions.CorrespondenceMergeFieldVersionException;
 import com.armedia.acm.correspondence.model.CorrespondenceTemplate;
 import com.armedia.acm.correspondence.service.CorrespondenceService;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
+import gov.foia.model.FOIADocumentDescriptor;
+import gov.foia.model.FOIAObject;
 
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
-
-import gov.foia.model.FOIADocumentDescriptor;
-import gov.foia.model.FOIAObject;
 
 public class CorrespondenceDocumentGenerator implements DocumentGenerator
 {
@@ -50,7 +48,7 @@ public class CorrespondenceDocumentGenerator implements DocumentGenerator
     @Override
     public EcmFile generateAndUpload(FOIADocumentDescriptor documentDescriptor, FOIAObject acmObject, String targetCmisFolderId,
             String targetFilename, Map<String, String> substitutions)
-            throws DocumentGeneratorException, CorrespondenceMergeFieldVersionException
+            throws DocumentGeneratorException
     {
         try
         {        

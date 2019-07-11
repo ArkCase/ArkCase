@@ -137,8 +137,8 @@
  </file>
  </example>
  */
-angular.module('directives').directive('objectTree', [ '$q', '$translate', 'UtilService', 'Acm.StoreService', 'Helper.ObjectBrowserService', 'ObjectService',
-    function($q, $translate, Util, Store, HelperObjectBrowserService, ObjectService) {
+angular.module('directives').directive('objectTree', [ '$q', '$translate', 'UtilService', 'Acm.StoreService', 'Helper.ObjectBrowserService', 'Authentication',
+    function($q, $translate, Util, Store, HelperObjectBrowserService, Authentication) {
     var Tree = {
         create: function(treeArgs) {
             Tree.Info.create({
@@ -547,7 +547,6 @@ angular.module('directives').directive('objectTree', [ '$q', '$translate', 'Util
                         folder: false
                     });
                 }
-
                 return builder.getTree();
             }
             ,
@@ -556,6 +555,18 @@ angular.module('directives').directive('objectTree', [ '$q', '$translate', 'Util
             var nodeTypes = Util.goodMapValue(Tree, "treeConfig.nodeTypes", []);
             var key = data.node.key;
             var nodeId = Tree.Key.getNodeIdByKey(key);
+            var userPrivileges = Tree.scope.userPrivileges;
+
+            for(var i = 0; i < nodeTypes.length; i++){
+                if(nodeTypes[i].requiredPrivileges ){
+                    for (var j = 0; j < nodeTypes[i].requiredPrivileges.length; j++){
+                        if(userPrivileges && !userPrivileges.includes(nodeTypes[i].requiredPrivileges[j])) {
+                            nodeTypes.splice(i,1);
+                            break;
+                        }
+                    }
+                }
+            }
             var nodeTypePath = Tree.Key.getNodeTypeByKey(key);
             var arr = nodeTypePath.split(Tree.Key.KEY_SEPARATOR);
             if (Util.isArray(arr) && 2 == arr.length) {
@@ -856,7 +867,8 @@ angular.module('directives').directive('objectTree', [ '$q', '$translate', 'Util
             onReset: '&',
             onLoad: '&',
             onSelect: '&',
-            treeControl: '='
+            treeControl: '=',
+            userPrivileges: '=?'
         }
 
         ,

@@ -27,7 +27,7 @@
         <property name="auditDao" ref="auditDao"/>
     </bean>
 
-    <bean id="ocrQueueJob" class="com.armedia.acm.services.ocr.job.OCRQueueJob">
+    <bean id="ocrQueueJobService" class="com.armedia.acm.services.ocr.job.OCRQueueJob">
         <property name="arkCaseOCRService" ref="arkCaseOCRService"/>
         <property name="activitiRuntimeService" ref="activitiRuntimeService"/>
         <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
@@ -36,6 +36,10 @@
         <property name="mediaEngineMapper" ref="mediaEngineMapper"/>
         <property name="ocrProviderFactory" ref="ocrProviderFactory"/>
         <property name="ocrConfigurationService" ref="ocrConfigurationService"/>
+    </bean>
+
+    <bean id="ocrQueueJobDescriptor" class="com.armedia.acm.services.ocr.job.OCRQueueJobDescriptor" parent="acmJobDescriptor">
+        <property name="ocrQueueJob" ref="ocrQueueJobService"/>
     </bean>
 
     <bean id="ocrBusinessRulesExecutor" class="com.armedia.acm.services.mediaengine.rules.MediaEngineBusinessRulesExecutor"

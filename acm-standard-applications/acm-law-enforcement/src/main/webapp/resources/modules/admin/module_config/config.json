@@ -106,6 +106,9 @@
             "enabled": true,
             "type": "grid",
             "enableFiltering": false,
+            "enableRowSelection": true,
+            "enableRowHeaderSelection": true,
+            "enableFullRowSelection": true,
             "configurable": true,
             "columnDefs": [
                 {
@@ -136,55 +139,6 @@
                 50
             ],
             "paginationPageSize": 20
-        },
-        {
-            "id": "correspondenceManagementMergeFieldsVersions",
-            "title": "admin.comp.correspondenceManagementMergeFieldsVersions.title",
-            "enabled": true,
-            "type": "grid",
-            "enableFiltering": false,
-            "configurable": true,
-            "columnDefs": [
-                {
-                    "name": "mergingActiveVersion",
-                    "displayName": "admin.correspondenceManagement.mergefields.version.grid.mergingActiveVersion",
-                    "visible": true,
-                    "headerCellFilter": "translate",
-                    "cellTemplate": "<div align='center'><span ng-if='!row.entity.mergingActiveVersion' class='label label-warning'>No</span><span ng-if='row.entity.mergingActiveVersion' class='label label-success'>Yes</span></div>'",
-                    "width": 70
-                },
-                {
-                    "name": "mergingVersion",
-                    "displayName": "admin.correspondenceManagement.mergefields.version.grid.mergingVersion",
-                    "visible": true,
-                    "headerCellFilter": "translate",
-                    "sort": {
-                        "direction": "desc"
-                    },
-                    "width": 80
-                },
-                {
-                    "name": "modified",
-                    "displayName": "admin.correspondenceManagement.mergefields.version.grid.modified",
-                    "visible": true,
-                    "cellTemplate": "<div>{{ row.entity.modified | date : 'shortDate' }}</div>",
-                    "headerCellFilter": "translate"
-                },
-                {
-                    "name": "modifier",
-                    "displayName": "admin.correspondenceManagement.mergefields.version.grid.modifier",
-                    "visible": true,
-                    "headerCellFilter": "translate",
-                    "lookup": "userFullNames"
-                }
-            ],
-            "paginationPageSizes": [
-                5,
-                10,
-                20,
-                50
-            ],
-            "paginationPageSize": 10
         },
         {
             "id": "correspondenceManagementTemplates",
@@ -223,6 +177,14 @@
                     "cellTemplate": "<div class='ui-grid-cell-contents'>{{ grid.appScope.utils.getLookupValue(grid.appScope.correspondenceObjectTypes, row.entity.objectType) | translate }}</div>",
                     "headerCellFilter": "translate",
                     "width": 120
+                },
+                {
+                    "name": "templateModelProvider",
+                    "displayName": "admin.correspondenceManagement.templates.grid.templateModelProvider",
+                    "visible": true,
+                    "headerCellFilter": "translate",
+                    "width": 320,
+                    "cellTemplate": "<div><span>{{ row.entity.templateModelProvider.substr(row.entity.templateModelProvider.lastIndexOf(\".\") + 1) }}</span> <i class='fa fa-info-circle' style='cursor :pointer' ng-click='grid.appScope.getNavBarTree(row.entity.templateModelProvider)'></i> </div>"
                 },
                 {
                     "name": "modified",
@@ -1263,6 +1225,52 @@
                 "CASE_FILE": "admin.application.objectTitleConfiguration.caseFile",
                 "COMPLAINT": "admin.application.objectTitleConfiguration.complaint"
             }
+        },
+        {
+            "id": "scheduledJobs",
+            "title": "admin.application.scheduled.jobs.title",
+            "enabled": true,
+            "type": "grid",
+            "enableFiltering": true,
+            "configurable": true,
+            "columnDefs": [
+              {
+                  "name": "jobName",
+                  "displayName": "admin.application.scheduled.jobs.column.jobName.title",
+                  "visible": true,
+                  "headerCellFilter": "translate",
+                  "width": "25%"
+              },
+              {
+                  "name": "trigger",
+                  "displayName": "admin.application.scheduled.jobs.column.trigger.title",
+                  "visible": true,
+                  "headerCellFilter": "translate",
+                  "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.cronExpression != null ? row.entity.cronExpression : row.entity.repeatIntervalInSeconds}}</div>",
+                  "width": "25%"
+              },
+              {
+                  "name": "lastRun",
+                  "displayName": "admin.application.scheduled.jobs.column.lastRun.title",
+                  "headerCellFilter": "translate",
+                  "visible": true,
+                  "width": "25%"
+              },
+              {
+                  "name": "act",
+                  "cellEditableCondition": false,
+                  "width": "25%",
+                  "headerCellTemplate": "<span></span>",
+                  "cellTemplate": ""
+              }
+            ],
+            "paginationPageSizes": [
+                5,
+                10,
+                20,
+                50
+            ],
+            "paginationPageSize": 20
         }
     ],
     "tree": {
@@ -1537,6 +1545,13 @@
                 "label": "admin.application.recycleBin.title",
                 "components": [
                     "application-recycle-bin.config"
+                ]
+            },
+            {
+                "type": "p/application/scheduledJobs",
+                "label": "admin.application.scheduled.jobs.title",
+                "components": [
+                    "application-scheduled-jobs-management"
                 ]
             },
             {
