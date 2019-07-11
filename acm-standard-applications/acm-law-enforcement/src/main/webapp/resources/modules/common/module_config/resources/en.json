@@ -73,6 +73,7 @@
             "defaultBodyAttachments": "Please find the attached document(s) for your review.",
             "defaultFooter": "Powered by ArkCase, Enterprise Case Management platform, http://www.arkcase.com",
             "successMessage": "The email was sent successfully",
+            "unsuccessMessage": "The email was not sent",
             "noEmailAddress": "There is no entered email for this "
         },
         "menu": {
