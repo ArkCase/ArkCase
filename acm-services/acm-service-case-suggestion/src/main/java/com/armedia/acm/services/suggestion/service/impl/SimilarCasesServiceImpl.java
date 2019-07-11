@@ -32,6 +32,7 @@ import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.search.service.SearchResults;
 import com.armedia.acm.services.suggestion.model.SuggestedCase;
 import com.armedia.acm.services.suggestion.service.SimilarCasesService;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.mule.api.MuleException;
@@ -41,7 +42,12 @@ import org.springframework.security.core.Authentication;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class SimilarCasesServiceImpl implements SimilarCasesService
@@ -52,11 +58,13 @@ public class SimilarCasesServiceImpl implements SimilarCasesService
     private ExecuteSolrQuery executeSolrQuery;
 
     @Override
-    public List<SuggestedCase> findSimilarCases(String title, Boolean isPortal, Long objectId, Authentication auth) throws MuleException, ParseException {
+    public List<SuggestedCase> findSimilarCases(String title, Boolean isPortal, Long objectId, Authentication auth)
+            throws MuleException, ParseException
+    {
 
         List<SuggestedCase> similarCases = new ArrayList<>();
 
-        if(isPortal)
+        if (isPortal)
         {
             similarCases.addAll(findSolrCasesByFileContent(title, isPortal, objectId, auth));
             return similarCases;
@@ -70,139 +78,184 @@ public class SimilarCasesServiceImpl implements SimilarCasesService
 
     }
 
-    private List<SuggestedCase> findSolrCasesByTitle(String title, Boolean isPortal, Long objectId, Authentication auth) throws MuleException, ParseException
+    private List<SuggestedCase> findSolrCasesByTitle(String title, Boolean isPortal, Long objectId, Authentication auth)
+            throws MuleException, ParseException
     {
         List<SuggestedCase> records = new ArrayList<>();
 
-        log.debug(String.format("Finding similar cases by title to [%s]", title));
-
-        String query;
-        if(isPortal)
+        if (title != null && !title.isEmpty())
         {
-            query = String.format("object_type_s:CASE_FILE AND request_status_lcs:Released AND title_parseable:*%s*", title);
-        }
-        else
-        {
-            query = String.format("object_type_s:CASE_FILE AND title_parseable:*%s*", title);
-        }
-
-        String results = getExecuteSolrQuery().getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, query, 0, 99999, "", true, "",
-                false, false, "catch_all");
-
-        SearchResults searchResults = new SearchResults();
-        JSONArray docFiles = searchResults.getDocuments(results);
-
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
-
-        for (int i = 0; i < docFiles.length(); i++)
-        {
-            JSONObject docFile = docFiles.getJSONObject(i);
-
-            if(Long.valueOf(docFile.getString("object_id_s")).equals(objectId))
+            List<String> wordArray = new ArrayList<>();
+            wordArray.add(title.trim());
+            if (title.trim().contains(" "))
             {
-                continue;
+                wordArray.addAll(Arrays.asList(title.trim().split(" ")));
             }
 
-            SuggestedCase suggestedCase = new SuggestedCase();
-
-            suggestedCase.setCaseId(Long.valueOf(docFile.getString("object_id_s")));
-            suggestedCase.setCaseNumber(docFile.getString("name"));
-            suggestedCase.setCaseTitle(docFile.getString("title_parseable"));
-            suggestedCase.setModifiedDate(formatter.parse(docFile.getString("modified_date_tdt")));
-            suggestedCase.setCaseStatus(docFile.getString("status_lcs"));
-            suggestedCase.setCaseDescription("");
-            suggestedCase.setObjectType(docFile.getString("object_type_s"));
-
-            if (!docFile.isNull("description_no_html_tags_parseable"))
+            for (String word : wordArray)
             {
-                suggestedCase.setCaseDescription(docFile.getString("description_no_html_tags_parseable"));
-            }
+                if (word.length() >= 3)
+                {
 
-            records.add(suggestedCase);
+                    log.debug(String.format("Finding similar cases by title to [%s]", word));
+
+                    String query;
+                    if (isPortal)
+                    {
+                        query = String.format("object_type_s:CASE_FILE AND request_status_lcs:Released AND title_parseable:*%s*", word);
+                    }
+                    else
+                    {
+                        query = String.format("object_type_s:CASE_FILE AND title_parseable:*%s*", word);
+                    }
+
+                    String results = getExecuteSolrQuery().getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, query, 0, 99999, "",
+                            true, "",
+                            false, false, "catch_all");
+
+                    SearchResults searchResults = new SearchResults();
+                    JSONArray docFiles = searchResults.getDocuments(results);
+
+                    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+
+                    for (int i = 0; i < docFiles.length(); i++)
+                    {
+                        JSONObject docFile = docFiles.getJSONObject(i);
+
+                        if (objectId != null && Long.valueOf(docFile.getString("object_id_s")).equals(objectId))
+                        {
+                            continue;
+                        }
+
+                        SuggestedCase suggestedCase = new SuggestedCase();
+
+                        suggestedCase.setCaseId(Long.valueOf(docFile.getString("object_id_s")));
+                        suggestedCase.setCaseNumber(docFile.getString("name"));
+                        suggestedCase.setCaseTitle(docFile.getString("title_parseable"));
+                        suggestedCase.setModifiedDate(formatter.parse(docFile.getString("modified_date_tdt")));
+                        suggestedCase.setCaseStatus(docFile.getString("status_lcs"));
+                        suggestedCase.setCaseDescription("");
+                        suggestedCase.setObjectType(docFile.getString("object_type_s"));
+
+                        if (!docFile.isNull("description_no_html_tags_parseable"))
+                        {
+                            suggestedCase.setCaseDescription(docFile.getString("description_no_html_tags_parseable"));
+                        }
+
+                        records.add(suggestedCase);
+                    }
+                }
+            }
         }
 
         return records;
     }
 
-    private List<SuggestedCase> findSolrCasesByFileContent(String title, Boolean isPortal, Long objectId, Authentication auth) throws MuleException, ParseException
+    private List<SuggestedCase> findSolrCasesByFileContent(String title, Boolean isPortal, Long objectId, Authentication auth)
+            throws MuleException, ParseException
     {
         List<SuggestedCase> records = new ArrayList<>();
 
-        log.debug(String.format("Finding similar cases in content to [%s]", title));
-
         String fileQuery;
-        if(isPortal)
+
+        List<String> wordArray = new ArrayList<>();
+        wordArray.add(title.trim());
+        if (title.trim().contains(" "))
         {
-            fileQuery = String.format("*%s* AND object_type_s:FILE AND parent_ref_s:*CASE_FILE AND public_flag_b:true", title);
-        }
-        else
-        {
-            fileQuery = String.format("*%s* AND object_type_s:FILE AND parent_ref_s:*CASE_FILE", title);
-        }
-
-        String fileResults = getExecuteSolrQuery().getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, fileQuery, 0, 99999, "", true, "",
-                false, false, "catch_all");
-
-        SearchResults fileSearchResults = new SearchResults();
-        JSONArray fileDocFiles = fileSearchResults.getDocuments(fileResults);
-
-        for (int i = 0; i < fileDocFiles.length(); i++)
-        {
-            SuggestedCase suggestedCase = new SuggestedCase();
-            SuggestedCase.File file = new SuggestedCase.File();
-
-            JSONObject docFile = fileDocFiles.getJSONObject(i);
-
-            file.setFileId(docFile.getString("object_id_s"));
-            file.setFileName(docFile.getString("title_parseable") + docFile.getString("ext_s"));
-
-            suggestedCase.setCaseNumber(docFile.getString("parent_number_lcs"));
-            suggestedCase.setFile(file);
-
-            records.add(suggestedCase);
+            wordArray.addAll(Arrays.asList(title.trim().split(" ")));
         }
 
-        for(SuggestedCase sc : records)
+        for (String word : wordArray)
         {
-            String caseQuery;
-
-            if(isPortal)
+            if (word.length() >= 3)
             {
-                caseQuery = String.format("object_type_s:CASE_FILE AND request_status_lcs:Released AND name:*%s*", sc.getCaseNumber());
-            }
-            else
-            {
-                caseQuery = String.format("object_type_s:CASE_FILE AND name:*%s*", sc.getCaseNumber());
-            }
-
-            String caseResults = getExecuteSolrQuery().getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, caseQuery, 0, 99999, "", true, "",
-                    false, false, "catch_all");
-
-            SearchResults caseSearchResults = new SearchResults();
-            JSONArray caseDocFiles = caseSearchResults.getDocuments(caseResults);
-
-            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
-
-            for (int i = 0; i < caseDocFiles.length(); i++)
-            {
-                JSONObject caseDocFile = caseDocFiles.getJSONObject(i);
-
-                if(objectId != null || Long.valueOf(caseDocFile.getString("object_id_s")).equals(objectId))
+                List<SuggestedCase> suggestedCaseList = new ArrayList<>();
+                if (isPortal)
                 {
-                    continue;
+                    fileQuery = String.format("\"%s\" AND object_type_s:FILE AND parent_ref_s:*CASE_FILE AND public_flag_b:true", word);
+                }
+                else
+                {
+                    fileQuery = String.format("\"%s\" AND object_type_s:FILE AND parent_ref_s:*CASE_FILE", word);
                 }
 
-                sc.setCaseId(Long.valueOf(caseDocFile.getString("object_id_s")));
-                sc.setCaseTitle(caseDocFile.getString("title_parseable"));
-                sc.setModifiedDate(formatter.parse(caseDocFile.getString("modified_date_tdt")));
-                sc.setCaseStatus(caseDocFile.getString("status_lcs"));
-                sc.setCaseDescription("");
-                sc.setObjectType(caseDocFile.getString("object_type_s"));
+                log.debug(String.format("Finding similar cases in content to [%s]", word));
 
-                if (!caseDocFile.isNull("description_no_html_tags_parseable"))
+                String fileResults = getExecuteSolrQuery().getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, fileQuery, 0, 99999,
+                        "",
+                        true, "",
+                        false, false, "catch_all");
+
+                SearchResults fileSearchResults = new SearchResults();
+                JSONArray fileDocFiles = fileSearchResults.getDocuments(fileResults);
+
+                for (int i = 0; i < fileDocFiles.length(); i++)
                 {
-                    sc.setCaseDescription(caseDocFile.getString("description_no_html_tags_parseable"));
+                    SuggestedCase suggestedCase = new SuggestedCase();
+                    SuggestedCase.File file = new SuggestedCase.File();
+
+                    JSONObject docFile = fileDocFiles.getJSONObject(i);
+
+                    file.setFileId(docFile.getString("object_id_s"));
+                    file.setFileName(docFile.getString("title_parseable") + docFile.getString("ext_s"));
+
+                    suggestedCase.setCaseNumber(docFile.getString("parent_number_lcs"));
+                    suggestedCase.setFile(file);
+
+                    suggestedCaseList.add(suggestedCase);
                 }
+
+                for (SuggestedCase sc : suggestedCaseList)
+                {
+                    String caseQuery;
+
+                    if (!sc.getCaseNumber().isEmpty())
+                    {
+
+                        if (isPortal)
+                        {
+                            caseQuery = String.format("object_type_s:CASE_FILE AND request_status_lcs:Released AND name:%s",
+                                    sc.getCaseNumber());
+                        }
+                        else
+                        {
+                            caseQuery = String.format("object_type_s:CASE_FILE AND name:%s", sc.getCaseNumber());
+                        }
+
+                        String caseResults = getExecuteSolrQuery().getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, caseQuery, 0,
+                                99999, "",
+                                true, "",
+                                false, false, "catch_all");
+
+                        SearchResults caseSearchResults = new SearchResults();
+                        JSONArray caseDocFiles = caseSearchResults.getDocuments(caseResults);
+
+                        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+
+                        for (int i = 0; i < caseDocFiles.length(); i++)
+                        {
+                            JSONObject caseDocFile = caseDocFiles.getJSONObject(i);
+
+                            if (objectId != null && Long.valueOf(caseDocFile.getString("object_id_s")).equals(objectId))
+                            {
+                                continue;
+                            }
+
+                            sc.setCaseId(Long.valueOf(caseDocFile.getString("object_id_s")));
+                            sc.setCaseTitle(caseDocFile.getString("title_parseable"));
+                            sc.setModifiedDate(formatter.parse(caseDocFile.getString("modified_date_tdt")));
+                            sc.setCaseStatus(caseDocFile.getString("status_lcs"));
+                            sc.setCaseDescription("");
+                            sc.setObjectType(caseDocFile.getString("object_type_s"));
+
+                            if (!caseDocFile.isNull("description_no_html_tags_parseable"))
+                            {
+                                sc.setCaseDescription(caseDocFile.getString("description_no_html_tags_parseable"));
+                            }
+                        }
+                    }
+                }
+                records.addAll(suggestedCaseList);
             }
         }
 

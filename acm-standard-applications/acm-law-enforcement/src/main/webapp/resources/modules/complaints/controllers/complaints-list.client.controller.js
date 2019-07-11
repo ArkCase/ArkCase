@@ -2,11 +2,15 @@
 
 angular.module('complaints').controller(
         'ComplaintsListController',
-        [ '$scope', '$state', '$stateParams', '$translate', 'UtilService', 'ObjectService', 'Complaint.ListService', 'Complaint.InfoService', 'Helper.ObjectBrowserService', 'ServCommService', 'MessageService',
-                function($scope, $state, $stateParams, $translate, Util, ObjectService, ComplaintListService, ComplaintInfoService, HelperObjectBrowserService, ServCommService, MessageService) {
+        [ '$scope', '$state', '$stateParams', '$translate', 'UtilService', 'ObjectService', 'Complaint.ListService', 'Complaint.InfoService', 'Helper.ObjectBrowserService', 'ServCommService', 'MessageService', 'Authentication',
+                function($scope, $state, $stateParams, $translate, Util, ObjectService, ComplaintListService, ComplaintInfoService, HelperObjectBrowserService, ServCommService, MessageService, Authentication) {
 
                     // maybe optional listener for "close-complaint"?
                     var eventName = "object.inserted";
+                    $scope.userPrivileges = [];
+                    Authentication.getUserPrivileges().then(function (data) {
+                        $scope.userPrivileges = data;
+                    });
                     $scope.$bus.subscribe(eventName, function(data) {
                         if (data.objectType === ObjectService.ObjectTypes.COMPLAINT) {
                             var frevvoRequest = ServCommService.popRequest("frevvo", "new-complaint");

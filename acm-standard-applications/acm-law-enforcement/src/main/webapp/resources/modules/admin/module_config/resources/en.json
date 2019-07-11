@@ -62,6 +62,8 @@
             "changedGroupSearchPageFilter": "Changed Group Search Page Filter",
             "enableEditingLdapUsers": "Enable managing users and groups",
             "syncEnabled": "Enable synchronize users",
+            "fullSync": "Full Sync Cron Expression",
+            "partialSync": "Partial Sync Cron Expression",
             "cancel": "Cancel",
             "ok": "Save"
         },
@@ -105,7 +107,9 @@
             "changedGroupSearchPageFilter": "Enter filter including sort-attribute for all changed groups",
             "groupSearchPageFilter": "Enter filter including sort-attribute (e.g. (&(objectClass=group)(gidNumber>=%s)))",
             "enableEditingLdapUsers": "Check if managing users and groups to your DS is allowed",
-            "syncEnabled": "Check if synchronize users to your DS is allowed"
+            "syncEnabled": "Check if synchronize users to your DS is allowed",
+            "fullSync": "Enter cron expression for full sync job",
+            "partialSync": "Enter cron expression for partial sync job"
         },
         "security.ldapConfig.messages": {
             "delete.success": "Successfully deleted row.",
@@ -496,7 +500,6 @@
         "portals.portalsConfiguration": {
             "nodeTitle": "Portals Service",
             "title": "Portals Configuration",
-            "enablePortalAuthentication": " Enable Portal Authentication",
             "url": "URL",
             "id": "ID",
             "portalId": "Portal ID",
@@ -925,6 +928,14 @@
                     "save": "Save",
                     "cancel": "Cancel"
                 }
+            },
+            "scheduled.jobs": {
+                "title": "Scheduled Jobs",
+                "column": {
+                    "jobName.title": "Job Name",
+                    "trigger.title": "Trigger interval(seconds) / cron",
+                    "lastRun.title": "Last Run"
+                }
             }
         },
         "branding.title": "Branding",
@@ -971,7 +982,8 @@
                 "statusActivated": "Activated",
                 "objectType": "Object Type",
                 "version": "Version",
-                "templateVersionActive": "Active"
+                "templateVersionActive": "Active",
+                "templateModelProvider": "Template Model Provider"
             },
             "templates.fieldNames.label": "Map fields to values from the template",
             "templates.querySelect": {
@@ -990,14 +1002,20 @@
                 "querySelect.label": "Query Select",
                 "label.label": "Display Name",
                 "btnCancel.text": "Cancel",
-                "btnOk.text": "Upload Template"
+                "btnOk.text": "Upload Template",
+                "templateModelProvider.label": "Template Model Provider",
+                "navigationBar": "Correspondence Templates Fields"
             },
             "templates.version.modal": {
                 "btnOk.text": "Confirm"
             },
+            "templates.tabs": {
+                "firstTab" : "Correspondence Object Tree View",
+                "secondTab" : "Merge Fields"
+            },
             "mergefields": "Merge Fields Configuration",
             "mergefields.saveMergeFields": "Save",
-            "mergefields.versionMergeFields": "Versions",
+            "mergefields.deleteMergeFields": "Delete",
             "mergefields.grid": {
                 "fieldId": "ID",
                 "fieldValue": "Value",
@@ -1012,6 +1030,19 @@
             "mergefields.version.modal": {
                 "btnLoadVersion.text": "Load Version",
                 "btnCancel.text": "Cancel"
+            },
+            "mergefields.addModal": {
+                "fieldId": "Field Id",
+                "fieldValue": "Field Value",
+                "fieldDescription": "Field Description",
+                "objectType": "Object Type",
+                "mergeFieldForm": "Merge Field Configuration",
+                "addMergeField": "Add Merge Field"
+            },
+            "mergefields.addModal.placeHolders": {
+                "fieldId": "Enter Merge Field Id",
+                "fieldValue": "Enter Merge Field Value",
+                "fieldDescription": "Enter Merge Field Description"
             }
         },
         "forms.defaultValue": "Select Target",
@@ -1235,6 +1266,7 @@
     },
     "contextMenu.options": {
         "restore": "Restore",
-        "delete": "Delete"
+        "delete" : "Delete",
+        "copyVariablePath": "Copy Variable Path"
     }
 }

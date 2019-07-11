@@ -149,7 +149,8 @@ public abstract class NotificationSender
 
             in.setSubject(notification.getTitle());
             in.setEmailAddresses(Arrays.asList(notification.getEmailAddresses().split(",")));
-
+            in.setObjectId(notification.getParentId());
+            in.setObjectType(notification.getParentType());
             Authentication authentication = SecurityContextHolder.getContext() != null
                     ? SecurityContextHolder.getContext().getAuthentication()
                     : null;

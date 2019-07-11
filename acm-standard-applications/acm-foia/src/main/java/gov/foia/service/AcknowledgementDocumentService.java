@@ -32,7 +32,6 @@ import static gov.foia.model.FOIAConstants.EMAIL_FOOTER_ATTACHMENT;
 import static gov.foia.model.FOIAConstants.EMAIL_HEADER_ATTACHMENT;
 import static gov.foia.model.FOIARequestUtils.extractRequestorEmailAddress;
 
-import com.armedia.acm.core.exceptions.CorrespondenceMergeFieldVersionException;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.services.email.model.EmailWithAttachmentsDTO;
@@ -129,8 +128,7 @@ public class AcknowledgementDocumentService
         }
     }
 
-    public void generateAndUpload(String objectType, Long requestId)
-            throws DocumentGeneratorException, CorrespondenceMergeFieldVersionException
+    public void generateAndUpload(String objectType, Long requestId) throws DocumentGeneratorException
     {
         if (foiaConfigurationService.readConfiguration().getReceivedDateEnabled())
         {
@@ -142,7 +140,7 @@ public class AcknowledgementDocumentService
         }
     }
 
-    public void generateAndUploadACK(Long requestId) throws DocumentGeneratorException, CorrespondenceMergeFieldVersionException
+    public void generateAndUploadACK(Long requestId) throws DocumentGeneratorException
 
     {
         FOIARequest request = requestDao.find(requestId);

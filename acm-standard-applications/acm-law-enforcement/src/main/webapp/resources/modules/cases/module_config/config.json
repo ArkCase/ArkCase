@@ -142,9 +142,9 @@
                     "cost",
                     "tags",
                     "calendar",
+                    "suggestedCases",
                     "approvalRouting",
-                    "billing",
-                    "suggestedCases"
+                    "billing"
                 ]
             },
             {
@@ -252,6 +252,14 @@
                 ]
             },
             {
+                "type": "p/CASE_FILE/suggestedCases",
+                "label": "cases.tree.nodeTypes.suggestedCases.label",
+                "icon": "fa fa-files-o",
+                "components": [
+                    "suggestedCases"
+                ]
+            },
+            {
                 "type": "p/CASE_FILE/apr",
                 "label": "cases.tree.nodeTypes.approvalRouting.label",
                 "icon": "fa fa-sort-amount-desc",
@@ -265,15 +273,10 @@
                 "icon": "fa fa-pencil-square-o",
                 "components": [
                     "billing"
-                ]
-            },
-            {
-                "type": "p/CASE_FILE/suggestedCases",
-                "label": "cases.tree.nodeTypes.suggestedCases.label",
-                "icon": "fa fa-files-o",
-                "components": [
-                    "suggestedCases"
-                ]
+                ],
+                "requiredPrivileges": [
+                    "acmListBillingItemsPrivilege"
+                    ]
             },
             {
                 "type": "p/ERROR",

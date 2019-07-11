@@ -589,6 +589,21 @@ LANGUAGE plpgsql;
             <column name="cm_user_role" type="VARCHAR(64)"/>
         </createTable>
     </changeSet>
+
+    <changeSet id="35-foia-file-exemption-code-version" author="aleksandar.bujaroski"
+        logicalFilePath="/ddl/tables/foia-request-db-tables-1.0.xml">
+        <!-- foreign key must be removed for mysql (not tested on another database) before we drop primary key-->
+        <dropForeignKeyConstraint baseTableName="foia_file_exemption_code" constraintName="fk_foia_file_exemption_code_id"/>
+        <dropPrimaryKey tableName="foia_file_exemption_code"/>
+        <addColumn tableName="foia_file_exemption_code">
+            <column name="fo_exemption_code_id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"></constraints>
+            </column>
+        </addColumn>
+        <addForeignKeyConstraint baseTableName="foia_file_exemption_code" baseColumnNames="ecm_file_id"
+            constraintName="fk_foia_file_exemption_code_id" referencedTableName="acm_file" referencedColumnNames="cm_file_id"
+            deferrable="${deferrable}" initiallyDeferred="${initially.deferred}"/>
+    </changeSet>
     
 </databaseChangeLog>
 

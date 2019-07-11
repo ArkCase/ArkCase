@@ -17,70 +17,11 @@
  */
 angular.module('admin').service('Admin.CMMergeFieldsService', [ '$http', function($http) {
     return ({
-        retrieveMergeFieldsList: retrieveMergeFieldsList,
-        retrieveMergeFieldsVersionsList: retrieveMergeFieldsVersionsList,
-        retrieveMergeFieldsVersionsByType: retrieveMergeFieldsVersionsByType,
         retrieveActiveMergeFieldsByType: retrieveActiveMergeFieldsByType,
         saveMergeFieldsData: saveMergeFieldsData,
-        setActiveMergingVersion: setActiveMergingVersion
+        deleteMergeFields: deleteMergeFields,
+        addMergeField: addMergeField
     });
-
-    /**
-     * @ngdoc method
-     * @name retrieveMergeFieldsList
-     * @methodOf admin.service:Admin.CMMergeFieldsService
-     *
-     * @description
-     * Performs retrieving correspondence management merge fields.
-     *
-     * @returns {HttpPromise} Future info about widgets
-     */
-    function retrieveMergeFieldsList() {
-        return $http({
-            method: "GET",
-            url: 'api/latest/plugin/admin/mergefields',
-            cache: false
-        });
-    }
-    ;
-
-    /**
-     * @ngdoc method
-     * @name retrieveMergeFieldsVersionsList
-     * @methodOf admin.service:Admin.CMMergeFieldsService
-     *
-     * @description
-     * Performs retrieving correspondence management merge fields versions.
-     *
-     * @returns {HttpPromise} Future info about widgets
-     */
-    function retrieveMergeFieldsVersionsList() {
-        return $http({
-            method: "GET",
-            url: 'api/latest/plugin/admin/mergefields/versions',
-            cache: false
-        });
-    }
-    ;
-
-    /**
-     * @ngdoc method
-     * @name retrieveMergeFieldsVersionsByType
-     * @methodOf admin.service:Admin.CMMergeFieldsService
-     *
-     * @description
-     * Performs retrieving correspondence management merge fields versions for selected type.
-     *
-     * @returns {HttpPromise} Future info about widgets
-     */
-    function retrieveMergeFieldsVersionsByType(objectType) {
-        return $http({
-            method: "GET",
-            url: 'api/latest/plugin/admin/mergefields/versions/' + objectType,
-            cache: false
-        });
-    }
-    ;
 
     /**
      * @ngdoc method
@@ -122,20 +63,38 @@ angular.module('admin').service('Admin.CMMergeFieldsService', [ '$http', functio
 
     /**
      * @ngdoc method
-     * @name setActiveMergingVersion
-     * @methodOf admin.service:Admin.CMMergeFieldsService
+     * @name deleteMergeFieldData
+     * @methodOf admin.service:Admin.CMTemplatesService
      *
      * @description
-     * Set selected merge field version as active.
+     * Delete merge field.
      *
-     * @param {object} mergeFieldVersionData Contains merge field version data
+     * @param {string} mergeFieldId Id of the merge field
      * @returns {HttpPromise} Future info about widgets
      */
-    function setActiveMergingVersion(mergeFieldVersionData) {
+    function deleteMergeFields(mergeFieldId) {
+        return $http({
+            method: "DELETE",
+            url: 'api/latest/plugin/admin/mergefields/' + mergeFieldId
+        });
+    }
+
+    /**
+     * @ngdoc method
+     * @name addMergeField
+     * @methodOf admin.service:Admin.CMTemplatesService
+     *
+     * @description
+     * Add new merge field
+     *
+     * @param {string} mergeFieldId Id of the merge field
+     * @returns {HttpPromise} Future info about widgets
+     */
+    function addMergeField(newMergeField) {
         return $http({
             method: "PUT",
-            url: 'api/latest/plugin/admin/mergefields/version/active',
-            data: mergeFieldVersionData
+            url: 'api/latest/plugin/admin/mergefields/addMergeField',
+            data: newMergeField
         });
     }
 } ]);

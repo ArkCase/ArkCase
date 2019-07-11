@@ -32,24 +32,21 @@ import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
-import com.armedia.acm.files.propertymanager.PropertyFileManager;
 import com.armedia.acm.plugins.ecm.model.sync.EcmEvent;
 import com.armedia.acm.plugins.ecm.service.sync.EcmAuditResponseReader;
 
 import org.apache.commons.io.FileUtils;
 import org.easymock.Capture;
 import org.easymock.EasyMock;
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
+import org.quartz.JobDataMap;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -61,16 +58,12 @@ public class AlfrescoSyncServiceTest
 {
     private AlfrescoSyncService unit;
 
-    private PropertyFileManager propertyFileManager = EasyMock.createMock(PropertyFileManager.class);
-
     private AlfrescoAuditApplicationRestClient auditApplicationRestClient = EasyMock.createMock(AlfrescoAuditApplicationRestClient.class);
 
     private ApplicationEventPublisher applicationEventPublisher = EasyMock.createMock(ApplicationEventPublisher.class);
 
     private EcmAuditResponseReader firstEcmAuditResponseReader = new AlfrescoNodeServiceCreateNodeAuditResponseReader();
     private EcmAuditResponseReader secondEcmAuditResponseReader = new AlfrescoFileFolderServiceCreateAuditResponseReader();
-
-    private String auditApplicationLastAuditIdProperties = "/home/arkuser/path/to/lastAuditId.properties";
 
     private JSONObject firstAuditResponse;
     private JSONObject secondAuditResponse;
@@ -82,9 +75,7 @@ public class AlfrescoSyncServiceTest
     {
         unit = new AlfrescoSyncService();
 
-        unit.setPropertyFileManager(propertyFileManager);
         unit.setAuditApplicationRestClient(auditApplicationRestClient);
-        unit.setAuditApplicationLastAuditIdsFilename(auditApplicationLastAuditIdProperties);
         unit.setApplicationEventPublisher(applicationEventPublisher);
 
         Map<String, EcmAuditResponseReader> applications = new HashMap<>();
@@ -113,25 +104,15 @@ public class AlfrescoSyncServiceTest
         Long firstAppAuditId = Integer.valueOf(new Random().nextInt(10000 - 10) + 10).longValue();
         Long secondAppAuditId = Integer.valueOf(new Random().nextInt(10000 - 10) + 10).longValue();
 
-        expect(propertyFileManager.load(auditApplicationLastAuditIdProperties, "applicationOne.lastAuditId", "0"))
-                .andReturn(String.valueOf(firstAppAuditId));
-        expect(propertyFileManager.load(auditApplicationLastAuditIdProperties, "applicationTwo.lastAuditId", "0"))
-                .andReturn(String.valueOf(secondAppAuditId));
+        Map<String, Long> lastAuditIdsPerApp = new HashMap<>();
+        lastAuditIdsPerApp.put("applicationOne.lastAuditId", firstAppAuditId);
+        lastAuditIdsPerApp.put("applicationTwo.lastAuditId", secondAppAuditId);
 
         // we want to start from the next audit record... so we don't retrieve the last one we got before
-        expect(auditApplicationRestClient.service("applicationOne", firstAppAuditId + 1)).andReturn(firstAuditResponse);
-        expect(auditApplicationRestClient.service("applicationTwo", secondAppAuditId + 1)).andReturn(secondAuditResponse);
-
-        // the last audit ID in the first audit response is 61
-        propertyFileManager.storeMultiple(
-                Collections.singletonMap("applicationOne.lastAuditId", "61"),
-                auditApplicationLastAuditIdProperties,
-                false);
-        // the last audit ID in the second audit response is 91
-        propertyFileManager.storeMultiple(
-                Collections.singletonMap("applicationTwo.lastAuditId", "91"),
-                auditApplicationLastAuditIdProperties,
-                false);
+        expect(auditApplicationRestClient.service("applicationOne", firstAppAuditId + 1))
+                .andReturn(firstAuditResponse);
+        expect(auditApplicationRestClient.service("applicationTwo", secondAppAuditId + 1))
+                .andReturn(secondAuditResponse);
 
         // 3 events from the first audit app, and 2 events from the second. The events should be published
         // by order of the audit id in each event: 42, 52, 55, 57, 91
@@ -146,37 +127,22 @@ public class AlfrescoSyncServiceTest
         applicationEventPublisher.publishEvent(capture(fourth));
         applicationEventPublisher.publishEvent(capture(fifth));
 
-        replay(propertyFileManager, auditApplicationRestClient, applicationEventPublisher);
+        replay(auditApplicationRestClient, applicationEventPublisher);
 
-        unit.queryAlfrescoAuditApplications();
+        JobDataMap jobDataMap = new JobDataMap(lastAuditIdsPerApp);
+        unit.queryAlfrescoAuditApplications(jobDataMap);
 
-        verify(propertyFileManager, auditApplicationRestClient, applicationEventPublisher);
+        verify(auditApplicationRestClient, applicationEventPublisher);
 
         assertEquals(42, first.getValue().getAuditId());
         assertEquals(52, second.getValue().getAuditId());
         assertEquals(55, third.getValue().getAuditId());
         assertEquals(57, fourth.getValue().getAuditId());
         assertEquals(91, fifth.getValue().getAuditId());
-
-    }
-
-    @Test
-    public void updatePropertiesWithLastAuditId_noAuditsFound() throws Exception
-    {
-
-        replay(propertyFileManager, auditApplicationRestClient, applicationEventPublisher);
-
-        try
-        {
-            unit.updatePropertiesWithLastAuditId("lastAuditIdKey", emptyAuditResponse);
-        }
-        catch (JSONException e)
-        {
-            System.out.println("in catch block");
-            fail("Shouldn't have JSON exceptions for an empty audit response - " + e.getMessage());
-        }
-
-        verify(propertyFileManager, auditApplicationRestClient, applicationEventPublisher);
+        // the last audit ID in the first audit response is 61
+        assertEquals(61L, jobDataMap.get("applicationOne.lastAuditId"));
+        // the last audit ID in the second audit response is 91
+        assertEquals(91L, jobDataMap.get("applicationTwo.lastAuditId"));
 
     }
 

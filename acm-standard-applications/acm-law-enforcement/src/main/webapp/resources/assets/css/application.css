@@ -383,6 +383,7 @@ span.fancytree-title {
 
 .docTreeMenu {
     font-size: 100%;
+    top: 40% !important;
 }
 
 .docTreeMenu ul {
@@ -1854,4 +1855,8 @@ a.primary {
 .loadingSpinner {
     font-size: 16px;
     margin-left: 80px;
+}
+
+.marginTop {
+    margin-top: 5px
 }

@@ -3,9 +3,13 @@
 angular.module('admin').controller('Admin.LoginConfigController',
         [ '$scope', '$q', '$modal', '$translate', 'UtilService', 'Admin.ApplicationSettingsService', 'Dialog.BootboxService', 'MessageService', function($scope, $q, $modal, $translate, Util, ApplicationSettingsService, DialogService, messageService) {
             var saved = {};
-            ApplicationSettingsService.getProperty(ApplicationSettingsService.PROPERTIES.IDLE_LIMIT).then(function(response) {
+
+            $scope.configDataModel = {};
+
+            ApplicationSettingsService.getApplicationPropertiesConfig().then(function (response) {
                 $scope.idleLimit = Util.goodValue(response.data[ApplicationSettingsService.PROPERTIES.IDLE_LIMIT], 600000);
                 saved.idleLimit = $scope.idleLimit;
+                $scope.configDataModel = response.data;
             });
             //ApplicationSettingsService.getProperty(ApplicationSettingsService.PROPERTIES.IDLE_PULL).then(function (response) {
             //    $scope.idlePull = Util.goodValue(response.data[ApplicationSettingsService.PROPERTIES.IDLE_PULL], 5000);
@@ -18,7 +22,8 @@ angular.module('admin').controller('Admin.LoginConfigController',
 
             $scope.applyChanges = function() {
                 if (saved.idleLimit != $scope.idleLimit) {
-                    ApplicationSettingsService.setProperty(ApplicationSettingsService.PROPERTIES.IDLE_LIMIT, $scope.idleLimit);
+                    $scope.configDataModel[ApplicationSettingsService.PROPERTIES.IDLE_LIMIT] = $scope.idleLimit;
+                    ApplicationSettingsService.saveApplicationPropertyConfig($scope.configDataModel);
                     saved.idleLimit = $scope.idleLimit;
 
                     //change for AFDP-6803

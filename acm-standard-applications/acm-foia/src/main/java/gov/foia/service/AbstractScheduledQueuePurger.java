@@ -32,7 +32,6 @@ package gov.foia.service;
 
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.plugins.businessprocess.service.StartBusinessProcessService;
-import com.armedia.acm.scheduler.AcmSchedulableBean;
 import com.armedia.acm.web.api.MDCConstants;
 
 import org.apache.logging.log4j.Logger;
@@ -49,7 +48,7 @@ import gov.foia.model.FOIARequest;
 /**
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Sep 5, 2016
  */
-public abstract class AbstractScheduledQueuePurger implements AcmSchedulableBean
+public abstract class AbstractScheduledQueuePurger
 {
 
     private FOIARequestDao requestDao;
@@ -81,7 +80,6 @@ public abstract class AbstractScheduledQueuePurger implements AcmSchedulableBean
      */
     protected abstract Boolean getPurgeRequestEnabled();
 
-    @Override
     public void executeTask()
     {
         if (getPurgeRequestEnabled())

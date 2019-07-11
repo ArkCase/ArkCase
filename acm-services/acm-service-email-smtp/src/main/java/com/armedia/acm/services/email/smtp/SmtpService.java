@@ -31,8 +31,8 @@ import com.armedia.acm.auth.AuthenticationUtils;
 import com.armedia.acm.convertfolder.ConversionException;
 import com.armedia.acm.convertfolder.DefaultFolderAndFileConverter;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
+import com.armedia.acm.core.model.AcmEvent;
 import com.armedia.acm.email.model.EmailSenderConfig;
-import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.services.email.model.AttachmentsProcessableDTO;
@@ -42,7 +42,6 @@ import com.armedia.acm.services.email.model.EmailWithAttachmentsAndLinksDTO;
 import com.armedia.acm.services.email.model.EmailWithAttachmentsDTO;
 import com.armedia.acm.services.email.model.EmailWithEmbeddedLinksDTO;
 import com.armedia.acm.services.email.model.EmailWithEmbeddedLinksResultDTO;
-import com.armedia.acm.services.email.sender.service.EmailSenderConfigurationServiceImpl;
 import com.armedia.acm.services.email.service.AcmEmailContentGeneratorService;
 import com.armedia.acm.services.email.service.AcmEmailSenderService;
 import com.armedia.acm.services.email.service.TemplatingEngine;
@@ -56,8 +55,6 @@ import org.apache.logging.log4j.LogManager;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.security.core.Authentication;
-
-import javax.activation.DataHandler;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -77,15 +74,11 @@ import java.util.stream.Stream;
 public class SmtpService implements AcmEmailSenderService, ApplicationEventPublisherAware
 {
 
-    private final Logger LOG = LogManager.getLogger(getClass());
+    private final Logger log = LogManager.getLogger(getClass());
 
     private EcmFileService ecmFileService;
 
-    private MuleContextManager muleContextManager;
-
     private ApplicationEventPublisher eventPublisher;
-
-    private String flow;
 
     private AcmEmailContentGeneratorService acmEmailContentGeneratorService;
 
@@ -93,9 +86,9 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
 
     private TemplatingEngine templatingEngine;
 
-    private EmailSenderConfigurationServiceImpl emailSenderConfigurationService;
-
     private DefaultFolderAndFileConverter defaultFolderAndFileConverter;
+
+    private AcmMailSender acmMailSender;
 
     @Override
     public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher)
@@ -105,32 +98,25 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
 
     /*
      * (non-Javadoc)
-     * @see com.armedia.acm.services.email.service.AcmEmailSenderService#sendPlainEmail(java.util.stream.Stream,
+     * @see com.armedia.acm.services.email.service.AcmEmailSenderService#sendEmail(java.util.stream.Stream,
      * com.armedia.acm.services.email.model.EmailBuilder, com.armedia.acm.services.email.model.EmailBodyBuilder)
      */
     @Override
     public <T> void sendPlainEmail(Stream<T> emailsDataStream, EmailBuilder<T> emailBuilder, EmailBodyBuilder<T> emailBodyBuilder)
-            throws Exception
     {
-        Map<String, Object> messageProps = loadSmtpAndOriginatingProperties();
-
         emailsDataStream.forEach(emailData -> {
+            Map<String, Object> messageProps = new HashMap<>();
             emailBuilder.buildEmail(emailData, messageProps);
-
+            String recipient = (String) messageProps.get("to");
+            String subject = (String) messageProps.get("subject");
             try
             {
-                MuleMessage received = muleContextManager.send(flow, emailBodyBuilder.buildEmailBody(emailData), messageProps);
-                MuleException exception = received.getInboundProperty("sendEmailException");
-                if (exception != null)
-                {
-                    LOG.error("Email message not sent ...", exception);
-                }
+                acmMailSender.sendEmail(recipient, subject, emailBodyBuilder.buildEmailBody(emailData));
             }
             catch (Exception e)
             {
-                LOG.error("Email message not sent ...", e);
+                log.error("Failed to send mail to [{}].", recipient, e);
             }
-
         });
     }
 
@@ -142,39 +128,38 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
      * com.armedia.acm.services.users.model.AcmUser)
      */
     @Override
-    public void sendEmailWithAttachments(EmailWithAttachmentsDTO in, Authentication authentication, AcmUser user) throws Exception
+    public void sendEmailWithAttachments(EmailWithAttachmentsDTO in, Authentication authentication, AcmUser user)
+            throws Exception
     {
         in.setTemplatingEngine(getTemplatingEngine());
 
         Exception exception = null;
-        Map<String, Object> messageProps = loadSmtpAndOriginatingProperties();
-        messageProps.put("subject", in.getSubject());
 
-        List<SmtpEventSentEvent> sentEvents = new ArrayList<>();
-        Map<String, DataHandler> attachments = processAttachments(in, user, sentEvents);
+        List<AcmEvent> sentEvents = new ArrayList<>();
+        Map<String, InputStreamDataSource> attachments = processAttachments(in, user, sentEvents);
+        if(attachments.size() == 0)
+        {
+            sentEvents.add(new SmtpEventMailSent(in,user.getUserId(),in.getObjectId(),in.getObjectType(),AuthenticationUtils.getUserIpAddress()));
+        }
         for (String emailAddress : in.getEmailAddresses())
         {
             try
             {
-                messageProps.put("to", emailAddress);
-                MuleMessage received = muleContextManager.send(flow, in.getMessageBody(), attachments, messageProps);
-                exception = received.getInboundProperty("sendEmailException");
-
+                acmMailSender.sendMultipartEmail(emailAddress, in.getSubject(), in.getMessageBody(),
+                        new ArrayList<>(attachments.values()));
             }
-            catch (MuleException e)
+            catch (Exception e)
             {
-                LOG.error("Email message not sent ...", exception);
                 exception = e;
+                log.error("Failed to send email to [{}].", emailAddress, exception);
             }
-
         }
-        for (SmtpEventSentEvent event : sentEvents)
+        for (AcmEvent event : sentEvents)
         {
             boolean success = (exception == null);
             event.setSucceeded(success);
             eventPublisher.publishEvent(event);
         }
-
     }
 
     /*
@@ -204,28 +189,24 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
 
         setFilenames(in);
 
-        Map<String, Object> messageProps = loadSmtpAndOriginatingProperties();
-        messageProps.put("subject", in.getSubject());
-        List<SmtpEventSentEvent> sentEvents = new ArrayList<>();
-        Map<String, DataHandler> attachments = processAttachments(in, user, sentEvents);
+        List<AcmEvent> sentEvents = new ArrayList<>();
+        Map<String, InputStreamDataSource> attachments = processAttachments(in, user, sentEvents);
+
         for (String emailAddress : in.getEmailAddresses())
         {
             try
             {
-                messageProps.put("to", emailAddress);
-                MuleMessage received = muleContextManager.send(flow, makeNote(emailAddress, in, authentication), attachments, messageProps);
-                exception = received.getInboundProperty("sendEmailException");
-
+                acmMailSender.sendMultipartEmail(emailAddress, in.getSubject(),
+                        makeNote(emailAddress, in, authentication), new ArrayList<>(attachments.values()));
             }
-            catch (MuleException e)
+            catch (Exception e)
             {
-                LOG.error("Email message not sent ...", exception);
+                log.error("Failed to send email to [{}].", emailAddress, exception);
                 exception = e;
             }
-
         }
 
-        for (SmtpEventSentEvent event : sentEvents)
+        for (AcmEvent event : sentEvents)
         {
             boolean success = (exception == null);
             event.setSucceeded(success);
@@ -258,14 +239,14 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
      *            *
      * @param sentEvents
      * @return
-     * @throws MuleException
      * @throws AcmUserActionFailedException
      * @throws FileNotFoundException
      */
-    private Map<String, DataHandler> processAttachments(AttachmentsProcessableDTO in, AcmUser user, List<SmtpEventSentEvent> sentEvents)
-            throws MuleException, AcmUserActionFailedException, FileNotFoundException
+    private Map<String, InputStreamDataSource> processAttachments(AttachmentsProcessableDTO in, AcmUser user,
+            List<AcmEvent> sentEvents)
+            throws AcmUserActionFailedException, FileNotFoundException
     {
-        Map<String, DataHandler> attachments = new HashMap<>();
+        Map<String, InputStreamDataSource> attachments = new HashMap<>();
         if (in.getAttachmentIds() != null && !in.getAttachmentIds().isEmpty())
         {
             // add index to make sure the fileKey is unique for AFDP- 5713
@@ -291,9 +272,9 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
                     fileName = fileName + ecmFile.getFileActiveVersionNameExtension();
                 }
 
-                //Convert the Attachment to PDF if set in Admin section
-                if (getEmailSenderConfigurationService().readConfiguration().getConvertDocumentsToPdf() &&
-                        Objects.nonNull(ecmFile) && !".pdf".equals(ecmFile.getFileActiveVersionNameExtension()))
+                // Convert the Attachment to PDF if set in Admin section
+                if (emailSenderConfig.getConvertDocumentsToPdf() && !".pdf"
+                        .equals(ecmFile.getFileActiveVersionNameExtension()))
                 {
                     try
                     {
@@ -301,7 +282,7 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
                     }
                     catch (ConversionException e)
                     {
-                        LOG.error(String.format("Could not convert file [%s] to PDF", fileName), e);
+                        log.error(String.format("Could not convert file [%s] to PDF", fileName), e);
                     }
 
                     if (pdfConvertedFile != null)
@@ -311,11 +292,11 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
                         {
                             contents = pdfConvertedFileInputStream;
                             fileName = fileKey.concat(".pdf");
-                            attachments.put(fileKey, new DataHandler(new InputStreamDataSource(contents, fileName)));
+                            attachments.put(fileKey, new InputStreamDataSource(contents, fileName));
                         }
                         catch (IOException e)
                         {
-                            LOG.error(String.format("Could not open input stream of file [%s]", fileName), e);
+                            log.error(String.format("Could not open input stream of file [%s]", fileName), e);
                         }
                         finally
                         {
@@ -324,16 +305,19 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
                     }
                     else
                     {
-                        attachments.put(fileKey, new DataHandler(new InputStreamDataSource(contents, fileName)));
+                        attachments.put(fileKey, new InputStreamDataSource(contents, fileName));
                     }
                 }
                 else
                 {
-                    attachments.put(fileKey, new DataHandler(new InputStreamDataSource(contents, fileName)));
+                    attachments.put(fileKey, new InputStreamDataSource(contents, fileName));
                 }
 
                 String ipAddress = AuthenticationUtils.getUserIpAddress();
-
+                for (String mailAddress : in.getEmailAddresses())
+                {
+                    ecmFile.setMailAddress(mailAddress);
+                }
                 sentEvents
                         .add(new SmtpEventSentEvent(ecmFile, user.getUserId(), ecmFile.getParentObjectId(), ecmFile.getParentObjectType(),
                                 ipAddress));
@@ -348,7 +332,7 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
             {
                 File file = new File(filePath);
                 FileInputStream contents = new FileInputStream(file);
-                attachments.put(file.getName(), new DataHandler(new InputStreamDataSource(contents, file.getName())));
+                attachments.put(file.getName(), new InputStreamDataSource(contents, file.getName()));
             }
         }
         return attachments;
@@ -382,17 +366,13 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
 
         Long parentId = setFilenames(in);
 
-        Map<String, Object> messageProps = loadSmtpAndOriginatingProperties();
-        messageProps.put("subject", in.getSubject());
         for (String emailAddress : in.getEmailAddresses())
         {
             try
             {
-                messageProps.put("to", emailAddress);
-                MuleMessage received = muleContextManager.send(flow, makeNote(emailAddress, in, authentication), messageProps);
-                exception = received.getInboundProperty("sendEmailException");
+                acmMailSender.sendEmail(emailAddress, in.getSubject(), makeNote(emailAddress, in, authentication));
             }
-            catch (MuleException e)
+            catch (Exception e)
             {
                 exception = e;
             }
@@ -400,7 +380,7 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
             if (exception != null)
             {
                 emailResultList.add(new EmailWithEmbeddedLinksResultDTO(emailAddress, false));
-                LOG.error("Email message not sent ...", exception);
+                log.error("Email message not sent ...", exception);
             }
             else
             {
@@ -414,20 +394,6 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
             eventPublisher.publishEvent(event);
         }
         return emailResultList;
-
-    }
-
-    protected Map<String, Object> loadSmtpAndOriginatingProperties()
-    {
-        Map<String, Object> messageProps = new HashMap<>();
-        messageProps.put("host", emailSenderConfig.getHost());
-        messageProps.put("port", emailSenderConfig.getPort());
-        messageProps.put("user", emailSenderConfig.getUsername());
-        messageProps.put("password", emailSenderConfig.getPassword());
-        messageProps.put("from", emailSenderConfig.getUserFrom());
-        messageProps.put("encryption", emailSenderConfig.getEncryption());
-
-        return messageProps;
     }
 
     private String makeNote(String emailAddress, EmailWithEmbeddedLinksDTO emailWithEmbeddedLinksDTO, Authentication authentication)
@@ -444,15 +410,6 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
         this.ecmFileService = ecmFileService;
     }
 
-    /**
-     * @param muleContextManager
-     *            the muleContextManager to set
-     */
-    public void setMuleContextManager(MuleContextManager muleContextManager)
-    {
-        this.muleContextManager = muleContextManager;
-    }
-
     public AcmEmailContentGeneratorService getAcmEmailContentGeneratorService()
     {
         return acmEmailContentGeneratorService;
@@ -461,15 +418,6 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
     public void setAcmEmailContentGeneratorService(AcmEmailContentGeneratorService acmEmailContentGeneratorService)
     {
         this.acmEmailContentGeneratorService = acmEmailContentGeneratorService;
-    }
-
-    /**
-     * @param flow
-     *            the flow to set
-     */
-    public void setFlow(String flow)
-    {
-        this.flow = flow;
     }
 
     public EmailSenderConfig getEmailSenderConfig()
@@ -492,16 +440,6 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
         this.templatingEngine = templatingEngine;
     }
 
-    public EmailSenderConfigurationServiceImpl getEmailSenderConfigurationService()
-    {
-        return emailSenderConfigurationService;
-    }
-
-    public void setEmailSenderConfigurationService(EmailSenderConfigurationServiceImpl emailSenderConfigurationService)
-    {
-        this.emailSenderConfigurationService = emailSenderConfigurationService;
-    }
-
     public DefaultFolderAndFileConverter getDefaultFolderAndFileConverter()
     {
         return defaultFolderAndFileConverter;
@@ -510,5 +448,15 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
     public void setDefaultFolderAndFileConverter(DefaultFolderAndFileConverter defaultFolderAndFileConverter)
     {
         this.defaultFolderAndFileConverter = defaultFolderAndFileConverter;
+    }
+
+    public AcmMailSender getAcmMailSender()
+    {
+        return acmMailSender;
+    }
+
+    public void setAcmMailSender(AcmMailSender acmMailSender)
+    {
+        this.acmMailSender = acmMailSender;
     }
 }
