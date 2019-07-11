@@ -29,6 +29,7 @@ package com.armedia.acm.plugins.ecm.dao;
 
 import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
+import com.armedia.acm.plugins.ecm.model.RecycleBinConstants;
 import com.armedia.acm.plugins.ecm.model.RecycleBinItem;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -72,5 +73,10 @@ public class RecycleBinItemDao extends AcmAbstractDao<RecycleBinItem>
         {
             return null;
         }
+    }
+
+    public String getSupportedObjectType()
+    {
+        return RecycleBinConstants.OBJECT_TYPE;
     }
 }
