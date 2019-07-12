@@ -261,6 +261,7 @@
             <beans:property name="ecmFileDao" ref="ecmFileDao"/>
             <beans:property name="lookupDao" ref="lookupDao"/>
             <beans:property name="notificationDao" ref="notificationDao"/>
+            <property name="contextHolder" ref="acmContextHolder"/>
         </beans:bean>
 
         <beans:bean id="firstAssigneeOwningGroupNotify" class="gov.foia.service.FirstAssigneeOwningGroupNotify">
