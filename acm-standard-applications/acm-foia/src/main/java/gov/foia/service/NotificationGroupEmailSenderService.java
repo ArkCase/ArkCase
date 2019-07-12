@@ -39,9 +39,12 @@ import com.armedia.acm.services.config.lookups.service.LookupDao;
 import com.armedia.acm.services.notification.dao.NotificationDao;
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.users.model.AcmUser;
+import com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig;
+import com.armedia.acm.spring.SpringContextHolder;
 
-import org.apache.logging.log4j.Logger;
+import org.apache.commons.lang.StringUtils;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.security.core.Authentication;
 
 import java.io.FileNotFoundException;
@@ -60,6 +63,7 @@ public class NotificationGroupEmailSenderService
     private EcmFileDao ecmFileDao;
     private LookupDao lookupDao;
     private NotificationDao notificationDao;
+    private SpringContextHolder contextHolder;
 
     public void sendRequestEmailToNotificationGroup(Long caseId, String notificationGroupName, AcmUser acmUser,
             Authentication authentication) throws Exception
@@ -100,6 +104,24 @@ public class NotificationGroupEmailSenderService
                     .findFirst()
                     .orElse(null);
 
+            String baseUserId = acmUser.getUserId();
+
+            String directoryName = acmUser.getUserDirectoryName();
+
+            if (StringUtils.isNotBlank(directoryName))
+            {
+                AcmLdapSyncConfig acmLdapSyncConfig = contextHolder.getBeanByNameIncludingChildContexts(directoryName.concat("_sync"),
+                        AcmLdapSyncConfig.class);
+                String userPrefix = acmLdapSyncConfig.getUserPrefix();
+                if (StringUtils.isNotBlank(userPrefix))
+                {
+                    log.debug(String.format("User Prefix [%s]", userPrefix));
+                    log.debug(String.format("Full User id: [%s]", baseUserId));
+                    baseUserId = acmUser.getUserId().replace(userPrefix.concat("."), "");
+                    log.debug(String.format("User Id without prefix: [%s]", baseUserId));
+                }
+            }
+
             if (Objects.nonNull(requestFormFile))
             {
                 String subject = "Executive Email";
@@ -118,7 +140,7 @@ public class NotificationGroupEmailSenderService
                 notification.setParentId(caseId);
                 notification.setParentName(caseFile.getCaseNumber());
                 notification.setParentTitle(caseFile.getDetails());
-                notification.setUser(acmUser.getUserId());
+                notification.setUser(baseUserId);
                 notification.setEmailAddresses(emailAddresses.stream().collect(Collectors.joining(",")));
                 notificationDao.save(notification);
 
@@ -168,5 +190,22 @@ public class NotificationGroupEmailSenderService
     public void setNotificationDao(NotificationDao notificationDao)
     {
         this.notificationDao = notificationDao;
+    }
+
+    /**
+     * @return the contextHolder
+     */
+    public SpringContextHolder getContextHolder()
+    {
+        return contextHolder;
+    }
+
+    /**
+     * @param contextHolder
+     *            the contextHolder to set
+     */
+    public void setContextHolder(SpringContextHolder contextHolder)
+    {
+        this.contextHolder = contextHolder;
     }
 }
