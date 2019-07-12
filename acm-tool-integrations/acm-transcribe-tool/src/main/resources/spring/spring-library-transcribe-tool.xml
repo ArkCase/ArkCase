@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.springframework.org/schema/beans"
-       xmlns:aop="http://www.springframework.org/schema/aop"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+    xmlns:aop="http://www.springframework.org/schema/aop"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
 
     <bean id="awsTranscribeService" class="com.armedia.acm.tool.transcribe.service.AWSTranscribeServiceImpl" init-method="init">
         <property name="awsTranscribeConfigurationService" ref="awsTranscribeConfigurationService"/>
         <property name="awsTranscribeCredentialsConfigurationService" ref="awsTranscribeCredentialsConfigurationService"/>
         <property name="muleContextManager" ref="muleContextManager"/>
-        <property name="credentialConfigurationFileLocation" value="${user.home}/.arkcase/acm/aws/credentials.properties"/>
         <property name="mediaEngineIntegrationEventPublisher" ref="mediaEngineIntegrationEventPublisher"/>
     </bean>
 
@@ -25,7 +24,7 @@
     </bean>
 
     <bean id="awsTranscribeCredentialsConfigurationService"
-          class="com.armedia.acm.tool.transcribe.service.AWSTranscribeCredentialsConfigurationService">
+        class="com.armedia.acm.tool.transcribe.service.AWSTranscribeCredentialsConfigurationService">
         <property name="configurationPropertyService" ref="configurationPropertyService"/>
         <property name="awsCredentialsConfig" ref="AWSCredentialsConfig"/>
         <property name="acmCryptoUtils" ref="acmCryptoUtils"/>
