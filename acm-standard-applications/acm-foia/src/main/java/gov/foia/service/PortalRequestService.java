@@ -42,6 +42,7 @@ import com.armedia.acm.services.search.service.SearchResults;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.service.group.GroupService;
+import org.apache.commons.lang.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -230,14 +231,17 @@ public class  PortalRequestService
             log.warn("Could not read members of request download notification group");
         }
 
-        JSONArray membersArray = getSearchResults().getDocuments(members);
-
-        for (int i = 0; i < membersArray.length(); i++)
+        if(StringUtils.isNotBlank(members))
         {
-            JSONObject memberObject = membersArray.getJSONObject(i);
-            String emailAddress = getSearchResults().extractString(memberObject, "email_lcs");
+            JSONArray membersArray = getSearchResults().getDocuments(members);
 
-            officersGroupMemberEmailAddresses.add(emailAddress);
+            for (int i = 0; i < membersArray.length(); i++)
+            {
+                JSONObject memberObject = membersArray.getJSONObject(i);
+                String emailAddress = getSearchResults().extractString(memberObject, "email_lcs");
+
+                officersGroupMemberEmailAddresses.add(emailAddress);
+            }
         }
 
         if(!officersGroupMemberEmailAddresses.isEmpty())
