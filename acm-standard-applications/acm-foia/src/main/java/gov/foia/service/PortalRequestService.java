@@ -31,6 +31,8 @@ import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.casefile.service.GetCaseByNumberService;
+import com.armedia.acm.services.config.lookups.model.StandardLookupEntry;
+import com.armedia.acm.services.config.lookups.service.LookupDao;
 import com.armedia.acm.services.notification.dao.NotificationDao;
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.search.model.SolrCore;
@@ -86,6 +88,8 @@ public class  PortalRequestService
     private GetCaseByNumberService getCaseByNumberService;
 
     private UserDao userDao;
+
+    private LookupDao lookupDao;
 
     private NotificationDao notificationDao;
 
@@ -208,14 +212,22 @@ public class  PortalRequestService
 
         Set<String> officersGroupMemberEmailAddresses = new HashSet<>();
 
-        String members = null;
+        String members = "";
         try
         {
-            members = getGroupService().getUserMembersForGroup("OFFICERS@ARMEDIA.COM", Optional.empty(), SecurityContextHolder.getContext().getAuthentication());
+            List<StandardLookupEntry> downloadResponseNotificationGroup = (List<StandardLookupEntry>) getLookupDao().getLookupByName("downloadResponseNotificationGroup").getEntries();
+            StandardLookupEntry groupNameLookupEntry =  downloadResponseNotificationGroup.stream().filter(standardLookupEntry -> standardLookupEntry.getKey().equals("groupName")).findFirst().orElse(null);
+
+            if(Objects.nonNull(groupNameLookupEntry))
+            {
+                members = getGroupService().getUserMembersForGroup(groupNameLookupEntry.getValue(), Optional.empty(), SecurityContextHolder.getContext().getAuthentication());
+            }
+
+
         }
         catch (MuleException e)
         {
-            log.warn("Could not read members of OFFICERS group");
+            log.warn("Could not read members of request download notification group");
         }
 
         JSONArray membersArray = getSearchResults().getDocuments(members);
@@ -333,6 +345,16 @@ public class  PortalRequestService
     public void setUserDao(UserDao userDao)
     {
         this.userDao = userDao;
+    }
+
+    public LookupDao getLookupDao()
+    {
+        return lookupDao;
+    }
+
+    public void setLookupDao(LookupDao lookupDao)
+    {
+        this.lookupDao = lookupDao;
     }
 
     public NotificationDao getNotificationDao()
