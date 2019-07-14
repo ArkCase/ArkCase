@@ -70,6 +70,7 @@
             <beans:property name="executeSolrQuery" ref="executeSolrQuery"/>
             <beans:property name="getCaseByNumberService" ref="getCaseByNumberService"/>
             <beans:property name="userDao" ref="userJpaDao"/>
+            <beans:property name="lookupDao" ref="lookupDao"/>
             <beans:property name="notificationDao" ref="notificationDao"/>
             <beans:property name="groupService" ref="groupService"/>
             <beans:property name="searchResults" ref="searchResults"/>
