@@ -99,9 +99,13 @@ angular.module('services').factory('Ecm.EmailService', [ '$resource', '$translat
             },
             data: emailData,
             onSuccess: function(data) {
-                MessageService.info($translate.instant("common.directive.docTree.email.successMessage"));
                 if (Service.validateSentEmails(data)) {
                     for (var i = 0; i < data.length; i++) {
+                        if(data[i].state) {
+                            MessageService.info($translate.instant("common.directive.docTree.email.successMessage"));
+                        } else {
+                            MessageService.error($translate.instant("common.directive.docTree.email.unsuccessMessage"));
+                        }
                         if ("NOT_SENT" == data[i].state) {
                             failed += data[i].userEmail + ";";
                         }
@@ -112,6 +116,7 @@ angular.module('services').factory('Ecm.EmailService', [ '$resource', '$translat
                 }
             },
             onInvalid: function(data) {
+                MessageService.error($translate.instant("common.directive.docTree.email.unsuccessMessage"));
                 return failed;
             }
         });
@@ -139,7 +144,11 @@ angular.module('services').factory('Ecm.EmailService', [ '$resource', '$translat
             },
             data: emailData,
             onSuccess: function(data) {
-                MessageService.info($translate.instant("common.directive.docTree.email.successMessage"));
+                if(data.mailSent) {
+                    MessageService.info($translate.instant("common.directive.docTree.email.successMessage"));
+                } else {
+                    MessageService.error($translate.instant("common.directive.docTree.email.unsuccessMessage"));
+                }
                 if (Service.validateSentEmail(data)) {
                     return data;
                 }
@@ -173,7 +182,11 @@ angular.module('services').factory('Ecm.EmailService', [ '$resource', '$translat
             },
             data: emailData,
             onSuccess: function(data) {
-                MessageService.info($translate.instant("common.directive.docTree.email.successMessage"));
+                if(data.mailSent) {
+                    MessageService.info($translate.instant("common.directive.docTree.email.successMessage"));
+                } else {
+                    MessageService.error($translate.instant("common.directive.docTree.email.unsuccessMessage"));
+                }
                 if (Service.validateSentEmail(data)) {
                     return data;
                 }
@@ -202,7 +215,11 @@ angular.module('services').factory('Ecm.EmailService', [ '$resource', '$translat
             service: Service._sendMentionsEmail,
             data: emailData,
             onSuccess: function(data) {
-                MessageService.info($translate.instant("common.directive.docTree.email.successMessage"));
+                if(data.mailSent) {
+                    MessageService.info($translate.instant("common.directive.docTree.email.successMessage"));
+                } else {
+                    MessageService.error($translate.instant("common.directive.docTree.email.unsuccessMessage"));
+                }
                 if (Service.validateSentEmail(data)) {
                     return data;
                 }
