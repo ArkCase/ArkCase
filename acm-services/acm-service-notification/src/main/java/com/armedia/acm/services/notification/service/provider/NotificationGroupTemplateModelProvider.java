@@ -35,19 +35,31 @@ import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.service.provider.model.GenericTemplateModel;
 import com.armedia.acm.services.participants.model.AcmAssignedObject;
 import com.armedia.acm.services.participants.model.AcmParticipant;
+import com.armedia.acm.services.users.dao.UserDao;
+import com.armedia.acm.services.users.model.AcmUser;
+import com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig;
+import com.armedia.acm.spring.SpringContextHolder;
+import org.apache.commons.lang.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.Objects;
 
 public class NotificationGroupTemplateModelProvider implements TemplateModelProvider<GenericTemplateModel>
 {
     private AcmDataService dataService;
+    private UserDao userDao;
+    private SpringContextHolder contextHolder;
+
+    private final Logger log = LogManager.getLogger(getClass().getName());
+
 
     @Override
     public GenericTemplateModel getModel(Object notificationObject)
     {
         GenericTemplateModel genericTemplateModelData = new GenericTemplateModel();
         Notification notification = (Notification) notificationObject;
-        genericTemplateModelData.setObjectNumber(notification.getParentId().toString());
+        genericTemplateModelData.setObjectNumber(notification.getParentName());
         genericTemplateModelData.setObjectTitle(notification.getParentTitle());
 
         AcmAbstractDao<AcmObject> dao = getDataService().getDaoByObjectType(notification.getParentType());
@@ -59,7 +71,36 @@ public class NotificationGroupTemplateModelProvider implements TemplateModelProv
             AcmParticipant assignee = acmAssignedObject.getParticipants().stream().filter(acmParticipant -> acmParticipant.getParticipantType()
                     .equals("assignee")).findFirst().orElse(null);
 
-            genericTemplateModelData.setOtherObjectValue(Objects.nonNull(assignee) ? assignee.getParticipantLdapId() : "");
+            String baseUserId = "";
+            if(Objects.nonNull(assignee))
+            {
+                AcmUser user = getUserDao().findByUserId(assignee.getParticipantLdapId());
+                String directoryName = user.getUserDirectoryName();
+
+                if(!directoryName.isEmpty())
+                {
+                    AcmLdapSyncConfig acmLdapSyncConfig = getContextHolder().getBeanByNameIncludingChildContexts(directoryName.concat("_sync"), AcmLdapSyncConfig.class);
+                    String userPrefix = acmLdapSyncConfig.getUserPrefix();
+                    if (StringUtils.isNotBlank(userPrefix))
+                    {
+                        log.debug(String.format("User Prefix [%s]", userPrefix));
+                        log.debug(String.format("Full User id: [%s]", baseUserId));
+                        baseUserId = assignee.getParticipantLdapId().replace(userPrefix.concat("."), "");
+                        log.debug(String.format("User Id without prefix: [%s]", baseUserId));
+                    }
+                    else
+                    {
+                        baseUserId = assignee.getParticipantLdapId();
+                    }
+
+                }
+                else
+                {
+                    baseUserId = assignee.getParticipantLdapId();
+                }
+            }
+
+            genericTemplateModelData.setOtherObjectValue(baseUserId);
         }
 
         return genericTemplateModelData;
@@ -79,6 +120,26 @@ public class NotificationGroupTemplateModelProvider implements TemplateModelProv
     public void setDataService(AcmDataService dataService)
     {
         this.dataService = dataService;
+    }
+
+    public UserDao getUserDao()
+    {
+        return userDao;
+    }
+
+    public void setUserDao(UserDao userDao)
+    {
+        this.userDao = userDao;
+    }
+
+    public SpringContextHolder getContextHolder()
+    {
+        return contextHolder;
+    }
+
+    public void setContextHolder(SpringContextHolder contextHolder)
+    {
+        this.contextHolder = contextHolder;
     }
 }
 
