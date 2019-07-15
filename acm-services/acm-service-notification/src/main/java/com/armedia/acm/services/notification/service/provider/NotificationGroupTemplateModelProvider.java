@@ -40,11 +40,8 @@ import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig;
 import com.armedia.acm.spring.SpringContextHolder;
 import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeansException;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.Objects;
 
@@ -54,7 +51,7 @@ public class NotificationGroupTemplateModelProvider implements TemplateModelProv
     private UserDao userDao;
     private SpringContextHolder contextHolder;
 
-    private final Logger log = LoggerFactory.getLogger(getClass().getName());
+    private final Logger log = LogManager.getLogger(getClass().getName());
 
 
     @Override
@@ -62,7 +59,7 @@ public class NotificationGroupTemplateModelProvider implements TemplateModelProv
     {
         GenericTemplateModel genericTemplateModelData = new GenericTemplateModel();
         Notification notification = (Notification) notificationObject;
-        genericTemplateModelData.setObjectNumber(notification.getParentId().toString());
+        genericTemplateModelData.setObjectNumber(notification.getParentName());
         genericTemplateModelData.setObjectTitle(notification.getParentTitle());
 
         AcmAbstractDao<AcmObject> dao = getDataService().getDaoByObjectType(notification.getParentType());
