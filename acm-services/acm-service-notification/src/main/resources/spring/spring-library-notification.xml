@@ -66,6 +66,8 @@
     <bean id="notificationGroupTemplateModelProvider"
           class="com.armedia.acm.services.notification.service.provider.NotificationGroupTemplateModelProvider">
         <property name="dataService" ref="acmDataService"/>
+        <property name="userDao" ref="userJpaDao"/>
+        <property name="contextHolder" ref="acmContextHolder"/>
     </bean>
 
     <bean id="dueDateReminderModelProvider" class="com.armedia.acm.services.notification.service.provider.DueDateReminderModelProvider">
