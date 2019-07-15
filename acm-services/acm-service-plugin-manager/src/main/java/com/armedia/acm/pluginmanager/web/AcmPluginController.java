@@ -32,8 +32,8 @@ import com.armedia.acm.core.AcmUserAction;
 import com.armedia.acm.pluginmanager.model.AcmPluginConfig;
 import com.armedia.acm.pluginmanager.service.AcmConfigurablePluginsManager;
 
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;

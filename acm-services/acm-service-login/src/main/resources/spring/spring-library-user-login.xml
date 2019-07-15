@@ -39,6 +39,7 @@
         <property name="userDao" ref="userJpaDao"/>
         <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
         <property name="objectConverter" ref="objectConverter"/>
+        <property name="applicationConfig" ref="applicationProperties"/>
     </bean>
 
     <bean id="acmLoginFailureListener" class="com.armedia.acm.auth.AcmLoginFailureEventListener"/>
