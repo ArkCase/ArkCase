@@ -28,11 +28,12 @@ package com.armedia.acm.audit.service.systemlogger;
  */
 
 import com.armedia.acm.audit.model.AuditConfig;
-import com.armedia.acm.core.AcmApplication;
+import com.armedia.acm.core.ApplicationConfig;
 
 import org.apache.commons.io.Charsets;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.LoggerContext;
 import org.apache.logging.log4j.core.appender.SyslogAppender;
 import org.apache.logging.log4j.core.config.AbstractConfiguration;
@@ -41,8 +42,6 @@ import org.apache.logging.log4j.core.config.DefaultConfiguration;
 import org.apache.logging.log4j.core.config.LoggerConfig;
 import org.apache.logging.log4j.core.layout.Rfc5424Layout;
 import org.apache.logging.log4j.core.net.Facility;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
 
 /**
  * Syslog implementation of {@link ISystemLogger}.
@@ -58,8 +57,8 @@ public class SyslogLogger implements ISystemLogger
     private static final String SYSLOG_LOGGER_NAME = SyslogLogger.class.getName();
     private static Logger logger;
 
-    private AcmApplication acmApplication;
     private AuditConfig auditConfig;
+    private ApplicationConfig applicationConfig;
 
     @Override
     public void log(String message)
@@ -87,7 +86,7 @@ public class SyslogLogger implements ISystemLogger
                 0, 0, true, SYSLOG_LOGGER_APPENDER_NAME, true, true,
                 Facility.LOG_AUDIT, "App", Rfc5424Layout.DEFAULT_ENTERPRISE_NUMBER, true, Rfc5424Layout.DEFAULT_MDCID, null, "acm", true,
                 null,
-                getAcmApplication().getApplicationName(), "ACMAudit", null, null, null, "RFC5424", null, new DefaultConfiguration(),
+                applicationConfig.getApplicationName(), "ACMAudit", null, null, null, "RFC5424", null, new DefaultConfiguration(),
                 Charsets.UTF_8,
                 null, null, false);
 
@@ -102,16 +101,6 @@ public class SyslogLogger implements ISystemLogger
         logger = LogManager.getLogger(SYSLOG_LOGGER_NAME);
     }
 
-    public AcmApplication getAcmApplication()
-    {
-        return acmApplication;
-    }
-
-    public void setAcmApplication(AcmApplication acmApplication)
-    {
-        this.acmApplication = acmApplication;
-    }
-
     public AuditConfig getAuditConfig()
     {
         return auditConfig;
@@ -120,5 +109,10 @@ public class SyslogLogger implements ISystemLogger
     public void setAuditConfig(AuditConfig auditConfig)
     {
         this.auditConfig = auditConfig;
+    }
+
+    public void setApplicationConfig(ApplicationConfig applicationConfig)
+    {
+        this.applicationConfig = applicationConfig;
     }
 }
