@@ -28,7 +28,7 @@ package com.armedia.acm.plugins.admin.service;
  */
 
 import com.armedia.acm.configuration.service.ConfigurationPropertyService;
-import com.armedia.acm.plugins.admin.model.ApplicationProperties;
+import com.armedia.acm.core.ApplicationConfig;
 
 /**
  * Created by sergey on 4/13/16.
@@ -37,24 +37,17 @@ public class ApplicationPropertiesManagementService
 {
 
     private static final String APPLICATION_PROPERTIES = "application.properties.";
-    private ApplicationProperties confApplicationProperties;
+    private ApplicationConfig confApplicationConfig;
     private ConfigurationPropertyService configurationPropertyService;
 
-    public void writeConfiguration(ApplicationProperties applicationProperties)
+    public void writeConfiguration(ApplicationConfig applicationConfig)
     {
-        configurationPropertyService.updateProperties(applicationProperties);
+        configurationPropertyService.updateProperties(applicationConfig);
     }
 
-    public ApplicationProperties readConfiguration()
+    public ApplicationConfig readApplicationPropertiesConfiguration()
     {
-        ApplicationProperties applicationProperties = new ApplicationProperties();
-        applicationProperties.setIdleLimit(confApplicationProperties.getIdleLimit());
-        applicationProperties.setIdleConfirm(confApplicationProperties.getIdleConfirm());
-        applicationProperties.setIdlePull(confApplicationProperties.getIdlePull());
-        applicationProperties.setDisplayUserName(confApplicationProperties.getDisplayUserName());
-        applicationProperties.setHistoryDays(confApplicationProperties.getHistoryDays());
-
-        return applicationProperties;
+        return confApplicationConfig;
     }
 
     public Object readProperty(String propertyName)
@@ -62,9 +55,9 @@ public class ApplicationPropertiesManagementService
         return configurationPropertyService.getProperty(APPLICATION_PROPERTIES + propertyName);
     }
 
-    public void setConfApplicationProperties(ApplicationProperties applicationProperties)
+    public void setConfApplicationConfig(ApplicationConfig applicationConfig)
     {
-        this.confApplicationProperties = applicationProperties;
+        this.confApplicationConfig = applicationConfig;
     }
 
     public void setConfigurationPropertyService(ConfigurationPropertyService configurationPropertyService)

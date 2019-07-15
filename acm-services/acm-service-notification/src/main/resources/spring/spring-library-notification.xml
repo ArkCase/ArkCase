@@ -211,5 +211,6 @@
         <property name="acmAppConfiguration" ref="acmApplication"/>
         <property name="templatingEngine" ref="templatingEngine"/>
         <property name="notificationDao" ref="notificationDao"/>
+        <property name="applicationConfig" ref="applicationProperties"/>
     </bean>
 </beans>
