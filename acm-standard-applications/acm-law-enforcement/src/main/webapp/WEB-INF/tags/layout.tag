@@ -19,7 +19,7 @@
         <%--<span itemprop="labelSettings">${sessionScope.acm_application.getSettings().get("labelSettings")}</span>--%>
         <%--<span itemprop="appConfig">${sessionScope.acm_application.toJson()}</span>--%>
         <span itemprop="objectTypes">${acm_object_types}</span>
-        <span itemprop="issueCollectorFlag">${acm_application.getIssueCollectorFlag()}</span>
+        <span itemprop="issueCollectorFlag">${issue_collector_flag}</span>
     </div>
     <jsp:invoke fragment="endOfHead"/>
 </head>

@@ -74,7 +74,7 @@
         <property name="auditDao" ref="auditDao"/>
         <property name="notificationDao" ref="notificationDao"/>
         <property name="executeSolrQuery" ref="executeSolrQuery"/>
-        <property name="applicationProperties" ref="applicationProperties"/>
+        <property name="applicationConfig" ref="applicationProperties"/>
     </bean>
 
     <bean id="cleanHistoryJobDescriptor" class="com.armedia.acm.plugins.admin.service.CleanHistoryJobDescriptor" parent="acmJobDescriptor">
@@ -186,12 +186,8 @@
         <aop:scoped-proxy/>
     </bean>
 
-    <bean id="applicationProperties" class="com.armedia.acm.plugins.admin.model.ApplicationProperties" scope="refresh">
-        <aop:scoped-proxy/>
-    </bean>
-
     <bean id="applicationPropertiesManagementService" class="com.armedia.acm.plugins.admin.service.ApplicationPropertiesManagementService">
-        <property name="confApplicationProperties" ref="applicationProperties"/>
+        <property name="confApplicationConfig" ref="applicationProperties"/>
         <property name="configurationPropertyService" ref="configurationPropertyService"/>
     </bean>
 

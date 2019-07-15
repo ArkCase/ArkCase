@@ -28,8 +28,8 @@ package com.armedia.acm.plugins.admin.service;
  */
 
 import com.armedia.acm.audit.dao.AuditDao;
+import com.armedia.acm.core.ApplicationConfig;
 import com.armedia.acm.objectonverter.DateFormats;
-import com.armedia.acm.plugins.admin.model.ApplicationProperties;
 import com.armedia.acm.services.notification.dao.NotificationDao;
 import com.armedia.acm.services.notification.model.NotificationConstants;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
@@ -51,7 +51,7 @@ public class HistoryCleanService
     private AuditDao auditDao;
     private NotificationDao notificationDao;
     private ExecuteSolrQuery executeSolrQuery;
-    private ApplicationProperties applicationProperties;
+    private ApplicationConfig applicationConfig;
 
     private Logger log = LogManager.getLogger(getClass());
 
@@ -59,7 +59,7 @@ public class HistoryCleanService
     {
         int historyDays = 0;
 
-        historyDays = applicationProperties.getHistoryDays();
+        historyDays = applicationConfig.getHistoryDays();
 
         if (historyDays <= 0)
         {
@@ -136,8 +136,8 @@ public class HistoryCleanService
         this.executeSolrQuery = executeSolrQuery;
     }
 
-    public void setApplicationProperties(ApplicationProperties applicationProperties)
+    public void setApplicationConfig(ApplicationConfig applicationConfig)
     {
-        this.applicationProperties = applicationProperties;
+        this.applicationConfig = applicationConfig;
     }
 }
