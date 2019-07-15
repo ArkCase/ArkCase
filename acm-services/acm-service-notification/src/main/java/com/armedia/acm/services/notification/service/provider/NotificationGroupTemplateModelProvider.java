@@ -35,12 +35,27 @@ import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.service.provider.model.GenericTemplateModel;
 import com.armedia.acm.services.participants.model.AcmAssignedObject;
 import com.armedia.acm.services.participants.model.AcmParticipant;
+import com.armedia.acm.services.users.dao.UserDao;
+import com.armedia.acm.services.users.model.AcmUser;
+import com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig;
+import com.armedia.acm.spring.SpringContextHolder;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeansException;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 
 import java.util.Objects;
 
 public class NotificationGroupTemplateModelProvider implements TemplateModelProvider<GenericTemplateModel>
 {
     private AcmDataService dataService;
+    private UserDao userDao;
+    private SpringContextHolder contextHolder;
+
+    private final Logger log = LoggerFactory.getLogger(getClass().getName());
+
 
     @Override
     public GenericTemplateModel getModel(Object notificationObject)
@@ -59,7 +74,36 @@ public class NotificationGroupTemplateModelProvider implements TemplateModelProv
             AcmParticipant assignee = acmAssignedObject.getParticipants().stream().filter(acmParticipant -> acmParticipant.getParticipantType()
                     .equals("assignee")).findFirst().orElse(null);
 
-            genericTemplateModelData.setOtherObjectValue(Objects.nonNull(assignee) ? assignee.getParticipantLdapId() : "");
+            String baseUserId = "";
+            if(Objects.nonNull(assignee))
+            {
+                AcmUser user = getUserDao().findByUserId(assignee.getParticipantLdapId());
+                String directoryName = user.getUserDirectoryName();
+
+                if(!directoryName.isEmpty())
+                {
+                    AcmLdapSyncConfig acmLdapSyncConfig = getContextHolder().getBeanByNameIncludingChildContexts(directoryName.concat("_sync"), AcmLdapSyncConfig.class);
+                    String userPrefix = acmLdapSyncConfig.getUserPrefix();
+                    if (StringUtils.isNotBlank(userPrefix))
+                    {
+                        log.debug(String.format("User Prefix [%s]", userPrefix));
+                        log.debug(String.format("Full User id: [%s]", baseUserId));
+                        baseUserId = assignee.getParticipantLdapId().replace(userPrefix.concat("."), "");
+                        log.debug(String.format("User Id without prefix: [%s]", baseUserId));
+                    }
+                    else
+                    {
+                        baseUserId = assignee.getParticipantLdapId();
+                    }
+
+                }
+                else
+                {
+                    baseUserId = assignee.getParticipantLdapId();
+                }
+            }
+
+            genericTemplateModelData.setOtherObjectValue(baseUserId);
         }
 
         return genericTemplateModelData;
@@ -79,6 +123,26 @@ public class NotificationGroupTemplateModelProvider implements TemplateModelProv
     public void setDataService(AcmDataService dataService)
     {
         this.dataService = dataService;
+    }
+
+    public UserDao getUserDao()
+    {
+        return userDao;
+    }
+
+    public void setUserDao(UserDao userDao)
+    {
+        this.userDao = userDao;
+    }
+
+    public SpringContextHolder getContextHolder()
+    {
+        return contextHolder;
+    }
+
+    public void setContextHolder(SpringContextHolder contextHolder)
+    {
+        this.contextHolder = contextHolder;
     }
 }
 
