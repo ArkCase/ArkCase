@@ -27,7 +27,9 @@ package com.armedia.acm.correspondence.utils;
  * #L%
  */
 
-import com.armedia.acm.core.AcmApplication;
+import static com.armedia.acm.correspondence.service.CorrespondenceMapper.generateCorrespodencenMergeField;
+
+import com.armedia.acm.core.ApplicationConfig;
 import com.armedia.acm.correspondence.model.CorrespondenceMergeField;
 import com.armedia.acm.correspondence.service.CorrespondenceMergeFieldManager;
 import com.armedia.acm.correspondence.service.CorrespondenceService;
@@ -37,15 +39,16 @@ import com.armedia.acm.objectonverter.DateFormats;
 import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
+
 import org.apache.commons.io.FileUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.apache.poi.xwpf.usermodel.XWPFTable;
 import org.apache.poi.xwpf.usermodel.XWPFTableCell;
 import org.apache.poi.xwpf.usermodel.XWPFTableRow;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.core.io.Resource;
@@ -65,8 +68,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.StringJoiner;
 import java.util.stream.Collectors;
-
-import static com.armedia.acm.correspondence.service.CorrespondenceMapper.generateCorrespodencenMergeField;
 
 /**
  * Created by armdev on 12/11/14.
@@ -88,7 +89,7 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGene
     private ObjectConverter objectConverter;
     private CorrespondenceMergeFieldManager mergeFieldManager;
     private List<CorrespondenceMergeField> mergeFields = new ArrayList<>();
-    private AcmApplication acmApplication;
+    private ApplicationConfig appConfig;
 
     /**
      * Generate the Word document via direct manipulation of Word paragraph texts. This works seamlessly (user sees
@@ -401,7 +402,7 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGene
     private Map<Integer, XWPFRun> getPosToRuns(XWPFParagraph paragraph)
     {
         int pos = 0;
-        Map<Integer, XWPFRun> map = new HashMap<Integer, XWPFRun>(10);
+        Map<Integer, XWPFRun> map = new HashMap<>(10);
         for (XWPFRun run : paragraph.getRuns())
         {
             String runText = run.text();
@@ -558,7 +559,7 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGene
             }
             else if (BASE_URL.equalsIgnoreCase(spelExpression))
             {
-                generatedExpression = getAcmApplication().getBaseUrl();
+                generatedExpression = appConfig.getBaseUrl();
             }
             else if (FILES.equalsIgnoreCase(spelExpression))
             {
@@ -650,13 +651,13 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGene
         this.mergeFieldManager = mergeFieldManager;
     }
 
-    public AcmApplication getAcmApplication()
+    public ApplicationConfig getAppConfig()
     {
-        return acmApplication;
+        return appConfig;
     }
 
-    public void setAcmApplication(AcmApplication acmApplication)
+    public void setAppConfig(ApplicationConfig appConfig)
     {
-        this.acmApplication = acmApplication;
+        this.appConfig = appConfig;
     }
 }
