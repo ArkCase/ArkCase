@@ -30,6 +30,7 @@ package com.armedia.acm.auth;
 import static org.easymock.EasyMock.expect;
 
 import com.armedia.acm.core.AcmApplication;
+import com.armedia.acm.core.ApplicationConfig;
 import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.pluginmanager.service.AcmPluginManager;
 import com.armedia.acm.services.users.dao.UserDao;
@@ -97,9 +98,14 @@ public class AcmLoginSuccessOperationsTest extends EasyMockSupport
     public void addAcmApplicationObjectToSession()
     {
         AcmApplication app = new AcmApplication();
+        ApplicationConfig appConfig = new ApplicationConfig();
+        appConfig.setIssueCollectorFlag(true);
+
         unit.setAcmApplication(app);
+        unit.setApplicationConfig(appConfig);
 
         expect(mockRequest.getSession(true)).andReturn(mockSession);
+        mockSession.setAttribute("issue_collector_flag", true);
         mockSession.setAttribute("acm_application", app);
         mockSession.setAttribute("acm_object_types", "[]");
 
