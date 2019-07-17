@@ -34,6 +34,7 @@ import com.armedia.acm.core.AcmStatefulEntity;
 import com.armedia.acm.core.AcmTitleEntity;
 import com.armedia.acm.data.AcmEntity;
 import com.armedia.acm.data.AcmLegacySystemEntity;
+import com.armedia.acm.data.AcmAssignee;
 import com.armedia.acm.data.converter.BooleanToStringConverter;
 import com.armedia.acm.data.converter.LocalDateConverter;
 import com.armedia.acm.data.converter.LocalDateTimeConverter;
@@ -114,7 +115,7 @@ import java.util.Set;
 
 public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity,
         AcmContainerEntity, AcmChildObjectEntity, AcmLegacySystemEntity, AcmNotifiableEntity, AcmStatefulEntity, AcmTitleEntity,
-        AcmObjectNumber, AcmObjectOriginator
+        AcmObjectNumber, AcmObjectOriginator, AcmAssignee
 {
     private static final long serialVersionUID = -6035628455385955008L;
 
@@ -856,6 +857,7 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity,
         return groupName;
     }
 
+    @Override
     @JsonIgnore
     public String getAssigneeLdapId()
     {
