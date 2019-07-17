@@ -365,7 +365,7 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
 
                 try
                 {
-                    ldapAuthenticateService.changeUserPassword(registeredPedrson.get().getDefaultEmail().getValue(), password, password);
+                    ldapAuthenticateService.resetPortalUserPassword(registeredPedrson.get().getDefaultEmail().getValue(), password);
                 }
                 catch (AcmUserActionFailedException e)
                 {
