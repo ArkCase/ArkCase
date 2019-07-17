@@ -31,7 +31,6 @@ import com.amazonaws.auth.AWSCredentialsProviderChain;
 import com.amazonaws.auth.EC2ContainerCredentialsProviderWrapper;
 import com.amazonaws.auth.EnvironmentVariableCredentialsProvider;
 import com.amazonaws.auth.SystemPropertiesCredentialsProvider;
-import com.amazonaws.auth.profile.ProfileCredentialsProvider;
 import com.armedia.acm.tool.transcribe.service.AWSTranscribeCredentialsConfigurationService;
 
 /**
@@ -39,7 +38,7 @@ import com.armedia.acm.tool.transcribe.service.AWSTranscribeCredentialsConfigura
  */
 public class ArkCaseAWSCredentialsProviderChain extends AWSCredentialsProviderChain
 {
-    public ArkCaseAWSCredentialsProviderChain(String path, String profile,
+    public ArkCaseAWSCredentialsProviderChain(
             AWSTranscribeCredentialsConfigurationService awsTranscribeCredentialsConfigurationService)
     {
         // Keep backward compatibility with Default Amazon Credential provider chain.
@@ -48,7 +47,6 @@ public class ArkCaseAWSCredentialsProviderChain extends AWSCredentialsProviderCh
         super(new EnvironmentVariableCredentialsProvider(),
                 new SystemPropertiesCredentialsProvider(),
                 new ArkCaseProfileCredentialsProvider(awsTranscribeCredentialsConfigurationService),
-                new ProfileCredentialsProvider(path, profile),
                 new EC2ContainerCredentialsProviderWrapper());
     }
 }
