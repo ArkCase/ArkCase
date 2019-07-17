@@ -47,13 +47,19 @@ public class AcmEntityTemplateNoUserPrefixModelProvider implements TemplateModel
         Notification notification = (Notification) object;
         AcmAbstractDao<AcmObject> dao = getDataService().getDaoByObjectType(notification.getParentType());
         AcmObject acmObject = dao.find(notification.getParentId());
-        AcmAssignee acmAssignee = (AcmAssignee) acmObject;
 
-        String assigneeLdapId = acmAssignee.getAssigneeLdapId();
-        String modifier = acmAssignee.getModifier();
+        String baseAssigneeLdapId = "";
+        String baseModifier = "";
+        if(acmObject instanceof AcmAssignee)
+        {
+            AcmAssignee acmAssignee = (AcmAssignee) acmObject;
 
-        String baseAssigneeLdapId = getUserInfoHelper().removeUserPrefix(assigneeLdapId);
-        String baseModifier = getUserInfoHelper().removeUserPrefix(modifier);
+            String assigneeLdapId = acmAssignee.getAssigneeLdapId();
+            String modifier = acmAssignee.getModifier();
+
+            baseAssigneeLdapId = getUserInfoHelper().removeUserPrefix(assigneeLdapId);
+            baseModifier = getUserInfoHelper().removeUserPrefix(modifier);
+        }
 
         AcmEntityTemplateModel acmEntityTemplateModel = new AcmEntityTemplateModel();
         acmEntityTemplateModel.caseFileObject = acmObject;
