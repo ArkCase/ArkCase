@@ -30,49 +30,43 @@ package com.armedia.acm.services.notification.service.provider;
 import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.core.provider.TemplateModelProvider;
 import com.armedia.acm.data.AcmAbstractDao;
+import com.armedia.acm.data.AcmAssignee;
 import com.armedia.acm.data.service.AcmDataService;
 import com.armedia.acm.services.notification.helper.UserInfoHelper;
 import com.armedia.acm.services.notification.model.Notification;
-import com.armedia.acm.services.notification.service.provider.model.GenericTemplateModel;
-import com.armedia.acm.services.participants.model.AcmAssignedObject;
-import com.armedia.acm.services.participants.model.AcmParticipant;
+import com.armedia.acm.services.notification.service.provider.model.AcmEntityTemplateModel;
 
-import java.util.Objects;
-
-public class NotificationGroupTemplateModelProvider implements TemplateModelProvider<GenericTemplateModel>
+public class AcmEntityTemplateNoUserPrefixModelProvider implements TemplateModelProvider<AcmEntityTemplateModel>
 {
     private AcmDataService dataService;
     private UserInfoHelper userInfoHelper;
 
     @Override
-    public GenericTemplateModel getModel(Object notificationObject)
+    public AcmEntityTemplateModel getModel(Object object)
     {
-        GenericTemplateModel genericTemplateModelData = new GenericTemplateModel();
-        Notification notification = (Notification) notificationObject;
-        genericTemplateModelData.setObjectNumber(notification.getParentName());
-        genericTemplateModelData.setObjectTitle(notification.getParentTitle());
-
+        Notification notification = (Notification) object;
         AcmAbstractDao<AcmObject> dao = getDataService().getDaoByObjectType(notification.getParentType());
         AcmObject acmObject = dao.find(notification.getParentId());
+        AcmAssignee acmAssignee = (AcmAssignee) acmObject;
 
-        if(acmObject instanceof AcmAssignedObject)
-        {
-            AcmAssignedObject acmAssignedObject = (AcmAssignedObject)acmObject;
-            AcmParticipant assignee = acmAssignedObject.getParticipants().stream().filter(acmParticipant -> acmParticipant.getParticipantType()
-                    .equals("assignee")).findFirst().orElse(null);
+        String assigneeLdapId = acmAssignee.getAssigneeLdapId();
+        String modifier = acmAssignee.getModifier();
 
-            String baseUserId = Objects.nonNull(assignee) ? getUserInfoHelper().removeUserPrefix(assignee.getParticipantLdapId()) : "";
+        String baseAssigneeLdapId = getUserInfoHelper().removeUserPrefix(assigneeLdapId);
+        String baseModifier = getUserInfoHelper().removeUserPrefix(modifier);
 
-            genericTemplateModelData.setOtherObjectValue(baseUserId);
-        }
+        AcmEntityTemplateModel acmEntityTemplateModel = new AcmEntityTemplateModel();
+        acmEntityTemplateModel.caseFileObject = acmObject;
+        acmEntityTemplateModel.assigneeUserId = baseAssigneeLdapId;
+        acmEntityTemplateModel.modifierUserId = baseModifier;
 
-        return genericTemplateModelData;
+        return acmEntityTemplateModel;
     }
 
     @Override
-    public Class<GenericTemplateModel> getType()
+    public Class<AcmEntityTemplateModel> getType()
     {
-        return GenericTemplateModel.class;
+        return AcmEntityTemplateModel.class;
     }
 
     public AcmDataService getDataService()
@@ -95,4 +89,3 @@ public class NotificationGroupTemplateModelProvider implements TemplateModelProv
         this.userInfoHelper = userInfoHelper;
     }
 }
-
