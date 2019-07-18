@@ -63,6 +63,8 @@ angular.module('admin').controller('Admin.CMTemplatesController',
             });
 
             $scope.addTemplate = function() {
+                var params = {};
+                params.selectedRow = $scope.selectedRows[0];
                 var modalScope = $scope.$new();
                 modalScope.config = $scope.config;
                 $scope.myData = [];
@@ -72,7 +74,12 @@ angular.module('admin').controller('Admin.CMTemplatesController',
                     templateUrl: 'modules/admin/views/components/correspondence-management-add-edit-template.modal.client.view.html',
                     controller: 'Admin.AddCMTemplateController',
                     size: 'md',
-                    backdrop: 'static'
+                    backdrop: 'static',
+                    resolve: {
+                        params: function() {
+                            return params;
+                        }
+                    }
                 });
 
             };
