@@ -49,6 +49,11 @@
         <property name="dataService" ref="acmDataService"/>
     </bean>
 
+    <bean id="acmEntityTemplateNoUserPrefixModelProvider" class="com.armedia.acm.services.notification.service.provider.AcmEntityTemplateNoUserPrefixModelProvider">
+        <property name="dataService" ref="acmDataService"/>
+        <property name="userInfoHelper" ref="userInfoHelper"/>
+    </bean>
+
     <bean id="acmUserTemplateModelProvider" class="com.armedia.acm.services.notification.service.provider.AcmUserTemplateModelProvider">
         <property name="userDao" ref="userJpaDao"/>
     </bean>
@@ -66,8 +71,7 @@
     <bean id="notificationGroupTemplateModelProvider"
           class="com.armedia.acm.services.notification.service.provider.NotificationGroupTemplateModelProvider">
         <property name="dataService" ref="acmDataService"/>
-        <property name="userDao" ref="userJpaDao"/>
-        <property name="contextHolder" ref="acmContextHolder"/>
+        <property name="userInfoHelper" ref="userInfoHelper"/>
     </bean>
 
     <bean id="dueDateReminderModelProvider" class="com.armedia.acm.services.notification.service.provider.DueDateReminderModelProvider">
@@ -79,6 +83,11 @@
     <bean id="acmEntitySendExecutor" class="com.armedia.acm.services.notification.service.SendExecutor">
         <property name="springContextHolder" ref="acmContextHolder"/>
         <property name="templateModelProvider" ref="acmEntityTemplateModelProvider"/>
+    </bean>
+
+    <bean id="acmEntitySendExecutorNoUserPrefix" class="com.armedia.acm.services.notification.service.SendExecutor">
+        <property name="springContextHolder" ref="acmContextHolder"/>
+        <property name="templateModelProvider" ref="acmEntityTemplateNoUserPrefixModelProvider"/>
     </bean>
 
     <bean id="notificationSendExecutor" class="com.armedia.acm.services.notification.service.SendExecutor">
@@ -214,5 +223,10 @@
         <property name="templatingEngine" ref="templatingEngine"/>
         <property name="notificationDao" ref="notificationDao"/>
         <property name="applicationConfig" ref="applicationProperties"/>
+    </bean>
+
+    <bean id="userInfoHelper" class="com.armedia.acm.services.notification.helper.UserInfoHelper">
+        <property name="userDao" ref="userJpaDao"/>
+        <property name="contextHolder" ref="acmContextHolder"/>
     </bean>
 </beans>
