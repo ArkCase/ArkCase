@@ -91,7 +91,11 @@ public class FOIALdapAuthenticationService
         }
         catch (AcmLdapActionFailedException e)
         {
-            throw new AcmUserActionFailedException("change password", "USER", null, "Change password action failed!", null);
+            throw new AcmUserActionFailedException("change password", "USER", null, "Change password action failed!", e.getCause());
+        }
+        catch (AuthenticationException e)
+        {
+            throw new AcmUserActionFailedException("change password", "USER", null, "Change password action failed!", e.getCause());
         }
         try
         {
