@@ -27,6 +27,7 @@ package com.armedia.acm.portalgateway.service;
  * #L%
  */
 import com.armedia.acm.portalgateway.model.PortalUser;
+import com.armedia.acm.portalgateway.model.PortalUserCredentials;
 import com.armedia.acm.portalgateway.model.UserRegistrationRequest;
 import com.armedia.acm.portalgateway.model.UserRegistrationResponse;
 import com.armedia.acm.portalgateway.model.UserResetRequest;
@@ -116,4 +117,5 @@ public interface PortalUserService
      */
     PortalServiceExceptionMapper getExceptionMapper(PortalUserServiceException se);
 
+    UserResetResponse changePassword(String portalId, String userId, PortalUserCredentials portalUserCredentials) throws PortalUserServiceException;
 }

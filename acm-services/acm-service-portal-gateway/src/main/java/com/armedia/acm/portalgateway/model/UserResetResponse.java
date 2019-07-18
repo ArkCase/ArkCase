@@ -34,6 +34,7 @@ import static com.armedia.acm.portalgateway.model.UserResetResponse.ResetStatus.
 import static com.armedia.acm.portalgateway.model.UserResetResponse.ResetStatus.REQUEST_INVALID;
 import static com.armedia.acm.portalgateway.model.UserResetResponse.ResetStatus.REQUEST_PENDING;
 import static com.armedia.acm.portalgateway.model.UserResetResponse.ResetStatus.REQUEST_REQUIRED;
+import static com.armedia.acm.portalgateway.model.UserResetResponse.ResetStatus.INVALID_CREDENTIALS_STATUS;
 
 /**
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Jul 17, 2018
@@ -44,7 +45,7 @@ public class UserResetResponse
 
     public static enum ResetStatus
     {
-        REGISTRATION_REQUIRED, REQUEST_REQUIRED, REQUEST_EXISTS, REQUEST_PENDING, REQUEST_ACCEPTED, REQUEST_EXPIRED, PASSWORD_UPDATED, REQUEST_INVALID
+        REGISTRATION_REQUIRED, REQUEST_REQUIRED, REQUEST_EXISTS, REQUEST_PENDING, REQUEST_ACCEPTED, REQUEST_EXPIRED, PASSWORD_UPDATED, REQUEST_INVALID, INVALID_CREDENTIALS_STATUS
     }
 
     /**
@@ -84,6 +85,17 @@ public class UserResetResponse
     {
         UserResetResponse response = new UserResetResponse();
         response.resetStatus = PASSWORD_UPDATED.name();
+        return response;
+    }
+
+
+    /**
+     * @return
+     */
+    public static UserResetResponse invalidCredentials()
+    {
+        UserResetResponse response = new UserResetResponse();
+        response.resetStatus = INVALID_CREDENTIALS_STATUS.name();
         return response;
     }
 
