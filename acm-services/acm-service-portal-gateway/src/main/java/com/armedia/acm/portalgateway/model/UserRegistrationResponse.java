@@ -67,10 +67,11 @@ public class UserRegistrationResponse
         return result;
     }
 
-    public static UserRegistrationResponse pending()
+    public static UserRegistrationResponse pending(String emailAddress)
     {
         UserRegistrationResponse result = new UserRegistrationResponse();
         result.registrationStatus = REGISTRATION_PENDING.name();
+        result.emailAddress = emailAddress;
         return result;
     }
 
@@ -107,6 +108,8 @@ public class UserRegistrationResponse
 
     private String registrationStatus;
 
+    private String emailAddress;
+
     /**
      * @return the registrationStatus
      */
@@ -124,4 +127,13 @@ public class UserRegistrationResponse
         this.registrationStatus = registrationStatus;
     }
 
+    public String getEmailAddress()
+    {
+        return emailAddress;
+    }
+
+    public void setEmailAddress(String emailAddress)
+    {
+        this.emailAddress = emailAddress;
+    }
 }
