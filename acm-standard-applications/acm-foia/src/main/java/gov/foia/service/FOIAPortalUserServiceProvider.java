@@ -390,8 +390,6 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
     public UserResetResponse changePassword(String portalId, String userId, PortalUserCredentials portalUserCredentials) throws PortalUserServiceException
     {
 
-          //get emailAddress of the logged user
-        System.out.println("Change password method in service provider");
              try
                 {
                     ldapAuthenticateService.changeUserPassword(userId, portalUserCredentials.getPassword(), portalUserCredentials.getNewPassword());
@@ -419,7 +417,6 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
     public PortalUser updateUser(String portalId, PortalUser user) throws PortalUserServiceException
     {
         // TODO Auto-generated method stub
-        System.out.println("Update user");
         return null;
     }
 
