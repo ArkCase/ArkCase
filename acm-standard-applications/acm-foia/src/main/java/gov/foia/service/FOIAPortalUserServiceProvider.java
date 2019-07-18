@@ -112,7 +112,7 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
         if (registrationRecord.isPresent()
                 && registrationRecord.get().getRegistrationTime() + REGISTRATION_EXPIRATION > System.currentTimeMillis())
         {
-            return UserRegistrationResponse.pending();
+            return UserRegistrationResponse.pending(registrationRecord.get().getEmailAddress());
         }
         else
         {
@@ -155,6 +155,7 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
     public UserRegistrationResponse checkRegistrationStatus(String portalId, String registrationId)
     {
         Optional<UserRegistrationRequestRecord> registrationRecord = registrationDao.findByRegistrationId(registrationId);
+        String emailAddress = registrationRecord.get().getEmailAddress();
         if (!registrationRecord.isPresent())
         {
             return UserRegistrationResponse.requestRequired();
@@ -163,7 +164,7 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
         {
             if (registrationRecord.get().getRegistrationTime() + REGISTRATION_EXPIRATION > System.currentTimeMillis())
             {
-                return UserRegistrationResponse.pending();
+                return UserRegistrationResponse.pending(emailAddress);
             }
             else
             {
