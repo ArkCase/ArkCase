@@ -629,7 +629,7 @@ angular.module('services').factory(
                          *     not subject to any read only function control (i.e., it is always regardless if grid is read only or not)
                          */
                         ,
-                        addButton: function(config, name, icon, clickFn, readOnlyFn) {
+                        addButton: function(config, name, icon, clickFn, readOnlyFn, title) {
                             if (Util.isEmpty(icon) || Util.isEmpty(clickFn) || Util.isEmpty(readOnlyFn)) {
                                 var found = _.find(Service.CommonButtons, {
                                     name: name
@@ -655,7 +655,8 @@ angular.module('services').factory(
                             //}
                             //cellTemplate += "></i></span>";
 
-                            var cellTemplate = "<a title='' class='inline animated btn btn-default btn-xs'" + " ng-click='grid.appScope." + clickFn + "(row.entity)'";
+                            var btnTitle =  title ? title : "";
+                            var cellTemplate = "<a title=" + btnTitle + " class='inline animated btn btn-default btn-xs'" + " ng-click='grid.appScope." + clickFn + "(row.entity)'";
                             if (readOnlyFn) {
                                 cellTemplate += " ng-hide='grid.appScope." + readOnlyFn + "(row.entity)'";
                             }

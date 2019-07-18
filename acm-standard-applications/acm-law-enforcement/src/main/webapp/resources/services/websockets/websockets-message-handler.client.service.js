@@ -7,6 +7,8 @@ angular.module('services').factory('Websockets.MessageHandler', [ '$q', '$rootSc
 
     Service.handleGenericMessage = handleGenericMessage;
 
+    Service.handleScheduledJobStatusMessage = handleScheduledJobStatusMessage;
+
     return Service;
 
     function handleMessage(message) {
@@ -22,16 +24,19 @@ angular.module('services').factory('Websockets.MessageHandler', [ '$q', '$rootSc
     }
 
     function handleGenericMessage(message) {
-        if(!Util.isEmpty(message.progressbar)){
+        if (!Util.isEmpty(message.progressbar)) {
             if (message.success === false || message.currentProgress === 100) {
                 $rootScope.$bus.publish('progressbar-current-progress-finished', message);
-            }else{
+            } else {
                 $rootScope.$bus.publish('progressbar-current-progress-updated', message);
             }
         }
         var eventName = message.eventType;
         $rootScope.$bus.publish(eventName, message);
+    }
 
+    function handleScheduledJobStatusMessage(message) {
+        $rootScope.$bus.publish("scheduled-jobs-status-update", message);
     }
 
     function handleCache(message) {
