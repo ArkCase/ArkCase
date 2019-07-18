@@ -27,6 +27,7 @@ package com.armedia.acm.portalgateway.web.api;
  * #L%
  */
 import com.armedia.acm.portalgateway.model.PortalUser;
+import com.armedia.acm.portalgateway.model.PortalUserCredentials;
 import com.armedia.acm.portalgateway.model.UserRegistrationRequest;
 import com.armedia.acm.portalgateway.model.UserRegistrationResponse;
 import com.armedia.acm.portalgateway.model.UserResetRequest;
@@ -160,7 +161,19 @@ public class ArkCasePortalGatewayUserAPIController
         return portalUserService.resetPassword(portalId, resetId, password);
     }
 
-    @CheckPortalUserAssignement
+
+    @RequestMapping(value = "/registrations/{userId:.+}/changePassword", method = RequestMethod.POST, produces = {
+            MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE })
+    @ResponseBody
+    public UserResetResponse changePassword(Authentication auth, @PortalId @PathVariable(value = "portalId") String portalId,
+                                          @RequestBody PortalUserCredentials portalUserCredentials, @PathVariable String userId)
+            throws PortalUserAssignementException, PortalUserServiceException
+    {
+        log.debug("Changing password for [{}] user for portal with [{}] ID.", userId,  portalId);
+        return portalUserService.changePassword(portalId, userId, portalUserCredentials);
+    }
+
+
     @RequestMapping(method = RequestMethod.PUT, produces = { MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE })
     @ResponseBody
     public PortalUser updateUser(Authentication auth, @PortalId @PathVariable(value = "portalId") String portalId,
