@@ -40,7 +40,6 @@ import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
@@ -49,30 +48,27 @@ import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.apache.poi.xwpf.usermodel.XWPFTable;
 import org.apache.poi.xwpf.usermodel.XWPFTableCell;
 import org.apache.poi.xwpf.usermodel.XWPFTableRow;
-import org.springframework.context.ApplicationListener;
-import org.springframework.context.event.ContextRefreshedEvent;
+
 import org.springframework.core.io.Resource;
+import org.springframework.expression.spel.SpelEvaluationException;
 import org.springframework.expression.spel.SpelParserConfiguration;
 import org.springframework.expression.spel.standard.SpelExpression;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.StringJoiner;
-import java.util.stream.Collectors;
 
 /**
  * Created by armdev on 12/11/14.
  */
-public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGenerator, ApplicationListener<ContextRefreshedEvent>
+public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGenerator
 {
     public static final String DATE_TYPE = "Date";
     public static final String CURRENT_DATE = "currentDate";
@@ -85,44 +81,10 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGene
 
     private CorrespondenceService correspondenceService;
     private EcmFileDao ecmFileDao;
-    private Resource correspondenceMergeFieldsConfiguration;
     private ObjectConverter objectConverter;
     private CorrespondenceMergeFieldManager mergeFieldManager;
-    private List<CorrespondenceMergeField> mergeFields = new ArrayList<>();
     private ApplicationConfig appConfig;
 
-    /**
-     * Generate the Word document via direct manipulation of Word paragraph texts. This works seamlessly (user sees
-     * no prompt to update document fields) but loses all formatting in paragraphs with substitution variables.
-     */
-    @Override
-    public void onApplicationEvent(ContextRefreshedEvent event)
-    {
-        try
-        {
-            File file = correspondenceMergeFieldsConfiguration.getFile();
-            if (!file.exists())
-            {
-                file.createNewFile();
-            }
-            String resource = FileUtils.readFileToString(file);
-            if (resource.isEmpty())
-            {
-                resource = "[]";
-            }
-
-            List<CorrespondenceMergeField> mergeFieldsConfigurations = getObjectConverter().getJsonUnmarshaller()
-                    .unmarshallCollection(resource, List.class, CorrespondenceMergeField.class);
-
-            mergeFields = new ArrayList<>(mergeFieldsConfigurations.stream()
-                    .map(configuration -> generateCorrespodencenMergeField(configuration)).collect(Collectors.toList()));
-
-        }
-        catch (IOException ioe)
-        {
-            throw new IllegalStateException(ioe);
-        }
-    }
 
     @Override
     public void generate(Resource wordTemplate, OutputStream targetStream, String objectType, Long parentObjectId) throws IOException
@@ -512,7 +474,7 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGene
         SpelParserConfiguration config = new SpelParserConfiguration(true, true);
         SpelExpressionParser parser = new SpelExpressionParser(config);
 
-        for (CorrespondenceMergeField mergeField : mergeFields)
+        for (CorrespondenceMergeField mergeField : getMergeFieldManager().getMergeFields())
         {
             if (mergeField.getFieldObjectType().equalsIgnoreCase(objectType) && mergeField.getFieldId().equalsIgnoreCase(spelExpression))
             {
@@ -576,23 +538,33 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGene
             }
             else
             {
-                if (String.valueOf(expression.getValue(stContext)) != null)
+                try
                 {
-                    if (expression.getValue(stContext).getClass().getSimpleName().equalsIgnoreCase(DATE_TYPE))
+                    if (String.valueOf(expression.getValue(stContext)) != null)
                     {
-                        generatedExpression = formatter.format(expression.getValue(stContext));
+                        if (expression.getValue(stContext).getClass().getSimpleName().equalsIgnoreCase(DATE_TYPE))
+                        {
+                            generatedExpression = formatter.format(expression.getValue(stContext));
+                        }
+                        else
+                        {
+
+                            generatedExpression = String.valueOf(expression.getValue(stContext));
+
+                        }
                     }
                     else
                     {
-
-                        generatedExpression = String.valueOf(expression.getValue(stContext));
-
+                        generatedExpression = "";
                     }
                 }
-                else
+                catch (SpelEvaluationException ex)
                 {
-                     generatedExpression = "";
+                    log.error("Merge field with id " + expression.getExpressionString() + " does not exist");
+                    generatedExpression = "";
                 }
+
+
             }
         }
         return generatedExpression;
@@ -620,15 +592,6 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGene
     public void setEcmFileDao(EcmFileDao ecmFileDao)
     {
         this.ecmFileDao = ecmFileDao;
-    }
-
-    /**
-     * @param correspondenceMergeFieldsConfiguration
-     *            the correspondenceMergeFieldsConfiguration to set
-     */
-    public void setCorrespondenceMergeFieldsConfiguration(Resource correspondenceMergeFieldsConfiguration)
-    {
-        this.correspondenceMergeFieldsConfiguration = correspondenceMergeFieldsConfiguration;
     }
 
     public ObjectConverter getObjectConverter()
