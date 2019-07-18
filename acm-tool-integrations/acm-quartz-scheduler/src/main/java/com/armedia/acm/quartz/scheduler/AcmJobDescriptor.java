@@ -27,13 +27,13 @@ package com.armedia.acm.quartz.scheduler;
  * #L%
  */
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.quartz.DisallowConcurrentExecution;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.quartz.PersistJobDataAfterExecution;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 
@@ -43,30 +43,26 @@ public abstract class AcmJobDescriptor implements Job
 {
     private AcmJobEventPublisher jobEventPublisher;
 
-    private static final Logger logger = LoggerFactory.getLogger(AcmJobDescriptor.class);
+    private static final Logger logger = LogManager.getLogger(AcmJobDescriptor.class);
 
     @Override
     public void execute(JobExecutionContext context) throws JobExecutionException
     {
-        String startInfo = String.format("Start execution of job %s.", getJobName());
-        logger.info(startInfo);
-        jobEventPublisher.publishJobEvent(startInfo, AcmJobEventPublisher.JOB_TRIGGERED, context.getFireInstanceId(), getJobName());
+        logger.info("Start execution of job [{}].", this::getJobName);
         try
         {
             executeJob(context);
         }
         catch (JobExecutionException e)
         {
-            String completeFailedInfo = String.format("Job %s failed to complete. Cause: %s", getJobName(), e.getMessage());
-            jobEventPublisher.publishJobEvent(completeFailedInfo,
-                    AcmJobEventPublisher.JOB_FAILED, context.getFireInstanceId(), getJobName());
+            logger.error("Job [{}] failed to complete. Cause: {}.", getJobName(), e.getMessage());
+            jobEventPublisher.publishJobEvent(new AcmJobState(getJobName(), context.getTrigger().getKey().getName(),
+                            context.getTrigger().getPreviousFireTime(), context.getNextFireTime(), false),
+                    AcmJobEventPublisher.JOB_FAILED, context.getFireInstanceId());
             throw e;
         }
 
-        String completeInfo = String.format("Job %s finished execution.", getJobName());
-        logger.info(completeInfo);
-        jobEventPublisher.publishJobEvent(completeInfo,
-                AcmJobEventPublisher.JOB_COMPLETED, context.getFireInstanceId(), getJobName());
+        logger.info("Job [{}] finished execution.", this::getJobName);
     }
 
     public abstract String getJobName();

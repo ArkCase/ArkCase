@@ -934,7 +934,14 @@
                 "column": {
                     "jobName.title": "Job Name",
                     "trigger.title": "Trigger interval(seconds) / cron",
-                    "lastRun.title": "Last Run"
+                    "lastRun.title": "Last Run",
+                    "nextRun.title": "Next Run"
+                },
+                "btn": {
+                    "run": "Run",
+                    "spin": "Executing",
+                    "pause": "Pause",
+                    "resume": "Resume"
                 }
             }
         },

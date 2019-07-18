@@ -1,8 +1,8 @@
-package com.armedia.acm.services.email.smtp;
+package com.armedia.acm.quartz.scheduler;
 
 /*-
  * #%L
- * ACM Service: Email SMTP
+ * ACM Tool Integrations: Quartz Scheduler
  * %%
  * Copyright (C) 2014 - 2019 ArkCase LLC
  * %%
@@ -27,36 +27,28 @@ package com.armedia.acm.services.email.smtp;
  * #L%
  */
 
-import com.armedia.acm.core.model.AcmEvent;
+import org.springframework.context.ApplicationListener;
+import org.springframework.messaging.MessageChannel;
+import org.springframework.messaging.support.MessageBuilder;
 
-import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
-public class SmtpEventMailSent extends AcmEvent {
-
-    private static final long serialVersionUID = 1L;
-    private static final String EVENT_TYPE = "com.armedia.acm.smtp.event.mail.sent";
-
-    public SmtpEventMailSent(Object source, String userId)
-    {
-        this(source, userId, null, null, null);
-    }
-
-    public SmtpEventMailSent(Object source, String userId, Long objectId, String objectType, String ipAddress)
-    {
-        super(source);
-        setUserId(userId);
-        setEventDate(new Date());
-        if (objectId != null && objectType != null)
-        {
-            setObjectId(objectId);
-            setObjectType(objectType);
-            setIpAddress(ipAddress);
-        }
-    }
+public class AcmJobStateNotifier implements ApplicationListener<AcmJobEvent>
+{
+    private MessageChannel jobsStatusChannel;
 
     @Override
-    public String getEventType()
+    public void onApplicationEvent(AcmJobEvent event)
     {
-        return EVENT_TYPE;
+        AcmJobState jobState = event.getSource();
+        Map<String, Object> message = new HashMap<>();
+        message.put("jobState", jobState);
+        jobsStatusChannel.send(MessageBuilder.withPayload(message).build());
+    }
+
+    public void setJobsStatusChannel(MessageChannel jobsStatusChannel)
+    {
+        this.jobsStatusChannel = jobsStatusChannel;
     }
 }

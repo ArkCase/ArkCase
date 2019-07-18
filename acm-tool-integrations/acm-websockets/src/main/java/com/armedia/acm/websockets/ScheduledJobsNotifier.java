@@ -1,10 +1,10 @@
-package com.armedia.acm.services.email.smtp;
+package com.armedia.acm.websockets;
 
 /*-
  * #%L
- * ACM Service: Email SMTP
+ * Tool Integrations: ArkCase Web Sockets
  * %%
- * Copyright (C) 2014 - 2019 ArkCase LLC
+ * Copyright (C) 2014 - 2018 ArkCase LLC
  * %%
  * This file is part of the ArkCase software. 
  * 
@@ -27,36 +27,27 @@ package com.armedia.acm.services.email.smtp;
  * #L%
  */
 
-import com.armedia.acm.core.model.AcmEvent;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.Message;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 
-import java.util.Date;
+import java.util.Map;
 
-public class SmtpEventMailSent extends AcmEvent {
+/**
+ * Scheduled jobs state notifier
+ */
+public class ScheduledJobsNotifier
+{
+    private static final Logger log = LoggerFactory.getLogger(ScheduledJobsNotifier.class);
 
-    private static final long serialVersionUID = 1L;
-    private static final String EVENT_TYPE = "com.armedia.acm.smtp.event.mail.sent";
+    @Autowired
+    private SimpMessagingTemplate template;
 
-    public SmtpEventMailSent(Object source, String userId)
+    public void receiveMessage(Message<Map<String, Object>> message)
     {
-        this(source, userId, null, null, null);
-    }
-
-    public SmtpEventMailSent(Object source, String userId, Long objectId, String objectType, String ipAddress)
-    {
-        super(source);
-        setUserId(userId);
-        setEventDate(new Date());
-        if (objectId != null && objectType != null)
-        {
-            setObjectId(objectId);
-            setObjectType(objectType);
-            setIpAddress(ipAddress);
-        }
-    }
-
-    @Override
-    public String getEventType()
-    {
-        return EVENT_TYPE;
+        log.debug("Sending scheduled jobs status update message: [{}]", message);
+        template.convertAndSend("/topic/jobStatus", message.getPayload());
     }
 }
