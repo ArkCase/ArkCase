@@ -41,30 +41,6 @@ angular.module('directives').directive('downloadAllAsZip', [ 'MessageService', '
                 updateSelectedNodesList();
             });
 
-            var downloadFile = function(data) {
-                //TRIGGER DOWNLOAD
-
-                var blob = new Blob([ data ], {
-                    type: "application/zip"
-                })
-                if (window.navigator.msSaveOrOpenBlob) {
-                    window.navigator.msSaveOrOpenBlob(blob, "acm-documents.zip");
-                    scope.downloadInProgress = false;
-                } else {
-                    var url = window.URL.createObjectURL(blob);
-                    var downloadLink = angular.element('<a></a>');
-
-                    downloadLink.css('display', 'none');
-                    downloadLink.attr('href', url);
-                    downloadLink.attr('download', "acm-documents.zip");
-                    angular.element(document.body).append(downloadLink);
-                    downloadLink[0].click();
-
-                    downloadLink.remove();
-                    window.URL.revokeObjectURL(url);
-                    scope.downloadInProgress = false;
-                }
-            };
 
             scope.downloadAllAsZip = function() {
                 scope.downloadInProgress = true;
@@ -89,8 +65,9 @@ angular.module('directives').directive('downloadAllAsZip', [ 'MessageService', '
                     selectedNodes: selectedNodes
                 };
 
-                DownloadSelectedAsZip.downloadSelectedFoldersAndFiles(compressNode).then(function(result) {
-                    downloadFile(result.data);
+                DownloadSelectedAsZip.downloadSelectedFoldersAndFiles(compressNode).then(function () {
+                    scope.downloadInProgress = false;
+                    MessageService.info($translate.instant("common.directive.downloadAllAsZip.message.start"))
                 });
             };
         }

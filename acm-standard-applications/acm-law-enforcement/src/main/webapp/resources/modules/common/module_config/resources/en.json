@@ -666,7 +666,7 @@
     "common.directive.downloadAllAsZip": {
         "button": "Download All As Zip",
         "message": {
-            "start": "Zip file is downloading",
+            "start": "Zip file will be downloaded",
             "finish": "Zip file downloaded",
             "containerError": "Unable to find container",
             "downloadError": "Zip file download Failed"
