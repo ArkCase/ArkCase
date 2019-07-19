@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns="http://www.springframework.org/schema/beans" xmlns:aop="http://www.springframework.org/schema/aop" xsi:schemaLocation="http://www.springframework.org/schema/beans
+       xmlns="http://www.springframework.org/schema/beans" xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:task="http://www.springframework.org/schema/task" xmlns:int="http://www.springframework.org/schema/integration"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans.xsd
-        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/spring-integration.xsd">
 
     <bean id="socketsConfig" class="com.armedia.acm.websockets.WebSocketConfig" scope="refresh">
         <aop:scoped-proxy/>
@@ -11,4 +13,13 @@
     <bean id="objectNotificationConfig" class="com.armedia.acm.websockets.ObjectNotificationsConfig" scope="refresh">
         <aop:scoped-proxy/>
     </bean>
+
+    <task:executor id="channelExecutor" pool-size="4"/>
+    <!-- Channel for sending all acm object changes, it can have as many subscribers to that channel-->
+    <int:publish-subscribe-channel id="objectEventChannel" task-executor="channelExecutor" min-subscribers="1"/>
+    <!-- Channel for sending simple generic messages for general purposes -->
+    <int:publish-subscribe-channel id="genericMessagesChannel" task-executor="channelExecutor" min-subscribers="1"/>
+    <!-- Channel for sending scheduled jobs status messages -->
+    <int:publish-subscribe-channel id="jobsStatusChannel" task-executor="channelExecutor" min-subscribers="1"/>
+
 </beans>

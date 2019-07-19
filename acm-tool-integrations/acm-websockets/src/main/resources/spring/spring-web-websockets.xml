@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:websocket="http://www.springframework.org/schema/websocket"
-    xmlns:context="http://www.springframework.org/schema/context" xmlns:int="http://www.springframework.org/schema/integration"
-    xmlns="http://www.springframework.org/schema/beans" xsi:schemaLocation="http://www.springframework.org/schema/beans
+       xmlns:context="http://www.springframework.org/schema/context" xmlns:int="http://www.springframework.org/schema/integration"
+       xmlns="http://www.springframework.org/schema/beans" xsi:schemaLocation="http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans.xsd
         http://www.springframework.org/schema/websocket
         http://www.springframework.org/schema/websocket/spring-websocket.xsd
@@ -56,4 +56,6 @@
     <bean id="simplePushNotifier" class="com.armedia.acm.websockets.SimplePushNotifier"/>
     <int:service-activator ref="simplePushNotifier" input-channel="genericMessagesChannel" method="receiveMessage"/>
 
+    <bean id="scheduledJobsNotifier" class="com.armedia.acm.websockets.ScheduledJobsNotifier"/>
+    <int:service-activator ref="scheduledJobsNotifier" input-channel="jobsStatusChannel" method="receiveMessage"/>
 </beans>

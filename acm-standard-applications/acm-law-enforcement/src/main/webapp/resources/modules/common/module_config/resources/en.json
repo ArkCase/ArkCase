@@ -22,7 +22,8 @@
         "defaultDateLongTimeFormat": "MM/DD/YYYY HH:mm",
         "defaultDatePickerFormat": "MM/dd/yyyy",
         "defaultDateUIFormat": "MM/dd/yyyy",
-        "defaultDateTimeUIFormat": "MM/dd/yyyy HH:mm"
+        "defaultDateTimeUIFormat": "MM/dd/yyyy HH:mm",
+        "defaultDateTimeLongUIFormat": "MM/dd/yyyy HH:mm:ss"
     },
     "common.userOrGroupSearch": {
         "id": "userSearch",

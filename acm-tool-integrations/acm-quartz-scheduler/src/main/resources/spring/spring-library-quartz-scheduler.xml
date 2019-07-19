@@ -15,6 +15,7 @@
         <property name="jobFactory" ref="acmJobFactory"/>
         <property name="triggers" value="#{acmJobFactory.getTriggerList()}"/>
         <property name="jobDetails" value="#{acmJobFactory.getJobDetailList()}"/>
+        <property name="globalTriggerListeners" ref="acmTriggerListener"/>
     </bean>
 
     <bean id="jobsJsonConfig" class="org.apache.commons.io.IOUtils" factory-method="toString">
@@ -34,11 +35,20 @@
     <bean id="acmSchedulerService" class="com.armedia.acm.quartz.scheduler.AcmSchedulerService">
         <property name="scheduler" ref="acmQuartzScheduler"/>
         <property name="jobEventPublisher" ref="jobEventPublisher"/>
+        <property name="jobFactory" ref="acmJobFactory"/>
     </bean>
 
     <bean id="jobEventPublisher" class="com.armedia.acm.quartz.scheduler.AcmJobEventPublisher"/>
 
     <bean id="acmJobDescriptor" class="com.armedia.acm.quartz.scheduler.AcmJobDescriptor" abstract="true">
         <property name="jobEventPublisher" ref="jobEventPublisher"/>
+    </bean>
+
+    <bean id="acmTriggerListener" class="com.armedia.acm.quartz.scheduler.AcmTriggerListener">
+        <property name="jobEventPublisher" ref="jobEventPublisher"/>
+    </bean>
+
+    <bean id="jobStatusNotifier" class="com.armedia.acm.quartz.scheduler.AcmJobStateNotifier">
+        <property name="jobsStatusChannel" ref="jobsStatusChannel"/>
     </bean>
 </beans>

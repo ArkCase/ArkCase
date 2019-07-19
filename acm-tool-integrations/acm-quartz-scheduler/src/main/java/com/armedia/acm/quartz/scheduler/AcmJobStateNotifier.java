@@ -27,42 +27,28 @@ package com.armedia.acm.quartz.scheduler;
  * #L%
  */
 
-import com.armedia.acm.core.model.AcmEvent;
+import org.springframework.context.ApplicationListener;
+import org.springframework.messaging.MessageChannel;
+import org.springframework.messaging.support.MessageBuilder;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
-public class AcmJobEvent extends AcmEvent
+public class AcmJobStateNotifier implements ApplicationListener<AcmJobEvent>
 {
-
-    public AcmJobEvent(AcmJobState source, String eventType, String fireInstanceId)
-    {
-        super(source);
-        setEventDate(new Date());
-        setSucceeded(true);
-        setEventType(eventType);
-        setObjectType("QRTZ_JOB");
-        setUserId(fireInstanceId);
-        setIpAddress(getHostAddress());
-        setEventDescription(String.format("%s - %s", source.getJobName(), eventType));
-    }
-
-    private String getHostAddress()
-    {
-        try
-        {
-            return InetAddress.getLocalHost().getHostAddress();
-        }
-        catch (UnknownHostException e)
-        {
-            return "";
-        }
-    }
+    private MessageChannel jobsStatusChannel;
 
     @Override
-    public AcmJobState getSource()
+    public void onApplicationEvent(AcmJobEvent event)
     {
-        return (AcmJobState) super.getSource();
+        AcmJobState jobState = event.getSource();
+        Map<String, Object> message = new HashMap<>();
+        message.put("jobState", jobState);
+        jobsStatusChannel.send(MessageBuilder.withPayload(message).build());
+    }
+
+    public void setJobsStatusChannel(MessageChannel jobsStatusChannel)
+    {
+        this.jobsStatusChannel = jobsStatusChannel;
     }
 }

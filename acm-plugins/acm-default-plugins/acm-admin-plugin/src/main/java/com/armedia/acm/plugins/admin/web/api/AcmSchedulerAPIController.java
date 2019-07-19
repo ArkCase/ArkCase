@@ -27,19 +27,17 @@ package com.armedia.acm.plugins.admin.web.api;
  * #L%
  */
 
-import com.armedia.acm.quartz.scheduler.AcmJobDTO;
+import com.armedia.acm.quartz.scheduler.AcmJobState;
 import com.armedia.acm.quartz.scheduler.AcmSchedulerService;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
 
-import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping(value = { "/api/latest/plugin/admin/scheduler" }, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -49,14 +47,13 @@ public class AcmSchedulerAPIController
 
     @RequestMapping(value = "/jobs", method = RequestMethod.GET)
     @ResponseBody
-    public List<AcmJobDTO> getScheduledJobs()
+    public Map<String, AcmJobState> getScheduledJobs()
     {
         return schedulerService.getAllScheduledJobDetails();
     }
 
     @RequestMapping(value = "/jobs/{name}/run", method = RequestMethod.PUT)
     @ResponseBody
-    @ResponseStatus(HttpStatus.OK)
     public void runJob(@PathVariable String name)
     {
         schedulerService.triggerJob(name);
@@ -64,7 +61,6 @@ public class AcmSchedulerAPIController
 
     @RequestMapping(value = "/jobs/{name}/pause", method = RequestMethod.PUT)
     @ResponseBody
-    @ResponseStatus(HttpStatus.OK)
     public void pauseJob(@PathVariable String name)
     {
         schedulerService.pauseJob(name);
@@ -72,7 +68,6 @@ public class AcmSchedulerAPIController
 
     @RequestMapping(value = "/jobs/{name}/resume", method = RequestMethod.PUT)
     @ResponseBody
-    @ResponseStatus(HttpStatus.OK)
     public void resumeJob(@PathVariable String name)
     {
         schedulerService.resumeJob(name);
