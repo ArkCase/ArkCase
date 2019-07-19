@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module("services").factory("WebSocketsListener", [ '$q', '$timeout', 'Websockets.MessageHandler', 'Authentication', function($q, $timeout, messageHandler, Authentication) {
+angular.module("services").factory("WebSocketsListener", ['$q', '$timeout', 'Websockets.MessageHandler', 'Authentication', function ($q, $timeout, messageHandler, Authentication) {
 
     var user;
     Authentication.queryUserInfo().then(function(userInfo) {

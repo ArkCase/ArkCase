@@ -1,13 +1,13 @@
 'use strict';
 
-angular.module('services').factory('Websockets.MessageHandler', [ '$q', '$rootScope', 'Acm.StoreService', 'Object.AuditService', 'TimeTracking.InfoService', 'ObjectService', 'UtilService', function($q, $rootScope, Store, ObjectAuditService, TimeTrackingInfoService, ObjectService, Util) {
+angular.module('services').factory('Websockets.MessageHandler', ['$q', '$rootScope', 'Acm.StoreService', 'Object.AuditService', 'TimeTracking.InfoService', 'ObjectService', 'UtilService', 'DocTreeExt.DownloadSelectedAsZip', 'FileSaver', 'Blob', '$filter', function ($q, $rootScope, Store, ObjectAuditService, TimeTrackingInfoService, ObjectService, Util, DownloadSelectedAsZip, FileSaver, Blob, $filter) {
     var Service = {};
 
     Service.handleMessage = handleMessage;
 
     Service.handleGenericMessage = handleGenericMessage;
 
-    Service.handleScheduledJobStatusMessage = handleScheduledJobStatusMessage;
+    Service.handleZipGenerationMessage = handleZipGenerationMessage;
 
     return Service;
 
@@ -37,6 +37,16 @@ angular.module('services').factory('Websockets.MessageHandler', [ '$q', '$rootSc
 
     function handleScheduledJobStatusMessage(message) {
         $rootScope.$bus.publish("scheduled-jobs-status-update", message);
+    }
+
+    function handleZipGenerationMessage(message) {
+        DownloadSelectedAsZip.downloadZipFile(message).then(function (result) {
+            var dateStr = $filter('date')(new Date(), 'HH:mm:ss');
+            var data = new Blob([result.data], {
+                type: 'application/octet-stream'
+            });
+            FileSaver.saveAs(data, 'acm-documents-' + dateStr + '.zip');
+        });
     }
 
     function handleCache(message) {
