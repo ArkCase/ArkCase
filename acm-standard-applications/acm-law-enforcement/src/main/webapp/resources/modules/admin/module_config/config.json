@@ -1239,7 +1239,7 @@
                   "displayName": "admin.application.scheduled.jobs.column.jobName.title",
                   "visible": true,
                   "headerCellFilter": "translate",
-                  "width": "25%"
+                  "width": "20%"
               },
               {
                   "name": "trigger",
@@ -1247,19 +1247,28 @@
                   "visible": true,
                   "headerCellFilter": "translate",
                   "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.cronExpression != null ? row.entity.cronExpression : row.entity.repeatIntervalInSeconds}}</div>",
-                  "width": "25%"
+                  "width": "20%"
               },
               {
                   "name": "lastRun",
                   "displayName": "admin.application.scheduled.jobs.column.lastRun.title",
                   "headerCellFilter": "translate",
+                  "cellTemplate": "<div>{{ row.entity.lastRun | date: ('common.defaultDateTimeLongUIFormat' | translate)}}</div>",
                   "visible": true,
-                  "width": "25%"
+                  "width": "20%"
               },
+              {
+                  "name": "nextRun",
+                  "displayName": "admin.application.scheduled.jobs.column.nextRun.title",
+                  "headerCellFilter": "translate",
+                  "cellTemplate": "<div>{{ row.entity.nextRun | date: ('common.defaultDateTimeLongUIFormat' | translate)}}</div>",
+                  "visible": true,
+                  "width": "20%"
+               },
               {
                   "name": "act",
                   "cellEditableCondition": false,
-                  "width": "25%",
+                  "width": "20%",
                   "headerCellTemplate": "<span></span>",
                   "cellTemplate": ""
               }

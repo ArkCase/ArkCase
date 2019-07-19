@@ -115,7 +115,7 @@ public class OnLdapContextChangedUpdateScheduler implements ApplicationListener<
     {
         JobDetail jobDetail = contextHolder.getBeanByNameIncludingChildContexts(syncJobName, JobDetail.class);
         Trigger trigger = jobFactory.createTrigger(getJobConfig(cronExpression, syncJobName), jobDetail);
-        schedulerService.rescheduleJob(jobDetail, trigger);
+        schedulerService.rescheduleJob(jobDetail.getKey().getName(), trigger);
     }
 
     private void scheduleJob(String syncJobName, String cronExpression)
