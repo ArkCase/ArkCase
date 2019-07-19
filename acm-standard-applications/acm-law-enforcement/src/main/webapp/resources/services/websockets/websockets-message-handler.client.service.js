@@ -9,6 +9,8 @@ angular.module('services').factory('Websockets.MessageHandler', ['$q', '$rootSco
 
     Service.handleZipGenerationMessage = handleZipGenerationMessage;
 
+    Service.handleScheduledJobStatusMessage = handleScheduledJobStatusMessage;
+
     return Service;
 
     function handleMessage(message) {
