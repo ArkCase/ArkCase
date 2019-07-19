@@ -655,8 +655,7 @@ angular.module('services').factory(
                             //}
                             //cellTemplate += "></i></span>";
 
-                            var btnTitle =  title ? title : "";
-                            var cellTemplate = "<a title=" + btnTitle + " class='inline animated btn btn-default btn-xs'" + " ng-click='grid.appScope." + clickFn + "(row.entity)'";
+                            var cellTemplate = title ? "<a title=" + title + " class='inline animated btn btn-default btn-xs'" + " ng-click='grid.appScope." + clickFn + "(row.entity)'" : "<a title='' class='inline animated btn btn-default btn-xs'" + " ng-click='grid.appScope." + clickFn + "(row.entity)'";
                             if (readOnlyFn) {
                                 cellTemplate += " ng-hide='grid.appScope." + readOnlyFn + "(row.entity)'";
                             }
