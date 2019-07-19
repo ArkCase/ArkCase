@@ -42,16 +42,17 @@ import com.armedia.acm.compressfolder.model.FileFolderNode;
 import com.armedia.acm.plugins.ecm.exception.AcmFolderException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpSession;
+import org.springframework.security.core.Authentication;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -85,6 +86,8 @@ public class FolderCompressorAPIControllerTest extends EasyMockSupport
     @Autowired
     private ExceptionHandlerExceptionResolver exceptionResolver;
 
+    private Authentication mockAuthentication;
+
     private Logger log = LogManager.getLogger(getClass());
 
     @Before
@@ -98,7 +101,7 @@ public class FolderCompressorAPIControllerTest extends EasyMockSupport
         mockHttpSession = new MockHttpSession();
         mockZipFile = new File(getClass().getResource("/acm-101-ROOT.zip").getFile());
         assertNotNull("Unable to load test zip file.", mockZipFile.getPath());
-
+        mockAuthentication = createMock(Authentication.class);
         mockMvc = MockMvcBuilders.standaloneSetup(controller).setHandlerExceptionResolvers(exceptionResolver).build();
     }
 
@@ -209,21 +212,22 @@ public class FolderCompressorAPIControllerTest extends EasyMockSupport
 
         String fileName = mockZipFile.getPath();
 
-        expect(mockedFolderCompressor.compressFolder(isA(CompressNode.class))).andReturn(fileName);
+        expect(mockedFolderCompressor.compressFolder(isA(CompressNode.class), isA(Authentication.class))).andReturn(fileName);
 
+        expect(mockAuthentication.getName()).andReturn("***REMOVED***");
         replayAll();
 
         MvcResult response = mockMvc.perform(
                 post("/api/v1/service/compressor/download")
                         .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
                         .content(objectMapper.writeValueAsString(compressNode))
+                        .principal(mockAuthentication)
                         .accept("application/zip")
                         .session(mockHttpSession))
                 .andReturn();
+
         verifyAll();
 
         assertEquals(response.getResponse().getStatus(), HttpStatus.OK.value());
-        assertEquals(response.getResponse().getContentType(), "application/zip");
-        assertEquals(response.getResponse().getHeader("Content-Disposition"), "attachment; filename=\"acm-101-ROOT.zip\"");
     }
 }
