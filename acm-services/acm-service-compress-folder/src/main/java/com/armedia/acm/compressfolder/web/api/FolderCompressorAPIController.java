@@ -35,8 +35,8 @@ import com.armedia.acm.compressfolder.model.CompressNode;
 import com.armedia.acm.core.exceptions.AcmAccessControlException;
 import com.armedia.acm.plugins.ecm.exception.AcmFolderException;
 import com.armedia.acm.services.dataaccess.service.impl.ArkPermissionEvaluator;
+
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.tika.io.FilenameUtils;
@@ -47,15 +47,19 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URLEncoder;
 import java.util.Arrays;
 import java.util.List;
 
@@ -100,12 +104,12 @@ public class FolderCompressorAPIController
 
     @RequestMapping(value = "/download", method = RequestMethod.POST)
     @ResponseBody
-    public void getCompressedSelectedFolderAndFiles(@RequestBody CompressNode compressNode, HttpServletResponse response)
-            throws IOException, AcmFolderException
+    public ResponseEntity<?> getCompressedSelectedFolderAndFiles(@RequestBody CompressNode compressNode, Authentication auth)
+            throws AcmFolderException
     {
-        String filePath = folderCompressor.compressFolder(compressNode);
-        String fileName = FilenameUtils.getName(filePath);
-        downloadCompressedFolder(filePath, fileName, response);
+        folderCompressor.compressFolder(compressNode, auth);
+
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @RequestMapping(value = "/download/files", method = RequestMethod.GET)
@@ -123,11 +127,21 @@ public class FolderCompressorAPIController
             }
         }
 
-        String zipFilePath = folderCompressor.compressFiles(fileIds);
+        folderCompressor.compressFiles(fileIds, auth);
+
+        return new ResponseEntity<>(HttpStatus.OK);
+
+    }
+
+    @RequestMapping(value = "/download/files/zip", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity<?> downloadCompressedZipFile(
+            @RequestParam(value = "zipFilePath") String zipFilePath) throws Exception
+    {
+
         String fileName = zipFilePath.substring(zipFilePath.lastIndexOf(File.separator) + 1);
         File zipFile = new File(zipFilePath);
-
-        if(zipFile.exists())
+        if (zipFile.exists())
         {
             return ResponseEntity
                     .ok()
@@ -138,7 +152,7 @@ public class FolderCompressorAPIController
         }
         else
         {
-            return new ResponseEntity(HttpStatus.OK);
+            return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
