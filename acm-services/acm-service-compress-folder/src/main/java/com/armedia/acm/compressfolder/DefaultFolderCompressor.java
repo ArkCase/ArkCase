@@ -46,22 +46,31 @@ import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.services.email.service.AcmMailTemplateConfigurationService;
 import com.armedia.acm.services.notification.dao.NotificationDao;
-import com.armedia.acm.services.notification.model.Notification;
-import com.armedia.acm.services.users.model.AcmUser;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.mule.api.MuleException;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
+import org.springframework.messaging.Message;
+import org.springframework.messaging.MessageChannel;
+import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.core.Authentication;
 
-import javax.servlet.http.HttpSession;
-
-import java.io.*;
-import java.util.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.zip.Deflater;
@@ -131,6 +140,8 @@ public class DefaultFolderCompressor implements FolderCompressor
 
     private static final String PROCESS_USER = "FILES_COMPRESSOR";
 
+    private static final String CREATE_ZIP = "zip_completed";
+
     /**
      * Used for generating unique name
      */
@@ -143,6 +154,8 @@ public class DefaultFolderCompressor implements FolderCompressor
     private NotificationDao notificationDao;
 
     private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
+
+    private MessageChannel genericMessagesChannel;
 
     /*
      * (non-Javadoc)
@@ -158,6 +171,16 @@ public class DefaultFolderCompressor implements FolderCompressor
     public String compressFolder(CompressNode compressNode) throws AcmFolderException
     {
         return compressFolder(compressNode.getRootFolderId(), compressNode, maxSize, sizeUnit);
+    }
+
+    @Override
+    @Async("fileCompressThreadPoolTaskExecutor")
+    public String compressFolder(CompressNode compressNode, Authentication auth) throws AcmFolderException
+    {
+        String fileName = compressFolder(compressNode.getRootFolderId(), compressNode, maxSize, sizeUnit);
+        send(fileName, auth);
+
+        return fileName;
     }
 
     /*
@@ -196,78 +219,97 @@ public class DefaultFolderCompressor implements FolderCompressor
     }
 
     @Override
-    public String compressFiles(List<Long> fileIds)
+    @Async("fileCompressThreadPoolTaskExecutor")
+    public void compressFiles(List<Long> fileIds, Authentication auth)
     {
 
+        String filePath = null;
         getAuditPropertyEntityAdapter().setUserId(PROCESS_USER);
 
-        String filename = getCompressedZipPath();
-
-        List<String> fileFolderList = new ArrayList<>();
-
-        log.debug("ZIP creation: using [{}] as temporary file name", filename);
-
-        FileOutputStream fos;
         try
         {
-            fos = new FileOutputStream(new File(filename));
-        }
-        catch (FileNotFoundException e)
-        {
-            log.error(String.format("ZIP creation: the target zip file [%s] does not exist", filename), e);
-            return "";
-        }
+            List<String> fileFolderList = new ArrayList<>();
 
-        ZipOutputStream zos = new ZipOutputStream(fos);
-        zos.setLevel(Deflater.BEST_COMPRESSION);
+            filePath = getCompressedZipPath();
+            log.debug("ZIP creation: using [{}] as temporary file name", filePath);
+            File file = new File(filePath);
 
-        List<EcmFile> filesForCompression = fileService.findByIds(fileIds);
-        Map<EcmFile, InputStream> filesToCompressMap = new HashMap<>();
+            FileOutputStream fos = new FileOutputStream(file);
+            ZipOutputStream zos = new ZipOutputStream(fos);
+            zos.setLevel(Deflater.BEST_COMPRESSION);
 
-        filesForCompression.forEach(ecmFile -> {
+            List<EcmFile> filesForCompression = fileService.findByIds(fileIds);
+
+            List<InputStream> filesContent = filesForCompression.parallelStream().map(fileForCompression -> {
+                try
+                {
+                    InputStream fileByteStream = fileService.downloadAsInputStream(fileForCompression);
+
+                    return fileByteStream;
+                }
+                catch (AcmUserActionFailedException e)
+                {
+                    log.error("Error while downloading stream for object with [{}] id.", file, e);
+                }
+                return null;
+
+            }).collect(Collectors.toList());
+
+            filesForCompression.forEach(fileForCompression -> {
+                try
+                {
+                    String objectName = getUniqueObjectName(fileFolderList, DATE_FORMATTER, fileForCompression,
+                            fileForCompression.getFileName());
+                    fileFolderList.add(objectName);
+
+                    String entryName = concatStrings(objectName +
+                            fileForCompression.getFileActiveVersionNameExtension());
+
+                    ZipEntry zipEntry = new ZipEntry(entryName);
+                    zos.putNextEntry(zipEntry);
+
+                    InputStream inputStream = filesContent.get(filesForCompression.indexOf(fileForCompression));
+                    if (inputStream != null)
+                    {
+                        copy(inputStream, zos);
+                    }
+                }
+                catch (IOException e)
+                {
+                    log.error("ZIP creation: Error while creating zip entry for object with [{}] id.", file, e);
+                }
+            });
+
             try
             {
-                InputStream inputStream = fileService.downloadAsInputStream(ecmFile);
-                filesToCompressMap.put(ecmFile, inputStream);
-            }
-            catch (AcmUserActionFailedException e)
-            {
-                log.error(String.format("Error while downloading stream for EcmFile with id [%s].", ecmFile.getId()), e);
-            }
-        });
-
-        filesToCompressMap.forEach((ecmFile, inputStream) -> {
-
-            String objectName = getUniqueObjectName(fileFolderList, DATE_FORMATTER, ecmFile, ecmFile.getFileName());
-            fileFolderList.add(objectName);
-
-            String entryName = concatStrings(objectName +
-                    ecmFile.getFileActiveVersionNameExtension());
-
-            try
-            {
-                ZipEntry zipEntry = new ZipEntry(entryName);
-                zos.putNextEntry(zipEntry);
-                copy(inputStream, zos);
+                zos.close();
+                fos.close();
             }
             catch (IOException e)
             {
-                log.error(String.format("ZIP Creation: could not add file with name [%s] to the zip archive", entryName), e);
+                log.warn("Could not close CMIS content stream: {}", e.getMessage(), e);
             }
-
-        });
-
-        try
-        {
-            zos.close();
-            fos.close();
         }
         catch (IOException e)
         {
-            log.warn("Could not close CMIS content stream: {}", e.getMessage(), e);
+            log.warn("Could not create zip file: {}", e.getMessage(), e);
         }
 
-        return filename;
+        send(filePath, auth);
+
+    }
+
+    private void send(String filePath, Authentication auth)
+    {
+
+        Map<String, Object> message = new HashMap<>();
+        message.put("filePath", filePath);
+        message.put("user", auth.getName());
+        message.put("eventType", CREATE_ZIP);
+        Message<Map<String, Object>> progressMessage = MessageBuilder.withPayload(message).build();
+
+        genericMessagesChannel.send(progressMessage);
+
     }
 
     /**
@@ -582,5 +624,10 @@ public class DefaultFolderCompressor implements FolderCompressor
     public void setCompressorServiceConfig(CompressorServiceConfig compressorServiceConfig)
     {
         this.compressorServiceConfig = compressorServiceConfig;
+    }
+
+    public void setGenericMessagesChannel(MessageChannel genericMessagesChannel)
+    {
+        this.genericMessagesChannel = genericMessagesChannel;
     }
 }
