@@ -53,7 +53,7 @@ angular.module('admin').controller('Admin.SequenceManagementResetDetailsControll
     $scope.onClickSave = function(){
 
         $scope.sequenceReset.resetDate = $scope.sequenceReset.resetStartDate;
-        $scope.sequenceReset.resetRepeatablePeriod = $scope.sequenceReset.resetRepeatPeriodOption == "0" ? $scope.sequenceReset.resetRepeatablePeriod : $scope.resetRepeatPeriodOption;
+        $scope.sequenceReset.resetRepeatablePeriod = $scope.sequenceReset.resetRepeatPeriodOption == "0" ? $scope.sequenceReset.resetRepeatablePeriod : $scope.sequenceReset.resetRepeatPeriodOption;
 
         SequenceManagementResetService.saveSequenceReset($scope.sequenceReset).success(function () {
             MessageService.succsessAction();
