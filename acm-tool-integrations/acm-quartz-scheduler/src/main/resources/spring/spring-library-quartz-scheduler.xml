@@ -35,7 +35,6 @@
     <bean id="acmSchedulerService" class="com.armedia.acm.quartz.scheduler.AcmSchedulerService">
         <property name="scheduler" ref="acmQuartzScheduler"/>
         <property name="jobEventPublisher" ref="jobEventPublisher"/>
-        <property name="jobFactory" ref="acmJobFactory"/>
     </bean>
 
     <bean id="jobEventPublisher" class="com.armedia.acm.quartz.scheduler.AcmJobEventPublisher"/>
