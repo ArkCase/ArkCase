@@ -76,7 +76,13 @@ public interface EcmFileTransaction
     EcmFile updateFileTransaction(Authentication authentication, EcmFile ecmFile, InputStream fileInputStream)
             throws MuleException, IOException;
 
+    EcmFile updateFileTransaction(Authentication authentication, EcmFile ecmFile, InputStream fileInputStream, String fileExtension)
+            throws MuleException, IOException;
+
     EcmFile updateFileTransactionEventAware(Authentication authentication, EcmFile ecmFile, InputStream fileInputStream)
+            throws MuleException, IOException;
+
+    EcmFile updateFileTransactionEventAware(Authentication authentication, EcmFile ecmFile, InputStream fileInputStream, String fileExtension)
             throws MuleException, IOException;
 
     String downloadFileTransaction(EcmFile ecmFile) throws MuleException;
