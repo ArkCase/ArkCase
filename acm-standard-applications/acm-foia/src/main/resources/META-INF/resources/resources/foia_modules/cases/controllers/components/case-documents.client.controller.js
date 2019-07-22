@@ -30,8 +30,9 @@ angular.module('cases').controller(
                 'Admin.EmailSenderConfigurationService',
                 'MultiCorrespondence.Service',
                 'ModalDialogService',
+                'Websockets.MessageHandler',
                 function($scope, $state, $stateParams, $modal, $q, $timeout, $translate, Util, LocaleService, ConfigService, ObjectService, ObjectLookupService, CaseInfoService, DocTreeService, HelperObjectBrowserService, Authentication, PermissionsService, ObjectModelService, DocTreeExtWebDAV,
-                        DocTreeExtCheckin, CorrespondenceService, DocTreeExtEmail, Ecm, MessageService, EmailSenderConfigurationService, MultiCorrespondenceService, ModalDialogService) {
+                         DocTreeExtCheckin, CorrespondenceService, DocTreeExtEmail, Ecm, MessageService, EmailSenderConfigurationService, MultiCorrespondenceService, ModalDialogService, messageHandler) {
 
                     Authentication.queryUserInfo().then(function(userInfo) {
                         $scope.user = userInfo.userId;
@@ -91,6 +92,10 @@ angular.module('cases').controller(
                         fileTypes = fileTypes.concat(Util.goodArray($scope.treeConfig.formTypes));
                         return DocTreeService.uploadFrevvoForm(type, folderId, onCloseForm, $scope.objectInfo, fileTypes);
                     };
+
+                    $scope.$bus.subscribe("zip_completed", function (data) {
+                        messageHandler.handleZipGenerationMessage(data.filePath);
+                    });
 
                     $scope.onInitTree = function(treeControl) {
                         $scope.treeControl = treeControl;
