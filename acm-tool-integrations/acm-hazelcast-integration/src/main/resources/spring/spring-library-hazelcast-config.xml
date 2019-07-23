@@ -4,7 +4,7 @@
     xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
                 http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache.xsd">
 
-    <import resource="file:${user.home}/.arkcase/acm/hazelcast-config.xml"/>
+    <import resource="http://localhost:9999/arkcase/runtime/default/spring/hazelcast-config.xml"/>
 
     <bean id="cacheManager" class="com.hazelcast.spring.cache.HazelcastCacheManager">
         <constructor-arg ref="acmHazelcastInstance"/>
