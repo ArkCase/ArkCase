@@ -26,6 +26,7 @@ package com.armedia.acm.portalgateway.web.api;
  * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
  * #L%
  */
+import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.portalgateway.model.PortalUser;
 import com.armedia.acm.portalgateway.model.PortalUserCredentials;
 import com.armedia.acm.portalgateway.model.UserRegistrationRequest;
@@ -182,6 +183,14 @@ public class ArkCasePortalGatewayUserAPIController
     {
         log.debug("Updating [{}] user for portal with [{}] ID.", PortalUser.composeUserName(user), portalId);
         return portalUserService.updateUser(portalId, user);
+    }
+
+    @RequestMapping( value = "/{portalUserId}", method = RequestMethod.GET, produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE })
+    @ResponseBody
+    public PortalUser retrieveUser(@PortalId @PathVariable(value = "portalId") String portalId, @PathVariable(value="portalUserId") String portalUserId) throws PortalUserServiceException
+    {
+        log.debug("Retrieve [{}] user for portal with [{}] ID.", portalUserId, portalId);
+        return portalUserService.retrieveUser(portalUserId, portalId);
     }
 
     @ExceptionHandler(PortalUserServiceException.class)
