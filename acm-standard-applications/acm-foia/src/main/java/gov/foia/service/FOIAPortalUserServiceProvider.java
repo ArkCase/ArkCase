@@ -29,7 +29,9 @@ package gov.foia.service;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.addressable.model.ContactMethod;
 import com.armedia.acm.plugins.addressable.model.PostalAddress;
+import com.armedia.acm.plugins.person.dao.PersonDao;
 import com.armedia.acm.plugins.person.model.Organization;
+import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.portalgateway.model.PortalInfo;
 import com.armedia.acm.portalgateway.model.PortalUser;
 import com.armedia.acm.portalgateway.model.PortalUserCredentials;
@@ -91,6 +93,8 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
     private LdapUserService ldapUserService;
 
     private PortalInfoDAO portalInfoDAO;
+
+    private PersonDao personDao;
 
     @Value("${foia.portalserviceprovider.directory.name}")
     private String directoryName;
@@ -418,7 +422,56 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
     public PortalUser updateUser(String portalId, PortalUser user) throws PortalUserServiceException
     {
         // TODO Auto-generated method stub
-        return null;
+        Person person = getPersonDao().find(Long.valueOf(user.getPortalUserId()));
+
+        person.getAddresses().get(0).setCity(user.getCity());
+        person.getAddresses().get(0).setCountry(user.getCountry());
+        person.getAddresses().get(0).setState(user.getState());
+        person.getAddresses().get(0).setStreetAddress(user.getAddress1());
+        person.getAddresses().get(0).setStreetAddress2(user.getAddress2());
+        person.getAddresses().get(0).setZip(user.getZipCode());
+        person.getContactMethods().stream().filter(cm -> cm.getType().equals("Phone")).findFirst().get().setValue(user.getPhoneNumber());
+
+        personDao.save(person);
+
+        //assign person properties to portal user model
+        PortalUser portalUser = new PortalUser();
+        portalUser.setCity(person.getAddresses().get(0).getCity());
+        portalUser.setCountry(person.getAddresses().get(0).getCountry());
+        portalUser.setState(person.getAddresses().get(0).getState());
+        portalUser.setAddress1(person.getAddresses().get(0).getStreetAddress());
+        portalUser.setAddress2(person.getAddresses().get(0).getStreetAddress2());
+        portalUser.setZipCode(person.getAddresses().get(0).getZip());
+        portalUser.setPhoneNumber( person.getContactMethods().stream().filter(cm -> cm.getType().equals("Phone")).findFirst().get().getValue());
+
+        return portalUser;
+
+    }
+
+    @Override
+    public PortalUser retrieveUser(String portalUserId, String portalId)
+    {
+        Person person = getPersonDao().find(Long.valueOf(portalUserId));
+
+        PortalUser portalUser = new PortalUser();
+        portalUser.setPortalUserId(person.getId().toString());
+        portalUser.setFirstName(person.getGivenName());
+        portalUser.setMiddleName(person.getMiddleName());
+        portalUser.setLastName(person.getFamilyName());
+        portalUser.setPrefix(person.getTitle());
+        portalUser.setPhoneNumber(person.getContactMethods().stream().filter(cm -> cm.getType().equals("Phone")).findFirst().get().getValue());
+
+        PostalAddress address = person.getDefaultAddress();
+        portalUser.setCity(address.getCity());
+        portalUser.setCountry(address.getCountry());
+        portalUser.setState(address.getState());
+        portalUser.setAddress1(address.getStreetAddress());
+        portalUser.setAddress2(address.getStreetAddress2());
+        portalUser.setZipCode(address.getZip());
+
+        portalUser.setEmail(person.getDefaultEmail().getValue());
+
+        return portalUser;
     }
 
     /**
@@ -680,4 +733,13 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
         this.ldapAuthenticateService = ldapAuthenticateService;
     }
 
+    public PersonDao getPersonDao()
+    {
+        return personDao;
+    }
+
+    public void setPersonDao(PersonDao personDao)
+    {
+        this.personDao = personDao;
+    }
 }
