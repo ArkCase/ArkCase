@@ -53,6 +53,7 @@ import javax.persistence.TableGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
+import javax.validation.constraints.NotNull;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -70,6 +71,7 @@ public class Notification implements Serializable, AcmObject, AcmEntity
     @TableGenerator(name = "acm_notification_gen", table = "acm_notification_id", pkColumnName = "cm_seq_name", valueColumnName = "cm_seq_num", pkColumnValue = "acm_notification", initialValue = 100, allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "acm_notification_gen")
     @Column(name = "cm_notification_id")
+    @NotNull
     private Long id;
 
     @Column(name = "cm_notification_created", nullable = false, insertable = true, updatable = false)
