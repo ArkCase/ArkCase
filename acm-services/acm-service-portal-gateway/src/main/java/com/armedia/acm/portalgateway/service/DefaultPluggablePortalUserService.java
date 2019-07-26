@@ -26,6 +26,7 @@ package com.armedia.acm.portalgateway.service;
  * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
  * #L%
  */
+
 import com.armedia.acm.portalgateway.model.PortalUser;
 import com.armedia.acm.portalgateway.model.PortalUserCredentials;
 import com.armedia.acm.portalgateway.model.UserRegistrationRequest;
@@ -99,6 +100,13 @@ public class DefaultPluggablePortalUserService implements PortalUserService
     {
         log.debug("Updating user [{}] at portal with ID [{}].", PortalUser.composeUserName(user), portalId);
         return getServiceProvider().updateUser(portalId, user);
+    }
+
+    @Override
+    public PortalUser retrieveUser(String portalUserId, String portalId) throws PortalUserServiceException
+    {
+        log.debug("Retrieving user [{}] at portal with ID [{}].", portalUserId, portalId);
+        return getServiceProvider().retrieveUser(portalUserId, portalId);
     }
 
     /*
