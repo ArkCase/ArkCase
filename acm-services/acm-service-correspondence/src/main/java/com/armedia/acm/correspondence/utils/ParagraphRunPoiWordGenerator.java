@@ -311,7 +311,7 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGene
                     {
                         paragraph.removeRun(i);
                     }
-                    break;
+                    continue;
                 }
 
                 // set the run text to the first line of the replacement; this existing run maintains its formatting
