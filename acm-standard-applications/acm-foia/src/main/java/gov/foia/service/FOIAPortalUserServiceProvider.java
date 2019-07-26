@@ -434,17 +434,7 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
 
         personDao.save(person);
 
-        //assign person properties to portal user model
-        PortalUser portalUser = new PortalUser();
-        portalUser.setCity(person.getAddresses().get(0).getCity());
-        portalUser.setCountry(person.getAddresses().get(0).getCountry());
-        portalUser.setState(person.getAddresses().get(0).getState());
-        portalUser.setAddress1(person.getAddresses().get(0).getStreetAddress());
-        portalUser.setAddress2(person.getAddresses().get(0).getStreetAddress2());
-        portalUser.setZipCode(person.getAddresses().get(0).getZip());
-        portalUser.setPhoneNumber( person.getContactMethods().stream().filter(cm -> cm.getType().equals("Phone")).findFirst().get().getValue());
-
-        return portalUser;
+        return portaluserFromPortalPerson(portalId, (PortalFOIAPerson) person);
 
     }
 
@@ -452,26 +442,7 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
     public PortalUser retrieveUser(String portalUserId, String portalId)
     {
         Person person = getPersonDao().find(Long.valueOf(portalUserId));
-
-        PortalUser portalUser = new PortalUser();
-        portalUser.setPortalUserId(person.getId().toString());
-        portalUser.setFirstName(person.getGivenName());
-        portalUser.setMiddleName(person.getMiddleName());
-        portalUser.setLastName(person.getFamilyName());
-        portalUser.setPrefix(person.getTitle());
-        portalUser.setPhoneNumber(person.getContactMethods().stream().filter(cm -> cm.getType().equals("Phone")).findFirst().get().getValue());
-
-        PostalAddress address = person.getDefaultAddress();
-        portalUser.setCity(address.getCity());
-        portalUser.setCountry(address.getCountry());
-        portalUser.setState(address.getState());
-        portalUser.setAddress1(address.getStreetAddress());
-        portalUser.setAddress2(address.getStreetAddress2());
-        portalUser.setZipCode(address.getZip());
-
-        portalUser.setEmail(person.getDefaultEmail().getValue());
-
-        return portalUser;
+        return portaluserFromPortalPerson(portalUserId, (PortalFOIAPerson) person);
     }
 
     /**
