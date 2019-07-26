@@ -25,7 +25,7 @@
             <version>${acm.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.armedia.acm.com.armedia.acm.acm-services</groupId>
+            <groupId>com.armedia.acm.acm-services</groupId>
             <artifactId>acm-service-form-configuration</artifactId>
             <version>${acm.version}</version>
         </dependency>
