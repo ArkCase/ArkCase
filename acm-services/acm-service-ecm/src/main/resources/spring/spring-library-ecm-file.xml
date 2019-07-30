@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.springframework.org/schema/beans"
-       xmlns:aop="http://www.springframework.org/schema/aop"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+    xmlns:aop="http://www.springframework.org/schema/aop"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
 
     <bean id="ecmFileDao" class="com.armedia.acm.plugins.ecm.dao.EcmFileDao"/>
 
@@ -35,12 +35,12 @@
     </bean>
 
     <bean id="entityParticipantsChangedEventListener"
-          class="com.armedia.acm.plugins.ecm.service.EntityParticipantsChangedEventListener">
+        class="com.armedia.acm.plugins.ecm.service.EntityParticipantsChangedEventListener">
         <property name="fileParticipantService" ref="fileParticipantService"/>
     </bean>
 
     <bean id="folderDataAccessUpdateLocator"
-          class="com.armedia.acm.plugins.ecm.service.impl.FolderDataAccessUpdateLocator">
+        class="com.armedia.acm.plugins.ecm.service.impl.FolderDataAccessUpdateLocator">
         <property name="folderDao" ref="acmFolderDao"/>
     </bean>
 
@@ -63,7 +63,7 @@
         <property name="captureConfig" ref="captureConfig"/>
     </bean>
     <bean id="ecmFileMergedContentHandler"
-          class="com.armedia.acm.plugins.ecm.pipeline.presave.EcmFileMergeContentHandler">
+        class="com.armedia.acm.plugins.ecm.pipeline.presave.EcmFileMergeContentHandler">
         <property name="ecmFileMuleUtils" ref="ecmFileMuleUtils"/>
     </bean>
     <bean id="ecmFileNewContentHandler" class="com.armedia.acm.plugins.ecm.pipeline.presave.EcmFileNewContentHandler">
@@ -76,32 +76,33 @@
         <property name="pageCountService" ref="pageCountService"/>
     </bean>
     <bean id="ecmFileMergedMetadataHandler"
-          class="com.armedia.acm.plugins.ecm.pipeline.presave.EcmFileMergedMetadataHandler">
+        class="com.armedia.acm.plugins.ecm.pipeline.presave.EcmFileMergedMetadataHandler">
         <property name="ecmFileDao" ref="ecmFileDao"/>
         <property name="folderDao" ref="acmFolderDao"/>
         <property name="pageCountService" ref="pageCountService"/>
 
     </bean>
     <bean id="ecmFileSendForPdfConversionHandler"
-          class="com.armedia.acm.plugins.ecm.pipeline.presave.EcmFileSendForPdfConversionHandler">
+        class="com.armedia.acm.plugins.ecm.pipeline.presave.EcmFileSendForPdfConversionHandler">
         <property name="captureFolderService" ref="captureFolderHandler"/>
         <property name="captureConfig" ref="captureConfig"/>
     </bean>
     <bean id="ecmFileUpdateContentHandler"
-          class="com.armedia.acm.plugins.ecm.pipeline.presave.EcmFileUpdateContentHandler">
+        class="com.armedia.acm.plugins.ecm.pipeline.presave.EcmFileUpdateContentHandler">
         <property name="ecmFileMuleUtils" ref="ecmFileMuleUtils"/>
     </bean>
     <bean id="ecmFileUpdateMetadataHandler"
-          class="com.armedia.acm.plugins.ecm.pipeline.presave.EcmFileUpdateMetadataHandler">
+        class="com.armedia.acm.plugins.ecm.pipeline.presave.EcmFileUpdateMetadataHandler">
         <property name="ecmFileDao" ref="ecmFileDao"/>
         <property name="folderDao" ref="acmFolderDao"/>
         <property name="pageCountService" ref="pageCountService"/>
     </bean>
     <bean id="ecmFileParticipantsHandler"
-          class="com.armedia.acm.plugins.ecm.pipeline.postsave.EcmFileParticipantsHandler">
+        class="com.armedia.acm.plugins.ecm.pipeline.postsave.EcmFileParticipantsHandler">
         <property name="fileParticipantService" ref="fileParticipantService"/>
     </bean>
-    <bean id="fileUploadConversionHandler" class="com.armedia.acm.plugins.ecm.pipeline.postsave.FileUploadConversionHandler" scope="refresh">
+    <bean id="fileUploadConversionHandler" class="com.armedia.acm.plugins.ecm.pipeline.postsave.FileUploadConversionHandler"
+        scope="refresh">
         <aop:scoped-proxy/>
         <property name="fileConverterFactory" ref="fileConverterFactory"/>
         <property name="ecmFileService" ref="ecmFileService"/>
@@ -282,8 +283,6 @@
         <property name="progressIndicatorService" ref="progressIndicatorService"/>
     </bean>
 
-    <import resource="file:${user.home}/.arkcase/acm/activeMqSpringConfig.xml"/>
-
     <bean id="jmsTemplate" class="org.springframework.jms.core.JmsTemplate">
         <constructor-arg index="0" ref="amqConnectionFactory"/>
         <property name="deliveryMode" value="2"/>
@@ -373,7 +372,7 @@
     </bean>
 
     <bean id="fileWorkflowBusinessRule" class="com.armedia.acm.plugins.ecm.service.impl.FileWorkflowBusinessRule"
-          parent="simpleStatelessSingleObjectRuleManager">
+        parent="simpleStatelessSingleObjectRuleManager">
         <property name="ruleSpreadsheetFilename" value="drools-form-business-process-rules.xlsx"/>
     </bean>
 
@@ -431,7 +430,7 @@
     <bean id="pageCountService" class="com.armedia.acm.plugins.ecm.service.impl.PageCountServiceImpl"/>
 
     <bean id="fileCreatedWorkflowHandler"
-          class="com.armedia.acm.plugins.ecm.handler.FileCreatedBuckslipWorkflowHandler">
+        class="com.armedia.acm.plugins.ecm.handler.FileCreatedBuckslipWorkflowHandler">
         <property name="fileWorkflowBusinessRule" ref="fileWorkflowBusinessRule"/>
         <property name="activitiRuntimeService" ref="activitiRuntimeService"/>
         <property name="objectConverter" ref="objectConverter"/>
@@ -511,7 +510,7 @@
     </bean>
 
     <bean id="removeExpiredFilesJobDescriptor" class="com.armedia.acm.plugins.ecm.service.RemoveExpiredFilesJobDescriptor"
-          parent="acmJobDescriptor">
+        parent="acmJobDescriptor">
         <property name="removeExpiredFilesService" ref="removeExpiredFilesService"/>
     </bean>
 </beans>
