@@ -6,8 +6,6 @@
 
     <jms:annotation-driven/>
 
-    <import resource="file:${user.home}/.arkcase/acm/activeMqSpringConfig.xml"/>
-
     <bean id="destinationResolver" class="org.springframework.jms.support.destination.DynamicDestinationResolver"/>
 
     <bean id="jmsListenerContainerFactory" class="org.springframework.jms.config.DefaultJmsListenerContainerFactory">

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
+
+    <!--*************************************************************************** -->
+    <!-- ActiveMQ Configuration                                                     -->
+    <!--*************************************************************************** -->
+
+    <bean id="activeMqConfig" class="com.armedia.acm.tools.activemq.model.ActiveMqConfig">
+    </bean>
+    <!-- NOTE WHEN YOU SEE "This class is not trusted to be serialized as ObjectMessage payload" MESSAGES IN YOUR LOG FILE,
+         UPDATE arkcase-activemq.properties TO INCLUDE THE RELEVANT PACKAGES IN THE ark.activemq.trustedPackages PROPERTY. -->
+
+    <bean id="amqConnectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
+        <property name="brokerURL" value="#{activeMqConfig.getTransportConnectorURI()}"/>
+        <property name="watchTopicAdvisories" value="true"/>
+        <property name="trustedPackages" value="#{activeMqConfig.mergeTrustedPackages()}"/>
+        <property name="userName" value="#{activeMqConfig.getUsername()}"/>
+        <property name="password" value="#{activeMqConfig.getPassword()}"/>
+    </bean>
+
+    <bean id="jmsConnectionFactory" class="org.apache.activemq.pool.PooledConnectionFactory" destroy-method="stop">
+        <property name="connectionFactory" ref="amqConnectionFactory"/>
+        <property name="maxConnections" value="#{activeMqConfig.getMaxConnections()}"/>
+    </bean>
+
+</beans>

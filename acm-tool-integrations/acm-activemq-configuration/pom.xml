@@ -20,19 +20,32 @@
             <version>${acm.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.armedia.acm.acm-tool-integrations</groupId>
+            <artifactId>acm-configuration</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+
         <!-- activemq -->
+        <!--<dependency>-->
+            <!--<groupId>org.apache.activemq</groupId>-->
+            <!--<artifactId>activemq-broker</artifactId>-->
+        <!--</dependency>-->
+        <!--<dependency>-->
+            <!--<groupId>org.apache.activemq</groupId>-->
+            <!--<artifactId>activemq-kahadb-store</artifactId>-->
+        <!--</dependency>-->
+        <!--<dependency>-->
+            <!--<groupId>org.apache.activemq</groupId>-->
+            <!--<artifactId>activemq-spring</artifactId>-->
+        <!--</dependency>-->
+        <!-- https://mvnrepository.com/artifact/org.apache.activemq/activemq-pool -->
         <dependency>
             <groupId>org.apache.activemq</groupId>
-            <artifactId>activemq-broker</artifactId>
+            <artifactId>activemq-pool</artifactId>
+            <version>${activemq.version}</version>
         </dependency>
-        <dependency>
-            <groupId>org.apache.activemq</groupId>
-            <artifactId>activemq-kahadb-store</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.activemq</groupId>
-            <artifactId>activemq-spring</artifactId>
-        </dependency>
+
 
         <!-- spring -->
         <dependency>
@@ -56,6 +69,29 @@
         <dependency>
             <groupId>org.mule.transports</groupId>
             <artifactId>mule-transport-jms</artifactId>
+        </dependency>
+
+
+        <!-- mule -->
+        <dependency>
+            <groupId>org.mule.modules</groupId>
+            <artifactId>mule-module-http</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.mule.modules</groupId>
+            <artifactId>mule-module-client</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.mule.modules</groupId>
+            <artifactId>mule-module-scripting</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.mule.transports</groupId>
+            <artifactId>mule-transport-vm</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.mule.transports</groupId>
+            <artifactId>mule-transport-http</artifactId>
         </dependency>
 
         <!-- test -->
