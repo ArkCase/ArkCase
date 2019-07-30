@@ -41,6 +41,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.UnsupportedEncodingException;
@@ -70,6 +71,14 @@ public class PortalRequestAPIController
             throws UnsupportedEncodingException, MuleException, AcmObjectNotFoundException
     {
         return getPortalRequestService().getExternalRequests(requestStatus);
+    }
+
+    @RequestMapping(value = "/external/user/status", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public List<PortalFOIARequestStatus> getLoggedUserExternalRequests(@RequestParam(value = "emailAddress") String emailAddress)
+            throws AcmObjectNotFoundException
+    {
+        return getPortalRequestService().getLoggedUserExternalRequests(emailAddress);
     }
 
     @RequestMapping(value = "/external/readingroom", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
