@@ -35,6 +35,10 @@ import com.armedia.acm.data.service.AcmDataService;
 import com.armedia.acm.services.notification.helper.UserInfoHelper;
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.service.provider.model.AcmEntityTemplateModel;
+import com.armedia.acm.services.participants.model.AcmAssignedObject;
+import com.armedia.acm.services.participants.utils.ParticipantUtils;
+
+import java.util.Objects;
 
 public class AcmEntityTemplateNoUserPrefixModelProvider implements TemplateModelProvider<AcmEntityTemplateModel>
 {
@@ -61,10 +65,20 @@ public class AcmEntityTemplateNoUserPrefixModelProvider implements TemplateModel
             baseModifier = getUserInfoHelper().removeUserPrefix(modifier);
         }
 
+        AcmAssignedObject acmAssignedObject = null;
+        if(acmObject instanceof  AcmAssignedObject)
+        {
+            acmAssignedObject = (AcmAssignedObject)acmObject;
+        }
+
         AcmEntityTemplateModel acmEntityTemplateModel = new AcmEntityTemplateModel();
         acmEntityTemplateModel.caseFileObject = acmObject;
         acmEntityTemplateModel.assigneeUserId = baseAssigneeLdapId;
         acmEntityTemplateModel.modifierUserId = baseModifier;
+
+        if(Objects.nonNull(acmAssignedObject)) {
+            acmEntityTemplateModel.assigneeGroupId = ParticipantUtils.getOwningGroupIdFromParticipants(((AcmAssignedObject) acmObject).getParticipants());
+        }
 
         return acmEntityTemplateModel;
     }
