@@ -4,13 +4,30 @@
 
     <bean id="smtpService" class="com.armedia.acm.services.email.smtp.SmtpService">
         <property name="ecmFileService" ref="ecmFileService"/>
-        <property name="muleContextManager" ref="muleContextManager"/>
-        <property name="flow" value="vm://sendEmailViaSmtp.in"/>
         <property name="acmEmailContentGeneratorService" ref="acmEmailContentGeneratorService"/>
         <property name="emailSenderConfig" ref="emailSenderConfig"/>
         <property name="templatingEngine" ref="templatingEngine"/>
-        <property name="emailSenderConfigurationService" ref="emailSenderConfigurationService"/>
         <property name="defaultFolderAndFileConverter" ref="folderConverter"/>
+        <property name="acmMailSender" ref="acmMailSender"/>
+    </bean>
+
+    <bean id="acmMailSender" class="com.armedia.acm.services.email.smtp.AcmMailSender">
+        <property name="emailConfig" ref="emailSenderConfig"/>
+        <property name="smtpMailSender" ref="smtpMailSender"/>
+        <property name="smtpsMailSender" ref="smtpsMailSender"/>
+    </bean>
+
+    <bean id="smtpMailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl"/>
+
+    <bean id="smtpsMailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+        <property name="javaMailProperties">
+            <props>
+                <prop key="mail.smtp.auth">true</prop>
+                <prop key="mail.smtp.starttls.enable">true</prop>
+                <prop key="mail.smtps.starttls.enable">true</prop>
+                <prop key="mail.smtps.auth">true</prop>
+            </props>
+        </property>
     </bean>
 
 </beans>
