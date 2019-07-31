@@ -76,7 +76,8 @@ public class AcmEntityTemplateNoUserPrefixModelProvider implements TemplateModel
         acmEntityTemplateModel.assigneeUserId = baseAssigneeLdapId;
         acmEntityTemplateModel.modifierUserId = baseModifier;
 
-        if(Objects.nonNull(acmAssignedObject)) {
+        if(Objects.nonNull(acmAssignedObject))
+        {
             acmEntityTemplateModel.assigneeGroupId = ParticipantUtils.getOwningGroupIdFromParticipants(((AcmAssignedObject) acmObject).getParticipants());
         }
 
