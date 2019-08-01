@@ -72,4 +72,9 @@ public class TemplatingEngine
     {
         this.applicationConfig = applicationConfig;
     }
+
+    public ApplicationConfig getApplicationConfig()
+    {
+        return applicationConfig;
+    }
 }
