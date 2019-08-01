@@ -35,10 +35,6 @@ import com.armedia.acm.data.service.AcmDataService;
 import com.armedia.acm.services.notification.helper.UserInfoHelper;
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.service.provider.model.AcmEntityTemplateModel;
-import com.armedia.acm.services.participants.model.AcmAssignedObject;
-import com.armedia.acm.services.participants.utils.ParticipantUtils;
-
-import java.util.Objects;
 
 public class AcmEntityTemplateNoUserPrefixModelProvider implements TemplateModelProvider<AcmEntityTemplateModel>
 {
@@ -54,6 +50,8 @@ public class AcmEntityTemplateNoUserPrefixModelProvider implements TemplateModel
 
         String baseAssigneeLdapId = "";
         String baseModifier = "";
+        String baseAssigneeGroupId = "";
+
         if(acmObject instanceof AcmAssignee)
         {
             AcmAssignee acmAssignee = (AcmAssignee) acmObject;
@@ -63,23 +61,18 @@ public class AcmEntityTemplateNoUserPrefixModelProvider implements TemplateModel
 
             baseAssigneeLdapId = getUserInfoHelper().removeUserPrefix(assigneeLdapId);
             baseModifier = getUserInfoHelper().removeUserPrefix(modifier);
-        }
 
-        AcmAssignedObject acmAssignedObject = null;
-        if(acmObject instanceof  AcmAssignedObject)
-        {
-            acmAssignedObject = (AcmAssignedObject)acmObject;
+            String assigneeLdapGroupId = acmAssignee.getAssigneeGroupId();
+            baseAssigneeGroupId = getUserInfoHelper().removeGroupPrefix(assigneeLdapGroupId);
+
         }
 
         AcmEntityTemplateModel acmEntityTemplateModel = new AcmEntityTemplateModel();
         acmEntityTemplateModel.caseFileObject = acmObject;
         acmEntityTemplateModel.assigneeUserId = baseAssigneeLdapId;
         acmEntityTemplateModel.modifierUserId = baseModifier;
+        acmEntityTemplateModel.assigneeGroupId = baseAssigneeGroupId;
 
-        if(Objects.nonNull(acmAssignedObject))
-        {
-            acmEntityTemplateModel.assigneeGroupId = ParticipantUtils.getOwningGroupIdFromParticipants(((AcmAssignedObject) acmObject).getParticipants());
-        }
 
         return acmEntityTemplateModel;
     }
