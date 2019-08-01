@@ -152,11 +152,13 @@
     <bean id="resetPassword" class="com.armedia.acm.services.notification.service.ResetPasswordService">
         <property name="notificationDao" ref="notificationDao"/>
         <property name="userDao" ref="userJpaDao"/>
+        <property name="acmSpringActiveProfile" ref="acmSpringActiveProfile"/>
     </bean>
 
     <bean id="onForgotUsername" class="com.armedia.acm.services.notification.service.OnForgotUsername">
         <property name="notificationDao" ref="notificationDao"/>
         <property name="userDao" ref="userJpaDao"/>
+        <property name="acmSpringActiveProfile" ref="acmSpringActiveProfile"/>
     </bean>
 
     <bean id="onLoginCheckPasswordExpiration" class="com.armedia.acm.services.notification.service.OnLoginCheckPasswordExpiration">
