@@ -34,6 +34,7 @@ public class AcmEntityTemplateModel
     public AcmObject caseFileObject;
     public String assigneeUserId;
     public String modifierUserId;
+    public String assigneeGroupId;
 
     public AcmObject getCaseFileObject()
     {
@@ -63,6 +64,16 @@ public class AcmEntityTemplateModel
     public void setModifierUserId(String modifierUserId)
     {
         this.modifierUserId = modifierUserId;
+    }
+
+    public String getAssigneeGroupId()
+    {
+        return assigneeGroupId;
+    }
+
+    public void setAssigneeGroupId(String assigneeGroupId)
+    {
+        this.assigneeGroupId = assigneeGroupId;
     }
 }
 
