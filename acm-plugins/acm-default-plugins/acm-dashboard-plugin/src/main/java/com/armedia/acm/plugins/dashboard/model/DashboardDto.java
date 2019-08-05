@@ -30,6 +30,9 @@ package com.armedia.acm.plugins.dashboard.model;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.voodoodyne.jackson.jsog.JSOGGenerator;
 
+import org.json.JSONObject;
+import org.json.JSONException;
+
 /**
  * Created by marst on 8/6/14.
  */
@@ -80,7 +83,16 @@ public class DashboardDto
 
     public void setDashboardConfig(String dashboardConfig)
     {
-        this.dashboardConfig = dashboardConfig;
+        try
+        {
+            new JSONObject(dashboardConfig);
+            this.dashboardConfig = dashboardConfig;
+        }
+        catch (JSONException e)
+        {
+            throw new JSONException("Invalid dashboard configuration.");
+        }
+        
     }
 
     public String getModule()
