@@ -113,7 +113,7 @@ public class SetDashboardConfigAPIControllerTest extends EasyMockSupport
     {
 
         String userId = "ann-acm";
-
+        
         Dashboard dashboard = new Dashboard();
         dashboard.setDashboardConfig("UPDATE TEST");
 
@@ -121,7 +121,11 @@ public class SetDashboardConfigAPIControllerTest extends EasyMockSupport
         user.setUserId(userId);
 
         DashboardDto dashboardDto = new DashboardDto();
-        dashboardDto.setDashboardConfig("UPDATE TEST");
+        dashboardDto.setDashboardConfig("{\r\n" + 
+        		"    \"fruit\": \"Apple\",\r\n" + 
+        		"    \"size\": \"Large\",\r\n" + 
+        		"    \"color\": \"Red\"\r\n" + 
+        		"}");
 
         ObjectMapper objectMapper = new ObjectMapper();
         String in = objectMapper.writeValueAsString(dashboardDto);
@@ -138,8 +142,10 @@ public class SetDashboardConfigAPIControllerTest extends EasyMockSupport
 
         expect(mockDashboardPropertyReader.getModuleNameList()).andReturn(retList);
         expect(mockDashboardService.getUserByUserId(userId)).andReturn(user);
+        
         expect(mockDashboardService.getDashboardConfigForUserAndModuleName(user, DashboardConstants.DASHBOARD_MODULE_NAME))
                 .andReturn(dashboard);
+        
         expect(mockDashboardService.setDashboardConfigForUserAndModule(eq(user), capture(savedDashboardDto),
                 eq(DashboardConstants.DASHBOARD_MODULE_NAME))).andReturn(1);
 
@@ -171,15 +177,12 @@ public class SetDashboardConfigAPIControllerTest extends EasyMockSupport
         String notDashboardJson = "{ \"user\": \"dmiller\" }";
 
         String userId = "ann-acm";
-
+        
         Dashboard dashboard = new Dashboard();
         dashboard.setDashboardConfig("UPDATE TEST");
 
         AcmUser user = new AcmUser();
         user.setUserId(userId);
-
-        DashboardDto dashboardDto = new DashboardDto();
-        dashboardDto.setDashboardConfig("UPDATE TEST");
 
         Capture<DashboardDto> savedDashboardDto = new Capture<>();
         Capture<Dashboard> publishedDashboard = new Capture<>();
@@ -189,9 +192,10 @@ public class SetDashboardConfigAPIControllerTest extends EasyMockSupport
 
         expect(mockDashboardPropertyReader.getModuleNameList()).andReturn(retList);
         expect(mockDashboardService.getUserByUserId(userId)).andReturn(user);
+        
         expect(mockDashboardService.getDashboardConfigForUserAndModuleName(user, DashboardConstants.DASHBOARD_MODULE_NAME))
                 .andReturn(dashboard);
-
+		
         // With upgrading spring version, bad JSON is not the problem for entering the execution in the controller
         expect(mockDashboardService.setDashboardConfigForUserAndModule(eq(user), capture(savedDashboardDto),
                 eq(DashboardConstants.DASHBOARD_MODULE_NAME))).andThrow(new RuntimeException());
@@ -200,7 +204,7 @@ public class SetDashboardConfigAPIControllerTest extends EasyMockSupport
         // MVC test classes must call getName() somehow
         expect(mockAuthentication.getName()).andReturn("ann-acm").atLeastOnce();
 
-        // when the JSON can't be converted to a Complaint POJO, Spring MVC will not even call our controller method.
+        // when the JSON can't be converted to a DashboardDto, Spring MVC will not even call our controller method.
         // so we can't raise a failure event. None of our services should be called, so there are no
         // expectations.
         replayAll();
