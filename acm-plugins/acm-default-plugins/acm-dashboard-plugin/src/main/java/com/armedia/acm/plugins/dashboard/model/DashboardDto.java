@@ -30,10 +30,8 @@ package com.armedia.acm.plugins.dashboard.model;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.voodoodyne.jackson.jsog.JSOGGenerator;
 
-//import validateJSON.JSONException;
-//import validateJSON.JSONObject;
-
-import org.json.*;
+import org.json.JSONObject;
+import org.json.JSONException;
 
 /**
  * Created by marst on 8/6/14.
