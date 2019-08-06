@@ -55,9 +55,9 @@ public class ActiveMqConfig
     @Value("${ark.activemq.password}")
     private String password;
 
-    public ArrayList<String> mergeTrustedPackages()
+    public List<String> mergeTrustedPackages()
     {
-        ArrayList<String> mergedPackages = new ArrayList<>();
+        List<String> mergedPackages = new ArrayList<>();
         mergedPackages.addAll(getDefaultTrustedPackages());
         mergedPackages.addAll(getTrustedPackages());
         return mergedPackages;
