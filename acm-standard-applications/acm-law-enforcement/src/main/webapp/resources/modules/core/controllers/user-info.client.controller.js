@@ -3,7 +3,7 @@
 angular.module('core').controller('UserInfoController', ['$scope', 'Profile.UserInfoService', 'Menus', 'Acm.LoginService', 'Admin.ApplicationSettingsService', 'MessageService', function ($scope, UserInfoService, Menus, AcmLoginService, ApplicationSettingsService, MessageService) {
 
     ApplicationSettingsService.getApplicationPropertiesConfig().then(function (response) {
-        $scope.nameProperty = response.data["application.properties.helpUrl"];
+        $scope.helpUrl = response.data["application.properties.helpUrl"];
     });
 
     $scope.menu = Menus.getMenu('usermenu');
