@@ -90,6 +90,9 @@ public class OnLdapContextChangedUpdateScheduler implements ApplicationListener<
                     scheduleJob(ldapPartialSyncJobName, ldapSyncConfig.getPartialSyncCron());
                     logger.info("Schedule ldap partial sync job [{}] for directory [{}].", ldapPartialSyncJobName, directoryId);
                 }
+
+                // when new ldap configuration added trigger full ldap sync
+                schedulerService.triggerJob(ldapSyncJobName);
             }
             else if (event instanceof ContextReplacedEvent)
             {
