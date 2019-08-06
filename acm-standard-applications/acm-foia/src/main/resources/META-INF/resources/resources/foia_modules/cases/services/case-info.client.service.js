@@ -233,9 +233,6 @@ angular.module('services').factory('Case.InfoService', [ '$resource', '$translat
             return Util.errorPromise($translate.instant("common.service.error.invalidData"));
         }
         caseInfo.modified = null;
-        if(caseInfo.dueDate != null) {
-            caseInfo.dueDate = moment(caseInfo.dueDate.replace(/(\d{4})\-(\d{2})\-(\d{2}).*/, '$1/$2/$3'));    
-        }
         return $http({
             method: 'POST',
             url: 'api/latest/plugin/foiarequest',

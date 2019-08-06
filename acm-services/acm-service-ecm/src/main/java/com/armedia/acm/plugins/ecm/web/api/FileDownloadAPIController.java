@@ -226,7 +226,7 @@ public class FileDownloadAPIController implements ApplicationEventPublisherAware
 
             if (!isInline)
             {
-                response.setHeader("Content-Disposition", URLEncoder.encode("attachment; filename=\"" + fileName + "\"","UTF-8"));
+                response.setHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
                 // add file metadata so it can be displayed in Snowbound
                 JSONObject fileMetadata = new JSONObject();
                 fileMetadata.put("fileName", ecmFile.getFileName());

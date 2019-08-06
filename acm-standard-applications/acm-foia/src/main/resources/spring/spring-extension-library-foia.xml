@@ -55,6 +55,7 @@
             <beans:property name="portalInfoDAO" ref="portalInfoDAO"/>
             <beans:property name="ldapUserService" ref="ldapUserService"/>
             <beans:property name="ldapAuthenticateService" ref="foiaportal_ldapAuthenticateService"/>
+            <beans:property name="personDao" ref="acmPersonDao"/>
         </beans:bean>
         
 

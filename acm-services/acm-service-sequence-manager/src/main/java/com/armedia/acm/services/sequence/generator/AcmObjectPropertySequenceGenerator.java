@@ -30,11 +30,13 @@ package com.armedia.acm.services.sequence.generator;
 import com.armedia.acm.services.sequence.exception.AcmSequenceException;
 import com.armedia.acm.services.sequence.model.AcmSequencePart;
 
-import org.apache.commons.beanutils.PropertyUtils;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.expression.Expression;
+import org.springframework.expression.ExpressionParser;
+import org.springframework.expression.spel.standard.SpelExpressionParser;
+import org.springframework.expression.spel.support.StandardEvaluationContext;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 
 /**
@@ -64,9 +66,13 @@ public class AcmObjectPropertySequenceGenerator implements AcmSequenceGenerator
         String objectPropertyValue = "";
         try
         {
-            objectPropertyValue = PropertyUtils.getProperty(object, sequencePart.getSequenceObjectPropertyName()).toString();
+            ExpressionParser expressionParser = new SpelExpressionParser();
+            StandardEvaluationContext objectContext = new StandardEvaluationContext(object);
+            Expression expression = expressionParser.parseExpression(sequencePart.getSequenceObjectPropertyName());
+            objectPropertyValue = expression.getValue(objectContext, String.class);
+
         }
-        catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e)
+        catch (Exception e)
         {
             throw new AcmSequenceException("Error getting property " + sequencePart.getSequenceObjectPropertyName(), e);
         }

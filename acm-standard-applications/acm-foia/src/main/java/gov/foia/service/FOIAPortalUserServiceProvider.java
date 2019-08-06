@@ -29,7 +29,9 @@ package gov.foia.service;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.addressable.model.ContactMethod;
 import com.armedia.acm.plugins.addressable.model.PostalAddress;
+import com.armedia.acm.plugins.person.dao.PersonDao;
 import com.armedia.acm.plugins.person.model.Organization;
+import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.portalgateway.model.PortalInfo;
 import com.armedia.acm.portalgateway.model.PortalUser;
 import com.armedia.acm.portalgateway.model.PortalUserCredentials;
@@ -91,6 +93,8 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
     private LdapUserService ldapUserService;
 
     private PortalInfoDAO portalInfoDAO;
+
+    private PersonDao personDao;
 
     @Value("${foia.portalserviceprovider.directory.name}")
     private String directoryName;
@@ -418,7 +422,27 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
     public PortalUser updateUser(String portalId, PortalUser user) throws PortalUserServiceException
     {
         // TODO Auto-generated method stub
-        return null;
+        Person person = getPersonDao().find(Long.valueOf(user.getPortalUserId()));
+
+        person.getAddresses().get(0).setCity(user.getCity());
+        person.getAddresses().get(0).setCountry(user.getCountry());
+        person.getAddresses().get(0).setState(user.getState());
+        person.getAddresses().get(0).setStreetAddress(user.getAddress1());
+        person.getAddresses().get(0).setStreetAddress2(user.getAddress2());
+        person.getAddresses().get(0).setZip(user.getZipCode());
+        person.getContactMethods().stream().filter(cm -> cm.getType().equals("Phone")).findFirst().get().setValue(user.getPhoneNumber());
+
+        personDao.save(person);
+
+        return portaluserFromPortalPerson(portalId, (PortalFOIAPerson) person);
+
+    }
+
+    @Override
+    public PortalUser retrieveUser(String portalUserId, String portalId)
+    {
+        Person person = getPersonDao().find(Long.valueOf(portalUserId));
+        return portaluserFromPortalPerson(portalUserId, (PortalFOIAPerson) person);
     }
 
     /**
@@ -680,4 +704,13 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
         this.ldapAuthenticateService = ldapAuthenticateService;
     }
 
+    public PersonDao getPersonDao()
+    {
+        return personDao;
+    }
+
+    public void setPersonDao(PersonDao personDao)
+    {
+        this.personDao = personDao;
+    }
 }
