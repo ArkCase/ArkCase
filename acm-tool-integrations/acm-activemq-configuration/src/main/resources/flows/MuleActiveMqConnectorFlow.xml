@@ -14,7 +14,8 @@
         <spring:import resource="classpath:/spring/spring-library-activemq.xml"/>
 
         <spring:bean id="yamlProperties" class="org.springframework.beans.factory.config.YamlPropertiesFactoryBean">
-            <spring:property name="resources" value="http://localhost:9999/arkcase/runtime/default/include.d/activemq-config.yaml"/>
+            <spring:property name="resources"
+                value="${configuration.server.url}/${application.name}/${application.profile}/default/include.d/activemq-config.yaml"/>
         </spring:bean>
     </spring:beans>
 
