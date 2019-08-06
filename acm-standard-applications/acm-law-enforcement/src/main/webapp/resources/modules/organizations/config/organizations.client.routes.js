@@ -13,6 +13,7 @@ angular.module('organizations').config([ '$stateProvider', function($stateProvid
                 $translatePartialLoader.addPart('dashboard');
                 $translatePartialLoader.addPart('organizations');
                 $translatePartialLoader.addPart('preference');
+                $translatePartialLoader.addPart('core');
                 return $translate.refresh();
             } ]
         }

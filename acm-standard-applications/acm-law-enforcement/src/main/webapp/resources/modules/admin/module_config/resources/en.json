@@ -821,7 +821,7 @@
                             "numberLength": "Select or enter number length"
                         },
                         "arbitraryText": "Enter arbitrary text",
-                        "objectProperty": "Enter object property",
+                        "objectProperty": "Enter object property or SPEL expression",
                         "date": "Enter Date Format (ex: ddMMyyyyHHmmssSSS)",
                         "sequencePartName": "Enter sequence part name",
                         "sequencePartType": "Select part type"

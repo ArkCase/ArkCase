@@ -158,6 +158,7 @@ public class MSGToPDFConverter implements FileConverter {
 	}
 
 	private boolean parseHtml(String bodyHTML, Document document) {
+		bodyHTML = fixSmallFonSize(bodyHTML);
 		// convert to correct XHTML
 		ByteArrayOutputStream xhtmlOutputStream = new ByteArrayOutputStream();
 		Tidy tidy = new Tidy();
@@ -184,5 +185,9 @@ public class MSGToPDFConverter implements FileConverter {
 		}
 
 		return true;
+	}
+	
+	private String fixSmallFonSize(String bodyHTML) {
+		return bodyHTML.replaceAll("font-size:\\s*?0px", "font-size:1px");
 	}
 }

@@ -190,7 +190,7 @@ public class FacetedSearchAPIController
         {
             response.setContentType(generator.getReportContentType());
             response.setHeader("Content-Disposition",
-                    URLEncoder.encode(String.format("attachment; filename=\"%s\"", generator.generateReportName(reportName)), "UTF-8"));
+                    String.format("attachment; filename=\"%s\"", generator.generateReportName(reportName)));
             response.setContentLength(content.length());
             writer.write(URLEncoder.encode(content, "UTF-8"));
         }

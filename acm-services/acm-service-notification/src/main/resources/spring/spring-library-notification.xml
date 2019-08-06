@@ -228,5 +228,6 @@
     <bean id="userInfoHelper" class="com.armedia.acm.services.notification.helper.UserInfoHelper">
         <property name="userDao" ref="userJpaDao"/>
         <property name="contextHolder" ref="acmContextHolder"/>
+        <property name="acmGroupDao" ref="groupDao"/>
     </bean>
 </beans>

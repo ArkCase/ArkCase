@@ -390,4 +390,16 @@ public class  PortalRequestService
     {
         this.searchResults = searchResults;
     }
+
+    public List<PortalFOIARequestStatus> getLoggedUserExternalRequests(String emailAddress) throws AcmObjectNotFoundException
+    {
+        List<PortalFOIARequestStatus> responseRequests = getRequestDao().getLoggedUserExternalRequests(emailAddress);
+        if (responseRequests.isEmpty())
+        {
+            log.info("FOIA Requests not found for the logged user [{}]]", emailAddress);
+            throw new AcmObjectNotFoundException("PortalFOIARequestStatus", null, "FOIA Requests not found for the logged user" + emailAddress + " not found");
+
+        }
+        return responseRequests;
+    }
 }

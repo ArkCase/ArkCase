@@ -50,6 +50,8 @@ public class AcmEntityTemplateNoUserPrefixModelProvider implements TemplateModel
 
         String baseAssigneeLdapId = "";
         String baseModifier = "";
+        String baseAssigneeGroupId = "";
+
         if(acmObject instanceof AcmAssignee)
         {
             AcmAssignee acmAssignee = (AcmAssignee) acmObject;
@@ -59,12 +61,18 @@ public class AcmEntityTemplateNoUserPrefixModelProvider implements TemplateModel
 
             baseAssigneeLdapId = getUserInfoHelper().removeUserPrefix(assigneeLdapId);
             baseModifier = getUserInfoHelper().removeUserPrefix(modifier);
+
+            String assigneeLdapGroupId = acmAssignee.getAssigneeGroupId();
+            baseAssigneeGroupId = getUserInfoHelper().removeGroupPrefix(assigneeLdapGroupId);
+
         }
 
         AcmEntityTemplateModel acmEntityTemplateModel = new AcmEntityTemplateModel();
         acmEntityTemplateModel.caseFileObject = acmObject;
         acmEntityTemplateModel.assigneeUserId = baseAssigneeLdapId;
         acmEntityTemplateModel.modifierUserId = baseModifier;
+        acmEntityTemplateModel.assigneeGroupId = baseAssigneeGroupId;
+
 
         return acmEntityTemplateModel;
     }
