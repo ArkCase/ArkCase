@@ -60,6 +60,7 @@ public class ResetPasswordService {
         notification.setAttachFiles(false);
         notification.setEmailAddresses(user.getMail());
         notification.setTitle("Reset password");
+        notification.setUser(user.getUserId());
         notificationDao.save(notification);
     }
 
