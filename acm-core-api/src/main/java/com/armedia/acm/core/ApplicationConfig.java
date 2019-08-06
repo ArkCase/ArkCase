@@ -29,8 +29,8 @@ package com.armedia.acm.core;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
 import org.springframework.beans.factory.annotation.Value;
 
 @JsonSerialize(as = ApplicationConfig.class)
@@ -65,7 +65,7 @@ public class ApplicationConfig
     @Value("${application.properties.applicationName}")
     private String applicationName;
 
-    @JsonIgnore
+    @JsonProperty("application.properties.helpUrl")
     @Value("${application.properties.helpUrl}")
     private String helpUrl;
 
