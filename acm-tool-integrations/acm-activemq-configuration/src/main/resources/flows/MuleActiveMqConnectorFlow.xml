@@ -15,7 +15,7 @@
 
         <spring:bean id="yamlProperties" class="org.springframework.beans.factory.config.YamlPropertiesFactoryBean">
             <spring:property name="resources"
-                value="${configuration.server.url}/${application.name}/${application.profile}/default/include.d/activemq-config.yaml"/>
+                value="${configuration.server.url}/${application.name}/${application.profile}/default/activemq-config.yaml"/>
         </spring:bean>
     </spring:beans>
 
