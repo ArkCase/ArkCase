@@ -36,7 +36,7 @@
         }
     },
     "costTracking.comp.person": {
-        "title": "Person",
+        "title": "User",
         "table.columns": {
             "fullName": "Full Name",
             "userId": "Username"
@@ -155,7 +155,7 @@
     "costTracking.tree": {
         "nodeTypes": {
             "details.label": "Details",
-            "person.label": "Person",
+            "person.label": "User",
             "summary.label": "Expenses",
             "tags.label": "Tags",
             "tasks.label": "Tasks",
