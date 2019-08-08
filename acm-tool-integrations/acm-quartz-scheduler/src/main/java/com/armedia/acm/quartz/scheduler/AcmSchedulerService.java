@@ -153,7 +153,7 @@ public class AcmSchedulerService
     {
         try
         {
-            logger.debug("Delete [{}] job from scheduler.", name);
+            logger.info("Delete [{}] job from scheduler.", name);
             scheduler.deleteJob(JobKey.jobKey(name));
             publishSchedulerActionEvent(AcmJobEventPublisher.JOB_DELETED, new AcmJobState(name, null));
         }
@@ -169,7 +169,7 @@ public class AcmSchedulerService
         String triggerName = trigger.getKey().getName();
         try
         {
-            logger.debug("Schedule [{}] with trigger [{}].", jobName, triggerName);
+            logger.info("Schedule [{}] with trigger [{}].", jobName, triggerName);
             scheduler.scheduleJob(jobDetail, trigger);
             publishSchedulerActionEvent(AcmJobEventPublisher.JOB_SCHEDULED, new AcmJobState(jobName, triggerName));
         }
@@ -200,7 +200,7 @@ public class AcmSchedulerService
     {
         try
         {
-            logger.debug("Pause job [{}].", name);
+            logger.info("Pause job [{}].", name);
             List<? extends Trigger> triggers = scheduler.getTriggersOfJob(JobKey.jobKey(name));
             scheduler.pauseJob(JobKey.jobKey(name));
             triggers.forEach(it -> publishSchedulerActionEvent(AcmJobEventPublisher.JOB_PAUSED,
@@ -216,7 +216,7 @@ public class AcmSchedulerService
     {
         try
         {
-            logger.debug("Resume job [{}] with execution.", name);
+            logger.info("Resume job [{}] with execution.", name);
             List<? extends Trigger> triggers = scheduler.getTriggersOfJob(JobKey.jobKey(name));
             scheduler.resumeJob(JobKey.jobKey(name));
             triggers.forEach(it -> publishSchedulerActionEvent(AcmJobEventPublisher.JOB_RESUMED,
@@ -258,7 +258,7 @@ public class AcmSchedulerService
     {
         try
         {
-            logger.debug("Trigger job [{}].", jobName);
+            logger.info("Trigger job [{}].", jobName);
             scheduler.triggerJob(JobKey.jobKey(jobName));
         }
         catch (SchedulerException e)
@@ -271,7 +271,7 @@ public class AcmSchedulerService
     {
         try
         {
-            logger.debug("Trigger job [{}].", jobName);
+            logger.info("Trigger job [{}].", jobName);
             scheduler.triggerJob(JobKey.jobKey(jobName), jobDataMap);
         }
         catch (SchedulerException e)
