@@ -47,7 +47,7 @@ public class ScheduledJobsNotifier
 
     public void receiveMessage(Message<Map<String, Object>> message)
     {
-        log.debug("Sending scheduled jobs status update message: [{}]", message);
+        log.trace("Sending scheduled jobs status update message: [{}]", message);
         template.convertAndSend("/topic/jobStatus", message.getPayload());
     }
 }
