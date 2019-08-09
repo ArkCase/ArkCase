@@ -32,13 +32,17 @@ import com.armedia.acm.quartz.scheduler.AcmJobDescriptor;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.quartz.DisallowConcurrentExecution;
 import org.quartz.JobDataMap;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
+import org.quartz.PersistJobDataAfterExecution;
 
 /**
  * Created by dmiller on 5/15/17.
  */
+@DisallowConcurrentExecution
+@PersistJobDataAfterExecution
 public class AlfrescoSyncScheduledBean extends AcmJobDescriptor
 {
     private transient final Logger log = LogManager.getLogger(getClass());

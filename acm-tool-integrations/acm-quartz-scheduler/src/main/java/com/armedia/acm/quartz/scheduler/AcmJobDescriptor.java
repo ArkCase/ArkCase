@@ -37,8 +37,6 @@ import org.quartz.PersistJobDataAfterExecution;
 
 import java.util.Map;
 
-@DisallowConcurrentExecution
-@PersistJobDataAfterExecution
 public abstract class AcmJobDescriptor implements Job
 {
     private AcmJobEventPublisher jobEventPublisher;

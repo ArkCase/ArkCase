@@ -31,9 +31,11 @@ import com.armedia.acm.quartz.scheduler.AcmJobDescriptor;
 import com.armedia.acm.services.search.model.SearchConstants;
 import com.armedia.acm.spring.SpringContextHolder;
 
+import org.quartz.DisallowConcurrentExecution;
 import org.quartz.JobDataMap;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
+import org.quartz.PersistJobDataAfterExecution;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -43,6 +45,8 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+@DisallowConcurrentExecution
+@PersistJobDataAfterExecution
 public class AcmJpaBatchUpdateJobDescriptor extends AcmJobDescriptor
 {
     private AcmJpaBatchUpdateService jpaBatchUpdateService;
