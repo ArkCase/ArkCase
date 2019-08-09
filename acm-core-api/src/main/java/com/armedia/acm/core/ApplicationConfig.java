@@ -57,7 +57,7 @@ public class ApplicationConfig
     @Value("${application.properties.historyDays}")
     private Integer historyDays;
 
-    @JsonIgnore
+    @JsonProperty("application.properties.baseUrl")
     @Value("${application.properties.baseUrl}")
     private String baseUrl;
 

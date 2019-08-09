@@ -1,8 +1,6 @@
 <div class="input-group">
     <input class="form-control" ng-click="editable = !editable"
-            ng-value="timeFormatDisabled ? (today | date: ('common.defaultDateUIFormat' | translate)) : (today | date: ('common.defaultDateTimeUIFormat' | translate))"
-            data-ng-required = "isRequired"
-            data-ng-model="data"/>
+            ng-value="timeFormatDisabled ? (today | date: ('common.defaultDateUIFormat' | translate)) : (today | date: ('common.defaultDateTimeUIFormat' | translate))" />
 
     <span class="input-group-btn">
         <button type="button" class="btn btn-default" ng-click="editable = !editable"><i class="fa fa-calendar"></i></button>
