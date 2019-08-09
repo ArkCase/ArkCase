@@ -43,6 +43,11 @@
         <param-value>ldap</param-value>
     </context-param>
 
+    <context-param>
+        <param-name>contextInitializerClasses</param-name>
+        <param-value>com.armedia.acm.AcmApplicationContextInitializer</param-value>
+    </context-param>
+
     <filter>
         <filter-name>hazelcast-filter</filter-name>
         <filter-class>com.hazelcast.web.spring.SpringAwareWebFilter</filter-class>

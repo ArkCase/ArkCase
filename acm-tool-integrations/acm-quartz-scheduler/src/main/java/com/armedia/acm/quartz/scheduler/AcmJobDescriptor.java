@@ -48,7 +48,7 @@ public abstract class AcmJobDescriptor implements Job
     @Override
     public void execute(JobExecutionContext context) throws JobExecutionException
     {
-        logger.info("Start execution of job [{}].", this::getJobName);
+        logger.debug("Start execution of job [{}].", this::getJobName);
         try
         {
             executeJob(context);
@@ -62,7 +62,7 @@ public abstract class AcmJobDescriptor implements Job
             throw e;
         }
 
-        logger.info("Job [{}] finished execution.", this::getJobName);
+        logger.debug("Job [{}] finished execution.", this::getJobName);
     }
 
     public abstract String getJobName();
