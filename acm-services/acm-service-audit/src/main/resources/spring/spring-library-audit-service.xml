@@ -83,8 +83,4 @@
         <property name="jsonUnmarshaller" ref="jsonUnmarshaller"/>
         <aop:scoped-proxy/>
     </bean>
-
-    <bean id="auditPatternsConfig" class="com.armedia.acm.audit.model.AuditPatternsConfig">
-        <property name="jsonUnmarshaller" ref="jsonUnmarshaller"/>
-    </bean>
 </beans>

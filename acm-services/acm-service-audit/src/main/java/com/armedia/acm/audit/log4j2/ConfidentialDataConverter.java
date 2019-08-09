@@ -27,7 +27,6 @@ package com.armedia.acm.audit.log4j2;
  * #L%
  */
 
-import com.armedia.acm.audit.model.AuditPatternsConfig;
 import com.armedia.acm.audit.service.AuditPatternsSubstitution;
 
 import org.apache.logging.log4j.core.LogEvent;
@@ -39,7 +38,6 @@ import org.apache.logging.log4j.core.pattern.LogEventPatternConverter;
 import org.apache.logging.log4j.core.pattern.PatternConverter;
 import org.apache.logging.log4j.core.pattern.PatternFormatter;
 import org.apache.logging.log4j.core.pattern.PatternParser;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,9 +61,6 @@ public class ConfidentialDataConverter extends LogEventPatternConverter
     private String substitution;
     private List<PatternFormatter> formatters;
 
-    @Autowired
-    private AuditPatternsConfig auditPatternsConfig;
-
     private ConfidentialDataConverter(final List<Pattern> patterns, final String substitution, final List<PatternFormatter> formatters)
     {
         super("confidential", "confidential");
@@ -74,7 +69,7 @@ public class ConfidentialDataConverter extends LogEventPatternConverter
         this.formatters = formatters;
     }
 
-    public static ConfidentialDataConverter newInstance(final Configuration config, final String[] options, )
+    public static ConfidentialDataConverter newInstance(final Configuration config, final String[] options)
     {
         if (options.length != 1)
         {
@@ -85,7 +80,7 @@ public class ConfidentialDataConverter extends LogEventPatternConverter
         final PatternParser parser = PatternLayout.createPatternParser(config);
         final List<PatternFormatter> formatters = parser.parse(options[0]);
 
-        return new ConfidentialDataConverter(auditPatternsConfig.getPatterns(), AuditPatternsSubstitution.getSubstitution(),
+        return new ConfidentialDataConverter(AuditPatternsSubstitution.getPatterns(), AuditPatternsSubstitution.getSubstitution(),
                 formatters);
     }
 
@@ -146,15 +141,5 @@ public class ConfidentialDataConverter extends LogEventPatternConverter
     public void setSubstitution(String substitution)
     {
         this.substitution = substitution;
-    }
-
-    public AuditPatternsConfig getAuditPatternsConfig()
-    {
-        return auditPatternsConfig;
-    }
-
-    public void setAuditPatternsConfig(AuditPatternsConfig auditPatternsConfig)
-    {
-        this.auditPatternsConfig = auditPatternsConfig;
     }
 }
