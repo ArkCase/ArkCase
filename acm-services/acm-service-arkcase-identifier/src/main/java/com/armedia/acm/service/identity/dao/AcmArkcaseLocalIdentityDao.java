@@ -53,15 +53,6 @@ public class AcmArkcaseLocalIdentityDao implements AcmArkcaseIdentityDao
     @Override
     public String getIdentity() throws AcmIdentityException
     {
-
-        // check if all properties exists
-        // if (!properties.containsKey(PROPERTY_IDENTITY) || !properties.containsKey(PROPERTY_DIGEST))
-        // {
-        // log.error("Some properties are missing. contains_identity=[{}], contains_digest=[{}]",
-        // properties.containsKey(PROPERTY_IDENTITY),
-        // properties.containsKey(PROPERTY_DIGEST));
-        // throw new AcmIdentityException("Missing some of the properties.");
-        // }
         String identity = instanceIdentityConfig.getIdentityId();
         byte[] digest = Base64.decodeBase64(instanceIdentityConfig.getDigest());
         /*
@@ -82,22 +73,9 @@ public class AcmArkcaseLocalIdentityDao implements AcmArkcaseIdentityDao
     public String createIdentityIfNotExists() throws AcmIdentityException
     {
         String identity = UUID.randomUUID().toString();
-        // Properties properties = new Properties();
 
         if (instanceIdentityConfig.getIdentityId().isEmpty())
         {
-            // properties.setProperty(PROPERTY_IDENTITY, identity);
-            // properties.setProperty(PROPERTY_DATE_CREATED,
-            // LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME));
-            // properties.setProperty(PROPERTY_DIGEST, Base64.encodeBase64String(getIdentityDigest(identity)));
-            // try (OutputStream out = Files.newOutputStream(identityFilePath))
-            // {
-            // properties.store(out, null);
-            // }
-            // catch (IOException e)
-            // {
-            // log.error("Error writing to file arkcase identity. [{}]", e.getMessage());
-            // }
             AcmInstanceIdentityConfig configuration = new AcmInstanceIdentityConfig();
             configuration.setIdentityId(identity);
             configuration.setDateCreated(LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME));
