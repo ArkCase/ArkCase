@@ -1564,6 +1564,13 @@
                 ]
             },
             {
+                "type": "p/application/resetConfiguration",
+                "label": "admin.application.resetConfiguration.title",
+                "components": [
+                    "application-reset-configuration"
+                ]
+            },
+            {
                 "type": "p/branding",
                 "label": "admin.branding.title",
                 "icon": "fa fa-wrench",
