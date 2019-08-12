@@ -29,9 +29,13 @@ package com.armedia.acm.services.users.service.ldap;
 
 import com.armedia.acm.quartz.scheduler.AcmJobDescriptor;
 
+import org.quartz.DisallowConcurrentExecution;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
+import org.quartz.PersistJobDataAfterExecution;
 
+@DisallowConcurrentExecution
+@PersistJobDataAfterExecution
 public class LdapPartialSyncJobDescriptor extends AcmJobDescriptor
 {
     private LdapSyncService ldapSyncService;
