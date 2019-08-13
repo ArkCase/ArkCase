@@ -1,11 +1,14 @@
 package com.armedia.acm;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.config.YamlPropertiesFactoryBean;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Properties;
 
 /**
@@ -27,6 +30,13 @@ public class AcmApplicationContextInitializer implements
 
         System.setProperty("configuration.server.url", properties.getProperty("configuration.server.url"));
         System.setProperty("application.name", properties.getProperty("application.name"));
-        System.setProperty("application.profile", properties.getProperty("application.profile"));
+        System.setProperty("application.profile", getProfilesReversed(properties.getProperty("application.profile")));
+    }
+
+    private String getProfilesReversed(String profiles)
+    {
+        String[] splitedProfiles = profiles.split(",");
+        Collections.reverse(Arrays.asList(splitedProfiles));
+        return StringUtils.join(splitedProfiles, ",");
     }
 }
