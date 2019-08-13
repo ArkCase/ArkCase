@@ -30,9 +30,13 @@ package com.armedia.acm.plugins.task.service;
 import com.armedia.acm.plugins.task.service.impl.UpcomingTasksNotifier;
 import com.armedia.acm.quartz.scheduler.AcmJobDescriptor;
 
+import org.quartz.DisallowConcurrentExecution;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
+import org.quartz.PersistJobDataAfterExecution;
 
+@DisallowConcurrentExecution
+@PersistJobDataAfterExecution
 public class UpcomingTaskNotifierJobDescription extends AcmJobDescriptor
 {
     private UpcomingTasksNotifier upcomingTasksNotifier;

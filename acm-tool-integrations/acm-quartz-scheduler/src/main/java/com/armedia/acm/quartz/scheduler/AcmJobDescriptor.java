@@ -29,16 +29,12 @@ package com.armedia.acm.quartz.scheduler;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.quartz.DisallowConcurrentExecution;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
-import org.quartz.PersistJobDataAfterExecution;
 
 import java.util.Map;
 
-@DisallowConcurrentExecution
-@PersistJobDataAfterExecution
 public abstract class AcmJobDescriptor implements Job
 {
     private AcmJobEventPublisher jobEventPublisher;
@@ -57,7 +53,7 @@ public abstract class AcmJobDescriptor implements Job
         {
             logger.error("Job [{}] failed to complete. Cause: {}.", getJobName(), e.getMessage());
             jobEventPublisher.publishJobEvent(new AcmJobState(getJobName(), context.getTrigger().getKey().getName(),
-                            context.getTrigger().getPreviousFireTime(), context.getNextFireTime(), false),
+                    context.getTrigger().getPreviousFireTime(), context.getNextFireTime(), false),
                     AcmJobEventPublisher.JOB_FAILED, context.getFireInstanceId());
             throw e;
         }
