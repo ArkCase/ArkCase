@@ -34,6 +34,16 @@
             <artifactId>hazelcast-wm</artifactId>
         </dependency>
 
+        <!-- Kryo Serialization -->
+        <dependency>
+            <groupId>com.esotericsoftware</groupId>
+            <artifactId>kryo</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>info.jerrinot</groupId>
+            <artifactId>subzero-all</artifactId>
+        </dependency>
+
         <!-- Spring-->
         <dependency>
             <groupId>org.springframework</groupId>
