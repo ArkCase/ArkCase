@@ -904,6 +904,16 @@
                     "fileActiveVersionNameExtension": "Item Type"
                 }
             },
+            "resetConfiguration": {
+                "title": "Reset Configuration",
+                "btnReset.title": "Reset",
+                "modal": {
+                    "title": "Are you sure you want to reset configuration?",
+                    "body": "You can't undo this action!",
+                    "btnConfirm.title": "Confirm",
+                    "btnCancel.title": "Cancel"
+                }
+            },
             "objectTitleConfiguration": {
                 "title": "Object Title Configuration",
                 "save": "Save",
