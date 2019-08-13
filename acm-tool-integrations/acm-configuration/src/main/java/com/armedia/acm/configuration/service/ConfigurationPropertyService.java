@@ -61,6 +61,8 @@ public class ConfigurationPropertyService implements InitializingBean
 
     private String updatePropertiesEndpoint;
 
+    private String resetPropertiesEndpoint;
+
     private static final Logger log = LogManager.getLogger(ConfigurationPropertyService.class);
 
     @Override
@@ -70,7 +72,10 @@ public class ConfigurationPropertyService implements InitializingBean
                 .get("bootstrap").getProperty("configuration.server.update.path");
         String serverUrl = (String) configurableEnvironment.getPropertySources()
                 .get("bootstrap").getProperty("configuration.server.url");
+        String resetPath = (String) configurableEnvironment.getPropertySources()
+                .get("bootstrap").getProperty("configuration.server.reset.path");
         updatePropertiesEndpoint = String.format("%s%s", serverUrl, updatePath);
+        resetPropertiesEndpoint = String.format("%s%s%s", serverUrl, updatePath, resetPath);
     }
 
     @Autowired
@@ -126,6 +131,19 @@ public class ConfigurationPropertyService implements InitializingBean
         {
             log.warn("Failed to update property due to {}", e.getMessage());
             throw new ConfigurationPropertyException("Failed to update configuration", e);
+        }
+    }
+
+    public void resetPropertiesToDefault() throws ConfigurationPropertyException
+    {
+        try
+        {
+            configRestTemplate.delete(resetPropertiesEndpoint, ResponseEntity.class);
+        }
+        catch (RestClientException e)
+        {
+            log.warn("Failed to reset properties due to {}", e.getMessage());
+            throw new ConfigurationPropertyException("Failed to reset configuration", e);
         }
     }
 }
