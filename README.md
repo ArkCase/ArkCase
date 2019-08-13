@@ -4,7 +4,7 @@ ArkCase aims to be the leading open source case management and IT modernization 
 
 ## Run ArkCase in a Standalone VM
 
-To evaluate ArkCase, or try it out, or just see how it works; in short, to run ArkCase in a VM without having to install all the developer tools, just follow the directions here: https://github.com/ArkCase/arkcase-ce#if-you-just-want-to-download-a-pre-built-arkcase-virtual-machine-and-run-arkcase
+To evaluate ArkCase, or try it out, or just see how it works; in short, to run ArkCase in a VM without having to install all the developer tools, just follow the directions here: https://github.com/ArkCase/arkcase-ce#how-to-run-arkcase
 
 And you can skip the Developer Setup section below.
 
@@ -28,15 +28,15 @@ This section documents how developers can build and run ArkCase.  (For non-devel
 * npm (comes with NodeJS)
 * yarn <https://yarnpkg.com>
 
-### Build the Vagrant VM
+### Start the Vagrant VM
 
-In this section you will build the Vagrant VM which will run the services ArkCase requires.  These services include Solr, ActiveMQ, MySQL, Alfresco, and Pentaho. 
+In this section you will start the Vagrant VM which runs the services ArkCase requires.  These services include Solr, ActiveMQ, MySQL, Alfresco, and Pentaho. 
 
 First, install all the prerequisites (see Prerequisites section above).
 
 Next, build the Vagrant VM according to the instructions in the `arkcase-ce` repository: <https://github.com/ArkCase/arkcase-ce>.
 
-After the box is up, the following URLs should work from your browser; be aware that ArkCase uses a self-signed TLS certificate, so you will have to accept the browser warning about the unrecognized, self-signed certificate. 
+After the box is up, the following URLs should work from your browser; be aware that ArkCase uses a self-signed root TLS certificate, so you will have to accept the browser warning about the unrecognized root certificate. 
 
 https://arkcase-ce.local/solr
 
@@ -46,11 +46,56 @@ https://arkcase-ce.local/pentaho
 
 https://arkcase-ce.local/VirtualViewerJavaHTML5 (expect a 503 error from this URL)
 
+### Update the Vagrant VM Hosts File
+First, find the IP address of your VirtualBox network.  From the VirtualBox GUI, open File / Host Network Manager.  Most likely the IP address you need is the one for the `vboxnet1` adapter, which will be shown as something like `172.28.128.1/24`.  You want the part before the `/24`.
+
+Next, ssh into the VM: `vagrant ssh` (from the same folder as the `Vagrantfile`).
+
+Next, become the root user: `sudo su - `
+
+Next, view the contents of `/etc/hosts`: `cat /etc/hosts`.  It will display something like this:
+
+```
+[vagrant@arkcase-ce ~]$ cat /etc/hosts
+127.0.0.1       arkcase-ce.local        arkcase-ce
+127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4
+::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
+127.0.0.1 arkcase-ce.local
+127.0.0.1 arkcase-host
+127.0.0.1 acm-activemq
+```
+
+Note that the host `arkcase-host` has IP address of 127.0.0.1.  You want to replace it with the IP address you identified above.
+
+Run this command: `sed 's|127.0.0.1 arkcase-host|172.28.128.1|g' /etc/hosts`, being careful to replace `172.28.128.1` with the IP address you identified above.  It will output the updated text, but will not actually update /etc/hosts:
+
+```
+[root@arkcase-ce ~]# sed 's|127.0.0.1 arkcase-host|172.28.128.1 arkcase-host|g' /etc/hosts
+127.0.0.1       arkcase-ce.local        arkcase-ce
+127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4
+::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
+127.0.0.1 arkcase-ce.local
+172.28.128.1 arkcase-host
+127.0.0.1 acm-activemq
+```
+
+If it seems OK (that is: if the old arkcase-host line with 127.0.0.1 is gone and the new arkcase-host line with the right IP address is there, then you can update `/etc/hosts` itself: `sed -i 's|127.0.0.1 arkcase-host|172.28.128.1 arkcase-host|g' /etc/hosts`.
+
+Now you can `cat /etc/hosts` again and it should look OK.
+
+Finally, restart httpd:
+
+```bash
+systemctl restart httpd
+```
+
+Now you can exit out of your ssh session in the Vagrant VM.
+
 ### Clone the repository and build the war file
 
 Clone this repository to a folder of your choice.
 
-`cd` to the root folder of this repository; then run `mvn -DskipITs clean install`.  This will run the unit tests and build the war file.  It should take a few minutes.
+`cd` to the root folder of this repository; then run `mvn -DskipITs clean install`.  This will run the unit tests and build the war file.  It will take a few minutes.
 
 ### Clone the configuration folder
 
@@ -61,9 +106,9 @@ ArkCase requires a configuration folder which is housed in another GitHub reposi
 Starting with version 3.3.1, ArkCase requires a separate configuration server, based on Spring Cloud Config Server (more info here: https://spring.io/projects/spring-cloud-config).  To start the config server, take these steps:
 
 * Download the most recent config-server.jar file from here: https://github.com/ArkCase/acm-config-server/releases
-* Start the server process with this command: `java -jar config-server-0.0.1.jar`, replacing `0.0.1` with the version you downloaded.
+* Start the server process with this command: `java -Dserver.port=9999 -jar config-server-0.0.1.jar`, replacing `0.0.1` with the version you downloaded.
 
-The config server runs on port 9999 by default.  To run on a different port, add the server.port option to the command, like so: `java -Dserver.port=8888 -jar config-server-0.0.1.jar`, replacing `8888` with the desired port.
+ArkCase expects the config server to run at port 9999, as shown above. 
 
 ### Configure Tomcat
 
@@ -109,8 +154,8 @@ Create the file `bin/setenv.sh`, mark it executable, and set the contents as the
 ```bash
 #!/bin/sh
 
-### MacOS X note: replace {user.home} with the actual path to your home folder, e.g. /Users/dmiller
-export JAVA_OPTS="-Djava.net.preferIPv4Stack=true -Duser.timezone=GMT  -Djavax.net.ssl.keyStorePassword=password -Djavax.net.ssl.trustStorePassword=password -Djavax.net.ssl.keyStore=${user.home}/.arkcase/acm/private/arkcase.ks -Djavax.net.ssl.trustStore=${user.home}/.arkcase/acm/private/arkcase.ts -Dspring.profiles.active=ldap -Dacm.configurationserver.propertyfile="${user.home}/.arkcase/acm/conf.yml -Xms1024M -Xmx1024M"
+### REPLACE ${user.home} with the actual path to your home folder, e.g. /Users/dmiller
+export JAVA_OPTS="-Djava.net.preferIPv4Stack=true -Duser.timezone=GMT  -Djavax.net.ssl.keyStorePassword=password -Djavax.net.ssl.trustStorePassword=password -Djavax.net.ssl.keyStore=${user.home}/.arkcase/acm/private/arkcase.ks -Djavax.net.ssl.trustStore=${user.home}/.arkcase/acm/private/arkcase.ts -Dspring.profiles.active=ldap -Dacm.configurationserver.propertyfile=${user.home}/.arkcase/acm/conf.yml -Xms1024M -Xmx1024M"
 
 export NODE_ENV=development
 
@@ -120,7 +165,7 @@ export CATALINA_OPTS="$CATALINA_OPTS -Djava.library.path=(PATH TO THE TOMCAT NAT
 export CATALINA_PID=$CATALINA_HOME/temp/catalina.pid
 ```
 
-On MacOS X, you have to replace `file:${user.home}` in the above script, with the actual full path to your home folder.
+Again, be sure to replace `${user.home}` in the above script, with the actual full path to your home folder.
 
 #### Start Tomcat
 
@@ -140,7 +185,7 @@ If you see any errors that prevent application startup (in other words: if after
 
 Once you see that Tomcat has started successfully, you should be able to open `https://arkcase-ce.local/arkcase` in your browser.
 
-When you open ArkCase in your browser, you will have to trust the self-signed cert.  The cert is signed by a self-signed ArkCase certificate authority.  Follow the right procedure for your operating system to trust this certificate.
+When you open ArkCase in your browser, you will have to accept the warning about an unrecognized, self-signed root certificate.  The certificate is signed by a self-signed ArkCase certificate authority.  Follow the right procedure for your operating system to trust this certificate.
 
 MacOS: A good guide is here, https://www.accuweaver.com/2014/09/19/make-chrome-accept-a-self-signed-certificate-on-osx/
 
