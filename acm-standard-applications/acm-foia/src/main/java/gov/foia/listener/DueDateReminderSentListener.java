@@ -28,7 +28,11 @@ package gov.foia.listener;
  */
 
 import com.armedia.acm.plugins.casefile.model.CaseFile;
+import com.armedia.acm.services.notification.dao.NotificationDao;
 import com.armedia.acm.services.notification.event.DueDateReminderSentEvent;
+import com.armedia.acm.services.notification.model.Notification;
+import com.armedia.acm.services.users.dao.UserDao;
+import com.armedia.acm.services.users.model.AcmUser;
 import gov.foia.dao.FOIARequestDao;
 import gov.foia.model.FOIARequest;
 import org.springframework.context.ApplicationListener;
@@ -36,6 +40,8 @@ import org.springframework.context.ApplicationListener;
 public class DueDateReminderSentListener implements ApplicationListener<DueDateReminderSentEvent>
 {
     private FOIARequestDao foiaRequestDao;
+    private UserDao userDao;
+    private NotificationDao notificationDao;
 
     @Override
     public void onApplicationEvent(DueDateReminderSentEvent dueDateReminderSentEvent)
@@ -50,16 +56,31 @@ public class DueDateReminderSentListener implements ApplicationListener<DueDateR
             if(caseFile instanceof FOIARequest)
             {
                 FOIARequest foiaRequest = (FOIARequest) caseFile;
-                if(dueDateRemainingDays.equals(1L))
+                
+                if(foiaRequest.getStatus().toUpperCase() != "RELEASED") 
                 {
-                    foiaRequest.setOneDayReminderSent(true);
-                }
-                else if(dueDateRemainingDays.equals(5L))
-                {
-                    foiaRequest.setFiveDaysReminderSent(true);
-                }
+                    AcmUser user = getUserDao().findByUserId(foiaRequest.getAssigneeLdapId());
+                    String assigneeFullName = user.getFullName();
 
-                getFoiaRequestDao().save(foiaRequest);
+                    Notification notification = new Notification();
+                    if (dueDateRemainingDays.equals(1L)) {
+                        notification.setNote("1");
+                    } else if (dueDateRemainingDays.equals(5L)) {
+                        notification.setNote("5");
+                    }
+                    notification.setTitle(String.format("Request:%s assigned to %s", foiaRequest.getCaseNumber(), assigneeFullName));
+                    notification.setType("user");
+                    notification.setParentId(foiaRequest.getId());
+                    notification.setParentType(foiaRequest.getObjectType());
+                    notification.setParentName(foiaRequest.getCaseNumber());
+                    notification.setParentTitle(foiaRequest.getTitle());
+                    notification.setUser(foiaRequest.getAssigneeLdapId());
+                    notification.setEmailAddresses(user.getMail());
+                    notification.setTemplateModelName("requestAssigneeDueDateReminder");
+                    notification.setData("{\"usr\":\"/plugin/" + (foiaRequest.getObjectType().toLowerCase() + "/" + foiaRequest.getId() + "\"}"));
+                    notification.setAttachFiles(false);
+                    notificationDao.save(notification);
+                }
             }
         }
     }
@@ -72,5 +93,25 @@ public class DueDateReminderSentListener implements ApplicationListener<DueDateR
     public void setFoiaRequestDao(FOIARequestDao foiaRequestDao)
     {
         this.foiaRequestDao = foiaRequestDao;
+    }
+
+    public UserDao getUserDao() 
+    {
+        return userDao;
+    }
+
+    public void setUserDao(UserDao userDao) 
+    {
+        this.userDao = userDao;
+    }
+
+    public NotificationDao getNotificationDao() 
+    {
+        return notificationDao;
+    }
+
+    public void setNotificationDao(NotificationDao notificationDao) 
+    {
+        this.notificationDao = notificationDao;
     }
 }
