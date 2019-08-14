@@ -168,6 +168,8 @@
 
         <beans:bean id="dueDateReminderSentListener" class="gov.foia.listener.DueDateReminderSentListener">
             <beans:property name="foiaRequestDao" ref="foiaRequestDao"/>
+            <beans:property name="userDao" ref="userJpaDao"/>
+            <beans:property name="notificationDao" ref="notificationDao"/>
         </beans:bean>
 
         <beans:bean id="newRequestDocumentDescriptor" class="gov.foia.model.FOIADocumentDescriptor">
