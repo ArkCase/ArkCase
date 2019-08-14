@@ -57,12 +57,12 @@
             <beans:property name="ldapAuthenticateService" ref="foiaportal_ldapAuthenticateService"/>
             <beans:property name="personDao" ref="acmPersonDao"/>
         </beans:bean>
-        
 
         <beans:bean id="portalCreateRequestService" class="gov.foia.service.PortalCreateRequestService">
             <beans:property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
             <beans:property name="userTrackerService" ref="userTrackerService"/>
             <beans:property name="saveFOIARequestService" ref="saveFOIARequestService"/>
+            <beans:property name="organizationDao" ref="acmOrganizationDao"/>
         </beans:bean>
 
         <beans:bean id="portalRequestService" class="gov.foia.service.PortalRequestService">
