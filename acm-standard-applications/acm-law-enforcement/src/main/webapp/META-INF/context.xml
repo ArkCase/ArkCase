@@ -14,11 +14,8 @@
         <!-- main log4j configuration, extensions can customize it -->
         <PreResources className="org.apache.catalina.webresources.FileResourceSet" base="${user.home}/.arkcase/acm/log4j2.xml"
             internalPath="/" webAppMount="/WEB-INF/classes/log4j2.xml"/>
-        <!-- map $HOME/.arkcase/custom to load the extension jars -->
+        <!-- map $HOME/.arkcase/custom to load the extension jars and add it to the root of web application -->
         <PostResources className="org.apache.catalina.webresources.DirResourceSet" base="${user.home}/.arkcase/custom/" internalPath="/"
-            webAppMount="/"/>
-        <!-- map $HOME/.arkcase/ui to the root of web application -->
-        <PostResources className="org.apache.catalina.webresources.DirResourceSet" base="${user.home}/.arkcase/ui/" internalPath="/"
             webAppMount="/"/>
     </Resources>
 </Context>
