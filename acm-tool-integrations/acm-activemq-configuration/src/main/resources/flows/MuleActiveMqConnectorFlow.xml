@@ -13,13 +13,12 @@
     <spring:beans>
         <spring:import resource="classpath:/spring/spring-library-activemq.xml"/>
 
-        <spring:bean id="yamlProperties" class="org.springframework.beans.factory.config.YamlPropertiesFactoryBean">
-            <spring:property name="resources"
-                value="${configuration.server.url}/${application.name}/${application.profile}/default/activemq-config.yaml"/>
+        <spring:bean id="activeMqPropertiesConfig" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+            <spring:property name="properties" value="#{acmConfigurationProperties.getPropertiesFromActiveMqYaml()}"/>
         </spring:bean>
     </spring:beans>
 
-    <context:property-placeholder ignore-unresolvable="true" local-override="false" properties-ref="yamlProperties"/>
+    <context:property-placeholder ignore-unresolvable="true" local-override="false" properties-ref="activeMqPropertiesConfig"/>
 
     <!-- We don't need a notification-listener since we register the listener during context startup.
              But we do need the notifications element, to tell Mule we want the events to flow.. -->
