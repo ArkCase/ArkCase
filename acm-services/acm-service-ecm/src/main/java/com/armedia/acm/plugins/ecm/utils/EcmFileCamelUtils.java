@@ -32,17 +32,22 @@ import com.armedia.acm.camelcontext.arkcase.cmis.ArkCaseCMISActions;
 import com.armedia.acm.camelcontext.arkcase.cmis.ArkCaseCMISConstants;
 import com.armedia.acm.camelcontext.context.CamelContextManager;
 import com.armedia.acm.camelcontext.exception.ArkCaseFileRepositoryException;
+import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.web.api.MDCConstants;
 
+import org.apache.chemistry.opencmis.client.api.Document;
+import org.apache.chemistry.opencmis.commons.PropertyIds;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
+
 
 /**
  * Created by Vladimir Cherepnalkovski <vladimir.cherepnalkovski@armedia.com>
@@ -94,6 +99,47 @@ public class EcmFileCamelUtils
         log.debug("Invoking delete Camel route to delete document with cmis id: [{}] using [{}]", cmisFileId,
                 ArkCaseCMISActions.DELETE_DOCUMENT.getQueueName());
         getCamelContextManager().send(ArkCaseCMISActions.DELETE_DOCUMENT, messageProps);
+    }
+
+    /**
+     * Adds a new file to the repository using the createDocument camel route.
+     *
+     * @param newEcmFile
+     *            - contains metadata for the file whose contents will be added to the repository
+     * @param cmisFolderId
+     *            - cmis id of the folder in which the new file will be added
+     * @param fileInputStream
+     *            - binary content data for the new file version
+     * @throws AcmUserActionFailedException
+     *             if the Camel call to save the file to the repository fails
+     * @returns Cmis Document object for the new repository document
+     */
+    public Document addFile(EcmFile newEcmFile, String cmisFolderId, InputStream fileInputStream)
+            throws AcmUserActionFailedException
+    {
+        newEcmFile.setFileName(newEcmFile.getFileName().trim());
+        // Camel upload request payload setup (specifies the folder in which to upload the supplied content stream)
+        Map<String, Object> messageProps = new HashMap<>();
+        messageProps.put("cmisFolderId", cmisFolderId);
+        messageProps.put("inputStream", fileInputStream);
+        messageProps.put(EcmFileConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID);
+        messageProps.put(EcmFileConstants.VERSIONING_STATE, getCamelContextManager().getRepositoryConfigs()
+                .get(ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID).getCmisVersioningState());
+        messageProps.put(PropertyIds.NAME, newEcmFile.getFileName());
+        messageProps.put(PropertyIds.CONTENT_STREAM_MIME_TYPE, newEcmFile.getFileActiveVersionMimeType());
+        messageProps.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, EcmFileCamelUtils.getCmisUser());
+
+        log.debug("Invoking Camel add document route");
+        try
+        {
+            return (Document) getCamelContextManager().send(ArkCaseCMISActions.CREATE_DOCUMENT, messageProps);
+        }
+        catch (ArkCaseFileRepositoryException e)
+        {
+            log.error("Could not create document {} ", e.getMessage(), e);
+            throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_UPLOAD_FILE, EcmFileConstants.OBJECT_FILE_TYPE, null,
+                    "Could not create document", e);
+        }
     }
 
     public CamelContextManager getCamelContextManager()
