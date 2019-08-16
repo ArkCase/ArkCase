@@ -158,11 +158,11 @@ public class EcmFileMuleUtils
 
     /**
      * Removes a file from the Alfresco content repository
-     * 
+     *
      * @deprecated
      *             This method is no longer acceptable
      *             Use {@link EcmFileCamelUtils#deleteFile(EcmFile, String)} instead.
-     * 
+     *
      * @param ecmFile
      *            - metadata for the file to delete
      * @param cmisFileId

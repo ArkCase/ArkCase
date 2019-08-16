@@ -1112,21 +1112,14 @@
 
             <dependency>
                 <groupId>org.apache.camel</groupId>
+                <artifactId>camel-cmis-arkcase</artifactId>
+                <version>${camel.cmis.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.camel</groupId>
                 <artifactId>camel-support</artifactId>
                 <version>${camel.support.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.apache.camel</groupId>
-                <artifactId>camel-cmis-arkcase</artifactId>
-                <version>${camel.cmis.version}</version>
-            </dependency>
-
-
-            <dependency>
-                <groupId>org.apache.camel</groupId>
-                <artifactId>camel-cmis-arkcase</artifactId>
-                <version>${camel.cmis.version}</version>
             </dependency>
 
             <!-- apache libraries -->
@@ -1727,7 +1720,7 @@
                 <artifactId>xsync</artifactId>
                 <version>${xsync-version}</version>
             </dependency>
-            
+
         </dependencies>
     </dependencyManagement>
     <dependencies>
