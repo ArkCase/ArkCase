@@ -25,4 +25,7 @@
         <property name="maxConnections" value="#{activeMqConfig.getMaxConnections()}"/>
     </bean>
 
+    <bean id="acmConfigurationProperties" class="com.armedia.acm.tools.activemq.AcmConfigurationProperties">
+    </bean>
+
 </beans>
