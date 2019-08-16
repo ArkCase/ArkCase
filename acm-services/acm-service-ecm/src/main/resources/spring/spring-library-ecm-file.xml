@@ -430,6 +430,7 @@
         <property name="ecmFileConfig" ref="ecmFileConfig"/>
         <property name="genericMessagesChannel" ref="genericMessagesChannel"/>
         <property name="objectLockService" ref="objectLockService"/>
+        <property name="camelContextManager" ref="camelContextManager"/>
     </bean>
 
     <bean id="folderAndFilesUtils" class="com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils">
