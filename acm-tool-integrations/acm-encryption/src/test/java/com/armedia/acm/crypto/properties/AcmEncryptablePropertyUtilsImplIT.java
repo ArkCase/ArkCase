@@ -79,7 +79,7 @@ public class AcmEncryptablePropertyUtilsImplIT
     @Test
     public void encryptPassword() throws AcmEncryptionException
     {
-        String password = "***REMOVED***";
+        String password = "@rM3diA$";
 
         String encryptedPassword = utils.encryptPropertyValue(password);
 

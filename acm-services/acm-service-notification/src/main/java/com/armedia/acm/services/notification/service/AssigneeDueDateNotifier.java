@@ -1,37 +1,11 @@
 package com.armedia.acm.services.notification.service;
 
 import com.armedia.acm.services.holiday.service.HolidayConfigurationService;
-
-/*-
- * #%L
- * ACM Service: Notification
- * %%
- * Copyright (C) 2014 - 2018 ArkCase LLC
- * %%
- * This file is part of the ArkCase software. 
- * 
- * If the software was purchased under a paid ArkCase license, the terms of 
- * the paid license agreement will prevail.  Otherwise, the software is 
- * provided under the following open source license terms:
- * 
- * ArkCase is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *  
- * ArkCase is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
- * 
- * You should have received a copy of the GNU Lesser General Public License
- * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
- * #L%
- */
-
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.model.NotificationConstants;
 import com.armedia.acm.services.users.dao.UserDao;
+
+import org.apache.commons.lang3.StringUtils;
 import org.joda.time.Days;
 import org.joda.time.LocalDate;
 
@@ -39,6 +13,33 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+
+/*-
+ * #%L
+ * ACM Service: Notification
+ * %%
+ * Copyright (C) 2014 - 2018 ArkCase LLC
+ * %%
+ * This file is part of the ArkCase software.
+ *
+ * If the software was purchased under a paid ArkCase license, the terms of
+ * the paid license agreement will prevail.  Otherwise, the software is
+ * provided under the following open source license terms:
+ *
+ * ArkCase is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * ArkCase is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
+ * #L%
+ */
 
 public class AssigneeDueDateNotifier implements UsersNotified
 {
@@ -68,7 +69,7 @@ public class AssigneeDueDateNotifier implements UsersNotified
                 customNotification.setParentId((Long) notification[3]);
                 customNotification.setParentType((String) notification[4]);
                 customNotification.setParentName((String) notification[5]);
-                customNotification.setParentTitle((String) notification[6]);
+                customNotification.setParentTitle(StringUtils.left((String) notification[6], 1000));
                 customNotification.setRelatedObjectId((Long) notification[7]);
                 customNotification.setRelatedObjectType((String) notification[8]);
                 customNotification.setActionDate((Date) notification[9]);
