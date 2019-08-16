@@ -27,6 +27,7 @@ package com.armedia.acm.audit.service;
  * #L%
  */
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.StringSubstitutor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -40,6 +41,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
 import java.util.regex.Pattern;
@@ -57,7 +60,8 @@ public class AuditPatternsSubstitution
 
     private static List<Pattern> PATTERNS = new ArrayList<>();
     private static String SUBSTITUTION = "$1*****$3";
-    private static String PATTERNS_FILENAME = "${configuration.server.url}/${application.name}/${application.profile}/default/spring/auditPatterns.properties";
+    private static String PROPERTIES_FOR_SUBSTITUTION = "${configuration.server.url}/${application.name}/";
+    private static String PATTERNS_PATH = "/default/spring/auditPatterns.properties";
 
     static
     {
@@ -68,10 +72,14 @@ public class AuditPatternsSubstitution
         yaml.setResources(yamlResource);
         Properties properties = yaml.getObject();
 
-        StringSubstitutor sub = new StringSubstitutor();
-        String REPLACED_PATTERNS_FILENAME = sub.replace(PATTERNS_FILENAME, properties);
+        String profilesReversed = getProfilesReversed(properties.getProperty("application.profile"));
 
-        try (InputStream inputStream = new URL(REPLACED_PATTERNS_FILENAME).openStream())
+        StringSubstitutor sub = new StringSubstitutor();
+        String serverUrlAndName = sub.replace(PROPERTIES_FOR_SUBSTITUTION, properties);
+
+        String patternsFileUrl = String.format("%s%s%s", serverUrlAndName, profilesReversed, PATTERNS_PATH);
+
+        try (InputStream inputStream = new URL(patternsFileUrl).openStream())
         {
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
             String currentLine;
@@ -85,8 +93,15 @@ public class AuditPatternsSubstitution
         }
         catch (IOException e)
         {
-            LOG.error("Exception reading patterns from file: " + PATTERNS_FILENAME, e);
+            LOG.error("Exception reading patterns from file: " + PATTERNS_PATH, e);
         }
+    }
+
+    private static String getProfilesReversed(String profiles)
+    {
+        String[] splitedProfiles = profiles.split(",");
+        Collections.reverse(Arrays.asList(splitedProfiles));
+        return StringUtils.join(splitedProfiles, ",");
     }
 
     public static List<Pattern> getPatterns()
