@@ -30,7 +30,8 @@ public class AcmApplicationContextInitializer implements
 
         System.setProperty("configuration.server.url", properties.getProperty("configuration.server.url"));
         System.setProperty("application.name", properties.getProperty("application.name"));
-        System.setProperty("application.profile", getProfilesReversed(properties.getProperty("application.profile")));
+        System.setProperty("application.profile", properties.getProperty("application.profile"));
+        System.setProperty("application.profile.reversed", getProfilesReversed(properties.getProperty("application.profile")));
     }
 
     private String getProfilesReversed(String profiles)
