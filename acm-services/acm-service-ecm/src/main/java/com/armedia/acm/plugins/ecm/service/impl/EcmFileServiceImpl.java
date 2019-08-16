@@ -197,17 +197,11 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     public CmisObject findObjectById(String cmisRepositoryId, String cmisId) throws Exception
     {
         Map<String, Object> properties = new HashMap<>();
-        properties.put(EcmFileConstants.CONFIGURATION_REFERENCE, cmisConfigUtils.getCmisConfiguration(cmisRepositoryId));
+        properties.put(EcmFileConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID);
+        properties.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, EcmFileCamelUtils.getCmisUser());
+        properties.put(EcmFileConstants.CMIS_OBJECT_ID, cmisId);
 
-        MuleMessage muleMessage = getMuleContextManager().send("vm://getObjectById.in", cmisId, properties);
-
-        if (muleMessage.getInboundProperty("findObjectByIdException") != null)
-        {
-            throw (Exception) muleMessage.getInboundProperty("findObjectByIdException");
-        }
-
-        return (CmisObject) muleMessage.getPayload();
-
+        return (CmisObject) getCamelContextManager().send(ArkCaseCMISActions.GET_OBJECT_BY_ID, properties);
     }
 
     @Override
