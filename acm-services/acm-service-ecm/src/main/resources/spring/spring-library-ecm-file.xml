@@ -78,6 +78,11 @@
         <property name="camelContextManager" ref="camelContextManager"/>
     </bean>
 
+    <!-- Camel Utility Bean for downloading, updating, adding files -->
+    <bean id="ecmFileCamelUtils" class="com.armedia.acm.plugins.ecm.utils.EcmFileCamelUtils">
+        <property name="camelContextManager" ref="camelContextManager"/>
+    </bean>
+
     <!-- Bactes specific pipeline pre save handlers -->
     <bean id="ecmFileMergeHandler" class="com.armedia.acm.plugins.ecm.pipeline.presave.EcmFileMergeHandler">
         <property name="ecmFileDao" ref="ecmFileDao"/>
