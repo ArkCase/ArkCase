@@ -36,8 +36,6 @@ public interface EcmFileConstants
 
     String MULE_ENDPOINT_COPY_FILE = "vm://copyFile.in";
 
-    String MULE_ENDPOINT_RENAME_FILE = "vm://renameFile.in";
-
     String MULE_ENDPOINT_REPLACE_FILE = "vm://updateFile.in";
 
     String MULE_ENDPOINT_MOVE_FILE = "vm://moveFile.in";
