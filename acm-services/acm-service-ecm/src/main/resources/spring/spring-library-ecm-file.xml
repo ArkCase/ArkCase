@@ -69,6 +69,11 @@
         <property name="cmisConfigUtils" ref="cmisConfigUtils"/>
     </bean>
 
+    <!-- Camel Utility Bean for downloading, updating, adding files -->
+    <bean id="ecmFileCamelUtils" class="com.armedia.acm.plugins.ecm.utils.EcmFileCamelUtils">
+        <property name="camelContextManager" ref="camelContextManager"/>
+    </bean>
+
     <!-- Bactes specific pipeline pre save handlers -->
     <bean id="ecmFileMergeHandler" class="com.armedia.acm.plugins.ecm.pipeline.presave.EcmFileMergeHandler">
         <property name="ecmFileDao" ref="ecmFileDao"/>
@@ -82,6 +87,7 @@
     </bean>
     <bean id="ecmFileNewContentHandler" class="com.armedia.acm.plugins.ecm.pipeline.presave.EcmFileNewContentHandler">
         <property name="ecmFileMuleUtils" ref="ecmFileMuleUtils"/>
+        <property name="ecmFileCamelUtils" ref="ecmFileCamelUtils"/>
         <property name="progressIndicatorService" ref="progressIndicatorService"/>
     </bean>
     <bean id="ecmFileNewMetadataHandler" class="com.armedia.acm.plugins.ecm.pipeline.presave.EcmFileNewMetadataHandler">
@@ -356,6 +362,7 @@
         <property name="objectLockService" ref="objectLockService"/>
         <property name="emailSenderConfig" ref="emailSenderConfig"/>
         <property name="progressIndicatorService" ref="progressIndicatorService"/>
+        <property name="camelContextManager" ref="camelContextManager"/>
         <property name="authenticationTokenDao" ref="authenticationTokenDao"/>
     </bean>
 

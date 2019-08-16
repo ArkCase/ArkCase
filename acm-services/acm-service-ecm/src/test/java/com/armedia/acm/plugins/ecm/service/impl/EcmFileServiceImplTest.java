@@ -6,22 +6,22 @@ package com.armedia.acm.plugins.ecm.service.impl;
  * %%
  * Copyright (C) 2014 - 2018 ArkCase LLC
  * %%
- * This file is part of the ArkCase software. 
- * 
- * If the software was purchased under a paid ArkCase license, the terms of 
- * the paid license agreement will prevail.  Otherwise, the software is 
+ * This file is part of the ArkCase software.
+ *
+ * If the software was purchased under a paid ArkCase license, the terms of
+ * the paid license agreement will prevail.  Otherwise, the software is
  * provided under the following open source license terms:
- * 
+ *
  * ArkCase is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *  
+ *
  * ArkCase is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
  * #L%
@@ -33,6 +33,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import com.armedia.acm.auth.AcmAuthenticationDetails;
+import com.armedia.acm.camelcontext.arkcase.cmis.ArkCaseCMISActions;
+import com.armedia.acm.camelcontext.context.CamelContextManager;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.plugins.ecm.dao.AcmContainerDao;
@@ -45,6 +48,7 @@ import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.model.EcmFileUpdatedEvent;
 import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
 import com.armedia.acm.plugins.ecm.utils.CmisConfigUtils;
+import com.armedia.acm.web.api.MDCConstants;
 import com.armedia.acm.services.authenticationtoken.dao.AuthenticationTokenDao;
 import com.armedia.acm.services.authenticationtoken.model.AuthenticationToken;
 import com.armedia.acm.services.authenticationtoken.model.AuthenticationTokenConstants;
@@ -78,6 +82,7 @@ public class EcmFileServiceImplTest extends EasyMockSupport
     private EcmFileServiceImpl unit;
 
     private MuleContextManager mockMuleContextManager;
+    private CamelContextManager camelContextManager;
     private MuleMessage mockMuleMessage;
     private CmisObject mockCmisObject;
     private CmisConfigUtils mockCmisConfigUtils;
@@ -97,6 +102,7 @@ public class EcmFileServiceImplTest extends EasyMockSupport
         unit = new EcmFileServiceImpl();
 
         mockMuleContextManager = createMock(MuleContextManager.class);
+        camelContextManager = createMock(CamelContextManager.class);
         mockMuleMessage = createMock(MuleMessage.class);
         mockCmisObject = createMock(CmisObject.class);
         mockCmisConfigUtils = createMock(CmisConfigUtils.class);
@@ -113,6 +119,7 @@ public class EcmFileServiceImplTest extends EasyMockSupport
         unit.setEcmFileConfig(ecmFileConfig);
 
         unit.setMuleContextManager(mockMuleContextManager);
+        unit.setCamelContextManager(camelContextManager);
         unit.setCmisConfigUtils(mockCmisConfigUtils);
         unit.setEcmFileDao(mockEcmFileDao);
         unit.setApplicationEventPublisher(mockApplicationEventPublisher);
@@ -152,13 +159,14 @@ public class EcmFileServiceImplTest extends EasyMockSupport
         toBeDeleted.getVersions().add(second);
 
         Map<String, Object> props = new HashMap<>();
-        props.put(EcmFileConstants.ECM_FILE_ID, second.getVersionTag());
-        props.put(EcmFileConstants.CONFIGURATION_REFERENCE, null);
+        props.put(EcmFileConstants.CMIS_DOCUMENT_ID, second.getVersionTag());
+        props.put(EcmFileConstants.CMIS_REPOSITORY_ID, "camelAlfresco");
         props.put(EcmFileConstants.ALL_VERSIONS, false);
+        props.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, "");
 
         expect(mockEcmFileDao.find(toBeDeleted.getFileId())).andReturn(toBeDeleted);
-        expect(mockCmisConfigUtils.getCmisConfiguration(toBeDeleted.getCmisRepositoryId())).andReturn(null);
-        expect(mockMuleContextManager.send(EcmFileConstants.MULE_ENDPOINT_DELETE_FILE, toBeDeleted, props)).andReturn(mockMuleMessage);
+        expect(camelContextManager.send(ArkCaseCMISActions.DELETE_DOCUMENT, props)).andReturn(new Object());
+        expect(mockAuthentication.getDetails()).andReturn(AcmAuthenticationDetails.class);
         Capture<EcmFile> updated = Capture.newInstance();
         expect(mockEcmFileDao.save(capture(updated))).andReturn(new EcmFile());
 
@@ -202,14 +210,15 @@ public class EcmFileServiceImplTest extends EasyMockSupport
         toBeDeleted.getVersions().add(second);
 
         Map<String, Object> props = new HashMap<>();
-        props.put(EcmFileConstants.ECM_FILE_ID, toBeDeleted.getVersionSeriesId());
-        props.put(EcmFileConstants.CONFIGURATION_REFERENCE, null);
+        props.put(EcmFileConstants.CMIS_DOCUMENT_ID, toBeDeleted.getVersionSeriesId());
+        props.put(EcmFileConstants.CMIS_REPOSITORY_ID, "camelAlfresco");
         props.put(EcmFileConstants.ALL_VERSIONS, true);
+        props.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, "");
 
         expect(mockEcmFileDao.find(toBeDeleted.getFileId())).andReturn(toBeDeleted);
-        expect(mockCmisConfigUtils.getCmisConfiguration(toBeDeleted.getCmisRepositoryId())).andReturn(null);
-        expect(mockMuleContextManager.send(EcmFileConstants.MULE_ENDPOINT_DELETE_FILE, toBeDeleted, props)).andReturn(mockMuleMessage);
         expect(mockAuthenticationTokenDao.findAuthenticationTokenByTokenFileId(toBeDeleted.getFileId())).andReturn(authenticationTokens);
+        expect(camelContextManager.send(ArkCaseCMISActions.DELETE_DOCUMENT, props)).andReturn(new Object());
+        expect(mockAuthentication.getDetails()).andReturn(AcmAuthenticationDetails.class);
 
         mockEcmFileDao.deleteFile(toBeDeleted.getFileId());
 
@@ -235,15 +244,15 @@ public class EcmFileServiceImplTest extends EasyMockSupport
         toBeDeleted.getVersions().add(only);
 
         Map<String, Object> props = new HashMap<>();
-        props.put(EcmFileConstants.ECM_FILE_ID, toBeDeleted.getVersionSeriesId());
-        props.put(EcmFileConstants.CONFIGURATION_REFERENCE, null);
+        props.put(EcmFileConstants.CMIS_DOCUMENT_ID, toBeDeleted.getVersionSeriesId());
+        props.put(EcmFileConstants.CMIS_REPOSITORY_ID, "camelAlfresco");
         props.put(EcmFileConstants.ALL_VERSIONS, true);
+        props.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, "");
 
         expect(mockEcmFileDao.find(toBeDeleted.getFileId())).andReturn(toBeDeleted);
-        expect(mockCmisConfigUtils.getCmisConfiguration(toBeDeleted.getCmisRepositoryId())).andReturn(null);
-        expect(mockMuleContextManager.send(EcmFileConstants.MULE_ENDPOINT_DELETE_FILE, toBeDeleted, props)).andReturn(mockMuleMessage);
-        expect(mockAuthenticationTokenDao.findAuthenticationTokenByTokenFileId(toBeDeleted.getFileId())).andReturn(authenticationTokens);
-        mockEcmFileDao.deleteFile(toBeDeleted.getFileId());
+        expect(camelContextManager.send(ArkCaseCMISActions.DELETE_DOCUMENT, props)).andReturn(new Object());
+        expect(mockAuthentication.getDetails()).andReturn(AcmAuthenticationDetails.class);
+        expect(mockAuthenticationTokenDao.findAuthenticationTokenByTokenFileId(toBeDeleted.getFileId())).andReturn(authenticationTokens);        mockEcmFileDao.deleteFile(toBeDeleted.getFileId());
 
         replayAll();
 

@@ -33,11 +33,11 @@ import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 
 import org.apache.chemistry.opencmis.client.api.Document;
 import org.apache.chemistry.opencmis.commons.data.ContentStream;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.mule.api.ExceptionPayload;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
 
 import java.io.InputStream;
 import java.util.HashMap;
@@ -156,7 +156,11 @@ public class EcmFileMuleUtils
 
     /**
      * Removes a file from the Alfresco content repository
-     *
+     * 
+     * @deprecated
+     *             This method is no longer acceptable
+     *             Use {@link EcmFileCamelUtils#deleteFile(EcmFile, String)} instead.
+     * 
      * @param ecmFile
      *            - metadata for the file to delete
      * @param cmisFileId
@@ -164,6 +168,7 @@ public class EcmFileMuleUtils
      * @throws Exception
      *             if the mule call to delete the document from the repository fails
      */
+    @Deprecated
     public void deleteFile(EcmFile ecmFile, String cmisFileId) throws Exception
     {
         // This is the request payload for mule including the unique cmis id for the document to delete

@@ -132,6 +132,7 @@
         <property name="cmisPropertiesFile" value="mule-config-%s-cmis.properties"/>
         <property name="cmisIdPattern" ref="cmisIdPattern"/>
         <property name="cmisPropertiesPattern" ref="cmisPropertiesPattern"/>
+        <property name="camelContextManager" ref="camelContextManager"/>
     </bean>
 
     <bean id="cmisPropertiesPattern" class="java.util.regex.Pattern" factory-method="compile">

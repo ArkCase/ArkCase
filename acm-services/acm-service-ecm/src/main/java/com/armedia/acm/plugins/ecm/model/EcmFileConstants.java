@@ -121,6 +121,7 @@ public interface EcmFileConstants
     String FILE_NAME = "fileName";
     String INPUT_STREAM = "inputStream";
     String RECORD = "RECORD";
+    String CMIS_DOCUMENT_ID = "cmisDocumentId";
 
     String IP_ADDRESS_ATTRIBUTE = "acm_ip_address";
 
@@ -138,6 +139,7 @@ public interface EcmFileConstants
     String VERSIONING_STATE = "versioningState";
     String DEFAULT_CMIS_REPOSITORY_ID = "alfresco";
     String ALL_VERSIONS = "allVersions";
+    String CMIS_REPOSITORY_ID = "cmisRepositoryId";
 
     String ECM_SYNC_NODE_TYPE_FOLDER = "folder";
     String ECM_SYNC_NODE_TYPE_DOCUMENT = "document";

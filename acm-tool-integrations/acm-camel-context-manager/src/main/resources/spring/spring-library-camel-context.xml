@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+    <bean id="acmCamelConfig" class="com.armedia.acm.camelcontext.configuration.AcmCamelConfig" scope="refresh">
+        <aop:scoped-proxy/>
+    </bean>
+
+    <bean id="camelConfigUtils" class="com.armedia.acm.camelcontext.configuration.CamelConfigUtils">
+        <property name="propertyFileManager" ref="propertyFileManager"/>
+        <property name="acmCamelConfig" ref="acmCamelConfig"/>
+    </bean>
+
+    <bean id="camelContextManager" class="com.armedia.acm.camelcontext.context.CamelContextManager"
+          destroy-method="shutdownBeans">
+        <property name="camelConfigUtils" ref="camelConfigUtils"/>
+        <property name="encryptablePropertyUtils" ref="acmEncryptablePropertyUtils"/>
+    </bean>
+
+</beans>
+
