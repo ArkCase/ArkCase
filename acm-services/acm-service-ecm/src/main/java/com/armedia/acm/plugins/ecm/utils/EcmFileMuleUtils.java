@@ -38,6 +38,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.io.InputStream;
 import java.util.HashMap;
@@ -158,11 +160,11 @@ public class EcmFileMuleUtils
 
     /**
      * Removes a file from the Alfresco content repository
-     * 
+     *
      * @deprecated
      *             This method is no longer acceptable
      *             Use {@link EcmFileCamelUtils#deleteFile(EcmFile, String)} instead.
-     * 
+     *
      * @param ecmFile
      *            - metadata for the file to delete
      * @param cmisFileId
