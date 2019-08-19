@@ -47,6 +47,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -114,7 +115,8 @@ public class AcmSchedulerService
         }
         else
         {
-            job.setRepeatIntervalInSeconds(((SimpleTrigger) it).getRepeatInterval());
+            long intervalInMilliseconds = ((SimpleTrigger) it).getRepeatInterval();
+            job.setRepeatIntervalInSeconds(TimeUnit.MILLISECONDS.toSeconds(intervalInMilliseconds));
         }
         job.setLastRun(it.getPreviousFireTime());
         job.setNextRun(it.getNextFireTime());

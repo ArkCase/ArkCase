@@ -62,7 +62,7 @@ public class AcmTriggerListener extends TriggerListenerSupport
     @Override
     public void triggerMisfired(Trigger trigger)
     {
-        logger.debug("Trigger [{}] for job misfired.", trigger.getKey());
+        logger.warn("Trigger [{}] for job misfired.", trigger.getKey());
     }
 
     @Override
