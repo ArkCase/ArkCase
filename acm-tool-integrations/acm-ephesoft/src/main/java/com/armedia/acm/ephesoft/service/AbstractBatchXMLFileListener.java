@@ -38,23 +38,20 @@ import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.web.api.MDCConstants;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.vfs2.FileObject;
 import org.apache.commons.vfs2.FileSystemException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.eclipse.persistence.dynamic.DynamicEntity;
 import org.eclipse.persistence.jaxb.JAXBContextProperties;
 import org.eclipse.persistence.jaxb.dynamic.DynamicJAXBContext;
 import org.eclipse.persistence.jaxb.dynamic.DynamicJAXBContextFactory;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
 import org.slf4j.MDC;
 import org.springframework.security.core.Authentication;
 
 import javax.activation.MimetypesFileTypeMap;
 import javax.xml.bind.Unmarshaller;
 
-import java.io.BufferedInputStream;
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -246,7 +243,7 @@ public abstract class AbstractBatchXMLFileListener extends FileEventListener
             MimetypesFileTypeMap mimetypesFileTypeMap = new MimetypesFileTypeMap();
 
             // Take the input stream for given file
-            InputStream is = new BufferedInputStream(new FileInputStream(docObject.getDocument()));
+            InputStream is = new FileInputStream(docObject.getDocument());
 
             // Take content type and create authentication object (we need authentication object for
             // EcmFileService - we need userID which in this case is set to FileConstants.XML_BATCH_USER value)
