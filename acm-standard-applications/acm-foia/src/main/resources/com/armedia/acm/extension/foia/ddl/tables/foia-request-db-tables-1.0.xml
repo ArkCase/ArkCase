@@ -604,6 +604,13 @@ LANGUAGE plpgsql;
             constraintName="fk_foia_file_exemption_code_id" referencedTableName="acm_file" referencedColumnNames="cm_file_id"
             deferrable="${deferrable}" initiallyDeferred="${initially.deferred}"/>
     </changeSet>
+
+    <changeSet id="36-remove-one-day-reminder-column" author="stefan.sanevski" dbms="oracle,mssql,postgres,mysql">
+       <dropColumn tableName="acm_case_file" columnName="fo_one_day_reminder_sent"/>
+    </changeSet>
     
+    <changeSet id="37-remove-five-days-reminder-column" author="stefan.sanevski" dbms="oracle,mssql,postgres,mysql">
+        <dropColumn tableName="acm_case_file" columnName="fo_five_days_reminder_sent"/>
+    </changeSet>
 </databaseChangeLog>
 
