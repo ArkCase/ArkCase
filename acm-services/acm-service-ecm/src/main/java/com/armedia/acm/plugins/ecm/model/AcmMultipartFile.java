@@ -32,6 +32,9 @@ package com.armedia.acm.plugins.ecm.model;
 
 import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
 
+import org.apache.commons.io.FileUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -51,14 +54,15 @@ public class AcmMultipartFile implements MultipartFile
     private String contentType;
     private boolean empty;
     private long size;
-    private byte[] bytes;
     private InputStream inputStream;
     private String type;
     private MultipartFile multipartFile;
+    private File file;
+
+    private static final Logger logger = LogManager.getLogger(AcmMultipartFile.class);
 
     public AcmMultipartFile()
     {
-
     }
 
     public AcmMultipartFile(MultipartFile multipartFile, boolean uniqueFileName)
@@ -78,12 +82,20 @@ public class AcmMultipartFile implements MultipartFile
         }
     }
 
+    @Deprecated
     public AcmMultipartFile(String name, String originalFileName, String contentType, boolean empty, long size, byte[] bytes,
             InputStream inputStream, boolean uniqueFileName)
     {
         init(name, originalFileName, contentType, empty, size, bytes, inputStream, uniqueFileName);
     }
 
+    public AcmMultipartFile(String name, String originalFileName, String contentType, boolean empty, long size,
+            InputStream inputStream, boolean uniqueFileName)
+    {
+        init(name, originalFileName, contentType, empty, size, inputStream, uniqueFileName);
+    }
+
+    @Deprecated
     public AcmMultipartFile(String name, String originalFileName, String contentType, boolean empty, long size, byte[] bytes,
             InputStream inputStream, boolean uniqueFileName, String type)
     {
@@ -91,7 +103,29 @@ public class AcmMultipartFile implements MultipartFile
         this.type = type;
     }
 
+    public AcmMultipartFile(String name, String originalFileName, String contentType, boolean empty, long size,
+            InputStream inputStream, boolean uniqueFileName, String type)
+    {
+        init(name, originalFileName, contentType, empty, size, inputStream, uniqueFileName);
+        this.type = type;
+    }
+
     private void init(String name, String originalFileName, String contentType, boolean empty, long size, byte[] bytes,
+            InputStream inputStream, boolean uniqueFileName)
+    {
+        init(name, originalFileName, contentType, empty, size, inputStream, uniqueFileName);
+        try
+        {
+            file = File.createTempFile("arkcase-multipart-file-", null);
+            FileUtils.writeByteArrayToFile(file, bytes);
+        }
+        catch (IOException e)
+        {
+            logger.warn("Could not create .tmp file. Cause: {}", e.getMessage());
+        }
+    }
+
+    private void init(String name, String originalFileName, String contentType, boolean empty, long size,
             InputStream inputStream, boolean uniqueFileName)
     {
         FolderAndFilesUtils folderAndFilesUtils = new FolderAndFilesUtils();
@@ -109,7 +143,6 @@ public class AcmMultipartFile implements MultipartFile
         this.contentType = contentType;
         this.empty = empty;
         this.size = size;
-        this.bytes = bytes;
         this.inputStream = inputStream;
     }
 
@@ -196,6 +229,7 @@ public class AcmMultipartFile implements MultipartFile
     }
 
     @Override
+    @Deprecated
     public byte[] getBytes() throws IOException
     {
         if (this.multipartFile != null)
@@ -203,12 +237,11 @@ public class AcmMultipartFile implements MultipartFile
             return this.multipartFile.getBytes();
         }
 
-        return bytes;
-    }
-
-    public void setBytes(byte[] bytes)
-    {
-        this.bytes = bytes;
+        if (file != null)
+        {
+            return FileUtils.readFileToByteArray(file);
+        }
+        return new byte[0];
     }
 
     @Override
@@ -236,7 +269,7 @@ public class AcmMultipartFile implements MultipartFile
         }
         else
         {
-            FileCopyUtils.copy(bytes, dest);
+            FileCopyUtils.copy(file, dest);
         }
     }
 

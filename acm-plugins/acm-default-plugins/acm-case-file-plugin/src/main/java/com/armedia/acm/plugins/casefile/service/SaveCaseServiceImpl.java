@@ -118,9 +118,7 @@ public class SaveCaseServiceImpl implements SaveCaseService
     @Override
     @Transactional
     public CaseFile saveCase(CaseFile caseFile, Map<String, List<MultipartFile>> filesMap, Authentication authentication, String ipAddress)
-            throws AcmUserActionFailedException,
-            AcmCreateObjectFailedException, AcmUpdateObjectFailedException, AcmObjectNotFoundException, PipelineProcessException,
-            IOException
+            throws PipelineProcessException
     {
         CaseFilePipelineContext pipelineContext = new CaseFilePipelineContext();
         // populate the context
@@ -135,12 +133,12 @@ public class SaveCaseServiceImpl implements SaveCaseService
             for (Map.Entry<String, List<MultipartFile>> file : filesMap.entrySet())
             {
                 String fileType = file.getKey();
-                file.getValue().stream().forEach(item -> {
+                for (MultipartFile item : file.getValue())
+                {
                     try
                     {
                         AcmMultipartFile acmMultipartFile = new AcmMultipartFile(item.getName(), item.getOriginalFilename(),
-                                item.getContentType(),
-                                item.isEmpty(), item.getSize(), item.getBytes(), item.getInputStream(), false);
+                                item.getContentType(), item.isEmpty(), item.getSize(), item.getInputStream(), false);
                         acmMultipartFile.setType(fileType);
                         files.add(acmMultipartFile);
                     }
@@ -148,14 +146,11 @@ public class SaveCaseServiceImpl implements SaveCaseService
                     {
                         log.error("Could not read properties from {} file. Exception {}", item.getOriginalFilename(), e.getMessage());
                     }
-                });
+                }
             }
         }
 
-        if (Objects.nonNull(files))
-        {
-            pipelineContext.addProperty("attachmentFiles", files);
-        }
+        pipelineContext.addProperty("attachmentFiles", files);
 
         return pipelineManager.executeOperation(caseFile, pipelineContext, () -> {
 
