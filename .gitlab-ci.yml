@@ -234,7 +234,7 @@ deploy_backend_bcgeu_dev:
     ARKCASE_UI_VARIANT: ui-foia
     ARKCASE_SERVICE_USER_NAME: arkuser
 
-restart:
+.restart:
   stage: restart
   script:
     # Connect to environment
