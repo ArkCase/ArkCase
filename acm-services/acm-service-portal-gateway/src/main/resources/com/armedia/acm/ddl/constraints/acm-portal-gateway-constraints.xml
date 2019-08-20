@@ -1,0 +1,32 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="
+            http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="01-portal-info-user-constraint" author="vladimir.cherepnalkovski">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <foreignKeyConstraintExists foreignKeyName="fk_user_id"/>
+            </not>
+        </preConditions>
+        <addForeignKeyConstraint baseTableName="acm_portal_info" baseColumnNames="cm_user_id"
+                                 constraintName="fk_user_id"
+                                 referencedTableName="acm_user" referencedColumnNames="cm_user_id"
+                                 deferrable="${deferrable}"
+                                 initiallyDeferred="${initially.deferred}"/>
+    </changeSet>
+
+    <changeSet id="02-portal-info-group-constraint" author="vladimir.cherepnalkovski">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <foreignKeyConstraintExists foreignKeyName="fk_pi_group_name"/>
+            </not>
+        </preConditions>
+        <addForeignKeyConstraint baseTableName="acm_portal_info" baseColumnNames="cm_group_name"
+                                 constraintName="fk_pi_group_name"
+                                 referencedTableName="acm_group" referencedColumnNames="cm_group_name"
+                                 deferrable="${deferrable}"
+                                 initiallyDeferred="${initially.deferred}"/>
+    </changeSet>
+
+</databaseChangeLog>
