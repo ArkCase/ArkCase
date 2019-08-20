@@ -28,12 +28,12 @@ package com.armedia.acm.audit.service.systemlogger;
  */
 
 import com.armedia.acm.audit.model.AuditConfig;
-import com.armedia.acm.core.AcmApplication;
+import com.armedia.acm.core.ApplicationConfig;
 
-import org.apache.commons.exec.DefaultExecutor;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
 import org.apache.commons.exec.CommandLine;
+import org.apache.commons.exec.DefaultExecutor;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 
@@ -50,15 +50,15 @@ public class WindowsEventLogger implements ISystemLogger
 {
     private static final String level = "Information";
     private Logger log = LogManager.getLogger(getClass());
-    private AcmApplication acmApplication;
     private AuditConfig auditConfig;
+    private ApplicationConfig applicationConfig;
 
     @Override
     public void log(String message)
     {
         String command = "eventcreate "
                 + " /l APPLICATION"
-                + " /so \"" + getAcmApplication().getApplicationName() + "\""
+                + " /so \"" + applicationConfig.getApplicationName() + "\""
                 + " /t " + level
                 + " /id " + auditConfig.getSystemLogWindowsEventLogEventId()
                 + " /d \"" + message + "\"";
@@ -78,16 +78,6 @@ public class WindowsEventLogger implements ISystemLogger
         }
     }
 
-    public AcmApplication getAcmApplication()
-    {
-        return acmApplication;
-    }
-
-    public void setAcmApplication(AcmApplication acmApplication)
-    {
-        this.acmApplication = acmApplication;
-    }
-
     public AuditConfig getAuditConfig()
     {
         return auditConfig;
@@ -96,5 +86,10 @@ public class WindowsEventLogger implements ISystemLogger
     public void setAuditConfig(AuditConfig auditConfig)
     {
         this.auditConfig = auditConfig;
+    }
+
+    public void setApplicationConfig(ApplicationConfig applicationConfig)
+    {
+        this.applicationConfig = applicationConfig;
     }
 }

@@ -11,7 +11,7 @@
             "menuItemTitle": "timeTracking.menus.leftnav.item",
             "moduleId": "time",
             "iconClass": "fa fa-clock-o",
-            "position": 160
+            "position": 150
         },
         {
             "menuId": "topbar",

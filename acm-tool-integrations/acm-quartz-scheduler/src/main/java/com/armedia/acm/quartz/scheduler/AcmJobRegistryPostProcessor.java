@@ -31,8 +31,8 @@ import com.armedia.acm.objectonverter.json.JSONUnmarshaller;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
@@ -59,7 +59,7 @@ public class AcmJobRegistryPostProcessor implements BeanDefinitionRegistryPostPr
 
     private String jobsJsonConfig;
 
-    private static final Logger logger = LoggerFactory.getLogger(AcmJobRegistryPostProcessor.class);
+    private static final Logger logger = LogManager.getLogger(AcmJobRegistryPostProcessor.class);
 
     @Override
     public void postProcessBeanDefinitionRegistry(BeanDefinitionRegistry registry) throws BeansException

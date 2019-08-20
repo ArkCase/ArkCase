@@ -33,7 +33,9 @@ import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.plugins.addressable.model.ContactMethod;
 import com.armedia.acm.plugins.addressable.model.PostalAddress;
+import com.armedia.acm.plugins.person.dao.OrganizationDao;
 import com.armedia.acm.plugins.person.model.Organization;
+import com.armedia.acm.plugins.person.model.OrganizationAssociation;
 import com.armedia.acm.plugins.person.model.PersonOrganizationAssociation;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.users.service.tracker.UserTrackerService;
@@ -42,8 +44,8 @@ import com.armedia.acm.web.api.MDCConstants;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItem;
 import org.apache.commons.io.IOUtils;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.slf4j.MDC;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -81,6 +83,8 @@ public class PortalCreateRequestService
     private UserTrackerService userTrackerService;
 
     private SaveFOIARequestService saveFOIARequestService;
+
+    private OrganizationDao organizationDao;
 
     public FOIARequest createFOIARequest(PortalFOIARequest in)
             throws PipelineProcessException, AcmUserActionFailedException, AcmCreateObjectFailedException
@@ -162,7 +166,7 @@ public class PortalCreateRequestService
         request.setRequestCategory(in.getRequestCategory());
         request.setDeliveryMethodOfResponse(in.getDeliveryMethodOfResponse());
 
-        if(in.getTitle() != null)
+        if (in.getTitle() != null)
         {
             request.setTitle(in.getTitle());
         }
@@ -196,9 +200,22 @@ public class PortalCreateRequestService
 
         if (in.getOrganization() != null && in.getOrganization().length() > 0)
         {
-            Organization organization = new Organization();
-            organization.setOrganizationValue(in.getOrganization());
-            organization.setOrganizationType("Corporation");
+            OrganizationAssociation organizationAssociation = new OrganizationAssociation();
+            Organization organization = null;
+
+            organization = getOrganizationDao().findByOrganizationName(in.getOrganization());
+            if (organization == null)
+            {
+                organization = new Organization();
+                organization.setOrganizationValue(in.getOrganization());
+                organization.setOrganizationType("Corporation");
+            }
+
+            organizationAssociation.setOrganization(organization);
+            organizationAssociation.setAssociationType("Other");
+
+            request.getOrganizationAssociations().add(organizationAssociation);
+
             requester.getOrganizations().add(organization);
 
             List<PersonOrganizationAssociation> personOrganizationAssociations = new ArrayList<>();
@@ -220,11 +237,12 @@ public class PortalCreateRequestService
         address.setStreetAddress2(in.getAddress2());
         address.setZip(in.getZip());
         address.setType("Business");
-        if((address.getStreetAddress() != null && !address.getStreetAddress().equals(""))
+        if ((address.getStreetAddress() != null && !address.getStreetAddress().equals(""))
                 || (address.getStreetAddress2() != null && !address.getStreetAddress2().equals(""))
                 || (address.getCity() != null && !address.getCity().equals(""))
                 || (address.getZip() != null && !address.getZip().equals(""))
-                || (address.getState() != null && !address.getState().equals(""))){
+                || (address.getState() != null && !address.getState().equals("")))
+        {
             requester.getAddresses().add(address);
         }
 
@@ -307,4 +325,13 @@ public class PortalCreateRequestService
         this.saveFOIARequestService = saveFOIARequestService;
     }
 
+    public OrganizationDao getOrganizationDao()
+    {
+        return organizationDao;
+    }
+
+    public void setOrganizationDao(OrganizationDao organizationDao)
+    {
+        this.organizationDao = organizationDao;
+    }
 }

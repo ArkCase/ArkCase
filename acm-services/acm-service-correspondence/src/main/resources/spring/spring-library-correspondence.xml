@@ -10,10 +10,9 @@
     <bean id="poiWordGenerator" class="com.armedia.acm.correspondence.utils.ParagraphRunPoiWordGenerator">
         <property name="correspondenceService" ref="correspondenceService"/>
         <property name="ecmFileDao" ref="ecmFileDao"/>
-        <property name="correspondenceMergeFieldsConfiguration" value="file:${user.home}/.arkcase/acm/correspondence-merge-fields.json"/>
         <property name="objectConverter" ref="objectConverter" />
         <property name="mergeFieldManager" ref="correspondenceMergeFieldManager"/>
-        <property name="acmApplication" ref="acmApplication"/>
+        <property name="appConfig" ref="applicationProperties"/>
     </bean>
 
     <import resource="file:${user.home}/.arkcase/acm/app-config.xml"/>

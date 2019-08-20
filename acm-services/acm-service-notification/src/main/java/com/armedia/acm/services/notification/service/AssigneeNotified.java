@@ -31,6 +31,8 @@ import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.model.NotificationConstants;
 import com.armedia.acm.services.users.dao.UserDao;
 
+import org.apache.commons.lang.StringUtils;
+
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -51,7 +53,7 @@ public class AssigneeNotified implements UsersNotified
         customNotification.setParentId((Long) notification[3]);
         customNotification.setParentType((String) notification[4]);
         customNotification.setParentName((String) notification[5]);
-        customNotification.setParentTitle((String) notification[6]);
+        customNotification.setParentTitle(StringUtils.left((String) notification[6], 1000));
         customNotification.setRelatedObjectId((Long) notification[7]);
         customNotification.setRelatedObjectType((String) notification[8]);
         customNotification.setActionDate((Date) notification[9]);

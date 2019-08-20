@@ -22,7 +22,8 @@
         "defaultDateLongTimeFormat": "MM/DD/YYYY HH:mm",
         "defaultDatePickerFormat": "MM/dd/yyyy",
         "defaultDateUIFormat": "MM/dd/yyyy",
-        "defaultDateTimeUIFormat": "MM/dd/yyyy HH:mm"
+        "defaultDateTimeUIFormat": "MM/dd/yyyy HH:mm",
+        "defaultDateTimeLongUIFormat": "MM/dd/yyyy HH:mm:ss"
     },
     "common.userOrGroupSearch": {
         "id": "userSearch",
@@ -73,6 +74,7 @@
             "defaultBodyAttachments": "Please find the attached document(s) for your review.",
             "defaultFooter": "Powered by ArkCase, Enterprise Case Management platform, http://www.arkcase.com",
             "successMessage": "The email was sent successfully",
+            "unsuccessMessage": "The email was not sent",
             "noEmailAddress": "There is no entered email for this "
         },
         "menu": {
@@ -664,7 +666,7 @@
     "common.directive.downloadAllAsZip": {
         "button": "Download All As Zip",
         "message": {
-            "start": "Zip file is downloading",
+            "start": "Zip file will be downloaded",
             "finish": "Zip file downloaded",
             "containerError": "Unable to find container",
             "downloadError": "Zip file download Failed"

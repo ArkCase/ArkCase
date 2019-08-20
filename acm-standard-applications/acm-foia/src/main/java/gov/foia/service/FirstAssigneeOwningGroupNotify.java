@@ -121,6 +121,7 @@ public class FirstAssigneeOwningGroupNotify implements ApplicationListener<CaseE
                     notification.setEmailAddresses(emailAddresses.stream().collect(Collectors.joining(",")));
                     notification.setTitle(String.format("Request:%s assigned to %s", event.getCaseFile().getCaseNumber(), assigneeFullName));
                     notification.setAttachFiles(false);
+                    notification.setUser(user.getUserId());
                     notificationDao.save(notification);
                 }
                 catch (MuleException e)

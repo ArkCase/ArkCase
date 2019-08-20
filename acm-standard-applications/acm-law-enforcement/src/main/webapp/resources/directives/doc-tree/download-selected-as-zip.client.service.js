@@ -25,9 +25,21 @@ angular.module('services').factory('DocTreeExt.DownloadSelectedAsZip', [ '$http'
         });
     };
 
+    var _downloadZipFile = function (selectedNodes) {
+        return $http({
+            method: 'GET',
+            url: 'api/latest/service/compressor/download/files/zip',
+            params: {
+                "zipFilePath": selectedNodes
+            },
+            responseType: 'arraybuffer'
+        });
+    };
+
     return {
         downloadSelectedFoldersAndFiles: _downloadSelectedFoldersAndFiles,
-        downloadSelectedFiles: _downloadSelectedFiles
+        downloadSelectedFiles: _downloadSelectedFiles,
+        downloadZipFile: _downloadZipFile
     };
 
 } ]);

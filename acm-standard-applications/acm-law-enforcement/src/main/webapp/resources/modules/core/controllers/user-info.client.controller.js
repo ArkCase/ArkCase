@@ -1,9 +1,9 @@
 'use strict';
 
-angular.module('core').controller('UserInfoController', [ '$scope', 'Profile.UserInfoService', 'Menus', 'Acm.LoginService', 'LookupService', 'MessageService', function($scope, UserInfoService, Menus, AcmLoginService, LookupService, MessageService) {
+angular.module('core').controller('UserInfoController', ['$scope', 'Profile.UserInfoService', 'Menus', 'Acm.LoginService', 'Admin.ApplicationSettingsService', 'MessageService', function ($scope, UserInfoService, Menus, AcmLoginService, ApplicationSettingsService, MessageService) {
 
-    var appConfig = LookupService.getConfig('app').then(function(data) {
-        $scope.helpUrl = data.helpUrl;
+    ApplicationSettingsService.getApplicationPropertiesConfig().then(function (response) {
+        $scope.helpUrl = response.data["application.properties.helpUrl"];
     });
 
     $scope.menu = Menus.getMenu('usermenu');

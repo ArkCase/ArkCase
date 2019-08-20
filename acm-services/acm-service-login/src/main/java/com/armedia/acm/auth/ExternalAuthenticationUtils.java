@@ -27,7 +27,7 @@ package com.armedia.acm.auth;
  * #L%
  */
 
-import com.armedia.acm.core.AcmApplication;
+import com.armedia.acm.core.ApplicationConfig;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 
@@ -37,12 +37,21 @@ import com.armedia.acm.services.users.model.AcmUser;
 public class ExternalAuthenticationUtils
 {
 
-    private AcmApplication acmApplication;
+    private ApplicationConfig applicationConfig;
     private UserDao userDao;
 
+    /*
+     * alfrescoUserIdLdapAttribute controls the user id that is sent to Alfresco in the
+     * X-Alfresco-Remote-User header, so that Alfresco knows who the real user is. In
+     * Kerberos and CAC (smart card) environments, sometimes the ArkCase user id is not the
+     * same as the Alfresco user id... The ArkCase user id could be "david.miller@armedia.com"
+     * and the Alfresco user id would be some number from the smart card, e.g. "9283923892".
+     * So with this attribute we can control what is sent to Alfresco.
+     * Valid values: uid, samAccountName, userPrincipalName, distinguishedName
+     */
     public String getEcmServiceUserId(AcmUser acmUser)
     {
-        switch (getAcmApplication().getAlfrescoUserIdLdapAttribute().toLowerCase())
+        switch (getApplicationConfig().getAlfrescoUserIdLdapAttribute().toLowerCase())
         {
         case "samaccountname":
             return acmUser.getsAMAccountName();
@@ -79,13 +88,13 @@ public class ExternalAuthenticationUtils
         this.userDao = userDao;
     }
 
-    public AcmApplication getAcmApplication()
+    public ApplicationConfig getApplicationConfig()
     {
-        return acmApplication;
+        return applicationConfig;
     }
 
-    public void setAcmApplication(AcmApplication acmApplication)
+    public void setApplicationConfig(ApplicationConfig applicationConfig)
     {
-        this.acmApplication = acmApplication;
+        this.applicationConfig = applicationConfig;
     }
 }

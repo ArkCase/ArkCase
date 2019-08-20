@@ -602,6 +602,77 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
     }
 
     @Override
+    public EcmFile updateFileTransaction(Authentication authentication, EcmFile ecmFile, InputStream fileInputStream, String fileExtension) throws IOException
+    {
+        File file = null;
+        try
+        {
+
+            if (ecmFile.getFileActiveVersionNameExtension() != null
+                    && ecmFile.getFileName().endsWith(ecmFile.getFileActiveVersionNameExtension()))
+            {
+                ecmFile.setFileName(getFolderAndFilesUtils().getBaseFileName(ecmFile.getFileName()));
+            }
+
+            log.debug("Creating ecm file pipeline context");
+            EcmFileTransactionPipelineContext pipelineContext = new EcmFileTransactionPipelineContext();
+
+            pipelineContext.setAuthentication(authentication);
+            pipelineContext.setEcmFile(ecmFile);
+            file = File.createTempFile("arkcase-update-file-transaction-", null);
+            FileUtils.copyInputStreamToFile(fileInputStream, file);
+            pipelineContext.setFileContents(file);
+
+            EcmTikaFile ecmTikaFile = new EcmTikaFile();
+
+            try
+            {
+                String fileName = ecmFile.getFileName() != null && ecmFile.getFileName().endsWith(ecmFile.getFileExtension())? ecmFile.getFileName() : ecmFile.getFileName() + "." + fileExtension;
+
+                ecmTikaFile = getEcmTikaFileService().detectFileUsingTika(file, fileName);
+            }
+            catch (TikaException | SAXException | IOException e1)
+            {
+                log.debug("Can not auto detect file using Tika");
+                ecmTikaFile.setContentType(ecmFile.getFileActiveVersionMimeType());
+                ecmTikaFile.setNameExtension(getFolderAndFilesUtils().getFileNameExtension(ecmFile.getFileName()));
+            }
+
+            pipelineContext.setDetectedFileMetadata(ecmTikaFile);
+
+            if (!ecmFile.getFileActiveVersionMimeType().contains("frevvo"))
+            {
+                ecmFile.setFileActiveVersionMimeType(ecmTikaFile.getContentType());
+            }
+            ecmFile.setFileActiveVersionNameExtension(ecmTikaFile.getNameExtension());
+
+            boolean searchablePDF = false;
+            if (ecmFileConfig.getSnowboundEnableOcr())
+            {
+                searchablePDF = folderAndFilesUtils.isSearchablePDF(file, ecmFile.getFileActiveVersionMimeType());
+            }
+            pipelineContext.setSearchablePDF(searchablePDF);
+
+            try
+            {
+                log.debug("Calling pipeline manager handlers");
+                return getEcmFileUpdatePipelineManager().executeOperation(ecmFile, pipelineContext, () -> pipelineContext.getEcmFile());
+            }
+            catch (Exception e)
+            {
+                log.error("pipeline handler call failed: {}", e.getMessage(), e);
+            }
+        }
+        finally
+        {
+            FileUtils.deleteQuietly(file);
+        }
+
+        log.debug("Returning from updateFileTransaction method");
+        return ecmFile;
+    }
+
+    @Override
     public EcmFile updateFileTransactionEventAware(Authentication authentication, EcmFile ecmFile, InputStream fileInputStream)
             throws IOException
     {
@@ -619,6 +690,25 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
         getFileEventPublisher().publishFileActiveVersionSetEvent(ecmFile, authentication, ipAddress, true);
 
         return ecmFile;
+    }
+
+    @Override
+    public EcmFile updateFileTransactionEventAware(Authentication authentication, EcmFile ecmFile, InputStream fileInputStream, String fileExtension) throws MuleException, IOException {
+
+        ecmFile = updateFileTransaction(authentication, ecmFile, fileInputStream, fileExtension);
+        String ipAddress = null;
+        if (authentication != null)
+        {
+            if (authentication.getDetails() != null && authentication.getDetails() instanceof AcmAuthenticationDetails)
+            {
+                ipAddress = ((AcmAuthenticationDetails) authentication.getDetails()).getRemoteAddress();
+            }
+        }
+
+        getFileEventPublisher().publishFileActiveVersionSetEvent(ecmFile, authentication, ipAddress, true);
+
+        return ecmFile;
+
     }
 
     @Override

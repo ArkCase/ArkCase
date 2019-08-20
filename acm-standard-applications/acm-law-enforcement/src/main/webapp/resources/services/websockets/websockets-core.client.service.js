@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module("services").factory("WebSocketsListener", [ '$q', '$timeout', 'Websockets.MessageHandler', 'Authentication', function($q, $timeout, messageHandler, Authentication) {
+angular.module("services").factory("WebSocketsListener", ['$q', '$timeout', 'Websockets.MessageHandler', 'Authentication', function ($q, $timeout, messageHandler, Authentication) {
 
     var user;
     Authentication.queryUserInfo().then(function(userInfo) {
@@ -20,6 +20,7 @@ angular.module("services").factory("WebSocketsListener", [ '$q', '$timeout', 'We
         SOCKET_URL: "/arkcase/stomp",
         LISTEN_TOPIC_OBJECTS: "/topic/objects/changed",
         GENERIC_TOPIC: "/topic/generic/",
+        SCHEDULED_JOBS_TOPIC: "/topic/jobStatus",
         UPLOAD_FILE_MANAGER_QUEUE: "/queue/Consumer.[CLIENT_ID].VirtualTopic.UploadFileManager:[USERNAME]",
         MESSAGE_BROKER: "/app/print-message",
         shouldStart: true,
@@ -75,6 +76,12 @@ angular.module("services").factory("WebSocketsListener", [ '$q', '$timeout', 'We
                 var message = JSON.parse(data.body);
                 messageHandler.handleGenericMessage(message);
             });
+
+            target.socket.stomp.subscribe(target.SCHEDULED_JOBS_TOPIC, function(data) {
+                var message = JSON.parse(data.body);
+                messageHandler.handleScheduledJobStatusMessage(message);
+            });
+
             var username = user.userId.replace(/\./g, "_DOT_").replace(/@/g, "_AT_");
             var destination = target.UPLOAD_FILE_MANAGER_QUEUE.replace("[CLIENT_ID]", username).replace("[USERNAME]", username);
             target.socket.stomp.subscribe(destination, function(data) {

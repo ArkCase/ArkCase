@@ -26,7 +26,9 @@ package com.armedia.acm.portalgateway.service;
  * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
  * #L%
  */
+
 import com.armedia.acm.portalgateway.model.PortalUser;
+import com.armedia.acm.portalgateway.model.PortalUserCredentials;
 import com.armedia.acm.portalgateway.model.UserRegistrationRequest;
 import com.armedia.acm.portalgateway.model.UserRegistrationResponse;
 import com.armedia.acm.portalgateway.model.UserResetRequest;
@@ -100,6 +102,13 @@ public class DefaultPluggablePortalUserService implements PortalUserService
         return getServiceProvider().updateUser(portalId, user);
     }
 
+    @Override
+    public PortalUser retrieveUser(String portalUserId, String portalId) throws PortalUserServiceException
+    {
+        log.debug("Retrieving user [{}] at portal with ID [{}].", portalUserId, portalId);
+        return getServiceProvider().retrieveUser(portalUserId, portalId);
+    }
+
     /*
      * (non-Javadoc)
      * @see com.armedia.acm.portalgateway.service.PortalUserService#authenticateUser(java.lang.String, java.lang.String)
@@ -145,6 +154,13 @@ public class DefaultPluggablePortalUserService implements PortalUserService
     {
         log.debug("Reseting passwrod for [{}] reset request for portal with [{}] ID.", resetId, portalId);
         return getServiceProvider().resetPassword(portalId, resetId, password);
+    }
+
+    @Override
+    public UserResetResponse changePassword(String portalId, String userId, PortalUserCredentials portalUserCredentials) throws PortalUserServiceException
+    {
+        log.debug("Changing password for [{}] for portal with [{}] ID.", userId, portalId);
+        return getServiceProvider().changePassword(portalId, userId, portalUserCredentials);
     }
 
     /*

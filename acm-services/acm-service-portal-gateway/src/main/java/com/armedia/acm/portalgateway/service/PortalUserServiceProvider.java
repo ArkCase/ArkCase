@@ -26,7 +26,9 @@ package com.armedia.acm.portalgateway.service;
  * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
  * #L%
  */
+
 import com.armedia.acm.portalgateway.model.PortalUser;
+import com.armedia.acm.portalgateway.model.PortalUserCredentials;
 import com.armedia.acm.portalgateway.model.UserRegistrationRequest;
 import com.armedia.acm.portalgateway.model.UserRegistrationResponse;
 import com.armedia.acm.portalgateway.model.UserResetRequest;
@@ -101,5 +103,9 @@ public interface PortalUserServiceProvider
      * @throws PortalUserServiceException
      */
     UserResetResponse resetPassword(String portalId, String resetId, String password) throws PortalUserServiceException;
+
+    UserResetResponse changePassword(String portalId, String userId, PortalUserCredentials portalUserCredentials) throws PortalUserServiceException;
+
+    PortalUser retrieveUser(String portalUserId, String portalId);
 
 }

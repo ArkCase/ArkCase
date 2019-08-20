@@ -6,22 +6,22 @@ package gov.foia.service;
  * %%
  * Copyright (C) 2014 - 2019 ArkCase LLC
  * %%
- * This file is part of the ArkCase software. 
- * 
- * If the software was purchased under a paid ArkCase license, the terms of 
- * the paid license agreement will prevail.  Otherwise, the software is 
+ * This file is part of the ArkCase software.
+ *
+ * If the software was purchased under a paid ArkCase license, the terms of
+ * the paid license agreement will prevail.  Otherwise, the software is
  * provided under the following open source license terms:
- * 
+ *
  * ArkCase is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *  
+ *
  * ArkCase is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
  * #L%
@@ -29,9 +29,12 @@ package gov.foia.service;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.addressable.model.ContactMethod;
 import com.armedia.acm.plugins.addressable.model.PostalAddress;
+import com.armedia.acm.plugins.person.dao.PersonDao;
 import com.armedia.acm.plugins.person.model.Organization;
+import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.portalgateway.model.PortalInfo;
 import com.armedia.acm.portalgateway.model.PortalUser;
+import com.armedia.acm.portalgateway.model.PortalUserCredentials;
 import com.armedia.acm.portalgateway.model.UserRegistrationRequest;
 import com.armedia.acm.portalgateway.model.UserRegistrationResponse;
 import com.armedia.acm.portalgateway.model.UserResetRequest;
@@ -62,6 +65,8 @@ import gov.foia.model.PortalFOIAPerson;
 import gov.foia.model.UserRegistrationRequestRecord;
 import gov.foia.model.UserResetRequestRecord;
 
+import javax.naming.AuthenticationException;
+
 /**
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Jul 12, 2018
  *
@@ -89,6 +94,8 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
 
     private PortalInfoDAO portalInfoDAO;
 
+    private PersonDao personDao;
+
     @Value("${foia.portalserviceprovider.directory.name}")
     private String directoryName;
 
@@ -109,7 +116,7 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
         if (registrationRecord.isPresent()
                 && registrationRecord.get().getRegistrationTime() + REGISTRATION_EXPIRATION > System.currentTimeMillis())
         {
-            return UserRegistrationResponse.pending();
+            return UserRegistrationResponse.pending(registrationRecord.get().getEmailAddress());
         }
         else
         {
@@ -152,6 +159,7 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
     public UserRegistrationResponse checkRegistrationStatus(String portalId, String registrationId)
     {
         Optional<UserRegistrationRequestRecord> registrationRecord = registrationDao.findByRegistrationId(registrationId);
+        String emailAddress = registrationRecord.get().getEmailAddress();
         if (!registrationRecord.isPresent())
         {
             return UserRegistrationResponse.requestRequired();
@@ -160,7 +168,7 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
         {
             if (registrationRecord.get().getRegistrationTime() + REGISTRATION_EXPIRATION > System.currentTimeMillis())
             {
-                return UserRegistrationResponse.pending();
+                return UserRegistrationResponse.pending(emailAddress);
             }
             else
             {
@@ -365,7 +373,7 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
 
                 try
                 {
-                    ldapAuthenticateService.changeUserPassword(registeredPedrson.get().getDefaultEmail().getValue(), password, password);
+                    ldapAuthenticateService.resetPortalUserPassword(registeredPedrson.get().getDefaultEmail().getValue(), password);
                 }
                 catch (AcmUserActionFailedException e)
                 {
@@ -382,6 +390,29 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
         }
     }
 
+
+    @Override
+    public UserResetResponse changePassword(String portalId, String userId, PortalUserCredentials portalUserCredentials) throws PortalUserServiceException
+    {
+
+             try
+                {
+                    ldapAuthenticateService.changeUserPassword(userId, portalUserCredentials.getPassword(), portalUserCredentials.getNewPassword());
+                }
+
+                catch (AcmUserActionFailedException e)
+                {
+                    if(e.getCause() instanceof AuthenticationException)
+                    {
+                        return UserResetResponse.invalidCredentials();
+                    }
+                   throw new PortalUserServiceException(String.format("Couldn't update password for LDAP user %s.", userId), e);
+
+                }
+
+                return UserResetResponse.passwordUpdated();
+    }
+
     /*
      * (non-Javadoc)
      * @see com.armedia.acm.portalgateway.service.PortalUserServiceProvider#updateUser(java.lang.String,
@@ -391,7 +422,27 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
     public PortalUser updateUser(String portalId, PortalUser user) throws PortalUserServiceException
     {
         // TODO Auto-generated method stub
-        return null;
+        Person person = getPersonDao().find(Long.valueOf(user.getPortalUserId()));
+
+        person.getAddresses().get(0).setCity(user.getCity());
+        person.getAddresses().get(0).setCountry(user.getCountry());
+        person.getAddresses().get(0).setState(user.getState());
+        person.getAddresses().get(0).setStreetAddress(user.getAddress1());
+        person.getAddresses().get(0).setStreetAddress2(user.getAddress2());
+        person.getAddresses().get(0).setZip(user.getZipCode());
+        person.getContactMethods().stream().filter(cm -> cm.getType().equals("Phone")).findFirst().get().setValue(user.getPhoneNumber());
+
+        personDao.save(person);
+
+        return portaluserFromPortalPerson(portalId, (PortalFOIAPerson) person);
+
+    }
+
+    @Override
+    public PortalUser retrieveUser(String portalUserId, String portalId)
+    {
+        Person person = getPersonDao().find(Long.valueOf(portalUserId));
+        return portaluserFromPortalPerson(portalUserId, (PortalFOIAPerson) person);
     }
 
     /**
@@ -653,4 +704,13 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
         this.ldapAuthenticateService = ldapAuthenticateService;
     }
 
+    public PersonDao getPersonDao()
+    {
+        return personDao;
+    }
+
+    public void setPersonDao(PersonDao personDao)
+    {
+        this.personDao = personDao;
+    }
 }

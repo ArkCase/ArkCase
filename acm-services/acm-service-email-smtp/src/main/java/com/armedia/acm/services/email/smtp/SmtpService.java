@@ -153,6 +153,7 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
                 exception = e;
                 log.error("Failed to send email to [{}].", emailAddress, exception);
             }
+            in.setMailSent(exception == null);
         }
         for (AcmEvent event : sentEvents)
         {
@@ -205,7 +206,7 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
                 exception = e;
             }
         }
-
+        in.setMailSent(exception == null);
         for (AcmEvent event : sentEvents)
         {
             boolean success = (exception == null);

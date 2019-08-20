@@ -1,14 +1,15 @@
 'use strict';
 
 angular.module('admin').controller('Admin.ManageScheduledJobsController',
-        [ '$scope', 'Helper.UiGridService', 'MessageService', 'UtilService', 'Util.DateService', 'Admin.ScheduledJobsManagementService', '$interval',
-            function($scope, HelperUiGridService, MessageService, Util, UtilDateService, AdminScheduledJobsManagementService, $interval) {
+    ['$scope', '$translate', 'Helper.UiGridService', 'MessageService',
+        'UtilService', 'Util.DateService', 'Admin.ScheduledJobsManagementService',
+        function ($scope, $translate, HelperUiGridService, MessageService, Util, UtilDateService, AdminScheduledJobsManagementService) {
 
             var gridHelper = new HelperUiGridService.Grid({
                 scope: $scope
             });
 
-            $scope.config.$promise.then(function(config) {
+            $scope.config.$promise.then(function (config) {
                 $scope.config = angular.copy(_.find(config.components, {
                     id: 'scheduledJobs'
                 }));
@@ -16,62 +17,82 @@ angular.module('admin').controller('Admin.ManageScheduledJobsController',
                 gridHelper.setColumnDefs($scope.config);
                 gridHelper.setBasicOptions($scope.config);
                 gridHelper.disableGridScrolling($scope.config);
-                gridHelper.addButton($scope.config, "Run", "fa fa-play", "runJob", "isRunHidden");
-                gridHelper.addButton($scope.config, "Pause", "fa fa-pause", "pauseJob", "isPauseHidden");
-                gridHelper.addButton($scope.config, "Resume", "fa fa-forward", "resumeJob", "isResumeHidden");
-                gridHelper.addButton($scope.config, "Spinner", "fa fa-circle-o-notch fa-spin", null, "spin");
+
+                var runBtnTitle = $translate.instant('admin.application.scheduled.jobs.btn.run');
+                var spinBtnTitle = $translate.instant('admin.application.scheduled.jobs.btn.spin');
+                var pauseBtnTitle = $translate.instant('admin.application.scheduled.jobs.btn.pause');
+                var resumeBtnTitle = $translate.instant('admin.application.scheduled.jobs.btn.resume');
+
+                gridHelper.addButton($scope.config, "Run", "fa fa-play", "runJob", "hideRun", runBtnTitle);
+                gridHelper.addButton($scope.config, "Spinner", "fa fa-circle-o-notch fa-spin",
+                    null, "hideSpin", spinBtnTitle);
+                gridHelper.addButton($scope.config, "Pause", "fa fa-pause", "pauseJob",
+                    "hidePause", pauseBtnTitle);
+                gridHelper.addButton($scope.config, "Resume", "fa fa-forward", "resumeJob",
+                    "hideResume", resumeBtnTitle);
             });
 
+            var jobStateMap = {};
+
             function getScheduledJobs() {
-                AdminScheduledJobsManagementService.getScheduledJobs().then(function(response) {
-                  $scope.gridOptions.data = response.data;
+                AdminScheduledJobsManagementService.getScheduledJobs().then(function (response) {
+                    jobStateMap = response.data;
+                    $scope.gridOptions.data = _.values(jobStateMap);
                 });
             }
 
             getScheduledJobs();
 
-            var interval;
-
-            var start = function() {
-                stop();
-                interval = $interval(getScheduledJobs, 5000);
-            };
-
-            var stop = function() {
-                $interval.cancel(interval);
-            };
-
-            $scope.$on('$destroy', function() {
-                stop();
+            $scope.$bus.subscribe("scheduled-jobs-status-update", function (message) {
+                var jobState = message.jobState;
+                $scope.$apply(function () {
+                    var oneTimeJobDone = !jobState.nextRun && !jobState.running && !jobState.paused;
+                    var deletedJob = !jobState.triggerName;
+                    if (deletedJob || oneTimeJobDone) {
+                        delete jobStateMap[jobState.triggerName];
+                    } else {
+                        var job = jobStateMap[jobState.triggerName];
+                        if (!job) {
+                            jobStateMap[jobState.triggerName] = jobState;
+                        } else {
+                            job.running = jobState.running;
+                            job.paused = jobState.paused;
+                            job.lastRun = jobState.lastRun;
+                            job.nextRun = jobState.nextRun;
+                        }
+                    }
+                    $scope.gridOptions.data = _.values(_.sortBy(jobStateMap, function (job) {
+                        return job.jobName;
+                    }));
+                });
             });
 
-            start();
-
-            $scope.isRunHidden = function(rowEntity) {
-                return rowEntity.running;
+            $scope.hideRun = function (rowEntity) {
+                return rowEntity.running || rowEntity.paused;
             };
 
-            $scope.isPauseHidden = function(rowEntity) {
-                return !rowEntity.running;
+            $scope.hidePause = function (rowEntity) {
+                var oneTimeJobRunning = rowEntity.running && !rowEntity.nextRun;
+                return rowEntity.paused || oneTimeJobRunning;
             };
 
-            $scope.isResumeHidden = function(rowEntity) {
+            $scope.hideResume = function (rowEntity) {
                 return !rowEntity.paused;
             };
 
-            $scope.spin = function(rowEntity) {
+            $scope.hideSpin = function (rowEntity) {
                 return !rowEntity.running;
             };
 
-            $scope.runJob = function(rowEntity) {
+            $scope.runJob = function (rowEntity) {
                 AdminScheduledJobsManagementService.runJob(rowEntity.jobName);
             };
 
-            $scope.pauseJob = function(rowEntity) {
+            $scope.pauseJob = function (rowEntity) {
                 AdminScheduledJobsManagementService.pauseJob(rowEntity.jobName);
             };
 
-            $scope.resumeJob = function(rowEntity) {
+            $scope.resumeJob = function (rowEntity) {
                 AdminScheduledJobsManagementService.resumeJob(rowEntity.jobName);
             };
 

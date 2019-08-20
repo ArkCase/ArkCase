@@ -33,6 +33,8 @@ package com.armedia.acm.services.notification.service;
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.model.NotificationConstants;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.Date;
 import java.util.List;
 
@@ -53,13 +55,13 @@ public interface UsersNotified
         notification.setParentId((Long) obj[3]);
         notification.setParentType((String) obj[4]);
         notification.setParentName((String) obj[5]);
-        notification.setParentTitle((String) obj[6]);
+        notification.setParentTitle(StringUtils.left((String) obj[6], 1000));
         notification.setRelatedObjectId((Long) obj[7]);
         notification.setRelatedObjectType((String) obj[8]);
         notification.setActionDate((Date) obj[9]);
-        if(10 < obj.length)
+        if (10 < obj.length)
         {
-            notification.setTemplateModelName((String) obj[10]);    
+            notification.setTemplateModelName((String) obj[10]);
         }
         notification.setStatus(NotificationConstants.STATUS_NEW);
         notification.setAction(NotificationConstants.ACTION_DEFAULT);

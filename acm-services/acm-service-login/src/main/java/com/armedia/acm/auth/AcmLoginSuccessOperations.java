@@ -30,6 +30,7 @@ package com.armedia.acm.auth;
 import static java.time.temporal.ChronoUnit.DAYS;
 
 import com.armedia.acm.core.AcmApplication;
+import com.armedia.acm.core.ApplicationConfig;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.pluginmanager.service.AcmPluginManager;
@@ -64,6 +65,7 @@ public class AcmLoginSuccessOperations
     private UserDao userDao;
     private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
     private ObjectConverter objectConverter;
+    private ApplicationConfig applicationConfig;
     private ExternalAuthenticationUtils externalAuthenticationUtils;
 
     public void onSuccessfulAuthentication(HttpServletRequest request, Authentication authentication)
@@ -196,12 +198,12 @@ public class AcmLoginSuccessOperations
         HttpSession session = request.getSession(true);
 
         session.setAttribute("acm_application", getAcmApplication());
-
+        session.setAttribute("issue_collector_flag", applicationConfig.getIssueCollectorFlag());
         String json = getObjectConverter().getJsonMarshaller().marshal(getAcmApplication().getObjectTypes());
         json = json == null || "null".equals(json) ? "[]" : json;
         session.setAttribute("acm_object_types", json);
 
-        log.debug("Added ACM application named '{}' to user session.", getAcmApplication().getApplicationName());
+        log.debug("Added ACM application named '{}' to user session.", applicationConfig.getApplicationName());
 
     }
 
@@ -267,6 +269,11 @@ public class AcmLoginSuccessOperations
     public void setObjectConverter(ObjectConverter objectConverter)
     {
         this.objectConverter = objectConverter;
+    }
+
+    public void setApplicationConfig(ApplicationConfig applicationConfig)
+    {
+        this.applicationConfig = applicationConfig;
     }
 
     public ExternalAuthenticationUtils getExternalAuthenticationUtils()

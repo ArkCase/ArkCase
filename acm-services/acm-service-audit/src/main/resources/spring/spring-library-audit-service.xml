@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:aop="http://www.springframework.org/schema/aop" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
-         http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+       xmlns:aop="http://www.springframework.org/schema/aop" xmlns:task="http://www.springframework.org/schema/task" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+         http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd">
+
+    <task:executor id="auditorExecutor" pool-size="5"/>
 
     <bean id="expressionParser" class="org.springframework.expression.spel.standard.SpelExpressionParser"/>
 
@@ -15,11 +17,11 @@
 
     <bean id="auditSyslogLogger" class="com.armedia.acm.audit.service.systemlogger.SyslogLogger">
         <property name="auditConfig" ref="auditConfig"/>
-        <property name="acmApplication" ref="acmApplication"/>
+        <property name="applicationConfig" ref="applicationProperties"/>
     </bean>
 
     <bean id="auditWindowsEventLogger" class="com.armedia.acm.audit.service.systemlogger.WindowsEventLogger">
-        <property name="acmApplication" ref="acmApplication"/>
+        <property name="applicationConfig" ref="applicationProperties"/>
         <property name="auditConfig" ref="auditConfig"/>
     </bean>
 

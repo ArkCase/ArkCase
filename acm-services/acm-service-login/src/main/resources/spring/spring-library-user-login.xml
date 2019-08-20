@@ -39,6 +39,7 @@
         <property name="userDao" ref="userJpaDao"/>
         <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
         <property name="objectConverter" ref="objectConverter"/>
+        <property name="applicationConfig" ref="applicationProperties"/>
         <property name="externalAuthenticationUtils" ref="externalAuthenticationUtils"/>
     </bean>
 
@@ -110,7 +111,7 @@
     </bean>
 
     <bean id="externalAuthenticationUtils" class="com.armedia.acm.auth.ExternalAuthenticationUtils">
-        <property name="acmApplication" ref="acmApplication"/>
+        <property name="applicationConfig" ref="applicationProperties"/>
         <property name="userDao" ref="userJpaDao"/>
     </bean>
 

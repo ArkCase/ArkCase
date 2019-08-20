@@ -1,11 +1,16 @@
 'use strict';
 
-angular.module('admin').controller('Admin.AddCMTemplateController', [ '$scope', '$modal', '$modalInstance', 'LookupService', 'Acm.StoreService', 'Admin.CMTemplatesService', 'ObjectService', 'Admin.CMMergeFieldsService', 'MessageService',
-    function($scope, $modal, $modalInstance, LookupService, Store, correspondenceService, ObjectService, correspondenceMergeFieldsService, messageService) {
+angular.module('admin').controller('Admin.AddCMTemplateController', [ '$scope', '$modal', '$modalInstance', 'LookupService', 'Acm.StoreService', 'Admin.CMTemplatesService', 'ObjectService', 'Admin.CMMergeFieldsService', 'MessageService','params',
+    function($scope, $modal, $modalInstance, LookupService, Store, correspondenceService, ObjectService, correspondenceMergeFieldsService, messageService, params) {
 
         $scope.objectTypes = $scope.config.objectTypes;
         $scope.selectedFiles = [];
         $scope.template = {};
+        $scope.selectedRow = params['selectedRow'];
+        $scope.isEdit = $scope.selectedRow !== undefined;
+        $scope.objec = '';
+
+
 
         function clearCachedForms(template) {
             var cacheConfigMap = new Store.SessionData(LookupService.SessionCacheNames.CONFIG_MAP);
@@ -83,6 +88,16 @@ angular.module('admin').controller('Admin.AddCMTemplateController', [ '$scope', 
                 $scope.mergeFieldsByType = mergeFields.data;
             });
         };
+
+        if($scope.isEdit){
+            var currentSelectedObjectType = $scope.correspondenceObjectTypes.find(function(objectType) {
+                return objectType.key === $scope.selectedRow.objectType;
+            });
+            $scope.selectedName = currentSelectedObjectType;
+            $scope.template.label = $scope.selectedRow.label;
+            $scope.changeTemplateModelProvider($scope.selectedRow.templateModelProvider);
+            $scope.change(currentSelectedObjectType);
+        }
 
         $scope.getNavBarTree = function(){
             var modalScope = $scope.$new();

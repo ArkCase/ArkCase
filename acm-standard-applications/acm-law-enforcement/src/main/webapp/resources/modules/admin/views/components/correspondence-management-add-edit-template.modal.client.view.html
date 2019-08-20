@@ -28,8 +28,10 @@
                     translate}}
                     <span class="required-asterisk">*</span>
                     <select ng-model="selectedName" ng-required="true"
+                            ng-value="currentSelectedObjectType.value"
                             ng-options="objectType.value | translate for objectType in correspondenceObjectTypes"
-                            ng-change="change(selectedName)" class="form-control input-md" required>
+                            ng-change="change(selectedName)"
+                            ng-disabled="isEdit" class="form-control input-md" required>
                     </select>
                 </label>
             </div>
@@ -39,7 +41,8 @@
                     <span class="required-asterisk">*</span>
                     <select ng-model="templateModelProvider" ng-required="true"
                             ng-options="key as value for (key, value) in templateModelProviders.data"
-                            ng-change="changeTemplateModelProvider(templateModelProvider)" class="form-control input-md" required>
+                            ng-change="changeTemplateModelProvider(templateModelProvider)"
+                            ng-disabled="isEdit" class="form-control input-md" required>
                     </select>
                 </label>
                 <i class="fa fa-info-circle cursor-pointer" ng-click="getNavBarTree(row.entity.templateModelProvider)"></i>
@@ -47,7 +50,7 @@
             <div class="row">
                 <label for="label"><span translate>admin.correspondenceManagement.templates.modal.label.label</span>
                     <span class="required-asterisk">*</span></label>
-                <input id="label" class="form-control" type="text" ng-model="template.label" required>
+                <input id="label" class="form-control" type="text" ng-model="template.label" required ng-disabled="isEdit">
             </div>
         </div>
     </form>

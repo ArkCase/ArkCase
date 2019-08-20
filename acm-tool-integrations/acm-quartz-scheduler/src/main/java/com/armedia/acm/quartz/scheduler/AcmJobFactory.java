@@ -43,8 +43,8 @@ import org.quartz.JobDetail;
 import org.quartz.Trigger;
 import org.quartz.TriggerBuilder;
 import org.quartz.spi.TriggerFiredBundle;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.scheduling.quartz.SpringBeanJobFactory;
@@ -78,7 +78,7 @@ public class AcmJobFactory extends SpringBeanJobFactory implements InitializingB
 
     private Map<String, AcmJobDescriptor> acmSimpleJobDescriptorMap;
 
-    private static final Logger logger = LoggerFactory.getLogger(AcmJobFactory.class);
+    private static final Logger logger = LogManager.getLogger(AcmJobFactory.class);
 
     @Override
     protected Object createJobInstance(TriggerFiredBundle bundle)
@@ -170,10 +170,44 @@ public class AcmJobFactory extends SpringBeanJobFactory implements InitializingB
         this.jobsJsonConfig = jobsJsonConfig;
     }
 
-    public Trigger createTrigger(AcmJobConfig jobConfig, JobDetail jobDetail)
+    private TriggerBuilder buildTrigger(AcmJobConfig jobConfig)
     {
         TriggerBuilder triggerBuilder = newTrigger()
-                .withIdentity(jobConfig.getName() + "Trigger")
+                .withIdentity(jobConfig.getName() + "Trigger");
+
+        if (StringUtils.isNotBlank(jobConfig.getCronExpression()))
+        {
+            logger.info("Trigger with cron schedule [{}] created for job [{}]", jobConfig.getCronExpression(), jobConfig.getName());
+            return triggerBuilder
+                    .withSchedule(cronSchedule(jobConfig.getCronExpression())
+                            .withMisfireHandlingInstructionDoNothing());
+        }
+        else
+        {
+            logger.info("Trigger with repeating interval of [{}] seconds created for job [{}]",
+                    jobConfig.getRepeatIntervalInSeconds(), jobConfig.getName());
+            if (jobConfig.getStartDelayInSeconds() > 0)
+            {
+                Date startAt = new Date(System.currentTimeMillis() + jobConfig.getStartDelayInSeconds() * 1000);
+                triggerBuilder.startAt(startAt);
+            }
+            return triggerBuilder
+                    .withSchedule(simpleSchedule()
+                            .withIntervalInSeconds(jobConfig.getRepeatIntervalInSeconds())
+                            .withMisfireHandlingInstructionNextWithExistingCount()
+                            .repeatForever());
+        }
+    }
+
+
+    public Trigger createTrigger(AcmJobConfig jobConfig)
+    {
+        return buildTrigger(jobConfig).build();
+    }
+
+    public Trigger createTrigger(AcmJobConfig jobConfig, JobDetail jobDetail)
+    {
+        TriggerBuilder triggerBuilder = buildTrigger(jobConfig)
                 .forJob(jobDetail);
 
         AcmJobDescriptor acmJobDescriptor = acmSimpleJobDescriptorMap.get(jobConfig.getName());
@@ -186,30 +220,6 @@ public class AcmJobFactory extends SpringBeanJobFactory implements InitializingB
                 triggerBuilder.usingJobData(jobDataMap);
             }
         }
-
-        if (StringUtils.isNotBlank(jobConfig.getCronExpression()))
-        {
-            logger.info("Trigger with cron schedule [{}] created for job [{}]", jobConfig.getCronExpression(), jobConfig.getName());
-            return triggerBuilder
-                    .withSchedule(cronSchedule(jobConfig.getCronExpression())
-                            .withMisfireHandlingInstructionDoNothing())
-                    .build();
-        }
-        else
-        {
-            logger.info("Trigger with repeating interval of [{}] seconds created for job [{}]",
-                    jobConfig.getRepeatInterval(), jobConfig.getName());
-            if (jobConfig.getStartDelay() > 0)
-            {
-                Date startAt = new Date(System.currentTimeMillis() + jobConfig.getStartDelay() * 1000);
-                triggerBuilder.startAt(startAt);
-            }
-            return triggerBuilder
-                    .withSchedule(simpleSchedule()
-                            .withIntervalInSeconds(jobConfig.getRepeatInterval())
-                            .withMisfireHandlingInstructionNextWithExistingCount()
-                            .repeatForever())
-                    .build();
-        }
+        return triggerBuilder.build();
     }
 }

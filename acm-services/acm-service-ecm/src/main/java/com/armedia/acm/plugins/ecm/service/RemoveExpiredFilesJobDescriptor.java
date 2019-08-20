@@ -29,9 +29,13 @@ package com.armedia.acm.plugins.ecm.service;
 
 import com.armedia.acm.quartz.scheduler.AcmJobDescriptor;
 
+import org.quartz.DisallowConcurrentExecution;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
+import org.quartz.PersistJobDataAfterExecution;
 
+@DisallowConcurrentExecution
+@PersistJobDataAfterExecution
 public class RemoveExpiredFilesJobDescriptor extends AcmJobDescriptor
 {
     private RemoveExpiredFilesService removeExpiredFilesService;

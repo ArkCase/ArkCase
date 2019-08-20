@@ -36,7 +36,7 @@ import java.util.Date;
 public class AcmJobEvent extends AcmEvent
 {
 
-    public AcmJobEvent(Object source, String eventType, String fireInstanceId, String jobName)
+    public AcmJobEvent(AcmJobState source, String eventType, String fireInstanceId)
     {
         super(source);
         setEventDate(new Date());
@@ -45,7 +45,7 @@ public class AcmJobEvent extends AcmEvent
         setObjectType("QRTZ_JOB");
         setUserId(fireInstanceId);
         setIpAddress(getHostAddress());
-        setEventDescription(String.format("%s - %s", jobName, eventType));
+        setEventDescription(String.format("%s - %s", source.getJobName(), eventType));
     }
 
     private String getHostAddress()
@@ -61,8 +61,8 @@ public class AcmJobEvent extends AcmEvent
     }
 
     @Override
-    public String getSource()
+    public AcmJobState getSource()
     {
-        return (String) super.getSource();
+        return (AcmJobState) super.getSource();
     }
 }

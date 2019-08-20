@@ -821,7 +821,7 @@
                             "numberLength": "Select or enter number length"
                         },
                         "arbitraryText": "Enter arbitrary text",
-                        "objectProperty": "Enter object property",
+                        "objectProperty": "Enter object property or SPEL expression",
                         "date": "Enter Date Format (ex: ddMMyyyyHHmmssSSS)",
                         "sequencePartName": "Enter sequence part name",
                         "sequencePartType": "Select part type"
@@ -904,6 +904,16 @@
                     "fileActiveVersionNameExtension": "Item Type"
                 }
             },
+            "resetConfiguration": {
+                "title": "Reset Configuration",
+                "btnReset.title": "Reset",
+                "modal": {
+                    "title": "Are you sure you want to reset configuration?",
+                    "body": "You can't undo this action!",
+                    "btnConfirm.title": "Confirm",
+                    "btnCancel.title": "Cancel"
+                }
+            },
             "objectTitleConfiguration": {
                 "title": "Object Title Configuration",
                 "save": "Save",
@@ -934,7 +944,14 @@
                 "column": {
                     "jobName.title": "Job Name",
                     "trigger.title": "Trigger interval(seconds) / cron",
-                    "lastRun.title": "Last Run"
+                    "lastRun.title": "Last Run",
+                    "nextRun.title": "Next Run"
+                },
+                "btn": {
+                    "run": "Run",
+                    "spin": "Executing",
+                    "pause": "Pause",
+                    "resume": "Resume"
                 }
             }
         },
