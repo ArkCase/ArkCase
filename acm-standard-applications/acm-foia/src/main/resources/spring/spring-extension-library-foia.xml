@@ -86,6 +86,17 @@
         <beans:bean id="dueDateUpdateJobDescriptor" class="gov.foia.service.DueDateUpdateJobDescriptor" parent="acmJobDescriptor">
             <beans:property name="holdedAndAppealedRequestsDueDateUpdate" ref="holdedAndAppealedRequestsDueDateUpdate"/>
         </beans:bean>
+        
+        <beans:bean id="dueDateReminder" class="gov.foia.service.DueDateReminder">
+            <property name="notificationDao" ref="notificationDao"/>
+            <property name="foiaRequestDao" ref="foiaRequestDao"/>
+            <property name="holidayConfigurationService" ref="holidayConfigurationService"/>
+            <property name="userDao" ref="userJpaDao"/>
+        </beans:bean>
+        
+        <beans:bean id="dueDateReminderJobDescriptor" class="gov.foia.service.DueDateReminderJobDescriptor">
+            <property name="dueDateReminder" ref="dueDateReminder"/>
+        </beans:bean>
 
         <beans:bean id="pdfConverter" class="com.armedia.acm.objectdataprocessing.PluggableDocumentConverter">
             <beans:property name="outputMimeType" value="application/pdf"/>
@@ -164,12 +175,6 @@
 
         <beans:bean id="foiaQueuedEventListener" class="gov.foia.listener.FOIAQueuedEventListener">
             <beans:property name="requestDao" ref="foiaRequestDao"/>
-        </beans:bean>
-
-        <beans:bean id="dueDateReminderSentListener" class="gov.foia.listener.DueDateReminderSentListener">
-            <beans:property name="foiaRequestDao" ref="foiaRequestDao"/>
-            <beans:property name="userDao" ref="userJpaDao"/>
-            <beans:property name="notificationDao" ref="notificationDao"/>
         </beans:bean>
 
         <beans:bean id="newRequestDocumentDescriptor" class="gov.foia.model.FOIADocumentDescriptor">
