@@ -33,9 +33,11 @@ import java.util.Date;
 import java.util.Objects;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class AcmJobDTO
+public class AcmJobState
 {
     private String jobName;
+
+    private String triggerName;
 
     private Long repeatIntervalInSeconds;
 
@@ -43,9 +45,44 @@ public class AcmJobDTO
 
     private Date lastRun;
 
-    private boolean isRunning = false;
+    private Date nextRun;
 
-    private boolean isPaused = false;
+    private boolean isRunning;
+
+    private boolean isPaused;
+
+    public AcmJobState(String jobName, String triggerName)
+    {
+        this.jobName = jobName;
+        this.triggerName = triggerName;
+        this.isRunning = false;
+        this.isPaused = false;
+    }
+
+    public AcmJobState(String jobName, String triggerName, Date lastRun, Date nextRun, boolean isRunning)
+    {
+        this(jobName, triggerName, lastRun, nextRun, isRunning, false);
+    }
+
+    public AcmJobState(String jobName, String triggerName, Date lastRun, Date nextRun, boolean isRunning, boolean isPaused)
+    {
+        this.jobName = jobName;
+        this.triggerName = triggerName;
+        this.lastRun = lastRun;
+        this.nextRun = nextRun;
+        this.isRunning = isRunning;
+        this.isPaused = isPaused;
+    }
+
+    public String getTriggerName()
+    {
+        return triggerName;
+    }
+
+    public void setTriggerName(String triggerName)
+    {
+        this.triggerName = triggerName;
+    }
 
     public String getJobName()
     {
@@ -87,11 +124,6 @@ public class AcmJobDTO
         isRunning = running;
     }
 
-    public boolean isPaused()
-    {
-        return isPaused;
-    }
-
     public Date getLastRun()
     {
         return lastRun;
@@ -100,6 +132,21 @@ public class AcmJobDTO
     public void setLastRun(Date lastRun)
     {
         this.lastRun = lastRun;
+    }
+
+    public Date getNextRun()
+    {
+        return nextRun;
+    }
+
+    public void setNextRun(Date nextRun)
+    {
+        this.nextRun = nextRun;
+    }
+
+    public boolean isPaused()
+    {
+        return isPaused;
     }
 
     public void setPaused(boolean paused)
@@ -114,10 +161,10 @@ public class AcmJobDTO
             return true;
         if (o == null || getClass() != o.getClass())
             return false;
-        AcmJobDTO acmJobDTO = (AcmJobDTO) o;
-        return Objects.equals(jobName, acmJobDTO.jobName) &&
-                Objects.equals(repeatIntervalInSeconds, acmJobDTO.repeatIntervalInSeconds) &&
-                Objects.equals(cronExpression, acmJobDTO.cronExpression);
+        AcmJobState acmJobStatus = (AcmJobState) o;
+        return Objects.equals(jobName, acmJobStatus.jobName) &&
+                Objects.equals(repeatIntervalInSeconds, acmJobStatus.repeatIntervalInSeconds) &&
+                Objects.equals(cronExpression, acmJobStatus.cronExpression);
     }
 
     @Override

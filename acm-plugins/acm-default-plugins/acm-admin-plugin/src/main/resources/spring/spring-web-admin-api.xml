@@ -300,4 +300,9 @@
     <bean id="acmSchedulerAPIController" class="com.armedia.acm.plugins.admin.web.api.AcmSchedulerAPIController">
         <property name="schedulerService" ref="acmSchedulerService"/>
     </bean>
+
+    <bean id="resetConfigurationAPIController" class="com.armedia.acm.plugins.admin.web.api.ResetConfigurationAPIController">
+        <property name="configurationPropertyService" ref="configurationPropertyService"/>
+    </bean>
+
 </beans>

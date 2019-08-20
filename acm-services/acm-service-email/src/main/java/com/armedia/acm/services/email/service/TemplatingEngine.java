@@ -27,7 +27,7 @@ package com.armedia.acm.services.email.service;
  * #L%
  */
 
-import com.armedia.acm.core.AcmApplication;
+import com.armedia.acm.core.ApplicationConfig;
 
 import java.io.IOException;
 import java.io.StringReader;
@@ -43,7 +43,7 @@ import freemarker.template.TemplateException;
 
 public class TemplatingEngine
 {
-    private AcmApplication acmApplication;
+    private ApplicationConfig applicationConfig;
 
     public String process(String emailBodyTemplate, String modelReferenceName, Object model) throws TemplateException, IOException
     {
@@ -58,7 +58,7 @@ public class TemplatingEngine
         // formatting date time for java.time.* classes isn't implemented in Freemarker
         templatingModel.put("formatDateTime", new FormatDateTimeMethodModel());
         // set the application base URL as a variable, to be used in any templates
-        templatingModel.put("baseURL", getAcmApplication().getBaseUrl());
+        templatingModel.put("baseURL", applicationConfig.getBaseUrl());
 
         Template t = new Template("templateName", new StringReader(emailBodyTemplate), cfg);
 
@@ -68,13 +68,13 @@ public class TemplatingEngine
         return out.toString();
     }
 
-    public AcmApplication getAcmApplication()
+    public void setApplicationConfig(ApplicationConfig applicationConfig)
     {
-        return acmApplication;
+        this.applicationConfig = applicationConfig;
     }
 
-    public void setAcmApplication(AcmApplication acmApplication)
+    public ApplicationConfig getApplicationConfig()
     {
-        this.acmApplication = acmApplication;
+        return applicationConfig;
     }
 }

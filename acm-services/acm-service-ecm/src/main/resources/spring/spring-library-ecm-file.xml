@@ -282,6 +282,14 @@
                         <value>application/vnd.ms-excel</value>
                     </list>
                 </entry>
+                <entry key="application/zip">
+                    <list>
+                        <value>application/x-zip-compressed</value>
+                    </list>
+                </entry>
+                <entry key="application/x-dosexec">
+                    <value>application/octet-stream</value>
+                </entry>
             </map>
         </property>
         <property name="progressIndicatorService" ref="progressIndicatorService"/>

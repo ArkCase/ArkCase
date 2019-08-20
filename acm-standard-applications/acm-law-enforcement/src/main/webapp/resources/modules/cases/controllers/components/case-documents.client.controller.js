@@ -28,8 +28,9 @@ angular.module('cases').controller(
                 'Admin.EmailSenderConfigurationService',
                 'MultiCorrespondence.Service',
                 'EcmService',
+                'Websockets.MessageHandler',
                 function($scope, $stateParams, $modal, $q, $timeout, $translate, Util, LocaleService, ConfigService, ObjectService, ObjectLookupService, CaseInfoService, DocTreeService, HelperObjectBrowserService, Authentication, PermissionsService, ObjectModelService, DocTreeExtWebDAV,
-                        DocTreeExtCheckin, CorrespondenceService, DocTreeExtEmail, ModalDialogService, EmailSenderConfigurationService, MultiCorrespondenceService, Ecm) {
+                         DocTreeExtCheckin, CorrespondenceService, DocTreeExtEmail, ModalDialogService, EmailSenderConfigurationService, MultiCorrespondenceService, Ecm, messageHandler) {
                     Authentication.queryUserInfo().then(function(userInfo) {
                         $scope.user = userInfo.userId;
                         return userInfo;
@@ -127,6 +128,10 @@ angular.module('cases').controller(
 
                                 return $scope.getActionPermission(action, node.data, objectType);
                             }
+                        });
+
+                        $scope.$bus.subscribe("zip_completed", function (data) {
+                            messageHandler.handleZipGenerationMessage(data.filePath);
                         });
 
                         //$scope.treeControl.addCommandHandler({

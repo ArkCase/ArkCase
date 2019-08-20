@@ -43,9 +43,9 @@ public class AcmJobEventPublisher implements ApplicationEventPublisherAware
     public static final String JOB_SCHEDULED = "com.armedia.acm.quartz.scheduler.job.scheduled";
     public static final String JOB_RESCHEDULED = "com.armedia.acm.quartz.scheduler.job.rescheduled";
 
-    public void publishJobEvent(String message, String eventType, String fireInstanceId, String jobName)
+    public void publishJobEvent(AcmJobState jobState, String eventType, String fireInstanceId)
     {
-        AcmJobEvent jobEvent = new AcmJobEvent(message, eventType, fireInstanceId, jobName);
+        AcmJobEvent jobEvent = new AcmJobEvent(jobState, eventType, fireInstanceId);
         applicationEventPublisher.publishEvent(jobEvent);
     }
 

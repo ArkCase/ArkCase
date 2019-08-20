@@ -110,7 +110,7 @@ angular.module('cases').controller(
                 var states = data[8];
                 var configTitle = data[9];
 
-                if(!Util.isEmpty(configTitle)) {
+                if (!Util.isEmpty(configTitle)) {
                     $scope.enableTitle = configTitle.data.CASE_FILE.enableTitleField;
                 }
                 $scope.organizationTypes = organizationTypes;
@@ -142,6 +142,8 @@ angular.module('cases').controller(
 
                 //get json data for new foia request
                 angular.copy(Data.getData(), $scope.config.data);
+
+                $scope.config.data.organizationAssociations = [];
 
                 $scope.config.data.requestType = $scope.requestTypes[0].key;
 
@@ -298,6 +300,10 @@ angular.module('cases').controller(
                 association.personToOrganizationAssociationType = data.type;
                 association.organizationToPersonAssociationType = data.inverseType;
 
+                var organizationAssociation = {};
+                organizationAssociation["associationType"] = data.type;
+                organizationAssociation["organization"] = data.organization;
+
                 if (data.isDefault) {
                     //find and change previously default organization
                     var defaultAssociation = _.find($scope.config.data.originator.person.organizationAssociations, function (object) {
@@ -316,6 +322,7 @@ angular.module('cases').controller(
 
                 if (!_.includes($scope.config.data.originator.person.organizationAssociations, association)) {
                     $scope.config.data.originator.person.organizationAssociations.push(association);
+                    $scope.config.data.organizationAssociations.push(organizationAssociation);
                 }
             }
 
@@ -338,7 +345,7 @@ angular.module('cases').controller(
 
                 for (var property in $scope.uploadFilesDescription) {
                     if ($scope.uploadFilesDescription.hasOwnProperty(property)) {
-                        angular.forEach($scope.uploadFilesDescription[property], function(value){
+                        angular.forEach($scope.uploadFilesDescription[property], function (value) {
                             formdata.append(property, value);
                         });
                     }

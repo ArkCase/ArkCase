@@ -11,6 +11,7 @@
         <property name="notificationDao" ref="notificationDao"/>
         <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
         <property name="compressorServiceConfig" ref="compressorServiceConfig"/>
+        <property name="genericMessagesChannel" ref="genericMessagesChannel"/>
     </bean>
 
     <bean id="fileCompressThreadPoolTaskExecutor" class="com.armedia.acm.web.api.MDCThreadPoolTaskExecutor">

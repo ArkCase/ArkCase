@@ -2,10 +2,10 @@
     <span translate>admin.correspondenceManagement.mergefields.addModal.mergeFieldForm</span>
 </div>
 <div class="modal-body">
-   <form>
+   <form name="modifyMergeFieldForm">
         <div class="form-group">
             <label for="fieldId" translate>admin.correspondenceManagement.mergefields.addModal.fieldId</label><span class="required-asterisk">*</span>
-            <input ng-model="fieldId" id="fieldId" type="text" class="input-md form-control"
+            <input ng-model="fieldId" id="fieldId" type="text" class="input-md form-control" data-ng-required="true"
                     placeholder="{{ 'admin.correspondenceManagement.mergefields.addModal.placeHolders.fieldId' | translate }}" ng-readonly="isEdit">
         </div>
         <div class="form-group">
@@ -31,7 +31,7 @@
     <button class="btn btn-secondary" ng-click="onClickCancel()">
         <span translate>admin.correspondenceManagement.templates.modal.btnCancel.text</span>
     </button>
-    <button class="btn btn-primary" ng-click="addMergeField()">
+    <button class="btn btn-primary" ng-click="addMergeField()" ng-disabled="modifyMergeFieldForm.$invalid">
         <span translate>admin.correspondenceManagement.mergefields.addModal.addMergeField</span>
     </button>
 </div>

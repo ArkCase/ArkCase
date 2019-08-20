@@ -40,8 +40,9 @@ import com.armedia.acm.services.notification.dao.NotificationDao;
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.users.model.AcmUser;
 
-import org.apache.logging.log4j.Logger;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.security.core.Authentication;
 
 import java.io.FileNotFoundException;
@@ -117,7 +118,7 @@ public class NotificationGroupEmailSenderService
                 notification.setParentType(caseFile.getObjectType());
                 notification.setParentId(caseId);
                 notification.setParentName(caseFile.getCaseNumber());
-                notification.setParentTitle(caseFile.getDetails());
+                notification.setParentTitle(StringUtils.left(caseFile.getDetails(), 1000));
                 notification.setUser(acmUser.getUserId());
                 notification.setEmailAddresses(emailAddresses.stream().collect(Collectors.joining(",")));
                 notificationDao.save(notification);

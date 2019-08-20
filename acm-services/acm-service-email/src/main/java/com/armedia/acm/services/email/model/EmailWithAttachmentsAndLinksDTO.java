@@ -38,6 +38,8 @@ public class EmailWithAttachmentsAndLinksDTO extends EmailWithEmbeddedLinksDTO i
     private List<Long> attachmentIds;
 
     private List<String> filePaths;
+    
+    private Boolean mailSent = true;
 
     @Override
     public List<Long> getAttachmentIds()
@@ -61,4 +63,13 @@ public class EmailWithAttachmentsAndLinksDTO extends EmailWithEmbeddedLinksDTO i
         this.filePaths = filePaths;
     }
 
+    public Boolean getMailSent() 
+    {
+        return mailSent;
+    }
+
+    public void setMailSent(Boolean mailSent) 
+    {
+        this.mailSent = mailSent;
+    }
 }

@@ -31,6 +31,7 @@ import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.core.provider.TemplateModelProvider;
 import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.data.service.AcmDataService;
+import com.armedia.acm.services.notification.helper.UserInfoHelper;
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.service.provider.model.GenericTemplateModel;
 import com.armedia.acm.services.participants.model.AcmAssignedObject;
@@ -41,13 +42,14 @@ import java.util.Objects;
 public class NotificationGroupTemplateModelProvider implements TemplateModelProvider<GenericTemplateModel>
 {
     private AcmDataService dataService;
+    private UserInfoHelper userInfoHelper;
 
     @Override
     public GenericTemplateModel getModel(Object notificationObject)
     {
         GenericTemplateModel genericTemplateModelData = new GenericTemplateModel();
         Notification notification = (Notification) notificationObject;
-        genericTemplateModelData.setObjectNumber(notification.getParentId().toString());
+        genericTemplateModelData.setObjectNumber(notification.getParentName());
         genericTemplateModelData.setObjectTitle(notification.getParentTitle());
 
         AcmAbstractDao<AcmObject> dao = getDataService().getDaoByObjectType(notification.getParentType());
@@ -59,7 +61,9 @@ public class NotificationGroupTemplateModelProvider implements TemplateModelProv
             AcmParticipant assignee = acmAssignedObject.getParticipants().stream().filter(acmParticipant -> acmParticipant.getParticipantType()
                     .equals("assignee")).findFirst().orElse(null);
 
-            genericTemplateModelData.setOtherObjectValue(Objects.nonNull(assignee) ? assignee.getParticipantLdapId() : "");
+            String baseUserId = Objects.nonNull(assignee) ? getUserInfoHelper().removeUserPrefix(assignee.getParticipantLdapId()) : "";
+
+            genericTemplateModelData.setOtherObjectValue(baseUserId);
         }
 
         return genericTemplateModelData;
@@ -79,6 +83,16 @@ public class NotificationGroupTemplateModelProvider implements TemplateModelProv
     public void setDataService(AcmDataService dataService)
     {
         this.dataService = dataService;
+    }
+
+    public UserInfoHelper getUserInfoHelper()
+    {
+        return userInfoHelper;
+    }
+
+    public void setUserInfoHelper(UserInfoHelper userInfoHelper)
+    {
+        this.userInfoHelper = userInfoHelper;
     }
 }
 

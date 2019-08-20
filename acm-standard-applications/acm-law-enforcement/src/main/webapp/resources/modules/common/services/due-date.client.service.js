@@ -99,7 +99,7 @@ angular.module('services').service('DueDate.Service', [ '$translate', function($
         var momentDate = moment();
         var days = 0;
         if (momentDueDate > momentDate) { //calculate days remaining
-            while (momentDate < dueDate) {
+            while (momentDate < momentDueDate) {
                 momentDate.add(1, 'days');
                 if (!isWeekend(momentDate) && !isHoliday(holidays, momentDate)) {
                     days += 1;
@@ -132,7 +132,7 @@ angular.module('services').service('DueDate.Service', [ '$translate', function($
         var momentDate = moment();
         var days = 0;
         if(momentDueDate > momentDate) { //calculate days remaining
-            while (momentDate < dueDate) {
+            while (momentDate < momentDueDate) {
                 momentDate.add(1, 'days');
                 if (!isHoliday(holidays, momentDate)) {
                     days += 1;

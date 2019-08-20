@@ -38,10 +38,10 @@ public class AcmJobConfig
     private String clazz;
 
     @JsonProperty("startDelayInSeconds")
-    private int startDelay;
+    private int startDelayInSeconds;
 
     @JsonProperty("repeatIntervalInSeconds")
-    private int repeatInterval;
+    private int repeatIntervalInSeconds;
 
     @JsonProperty("cronExpression")
     private String cronExpression;
@@ -69,24 +69,24 @@ public class AcmJobConfig
         this.clazz = clazz;
     }
 
-    public int getStartDelay()
+    public int getStartDelayInSeconds()
     {
-        return startDelay;
+        return startDelayInSeconds;
     }
 
-    public void setStartDelay(int startDelay)
+    public void setStartDelayInSeconds(int startDelayInSeconds)
     {
-        this.startDelay = startDelay;
+        this.startDelayInSeconds = startDelayInSeconds;
     }
 
-    public int getRepeatInterval()
+    public int getRepeatIntervalInSeconds()
     {
-        return repeatInterval;
+        return repeatIntervalInSeconds;
     }
 
-    public void setRepeatInterval(int repeatInterval)
+    public void setRepeatIntervalInSeconds(int repeatIntervalInSeconds)
     {
-        this.repeatInterval = repeatInterval;
+        this.repeatIntervalInSeconds = repeatIntervalInSeconds;
     }
 
     public String getCronExpression()

@@ -63,10 +63,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
 import org.springframework.scheduling.annotation.Async;
 
 import java.io.File;
@@ -89,7 +89,6 @@ public class AWSTranscribeServiceImpl implements TranscribeIntegrationService
     private AmazonS3 s3Client;
     private AmazonTranscribe transcribeClient;
     private MuleContextManager muleContextManager;
-    private String credentialConfigurationFileLocation;
     private MediaEngineIntegrationEventPublisher mediaEngineIntegrationEventPublisher;
     private AWSTranscribeConfigurationService awsTranscribeConfigurationService;
     private AWSTranscribeCredentialsConfigurationService awsTranscribeCredentialsConfigurationService;
@@ -109,7 +108,8 @@ public class AWSTranscribeServiceImpl implements TranscribeIntegrationService
         AWSTranscribeConfiguration configuration = getAwsTranscribeConfigurationService().getAWSTranscribeConfig();
 
         ArkCaseAWSCredentialsProviderChain credentialsProviderChain = new ArkCaseAWSCredentialsProviderChain(
-                getCredentialConfigurationFileLocation(), configuration.getProfile(), getAwsTranscribeCredentialsConfigurationService());
+                getAwsTranscribeCredentialsConfigurationService());
+
         s3Client = AmazonS3ClientBuilder.standard().withCredentials(credentialsProviderChain)
                 .withRegion(Regions.fromName(configuration.getRegion())).build();
         transcribeClient = AmazonTranscribeClientBuilder.standard().withCredentials(credentialsProviderChain)
@@ -571,16 +571,6 @@ public class AWSTranscribeServiceImpl implements TranscribeIntegrationService
     public void setMuleContextManager(MuleContextManager muleContextManager)
     {
         this.muleContextManager = muleContextManager;
-    }
-
-    public String getCredentialConfigurationFileLocation()
-    {
-        return credentialConfigurationFileLocation;
-    }
-
-    public void setCredentialConfigurationFileLocation(String credentialConfigurationFileLocation)
-    {
-        this.credentialConfigurationFileLocation = credentialConfigurationFileLocation;
     }
 
     public AWSTranscribeConfigurationService getAwsTranscribeConfigurationService()

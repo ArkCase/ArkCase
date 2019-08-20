@@ -29,24 +29,26 @@ package gov.foia.service;
 
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
-import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.casefile.service.GetCaseByNumberService;
+import com.armedia.acm.services.config.lookups.model.StandardLookupEntry;
+import com.armedia.acm.services.config.lookups.service.LookupDao;
 import com.armedia.acm.services.notification.dao.NotificationDao;
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.search.model.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.search.service.SearchResults;
-
 import com.armedia.acm.services.users.dao.UserDao;
-import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.service.group.GroupService;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.mule.api.MuleException;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -54,7 +56,6 @@ import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
@@ -67,13 +68,12 @@ import gov.foia.model.FOIARequest;
 import gov.foia.model.PortalFOIAReadingRoom;
 import gov.foia.model.PortalFOIARequest;
 import gov.foia.model.PortalFOIARequestStatus;
-import org.springframework.security.core.context.SecurityContextHolder;
 
 /**
  * @author sasko.tanaskoski
  *
  */
-public class  PortalRequestService
+public class PortalRequestService
 {
     private final Logger log = LogManager.getLogger(getClass());
 
@@ -86,6 +86,8 @@ public class  PortalRequestService
     private GetCaseByNumberService getCaseByNumberService;
 
     private UserDao userDao;
+
+    private LookupDao lookupDao;
 
     private NotificationDao notificationDao;
 
@@ -201,34 +203,47 @@ public class  PortalRequestService
     {
         FOIARequest request = (FOIARequest) getCaseFileDao().findByCaseNumber(requestNumber);
 
-        if(Objects.isNull(request))
+        if (Objects.isNull(request))
         {
             return;
         }
 
         Set<String> officersGroupMemberEmailAddresses = new HashSet<>();
 
-        String members = null;
+        String members = "";
         try
         {
-            members = getGroupService().getUserMembersForGroup("OFFICERS@ARMEDIA.COM", Optional.empty(), SecurityContextHolder.getContext().getAuthentication());
+            List<StandardLookupEntry> downloadResponseNotificationGroup = (List<StandardLookupEntry>) getLookupDao()
+                    .getLookupByName("downloadResponseNotificationGroup").getEntries();
+            StandardLookupEntry groupNameLookupEntry = downloadResponseNotificationGroup.stream()
+                    .filter(standardLookupEntry -> standardLookupEntry.getKey().equals("groupName")).findFirst().orElse(null);
+
+            if (Objects.nonNull(groupNameLookupEntry))
+            {
+                members = getGroupService().getUserMembersForGroup(groupNameLookupEntry.getValue(), Optional.empty(),
+                        SecurityContextHolder.getContext().getAuthentication());
+            }
+
         }
         catch (MuleException e)
         {
-            log.warn("Could not read members of OFFICERS group");
+            log.warn("Could not read members of request download notification group");
         }
 
-        JSONArray membersArray = getSearchResults().getDocuments(members);
-
-        for (int i = 0; i < membersArray.length(); i++)
+        if (StringUtils.isNotBlank(members))
         {
-            JSONObject memberObject = membersArray.getJSONObject(i);
-            String emailAddress = getSearchResults().extractString(memberObject, "email_lcs");
+            JSONArray membersArray = getSearchResults().getDocuments(members);
 
-            officersGroupMemberEmailAddresses.add(emailAddress);
+            for (int i = 0; i < membersArray.length(); i++)
+            {
+                JSONObject memberObject = membersArray.getJSONObject(i);
+                String emailAddress = getSearchResults().extractString(memberObject, "email_lcs");
+
+                officersGroupMemberEmailAddresses.add(emailAddress);
+            }
         }
 
-        if(!officersGroupMemberEmailAddresses.isEmpty())
+        if (!officersGroupMemberEmailAddresses.isEmpty())
         {
             Notification notification = new Notification();
 
@@ -240,7 +255,7 @@ public class  PortalRequestService
             notification.setParentId(request.getId());
             notification.setParentType(request.getRequestType());
             notification.setParentName(request.getCaseNumber());
-            notification.setParentTitle(request.getDetails());
+            notification.setParentTitle(StringUtils.left(request.getDetails(), 1000));
             notification.setNote(downloadedDateTimeFormatted);
             notification.setEmailAddresses(officersGroupMemberEmailAddresses.stream().collect(Collectors.joining(",")));
             notification.setUser(SecurityContextHolder.getContext().getAuthentication().getName());
@@ -335,6 +350,16 @@ public class  PortalRequestService
         this.userDao = userDao;
     }
 
+    public LookupDao getLookupDao()
+    {
+        return lookupDao;
+    }
+
+    public void setLookupDao(LookupDao lookupDao)
+    {
+        this.lookupDao = lookupDao;
+    }
+
     public NotificationDao getNotificationDao()
     {
         return notificationDao;
@@ -363,5 +388,18 @@ public class  PortalRequestService
     public void setSearchResults(SearchResults searchResults)
     {
         this.searchResults = searchResults;
+    }
+
+    public List<PortalFOIARequestStatus> getLoggedUserExternalRequests(String emailAddress) throws AcmObjectNotFoundException
+    {
+        List<PortalFOIARequestStatus> responseRequests = getRequestDao().getLoggedUserExternalRequests(emailAddress);
+        if (responseRequests.isEmpty())
+        {
+            log.info("FOIA Requests not found for the logged user [{}]]", emailAddress);
+            throw new AcmObjectNotFoundException("PortalFOIARequestStatus", null,
+                    "FOIA Requests not found for the logged user" + emailAddress + " not found");
+
+        }
+        return responseRequests;
     }
 }
