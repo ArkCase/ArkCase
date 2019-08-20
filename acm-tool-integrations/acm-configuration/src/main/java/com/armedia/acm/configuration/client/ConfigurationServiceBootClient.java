@@ -86,23 +86,17 @@ public class ConfigurationServiceBootClient
     public Map<String, Object> loadConfiguration(String url)
     {
         Environment result = getRemoteEnvironment(configRestTemplate(), url, null);
-        Map<String, Object> compositeMap = new HashMap<>();
-
-        if (result.getPropertySources() != null)
-        {
-            for (PropertySource source : result.getPropertySources())
-            {
-                Map<String, Object> map = source.getSource();
-                map.forEach(compositeMap::putIfAbsent);
-            }
-        }
-
-        return compositeMap;
+        return getCompositeMap(result);
     }
 
     public Map<String, Object> loadConfiguration(String url, String name)
     {
         Environment result = getRemoteEnvironment(configRestTemplate(), url, name);
+        return getCompositeMap(result);
+    }
+
+    private Map<String, Object> getCompositeMap(Environment result)
+    {
         Map<String, Object> compositeMap = new HashMap<>();
 
         if (result.getPropertySources() != null)
