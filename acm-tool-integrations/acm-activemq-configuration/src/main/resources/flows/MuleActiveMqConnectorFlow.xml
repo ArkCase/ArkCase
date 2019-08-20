@@ -14,7 +14,7 @@
         <spring:import resource="classpath:/spring/spring-library-activemq.xml"/>
 
         <spring:bean id="activeMqPropertiesConfig" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
-            <spring:property name="properties" value="#{acmConfigurationProperties.getPropertiesFromActiveMqYaml()}"/>
+            <spring:property name="properties" value="#{activeMqPropertiesResolver.getProperties()}"/>
         </spring:bean>
     </spring:beans>
 
