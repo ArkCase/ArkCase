@@ -26,12 +26,11 @@ public class DueDateReminder
         LocalDate oneDayFromNow = holidayConfigurationService.addWorkingDaysToDate(LocalDate.now(), 1);
         LocalDate fiveDaysFromNow = holidayConfigurationService.addWorkingDaysToDate(LocalDate.now(), 5);
 
-        List<FOIARequest> foiaRequests = foiaRequestDao.findAll();
+        List<FOIARequest> foiaRequests = foiaRequestDao.findAllNotReleasedRequests();
         for (FOIARequest request : foiaRequests)
         {
-            if (request.getStatus() != "RELEASED"
-                    && (request.getDueDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().equals(oneDayFromNow)
-                            || request.getDueDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().equals(fiveDaysFromNow)))
+            if (request.getDueDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().equals(oneDayFromNow)
+                    || request.getDueDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().equals(fiveDaysFromNow))
             {
                 AcmUser user = getUserDao().findByUserId(request.getAssigneeLdapId());
 
