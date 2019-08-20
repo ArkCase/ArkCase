@@ -18,7 +18,7 @@ import java.util.Properties;
 /**
  * @author ivana.shekerova on 8/14/2019.
  */
-public class AcmConfigurationProperties
+public class ActiveMqPropertiesResolver
 {
     private final static String CONFIGURATION_SERVER_URL = "configuration.server.url";
 
@@ -28,7 +28,7 @@ public class AcmConfigurationProperties
     private ConfigurableEnvironment configurableEnvironment;
     private ConfigurationServiceBootClient configurationServiceBootClient;
 
-    public Properties getPropertiesFromActiveMqYaml()
+    public Properties getProperties()
     {
         environment = new StandardEnvironment();
         configurationServiceBootClient = new ConfigurationServiceBootClient();
