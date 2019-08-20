@@ -32,17 +32,16 @@ import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileParticipantChangedEvent;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.context.ApplicationListener;
 
 public class FileParticipantChangedEventListener implements ApplicationListener<EcmFileParticipantChangedEvent>
 {
 
-    private final transient Logger log = LoggerFactory.getLogger(getClass());
+    private static final Logger log = LogManager.getLogger(FileParticipantChangedEventListener.class);
 
     private ChangedParticipantToJmsSender changedParticipantToJmsSender;
-    private String directoryName;
 
     @Override
     public void onApplicationEvent(EcmFileParticipantChangedEvent event)
@@ -80,15 +79,5 @@ public class FileParticipantChangedEventListener implements ApplicationListener<
     public void setChangedParticipantToJmsSender(ChangedParticipantToJmsSender changedParticipantToJmsSender)
     {
         this.changedParticipantToJmsSender = changedParticipantToJmsSender;
-    }
-
-    public String getDirectoryName()
-    {
-        return directoryName;
-    }
-
-    public void setDirectoryName(String directoryName)
-    {
-        this.directoryName = directoryName;
     }
 }

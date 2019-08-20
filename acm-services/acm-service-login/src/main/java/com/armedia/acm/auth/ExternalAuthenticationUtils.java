@@ -40,7 +40,7 @@ public class ExternalAuthenticationUtils
     private AcmApplication acmApplication;
     private UserDao userDao;
 
-    public String getAlfrescoUserIdLdapAttributeValue(AcmUser acmUser)
+    public String getEcmServiceUserId(AcmUser acmUser)
     {
         switch (getAcmApplication().getAlfrescoUserIdLdapAttribute().toLowerCase())
         {
@@ -63,10 +63,10 @@ public class ExternalAuthenticationUtils
         return getUserDao().findByUserId(userId);
     }
 
-    public String getAlfrescoUserIdByParticipantLdapId(String participantLdapId)
+    public String getEcmServiceUserIdByParticipantLdapId(String participantLdapId)
     {
         AcmUser acmUser = getUserByUserId(participantLdapId);
-        return getAlfrescoUserIdLdapAttributeValue(acmUser);
+        return getEcmServiceUserId(acmUser);
     }
 
     public UserDao getUserDao()

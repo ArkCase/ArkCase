@@ -37,8 +37,8 @@ import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.web.api.MDCConstants;
 
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.slf4j.MDC;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -138,7 +138,7 @@ public class AcmLoginSuccessOperations
         HttpSession session = request.getSession(true);
         AcmUser acmUser = (AcmUser) session.getAttribute("acm_user");
 
-        String alfrescoUserId = getExternalAuthenticationUtils().getAlfrescoUserIdLdapAttributeValue(acmUser);
+        String alfrescoUserId = getExternalAuthenticationUtils().getEcmServiceUserId(acmUser);
         session.setAttribute("acm_alfresco_username", alfrescoUserId);
 
         log.debug("Session 'acm_alfresco_username' set to '{}'", alfrescoUserId);

@@ -44,13 +44,11 @@
     <bean id="fileParticipantsChangedEventListener"
         class="com.armedia.acm.plugins.ecm.service.FileParticipantChangedEventListener">
         <property name="changedParticipantToJmsSender" ref="changedParticipantToJmsSender"/>
-        <property name="directoryName" value="armedia"/>
     </bean>
 
     <bean id="folderParticipantsChangedEventListener"
         class="com.armedia.acm.plugins.ecm.service.FolderParticipantChangedEventListener">
         <property name="changedParticipantToJmsSender" ref="changedParticipantToJmsSender"/>
-        <property name="directoryName" value="armedia"/>
     </bean>
 
     <bean id="folderDataAccessUpdateLocator"
@@ -523,7 +521,7 @@
     </bean>
 
     <bean id="removeExpiredFilesJobDescriptor" class="com.armedia.acm.plugins.ecm.service.RemoveExpiredFilesJobDescriptor"
-          parent="acmJobDescriptor">
+        parent="acmJobDescriptor">
         <property name="removeExpiredFilesService" ref="removeExpiredFilesService"/>
     </bean>
 </beans>
