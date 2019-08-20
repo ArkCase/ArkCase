@@ -27,7 +27,6 @@ package com.armedia.acm.services.notification.service.provider;
  * #L%
  */
 import com.armedia.acm.core.provider.TemplateModelProvider;
-import com.armedia.acm.services.notification.event.DueDateReminderSentEvent;
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.service.provider.model.GenericTemplateModel;
 import org.springframework.context.ApplicationEventPublisher;
@@ -47,7 +46,6 @@ public class DueDateReminderModelProvider implements TemplateModelProvider<Gener
         genericTemplateModel.setObjectTitle(notification.getParentTitle());
         genericTemplateModel.setOtherObjectValue(notification.getNote());
 
-        generateDueDateReminderSentEvent(notification);
 
         return genericTemplateModel;
     }
@@ -56,14 +54,6 @@ public class DueDateReminderModelProvider implements TemplateModelProvider<Gener
     public Class<GenericTemplateModel> getType()
     {
         return GenericTemplateModel.class;
-    }
-
-    private void generateDueDateReminderSentEvent(Notification notification)
-    {
-        DueDateReminderSentEvent dueDateReminderSentEvent =
-                new DueDateReminderSentEvent(notification, notification.getParentType(), notification.getParentId(), Long.valueOf(notification.getNote()), notification.getUser());
-        dueDateReminderSentEvent.setSucceeded(true);
-        applicationEventPublisher.publishEvent(dueDateReminderSentEvent);
     }
 
     @Override
