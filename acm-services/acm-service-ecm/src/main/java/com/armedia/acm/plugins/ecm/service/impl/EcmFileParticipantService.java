@@ -456,7 +456,7 @@ public class EcmFileParticipantService implements ApplicationEventPublisherAware
                     AcmParticipant changedParticipant = AcmParticipant.createRulesTestParticipant(existingParticipant);
                     AcmFolderParticipantChangedEvent folderParticipantChangedEvent = new AcmFolderParticipantChangedEvent(folder);
                     String ldapId = getExternalAuthenticationUtils()
-                            .getAlfrescoUserIdByParticipantLdapId(changedParticipant.getParticipantLdapId());
+                            .getEcmServiceUserIdByParticipantLdapId(changedParticipant.getParticipantLdapId());
                     changedParticipant.setParticipantLdapId(ldapId);
                     folderParticipantChangedEvent.setChangedParticipant(changedParticipant);
                     folderParticipantChangedEvent.setChangeType(ChangedParticipantConstants.REMOVED);

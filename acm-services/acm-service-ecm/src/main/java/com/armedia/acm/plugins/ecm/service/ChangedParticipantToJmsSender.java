@@ -30,8 +30,8 @@ package com.armedia.acm.plugins.ecm.service;
 import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.plugins.ecm.model.ChangedParticipant;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.jms.JmsException;
 import org.springframework.jms.core.JmsTemplate;
@@ -43,7 +43,7 @@ import javax.jms.ConnectionFactory;
  */
 public class ChangedParticipantToJmsSender implements InitializingBean
 {
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private static final Logger log = LogManager.getLogger(ChangedParticipantToJmsSender.class);
     private ObjectConverter objectConverter;
     private ConnectionFactory jmsConnectionFactory;
     private JmsTemplate jmsTemplate;
