@@ -286,7 +286,7 @@ public class FOIARequestDao extends AcmAbstractDao<FOIARequest>
     public List<FOIARequest> findAllNotReleasedRequests()
     {
         String queryText = "SELECT request FROM FOIARequest request"
-                + " WHERE request.status != 'RELEASED'";
+                + " WHERE request.status != 'Released'";
         TypedQuery<FOIARequest> allRecords = getEm().createQuery(queryText, FOIARequest.class);
         List<FOIARequest> requests = allRecords.getResultList();
         return requests;
