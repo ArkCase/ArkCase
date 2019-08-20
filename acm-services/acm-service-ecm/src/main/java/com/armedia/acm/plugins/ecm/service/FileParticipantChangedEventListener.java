@@ -30,6 +30,7 @@ package com.armedia.acm.plugins.ecm.service;
 import com.armedia.acm.plugins.ecm.model.ChangedParticipant;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileParticipantChangedEvent;
+import com.armedia.acm.plugins.ecm.service.sync.AlfrescoSyncConfig;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 
 import org.apache.logging.log4j.LogManager;
@@ -41,6 +42,7 @@ public class FileParticipantChangedEventListener implements ApplicationListener<
 
     private static final Logger log = LogManager.getLogger(FileParticipantChangedEventListener.class);
 
+    private AlfrescoSyncConfig alfrescoSyncConfig;
     private ChangedParticipantToJmsSender changedParticipantToJmsSender;
 
     @Override
@@ -48,7 +50,7 @@ public class FileParticipantChangedEventListener implements ApplicationListener<
     {
         AcmParticipant changeParticipant = event.getChangedParticipant();
 
-        if (changeParticipant != null)
+        if (changeParticipant != null && alfrescoSyncConfig.getAceEnabled())
         {
             EcmFile file = (EcmFile) event.getSource();
 
@@ -79,5 +81,15 @@ public class FileParticipantChangedEventListener implements ApplicationListener<
     public void setChangedParticipantToJmsSender(ChangedParticipantToJmsSender changedParticipantToJmsSender)
     {
         this.changedParticipantToJmsSender = changedParticipantToJmsSender;
+    }
+
+    public AlfrescoSyncConfig getAlfrescoSyncConfig()
+    {
+        return alfrescoSyncConfig;
+    }
+
+    public void setAlfrescoSyncConfig(AlfrescoSyncConfig alfrescoSyncConfig)
+    {
+        this.alfrescoSyncConfig = alfrescoSyncConfig;
     }
 }
