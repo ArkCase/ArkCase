@@ -27,44 +27,81 @@ package com.armedia.acm.audit.service;
  * #L%
  */
 
-import org.apache.logging.log4j.Logger;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.text.StringSubstitutor;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.config.YamlPropertiesFactoryBean;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
 
+import java.io.BufferedReader;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.Properties;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
-/**
- * Holds static patterns loaded from file '$user.home/.arkcase/acm/auditPatterns.properties'. The substitution string is
- * default
- * "$1*****$3".
+/***
+ * Holds static patterns loaded from file'$user.home/.arkcase/acm/auditPatterns.properties'.The substitution string
+ * is*default*"$1*****$3".*
  * <p>
- * Created by Bojan Milenkoski on 30.5.2016
+ * *Created by Bojan Milenkoski on 30.5.2016
  */
+
 public class AuditPatternsSubstitution
 {
     private final static Logger LOG = LogManager.getLogger(AuditPatternsSubstitution.class);
 
     private static List<Pattern> PATTERNS = new ArrayList<>();
     private static String SUBSTITUTION = "$1*****$3";
-    private static String PATTERNS_FILENAME = System.getProperty("user.home") + "/.arkcase/acm/auditPatterns.properties";
+    private static String PROPERTIES_FOR_SUBSTITUTION = "${configuration.server.url}/${application.name}/";
+    private static String PATTERNS_PATH = "/default/spring/auditPatterns.properties";
 
     static
     {
-        try (Stream<String> stream = Files.lines(Paths.get(PATTERNS_FILENAME)))
+        String yamlConfiguration = System.getProperty("acm.configurationserver.propertyfile");
+        Resource yamlResource = new FileSystemResource(yamlConfiguration);
+
+        YamlPropertiesFactoryBean yaml = new YamlPropertiesFactoryBean();
+        yaml.setResources(yamlResource);
+        Properties properties = yaml.getObject();
+
+        String profilesReversed = getProfilesReversed(properties.getProperty("application.profile"));
+
+        StringSubstitutor sub = new StringSubstitutor();
+        String serverUrlAndName = sub.replace(PROPERTIES_FOR_SUBSTITUTION, properties);
+
+        String patternsFileUrl = String.format("%s%s%s", serverUrlAndName, profilesReversed, PATTERNS_PATH);
+
+        try (InputStream inputStream = new URL(patternsFileUrl).openStream())
         {
-            PATTERNS = stream.filter(line -> line.trim().length() > 0 && !line.startsWith("#"))
-                    .map(line -> Pattern.compile(line.toString())).collect(Collectors.toList());
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+            String currentLine;
+            while ((currentLine = bufferedReader.readLine()) != null)
+            {
+                if (!currentLine.startsWith("#"))
+                {
+                    PATTERNS.add(Pattern.compile(currentLine));
+                }
+            }
         }
         catch (IOException e)
         {
-            LOG.error("Exception reading patterns from file: " + PATTERNS_FILENAME, e);
+            LOG.error("Exception reading patterns from file: {}", PATTERNS_PATH, e);
         }
+    }
+
+    public static String getProfilesReversed(String profiles)
+    {
+        String[] splitedProfiles = profiles.split(",");
+        Collections.reverse(Arrays.asList(splitedProfiles));
+        return StringUtils.join(splitedProfiles, ",");
     }
 
     public static List<Pattern> getPatterns()
