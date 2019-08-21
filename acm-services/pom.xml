@@ -44,7 +44,6 @@
         <module>acm-service-pipeline</module>
         <module>acm-service-plugin-manager</module>
         <module>acm-service-protect-url</module>
-        <module>acm-service-scheduler</module>
         <module>acm-service-search</module>
         <module>acm-service-subscription</module>
         <module>acm-service-tag</module>
