@@ -93,11 +93,11 @@ public class AuditPatternsSubstitution
         }
         catch (IOException e)
         {
-            LOG.error("Exception reading patterns from file: " + PATTERNS_PATH, e);
+            LOG.error("Exception reading patterns from file: {}", PATTERNS_PATH, e);
         }
     }
 
-    private static String getProfilesReversed(String profiles)
+    public static String getProfilesReversed(String profiles)
     {
         String[] splitedProfiles = profiles.split(",");
         Collections.reverse(Arrays.asList(splitedProfiles));
