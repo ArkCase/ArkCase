@@ -140,7 +140,7 @@ public class ConfigurationServiceBootClient
 
         if (name == null)
         {
-            name = (String) configurableEnvironment.getPropertySources().get("bootstrap").getProperty("application.name");
+            name = getApplicationName();
         }
 
         if (StringUtils.isEmpty(name))
@@ -148,8 +148,7 @@ public class ConfigurationServiceBootClient
             throw new IllegalStateException("Application name by configuration can't be empty");
         }
 
-        Object profiles = configurableEnvironment.getPropertySources()
-                .get("bootstrap").getProperty("application.profile");
+        Object profiles = getApplicationProfile();
 
         String activeProfiles;
         if (profiles == null)
@@ -240,6 +239,16 @@ public class ConfigurationServiceBootClient
             request.getHeaders().add("Authorization", authorizationToken);
             return execution.execute(request, body);
         }
+    }
+
+    public String getApplicationName()
+    {
+        return (String) configurableEnvironment.getPropertySources().get("bootstrap").getProperty("application.name");
+    }
+
+    public Object getApplicationProfile()
+    {
+        return configurableEnvironment.getPropertySources().get("bootstrap").getProperty("application.profile");
     }
 
     public ConfigurableEnvironment getConfigurableEnvironment()
