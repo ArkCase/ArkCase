@@ -80,12 +80,6 @@
         </dependency>
         <dependency>
             <groupId>com.armedia.acm.acm-services</groupId>
-            <artifactId>acm-service-scheduler</artifactId>
-            <version>${acm.version}</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.armedia.acm.acm-services</groupId>
             <artifactId>acm-service-message-broker</artifactId>
             <version>${acm.version}</version>
             <scope>provided</scope>
