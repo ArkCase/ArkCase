@@ -1142,6 +1142,11 @@
                 <artifactId>commons-net</artifactId>
                 <version>${apache-commons-net.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-text</artifactId>
+                <version>${apache-commons-text.version}</version>
+            </dependency>
             <!-- json -->
             <dependency>
                 <groupId>org.json</groupId>
