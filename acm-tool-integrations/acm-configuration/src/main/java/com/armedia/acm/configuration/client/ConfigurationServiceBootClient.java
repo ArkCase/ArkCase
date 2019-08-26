@@ -30,8 +30,8 @@ package com.armedia.acm.configuration.client;
 import com.armedia.acm.configuration.api.environment.Environment;
 import com.armedia.acm.configuration.api.environment.PropertySource;
 
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -85,7 +85,18 @@ public class ConfigurationServiceBootClient
 
     public Map<String, Object> loadConfiguration(String url)
     {
-        Environment result = getRemoteEnvironment(configRestTemplate(), url);
+        Environment result = getRemoteEnvironment(configRestTemplate(), url, null);
+        return getCompositeMap(result);
+    }
+
+    public Map<String, Object> loadConfiguration(String url, String name)
+    {
+        Environment result = getRemoteEnvironment(configRestTemplate(), url, name);
+        return getCompositeMap(result);
+    }
+
+    private Map<String, Object> getCompositeMap(Environment result)
+    {
         Map<String, Object> compositeMap = new HashMap<>();
 
         if (result.getPropertySources() != null)
@@ -100,9 +111,9 @@ public class ConfigurationServiceBootClient
         return compositeMap;
     }
 
-    public org.springframework.core.env.PropertySource<?> locate(String url)
+    public org.springframework.core.env.PropertySource<?> locate(String url, String name)
     {
-        Environment result = getRemoteEnvironment(configRestTemplate(), url);
+        Environment result = getRemoteEnvironment(configRestTemplate(), url, name);
         CompositePropertySource compositePropertySource = new CompositePropertySource("configService");
 
         if (result.getPropertySources() != null)
@@ -123,17 +134,21 @@ public class ConfigurationServiceBootClient
      * @param url
      * @return
      */
-    private Environment getRemoteEnvironment(RestTemplate restTemplate, String url)
+    private Environment getRemoteEnvironment(RestTemplate restTemplate, String url, String name)
     {
         String path = "/{name}/{profile}";
-        String name = (String) configurableEnvironment.getPropertySources().get("bootstrap").getProperty("application.name");
+
+        if (name == null)
+        {
+            name = getApplicationName();
+        }
+
         if (StringUtils.isEmpty(name))
         {
             throw new IllegalStateException("Application name by configuration can't be empty");
         }
 
-        Object profiles = configurableEnvironment.getPropertySources()
-                .get("bootstrap").getProperty("application.profile");
+        Object profiles = getApplicationProfile();
 
         String activeProfiles;
         if (profiles == null)
@@ -226,4 +241,23 @@ public class ConfigurationServiceBootClient
         }
     }
 
+    public String getApplicationName()
+    {
+        return (String) configurableEnvironment.getPropertySources().get("bootstrap").getProperty("application.name");
+    }
+
+    public Object getApplicationProfile()
+    {
+        return configurableEnvironment.getPropertySources().get("bootstrap").getProperty("application.profile");
+    }
+
+    public ConfigurableEnvironment getConfigurableEnvironment()
+    {
+        return configurableEnvironment;
+    }
+
+    public void setConfigurableEnvironment(ConfigurableEnvironment configurableEnvironment)
+    {
+        this.configurableEnvironment = configurableEnvironment;
+    }
 }
