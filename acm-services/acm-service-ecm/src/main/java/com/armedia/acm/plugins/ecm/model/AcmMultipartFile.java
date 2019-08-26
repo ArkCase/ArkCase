@@ -82,6 +82,12 @@ public class AcmMultipartFile implements MultipartFile
         }
     }
 
+    public AcmMultipartFile(MultipartFile multipartFile, boolean uniqueFileName, String type)
+    {
+        this(multipartFile, uniqueFileName);
+        this.type = type;
+    }
+
     @Deprecated
     public AcmMultipartFile(String name, String originalFileName, String contentType, boolean empty, long size, byte[] bytes,
             InputStream inputStream, boolean uniqueFileName)
@@ -267,9 +273,14 @@ public class AcmMultipartFile implements MultipartFile
         {
             FileCopyUtils.copy(this.multipartFile.getBytes(), dest);
         }
+
+        if (file != null)
+        {
+            FileUtils.copyFile(file, dest);
+        }
         else
         {
-            FileCopyUtils.copy(file, dest);
+            FileUtils.copyInputStreamToFile(inputStream, dest);
         }
     }
 
