@@ -27,7 +27,7 @@ package com.armedia.acm.crypto.properties;
  * #L%
  */
 
-import com.armedia.acm.core.exceptions.AcmEncryptionException;
+import com.armedia.acm.crypto.exceptions.AcmEncryptionException;
 
 import org.bouncycastle.crypto.RuntimeCryptoException;
 import org.apache.logging.log4j.Logger;

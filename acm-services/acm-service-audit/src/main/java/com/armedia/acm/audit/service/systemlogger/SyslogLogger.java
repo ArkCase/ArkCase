@@ -28,7 +28,7 @@ package com.armedia.acm.audit.service.systemlogger;
  */
 
 import com.armedia.acm.audit.model.AuditConfig;
-import com.armedia.acm.core.ApplicationConfig;
+import com.armedia.acm.core.model.ApplicationConfig;
 
 import org.apache.commons.io.Charsets;
 import org.apache.logging.log4j.Level;

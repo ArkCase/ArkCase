@@ -27,7 +27,7 @@ package com.armedia.acm.plugins.report.web.api;
  * #L%
  */
 
-import com.armedia.acm.core.exceptions.AcmEncryptionException;
+import com.armedia.acm.crypto.exceptions.AcmEncryptionException;
 import com.armedia.acm.plugins.report.service.ReportService;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 

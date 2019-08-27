@@ -27,8 +27,8 @@ package com.armedia.acm.crypto;
  * #L%
  */
 
-import com.armedia.acm.core.exceptions.AcmEncryptionBadKeyOrDataException;
-import com.armedia.acm.core.exceptions.AcmEncryptionException;
+import com.armedia.acm.crypto.exceptions.AcmEncryptionBadKeyOrDataException;
+import com.armedia.acm.crypto.exceptions.AcmEncryptionException;
 
 import org.bouncycastle.openpgp.PGPException;
 

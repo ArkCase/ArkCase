@@ -37,12 +37,11 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
 import com.armedia.acm.core.AcmObject;
-import com.armedia.acm.core.exceptions.AcmEncryptionException;
+import com.armedia.acm.crypto.exceptions.AcmEncryptionException;
 import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.email.model.EmailSenderConfig;
 import com.armedia.acm.data.service.AcmDataService;
-import com.armedia.acm.files.propertymanager.PropertyFileManager;
 import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;

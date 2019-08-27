@@ -27,7 +27,7 @@ package com.armedia.acm.plugins.ecm.service.sync.impl;
  * #L%
  */
 
-import com.armedia.acm.core.exceptions.AcmEncryptionException;
+import com.armedia.acm.crypto.exceptions.AcmEncryptionException;
 import com.armedia.acm.plugins.ecm.model.sync.EcmEvent;
 import com.armedia.acm.plugins.ecm.service.sync.EcmAuditResponseReader;
 import com.armedia.acm.web.api.MDCConstants;

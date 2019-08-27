@@ -40,17 +40,20 @@
             <version>${acm.version}</version>
         </dependency>
         <dependency>
+            <groupId>com.armedia.acm</groupId>
+            <artifactId>acm-core-api</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+        <dependency>
             <groupId>org.apache.activemq</groupId>
             <artifactId>activemq-spring</artifactId>
             <scope>test</scope>
         </dependency>
-
         <!-- datasource -->
         <dependency>
             <groupId>org.apache.tomcat</groupId>
             <artifactId>tomcat-jdbc</artifactId>
         </dependency>
-
         <!-- liquibase (database ddl maintenance) -->
         <dependency>
             <groupId>org.liquibase</groupId>
