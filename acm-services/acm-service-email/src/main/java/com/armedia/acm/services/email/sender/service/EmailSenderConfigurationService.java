@@ -27,7 +27,7 @@ package com.armedia.acm.services.email.sender.service;
  * #L%
  */
 
-import com.armedia.acm.core.exceptions.AcmEncryptionException;
+import com.armedia.acm.crypto.exceptions.AcmEncryptionException;
 import com.armedia.acm.email.model.EmailSenderConfig;
 
 /**

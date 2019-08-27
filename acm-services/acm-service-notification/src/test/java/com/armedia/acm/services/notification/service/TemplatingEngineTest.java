@@ -30,7 +30,7 @@ package com.armedia.acm.services.notification.service;
 
 import static org.junit.Assert.fail;
 
-import com.armedia.acm.core.ApplicationConfig;
+import com.armedia.acm.core.model.ApplicationConfig;
 import com.armedia.acm.services.email.service.TemplatingEngine;
 
 import org.junit.Before;

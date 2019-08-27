@@ -30,7 +30,7 @@ package com.armedia.acm.auth;
 import static java.time.temporal.ChronoUnit.DAYS;
 
 import com.armedia.acm.core.AcmApplication;
-import com.armedia.acm.core.ApplicationConfig;
+import com.armedia.acm.core.model.ApplicationConfig;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.pluginmanager.service.AcmPluginManager;

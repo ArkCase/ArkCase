@@ -28,7 +28,7 @@ package com.armedia.acm.services.notification.service;
  */
 
 import com.armedia.acm.core.AcmApplication;
-import com.armedia.acm.core.ApplicationConfig;
+import com.armedia.acm.core.model.ApplicationConfig;
 import com.armedia.acm.services.email.model.EmailMentionsDTO;
 import com.armedia.acm.services.email.service.AcmEmailServiceException;
 import com.armedia.acm.services.email.service.TemplatingEngine;

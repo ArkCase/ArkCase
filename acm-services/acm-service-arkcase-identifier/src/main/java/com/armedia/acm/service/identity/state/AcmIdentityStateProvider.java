@@ -27,7 +27,7 @@ package com.armedia.acm.service.identity.state;
  * #L%
  */
 
-import com.armedia.acm.core.ApplicationConfig;
+import com.armedia.acm.core.model.ApplicationConfig;
 import com.armedia.acm.service.identity.exceptions.AcmIdentityException;
 import com.armedia.acm.service.identity.model.AcmArkcaseIdentity;
 import com.armedia.acm.service.identity.service.AcmArkcaseIdentityService;

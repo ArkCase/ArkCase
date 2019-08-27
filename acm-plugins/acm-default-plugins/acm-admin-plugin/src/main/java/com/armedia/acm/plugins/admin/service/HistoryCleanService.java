@@ -28,7 +28,7 @@ package com.armedia.acm.plugins.admin.service;
  */
 
 import com.armedia.acm.audit.dao.AuditDao;
-import com.armedia.acm.core.ApplicationConfig;
+import com.armedia.acm.core.model.ApplicationConfig;
 import com.armedia.acm.objectonverter.DateFormats;
 import com.armedia.acm.services.notification.dao.NotificationDao;
 import com.armedia.acm.services.notification.model.NotificationConstants;

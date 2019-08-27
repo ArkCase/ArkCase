@@ -27,7 +27,7 @@ package com.armedia.acm.services.email.service;
  * #L%
  */
 
-import com.armedia.acm.core.ApplicationConfig;
+import com.armedia.acm.core.model.ApplicationConfig;
 
 import java.io.IOException;
 import java.io.StringReader;

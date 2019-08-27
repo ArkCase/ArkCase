@@ -27,7 +27,7 @@ package com.armedia.acm.services.functionalaccess.service;
  * #L%
  */
 
-import com.armedia.acm.core.exceptions.AcmEncryptionException;
+import com.armedia.acm.crypto.exceptions.AcmEncryptionException;
 import com.armedia.acm.services.users.model.AcmUser;
 
 import org.mule.api.MuleException;

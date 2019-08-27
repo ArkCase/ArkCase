@@ -1,4 +1,4 @@
-package com.armedia.acm.core.exceptions;
+package com.armedia.acm.crypto.exceptions;
 
 /*-
  * #%L
@@ -27,29 +27,29 @@ package com.armedia.acm.core.exceptions;
  * #L%
  */
 
-public class AcmEncryptionBadKeyOrDataException extends AcmEncryptionException
+public class AcmEncryptionException extends Exception
 {
 
-    public AcmEncryptionBadKeyOrDataException()
+    public AcmEncryptionException()
     {
     }
 
-    public AcmEncryptionBadKeyOrDataException(String message)
+    public AcmEncryptionException(String message)
     {
         super(message);
     }
 
-    public AcmEncryptionBadKeyOrDataException(String message, Throwable cause)
+    public AcmEncryptionException(String message, Throwable cause)
     {
         super(message, cause);
     }
 
-    public AcmEncryptionBadKeyOrDataException(Throwable cause)
+    public AcmEncryptionException(Throwable cause)
     {
         super(cause);
     }
 
-    public AcmEncryptionBadKeyOrDataException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)
+    public AcmEncryptionException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)
     {
         super(message, cause, enableSuppression, writableStackTrace);
     }

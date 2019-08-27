@@ -28,7 +28,7 @@ package com.armedia.acm.plugins.admin.web.api;
  */
 
 import com.armedia.acm.core.exceptions.AcmAppErrorJsonMsg;
-import com.armedia.acm.core.exceptions.AcmEncryptionException;
+import com.armedia.acm.crypto.exceptions.AcmEncryptionException;
 import com.armedia.acm.plugins.admin.model.CmisUrlConfig;
 import com.armedia.acm.plugins.admin.service.CmisConfigurationService;
 
