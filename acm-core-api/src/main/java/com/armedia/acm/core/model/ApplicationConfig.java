@@ -1,4 +1,4 @@
-package com.armedia.acm.core;
+package com.armedia.acm.core.model;
 
 /*-
  * #%L
@@ -32,6 +32,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import org.springframework.beans.factory.annotation.Value;
+
+import java.util.HashMap;
 
 @JsonSerialize(as = ApplicationConfig.class)
 public class ApplicationConfig
@@ -91,6 +93,8 @@ public class ApplicationConfig
     @JsonProperty("application.properties.issueCollectorFlag")
     @Value("${application.properties.issueCollectorFlag}")
     private Boolean issueCollectorFlag;
+
+    private HashMap<Object, String> roles;
 
     public Integer getIdleLimit()
     {
@@ -192,4 +196,13 @@ public class ApplicationConfig
         this.issueCollectorFlag = issueCollectorFlag;
     }
 
+    public HashMap<Object, String> getRoles()
+    {
+        return roles;
+    }
+
+    public void setRoles(HashMap<Object, String> roles)
+    {
+        this.roles = roles;
+    }
 }

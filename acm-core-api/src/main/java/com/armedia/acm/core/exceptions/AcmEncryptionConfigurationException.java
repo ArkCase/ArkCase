@@ -27,6 +27,8 @@ package com.armedia.acm.core.exceptions;
  * #L%
  */
 
+import com.armedia.acm.crypto.exceptions.AcmEncryptionException;
+
 public class AcmEncryptionConfigurationException extends AcmEncryptionException
 {
 

@@ -43,8 +43,8 @@ import com.armedia.acm.services.search.service.SendDocumentsToSolr;
 
 import org.activiti.engine.TaskService;
 import org.activiti.engine.task.Task;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.context.ApplicationListener;
 import org.springframework.security.core.context.SecurityContextHolder;
 
