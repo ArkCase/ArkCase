@@ -27,9 +27,7 @@ package com.armedia.acm.correspondence.utils;
  * #L%
  */
 
-import static com.armedia.acm.correspondence.service.CorrespondenceMapper.generateCorrespodencenMergeField;
-
-import com.armedia.acm.core.ApplicationConfig;
+import com.armedia.acm.core.model.ApplicationConfig;
 import com.armedia.acm.correspondence.model.CorrespondenceMergeField;
 import com.armedia.acm.correspondence.service.CorrespondenceMergeFieldManager;
 import com.armedia.acm.correspondence.service.CorrespondenceService;
@@ -48,7 +46,6 @@ import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.apache.poi.xwpf.usermodel.XWPFTable;
 import org.apache.poi.xwpf.usermodel.XWPFTableCell;
 import org.apache.poi.xwpf.usermodel.XWPFTableRow;
-
 import org.springframework.core.io.Resource;
 import org.springframework.expression.spel.SpelEvaluationException;
 import org.springframework.expression.spel.SpelParserConfiguration;

@@ -29,17 +29,19 @@ package com.armedia.acm.configuration.core;
 
 import com.armedia.acm.configuration.api.ConfigurationFacade;
 import com.armedia.acm.configuration.client.ConfigurationServiceBootClient;
-import com.armedia.acm.core.exceptions.AcmEncryptionException;
+import com.armedia.acm.configuration.core.propertysource.PropertyNavigator;
+import com.armedia.acm.crypto.exceptions.AcmEncryptionException;
 import com.armedia.acm.crypto.properties.AcmEncryptablePropertyUtils;
 
-import org.bouncycastle.crypto.RuntimeCryptoException;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.bouncycastle.crypto.RuntimeCryptoException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -115,6 +117,40 @@ public class ConfigurationContainer implements ConfigurationFacade
                             return it.getValue();
                         }
                     }));
+        this.configurationMap = convertMap(this.configurationMap, true);
+    }
+
+    public Map<String, Object> convertMap(Map<String, Object> configurationMap, Boolean convertWithoutMap)
+    {
+
+        Map<String, Object> rootMap = new LinkedHashMap<>();
+        for (Map.Entry<String, Object> entry : configurationMap.entrySet())
+        {
+            String key = entry.getKey();
+            Object value = entry.getValue();
+
+            if (convertWithoutMap == true)
+            {
+                // if is a list
+                if ((entry.getKey().contains("[") && entry.getKey().contains("]")))
+                {
+                    PropertyNavigator nav = new PropertyNavigator(key);
+                    nav.setMapValue(rootMap, value);
+                }
+                else
+                {
+                    rootMap.put(entry.getKey(), entry.getValue());
+                }
+            }
+            else
+            {
+                PropertyNavigator nav = new PropertyNavigator(key);
+                nav.setMapValue(rootMap, value);
+            }
+
+        }
+
+        return rootMap;
     }
 
     @Override
@@ -140,4 +176,5 @@ public class ConfigurationContainer implements ConfigurationFacade
     {
         return this.configurationMap;
     }
+
 }

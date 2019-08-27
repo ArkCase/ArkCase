@@ -27,7 +27,7 @@ package com.armedia.acm.plugins.admin.web.api;
  * #L%
  */
 
-import com.armedia.acm.core.ApplicationConfig;
+import com.armedia.acm.core.model.ApplicationConfig;
 import com.armedia.acm.plugins.admin.exception.AcmPropertiesManagementException;
 import com.armedia.acm.plugins.admin.service.ApplicationPropertiesManagementService;
 

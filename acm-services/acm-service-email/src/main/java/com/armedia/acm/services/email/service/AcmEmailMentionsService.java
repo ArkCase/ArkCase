@@ -29,7 +29,7 @@ package com.armedia.acm.services.email.service;
  */
 
 import com.armedia.acm.core.AcmApplication;
-import com.armedia.acm.core.ApplicationConfig;
+import com.armedia.acm.core.model.ApplicationConfig;
 import com.armedia.acm.services.email.model.EmailBodyBuilder;
 import com.armedia.acm.services.email.model.EmailBuilder;
 import com.armedia.acm.services.email.model.EmailMentionsDTO;

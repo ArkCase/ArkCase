@@ -36,9 +36,9 @@ import com.armedia.acm.plugins.casefile.model.MergeCaseOptions;
 import com.armedia.acm.plugins.casefile.service.MergeCaseService;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 
-import org.mule.api.MuleException;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.mule.api.MuleException;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;

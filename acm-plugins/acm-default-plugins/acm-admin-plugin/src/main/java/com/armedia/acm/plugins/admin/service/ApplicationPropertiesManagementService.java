@@ -28,7 +28,7 @@ package com.armedia.acm.plugins.admin.service;
  */
 
 import com.armedia.acm.configuration.service.ConfigurationPropertyService;
-import com.armedia.acm.core.ApplicationConfig;
+import com.armedia.acm.core.model.ApplicationConfig;
 
 /**
  * Created by sergey on 4/13/16.

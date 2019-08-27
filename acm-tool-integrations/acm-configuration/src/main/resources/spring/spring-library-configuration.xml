@@ -6,7 +6,8 @@
        http://www.springframework.org/schema/context/spring-context.xsd">
 
     <context:annotation-config/>
-    <context:component-scan base-package="com.armedia.acm.configuration.api,
+    <context:component-scan base-package="com.armedia.acm.configuration.annotations
+                                          com.armedia.acm.configuration.api,
                                           com.armedia.acm.configuration.client,
                                           com.armedia.acm.configuration.core,
                                           com.armedia.acm.configuration.scope,
@@ -28,5 +29,4 @@
         <property name="destinationResolver" ref="destinationResolver"/>
         <property name="pubSubDomain" value="true"/>
     </bean>
-
 </beans>
