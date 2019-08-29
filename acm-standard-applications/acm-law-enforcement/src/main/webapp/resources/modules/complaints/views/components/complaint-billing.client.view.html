@@ -7,7 +7,7 @@
                     <button type="button" class="btn btn-default btn-xs" ng-click="listInvoices()">
                         <span translate>complaints.comp.billing.table.columns.buttons.listInvoices</span>
                     </button>
-                    <button type="button" class="btn btn-default btn-xs" ng-click="emailInvoice()">
+                    <button type="button" class="btn btn-default btn-xs" ng-click="emailInvoice()" ng-disabled="!isInvoiceGenerated">
                         <span translate>complaints.comp.billing.table.columns.buttons.emailInvoice</span>
                     </button>
                     <button type="button" class="btn btn-default btn-xs" ng-click="generateInvoice()" ng-disabled="gridOptions.data.length <= 0">
