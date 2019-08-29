@@ -1,6 +1,6 @@
 <div ng-controller="Admin.OrganizationalHierarchyController">
     <div class="pull-right well">
-        <div class="btn-group">
+        <div class="btn-group" ng-show="showButton">
             <button class="btn btn-xs btn-link" ng-click="createGroup()">
                 <i class="fa fa-plus"></i>
                 <span>{{ 'admin.security.organizationalHierarchy.createGroupDialog.adHocGroup.title' | translate }}</span>

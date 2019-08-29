@@ -10,6 +10,33 @@ angular.module('admin').controller(
                     var gridCurrentPage;
                     var gridPageSize;
 
+                    var enableEditingLdapUsers = false;
+                    function getEnableEditingLdapUsers() {
+                        var tempLdapPromise = LdapConfigService.retrieveDirectories();
+                        tempLdapPromise.then(function(directories) {
+                            removePrefixInKey(directories.data);
+                            _.forEach(directories.data , function (data) {
+                                if(data.enableEditingLdapUsers === 'true'){
+                                    enableEditingLdapUsers = true;
+                                }
+                            });
+                            $scope.showButton = enableEditingLdapUsers;
+                        });
+                    }
+
+                    //we need this because key name contains '.'
+                    function removePrefixInKey(data) {
+                        angular.forEach(data, function(row, index) {
+                            angular.forEach(row, function(element, key) {
+                                if (key.match('.') !== -1) {
+                                    delete row[key];
+                                    var newKey = key.replace(/[a-zA-Z]*?\./, '');
+                                    row[newKey] = element;
+                                }
+                            });
+                        });
+                    }
+                    getEnableEditingLdapUsers();
                     LdapConfigService.retrieveDirectories().then(function(directories) {
                         $scope.ldapEditingEnabledPerDirectoryServer = {};
                         $scope.directoryServers = _.map(directories.data, function(ds) {
