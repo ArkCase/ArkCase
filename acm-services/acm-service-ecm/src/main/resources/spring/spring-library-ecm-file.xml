@@ -278,6 +278,9 @@
                 <entry key="application/x-dosexec">
                     <value>application/octet-stream</value>
                 </entry>
+                <entry key="application/json">
+                    <value>application/octet-stream</value>
+                </entry>
             </map>
         </property>
         <property name="progressIndicatorService" ref="progressIndicatorService"/>
