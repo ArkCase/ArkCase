@@ -172,6 +172,7 @@
 
     <bean id="customLogoUploadFile" class="com.armedia.acm.plugins.admin.web.api.CustomLogoUploadFile">
         <property name="customLogoService" ref="customLogoService"/>
+        <property name="fileConfigurationService" ref="fileConfigurationServiceImpl"/>
     </bean>
 
     <!-- Module Configuration -->
