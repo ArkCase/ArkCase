@@ -253,7 +253,7 @@ angular.module('admin').controller(
                             // Cancel button was clicked
                         });
                     } else {
-                        DialogService.alert($translate.instant("admin.security.ldap.user.management.cloneAlertMessage"));
+                        DialogService.alert($translate.instant("admin.security.ldap.user.management.alertMessage"));
                     }
                 })
             }
@@ -397,7 +397,7 @@ angular.module('admin').controller(
                             }
                         })
                     }else {
-                        DialogService.alert($translate.instant("admin.security.ldap.user.management.deleteAlertMessage"));
+                        DialogService.alert($translate.instant("admin.security.ldap.user.management.alertMessage"));
                     }
 
                 })
