@@ -27,12 +27,14 @@ package com.armedia.acm.plugins.admin.web.api;
  * #L%
  */
 
+import com.armedia.acm.configuration.service.FileConfigurationService;
 import com.armedia.acm.plugins.admin.exception.AcmCustomLogoException;
 import com.armedia.acm.plugins.admin.exception.AcmWorkflowConfigurationException;
 import com.armedia.acm.plugins.admin.service.CustomLogoService;
 
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -40,8 +42,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.io.IOException;
 
 /**
  * Created by sergey.kolomiets on 6/22/15.
@@ -54,13 +54,15 @@ public class CustomLogoUploadFile
 
     private CustomLogoService customLogoService;
 
+    private FileConfigurationService fileConfigurationService;
+
     @RequestMapping(value = "/branding/customlogos", method = RequestMethod.POST)
     @ResponseBody
     public String replaceFile(
             @RequestParam(value = "headerLogo", required = false) MultipartFile headerLogoFile,
             @RequestParam(value = "loginLogo", required = false) MultipartFile loginLogoFile,
             @RequestParam(value = "emailLogo", required = false) MultipartFile emailLogoFile)
-            throws IOException, AcmWorkflowConfigurationException
+            throws AcmWorkflowConfigurationException
     {
 
         try
@@ -69,7 +71,7 @@ public class CustomLogoUploadFile
             {
                 if (headerLogoFile.getContentType().equals(MediaType.IMAGE_PNG_VALUE))
                 {
-                    customLogoService.updateHeaderLogo(headerLogoFile);
+                    customLogoService.updateHeaderLogo(new InputStreamResource(headerLogoFile.getInputStream()));
                 }
                 else
                 {
@@ -81,7 +83,7 @@ public class CustomLogoUploadFile
             {
                 if (loginLogoFile.getContentType().equals(MediaType.IMAGE_PNG_VALUE))
                 {
-                    customLogoService.updateLoginLogo(loginLogoFile);
+                    customLogoService.updateLoginLogo(new InputStreamResource(loginLogoFile.getInputStream()));
                 }
                 else
                 {
@@ -93,7 +95,7 @@ public class CustomLogoUploadFile
             {
                 if (emailLogoFile.getContentType().equals(MediaType.IMAGE_PNG_VALUE))
                 {
-                    customLogoService.updateEmailLogo(emailLogoFile);
+                    customLogoService.updateEmailLogo(new InputStreamResource(emailLogoFile.getInputStream()));
                 }
                 else
                 {
@@ -110,8 +112,14 @@ public class CustomLogoUploadFile
         }
     }
 
+
     public void setCustomLogoService(CustomLogoService customLogoService)
     {
         this.customLogoService = customLogoService;
+    }
+
+    public void setFileConfigurationService(FileConfigurationService fileConfigurationService)
+    {
+        this.fileConfigurationService = fileConfigurationService;
     }
 }
