@@ -22,6 +22,7 @@
 
         <beans:bean id="portalRequestAPIController" class="gov.foia.web.api.PortalRequestAPIController">
             <beans:property name="portalRequestService" ref="portalRequestService"/>
+            <beans:property name="personService" ref="personService"/>
         </beans:bean>
 
         <beans:bean id="saveFOIARequestAPIController" class="gov.foia.web.api.SaveFOIARequestAPIController">
