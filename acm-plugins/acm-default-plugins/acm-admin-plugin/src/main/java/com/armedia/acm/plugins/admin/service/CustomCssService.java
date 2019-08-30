@@ -27,13 +27,18 @@ package com.armedia.acm.plugins.admin.service;
  * #L%
  */
 
+import com.armedia.acm.configuration.service.FileConfigurationService;
 import com.armedia.acm.plugins.admin.exception.AcmCustomCssException;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.core.io.InputStreamResource;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 
 /**
  * Created by admin on 6/11/15.
@@ -43,6 +48,10 @@ public class CustomCssService
     private Logger log = LogManager.getLogger(getClass());
 
     private String customCssFile;
+
+    private String customCssFileName;
+
+    private FileConfigurationService fileConfigurationService;
 
     public String getFile()
     {
@@ -66,8 +75,9 @@ public class CustomCssService
     {
         try
         {
-            File cssFile = new File(customCssFile);
-            FileUtils.writeStringToFile(cssFile, cssText);
+            InputStreamResource file = setInputStreamResource(cssText);
+
+            fileConfigurationService.moveFileToConfiguration(file, "branding/" + customCssFileName);
 
         }
         catch (Exception e)
@@ -77,8 +87,25 @@ public class CustomCssService
         }
     }
 
+    private InputStreamResource setInputStreamResource(String cssText)
+    {
+        InputStream stream = new ByteArrayInputStream(cssText.getBytes(StandardCharsets.UTF_8));
+        InputStreamResource file = new InputStreamResource(stream);
+        return file;
+    }
+
     public void setCustomCssFile(String customCssFile)
     {
         this.customCssFile = customCssFile;
+    }
+
+    public void setFileConfigurationService(FileConfigurationService fileConfigurationService)
+    {
+        this.fileConfigurationService = fileConfigurationService;
+    }
+
+    public void setCustomCssFileName(String customCssFileName)
+    {
+        this.customCssFileName = customCssFileName;
     }
 }

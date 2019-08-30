@@ -16,6 +16,25 @@
                                           com.armedia.acm.configuration.refresher.jms,
                                           com.armedia.acm.configuration.refresher.jmx"/>
 
+    <bean id="fileConfigurationServiceImpl" class="com.armedia.acm.configuration.service.FileConfigurationServiceImpl">
+        <property name="customFilesLocation" value="#{ systemProperties ['user.home'] }/.arkcase/custom/"/>
+        <property name="configurationClientConfig" ref="configurationClientConfig"/>
+        <property name="configRestTemplate" ref="restTemplate"/>
+    </bean>
+
+    <bean id="brandingFileConfigurationService" class="com.armedia.acm.configuration.core.initialization.BrandingConfigurationInitialization">
+        <property name="customFilesLocation" value="#{ systemProperties ['user.home'] }/.arkcase/custom/"/>
+        <property name="fileConfigurationService" ref="fileConfigurationServiceImpl"/>
+        <property name="brandingFiles">
+            <list value-type="java.lang.String">
+                <value>header-logo.png</value>
+                <value>login-logo.png</value>
+                <value>email-logo.png</value>
+                <value>custom.css</value>
+            </list>
+        </property>
+    </bean>
+
     <bean id="destinationResolver" class="org.springframework.jms.support.destination.DynamicDestinationResolver"/>
 
     <bean id="jmsListenerContainerFactory" class="org.springframework.jms.config.DefaultJmsListenerContainerFactory">
@@ -29,4 +48,8 @@
         <property name="destinationResolver" ref="destinationResolver"/>
         <property name="pubSubDomain" value="true"/>
     </bean>
+
+    <bean id="configurationClientConfig" class="com.armedia.acm.configuration.model.ConfigurationClientConfig">
+    </bean>
+
 </beans>

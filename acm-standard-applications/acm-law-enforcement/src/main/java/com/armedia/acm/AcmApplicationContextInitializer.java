@@ -27,6 +27,7 @@ public class AcmApplicationContextInitializer implements
         yaml.setResources(yamlResource);
         Properties properties = yaml.getObject();
 
+        System.setProperty("configuration.server.update.file.path", properties.getProperty("configuration.server.update.file.path"));
         System.setProperty("configuration.server.url", properties.getProperty("configuration.server.url"));
         System.setProperty("application.name", properties.getProperty("application.name"));
         System.setProperty("application.profile", properties.getProperty("application.profile"));
