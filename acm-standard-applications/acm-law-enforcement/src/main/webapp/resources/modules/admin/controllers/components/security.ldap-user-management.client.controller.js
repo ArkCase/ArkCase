@@ -199,65 +199,63 @@ angular.module('admin').controller(
             }
 
             function onCloneUser(data, deferred) {
-                LdapConfigService.retrieveDirectories().then(function (directories) {
-                    getEnableEditingLdapUsers(directories, data.selectedUser.directory);
-                    if($scope.enableLdapUser === 'true'){
-                        LdapUserManagementService.cloneUser(data).then(function(response) {
-                            // add the new user to the list
-                            var element = {};
-                            element.name = response.data.fullName;
-                            element.key = response.data.userId;
-                            element.directory = response.data.userDirectoryName;
-                            $scope.userData.chooseObject.push(element);
+                LdapUserManagementService.cloneUser(data).then(function(response) {
+                    // add the new user to the list
+                    var element = {};
+                    element.name = response.data.fullName;
+                    element.key = response.data.userId;
+                    element.directory = response.data.userDirectoryName;
+                    $scope.userData.chooseObject.push(element);
 
-                            //add the new user to cache store
-                            var cacheUsers = new Store.SessionData(LookupService.SessionCacheNames.USERS);
-                            var users = cacheUsers.get();
-                            users.push(element);
-                            cacheUsers.set(users);
+                    //add the new user to cache store
+                    var cacheUsers = new Store.SessionData(LookupService.SessionCacheNames.USERS);
+                    var users = cacheUsers.get();
+                    users.push(element);
+                    cacheUsers.set(users);
 
-                            MessageService.succsessAction();
-                        }, function(error) {
-                            //error adding user
-                            if (error.data.message) {
-                                var usernameError;
-                                var onAdd = function(data) {
-                                    return onCloneUser(data);
-                                };
-                                if (error.data.field == 'username') {
-                                    usernameError = error.data.message;
-                                    openCloneUserModal(error.data.extra.user, usernameError).result.then(onAdd, function() {
-                                        deferred.reject("cancel");
-                                        return {};
-                                    });
-                                } else {
-                                    MessageService.error(error.data.message);
-                                }
+                    MessageService.succsessAction();
+                }, function(error) {
+                    //error adding user
+                    if (error.data.message) {
+                        var usernameError;
+                        var onAdd = function(data) {
+                            return onCloneUser(data);
+                        };
+                        if (error.data.field == 'username') {
+                            usernameError = error.data.message;
+                            openCloneUserModal(error.data.extra.user, usernameError).result.then(onAdd, function() {
+                                deferred.reject("cancel");
+                                return {};
+                            });
+                        } else {
+                            MessageService.error(error.data.message);
+                        }
 
-                            }
-
-                            else {
-                                MessageService.errorAction();
-                            }
-
-                        });
-                    }else {
-                        DialogService.alert($translate.instant("admin.security.ldap.user.management.cloneAlertMessage"));
                     }
 
-                })
+                    else {
+                        MessageService.errorAction();
+                    }
+
+                });
 
             }
 
             function cloneUser() {
-                var modalInstance = openCloneUserModal({}, "");
-                var deferred = $q.defer();
-                modalInstance.result.then(function(data) {
-                    onCloneUser(data, deferred);
-                }, function() {
-                    // Cancel button was clicked
-                });
-
+                LdapConfigService.retrieveDirectories().then(function (directories) {
+                    getEnableEditingLdapUsers(directories, selectedUser.directory);
+                    if ($scope.enableLdapUser === 'true') {
+                        var modalInstance = openCloneUserModal({}, "");
+                        var deferred = $q.defer();
+                        modalInstance.result.then(function (data) {
+                            onCloneUser(data, deferred);
+                        }, function () {
+                            // Cancel button was clicked
+                        });
+                    } else {
+                        DialogService.alert($translate.instant("admin.security.ldap.user.management.cloneAlertMessage"));
+                    }
+                })
             }
 
             function fillList(listToFill, data) {
@@ -271,33 +269,24 @@ angular.module('admin').controller(
             }
 
             function deleteUser() {
-                LdapConfigService.retrieveDirectories().then(function (directories) {
-                    getEnableEditingLdapUsers(directories, selectedUser.directory);
-                    if($scope.enableLdapUser === 'true'){
-                        LdapUserManagementService.deleteUser(selectedUser).then(function() {
+                LdapUserManagementService.deleteUser(selectedUser).then(function() {
 
-                            var cacheUsers = new Store.SessionData(LookupService.SessionCacheNames.USERS);
-                            var users = cacheUsers.get();
-                            var cacheKeyUser = _.find(users, {
-                                'object_id_s': selectedUser.key
-                            });
-                            cacheUsers.remove(cacheKeyUser);
+                    var cacheUsers = new Store.SessionData(LookupService.SessionCacheNames.USERS);
+                    var users = cacheUsers.get();
+                    var cacheKeyUser = _.find(users, {
+                        'object_id_s': selectedUser.key
+                    });
+                    cacheUsers.remove(cacheKeyUser);
 
-                            $scope.userData.chooseObject = _.reject($scope.userData.chooseObject, function(element) {
-                                return element.key === selectedUser.key;
-                            });
+                    $scope.userData.chooseObject = _.reject($scope.userData.chooseObject, function(element) {
+                        return element.key === selectedUser.key;
+                    });
 
-                            $scope.lastSelectedUser = $scope.userData.chooseObject[0];
-                            MessageService.succsessAction();
-                        }, function() {
-                            MessageService.errorAction();
-                        });
-                    }else {
-                        DialogService.alert($translate.instant("admin.security.ldap.user.management.deleteAlertMessage"));
-                    }
-
-                })
-
+                    $scope.lastSelectedUser = $scope.userData.chooseObject[0];
+                    MessageService.succsessAction();
+                }, function() {
+                    MessageService.errorAction();
+                });
             }
 
             function userScroll() {
@@ -387,22 +376,30 @@ angular.module('admin').controller(
 
             // Add method for AFDP-6803 to customize ok button
             $scope.deleteUserConfirm = function deleteUserConfirm() {
-                bootbox.confirm({
-                    message: $translate.instant("admin.security.ldap.user.management.deleteUserMsg"),
-                    buttons: {
-                        confirm:{
-                            label: $translate.instant("admin.security.ldap.user.management.deleteUserBtn"),
-                            className: "btn btn-danger"
-                        },
-                        cancel: {
-                            label: $translate.instant("admin.security.ldap.user.management.cancelBtn")
-                        }
-                    },
-                    callback: function(result){
-                        if (result) {
-                            deleteUser();
-                        }
+                LdapConfigService.retrieveDirectories().then(function (directories) {
+                    getEnableEditingLdapUsers(directories, selectedUser.directory);
+                    if($scope.enableLdapUser === 'true'){
+                        bootbox.confirm({
+                            message: $translate.instant("admin.security.ldap.user.management.deleteUserMsg"),
+                            buttons: {
+                                confirm:{
+                                    label: $translate.instant("admin.security.ldap.user.management.deleteUserBtn"),
+                                    className: "btn btn-danger"
+                                },
+                             cancel: {
+                                label: $translate.instant("admin.security.ldap.user.management.cancelBtn")
+                            }
+                            },
+                            callback: function(result){
+                                if (result) {
+                                    deleteUser();
+                                }
+                            }
+                        })
+                    }else {
+                        DialogService.alert($translate.instant("admin.security.ldap.user.management.deleteAlertMessage"));
                     }
+
                 })
             }
 
