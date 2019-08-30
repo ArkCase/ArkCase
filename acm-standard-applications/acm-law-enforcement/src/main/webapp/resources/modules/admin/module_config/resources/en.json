@@ -286,8 +286,7 @@
             "deleteUserMsg": "Are you sure you want to delete this user?",
             "user": "User",
             "cancelBtn": "Cancel",
-            "cloneAlertMessage": "It is disable to clone users from this directory",
-            "deleteAlertMessage": "It is disable to delete users from this directory"
+            "alertMessage": "User management is not allowed on this directory"
         },
         "security.group.management": {
             "title": "Group Management",
