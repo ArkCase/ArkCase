@@ -1,4 +1,4 @@
-package com.armedia.acm.core.exceptions;
+package com.armedia.acm.data.exceptions;
 
 /*-
  * #%L

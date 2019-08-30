@@ -27,8 +27,8 @@ package com.armedia.acm.services.dataaccess.service.impl;
  * #L%
  */
 
-import com.armedia.acm.core.exceptions.AcmAccessControlException;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
+import com.armedia.acm.data.exceptions.AcmAccessControlException;
 import com.armedia.acm.services.dataaccess.model.DataAccessControlConfig;
 import com.armedia.acm.services.dataaccess.service.AcmObjectDataAccessBatchUpdateLocator;
 import com.armedia.acm.services.participants.model.AcmAssignedObject;

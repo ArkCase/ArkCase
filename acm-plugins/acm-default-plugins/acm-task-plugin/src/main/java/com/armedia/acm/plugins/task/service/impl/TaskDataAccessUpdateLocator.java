@@ -27,7 +27,7 @@ package com.armedia.acm.plugins.task.service.impl;
  * #L%
  */
 
-import com.armedia.acm.core.exceptions.AcmAccessControlException;
+import com.armedia.acm.data.exceptions.AcmAccessControlException;
 import com.armedia.acm.plugins.task.exception.AcmTaskException;
 import com.armedia.acm.plugins.task.model.AcmTask;
 import com.armedia.acm.plugins.task.service.TaskDao;
