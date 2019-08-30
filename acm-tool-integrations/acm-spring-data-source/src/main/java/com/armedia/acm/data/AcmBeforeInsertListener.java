@@ -27,7 +27,7 @@ package com.armedia.acm.data;
  * #L%
  */
 
-import com.armedia.acm.core.exceptions.AcmAccessControlException;
+import com.armedia.acm.data.exceptions.AcmAccessControlException;
 
 /**
  * Created by armdev on 11/24/14.

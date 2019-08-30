@@ -28,8 +28,8 @@ package com.armedia.acm.data;
  */
 
 
-import com.armedia.acm.core.exceptions.AcmAccessControlException;
 
+import com.armedia.acm.data.exceptions.AcmAccessControlException;
 import org.eclipse.persistence.descriptors.DescriptorEvent;
 import org.eclipse.persistence.descriptors.DescriptorEventAdapter;
 

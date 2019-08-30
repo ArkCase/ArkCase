@@ -27,7 +27,7 @@ package com.armedia.acm.plugins.casefile.web.api;
  * #L%
  */
 
-import com.armedia.acm.core.exceptions.AcmAccessControlException;
+import com.armedia.acm.data.exceptions.AcmAccessControlException;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.casefile.service.GetCaseByNumberService;
 import com.armedia.acm.services.dataaccess.service.impl.ArkPermissionEvaluator;

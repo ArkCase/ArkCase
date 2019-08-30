@@ -27,7 +27,7 @@ package com.armedia.acm.plugins.complaint.web.api;
  * #L%
  */
 
-import com.armedia.acm.core.exceptions.AcmAccessControlException;
+import com.armedia.acm.data.exceptions.AcmAccessControlException;
 import com.armedia.acm.plugins.complaint.model.Complaint;
 import com.armedia.acm.plugins.complaint.service.GetComplaintByNumberService;
 import com.armedia.acm.services.dataaccess.service.impl.ArkPermissionEvaluator;
