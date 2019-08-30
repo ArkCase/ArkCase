@@ -36,11 +36,14 @@
     </bean>
 
     <bean id="customCssService" class="com.armedia.acm.plugins.admin.service.CustomCssService">
-        <property name="customCssFile" value="#{ systemProperties ['user.home'] }/.arkcase/acm/branding/custom.css"/>
+        <property name="customCssFile" value="#{ systemProperties ['user.home'] }/.arkcase/custom/branding/custom.css"/>
+        <property name="fileConfigurationService" ref="fileConfigurationServiceImpl"/>
+        <property name="customCssFileName" value="custom.css"/>
     </bean>
 
     <bean id="customLogoService" class="com.armedia.acm.plugins.admin.service.CustomLogoService">
-        <property name="brandingFilesLocation" value="#{ systemProperties ['user.home'] }/.arkcase/acm/branding/"/>
+        <property name="brandingFilesLocation" value="#{ systemProperties ['user.home'] }/.arkcase/custom/branding/"/>
+        <property name="fileConfigurationService" ref="fileConfigurationServiceImpl"/>
         <property name="headerLogoFile" value="header-logo.png"/>
         <property name="loginLogoFile" value="login-logo.png"/>
         <property name="emailLogoFile" value="email-logo.png"/>
