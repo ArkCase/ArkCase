@@ -505,6 +505,14 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
 
         user.setRole(person.getPortalRoles().get(portalId));
 
+        if(person.getDefaultPicture() != null)
+        {
+            user.setEcmFileId(person.getDefaultPicture().getFileId());
+        }
+        else
+        {
+            user.setEcmFileId(null);
+        }
         return user;
     }
 
