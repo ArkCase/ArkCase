@@ -322,9 +322,12 @@ public class PersonServiceImpl implements PersonService
             FileUtils.deleteQuietly(pictureFile);
         }
 
+        String fileName = image.getOriginalFilename();
+        String uniqueFileName = folderAndFilesUtils.createUniqueIdentificator(fileName);
+
         EcmFile uploaded = ecmFileService.upload(image.getOriginalFilename(), PersonOrganizationConstants.PERSON_PICTURE_FILE_TYPE,
                 PersonOrganizationConstants.PERSON_PICTURE_CATEGORY, image.getInputStream(), imageContentType,
-                image.getOriginalFilename(), auth, picturesFolderObj.getCmisFolderId(), PersonOrganizationConstants.PERSON_OBJECT_TYPE,
+                uniqueFileName, auth, picturesFolderObj.getCmisFolderId(), PersonOrganizationConstants.PERSON_OBJECT_TYPE,
                 person.getId());
 
         uploaded = ecmFileService.updateFile(uploaded);
