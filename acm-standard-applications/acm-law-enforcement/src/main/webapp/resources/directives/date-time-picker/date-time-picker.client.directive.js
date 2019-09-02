@@ -37,7 +37,7 @@ angular.module('directives').directive('dateTimePicker', ['moment', 'Util.DateSe
                     }
                     $scope.dateInPicker = UtilDateService.isoToDate($scope.today);
                 }
-                $scope.minYear = moment.utc($scope.dateInPicker).year() - 50;
+                $scope.minYear = 1900;
                 $scope.maxYear = moment.utc($scope.dateInPicker).year() + 1;
             }
 
