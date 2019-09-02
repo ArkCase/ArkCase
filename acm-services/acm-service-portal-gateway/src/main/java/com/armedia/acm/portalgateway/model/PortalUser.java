@@ -97,6 +97,8 @@ public class PortalUser
 
     private String role;
 
+    private Long ecmFileId;
+
     /**
      * @return the portalUserId
      */
@@ -355,6 +357,16 @@ public class PortalUser
             // TODO throw an exception here
         }
         this.role = role;
+    }
+
+    public Long getEcmFileId()
+    {
+        return ecmFileId;
+    }
+
+    public void setEcmFileId(Long ecmFileId)
+    {
+        this.ecmFileId = ecmFileId;
     }
 
     public static String composeUserName(PortalUser user)
