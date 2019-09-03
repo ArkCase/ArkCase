@@ -41,8 +41,17 @@ stages:
   stage: build
   script:
     # build war file and deploy to Nexus Snapshots
+    - echo '<settings>' > /root/.m2/settings.xml
+    - echo '  <servers>' >> /root/.m2/settings.xml
+    - echo '    <server>' >> /root/.m2/settings.xml
+    - echo '      <id>arkcase.snapshot</id>' >> /root/.m2/settings.xml
+    - echo '      <username>admin</username>' >> /root/.m2/settings.xml
+    - echo "      <password>$MVN_PASSWORD</password>" >> /root/.m2/settings.xml
+    - echo '    </server>' >> /root/.m2/settings.xml
+    - echo '  </servers>' >> /root/.m2/settings.xml
+    - echo '</settings>' >> /root/.m2/settings.xml
     - export MAVEN_OPTS="-Xmx2048M -Xss256M -XX:MetaspaceSize=2048M -XX:+CMSClassUnloadingEnabled"
-    - mvn -DskipITs -T 4 -B deploy "-Drelease-repository.url=https://***REMOVED***/repository/armedia.snapshot/" "-Drelease-repository.id=armedia.snapshot" "-Drelease-repository.name=Armedia Snapshots repository"
+    - mvn -DskipITs -T 4 -B deploy "altDeploymentRepository=arkcase.snapshot::default::https://***REMOVED***/repository/arkcase.snapshot/"
 
 .build_frontend_snapshot:
   stage: build
@@ -163,7 +172,7 @@ deploy_backend_core_dev:
     SSH_USER: ***REMOVED***
     SSH_PASSWORD: $ARKCASEMGMTSCV_PASSWORD
     ARKCASE_VERSION: 3.3.3-SNAPSHOT
-    ARKCASE_REPOSITORY: armedia.snapshot
+    ARKCASE_REPOSITORY: arkcase.snapshot
     ARKCASE_SERVICE_USER_NAME: arkuser
 
 deploy_backend_bcgeu_dev:
@@ -181,7 +190,7 @@ deploy_backend_bcgeu_dev:
     SSH_USER: ***REMOVED***
     SSH_PASSWORD: $ARKCASEMGMTSCV_PASSWORD
     ARKCASE_VERSION: 3.3.3-SNAPSHOT
-    ARKCASE_REPOSITORY: armedia.snapshot
+    ARKCASE_REPOSITORY: arkcase.snapshot
     ARKCASE_SERVICE_USER_NAME: arkuser
     
 .trigger_bcgeu_develop_pipeline:
@@ -211,7 +220,7 @@ deploy_backend_bcgeu_dev:
     SSH_USER: ***REMOVED***
     SSH_PASSWORD: $ARKCASEMGMTSCV_PASSWORD
     ARKCASE_VERSION: 3.3.3-SNAPSHOT
-    ARKCASE_REPOSITORY: armedia.snapshot
+    ARKCASE_REPOSITORY: arkcase.snapshot
     ARKCASE_UI_VARIANT: ui-core
     ARKCASE_SERVICE_USER_NAME: arkuser
     
@@ -230,7 +239,7 @@ deploy_backend_bcgeu_dev:
     SSH_USER: ***REMOVED***
     SSH_PASSWORD: $ARKCASEMGMTSCV_PASSWORD
     ARKCASE_VERSION: 3.3.3-SNAPSHOT
-    ARKCASE_REPOSITORY: armedia.snapshot
+    ARKCASE_REPOSITORY: arkcase.snapshot
     ARKCASE_UI_VARIANT: ui-foia
     ARKCASE_SERVICE_USER_NAME: arkuser
 
