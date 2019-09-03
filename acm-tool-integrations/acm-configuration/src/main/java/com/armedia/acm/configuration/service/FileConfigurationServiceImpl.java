@@ -41,6 +41,7 @@ public class FileConfigurationServiceImpl implements FileConfigurationService
     {
         try
         {
+            log.debug("Sending the file to the config server repository []", filePath);
             configRestTemplate.exchange(
                     configurationClientConfig.getUpdatePropertiesEndpoint(), HttpMethod.POST,
                     prepareFileProperties(file, filePath),
@@ -93,6 +94,8 @@ public class FileConfigurationServiceImpl implements FileConfigurationService
         LinkedMultiValueMap<String, Object> multipartReqMap = setStringObjectLinkedMultiValueMap(fileName, doc);
 
         HttpEntity<LinkedMultiValueMap<String, Object>> reqEntity = new HttpEntity<>(multipartReqMap, headers);
+
+        log.debug("HttpEntity for updating config file is created");
 
         return reqEntity;
     }
