@@ -130,9 +130,10 @@ public class CustomLogoService
         updateFile(logoFileSource, emailLogoFile);
     }
 
-    private void updateFile(InputStreamResource logoFileSource, String fileLocation) throws IOException
+    private void updateFile(InputStreamResource logoFileSource, String fileName) throws IOException
     {
-        fileConfigurationService.moveFileToConfiguration(logoFileSource, "branding/" + fileLocation);
+        log.debug("Trying to update the file with file name {} in the configuration.", fileName);
+        fileConfigurationService.moveFileToConfiguration(logoFileSource, "branding/" + fileName);
     }
 
     public void setBrandingFilesLocation(String brandingFilesLocation)
