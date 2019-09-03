@@ -71,6 +71,7 @@ public class CustomLogoUploadFile
             {
                 if (headerLogoFile.getContentType().equals(MediaType.IMAGE_PNG_VALUE))
                 {
+                    log.debug("Trying to upload file with name {}", headerLogoFile.getOriginalFilename());
                     customLogoService.updateHeaderLogo(new InputStreamResource(headerLogoFile.getInputStream()));
                 }
                 else
@@ -83,6 +84,7 @@ public class CustomLogoUploadFile
             {
                 if (loginLogoFile.getContentType().equals(MediaType.IMAGE_PNG_VALUE))
                 {
+                    log.debug("Trying to upload file with name {}", loginLogoFile.getOriginalFilename());
                     customLogoService.updateLoginLogo(new InputStreamResource(loginLogoFile.getInputStream()));
                 }
                 else
@@ -95,6 +97,7 @@ public class CustomLogoUploadFile
             {
                 if (emailLogoFile.getContentType().equals(MediaType.IMAGE_PNG_VALUE))
                 {
+                    log.debug("Trying to upload file with name {}", emailLogoFile.getOriginalFilename());
                     customLogoService.updateEmailLogo(new InputStreamResource(emailLogoFile.getInputStream()));
                 }
                 else
