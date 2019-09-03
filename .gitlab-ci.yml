@@ -51,7 +51,7 @@ stages:
     - echo '  </servers>' >> /root/.m2/settings.xml
     - echo '</settings>' >> /root/.m2/settings.xml
     - export MAVEN_OPTS="-Xmx2048M -Xss256M -XX:MetaspaceSize=2048M -XX:+CMSClassUnloadingEnabled"
-    - mvn -DskipITs -T 4 -B deploy "altDeploymentRepository=arkcase.snapshot::default::https://project.armedia.com/nexus/repository/arkcase.snapshot/"
+    - mvn -DskipITs -T 4 -B deploy "-DaltDeploymentRepository=arkcase.snapshot::default::https://project.armedia.com/nexus/repository/arkcase.snapshot/"
 
 .build_frontend_snapshot:
   stage: build
@@ -69,7 +69,7 @@ stages:
     - npm run build:prod
     - /bin/cp -f $BUILD_CORE_ARTIFACTS_DIRECTORY/pom.xml .
     - /bin/cp -f $BUILD_CORE_ARTIFACTS_DIRECTORY/assembly.xml .
-    - mvn -B clean deploy "-Drelease-repository.url=https://project.armedia.com/nexus/repository/armedia.snapshot/" "-Drelease-repository.id=armedia.snapshot" "-Drelease-repository.name=Armedia Snapshots repository"
+    - mvn -B clean deploy "-DaltDeploymentRepository=arkcase.snapshot::default::https://project.armedia.com/nexus/repository/arkcase.snapshot/"
     # build ui-foia variant
     - /bin/cp -f $BUILD_FOIA_ARTIFACTS_DIRECTORY/build.env ./.env
     - /bin/cp -f $BUILD_FOIA_ARTIFACTS_DIRECTORY/local*.js ./config/
@@ -79,7 +79,7 @@ stages:
     - npm run build:prod
     - /bin/cp -f $BUILD_FOIA_ARTIFACTS_DIRECTORY/pom.xml .
     - /bin/cp -f $BUILD_FOIA_ARTIFACTS_DIRECTORY/assembly.xml .
-    - mvn -B clean deploy "-Drelease-repository.url=https://project.armedia.com/nexus/repository/armedia.snapshot/" "-Drelease-repository.id=armedia.snapshot" "-Drelease-repository.name=Armedia Snapshots repository"
+    - mvn -B clean deploy "-DaltDeploymentRepository=arkcase.snapshot::default::https://project.armedia.com/nexus/repository/arkcase.snapshot/"
 
 .build_artifact:
   stage: build
