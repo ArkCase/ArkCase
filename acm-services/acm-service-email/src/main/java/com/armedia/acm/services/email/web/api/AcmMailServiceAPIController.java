@@ -181,6 +181,40 @@ public class AcmMailServiceAPIController
         return in;
     }
 
+    @RequestMapping(value = "/plainEmail", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public List<EmailWithEmbeddedLinksResultDTO> createPlainEmail(@RequestBody EmailWithEmbeddedLinksDTO in, Authentication authentication, HttpSession session) throws AcmEmailServiceException
+    {
+        if (null == in)
+        {
+            throw new AcmEmailServiceException("Could not create email message, invalid input : " + in);
+        }
+        // the user is stored in the session during login.
+        AcmUser user = (AcmUser) session.getAttribute("acm_user");
+
+        try
+        {
+            List<EmailWithEmbeddedLinksResultDTO> result = new ArrayList<>();
+            List<String> emailAddresses = in.getEmailAddresses();
+            String templateName = String.format("%s.html",in.getModelReferenceName());
+            String template = templateService.getTemplate(templateName);
+            for (String emailAddress : emailAddresses)
+            {
+                    in.setTemplate(template);
+                    in.setEmailAddresses(Arrays.asList(emailAddress));
+                    result.addAll(emailSenderService.sendEmailWithEmbeddedLinks(in, authentication, user));
+            }
+            return result;
+        }
+        catch (Exception e)
+        {
+            throw new AcmEmailServiceException(
+                    "Could not send plain emails, among other things check your request body. Exception message is : "
+                            + e.getMessage(),
+                    e);
+        }
+    }
+
 
     /**
      * @param objectType
