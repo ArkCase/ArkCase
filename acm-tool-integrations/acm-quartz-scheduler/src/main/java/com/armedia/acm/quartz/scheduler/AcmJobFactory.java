@@ -6,22 +6,22 @@ package com.armedia.acm.quartz.scheduler;
  * %%
  * Copyright (C) 2014 - 2019 ArkCase LLC
  * %%
- * This file is part of the ArkCase software. 
- * 
- * If the software was purchased under a paid ArkCase license, the terms of 
- * the paid license agreement will prevail.  Otherwise, the software is 
+ * This file is part of the ArkCase software.
+ *
+ * If the software was purchased under a paid ArkCase license, the terms of
+ * the paid license agreement will prevail.  Otherwise, the software is
  * provided under the following open source license terms:
- * 
+ *
  * ArkCase is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *  
+ *
  * ArkCase is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
  * #L%
@@ -33,8 +33,9 @@ import static org.quartz.TriggerBuilder.newTrigger;
 
 import com.armedia.acm.objectonverter.json.JSONUnmarshaller;
 import com.armedia.acm.spring.SpringContextHolder;
-
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.quartz.Job;
@@ -43,8 +44,6 @@ import org.quartz.JobDetail;
 import org.quartz.Trigger;
 import org.quartz.TriggerBuilder;
 import org.quartz.spi.TriggerFiredBundle;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.scheduling.quartz.SpringBeanJobFactory;
@@ -58,6 +57,10 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+
+import static org.quartz.CronScheduleBuilder.cronSchedule;
+import static org.quartz.SimpleScheduleBuilder.simpleSchedule;
+import static org.quartz.TriggerBuilder.newTrigger;
 
 /**
  * This class applies scheduler context, for job dependencies.
@@ -77,6 +80,8 @@ public class AcmJobFactory extends SpringBeanJobFactory implements InitializingB
     private List<Trigger> triggerList;
 
     private Map<String, AcmJobDescriptor> acmSimpleJobDescriptorMap;
+
+    private boolean overwriteExistingJobs = false;
 
     private static final Logger logger = LogManager.getLogger(AcmJobFactory.class);
 
@@ -104,6 +109,12 @@ public class AcmJobFactory extends SpringBeanJobFactory implements InitializingB
                 .collect(Collectors.toMap(AcmJobDescriptor::getJobName, Function.identity()));
 
         JSONObject jsonJobConfiguration = new JSONObject(jobsJsonConfig);
+
+        if (jsonJobConfiguration.has("overwriteExistingJobs"))
+        {
+            overwriteExistingJobs = jsonJobConfiguration.getBoolean("overwriteExistingJobs");
+        }
+
         JSONArray jobs = jsonJobConfiguration.getJSONArray("jobs");
         List<AcmJobConfig> jobConfigurations = IntStream.range(0, jobs.length())
                 .mapToObj(jobs::getJSONObject)
@@ -199,7 +210,6 @@ public class AcmJobFactory extends SpringBeanJobFactory implements InitializingB
         }
     }
 
-
     public Trigger createTrigger(AcmJobConfig jobConfig)
     {
         return buildTrigger(jobConfig).build();
@@ -221,5 +231,11 @@ public class AcmJobFactory extends SpringBeanJobFactory implements InitializingB
             }
         }
         return triggerBuilder.build();
+    }
+
+    public boolean isOverwriteExistingJobs()
+    {
+        logger.info("Quartz scheduler configured with [overwriteExistingJobs={}].", overwriteExistingJobs);
+        return overwriteExistingJobs;
     }
 }
