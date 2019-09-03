@@ -59,13 +59,11 @@ public class AcmJpaBatchUpdateJobDescriptor extends AcmJobDescriptor
     }
 
     @Override
-    public void executeJob(JobExecutionContext context) throws JobExecutionException
+    public void executeJob(JobExecutionContext context) throws InterruptedException
     {
         JobDataMap triggerDataMap = context.getTrigger().getJobDataMap();
         JobDataMap jobDataMap = context.getJobDetail().getJobDataMap();
 
-        try
-        {
             if (triggerDataMap != null && triggerDataMap.size() != 0)
             {
                 jpaBatchUpdateService.jpaBatchUpdate(triggerDataMap);
@@ -76,11 +74,6 @@ public class AcmJpaBatchUpdateJobDescriptor extends AcmJobDescriptor
             {
                 jpaBatchUpdateService.jpaBatchUpdate(jobDataMap);
             }
-        }
-        catch (InterruptedException e)
-        {
-            throw new JobExecutionException(e);
-        }
     }
 
     @Override
