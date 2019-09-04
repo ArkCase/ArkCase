@@ -27,6 +27,12 @@ angular.module('services').factory('Ecm.EmailService', [ '$resource', '$translat
             method: 'POST',
             url: 'api/latest/service/email/send/withembeddedlinks/:objectType',
             isArray: true
+        },
+
+        _sendPlainEmail: {
+            method: 'POST',
+            url: 'api/latest/service/email/send/plainEmail',
+            isArray: true
         }
 
         /**
@@ -97,6 +103,35 @@ angular.module('services').factory('Ecm.EmailService', [ '$resource', '$translat
             param: {
                 objectType: objectType
             },
+            data: emailData,
+            onSuccess: function(data) {
+                if (Service.validateSentEmails(data)) {
+                    for (var i = 0; i < data.length; i++) {
+                        if(data[i].state) {
+                            MessageService.info($translate.instant("common.directive.docTree.email.successMessage"));
+                        } else {
+                            MessageService.error($translate.instant("common.directive.docTree.email.unsuccessMessage"));
+                        }
+                        if ("NOT_SENT" == data[i].state) {
+                            failed += data[i].userEmail + ";";
+                        }
+                    }
+                    if (Util.isEmpty(failed)) {
+                        return emailData;
+                    }
+                }
+            },
+            onInvalid: function(data) {
+                MessageService.error($translate.instant("common.directive.docTree.email.unsuccessMessage"));
+                return failed;
+            }
+        });
+    };
+
+    Service.sendPlainEmail = function(emailData) {
+        var failed = "";
+        return Util.serviceCall({
+            service: Service._sendPlainEmail,
             data: emailData,
             onSuccess: function(data) {
                 if (Service.validateSentEmails(data)) {

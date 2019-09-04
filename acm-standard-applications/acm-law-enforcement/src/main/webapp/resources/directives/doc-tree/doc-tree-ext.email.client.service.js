@@ -148,7 +148,7 @@ angular.module('services').factory('DocTreeExt.Email',
                                 EcmEmailService.sendEmailWithAttachmentsAndLinks(emailData, DocTree.getObjType());
                             } else {
                                 emailData = Email._makeEmailDataForPlainEmail(DocTree, res);
-                                EcmEmailService.sendEmail(emailData, DocTree.getObjType());
+                                EcmEmailService.sendPlainEmail(emailData, DocTree.getObjType());
                             }
                         });
                     });
