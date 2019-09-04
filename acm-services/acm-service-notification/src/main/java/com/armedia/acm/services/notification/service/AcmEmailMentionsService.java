@@ -35,6 +35,7 @@ import com.armedia.acm.services.email.service.TemplatingEngine;
 import com.armedia.acm.services.notification.dao.NotificationDao;
 import com.armedia.acm.services.notification.model.Notification;
 
+import com.armedia.acm.services.users.model.AcmUser;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -72,18 +73,18 @@ public class AcmEmailMentionsService
         }
     }
 
-    public void sendMentionsEmail(EmailMentionsDTO in, String userFullName) throws AcmEmailServiceException
+    public void sendMentionsEmail(EmailMentionsDTO in, AcmUser user) throws AcmEmailServiceException
     {
 
         Notification notification = new Notification();
         notification.setTemplateModelName("mentions");
-        notification.setTitle(String.format("%s mentioned you in %s %d", userFullName, in.getObjectType(), in.getObjectId()));
+        notification.setTitle(String.format("%s mentioned you in %s %d", user.getFullName(), in.getObjectType(), in.getObjectId()));
         notification.setAttachFiles(false);
         notification.setParentType(in.getObjectType());
         notification.setParentId(in.getObjectId());
         notification.setNote(in.getTextMentioned());
         notification.setData(buildObjectUrl(in));
-        notification.setUser(userFullName);
+        notification.setUser(user.getUserId());
         notification.setEmailAddresses(in.getEmailAddresses().stream().collect(Collectors.joining(",")));
         notificationDao.save(notification);
 
