@@ -143,7 +143,7 @@ public class SaveNotificationAPIController
 
         // the user is stored in the session during login.
         AcmUser user = (AcmUser) session.getAttribute("acm_user");
-        acmEmailMentionsService.sendMentionsEmail(in, user.getFullName());
+        acmEmailMentionsService.sendMentionsEmail(in, user);
 
         return in;
     }
