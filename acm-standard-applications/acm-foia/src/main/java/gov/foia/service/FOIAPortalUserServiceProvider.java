@@ -45,11 +45,14 @@ import com.armedia.acm.portalgateway.service.PortalUserServiceProvider;
 import com.armedia.acm.services.email.model.EmailBodyBuilder;
 import com.armedia.acm.services.email.model.EmailBuilder;
 import com.armedia.acm.services.email.service.AcmEmailSenderService;
+import com.armedia.acm.services.notification.dao.NotificationDao;
+import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.users.model.ldap.AcmLdapActionFailedException;
 import com.armedia.acm.services.users.model.ldap.UserDTO;
 import com.armedia.acm.services.users.service.ldap.LdapUserService;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.Base64Utils;
 
 import java.nio.charset.Charset;
@@ -101,6 +104,8 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
 
     private FOIALdapAuthenticationService ldapAuthenticateService;
 
+    private NotificationDao notificationDao;
+
     /*
      * (non-Javadoc)
      * @see com.armedia.acm.portalgateway.service.PortalUserServiceProvider#requestRegistration(java.lang.String,
@@ -134,8 +139,17 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
 
                 registrationDao.save(record);
 
-                sendEmail(registrationRequest.getEmailAddress(), "Request registration", registrationRequestEmailTemplate,
-                        registrationRequest.getRegistrationUrl(), registrationKey);
+                String registrationLink = new String(Base64Utils.decodeFromString(registrationRequest.getRegistrationUrl()), Charset.forName("UTF-8")) + "/" + registrationKey;
+
+                Notification notification = new Notification();
+                notification.setTemplateModelName("portalRequestRegistrationLink");
+                notification.setTitle("Request registration");
+                notification.setCreator(registrationRequest.getEmailAddress());
+                notification.setNote(registrationLink);
+                notification.setEmailAddresses(registrationRequest.getEmailAddress());
+                notification.setUser(SecurityContextHolder.getContext().getAuthentication().getName());
+
+                getNotificationDao().save(notification);
 
                 return UserRegistrationResponse.requestAccepted();
             }
@@ -311,8 +325,17 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
 
             resetDao.save(record);
 
-            sendEmail(resetRequest.getEmailAddress(), "Request password reset", passwordResetRequestEmailTemplate,
-                    resetRequest.getResetUrl(), resetKey);
+            String resetLink = new String(Base64Utils.decodeFromString(resetRequest.getResetUrl()), Charset.forName("UTF-8")) + "/" + resetKey;
+
+            Notification notification = new Notification();
+            notification.setTemplateModelName("portalPasswordResetRequestLink");
+            notification.setTitle("Request password reset");
+            notification.setCreator(resetRequest.getEmailAddress());
+            notification.setNote(resetLink);
+            notification.setEmailAddresses(resetRequest.getEmailAddress());
+            notification.setUser(SecurityContextHolder.getContext().getAuthentication().getName());
+
+            getNotificationDao().save(notification);
 
             return UserResetResponse.requestAccepted();
         }
@@ -720,5 +743,15 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
     public void setPersonDao(PersonDao personDao)
     {
         this.personDao = personDao;
+    }
+
+    public void setNotificationDao(NotificationDao notificationDao)
+    {
+        this.notificationDao = notificationDao;
+    }
+
+    public NotificationDao getNotificationDao()
+    {
+        return notificationDao;
     }
 }
