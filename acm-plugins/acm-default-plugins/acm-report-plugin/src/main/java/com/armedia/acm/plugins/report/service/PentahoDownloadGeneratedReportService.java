@@ -32,6 +32,7 @@ import com.armedia.acm.plugins.report.model.ScheduleReportException;
 
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -48,7 +49,7 @@ import java.util.Arrays;
 public class PentahoDownloadGeneratedReportService
 {
     private static final Logger LOGGER = LogManager.getLogger(PentahoDownloadGeneratedReportService.class);
-    private ResponseEntity<byte[]> response;
+    private ResponseEntity<Resource> response;
     private PentahoReportsConfig reportsConfig;
 
     public void downloadReport(HttpHeaders headers, RestTemplate restTemplate, String fileName)
@@ -62,7 +63,7 @@ public class PentahoDownloadGeneratedReportService
 
             response = restTemplate.exchange(
                     buildDownloadUrl(fileName),
-                    HttpMethod.GET, request, byte[].class, "1");
+                    HttpMethod.GET, request, Resource.class, "1");
 
             if (response.getStatusCode() != HttpStatus.OK)
             {
@@ -84,7 +85,7 @@ public class PentahoDownloadGeneratedReportService
                 + reportsConfig.getDownloadApi().replace("{reportFileName}", fileName);
     }
 
-    public ResponseEntity<byte[]> getResponse()
+    public ResponseEntity<Resource> getResponse()
     {
         return response;
     }
