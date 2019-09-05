@@ -93,7 +93,9 @@
         <!-- by default spring.security.saml2.core uses opensaml version 2.6.1, which uses bouncycastle version 1.46, but we require version
             1.54 -->
         <opensaml.version>2.6.4</opensaml.version>
-        <org.apache.poi.version>3.17-beta1</org.apache.poi.version>
+        <org.apache.poi.version>3.17</org.apache.poi.version>
+        <com.itextpdf.version>5.5.10</com.itextpdf.version>
+        <net.sf.jtidy.version>r938</net.sf.jtidy.version>
         <org.json.version>20140107</org.json.version>
         <org.mvel.version>2.2.1.Final</org.mvel.version>
         <pdfbox.version>2.0.11</pdfbox.version>
@@ -1655,27 +1657,17 @@
             <dependency>
                 <groupId>com.itextpdf</groupId>
                 <artifactId>itextpdf</artifactId>
-                <version>5.5.10</version>
+                <version>${com.itextpdf.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.itextpdf.tool</groupId>
                 <artifactId>xmlworker</artifactId>
-                <version>5.5.10</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.poi</groupId>
-                <artifactId>poi</artifactId>
-                <version>4.1.0</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.poi</groupId>
-                <artifactId>poi-scratchpad</artifactId>
-                <version>4.1.0</version>
+                <version>${com.itextpdf.version}</version>
             </dependency>
             <dependency>
                 <groupId>net.sf.jtidy</groupId>
                 <artifactId>jtidy</artifactId>
-                <version>r938</version>
+                <version>${net.sf.jtidy.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.reflections</groupId>

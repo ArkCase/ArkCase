@@ -41,8 +41,17 @@ stages:
   stage: build
   script:
     # build war file and deploy to Nexus Snapshots
+    - echo '<settings>' > /root/.m2/settings.xml
+    - echo '  <servers>' >> /root/.m2/settings.xml
+    - echo '    <server>' >> /root/.m2/settings.xml
+    - echo '      <id>arkcase.snapshot</id>' >> /root/.m2/settings.xml
+    - echo '      <username>admin</username>' >> /root/.m2/settings.xml
+    - echo "      <password>$MVN_PASSWORD</password>" >> /root/.m2/settings.xml
+    - echo '    </server>' >> /root/.m2/settings.xml
+    - echo '  </servers>' >> /root/.m2/settings.xml
+    - echo '</settings>' >> /root/.m2/settings.xml
     - export MAVEN_OPTS="-Xmx2048M -Xss256M -XX:MetaspaceSize=2048M -XX:+CMSClassUnloadingEnabled"
-    - mvn -DskipITs -T 4 -B deploy "-Drelease-repository.url=https://project.armedia.com/nexus/repository/armedia.snapshot/" "-Drelease-repository.id=armedia.snapshot" "-Drelease-repository.name=Armedia Snapshots repository"
+    - mvn -DskipITs -T 4 -B deploy "-DaltDeploymentRepository=arkcase.snapshot::default::https://project.armedia.com/nexus/repository/arkcase.snapshot/"
 
 .build_frontend_snapshot:
   stage: build
@@ -60,7 +69,7 @@ stages:
     - npm run build:prod
     - /bin/cp -f $BUILD_CORE_ARTIFACTS_DIRECTORY/pom.xml .
     - /bin/cp -f $BUILD_CORE_ARTIFACTS_DIRECTORY/assembly.xml .
-    - mvn -B clean deploy "-Drelease-repository.url=https://project.armedia.com/nexus/repository/armedia.snapshot/" "-Drelease-repository.id=armedia.snapshot" "-Drelease-repository.name=Armedia Snapshots repository"
+    - mvn -B clean deploy "-DaltDeploymentRepository=arkcase.snapshot::default::https://project.armedia.com/nexus/repository/arkcase.snapshot/"
     # build ui-foia variant
     - /bin/cp -f $BUILD_FOIA_ARTIFACTS_DIRECTORY/build.env ./.env
     - /bin/cp -f $BUILD_FOIA_ARTIFACTS_DIRECTORY/local*.js ./config/
@@ -70,7 +79,7 @@ stages:
     - npm run build:prod
     - /bin/cp -f $BUILD_FOIA_ARTIFACTS_DIRECTORY/pom.xml .
     - /bin/cp -f $BUILD_FOIA_ARTIFACTS_DIRECTORY/assembly.xml .
-    - mvn -B clean deploy "-Drelease-repository.url=https://project.armedia.com/nexus/repository/armedia.snapshot/" "-Drelease-repository.id=armedia.snapshot" "-Drelease-repository.name=Armedia Snapshots repository"
+    - mvn -B clean deploy "-DaltDeploymentRepository=arkcase.snapshot::default::https://project.armedia.com/nexus/repository/arkcase.snapshot/"
 
 .build_artifact:
   stage: build
@@ -163,7 +172,7 @@ deploy_backend_core_dev:
     SSH_USER: loc.arkcasemgmtsvc
     SSH_PASSWORD: $ARKCASEMGMTSCV_PASSWORD
     ARKCASE_VERSION: 3.3.3-SNAPSHOT
-    ARKCASE_REPOSITORY: armedia.snapshot
+    ARKCASE_REPOSITORY: arkcase.snapshot
     ARKCASE_SERVICE_USER_NAME: arkuser
 
 deploy_backend_bcgeu_dev:
@@ -181,7 +190,7 @@ deploy_backend_bcgeu_dev:
     SSH_USER: loc.arkcasemgmtsvc
     SSH_PASSWORD: $ARKCASEMGMTSCV_PASSWORD
     ARKCASE_VERSION: 3.3.3-SNAPSHOT
-    ARKCASE_REPOSITORY: armedia.snapshot
+    ARKCASE_REPOSITORY: arkcase.snapshot
     ARKCASE_SERVICE_USER_NAME: arkuser
     
 .trigger_bcgeu_develop_pipeline:
@@ -211,7 +220,7 @@ deploy_backend_bcgeu_dev:
     SSH_USER: loc.arkcasemgmtsvc
     SSH_PASSWORD: $ARKCASEMGMTSCV_PASSWORD
     ARKCASE_VERSION: 3.3.3-SNAPSHOT
-    ARKCASE_REPOSITORY: armedia.snapshot
+    ARKCASE_REPOSITORY: arkcase.snapshot
     ARKCASE_UI_VARIANT: ui-core
     ARKCASE_SERVICE_USER_NAME: arkuser
     
@@ -230,7 +239,7 @@ deploy_backend_bcgeu_dev:
     SSH_USER: loc.arkcasemgmtsvc
     SSH_PASSWORD: $ARKCASEMGMTSCV_PASSWORD
     ARKCASE_VERSION: 3.3.3-SNAPSHOT
-    ARKCASE_REPOSITORY: armedia.snapshot
+    ARKCASE_REPOSITORY: arkcase.snapshot
     ARKCASE_UI_VARIANT: ui-foia
     ARKCASE_SERVICE_USER_NAME: arkuser
 
