@@ -37,6 +37,7 @@ import com.armedia.acm.plugins.person.model.PersonAssociation;
 import com.armedia.acm.services.pipeline.AbstractPipelineContext;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 
+import org.jsoup.Jsoup;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -99,7 +100,7 @@ public class PDFComplaintDocumentGenerator<D extends AcmAbstractDao, T extends C
         addElement(document, rootElem, "complaintTag", complaint.getTag() != null ? complaint.getTag() : "N/A", false);
         addElement(document, rootElem, "frequency", complaint.getFrequency() != null ? complaint.getFrequency() : "N/A", false);
 
-        addElement(document, rootElem, "complaintDescription", complaint.getDetails() != null ? complaint.getDetails() : "N/A", false);
+        addElement(document, rootElem, "complaintDescription", complaint.getDetails() != null ? Jsoup.parse(complaint.getDetails()).text() : "N/A", false);
 
         if (complaint.getDefaultAddress() != null)
         {
