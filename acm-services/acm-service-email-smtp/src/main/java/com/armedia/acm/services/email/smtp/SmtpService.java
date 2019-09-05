@@ -47,11 +47,9 @@ import com.armedia.acm.services.email.service.AcmEmailSenderService;
 import com.armedia.acm.services.email.service.TemplatingEngine;
 import com.armedia.acm.services.users.model.AcmUser;
 
-import org.mule.api.MuleException;
-import org.mule.api.MuleMessage;
-import org.mule.util.FileUtils;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.mule.util.FileUtils;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.security.core.Authentication;
@@ -387,9 +385,18 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
             {
                 emailResultList.add(new EmailWithEmbeddedLinksResultDTO(emailAddress, true));
             }
+            AcmEvent event = null;
+            if (in.getModelReferenceName().equals("plainEmail"))
+            {
 
-            SmtpSentEventHyperlink event = new SmtpSentEventHyperlink(in, user.getUserId(), parentId, in.getParentType());
-
+                event = new SmtpEventMailSent(in, user.getUserId(),
+                        Long.parseLong(in.getParentNumber().contains("_") ? in.getParentNumber().split("_")[1] : in.getParentNumber()),
+                        in.getParentType(), null);
+            }
+            else
+            {
+                event = new SmtpSentEventHyperlink(in, user.getUserId(), parentId, in.getParentType());
+            }
             boolean success = (exception == null);
             event.setSucceeded(success);
             eventPublisher.publishEvent(event);
