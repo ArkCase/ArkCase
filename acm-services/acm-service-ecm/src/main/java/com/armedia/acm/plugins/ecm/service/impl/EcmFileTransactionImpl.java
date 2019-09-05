@@ -255,8 +255,7 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
 
     @Override
     public EcmFile addFileTransaction(Authentication authentication, String ecmUniqueFilename, AcmContainer container,
-            String targetCmisFolderId, InputStream fileContents, EcmFile metadata,
-            Document existingCmisDocument, MultipartFile file) throws MuleException, IOException
+            String targetCmisFolderId, EcmFile metadata, Document existingCmisDocument, MultipartFile file)
     {
 
         log.debug("Creating ecm file pipeline context");
@@ -265,10 +264,10 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
         try
         {
             log.debug("Putting fileInputStream in a decorator stream so that the number of bytes can be counted");
-            CountingInputStream countingInputStream = new CountingInputStream(fileContents);
+            CountingInputStream countingInputStream = new CountingInputStream(file.getInputStream());
             // this reports progress on file system. Also should store info for the broker, for which part of the
             // progress it is loading for the filesystem or the activity upload from 50% to 59%
-            if (StringUtils.isNotEmpty(metadata.getUuid()) && file != null)
+            if (StringUtils.isNotEmpty(metadata.getUuid()))
             {
                 ProgressbarDetails progressbarDetails = new ProgressbarDetails();
                 progressbarDetails.setProgressbar(true);
@@ -393,11 +392,11 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
 
     @Override
     public EcmFile addFileTransaction(Authentication authentication, String ecmUniqueFilename, AcmContainer container,
-            String targetCmisFolderId, InputStream fileContents, EcmFile metadata, MultipartFile file)
+            String targetCmisFolderId, EcmFile metadata, MultipartFile file)
             throws MuleException, IOException
     {
         Document existingCmisDocument = null;
-        return addFileTransaction(authentication, ecmUniqueFilename, container, targetCmisFolderId, fileContents,
+        return addFileTransaction(authentication, ecmUniqueFilename, container, targetCmisFolderId,
                 metadata, existingCmisDocument, file);
     }
 
@@ -490,6 +489,7 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
         return Pair.of(finalMimeType, finalExtension);
     }
 
+    @Deprecated
     protected EcmFileTransactionPipelineContext buildEcmFileTransactionPipelineContext(Authentication authentication,
             byte[] fileBytes,
             String cmisFolderId,

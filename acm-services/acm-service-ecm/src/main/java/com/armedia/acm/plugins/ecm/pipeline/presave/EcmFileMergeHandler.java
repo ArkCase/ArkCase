@@ -27,9 +27,9 @@ package com.armedia.acm.plugins.ecm.pipeline.presave;
  * #L%
  */
 
+import com.armedia.acm.files.capture.CaptureConfig;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
-import com.armedia.acm.files.capture.CaptureConfig;
 import com.armedia.acm.plugins.ecm.pipeline.EcmFileTransactionPipelineContext;
 import com.armedia.acm.plugins.ecm.utils.EcmFileMuleUtils;
 import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
@@ -37,9 +37,10 @@ import com.armedia.acm.plugins.ecm.utils.PDFUtils;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.pipeline.handler.PipelineHandler;
 
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.List;
@@ -103,19 +104,12 @@ public class EcmFileMergeHandler implements PipelineHandler<EcmFile, EcmFileTran
 
                         // Appends the new PDF to the end of the old one
                         log.debug("merging the new document and the original");
-                        byte[] mergedFileByteArray = PDFUtils.mergeFiles(originalFileStream, updatedFileStream);
+                        File mergedFile = PDFUtils.mergeFileStreams(originalFileStream, updatedFileStream);
 
                         // The merged PDF content will be available to the next pipeline stage
-                        if (mergedFileByteArray != null)
-                        {
-                            pipelineContext.setMergedFileByteArray(mergedFileByteArray);
-                            pipelineContext.setIsAppend(true);
-                            pipelineContext.setEcmFile(matchFile);
-                        }
-                        else
-                        {
-                            throw new Exception("The document merge failed");
-                        }
+                        pipelineContext.setMergedFile(mergedFile);
+                        pipelineContext.setIsAppend(true);
+                        pipelineContext.setEcmFile(matchFile);
                     }
                 }
             }

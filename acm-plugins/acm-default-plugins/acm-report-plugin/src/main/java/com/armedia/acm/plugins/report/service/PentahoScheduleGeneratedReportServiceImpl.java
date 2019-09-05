@@ -27,6 +27,7 @@ package com.armedia.acm.plugins.report.service;
  * #L%
  */
 
+import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.pentaho.config.PentahoReportsConfig;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
@@ -34,12 +35,13 @@ import com.armedia.acm.plugins.report.model.PentahoFileProperties;
 import com.armedia.acm.plugins.report.model.PentahoReportFiles;
 
 import org.apache.commons.ssl.Base64;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.client.RestTemplate;
 
-import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 
 /**
@@ -64,6 +66,7 @@ public class PentahoScheduleGeneratedReportServiceImpl
 
         // get generate report metadata
         PentahoReportFiles pentahoReportFiles = getPentahoFilePropertiesService().consumeXML(headers, restTemplate);
+
         if (pentahoReportFiles != null && pentahoReportFiles.getPentahoFilePropertiesList() != null)
         {
             pentahoReportFiles.getPentahoFilePropertiesList().forEach(pentahoFileProperties -> {
@@ -93,10 +96,19 @@ public class PentahoScheduleGeneratedReportServiceImpl
         }
     }
 
-    private EcmFile uploadReportToArkCase(PentahoFileProperties pentahoFileProperties) throws AcmObjectNotFoundException
+    private EcmFile uploadReportToArkCase(PentahoFileProperties pentahoFileProperties)
+            throws AcmObjectNotFoundException, AcmCreateObjectFailedException
     {
-        byte[] data = getDownloadService().getResponse().getBody();
-        InputStream inputStream = new ByteArrayInputStream(data);
+        Resource resource = getDownloadService().getResponse().getBody();
+        InputStream inputStream;
+        try
+        {
+            inputStream = resource.getInputStream();
+        }
+        catch (IOException e)
+        {
+            throw new AcmCreateObjectFailedException("FILE", "Failed to read the report input stream for uploading.", e);
+        }
         return getUploadService().uploadReport(inputStream, pentahoFileProperties);
     }
 

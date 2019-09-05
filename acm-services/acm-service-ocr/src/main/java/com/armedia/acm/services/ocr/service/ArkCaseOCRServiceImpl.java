@@ -62,9 +62,9 @@ import com.armedia.acm.web.api.MDCConstants;
 
 import org.activiti.engine.delegate.DelegateExecution;
 import org.apache.commons.lang.NotImplementedException;
-import org.mule.api.MuleException;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.mule.api.MuleException;
 import org.slf4j.MDC;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -245,11 +245,9 @@ public class ArkCaseOCRServiceImpl extends ArkCaseMediaEngineServiceImpl<OCR>
             {
                 AcmMultipartFile multipartFile = new AcmMultipartFile(fileName, fileName, "application/pdf",
                         false,
-                        file.length(),
-                        new byte[0], stream, true);
+                        file.length(), stream, true);
 
-                getEcmFileService().update(mediaEngine.getMediaEcmFileVersion().getFile(), multipartFile,
-                        authentication);
+                getEcmFileService().update(mediaEngine.getMediaEcmFileVersion().getFile(), multipartFile, authentication);
             }
 
             getObjectLockingManager().releaseObjectLock(mediaEngine.getMediaEcmFileVersion().getFile().getId(),
