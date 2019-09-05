@@ -173,4 +173,7 @@ public interface PersonService
     @Transactional
     Person savePerson(Person person, List<MultipartFile> pictures, Authentication authentication) throws AcmUserActionFailedException,
             AcmCreateObjectFailedException, AcmUpdateObjectFailedException, AcmObjectNotFoundException, PipelineProcessException;
+
+    @Transactional
+    EcmFile insertImageForPortalPerson(Person person, MultipartFile image, String imageContentType, Authentication auth) throws IOException, AcmUserActionFailedException, AcmCreateObjectFailedException, AcmUpdateObjectFailedException, AcmObjectNotFoundException, PipelineProcessException, AcmFileTypesException;
 }

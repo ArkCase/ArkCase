@@ -176,9 +176,9 @@ public class ReportServiceImpl implements ReportService
     {
         String reportKey = "";
 
-        if(title != null && !title.isEmpty())
+        if (title != null && !title.isEmpty())
         {
-            String[] titleArray =  title.replaceAll("\\s","").split("(?=[A-Z])");
+            String[] titleArray = title.replaceAll("\\s", "_").split("_");
             List<String> titleList = Arrays.asList(titleArray);
             reportKey = titleList.stream().map(element -> StringUtils.capitalize(element.toUpperCase())).collect(Collectors.joining("_"));
         }

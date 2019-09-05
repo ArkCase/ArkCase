@@ -287,6 +287,57 @@ public class PersonServiceImpl implements PersonService
         return uploaded;
     }
 
+
+    @Override
+    public EcmFile insertImageForPortalPerson(Person person, MultipartFile image, String imageContentType, Authentication auth)
+            throws IOException, AcmUserActionFailedException, AcmCreateObjectFailedException, AcmUpdateObjectFailedException,
+            AcmObjectNotFoundException, PipelineProcessException, AcmFileTypesException
+    {
+        Objects.requireNonNull(person, "Person not found.");
+        if (person.getContainer() == null)
+        {
+            person = createContainerAndPictureFolder(person, auth);
+        }
+        AcmFolder picturesFolderObj = acmFolderService.findByNameAndParent(personConfig.getPicturesFolder(),
+                person.getContainer().getFolder());
+        Objects.requireNonNull(picturesFolderObj, "Pictures folder not found.");
+
+        File pictureFile = null;
+        try
+        {
+            pictureFile = File.createTempFile("arkcase-insert-image-for-person-", null);
+            FileUtils.copyInputStreamToFile(image.getInputStream(), pictureFile);
+            EcmTikaFile ecmTikaFile = ecmTikaFileService.detectFileUsingTika(pictureFile, image.getName());
+            if (!ecmTikaFile.getContentType().startsWith("image"))
+            {
+                throw new AcmFileTypesException("File is not a type of an image, got " + ecmTikaFile.getContentType());
+            }
+        }
+        catch (SAXException | TikaException e)
+        {
+            throw new AcmFileTypesException("Error parsing contentType", e);
+        }
+        finally
+        {
+            FileUtils.deleteQuietly(pictureFile);
+        }
+
+        String fileName = image.getOriginalFilename();
+        String uniqueFileName = folderAndFilesUtils.createUniqueIdentificator(fileName);
+
+        EcmFile uploaded = ecmFileService.upload(image.getOriginalFilename(), PersonOrganizationConstants.PERSON_PICTURE_FILE_TYPE,
+                PersonOrganizationConstants.PERSON_PICTURE_CATEGORY, image.getInputStream(), imageContentType,
+                uniqueFileName, auth, picturesFolderObj.getCmisFolderId(), PersonOrganizationConstants.PERSON_OBJECT_TYPE,
+                person.getId());
+
+        uploaded = ecmFileService.updateFile(uploaded);
+
+        person.setDefaultPicture(uploaded);
+        savePerson(person, auth);
+
+        return uploaded;
+    }
+
     @Override
     @Transactional
     public EcmFile saveImageForPerson(Long personId, MultipartFile image, boolean isDefault, EcmFile metadata, Authentication auth)
