@@ -29,7 +29,8 @@ public class AcmApplicationContextInitializer implements
 
         System.setProperty("configuration.server.update.file.path", properties.getProperty("configuration.server.update.file.path"));
         System.setProperty("configuration.server.url", properties.getProperty("configuration.server.url"));
-        System.setProperty("application.name", properties.getProperty("application.name"));
+        System.setProperty("application.name.default", properties.getProperty("application.name.default"));
+        System.setProperty("application.name.active", properties.getProperty("application.name.active"));
         System.setProperty("application.profile", properties.getProperty("application.profile"));
         System.setProperty("application.profile.reversed",
                 AuditPatternsSubstitution.getProfilesReversed(properties.getProperty("application.profile")));

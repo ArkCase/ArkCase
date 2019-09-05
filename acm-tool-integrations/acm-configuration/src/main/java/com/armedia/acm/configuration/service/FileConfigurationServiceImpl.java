@@ -1,6 +1,5 @@
 package com.armedia.acm.configuration.service;
 
-
 import com.armedia.acm.configuration.model.ConfigurationClientConfig;
 
 import org.apache.commons.io.FileUtils;
@@ -42,7 +41,7 @@ public class FileConfigurationServiceImpl implements FileConfigurationService
         try
         {
             configRestTemplate.exchange(
-                    configurationClientConfig.getUpdatePropertiesEndpoint(), HttpMethod.POST,
+                    configurationClientConfig.getUpdateFilePropertiesEndpoint(), HttpMethod.POST,
                     prepareFileProperties(file, filePath),
                     HttpEntity.class);
         }
@@ -63,7 +62,7 @@ public class FileConfigurationServiceImpl implements FileConfigurationService
         HttpEntity<Object> entity = new HttpEntity<>("body", headers);
 
         ResponseEntity<Resource> exchange = configRestTemplate.exchange(
-                configurationClientConfig.getConfigurationUrl() + "/" + configurationClientConfig.getApplicationName() + "/"
+                configurationClientConfig.getConfigurationUrl() + "/" + configurationClientConfig.getDefaultApplicationName() + "/"
                         + configurationClientConfig.getActiveProfile() + "/*/" + BRANDING_LOCATION + "/" + fileName,
                 HttpMethod.GET, entity,
                 Resource.class);
@@ -79,7 +78,6 @@ public class FileConfigurationServiceImpl implements FileConfigurationService
     {
         getFileFromConfiguration(message.getPayload().toString(), customFilesLocation);
     }
-
 
     private HttpEntity<LinkedMultiValueMap<String, Object>> prepareFileProperties(InputStreamResource file, String fileName)
     {
