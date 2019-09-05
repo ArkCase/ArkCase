@@ -35,6 +35,7 @@ import com.armedia.acm.plugins.person.model.PersonAssociation;
 import com.armedia.acm.services.pipeline.AbstractPipelineContext;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 
+import org.jsoup.Jsoup;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -76,7 +77,7 @@ public class PDFCasefileDocumentGenerator<D extends AcmAbstractDao, T extends Ca
 
         addElement(document, rootElem, "caseTitle", caseFile.getTitle(), true);
         addElement(document, rootElem, "caseType", caseFile.getCaseType(), true);
-        addElement(document, rootElem, "caseDetails", caseFile.getDetails() != null ? caseFile.getDetails() : "N/A", false);
+        addElement(document, rootElem, "caseDetails", caseFile.getDetails() != null ? Jsoup.parse(caseFile.getDetails()).text() : "N/A", false);
 
         String initiator = "Unknown";
         if ( caseFile.getOriginator() != null && caseFile.getOriginator().getPerson() != null && caseFile.getOriginator().getPerson().getFullName() != null )
