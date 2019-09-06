@@ -344,6 +344,7 @@
             "type": "empty",
             "docTree": {
                 "email": {
+                    "emailSubject": "Document $id",
                     "subjectRegex": "(.*)\\$([^\\s]+)",
                     "objectTypeRegexGroup": 1,
                     "objectNumberRegexGroup": 2
