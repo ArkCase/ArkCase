@@ -64,7 +64,7 @@ public class ContentFileSolrPostClient implements SolrPostClient, ApplicationEve
     private ApplicationEventPublisher applicationEventPublisher;
 
     @Override
-    public void sendToSolr(SolrCore core, String json) throws SolrPostException
+    public void sendToSolr(String destinationQueue, SolrCore core, String json) throws SolrPostException
     {
         Objects.requireNonNull(core, "Core must be specified");
         Objects.requireNonNull(core.getCore(), "The Solr core must have a value");
@@ -105,7 +105,8 @@ public class ContentFileSolrPostClient implements SolrPostClient, ApplicationEve
         InputStreamResource inputStreamResource = new InputStreamResource(contentStream.getStream());
         HttpEntity<InputStreamResource> entity = new HttpEntity<>(inputStreamResource, headers);
 
-        getSolrRestClient().postToSolr(core.getCore(), solrRestClient.getSolrConfig().getContentFileHandler(), entity, logText,
+        getSolrRestClient().postToSolr(destinationQueue, core.getCore(), solrRestClient.getSolrConfig().getContentFileHandler(), entity,
+                logText,
                 urlWithPlaceholders, urlValues);
 
         applicationEventPublisher.publishEvent(new EcmFileContentIndexedEvent(solrContentDocument));

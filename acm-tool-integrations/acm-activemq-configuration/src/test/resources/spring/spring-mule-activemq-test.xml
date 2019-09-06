@@ -12,6 +12,7 @@
         <property name="connectionFactory" ref="jmsConnectionFactory"/>
         <property name="destinationResolver" ref="destinationResolver"/>
         <property name="concurrency" value="3-10"/>
+        <property name="sessionTransacted" value="true"/>
 
     </bean>
 
