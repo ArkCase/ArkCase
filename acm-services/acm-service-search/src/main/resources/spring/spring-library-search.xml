@@ -11,6 +11,7 @@
 
     <bean id="solrRestClient" class="com.armedia.acm.services.search.service.solr.SolrRestClient">
         <property name="solrConfig" ref="solrConfig"/>
+        <property name="jmsTemplate" ref="jmsTemplate"/>
     </bean>
 
     <bean id="solrPostClient" class="com.armedia.acm.services.search.service.solr.DefaultSolrPostClient">
