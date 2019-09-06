@@ -38,6 +38,7 @@ import com.armedia.acm.services.pipeline.AbstractPipelineContext;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 
 import org.apache.commons.lang3.StringUtils;
+import org.jsoup.Jsoup;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -82,7 +83,7 @@ public class PDFCostsheetDocumentGenerator<D extends AcmAbstractDao, T extends A
         addElement(document, rootElem, "type", StringUtils.capitalize(costsheet.getParentType().toLowerCase()), true);
         addElement(document, rootElem, "code", costsheet.getParentNumber(), true);
 
-        addElement(document, rootElem, "details", costsheet.getDetails() != null ? costsheet.getDetails() : "N/A", false);
+        addElement(document, rootElem, "details", costsheet.getDetails() != null ? Jsoup.parse(costsheet.getDetails()).text() : "N/A", false);
 
         if (!costsheet.getCosts().isEmpty())
         {
