@@ -2,8 +2,8 @@
 
 angular.module('time-tracking').controller(
         'TimeTracking.TasksController',
-        [ '$scope', '$stateParams', 'UtilService', 'ConfigService', 'Helper.UiGridService', 'TimeTracking.InfoService', 'Helper.ObjectBrowserService', 'LookupService', 'Task.AlertsService', 'Object.TaskService', 'ObjectService', 'ModalDialogService', 'Task.WorkflowService', '$timeout',
-                function($scope, $stateParams, Util, ConfigService, HelperUiGridService, TimeTrackingInfoService, HelperObjectBrowserService, LookupService, TaskAlertsService, ObjectTaskService, ObjectService, ModalDialogService, TaskWorkflowService, $timeout) {
+        [ '$scope', '$stateParams', 'UtilService', 'ConfigService', 'Helper.UiGridService', 'TimeTracking.InfoService', 'Helper.ObjectBrowserService', 'LookupService', 'Task.AlertsService', 'Object.TaskService', 'ObjectService', 'ModalDialogService', 'Task.WorkflowService', '$timeout', 'Authentication',
+                function($scope, $stateParams, Util, ConfigService, HelperUiGridService, TimeTrackingInfoService, HelperObjectBrowserService, LookupService, TaskAlertsService, ObjectTaskService, ObjectService, ModalDialogService, TaskWorkflowService, $timeout, Authentication) {
 
                     var componentHelper = new HelperObjectBrowserService.Component({
                         scope: $scope,
@@ -95,8 +95,14 @@ angular.module('time-tracking').controller(
                         });
                     };
 
+                    Authentication.queryUserInfo().then(function(userInfo) {
+                        $scope.userInfo = userInfo;
+                        $scope.userId = userInfo.userId;
+                        return userInfo;
+                    });
+
                     $scope.isDeleteDisabled = function(rowEntity) {
-                        return ((Util.isEmpty(rowEntity.task_owner_s) || (rowEntity.task_owner_s !== rowEntity.author_s)) || (rowEntity.status_s === "CLOSED"));
+                        return ((Util.isEmpty(rowEntity.assignee_s) || (rowEntity.assignee_s !== $scope.userId)) || (rowEntity.status_s === "CLOSED") || (!rowEntity.adhocTask_b));
                     };
                     $scope.deleteRow = function(rowEntity) {
                         var timesheetInfo = Util.omitNg($scope.objectInfo);
