@@ -54,7 +54,7 @@ stages:
     - mvn -DskipITs -T 4 -B deploy "-DaltDeploymentRepository=arkcase.snapshot::default::https://project.armedia.com/nexus/repository/arkcase.snapshot/"
     - sshpass -e sftp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null arkcase@fileshare.armedia.com <<< $'put acm-standard-applications/acm-law-enforcement/target/*.war /from-arkcase/arkcase.war' 
     - sshpass -e sftp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null arkcase@fileshare.armedia.com <<< $'put acm-standard-applications/acm-foia/target/*.jar /from-arkcase/foia.jar' 
-
+ 
 
 
 .build_frontend_snapshot:
