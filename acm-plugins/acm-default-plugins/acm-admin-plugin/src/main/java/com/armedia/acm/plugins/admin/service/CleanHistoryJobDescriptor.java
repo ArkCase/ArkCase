@@ -28,10 +28,8 @@ package com.armedia.acm.plugins.admin.service;
  */
 
 import com.armedia.acm.quartz.scheduler.AcmJobDescriptor;
-
 import org.quartz.DisallowConcurrentExecution;
 import org.quartz.JobExecutionContext;
-import org.quartz.JobExecutionException;
 import org.quartz.PersistJobDataAfterExecution;
 
 @DisallowConcurrentExecution
@@ -47,7 +45,7 @@ public class CleanHistoryJobDescriptor extends AcmJobDescriptor
     }
 
     @Override
-    public void executeJob(JobExecutionContext context) throws JobExecutionException
+    public void executeJob(JobExecutionContext context)
     {
         historyCleanService.cleanHistory();
     }
