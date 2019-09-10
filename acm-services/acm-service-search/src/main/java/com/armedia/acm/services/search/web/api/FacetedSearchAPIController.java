@@ -181,7 +181,7 @@ public class FacetedSearchAPIController
             // The output stream is already closed as report is exported
             return "";
         }
-        return URLEncoder.encode(res, "UTF-8");
+        return res;
     }
 
     public void export(ReportGenerator generator, String content, HttpServletResponse response, String reportName)
