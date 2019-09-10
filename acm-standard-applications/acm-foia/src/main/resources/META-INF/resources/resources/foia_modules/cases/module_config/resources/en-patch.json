@@ -359,7 +359,7 @@
         "path": "/cases.comp.main/feeWaiverFlag",
         "value": {
             "placeholder": "Enter Fee Waiver",
-            "label": "Fee Waiver"
+            "label": "Fee Waiver Requested"
         }
     },
     {
@@ -367,7 +367,7 @@
         "path": "/cases.comp.main/expediteFlag",
         "value": {
             "placeholder": "Enter Expedite",
-            "label": "Expedite"
+            "label": "Expedite Requested"
         }
     },
     {
