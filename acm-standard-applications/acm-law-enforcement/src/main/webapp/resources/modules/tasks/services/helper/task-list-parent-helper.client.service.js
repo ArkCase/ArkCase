@@ -99,13 +99,13 @@ angular.module('tasks').factory(
                             };
 
                             Authentication.queryUserInfo().then(function(userInfo) {
-                                $scope.userInfo = userInfo;
-                                $scope.userId = userInfo.userId;
+                                that.scope.userInfo = userInfo;
+                                that.scope.userId = userInfo.userId;
                                 return userInfo;
                             });
 
                             that.scope.isDeleteDisabled = arg.isDeleteDisabled || function(rowEntity) {
-                                return ((Util.isEmpty(rowEntity.assignee_s) || (rowEntity.assignee_s !== $scope.userId)) || (rowEntity.status_s === "CLOSED") || (!rowEntity.adhocTask_b));
+                                return ((Util.isEmpty(rowEntity.assignee_s) || (rowEntity.assignee_s !== that.scope.userId)) || (rowEntity.status_s === "CLOSED") || (!rowEntity.adhocTask_b));
                             };
 
                             that.scope.onClickObjLink = arg.onClickObjLink || function(event, rowEntity) {
