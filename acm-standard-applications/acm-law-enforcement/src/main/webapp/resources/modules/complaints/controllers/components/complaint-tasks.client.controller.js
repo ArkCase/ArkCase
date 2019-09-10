@@ -2,8 +2,8 @@
 
 angular.module('complaints').controller(
         'Complaints.TasksController',
-        [ '$scope', '$state', '$stateParams', '$q', '$translate', 'UtilService', 'ConfigService', 'ObjectService', 'Object.TaskService', 'Task.WorkflowService', 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'Complaint.InfoService', 'Task.AlertsService', 'ModalDialogService', '$timeout',
-                function($scope, $state, $stateParams, $q, $translate, Util, ConfigService, ObjectService, ObjectTaskService, TaskWorkflowService, HelperUiGridService, HelperObjectBrowserService, ComplaintInfoService, TaskAlertsService, ModalDialogService, $timeout) {
+        [ '$scope', '$state', '$stateParams', '$q', '$translate', 'UtilService', 'ConfigService', 'ObjectService', 'Object.TaskService', 'Task.WorkflowService', 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'Complaint.InfoService', 'Task.AlertsService', 'ModalDialogService', '$timeout', 'Authentication',
+                function($scope, $state, $stateParams, $q, $translate, Util, ConfigService, ObjectService, ObjectTaskService, TaskWorkflowService, HelperUiGridService, HelperObjectBrowserService, ComplaintInfoService, TaskAlertsService, ModalDialogService, $timeout, Authentication) {
 
                     var componentHelper = new HelperObjectBrowserService.Component({
                         scope: $scope,
@@ -111,8 +111,14 @@ angular.module('complaints').controller(
                         gridHelper.showObject(targetType, targetId);
                     };
 
+                    Authentication.queryUserInfo().then(function(userInfo) {
+                        $scope.userInfo = userInfo;
+                        $scope.userId = userInfo.userId;
+                        return userInfo;
+                    });
+
                     $scope.isDeleteDisabled = function(rowEntity) {
-                        return ((Util.isEmpty(rowEntity.task_owner_s) || (rowEntity.task_owner_s !== rowEntity.author_s)) || (rowEntity.status_s === "CLOSED"));
+                        return ((Util.isEmpty(rowEntity.assignee_s) || (rowEntity.assignee_s !== $scope.userId)) || (rowEntity.status_s === "CLOSED") || (!rowEntity.adhocTask_b));
                     };
 
                 } ]);
