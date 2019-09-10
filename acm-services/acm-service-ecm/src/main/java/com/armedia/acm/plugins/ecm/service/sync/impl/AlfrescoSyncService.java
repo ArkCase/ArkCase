@@ -131,7 +131,8 @@ public class AlfrescoSyncService implements ApplicationEventPublisherAware
         if (numAudits > 0)
         {
             long lastAuditFromFullResponse = allAudits.getJSONObject(numAudits - 1).getLong("id");
-            Map<String, Long> properties = Collections.singletonMap(lastAuditIdKey, lastAuditFromFullResponse);
+            String lastAuditId = String.valueOf(lastAuditFromFullResponse);
+            Map<String, String> properties = Collections.singletonMap(lastAuditIdKey, lastAuditId);
             lastAuditIdsPerApplication.putAll(properties);
         }
     }
