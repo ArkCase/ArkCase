@@ -30,6 +30,8 @@ package com.armedia.acm.plugins.ecm.model;
 import com.armedia.acm.core.model.AcmEvent;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 
+import static org.mockito.ArgumentMatchers.nullable;
+
 import java.util.Date;
 
 /**
@@ -49,8 +51,11 @@ public class EcmFileParticipantChangedEvent extends AcmEvent
         setObjectType("FILE");
         setObjectId(source.getFileId());
         setEventDate(new Date());
-        setParentObjectType(source.getContainer().getContainerObjectType());
-        setParentObjectId(source.getContainer().getContainerObjectId());
+        if ( source.getContainer() != null ) 
+        {
+            setParentObjectType(source.getContainer().getContainerObjectType());
+            setParentObjectId(source.getContainer().getContainerObjectId());
+        }
     }
 
     public String getChangeType()
