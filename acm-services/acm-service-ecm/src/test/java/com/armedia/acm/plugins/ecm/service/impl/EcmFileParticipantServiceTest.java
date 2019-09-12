@@ -52,6 +52,8 @@ import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import javax.persistence.EntityManager;
 import javax.persistence.FlushModeType;
@@ -102,6 +104,8 @@ public class EcmFileParticipantServiceTest extends EasyMockSupport
         fileParticipantServiceHelper.setAuditPropertyEntityAdapter(mockAuditPropertyEntityAdapter);
         fileParticipantServiceHelper.setExternalAuthenticationUtils(mockExternalAuthenticationUtils);
         fileParticipantServiceHelper.setApplicationEventPublisher(mockApplicationEventPublisher);
+
+        SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken("test", "test"));
     }
 
     @Test
