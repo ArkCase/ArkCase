@@ -38,6 +38,7 @@ import java.util.Date;
  */
 public class AcmFolderParticipantChangedEvent extends AcmEvent
 {
+    private static final long serialVersionUID = -4799894503460467613L;
     private String changeType;
     private AcmParticipant changedParticipant;
     private AcmParticipant oldParticipant;
