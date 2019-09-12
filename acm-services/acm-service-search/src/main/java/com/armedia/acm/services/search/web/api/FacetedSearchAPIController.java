@@ -35,9 +35,9 @@ import com.armedia.acm.services.search.service.FacetedSearchService;
 import com.armedia.acm.spring.SpringContextHolder;
 
 import org.apache.commons.lang3.StringUtils;
-import org.mule.api.MuleException;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.mule.api.MuleException;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;

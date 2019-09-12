@@ -104,7 +104,7 @@ public class DataAccessPrivilegeListener implements AcmBeforeUpdateListener, Acm
         List<AcmParticipant> originalParticipants = new ArrayList<>();
         if (assignedObject.getId() != null)
         {
-            originalParticipants = getParticipantService().listAllParticipantsPerObjectTypeAndId(assignedObject.getObjectType(),
+            originalParticipants = getParticipantService().getAllParticipantsPerObjectTypeAndId(assignedObject.getObjectType(),
                     assignedObject.getId(), FlushModeType.COMMIT);
             originalRestricted = getParticipantService().getOriginalRestrictedFlag(assignedObject);
         }

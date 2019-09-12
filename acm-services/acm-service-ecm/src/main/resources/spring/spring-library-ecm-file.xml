@@ -23,6 +23,7 @@
         <property name="fileDao" ref="ecmFileDao"/>
         <property name="folderDao" ref="acmFolderDao"/>
         <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
+        <property name="externalAuthenticationUtils" ref="externalAuthenticationUtils"/>
     </bean>
 
     <bean id="fileParticipantService" class="com.armedia.acm.plugins.ecm.service.impl.EcmFileParticipantService">
@@ -32,11 +33,24 @@
         <property name="participantService" ref="acmParticipantService"/>
         <property name="fileParticipantServiceHelper" ref="fileParticipantServiceHelper"/>
         <property name="ecmFileConfig" ref="ecmFileConfig"/>
+        <property name="externalAuthenticationUtils" ref="externalAuthenticationUtils"/>
     </bean>
 
     <bean id="entityParticipantsChangedEventListener"
         class="com.armedia.acm.plugins.ecm.service.EntityParticipantsChangedEventListener">
         <property name="fileParticipantService" ref="fileParticipantService"/>
+    </bean>
+
+    <bean id="fileParticipantsChangedEventListener"
+        class="com.armedia.acm.plugins.ecm.service.FileParticipantChangedEventListener">
+        <property name="alfrescoSyncConfig" ref="alfrescoSyncConfig"/>
+        <property name="changedParticipantToJmsSender" ref="changedParticipantToJmsSender"/>
+    </bean>
+
+    <bean id="folderParticipantsChangedEventListener"
+        class="com.armedia.acm.plugins.ecm.service.FolderParticipantChangedEventListener">
+        <property name="alfrescoSyncConfig" ref="alfrescoSyncConfig"/>
+        <property name="changedParticipantToJmsSender" ref="changedParticipantToJmsSender"/>
     </bean>
 
     <bean id="folderDataAccessUpdateLocator"
@@ -488,6 +502,11 @@
 
     <bean id="updateMetadataConfig" class="com.armedia.acm.plugins.ecm.model.UpdateMetadataConfig" scope="refresh">
         <aop:scoped-proxy/>
+    </bean>
+
+    <bean id="changedParticipantToJmsSender" class="com.armedia.acm.plugins.ecm.service.ChangedParticipantToJmsSender">
+        <property name="objectConverter" ref="objectConverter"/>
+        <property name="jmsConnectionFactory" ref="jmsConnectionFactory"/>
     </bean>
 
     <bean id="fileChunkService" class="com.armedia.acm.plugins.ecm.service.impl.FileChunkServiceImpl">

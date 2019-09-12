@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?><!--suppress SpringSecurityFiltersConfiguredInspection -->
 <beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.springframework.org/schema/beans"
-       xmlns:aop="http://www.springframework.org/schema/aop"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+    xmlns:aop="http://www.springframework.org/schema/aop"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
 
     <bean id="acmAuthoritiesMapper" class="com.armedia.acm.auth.AcmGrantedAuthoritiesMapper" init-method="initBean">
         <property name="roleToGroupMapping" ref="acmRoleToGroupConfig"/>
@@ -40,18 +40,19 @@
         <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
         <property name="objectConverter" ref="objectConverter"/>
         <property name="applicationConfig" ref="applicationProperties"/>
+        <property name="externalAuthenticationUtils" ref="externalAuthenticationUtils"/>
     </bean>
 
     <bean id="acmLoginFailureListener" class="com.armedia.acm.auth.AcmLoginFailureEventListener"/>
 
     <bean id="ssAuthenticationEventPublisher"
-          class="org.springframework.security.authentication.DefaultAuthenticationEventPublisher"/>
+        class="org.springframework.security.authentication.DefaultAuthenticationEventPublisher"/>
 
     <!-- REST services security beans -->
     <bean id="acmRestAuthenticationSuccessHandler" class="com.armedia.acm.auth.AcmRestAuthenticationSuccessHandler"/>
 
     <bean id="acmRestAuthenticationFailureHandler"
-          class="org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler"/>
+        class="org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler"/>
 
     <bean id="acmRestAuthenticationEntryPoint" class="com.armedia.acm.auth.AcmRestAuthenticationEntryPoint"/>
 
@@ -85,7 +86,7 @@
     </bean>
 
     <bean id="concurrentSessionControlAuthenticationStrategy"
-          class="com.armedia.acm.auth.AcmConcurrentSessionControlAuthenticationStrategy">
+        class="com.armedia.acm.auth.AcmConcurrentSessionControlAuthenticationStrategy">
         <constructor-arg name="sessionRegistry" ref="sessionRegistry"/>
         <constructor-arg name="authenticationTokenService" ref="authenticationTokenService"/>
         <property name="maximumSessions" value="#{sessionConfig.maximumSessions}"/>
@@ -107,6 +108,11 @@
 
     <bean id="sessionConfig" class="com.armedia.acm.auth.SessionControlConfig" scope="refresh">
         <aop:scoped-proxy/>
+    </bean>
+
+    <bean id="externalAuthenticationUtils" class="com.armedia.acm.auth.ExternalAuthenticationUtils">
+        <property name="applicationConfig" ref="applicationProperties"/>
+        <property name="userDao" ref="userJpaDao"/>
     </bean>
 
     <beans profile="ldap,kerberos,externalAuth,mfa-okta">
@@ -141,13 +147,13 @@
 
         <bean id="acmSamlAuthenticationCheckFilter" class="com.armedia.acm.auth.AcmSamlAuthenticationCheckFilter">
             <property name="authenticationCheckIntervalInSeconds"
-                      value="${sso.saml.authenticationCheckIntervalInSeconds}"/>
+                value="${sso.saml.authenticationCheckIntervalInSeconds}"/>
         </bean>
 
         <bean id="acmSamlRestAuthenticationCheckFilter"
-              class="com.armedia.acm.auth.AcmSamlRestAuthenticationCheckFilter">
+            class="com.armedia.acm.auth.AcmSamlRestAuthenticationCheckFilter">
             <property name="authenticationCheckIntervalInSeconds"
-                      value="${sso.saml.authenticationCheckIntervalInSeconds}"/>
+                value="${sso.saml.authenticationCheckIntervalInSeconds}"/>
         </bean>
 
         <bean id="acmLogoutSuccessHandler" class="com.armedia.acm.auth.AcmLogoutSuccessHandler">
