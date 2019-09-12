@@ -34,7 +34,6 @@ import com.armedia.acm.services.participants.model.AcmParticipant;
  */
 public class ChangedParticipant
 {
-
     private String cmisObjectId;
     private String changeType;
     private AcmParticipant changedParticipant;

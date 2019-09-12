@@ -93,6 +93,14 @@ public class EcmFileConfig implements InitializingBean
     @Value("${ecm.documentsParticipantTypes.mappings.no-access}")
     private String documentParticipantTypeNoAccess;
 
+    @JsonProperty("ecm.arkcaseAlfrescoDocumentsParticipantTypes.mappings.write")
+    @Value("${ecm.arkcaseAlfrescoDocumentsParticipantTypes.mappings.write}")
+    private String arkcaseAlfrescoDocumentsParticipantTypeWrite;
+
+    @JsonProperty("ecm.arkcaseAlfrescoDocumentsParticipantTypes.mappings.read")
+    @Value("${ecm.arkcaseAlfrescoDocumentsParticipantTypes.mappings.read}")
+    private String arkcaseAlfrescoDocumentsParticipantTypeRead;
+
     @JsonProperty("ecm.viewer")
     @Value("${ecm.viewer}")
     private String viewer;
@@ -131,6 +139,8 @@ public class EcmFileConfig implements InitializingBean
 
     private Map<String, String> documentsParticipantTypesFileMappings = new HashMap<>();
 
+    private Map<String, String> arkcaseAlfrescoDocumentsParticipantTypesFileMappings = new HashMap<>();
+
     private Map<String, String> defaultPathByObjectType = new HashMap<>();
 
     @Override
@@ -142,6 +152,9 @@ public class EcmFileConfig implements InitializingBean
         documentsParticipantTypesFileMappings.put("write", documentParticipantTypeWrite);
         documentsParticipantTypesFileMappings.put("read", documentParticipantTypeRead);
         documentsParticipantTypesFileMappings.put("no-access", documentParticipantTypeRead);
+
+        arkcaseAlfrescoDocumentsParticipantTypesFileMappings.put("write", arkcaseAlfrescoDocumentsParticipantTypeWrite);
+        arkcaseAlfrescoDocumentsParticipantTypesFileMappings.put("read", arkcaseAlfrescoDocumentsParticipantTypeRead);
 
         defaultPathByObjectType.put("COMPLAINT", defaultPathComplaint);
         defaultPathByObjectType.put("TASK", defaultPathTask);
@@ -271,6 +284,26 @@ public class EcmFileConfig implements InitializingBean
         this.documentParticipantTypeNoAccess = documentParticipantTypeNoAccess;
     }
 
+    public String getArkcaseAlfrescoDocumentsParticipantTypeWrite()
+    {
+        return arkcaseAlfrescoDocumentsParticipantTypeWrite;
+    }
+
+    public void setArkcaseAlfrescoDocumentsParticipantTypeWrite(String arkcaseAlfrescoDocumentsParticipantTypeWrite)
+    {
+        this.arkcaseAlfrescoDocumentsParticipantTypeWrite = arkcaseAlfrescoDocumentsParticipantTypeWrite;
+    }
+
+    public String getArkcaseAlfrescoDocumentsParticipantTypeRead()
+    {
+        return arkcaseAlfrescoDocumentsParticipantTypeRead;
+    }
+
+    public void setArkcaseAlfrescoDocumentsParticipantTypeRead(String arkcaseAlfrescoDocumentsParticipantTypeRead)
+    {
+        this.arkcaseAlfrescoDocumentsParticipantTypeRead = arkcaseAlfrescoDocumentsParticipantTypeRead;
+    }
+
     public Map<String, String> getDocumentsParticipantTypesFileMappings()
     {
         return documentsParticipantTypesFileMappings;
@@ -284,6 +317,17 @@ public class EcmFileConfig implements InitializingBean
     public Map<String, String> getDefaultPathByObjectType()
     {
         return defaultPathByObjectType;
+    }
+
+    public Map<String, String> getArkcaseAlfrescoDocumentsParticipantTypesFileMappings()
+    {
+        return arkcaseAlfrescoDocumentsParticipantTypesFileMappings;
+    }
+
+    public void setArkcaseAlfrescoDocumentsParticipantTypesFileMappings(
+            Map<String, String> arkcaseAlfrescoDocumentsParticipantTypesFileMappings)
+    {
+        this.arkcaseAlfrescoDocumentsParticipantTypesFileMappings = arkcaseAlfrescoDocumentsParticipantTypesFileMappings;
     }
 
     public void setDefaultPathByObjectType(Map<String, String> defaultPathByObjectType)

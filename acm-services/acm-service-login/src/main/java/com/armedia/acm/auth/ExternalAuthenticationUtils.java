@@ -67,6 +67,24 @@ public class ExternalAuthenticationUtils
         }
     }
 
+    public AcmUser getArkcaseUserByLdapAttributeUserIdValue(String userIdLdapValue)
+    {
+        switch (getApplicationConfig().getAlfrescoUserIdLdapAttribute().toLowerCase())
+        {
+        case "samaccountname":
+            return getUserDao().findBysAMAccountName(userIdLdapValue);
+        case "userprincipalname":
+            return getUserDao().findByUserPrincipalName(userIdLdapValue);
+        case "uid":
+            return getUserDao().findByUid(userIdLdapValue);
+        case "dn":
+        case "distinguishedname":
+            return getUserDao().findByDistinguishedName(userIdLdapValue);
+        default:
+            return getUserDao().findBysAMAccountName(userIdLdapValue);
+        }
+    }
+
     public AcmUser getUserByUserId(String userId)
     {
         return getUserDao().findByUserId(userId);

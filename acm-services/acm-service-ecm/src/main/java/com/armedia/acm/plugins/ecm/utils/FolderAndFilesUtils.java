@@ -35,6 +35,7 @@ import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
+import com.armedia.acm.plugins.ecm.model.EcmFileConfig;
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
 import com.armedia.acm.plugins.ecm.model.sync.EcmEvent;
@@ -44,13 +45,13 @@ import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import org.apache.chemistry.opencmis.client.api.CmisObject;
 import org.apache.chemistry.opencmis.client.api.Document;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.pdfbox.cos.COSName;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDResources;
 import org.apache.pdfbox.pdmodel.font.PDFont;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 
 import javax.persistence.NoResultException;
@@ -60,6 +61,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by marjan.stefanoski on 09.04.2015.
@@ -72,6 +74,7 @@ public class FolderAndFilesUtils
     private EcmFileDao fileDao;
     private AcmFolderService folderService;
     private EcmFileService fileService;
+    private EcmFileConfig ecmFileConfig;
 
     /**
      * Replace all not allowed characters in folder name with underscore
@@ -396,6 +399,18 @@ public class FolderAndFilesUtils
         }
     }
 
+    public String getArkcasePropertyMapping(String alfrescoPermission)
+    {
+        Map<String, String> documentsParticipantTypesFileMappings = getEcmFileConfig()
+                .getArkcaseAlfrescoDocumentsParticipantTypesFileMappings();
+        for (Map.Entry entry : documentsParticipantTypesFileMappings.entrySet())
+        {
+            if (entry.getValue().toString().contains(alfrescoPermission.toLowerCase()))
+                return entry.getKey().toString();
+        }
+        return null;
+    }
+
     public AcmFolderDao getFolderDao()
     {
         return folderDao;
@@ -465,5 +480,15 @@ public class FolderAndFilesUtils
             return false;
         }
         return false;
+    }
+
+    public EcmFileConfig getEcmFileConfig()
+    {
+        return ecmFileConfig;
+    }
+
+    public void setEcmFileConfig(EcmFileConfig ecmFileConfig)
+    {
+        this.ecmFileConfig = ecmFileConfig;
     }
 }

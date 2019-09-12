@@ -395,6 +395,89 @@ public class EcmFileParticipantServiceHelper implements ApplicationEventPublishe
         getApplicationEventPublisher().publishEvent(folderParticipantChangedEvent);
     }
 
+    /**
+     * Sets participant to a folder without sending event to the Content Repository (Alfresco).
+     * 
+     * First checks if the participant already exists for the folder.
+     * If not - add it, else - check the participant type and change it if not same.
+     *
+     * @param folder
+     * @param participantLdapId
+     * @param participantType
+     */
+    public void setParticipantToFolderWithoutSendingEvent(AcmFolder folder, String participantLdapId, String participantType)
+    {
+        // set participant to current folder
+        Optional<AcmParticipant> existingFolderParticipants = folder.getParticipants().stream()
+                .filter(existingParticipant -> existingParticipant.getParticipantLdapId().equals(participantLdapId))
+                .findFirst();
+
+        // for files and folders only one AcmParticipant per user is allowed
+        if (existingFolderParticipants.isPresent())
+        {
+            // change the role of the existing participant if needed
+            if (!existingFolderParticipants.get().getParticipantType().equals(participantType))
+            {
+                existingFolderParticipants.get().setParticipantType(participantType);
+            }
+        }
+        else
+        {
+            AcmParticipant newParticipant = new AcmParticipant();
+            newParticipant.setParticipantType(participantType);
+            newParticipant.setParticipantLdapId(participantLdapId);
+            newParticipant.setObjectType(EcmFileConstants.OBJECT_FOLDER_TYPE);
+            newParticipant.setObjectId(folder.getId());
+            folder.getParticipants().add(newParticipant);
+        }
+
+        // modify the instance to trigger the Solr transformers
+        folder.setModified(new Date());
+
+        getFolderDao().save(folder);
+    }
+
+    /**
+     * Sets participant to a file without sending event to the Content Repository (Alfresco).
+     * 
+     * First checks if the participant already exists for the file.
+     * If not - add it, else - check the participant type and change it if not same.
+     *
+     * @param file
+     * @param participantLdapId
+     * @param participantType
+     */
+    public void setParticipantToFileWithoutSendingEvent(EcmFile file, String participantLdapId, String participantType)
+    {
+        Optional<AcmParticipant> existingFileParticipants = file.getParticipants().stream()
+                .filter(existingParticipant -> existingParticipant.getParticipantLdapId().equals(participantLdapId))
+                .findFirst();
+
+        // for files and folders only one AcmParticipant per user is allowed
+        if (existingFileParticipants.isPresent())
+        {
+            // change the role of the existing participant if needed
+            if (!existingFileParticipants.get().getParticipantType().equals(participantType))
+            {
+                existingFileParticipants.get().setParticipantType(participantType);
+            }
+        }
+        else
+        {
+            AcmParticipant newParticipant = new AcmParticipant();
+            newParticipant.setParticipantType(participantType);
+            newParticipant.setParticipantLdapId(participantLdapId);
+            newParticipant.setObjectType(EcmFileConstants.OBJECT_FILE_TYPE);
+            newParticipant.setObjectId(file.getId());
+            file.getParticipants().add(newParticipant);
+        }
+
+        // modify the instance to trigger the Solr transformers
+        file.setModified(new Date());
+
+        getFileDao().save(file);
+    }
+
     private boolean containsParticipantWithLdapId(List<AcmParticipant> participants, String ldapId)
     {
         return participants.stream()
