@@ -37,6 +37,9 @@ import java.util.Date;
  */
 public class EcmFileParticipantChangedEvent extends AcmEvent
 {
+
+    private static final long serialVersionUID = 8103131507748851608L;
+    
     private String changeType;
     private AcmParticipant changedParticipant;
     private AcmParticipant oldParticipant;
@@ -49,8 +52,11 @@ public class EcmFileParticipantChangedEvent extends AcmEvent
         setObjectType("FILE");
         setObjectId(source.getFileId());
         setEventDate(new Date());
-        setParentObjectType(source.getContainer().getContainerObjectType());
-        setParentObjectId(source.getContainer().getContainerObjectId());
+        if ( source.getContainer() != null ) 
+        {
+            setParentObjectType(source.getContainer().getContainerObjectType());
+            setParentObjectId(source.getContainer().getContainerObjectId());
+        }
     }
 
     public String getChangeType()
