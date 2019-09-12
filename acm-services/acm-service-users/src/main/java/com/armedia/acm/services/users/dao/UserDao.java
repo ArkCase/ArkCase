@@ -336,6 +336,54 @@ public class UserDao extends AcmAbstractDao<AcmUser>
         return allUsersByState.getResultList();
     }
 
+    public AcmUser findBysAMAccountName(String sAMAccountName)
+    {
+        String select = "SELECT acmUser FROM AcmUser acmUser WHERE acmUser.sAMAccountName = :sAMAccountName";
+        TypedQuery<AcmUser> query = getEm().createQuery(select, AcmUser.class);
+        query.setParameter("sAMAccountName", sAMAccountName);
+        try
+        {
+            return query.getSingleResult();
+        }
+        catch (NoResultException | NonUniqueResultException e)
+        {
+            log.error("User with sAMAccount Name : [{}] not found!", sAMAccountName);
+            return null;
+        }
+    }
+
+    public AcmUser findByUserPrincipalName(String userPrincipalName)
+    {
+        String select = "SELECT acmUser FROM AcmUser acmUser WHERE acmUser.userPrincipalName = :userPrincipalName";
+        TypedQuery<AcmUser> query = getEm().createQuery(select, AcmUser.class);
+        query.setParameter("userPrincipalName", userPrincipalName);
+        try
+        {
+            return query.getSingleResult();
+        }
+        catch (NoResultException | NonUniqueResultException e)
+        {
+            log.error("User with user principal name : [{}] not found!", userPrincipalName);
+            return null;
+        }
+    }
+
+    public AcmUser findByDistinguishedName(String distinguishedName)
+    {
+        String select = "SELECT acmUser FROM AcmUser acmUser WHERE acmUser.distinguishedName = :distinguishedName";
+        TypedQuery<AcmUser> query = getEm().createQuery(select, AcmUser.class);
+        query.setParameter("distinguishedName", distinguishedName);
+        try
+        {
+            return query.getSingleResult();
+        }
+        catch (NoResultException | NonUniqueResultException e)
+        {
+            log.error("User with distinguished name : [{}] not found!", distinguishedName);
+            return null;
+        }
+    }
+
     @Transactional
     public AcmUser persistUser(AcmUser acmUser)
     {
