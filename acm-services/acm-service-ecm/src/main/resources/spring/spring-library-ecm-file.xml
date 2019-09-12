@@ -424,6 +424,7 @@
         <property name="folderDao" ref="acmFolderDao"/>
         <property name="fileDao" ref="ecmFileDao"/>
         <property name="fileService" ref="ecmFileService"/>
+        <property name="ecmFileConfig" ref="ecmFileConfig"/>
     </bean>
 
     <bean id="fileEventPublisher" class="com.armedia.acm.plugins.ecm.service.FileEventPublisher"/>
@@ -534,5 +535,23 @@
     <bean id="removeExpiredFilesJobDescriptor" class="com.armedia.acm.plugins.ecm.service.RemoveExpiredFilesJobDescriptor"
         parent="acmJobDescriptor">
         <property name="removeExpiredFilesService" ref="removeExpiredFilesService"/>
+    </bean>
+
+    <bean id="changedParticipantToArkcaseListener" class="com.armedia.acm.plugins.ecm.service.ChangedParticipantToArkcaseListener">
+        <property name="objectConverter" ref="objectConverter"/>
+        <property name="folderAndFilesUtils" ref="folderAndFilesUtils"/>
+        <property name="ecmFileParticipantServiceHelper" ref="fileParticipantServiceHelper"/>
+        <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
+    </bean>
+
+    <bean id="messageDestination" class="org.apache.activemq.command.ActiveMQQueue">
+        <constructor-arg value="com.armedia.acm.v1.alfrescoParticipantChange.queue"/>
+    </bean>
+
+    <!-- and this is the message listener container for ChangedParticipantToArkcaseListener -->
+    <bean id="jmsContainer" class="org.springframework.jms.listener.DefaultMessageListenerContainer">
+        <property name="connectionFactory" ref="jmsConnectionFactory"/>
+        <property name="destination" ref="messageDestination"/>
+        <property name="messageListener" ref="changedParticipantToArkcaseListener"/>
     </bean>
 </beans>
