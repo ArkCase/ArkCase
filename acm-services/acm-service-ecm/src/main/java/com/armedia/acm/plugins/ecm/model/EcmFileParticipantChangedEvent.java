@@ -30,8 +30,6 @@ package com.armedia.acm.plugins.ecm.model;
 import com.armedia.acm.core.model.AcmEvent;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 
-import static org.mockito.ArgumentMatchers.nullable;
-
 import java.util.Date;
 
 /**
@@ -39,6 +37,9 @@ import java.util.Date;
  */
 public class EcmFileParticipantChangedEvent extends AcmEvent
 {
+
+    private static final long serialVersionUID = 8103131507748851608L;
+    
     private String changeType;
     private AcmParticipant changedParticipant;
     private AcmParticipant oldParticipant;
