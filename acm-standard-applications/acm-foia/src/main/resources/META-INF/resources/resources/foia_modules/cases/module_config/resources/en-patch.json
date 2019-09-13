@@ -81,6 +81,11 @@
     },
     {
         "op": "add",
+        "path": "/cases.comp.info/requestDenied.label",
+        "value": "(Request Denied!)"
+    },
+    {
+        "op": "add",
         "path": "/cases.comp.info/notificationGroup",
         "value": "Executive Group"
     },
