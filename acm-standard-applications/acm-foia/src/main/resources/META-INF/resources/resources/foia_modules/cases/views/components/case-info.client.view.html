@@ -8,8 +8,11 @@
                     <small><b><span class="icon-overdue" translate>cases.comp.info.daysOverdue.label</span></b>
                     </small>
                     <small><span class="icon-overdue">({{calculateDaysObj.days}}) </span></small>
+                    <span ng-if="objectInfo.deniedFlag" class="icon-overdue" translate> cases.comp.info.requestDenied.label </span>
                 </div>
-                <div ng-if="!calculateDaysObj.isOverdue && objectInfo.queue.name != 'Release'" class="h4 font-bold">{{objectInfo.title || 'common.value.unknown' | translate }} <small>({{calculateDaysObj.days}}) <span translate>cases.comp.info.daysToComplete.label</span></small></div>
+                <div ng-if="!calculateDaysObj.isOverdue && objectInfo.queue.name != 'Release'" class="h4 font-bold">{{objectInfo.title || 'common.value.unknown' | translate }} <small>({{calculateDaysObj.days}}) <span translate>cases.comp.info.daysToComplete.label</span></small>
+                    <span ng-if="objectInfo.deniedFlag" class="icon-overdue" translate> cases.comp.info.requestDenied.label </span>
+                </div>
                 <div ng-if="objectInfo.queue.name == 'Release'">{{objectInfo.title || 'common.value.unknown' | translate }}</div>
             </div>
             <div class="col-xs-6 text-right">

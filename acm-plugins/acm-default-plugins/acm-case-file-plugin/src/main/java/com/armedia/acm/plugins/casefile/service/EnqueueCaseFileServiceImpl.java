@@ -27,6 +27,7 @@ package com.armedia.acm.plugins.casefile.service;
  * #L%
  */
 
+import com.armedia.acm.auth.AcmAuthenticationDetails;
 import com.armedia.acm.plugins.businessprocess.model.EnterQueueModel;
 import com.armedia.acm.plugins.businessprocess.model.LeaveCurrentQueueModel;
 import com.armedia.acm.plugins.businessprocess.model.NextPossibleQueuesModel;
@@ -39,15 +40,19 @@ import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.casefile.model.CaseFileConstants;
 import com.armedia.acm.plugins.casefile.pipeline.CaseFilePipelineContext;
+import com.armedia.acm.plugins.casefile.utility.CaseFileEventUtility;
 import com.armedia.acm.plugins.casefile.web.api.CaseFileEnqueueResponse;
 import com.armedia.acm.plugins.casefile.web.api.CaseFileEnqueueResponse.ErrorReason;
 import com.armedia.acm.service.objectlock.service.AcmObjectLockService;
 
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -80,6 +85,8 @@ public class EnqueueCaseFileServiceImpl implements EnqueueCaseFileService
 
     private SystemConfigurationService systemConfigurationService;
 
+    private CaseFileEventUtility caseFileEventUtility;
+
     @Override
     @Transactional
     public CaseFileEnqueueResponse enqueueCaseFile(Long caseId, String nextQueue, CaseFilePipelineContext context)
@@ -97,9 +104,14 @@ public class EnqueueCaseFileServiceImpl implements EnqueueCaseFileService
 
         Boolean oldDeniedFlag = caseFile.getDeniedFlag();
 
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        AcmAuthenticationDetails details = (AcmAuthenticationDetails) auth.getDetails();
+        String ipAddress = details.getRemoteAddress();
+
         if (nextQueueAction != null && nextQueueAction.equals("Deny"))
         {
             caseFile.setDeniedFlag(true);
+            caseFileEventUtility.raiseEvent(caseFile, "denied", new Date(), ipAddress, auth.getName(), auth);
         }
 
         context.setNewCase(false);
@@ -353,5 +365,15 @@ public class EnqueueCaseFileServiceImpl implements EnqueueCaseFileService
     public void setSystemConfigurationService(SystemConfigurationService systemConfigurationService)
     {
         this.systemConfigurationService = systemConfigurationService;
+    }
+
+    public CaseFileEventUtility getCaseFileEventUtility()
+    {
+        return caseFileEventUtility;
+    }
+
+    public void setCaseFileEventUtility(CaseFileEventUtility caseFileEventUtility)
+    {
+        this.caseFileEventUtility = caseFileEventUtility;
     }
 }
