@@ -28,7 +28,7 @@ variables:
   #DEVELOP_NEW_VERSION:
    
 
-image: arkcase-gitlab-ci:1.0.1
+image: arkcase-gitlab-ci:1.0.2
 
 stages:
   - build
@@ -36,6 +36,8 @@ stages:
   - trigger
   - restart
   - release
+  - start_security_scan
+  - security_scan_results
   
 .build_backend_snapshot:
   stage: build
@@ -246,6 +248,43 @@ deploy_backend_bcgeu_dev:
     ARKCASE_REPOSITORY: arkcase.snapshot
     ARKCASE_UI_VARIANT: ui-foia
     ARKCASE_SERVICE_USER_NAME: arkuser
+
+start_security_scan:
+  stage: start_security_scan
+  only:
+    variables:
+      - $START_SECURITY_SCAN
+  script:
+    # get arkcase.war version from Nexus
+    - mvn -B dependency:get -DremoteRepositories=http://project.armedia.com/nexus/repository/$ARKCASE_REPOSITORY -DgroupId=com.armedia.acm.acm-standard-applications -DartifactId=acm-law-enforcement -Dversion=$ARKCASE_VERSION -Dpackaging=war -Dtransitive=false
+    - mvn -B dependency:copy -Dartifact=com.armedia.acm.acm-standard-applications:acm-law-enforcement:$ARKCASE_VERSION:war -DoutputDirectory=.
+    # Upload war
+    - curl --compressed -u $VERACODE_USER:$VERACODE_PASSWORD https://analysiscenter.veracode.com/api/5.0/uploadfile.do -F "app_id=529559" -F "file=@acm-law-enforcement-$ARKCASE_VERSION.war"
+    # Begin scan
+    - curl --compressed -u $VERACODE_USER:$VERACODE_PASSWORD https://analysiscenter.veracode.com/api/5.0/beginprescan.do -F "app_id=529559"
+
+.security_scan_results:
+  stage: security_scan_results
+  only:
+    variables:
+      - $SECURITY_SCAN_RESULTS
+  script:
+    # Get scan info
+    - curl --compressed -u $VERACODE_USER:$VERACODE_PASSWORD https://analysiscenter.veracode.com/api/5.0/getbuildinfo.do -F "app_id=529559"
+    - BUILDINFO="$(curl --compressed -u arkcase-veracode:AcMd3v\$1 https://analysiscenter.veracode.com/api/5.0/getbuildinfo.do -F 'app_id=529559' 2>/dev/null)"
+    - BUILD_ID=$(grep -oPm1 "(?<=build_id=\")[^\"<]+" <<< "$BUILDINFO" | head -1)
+    # Get detailed report
+    - DETAILED_REPORT="$(curl --compressed -u $VERACODE_USER:$VERACODE_PASSWORD https://analysiscenter.veracode.com/api/5.0/detailedreport.do?build_id=$BUILD_ID 2>/dev/null)"
+    - SCAN_SCORE=$(grep -oPm1 "(?<=score=\")[^\"<]+" <<< "$DETAILED_REPORT" | head -1)
+    # Get detailed report as PDF
+    - curl --compressed -u $VERACODE_USER:$VERACODE_PASSWORD https://analysiscenter.veracode.com/api/5.0/detailedreportpdf.do?build_id=$BUILD_ID > scan-report.pdf 
+    # Send results via email
+    - echo 'echo 'set from = "veracode-scan@armedia.com"' >> ~/.muttrc
+    - echo 'set realname = "Veracode Scan"' >> ~/.muttrc
+    - echo 'set smtp_url = "smtp://relay.armedia.com:25"' >> ~/.muttrc
+    - echo 'set crypt_use_gpgme=no' >> ~/.muttrc
+    - echo 'set ssl_starttls = no' >> ~/.muttrc
+    - echo "Detailed scan result attached" | mutt -s "Veracode scan of Arkcase code on $(date +%m-%d-%y) finished with score $SCAN_SCORE" $EMAIL_ADDRESSES -a scan-report.pdf
 
 .restart:
   stage: restart
