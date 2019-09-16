@@ -249,12 +249,21 @@ deploy_backend_bcgeu_dev:
     ARKCASE_UI_VARIANT: ui-foia
     ARKCASE_SERVICE_USER_NAME: arkuser
 
-start_security_scan:
+.start_security_scan:
   stage: start_security_scan
   only:
     variables:
       - $START_SECURITY_SCAN
   script:
+    - echo '<settings>' > /root/.m2/settings.xml
+    - echo '  <servers>' >> /root/.m2/settings.xml
+    - echo '    <server>' >> /root/.m2/settings.xml
+    - echo '      <id>arkcase.snapshot</id>' >> /root/.m2/settings.xml
+    - echo '      <username>admin</username>' >> /root/.m2/settings.xml
+    - echo "      <password>$MVN_PASSWORD</password>" >> /root/.m2/settings.xml
+    - echo '    </server>' >> /root/.m2/settings.xml
+    - echo '  </servers>' >> /root/.m2/settings.xml
+    - echo '</settings>' >> /root/.m2/settings.xml  
     # get arkcase.war version from Nexus
     - mvn -B dependency:get -DremoteRepositories=http://project.armedia.com/nexus/repository/$ARKCASE_REPOSITORY -DgroupId=com.armedia.acm.acm-standard-applications -DartifactId=acm-law-enforcement -Dversion=$ARKCASE_VERSION -Dpackaging=war -Dtransitive=false
     - mvn -B dependency:copy -Dartifact=com.armedia.acm.acm-standard-applications:acm-law-enforcement:$ARKCASE_VERSION:war -DoutputDirectory=.
@@ -263,7 +272,13 @@ start_security_scan:
     # Begin scan
     - curl -k --compressed -u $VERACODE_USER:$VERACODE_PASSWORD https://analysiscenter.veracode.com/api/5.0/beginprescan.do -F "app_id=529559"
 
-.security_scan_results:
+start_security_scan_arkcase_snapshot:
+  extends: .start_security_scan
+  variables:
+    ARKCASE_VERSION: 3.3.3-SNAPSHOT
+    ARKCASE_REPOSITORY: arkcase.snapshot
+
+security_scan_results:
   stage: security_scan_results
   only:
     variables:
@@ -285,6 +300,7 @@ start_security_scan:
     - echo 'set crypt_use_gpgme=no' >> ~/.muttrc
     - echo 'set ssl_starttls = no' >> ~/.muttrc
     - echo "Detailed scan result attached" | mutt -s "Veracode scan of Arkcase code on $(date +%m-%d-%y) finished with score $SCAN_SCORE" $EMAIL_ADDRESSES -a scan-report.pdf
+
 
 .restart:
   stage: restart
