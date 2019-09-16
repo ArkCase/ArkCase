@@ -457,10 +457,13 @@ public class EcmFileParticipantService implements ApplicationEventPublisherAware
                     AcmFolderParticipantChangedEvent folderParticipantChangedEvent = new AcmFolderParticipantChangedEvent(folder);
                     String ldapId = getExternalAuthenticationUtils()
                             .getEcmServiceUserIdByParticipantLdapId(changedParticipant.getParticipantLdapId());
-                    changedParticipant.setParticipantLdapId(ldapId);
-                    folderParticipantChangedEvent.setChangedParticipant(changedParticipant);
-                    folderParticipantChangedEvent.setChangeType(ChangedParticipantConstants.REMOVED);
-                    getApplicationEventPublisher().publishEvent(folderParticipantChangedEvent);
+                    if (ldapId != null)
+                    {
+                        changedParticipant.setParticipantLdapId(ldapId);
+                        folderParticipantChangedEvent.setChangedParticipant(changedParticipant);
+                        folderParticipantChangedEvent.setChangeType(ChangedParticipantConstants.REMOVED);
+                        getApplicationEventPublisher().publishEvent(folderParticipantChangedEvent);
+                    }
                 }
             }
         }

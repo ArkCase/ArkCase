@@ -93,6 +93,10 @@ public class ExternalAuthenticationUtils
     public String getEcmServiceUserIdByParticipantLdapId(String participantLdapId)
     {
         AcmUser acmUser = getUserByUserId(participantLdapId);
+        if (acmUser == null)
+        {
+            return null;
+        }
         return getEcmServiceUserId(acmUser);
     }
 
