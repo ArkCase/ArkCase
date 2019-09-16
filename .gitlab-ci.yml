@@ -277,7 +277,7 @@ security_scan_results:
   script:
     # Get scan info
     - curl -k --compressed -u $VERACODE_USER:$VERACODE_PASSWORD https://analysiscenter.veracode.com/api/5.0/getbuildinfo.do -F "app_id=529559"
-    - BUILDINFO="$(curl -k --compressed -u arkcase-veracode:AcMd3v\$1 https://analysiscenter.veracode.com/api/5.0/getbuildinfo.do -F 'app_id=529559' 2>/dev/null)"
+    - BUILDINFO="$(curl -k --compressed -u $VERACODE_USER:$VERACODE_PASSWORD https://analysiscenter.veracode.com/api/5.0/getbuildinfo.do -F 'app_id=529559' 2>/dev/null)"
     - BUILD_ID=$(grep -oPm1 "(?<=build_id=\")[^\"<]+" <<< "$BUILDINFO" | head -1)
     # Get detailed report
     - DETAILED_REPORT="$(curl -k --compressed -u $VERACODE_USER:$VERACODE_PASSWORD https://analysiscenter.veracode.com/api/5.0/detailedreport.do?build_id=$BUILD_ID 2>/dev/null)"
