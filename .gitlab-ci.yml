@@ -285,7 +285,7 @@ security_scan_results:
     # Get detailed report as PDF
     - curl -k --compressed -u $VERACODE_USER:$VERACODE_PASSWORD https://analysiscenter.veracode.com/api/5.0/detailedreportpdf.do?build_id=$BUILD_ID > scan-report.pdf 
     # Send results via email
-    - echo 'echo 'set from = "veracode-scan@armedia.com"' >> ~/.muttrc
+    - echo 'set from = "veracode-scan@armedia.com"' >> ~/.muttrc
     - echo 'set realname = "Veracode Scan"' >> ~/.muttrc
     - echo 'set smtp_url = "smtp://relay.armedia.com:25"' >> ~/.muttrc
     - echo 'set crypt_use_gpgme=no' >> ~/.muttrc
