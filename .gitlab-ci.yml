@@ -255,15 +255,6 @@ deploy_backend_bcgeu_dev:
     variables:
       - $START_SECURITY_SCAN
   script:
-    - echo '<settings>' > /root/.m2/settings.xml
-    - echo '  <servers>' >> /root/.m2/settings.xml
-    - echo '    <server>' >> /root/.m2/settings.xml
-    - echo '      <id>arkcase.snapshot</id>' >> /root/.m2/settings.xml
-    - echo '      <username>admin</username>' >> /root/.m2/settings.xml
-    - echo "      <password>$MVN_PASSWORD</password>" >> /root/.m2/settings.xml
-    - echo '    </server>' >> /root/.m2/settings.xml
-    - echo '  </servers>' >> /root/.m2/settings.xml
-    - echo '</settings>' >> /root/.m2/settings.xml  
     # get arkcase.war version from Nexus
     - mvn -B dependency:get -DremoteRepositories=http://project.armedia.com/nexus/repository/$ARKCASE_REPOSITORY -DgroupId=com.armedia.acm.acm-standard-applications -DartifactId=acm-law-enforcement -Dversion=$ARKCASE_VERSION -Dpackaging=war -Dtransitive=false
     - mvn -B dependency:copy -Dartifact=com.armedia.acm.acm-standard-applications:acm-law-enforcement:$ARKCASE_VERSION:war -DoutputDirectory=.
