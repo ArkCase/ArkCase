@@ -259,9 +259,9 @@ start_security_scan:
     - mvn -B dependency:get -DremoteRepositories=http://***REMOVED***/repository/$ARKCASE_REPOSITORY -DgroupId=com.armedia.acm.acm-standard-applications -DartifactId=acm-law-enforcement -Dversion=$ARKCASE_VERSION -Dpackaging=war -Dtransitive=false
     - mvn -B dependency:copy -Dartifact=com.armedia.acm.acm-standard-applications:acm-law-enforcement:$ARKCASE_VERSION:war -DoutputDirectory=.
     # Upload war
-    - curl --compressed -u $VERACODE_USER:$VERACODE_PASSWORD https://analysiscenter.veracode.com/api/5.0/uploadfile.do -F "app_id=529559" -F "file=@acm-law-enforcement-$ARKCASE_VERSION.war"
+    - curl -k --compressed -u $VERACODE_USER:$VERACODE_PASSWORD https://analysiscenter.veracode.com/api/5.0/uploadfile.do -F "app_id=529559" -F "file=@acm-law-enforcement-$ARKCASE_VERSION.war"
     # Begin scan
-    - curl --compressed -u $VERACODE_USER:$VERACODE_PASSWORD https://analysiscenter.veracode.com/api/5.0/beginprescan.do -F "app_id=529559"
+    - curl -k --compressed -u $VERACODE_USER:$VERACODE_PASSWORD https://analysiscenter.veracode.com/api/5.0/beginprescan.do -F "app_id=529559"
 
 .security_scan_results:
   stage: security_scan_results
@@ -270,14 +270,14 @@ start_security_scan:
       - $SECURITY_SCAN_RESULTS
   script:
     # Get scan info
-    - curl --compressed -u $VERACODE_USER:$VERACODE_PASSWORD https://analysiscenter.veracode.com/api/5.0/getbuildinfo.do -F "app_id=529559"
-    - BUILDINFO="$(curl --compressed -u arkcase-veracode:AcMd3v\$1 https://analysiscenter.veracode.com/api/5.0/getbuildinfo.do -F 'app_id=529559' 2>/dev/null)"
+    - curl -k --compressed -u $VERACODE_USER:$VERACODE_PASSWORD https://analysiscenter.veracode.com/api/5.0/getbuildinfo.do -F "app_id=529559"
+    - BUILDINFO="$(curl -k --compressed -u arkcase-veracode:AcMd3v\$1 https://analysiscenter.veracode.com/api/5.0/getbuildinfo.do -F 'app_id=529559' 2>/dev/null)"
     - BUILD_ID=$(grep -oPm1 "(?<=build_id=\")[^\"<]+" <<< "$BUILDINFO" | head -1)
     # Get detailed report
-    - DETAILED_REPORT="$(curl --compressed -u $VERACODE_USER:$VERACODE_PASSWORD https://analysiscenter.veracode.com/api/5.0/detailedreport.do?build_id=$BUILD_ID 2>/dev/null)"
+    - DETAILED_REPORT="$(curl -k --compressed -u $VERACODE_USER:$VERACODE_PASSWORD https://analysiscenter.veracode.com/api/5.0/detailedreport.do?build_id=$BUILD_ID 2>/dev/null)"
     - SCAN_SCORE=$(grep -oPm1 "(?<=score=\")[^\"<]+" <<< "$DETAILED_REPORT" | head -1)
     # Get detailed report as PDF
-    - curl --compressed -u $VERACODE_USER:$VERACODE_PASSWORD https://analysiscenter.veracode.com/api/5.0/detailedreportpdf.do?build_id=$BUILD_ID > scan-report.pdf 
+    - curl -k --compressed -u $VERACODE_USER:$VERACODE_PASSWORD https://analysiscenter.veracode.com/api/5.0/detailedreportpdf.do?build_id=$BUILD_ID > scan-report.pdf 
     # Send results via email
     - echo 'echo 'set from = "veracode-scan@armedia.com"' >> ~/.muttrc
     - echo 'set realname = "Veracode Scan"' >> ~/.muttrc
