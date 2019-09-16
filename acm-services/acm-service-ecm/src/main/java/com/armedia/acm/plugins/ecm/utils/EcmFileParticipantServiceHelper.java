@@ -353,7 +353,8 @@ public class EcmFileParticipantServiceHelper implements ApplicationEventPublishe
                 publishChangedEvent = true;
             }
         }
-        if (publishChangedEvent) {
+        if (publishChangedEvent)
+        {
             getApplicationEventPublisher().publishEvent(ecmFileParticipantChangedEvent);
         }
     }
@@ -383,7 +384,8 @@ public class EcmFileParticipantServiceHelper implements ApplicationEventPublishe
                 AcmParticipant changedParticipant = AcmParticipant.createRulesTestParticipant(participant);
                 String ldapId = getExternalAuthenticationUtils()
                         .getEcmServiceUserIdByParticipantLdapId(changedParticipant.getParticipantLdapId());
-                if (ldapId != null) {
+                if (ldapId != null)
+                {
                     changedParticipant.setParticipantLdapId(ldapId);
                     folderParticipantChangedEvent.setChangedParticipant(changedParticipant);
                     publishChangedEvent = true;
@@ -392,7 +394,8 @@ public class EcmFileParticipantServiceHelper implements ApplicationEventPublishe
                 AcmParticipant oldParticipant = AcmParticipant.createRulesTestParticipant(existingFolderParticipant.get());
                 String ldapIdOldParticipant = getExternalAuthenticationUtils()
                         .getEcmServiceUserIdByParticipantLdapId(oldParticipant.getParticipantLdapId());
-                if (ldapIdOldParticipant != null) {
+                if (ldapIdOldParticipant != null)
+                {
                     oldParticipant.setParticipantLdapId(ldapIdOldParticipant);
                     folderParticipantChangedEvent.setOldParticipant(oldParticipant);
                     folderParticipantChangedEvent.setChangeType(ChangedParticipantConstants.CHANGED);
@@ -422,7 +425,8 @@ public class EcmFileParticipantServiceHelper implements ApplicationEventPublishe
                 publishChangedEvent = true;
             }
         }
-        if (publishChangedEvent) {
+        if (publishChangedEvent)
+        {
             getApplicationEventPublisher().publishEvent(folderParticipantChangedEvent);
         }
     }
