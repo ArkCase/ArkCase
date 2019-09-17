@@ -332,6 +332,10 @@ angular.module('document-details').controller(
 
                     $scope.onPlayerReady = function(API) {
                         $scope.videoAPI = API;
+                        var videoElement = angular.element(document.getElementsByTagName("video")[0])[0];
+                        videoElement.onloadeddata = function() {
+                            onHideLoader();
+                        };
                     };
 
                     $scope.enableEditing = function() {
