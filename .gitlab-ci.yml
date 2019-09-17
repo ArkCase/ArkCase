@@ -283,7 +283,7 @@ security_scan_results:
     - DETAILED_REPORT="$(curl -k --compressed -u $VERACODE_USER:$VERACODE_PASSWORD https://analysiscenter.veracode.com/api/5.0/detailedreport.do?build_id=$BUILD_ID 2>/dev/null)"
     - SCAN_SCORE=$(grep -oPm1 "(?<=score=\")[^\"<]+" <<< "$DETAILED_REPORT" | head -1)
     # Get detailed report as PDF
-    - curl -k --compressed -u $VERACODE_USER:$VERACODE_PASSWORD https://analysiscenter.veracode.com/api/5.0/detailedreportpdf.do?build_id=$BUILD_ID > scan-report.pdf 
+    - curl -k --compressed -u $VERACODE_USER:$VERACODE_PASSWORD https://analysiscenter.veracode.com/api/4.0/detailedreportpdf.do?build_id=$BUILD_ID > scan-report.pdf 
     # Send results via email
     - echo 'set from = "veracode-scan@armedia.com"' >> ~/.muttrc
     - echo 'set realname = "Veracode Scan"' >> ~/.muttrc
