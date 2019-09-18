@@ -1651,6 +1651,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
             cmisRepositoryId = ecmFileConfig.getDefaultCmisId();
         }
         props.put(EcmFileConstants.CONFIGURATION_REFERENCE, cmisConfigUtils.getCmisConfiguration(cmisRepositoryId));
+        props.put(EcmFileConstants.ALL_VERSIONS, Boolean.TRUE);
 
         try
         {
