@@ -429,10 +429,14 @@ LANGUAGE plpgsql;
 
     <changeSet id="21-acm-case-file-add-notification-group-column-if-not-exists" author="marko.stojanoski" dbms="mysql"
                logicalFilePath="/ddl/tables/foia-request-db-tables-1.0.xml">
-        <preConditions onFail="MARK_RAN" onError="MARK_RAN">
-            <not>
-                <columnExists tableName="acm_case_file" columnName="fo_notification_group"/>
-            </not>
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                select count(*) 
+                from information_schema.COLUMNS 
+                where TABLE_SCHEMA = database() 
+                and TABLE_NAME = 'acm_case_file' 
+                and column_name = 'fo_notification_group'
+            </sqlCheck>
         </preConditions>
         <addColumn tableName="acm_case_file">
             <column name="fo_notification_group" type="TEXT"/>
