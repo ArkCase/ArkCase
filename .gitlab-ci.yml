@@ -260,8 +260,10 @@ deploy_backend_bcgeu_dev:
     - mvn -B dependency:copy -Dartifact=com.armedia.acm.acm-standard-applications:acm-law-enforcement:$ARKCASE_VERSION:war -DoutputDirectory=.
     # Upload war
     - curl -k --compressed -u $VERACODE_USER:$VERACODE_PASSWORD https://analysiscenter.veracode.com/api/5.0/uploadfile.do -F "app_id=529559" -F "file=@acm-law-enforcement-$ARKCASE_VERSION.war"
-    # Begin scan
+    # Begin static scan
     - curl -k --compressed -u $VERACODE_USER:$VERACODE_PASSWORD https://analysiscenter.veracode.com/api/5.0/beginprescan.do -F "app_id=529559"
+    # Start Software Composition Analysis
+    - curl -sSL https://download.sourceclear.com/ci.sh | sh
 
 start_security_scan_arkcase_snapshot:
   extends: .start_security_scan
@@ -291,7 +293,6 @@ security_scan_results:
     - echo 'set crypt_use_gpgme=no' >> ~/.muttrc
     - echo 'set ssl_starttls = no' >> ~/.muttrc
     - echo "Detailed scan result attached" | mutt -s "Veracode scan of Arkcase code on $(date +%m-%d-%y) finished with score $SCAN_SCORE" $EMAIL_ADDRESSES -a scan-report.pdf
-
 
 .restart:
   stage: restart

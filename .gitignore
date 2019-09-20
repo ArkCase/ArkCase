@@ -17,6 +17,7 @@ atlassian-ide-plugin.xml
 .mule/
 .configuration
 .tern-project
+.sts4-cache/
 
 # Package Files #
 nbactions.xml
