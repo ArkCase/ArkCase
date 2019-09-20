@@ -1626,7 +1626,9 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         }
         catch (PersistenceException e)
         {
-            log.error("Could not delete file {}, reason {} ", objectId, e.getMessage(), e);
+            log.error("Could not put file {} into recycle bin, reason {} ", objectId, e.getMessage(), e);
+            throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_DELETE_FILE, EcmFileConstants.OBJECT_FILE_TYPE,
+                    file.getId(), "Could not put file into recycle bin", e);
         }
         return recycleBinItem;
     }
