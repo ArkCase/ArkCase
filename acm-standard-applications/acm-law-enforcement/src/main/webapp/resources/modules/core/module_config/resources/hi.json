@@ -460,7 +460,8 @@
                     "taxi": "टैक्सी",
                     "hotel": "होटल",
                     "overtime": "अधिक समय तक",
-                    "food": "भोजन"
+                    "food": "भोजन",
+                    "postage": "डाक"
                 }
             },
             "timesheet": {

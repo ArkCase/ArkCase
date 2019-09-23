@@ -460,7 +460,8 @@
                     "taxi": "Taxi",
                     "hotel": "Un hôtel",
                     "overtime": "Heures supplémentaires",
-                    "food": "Aliments"
+                    "food": "Aliments",
+                    "postage": "Affranchissement"
                 }
             },
             "timesheet": {
