@@ -460,7 +460,8 @@
                     "taxi": "出租车",
                     "hotel": "旅馆",
                     "overtime": "加班",
-                    "food": "食物"
+                    "food": "食物",
+                    "postage": "邮资"
                 }
             },
             "timesheet": {

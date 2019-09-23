@@ -460,7 +460,8 @@
                     "taxi": "タクシー",
                     "hotel": "ホテル",
                     "overtime": "残業",
-                    "food": "食べ物"
+                    "food": "食べ物",
+                    "postage": "送料"
                 }
             },
             "timesheet": {
