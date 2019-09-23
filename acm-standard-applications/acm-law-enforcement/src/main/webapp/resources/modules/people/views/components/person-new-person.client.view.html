@@ -153,10 +153,10 @@
                     <div class="row">
                         <div class="col-sm-4 form-group">
                             <label translate>people.comp.pictures.dialog.title</label><br />
-                            <button ngf-select ng-model="userPictures[$index]" ng-hide="userPictures[$index].name" ngf-pattern="'image/*'"
+                            <button ngf-select="showImage($file, $index)" ng-model="userPictures[$index]" ng-hide="userPictures[$index].name" ngf-pattern="'image/*'"
                                     ngf-accept="'image/*'" class="btn btn-sm btn-default"><span
                                     translate>people.comp.pictures.dialog.browse</span></button>
-                            {{userPictures[$index].name}}
+                            <img ng-src="{{previewImage[$index]}}" ng-class="{'img-circle img-responsive': previewImage[$index]}" />
                         </div>
                         <div class="col-sm-4 form-group">
                             <div class="pull-left" ng-show="userPictures[$index].name">
