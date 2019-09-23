@@ -23,6 +23,7 @@ angular.module('people').controller(
 
                     $scope.pictures = [ {} ];
                     $scope.userPictures = [];
+                    $scope.previewImage = [];
 
                     //new person with predefined values
                     $scope.person = {
@@ -132,6 +133,17 @@ angular.module('people').controller(
                             });
                         }, 0);
                     };
+                    
+                    $scope.showImage = function ($files, index) {
+                        var file = $files;
+                        var reader = new FileReader();
+                        reader.onload = function (e) {
+                            $scope.previewImage[e.target.index] = e.target.result;
+                            $scope.$apply();
+                        };
+                        reader.index = index;
+                        reader.readAsDataURL(file);
+                    };
 
                     $scope.addEmptyPicture = function() {
                         $scope.pictures.push({});
@@ -144,6 +156,7 @@ angular.module('people').controller(
                         $timeout(function() {
                             $scope.pictures.splice(index, 1);
                             $scope.userPictures.splice(index, 1);
+                            $scope.previewImage.splice(index, 1);
                             if ($scope.pictures.length < 1) {
                                 $scope.pictures.push({});
                             }
