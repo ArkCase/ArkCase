@@ -532,7 +532,8 @@
                     "taxi": "Taxi",
                     "hotel": "Hotel",
                     "overtime": "Overtime",
-                    "food": "Food"
+                    "food": "Food",
+                    "postage": "Postage"
                 },
                 "statuses": {
                     "draft": "Draft",
