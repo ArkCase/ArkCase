@@ -27,15 +27,14 @@ package com.armedia.acm.services.users.web.api;
  * #L%
  */
 
+import com.armedia.acm.core.AcmSpringActiveProfile;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.AcmUserInfoDTO;
-
-import com.armedia.acm.services.users.model.ApplicationRolesToPrivilegesConfig;
-import com.armedia.acm.services.users.service.AcmUserRoleService;
 import com.armedia.acm.services.users.service.AcmUserService;
-import org.apache.logging.log4j.Logger;
+
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -47,7 +46,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -62,6 +60,7 @@ public class UserInfoAPIController
     private Logger log = LogManager.getLogger(getClass());
     private UserDao userDao;
     private AcmUserService acmUserService;
+    private AcmSpringActiveProfile acmSpringActiveProfile;
 
     @RequestMapping(method = RequestMethod.GET, value = "/info", produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody AcmUserInfoDTO info(Authentication auth, HttpSession session)
@@ -91,7 +90,10 @@ public class UserInfoAPIController
         retval.setDepartment(user.getDepartment());
         retval.setCompany(user.getCompany());
         retval.setTitle(user.getTitle());
-        retval.setNotificationMessage(notificationMessage);
+        if (!getAcmSpringActiveProfile().isSAMLEnabledEnvironment())
+        {
+            retval.setNotificationMessage(notificationMessage);
+        }
         retval.setLangCode(user.getLang());
         return retval;
     }
@@ -132,11 +134,23 @@ public class UserInfoAPIController
         this.userDao = userDao;
     }
 
-    public AcmUserService getAcmUserService() {
+    public AcmUserService getAcmUserService()
+    {
         return acmUserService;
     }
 
-    public void setAcmUserService(AcmUserService acmUserService) {
+    public void setAcmUserService(AcmUserService acmUserService)
+    {
         this.acmUserService = acmUserService;
+    }
+
+    public AcmSpringActiveProfile getAcmSpringActiveProfile()
+    {
+        return acmSpringActiveProfile;
+    }
+
+    public void setAcmSpringActiveProfile(AcmSpringActiveProfile acmSpringActiveProfile)
+    {
+        this.acmSpringActiveProfile = acmSpringActiveProfile;
     }
 }
