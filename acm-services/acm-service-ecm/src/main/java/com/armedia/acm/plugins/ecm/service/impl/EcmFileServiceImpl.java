@@ -64,6 +64,9 @@ import com.armedia.acm.service.objectlock.annotation.AcmAcquireAndReleaseObjectL
 import com.armedia.acm.service.objectlock.annotation.AcmAcquireObjectLock;
 import com.armedia.acm.service.objectlock.model.AcmObjectLock;
 import com.armedia.acm.service.objectlock.service.AcmObjectLockService;
+import com.armedia.acm.services.authenticationtoken.dao.AuthenticationTokenDao;
+import com.armedia.acm.services.authenticationtoken.model.AuthenticationToken;
+import com.armedia.acm.services.authenticationtoken.model.AuthenticationTokenConstants;
 import com.armedia.acm.services.participants.service.AcmParticipantService;
 import com.armedia.acm.services.search.model.SearchConstants;
 import com.armedia.acm.services.search.model.SolrCore;
@@ -160,6 +163,8 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     private AcmObjectLockService objectLockService;
 
     private EmailSenderConfig emailSenderConfig;
+
+    private AuthenticationTokenDao authenticationTokenDao;
 
     @Override
     public CmisObject findObjectByPath(String path) throws Exception
@@ -1521,6 +1526,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     @AcmAcquireAndReleaseObjectLock(objectIdArgIndex = 0, objectType = "FILE", lockType = "DELETE")
     public void deleteFileFromArkcase(Long fileId)
     {
+        deleteAuthenticationTokens(fileId);
         getEcmFileDao().deleteFile(fileId);
     }
 
@@ -1563,6 +1569,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
 
             if (removeFileFromDatabase)
             {
+                deleteAuthenticationTokens(objectId);
                 getEcmFileDao().deleteFile(objectId);
             }
             else
@@ -1657,6 +1664,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
 
         try
         {
+            deleteAuthenticationTokens(objectId);
             getMuleContextManager().send(EcmFileConstants.MULE_ENDPOINT_DELETE_FILE, file, props);
 
             getEcmFileDao().deleteFile(objectId);
@@ -1681,6 +1689,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
 
         try
         {
+            deleteAuthenticationTokens(file.getId());
             getEcmFileDao().deleteFile(file.getId());
         }
         catch (PersistenceException e)
@@ -1837,6 +1846,16 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
             log.error("File upload was unsuccessful.", e);
         }
         return fileName;
+    }
+
+    private void deleteAuthenticationTokens(Long fileId)
+    {
+        List<AuthenticationToken> authenticationTokens = getAuthenticationTokenDao().findAuthenticationTokenByTokenFileId(fileId);
+        for (AuthenticationToken authenticationToken : authenticationTokens)
+        {
+            authenticationToken.setStatus(AuthenticationTokenConstants.FILE_DELETED);
+            authenticationToken.setFileId(null);
+        }
     }
 
     public EcmFileTransaction getEcmFileTransaction()
@@ -2060,4 +2079,13 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         this.recycleBinItemService = recycleBinItemService;
     }
 
+    public AuthenticationTokenDao getAuthenticationTokenDao()
+    {
+        return authenticationTokenDao;
+    }
+
+    public void setAuthenticationTokenDao(AuthenticationTokenDao authenticationTokenDao)
+    {
+        this.authenticationTokenDao = authenticationTokenDao;
+    }
 }
