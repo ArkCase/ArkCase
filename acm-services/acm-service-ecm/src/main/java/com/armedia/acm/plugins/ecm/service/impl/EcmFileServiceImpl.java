@@ -1565,8 +1565,6 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
 
         try
         {
-            getMuleContextManager().send(EcmFileConstants.MULE_ENDPOINT_DELETE_FILE, file, props);
-
             if (removeFileFromDatabase)
             {
                 deleteAuthenticationTokens(objectId);
@@ -1581,6 +1579,8 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
                 file.setFileActiveVersionMimeType(current.getVersionMimeType());
                 getEcmFileDao().save(file);
             }
+
+            getMuleContextManager().send(EcmFileConstants.MULE_ENDPOINT_DELETE_FILE, file, props);
         }
         catch (MuleException | PersistenceException e)
         {
@@ -1665,9 +1665,9 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         try
         {
             deleteAuthenticationTokens(objectId);
-            getMuleContextManager().send(EcmFileConstants.MULE_ENDPOINT_DELETE_FILE, file, props);
-
             getEcmFileDao().deleteFile(objectId);
+
+            getMuleContextManager().send(EcmFileConstants.MULE_ENDPOINT_DELETE_FILE, file, props);
         }
         catch (MuleException | PersistenceException e)
         {
