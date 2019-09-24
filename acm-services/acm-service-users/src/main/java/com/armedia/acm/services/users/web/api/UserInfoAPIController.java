@@ -90,7 +90,7 @@ public class UserInfoAPIController
         retval.setDepartment(user.getDepartment());
         retval.setCompany(user.getCompany());
         retval.setTitle(user.getTitle());
-        if (!getAcmSpringActiveProfile().isSAMLEnabledEnvironment())
+        if (getAcmSpringActiveProfile() != null && !getAcmSpringActiveProfile().isSAMLEnabledEnvironment())
         {
             retval.setNotificationMessage(notificationMessage);
         }
