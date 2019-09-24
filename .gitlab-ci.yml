@@ -162,8 +162,8 @@ deploy_server:
     name: $ENVIRONMENT_NAME
     url: $ENVIRONMENT_URL
 
-.deploy_backend_core_dev:
-  extends: .deploy_backend
+deploy_backend_core_dev:
+  stage: deploy
   only:
     - develop
   except:
@@ -173,12 +173,16 @@ deploy_server:
     name: Dev Core
     url: https://dev.core.arkcase.com
   variables:
+    ARKCASE_SFTP_PASS: $SSHPASS
     SERVER_IP: 10.60.24.39
     SSH_USER: loc.arkcasemgmtsvc
     SSH_PASSWORD: $ARKCASEMGMTSCV_PASSWORD
     ARKCASE_VERSION: 3.3.3-SNAPSHOT
     ARKCASE_REPOSITORY: arkcase.snapshot
     ARKCASE_SERVICE_USER_NAME: arkuser
+    SSHPASS: $ARKCASEMGMTSCV_PASSWORD
+  script:
+    - sshpass -e ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $SSH_USER@$SERVER_IP "cd /etc/arkcase-install/arkcase-ce/vagrant/provisioning ; sudo ansible-playbook -e sftp_arkcase_password=$ARKCASE_SFTP_PASSWORD -e sftp_pentaho_password=$PENTAHO_SFTP_PASSWORD -e @dev-core-facts.yml arkcase-upgrade.yml"
 
 deploy_backend_bcgeu_dev:
   extends: .deploy_backend
