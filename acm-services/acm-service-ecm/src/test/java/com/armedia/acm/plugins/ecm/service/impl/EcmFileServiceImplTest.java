@@ -45,6 +45,9 @@ import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.model.EcmFileUpdatedEvent;
 import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
 import com.armedia.acm.plugins.ecm.utils.CmisConfigUtils;
+import com.armedia.acm.services.authenticationtoken.dao.AuthenticationTokenDao;
+import com.armedia.acm.services.authenticationtoken.model.AuthenticationToken;
+import com.armedia.acm.services.authenticationtoken.model.AuthenticationTokenConstants;
 
 import org.apache.chemistry.opencmis.client.api.CmisObject;
 import org.apache.chemistry.opencmis.client.api.Document;
@@ -60,7 +63,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 import javax.persistence.EntityManager;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -82,6 +87,9 @@ public class EcmFileServiceImplTest extends EasyMockSupport
     private AcmContainerDao mockContainerDao;
     private EcmFileParticipantService mockFileParticipantService;
     private Authentication mockAuthentication;
+    private AuthenticationTokenDao mockAuthenticationTokenDao;
+
+    private List<AuthenticationToken> authenticationTokens;
 
     @Before
     public void setUp() throws Exception
@@ -98,6 +106,7 @@ public class EcmFileServiceImplTest extends EasyMockSupport
         mockContainerDao = createMock(AcmContainerDao.class);
         mockFileParticipantService = createMock(EcmFileParticipantService.class);
         mockAuthentication = createMock(Authentication.class);
+        mockAuthenticationTokenDao = createMock(AuthenticationTokenDao.class);
 
         EcmFileConfig ecmFileConfig = new EcmFileConfig();
         ecmFileConfig.setDefaultCmisId(defaultCmisId);
@@ -109,7 +118,17 @@ public class EcmFileServiceImplTest extends EasyMockSupport
         unit.setApplicationEventPublisher(mockApplicationEventPublisher);
         unit.setContainerFolderDao(mockContainerDao);
         unit.setFileParticipantService(mockFileParticipantService);
+        unit.setAuthenticationTokenDao(mockAuthenticationTokenDao);
         SecurityContextHolder.getContext().setAuthentication(mockAuthentication);
+
+        authenticationTokens = new ArrayList<>();
+
+        AuthenticationToken token = new AuthenticationToken();
+        token.setFileId(500L);
+        token.setStatus(AuthenticationTokenConstants.ACTIVE);
+        token.setEmail("user_email");
+        token.setKey("token");
+        authenticationTokens.add(token);
     }
 
     @Test
@@ -190,6 +209,7 @@ public class EcmFileServiceImplTest extends EasyMockSupport
         expect(mockEcmFileDao.find(toBeDeleted.getFileId())).andReturn(toBeDeleted);
         expect(mockCmisConfigUtils.getCmisConfiguration(toBeDeleted.getCmisRepositoryId())).andReturn(null);
         expect(mockMuleContextManager.send(EcmFileConstants.MULE_ENDPOINT_DELETE_FILE, toBeDeleted, props)).andReturn(mockMuleMessage);
+        expect(mockAuthenticationTokenDao.findAuthenticationTokenByTokenFileId(toBeDeleted.getFileId())).andReturn(authenticationTokens);
 
         mockEcmFileDao.deleteFile(toBeDeleted.getFileId());
 
@@ -222,7 +242,7 @@ public class EcmFileServiceImplTest extends EasyMockSupport
         expect(mockEcmFileDao.find(toBeDeleted.getFileId())).andReturn(toBeDeleted);
         expect(mockCmisConfigUtils.getCmisConfiguration(toBeDeleted.getCmisRepositoryId())).andReturn(null);
         expect(mockMuleContextManager.send(EcmFileConstants.MULE_ENDPOINT_DELETE_FILE, toBeDeleted, props)).andReturn(mockMuleMessage);
-
+        expect(mockAuthenticationTokenDao.findAuthenticationTokenByTokenFileId(toBeDeleted.getFileId())).andReturn(authenticationTokens);
         mockEcmFileDao.deleteFile(toBeDeleted.getFileId());
 
         replayAll();
