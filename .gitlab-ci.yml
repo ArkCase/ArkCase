@@ -55,7 +55,6 @@ stages:
     - export MAVEN_OPTS="-Xmx2048M -Xss256M -XX:MetaspaceSize=2048M -XX:+CMSClassUnloadingEnabled"
     - mvn -DskipITs -T 4 -B deploy "-DaltDeploymentRepository=arkcase.snapshot::default::https://project.armedia.com/nexus/repository/arkcase.snapshot/"
     - sshpass -e sftp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null arkcase@fileshare.armedia.com <<< $'put acm-standard-applications/acm-law-enforcement/target/*.war /from-arkcase/arkcase.war' 
-    - sshpass -e sftp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null arkcase@fileshare.armedia.com <<< $'put acm-standard-applications/acm-foia/target/*.jar /from-arkcase/foia.jar' 
  
 
 
@@ -163,7 +162,7 @@ deploy_server:
     name: $ENVIRONMENT_NAME
     url: $ENVIRONMENT_URL
 
-deploy_backend_core_dev:
+.deploy_backend_core_dev:
   extends: .deploy_backend
   only:
     - develop
