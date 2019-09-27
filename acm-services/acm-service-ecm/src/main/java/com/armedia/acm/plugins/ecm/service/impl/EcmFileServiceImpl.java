@@ -1874,6 +1874,8 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         {
             authenticationToken.setStatus(AuthenticationTokenConstants.FILE_DELETED);
             authenticationToken.setFileId(null);
+            getAuthenticationTokenDao().save(authenticationToken);
+            getAuthenticationTokenDao().getEntityManager().flush();
         }
     }
 
