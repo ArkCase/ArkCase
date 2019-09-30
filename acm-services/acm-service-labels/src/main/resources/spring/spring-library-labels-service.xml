@@ -3,15 +3,15 @@
     xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
 
     <bean id="labelManagementService" class="com.armedia.acm.services.labels.service.LabelManagementService">
-        <property name="modulesLocation" value="#{ systemProperties ['user.home'] }/.arkcase/custom/modules/"/>
+        <!--<property name="modulesLocation" value="#{ systemProperties ['user.home'] }/.arkcase/custom/modules/"/>-->
         <property name="moduleConfigLocation"
             value="#{ systemProperties ['user.home'] }/.arkcase/custom/modules/%s/module_config/config.json"/>
-        <property name="moduleResourcesLocation"
-            value="#{ systemProperties ['user.home'] }/.arkcase/custom/modules/%s/module_config/resources/%s.json"/>
+        <!--<property name="moduleResourcesLocation"-->
+        <!--value="#{ systemProperties ['user.home'] }/.arkcase/acm/acm-config-server-repo/labels/%s-%s.yaml"/>-->
         <property name="customResourceFile" value="%s.%s.json"/>
         <property name="customResourcesLocation" value="#{ systemProperties ['user.home'] }/.arkcase/acm/resources/custom/"/>
-        <property name="resourceFile" value="%s.%s.json"/>
-        <property name="resourcesLocation" value="#{ systemProperties ['user.home'] }/.arkcase/acm/resources/resources/"/>
+        <property name="resourceFile" value="%s-%s.yaml"/>
+        <property name="resourcesLocation" value="#{ systemProperties ['user.home'] }/.arkcase/acm/acm-config-server-repo/labels/"/>
         <property name="settingsFileLocation" value="#{ systemProperties ['user.home'] }/.arkcase/acm/resources/settings/settings.json"/>
         <property name="defaultLocale" value="en"/>
         <property name="defaultLocales">
@@ -19,6 +19,7 @@
                 <entry key="en" value="English"></entry>
             </map>
         </property>
+        <!--<property name="labelsConfiguration" ref="labelsConfiguration"/>-->
     </bean>
 
     <bean id="translationService" class="com.armedia.acm.services.labels.service.TranslationService">
@@ -26,9 +27,8 @@
         <property name="labelManagementService" ref="labelManagementService"/>
     </bean>
 
-    <bean id ="labelCheckService" class="com.armedia.acm.services.labels.service.LabelCheckService">
+    <bean id="labelCheckService" class="com.armedia.acm.services.labels.service.LabelCheckService">
         <property name="modulesLocation" value="#{ systemProperties ['user.home'] }/.arkcase/custom/modules/"/>
         <property name="resourcesLocation" value="#{ systemProperties ['user.home'] }/.arkcase/acm/resources/resources/"/>
     </bean>
-
 </beans>
