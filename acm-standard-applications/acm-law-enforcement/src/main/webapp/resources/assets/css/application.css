@@ -1860,3 +1860,8 @@ a.primary {
 .marginTop {
     margin-top: 5px
 }
+
+/* Allow only vertical resize on textarea element */
+textarea {
+    resize: vertical;
+}

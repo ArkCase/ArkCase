@@ -17,6 +17,7 @@
         <property name="triggers" value="#{acmJobFactory.getTriggerList()}"/>
         <property name="jobDetails" value="#{acmJobFactory.getJobDetailList()}"/>
         <property name="globalTriggerListeners" ref="acmTriggerListener"/>
+        <property name="overwriteExistingJobs" value="#{acmJobFactory.isOverwriteExistingJobs()}"/>
     </bean>
 
     <bean id="jobsJsonConfig" class="org.apache.commons.io.IOUtils" factory-method="toString">

@@ -28,7 +28,7 @@ variables:
   #DEVELOP_NEW_VERSION:
    
 
-image: arkcase-gitlab-ci:1.0.1
+image: arkcase-gitlab-ci:1.0.2
 
 stages:
   - build
@@ -36,6 +36,8 @@ stages:
   - trigger
   - restart
   - release
+  - start_security_scan
+  - security_scan_results
   
 .build_backend_snapshot:
   stage: build
@@ -52,6 +54,9 @@ stages:
     - echo '</settings>' >> /root/.m2/settings.xml
     - export MAVEN_OPTS="-Xmx2048M -Xss256M -XX:MetaspaceSize=2048M -XX:+CMSClassUnloadingEnabled"
     - mvn -DskipITs -T 4 -B deploy "-DaltDeploymentRepository=arkcase.snapshot::default::https://***REMOVED***/repository/arkcase.snapshot/"
+    - sshpass -e sftp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ***REMOVED*** <<< $'put acm-standard-applications/acm-law-enforcement/target/*.war /from-arkcase/arkcase.war' 
+ 
+
 
 .build_frontend_snapshot:
   stage: build
@@ -158,22 +163,20 @@ deploy_server:
     url: $ENVIRONMENT_URL
 
 deploy_backend_core_dev:
-  extends: .deploy_backend
+  stage: deploy
   only:
     - develop
   except:
     changes:
-      #- .gitlab-ci.yaml
+      - .gitlab-ci.yaml
   environment:
     name: Dev Core
     url: https://***REMOVED***
-  variables:
-    SERVER_IP: 10.60.24.39
-    SSH_USER: ***REMOVED***
-    SSH_PASSWORD: $ARKCASEMGMTSCV_PASSWORD
-    ARKCASE_VERSION: 3.3.3-SNAPSHOT
-    ARKCASE_REPOSITORY: arkcase.snapshot
-    ARKCASE_SERVICE_USER_NAME: arkuser
+  script:
+    - export SSHPASS=$ARKCASEMGMTSCV_PASSWORD
+    - export SSH_USER=***REMOVED***
+    - export SERVER_IP=10.60.24.39
+    - sshpass -e ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $SSH_USER@$SERVER_IP "cd /etc/arkcase-install/arkcase-ce/vagrant/provisioning ; sudo ansible-playbook -e sftp_arkcase_password=$ARKCASE_SFTP_PASSWORD -e sftp_pentaho_password=$PENTAHO_SFTP_PASSWORD -e @dev-core-facts.yml arkcase-upgrade.yml"
 
 deploy_backend_bcgeu_dev:
   extends: .deploy_backend
@@ -242,6 +245,51 @@ deploy_backend_bcgeu_dev:
     ARKCASE_REPOSITORY: arkcase.snapshot
     ARKCASE_UI_VARIANT: ui-foia
     ARKCASE_SERVICE_USER_NAME: arkuser
+
+.start_security_scan:
+  stage: start_security_scan
+  only:
+    variables:
+      - $START_SECURITY_SCAN
+  script:
+    # get arkcase.war version from Nexus
+    - mvn -B dependency:get -DremoteRepositories=http://***REMOVED***/repository/$ARKCASE_REPOSITORY -DgroupId=com.armedia.acm.acm-standard-applications -DartifactId=acm-law-enforcement -Dversion=$ARKCASE_VERSION -Dpackaging=war -Dtransitive=false
+    - mvn -B dependency:copy -Dartifact=com.armedia.acm.acm-standard-applications:acm-law-enforcement:$ARKCASE_VERSION:war -DoutputDirectory=.
+    # Upload war
+    - curl -k --compressed -u $VERACODE_USER:$VERACODE_PASSWORD https://analysiscenter.veracode.com/api/5.0/uploadfile.do -F "app_id=529559" -F "file=@acm-law-enforcement-$ARKCASE_VERSION.war"
+    # Begin static scan
+    - curl -k --compressed -u $VERACODE_USER:$VERACODE_PASSWORD https://analysiscenter.veracode.com/api/5.0/beginprescan.do -F "app_id=529559"
+    # Start Software Composition Analysis
+    - curl -sSL https://download.sourceclear.com/ci.sh | sh
+
+start_security_scan_arkcase_snapshot:
+  extends: .start_security_scan
+  variables:
+    ARKCASE_VERSION: 3.3.3-SNAPSHOT
+    ARKCASE_REPOSITORY: arkcase.snapshot
+
+security_scan_results:
+  stage: security_scan_results
+  only:
+    variables:
+      - $SECURITY_SCAN_RESULTS
+  script:
+    # Get scan info
+    - curl -k --compressed -u $VERACODE_USER:$VERACODE_PASSWORD https://analysiscenter.veracode.com/api/5.0/getbuildinfo.do -F "app_id=529559"
+    - BUILDINFO="$(curl -k --compressed -u $VERACODE_USER:$VERACODE_PASSWORD https://analysiscenter.veracode.com/api/5.0/getbuildinfo.do -F 'app_id=529559' 2>/dev/null)"
+    - BUILD_ID=$(grep -oPm1 "(?<=build_id=\")[^\"<]+" <<< "$BUILDINFO" | head -1)
+    # Get detailed report
+    - DETAILED_REPORT="$(curl -k --compressed -u $VERACODE_USER:$VERACODE_PASSWORD https://analysiscenter.veracode.com/api/5.0/detailedreport.do?build_id=$BUILD_ID 2>/dev/null)"
+    - SCAN_SCORE=$(grep -oPm1 "(?<=score=\")[^\"<]+" <<< "$DETAILED_REPORT" | head -1)
+    # Get detailed report as PDF
+    - curl -k --compressed -u $VERACODE_USER:$VERACODE_PASSWORD https://analysiscenter.veracode.com/api/4.0/detailedreportpdf.do?build_id=$BUILD_ID > scan-report.pdf 
+    # Send results via email
+    - echo 'set from = "veracode-scan@armedia.com"' >> ~/.muttrc
+    - echo 'set realname = "Veracode Scan"' >> ~/.muttrc
+    - echo 'set smtp_url = "smtp://***REMOVED***:25"' >> ~/.muttrc
+    - echo 'set crypt_use_gpgme=no' >> ~/.muttrc
+    - echo 'set ssl_starttls = no' >> ~/.muttrc
+    - echo "Detailed scan result attached" | mutt -s "Veracode scan of Arkcase code on $(date +%m-%d-%y) finished with score $SCAN_SCORE" $EMAIL_ADDRESSES -a scan-report.pdf
 
 .restart:
   stage: restart

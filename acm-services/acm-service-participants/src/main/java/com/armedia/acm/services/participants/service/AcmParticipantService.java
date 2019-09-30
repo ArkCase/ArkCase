@@ -169,6 +169,11 @@ public class AcmParticipantService
         return getParticipantDao().findParticipantsForObject(objectType, objectId, flushModeType);
     }
 
+    public List<AcmParticipant> getAllParticipantsPerObjectTypeAndId(String objectType, Long objectId, FlushModeType flushModeType)
+    {
+        return getParticipantDao().getParticipantsForObject(objectType, objectId, flushModeType);
+    }
+
     public Boolean getOriginalRestrictedFlag(AcmAssignedObject assignedObject)
     {
         if (assignedObject.getId() == null)

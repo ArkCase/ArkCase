@@ -93,7 +93,7 @@ public class FileChunkServiceImpl implements FileChunkService
         else
         {
             AcmMultipartFile multipartFile = new AcmMultipartFile(uniqueFileName, fileDetails.getName(), fileDetails.getMimeType(), false,
-                    holder.getSize(), new byte[0], holder.getStream(), true);
+                    holder.getSize(), holder.getStream(), true);
             ecmFileService.upload(authentication, multipartFile, folder.getCmisFolderId(), fileDetails.getObjectType(),
                     fileDetails.getObjectId(), metadata);
         }

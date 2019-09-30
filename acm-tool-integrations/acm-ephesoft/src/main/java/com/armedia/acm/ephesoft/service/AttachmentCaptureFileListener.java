@@ -37,19 +37,16 @@ import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.web.api.MDCConstants;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.vfs2.FileObject;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.slf4j.MDC;
 import org.springframework.context.ApplicationListener;
 import org.springframework.security.core.Authentication;
 
 import javax.activation.MimetypesFileTypeMap;
 
-import java.io.BufferedInputStream;
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
@@ -232,13 +229,7 @@ public class AttachmentCaptureFileListener implements ApplicationListener<Abstra
             MimetypesFileTypeMap mimetypesFileTypeMap = new MimetypesFileTypeMap();
 
             // Take the input stream for given file
-            InputStream originalIS = new BufferedInputStream(new FileInputStream(toBeUploaded));
-            byte[] bytes = IOUtils.toByteArray(originalIS);
-
-            // Create clone of the input stream and close the original. We need this to be able to release
-            // original input stream to be able to move files through folders
-            InputStream cloneIS = new ByteArrayInputStream(bytes);
-            originalIS.close();
+            InputStream is = new FileInputStream(toBeUploaded);
 
             // Take content type and create authentication object (we need authentication object for
             // EcmFileService - we need userID which in this case is set to CaptureConstants.XML_BATCH_USER value)
@@ -256,8 +247,7 @@ public class AttachmentCaptureFileListener implements ApplicationListener<Abstra
                     contentType,
                     false,
                     toBeUploaded.length(),
-                    bytes,
-                    cloneIS,
+                    is,
                     true);
 
             // set the Alfresco user name, so we can upload the files.

@@ -33,11 +33,20 @@ public class LoginEvent extends AcmAbstractAuthenticationEvent
 {
 
     private static final String EVENT_TYPE = "com.armedia.acm.login";
+    private Throwable cause;
 
     public LoginEvent(Authentication authentication, String ipAddress)
     {
         super(authentication);
         setIpAddress(ipAddress);
+        this.cause = null;
+    }
+
+    public LoginEvent(Authentication authentication, String ipAddress, Throwable cause)
+    {
+        super(authentication);
+        setIpAddress(ipAddress);
+        this.cause = cause;
     }
 
     @Override
@@ -49,5 +58,10 @@ public class LoginEvent extends AcmAbstractAuthenticationEvent
     public Authentication getAuthentication()
     {
         return (Authentication) source;
+    }
+
+    public Throwable getCause()
+    {
+        return cause;
     }
 }

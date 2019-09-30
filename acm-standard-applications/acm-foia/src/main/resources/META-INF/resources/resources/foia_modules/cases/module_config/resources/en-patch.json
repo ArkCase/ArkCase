@@ -42,7 +42,7 @@
     {
         "op": "replace",
         "path": "/cases.menus/leftnav.item",
-        "value": "Foia Requests"
+        "value": "FOIA Requests"
     },
     {
         "op": "replace",
@@ -78,6 +78,11 @@
         "op": "add",
         "path": "/cases.comp.info/daysOverdue.label",
         "value": "Days overdue"
+    },
+    {
+        "op": "add",
+        "path": "/cases.comp.info/requestDenied.label",
+        "value": "(Request Denied!)"
     },
     {
         "op": "add",
@@ -359,7 +364,7 @@
         "path": "/cases.comp.main/feeWaiverFlag",
         "value": {
             "placeholder": "Enter Fee Waiver",
-            "label": "Fee Waiver"
+            "label": "Fee Waiver Requested"
         }
     },
     {
@@ -367,7 +372,7 @@
         "path": "/cases.comp.main/expediteFlag",
         "value": {
             "placeholder": "Enter Expedite",
-            "label": "Expedite"
+            "label": "Expedite Requested"
         }
     },
     {

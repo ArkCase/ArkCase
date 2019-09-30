@@ -36,8 +36,8 @@ import com.armedia.acm.plugins.ecm.service.impl.EcmTikaFile;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 
 import org.apache.chemistry.opencmis.client.api.Document;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -80,12 +80,12 @@ public class FOIAEcmFileNewMetadataHandler extends EcmFileNewMetadataHandler
             version.setVersionTag(cmisDocument.getVersionLabel());
             version.setVersionMimeType(entity.getFileActiveVersionMimeType());
             version.setVersionFileNameExtension(entity.getFileActiveVersionNameExtension());
-            long fileSizeBytes = pipelineContext.getMergedFileByteArray() != null &&
-                    pipelineContext.getMergedFileByteArray().length > 0 ? pipelineContext.getMergedFileByteArray().length
+            long fileSizeBytes = pipelineContext.getMergedFile() != null &&
+                    pipelineContext.getMergedFile().length() > 0 ? pipelineContext.getMergedFile().length()
                             : pipelineContext.getFileContents() != null ? pipelineContext.getFileContents().length() : 0;
             version.setFileSizeBytes(fileSizeBytes);
-            version.setReviewStatus(new String());
-            version.setRedactionStatus(new String());
+            version.setReviewStatus("");
+            version.setRedactionStatus("");
             version.setSearchablePDF(pipelineContext.isSearchablePDF());
             log.debug("SearchablePDF = [{}]", pipelineContext.isSearchablePDF());
 

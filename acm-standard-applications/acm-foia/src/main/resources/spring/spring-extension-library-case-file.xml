@@ -253,6 +253,7 @@
             <property name="saveCaseFileBusinessRule" ref="saveCaseFileBusinessRule"/>
             <property name="acmObjectLockService" ref="objectLockService"/>
             <property name="systemConfigurationService" ref="foiaConfigurationService"/>
+            <property name="caseFileEventUtility" ref="caseFileEventUtility"/>
         </bean>
 
         <beans:bean id="requestResponseFolderService" class="gov.foia.service.RequestResponseFolderService">

@@ -38,6 +38,7 @@ import com.armedia.acm.services.timesheet.model.TimesheetConstants;
 import com.armedia.acm.services.timesheet.pipeline.TimesheetPipelineContext;
 
 import org.apache.commons.lang3.StringUtils;
+import org.jsoup.Jsoup;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -83,7 +84,7 @@ public class PDFTimesheetDocumentGenerator<D extends AcmAbstractDao, T extends A
                         + datePattern2.format(timesheet.getEndDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate()), true);
         addElement(document, rootElem, "dateCreated", timesheet.getCreated().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().toString(), true);
 
-        addElement(document, rootElem, "details", timesheet.getDetails() != null ? timesheet.getDetails() : "N/A", false);
+        addElement(document, rootElem, "details", timesheet.getDetails() != null ? Jsoup.parse(timesheet.getDetails()).text() : "N/A", false);
 
         if (!timesheet.getTimes().isEmpty()) {
             List<AcmTime> times = timesheet.getTimes();

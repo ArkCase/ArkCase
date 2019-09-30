@@ -17,8 +17,8 @@
 
 angular.module('tasks').factory(
         'Helper.TaskListParentNode',
-        [ 'UtilService', 'Helper.ObjectBrowserService', 'CostTracking.InfoService', 'Helper.UiGridService', 'Object.TaskService', 'Task.AlertsService', 'ObjectService', 'Task.WorkflowService', 'ModalDialogService', '$timeout',
-                function(Util, HelperObjectBrowserService, CostTrackingInfoService, HelperUiGridService, ObjectTaskService, TaskAlertsService, ObjectService, TaskWorkflowService, ModalDialogService, $timeout) {
+        [ 'UtilService', 'Helper.ObjectBrowserService', 'CostTracking.InfoService', 'Helper.UiGridService', 'Object.TaskService', 'Task.AlertsService', 'ObjectService', 'Task.WorkflowService', 'ModalDialogService', '$timeout', 'Authentication',
+                function(Util, HelperObjectBrowserService, CostTrackingInfoService, HelperUiGridService, ObjectTaskService, TaskAlertsService, ObjectService, TaskWorkflowService, ModalDialogService, $timeout, Authentication) {
 
                     var Service = {
 
@@ -98,8 +98,14 @@ angular.module('tasks').factory(
                                 }
                             };
 
+                            Authentication.queryUserInfo().then(function(userInfo) {
+                                that.scope.userInfo = userInfo;
+                                that.scope.userId = userInfo.userId;
+                                return userInfo;
+                            });
+
                             that.scope.isDeleteDisabled = arg.isDeleteDisabled || function(rowEntity) {
-                                return ((Util.isEmpty(rowEntity.task_owner_s) || (rowEntity.task_owner_s !== rowEntity.author_s)) || (rowEntity.status_s === "CLOSED"));
+                                return ((Util.isEmpty(rowEntity.assignee_s) || (rowEntity.assignee_s !== that.scope.userId)) || (rowEntity.status_s === "CLOSED") || (!rowEntity.adhocTask_b));
                             };
 
                             that.scope.onClickObjLink = arg.onClickObjLink || function(event, rowEntity) {

@@ -460,7 +460,8 @@
                     "taxi": "Táxi",
                     "hotel": "Hotel",
                     "overtime": "Ao longo do tempo",
-                    "food": "Comida"
+                    "food": "Comida",
+                    "postage": "Porte postal"
                 }
             },
             "timesheet": {
