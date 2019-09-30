@@ -5,6 +5,7 @@
     <bean id="userInfoAPIController" class="com.armedia.acm.services.users.web.api.UserInfoAPIController">
         <property name="userDao" ref="userJpaDao"/>
         <property name="acmUserService" ref="acmUserService"/>
+        <property name="acmSpringActiveProfile" ref="acmSpringActiveProfile"/>
     </bean>
 
     <bean id="findParticipantTypesForObjectTypeNameAPIController"

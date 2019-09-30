@@ -2,10 +2,12 @@
 
 <mule xmlns:vm="http://www.mulesoft.org/schema/mule/vm" xmlns="http://www.mulesoft.org/schema/mule/core"
     xmlns:cmis="http://www.mulesoft.org/schema/mule/cmis" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" version="CE-3.9.0"
+      xmlns:scripting="http://www.mulesoft.org/schema/mule/scripting"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
 http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
 http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/current/mule-vm.xsd
-http://www.mulesoft.org/schema/mule/cmis http://www.mulesoft.org/schema/mule/cmis/current/mule-cmis.xsd">
+http://www.mulesoft.org/schema/mule/cmis http://www.mulesoft.org/schema/mule/cmis/current/mule-cmis.xsd
+http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mule/scripting/current/mule-scripting.xsd">
 
     <flow name="updateFile" doc:name="Update the existing file with new version">
         <description>
@@ -23,6 +25,13 @@ http://www.mulesoft.org/schema/mule/cmis http://www.mulesoft.org/schema/mule/cmi
         <enricher target="#[flowVars['object']]">
             <cmis:check-out config-ref="#[message.inboundProperties.configRef]" documentId="#[message.inboundProperties.ecmFileId]"/>
         </enricher>
+
+        <scripting:component doc:name="Groovy">
+            <scripting:script engine="Groovy"><![CDATA[
+                    sleep(1000);
+                    return message.payload;]]>
+            </scripting:script>
+        </scripting:component>
 
         <cmis:check-in config-ref="#[message.inboundProperties.configRef]" filename="#[message.inboundProperties.fileName]"
             documentId="#[flowVars['object'].id]" content-ref="#[message.inboundProperties.inputStream]"

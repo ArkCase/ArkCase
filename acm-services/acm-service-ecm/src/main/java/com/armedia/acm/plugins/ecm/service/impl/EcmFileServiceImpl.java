@@ -64,6 +64,9 @@ import com.armedia.acm.service.objectlock.annotation.AcmAcquireAndReleaseObjectL
 import com.armedia.acm.service.objectlock.annotation.AcmAcquireObjectLock;
 import com.armedia.acm.service.objectlock.model.AcmObjectLock;
 import com.armedia.acm.service.objectlock.service.AcmObjectLockService;
+import com.armedia.acm.services.authenticationtoken.dao.AuthenticationTokenDao;
+import com.armedia.acm.services.authenticationtoken.model.AuthenticationToken;
+import com.armedia.acm.services.authenticationtoken.model.AuthenticationTokenConstants;
 import com.armedia.acm.services.participants.service.AcmParticipantService;
 import com.armedia.acm.services.search.model.SearchConstants;
 import com.armedia.acm.services.search.model.SolrCore;
@@ -161,6 +164,8 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
 
     private EmailSenderConfig emailSenderConfig;
 
+    private AuthenticationTokenDao authenticationTokenDao;
+
     @Override
     public CmisObject findObjectByPath(String path) throws Exception
     {
@@ -197,7 +202,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     @Deprecated
     public EcmFile upload(String arkcaseFileName, String fileType, String fileCategory, InputStream fileContents, String fileContentType,
             String fileName, Authentication authentication, String targetCmisFolderId, String parentObjectType, Long parentObjectId)
@@ -209,7 +214,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     @Deprecated
     public EcmFile upload(String arkcaseFileName, String fileType, String fileCategory, InputStream fileContents, String fileContentType,
             String fileName, Authentication authentication, String targetCmisFolderId, String parentObjectType, Long parentObjectId,
@@ -224,7 +229,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public EcmFile upload(String arkcaseFileName, String fileType, String fileCategory, InputStream fileContents, String fileContentType,
             String fileName, Authentication authentication, String targetCmisFolderId, String parentObjectType, Long parentObjectId,
             String cmisRepositoryId, Document existingCmisDocument) throws AcmCreateObjectFailedException, AcmUserActionFailedException
@@ -247,7 +252,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
 
     @Override
     @Deprecated
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public EcmFile upload(String arkcaseFileName, String fileType, MultipartFile file, Authentication authentication,
             String targetCmisFolderId, String parentObjectType, Long parentObjectId)
             throws AcmCreateObjectFailedException, AcmUserActionFailedException
@@ -255,8 +260,8 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         return upload(arkcaseFileName, fileType, null, file, authentication, targetCmisFolderId, parentObjectType, parentObjectId);
     }
 
-    @Transactional
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public EcmFile upload(String arkcaseFileName, String fileType, String fileLang, MultipartFile file, Authentication authentication,
             String targetCmisFolderId, String parentObjectType, Long parentObjectId)
             throws AcmCreateObjectFailedException, AcmUserActionFailedException
@@ -270,7 +275,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public EcmFile upload(Authentication authentication, String parentObjectType, Long parentObjectId, String targetCmisFolderId,
             String arkcaseFileName, InputStream fileContents, EcmFile metadata)
             throws AcmCreateObjectFailedException, AcmUserActionFailedException
@@ -279,7 +284,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public EcmFile upload(Authentication authentication, String parentObjectType, Long parentObjectId, String targetCmisFolderId,
             String arkcaseFileName, InputStream fileContents, EcmFile metadata, Document existingCmisDocument)
             throws AcmCreateObjectFailedException, AcmUserActionFailedException
@@ -320,7 +325,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public EcmFile upload(Authentication authentication, MultipartFile file, String targetCmisFolderId, String parentObjectType,
             Long parentObjectId, EcmFile metadata) throws AcmCreateObjectFailedException, AcmUserActionFailedException
     {
@@ -369,6 +374,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     }
 
     @Override
+    @Transactional(rollbackFor = AcmCreateObjectFailedException.class)
     @AcmAcquireAndReleaseObjectLock(acmObjectArgIndex = 0, objectType = "FILE", lockType = "WRITE")
     public EcmFile update(EcmFile ecmFile, MultipartFile file, Authentication authentication) throws AcmCreateObjectFailedException
     {
@@ -383,6 +389,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     }
 
     @Override
+    @Transactional(rollbackFor = AcmCreateObjectFailedException.class)
     @AcmAcquireAndReleaseObjectLock(acmObjectArgIndex = 0, objectType = "FILE", lockType = "WRITE")
     public EcmFile update(EcmFile ecmFile, InputStream inputStream, Authentication authentication) throws AcmCreateObjectFailedException
     {
@@ -483,12 +490,14 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     }
 
     @Override
+    @Transactional(rollbackFor = AcmCreateObjectFailedException.class)
     public String createFolder(String folderPath) throws AcmCreateObjectFailedException
     {
         return createFolder(folderPath, ecmFileConfig.getDefaultCmisId());
     }
 
     @Override
+    @Transactional(rollbackFor = AcmCreateObjectFailedException.class)
     public String createFolder(String folderPath, String cmisRepositoryId) throws AcmCreateObjectFailedException
     {
         try
@@ -517,7 +526,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public AcmContainer getOrCreateContainer(String objectType, Long objectId, String cmisRepositoryId)
             throws AcmCreateObjectFailedException, AcmUserActionFailedException
     {
@@ -547,6 +556,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
      * @return
      */
     @Override
+    @Transactional
     public AcmContainer createContainerFolder(String objectType, Long objectId, String cmisRepositoryId)
             throws AcmCreateObjectFailedException
     {
@@ -672,6 +682,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     }
 
     @Override
+    @Transactional(rollbackFor = PersistenceException.class)
     @AcmAcquireAndReleaseObjectLock(objectIdArgIndex = 0, objectType = "FILE", lockType = "WRITE")
     public EcmFile setFilesActiveVersion(Long fileId, String versionTag) throws PersistenceException
     {
@@ -799,6 +810,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     }
 
     @Override
+    @Transactional(rollbackFor = AcmObjectNotFoundException.class)
     @PreAuthorize("hasPermission(#fileId, 'FILE', 'read|group-read|write|group-write')")
     @AcmAcquireAndReleaseObjectLock(objectIdArgIndex = 0, objectType = "FILE", lockType = "WRITE")
     public void declareFileAsRecord(Long fileId, Authentication authentication) throws AcmObjectNotFoundException
@@ -825,7 +837,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     @PreAuthorize("hasPermission(#folderId, 'FOLDER', 'read|group-read|write|group-write')")
     @AcmAcquireAndReleaseObjectLock(objectIdArgIndex = 0, objectType = "FOLDER", lockType = "WRITE")
     public void declareFolderAsRecord(Long folderId, Authentication authentication, String parentObjectType, Long parentObjectId)
@@ -980,7 +992,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     @AcmAcquireAndReleaseObjectLock(objectIdArgIndex = 0, objectType = "FILE", lockType = "READ")
     @AcmAcquireAndReleaseObjectLock(objectIdArgIndex = 3, objectType = "FOLDER", lockType = "WRITE", lockChildObjects = false, unlockChildObjects = false)
     public EcmFile copyFile(Long fileId, Long targetObjectId, String targetObjectType, Long dstFolderId)
@@ -1004,6 +1016,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     @AcmAcquireAndReleaseObjectLock(objectIdArgIndex = 0, objectType = "FILE", lockType = "READ")
     @AcmAcquireAndReleaseObjectLock(acmObjectArgIndex = 1, objectType = "FOLDER", lockType = "WRITE", lockChildObjects = false, unlockChildObjects = false)
     public EcmFile copyFile(Long fileId, AcmFolder targetFolder, AcmContainer targetContainer)
@@ -1067,6 +1080,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     }
 
     @Override
+    @Transactional(rollbackFor = AcmUserActionFailedException.class)
     @AcmAcquireAndReleaseObjectLock(acmObjectArgIndex = 0, objectType = "FILE", lockType = "READ")
     @AcmAcquireAndReleaseObjectLock(acmObjectArgIndex = 2, objectType = "FOLDER", lockType = "WRITE", lockChildObjects = false, unlockChildObjects = false)
     public EcmFile copyFileInArkcase(EcmFile originalFile, String copiedFileNodeId, AcmFolder targetFolder)
@@ -1208,6 +1222,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     }
 
     @Override
+    @Transactional(rollbackFor = AcmObjectNotFoundException.class)
     @AcmAcquireAndReleaseObjectLock(objectIdArgIndex = 0, objectType = "FILE", lockType = "WRITE")
     public EcmFile updateFileType(Long fileId, String fileType) throws AcmObjectNotFoundException
     {
@@ -1225,6 +1240,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     }
 
     @Override
+    @Transactional(rollbackFor = AcmObjectNotFoundException.class)
     @AcmAcquireAndReleaseObjectLock(acmObjectArgIndex = 0, objectType = "FILE", lockType = "WRITE")
     public EcmFile updateFile(EcmFile ecmFile) throws AcmObjectNotFoundException
     {
@@ -1310,6 +1326,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     }
 
     @Override
+    @Transactional(rollbackFor = AcmObjectNotFoundException.class)
     @AcmAcquireAndReleaseObjectLock(objectIdArgIndex = 0, objectType = "FILE", lockType = "WRITE")
     public EcmFile updateSecurityField(Long fileId, String securityFieldValue) throws AcmObjectNotFoundException
     {
@@ -1411,7 +1428,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     @AcmAcquireAndReleaseObjectLock(objectIdArgIndex = 3, objectType = "FOLDER", lockType = "WRITE", lockChildObjects = false, unlockChildObjects = false)
     @AcmAcquireAndReleaseObjectLock(objectIdArgIndex = 0, objectType = "FILE", lockType = "DELETE")
     public EcmFile moveFile(Long fileId, Long targetObjectId, String targetObjectType, Long dstFolderId)
@@ -1427,7 +1444,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     @AcmAcquireAndReleaseObjectLock(acmObjectArgIndex = 3, objectType = "FOLDER", lockType = "WRITE", lockChildObjects = false, unlockChildObjects = false)
     @AcmAcquireAndReleaseObjectLock(objectIdArgIndex = 0, objectType = "FILE", lockType = "DELETE")
     public EcmFile moveFile(Long fileId, Long targetObjectId, String targetObjectType, AcmFolder folder)
@@ -1484,7 +1501,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     @AcmAcquireAndReleaseObjectLock(acmObjectArgIndex = 1, objectType = "FOLDER", lockType = "WRITE", lockChildObjects = false, unlockChildObjects = false)
     @AcmAcquireAndReleaseObjectLock(acmObjectArgIndex = 0, objectType = "FILE", lockType = "DELETE")
     public EcmFile moveFileInArkcase(EcmFile file, AcmFolder targetParentFolder, String targetObjectType)
@@ -1518,13 +1535,16 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     }
 
     @Override
+    @Transactional(rollbackFor = AcmUserActionFailedException.class)
     @AcmAcquireAndReleaseObjectLock(objectIdArgIndex = 0, objectType = "FILE", lockType = "DELETE")
     public void deleteFileFromArkcase(Long fileId)
     {
+        deleteAuthenticationTokens(fileId);
         getEcmFileDao().deleteFile(fileId);
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     @AcmAcquireAndReleaseObjectLock(objectIdArgIndex = 0, objectType = "FILE", lockType = "DELETE")
     public void deleteFile(Long objectId) throws AcmUserActionFailedException, AcmObjectNotFoundException
     {
@@ -1532,6 +1552,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     @AcmAcquireAndReleaseObjectLock(objectIdArgIndex = 0, objectType = "FILE", lockType = "DELETE")
     public void deleteFile(Long objectId, Boolean allVersions) throws AcmUserActionFailedException, AcmObjectNotFoundException
     {
@@ -1559,10 +1580,9 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
 
         try
         {
-            getMuleContextManager().send(EcmFileConstants.MULE_ENDPOINT_DELETE_FILE, file, props);
-
             if (removeFileFromDatabase)
             {
+                deleteAuthenticationTokens(objectId);
                 getEcmFileDao().deleteFile(objectId);
             }
             else
@@ -1574,6 +1594,8 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
                 file.setFileActiveVersionMimeType(current.getVersionMimeType());
                 getEcmFileDao().save(file);
             }
+
+            getMuleContextManager().send(EcmFileConstants.MULE_ENDPOINT_DELETE_FILE, file, props);
         }
         catch (MuleException | PersistenceException e)
         {
@@ -1626,12 +1648,15 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         }
         catch (PersistenceException e)
         {
-            log.error("Could not delete file {}, reason {} ", objectId, e.getMessage(), e);
+            log.error("Could not put file {} into recycle bin, reason {} ", objectId, e.getMessage(), e);
+            throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_DELETE_FILE, EcmFileConstants.OBJECT_FILE_TYPE,
+                    file.getId(), "Could not put file into recycle bin", e);
         }
         return recycleBinItem;
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     @AcmAcquireAndReleaseObjectLock(objectIdArgIndex = 0, objectType = "FILE", lockType = "DELETE")
     public void deleteFile(Long objectId, Long parentId, String parentType) throws AcmUserActionFailedException, AcmObjectNotFoundException
     {
@@ -1651,12 +1676,14 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
             cmisRepositoryId = ecmFileConfig.getDefaultCmisId();
         }
         props.put(EcmFileConstants.CONFIGURATION_REFERENCE, cmisConfigUtils.getCmisConfiguration(cmisRepositoryId));
+        props.put(EcmFileConstants.ALL_VERSIONS, Boolean.TRUE);
 
         try
         {
-            getMuleContextManager().send(EcmFileConstants.MULE_ENDPOINT_DELETE_FILE, file, props);
-
+            deleteAuthenticationTokens(objectId);
             getEcmFileDao().deleteFile(objectId);
+
+            getMuleContextManager().send(EcmFileConstants.MULE_ENDPOINT_DELETE_FILE, file, props);
         }
         catch (MuleException | PersistenceException e)
         {
@@ -1667,6 +1694,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     @AcmAcquireAndReleaseObjectLock(acmObjectArgIndex = 0, objectType = "FILE", lockType = "DELETE")
     public void deleteFileInArkcase(EcmFile file)
             throws AcmUserActionFailedException, AcmObjectNotFoundException
@@ -1678,6 +1706,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
 
         try
         {
+            deleteAuthenticationTokens(file.getId());
             getEcmFileDao().deleteFile(file.getId());
         }
         catch (PersistenceException e)
@@ -1689,6 +1718,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     @AcmAcquireAndReleaseObjectLock(objectIdArgIndex = 0, objectType = "FILE", lockType = "DELETE")
     public EcmFile renameFile(Long fileId, String newFileName) throws AcmUserActionFailedException, AcmObjectNotFoundException
     {
@@ -1727,6 +1757,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     }
 
     @Override
+    @Transactional(rollbackFor = AcmUserActionFailedException.class)
     @AcmAcquireAndReleaseObjectLock(acmObjectArgIndex = 0, objectType = "FILE", lockType = "DELETE")
     public EcmFile renameFileInArkcase(EcmFile file, String newFileName)
     {
@@ -1834,6 +1865,16 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
             log.error("File upload was unsuccessful.", e);
         }
         return fileName;
+    }
+
+    private void deleteAuthenticationTokens(Long fileId)
+    {
+        List<AuthenticationToken> authenticationTokens = getAuthenticationTokenDao().findAuthenticationTokenByTokenFileId(fileId);
+        for (AuthenticationToken authenticationToken : authenticationTokens)
+        {
+            authenticationToken.setStatus(AuthenticationTokenConstants.FILE_DELETED);
+            authenticationToken.setFileId(null);
+        }
     }
 
     public EcmFileTransaction getEcmFileTransaction()
@@ -2057,4 +2098,13 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         this.recycleBinItemService = recycleBinItemService;
     }
 
+    public AuthenticationTokenDao getAuthenticationTokenDao()
+    {
+        return authenticationTokenDao;
+    }
+
+    public void setAuthenticationTokenDao(AuthenticationTokenDao authenticationTokenDao)
+    {
+        this.authenticationTokenDao = authenticationTokenDao;
+    }
 }

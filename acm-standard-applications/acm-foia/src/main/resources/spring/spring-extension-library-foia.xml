@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans:beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-             xmlns:beans="http://www.springframework.org/schema/beans"
-             xmlns:aop="http://www.springframework.org/schema/aop"
-             xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+    xmlns:beans="http://www.springframework.org/schema/beans"
+    xmlns:aop="http://www.springframework.org/schema/aop"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
               http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
 
     <beans:beans profile="extension-foia">
@@ -10,7 +10,7 @@
         <beans:bean id="liquibase" class="liquibase.integration.spring.SpringLiquibase">
             <beans:property name="dataSource" ref="acmDataSource"/>
             <beans:property name="changeLog"
-                            value="classpath:/com/armedia/acm/extension/foia/ddl/acm-extension-foia-database-changelog.xml"/>
+                value="classpath:/com/armedia/acm/extension/foia/ddl/acm-extension-foia-database-changelog.xml"/>
             <beans:property name="shouldRun" value="#{dataSourceConfig.autoUpdate}"/>
         </beans:bean>
 
@@ -23,7 +23,8 @@
         </beans:bean>
 
         <!-- property placeholder for all properties needed for the proxy -->
-        <beans:bean id="arkCasePropertyConfigurerFOIA" class="com.armedia.acm.crypto.properties.AcmEncryptablePropertySourcesPlaceholderConfigurer">
+        <beans:bean id="arkCasePropertyConfigurerFOIA"
+            class="com.armedia.acm.crypto.properties.AcmEncryptablePropertySourcesPlaceholderConfigurer">
             <beans:property name="encryptablePropertyUtils" ref="acmEncryptablePropertyUtils"/>
             <beans:property name="ignoreResourceNotFound" value="true"/>
             <beans:property name="localOverride" value="false"/>
@@ -35,18 +36,18 @@
                 </beans:list>
             </beans:property>
         </beans:bean>
-        
+
         <beans:bean id="foiaPortalRequestServiceProvider" class="gov.foia.service.FOIAPortalRequestServiceProvider">
             <beans:property name="createRequestService" ref="portalCreateRequestService"/>
             <beans:property name="portalRequestService" ref="portalRequestService"/>
         </beans:bean>
-    
+
         <beans:bean id="userRegistrationRequestDao" class="gov.foia.dao.UserRegistrationRequestDao"/>
-    
+
         <beans:bean id="userResetRequestDao" class="gov.foia.dao.UserResetRequestDao"/>
-    
+
         <beans:bean id="portalFOIAPersonDao" class="gov.foia.dao.PortalFOIAPersonDao"/>
-    
+
         <beans:bean id="foiaPortalUserServiceProvider" class="gov.foia.service.FOIAPortalUserServiceProvider">
             <beans:property name="emailSenderService" ref="configurableEmailSenderService"/>
             <beans:property name="registrationDao" ref="userRegistrationRequestDao"/>
@@ -87,14 +88,14 @@
         <beans:bean id="dueDateUpdateJobDescriptor" class="gov.foia.service.DueDateUpdateJobDescriptor" parent="acmJobDescriptor">
             <beans:property name="holdedAndAppealedRequestsDueDateUpdate" ref="holdedAndAppealedRequestsDueDateUpdate"/>
         </beans:bean>
-        
+
         <beans:bean id="dueDateReminder" class="gov.foia.service.DueDateReminder">
             <property name="notificationDao" ref="notificationDao"/>
             <property name="foiaRequestDao" ref="foiaRequestDao"/>
             <property name="holidayConfigurationService" ref="holidayConfigurationService"/>
             <property name="userDao" ref="userJpaDao"/>
         </beans:bean>
-        
+
         <beans:bean id="dueDateReminderJobDescriptor" class="gov.foia.service.DueDateReminderJobDescriptor">
             <property name="dueDateReminder" ref="dueDateReminder"/>
         </beans:bean>
@@ -204,7 +205,6 @@
             <beans:property name="targetFileExtension" value="docx"/>
             <beans:property name="template" value="Request Received Acknowledgement Letter"/>
         </beans:bean>
-
 
         <beans:bean id="appealDocumentDescriptor" class="gov.foia.model.FOIADocumentDescriptor">
             <beans:property name="type" value="Appeal"/>
@@ -328,6 +328,7 @@
             <beans:property name="cmisConfigUtils" ref="cmisConfigUtils"/>
             <beans:property name="fileParticipantService" ref="fileParticipantService"/>
             <beans:property name="recycleBinItemService" ref="recycleBinItemServiceImpl"/>
+            <beans:property name="authenticationTokenDao" ref="authenticationTokenDao"/>
         </beans:bean>
 
         <beans:bean id="foiaConfig" class="gov.foia.model.FoiaConfig" scope="refresh">
