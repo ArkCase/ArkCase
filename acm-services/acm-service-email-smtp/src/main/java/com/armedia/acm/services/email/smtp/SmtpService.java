@@ -389,8 +389,7 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
             if (in.getModelReferenceName().equals("plainEmail"))
             {
 
-                event = new SmtpEventMailSent(in, user.getUserId(),
-                        Long.parseLong(in.getParentNumber().contains("_") ? in.getParentNumber().split("_")[1] : in.getParentNumber()),
+                event = new SmtpEventMailSent(in, user.getUserId(),Long.parseLong(in.getParentNumber()),
                         in.getParentType(), null);
             }
             else

@@ -42,7 +42,7 @@
     {
         "op": "replace",
         "path": "/cases.menus/leftnav.item",
-        "value": "Foia Requests"
+        "value": "FOIA Requests"
     },
     {
         "op": "replace",

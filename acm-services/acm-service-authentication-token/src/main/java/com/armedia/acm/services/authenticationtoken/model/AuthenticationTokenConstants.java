@@ -38,4 +38,6 @@ public interface AuthenticationTokenConstants
 
     String EXPIRED = "EXPIRED";
 
+    String FILE_DELETED = "FILE_DELETED";
+
 }
