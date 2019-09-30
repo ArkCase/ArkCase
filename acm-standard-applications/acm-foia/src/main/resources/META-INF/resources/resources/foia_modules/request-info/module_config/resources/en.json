@@ -540,11 +540,11 @@
             },
             "feeWaiverFlag": {
                 "placeholder": "Enter Fee Waiver",
-                "label": "Fee Waiver"
+                "label": "Fee Waiver Requested"
             },
             "expediteFlag": {
                 "placeholder": "Enter Expedite",
-                "label": "Expedite"
+                "label": "Expedite Requested"
             },
             "amendmentFlag": {
                 "label": "Amendment"

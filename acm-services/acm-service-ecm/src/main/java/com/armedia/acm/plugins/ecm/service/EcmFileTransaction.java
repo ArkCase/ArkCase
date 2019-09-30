@@ -66,11 +66,11 @@ public interface EcmFileTransaction
             Document existingCmisDocument) throws MuleException, IOException;
 
     EcmFile addFileTransaction(Authentication authentication, String ecmUniqueFilename, AcmContainer container,
-            String targetCmisFolderId, InputStream fileContents, EcmFile metadata,
+            String targetCmisFolderId, EcmFile metadata,
             Document existingCmisDocument, MultipartFile file) throws MuleException, IOException;
 
     EcmFile addFileTransaction(Authentication authentication, String ecmUniqueFilename, AcmContainer container,
-            String targetCmisFolderId, InputStream fileContents, EcmFile metadata, MultipartFile file)
+            String targetCmisFolderId, EcmFile metadata, MultipartFile file)
             throws MuleException, IOException;
 
     EcmFile updateFileTransaction(Authentication authentication, EcmFile ecmFile, InputStream fileInputStream)

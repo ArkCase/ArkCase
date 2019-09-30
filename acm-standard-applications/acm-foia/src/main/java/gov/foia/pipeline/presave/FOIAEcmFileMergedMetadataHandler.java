@@ -30,18 +30,19 @@ package gov.foia.pipeline.presave;
 import com.armedia.acm.plugins.ecm.dao.AcmFolderDao;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
-import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
 import com.armedia.acm.plugins.ecm.pipeline.EcmFileTransactionPipelineContext;
 import com.armedia.acm.plugins.ecm.service.PageCountService;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.pipeline.handler.PipelineHandler;
-import gov.foia.model.FOIAEcmFileVersion;
+
 import org.apache.chemistry.opencmis.client.api.Document;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.util.Date;
+
+import gov.foia.model.FOIAEcmFileVersion;
 
 /**
  * Created by joseph.mcgrady on 9/28/2015.
@@ -82,14 +83,14 @@ public class FOIAEcmFileMergedMetadataHandler implements PipelineHandler<EcmFile
             version.setVersionTag(cmisDocument.getVersionLabel());
             version.setVersionMimeType(oldFile.getFileActiveVersionMimeType());
             version.setVersionFileNameExtension(oldFile.getFileActiveVersionNameExtension());
-            version.setReviewStatus(new String());
-            version.setRedactionStatus(new String());
+            version.setReviewStatus("");
+            version.setRedactionStatus("");
             oldFile.getVersions().add(version);
             oldFile.setModified(new Date());
             try
             {
                 int pageCount = getPageCountService().getNumberOfPages(entity.getFileActiveVersionMimeType(),
-                        pipelineContext.getMergedFileByteArray());
+                        pipelineContext.getMergedFile());
                 if (pageCount > -1)
                 {
                     oldFile.setPageCount(pageCount);

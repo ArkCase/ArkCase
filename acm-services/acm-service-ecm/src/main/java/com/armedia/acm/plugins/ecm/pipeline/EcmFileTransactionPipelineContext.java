@@ -34,8 +34,8 @@ import com.armedia.acm.services.pipeline.AbstractPipelineContext;
 
 import org.apache.chemistry.opencmis.client.api.Document;
 import org.apache.commons.io.FileUtils;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.security.core.Authentication;
 
 import java.io.File;
@@ -60,8 +60,7 @@ public class EcmFileTransactionPipelineContext extends AbstractPipelineContext
     private boolean fileAlreadyInEcmSystem;
     private EcmTikaFile detectedFileMetadata;
     private boolean searchablePDF;
-
-    private byte[] mergedFileByteArray;
+    private File mergedFile;
 
     public String getOriginalFileName()
     {
@@ -143,14 +142,52 @@ public class EcmFileTransactionPipelineContext extends AbstractPipelineContext
         this.isAppend = isAppend;
     }
 
+    @Deprecated
+    /**
+     * @deprecated use getMergedFile
+     */
     public byte[] getMergedFileByteArray()
     {
-        return mergedFileByteArray;
+        try
+        {
+            return getMergedFile() == null ? null : FileUtils.readFileToByteArray(getMergedFile());
+        }
+        catch (IOException e)
+        {
+            LOG.error("Could not convert file to byte array: {}", e.getMessage(), e);
+            return null;
+        }
     }
 
+    @Deprecated
+    /**
+     * @deprecated use setMergedFile
+     */
     public void setMergedFileByteArray(byte[] mergedFileByteArray)
     {
-        this.mergedFileByteArray = mergedFileByteArray;
+        try
+        {
+            if (getMergedFile() == null)
+            {
+                // NOTE This file is stored in the context for later use, do NOT delete it at the end of this method.
+                setMergedFile(File.createTempFile("arkcase-file-transaction-set-merged-file-byte-array-", null));
+            }
+            FileUtils.writeByteArrayToFile(getMergedFile(), mergedFileByteArray);
+        }
+        catch (IOException e)
+        {
+            LOG.error("Could not convert byte array to file: {}", e.getMessage(), e);
+        }
+    }
+
+    public File getMergedFile()
+    {
+        return mergedFile;
+    }
+
+    public void setMergedFile(File mergedFile)
+    {
+        this.mergedFile = mergedFile;
     }
 
     public boolean isFileAlreadyInEcmSystem()

@@ -40,6 +40,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -74,6 +75,7 @@ public class BusinessProcessDao extends AcmAbstractDao<BusinessProcess>
                 .list().stream();
 
         List<Long> taskIds = Stream.concat(activitiWorkflowTasksStream, adhochTasksStream)
+                .filter(Objects::nonNull)
                 .map(it -> Long.valueOf(it.getId()))
                 .collect(Collectors.toList());
         log.debug("Found [{}] tasks for object [{}:{}]", taskIds.size(), parentObjectType, parentObjectId);

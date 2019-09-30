@@ -155,6 +155,7 @@ public class SmtpServiceTest
         inputDTO.setBaseUrl(baseUrl);
         inputDTO.setFileIds(fileIds);
         inputDTO.setFooter(footer);
+        inputDTO.setModelReferenceName("someEmail");
 
         senderConfig.setEncryption("off");
 

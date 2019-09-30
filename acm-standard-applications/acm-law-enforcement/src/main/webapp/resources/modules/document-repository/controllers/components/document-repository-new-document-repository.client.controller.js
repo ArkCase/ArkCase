@@ -117,7 +117,7 @@ angular.module('document-repository').controller(
                     };
                     var setParticipants = function () {
                         $scope.docRepo.participants.push(newParticipant('*', '*'));
-                        $scope.docRepo.participants.push(newParticipant('owner', $scope.assignee.object_id_s));
+                        $scope.docRepo.participants.push(newParticipant('assignee', $scope.assignee.object_id_s));
                         $scope.docRepo.participants.push(newParticipant('owning group', $scope.owningGroup.participantLdapId));
                     };
 
@@ -128,7 +128,7 @@ angular.module('document-repository').controller(
                         if ($scope.isPersonalDocRepo()) {
                             $scope.assignee.name = user.fullName;
                             $scope.assignee.object_id_s = user.userId;
-                            $scope.docRepo.participants.push(newParticipant('owner', user.userId))
+                            $scope.docRepo.participants.push(newParticipant('assignee', user.userId))
                         } else {
                             $scope.assignee.name = '';
                             $scope.assignee.object_id_s = '';

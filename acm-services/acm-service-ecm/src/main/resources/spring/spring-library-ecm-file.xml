@@ -23,6 +23,7 @@
         <property name="fileDao" ref="ecmFileDao"/>
         <property name="folderDao" ref="acmFolderDao"/>
         <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
+        <property name="externalAuthenticationUtils" ref="externalAuthenticationUtils"/>
     </bean>
 
     <bean id="fileParticipantService" class="com.armedia.acm.plugins.ecm.service.impl.EcmFileParticipantService">
@@ -32,11 +33,24 @@
         <property name="participantService" ref="acmParticipantService"/>
         <property name="fileParticipantServiceHelper" ref="fileParticipantServiceHelper"/>
         <property name="ecmFileConfig" ref="ecmFileConfig"/>
+        <property name="externalAuthenticationUtils" ref="externalAuthenticationUtils"/>
     </bean>
 
     <bean id="entityParticipantsChangedEventListener"
         class="com.armedia.acm.plugins.ecm.service.EntityParticipantsChangedEventListener">
         <property name="fileParticipantService" ref="fileParticipantService"/>
+    </bean>
+
+    <bean id="fileParticipantsChangedEventListener"
+        class="com.armedia.acm.plugins.ecm.service.FileParticipantChangedEventListener">
+        <property name="alfrescoSyncConfig" ref="alfrescoSyncConfig"/>
+        <property name="changedParticipantToJmsSender" ref="changedParticipantToJmsSender"/>
+    </bean>
+
+    <bean id="folderParticipantsChangedEventListener"
+        class="com.armedia.acm.plugins.ecm.service.FolderParticipantChangedEventListener">
+        <property name="alfrescoSyncConfig" ref="alfrescoSyncConfig"/>
+        <property name="changedParticipantToJmsSender" ref="changedParticipantToJmsSender"/>
     </bean>
 
     <bean id="folderDataAccessUpdateLocator"
@@ -342,6 +356,7 @@
         <property name="objectLockService" ref="objectLockService"/>
         <property name="emailSenderConfig" ref="emailSenderConfig"/>
         <property name="progressIndicatorService" ref="progressIndicatorService"/>
+        <property name="authenticationTokenDao" ref="authenticationTokenDao"/>
     </bean>
 
     <bean id="ecmFileToSolrTrasnformer" class="com.armedia.acm.plugins.ecm.service.EcmFileToSolrTransformer">
@@ -410,6 +425,7 @@
         <property name="folderDao" ref="acmFolderDao"/>
         <property name="fileDao" ref="ecmFileDao"/>
         <property name="fileService" ref="ecmFileService"/>
+        <property name="ecmFileConfig" ref="ecmFileConfig"/>
     </bean>
 
     <bean id="fileEventPublisher" class="com.armedia.acm.plugins.ecm.service.FileEventPublisher"/>
@@ -490,6 +506,11 @@
         <aop:scoped-proxy/>
     </bean>
 
+    <bean id="changedParticipantToJmsSender" class="com.armedia.acm.plugins.ecm.service.ChangedParticipantToJmsSender">
+        <property name="objectConverter" ref="objectConverter"/>
+        <property name="jmsConnectionFactory" ref="jmsConnectionFactory"/>
+    </bean>
+
     <bean id="fileChunkService" class="com.armedia.acm.plugins.ecm.service.impl.FileChunkServiceImpl">
         <property name="folderAndFilesUtils" ref="folderAndFilesUtils"/>
         <property name="ecmFileService" ref="ecmFileService"/>
@@ -515,5 +536,23 @@
     <bean id="removeExpiredFilesJobDescriptor" class="com.armedia.acm.plugins.ecm.service.RemoveExpiredFilesJobDescriptor"
         parent="acmJobDescriptor">
         <property name="removeExpiredFilesService" ref="removeExpiredFilesService"/>
+    </bean>
+
+    <bean id="changedParticipantToArkcaseListener" class="com.armedia.acm.plugins.ecm.service.ChangedParticipantToArkcaseListener">
+        <property name="objectConverter" ref="objectConverter"/>
+        <property name="folderAndFilesUtils" ref="folderAndFilesUtils"/>
+        <property name="ecmFileParticipantServiceHelper" ref="fileParticipantServiceHelper"/>
+        <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
+    </bean>
+
+    <bean id="messageDestination" class="org.apache.activemq.command.ActiveMQQueue">
+        <constructor-arg value="com.armedia.acm.v1.alfrescoParticipantChange.queue"/>
+    </bean>
+
+    <!-- and this is the message listener container for ChangedParticipantToArkcaseListener -->
+    <bean id="jmsContainer" class="org.springframework.jms.listener.DefaultMessageListenerContainer">
+        <property name="connectionFactory" ref="jmsConnectionFactory"/>
+        <property name="destination" ref="messageDestination"/>
+        <property name="messageListener" ref="changedParticipantToArkcaseListener"/>
     </bean>
 </beans>

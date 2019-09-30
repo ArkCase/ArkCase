@@ -216,7 +216,7 @@ public class EcmFile implements AcmEntity, Serializable, AcmObject, AcmStatefulE
 
     @Transient
     private String mailAddress;
-    
+
     @PrePersist
     protected void beforeInsert()
     {

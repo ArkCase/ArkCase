@@ -27,11 +27,14 @@ package com.armedia.acm.plugins.ecm.service.impl;
  * #L%
  */
 
+import com.armedia.acm.auth.ExternalAuthenticationUtils;
 import com.armedia.acm.core.exceptions.AcmParticipantsException;
 import com.armedia.acm.plugins.ecm.dao.AcmFolderDao;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
+import com.armedia.acm.plugins.ecm.model.AcmFolderParticipantChangedEvent;
+import com.armedia.acm.plugins.ecm.model.ChangedParticipantConstants;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileConfig;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
@@ -41,8 +44,10 @@ import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.participants.service.AcmParticipantService;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
@@ -56,7 +61,7 @@ import java.util.stream.Collectors;
 /**
  * Created by bojan.milenkoski on 06.10.2017
  */
-public class EcmFileParticipantService
+public class EcmFileParticipantService implements ApplicationEventPublisherAware
 {
     private static List<String> fileParticipantTypes = Arrays.asList("*", "group-write", "group-read", "group-no-access", "write", "read",
             "no-access");
@@ -67,6 +72,8 @@ public class EcmFileParticipantService
     private AcmParticipantService participantService;
     private EcmFileParticipantServiceHelper fileParticipantServiceHelper;
     private EcmFileConfig ecmFileConfig;
+    private ApplicationEventPublisher applicationEventPublisher;
+    private ExternalAuthenticationUtils externalAuthenticationUtils;
 
     /**
      * Sets the file's participants from the parent folder's participants and persists the file instance with the
@@ -172,7 +179,8 @@ public class EcmFileParticipantService
 
             // for files and folders we allow only one AcmParticipant for one user
             if (participants.stream()
-                    .noneMatch(existingParticipant -> existingParticipant.getParticipantLdapId().equals(participant.getParticipantLdapId())))
+                    .noneMatch(
+                            existingParticipant -> existingParticipant.getParticipantLdapId().equals(participant.getParticipantLdapId())))
             {
                 participants.add(participant);
             }
@@ -182,7 +190,7 @@ public class EcmFileParticipantService
     }
 
     /**
-     * Inherits participants and restricted flag from assigned object to files and folders recursively. Mapps the
+     * Inherits participants and restricted flag from assigned object to files and folders recursively. Maps the
      * assigned object participant types to file participant types using the mapping in 'ecmFileService.properties'.
      * 
      * @param assignedObjectParticipants
@@ -440,9 +448,23 @@ public class EcmFileParticipantService
             if (containsParticipantWithLdapId(participants, existingParticipant.getParticipantLdapId()))
             {
                 // remove participant from current folder
-                folder.getParticipants()
+                boolean removed = folder.getParticipants()
                         .removeIf(participant -> participant.getParticipantLdapId().equals(existingParticipant.getParticipantLdapId())
                                 && participant.getParticipantType().equals(existingParticipant.getParticipantType()));
+                if (removed)
+                {
+                    AcmParticipant changedParticipant = AcmParticipant.createRulesTestParticipant(existingParticipant);
+                    AcmFolderParticipantChangedEvent folderParticipantChangedEvent = new AcmFolderParticipantChangedEvent(folder);
+                    String ldapId = getExternalAuthenticationUtils()
+                            .getEcmServiceUserIdByParticipantLdapId(changedParticipant.getParticipantLdapId());
+                    if (ldapId != null)
+                    {
+                        changedParticipant.setParticipantLdapId(ldapId);
+                        folderParticipantChangedEvent.setChangedParticipant(changedParticipant);
+                        folderParticipantChangedEvent.setChangeType(ChangedParticipantConstants.REMOVED);
+                        getApplicationEventPublisher().publishEvent(folderParticipantChangedEvent);
+                    }
+                }
             }
         }
 
@@ -568,5 +590,26 @@ public class EcmFileParticipantService
     public void setEcmFileConfig(EcmFileConfig ecmFileConfig)
     {
         this.ecmFileConfig = ecmFileConfig;
+    }
+
+    public ApplicationEventPublisher getApplicationEventPublisher()
+    {
+        return applicationEventPublisher;
+    }
+
+    @Override
+    public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher)
+    {
+        this.applicationEventPublisher = applicationEventPublisher;
+    }
+
+    public ExternalAuthenticationUtils getExternalAuthenticationUtils()
+    {
+        return externalAuthenticationUtils;
+    }
+
+    public void setExternalAuthenticationUtils(ExternalAuthenticationUtils externalAuthenticationUtils)
+    {
+        this.externalAuthenticationUtils = externalAuthenticationUtils;
     }
 }

@@ -59,7 +59,11 @@ import java.time.LocalDateTime;
         "/spring/spring-library-object-converter.xml",
         "/spring/spring-library-ecm-file-lock.xml",
         "/spring/spring-library-service-data.xml",
-        "/spring/spring-library-acm-email.xml" })
+        "/spring/spring-library-acm-email.xml",
+        "/spring/spring-test-quartz-scheduler.xml",
+        "/spring/spring-library-websockets.xml",
+        "/spring/spring-library-core-api.xml",
+        "/spring/spring-library-activemq.xml" })
 public class EcmFileVersionDaoIT
 {
 

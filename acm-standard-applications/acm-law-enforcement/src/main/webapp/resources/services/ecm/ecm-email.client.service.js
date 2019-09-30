@@ -250,11 +250,7 @@ angular.module('services').factory('Ecm.EmailService', [ '$resource', '$translat
             service: Service._sendMentionsEmail,
             data: emailData,
             onSuccess: function(data) {
-                if(data.mailSent) {
-                    MessageService.info($translate.instant("common.directive.docTree.email.successMessage"));
-                } else {
-                    MessageService.error($translate.instant("common.directive.docTree.email.unsuccessMessage"));
-                }
+                MessageService.info($translate.instant("common.directive.docTree.email.successMessage"));
                 if (Service.validateSentEmail(data)) {
                     return data;
                 }
