@@ -11,7 +11,7 @@
     <bean id="acmQuartzScheduler" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
         <property name="dataSource" ref="acmDataSource"/>
         <property name="configLocation"
-            value="${configuration.server.url}/${application.name}/${application.profile.reversed}/default/spring/quartz.properties"/>
+            value="${configuration.server.url}/${application.name.default}/${application.profile.reversed}/default/spring/quartz.properties"/>
         <property name="transactionManager" ref="transactionManager"/>
         <property name="jobFactory" ref="acmJobFactory"/>
         <property name="triggers" value="#{acmJobFactory.getTriggerList()}"/>
