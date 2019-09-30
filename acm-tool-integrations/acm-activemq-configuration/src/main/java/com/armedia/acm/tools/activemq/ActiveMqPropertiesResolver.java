@@ -69,7 +69,7 @@ public class ActiveMqPropertiesResolver
 
         String serverUrl = environment.getProperty(CONFIGURATION_SERVER_URL);
 
-        Map<String, Object> configurationMap = configurationServiceBootClient.loadConfiguration(serverUrl, "activemq-config");
+        Map<String, Object> configurationMap = configurationServiceBootClient.loadConfiguration(serverUrl, "arkcase-activemq");
         Properties props = new Properties();
         props.putAll(configurationMap);
 

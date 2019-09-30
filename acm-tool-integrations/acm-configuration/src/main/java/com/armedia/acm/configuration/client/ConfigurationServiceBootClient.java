@@ -50,12 +50,12 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * This class provides methods for retrieving the configuration from the Spring Cloud Config Server
@@ -165,7 +165,7 @@ public class ConfigurationServiceBootClient
             }
             else if (name instanceof List)
             {
-                names = (ArrayList) name;
+                names = (List) name;
             }
             else
             {
@@ -186,30 +186,27 @@ public class ConfigurationServiceBootClient
         }
         else if (profiles instanceof List)
         {
-            activeProfiles = String.join(",", (ArrayList) profiles);
+            activeProfiles = String.join(",", (List) profiles);
         }
         else
         {
             activeProfiles = (String) profiles;
         }
 
-        List<Environment> environments = new ArrayList<>();
-
-        for (String nameElement : names)
-        {
+        List<Environment> environments = names.parallelStream().map(nameElement -> {
             Object[] args = new String[] { nameElement, activeProfiles };
 
-            ResponseEntity<Environment> response = null;
             try
             {
-                response = restTemplate.exchange(url + path, HttpMethod.GET, null, Environment.class, args);
-                environments.add(Objects.requireNonNull(response).getBody());
+                ResponseEntity<Environment> response = restTemplate.exchange(url + path, HttpMethod.GET, null, Environment.class, args);
+                return Objects.requireNonNull(response).getBody();
             }
             catch (Throwable t)
             {
                 logger.error(t.getMessage(), t);
             }
-        }
+            return null;
+        }).collect(Collectors.toList());
 
         return environments;
     }
