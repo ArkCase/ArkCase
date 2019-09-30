@@ -27,12 +27,13 @@ package com.armedia.acm.plugins.admin.web.api;
  * #L%
  */
 
+import com.armedia.acm.configuration.core.LabelsConfiguration;
+import com.armedia.acm.configuration.model.ModuleConfig;
 import com.armedia.acm.services.labels.exception.AcmLabelManagementException;
-import com.armedia.acm.services.labels.model.ModuleConfig;
-import com.armedia.acm.services.labels.service.LabelManagementService;
 
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -54,7 +55,9 @@ import java.util.List;
 public class LabelManagementRetrieveNamespaces
 {
     private Logger log = LogManager.getLogger(getClass());
-    private LabelManagementService labelManagementService;
+
+    @Autowired
+    private LabelsConfiguration labelsConfiguration;
 
     @RequestMapping(value = "/labelmanagement/namespaces", method = RequestMethod.GET, produces = {
             MediaType.APPLICATION_JSON_UTF8_VALUE,
@@ -65,7 +68,7 @@ public class LabelManagementRetrieveNamespaces
 
         try
         {
-            return labelManagementService.getModules();
+            return labelsConfiguration.getModules();
         }
         catch (Exception e)
         {
@@ -75,8 +78,13 @@ public class LabelManagementRetrieveNamespaces
         }
     }
 
-    public void setLabelManagementService(LabelManagementService labelManagementService)
+    // public void setLabelManagementService(LabelManagementService labelManagementService)
+    // {
+    // this.labelManagementService = labelManagementService;
+    // }
+
+    public void setLabelsConfiguration(LabelsConfiguration labelsConfiguration)
     {
-        this.labelManagementService = labelManagementService;
+        this.labelsConfiguration = labelsConfiguration;
     }
 }

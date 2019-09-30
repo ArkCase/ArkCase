@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.springframework.org/schema/beans"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
 
     <bean id="addCorrespondenceTemplate" class="com.armedia.acm.plugins.admin.web.api.AddCorrespondenceTemplatesAPI"></bean>
 
@@ -53,7 +53,6 @@
     </bean>
 
     <bean id="labelManagementRetrieveNamespaces" class="com.armedia.acm.plugins.admin.web.api.LabelManagementRetrieveNamespaces">
-        <property name="labelManagementService" ref="labelManagementService"/>
     </bean>
 
     <!-- Application properties management-->
@@ -109,7 +108,7 @@
     </bean>
 
     <bean id="rolesPrivilegesRetrieveRolesByPrivilege"
-          class="com.armedia.acm.plugins.admin.web.api.RolesPrivilegesRetrieveRolesByPrivilege">
+        class="com.armedia.acm.plugins.admin.web.api.RolesPrivilegesRetrieveRolesByPrivilege">
         <property name="rolesPrivilegesService" ref="rolesPrivilegesService"/>
     </bean>
 
@@ -140,14 +139,14 @@
     </bean>
 
     <bean id="workflowConfigurationDiagramAPIController"
-          class="com.armedia.acm.plugins.admin.web.api.WorkflowConfigurationDiagramAPIController">
+        class="com.armedia.acm.plugins.admin.web.api.WorkflowConfigurationDiagramAPIController">
         <property name="acmBpmnService" ref="processDefinitionManagementService"/>
     </bean>
 
     <!-- Link forms Workflows -->
 
     <bean id="linkFormsWorkflowsRetrieveConfiguration"
-          class="com.armedia.acm.plugins.admin.web.api.LinkFormsWorkflowsRetrieveConfiguration">
+        class="com.armedia.acm.plugins.admin.web.api.LinkFormsWorkflowsRetrieveConfiguration">
         <property name="linkFormsWorkflowsService" ref="linkFormsWorkflowsService"/>
     </bean>
 
@@ -226,7 +225,7 @@
     </bean>
 
     <bean id="emailReceiverConfigurationAPIController"
-          class="com.armedia.acm.plugins.admin.web.api.EmailReceiverConfigurationAPIController">
+        class="com.armedia.acm.plugins.admin.web.api.EmailReceiverConfigurationAPIController">
         <property name="emailReceiverConfigurationService" ref="emailReceiverConfigurationService"/>
     </bean>
 
@@ -235,44 +234,44 @@
     </bean>
 
     <bean id="getTranscribeConfigurationApiController"
-          class="com.armedia.acm.plugins.admin.web.api.GetTranscribeConfigurationAPIController">
+        class="com.armedia.acm.plugins.admin.web.api.GetTranscribeConfigurationAPIController">
         <property name="arkCaseTranscribeService" ref="arkCaseTranscribeService"/>
     </bean>
 
     <bean id="saveTranscribeConfigurationApiController"
-          class="com.armedia.acm.plugins.admin.web.api.SaveTranscribeConfigurationAPIController">
+        class="com.armedia.acm.plugins.admin.web.api.SaveTranscribeConfigurationAPIController">
         <property name="arkCaseTranscribeService" ref="arkCaseTranscribeService"/>
     </bean>
 
     <bean id="getOCRConfigurationApiController"
-          class="com.armedia.acm.plugins.admin.web.api.GetOCRConfigurationAPIController">
+        class="com.armedia.acm.plugins.admin.web.api.GetOCRConfigurationAPIController">
         <property name="arkCaseOCRService" ref="arkCaseOCRService"/>
     </bean>
 
     <bean id="getAWSTranscribeConfigurationApiController"
-          class="com.armedia.acm.plugins.admin.web.api.GetAWSTranscribeConfigurationAPIController">
+        class="com.armedia.acm.plugins.admin.web.api.GetAWSTranscribeConfigurationAPIController">
         <property name="awsTranscribeCredentialsConfigurationService" ref="awsTranscribeCredentialsConfigurationService"/>
         <property name="awsTranscribeConfigurationService" ref="awsTranscribeConfigurationService"/>
     </bean>
 
     <bean id="saveAWSTranscribeConfigurationApiController"
-          class="com.armedia.acm.plugins.admin.web.api.SaveAWSTranscribeConfigurationAPIController">
+        class="com.armedia.acm.plugins.admin.web.api.SaveAWSTranscribeConfigurationAPIController">
         <property name="awsTranscribeCredentialsConfigurationService" ref="awsTranscribeCredentialsConfigurationService"/>
         <property name="awsTranscribeConfigurationService" ref="awsTranscribeConfigurationService"/>
     </bean>
 
     <bean id="saveOCRConfigurationApiController"
-          class="com.armedia.acm.plugins.admin.web.api.SaveOCRConfigurationAPIController">
+        class="com.armedia.acm.plugins.admin.web.api.SaveOCRConfigurationAPIController">
         <property name="arkCaseOCRService" ref="arkCaseOCRService"/>
     </bean>
 
     <bean id="pdfConversionConfigurationAPIController"
-          class="com.armedia.acm.plugins.admin.web.api.PDFConversionConfigurationAPIController">
+        class="com.armedia.acm.plugins.admin.web.api.PDFConversionConfigurationAPIController">
         <property name="pdfConversionConfigurationService" ref="pdfConversionConfigurationService"/>
     </bean>
 
     <bean id="documentUploadPolicyConfigurationAPIController"
-          class="com.armedia.acm.plugins.admin.web.api.DocumentUploadPolicyConfigurationAPIController">
+        class="com.armedia.acm.plugins.admin.web.api.DocumentUploadPolicyConfigurationAPIController">
         <property name="documentUploadPolicyConfigurationService" ref="documentUploadPolicyConfigurationService"/>
     </bean>
 
@@ -281,7 +280,7 @@
     </bean>
 
     <bean id="dataAccessControlAPIController"
-          class="com.armedia.acm.plugins.admin.web.api.DataAccessControlAPIController">
+        class="com.armedia.acm.plugins.admin.web.api.DataAccessControlAPIController">
         <property name="dataAccessControlService" ref="dataAccessControlService"/>
     </bean>
 
@@ -294,7 +293,7 @@
     </bean>
 
     <bean id="getApplicationVersionAPIController"
-          class="com.armedia.acm.plugins.admin.web.api.GetApplicationVersionAPIController">
+        class="com.armedia.acm.plugins.admin.web.api.GetApplicationVersionAPIController">
         <property name="applicationMetaInfoService" ref="applicationMetaInfoService"/>
     </bean>
 
