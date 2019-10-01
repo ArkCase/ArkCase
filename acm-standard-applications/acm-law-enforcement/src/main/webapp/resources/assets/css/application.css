@@ -120,9 +120,9 @@ span.fancytree-title {
     font-size: 13px;
 }
 
-.fancytree-node {
-    margin-left: 0px !important;
-}
+/*.fancytree-node {*/
+    /*margin-left: 0px !important;*/
+/*}*/
 
 .fancytree-folder .fancytree-node {
     white-space: inherit !important;
