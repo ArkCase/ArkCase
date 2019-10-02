@@ -13,8 +13,8 @@ angular.module('dashboard.my-tasks').controller(
                     var paginationOptions = {
                         pageNumber: 1,
                         pageSize: 5,
-                        sortBy: 'object_id_i',
-                        sortDir: 'desc'
+                        sortBy: 'dueDate_tdt',
+                        sortDir: 'asc'
                     };
 
                     vm.gridOptions = {
