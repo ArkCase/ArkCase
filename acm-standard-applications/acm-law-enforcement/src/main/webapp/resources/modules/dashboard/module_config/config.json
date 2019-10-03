@@ -116,13 +116,11 @@
                     "width": 75
                 },
                 {
-                    "name": "object_id_i",
-                    "displayName": "dashboard.widgets.myTasks.table.header.taskId",
+                    "name": "parent_id_s",
+                    "displayName": "dashboard.widgets.myTasks.table.header.objectId",
                     "headerCellFilter": "translate",
-                    "enableSorting": true,
-                    "type": "number",
-                    "cellTemplate": "<a data-ui-sref=\"tasks.main({id: row.entity.object_id_i})\">{{COL_FIELD}}<\/a>",
-                    "width": 75
+                    "cellTemplate": "<button class='btn-link' ng-click='grid.appScope.myTasks.onClickCaseComplaintId(row.entity.parent_type_s,row.entity.parent_id_s)'>{{COL_FIELD}}</button>",
+                    "width": 100
                 },
                 {
                     "name": "title_parseable",
@@ -142,13 +140,6 @@
                     "headerCellFilter": "translate",
                     "cellTemplate": "<div>{{ row.entity.dueDate_tdt | date : 'shortDate' }}</div>",
                     "width": 70
-                },
-                {
-                    "name": "parent_id_s",
-                    "displayName": "dashboard.widgets.myTasks.table.header.objectId",
-                    "headerCellFilter": "translate",
-                    "cellTemplate": "<button class='btn-link' ng-click='grid.appScope.myTasks.onClickCaseComplaintId(row.entity.parent_type_s,row.entity.parent_id_s)'>{{COL_FIELD}}</button>",
-                    "width": 100
                 }
             ]
         },
