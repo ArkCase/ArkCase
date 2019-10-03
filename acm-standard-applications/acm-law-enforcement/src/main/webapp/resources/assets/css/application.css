@@ -1851,6 +1851,31 @@ a.primary {
 	margin-top: 35px;
 	z-index: 1001;
 }
+.overdue .ui-grid-cell{
+    background-color: #ed1c24 !important;
+    color:white;
+}
+
+.overdue a{
+    color: white;
+}
+
+.overdue i{
+    color: white;
+}
+
+.deadline .ui-grid-cell{
+    background-color: #ff7f27 !important;
+    color:white;
+}
+
+.deadline a{
+    color: white;
+}
+
+.deadline i{
+    color: white;
+}
 
 .loadingSpinner {
     font-size: 16px;
