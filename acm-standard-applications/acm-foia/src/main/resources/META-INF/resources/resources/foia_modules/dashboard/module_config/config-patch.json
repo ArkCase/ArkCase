@@ -77,7 +77,7 @@
             },
             {
                 "name": "parent_id_s",
-                "displayName": "dashboard.widgets.myTasks.table.header.caseId",
+                "displayName": "dashboard.widgets.myTasks.table.header.parentId",
                 "headerCellFilter": "translate",
                 "cellTemplate": "<a data-ui-sref=\"cases.main({id: row.entity.parent_id_s})\">{{COL_FIELD}}<\/a>",
                 "width": 100
