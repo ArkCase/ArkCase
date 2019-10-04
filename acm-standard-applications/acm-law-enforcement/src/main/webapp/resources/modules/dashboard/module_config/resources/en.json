@@ -91,7 +91,8 @@
                         "dueDate": "Due",
                         "status": "Status",
                         "objectId": "Object ID",
-                        "parentType": "Parent Type"
+                        "parentType": "Parent Type",
+                        "parentId": "Parent ID"
                     },
                     "overdue.tooltip": "Task is Overdue",
                     "deadline.tooltip": "Deadline is Approaching"
