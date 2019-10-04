@@ -123,6 +123,12 @@
                     "width": 100
                 },
                 {
+                    "name": "parent_type_s",
+                    "displayName": "dashboard.widgets.myTasks.table.header.parentType",
+                    "headerCellFilter": "translate",
+                    "width": 100
+                },
+                {
                     "name": "title_parseable",
                     "displayName": "dashboard.widgets.myTasks.table.header.title",
                     "headerCellFilter": "translate",
