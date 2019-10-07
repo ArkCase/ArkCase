@@ -37,6 +37,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
+import org.springframework.jmx.export.annotation.ManagedResource;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -45,6 +46,7 @@ import java.util.List;
 import java.util.Map;
 
 @Configuration
+@ManagedResource(objectName = "configuration:name=labels-service,type=com.armedia.acm.configuration.ConfigurationService,artifactId=labels-service")
 public class LabelsConfiguration implements ConfigurationFacade
 {
     private static final Logger log = LogManager.getLogger(LabelsConfiguration.class);
@@ -53,15 +55,10 @@ public class LabelsConfiguration implements ConfigurationFacade
     private volatile static LabelsConfiguration INSTANCE;
 
     private Map<String, Object> labelsMap = new HashMap<>();
+    private Map<String, Object> labelsDefaultMap = new HashMap<>();
 
-    private String defaultLocale;
-    private String modulesLocation;
-
-    // <!--<bean id="labelsLoadedConfig" class="com.armedia.acm.configuration.core.LabelsConfiguration"
-    // init-method="initialize">-->
-    // <!--<property name="modulesLocation" value="#{ systemProperties ['user.home'] }/.arkcase/custom/modules/"/>-->
-    // <!--<property name="defaultLocale" value="en"/>-->
-    // <!--</bean>-->
+    private String defaultLocale = "en";
+    private String modulesLocation = System.getProperty("user.home") + "/.arkcase/custom/modules/";
 
     @Autowired
     private ConfigurationServiceBootClient configurationServiceBootClient;
@@ -89,14 +86,13 @@ public class LabelsConfiguration implements ConfigurationFacade
 
     private synchronized void initializeLabelsMap()
     {
-        defaultLocale = "en";
-        modulesLocation = System.getProperty("user.home") + "/.arkcase/custom/modules/";
         String serverUrl = this.environment.getProperty(CONFIGURATION_SERVER_URL);
         List<String> allModules = getModulesNames();
         for (String labelsModule : allModules)
         {
             String key = String.format("%s-%s", labelsModule, defaultLocale);
             labelsMap.put(key, this.configurationServiceBootClient.loadConfiguration(serverUrl, key));
+            labelsDefaultMap.put(key, this.configurationServiceBootClient.loadDefaultConfiguration(serverUrl, key));
         }
     }
 
@@ -122,7 +118,6 @@ public class LabelsConfiguration implements ConfigurationFacade
      */
     public List<ModuleConfig> getModules()
     {
-        // modulesLocation = C:\Users\ivana.shekerova/.arkcase/custom/modules/
         File modulesDir = new File(modulesLocation);
 
         File[] dirs = modulesDir.listFiles(File::isDirectory);
@@ -144,6 +139,11 @@ public class LabelsConfiguration implements ConfigurationFacade
     public Object getProperty(String name)
     {
         return this.labelsMap.get(name);
+    }
+
+    public Object getDefaultProperty(String name)
+    {
+        return this.labelsDefaultMap.get(name);
     }
 
     @Override
@@ -188,16 +188,6 @@ public class LabelsConfiguration implements ConfigurationFacade
     {
         this.modulesLocation = modulesLocation;
     }
-
-    // public ConfigurationServiceBootClient getConfigurationServiceBootClient()
-    // {
-    // return configurationServiceBootClient;
-    // }
-    //
-    // public void setConfigurationServiceBootClient(ConfigurationServiceBootClient configurationServiceBootClient)
-    // {
-    // this.configurationServiceBootClient = configurationServiceBootClient;
-    // }
 
     public Environment getEnvironment()
     {

@@ -27,15 +27,12 @@ package com.armedia.acm.plugins.admin.web.api;
  * #L%
  */
 
-import com.armedia.acm.configuration.service.ConfigurationPropertyService;
 import com.armedia.acm.plugins.admin.exception.AcmLabelConfigurationException;
 import com.armedia.acm.services.labels.exception.AcmLabelManagementException;
 import com.armedia.acm.services.labels.service.LabelManagementService;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.json.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -46,12 +43,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletResponse;
 
-import java.io.IOException;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -65,41 +59,22 @@ public class LabelManagementUpdateResource
 {
     private static final Set<String> ISO_LANGUAGES = new HashSet<>(Arrays.asList(Locale.getISOLanguages()));
     private Logger log = LogManager.getLogger(getClass());
+
     private LabelManagementService labelManagementService;
-    @Autowired
-    private ConfigurationPropertyService configurationPropertyService;
 
     @RequestMapping(value = "/labelmanagement/admin-resource", method = RequestMethod.PUT, produces = {
             MediaType.APPLICATION_JSON_UTF8_VALUE,
             MediaType.TEXT_PLAIN_VALUE })
     @ResponseBody
     public String updateResource(@RequestParam("lang") String lang, @RequestParam("ns") String ns, @RequestBody String resource,
-            HttpServletResponse response) throws IOException, AcmLabelConfigurationException, AcmLabelManagementException
+            HttpServletResponse response) throws AcmLabelConfigurationException, AcmLabelManagementException
     {
         if (ISO_LANGUAGES.contains(lang))
         {
             try
             {
-
-                JSONObject value = new JSONObject(resource);
-
-                Map<String, Object> properties = new HashMap<>();
-                properties.put(value.getString("id"), value.getString("value"));
-                configurationPropertyService.updateProperties(properties);
-
-                return properties.toString();
-                // JSONObject updatedRes = labelManagementService.updateCustomResource(ns, lang, value);
-                // JSONArray jsonResourceArray = new JSONArray();
-                // // Convert json object to the array
-                // Iterator<String> keys = updatedRes.keys();
-                // while (keys.hasNext())
-                // {
-                // String key = keys.next();
-                // JSONObject node = (JSONObject) updatedRes.get(key);
-                // node.put("id", key);
-                // jsonResourceArray.put(node);
-                // }
-                // return jsonResourceArray.toString();
+                String applicationName = String.format("%s-%s", ns, lang);
+                return labelManagementService.updateResource(resource, applicationName).toString();
             }
             catch (Exception e)
             {
