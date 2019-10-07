@@ -555,7 +555,7 @@
             },
             "paidFlag": {
                 "placeholder": "Enter paid",
-                "label": "Paid"
+                "label": "Fee Waived"
             },
             "publicFlag": {
                 "placeholder": "Choose public",
