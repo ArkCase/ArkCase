@@ -76,13 +76,18 @@
                 "enableColumnMenu": false
             },
             {
-                "name": "object_id_i",
-                "displayName": "dashboard.widgets.myTasks.table.header.taskId",
+                "name": "parent_id_s",
+                "displayName": "dashboard.widgets.myTasks.table.header.parentId",
                 "headerCellFilter": "translate",
-                "enableSorting": true,
-                "type": "number",
-                "cellTemplate": "<a data-ui-sref=\"tasks.main({id: row.entity.object_id_i})\">{{COL_FIELD}}</a>",
-                "width": 75
+                "cellTemplate": "<a data-ui-sref=\"cases.main({id: row.entity.parent_id_s})\">{{COL_FIELD}}<\/a>",
+                "width": 100
+            },
+            {
+                "name": "parent_type_s",
+                "displayName": "dashboard.widgets.myTasks.table.header.parentType",
+                "headerCellFilter": "translate",
+                "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.parent_type_s == 'CASE_FILE' ? 'REQUEST' : row.entity.parent_type_s}}</div>",
+                "width": 100
             },
             {
                 "name": "title_parseable",
@@ -107,13 +112,6 @@
                 "name": "status_lcs",
                 "displayName": "dashboard.widgets.myTasks.table.header.status",
                 "headerCellFilter": "translate",
-                "width": 100
-            },
-            {
-                "name": "parent_id_s",
-                "displayName": "dashboard.widgets.myTasks.table.header.caseId",
-                "headerCellFilter": "translate",
-                "cellTemplate": "<a data-ui-sref=\"cases.main({id: row.entity.parent_id_s})\">{{COL_FIELD}}<\/a>",
                 "width": 100
             }
         ]
