@@ -1,8 +1,0 @@
-{
-    "analytics-audit": {
-        "title": "记录分析",
-        "menus": {
-            "leftnav.item": "记录分析"
-        }
-    }
-}

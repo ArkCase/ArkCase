@@ -109,6 +109,12 @@ public class ConfigurationServiceBootClient
         return getCompositeMap(result);
     }
 
+    public Map<String, Object> loadDefaultConfiguration(String url, String name)
+    {
+        Environment result = getRemoteEnvironment(configRestTemplate(), url, name).get(0);
+        return getDefaultCompositeMap(result);
+    }
+
     private Map<String, Object> getCompositeMap(Environment result)
     {
         Map<String, Object> compositeMap = new HashMap<>();
@@ -119,6 +125,24 @@ public class ConfigurationServiceBootClient
             {
                 Map<String, Object> map = source.getSource();
                 map.forEach(compositeMap::putIfAbsent);
+            }
+        }
+
+        return compositeMap;
+    }
+
+    private Map<String, Object> getDefaultCompositeMap(Environment result)
+    {
+        Map<String, Object> compositeMap = new HashMap<>();
+
+        if (result.getPropertySources() != null)
+        {
+            for (PropertySource source : result.getPropertySources())
+            {
+                if (!source.getName().contains("-runtime.yaml"))
+                {
+                    compositeMap = source.getSource();
+                }
             }
         }
 

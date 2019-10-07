@@ -1,8 +1,0 @@
-{
-    "analytics-audit": {
-        "title": "Analyse des enregistrements",
-        "menus": {
-            "leftnav.item": "Analyse des enregistrements"
-        }
-    }
-}

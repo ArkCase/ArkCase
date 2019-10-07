@@ -1,8 +1,0 @@
-{
-    "analytics-audit": {
-        "title": "Análise de auditoria",
-        "menus": {
-            "leftnav.item": "Análise de auditoria"
-        }
-    }
-}
