@@ -13,7 +13,10 @@
                 <div ng-if="!calculateDaysObj.isOverdue && objectInfo.queue.name != 'Release'" class="h4 font-bold">{{objectInfo.title || 'common.value.unknown' | translate }} <small>({{calculateDaysObj.days}}) <span translate>cases.comp.info.daysToComplete.label</span></small>
                     <span ng-if="objectInfo.deniedFlag" class="icon-overdue" translate> cases.comp.info.requestDenied.label </span>
                 </div>
-                <div ng-if="objectInfo.queue.name == 'Release'">{{objectInfo.title || 'common.value.unknown' | translate }}</div>
+                <div ng-if="objectInfo.queue.name == 'Release' && !objectInfo.deniedFlag">{{objectInfo.title || 'common.value.unknown' | translate }}</div>
+                <div ng-if="objectInfo.queue.name == 'Release' && objectInfo.deniedFlag" class="h4 font-bold">{{objectInfo.title || 'common.value.unknown' | translate }}
+                    <span ng-if="objectInfo.deniedFlag" class="icon-overdue" translate> cases.comp.info.requestDenied.label </span>
+                </div>
             </div>
             <div class="col-xs-6 text-right">
                 <h4>{{objectInfo.caseNumber}}</h4>
