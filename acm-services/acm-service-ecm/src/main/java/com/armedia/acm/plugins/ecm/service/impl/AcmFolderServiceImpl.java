@@ -27,6 +27,9 @@ package com.armedia.acm.plugins.ecm.service.impl;
  * #L%
  */
 
+import com.armedia.acm.camelcontext.arkcase.cmis.ArkCaseCMISActions;
+import com.armedia.acm.camelcontext.context.CamelContextManager;
+import com.armedia.acm.camelcontext.exception.ArkCaseCamelException;
 import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
@@ -48,11 +51,13 @@ import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.ecm.utils.CmisConfigUtils;
+import com.armedia.acm.plugins.ecm.utils.EcmFileCamelUtils;
 import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
 import com.armedia.acm.service.objectlock.annotation.AcmAcquireAndReleaseObjectLock;
 import com.armedia.acm.service.objectlock.model.AcmObjectLock;
 import com.armedia.acm.service.objectlock.service.AcmObjectLockService;
 import com.armedia.acm.services.participants.model.AcmParticipant;
+import com.armedia.acm.web.api.MDCConstants;
 
 import org.apache.chemistry.opencmis.client.api.CmisObject;
 import org.apache.chemistry.opencmis.client.api.Document;
@@ -60,12 +65,12 @@ import org.apache.chemistry.opencmis.client.api.Folder;
 import org.apache.chemistry.opencmis.client.api.ItemIterable;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.exception.ExceptionUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.messaging.MessageChannel;
@@ -109,6 +114,7 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
     private EcmFileConfig ecmFileConfig;
     private MessageChannel genericMessagesChannel;
     private AcmObjectLockService objectLockService;
+    private CamelContextManager camelContextManager;
 
     @Override
     @AcmAcquireAndReleaseObjectLock(objectIdArgIndex = 0, objectType = "FOLDER", lockType = "WRITE", lockChildObjects = false, unlockChildObjects = false)
@@ -150,7 +156,8 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
 
         String cmisRepositoryId = getCmisRepositoryId(parentFolder);
 
-        properties.put(AcmFolderConstants.CONFIGURATION_REFERENCE, cmisConfigUtils.getCmisConfiguration(cmisRepositoryId));
+        properties.put(EcmFileConstants.CMIS_REPOSITORY_ID, "camelAlfresco");
+        properties.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, EcmFileCamelUtils.getCmisUser());
         String cmisFolderId = null;
         try
         {
@@ -185,7 +192,7 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
 
             return result;
         }
-        catch (PersistenceException | AcmFolderException | MuleException e)
+        catch (PersistenceException | AcmFolderException e)
         {
             log.error("Folder not added under {} successfully {}", parentFolder.getName(), e.getMessage(), e);
             throw new AcmUserActionFailedException(AcmFolderConstants.USER_ACTION_ADD_NEW_FOLDER, AcmFolderConstants.OBJECT_FOLDER_TYPE,
@@ -1135,24 +1142,21 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
     }
 
     private String createNewFolderAndReturnCmisID(AcmFolder folder, Map<String, Object> properties)
-            throws MuleException, AcmUserActionFailedException
+            throws AcmUserActionFailedException
     {
-
-        String cmisFolderId;
-
-        MuleMessage message = getMuleContextManager().send(AcmFolderConstants.MULE_ENDPOINT_ADD_NEW_FOLDER, folder, properties);
-
-        if (message.getInboundPropertyNames().contains(AcmFolderConstants.ADD_NEW_FOLDER_EXCEPTION_INBOUND_PROPERTY))
+        Folder result;
+        try
         {
-            MuleException muleException = message.getInboundProperty(AcmFolderConstants.ADD_NEW_FOLDER_EXCEPTION_INBOUND_PROPERTY);
-            log.error("Folder not added successfully {}", muleException.getMessage(), muleException);
+            result = (Folder) getCamelContextManager().send(ArkCaseCMISActions.CREATE_FOLDER, properties);
+        }
+        catch (ArkCaseCamelException e)
+        {
+            log.error("Folder not added successfully {}", e.getMessage(), e);
             throw new AcmUserActionFailedException(AcmFolderConstants.USER_ACTION_ADD_NEW_FOLDER, AcmFolderConstants.OBJECT_FOLDER_TYPE,
-                    folder.getId(), "Folder was not created under " + folder.getName() + " successfully", muleException);
+                    folder.getId(), "Folder was not created under " + folder.getName() + " successfully", e);
         }
 
-        CmisObject cmisObject = message.getPayload(CmisObject.class);
-        cmisFolderId = cmisObject.getId();
-        return cmisFolderId;
+        return result.getId();
     }
 
     @Override
@@ -1648,5 +1652,15 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
 
     public void setObjectLockService(AcmObjectLockService objectLockService) {
         this.objectLockService = objectLockService;
+    }
+
+    public CamelContextManager getCamelContextManager()
+    {
+        return camelContextManager;
+    }
+
+    public void setCamelContextManager(CamelContextManager camelContextManager)
+    {
+        this.camelContextManager = camelContextManager;
     }
 }
