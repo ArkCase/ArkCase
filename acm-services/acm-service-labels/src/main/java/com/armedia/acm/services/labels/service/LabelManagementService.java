@@ -52,9 +52,7 @@ import java.util.Map;
 public class LabelManagementService
 {
     private static final String labelsDescriptionKeyEnd = ".desc?";
-    private final String MODULE_CORE_ID = "core";
     private Logger log = LogManager.getLogger(getClass());
-    private String moduleConfigLocation;
     private String resourcesLocation;
     private String resourceFile;
     private String settingsFileLocation;
@@ -79,13 +77,7 @@ public class LabelManagementService
     {
         String fileName = moduleId + "-" + lang;
 
-        JSONObject resource = loadResource(fileName);
-
-        JSONObject menusInfo = loadMenusResources(lang);
-        if (menusInfo != null)
-            resource = mergeResources(resource, menusInfo);
-
-        return resource;
+        return loadResource(fileName);
     }
 
     /**
@@ -127,11 +119,6 @@ public class LabelManagementService
      */
     public JSONArray getAdminResource(String moduleId, String lang) throws AcmLabelManagementException
     {
-        return getAdminResource(moduleId, lang, true);
-    }
-
-    public JSONArray getAdminResource(String moduleId, String lang, boolean loadMenu) throws AcmLabelManagementException
-    {
         // 1. Load module's resource file
         String fileName = String.format("%s-%s", moduleId, lang);
         JSONObject moduleResource = loadResource(fileName);
@@ -142,14 +129,6 @@ public class LabelManagementService
             String baseFileName = String.format("%s-%s", moduleId, defaultLocale);
             JSONObject baseResource = loadResource(baseFileName);
             moduleResource = mergeResources(baseResource, moduleResource);
-        }
-
-        // If module is core, them inject information about menus that are stored in configuration file
-        if (loadMenu && MODULE_CORE_ID.equals(moduleId))
-        {
-            JSONObject menusInfo = loadMenusResources(lang);
-            JSONObject coreModuleResource = mergeResources(moduleResource, menusInfo);
-            moduleResource = coreModuleResource;
         }
 
         return convertToObjectForAdminResources(moduleResource, defaultLabels);
@@ -410,77 +389,6 @@ public class LabelManagementService
             log.warn(String.format("Can't read resource file %s", fileName));
             return null;
         }
-    }
-
-    /**
-     * Load information about all modules menus
-     *
-     * @return
-     * @throws AcmLabelManagementException
-     */
-    private JSONObject loadMenusResources(String lang) throws AcmLabelManagementException
-    {
-        // 1. Get list of modules
-        List<String> modulesNames = labelsConfiguration.getModulesNames();
-        JSONObject modulesMenus = new JSONObject();
-
-        // 2. Load modules configuration file and retrieve information about menus
-        for (String moduleName : modulesNames)
-        {
-            String configFileName = String.format(moduleConfigLocation, moduleName);
-            JSONObject configResource;// = loadResource(configFileName);
-            try
-            {
-                File file = FileUtils.getFile(configFileName);
-                String resource = FileUtils.readFileToString(file, "UTF-8");
-                configResource = new JSONObject(resource);
-            }
-            catch (Exception e)
-            {
-                log.warn(String.format("Can't read resource file %s", configFileName));
-                return null;
-            }
-
-            if (configResource != null && configResource.has("menus"))
-            {
-                JSONArray moduleResourceArray = getAdminResource(moduleName, lang, false);
-
-                JSONArray menus = configResource.getJSONArray("menus");
-                for (int i = 0; i < menus.length(); i++)
-                {
-                    JSONObject menuInfo = menus.getJSONObject(i);
-                    // 3. Combine menus information into the one object
-                    if (menuInfo.has("menuId") && menuInfo.has("menuItemTitle") && menuInfo.has("menuItemURL"))
-                    {
-                        String key = MODULE_CORE_ID + ".menus." + menuInfo.getString("menuId") + "." + menuInfo.getString("menuItemURL");
-                        String menuItemTitle = (String) menuInfo.get("menuItemTitle");
-                        for (int j = 0; j < moduleResourceArray.length(); j++)
-                        {
-                            if (((JSONObject) moduleResourceArray.get(j)).has(menuItemTitle))
-                            {
-                                try
-                                {
-                                    JSONObject titleTranslatedObj = (JSONObject) moduleResourceArray.get(j);
-                                    menuItemTitle = (String) titleTranslatedObj.get("value");
-                                }
-                                catch (Exception e)
-                                {
-                                }
-                            }
-                        }
-
-                        modulesMenus.put(key, menuItemTitle);
-                    }
-                }
-            }
-        }
-
-        return modulesMenus;
-    }
-
-    public void setModuleConfigLocation(String moduleConfigLocation)
-    {
-        this.moduleConfigLocation = moduleConfigLocation;
     }
 
     public void setResourcesLocation(String resourcesLocation)

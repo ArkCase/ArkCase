@@ -32,7 +32,6 @@ import com.armedia.acm.services.labels.service.LabelManagementService;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.json.JSONArray;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -66,19 +65,7 @@ public class LabelManagementRetrieveAdminResource
 
         try
         {
-            JSONArray jsonResourceArray = labelManagementService.getAdminResource(ns, lang);
-            // JSONArray jsonResourceArray = new JSONArray();
-            // // Convert json object to the array
-            // Iterator<String> keys = jsonResource.keys();
-            // while (keys.hasNext())
-            // {
-            // String key = keys.next();
-            // JSONObject node = (JSONObject) jsonResource.get(key);
-            // node.put("id", key);
-            // jsonResourceArray.put(node);
-            // }
-            return jsonResourceArray.toString();
-            // return jsonResource.toString();
+            return labelManagementService.getAdminResource(ns, lang).toString();
         }
         catch (Exception e)
         {
