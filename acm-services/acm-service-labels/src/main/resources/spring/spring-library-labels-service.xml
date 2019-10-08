@@ -3,8 +3,6 @@
     xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
 
     <bean id="labelManagementService" class="com.armedia.acm.services.labels.service.LabelManagementService">
-        <property name="moduleConfigLocation"
-            value="#{ systemProperties ['user.home'] }/.arkcase/custom/modules/%s/module_config/config.json"/>
         <property name="resourceFile" value="%s-%s.yaml"/>
         <property name="resourcesLocation" value="#{ systemProperties ['user.home'] }/.arkcase/acm/acm-config-server-repo/labels/"/>
         <property name="settingsFileLocation" value="#{ systemProperties ['user.home'] }/.arkcase/acm/resources/settings/settings.json"/>
@@ -14,7 +12,6 @@
                 <entry key="en" value="English"></entry>
             </map>
         </property>
-        <!--<property name="labelsConfiguration" ref="labelsConfiguration"/>-->
     </bean>
 
     <bean id="translationService" class="com.armedia.acm.services.labels.service.TranslationService">
