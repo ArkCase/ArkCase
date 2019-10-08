@@ -403,7 +403,7 @@
         "path": "/cases.comp.main/paidFlag",
         "value": {
             "placeholder": "Enter paid",
-            "label": "Paid"
+            "label": "Fee Waived"
         }
     },
     {
