@@ -96,7 +96,7 @@ angular.module('dashboard').factory('Dashboard.DashboardService',
                 },
                 queryMyOverdueRequests: {
                     method: 'GET',
-                    url: 'api/v1/plugin/search/advancedSearch?q=object_type_s\\:CASE_FILE+' + 'AND+dueDate_tdt\\:[* TO NOW]' + '+AND+assignee_id_lcs\\::userId+' + 'AND+' + '-status_lcs\\::status&n=:pageSize&start=:startWith&s=:sortBy :sortDir',
+                    url: 'api/v1/plugin/search/advancedSearch?q=object_type_s\\:CASE_FILE+' + 'AND+dueDate_tdt\\:%5B*+TO+NOW%5D' + '+AND+assignee_id_lcs\\::userId+' + 'AND+' + '-status_lcs\\::status&n=:pageSize&start=:startWith&s=:sortBy :sortDir',
                     isArray: false,
                     data: ''
                 }
