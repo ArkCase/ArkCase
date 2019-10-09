@@ -68,6 +68,7 @@
         <module>acm-service-convert-file</module>
         <module>acm-service-case-suggestion</module>
         <module>acm-service-portal-gateway</module>
+        <module>acm-service-object-title</module>
     </modules>
 
 </project>

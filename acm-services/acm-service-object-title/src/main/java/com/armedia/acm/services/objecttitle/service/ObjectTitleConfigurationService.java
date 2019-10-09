@@ -1,4 +1,4 @@
-package com.armedia.acm.plugins.admin.service;
+package com.armedia.acm.services.objecttitle.service;
 
 /*-
  * #%L
@@ -27,9 +27,11 @@ package com.armedia.acm.plugins.admin.service;
  * #L%
  */
 
+
+
 import com.armedia.acm.configuration.service.ConfigurationPropertyService;
-import com.armedia.acm.plugins.admin.model.ObjectTitleConfig;
-import com.armedia.acm.plugins.admin.model.TitleConfiguration;
+import com.armedia.acm.services.objecttitle.model.ObjectTitleConfig;
+import com.armedia.acm.services.objecttitle.model.TitleConfiguration;
 
 import java.util.Map;
 

@@ -289,10 +289,6 @@
         <property name="recycleBinItemService" ref="recycleBinItemServiceImpl"/>
     </bean>
 
-    <bean id="objectTitleConfigurationController" class="com.armedia.acm.plugins.admin.web.api.ObjectTitleConfigurationAPIController">
-        <property name="objectTitleConfigurationService" ref="objectTitleConfigurationService"/>
-    </bean>
-
     <bean id="getApplicationVersionAPIController"
           class="com.armedia.acm.plugins.admin.web.api.GetApplicationVersionAPIController">
         <property name="applicationMetaInfoService" ref="applicationMetaInfoService"/>
