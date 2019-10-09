@@ -175,16 +175,6 @@
         <aop:scoped-proxy/>
     </bean>
 
-    <bean id="objectTitleConfiguration" class="com.armedia.acm.plugins.admin.model.ObjectTitleConfig" scope="refresh">
-        <property name="jsonUnmarshaller" ref="jsonUnmarshaller"/>
-        <aop:scoped-proxy proxy-target-class="true"/>
-    </bean>
-
-    <bean id="objectTitleConfigurationService" class="com.armedia.acm.plugins.admin.service.ObjectTitleConfigurationService">
-        <property name="configurationPropertyService" ref="configurationPropertyService"/>
-        <property name="objectTitleConfiguration" ref="objectTitleConfiguration" />
-    </bean>
-
     <bean id="googleAnalyticsConfig" class="com.armedia.acm.plugins.admin.model.GoogleAnalyticsConfig" scope="refresh">
         <aop:scoped-proxy/>
     </bean>

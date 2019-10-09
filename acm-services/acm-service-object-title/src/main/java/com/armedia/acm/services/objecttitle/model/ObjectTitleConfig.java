@@ -1,4 +1,4 @@
-package com.armedia.acm.plugins.admin.model;
+package com.armedia.acm.services.objecttitle.model;
 
 /*-
  * #%L
