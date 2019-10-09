@@ -110,12 +110,6 @@
                     "enableColumnMenu": false
                 },
                 {
-                    "name": "priority_lcs",
-                    "displayName": "dashboard.widgets.myTasks.table.header.priority",
-                    "headerCellFilter": "translate",
-                    "width": 75
-                },
-                {
                     "name": "parent_id_s",
                     "displayName": "dashboard.widgets.myTasks.table.header.parentId",
                     "headerCellFilter": "translate",
@@ -135,10 +129,10 @@
                     "cellTemplate": "<a data-ui-sref=\"tasks.main({id: row.entity.object_id_s})\">{{COL_FIELD}}<\/a>"
                 },
                 {
-                    "name": "status_lcs",
-                    "displayName": "dashboard.widgets.myTasks.table.header.status",
+                    "name": "priority_lcs",
+                    "displayName": "dashboard.widgets.myTasks.table.header.priority",
                     "headerCellFilter": "translate",
-                    "width": 100
+                    "width": 75
                 },
                 {
                     "name": "dueDate_tdt",
@@ -146,6 +140,12 @@
                     "headerCellFilter": "translate",
                     "cellTemplate": "<div>{{ row.entity.dueDate_tdt | date : 'shortDate' }}</div>",
                     "width": 70
+                },
+                {
+                    "name": "status_lcs",
+                    "displayName": "dashboard.widgets.myTasks.table.header.status",
+                    "headerCellFilter": "translate",
+                    "width": 100
                 }
             ]
         },
