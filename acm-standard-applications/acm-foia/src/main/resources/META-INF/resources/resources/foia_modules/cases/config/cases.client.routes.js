@@ -13,6 +13,7 @@ angular.module('cases').config([ '$stateProvider', function($stateProvider) {
                 $translatePartialLoader.addPart('cases');
                 $translatePartialLoader.addPart('request-info');
                 $translatePartialLoader.addPart('admin');
+                $translatePartialLoader.addPart('document-details');
                 return $translate.refresh();
             } ]
         }
