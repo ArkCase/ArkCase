@@ -5,7 +5,7 @@
     <bean id="labelManagementService" class="com.armedia.acm.services.labels.service.LabelManagementService">
         <property name="resourceFile" value="%s-%s.yaml"/>
         <property name="resourcesLocation" value="#{ systemProperties ['user.home'] }/.arkcase/acm/acm-config-server-repo/labels/"/>
-        <property name="settingsFileLocation" value="#{ systemProperties ['user.home'] }/.arkcase/acm/resources/settings/settings.json"/>
+        <property name="languageSettingsConfig" ref="languageSettingsConfig"/>
         <property name="defaultLocale" value="en"/>
         <property name="defaultLocales">
             <map>
