@@ -79,17 +79,13 @@ public class AcmEntityTemplateNoUserPrefixModelProvider implements TemplateModel
         acmEntityTemplateModel.modifierUserId = baseModifier;
         acmEntityTemplateModel.assigneeGroupId = baseAssigneeGroupId;
 
-        Boolean isTitleEnabled = false;
+
         Map<String, TitleConfiguration> titleConfigurationMap = objectTitleConfigurationService.getObjectTitleConfig();
         for(TitleConfiguration value: titleConfigurationMap.values())
         {
-            isTitleEnabled = value.getEnableTitleField();
+            acmEntityTemplateModel.setTitleEnabled(value.getEnableTitleField());
         }
 
-        if(isTitleEnabled)
-        {
-            acmEntityTemplateModel.setTitleEnabled("Title enabled");
-        }
 
         return acmEntityTemplateModel;
     }
