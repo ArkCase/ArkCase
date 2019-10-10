@@ -143,7 +143,7 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
 
                 Notification notification = new Notification();
                 notification.setTemplateModelName("portalRequestRegistrationLink");
-                notification.setTitle("Request registration");
+                notification.setTitle("Web Portal Registration");
                 notification.setCreator(registrationRequest.getEmailAddress());
                 notification.setNote(registrationLink);
                 notification.setEmailAddresses(registrationRequest.getEmailAddress());
