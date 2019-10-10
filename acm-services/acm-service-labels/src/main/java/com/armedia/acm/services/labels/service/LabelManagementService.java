@@ -29,6 +29,7 @@ package com.armedia.acm.services.labels.service;
 
 import com.armedia.acm.configuration.core.LabelsConfiguration;
 import com.armedia.acm.configuration.service.ConfigurationPropertyService;
+import com.armedia.acm.core.LanguageSettingsConfig;
 import com.armedia.acm.services.labels.exception.AcmLabelManagementException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -55,7 +56,7 @@ public class LabelManagementService
     private Logger log = LogManager.getLogger(getClass());
     private String resourcesLocation;
     private String resourceFile;
-    private String settingsFileLocation;
+    private LanguageSettingsConfig languageSettingsConfig;
     private String defaultLocale;
     private Map<String, Object> defaultLocales;
     private ApplicationEventPublisher applicationEventPublisher;
@@ -76,7 +77,6 @@ public class LabelManagementService
     public JSONObject getResource(String moduleId, String lang) throws AcmLabelManagementException
     {
         String fileName = moduleId + "-" + lang;
-
         return loadResource(fileName);
     }
 
@@ -140,45 +140,36 @@ public class LabelManagementService
      * @param createIfAbsent
      * @return
      */
-    public JSONObject getSettings(boolean createIfAbsent) throws AcmLabelManagementException
+    public LanguageSettingsConfig getSettings(boolean createIfAbsent) throws AcmLabelManagementException
     {
-        JSONObject settings;
-        try
-        {
-            File file = FileUtils.getFile(settingsFileLocation);
-            String resource = FileUtils.readFileToString(file, "UTF-8");
-            settings = new JSONObject(resource);
-        }
-        catch (Exception e)
-        {
-            log.warn(String.format("Can't read resource file %s", settingsFileLocation));
-            return null;
-        }
+        LanguageSettingsConfig settings = null;
 
-        // Try to create resource if required
-        if (settings == null && createIfAbsent)
+        if ((languageSettingsConfig.getDefaultLocale().isEmpty() || languageSettingsConfig.getLocaleCode().isEmpty()) && createIfAbsent)
         {
-            // Create default settings
-            JSONObject defaultSettings = getDefaultSettings();
-            settings = updateSettings(defaultSettings);
+            settings = new LanguageSettingsConfig();
+            settings.setDefaultLocale(defaultLocale);
+            settings.setLocaleCode(defaultLocale);
+
+            updateLanguageSettings(settings);
+        }
+        else
+        {
+            settings = languageSettingsConfig;
         }
 
         return settings;
     }
 
     /**
-     * Create default settings object
+     * Update Language Settings
      *
+     * @param languageSettingsConfig
      * @return
      */
-    public JSONObject getDefaultSettings()
+    public LanguageSettingsConfig updateLanguageSettings(LanguageSettingsConfig languageSettingsConfig) throws AcmLabelManagementException
     {
-        JSONObject defaultSettings = new JSONObject();
-        Map<String, Object> locales = getDefaultLocales();
-        String locale = getDefaultLocale();
-        defaultSettings.put("locales", locales);
-        defaultSettings.put("defaultLocale", locale);
-        return defaultSettings;
+        configurationPropertyService.updateProperties(languageSettingsConfig);
+        return languageSettingsConfig;
     }
 
     /**
@@ -270,27 +261,6 @@ public class LabelManagementService
 
         configurationPropertyService.updateProperties(properties, applicationName);
         return properties;
-    }
-
-    /**
-     * Update Settings file
-     *
-     * @param objSettings
-     * @return
-     */
-    public JSONObject updateSettings(JSONObject objSettings) throws AcmLabelManagementException
-    {
-        try
-        {
-            File file = FileUtils.getFile(settingsFileLocation);
-            FileUtils.writeStringToFile(file, objSettings.toString(), "UTF-8");
-        }
-        catch (Exception e)
-        {
-            log.error(String.format("Can't write settings data in to the file %s", settingsFileLocation));
-            throw new AcmLabelManagementException("Update settings error", e);
-        }
-        return objSettings;
     }
 
     /**
@@ -401,9 +371,9 @@ public class LabelManagementService
         this.resourceFile = resourceFile;
     }
 
-    public void setSettingsFileLocation(String settingsFileLocation)
+    public void setLanguageSettingsConfig(LanguageSettingsConfig languageSettingsConfig)
     {
-        this.settingsFileLocation = settingsFileLocation;
+        this.languageSettingsConfig = languageSettingsConfig;
     }
 
     public String getDefaultLocale()
