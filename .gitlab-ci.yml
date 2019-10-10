@@ -178,7 +178,7 @@ deploy_backend_core_dev:
     - export SERVER_IP=10.60.24.39
     - sshpass -e ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $SSH_USER@$SERVER_IP "cd /etc/arkcase-install/arkcase-ce/vagrant/provisioning ; sudo ansible-playbook -e sftp_arkcase_password=$ARKCASE_SFTP_PASSWORD -e sftp_pentaho_password=$PENTAHO_SFTP_PASSWORD -e @dev-core-facts.yml arkcase-upgrade.yml"
 
-.deploy_backend_foia_dev:
+deploy_backend_foia_dev:
   stage: deploy
   only:
     - develop
