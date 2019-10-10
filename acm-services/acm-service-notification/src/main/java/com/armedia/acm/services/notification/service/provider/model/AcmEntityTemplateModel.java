@@ -35,7 +35,7 @@ public class AcmEntityTemplateModel
     public String assigneeUserId;
     public String modifierUserId;
     public String assigneeGroupId;
-    public String titleEnabled;
+    public Boolean isTitleEnabled;
 
     public AcmObject getCaseFileObject()
     {
@@ -77,14 +77,14 @@ public class AcmEntityTemplateModel
         this.assigneeGroupId = assigneeGroupId;
     }
 
-    public String getTitleEnabled()
+    public Boolean getTitleEnabled()
     {
-        return titleEnabled;
+        return isTitleEnabled;
     }
 
-    public void setTitleEnabled(String titleEnabled)
+    public void setTitleEnabled(Boolean titleEnabled)
     {
-        this.titleEnabled = titleEnabled;
+        isTitleEnabled = titleEnabled;
     }
 }
 
