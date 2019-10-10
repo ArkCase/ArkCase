@@ -389,6 +389,8 @@
         "sorters": {
             "createdDateAsc": "Sort Created Date Asc",
             "createdDateDesc": "Sort Created Date Desc",
+            "dueDateAsc": "Sort Due Date Asc",
+            "dueDateDesc": "Sort Due Date Desc",
             "nameAsc": "Sort Task Name Asc",
             "nameDesc": "Sort Task Name Desc",
             "noSort": "(No Sort)"
