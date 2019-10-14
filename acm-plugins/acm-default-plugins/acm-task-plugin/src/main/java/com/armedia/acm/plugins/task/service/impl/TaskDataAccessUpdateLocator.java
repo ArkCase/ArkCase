@@ -4,7 +4,7 @@ package com.armedia.acm.plugins.task.service.impl;
  * #%L
  * ACM Default Plugin: Tasks
  * %%
- * Copyright (C) 2014 - 2018 ArkCase LLC
+ * Copyright (C) 2014 - 2019 ArkCase LLC
  * %%
  * This file is part of the ArkCase software. 
  * 
@@ -27,7 +27,7 @@ package com.armedia.acm.plugins.task.service.impl;
  * #L%
  */
 
-import com.armedia.acm.data.exceptions.AcmAccessControlException;
+import com.armedia.acm.core.exceptions.AcmAccessControlException;
 import com.armedia.acm.plugins.task.exception.AcmTaskException;
 import com.armedia.acm.plugins.task.model.AcmTask;
 import com.armedia.acm.plugins.task.service.TaskDao;
