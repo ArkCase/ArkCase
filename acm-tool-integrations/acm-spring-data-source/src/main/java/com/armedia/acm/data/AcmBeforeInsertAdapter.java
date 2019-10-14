@@ -4,7 +4,7 @@ package com.armedia.acm.data;
  * #%L
  * Tool Integrations: Spring Data Source
  * %%
- * Copyright (C) 2014 - 2018 ArkCase LLC
+ * Copyright (C) 2014 - 2019 ArkCase LLC
  * %%
  * This file is part of the ArkCase software. 
  * 
@@ -27,11 +27,10 @@ package com.armedia.acm.data;
  * #L%
  */
 
-
-
-import com.armedia.acm.data.exceptions.AcmAccessControlException;
 import org.eclipse.persistence.descriptors.DescriptorEvent;
 import org.eclipse.persistence.descriptors.DescriptorEventAdapter;
+
+import com.armedia.acm.core.exceptions.AcmAccessControlException;
 
 import javax.persistence.PersistenceException;
 
