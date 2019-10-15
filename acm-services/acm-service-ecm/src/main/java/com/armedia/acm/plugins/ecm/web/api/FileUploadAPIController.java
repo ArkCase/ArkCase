@@ -1,5 +1,7 @@
 package com.armedia.acm.plugins.ecm.web.api;
 
+import com.armedia.acm.core.exceptions.AcmAccessControlException;
+
 /*-
  * #%L
  * ACM Service: Enterprise Content Management
@@ -29,7 +31,6 @@ package com.armedia.acm.plugins.ecm.web.api;
 
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
-import com.armedia.acm.data.exceptions.AcmAccessControlException;
 import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
@@ -106,7 +107,7 @@ public class FileUploadAPIController implements ApplicationEventPublisherAware
 
         if (!getArkPermissionEvaluator().hasPermission(authentication, folder.getId(), "FOLDER", "write|group-write"))
         {
-            throw new AcmAccessControlException(Arrays.asList(""),
+        	throw new AcmAccessControlException(Arrays.asList(""),
                     "The user {" + authentication.getName() + "} is not allowed to write to folder with id=" + folder.getId());
         }
 

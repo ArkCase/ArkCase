@@ -9,7 +9,7 @@
  *
  * Loads cases in the "My Cases" widget.
  */
-angular.module('dashboard.my-cases').controller('Dashboard.MyCasesController', [ '$scope', '$translate', 'Authentication', 'Dashboard.DashboardService', 'ConfigService', 'params', 'UtilService', function($scope, $translate, Authentication, DashboardService, ConfigService, params, Util) {
+angular.module('dashboard.my-cases').controller('Dashboard.MyCasesController', [ '$scope', '$translate', 'Authentication', 'Dashboard.DashboardService', 'Task.AlertsService', 'Util.DateService', 'ConfigService', 'params', 'UtilService', function($scope, $translate, Authentication, DashboardService, TaskAlertsService, UtilDateService, ConfigService, params, Util) {
     var vm = this;
     vm.config = null;
     var userInfo = null;
@@ -65,6 +65,9 @@ angular.module('dashboard.my-cases').controller('Dashboard.MyCasesController', [
             window.open(window.location.href.split('!')[0] + '!/cases/' + rowData.entity.object_id_s + '/main', '_self');
         }
     };
+
+    var rowTmpl = '<div ng-class="{\'overdue\':row.entity.isOverdue, \'deadline\':row.entity.isDeadline}"><div ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.colDef.name" class="ui-grid-cell" ng-class="{ \'ui-grid-row-header-cell\': col.isRowHeader }" ui-grid-cell></div></div>';
+
     vm.gridOptions = {
         enableColumnResizing: true,
         enableRowSelection: true,
@@ -75,6 +78,7 @@ angular.module('dashboard.my-cases').controller('Dashboard.MyCasesController', [
         multiSelect: false,
         noUnselect: false,
         columnDefs: [],
+        rowTemplate: rowTmpl,
         onRegisterApi: function(gridApi) {
             vm.gridApi = gridApi;
             gridApi.core.on.sortChanged($scope, function(grid, sortColumns) {
@@ -103,8 +107,22 @@ angular.module('dashboard.my-cases').controller('Dashboard.MyCasesController', [
             startWith: (paginationOptions.pageNumber - 1) * paginationOptions.pageSize,
             pageSize: paginationOptions.pageSize
         }, function(data) {
-            vm.gridOptions.data = data.response.docs;
+            vm.gridOptions.data = [];
             vm.gridOptions.totalItems = data.response.numFound;
+
+            _.forEach(data.response.docs, function(value) {
+                value.status_lcs = value.status_lcs.toUpperCase();
+
+                if (Util.goodValue(value.dueDate_tdt)) {
+                    value.dueDate_tdt = UtilDateService.isoToDate(value.dueDate_tdt);
+                }
+
+                //calculate to show alert icons if cases is in overdue or deadline is approaching
+                value.isOverdue = TaskAlertsService.calculateOverdue(value.dueDate_tdt);
+                value.isDeadline = TaskAlertsService.calculateDeadline(value.dueDate_tdt);
+
+                vm.gridOptions.data.push(value);
+            });
         });
     }
 } ]);

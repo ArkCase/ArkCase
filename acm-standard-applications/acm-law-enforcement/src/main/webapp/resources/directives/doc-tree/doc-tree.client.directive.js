@@ -2441,6 +2441,8 @@ angular.module('directives').directive(
                                             });
                                         }
                                     }, function(errorData) {
+                                    	var errMsg = $translate.instant("common.service.messageService.authorizationError");
+                                        MessageService.error(errMsg);
                                         DocTree.refreshTree();
                                         dfd.reject();
                                     });
@@ -3030,7 +3032,11 @@ angular.module('directives').directive(
                                                 }
                                             },
                                             onError: function(error) {
+                                            	if(errorData.data.message) {	
                                                 MessageService.error(error.data.message);
+                                            	} else {
+                                            		MessageService.error(error.data); 
+                                            	}
                                             }
                                         }).then(function(deletedFileId) {
                                             dfd.resolve(deletedFileId);

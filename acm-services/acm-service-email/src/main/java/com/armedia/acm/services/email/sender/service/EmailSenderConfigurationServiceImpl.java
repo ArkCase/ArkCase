@@ -29,12 +29,15 @@ package com.armedia.acm.services.email.sender.service;
 
 import com.armedia.acm.configuration.service.ConfigurationPropertyService;
 import com.armedia.acm.email.model.EmailSenderConfig;
+import com.armedia.acm.services.email.exception.MailRefusedConnectionException;
+import com.armedia.acm.services.email.exception.RejectedLoginException;
+import com.armedia.acm.services.email.exception.StartTLSNotSupportedException;
 
 import org.apache.commons.net.smtp.AuthenticatingSMTPClient;
 import org.apache.commons.net.smtp.SMTPClient;
 import org.apache.commons.net.smtp.SMTPReply;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 
@@ -62,7 +65,8 @@ public class EmailSenderConfigurationServiceImpl implements EmailSenderConfigura
         return emailSenderConfig;
     }
 
-    public boolean validateSmtpConfiguration(EmailSenderConfig configuration)
+    public boolean validateSmtpConfiguration(EmailSenderConfig configuration) throws MailRefusedConnectionException, RejectedLoginException,
+            StartTLSNotSupportedException
     {
         boolean validation = false;
         AuthenticatingSMTPClient authenticatingSmtpClient = null;
@@ -82,7 +86,7 @@ public class EmailSenderConfigurationServiceImpl implements EmailSenderConfigura
             authenticatingSmtpClient.connect(configuration.getHost(), configuration.getPort());
             if (!isPositiveReply(authenticatingSmtpClient))
             {
-                throw new Exception("Rejected connection");
+                throw new MailRefusedConnectionException("Rejected connection");
             }
 
             if (configuration.getEncryption().equals("starttls"))
@@ -91,7 +95,7 @@ public class EmailSenderConfigurationServiceImpl implements EmailSenderConfigura
                 authenticatingSmtpClient.execTLS();
                 if (!isPositiveReply(authenticatingSmtpClient))
                 {
-                    throw new Exception("STARTTLS not supported");
+                    throw new StartTLSNotSupportedException("STARTTLS is not supported");
                 }
 
                 validation = true;
@@ -104,16 +108,27 @@ public class EmailSenderConfigurationServiceImpl implements EmailSenderConfigura
                         configuration.getPassword());
                 if (!isPositiveReply(authenticatingSmtpClient))
                 {
-                    throw new Exception("Rejected login");
+                    validation = false;
+                    throw new RejectedLoginException("Invalid username or password");
                 }
             }
 
             validation = true;
 
         }
-        catch (Exception e)
+        catch (MailRefusedConnectionException | RejectedLoginException | StartTLSNotSupportedException e)
         {
             log.error("SMTP Error, [{}]", e.getMessage(), e);
+            throw e;
+        }
+
+        catch (Exception e)
+        {
+            throw new MailRefusedConnectionException("Invalid server address and port");
+        }
+
+        finally
+        {
             if (authenticatingSmtpClient != null && authenticatingSmtpClient.isConnected())
             {
                 try

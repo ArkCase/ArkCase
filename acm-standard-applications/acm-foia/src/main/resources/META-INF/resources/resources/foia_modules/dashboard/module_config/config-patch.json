@@ -10,10 +10,6 @@
         }
     },
     {
-        "op": "remove",
-        "path": "/components/?@.id=='myCases'/columnDefs/?@.field=='alerts'"
-    },
-    {
         "op": "replace",
         "path": "/components/?@.id=='myCases'/columnDefs/?@.name=='name'",
         "value": {
@@ -54,10 +50,6 @@
     {
         "op": "remove",
         "path": "/components/?@.id=='myCases'/columnDefs/?@.name=='assignee_id_lcs'"
-    },
-    {
-        "op": "remove",
-        "path": "/components/?@.id=='myCases'/columnDefs/?@.name=='dueDate_tdt'"
     },
     {
         "op": "remove",
