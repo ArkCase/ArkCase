@@ -32,7 +32,8 @@
             {
                 "desc": "tasks.tree.filters.myTasks",
                 "name": "my-tasks",
-                "value": "fq=assignee_s:${user}"
+                "value": "fq=assignee_s:${user}",
+                "default": true
             },
             {
                 "desc": "tasks.tree.filters.opened",
@@ -67,8 +68,7 @@
             {
                 "desc": "tasks.tree.filters.noFilter",
                 "name": "",
-                "value": "",
-                "default": true
+                "value": ""
             }
         ],
         "sorters": [
@@ -80,7 +80,17 @@
             {
                 "desc": "tasks.tree.sorters.createdDateDesc",
                 "name": "sort-date-desc",
-                "value": "create_tdt DESC",
+                "value": "create_tdt DESC"
+            },
+            {
+                "desc": "tasks.tree.sorters.dueDateAsc",
+                "name": "sort-due-date-asc",
+                "value": "dueDate_tdt ASC"
+            },
+            {
+                "desc": "tasks.tree.sorters.dueDateDesc",
+                "name": "sort-due-date-desc",
+                "value": "dueDate_tdt DESC",
                 "default": true
             },
             {

@@ -27,10 +27,8 @@ package com.armedia.acm.plugins.admin.web.api;
  * #L%
  */
 
-import com.armedia.acm.plugins.admin.model.ObjectTitleConfig;
-import com.armedia.acm.plugins.admin.model.TitleConfiguration;
-import com.armedia.acm.plugins.admin.service.ObjectTitleConfigurationService;
-import org.json.JSONObject;
+import com.armedia.acm.services.objecttitle.model.TitleConfiguration;
+import com.armedia.acm.services.objecttitle.service.ObjectTitleConfigurationService;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;

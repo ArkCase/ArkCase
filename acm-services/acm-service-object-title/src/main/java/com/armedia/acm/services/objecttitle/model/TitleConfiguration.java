@@ -1,10 +1,10 @@
-package com.armedia.acm.data.exceptions;
+package com.armedia.acm.services.objecttitle.model;
 
 /*-
  * #%L
- * ACM Core API
+ * ACM Default Plugin: admin
  * %%
- * Copyright (C) 2014 - 2018 ArkCase LLC
+ * Copyright (C) 2014 - 2019 ArkCase LLC
  * %%
  * This file is part of the ArkCase software. 
  * 
@@ -27,44 +27,28 @@ package com.armedia.acm.data.exceptions;
  * #L%
  */
 
-import java.util.List;
-
-public class AcmAccessControlException extends Exception
+public class TitleConfiguration
 {
-    private List<String> listOfErrors;
+    private Boolean enableTitleField;
+    private String title;
 
-    public AcmAccessControlException(List<String> listOfErrors, String message)
+    public Boolean getEnableTitleField()
     {
-        super(message);
-        this.listOfErrors = listOfErrors;
+        return enableTitleField;
     }
 
-    public List<String> getListOfErrors()
+    public void setEnableTitleField(Boolean enableTitleField)
     {
-        return listOfErrors;
+        this.enableTitleField = enableTitleField;
     }
 
-    public void setListOfErrors(List<String> listOfErrors)
+    public String getTitle()
     {
-        this.listOfErrors = listOfErrors;
+        return title;
     }
 
-    @Override
-    public String getMessage()
+    public void setTitle(String title)
     {
-        String message = "";
-        if (getListOfErrors() != null)
-        {
-            message += "Encountered " + getListOfErrors() + " as a list of errors.\n";
-        }
-        if (super.getMessage() != null)
-        {
-            message += "Server encountered exception: " + super.getMessage() + "\n";
-        }
-
-        message += "Exception type was: '" + getClass().getName() + "'.";
-
-        return message;
+        this.title = title;
     }
-
 }

@@ -1,6 +1,8 @@
 
 package com.armedia.acm.plugins.casefile.service;
 
+import com.armedia.acm.core.exceptions.AcmAccessControlException;
+
 /*-
  * #%L
  * ACM Default Plugin: Case File
@@ -31,7 +33,6 @@ package com.armedia.acm.plugins.casefile.service;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
-import com.armedia.acm.data.exceptions.AcmAccessControlException;
 import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
 import com.armedia.acm.plugins.casefile.exceptions.AcmCaseFileNotFound;
 import com.armedia.acm.plugins.casefile.exceptions.MergeCaseFilesException;
