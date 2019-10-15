@@ -78,7 +78,6 @@ import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.search.service.SearchResults;
 import com.armedia.acm.web.api.MDCConstants;
 
-
 import org.apache.chemistry.opencmis.client.api.CmisObject;
 import org.apache.chemistry.opencmis.client.api.Document;
 import org.apache.commons.io.FileUtils;
@@ -196,17 +195,18 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     public CmisObject findObjectById(String cmisRepositoryId, String cmisId) throws Exception
     {
         Map<String, Object> properties = new HashMap<>();
-        properties.put(EcmFileConstants.CONFIGURATION_REFERENCE, cmisConfigUtils.getCmisConfiguration(cmisRepositoryId));
+        properties.put(EcmFileConstants.CMIS_REPOSITORY_ID, "camelAlfresco");
+        properties.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, EcmFileCamelUtils.getCmisUser());
+        properties.put(EcmFileConstants.CMIS_OBJECT_ID, cmisId);
 
-        MuleMessage muleMessage = getMuleContextManager().send("vm://getObjectById.in", cmisId, properties);
-
-        if (muleMessage.getInboundProperty("findObjectByIdException") != null)
+        try
         {
-            throw (Exception) muleMessage.getInboundProperty("findObjectByIdException");
+            return (CmisObject) getCamelContextManager().send(ArkCaseCMISActions.GET_OBJECT_BY_ID, properties);
         }
-
-        return (CmisObject) muleMessage.getPayload();
-
+        catch (ArkCaseCamelException e)
+        {
+            throw e;
+        }
     }
 
     @Override
