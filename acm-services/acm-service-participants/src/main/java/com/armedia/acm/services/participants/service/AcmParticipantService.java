@@ -4,7 +4,7 @@ package com.armedia.acm.services.participants.service;
  * #%L
  * ACM Service: Participants
  * %%
- * Copyright (C) 2014 - 2018 ArkCase LLC
+ * Copyright (C) 2014 - 2019 ArkCase LLC
  * %%
  * This file is part of the ArkCase software. 
  * 
@@ -27,7 +27,7 @@ package com.armedia.acm.services.participants.service;
  * #L%
  */
 
-import com.armedia.acm.data.exceptions.AcmAccessControlException;
+import com.armedia.acm.core.exceptions.AcmAccessControlException;
 import com.armedia.acm.services.participants.dao.AcmParticipantDao;
 import com.armedia.acm.services.participants.model.AcmAssignedObject;
 import com.armedia.acm.services.participants.model.AcmParticipant;
