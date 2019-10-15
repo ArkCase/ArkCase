@@ -33,7 +33,6 @@ import com.armedia.acm.services.labels.exception.AcmLabelManagementException;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -55,8 +54,6 @@ import java.util.List;
 public class LabelManagementRetrieveNamespaces
 {
     private Logger log = LogManager.getLogger(getClass());
-
-    @Autowired
     private LabelsConfiguration labelsConfiguration;
 
     @RequestMapping(value = "/labelmanagement/namespaces", method = RequestMethod.GET, produces = {
@@ -77,11 +74,6 @@ public class LabelManagementRetrieveNamespaces
             throw new AcmLabelManagementException(msg, e);
         }
     }
-
-    // public void setLabelManagementService(LabelManagementService labelManagementService)
-    // {
-    // this.labelManagementService = labelManagementService;
-    // }
 
     public void setLabelsConfiguration(LabelsConfiguration labelsConfiguration)
     {

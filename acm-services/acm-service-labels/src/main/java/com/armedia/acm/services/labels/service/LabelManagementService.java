@@ -37,7 +37,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 
 import java.io.File;
@@ -53,17 +52,13 @@ public class LabelManagementService
 {
     private static final String labelsDescriptionKeyEnd = ".desc?";
     private Logger log = LogManager.getLogger(getClass());
-    private String resourcesLocation;
-    private String resourceFile;
     private String settingsFileLocation;
     private String defaultLocale;
     private Map<String, Object> defaultLocales;
     private ApplicationEventPublisher applicationEventPublisher;
-    private Map<String, Map<String, JSONObject>> cachedResources = new HashMap<>();
+    private Map<String, Map<String, JSONObject>> labelResourcesForFrevvo = new HashMap<>();
 
-    @Autowired
     private LabelsConfiguration labelsConfiguration;
-    @Autowired
     private ConfigurationPropertyService configurationPropertyService;
 
     /**
@@ -75,28 +70,28 @@ public class LabelManagementService
      */
     public JSONObject getResource(String moduleId, String lang) throws AcmLabelManagementException
     {
-        String fileName = moduleId + "-" + lang;
+        String labelsResource = moduleId + "-" + lang;
 
-        return loadResource(fileName);
+        return loadResource(labelsResource);
     }
 
     /**
-     * Return cached module's resource. Doesn't read from the file if once read
+     * Return module's resources for translation in frevvo forms
      *
      * @param moduleId
      * @param lang
      * @return
      */
-    public JSONObject getCachedResource(String moduleId, String lang) throws AcmLabelManagementException
+    public JSONObject getLabelResources(String moduleId, String lang) throws AcmLabelManagementException
     {
-        Map<String, JSONObject> moduleResource = cachedResources.get(moduleId);
+        Map<String, JSONObject> moduleResource = labelResourcesForFrevvo.get(moduleId);
 
         if (moduleResource == null)
         {
             JSONObject jsonObject = getResource(moduleId, lang);
             moduleResource = new HashMap<>();
             moduleResource.put(lang, jsonObject);
-            cachedResources.put(moduleId, moduleResource);
+            labelResourcesForFrevvo.put(moduleId, moduleResource);
         }
 
         JSONObject json = moduleResource.get(lang);
@@ -119,10 +114,9 @@ public class LabelManagementService
      */
     public JSONArray getAdminResource(String moduleId, String lang) throws AcmLabelManagementException
     {
-        // 1. Load module's resource file
-        String fileName = String.format("%s-%s", moduleId, lang);
-        JSONObject moduleResource = loadResource(fileName);
-        HashMap<String, String> defaultLabels = (HashMap<String, String>) labelsConfiguration.getDefaultProperty(fileName);
+        String labelsResource = String.format("%s-%s", moduleId, lang);
+        HashMap<String, String> defaultLabels = (HashMap<String, String>) labelsConfiguration.getDefaultProperty(labelsResource);
+        JSONObject moduleResource = loadResource(labelsResource);
 
         if (!defaultLocale.equals(lang))
         {
@@ -200,24 +194,6 @@ public class LabelManagementService
     }
 
     /**
-     * Batch refresh of modules
-     *
-     * @param modules
-     * @param langs
-     */
-    public void refresh(List<String> modules, List<String> langs)
-    {
-        for (String lang : langs)
-        {
-            for (String module : modules)
-            {
-                String fileName = String.format("%s-%s", module, lang);
-                loadResource(fileName);
-            }
-        }
-    }
-
-    /**
      * Remove module's runtime resource and reload it.
      *
      * @param moduleId
@@ -225,16 +201,15 @@ public class LabelManagementService
      */
     public void resetModule(String moduleId, String lang) throws AcmLabelManagementException
     {
-        String fileName = String.format("%s-%s-runtime.yaml", moduleId, lang);
+        String labelsResource = String.format("%s-%s", moduleId, lang);
         try
         {
-            File resourceFile = new File(resourcesLocation + fileName);
-            FileUtils.deleteQuietly(resourceFile);
-            loadResource(moduleId + "-" + lang);
+            configurationPropertyService.resetFilePropertiesToDefault(labelsResource);
+            loadResource(labelsResource);
         }
         catch (Exception e)
         {
-            String msg = String.format("Can't reset resource file %s", fileName);
+            String msg = String.format("Can't reset resource file %s", labelsResource);
             log.error(msg);
             throw new AcmLabelManagementException(msg);
         }
@@ -371,14 +346,14 @@ public class LabelManagementService
     /**
      * Load JSON resource file
      *
-     * @param fileName
+     * @param labelsResource
      * @return
      */
-    private JSONObject loadResource(String fileName)
+    private JSONObject loadResource(String labelsResource)
     {
         try
         {
-            HashMap<String, String> labels = (HashMap<String, String>) labelsConfiguration.getProperty(fileName);
+            HashMap<String, String> labels = (HashMap<String, String>) labelsConfiguration.getProperty(labelsResource);
             ObjectMapper objectMapper = new ObjectMapper();
             String json = objectMapper.writeValueAsString(labels);
             return new JSONObject(json);
@@ -386,19 +361,9 @@ public class LabelManagementService
         }
         catch (Exception e)
         {
-            log.warn(String.format("Can't read resource file %s", fileName));
+            log.warn(String.format("Can't read resource file %s", labelsResource));
             return null;
         }
-    }
-
-    public void setResourcesLocation(String resourcesLocation)
-    {
-        this.resourcesLocation = resourcesLocation;
-    }
-
-    public void setResourceFile(String resourceFile)
-    {
-        this.resourceFile = resourceFile;
     }
 
     public void setSettingsFileLocation(String settingsFileLocation)
@@ -434,5 +399,25 @@ public class LabelManagementService
     public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher)
     {
         this.applicationEventPublisher = applicationEventPublisher;
+    }
+
+    public LabelsConfiguration getLabelsConfiguration()
+    {
+        return labelsConfiguration;
+    }
+
+    public void setLabelsConfiguration(LabelsConfiguration labelsConfiguration)
+    {
+        this.labelsConfiguration = labelsConfiguration;
+    }
+
+    public ConfigurationPropertyService getConfigurationPropertyService()
+    {
+        return configurationPropertyService;
+    }
+
+    public void setConfigurationPropertyService(ConfigurationPropertyService configurationPropertyService)
+    {
+        this.configurationPropertyService = configurationPropertyService;
     }
 }
