@@ -98,7 +98,7 @@
         <property name="ldapUserFileRegex" value="^spring[-d]config[-d]user[-d][a-zA-Z0-9-._]+.xml$"/>
         <property name="ldapGroupPropertiesFile" ref="ldapAddGroupPropertiesFile"/>
         <property name="ldapGroupPropertiesFileRegex" value="^spring[-d]config[-d]group[-d][a-zA-Z0-9-._]+.properties$"/>
-        <property name="ldapGroupFileRegex" value="^spring[-d]config[-d]group[-d][a-zA-Z0-9-.]+.xml$"/>
+        <property name="ldapGroupFileRegex" value="^spring[-d]config[-d]group[-d][a-zA-Z0-9-._]+.xml$"/>
     </bean>
 
     <bean id="openLdapTemplateConfig" class="com.armedia.acm.plugins.admin.model.LdapTemplateConfig">
