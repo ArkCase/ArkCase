@@ -383,6 +383,7 @@
             "item": "Item #",
             "description": "Description",
             "amount": "Amount",
+            "type": "Type",
             "total": "Total: ",
             "buttons": {
                 "listInvoices": "List Invoices",
