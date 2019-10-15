@@ -92,12 +92,12 @@
         <property name="ldapConfigurationLocation" value="#{ systemProperties ['user.home'] }/.arkcase/acm/spring/"/>
         <property name="ldapFile" value="spring-config-%s-ldap.xml"/>
         <property name="ldapPropertiesFile" value="spring-config-%s-ldap.properties"/>
-        <property name="ldapPropertiesFileRegex" value="^spring[-d]config[-d][a-zA-Z0-9.]+[-d]ldap.properties$"/>
+        <property name="ldapPropertiesFileRegex" value="^spring[-d]config[-d][a-zA-Z0-9._]+[-d]ldap.properties$"/>
         <property name="ldapUserPropertiesFile" ref="ldapAddUserPropertiesFile"/>
-        <property name="ldapUserPropertiesFileRegex" value="^spring[-d]config[-d]user[-d][a-zA-Z0-9-.]+.properties$"/>
-        <property name="ldapUserFileRegex" value="^spring[-d]config[-d]user[-d][a-zA-Z0-9-.]+.xml$"/>
+        <property name="ldapUserPropertiesFileRegex" value="^spring[-d]config[-d]user[-d][a-zA-Z0-9-._]+.properties$"/>
+        <property name="ldapUserFileRegex" value="^spring[-d]config[-d]user[-d][a-zA-Z0-9-._]+.xml$"/>
         <property name="ldapGroupPropertiesFile" ref="ldapAddGroupPropertiesFile"/>
-        <property name="ldapGroupPropertiesFileRegex" value="^spring[-d]config[-d]group[-d][a-zA-Z0-9-.]+.properties$"/>
+        <property name="ldapGroupPropertiesFileRegex" value="^spring[-d]config[-d]group[-d][a-zA-Z0-9-._]+.properties$"/>
         <property name="ldapGroupFileRegex" value="^spring[-d]config[-d]group[-d][a-zA-Z0-9-.]+.xml$"/>
     </bean>
 
