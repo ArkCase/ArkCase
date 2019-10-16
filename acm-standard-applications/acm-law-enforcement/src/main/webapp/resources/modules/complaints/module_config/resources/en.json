@@ -353,6 +353,7 @@
         "table.columns": {
             "item": "Item #",
             "description": "Description",
+            "type" : "Type",
             "amount": "Amount",
             "total": "Total: ",
             "buttons": {
