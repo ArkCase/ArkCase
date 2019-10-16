@@ -28,6 +28,7 @@ package com.armedia.acm.services.billing.listener;
  */
 
 import com.armedia.acm.services.billing.exception.CreateBillingItemException;
+import com.armedia.acm.services.billing.model.BillingConstants;
 import com.armedia.acm.services.billing.model.BillingItem;
 import com.armedia.acm.services.billing.service.BillingService;
 import com.armedia.acm.services.timesheet.dao.AcmTimesheetDao;
@@ -65,15 +66,15 @@ public class TimesheetBillingListener implements ApplicationListener<AcmTimeshee
         AcmTimesheet timesheet = (AcmTimesheet) event.getSource();
 
         getTimesheetService().accumulateTimesheetByTypeAndChangeCode(timesheet).values().forEach(acmTime -> {
-            createBillingItem(event.getUserId(), timesheet.getTitle(), acmTime.getObjectId(), acmTime.getType(), acmTime.getTotalCost());
+            createBillingItem(event.getUserId(), timesheet.getTitle(), acmTime.getObjectId(), acmTime.getType(), acmTime.getTotalCost(), BillingConstants.BILLING_ITEM_TYPE_TIMESHEET);
         });
     }
 
-    private void createBillingItem(String userId, String title, Long parentObjectId, String parentObjectType, double balance)
+    private void createBillingItem(String userId, String title, Long parentObjectId, String parentObjectType, double balance, String itemType)
     {
         try
         {
-            getBillingService().createBillingItem(populateBillingItem(userId, title, parentObjectId, parentObjectType, balance));
+            getBillingService().createBillingItem(populateBillingItem(userId, title, parentObjectId, parentObjectType, balance, itemType));
         }
         catch (CreateBillingItemException e)
         {
@@ -83,7 +84,7 @@ public class TimesheetBillingListener implements ApplicationListener<AcmTimeshee
     }
 
     private BillingItem populateBillingItem(String creator, String itemDescription, Long parentObjectId, String parentObjectType,
-            Double itemAmount)
+            Double itemAmount, String itemType)
     {
         BillingItem billingItem = new BillingItem();
         billingItem.setCreator(creator);
@@ -92,6 +93,7 @@ public class TimesheetBillingListener implements ApplicationListener<AcmTimeshee
         billingItem.setParentObjectId(parentObjectId);
         billingItem.setParentObjectType(parentObjectType);
         billingItem.setItemAmount(itemAmount);
+        billingItem.setItemType(itemType);
         return billingItem;
     }
 
