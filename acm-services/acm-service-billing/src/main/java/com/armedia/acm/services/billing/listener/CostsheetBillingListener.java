@@ -28,6 +28,7 @@ package com.armedia.acm.services.billing.listener;
  */
 
 import com.armedia.acm.services.billing.exception.CreateBillingItemException;
+import com.armedia.acm.services.billing.model.BillingConstants;
 import com.armedia.acm.services.billing.model.BillingItem;
 import com.armedia.acm.services.billing.service.BillingService;
 import com.armedia.acm.services.costsheet.dao.AcmCostsheetDao;
@@ -61,7 +62,7 @@ public class CostsheetBillingListener implements ApplicationListener<AcmCostshee
     private void generateBillingItems(AcmCostsheetEvent acmCostsheetEvent)
     {
         AcmCostsheet costsheet = (AcmCostsheet)acmCostsheetEvent.getSource();
-        BillingItem costsheetBillingItem = populateBillingItem(acmCostsheetEvent.getUserId(), costsheet.getTitle(), costsheet.getParentId(), costsheet.getParentType(), costsheet.calculateBalance());
+        BillingItem costsheetBillingItem = populateBillingItem(acmCostsheetEvent.getUserId(), costsheet.getTitle(), costsheet.getParentId(), costsheet.getParentType(), costsheet.calculateBalance(), BillingConstants.BILLING_ITEM_TYPE_COSTSHEET);
 
         try
         {
@@ -74,7 +75,7 @@ public class CostsheetBillingListener implements ApplicationListener<AcmCostshee
         }
     }
 
-    private BillingItem populateBillingItem(String creator, String itemDescription, Long parentObjectId, String parentObjectType, Double itemAmount)
+    private BillingItem populateBillingItem(String creator, String itemDescription, Long parentObjectId, String parentObjectType, Double itemAmount, String itemType)
     {
         BillingItem billingItem = new BillingItem();
         billingItem.setCreator(creator);
@@ -83,7 +84,7 @@ public class CostsheetBillingListener implements ApplicationListener<AcmCostshee
         billingItem.setParentObjectId(parentObjectId);
         billingItem.setParentObjectType(parentObjectType);
         billingItem.setItemAmount(itemAmount);
-
+        billingItem.setItemType(itemType);
         return billingItem;
     }
 
