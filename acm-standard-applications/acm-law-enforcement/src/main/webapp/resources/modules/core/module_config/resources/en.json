@@ -632,6 +632,12 @@
             "objectTitleTypes": {
                 "caseFile": "Case File",
                 "complaint": "Complaint"
+            },
+            "taskParentTypes": {
+                "caseFile": "Case File",
+                "complaint": "Complaint",
+                "costsheet": "Cost Tracking",
+                "timesheet": "Timesheet"
             }
         },
         "userInfo": {
