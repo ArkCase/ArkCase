@@ -1,5 +1,17 @@
 package com.armedia.acm.services.email.smtp;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Stream;
+
 /*-
  * #%L
  * ACM Service: Email SMTP
@@ -53,18 +65,6 @@ import org.mule.util.FileUtils;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.security.core.Authentication;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.stream.Stream;
 
 /**
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Jun 21, 2017
@@ -200,8 +200,8 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
             }
             catch (Exception e)
             {
-                log.error("Failed to send email to [{}].", emailAddress, exception);
                 exception = e;
+                log.error("Failed to send email to [{}].", emailAddress, exception);
             }
         }
         in.setMailSent(exception == null);
@@ -281,7 +281,7 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
                     }
                     catch (ConversionException e)
                     {
-                        log.error(String.format("Could not convert file [%s] to PDF", fileName), e);
+                        log.error("Could not convert file [{}] to PDF", fileName, e);
                     }
 
                     if (pdfConvertedFile != null)
@@ -295,7 +295,7 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
                         }
                         catch (IOException e)
                         {
-                            log.error(String.format("Could not open input stream of file [%s]", fileName), e);
+                            log.error("Could not open input stream of file [{}]", fileName, e);
                         }
                         finally
                         {
@@ -379,7 +379,7 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
             if (exception != null)
             {
                 emailResultList.add(new EmailWithEmbeddedLinksResultDTO(emailAddress, false));
-                log.error("Email message not sent ...", exception);
+                log.error("Failed to send email to [{}].", emailAddress, exception);
             }
             else
             {
