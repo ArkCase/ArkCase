@@ -29,6 +29,7 @@ package com.armedia.acm.plugins.ecm.service.impl;
 
 import static org.easymock.EasyMock.capture;
 import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.expectLastCall;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -210,6 +211,10 @@ public class EcmFileServiceImplTest extends EasyMockSupport
         expect(mockCmisConfigUtils.getCmisConfiguration(toBeDeleted.getCmisRepositoryId())).andReturn(null);
         expect(mockMuleContextManager.send(EcmFileConstants.MULE_ENDPOINT_DELETE_FILE, toBeDeleted, props)).andReturn(mockMuleMessage);
         expect(mockAuthenticationTokenDao.findAuthenticationTokenByTokenFileId(toBeDeleted.getFileId())).andReturn(authenticationTokens);
+        expect(mockAuthenticationTokenDao.save(authenticationTokens.get(0))).andReturn(authenticationTokens.get(0));
+        expect(mockAuthenticationTokenDao.getEntityManager()).andReturn(mockEntityManager);
+        mockEntityManager.flush();
+        expectLastCall();
 
         mockEcmFileDao.deleteFile(toBeDeleted.getFileId());
 
@@ -243,6 +248,10 @@ public class EcmFileServiceImplTest extends EasyMockSupport
         expect(mockCmisConfigUtils.getCmisConfiguration(toBeDeleted.getCmisRepositoryId())).andReturn(null);
         expect(mockMuleContextManager.send(EcmFileConstants.MULE_ENDPOINT_DELETE_FILE, toBeDeleted, props)).andReturn(mockMuleMessage);
         expect(mockAuthenticationTokenDao.findAuthenticationTokenByTokenFileId(toBeDeleted.getFileId())).andReturn(authenticationTokens);
+        expect(mockAuthenticationTokenDao.save(authenticationTokens.get(0))).andReturn(authenticationTokens.get(0));
+        expect(mockAuthenticationTokenDao.getEntityManager()).andReturn(mockEntityManager);
+        mockEntityManager.flush();
+        expectLastCall();
         mockEcmFileDao.deleteFile(toBeDeleted.getFileId());
 
         replayAll();
