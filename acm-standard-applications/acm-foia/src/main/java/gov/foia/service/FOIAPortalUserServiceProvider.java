@@ -447,8 +447,15 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
         // TODO Auto-generated method stub
         Person person = getPersonDao().find(Long.valueOf(user.getPortalUserId()));
 
+        person.setGivenName(user.getFirstName());
+        person.setMiddleName(user.getMiddleName());
+        person.setFamilyName(user.getLastName());
+        person.setTitle(user.getPrefix());
+        ((PortalFOIAPerson) person).setPosition(user.getPosition());
+        person.getOrganizations().get(0).setOrganizationValue(user.getOrganization());
+
+
         person.getAddresses().get(0).setCity(user.getCity());
-        person.getAddresses().get(0).setCountry(user.getCountry());
         person.getAddresses().get(0).setState(user.getState());
         person.getAddresses().get(0).setStreetAddress(user.getAddress1());
         person.getAddresses().get(0).setStreetAddress2(user.getAddress2());
@@ -513,7 +520,7 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
         user.setMiddleName(person.getMiddleName());
         user.setLastName(person.getFamilyName());
         user.setPrefix(person.getTitle());
-        user.setTitle(person.getPosition());
+        user.setPosition(person.getPosition());
         user.setPhoneNumber(person.getContactMethods().stream().filter(cm -> cm.getType().equals("Phone")).findFirst().get().getValue());
 
         PostalAddress address = person.getDefaultAddress();
@@ -523,7 +530,7 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
         user.setAddress1(address.getStreetAddress());
         user.setAddress2(address.getStreetAddress2());
         user.setZipCode(address.getZip());
-
+        user.setOrganization(person.getOrganizations().get(0).getOrganizationValue());
         user.setEmail(person.getDefaultEmail().getValue());
 
         user.setRole(person.getPortalRoles().get(portalId));
@@ -558,10 +565,10 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
         person.setMiddleName(user.getMiddleName());
         person.setFamilyName(user.getLastName());
         person.setTitle(user.getPrefix());
-        person.setPosition(user.getTitle());
+        person.setPosition(user.getPosition());
 
         Organization organization = new Organization();
-        organization.setOrganizationValue(" ");
+        organization.setOrganizationValue(user.getOrganization());
         organization.setOrganizationType("Corporation");
         person.getOrganizations().add(organization);
 
