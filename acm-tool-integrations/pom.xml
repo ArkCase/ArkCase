@@ -44,6 +44,7 @@
         <module>acm-ocr-tool</module>
         <module>acm-transcribe-tool</module>
         <module>acm-quartz-scheduler</module>
+        <module>acm-camel-context-manager</module>
     </modules>
 
 </project>
