@@ -27,17 +27,17 @@ package com.armedia.acm.plugins.ecm.utils;
  * #L%
  */
 
+import com.armedia.acm.camelcontext.arkcase.cmis.ArkCaseCMISActions;
 import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 
 import org.apache.chemistry.opencmis.client.api.Document;
 import org.apache.chemistry.opencmis.commons.data.ContentStream;
-import org.mule.api.ExceptionPayload;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
 
 import java.io.InputStream;
 import java.util.HashMap;
@@ -51,6 +51,8 @@ public class EcmFileMuleUtils
     private transient final Logger log = LogManager.getLogger(getClass());
 
     private MuleContextManager muleContextManager;
+
+    private EcmFileCamelUtils ecmFileCamelUtils;
 
     private CmisConfigUtils cmisConfigUtils;
 
@@ -156,7 +158,11 @@ public class EcmFileMuleUtils
 
     /**
      * Removes a file from the Alfresco content repository
-     *
+     * 
+     * @deprecated
+     *             This method is no longer acceptable
+     *             Use {@link EcmFileCamelUtils#deleteFile(EcmFile, String)} instead.
+     * 
      * @param ecmFile
      *            - metadata for the file to delete
      * @param cmisFileId
@@ -164,21 +170,13 @@ public class EcmFileMuleUtils
      * @throws Exception
      *             if the mule call to delete the document from the repository fails
      */
+    @Deprecated
     public void deleteFile(EcmFile ecmFile, String cmisFileId) throws Exception
     {
-        // This is the request payload for mule including the unique cmis id for the document to delete
-        Map<String, Object> messageProps = new HashMap<>();
-        messageProps.put("ecmFileId", cmisFileId);
-        messageProps.put(EcmFileConstants.CONFIGURATION_REFERENCE, cmisConfigUtils.getCmisConfiguration(ecmFile.getCmisRepositoryId()));
-
-        // Invokes the mule flow to delete the file contents from the repository
-        log.debug("rolling back file upload for cmis id: " + cmisFileId + " using vm://deleteFile.in mule flow");
-        MuleMessage fileDeleteResponse = getMuleContextManager().send("vm://deleteFile.in", ecmFile, messageProps);
-        ExceptionPayload exceptionPayload = fileDeleteResponse.getExceptionPayload();
-        if (exceptionPayload != null)
-        {
-            throw new Exception(exceptionPayload.getRootException());
-        }
+        // Invokes the Camel route to delete the file contents from the repository
+        log.debug("Invoking delete Camel route to perform roll back on file upload for cmis id: [{}] using [{}]", cmisFileId,
+                ArkCaseCMISActions.DELETE_DOCUMENT.getQueueName());
+        getEcmFileCamelUtils().deleteFile(ecmFile, cmisFileId);
     }
 
     public MuleContextManager getMuleContextManager()
@@ -199,5 +197,15 @@ public class EcmFileMuleUtils
     public void setCmisConfigUtils(CmisConfigUtils cmisConfigUtils)
     {
         this.cmisConfigUtils = cmisConfigUtils;
+    }
+
+    public EcmFileCamelUtils getEcmFileCamelUtils()
+    {
+        return ecmFileCamelUtils;
+    }
+
+    public void setEcmFileCamelUtils(EcmFileCamelUtils ecmFileCamelUtils)
+    {
+        this.ecmFileCamelUtils = ecmFileCamelUtils;
     }
 }

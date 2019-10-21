@@ -27,6 +27,7 @@ package com.armedia.acm.plugins.admin.service;
  * #L%
  */
 
+import com.armedia.acm.camelcontext.context.CamelContextManager;
 import com.armedia.acm.crypto.exceptions.AcmEncryptionException;
 import com.armedia.acm.crypto.properties.AcmEncryptablePropertyUtils;
 import com.armedia.acm.plugins.admin.exception.AcmCmisConfigurationException;
@@ -40,10 +41,10 @@ import org.apache.chemistry.opencmis.client.runtime.SessionFactoryImpl;
 import org.apache.chemistry.opencmis.commons.SessionParameter;
 import org.apache.chemistry.opencmis.commons.enums.BindingType;
 import org.apache.commons.io.FileUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -77,6 +78,8 @@ public class CmisConfigurationService
 
     private Pattern cmisIdPattern;
     private Pattern cmisPropertiesPattern;
+
+    private CamelContextManager camelContextManager;
 
     /**
      * Create CMIS Config config files
@@ -112,6 +115,7 @@ public class CmisConfigurationService
 
             log.debug("Attempting to create CMIS Configuration XML file");
             createCmisFile(cmisId, props);
+            getCamelContextManager().updateRepositoryConfigs();
         }
         catch (Exception e)
         {
@@ -144,6 +148,7 @@ public class CmisConfigurationService
         }
 
         writePropertiesFile(cmisId, props);
+        getCamelContextManager().updateRepositoryConfigs();
     }
 
     /**
@@ -172,6 +177,8 @@ public class CmisConfigurationService
 
         forceDeleteFileQuietly(getPropertiesFileName(cmisId));
         forceDeleteFileQuietly(getCmisFileName(cmisId));
+
+        getCamelContextManager().updateRepositoryConfigs();
     }
 
     /**
@@ -475,5 +482,15 @@ public class CmisConfigurationService
     public void setCmisPropertiesPattern(Pattern cmisPropertiesPattern)
     {
         this.cmisPropertiesPattern = cmisPropertiesPattern;
+    }
+
+    public CamelContextManager getCamelContextManager()
+    {
+        return camelContextManager;
+    }
+
+    public void setCamelContextManager(CamelContextManager camelContextManager)
+    {
+        this.camelContextManager = camelContextManager;
     }
 }

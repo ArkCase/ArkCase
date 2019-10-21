@@ -40,7 +40,6 @@
         <barcode4j.version>2.1</barcode4j.version>
         <bouncycastle.version>1.54</bouncycastle.version>
         <c3p0.version>0.9.2.1</c3p0.version>
-        <camel.version>2.13.1</camel.version>
         <castor-xml.version>1.3.3</castor-xml.version>
         <chemistry.version>1.1.0</chemistry.version>
         <osgi.version>6.0.0</osgi.version>
@@ -134,6 +133,14 @@
         <quartz.version>2.3.1</quartz.version>
         <jaudiotagger.version>2.0.3</jaudiotagger.version>
         <reflections.version>0.9.9</reflections.version>
+        <camel.spring.version>3.0.0-M3</camel.spring.version>
+        <camel.spi.version>3.0.0-M3</camel.spi.version>
+        <camel.core.version>3.0.0-M3</camel.core.version>
+        <camel.cmis.version>3.0.0-M3</camel.cmis.version>
+        <camel.support.version>3.0.0-M3</camel.support.version>
+        <camel.api.version>3.0.0-M3</camel.api.version>
+
+        <kryo.version>5.0.0-RC4</kryo.version>
         <subzero.version>0.9</subzero.version>
         <xsync-version>1.2</xsync-version>
         <nimbusds.version>5.8</nimbusds.version>
@@ -338,7 +345,7 @@
                     <compilerArgument>-Xlint:all</compilerArgument>
                     <showWarnings>true</showWarnings>
                     <showDeprecation>true</showDeprecation>
-                    <useIncrementalCompilation>false</useIncrementalCompilation> 
+                    <useIncrementalCompilation>false</useIncrementalCompilation>
                 </configuration>
                 <executions>
                     <execution>
@@ -1081,14 +1088,40 @@
             <!-- camel -->
             <dependency>
                 <groupId>org.apache.camel</groupId>
-                <artifactId>camel-core</artifactId>
-                <version>${camel.version}</version>
+                <artifactId>camel-spring-boot-starter</artifactId>
+                <version>${camel.spring.version}</version>
             </dependency>
+
             <dependency>
                 <groupId>org.apache.camel</groupId>
-                <artifactId>camel-spring</artifactId>
-                <version>${camel.version}</version>
+                <artifactId>spi-annotations</artifactId>
+                <version>${camel.spi.version}</version>
             </dependency>
+
+            <dependency>
+                <groupId>org.apache.camel</groupId>
+                <artifactId>camel-core</artifactId>
+                <version>${camel.core.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.camel</groupId>
+                <artifactId>camel-api</artifactId>
+                <version>${camel.api.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.camel</groupId>
+                <artifactId>camel-support</artifactId>
+                <version>${camel.support.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.camel</groupId>
+                <artifactId>camel-cmis-arkcase</artifactId>
+                <version>${camel.cmis.version}</version>
+            </dependency>
+
             <!-- apache libraries -->
             <dependency>
                 <groupId>org.apache.commons</groupId>
@@ -1669,7 +1702,7 @@
                 <artifactId>nimbus-jose-jwt</artifactId>
                 <version>${nimbusds.version}</version>
             </dependency>
-            
+
             <!-- concurrency -->
             <dependency>
                 <groupId>com.antkorwin</groupId>
