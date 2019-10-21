@@ -219,10 +219,10 @@ public class LabelManagementService
      * Update resource file
      *
      * @param resource
-     * @param applicationName
+     * @param labelsResource
      * @return
      */
-    public Map<String, Object> updateResource(String resource, String applicationName)
+    public Map<String, Object> updateResource(String resource, String labelsResource)
     {
         JSONObject value = new JSONObject(resource);
         Map<String, Object> properties = new HashMap<>();
@@ -234,7 +234,7 @@ public class LabelManagementService
         else
         {
             HashMap<String, String> defaultLabels = (HashMap<String, String>) labelsConfiguration
-                    .getDefaultProperty(applicationName);
+                    .getDefaultProperty(labelsResource);
             if (defaultLabels.containsKey(value.getString("id") + labelsDescriptionKeyEnd))
             {
                 properties.put(value.getString("id") + labelsDescriptionKeyEnd, "");
@@ -243,7 +243,7 @@ public class LabelManagementService
 
         properties.put(value.getString("id"), value.getString("value"));
 
-        configurationPropertyService.updateProperties(properties, applicationName);
+        configurationPropertyService.updateProperties(properties, labelsResource);
         return properties;
     }
 
