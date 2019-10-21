@@ -31,11 +31,11 @@ import com.armedia.acm.activiti.AcmTaskActivitiEvent;
 import com.armedia.acm.services.billing.exception.CreateBillingItemException;
 import com.armedia.acm.services.billing.model.BillingItem;
 import com.armedia.acm.services.billing.service.BillingService;
+import com.armedia.acm.services.billing.model.BillingConstants;
 import com.armedia.acm.services.costsheet.dao.AcmCostsheetDao;
 import com.armedia.acm.services.costsheet.model.AcmCostsheet;
 import com.armedia.acm.services.costsheet.model.CostsheetConstants;
 import com.armedia.acm.services.timesheet.dao.AcmTimesheetDao;
-import com.armedia.acm.services.timesheet.model.AcmTime;
 import com.armedia.acm.services.timesheet.model.AcmTimesheet;
 import com.armedia.acm.services.timesheet.model.TimesheetConstants;
 
@@ -85,7 +85,7 @@ public class BillingAcmTaskActivitiEventHandler implements ApplicationListener<A
         AcmTimesheet timesheet = getAcmTimesheetDao().find(event.getParentObjectId());
 
         getTimesheetService().accumulateTimesheetByTypeAndChangeCode(timesheet).values().stream().forEach(acmTime -> {
-            createBillingItem(event.getUserId(), timesheet.getTitle(), acmTime.getObjectId(), acmTime.getType(), acmTime.getTotalCost());
+            createBillingItem(event.getUserId(), timesheet.getTitle(), acmTime.getObjectId(), acmTime.getType(), acmTime.getTotalCost(), BillingConstants.BILLING_ITEM_TYPE_TIMESHEET);
         });
     }
 
@@ -94,14 +94,14 @@ public class BillingAcmTaskActivitiEventHandler implements ApplicationListener<A
         AcmCostsheet costsheet = getAcmCostsheetDao().find(event.getParentObjectId());
 
         createBillingItem(event.getUserId(), costsheet.getTitle(), costsheet.getParentId(), costsheet.getParentType(),
-                costsheet.calculateBalance());
+                costsheet.calculateBalance(), BillingConstants.BILLING_ITEM_TYPE_COSTSHEET);
     }
 
-    private void createBillingItem(String userId, String title, Long parentObjectId, String parentObjectType, double balance)
+    private void createBillingItem(String userId, String title, Long parentObjectId, String parentObjectType, double balance, String itemType)
     {
         try
         {
-            getBillingService().createBillingItem(populateBillingItem(userId, title, parentObjectId, parentObjectType, balance));
+            getBillingService().createBillingItem(populateBillingItem(userId, title, parentObjectId, parentObjectType, balance, itemType));
         }
         catch (CreateBillingItemException e)
         {
@@ -111,7 +111,7 @@ public class BillingAcmTaskActivitiEventHandler implements ApplicationListener<A
     }
 
     private BillingItem populateBillingItem(String creator, String itemDescription, Long parentObjectId, String parentObjectType,
-            Double itemAmount)
+            Double itemAmount, String itemType)
     {
         BillingItem billingItem = new BillingItem();
         billingItem.setCreator(creator);
@@ -120,6 +120,7 @@ public class BillingAcmTaskActivitiEventHandler implements ApplicationListener<A
         billingItem.setParentObjectId(parentObjectId);
         billingItem.setParentObjectType(parentObjectType);
         billingItem.setItemAmount(itemAmount);
+        billingItem.setItemType(itemType);
         return billingItem;
     }
 

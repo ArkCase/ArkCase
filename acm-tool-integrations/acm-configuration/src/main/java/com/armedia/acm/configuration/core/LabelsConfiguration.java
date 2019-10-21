@@ -31,18 +31,14 @@ import com.armedia.acm.configuration.api.ConfigurationFacade;
 import com.armedia.acm.configuration.client.ConfigurationServiceBootClient;
 import com.armedia.acm.configuration.model.ModuleConfig;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.json.JSONArray;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.jmx.export.annotation.ManagedResource;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -55,15 +51,11 @@ public class LabelsConfiguration implements ConfigurationFacade
     private static final Logger log = LogManager.getLogger(LabelsConfiguration.class);
 
     private final static String CONFIGURATION_SERVER_URL = "configuration.server.url";
-    private final static String MODULE_CORE_ID = "core";
     private final static String defaultLocale = "en";
     private volatile static LabelsConfiguration INSTANCE;
 
     private Map<String, Object> labelsMap = new HashMap<>();
     private Map<String, Object> labelsDefaultMap = new HashMap<>();
-
-    private String modulesLocation = System.getProperty("user.home") + "/.arkcase/custom/modules/";
-    private String moduleConfigLocation = System.getProperty("user.home") + "/.arkcase/custom/modules/%s/module_config/config.json";
 
     @Autowired
     private ConfigurationServiceBootClient configurationServiceBootClient;
@@ -92,79 +84,15 @@ public class LabelsConfiguration implements ConfigurationFacade
     private synchronized void initializeLabelsMap()
     {
         String serverUrl = this.environment.getProperty(CONFIGURATION_SERVER_URL);
-        List<String> allModules = getModulesNames();
-        for (String labelsModule : allModules)
+        List<String> modulesNames = configurationServiceBootClient.getModulesNames();
+
+        log.info("Loading labels from config server with language: {}", defaultLocale);
+        for (String labelsModule : modulesNames)
         {
             String key = String.format("%s-%s", labelsModule, defaultLocale);
             labelsMap.put(key, this.configurationServiceBootClient.loadConfiguration(serverUrl, key));
             labelsDefaultMap.put(key, this.configurationServiceBootClient.loadDefaultConfiguration(serverUrl, key));
         }
-        Map<String, Object> menusCore = loadMenusResources(defaultLocale, labelsMap);
-        ((HashMap) labelsMap.get(MODULE_CORE_ID + "-" + defaultLocale)).putAll(menusCore);
-    }
-
-    private Map<String, Object> loadMenusResources(String lang, Map<String, Object> labelsMap)
-    {
-        // 1. Get list of modules
-        List<String> modulesNames = getModulesNames();
-        Map<String, Object> modulesMenus = new HashMap<>();
-
-        // 2. Load modules configuration file and retrieve information about menus
-        for (String moduleName : modulesNames)
-        {
-            String configFileName = String.format(moduleConfigLocation, moduleName);
-            JSONObject configResource = null;
-            try
-            {
-                File file = FileUtils.getFile(configFileName);
-                String resource = FileUtils.readFileToString(file, "UTF-8");
-                configResource = new JSONObject(resource);
-            }
-            catch (Exception e)
-            {
-                log.warn(String.format("Can't read resource file %s", configFileName));
-            }
-
-            if (configResource != null && configResource.has("menus"))
-            {
-                JSONArray menus = configResource.getJSONArray("menus");
-                for (int i = 0; i < menus.length(); i++)
-                {
-                    JSONObject menuInfo = menus.getJSONObject(i);
-                    // 3. Combine menus information into the one object
-                    if (menuInfo.has("menuId") && menuInfo.has("menuItemTitle") && menuInfo.has("menuItemURL"))
-                    {
-                        String key = MODULE_CORE_ID + ".menus." + menuInfo.getString("menuId") + "." + menuInfo.getString("menuItemURL");
-                        String menuItemTitle = (String) menuInfo.get("menuItemTitle");
-
-                        if (((HashMap) labelsMap.get(configResource.getString("id") + "-" + lang)).containsKey(menuItemTitle))
-                        {
-                            menuItemTitle = ((HashMap) labelsMap.get(configResource.getString("id") + "-" + lang))
-                                    .get(menuItemTitle).toString();
-                        }
-
-                        modulesMenus.put(key, menuItemTitle);
-                    }
-                }
-            }
-        }
-
-        return modulesMenus;
-    }
-
-    /**
-     * Return modules
-     */
-    public List<String> getModulesNames()
-    {
-        List<String> modulesNames = new ArrayList<>();
-        List<ModuleConfig> modules = getModules();
-        for (ModuleConfig moduleIter : modules)
-        {
-            modulesNames.add(moduleIter.getId());
-        }
-
-        return modulesNames;
     }
 
     /**
@@ -174,20 +102,17 @@ public class LabelsConfiguration implements ConfigurationFacade
      */
     public List<ModuleConfig> getModules()
     {
-        File modulesDir = new File(modulesLocation);
-
-        File[] dirs = modulesDir.listFiles(File::isDirectory);
-
         List<ModuleConfig> modules = new ArrayList<>();
 
-        for (File dirIter : dirs)
+        List<String> modulesNames = configurationServiceBootClient.getModulesNames();
+
+        for (String moduleName : modulesNames)
         {
             ModuleConfig module = new ModuleConfig();
-            module.setId(dirIter.getName());
-            module.setName(dirIter.getName());
+            module.setId(moduleName);
+            module.setName(moduleName);
             modules.add(module);
         }
-
         return modules;
     }
 
@@ -223,16 +148,6 @@ public class LabelsConfiguration implements ConfigurationFacade
     public void setLabelsMap(Map<String, Object> labelsMap)
     {
         this.labelsMap = labelsMap;
-    }
-
-    public String getModulesLocation()
-    {
-        return modulesLocation;
-    }
-
-    public void setModulesLocation(String modulesLocation)
-    {
-        this.modulesLocation = modulesLocation;
     }
 
     public Environment getEnvironment()
