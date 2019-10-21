@@ -50,4 +50,8 @@ public interface BillingConstants
     String BILLING_EMAIL_HEADER = "Dear %s";
     String BILLING_EMAIL_BODY = "Please review your request invoice attached and make payment. If you have any questions, please email or call the FOIA Office.";
     String BILLING_EMAIL_FOOTER = "FOIA Office Staff";
+
+    String BILLING_ITEM_TYPE_TIMESHEET = "Timesheet";
+    String BILLING_ITEM_TYPE_COSTSHEET = "Costsheet";
+    String BILLING_ITEM_TYPE_DEFAULT = "Adhoc";
 }
