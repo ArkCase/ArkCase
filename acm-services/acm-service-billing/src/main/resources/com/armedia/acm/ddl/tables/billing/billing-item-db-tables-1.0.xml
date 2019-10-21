@@ -67,4 +67,11 @@
         </addColumn>
     </changeSet>
 
+    <changeSet id="04-add-billing-item-type" author="martin.jovanovski">
+        <addColumn tableName="acm_billing_item">
+            <column name="cm_billing_item_type" type="VARCHAR(64)">
+            </column>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>

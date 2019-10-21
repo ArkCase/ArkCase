@@ -9,6 +9,7 @@ angular.module('audit').config([ '$stateProvider', function($stateProvider) {
                 $translatePartialLoader.addPart('common');
                 $translatePartialLoader.addPart('audit');
                 $translatePartialLoader.addPart('core');
+                $translatePartialLoader.addPart('document-details');
 
                 return $translate.refresh();
             } ]

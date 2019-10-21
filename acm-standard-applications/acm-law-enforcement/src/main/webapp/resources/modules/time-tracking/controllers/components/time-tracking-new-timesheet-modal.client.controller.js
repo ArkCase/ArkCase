@@ -235,6 +235,7 @@ angular.module('time-tracking').controller(
                                     if (timeArray[0].type == ObjectService.ObjectTypes.CASE_FILE) {
                                         CaseInfoService.getCaseInfoByNumber(timeArray[0].code).then(function(caseInfo) {
                                             var timesForm = {
+                                                objectId: caseInfo.id,
                                                 type: timeArray[0].type,
                                                 code: timeArray[0].code,
                                                 chargeRole: timeArray[0].chargeRole,
@@ -250,6 +251,7 @@ angular.module('time-tracking').controller(
                                     } else if (timeArray[0].type == ObjectService.ObjectTypes.COMPLAINT) {
                                         ComplaintInfoService.getComplaintByNumber(timeArray[0].code).then(function(complaint) {
                                             var timesForm = {
+                                                objectId: complaint.complaintId,
                                                 type: timeArray[0].type,
                                                 code: timeArray[0].code,
                                                 chargeRole: timeArray[0].chargeRole,
