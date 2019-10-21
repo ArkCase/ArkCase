@@ -136,6 +136,7 @@
         <reflections.version>0.9.9</reflections.version>
         <kryo.version>5.0.0-RC4</kryo.version>
         <subzero.version>0.9</subzero.version>
+        <xsync-version>1.2</xsync-version>
     </properties>
     <organization>
         <name>ArkCase LLC</name>
@@ -1674,6 +1675,14 @@
                 <artifactId>reflections</artifactId>
                 <version>${reflections.version}</version>
             </dependency>
+            
+            <!-- concurrency -->
+            <dependency>
+                <groupId>com.antkorwin</groupId>
+                <artifactId>xsync</artifactId>
+                <version>${xsync-version}</version>
+            </dependency>
+            
         </dependencies>
     </dependencyManagement>
     <dependencies>
