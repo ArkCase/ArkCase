@@ -33,6 +33,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 
+import com.antkorwin.xsync.XSync;
 import com.armedia.acm.auth.ExternalAuthenticationUtils;
 import com.armedia.acm.core.exceptions.AcmParticipantsException;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
@@ -74,6 +75,7 @@ public class EcmFileParticipantServiceTest extends EasyMockSupport
     private EcmFileConfig ecmFileConfigMock;
     private ExternalAuthenticationUtils mockExternalAuthenticationUtils;
     private ApplicationEventPublisher mockApplicationEventPublisher;
+    private XSync<String> xSync;
 
     @Before
     public void setUp()
@@ -104,6 +106,9 @@ public class EcmFileParticipantServiceTest extends EasyMockSupport
         fileParticipantServiceHelper.setAuditPropertyEntityAdapter(mockAuditPropertyEntityAdapter);
         fileParticipantServiceHelper.setExternalAuthenticationUtils(mockExternalAuthenticationUtils);
         fileParticipantServiceHelper.setApplicationEventPublisher(mockApplicationEventPublisher);
+
+        xSync = new XSync<>();
+        fileParticipantServiceHelper.setxSync(xSync);
 
         SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken("test", "test"));
     }
@@ -141,7 +146,7 @@ public class EcmFileParticipantServiceTest extends EasyMockSupport
         expect(mockFileDao.save(file)).andReturn(file);
 
         expect(mockExternalAuthenticationUtils.getEcmServiceUserIdByParticipantLdapId(participantLdapId))
-            .andReturn(participantLdapId).atLeastOnce();
+                .andReturn(participantLdapId).atLeastOnce();
         mockApplicationEventPublisher.publishEvent(EasyMock.anyObject());
         expectLastCall().atLeastOnce();
 
@@ -180,7 +185,7 @@ public class EcmFileParticipantServiceTest extends EasyMockSupport
         expect(mockFileDao.save(file)).andReturn(file);
 
         expect(mockExternalAuthenticationUtils.getEcmServiceUserIdByParticipantLdapId(participantLdapId))
-            .andReturn(participantLdapId).atLeastOnce();
+                .andReturn(participantLdapId).atLeastOnce();
         mockApplicationEventPublisher.publishEvent(EasyMock.anyObject());
         expectLastCall().atLeastOnce();
 
@@ -272,9 +277,9 @@ public class EcmFileParticipantServiceTest extends EasyMockSupport
         expect(mockFileDao.save(file)).andReturn(file);
 
         expect(mockExternalAuthenticationUtils.getEcmServiceUserIdByParticipantLdapId(addParticipantLdapId))
-            .andReturn(addParticipantLdapId).atLeastOnce();
+                .andReturn(addParticipantLdapId).atLeastOnce();
         expect(mockExternalAuthenticationUtils.getEcmServiceUserIdByParticipantLdapId(updateParticipantLdapId))
-            .andReturn(updateParticipantLdapId).atLeastOnce();
+                .andReturn(updateParticipantLdapId).atLeastOnce();
         mockApplicationEventPublisher.publishEvent(EasyMock.anyObject());
         expectLastCall().atLeastOnce();
 
@@ -388,7 +393,7 @@ public class EcmFileParticipantServiceTest extends EasyMockSupport
         expectLastCall();
 
         expect(mockExternalAuthenticationUtils.getEcmServiceUserIdByParticipantLdapId(participantLdapId))
-            .andReturn(participantLdapId).atLeastOnce();
+                .andReturn(participantLdapId).atLeastOnce();
         mockApplicationEventPublisher.publishEvent(EasyMock.anyObject());
         expectLastCall().atLeastOnce();
 
@@ -454,7 +459,7 @@ public class EcmFileParticipantServiceTest extends EasyMockSupport
         expectLastCall();
 
         expect(mockExternalAuthenticationUtils.getEcmServiceUserIdByParticipantLdapId(participantLdapId))
-            .andReturn(participantLdapId).atLeastOnce();
+                .andReturn(participantLdapId).atLeastOnce();
         mockApplicationEventPublisher.publishEvent(EasyMock.anyObject());
         expectLastCall().atLeastOnce();
 
@@ -537,7 +542,7 @@ public class EcmFileParticipantServiceTest extends EasyMockSupport
         expectLastCall();
 
         expect(mockExternalAuthenticationUtils.getEcmServiceUserIdByParticipantLdapId(participantLdapId))
-            .andReturn(participantLdapId).atLeastOnce();
+                .andReturn(participantLdapId).atLeastOnce();
         mockApplicationEventPublisher.publishEvent(EasyMock.anyObject());
         expectLastCall().atLeastOnce();
 
@@ -761,9 +766,9 @@ public class EcmFileParticipantServiceTest extends EasyMockSupport
         expectLastCall();
 
         expect(mockExternalAuthenticationUtils.getEcmServiceUserIdByParticipantLdapId(participantLdapId1))
-            .andReturn(participantLdapId1).atLeastOnce();
+                .andReturn(participantLdapId1).atLeastOnce();
         expect(mockExternalAuthenticationUtils.getEcmServiceUserIdByParticipantLdapId(participantLdapId2))
-            .andReturn(participantLdapId2).atLeastOnce();
+                .andReturn(participantLdapId2).atLeastOnce();
         mockApplicationEventPublisher.publishEvent(EasyMock.anyObject());
         expectLastCall().atLeastOnce();
 
@@ -829,9 +834,9 @@ public class EcmFileParticipantServiceTest extends EasyMockSupport
         expectLastCall();
 
         expect(mockExternalAuthenticationUtils.getEcmServiceUserIdByParticipantLdapId(participantLdapId1))
-            .andReturn(participantLdapId1).atLeastOnce();
+                .andReturn(participantLdapId1).atLeastOnce();
         expect(mockExternalAuthenticationUtils.getEcmServiceUserIdByParticipantLdapId(participantLdapId2))
-            .andReturn(participantLdapId2).atLeastOnce();
+                .andReturn(participantLdapId2).atLeastOnce();
         mockApplicationEventPublisher.publishEvent(EasyMock.anyObject());
         expectLastCall().atLeastOnce();
 
@@ -1034,7 +1039,7 @@ public class EcmFileParticipantServiceTest extends EasyMockSupport
         expect(mockFolderDao.findSubFolders(objectId, FlushModeType.COMMIT)).andReturn(new ArrayList<>());
 
         expect(mockExternalAuthenticationUtils.getEcmServiceUserIdByParticipantLdapId(participantLdapId1))
-          .andReturn(participantLdapId1).atLeastOnce();
+                .andReturn(participantLdapId1).atLeastOnce();
         mockApplicationEventPublisher.publishEvent(EasyMock.anyObject());
         expectLastCall().atLeastOnce();
 
