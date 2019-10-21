@@ -27,10 +27,13 @@ package com.armedia.acm.plugins.ecm.web.api;
  * #L%
  */
 
+import com.armedia.acm.camelcontext.arkcase.cmis.ArkCaseCMISActions;
+import com.armedia.acm.camelcontext.arkcase.cmis.ArkCaseCMISConstants;
+import com.armedia.acm.camelcontext.context.CamelContextManager;
+import com.armedia.acm.camelcontext.exception.ArkCaseFileRepositoryException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.email.model.EmailSenderConfig;
 import com.armedia.acm.files.propertymanager.PropertyFileManager;
-import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
@@ -39,15 +42,16 @@ import com.armedia.acm.plugins.ecm.model.EcmFileDownloadedEvent;
 import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.ecm.utils.CmisConfigUtils;
+import com.armedia.acm.plugins.ecm.utils.EcmFileCamelUtils;
 import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
+import com.armedia.acm.web.api.MDCConstants;
 
+import org.apache.camel.component.cmis.CamelCMISConstants;
 import org.apache.chemistry.opencmis.commons.data.ContentStream;
 import org.apache.commons.io.FileUtils;
-import org.json.JSONObject;
-import org.mule.api.MuleException;
-import org.mule.api.MuleMessage;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.json.JSONObject;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -64,8 +68,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URLEncoder;
-import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -73,7 +75,7 @@ import java.util.Objects;
 @RequestMapping({ "/api/v1/plugin/ecm", "/api/latest/plugin/ecm" })
 public class FileDownloadAPIController implements ApplicationEventPublisherAware
 {
-    private MuleContextManager muleContextManager;
+    private CamelContextManager camelContextManager;
 
     private EcmFileDao fileDao;
 
@@ -105,7 +107,8 @@ public class FileDownloadAPIController implements ApplicationEventPublisherAware
             @RequestParam(value = "version", required = false, defaultValue = "") String version,
             @RequestParam(value = "parentObjectType", required = false, defaultValue = "") String parentObjectType,
             Authentication authentication,
-            HttpSession httpSession, HttpServletResponse response) throws IOException, MuleException, AcmObjectNotFoundException
+            HttpSession httpSession, HttpServletResponse response)
+            throws IOException, ArkCaseFileRepositoryException, AcmObjectNotFoundException
     {
         log.info("Downloading file by ID '{}' for user '{}'", fileId, authentication.getName());
 
@@ -129,16 +132,19 @@ public class FileDownloadAPIController implements ApplicationEventPublisherAware
     }
 
     protected void download(String fileId, HttpServletResponse response, boolean isInline, EcmFile ecmFile, String version)
-            throws IOException, MuleException, AcmObjectNotFoundException
+            throws IOException, ArkCaseFileRepositoryException, AcmObjectNotFoundException
     {
 
         Map<String, Object> messageProps = new HashMap<>();
-        messageProps.put(EcmFileConstants.CONFIGURATION_REFERENCE, cmisConfigUtils.getCmisConfiguration(ecmFile.getCmisRepositoryId()));
-        MuleMessage downloadedFile = getMuleContextManager().send("vm://downloadFileFlow.in", fileId, messageProps);
+        messageProps.put(EcmFileConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID);
+        messageProps.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, EcmFileCamelUtils.getCmisUser());
+        messageProps.put(CamelCMISConstants.CMIS_OBJECT_ID, fileId);
 
-        if (downloadedFile.getPayload() instanceof ContentStream)
+        Object result = getCamelContextManager().send(ArkCaseCMISActions.DOWNLOAD_DOCUMENT, messageProps);
+
+        if (result instanceof ContentStream)
         {
-            handleFilePayload((ContentStream) downloadedFile.getPayload(), response, isInline, ecmFile, version);
+            handleFilePayload((ContentStream) result, response, isInline, ecmFile, version);
         }
         else
         {
@@ -289,16 +295,6 @@ public class FileDownloadAPIController implements ApplicationEventPublisherAware
         throw new AcmObjectNotFoundException(EcmFileConstants.OBJECT_FILE_TYPE, fileId, String.format("File %d not found", fileId), null);
     }
 
-    public MuleContextManager getMuleContextManager()
-    {
-        return muleContextManager;
-    }
-
-    public void setMuleContextManager(MuleContextManager muleContextManager)
-    {
-        this.muleContextManager = muleContextManager;
-    }
-
     public EcmFileDao getFileDao()
     {
         return fileDao;
@@ -388,5 +384,15 @@ public class FileDownloadAPIController implements ApplicationEventPublisherAware
     public void setEmailSenderConfig(EmailSenderConfig emailSenderConfig)
     {
         this.emailSenderConfig = emailSenderConfig;
+    }
+
+    public CamelContextManager getCamelContextManager()
+    {
+        return camelContextManager;
+    }
+
+    public void setCamelContextManager(CamelContextManager camelContextManager)
+    {
+        this.camelContextManager = camelContextManager;
     }
 }

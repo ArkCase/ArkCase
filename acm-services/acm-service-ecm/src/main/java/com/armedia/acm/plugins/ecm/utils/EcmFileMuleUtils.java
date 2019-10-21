@@ -33,13 +33,10 @@ import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 
 import org.apache.chemistry.opencmis.client.api.Document;
-import org.apache.chemistry.opencmis.commons.data.ContentStream;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
 
 import java.io.InputStream;
 import java.util.HashMap;
@@ -67,23 +64,10 @@ public class EcmFileMuleUtils
      *            - cmis id of the document to download
      * @return InputStream for the document contents
      */
+    @Deprecated
     public InputStream downloadFile(String cmisRepositoryId, String cmisDocumentId)
     {
-        InputStream fileContentStream = null;
-        try
-        {
-            log.debug("downloading document using vm://downloadFileFlow.in mule flow");
-            Map<String, Object> properties = new HashMap<>();
-            properties.put(EcmFileConstants.CONFIGURATION_REFERENCE, cmisConfigUtils.getCmisConfiguration(cmisRepositoryId));
-            MuleMessage downloadResponse = getMuleContextManager().send("vm://downloadFileFlow.in", cmisDocumentId, properties);
-            ContentStream contentStream = (ContentStream) downloadResponse.getPayload();
-            fileContentStream = contentStream.getStream();
-        }
-        catch (Exception e)
-        {
-            log.error("Failed to get document: {}", e.getMessage(), e);
-        }
-        return fileContentStream;
+        return getEcmFileCamelUtils().downloadFile(cmisRepositoryId, cmisDocumentId);
     }
 
     /**

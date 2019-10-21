@@ -27,6 +27,7 @@ package com.armedia.acm.plugins.ecm.service;
  * #L%
  */
 
+import com.armedia.acm.camelcontext.exception.ArkCaseFileRepositoryException;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 
@@ -85,9 +86,9 @@ public interface EcmFileTransaction
     EcmFile updateFileTransactionEventAware(Authentication authentication, EcmFile ecmFile, InputStream fileInputStream, String fileExtension)
             throws MuleException, IOException;
 
-    String downloadFileTransaction(EcmFile ecmFile) throws MuleException;
+    String downloadFileTransaction(EcmFile ecmFile) throws ArkCaseFileRepositoryException;
 
-    InputStream downloadFileTransactionAsInputStream(EcmFile ecmFile) throws MuleException;
+    InputStream downloadFileTransactionAsInputStream(EcmFile ecmFile) throws ArkCaseFileRepositoryException;
 
-    InputStream downloadFileTransactionAsInputStream(EcmFile ecmFile, String fileVersion) throws MuleException;
+    InputStream downloadFileTransactionAsInputStream(EcmFile ecmFile, String fileVersion) throws ArkCaseFileRepositoryException;
 }
