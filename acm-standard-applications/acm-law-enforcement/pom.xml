@@ -534,6 +534,11 @@
             <artifactId>acm-transcribe-tool</artifactId>
             <version>${acm.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.armedia.acm.acm-tool-integrations</groupId>
+            <artifactId>acm-camel-context-manager</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
 
         <dependency>
             <groupId>com.armedia.acm.acm-plugins.acm-default-plugins</groupId>
