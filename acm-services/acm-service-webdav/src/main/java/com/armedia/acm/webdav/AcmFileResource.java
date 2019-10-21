@@ -27,16 +27,21 @@ package com.armedia.acm.webdav;
  * #L%
  */
 
+import com.armedia.acm.camelcontext.arkcase.cmis.ArkCaseCMISActions;
+import com.armedia.acm.camelcontext.arkcase.cmis.ArkCaseCMISConstants;
+import com.armedia.acm.camelcontext.exception.ArkCaseFileRepositoryException;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.utils.CmisConfigUtils;
+import com.armedia.acm.plugins.ecm.utils.EcmFileCamelUtils;
+import com.armedia.acm.web.api.MDCConstants;
 
+import org.apache.camel.component.cmis.CamelCMISConstants;
 import org.apache.chemistry.opencmis.commons.data.ContentStream;
 import org.apache.commons.io.IOUtils;
-import org.mule.api.MuleException;
-import org.mule.api.MuleMessage;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.mule.api.MuleException;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -143,13 +148,15 @@ public class AcmFileResource extends AcmFileSystemResource implements PropFindab
         try
         {
             Map<String, Object> messageProps = new HashMap<>();
-            messageProps.put(EcmFileConstants.CONFIGURATION_REFERENCE, cmisConfigUtils.getCmisConfiguration(acmFile.getCmisRepositoryId()));
+            messageProps.put(EcmFileConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID);
+            messageProps.put(CamelCMISConstants.CMIS_OBJECT_ID, getResourceFactory().getCmisFileId(acmFile));
+            messageProps.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, EcmFileCamelUtils.getCmisUser());
 
-            MuleMessage downloadedFile = getResourceFactory().getMuleContextManager().send("vm://downloadFileFlow.in",
-                    getResourceFactory().getCmisFileId(acmFile), messageProps);
-            if (downloadedFile.getPayload() instanceof ContentStream)
+            Object result = getResourceFactory().getCamelContextManager().send(ArkCaseCMISActions.DOWNLOAD_DOCUMENT, messageProps);
+
+            if (result instanceof ContentStream)
             {
-                ContentStream filePayload = (ContentStream) downloadedFile.getPayload();
+                ContentStream filePayload = (ContentStream) result;
                 try (InputStream fileIs = filePayload.getStream())
                 {
                     if (range != null)
@@ -169,9 +176,9 @@ public class AcmFileResource extends AcmFileSystemResource implements PropFindab
             }
 
         }
-        catch (MuleException e)
+        catch (ArkCaseFileRepositoryException e)
         {
-            LOGGER.error("Error while downloading file via Mule.", e);
+            LOGGER.error("Error while downloading file via Camel, reson: [{}]", e.getMessage(), e);
         }
     }
 

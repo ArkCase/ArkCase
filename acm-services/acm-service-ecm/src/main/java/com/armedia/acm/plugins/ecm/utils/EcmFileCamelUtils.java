@@ -36,11 +36,14 @@ import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.web.api.MDCConstants;
 
+import org.apache.camel.component.cmis.CamelCMISConstants;
+import org.apache.chemistry.opencmis.commons.data.ContentStream;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -94,6 +97,36 @@ public class EcmFileCamelUtils
         log.debug("Invoking delete Camel route to delete document with cmis id: [{}] using [{}]", cmisFileId,
                 ArkCaseCMISActions.DELETE_DOCUMENT.getQueueName());
         getCamelContextManager().send(ArkCaseCMISActions.DELETE_DOCUMENT, messageProps);
+    }
+
+    /**
+     * Downloads the contents of the specified document from the repository
+     *
+     * @param cmisRepositoryId
+     *            - cmis repository id of the document to download
+     * @param cmisDocumentId
+     *            - cmis id of the document to download
+     * @return InputStream for the document contents
+     */
+    public InputStream downloadFile(String cmisRepositoryId, String cmisDocumentId)
+    {
+        InputStream fileContentStream = null;
+        try
+        {
+            log.debug("downloading document using download document route");
+            Map<String, Object> messageProps = new HashMap<>();
+            messageProps.put(EcmFileConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID);
+            messageProps.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, EcmFileCamelUtils.getCmisUser());
+            messageProps.put(CamelCMISConstants.CMIS_OBJECT_ID, cmisDocumentId);
+            ContentStream result = (ContentStream) getCamelContextManager().send(ArkCaseCMISActions.DOWNLOAD_DOCUMENT, messageProps);
+
+            fileContentStream = result.getStream();
+        }
+        catch (Exception e)
+        {
+            log.error("Failed to get document: {}", e.getMessage(), e);
+        }
+        return fileContentStream;
     }
 
     public CamelContextManager getCamelContextManager()

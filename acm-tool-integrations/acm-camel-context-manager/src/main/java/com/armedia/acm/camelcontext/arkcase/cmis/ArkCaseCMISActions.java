@@ -44,6 +44,7 @@ public enum ArkCaseCMISActions
     RENAME_FOLDER("RenameFolderQueue"),
     CHECK_IN("CheckInQueue"),
     CHECK_OUT("CheckOutQueue"),
+    DOWNLOAD_DOCUMENT("DownloadDocumentQueue"),
     CANCEL_CHECK_OUT("CancelCheckOutQueue");
 
     private final String queueName;

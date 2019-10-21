@@ -434,7 +434,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
 
             return content;
         }
-        catch (MuleException e)
+        catch (ArkCaseFileRepositoryException e)
         {
             throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_DOWNLOAD_FILE,
                     EcmFileConstants.OBJECT_FILE_TYPE, id, "Download file failed", e);
@@ -471,7 +471,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
 
             return content;
         }
-        catch (MuleException e)
+        catch (ArkCaseFileRepositoryException e)
         {
             log.error("Could not create folder: {} ", e.getMessage(), e);
             throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_DOWNLOAD_FILE_AS_INPUTSTREAM,
@@ -489,7 +489,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
 
             return content;
         }
-        catch (MuleException e)
+        catch (ArkCaseFileRepositoryException e)
         {
             log.error("Content could not be retrieved from {}. Cause: {} ", ecmFile.getCmisRepositoryId(), e.getMessage(), e);
             throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_DOWNLOAD_FILE_AS_INPUTSTREAM,
