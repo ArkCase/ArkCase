@@ -76,6 +76,7 @@ public class EcmFileParticipantServiceHelper implements ApplicationEventPublishe
     @Async("fileParticipantsThreadPoolTaskExecutor")
     public void setParticipantsToFolderChildren(AcmFolder folder, List<AcmParticipant> participants, boolean restricted)
     {
+        log.debug("Setting participants for folder children [{}-{}]", folder.getId(), folder.getName());
         setAuditPropertyEntityAdapterUserId();
         setParticipantsToFolderChildrenRecursively(folder, participants, restricted);
     }
@@ -175,6 +176,9 @@ public class EcmFileParticipantServiceHelper implements ApplicationEventPublishe
     @Async("fileParticipantsThreadPoolTaskExecutor")
     public void setParticipantToFolderChildren(AcmFolder folder, AcmParticipant participant, boolean restricted)
     {
+        log.debug("Setting participant [{}] with privilege [{}] for folder children [{}-{}]", participant.getParticipantLdapId(),
+                participant.getParticipantType(), folder.getId(), folder.getName());
+
         setAuditPropertyEntityAdapterUserId();
         setParticipantToFolderChildrenRecursively(folder, participant, restricted);
     }
