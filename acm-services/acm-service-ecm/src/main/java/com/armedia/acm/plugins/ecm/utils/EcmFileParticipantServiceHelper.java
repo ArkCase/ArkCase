@@ -42,6 +42,8 @@ import com.armedia.acm.plugins.ecm.model.EcmFileParticipantChangedEvent;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.web.api.MDCConstants;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.slf4j.MDC;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
@@ -61,6 +63,8 @@ import java.util.stream.Collectors;
  */
 public class EcmFileParticipantServiceHelper implements ApplicationEventPublisherAware
 {
+    private transient final Logger log = LogManager.getLogger(getClass());
+
     private EcmFileDao fileDao;
     private AcmFolderDao folderDao;
     private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
@@ -213,6 +217,8 @@ public class EcmFileParticipantServiceHelper implements ApplicationEventPublishe
 
     private void removeParticipantFromFolderAndChildren(AcmFolder folder, String participantLdapId, String participantType)
     {
+        log.debug("Removing [{}] privilege to folder [{}-{}] and children for participant [{}]", participantType, folder.getId(),
+                folder.getName(), participantLdapId);
         setAuditPropertyEntityAdapterUserId();
 
         // remove participant from current folder
@@ -300,6 +306,8 @@ public class EcmFileParticipantServiceHelper implements ApplicationEventPublishe
     public void setParticipantToFile(EcmFile file, AcmParticipant participant)
     {
         xSync.execute("FILE" + file.getId(), () -> {
+            log.debug("Setting [{}] privilege to file [{}-{}] for participant [{}]", participant.getParticipantType(), file.getId(),
+                    file.getFileName(), participant.getParticipantLdapId());
             EcmFileParticipantChangedEvent ecmFileParticipantChangedEvent = new EcmFileParticipantChangedEvent(file);
             boolean publishChangedEvent = false;
             Optional<AcmParticipant> existingFileParticipant = file.getParticipants().stream()
@@ -360,6 +368,7 @@ public class EcmFileParticipantServiceHelper implements ApplicationEventPublishe
             {
                 getApplicationEventPublisher().publishEvent(ecmFileParticipantChangedEvent);
             }
+            log.debug("Participant set to file successfully");
         });
     }
 
@@ -373,6 +382,8 @@ public class EcmFileParticipantServiceHelper implements ApplicationEventPublishe
     public void setParticipantToFolder(AcmFolder folder, AcmParticipant participant)
     {
         xSync.execute("FOLDER" + folder.getId(), () -> {
+            log.debug("Setting [{}] privilege to folder [{}-{}] for participant [{}]", participant.getParticipantType(), folder.getId(),
+                    folder.getName(), participant.getParticipantLdapId());
             AcmFolderParticipantChangedEvent folderParticipantChangedEvent = new AcmFolderParticipantChangedEvent(folder);
             boolean publishChangedEvent = false;
             // set participant to current folder
@@ -434,6 +445,7 @@ public class EcmFileParticipantServiceHelper implements ApplicationEventPublishe
             {
                 getApplicationEventPublisher().publishEvent(folderParticipantChangedEvent);
             }
+            log.debug("Participant set to folder successfully");
         });
     }
 
