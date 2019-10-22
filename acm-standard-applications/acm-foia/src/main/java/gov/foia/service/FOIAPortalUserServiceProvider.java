@@ -568,7 +568,7 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
         person.setPosition(user.getPosition());
 
         Organization organization = new Organization();
-        organization.setOrganizationValue(user.getOrganization());
+        organization.setOrganizationValue(user.getOrganization() != null ? user.getOrganization() : " ");
         organization.setOrganizationType("Corporation");
         person.getOrganizations().add(organization);
 
