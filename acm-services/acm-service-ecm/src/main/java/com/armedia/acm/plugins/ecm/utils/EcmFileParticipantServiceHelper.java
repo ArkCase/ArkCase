@@ -63,7 +63,7 @@ import java.util.stream.Collectors;
  */
 public class EcmFileParticipantServiceHelper implements ApplicationEventPublisherAware
 {
-    private transient final Logger log = LogManager.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
 
     private EcmFileDao fileDao;
     private AcmFolderDao folderDao;
@@ -179,9 +179,10 @@ public class EcmFileParticipantServiceHelper implements ApplicationEventPublishe
     {
         log.trace("Setting participant [{}] with privilege [{}] for folder children [{}-{}]", participant.getParticipantLdapId(),
                 participant.getParticipantType(), folder.getId(), folder.getName());
-
-        setAuditPropertyEntityAdapterUserId();
-        setParticipantToFolderChildrenRecursively(folder, participant, restricted);
+        xSync.execute("FOLDER" + folder.getId(), () -> {
+            setAuditPropertyEntityAdapterUserId();
+            setParticipantToFolderChildrenRecursively(folder, participant, restricted);
+        });
     }
 
     private void setParticipantToFolderChildrenRecursively(AcmFolder folder, AcmParticipant participant, boolean restricted)
