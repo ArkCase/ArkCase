@@ -3,7 +3,7 @@
     xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
 
     <bean id="labelManagementService" class="com.armedia.acm.services.labels.service.LabelManagementService">
-        <property name="settingsFileLocation" value="#{ systemProperties ['user.home'] }/.arkcase/acm/resources/settings/settings.json"/>
+        <property name="languageSettingsConfig" ref="languageSettingsConfig"/>
         <property name="defaultLocale" value="en"/>
         <property name="defaultLocales">
             <map>

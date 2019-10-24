@@ -29,17 +29,15 @@ package com.armedia.acm.services.labels.service;
 
 import com.armedia.acm.configuration.core.LabelsConfiguration;
 import com.armedia.acm.configuration.service.ConfigurationPropertyService;
+import com.armedia.acm.core.LanguageSettingsConfig;
 import com.armedia.acm.services.labels.exception.AcmLabelManagementException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.springframework.context.ApplicationEventPublisher;
 
-import java.io.File;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -52,12 +50,11 @@ public class LabelManagementService
 {
     private static final String labelsDescriptionKeyEnd = ".desc?";
     private Logger log = LogManager.getLogger(getClass());
-    private String settingsFileLocation;
     private String defaultLocale;
     private Map<String, Object> defaultLocales;
-    private ApplicationEventPublisher applicationEventPublisher;
     private Map<String, Map<String, JSONObject>> labelResourcesForFrevvo = new HashMap<>();
 
+    private LanguageSettingsConfig languageSettingsConfig;
     private LabelsConfiguration labelsConfiguration;
     private ConfigurationPropertyService configurationPropertyService;
 
@@ -71,7 +68,6 @@ public class LabelManagementService
     public JSONObject getResource(String moduleId, String lang) throws AcmLabelManagementException
     {
         String labelsResource = moduleId + "-" + lang;
-
         return loadResource(labelsResource);
     }
 
@@ -134,45 +130,36 @@ public class LabelManagementService
      * @param createIfAbsent
      * @return
      */
-    public JSONObject getSettings(boolean createIfAbsent) throws AcmLabelManagementException
+    public LanguageSettingsConfig getSettings(boolean createIfAbsent) throws AcmLabelManagementException
     {
-        JSONObject settings;
-        try
-        {
-            File file = FileUtils.getFile(settingsFileLocation);
-            String resource = FileUtils.readFileToString(file, "UTF-8");
-            settings = new JSONObject(resource);
-        }
-        catch (Exception e)
-        {
-            log.warn(String.format("Can't read resource file %s", settingsFileLocation));
-            return null;
-        }
+        LanguageSettingsConfig settings = null;
 
-        // Try to create resource if required
-        if (settings == null && createIfAbsent)
+        if ((languageSettingsConfig.getDefaultLocale().isEmpty() || languageSettingsConfig.getLocaleCode().isEmpty()) && createIfAbsent)
         {
-            // Create default settings
-            JSONObject defaultSettings = getDefaultSettings();
-            settings = updateSettings(defaultSettings);
+            settings = new LanguageSettingsConfig();
+            settings.setDefaultLocale(defaultLocale);
+            settings.setLocaleCode(defaultLocale);
+
+            updateLanguageSettings(settings);
+        }
+        else
+        {
+            settings = languageSettingsConfig;
         }
 
         return settings;
     }
 
     /**
-     * Create default settings object
+     * Update Language Settings
      *
+     * @param languageSettingsConfig
      * @return
      */
-    public JSONObject getDefaultSettings()
+    public LanguageSettingsConfig updateLanguageSettings(LanguageSettingsConfig languageSettingsConfig) throws AcmLabelManagementException
     {
-        JSONObject defaultSettings = new JSONObject();
-        Map<String, Object> locales = getDefaultLocales();
-        String locale = getDefaultLocale();
-        defaultSettings.put("locales", locales);
-        defaultSettings.put("defaultLocale", locale);
-        return defaultSettings;
+        configurationPropertyService.updateProperties(languageSettingsConfig);
+        return languageSettingsConfig;
     }
 
     /**
@@ -245,27 +232,6 @@ public class LabelManagementService
 
         configurationPropertyService.updateProperties(properties, labelsResource);
         return properties;
-    }
-
-    /**
-     * Update Settings file
-     *
-     * @param objSettings
-     * @return
-     */
-    public JSONObject updateSettings(JSONObject objSettings) throws AcmLabelManagementException
-    {
-        try
-        {
-            File file = FileUtils.getFile(settingsFileLocation);
-            FileUtils.writeStringToFile(file, objSettings.toString(), "UTF-8");
-        }
-        catch (Exception e)
-        {
-            log.error(String.format("Can't write settings data in to the file %s", settingsFileLocation));
-            throw new AcmLabelManagementException("Update settings error", e);
-        }
-        return objSettings;
     }
 
     /**
@@ -366,9 +332,9 @@ public class LabelManagementService
         }
     }
 
-    public void setSettingsFileLocation(String settingsFileLocation)
+    public void setLanguageSettingsConfig(LanguageSettingsConfig languageSettingsConfig)
     {
-        this.settingsFileLocation = settingsFileLocation;
+        this.languageSettingsConfig = languageSettingsConfig;
     }
 
     public String getDefaultLocale()
@@ -389,16 +355,6 @@ public class LabelManagementService
     public void setDefaultLocales(Map<String, Object> defaultLocales)
     {
         this.defaultLocales = defaultLocales;
-    }
-
-    public ApplicationEventPublisher getApplicationEventPublisher()
-    {
-        return applicationEventPublisher;
-    }
-
-    public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher)
-    {
-        this.applicationEventPublisher = applicationEventPublisher;
     }
 
     public LabelsConfiguration getLabelsConfiguration()
