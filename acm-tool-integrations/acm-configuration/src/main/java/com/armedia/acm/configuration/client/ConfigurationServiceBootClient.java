@@ -29,12 +29,14 @@ package com.armedia.acm.configuration.client;
 
 import com.armedia.acm.configuration.api.environment.Environment;
 import com.armedia.acm.configuration.api.environment.PropertySource;
+import com.armedia.acm.configuration.service.ConfigurationPropertyException;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.core.env.CompositePropertySource;
 import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.env.MapPropertySource;
@@ -47,6 +49,7 @@ import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.util.Base64Utils;
 import org.springframework.util.StringUtils;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
@@ -109,6 +112,12 @@ public class ConfigurationServiceBootClient
         return getCompositeMap(result);
     }
 
+    public Map<String, Object> loadDefaultConfiguration(String url, String name)
+    {
+        Environment result = getRemoteEnvironment(configRestTemplate(), url, name).get(0);
+        return getDefaultCompositeMap(result);
+    }
+
     private Map<String, Object> getCompositeMap(Environment result)
     {
         Map<String, Object> compositeMap = new HashMap<>();
@@ -119,6 +128,24 @@ public class ConfigurationServiceBootClient
             {
                 Map<String, Object> map = source.getSource();
                 map.forEach(compositeMap::putIfAbsent);
+            }
+        }
+
+        return compositeMap;
+    }
+
+    private Map<String, Object> getDefaultCompositeMap(Environment result)
+    {
+        Map<String, Object> compositeMap = new HashMap<>();
+
+        if (result.getPropertySources() != null)
+        {
+            for (PropertySource source : result.getPropertySources())
+            {
+                if (!source.getName().contains("-runtime.yaml"))
+                {
+                    compositeMap = source.getSource();
+                }
             }
         }
 
@@ -271,6 +298,38 @@ public class ConfigurationServiceBootClient
             request.getHeaders().add("Authorization", authorizationToken);
             return execution.execute(request, body);
         }
+    }
+
+    /**
+     * Returns list of module names from config server
+     *
+     * @return
+     */
+    public List<String> getModulesNames()
+    {
+        String modulesPath = System.getProperty("configuration.server.url") + getModulesPath();
+
+        try
+        {
+            ResponseEntity<List<String>> response = configRestTemplate().exchange(
+                    modulesPath,
+                    HttpMethod.GET,
+                    null,
+                    new ParameterizedTypeReference<List<String>>()
+                    {
+                    });
+            return response.getBody();
+        }
+        catch (RestClientException e)
+        {
+            logger.warn("Failed to get modules due to {}", e.getMessage());
+            throw new ConfigurationPropertyException("Failed to get modules", e);
+        }
+    }
+
+    public Object getModulesPath()
+    {
+        return configurableEnvironment.getPropertySources().get("bootstrap").getProperty("configuration.server.modules.path");
     }
 
     public Object getActiveApplicationName()

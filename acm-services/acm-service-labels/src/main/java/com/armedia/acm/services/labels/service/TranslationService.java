@@ -32,10 +32,10 @@ import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.web.api.MDCConstants;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
 import org.slf4j.MDC;
 
 /**
@@ -72,7 +72,7 @@ public class TranslationService
 
         try
         {
-            jsonObject = labelManagementService.getCachedResource(labelKey.substring(0, labelKey.indexOf(".")), lang);
+            jsonObject = labelManagementService.getLabelResources(labelKey.substring(0, labelKey.indexOf(".")), lang);
         }
         catch (AcmLabelManagementException e)
         {
@@ -80,7 +80,7 @@ public class TranslationService
             // search in the default language
             try
             {
-                jsonObject = labelManagementService.getCachedResource(labelKey.substring(0, labelKey.indexOf(".")),
+                jsonObject = labelManagementService.getLabelResources(labelKey.substring(0, labelKey.indexOf(".")),
                         labelManagementService.getDefaultLocale());
             }
             catch (AcmLabelManagementException e1)
