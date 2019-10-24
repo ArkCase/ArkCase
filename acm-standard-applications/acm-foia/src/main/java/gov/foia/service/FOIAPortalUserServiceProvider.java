@@ -452,8 +452,7 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
         person.setFamilyName(user.getLastName());
         person.setTitle(user.getPrefix());
         ((PortalFOIAPerson) person).setPosition(user.getPosition());
-        person.getOrganizations().get(0).setOrganizationValue(user.getOrganization());
-
+        person.getOrganizations().get(0).setOrganizationValue(user.getOrganization() != null ? user.getOrganization() : " ");
 
         person.getAddresses().get(0).setCity(user.getCity());
         person.getAddresses().get(0).setState(user.getState());
