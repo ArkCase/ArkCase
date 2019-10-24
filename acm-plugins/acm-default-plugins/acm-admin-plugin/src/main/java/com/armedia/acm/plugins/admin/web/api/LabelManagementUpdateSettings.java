@@ -27,12 +27,13 @@ package com.armedia.acm.plugins.admin.web.api;
  * #L%
  */
 
+import com.armedia.acm.core.LanguageSettingsConfig;
+import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.services.labels.exception.AcmLabelManagementException;
 import com.armedia.acm.services.labels.service.LabelManagementService;
 
-import org.json.JSONObject;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -51,6 +52,7 @@ public class LabelManagementUpdateSettings
 {
     private Logger log = LogManager.getLogger(getClass());
     private LabelManagementService labelManagementService;
+    private ObjectConverter objectConverter;
 
     @RequestMapping(value = "/labelmanagement/settings", method = RequestMethod.PUT, produces = {
             MediaType.APPLICATION_JSON_UTF8_VALUE,
@@ -61,8 +63,9 @@ public class LabelManagementUpdateSettings
 
         try
         {
-            JSONObject settingsObj = new JSONObject(settings);
-            JSONObject updatedSettingsObj = labelManagementService.updateSettings(settingsObj);
+            LanguageSettingsConfig languageSettings = getObjectConverter().getJsonUnmarshaller().unmarshall(settings,
+                    LanguageSettingsConfig.class);
+            LanguageSettingsConfig updatedSettingsObj = labelManagementService.updateLanguageSettings(languageSettings);
             return updatedSettingsObj.toString();
         }
         catch (Exception e)
@@ -76,5 +79,15 @@ public class LabelManagementUpdateSettings
     public void setLabelManagementService(LabelManagementService labelManagementService)
     {
         this.labelManagementService = labelManagementService;
+    }
+
+    public ObjectConverter getObjectConverter()
+    {
+        return objectConverter;
+    }
+
+    public void setObjectConverter(ObjectConverter objectConverter)
+    {
+        this.objectConverter = objectConverter;
     }
 }
