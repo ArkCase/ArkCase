@@ -85,7 +85,7 @@ public class EcmFileParticipantServiceHelper implements ApplicationEventPublishe
     {
         for (AcmParticipant participant : participants)
         {
-            log.debug("Setting participant [{]} (recursively: {}) to folders [{}-{}] children ", participant.getParticipantLdapId(),
+            log.trace("Setting participant [{}] (recursively: {}) to folders [{}-{}] children ", participant.getParticipantLdapId(),
                     participant.isReplaceChildrenParticipant(), folder.getId(), folder.getName());
             if (participant.isReplaceChildrenParticipant())
             {
@@ -177,7 +177,7 @@ public class EcmFileParticipantServiceHelper implements ApplicationEventPublishe
     @Async("fileParticipantsThreadPoolTaskExecutor")
     public void setParticipantToFolderChildren(AcmFolder folder, AcmParticipant participant, boolean restricted)
     {
-        log.debug("Setting participant [{}] with privilege [{}] for folder children [{}-{}]", participant.getParticipantLdapId(),
+        log.trace("Setting participant [{}] with privilege [{}] for folder children [{}-{}]", participant.getParticipantLdapId(),
                 participant.getParticipantType(), folder.getId(), folder.getName());
 
         setAuditPropertyEntityAdapterUserId();
@@ -188,13 +188,13 @@ public class EcmFileParticipantServiceHelper implements ApplicationEventPublishe
     {
         // set participant to child folders
         List<AcmFolder> subfolders = getFolderDao().findSubFolders(folder.getId(), FlushModeType.COMMIT);
-        log.debug("Setting participant [{}] (recursive: {}) to {} subfolders of [{}-{}]", participant.getParticipantLdapId(),
+        log.trace("Setting participant [{}] (recursive: {}) to {} subfolders of [{}-{}]", participant.getParticipantLdapId(),
                 participant.isReplaceChildrenParticipant(), subfolders.size(), folder.getId(), folder.getName());
         if (subfolders != null)
         {
             for (AcmFolder subFolder : subfolders)
             {
-                log.debug("Setting participant [{}] (recursive: {}) to subfolder [{}-{}] of [{}-{}]", participant.getParticipantLdapId(),
+                log.trace("Setting participant [{}] (recursive: {}) to subfolder [{}-{}] of [{}-{}]", participant.getParticipantLdapId(),
                         participant.isReplaceChildrenParticipant(), subFolder.getId(), subFolder.getName(), folder.getId(),
                         folder.getName());
                 subFolder.setRestricted(restricted);
