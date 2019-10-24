@@ -85,6 +85,8 @@ public class EcmFileParticipantServiceHelper implements ApplicationEventPublishe
     {
         for (AcmParticipant participant : participants)
         {
+            log.debug("Setting participant [{]} (recursively: {}) to folders [{}-{}] children ", participant.getParticipantLdapId(),
+                    participant.isReplaceChildrenParticipant(), folder.getId(), folder.getName());
             if (participant.isReplaceChildrenParticipant())
             {
                 setParticipantToFolderChildren(folder, participant, restricted);
@@ -161,7 +163,6 @@ public class EcmFileParticipantServiceHelper implements ApplicationEventPublishe
     @Async("fileParticipantsThreadPoolTaskExecutor")
     public void removeDeletedParticipantFromFolderChild(AcmFolder folder, List<AcmParticipant> deletedParticipants)
     {
-
         if (folder.getId() != null)
         {
             for (AcmParticipant deletdParticipant : deletedParticipants)
@@ -187,10 +188,15 @@ public class EcmFileParticipantServiceHelper implements ApplicationEventPublishe
     {
         // set participant to child folders
         List<AcmFolder> subfolders = getFolderDao().findSubFolders(folder.getId(), FlushModeType.COMMIT);
+        log.debug("Setting participant [{}] (recursive: {}) to {} subfolders of [{}-{}]", participant.getParticipantLdapId(),
+                participant.isReplaceChildrenParticipant(), subfolders.size(), folder.getId(), folder.getName());
         if (subfolders != null)
         {
             for (AcmFolder subFolder : subfolders)
             {
+                log.debug("Setting participant [{}] (recursive: {}) to subfolder [{}-{}] of [{}-{}]", participant.getParticipantLdapId(),
+                        participant.isReplaceChildrenParticipant(), subFolder.getId(), subFolder.getName(), folder.getId(),
+                        folder.getName());
                 subFolder.setRestricted(restricted);
 
                 setParticipantToFolder(subFolder, participant);
