@@ -38,9 +38,6 @@ import com.armedia.acm.service.outlook.model.OutlookFolder;
 import com.armedia.acm.service.outlook.model.OutlookFolderPermission;
 import com.armedia.acm.service.outlook.model.OutlookTaskItem;
 
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
-
 import java.util.List;
 
 import microsoft.exchange.webservices.data.core.ExchangeService;
@@ -59,11 +56,7 @@ import microsoft.exchange.webservices.data.search.filter.SearchFilter;
 public interface OutlookDao
 {
 
-    @Cacheable(value = "outlook-connection-cache", key = "#user.emailAddress")
     ExchangeService connect(AcmOutlookUser user) throws AcmOutlookConnectionFailedException;
-
-    @CacheEvict(value = "outlook-connection-cache", key = "#user.emailAddress")
-    void disconnect(AcmOutlookUser user);
 
     FindItemsResults<Item> findItems(
             ExchangeService service,

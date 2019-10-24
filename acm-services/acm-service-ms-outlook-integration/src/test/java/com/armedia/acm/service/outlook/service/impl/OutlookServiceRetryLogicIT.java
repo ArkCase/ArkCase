@@ -134,9 +134,6 @@ public class OutlookServiceRetryLogicIT extends EasyMockSupport
                 eq(sortAscending),
                 eq(filter))).andThrow(new AcmOutlookFindItemsFailedException(new NullPointerException("test exception")));
 
-        // since we threw an exception, now it should disconnect, and then retry
-        mockDao.disconnect(user);
-
         // second connect, after the exception
         expect(mockDao.connect(user)).andReturn(mockExchangeService);
 
@@ -182,8 +179,6 @@ public class OutlookServiceRetryLogicIT extends EasyMockSupport
                 eq(filter))).andThrow(new AcmOutlookFindItemsFailedException(new NullPointerException("test exception")))
                         .times(expectedRetries);
 
-        // since we threw an exception, now it should disconnect, and then retry
-        mockDao.disconnect(user);
         expectLastCall().times(expectedRetries);
 
         replayAll();
