@@ -77,84 +77,86 @@ public class EcmFileParticipantServiceHelper implements ApplicationEventPublishe
     public void setParticipantsToFolderChildren(AcmFolder folder, List<AcmParticipant> participants, boolean restricted)
     {
         log.debug("Setting participants for folder children [{}-{}]", folder.getId(), folder.getName());
-        xSync.execute("FOLDER" + folder.getId(), () -> {
-            setAuditPropertyEntityAdapterUserId();
-            setParticipantsToFolderChildrenRecursively(folder, participants, restricted);
-        });
+
+        setAuditPropertyEntityAdapterUserId();
+        setParticipantsToFolderChildrenRecursively(folder, participants, restricted);
     }
 
     private void setParticipantsToFolderChildrenRecursively(AcmFolder folder, List<AcmParticipant> participants, boolean restricted)
     {
-        for (AcmParticipant participant : participants)
-        {
-            log.trace("Setting participant [{}] (recursively: {}) to folders [{}-{}] children ", participant.getParticipantLdapId(),
-                    participant.isReplaceChildrenParticipant(), folder.getId(), folder.getName());
-            if (participant.isReplaceChildrenParticipant())
+        xSync.execute("FOLDER" + folder.getId(), () -> {
+            for (AcmParticipant participant : participants)
             {
-                setParticipantToFolderChildren(folder, participant, restricted);
-            }
-        }
-
-        boolean inheritAllParticipants = participants.stream()
-                .allMatch(participant -> participant.isReplaceChildrenParticipant());
-
-        boolean inheritNoParticipants = participants.stream()
-                .allMatch(participant -> !participant.isReplaceChildrenParticipant());
-
-        // flush the session before removing participants
-        getFolderDao().getEm().flush();
-
-        // remove deleted participants
-        if ((inheritAllParticipants || inheritNoParticipants) && folder.getId() != null)
-        {
-            List<AcmFolder> subfolders = getFolderDao().findSubFolders(folder.getId(), FlushModeType.COMMIT);
-            for (AcmFolder subFolder : subfolders)
-            {
-                // copy folder participants to a new list because the folder.getParticipants() list will be
-                // modified in removeParticipantFromFolderAndChildren() method and will cause
-                // ConcurrentModificationException
-                List<AcmParticipant> folderParticipants = subFolder.getParticipants().stream().collect(Collectors.toList());
-
-                for (AcmParticipant existingParticipant : folderParticipants)
+                log.trace("Setting participant [{}] (recursively: {}) to folders [{}-{}] children ", participant.getParticipantLdapId(),
+                        participant.isReplaceChildrenParticipant(), folder.getId(), folder.getName());
+                if (participant.isReplaceChildrenParticipant())
                 {
-                    if (!containsParticipantWithLdapId(participants, existingParticipant.getParticipantLdapId()))
+                    setParticipantToFolderChildren(folder, participant, restricted);
+                }
+            }
+
+            boolean inheritAllParticipants = participants.stream()
+                    .allMatch(participant -> participant.isReplaceChildrenParticipant());
+
+            boolean inheritNoParticipants = participants.stream()
+                    .allMatch(participant -> !participant.isReplaceChildrenParticipant());
+
+            // flush the session before removing participants
+            getFolderDao().getEm().flush();
+
+            // remove deleted participants
+            if ((inheritAllParticipants || inheritNoParticipants) && folder.getId() != null)
+            {
+                List<AcmFolder> subfolders = getFolderDao().findSubFolders(folder.getId(), FlushModeType.COMMIT);
+                for (AcmFolder subFolder : subfolders)
+                {
+                    // copy folder participants to a new list because the folder.getParticipants() list will be
+                    // modified in removeParticipantFromFolderAndChildren() method and will cause
+                    // ConcurrentModificationException
+                    List<AcmParticipant> folderParticipants = subFolder.getParticipants().stream().collect(Collectors.toList());
+
+                    for (AcmParticipant existingParticipant : folderParticipants)
                     {
-                        removeParticipantFromFolderAndChildren(subFolder,
-                                existingParticipant.getParticipantLdapId(), existingParticipant.getParticipantType());
+                        if (!containsParticipantWithLdapId(participants, existingParticipant.getParticipantLdapId()))
+                        {
+                            removeParticipantFromFolderAndChildren(subFolder,
+                                    existingParticipant.getParticipantLdapId(), existingParticipant.getParticipantType());
+                        }
+                    }
+                }
+
+                // set participant to files in folder
+                List<EcmFile> files = getFileDao().findByFolderId(folder.getId(), FlushModeType.COMMIT);
+                for (EcmFile file : files)
+                {
+                    boolean fileParticipantsChanged = false;
+
+                    // copy folder participants to a new list because the folder.getParticipants() list will be
+                    // modified in removeParticipantFromFolderAndChildren() method and will cause
+                    // ConcurrentModificationException
+                    List<AcmParticipant> fileParticipants = file.getParticipants().stream().collect(Collectors.toList());
+
+                    for (AcmParticipant existingParticipant : fileParticipants)
+                    {
+                        if (!containsParticipantWithLdapId(participants, existingParticipant.getParticipantLdapId()))
+                        {
+                            file.getParticipants().removeIf(
+                                    participant -> participant.getParticipantLdapId().equals(existingParticipant.getParticipantLdapId())
+                                            && participant.getParticipantType().equals(existingParticipant.getParticipantType()));
+                            fileParticipantsChanged = true;
+                        }
+                    }
+
+                    if (fileParticipantsChanged)
+                    {
+                        // modify the instance to trigger the Solr transformers
+                        file.setModified(new Date());
+                        getFileDao().save(file);
                     }
                 }
             }
 
-            // set participant to files in folder
-            List<EcmFile> files = getFileDao().findByFolderId(folder.getId(), FlushModeType.COMMIT);
-            for (EcmFile file : files)
-            {
-                boolean fileParticipantsChanged = false;
-
-                // copy folder participants to a new list because the folder.getParticipants() list will be
-                // modified in removeParticipantFromFolderAndChildren() method and will cause
-                // ConcurrentModificationException
-                List<AcmParticipant> fileParticipants = file.getParticipants().stream().collect(Collectors.toList());
-
-                for (AcmParticipant existingParticipant : fileParticipants)
-                {
-                    if (!containsParticipantWithLdapId(participants, existingParticipant.getParticipantLdapId()))
-                    {
-                        file.getParticipants().removeIf(
-                                participant -> participant.getParticipantLdapId().equals(existingParticipant.getParticipantLdapId())
-                                        && participant.getParticipantType().equals(existingParticipant.getParticipantType()));
-                        fileParticipantsChanged = true;
-                    }
-                }
-
-                if (fileParticipantsChanged)
-                {
-                    // modify the instance to trigger the Solr transformers
-                    file.setModified(new Date());
-                    getFileDao().save(file);
-                }
-            }
-        }
+        });
     }
 
     /**
@@ -181,10 +183,8 @@ public class EcmFileParticipantServiceHelper implements ApplicationEventPublishe
     {
         log.trace("Setting participant [{}] with privilege [{}] for folder children [{}-{}]", participant.getParticipantLdapId(),
                 participant.getParticipantType(), folder.getId(), folder.getName());
-        xSync.execute("FOLDER" + folder.getId(), () -> {
-            setAuditPropertyEntityAdapterUserId();
-            setParticipantToFolderChildrenRecursively(folder, participant, restricted);
-        });
+        setAuditPropertyEntityAdapterUserId();
+        setParticipantToFolderChildrenRecursively(folder, participant, restricted);
     }
 
     private void setParticipantToFolderChildrenRecursively(AcmFolder folder, AcmParticipant participant, boolean restricted)
@@ -318,69 +318,71 @@ public class EcmFileParticipantServiceHelper implements ApplicationEventPublishe
      */
     public void setParticipantToFile(EcmFile file, AcmParticipant participant)
     {
-        log.debug("Setting [{}] privilege to file [{}-{}] for participant [{}]", participant.getParticipantType(), file.getId(),
-                file.getFileName(), participant.getParticipantLdapId());
-        EcmFileParticipantChangedEvent ecmFileParticipantChangedEvent = new EcmFileParticipantChangedEvent(file);
-        boolean publishChangedEvent = false;
-        Optional<AcmParticipant> existingFileParticipant = file.getParticipants().stream()
-                .filter(existingParticipant -> existingParticipant.getParticipantLdapId().equals(participant.getParticipantLdapId()))
-                .findFirst();
+        xSync.execute("FILE" + file.getId(), () -> {
+            log.debug("Setting [{}] privilege to file [{}-{}] for participant [{}]", participant.getParticipantType(), file.getId(),
+                    file.getFileName(), participant.getParticipantLdapId());
+            EcmFileParticipantChangedEvent ecmFileParticipantChangedEvent = new EcmFileParticipantChangedEvent(file);
+            boolean publishChangedEvent = false;
+            Optional<AcmParticipant> existingFileParticipant = file.getParticipants().stream()
+                    .filter(existingParticipant -> existingParticipant.getParticipantLdapId().equals(participant.getParticipantLdapId()))
+                    .findFirst();
 
-        // for files and folders only one AcmParticipant per user is allowed
-        if (existingFileParticipant.isPresent())
-        {
-            // change the role of the existing participant if needed
-            if (!existingFileParticipant.get().getParticipantType().equals(participant.getParticipantType()))
+            // for files and folders only one AcmParticipant per user is allowed
+            if (existingFileParticipant.isPresent())
             {
-                AcmParticipant changedParticipant = AcmParticipant.createRulesTestParticipant(participant);
+                // change the role of the existing participant if needed
+                if (!existingFileParticipant.get().getParticipantType().equals(participant.getParticipantType()))
+                {
+                    AcmParticipant changedParticipant = AcmParticipant.createRulesTestParticipant(participant);
+                    String ldapId = getExternalAuthenticationUtils()
+                            .getEcmServiceUserIdByParticipantLdapId(changedParticipant.getParticipantLdapId());
+                    if (ldapId != null)
+                    {
+                        changedParticipant.setParticipantLdapId(ldapId);
+                        ecmFileParticipantChangedEvent.setChangedParticipant(changedParticipant);
+                        publishChangedEvent = true;
+                    }
+
+                    AcmParticipant oldParticipant = AcmParticipant.createRulesTestParticipant(existingFileParticipant.get());
+                    String ldapIdOldParticipant = getExternalAuthenticationUtils()
+                            .getEcmServiceUserIdByParticipantLdapId(oldParticipant.getParticipantLdapId());
+                    if (ldapIdOldParticipant != null)
+                    {
+                        oldParticipant.setParticipantLdapId(ldapIdOldParticipant);
+                        ecmFileParticipantChangedEvent.setOldParticipant(oldParticipant);
+                        ecmFileParticipantChangedEvent.setChangeType(ChangedParticipantConstants.CHANGED);
+
+                        existingFileParticipant.get().setParticipantType(participant.getParticipantType());
+                        publishChangedEvent = true;
+                    }
+                }
+            }
+            else
+            {
+                AcmParticipant newParticipant = new AcmParticipant();
+                newParticipant.setParticipantType(participant.getParticipantType());
+                newParticipant.setParticipantLdapId(participant.getParticipantLdapId());
+                newParticipant.setObjectType(EcmFileConstants.OBJECT_FILE_TYPE);
+                newParticipant.setObjectId(file.getId());
+                file.getParticipants().add(newParticipant);
+
+                AcmParticipant changedParticipant = AcmParticipant.createRulesTestParticipant(newParticipant);
                 String ldapId = getExternalAuthenticationUtils()
                         .getEcmServiceUserIdByParticipantLdapId(changedParticipant.getParticipantLdapId());
                 if (ldapId != null)
                 {
                     changedParticipant.setParticipantLdapId(ldapId);
                     ecmFileParticipantChangedEvent.setChangedParticipant(changedParticipant);
-                    publishChangedEvent = true;
-                }
-
-                AcmParticipant oldParticipant = AcmParticipant.createRulesTestParticipant(existingFileParticipant.get());
-                String ldapIdOldParticipant = getExternalAuthenticationUtils()
-                        .getEcmServiceUserIdByParticipantLdapId(oldParticipant.getParticipantLdapId());
-                if (ldapIdOldParticipant != null)
-                {
-                    oldParticipant.setParticipantLdapId(ldapIdOldParticipant);
-                    ecmFileParticipantChangedEvent.setOldParticipant(oldParticipant);
-                    ecmFileParticipantChangedEvent.setChangeType(ChangedParticipantConstants.CHANGED);
-
-                    existingFileParticipant.get().setParticipantType(participant.getParticipantType());
+                    ecmFileParticipantChangedEvent.setChangeType(ChangedParticipantConstants.ADDED);
                     publishChangedEvent = true;
                 }
             }
-        }
-        else
-        {
-            AcmParticipant newParticipant = new AcmParticipant();
-            newParticipant.setParticipantType(participant.getParticipantType());
-            newParticipant.setParticipantLdapId(participant.getParticipantLdapId());
-            newParticipant.setObjectType(EcmFileConstants.OBJECT_FILE_TYPE);
-            newParticipant.setObjectId(file.getId());
-            file.getParticipants().add(newParticipant);
-
-            AcmParticipant changedParticipant = AcmParticipant.createRulesTestParticipant(newParticipant);
-            String ldapId = getExternalAuthenticationUtils()
-                    .getEcmServiceUserIdByParticipantLdapId(changedParticipant.getParticipantLdapId());
-            if (ldapId != null)
+            if (publishChangedEvent)
             {
-                changedParticipant.setParticipantLdapId(ldapId);
-                ecmFileParticipantChangedEvent.setChangedParticipant(changedParticipant);
-                ecmFileParticipantChangedEvent.setChangeType(ChangedParticipantConstants.ADDED);
-                publishChangedEvent = true;
+                getApplicationEventPublisher().publishEvent(ecmFileParticipantChangedEvent);
             }
-        }
-        if (publishChangedEvent)
-        {
-            getApplicationEventPublisher().publishEvent(ecmFileParticipantChangedEvent);
-        }
-        log.debug("Participant set to file successfully");
+            log.debug("Participant set to file successfully");
+        });
     }
 
     /**
