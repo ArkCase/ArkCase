@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.springframework.org/schema/beans"
-       xmlns:context="http://www.springframework.org/schema/context" xsi:schemaLocation="http://www.springframework.org/schema/beans
+    xmlns:context="http://www.springframework.org/schema/context" xsi:schemaLocation="http://www.springframework.org/schema/beans
        http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
        http://www.springframework.org/schema/context
        http://www.springframework.org/schema/context/spring-context.xsd">
@@ -33,6 +33,7 @@
                 <ref bean="groupAscendantsStringUpdateExecutor"/>
                 <ref bean="ocrSystemUserUpdateExecutor"/>
                 <ref bean="transcribeSystemUserUpdateExecutor"/>
+                <ref bean="solrReindexEcmFileExecutor"/>
             </list>
         </property>
         <property name="dataUpdateService" ref="dataUpdateService"/>
@@ -46,7 +47,7 @@
     </bean>
 
     <bean id="fileFolderParticipantsUpdateExecutor"
-          class="com.armedia.acm.services.dataupdate.service.FileFolderParticipantsUpdateExecutor">
+        class="com.armedia.acm.services.dataupdate.service.FileFolderParticipantsUpdateExecutor">
         <property name="contextHolder" ref="acmContextHolder"/>
         <property name="fileParticipantService" ref="fileParticipantService"/>
         <property name="fileDao" ref="ecmFileDao"/>
@@ -83,7 +84,7 @@
     </bean>
 
     <bean id="documentRepositoryParticipantTypesUpdateExecutor"
-          class="com.armedia.acm.services.dataupdate.service.DocumentRepositoryParticipantTypesUpdateExecutor">
+        class="com.armedia.acm.services.dataupdate.service.DocumentRepositoryParticipantTypesUpdateExecutor">
         <property name="documentDao" ref="documentRepositoryDao"/>
         <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
     </bean>
@@ -104,5 +105,9 @@
 
     <bean id="transcribeSystemUserUpdateExecutor" class="com.armedia.acm.services.dataupdate.service.TranscribeSystemUserUpdateExecutor">
         <property name="userDao" ref="userJpaDao"/>
+    </bean>
+
+    <bean id="solrReindexEcmFileExecutor" class="com.armedia.acm.services.dataupdate.service.SolrReindexEcmFileExecutor">
+        <property name="solrReindexService" ref="solrReindexService"/>
     </bean>
 </beans>

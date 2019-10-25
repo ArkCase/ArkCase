@@ -31,12 +31,13 @@ import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmListObjectsFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
+import com.armedia.acm.plugins.ecm.exception.LinkAlreadyExistException;
 import com.armedia.acm.plugins.ecm.model.AcmCmisObjectList;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
-
 import com.armedia.acm.plugins.ecm.model.RecycleBinItem;
+
 import org.apache.chemistry.opencmis.client.api.CmisObject;
 import org.apache.chemistry.opencmis.client.api.Document;
 import org.springframework.retry.annotation.Backoff;
@@ -325,7 +326,8 @@ public interface EcmFileService
 
     void deleteFile(Long fileId) throws AcmUserActionFailedException, AcmObjectNotFoundException;
 
-    RecycleBinItem putFileIntoRecycleBin(Long fileId, Authentication authentication, HttpSession session) throws AcmUserActionFailedException, AcmObjectNotFoundException, AcmCreateObjectFailedException;
+    RecycleBinItem putFileIntoRecycleBin(Long fileId, Authentication authentication, HttpSession session)
+            throws AcmUserActionFailedException, AcmObjectNotFoundException, AcmCreateObjectFailedException;
 
     void deleteFile(Long fileId, Boolean allVersions) throws AcmUserActionFailedException, AcmObjectNotFoundException;
 
@@ -386,9 +388,21 @@ public interface EcmFileService
      */
     boolean deleteTempFile(String uniqueFileName);
 
-    File convertFile(String fileKey, String version, String fileExtension, String fileName, String mimeType, EcmFile ecmFile) throws IOException;
+    File convertFile(String fileKey, String version, String fileExtension, String fileName, String mimeType, EcmFile ecmFile)
+            throws IOException;
 
     void removeLockAndSendMessage(Long objectId, String message);
 
     String uploadFileChunk(MultipartHttpServletRequest request, String fileName, String uniqueArkCaseHashFileIdentifier);
+
+    EcmFile copyFileAsLink(Long fileId, Long targetObjectId, String targetObjectType, Long dstFolderId)
+            throws AcmUserActionFailedException, AcmObjectNotFoundException, LinkAlreadyExistException;
+
+    EcmFile copyFileAsLink(Long fileId, AcmFolder targetFolder, AcmContainer targetContainer)
+            throws AcmUserActionFailedException, AcmObjectNotFoundException, LinkAlreadyExistException;
+
+    List<EcmFile> getFileLinks(Long fileId) throws AcmObjectNotFoundException;
+
+    @Transactional
+    void updateFileLinks(EcmFile file) throws AcmObjectNotFoundException;
 }

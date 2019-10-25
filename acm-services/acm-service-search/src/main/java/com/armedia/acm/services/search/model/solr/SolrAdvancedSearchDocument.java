@@ -969,7 +969,8 @@ public class SolrAdvancedSearchDocument extends SolrAbstractDocument implements 
     }
 
     @Override
-    public String toString() {
+    public String toString()
+    {
         return "SolrAdvancedSearchDocument{" +
                 "id='" + id + '\'' +
                 ", object_id_s='" + object_id_s + '\'' +
@@ -1052,11 +1053,13 @@ public class SolrAdvancedSearchDocument extends SolrAbstractDocument implements 
                 '}';
     }
 
-    public Long getObject_id_i() {
+    public Long getObject_id_i()
+    {
         return object_id_i;
     }
 
-    public void setObject_id_i(Long object_id_i) {
+    public void setObject_id_i(Long object_id_i)
+    {
         this.object_id_i = object_id_i;
     }
 }

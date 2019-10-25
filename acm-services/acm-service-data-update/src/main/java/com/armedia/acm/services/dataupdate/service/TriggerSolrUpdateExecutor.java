@@ -30,6 +30,7 @@ package com.armedia.acm.services.dataupdate.service;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.group.AcmGroup;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 public class TriggerSolrUpdateExecutor implements AcmDataUpdateExecutor
@@ -46,7 +47,7 @@ public class TriggerSolrUpdateExecutor implements AcmDataUpdateExecutor
     @Override
     public void execute()
     {
-        solrReindexService.reindex(Arrays.asList(AcmUser.class, AcmGroup.class));
+        solrReindexService.reindex(new ArrayList<>(Arrays.asList(AcmUser.class, AcmGroup.class)));
     }
 
     public SolrReindexService getSolrReindexService()
