@@ -10,7 +10,7 @@
 
  * EcmService contains functions to related to document management.
  */
-angular.module('services').factory('EcmService', [ '$resource', 'UtilService', function($resource, Util) {
+angular.module('services').factory('EcmService', ['$resource', 'UtilService', function ($resource, Util) {
 
     var Service = $resource('api/latest/service', {}, {
         retrieveFolderList: {
@@ -82,6 +82,10 @@ angular.module('services').factory('EcmService', [ '$resource', 'UtilService', f
             method: 'POST',
             url: 'api/latest/service/ecm/copyToAnotherContainer/:objType/:objId'
         },
+        copyFileAsLink: {
+            method: 'POST',
+            url: 'api/latest/service/ecm/copyToAnotherContainerAsLink/:objType/:objId'
+        },
         moveFolder: {
             method: 'POST',
             url: 'api/latest/service/ecm/folder/move/:subFolderId/:folderId'
@@ -130,21 +134,27 @@ angular.module('services').factory('EcmService', [ '$resource', 'UtilService', f
         updateFile: {
             method: 'POST',
             url: 'api/latest/service/ecm/file/metadata/:fileId'
+        },
+        getFileLinks: {
+            method: 'GET',
+            url: 'api/latest/service/ecm/fileLinks/:fileId',
+            cache: false,
+            isArray: true
         }
     });
 
-    Service._getFolderDocumentCounts = function(params) {
+    Service._getFolderDocumentCounts = function (params) {
         return Util.serviceCall({
             service: Service.getFolderDocumentCounts,
             param: params,
-            onSuccess: function(data) {
+            onSuccess: function (data) {
                 return data;
             },
-            onError: function(errData) {
+            onError: function (errData) {
                 alert("Error.");
             }
         });
     };
 
     return Service;
-} ]);
+}]);

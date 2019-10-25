@@ -123,4 +123,6 @@ public interface SearchConstants
 
     Integer MAX_RESULT_ROWS = 100000;
     String DEFAULT_FIELD = "catch_all";
+
+    String PROPERTY_LINK = "link_b";
 }
