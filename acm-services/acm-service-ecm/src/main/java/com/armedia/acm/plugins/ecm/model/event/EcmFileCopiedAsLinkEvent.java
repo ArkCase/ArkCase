@@ -1,8 +1,8 @@
-package com.armedia.acm.hazelcast.kryo;
+package com.armedia.acm.plugins.ecm.model.event;
 
 /*-
  * #%L
- * Tool Integrations: Hazelcast Integration
+ * ACM Service: Enterprise Content Management
  * %%
  * Copyright (C) 2014 - 2019 ArkCase LLC
  * %%
@@ -27,26 +27,39 @@ package com.armedia.acm.hazelcast.kryo;
  * #L%
  */
 
-import info.jerrinot.subzero.internal.PropertyUserSerializer;
-import info.jerrinot.subzero.internal.strategy.GlobalKryoStrategy;
-import info.jerrinot.subzero.internal.strategy.TypedKryoStrategy;
+import com.armedia.acm.plugins.ecm.model.EcmFile;
 
-public class AcmKryoSerializerImpl<T> extends AbstractAcmKryoSerializer<T>
+/**
+ * @author aleksandar.bujaroski
+ */
+public class EcmFileCopiedAsLinkEvent extends EcmFilePersistenceEvent
 {
+    private static final String EVENT_TYPE = "com.armedia.acm.ecm.file.copiedAsLink";
 
-    AcmKryoSerializerImpl()
-    {
-        super(new GlobalKryoStrategy(PropertyUserSerializer.INSTANCE));
-    }
+    private EcmFile original;
 
-    public AcmKryoSerializerImpl(Class<T> clazz)
+    public EcmFileCopiedAsLinkEvent(EcmFile source, EcmFile original, String userId, String ipAddress)
     {
-        super(new TypedKryoStrategy(clazz, PropertyUserSerializer.INSTANCE));
+        super(source, userId, ipAddress);
+        setOriginal(original);
+        setParentObjectType(source.getContainer().getContainerObjectType());
+        setParentObjectId(source.getContainer().getContainerObjectId());
     }
 
     @Override
-    public int getTypeId()
+    public String getEventType()
     {
-        return 10000;
+        return EVENT_TYPE;
     }
+
+    public EcmFile getOriginal()
+    {
+        return original;
+    }
+
+    public void setOriginal(EcmFile original)
+    {
+        this.original = original;
+    }
+
 }

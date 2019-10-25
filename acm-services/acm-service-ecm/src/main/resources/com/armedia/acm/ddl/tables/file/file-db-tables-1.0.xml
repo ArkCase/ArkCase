@@ -706,5 +706,22 @@
         </insert>
     </changeSet>
 
+    <changeSet id="66-add-file-restricted-flag" author="aleksandar.bujaroski">
+        <addColumn tableName="acm_file">
+            <column name="cm_file_is_link" type="VARCHAR(32)" defaultValue="false">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+        <createIndex tableName="acm_file" indexName="idx_cm_file_is_link">
+            <column name="cm_file_is_link"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="files-67-allow-link-of-file-in-same-folder" author="aleksandar.bujaroski">
+        <dropUniqueConstraint tableName="acm_file" constraintName="uk_file_folder"/>
+        <addUniqueConstraint tableName="acm_file" columnNames="cm_version_series_id, cm_folder_id, cm_file_is_link"
+            constraintName="uk_file_folder_link"/>
+    </changeSet>
+
 </databaseChangeLog>
 

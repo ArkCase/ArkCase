@@ -38,9 +38,10 @@ import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.ecm.service.FileEventPublisher;
 import com.armedia.acm.plugins.ecm.service.RecycleBinItemEventPublisher;
 import com.armedia.acm.plugins.ecm.service.RecycleBinItemService;
+
 import org.activiti.engine.impl.util.json.JSONObject;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -52,6 +53,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
+
 import java.util.List;
 
 /**
@@ -80,8 +82,11 @@ public class DeleteFileAPIController
         try
         {
             getFileService().deleteFile(objectId, source.getParentObjectId(), source.getParentObjectType());
-            log.info("File with id: {} successfully deleted, by user {} ", objectId, authentication.getName());
+            log.info("Links for file with id :{} successfully deleted by user {} ", objectId, authentication.getName());
             getFileEventPublisher().publishFileDeletedEvent(source, authentication, ipAddress, true);
+            log.info("File with id :{} moved to recycle bin", objectId);
+            getRecycleBinItemEventPublisher().publishFileMovedToRecycleBinEvent(source, authentication, ipAddress, true);
+
             return prepareJsonReturnMsg(EcmFileConstants.SUCCESS_DELETE_MSG, objectId, source.getFileName());
         }
         catch (AcmUserActionFailedException e)
@@ -137,6 +142,15 @@ public class DeleteFileAPIController
             getRecycleBinItemService().removeItemFromRecycleBin(file.getRecycleBinItemId());
             deleteFile(file.getFileId(), authentication, session);
         }
+    }
+
+    @PreAuthorize("hasPermission(#objectId, 'FILE', 'read|group-read|write|group-write')")
+    @RequestMapping(value = "/fileLinks/{fileId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public List<EcmFile> getFileLinks(@PathVariable("fileId") Long objectId, Authentication authentication, HttpSession session)
+            throws AcmObjectNotFoundException
+    {
+        return getFileService().getFileLinks(objectId);
     }
 
     private String prepareJsonReturnMsg(String msg, Long fileId, String fileName)
