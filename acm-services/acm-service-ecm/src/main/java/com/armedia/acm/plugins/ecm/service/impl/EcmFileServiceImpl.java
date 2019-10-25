@@ -1989,6 +1989,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
 
             getEcmFileDao().save(f);
         });
+    }
 
     private void deleteAuthenticationTokens(Long fileId)
     {
