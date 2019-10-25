@@ -24,6 +24,11 @@
         "defaultValue": "Declare successful. Refreshing Document Tree...",
         "description": ""
     },
+    "confirm-file-deletion": {
+        "value": "Are you sure you want to delete this file and all its links?",
+        "defaultValue": "Are you sure you want to delete this file and all its links?",
+        "description": ""
+    },
     "error": {
         "retrieve-folder-list": {
             "value": "Error occurred when retrieving folder list ",

@@ -1,0 +1,976 @@
+{
+    "common": {
+        "select.option.none": "(Select One)",
+        "value.unknown": "Unknown",
+        "value.none": "None",
+        "_1_": "Please do not use or add custom date formats, because it is error prone to be i18n compliant.",
+        "_2_": "Please use one of the predefined formats: ",
+        "_3_": "'medium'    - equivalent to 'MMM d, y h:mm:ss a' for en_US locale (e.g. Sep 3, 2010 12:05:08 PM)",
+        "_4_": "'short'     - equivalent to 'M/d/yy h:mm a' for en_US locale (e.g. 9/3/10 12:05 PM)",
+        "_5_": "'fullDate'  - equivalent to 'EEEE, MMMM d, y' for en_US locale (e.g. Friday, September 3, 2010)",
+        "_6_": "'longDate'  - equivalent to 'MMMM d, y' for en_US locale (e.g. September 3, 2010)",
+        "_7_": "'mediumDate'- equivalent to 'MMM d, y' for en_US locale (e.g. Sep 3, 2010)",
+        "_8_": "'shortDate' - equivalent to 'M/d/yy' for en_US locale (e.g. 9/3/10)",
+        "_9_": "'mediumTime'- equivalent to 'h:mm:ss a' for en_US locale (e.g. 12:05:08 PM)",
+        "_10": "'shortTime' - equivalent to 'h:mm a' for en_US locale (e.g. 12:05 PM)",
+        "_11": " ",
+        "_12": "Following date formats are phased out. If customers request to have customize format, we need ",
+        "_13": "to educate them to avoid doing so, because of i18n concerns",
+        "defaultDateFormat": "MM/DD/YYYY",
+        "defaultTimeFormat": "hh:mm:ss",
+        "defaultDateTimeFormat": "MM/DD/YYYY hh:mm",
+        "defaultDateLongTimeFormat": "MM/DD/YYYY HH:mm",
+        "defaultDatePickerFormat": "MM/dd/yyyy",
+        "defaultDateUIFormat": "MM/dd/yyyy",
+        "defaultDateTimeUIFormat": "MM/dd/yyyy HH:mm",
+        "defaultDateTimeLongUIFormat": "MM/dd/yyyy HH:mm:ss"
+    },
+    "common.userOrGroupSearch": {
+        "id": "userSearch",
+        "title": "User/Group Search",
+        "search": {
+            "btn": "Search",
+            "placeholder": "Search for the user or group."
+        },
+        "cancelButton": "Cancel",
+        "confirmButton": "Confirm",
+        "assigneeGridColumns": {
+            "name": "Name",
+            "type": "Type",
+            "title": "Title",
+            "username": "Username"
+        }
+    },
+    "common.frevvo": {
+        "defaultDateFormat": "YYYY-MM-DD"
+    },
+    "common.service": {
+        "error.invalidData": "Invalid data"
+    },
+    "common.objects": {
+        "progressNoData": "[ No data ]",
+        "progressLoading": "Loading data ",
+        "progressError": "Failed to load data "
+    },
+    "common.service.messageService": {
+        "authorizationError": "You are not authorized to take this action",
+        "actionMessages": {
+            "success": "Action was successful",
+            "error": "Action error"
+        }
+    },
+    "common.directive.docTree": {
+        "btnRefresh": "Refresh",
+        "waitUploading": "Uploading...",
+        "confirmVersion": "Are you sure to set back to older version?",
+        "confirmFileDeletion": "Are you sure you want to delete this file and all its links?",
+        "declareSuccessful": "Declare successful. Refreshing Document Tree...",
+        "prevItems": " items above...",
+        "prevItemsTooltip": "Review previous items",
+        "moreItems": " more items...",
+        "moreItemsTooltip": "Load more items",
+        "moreItemsBegin": "More items...",
+        "email": {
+            "defaultBodyLinks": "Please click the 'Open Document(s)' button to browse to the link. Links expire in 3 days.",
+            "defaultBodyAttachments": "Please find the attached document(s) for your review.",
+            "defaultFooter": "Powered by ArkCase, Enterprise Case Management platform, http://www.arkcase.com",
+            "successMessage": "The email was sent successfully",
+            "unsuccessMessage": "The email was not sent",
+            "noEmailAddress": "There is no entered email for this "
+        },
+        "menu": {
+            "noop": "(Select Item)",
+            "editWithWebDAV": "Edit",
+            "coEdit": "Co-Edit",
+            "cancelEditing": "Cancel Editing",
+            "newFolder": "New Folder",
+            "newDocument": "New Document",
+            "newCorrespondence": "New Correspondence",
+            "open": "Open",
+            "email": "Email",
+            "newTask": "New Task",
+            "download": "Download",
+            "copy": "Copy",
+            "cut": "Cut",
+            "paste": "Paste",
+            "pasteAsLink": "Paste as link(s)",
+            "rename": "Rename",
+            "delete": "Delete",
+            "replace": "Replace",
+            "checkout": "Check Out",
+            "checkin": "Check In",
+            "declareRecord": "Declare As Record(s)",
+            "editWithOfficeOnline": "Open in Microsoft Office Online",
+            "searchDocument": "Search Document(s)"
+        },
+        "table.columns": {
+            "title": "Title",
+            "type": "Type",
+            "created": "Created",
+            "modified": "Modified",
+            "modifier": "Modified By",
+            "version": "Version",
+            "status": "Status"
+        },
+        "dndDialog": {
+            "title": "Drag and Drop",
+            "radReplace.text": "Replace document (If more then one files are dropped, only first one is used)",
+            "radUploadToParent.text": "Create document(s) in parent folder",
+            "selFileTypes.label": "File Type:",
+            "optFileType.prompt": "[choose file type]",
+            "btnCancel.text": "Cancel",
+            "btnOk.text": "Submit"
+        },
+        "emailDialog": {
+            "title": "Email",
+            "recipients.label": "Recipients:",
+            "recipients.placeholder": "Choose recipients",
+            "subject.label": "Subject:",
+            "subject.placeholder": "Enter subject",
+            "attachments.label": "Attachments:",
+            "deliveryMethod.label": "Delivery Method:",
+            "sendWithAttachments.checkbox": "Send Email with Attachment",
+            "sendWithHyperlink.checkbox": "Send Email with Hyperlink",
+            "sendWithAttachmentsAndHyperlink.checkbox": "Send As Attachment and Hyperlink",
+            "btnCancel.text": "Cancel",
+            "btnOk.text": "Send Email"
+        },
+        "participantsDialog": {
+            "titlePart": "Participants for ",
+            "title": "Participants"
+        },
+        "recipientsDialog": {
+            "title": "Choose Recipients",
+            "search.placeholder": "Search Recipients",
+            "recipients.label": "Recipients:",
+            "externalRecipients.placeholder": "Enter external email addresses",
+            "cancel.button": "Cancel",
+            "addRecipients.button": "Add Recipients",
+            "gridColumns": {
+                "name": "Name",
+                "email": "Email"
+            }
+        },
+        "mediaDialog": {
+            "title": "ArkCase Media Player",
+            "btnCancel.text": "Cancel"
+        },
+        "comment": {
+            "title": "Checkin New Document",
+            "addComent": "Detailed Note",
+            "btnCancel.text": "Cancel",
+            "btnOk.text": "Checkin",
+            "chooseFiles": "Choose Files",
+            "noFiles": "No Files Selected"
+        },
+        "error": {
+            "nodeTitle": "(Error)",
+            "folderNodeTitle": "(Error) Folder was not created.",
+            "fileNodeTitle": "(Error) File was not uploaded."
+        },
+        "lockedTitle": "This document is locked by ",
+        "delete.confirmation.dialog": {
+            "header": "Are you sure you want to delete this folder?",
+            "body.message": "The folder contains:",
+            "body.content.files": "files",
+            "body.content.folders": "folders",
+            "btn.delete.folder": "Yes",
+            "btn.cancel.delete.folder": "No"
+        },
+        "fileTypesDialog": {
+            "header": "Please select type of the Document",
+            "type": "Document Type",
+            "language": "Document Language",
+            "btnOK": "OK",
+            "btnCancel": "Cancel"
+        }
+    },
+    "common.directive.objectTree": {
+        "btnPrev.title": " records above...",
+        "btnPrev.toolTip": "Review previous records",
+        "btnNext.titleUnknownSize": "More records...",
+        "btnNext.title": " more records...",
+        "btnNext.toolTip": "Load more records",
+        "edtQuery.placeHolder": "Search",
+        "btnQuery.text": "Go!",
+        "errorNode.title": "(Error)",
+        "errorNode.toolTip": "(Error)",
+        "noAccessNode.title": "(No Access)",
+        "noAccessNode.toolTip": "(No Access)"
+    },
+    "common.directive.simplePager": {
+        "rowCountLabel": "items per page",
+        "pagerCountLabel": "{{pageCount}} of {{pageTotal}} items"
+    },
+    "common.directive.objectAuthorization": {
+        "choose": "Choose",
+        "not_authorized": "Not Authorized",
+        "not_member": "Not Member",
+        "tooltip.move_right": "Move Right",
+        "tooltip.move_left": "Move Left",
+        "authorized": "Authorized",
+        "member": "Member"
+    },
+    "common.directive.objectAuthorizationRolesFilter": {
+        "pattern.title": "Error, 2 characters required."
+    },
+    "common.directive.searchModal": {
+        "header": "Search",
+        "btnSearch.text": "Search",
+        "btnOk.text": "Submit Result",
+        "btnConfirm.text": "Confirm",
+        "btnCancel.text": "Cancel",
+        "edtPlaceholder": "Type in to search",
+        "noData.text": "No Results",
+        "pickUserLabel": "Pick Associated User",
+        "pickGroupLabel": "Pick Associated Group",
+        "selectedItemsGrid.label": "Selected entries",
+        "notValidUser": "The selected user must be member in the owningGroup group! You can choose new owning group from the second grid, or change the selected user with one that is member in the owningGroup group",
+        "notValidGroup": "The selected group should be the one where the assignee is member! You can choose new assignee from the second grid, or change the selected group with one that the assignee is member"
+    },
+    "common.directive.search": {
+        "showMore.button.text": "Show More Values",
+        "showLess.button.text": "Show Less Values",
+        "results.text": "Results",
+        "noResults.text": "No Results",
+        "tooltip": {
+            "collapseFacetList": "Collapse Facet List",
+            "expandFacetList": "Expand Facet List"
+        },
+        "facet": {
+            "blankValue": "Unspecified",
+            "names.modifyUser%": "Modify User",
+            "names.taskPriority%": "Task Priority",
+            "fields.taskPriority.medium%": "Medium",
+            "fields.taskPriority.low%": "Low",
+            "fields.taskPriority.high%": "High",
+            "fields.taskPriority.expedite%": "Expedite",
+            "names.group%": "Group",
+            "names.tagToken%": "Tag Token",
+            "names.assignee%": "Assignee Full Name",
+            "names.documentRepository%": "Document Repository Name",
+            "names.taskStatus%": "Task Status",
+            "fields.taskStatus.active%": "Active",
+            "fields.taskStatus.draft%": "Draft",
+            "fields.taskStatus.closed%": "Closed",
+            "fields.taskStatus.record%": "Record",
+            "fields.taskStatus.inactive%": "Inactive",
+            "fields.taskStatus.inApproval%": "In Approval",
+            "fields.taskStatus.delete%": "Delete",
+            "fields.taskStatus.approved%": "Approved",
+            "fields.taskStatus.unclaimed%": "Unclaimed",
+            "fields.taskStatus.valid%": "Valid",
+            "names.documentLanguage%": "Document Language",
+            "names.createUser%": "Create User",
+            "names.postalCode%": "Postal Code",
+            "names.incidentType%": "Incident Type",
+            "fields.incidentType.agricultural%": "Agricultural",
+            "fields.incidentType.arson%": "Arson",
+            "fields.incidentType.backgroundInvestigation%": "Background Investigation",
+            "fields.incidentType.benefitsAppeal%": "Benefits Appeal",
+            "fields.incidentType.businessDispute%": "Better Business Dispute",
+            "fields.incidentType.clinicalFraud%": "Clinical Investigator Fraud",
+            "fields.incidentType.congressional%": "Congressional Response",
+            "fields.incidentType.disabilityWaiver%": "Disability Waiver Request",
+            "fields.incidentType.domesticDispute%": "Domestic Dispute",
+            "fields.incidentType.drugTrafficking%": "Drug Trafficking",
+            "fields.incidentType.educationWaiver%": "Education Waiver Request",
+            "fields.incidentType.eeoHarassment%": "EEO/Harassment",
+            "fields.incidentType.embezzlement%": "Embezzlement",
+            "fields.incidentType.extortion%": "Extortion",
+            "fields.incidentType.fraud%": "Fraud",
+            "fields.incidentType.government%": "Government",
+            "fields.incidentType.investorComplaint%": "Investor Complaint",
+            "fields.incidentType.laborRacketeering%": "Labor Racketeering",
+            "fields.incidentType.local%": "Local",
+            "fields.incidentType.murder%": "Murder",
+            "fields.incidentType.newDrugFraud%": "New Drug Application Fraud",
+            "fields.incidentType.payoff%": "Payoff",
+            "fields.incidentType.pensionWaiver%": "Pension Waiver Request",
+            "fields.incidentType.pollution%": "Pollution",
+            "fields.incidentType.productTampering%": "Product Tampering",
+            "fields.incidentType.assetTheftMisuse%": "Theft or misuse of asset",
+            "names.objectType%": "Object Type",
+            "fields.objectType.participant%": "Participant",
+            "fields.objectType.contactMethod%": "Contact Method",
+            "fields.objectType.task%": "Task",
+            "fields.objectType.file%": "File",
+            "fields.objectType.person%": "Person",
+            "fields.objectType.personAssociation%": "Person Association",
+            "fields.objectType.reference%": "Reference",
+            "fields.objectType.location%": "Location",
+            "fields.objectType.organization%": "Organization",
+            "fields.objectType.organizationAssociation%": "Organization Association",
+            "fields.objectType.caseFile%": "Case File",
+            "fields.objectType.complaint%": "Complaint",
+            "fields.objectType.associatedTag%": "Associated Tag",
+            "fields.objectType.group%": "Group",
+            "fields.objectType.costsheet%": "Costsheet",
+            "fields.objectType.note%": "Note",
+            "fields.objectType.docRepo%": "Doc Repo",
+            "fields.objectType.personAlias%": "Person Alias",
+            "fields.objectType.timesheet%": "Timesheet",
+            "fields.objectType.subscription%": "Subscription",
+            "fields.objectType.user%": "User",
+            "fields.objectType.objectLock%": "Object Lock",
+            "names.state%": "State",
+            "names.parentType%": "Parent Type",
+            "fields.parentType.container%": "Container",
+            "fields.parentType.caseFile%": "Case File",
+            "fields.parentType.complaint%": "Complaint",
+            "fields.parentType.organization%": "Organization",
+            "fields.parentType.person%": "Person",
+            "fields.parentType.task%": "Task",
+            "fields.parentType.file%": "File",
+            "fields.parentType.group%": "Group",
+            "fields.parentType.docRepo%": "Doc Repo",
+            "fields.parentType.costsheet%": "Costsheet",
+            "fields.parentType.timesheet%": "Timesheet",
+            "names.owner%": "Owner",
+            "names.parentObjectType%": "Parent Object Type",
+            "fields.parentObjectType.container%": "Container",
+            "fields.parentObjectType.caseFile%": "Case File",
+            "fields.parentObjectType.complaint%": "Complaint",
+            "fields.parentObjectType.organization%": "Organization",
+            "fields.parentObjectType.person%": "Person",
+            "fields.parentObjectType.task%": "Task",
+            "fields.parentObjectType.file%": "File",
+            "fields.parentObjectType.group%": "Group",
+            "fields.parentObjectType.docRepo%": "Doc Repo",
+            "fields.parentObjectType.costsheet%": "Costsheet",
+            "fields.parentObjectType.timesheet%": "Timesheet",
+            "names.personOrganization%": "Person,Organization Type",
+            "names.city%": "City",
+            "names.createDate%": "Create Date",
+            "fields.createDate.previousWeek%": "Previous Week",
+            "fields.createDate.previousMonth%": "Previous Month",
+            "fields.createDate.previousYear%": "Previous Year",
+            "names.dueDate%": "Due Date",
+            "fields.dueDate.previousWeek%": "Previous Week",
+            "fields.dueDate.previousMonth%": "Previous Month",
+            "fields.dueDate.previousYear%": "Previous Year",
+            "names.incidentDate%": "Incident Date",
+            "fields.incidentDate.previousWeek%": "Previous Week",
+            "fields.incidentDate.previousMonth%": "Previous Month",
+            "fields.incidentDate.previousYear%": "Previous Year",
+            "names.modifyDate%": "Modify Date",
+            "fields.modifyDate.previousWeek%": "Previous Week",
+            "fields.modifyDate.previousMonth%": "Previous Month",
+            "fields.modifyDate.previousYear%": "Previous Year"
+        }
+    },
+    "common.directive.coreNotes": {
+        "title": "Notes",
+        "modal.addNote": "Add Note",
+        "modal.editNote": "Edit Record",
+        "modal.notes.label": "Note",
+        "modal.btnOk.text": "Save",
+        "modal.btnCancel.text": "Cancel"
+    },
+    "common.directive.coreCalendar": {
+        "title": "Calendar",
+        "start.label": "Start: ",
+        "end.label": "End: ",
+        "newEvent.button": "New Event",
+        "agenda.button": {
+            "today": "Today",
+            "month": "Month",
+            "week": "Week",
+            "day": "Day"
+        },
+        "addNewEventDialog": {
+            "title": "New Event",
+            "cancel.button": "Cancel",
+            "add.button": "Add New Event",
+            "edit.button": "Update Event",
+            "next.button": "Next",
+            "previous.button": "Previous",
+            "stepOneTitle": "Step 1 – Enter Event Details",
+            "stepTwoTitle": "Step 2 – Enter Comments",
+            "stepThreeTitle": "Step 3 – Attach Documents",
+            "form": {
+                "requiredAttendees.label": "Required Attendees",
+                "requiredAttendees.placeholder": "Choose Required Attendees",
+                "optionalAttendees.label": "Optional Attendees",
+                "optionalAttendees.placeholder": "Choose Optional Attendees",
+                "subject.label": "Subject",
+                "subject.placeholder": "Enter Subject",
+                "location.label": "Location",
+                "location.placeholder": "Enter Location",
+                "startDate.label": "Start Date",
+                "startDate.placeholder": "Choose Start Date",
+                "startTime.label": "Start Time",
+                "startTime.placeholder": "Choose Start Time",
+                "priority.label": "Priority",
+                "priority.placeholder": "Choose Priority",
+                "priorityOptions": {
+                    "normalImportance": "Normal Importance",
+                    "highImportance": "High Importance",
+                    "lowImportance": "Low Importance"
+                },
+                "endDate.label": "End Date",
+                "endDate.placeholder": "Choose End Date",
+                "endTime.label": "End Time",
+                "endTime.placeholder": "Choose End Time",
+                "reminder.label": "Reminder",
+                "reminder.placeholder": "Choose Reminder Window",
+                "datePickerClose.button": "Close",
+                "datePickerCurrent.button": "Current",
+                "datePickerClear.button": "Clear",
+                "otherOptions.label": "Other Options",
+                "allDayEvent.checkbox": "All Day Event",
+                "privateEvent.checkbox": "Private Event",
+                "recurrence.label": "Recurrence",
+                "setRecurrence.button": "Set event recurrence",
+                "editRecurrence.button": "Edit event recurrence",
+                "browseFiles.button": "Browse Files",
+                "selectedFiles.label": "Selected files to attach:",
+                "noFiles.label": "No Files Selected.",
+                "attachedFiles.label": "Attached files:",
+                "reminderOptions": {
+                    "none": "None",
+                    "0Minutes": "0 minutes",
+                    "5Minutes": "5 minutes",
+                    "10Minutes": "10 minutes",
+                    "15Minutes": "15 minutes",
+                    "30Minutes": "30 minutes",
+                    "1Hours": "1 hour",
+                    "2Hours": "2 hours",
+                    "3Hours": "3 hours",
+                    "4Hours": "4 hours",
+                    "5Hours": "5 hours",
+                    "6Hours": "6 hours",
+                    "7Hours": "7 hours",
+                    "8Hours": "8 hours",
+                    "9Hours": "9 hours",
+                    "10Hours": "10 hours",
+                    "11Hours": "11 hours",
+                    "halfDay": "0.5 days",
+                    "18Hours": "18 hours",
+                    "1Days": "1 day",
+                    "2Days": "2 days",
+                    "3Days": "3 days",
+                    "4Days": "4 days",
+                    "1Week": "1 week",
+                    "2Weeks": "2 weeks"
+                }
+            }
+        },
+        "chooseEventAttendeesDialog": {
+            "table.columns.name": "Name",
+            "table.columns.email": "Email Address",
+            "title": "Choose Attendees",
+            "attendees.label": "Attendees",
+            "attendees.placeholder": "Enter additional attendees",
+            "searchAttendees.placeholder": "Search Attendees",
+            "cancel.button": "Cancel",
+            "addAttendees.button": "Add Attendees"
+        },
+        "recurrencePatternDialog": {
+            "title": "Event Recurrence",
+            "durationError.text": "The duration of the event must be shorter than how frequenlty it occurs.",
+            "recurrencePattern.label": "Recurrence Pattern",
+            "recurrencePattern.placeholder": "Choose Recurrence Pattern",
+            "cancel.button": "Cancel",
+            "removeRecurrence.button": "Remove current event recurrence",
+            "setRecurrence.button": "Set event recurrence",
+            "repeatsOptions": {
+                "daily": "Daily",
+                "weekly": "Weekly",
+                "monthly": "Monthly",
+                "yearly": "Yearly"
+            },
+            "sunday.checkbox": "Sunday",
+            "monday.checkbox": "Monday",
+            "tuesday.checkbox": "Tuesday",
+            "wednesday.checkbox": "Wednesday",
+            "thursday.checkbox": "Thursday",
+            "friday.checkbox": "Friday",
+            "saturday.checkbox": "Saturday",
+            "monthOptions": {
+                "january": "January",
+                "february": "February",
+                "march": "March",
+                "april": "April",
+                "may": "May",
+                "june": "June",
+                "july": "July",
+                "august": "August",
+                "september": "September",
+                "october": "October",
+                "november": "November",
+                "december": "December"
+            },
+            "dayOptions": {
+                "sunday": "Sunday",
+                "monday": "Monday",
+                "tuesday": "Tuesday",
+                "wednesday": "Wednesday",
+                "thursday": "Thursday",
+                "friday": "Friday",
+                "saturday": "Saturday",
+                "day": "day",
+                "weekDay": "weekday",
+                "weekendDay": "weekend day"
+            },
+            "dayOccurrenceOptions": {
+                "first": "first",
+                "second": "second",
+                "third": "third",
+                "fourth": "fourth",
+                "last": "last"
+            },
+            "every.label": "Every",
+            "day.label": "Day",
+            "week.label": "Week",
+            "month.label": "Month",
+            "_1_": "'on.label' appears not in use. _TO_BE_REMOVED_",
+            "_2_": "If needed it, rephrase message to avoid English centric grammar in message",
+            "_on.label": "On",
+            "day.placeholder": "Day",
+            "year.placeholder": "Year",
+            "dailyRecurrence": {
+                "every.text": "Every",
+                "days.text": "day(s)",
+                "everyWeekday.text": "Every weekday"
+            },
+            "weeklyRecurrence": {
+                "recurEvery.text": "Recur every",
+                "weeksOn.text": "week(s) on:"
+            },
+            "monthlyRecurrence": {
+                "day.text": "Day",
+                "ofEvery.text": "of every",
+                "months.text": "month(s)",
+                "the.text": "The"
+            },
+            "yearlyRecurrence": {
+                "recurEvery.text": "Recur every",
+                "years.text": "year(s)",
+                "on.text": "On:",
+                "onThe.text": "On the:",
+                "of.text": "of"
+            },
+            "recurrenceRange": {
+                "label": "Recurrence Range",
+                "noEndDate.text": "No end date",
+                "endAfter.text": "End after:",
+                "occurrences.text": "occurrences",
+                "endBy.text": "End by:"
+            },
+            "descriptionString": {
+                "effective": "effective",
+                "until": "until",
+                "from": "from",
+                "to": "to",
+                "occurs": "Occurs",
+                "every": "every",
+                "on": "on",
+                "of": "of",
+                "the": "the",
+                "and": "and",
+                "years": "years",
+                "day": "day",
+                "days": "days",
+                "weekday": "weekday",
+                "weeks": "week(s)",
+                "months": "month(s)"
+            }
+        },
+        "eventDetailsDialog": {
+            "title": "Event Details",
+            "private.label": "Private",
+            "start.label": "Start:",
+            "end.label": "End:",
+            "priority.label": "Priority:",
+            "occurs.label": "Occurs:",
+            "reminders.label": "Reminders:",
+            "attachments.label": "Attachments",
+            "invited.label": "Invited:",
+            "accepted.label": "Accepted:",
+            "maybe.label": "Maybe:",
+            "declined.label": "Declined:",
+            "cancel.button": "Cancel",
+            "delete.button": "Delete",
+            "edit.button": "Edit Event"
+        },
+        "updateEventDialog": {
+            "title": "Update Event",
+            "cancel.button": "Cancel",
+            "updateEvent.button": "Update",
+            "thisOne.radio": "Just this one",
+            "entireSeries.radio": "The entire series",
+            "updateWarning.text": "This is one event in a series. What do you want to update?"
+        },
+        "deleteEventDialog": {
+            "title": "Delete Event",
+            "cancel.button": "Cancel",
+            "deleteEvent.button": "Delete",
+            "thisOne.radio": "Just this one",
+            "entireSeries.radio": "The entire series",
+            "deleteWarning.text": "Are you sure you want to delete this event?"
+        },
+        "message": {
+            "error.accessDenied": "Access denied to calendar service.",
+            "error.serviceConfiguration": "Invalid calendar service configuration.",
+            "error.serviceCredentials": "Invalid Credentials. Please contact the system administrator.",
+            "error.calendarIntegration": "Calendar Integration Configuration Problem.",
+            "error.internalServerError": "Internal Server Error occurred."
+        }
+    },
+    "common.directive.coreParticipants": {
+        "title": "Participants",
+        "replaceFolderChildrenParticipants": "Replace child documents participants",
+        "modal": {
+            "addParticipant.label": "Add Participant",
+            "editParticipant.label": "Edit Record",
+            "participantType.label": "Participant Type ",
+            "participantName.label": "Participant Name",
+            "btnOk.text": "Save",
+            "btnCancel.text": "Cancel",
+            "dialogUserPicker.header": "Search User",
+            "dialogUserGroupPicker.header": "Search User/Group",
+            "dialogGroupPicker.header": "Search Group",
+            "replaceChildrenParticipant": "replace children participant"
+        },
+        "message": {
+            "error.groupType": "The owning group cannot be a person.",
+            "error.userType": " User type cannot be a group.",
+            "error.assigneeUnique": "Only one assignee is allowed.",
+            "error.assigneeDelete": "Deleting assignee is not allowed.",
+            "error.owninggroupUnique": "Only one owning group is allowed.",
+            "error.owninggroupDelete": "Deleting owning group is not allowed.",
+            "error.noAccessCombo": "The combination of No Access and Assignee is not allowed.",
+            "error.duplicateUserOrGroup": "Invalid participant. Duplicate entries found for the participant.",
+            "error.userOrGroupNotFound": "Invalid participant. Participant entry missing in the system.",
+            "error.emptyParticipantLdapId": "Participant name cannot be empty",
+            "error.emptyParticipantType": "Participant type cannot be empty",
+            "error.ownerUnique": "Only one owner is allowed."
+        }
+    },
+    "common.directive.coreParticipantsCreateNewObjectForm.modal": {
+        "addParticipant.label": "Add Participant",
+        "editParticipant.label": "Edit Record",
+        "participantType.label": "Participant Type",
+        "participantName.label": "Participant Name",
+        "btnOk.text": "Save",
+        "btnCancel.text": "Cancel",
+        "dialogUserGroupPicker.header": "Search User/Group",
+        "replaceChildrenParticipant": "replace children participant"
+    },
+    "common.directive.progressIndicator": {
+        "progressCompletion": "% Complete"
+    },
+    "common.directive.folderActions": {
+        "button.addFile": "Add File",
+        "button.addFolder": "Add Folder"
+    },
+    "common.directive.downloadAllAsZip": {
+        "button": "Download All As Zip",
+        "message": {
+            "start": "Zip file will be downloaded",
+            "finish": "Zip file downloaded",
+            "containerError": "Unable to find container",
+            "downloadError": "Zip file download Failed"
+        }
+    },
+    "common.comp.acmLogin": {
+        "confirmLogout": "For your protection, application is about to logout. Click Cancel to stay logged in.",
+        "logoutBtn" : "Logout",
+        "cancelBtn" : "Cancel"
+    },
+    "common.objectTypes": {
+        "CASE_FILE": "Case File",
+        "COMPLAINT": "Complaint",
+        "TASK": "Task",
+        "TIMESHEET": "Timesheet",
+        "COSTSHEET": "Costsheet",
+        "FILE": "File",
+        "DOC_REPO": "Document Repository",
+        "ORGANIZATION": "Organization",
+        "PERSON": "Person",
+        "PERSON-ASSOCIATION": "Person-Association",
+        "PARTICIPANT": "Participant",
+        "NOTE": "Note",
+        "PARTICIPANT-ASSOCIATION": "Participant-Association",
+        "ASSIGNMENT": "Assignment",
+        "ASSOCIATE_TAG": "Tag",
+        "TRANSCRIBE": "Transcription",
+        "BILLING_INVOICE": "Billing Invoice",
+        "BILLING_ITEM": "Billing Item"
+    },
+    "frevvo.dialogUserPicker": {
+        "header": "Choose User",
+        "table.columns": {
+            "name": "Name",
+            "type": "Type",
+            "title": "Title",
+            "id": "Username"
+        }
+    },
+    "common.objects.objectWasCreatedMessage": "{{objectTypeString}} with id {{objectId}} was created.",
+    "common.newPerson": {
+        "title": "Person",
+        "addAnother": "Add Another",
+        "remove": "Remove",
+        "familyName": "Last Name",
+        "familyName.placeholder": "Enter Last Name",
+        "givenName": "First Name",
+        "givenName.placeholder": "Enter First Name",
+        "middleName": "Middle Name",
+        "middleName.placeholder": "Enter Middle Name",
+        "saveButton": "Save Person",
+        "cancelButton": "Cancel",
+        "communicationAccounts": {
+            "title": "Communication Accounts",
+            "phone": "Phone",
+            "phone.placeholder": "Enter Phone",
+            "phoneType": "Phone Type",
+            "email": "Email",
+            "email.placeholder": "Enter Email",
+            "emailType": "Email Type",
+            "url": "URL",
+            "url.placeholder": "Enter URL",
+            "removeContactMethod": "Remove",
+            "urlType": "URL Type",
+            "validationMessage": "The Phone Number you entered is invalid. Should be in this format: xxx-xxx-xxxx"
+        },
+        "organizations": {
+            "title": "Organizations",
+            "searchExisting.placeholder": "Search Existing Organizations",
+            "organizationType": "Relation Type"
+        },
+        "picture": {
+            "title": "Picture",
+            "browse": "Browse"
+        },
+        "locations": {
+            "title": "Locations",
+            "country": "Country",
+            "country.placeholder": "Select Country",
+            "state": "State",
+            "state.placeholder": "Enter State",
+            "zip": "Zip",
+            "zip.placeholder": "Enter Zip",
+            "city": "City",
+            "city.placeholder": "Enter City",
+            "type": "Address Type",
+            "type.placeholder": "Select Address Type",
+            "streetAddress": "Street Address",
+            "streetAddress.placeholder": "Enter Street Address",
+            "streetAddress2": "Street Address2",
+            "streetAddress2.placeholder": "Enter Street Address2"
+        },
+        "identification": {
+            "title": "Identifications",
+            "identificationID": "Identification ID",
+            "identificationID.placeholder": "Enter Identification ID",
+            "identificationType": "Identification Type",
+            "identificationType.placeholder": "Select Identification Type",
+            "identificationNumber": "Identification Number",
+            "identificationNumber.placeholder": "Enter Identification Number",
+            "identificationIssuer": "Identification Issuer",
+            "identificationIssuer.placeholder": "Enter Identification Issuer",
+            "identificationYearIssued": "Identification Issued",
+            "identificationYearIssued.placeholder": "Select Identification Issued",
+            "identificationYearIssued.close.button": "Close"
+        },
+        "details": {
+            "title": "Details"
+        }
+    },
+    "common.addPerson": {
+        "title": "Add person",
+        "addNew.label": "Add new Person",
+        "selectExisting.label": "Select existing person",
+        "person.label": "Person",
+        "type.label": "Person Association Type",
+        "btnCancel.text": "Cancel",
+        "btnOk.text": "Save Person",
+        "setPrimary.label": "Set As Primary?",
+        "radioName": "Choice primary",
+        "radioYes.text": "Yes",
+        "radioNo.text": "No",
+        "duplicatePersonRoleErrorMessage": "Person already has the selected association"
+    },
+    "common.editPerson": {
+        "title": "Edit person"
+    },
+    "common.dialogPersonPicker": {
+        "header": "Search for People",
+        "table.columns": {
+            "givenName": "First Name",
+            "familyName": "Last Name",
+            "id": "ID",
+            "organization": "Organization",
+            "phone": "Phone",
+            "location": "Location"
+        }
+    },
+    "common.dialogOrganizationPicker": {
+        "header": "Choose Organization",
+        "table.columns": {
+            "type": "Organization Type",
+            "name": "Organization",
+            "identification": "ID",
+            "contact": "Primary Contact",
+            "phone": "Phone",
+            "location": "Location"
+        }
+    },
+    "common.dialogObjectPicker": {
+        "header": "Search {{objectLabel}}",
+        "table.columns": {
+            "id": "Document ID",
+            "title": "Document Title",
+            "parentId": "Parent Object ID",
+            "parentTitle": "Parent Object Title"
+        },
+        "addDocument": "Choose document to add"
+    },
+    "common.addOrganization": {
+        "title": "Add Organization",
+        "parentTitle": "Add Parent Organization",
+        "addNew.label": "Add new Organization",
+        "selectExisting.label": "Select existing organization",
+        "organization.label": "Organization",
+        "description": "Description",
+        "type.label": "Organization Association Type",
+        "type.label.default.text": "No parent Organization",
+        "type.label.text": "Parent Organization",
+        "btnCancel.text": "Cancel",
+        "btnOk.text": "Save Organization",
+        "setPrimary.label": "Set As Primary?",
+        "radioName": "Choice primary",
+        "radioYes.text": "Yes",
+        "radioNo.text": "No",
+        "duplicateOrganizationRoleErrorMessage": "Organization already has the selected association",
+        "notifyParentOrgWillBeChanged": "The chosen organization has already a parent organization. If you continue the parent organization will be changed."
+    },
+    "common.addObjectAssociation": {
+        "title.add": "Add {{objectLabel}} Association",
+        "title.edit": "Edit {{objectLabel}} Association",
+        "object.label": "Select {{objectLabel}}",
+        "selectExisting.label": "Select existing {{objectLabel}}",
+        "description": "Description",
+        "type.label": "Association Type",
+        "btnCancel.text": "Cancel",
+        "btnOk.text": "Save",
+        "setPrimary.label": "Set As Primary?",
+        "radioYes.text": "Yes",
+        "radioNo.text": "No"
+    },
+    "common.editOrganization": {
+        "title": "Edit Organization",
+        "parentTitle": "Edit Parent Organization"
+    },
+    "common.newOrganization": {
+        "title": "Organization",
+        "addAnother": "Add Another",
+        "remove": "Remove",
+        "name": "Organization Name",
+        "name.placeholder": "Enter Organization Name",
+        "type": "Organization Type",
+        "type.placeholder": "Select Organization Type",
+        "saveButton": "Save Organization",
+        "cancelButton": "Cancel",
+        "details.title": "Details",
+        "parentOrganization": "Parent Organization",
+        "searchParentOrganization.placeholder": "Search Parent Organization",
+        "communicationAccounts": {
+            "title": "Communication Accounts",
+            "phone": "Phone",
+            "phone.placeholder": "Enter Phone",
+            "phoneType": "Phone Type",
+            "email": "Email",
+            "email.placeholder": "Enter Email",
+            "emailType": "Email Type",
+            "fax": "Fax",
+            "fax.placeholder": "Enter Fax",
+            "faxType": "Fax Type",
+            "url": "URL",
+            "url.placeholder": "Enter URL",
+            "removeContactMethod": "Remove",
+            "urlType": "URL Type"
+        },
+        "people": {
+            "title": "People",
+            "searchExisting.placeholder": "Search Existing Person",
+            "personType": "Person Type"
+        },
+        "locations": {
+            "title": "Locations",
+            "country": "Country",
+            "country.placeholder": "Select Country",
+            "state": "State",
+            "state.placeholder": "Enter State",
+            "zip": "Zip",
+            "zip.placeholder": "Enter Zip",
+            "city": "City",
+            "city.placeholder": "Enter City",
+            "type": "Address Type",
+            "type.placeholder": "Select Address Type",
+            "streetAddress": "Street Address",
+            "streetAddress.placeholder": "Enter Street Address",
+            "streetAddress2": "Street Address2",
+            "streetAddress2.placeholder": "Enter Street Address2"
+        },
+        "identification": {
+            "title": "Identifications",
+            "identificationID": "Identification ID",
+            "identificationID.placeholder": "Enter Identification ID",
+            "identificationType": "Identification Type",
+            "identificationType.placeholder": "Select Identification Type",
+            "identificationNumber": "Identification Number",
+            "identificationNumber.placeholder": "Enter Identification Number",
+            "identificationIssuer": "Identification Issuer",
+            "identificationIssuer.placeholder": "Enter Identification Issuer",
+            "identificationYearIssued": "Identification Issued",
+            "identificationYearIssued.placeholder": "Select Identification Issued",
+            "identificationYearIssued.close.button": "Close"
+        }
+    },
+    "common.labels": {
+        "primary": " [Primary]"
+    },
+    "common.objectHistory": {
+        "modal": {
+            "title": "History Details",
+            "btn": {
+                "close": "Close"
+            },
+            "table.columns": {
+                "action": "Action",
+                "newValue": "New Value",
+                "oldValue": "Old Value"
+            }
+        },
+        "client": {
+            "title": "History",
+            "label": {
+                "updated": "Updated"
+            },
+            "table.columns": {
+                "eventType": "Event Name",
+                "eventDate": "Date",
+                "userId": "User",
+                "details.btn.text": "View {{count}} Changes"
+            }
+        }
+    },
+    "common.objectAction": {
+        "updated": "was updated"
+    },
+    "common.multicorrespondence": {
+        "modal": {
+            "title": "Correspondence Templates",
+            "select": "Select Correspondence Templates",
+            "documentName.label": "Enter Multi Correspondence Template Name",
+            "documentName.placeholder": "Document Name",
+            "buttons": {
+                "ok": "Create",
+                "cancel": "Cancel"
+            }
+        }
+    }
+}

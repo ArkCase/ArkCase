@@ -1,10 +1,10 @@
-package com.armedia.acm.plugins.ecm.model;
+package com.armedia.acm.plugins.ecm.model.event;
 
 /*-
  * #%L
  * ACM Service: Enterprise Content Management
  * %%
- * Copyright (C) 2014 - 2018 ArkCase LLC
+ * Copyright (C) 2014 - 2019 ArkCase LLC
  * %%
  * This file is part of the ArkCase software. 
  * 
@@ -27,42 +27,39 @@ package com.armedia.acm.plugins.ecm.model;
  * #L%
  */
 
+import com.armedia.acm.plugins.ecm.model.EcmFile;
+
 /**
- * Created by marjan.stefanoski on 15.05.2015.
+ * @author aleksandar.bujaroski
  */
-public class FileDTO
+public class EcmFileCopiedAsLinkEvent extends EcmFilePersistenceEvent
 {
-    private String originalId;
-    private EcmFile newFile;
-    private Boolean link;
+    private static final String EVENT_TYPE = "com.armedia.acm.ecm.file.copiedAsLink";
 
-    public String getOriginalId()
+    private EcmFile original;
+
+    public EcmFileCopiedAsLinkEvent(EcmFile source, EcmFile original, String userId, String ipAddress)
     {
-        return originalId;
+        super(source, userId, ipAddress);
+        setOriginal(original);
+        setParentObjectType(source.getContainer().getContainerObjectType());
+        setParentObjectId(source.getContainer().getContainerObjectId());
     }
 
-    public void setOriginalId(String originalId)
+    @Override
+    public String getEventType()
     {
-        this.originalId = originalId;
+        return EVENT_TYPE;
     }
 
-    public EcmFile getNewFile()
+    public EcmFile getOriginal()
     {
-        return newFile;
+        return original;
     }
 
-    public void setNewFile(EcmFile newFile)
+    public void setOriginal(EcmFile original)
     {
-        this.newFile = newFile;
+        this.original = original;
     }
 
-    public Boolean getLink()
-    {
-        return link;
-    }
-
-    public void setLink(Boolean link)
-    {
-        this.link = link;
-    }
 }

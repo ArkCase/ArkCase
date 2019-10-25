@@ -29,6 +29,7 @@ package com.armedia.acm.services.dataupdate.service;
 
 import com.armedia.acm.services.timesheet.model.AcmTimesheet;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 public class TriggerTimesheetSolrUpdateExecutor implements AcmDataUpdateExecutor
@@ -44,7 +45,7 @@ public class TriggerTimesheetSolrUpdateExecutor implements AcmDataUpdateExecutor
     @Override
     public void execute()
     {
-        solrReindexService.reindex(Arrays.asList(AcmTimesheet.class));
+        solrReindexService.reindex(new ArrayList<>(Arrays.asList(AcmTimesheet.class)));
     }
 
     public SolrReindexService getSolrReindexService()
