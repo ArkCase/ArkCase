@@ -77,8 +77,10 @@ public class EcmFileParticipantServiceHelper implements ApplicationEventPublishe
     public void setParticipantsToFolderChildren(AcmFolder folder, List<AcmParticipant> participants, boolean restricted)
     {
         log.debug("Setting participants for folder children [{}-{}]", folder.getId(), folder.getName());
-        setAuditPropertyEntityAdapterUserId();
-        setParticipantsToFolderChildrenRecursively(folder, participants, restricted);
+        xSync.execute("FOLDER" + folder.getId(), () -> {
+            setAuditPropertyEntityAdapterUserId();
+            setParticipantsToFolderChildrenRecursively(folder, participants, restricted);
+        });
     }
 
     private void setParticipantsToFolderChildrenRecursively(AcmFolder folder, List<AcmParticipant> participants, boolean restricted)
