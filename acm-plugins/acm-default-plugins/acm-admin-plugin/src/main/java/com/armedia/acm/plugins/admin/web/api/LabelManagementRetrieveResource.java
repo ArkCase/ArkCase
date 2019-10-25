@@ -30,10 +30,10 @@ package com.armedia.acm.plugins.admin.web.api;
 import com.armedia.acm.services.labels.exception.AcmLabelManagementException;
 import com.armedia.acm.services.labels.service.LabelManagementService;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -91,7 +91,7 @@ public class LabelManagementRetrieveResource
         try
         {
             // Retrieve resource, third parameter indicates that we have to try create resource it it is absent
-            JSONObject jsonResource = labelManagementService.getResource(ns, lang);
+            JSONObject jsonResource = labelManagementService.loadResource(ns, lang);
 
             // Return empty JSON if resource is absent
             if (jsonResource == null)
