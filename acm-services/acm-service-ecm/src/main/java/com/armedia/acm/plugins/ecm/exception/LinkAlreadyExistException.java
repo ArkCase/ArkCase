@@ -1,10 +1,10 @@
-package com.armedia.acm.plugins.ecm.model;
+package com.armedia.acm.plugins.ecm.exception;
 
 /*-
  * #%L
- * ACM Service: Enterprise Content Management
+ * ACM Core API
  * %%
- * Copyright (C) 2014 - 2018 ArkCase LLC
+ * Copyright (C) 2014 - 2019 ArkCase LLC
  * %%
  * This file is part of the ArkCase software. 
  * 
@@ -28,41 +28,21 @@ package com.armedia.acm.plugins.ecm.model;
  */
 
 /**
- * Created by marjan.stefanoski on 15.05.2015.
+ * @author aleksandar.bujaroski
  */
-public class FileDTO
+public class LinkAlreadyExistException extends Exception
 {
-    private String originalId;
-    private EcmFile newFile;
-    private Boolean link;
-
-    public String getOriginalId()
+    public LinkAlreadyExistException()
     {
-        return originalId;
     }
 
-    public void setOriginalId(String originalId)
+    public LinkAlreadyExistException(String message)
     {
-        this.originalId = originalId;
+        super(message);
     }
 
-    public EcmFile getNewFile()
+    public LinkAlreadyExistException(String message, Throwable cause)
     {
-        return newFile;
-    }
-
-    public void setNewFile(EcmFile newFile)
-    {
-        this.newFile = newFile;
-    }
-
-    public Boolean getLink()
-    {
-        return link;
-    }
-
-    public void setLink(Boolean link)
-    {
-        this.link = link;
+        super(message, cause);
     }
 }

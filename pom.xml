@@ -134,7 +134,6 @@
         <quartz.version>2.3.1</quartz.version>
         <jaudiotagger.version>2.0.3</jaudiotagger.version>
         <reflections.version>0.9.9</reflections.version>
-        <kryo.version>5.0.0-RC4</kryo.version>
         <subzero.version>0.9</subzero.version>
         <xsync-version>1.2</xsync-version>
     </properties>
@@ -1642,17 +1641,6 @@
                 <groupId>com.hazelcast</groupId>
                 <artifactId>hazelcast-wm</artifactId>
                 <version>3.8.3</version>
-            </dependency>
-            <!-- Kryo Serialization -->
-            <dependency>
-                <groupId>com.esotericsoftware</groupId>
-                <artifactId>kryo</artifactId>
-                <version>${kryo.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>info.jerrinot</groupId>
-                <artifactId>subzero-all</artifactId>
-                <version>${subzero.version}</version>
             </dependency>
             <!-- PDF Converter dependencies -->
             <dependency>
