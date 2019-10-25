@@ -138,7 +138,6 @@
             <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
             <property name="propertyFileManager" ref="propertyFileManager" />
             <property name="notificationPropertyFileLocation" ref="notificationPropertyFileLocation"/>
-            <property name="muleContextManager" ref="muleContextManager"/>
             <property name="authenticationTokenService" ref="authenticationTokenService"/>
             <property name="authenticationTokenDao" ref="authenticationTokenDao"/>
         </bean> -->
