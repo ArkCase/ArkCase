@@ -59,19 +59,6 @@ public class LabelManagementService
     private ConfigurationPropertyService configurationPropertyService;
 
     /**
-     * Return module's resource
-     *
-     * @param moduleId
-     * @param lang
-     * @return
-     */
-    public JSONObject getResource(String moduleId, String lang) throws AcmLabelManagementException
-    {
-        String labelsResource = moduleId + "-" + lang;
-        return loadResource(labelsResource);
-    }
-
-    /**
      * Return module's resources for translation in frevvo forms
      *
      * @param moduleId
@@ -84,7 +71,7 @@ public class LabelManagementService
 
         if (moduleResource == null)
         {
-            JSONObject jsonObject = getResource(moduleId, lang);
+            JSONObject jsonObject = loadResource(moduleId, lang);
             moduleResource = new HashMap<>();
             moduleResource.put(lang, jsonObject);
             labelResourcesForFrevvo.put(moduleId, moduleResource);
@@ -94,7 +81,7 @@ public class LabelManagementService
 
         if (json == null)
         {
-            json = getResource(moduleId, lang);
+            json = loadResource(moduleId, lang);
             moduleResource.put(lang, json);
         }
 
@@ -112,12 +99,11 @@ public class LabelManagementService
     {
         String labelsResource = String.format("%s-%s", moduleId, lang);
         HashMap<String, String> defaultLabels = (HashMap<String, String>) labelsConfiguration.getDefaultProperty(labelsResource);
-        JSONObject moduleResource = loadResource(labelsResource);
+        JSONObject moduleResource = loadResource(moduleId, lang);
 
         if (!defaultLocale.equals(lang))
         {
-            String baseFileName = String.format("%s-%s", moduleId, defaultLocale);
-            JSONObject baseResource = loadResource(baseFileName);
+            JSONObject baseResource = loadResource(moduleId, defaultLocale);
             moduleResource = mergeResources(baseResource, moduleResource);
         }
 
@@ -192,7 +178,7 @@ public class LabelManagementService
         try
         {
             configurationPropertyService.resetFilePropertiesToDefault(labelsResource);
-            loadResource(labelsResource);
+            loadResource(moduleId, defaultLocale);
         }
         catch (Exception e)
         {
@@ -310,16 +296,23 @@ public class LabelManagementService
     }
 
     /**
-     * Load JSON resource file
+     * Return module's resource
      *
-     * @param labelsResource
+     * @param moduleId
+     * @param lang
      * @return
      */
-    private JSONObject loadResource(String labelsResource)
+    public JSONObject loadResource(String moduleId, String lang)
     {
+        String labelsResource = moduleId + "-" + lang;
         try
         {
             HashMap<String, String> labels = (HashMap<String, String>) labelsConfiguration.getProperty(labelsResource);
+            if (labels == null)
+            {
+                labelsConfiguration.includeOtherLanguageInLabelsMap(lang);
+                labels = (HashMap<String, String>) labelsConfiguration.getProperty(labelsResource);
+            }
             ObjectMapper objectMapper = new ObjectMapper();
             String json = objectMapper.writeValueAsString(labels);
             return new JSONObject(json);

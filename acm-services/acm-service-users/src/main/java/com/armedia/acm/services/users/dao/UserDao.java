@@ -27,18 +27,14 @@ package com.armedia.acm.services.users.dao;
  * #L%
  */
 
+import com.armedia.acm.core.LanguageSettingsConfig;
 import com.armedia.acm.data.AcmAbstractDao;
-import com.armedia.acm.services.config.model.AcmConfig;
 import com.armedia.acm.services.users.model.AcmRole;
 import com.armedia.acm.services.users.model.AcmRoleType;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.AcmUserState;
-import com.jayway.jsonpath.Configuration;
-import com.jayway.jsonpath.JsonPath;
-import com.jayway.jsonpath.Option;
-import com.jayway.jsonpath.spi.json.JacksonJsonNodeJsonProvider;
-import com.jayway.jsonpath.spi.mapper.JacksonMappingProvider;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.cache.annotation.Cacheable;
@@ -59,31 +55,31 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
-import java.util.Optional;
 
 public class UserDao extends AcmAbstractDao<AcmUser>
 {
     private static String DEFAULT_LOCALE_CODE = null;
     @PersistenceContext
     private EntityManager entityManager;
-    private List<AcmConfig> configList;
+    private LanguageSettingsConfig languageSettingsConfig;
     private Logger log = LogManager.getLogger(getClass());
 
     public void init()
     {
-        Optional<AcmConfig> localeSettings = configList.stream().filter(config -> config.getConfigName().equals("languageSettings"))
-                .findFirst();
-        if (localeSettings.isPresent())
+        if (languageSettingsConfig != null)
         {
-            String settings = localeSettings.get().getConfigAsJson();
-            Configuration configuration = Configuration.builder().options(Option.SUPPRESS_EXCEPTIONS)
-                    .jsonProvider(new JacksonJsonNodeJsonProvider()).mappingProvider(new JacksonMappingProvider()).build();
-            DEFAULT_LOCALE_CODE = JsonPath.using(configuration).parse(settings).read("$.defaultLocale", String.class);
+            if (StringUtils.isNotBlank(languageSettingsConfig.getLocaleCode()))
+            {
+                DEFAULT_LOCALE_CODE = languageSettingsConfig.getLocaleCode();
+            }
+            else if (StringUtils.isNotBlank(languageSettingsConfig.getDefaultLocale()))
+            {
+                DEFAULT_LOCALE_CODE = languageSettingsConfig.getDefaultLocale();
+            }
         }
         else
         {
-            DEFAULT_LOCALE_CODE = Locale.getDefault().getLanguage();
+            DEFAULT_LOCALE_CODE = "en";
         }
     }
 
@@ -408,16 +404,6 @@ public class UserDao extends AcmAbstractDao<AcmUser>
         return AcmUser.class;
     }
 
-    public List<AcmConfig> getConfigList()
-    {
-        return configList;
-    }
-
-    public void setConfigList(List<AcmConfig> configList)
-    {
-        this.configList = configList;
-    }
-
     public Long getUserCount(LocalDateTime until)
     {
         String queryText = "SELECT COUNT(acmUser) FROM AcmUser acmUser where acmUser.created < :until";
@@ -425,5 +411,14 @@ public class UserDao extends AcmAbstractDao<AcmUser>
         Query query = getEm().createQuery(queryText);
         query.setParameter("until", Date.from(ZonedDateTime.of(until, ZoneId.systemDefault()).toInstant()));
         return (Long) query.getSingleResult();
+    }
+
+    /**
+     * @param languageSettingsConfig
+     *            the languageSettingsConfig to set
+     */
+    public void setLanguageSettingsConfig(LanguageSettingsConfig languageSettingsConfig)
+    {
+        this.languageSettingsConfig = languageSettingsConfig;
     }
 }

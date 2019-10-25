@@ -95,6 +95,18 @@ public class LabelsConfiguration implements ConfigurationFacade
         }
     }
 
+    public void includeOtherLanguageInLabelsMap(String lang)
+    {
+        String serverUrl = this.environment.getProperty(CONFIGURATION_SERVER_URL);
+        List<String> modulesNames = configurationServiceBootClient.getModulesNames();
+        for (String labelsModule : modulesNames)
+        {
+            String key = String.format("%s-%s", labelsModule, lang);
+            labelsMap.put(key, this.configurationServiceBootClient.loadConfiguration(serverUrl, key));
+            labelsDefaultMap.put(key, this.configurationServiceBootClient.loadDefaultConfiguration(serverUrl, key));
+        }
+    }
+
     /**
      * Return list of modules configuration
      *
