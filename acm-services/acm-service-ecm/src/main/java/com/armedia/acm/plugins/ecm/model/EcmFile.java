@@ -204,6 +204,9 @@ public class EcmFile implements AcmEntity, Serializable, AcmObject, AcmStatefulE
     @Convert(converter = BooleanToStringConverter.class)
     private Boolean restricted = Boolean.FALSE;
 
+    @Column(name = "cm_file_is_link", nullable = false)
+    @Convert(converter = BooleanToStringConverter.class)
+    private Boolean link = Boolean.FALSE;
     /**
      * This property is used to be able to make distinction between two or more EcmFile objects before these objects
      * to be persisted in database (before to take unique identifier from database)
@@ -633,6 +636,16 @@ public class EcmFile implements AcmEntity, Serializable, AcmObject, AcmStatefulE
     public void setRestricted(Boolean restricted)
     {
         this.restricted = restricted;
+    }
+
+    public Boolean isLink()
+    {
+        return link;
+    }
+
+    public void setLink(Boolean link)
+    {
+        this.link = link;
     }
 
     @Override

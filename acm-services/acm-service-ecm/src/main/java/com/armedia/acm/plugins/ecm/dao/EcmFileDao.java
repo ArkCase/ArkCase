@@ -32,8 +32,8 @@ import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -180,7 +180,8 @@ public class EcmFileDao extends AcmAbstractDao<EcmFile>
         }
         catch (NoResultException e)
         {
-            LOG.debug("Cannot find EcmFile for containerId=[{}], folderId=[{}] and fileType=[{}]. {}", containerId, folderId, fileType, e.getMessage());
+            LOG.debug("Cannot find EcmFile for containerId=[{}], folderId=[{}] and fileType=[{}]. {}", containerId, folderId, fileType,
+                    e.getMessage());
         }
         catch (NonUniqueResultException e1)
         {
@@ -320,5 +321,41 @@ public class EcmFileDao extends AcmAbstractDao<EcmFile>
         allRecords.setParameter("ids", fileIds);
         List<EcmFile> retval = allRecords.getResultList();
         return retval;
+    }
+
+    public List<EcmFile> getFileLinks(String versionSeriesId)
+    {
+        String jpql = "SELECT e FROM EcmFile e WHERE e.link=true AND e.versionSeriesId =:versionSeriesId";
+
+        TypedQuery<EcmFile> query = getEm().createQuery(jpql, getPersistenceClass());
+        query.setParameter("versionSeriesId", versionSeriesId);
+        return query.getResultList();
+    }
+
+    public EcmFile getFileLinkInCurrentDirectory(String versionSeriesId, Long folderId)
+    {
+        String jpql = "SELECT e FROM EcmFile e WHERE e.link=true AND e.versionSeriesId =:versionSeriesId AND e.folder.id =:folderId";
+
+        TypedQuery<EcmFile> query = getEm().createQuery(jpql, getPersistenceClass());
+        query.setParameter("versionSeriesId", versionSeriesId);
+        query.setParameter("folderId", folderId);
+        try
+        {
+            return query.getSingleResult();
+        }
+        catch (Exception e)
+        {
+            return null;
+        }
+    }
+
+    @Transactional
+    public void deleteFileAndHisLinks(String versionSeriesId)
+    {
+        String jpql = "DELETE FROM EcmFile e WHERE e.link=true AND e.versionSeriesId =:versionSeriesId";
+
+        Query deleteQuery = getEm().createQuery(jpql);
+        deleteQuery.setParameter("versionSeriesId", versionSeriesId);
+        deleteQuery.executeUpdate();
     }
 }

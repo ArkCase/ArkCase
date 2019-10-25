@@ -29,6 +29,7 @@ package com.armedia.acm.services.dataupdate.service;
 
 import com.armedia.acm.services.costsheet.model.AcmCostsheet;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 public class TriggerCostsheetSolrUpdateExecutor implements AcmDataUpdateExecutor
@@ -44,7 +45,7 @@ public class TriggerCostsheetSolrUpdateExecutor implements AcmDataUpdateExecutor
     @Override
     public void execute()
     {
-        solrReindexService.reindex(Arrays.asList(AcmCostsheet.class));
+        solrReindexService.reindex(new ArrayList<>(Arrays.asList(AcmCostsheet.class)));
     }
 
     public SolrReindexService getSolrReindexService()

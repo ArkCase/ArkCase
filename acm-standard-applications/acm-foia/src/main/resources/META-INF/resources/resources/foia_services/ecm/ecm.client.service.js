@@ -82,6 +82,10 @@ angular.module('services').factory('EcmService', [ '$resource', 'UtilService', f
             method: 'POST',
             url: 'api/latest/service/ecm/copyToAnotherContainer/:objType/:objId'
         },
+        copyFileAsLink: {
+            method: 'POST',
+            url: 'api/latest/service/ecm/copyToAnotherContainerAsLink/:objType/:objId'
+        },
         moveFolder: {
             method: 'POST',
             url: 'api/latest/service/ecm/folder/move/:subFolderId/:folderId'
@@ -145,6 +149,12 @@ angular.module('services').factory('EcmService', [ '$resource', 'UtilService', f
         findFileByContainerAndFileType: {
             method: 'GET',
             url: 'api/latest/service/ecm/container/file/:containerId/:fileType'
+        },
+        getFileLinks: {
+            method: 'GET',
+            url: 'api/latest/service/ecm/fileLinks/:fileId',
+            cache: false,
+            isArray: true
         }
 
     });
