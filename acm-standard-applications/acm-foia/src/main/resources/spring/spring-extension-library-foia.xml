@@ -58,6 +58,8 @@
             <beans:property name="ldapAuthenticateService" ref="foiaportal_ldapAuthenticateService"/>
             <beans:property name="personDao" ref="acmPersonDao"/>
             <beans:property name="notificationDao" ref="notificationDao"/>
+            <beans:property name="acmContextHolder" ref="acmContextHolder"/>
+            <beans:property name="userDao" ref="userJpaDao"/>
         </beans:bean>
 
         <beans:bean id="portalCreateRequestService" class="gov.foia.service.PortalCreateRequestService">

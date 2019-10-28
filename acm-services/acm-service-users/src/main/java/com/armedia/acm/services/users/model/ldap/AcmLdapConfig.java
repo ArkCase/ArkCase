@@ -39,6 +39,7 @@ public class AcmLdapConfig
     private String referral;
     private String directoryName;
     private String directoryType;
+    private boolean generateUsernameEnabled;
 
     public String getAuthUserPassword()
     {
@@ -138,5 +139,22 @@ public class AcmLdapConfig
     public void setDirectoryType(String directoryType)
     {
         this.directoryType = directoryType;
+    }
+
+    /**
+     * @return the generateUsernameEnabled
+     */
+    public boolean isGenerateUsernameEnabled()
+    {
+        return generateUsernameEnabled;
+    }
+
+    /**
+     * @param generateUsernameEnabled
+     *            the generateUsernameEnabled to set
+     */
+    public void setGenerateUsernameEnabled(boolean generateUsernameEnabled)
+    {
+        this.generateUsernameEnabled = generateUsernameEnabled;
     }
 }
