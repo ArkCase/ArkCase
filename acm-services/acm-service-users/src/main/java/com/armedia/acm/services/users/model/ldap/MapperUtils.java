@@ -195,6 +195,17 @@ public class MapperUtils
                 && !userId.startsWith(userPrefix))
         {
             String username = String.format("%s%s", prefixTrailingDot(userPrefix), userId);
+            if (ldapSyncConfig.isGenerateUsernameEnabled())
+            {
+                username = StringUtils.left(username, userPrefix.length())
+                        .concat(RandomStringUtils.random(20 - userPrefix.length(),
+                                "abcdefghijklmnopqrstuvwxyz0123456789"));
+            }
+            else
+            {
+                username = StringUtils.left(username, 20);
+            }
+
             username = StringUtils.left(username, 20);
             return buildUserId(username, ldapSyncConfig.getUserDomain());
         }

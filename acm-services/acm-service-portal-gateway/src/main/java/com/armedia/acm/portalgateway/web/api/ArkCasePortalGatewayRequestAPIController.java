@@ -33,8 +33,8 @@ import com.armedia.acm.portalgateway.service.PortalRequestService;
 import com.armedia.acm.portalgateway.service.PortalRequestServiceException;
 import com.armedia.acm.portalgateway.service.PortalServiceExceptionMapper;
 
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
