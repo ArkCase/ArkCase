@@ -171,7 +171,7 @@ public class UserDao extends AcmAbstractDao<AcmUser>
     {
         Query roleQuery = getEntityManager().createQuery("SELECT role FROM AcmRole role");
 
-        return (List<AcmRole>) roleQuery.getResultList();
+        return roleQuery.getResultList();
     }
 
     public List<AcmRole> findAllRolesByRoleType(AcmRoleType acmRoleType)
@@ -310,6 +310,42 @@ public class UserDao extends AcmAbstractDao<AcmUser>
         catch (Exception e)
         {
             log.error("Error while retrieving user by user id [{}] and email [{}]", userId, email, e);
+        }
+        return null;
+    }
+
+    public AcmUser findByPrefixAndEmailAddress(String userPrefix, String email)
+    {
+        String select = "SELECT user FROM AcmUser user WHERE LOWER(user.mail) = :email";
+        if (StringUtils.isNotBlank(userPrefix))
+        {
+            select += " AND user.userId LIKE :userId";
+        }
+
+        TypedQuery<AcmUser> query = getEm().createQuery(select, AcmUser.class);
+        query.setParameter("email", email.toLowerCase());
+        if (StringUtils.isNotBlank(userPrefix))
+        {
+            query.setParameter("userId", userPrefix.toLowerCase() + "%");
+        }
+
+        try
+        {
+            return query.getSingleResult();
+        }
+        catch (NoResultException e)
+        {
+            log.warn("There is no user with prefix [{}] and email [{}]", userPrefix, email);
+        }
+        catch (NonUniqueResultException e)
+        {
+            log.warn("There is no unique user found with prefix [{}] and email [{}]. More than one user has this name or address",
+                    userPrefix,
+                    email);
+        }
+        catch (Exception e)
+        {
+            log.error("Error while retrieving user by prefix [{}] and email [{}]", userPrefix, email, e);
         }
         return null;
     }
