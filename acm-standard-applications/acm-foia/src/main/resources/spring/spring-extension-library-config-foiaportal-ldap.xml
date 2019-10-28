@@ -14,7 +14,7 @@
             <beans:property name="ignoreUnresolvablePlaceholders" value="true"/>
             <beans:property name="locations">
                 <beans:list>
-                    <beans:value>file:${user.home}/.arkcase/acm/spring/spring-config-foia-portal-ldap.properties</beans:value>
+                    <beans:value>file:${user.home}/.arkcase/acm/spring/spring-config-foiaportal-ldap.properties</beans:value>
                 </beans:list>
             </beans:property>
         </beans:bean>
@@ -47,6 +47,8 @@
             <beans:property name="referral" value="follow"/>
             <beans:property name="directoryName" value='${ldapConfig.id}'/>
             <beans:property name="directoryType" value='${ldapConfig.directoryType}'/>
+            <!-- used for activedirectory only, in case of usernames are longer than 20 characters, for example portal registered users -->
+            <beans:property name="generateUsernameEnabled" value="true"/>
         </beans:bean>
     
         <beans:bean id="foiaportal_authenticate" class="com.armedia.acm.services.users.model.ldap.AcmLdapAuthenticateConfig"
@@ -77,6 +79,8 @@
             <beans:property name="userSyncAttributes" value='${ldapConfig.userAttributes}'/>
             <beans:property name="changedGroupSearchFilter" value='${ldapConfig.changedGroupSearchFilter}'/>
             <beans:property name="changedGroupSearchPageFilter" value='${ldapConfig.changedGroupSearchPageFilter}'/>
+            <beans:property name="userPrefix" value="${ldapConfig.userPrefix}"/>
+            <beans:property name="groupPrefix" value="${ldapConfig.groupPrefix}"/>
         </beans:bean>
         
         <beans:bean id="foiaportal_ldapAuthenticateService" class="gov.foia.service.FOIALdapAuthenticationService">

@@ -69,6 +69,8 @@ public class PortalUser
 
     private String portalUserId;
 
+    private String acmUserId;
+
     private String prefix;
 
     private String firstName;
@@ -116,6 +118,23 @@ public class PortalUser
     public void setPortalUserId(String portalUserId)
     {
         this.portalUserId = portalUserId;
+    }
+
+    /**
+     * @return the acmUserId
+     */
+    public String getAcmUserId()
+    {
+        return acmUserId;
+    }
+
+    /**
+     * @param acmUserId
+     *            the acmUserId to set
+     */
+    public void setAcmUserId(String acmUserId)
+    {
+        this.acmUserId = acmUserId;
     }
 
     /**

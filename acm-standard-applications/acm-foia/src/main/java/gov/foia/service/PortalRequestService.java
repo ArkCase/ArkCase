@@ -397,7 +397,7 @@ public class PortalRequestService
         {
             log.info("FOIA Requests not found for the logged user [{}]]", emailAddress);
             throw new AcmObjectNotFoundException("PortalFOIARequestStatus", null,
-                    "FOIA Requests not found for the logged user" + emailAddress + " not found");
+                    "FOIA Requests not found for the logged user " + emailAddress + " not found");
 
         }
         return responseRequests;
