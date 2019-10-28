@@ -200,7 +200,7 @@ public class ArkCasePortalGatewayUserAPIController
         log.warn("Handling exception of [{}] type.", se.getClass().getName());
         PortalServiceExceptionMapper exceptionMapper = portalUserService.getExceptionMapper(se);
         Object errorDetails = exceptionMapper.mapException();
-        return new ResponseEntity<>(errorDetails, exceptionMapper.getStatusCode());
+        return ResponseEntity.status(exceptionMapper.getStatusCode()).body(errorDetails);
     }
 
     /**
