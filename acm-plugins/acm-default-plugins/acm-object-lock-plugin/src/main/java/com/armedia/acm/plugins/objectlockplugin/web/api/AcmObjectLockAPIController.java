@@ -40,6 +40,7 @@ import org.json.JSONObject;
 import org.mule.api.MuleException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -90,6 +91,25 @@ public class AcmObjectLockAPIController
 
     {
         return objectLockingManager.acquireObjectLock(objectId, objectType, lockType, null, true, authentication.getName());
+    }
+
+    /**
+     * This method checks permissions for locks identified with objectId and objectType.
+     *
+     * @param objectType
+     *            object type
+     * @param objectId
+     *            object ID
+     * @param authentication
+     *            Authentication
+     * @return ResponseEntity permission status
+     */
+    @PreAuthorize("hasPermission(#objectId, #objectType, 'lock')")
+    @RequestMapping(value = { "/api/v1/plugin/{objectType}/{objectId}/lockPermission",
+            "/api/latest/plugin/{objectType}/{objectId}/lockPermission" }, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity hasPermissionToLockObject(@PathVariable(value = "objectType") String objectType, @PathVariable(value = "objectId") Long objectId, Authentication authentication)
+    {
+        return new ResponseEntity(HttpStatus.OK);
     }
 
     /**
