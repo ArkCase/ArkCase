@@ -55,7 +55,6 @@
             <beans:property name="portalPersonDao" ref="portalFOIAPersonDao"/>
             <beans:property name="portalInfoDAO" ref="portalInfoDAO"/>
             <beans:property name="ldapUserService" ref="ldapUserService"/>
-            <beans:property name="ldapAuthenticateService" ref="foiaportal_ldapAuthenticateService"/>
             <beans:property name="personDao" ref="acmPersonDao"/>
             <beans:property name="notificationDao" ref="notificationDao"/>
             <beans:property name="acmContextHolder" ref="acmContextHolder"/>
