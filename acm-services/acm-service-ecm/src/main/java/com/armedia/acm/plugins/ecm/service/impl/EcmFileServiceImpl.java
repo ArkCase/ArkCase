@@ -74,8 +74,9 @@ import com.armedia.acm.services.authenticationtoken.dao.AuthenticationTokenDao;
 import com.armedia.acm.services.authenticationtoken.model.AuthenticationToken;
 import com.armedia.acm.services.authenticationtoken.model.AuthenticationTokenConstants;
 import com.armedia.acm.services.participants.service.AcmParticipantService;
+import com.armedia.acm.services.search.exception.SolrException;
 import com.armedia.acm.services.search.model.SearchConstants;
-import com.armedia.acm.services.search.model.SolrCore;
+import com.armedia.acm.services.search.model.solr.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.search.service.SearchResults;
 import com.armedia.acm.web.api.MDCConstants;
@@ -1328,7 +1329,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
                 startRow += maxRows;
             } while (docs != null && docs.length() > 0);
         }
-        catch (MuleException e)
+        catch (SolrException e)
         {
             log.error("Cannot take total count. 'Parent Object Type': {}, 'Parent Object ID': {}", parentObjectType, parentObjectId);
         }

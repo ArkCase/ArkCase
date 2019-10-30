@@ -31,6 +31,7 @@ import com.armedia.acm.core.exceptions.AcmObjectLockException;
 import com.armedia.acm.service.objectlock.model.AcmObjectLock;
 import com.armedia.acm.service.objectlock.service.AcmObjectLockService;
 import com.armedia.acm.service.objectlock.service.AcmObjectLockingManager;
+import com.armedia.acm.services.search.exception.SolrException;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.logging.log4j.LogManager;
@@ -152,7 +153,6 @@ public class AcmObjectLockAPIController
      * @param authentication
      *            injected by spring
      * @return solr response
-     * @throws MuleException
      * @throws IOException
      */
     @RequestMapping(value = { "/api/v1/plugin/objects/{objectType}/locked",
@@ -162,7 +162,7 @@ public class AcmObjectLockAPIController
             @RequestParam(value = "firstRow", defaultValue = "0", required = false) int firstRow,
             @RequestParam(value = "maxRows", defaultValue = "1000", required = false) int maxRows,
             @RequestParam(value = "sort", defaultValue = "", required = false) String sort, Authentication authentication)
-            throws MuleException, IOException
+            throws SolrException
     {
         return objectLockService.getDocumentsWithLock(objectType, authentication, null, firstRow, maxRows, sort, null);
     }
@@ -181,7 +181,6 @@ public class AcmObjectLockAPIController
      * @param authentication
      *            injected by spring
      * @return solr response
-     * @throws MuleException
      * @throws IOException
      */
     @RequestMapping(value = { "/api/v1/plugin/locks/{objectType}",
@@ -193,7 +192,7 @@ public class AcmObjectLockAPIController
             @RequestParam(value = "firstRow", defaultValue = "0", required = false) int firstRow,
             @RequestParam(value = "maxRows", defaultValue = "1000", required = false) int maxRows,
             @RequestParam(value = "sort", defaultValue = "", required = false) String sort, Authentication authentication)
-            throws MuleException, IOException
+            throws SolrException
     {
         return objectLockService.getObjectLocks(objectType, authentication, objectId, creator, firstRow, maxRows, sort, null);
 
@@ -211,7 +210,6 @@ public class AcmObjectLockAPIController
      * @param auth
      *            auth
      * @return list of successful or failed unlock requests
-     * @throws MuleException
      */
     @PreAuthorize("hasPermission(#objectIds, #objectType, 'unlock')")
     @RequestMapping(value = { "/api/latest/plugin/locks/{objectType}/lock",
@@ -220,7 +218,6 @@ public class AcmObjectLockAPIController
     public String releaseMultipleLocks(@PathVariable(value = "objectType") String objectType,
             @RequestParam(value = "parentObjectIds") List<Long> objectIds,
             @RequestParam(value = "lockType", required = false, defaultValue = "OBJECT_LOCK") String lockType, Authentication auth)
-            throws MuleException
     {
         JSONArray resultList = new JSONArray();
         for (Long objectId : objectIds)

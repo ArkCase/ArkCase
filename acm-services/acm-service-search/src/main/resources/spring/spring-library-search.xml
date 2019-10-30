@@ -47,9 +47,10 @@
     </bean>
 
     <bean id="executeSolrQuery" class="com.armedia.acm.services.search.service.ExecuteSolrQuery">
-        <property name="muleContextManager" ref="muleContextManager"/>
         <property name="objectConverter" ref="objectConverter"/>
         <property name="sendDocumentsToSolr" ref="sendDocumentsToSolr"/>
+        <property name="configuration" ref="solrConfig"/>
+        <property name="solrClientProvider" ref="solrClientProvider"/>
     </bean>
 
     <!-- event publishers -->
@@ -78,4 +79,10 @@
         <property name="jsonUnmarshaller" ref="jsonUnmarshaller"/>
         <aop:scoped-proxy/>
     </bean>
+
+
+    <bean id="solrClientProvider" class="com.armedia.acm.services.search.service.solr.SolrClientProvider">
+        <property name="configuration" ref="solrConfig"/>
+    </bean>
+
 </beans>

@@ -28,7 +28,8 @@ package com.armedia.acm.services.tag.service;
  */
 
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
-import com.armedia.acm.services.search.model.SolrCore;
+import com.armedia.acm.services.search.exception.SolrException;
+import com.armedia.acm.services.search.model.solr.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.tag.dao.AssociatedTagDao;
 import com.armedia.acm.services.tag.dao.TagDao;
@@ -37,11 +38,10 @@ import com.armedia.acm.services.tag.model.AcmTag;
 import com.armedia.acm.services.tag.model.TagConfig;
 import com.armedia.acm.services.tag.model.TagConstants;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.mule.api.MuleException;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
 import org.springframework.security.core.Authentication;
 
 import java.sql.SQLException;
@@ -97,12 +97,12 @@ public class AssociatedTagService
             solrResponseJsonString = getExecuteSolrQuery().getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH,
                     predefinedQuery, TagConstants.FIRST_ROW, TagConstants.MAX_ROWS, TagConstants.SORT);
         }
-        catch (MuleException e)
+        catch (SolrException e)
         {
-            log.error("Mule exception occurred while performing quick search to fetch tags for object [{}]:[{}]",
+            log.error("Solr exception occurred while performing quick search to fetch tags for object [{}]:[{}]",
                     objectType, objectId, e);
             throw new AcmObjectNotFoundException(TagConstants.OBJECT_TYPE, null,
-                    "Mule exception occurred while performing quick search to fetch tags for object['" + objectType + "]:[" + objectId
+                    "Solr exception occurred while performing quick search to fetch tags for object['" + objectType + "]:[" + objectId
                             + "]",
                     e);
         }

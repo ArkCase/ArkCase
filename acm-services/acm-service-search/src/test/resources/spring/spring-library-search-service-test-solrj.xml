@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+    <bean id="jobEventPublisher" class="com.armedia.acm.quartz.scheduler.AcmJobEventPublisher"/>
+
+    <bean id="acmJobDescriptor" class="com.armedia.acm.quartz.scheduler.AcmJobDescriptor" abstract="true">
+        <property name="jobEventPublisher" ref="jobEventPublisher"/>
+    </bean>
+
+    <bean id="jmsTemplate" class="org.springframework.jms.core.JmsTemplate">
+        <constructor-arg index="0" ref="amqConnectionFactory"/>
+        <property name="deliveryMode" value="2"/>
+        <property name="receiveTimeout" value="500"/>
+    </bean>
+
+    <bean id="auditPropertyEntityAdapter" class="com.armedia.acm.data.AuditPropertyEntityAdapter"/>
+
+    <bean id="solrClientProvider" class="com.armedia.acm.services.search.service.solr.SolrClientProvider">
+        <property name="configuration" ref="solrConfig"/>
+    </bean>
+
+    <bean id="sendDocumentsToSolr" class="com.armedia.acm.services.search.service.SendDocumentsToSolr">
+        <property name="objectConverter" ref="objectConverter"/>
+        <property name="jmsConnectionFactory" ref="jmsConnectionFactory"/>
+    </bean>
+
+    <bean id="solrConfig" class="com.armedia.acm.services.search.model.solr.SolrConfig" scope="refresh">
+        <aop:scoped-proxy/>
+    </bean>
+
+    <bean id="executeSolrQuery" class="com.armedia.acm.services.search.service.ExecuteSolrQuery">
+        <property name="objectConverter" ref="objectConverter"/>
+        <property name="sendDocumentsToSolr" ref="sendDocumentsToSolr"/>
+        <property name="configuration" ref="solrConfig"/>
+        <property name="solrClientProvider" ref="solrClientProvider"/>
+    </bean>
+
+</beans>

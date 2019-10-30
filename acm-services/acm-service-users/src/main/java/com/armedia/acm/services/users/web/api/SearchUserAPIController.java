@@ -27,13 +27,13 @@ package com.armedia.acm.services.users.web.api;
  * #L%
  */
 
+import com.armedia.acm.services.search.exception.SolrException;
 import com.armedia.acm.services.search.service.SearchResults;
 import com.armedia.acm.services.users.service.AcmUserService;
 
-import org.json.JSONArray;
-import org.mule.api.MuleException;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.json.JSONArray;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -55,7 +55,7 @@ public class SearchUserAPIController
             @RequestParam(value = "s", required = false, defaultValue = "name_lcs") String sortBy,
             @RequestParam(value = "dir", required = false, defaultValue = "ASC") String sortDirection,
             @RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
-            @RequestParam(value = "n", required = false, defaultValue = "1000") int n) throws MuleException
+            @RequestParam(value = "n", required = false, defaultValue = "1000") int n) throws SolrException
     {
         return acmUserService.getNUsers(auth, sortBy, sortDirection, startRow, n);
     }
@@ -67,7 +67,7 @@ public class SearchUserAPIController
             @RequestParam(value = "s", required = false, defaultValue = "name") String sortBy,
             @RequestParam(value = "dir", required = false, defaultValue = "ASC") String sortDirection,
             @RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
-            @RequestParam(value = "n", required = false, defaultValue = "1000") int maxRows) throws MuleException
+            @RequestParam(value = "n", required = false, defaultValue = "1000") int maxRows) throws SolrException
     {
         String solrResponse = acmUserService.getUsersByName(auth, searchFilter, sortBy, sortDirection, startRow, maxRows);
         SearchResults searchResults = new SearchResults();
