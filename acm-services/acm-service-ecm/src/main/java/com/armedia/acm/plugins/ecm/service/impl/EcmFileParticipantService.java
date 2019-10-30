@@ -1,5 +1,7 @@
 package com.armedia.acm.plugins.ecm.service.impl;
 
+import com.antkorwin.xsync.XSync;
+
 /*-
  * #%L
  * ACM Service: Enterprise Content Management
@@ -48,6 +50,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
@@ -74,6 +77,7 @@ public class EcmFileParticipantService implements ApplicationEventPublisherAware
     private EcmFileConfig ecmFileConfig;
     private ApplicationEventPublisher applicationEventPublisher;
     private ExternalAuthenticationUtils externalAuthenticationUtils;
+    private XSync<String> xSync;
 
     /**
      * Sets the file's participants from the parent folder's participants and persists the file instance with the
@@ -204,6 +208,7 @@ public class EcmFileParticipantService implements ApplicationEventPublisherAware
      *            the restricted flag to set recursively
      */
     @Transactional(rollbackFor = Exception.class)
+    @Async("fileParticipantsThreadPoolTaskExecutor")
     public void inheritParticipantsFromAssignedObject(List<AcmParticipant> assignedObjectParticipants,
             List<AcmParticipant> originalAssignedObjectParticipants, AcmContainer acmContainer, boolean restricted)
     {
@@ -213,20 +218,24 @@ public class EcmFileParticipantService implements ApplicationEventPublisherAware
             return;
         }
 
-        if (acmContainer.getFolder() != null)
-        {
-            inheritParticipantsFromAssignedObject(assignedObjectParticipants,
-                    originalAssignedObjectParticipants, acmContainer.getFolder(), restricted);
-        }
-        if (acmContainer.getAttachmentFolder() != null
-                && (acmContainer.getFolder() == null
-                        || (acmContainer.getAttachmentFolder() != acmContainer.getFolder()
-                                && acmContainer.getAttachmentFolder().getId() != null &&
-                                !acmContainer.getAttachmentFolder().getId().equals(acmContainer.getFolder().getId()))))
-        {
-            inheritParticipantsFromAssignedObject(assignedObjectParticipants,
-                    originalAssignedObjectParticipants, acmContainer.getAttachmentFolder(), restricted);
-        }
+        xSync.execute("CONTAINER" + acmContainer.getId(), () -> {
+            log.debug("Setting participants for container [{}]", acmContainer.getId());
+
+            if (acmContainer.getFolder() != null)
+            {
+                inheritParticipantsFromAssignedObject(assignedObjectParticipants,
+                        originalAssignedObjectParticipants, acmContainer.getFolder(), restricted);
+            }
+            if (acmContainer.getAttachmentFolder() != null
+                    && (acmContainer.getFolder() == null
+                            || (acmContainer.getAttachmentFolder() != acmContainer.getFolder()
+                                    && acmContainer.getAttachmentFolder().getId() != null &&
+                                    !acmContainer.getAttachmentFolder().getId().equals(acmContainer.getFolder().getId()))))
+            {
+                inheritParticipantsFromAssignedObject(assignedObjectParticipants,
+                        originalAssignedObjectParticipants, acmContainer.getAttachmentFolder(), restricted);
+            }
+        });
     }
 
     private void inheritParticipantsFromAssignedObject(List<AcmParticipant> assignedObjectParticipants,
@@ -611,5 +620,15 @@ public class EcmFileParticipantService implements ApplicationEventPublisherAware
     public void setExternalAuthenticationUtils(ExternalAuthenticationUtils externalAuthenticationUtils)
     {
         this.externalAuthenticationUtils = externalAuthenticationUtils;
+    }
+
+    public XSync<String> getxSync()
+    {
+        return xSync;
+    }
+
+    public void setxSync(XSync<String> xSync)
+    {
+        this.xSync = xSync;
     }
 }

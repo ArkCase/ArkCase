@@ -34,10 +34,11 @@ import com.armedia.acm.services.dataaccess.model.AcmEntityParticipantsChangedEve
 import com.armedia.acm.services.participants.model.AcmAssignedObject;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.context.ApplicationListener;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class EntityParticipantsChangedEventListener implements ApplicationListener<AcmEntityParticipantsChangedEvent>
@@ -52,21 +53,31 @@ public class EntityParticipantsChangedEventListener implements ApplicationListen
     {
         AcmObject obj = (AcmObject) event.getSource();
         List<AcmParticipant> originalParticipants = event.getOriginalParticipants();
+        // create copy of the participants, because DataAccessPrivilegeListener.handleParticipantsChanged changes the
+        // inherit children participant flag
+        List<AcmParticipant> newParticipants = copyParticipants(((AcmAssignedObject) obj).getParticipants());
 
         if (obj instanceof AcmAssignedObject && obj instanceof AcmContainerEntity)
         {
             // inherit participants
             if (obj.getId() == null)
             {
-                ((AcmAssignedObject) obj).getParticipants().forEach(participant -> participant.setReplaceChildrenParticipant(true));
+                newParticipants.forEach(participant -> participant.setReplaceChildrenParticipant(true));
             }
 
             log.debug("Inheriting file participants from " + obj.getObjectType() + "[" + obj.getId() + "]");
             getFileParticipantService().inheritParticipantsFromAssignedObject(
-                    ((AcmAssignedObject) obj).getParticipants(),
+                    newParticipants,
                     originalParticipants,
                     ((AcmContainerEntity) obj).getContainer(), ((AcmAssignedObject) obj).getRestricted());
         }
+    }
+
+    private List<AcmParticipant> copyParticipants(List<AcmParticipant> participants)
+    {
+        List<AcmParticipant> copiedParticipants = new ArrayList<>();
+        participants.forEach(p -> copiedParticipants.add(AcmParticipant.createRulesTestParticipant(p)));
+        return copiedParticipants;
     }
 
     public EcmFileParticipantService getFileParticipantService()
