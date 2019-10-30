@@ -60,9 +60,9 @@ angular.module('services').factory(
                                     var promiseTicket = TicketService.getArkCaseTicket();
                                     promiseTicket.then(function(ticketData) {
                                         var acmTicket = ticketData.data;
-                                        LockingService.lockObject(fileId, ObjectService.ObjectTypes.FILE, ObjectService.LockTypes.WRITE, false)
+                                        LockingService.hasPermissionToLockObject(fileId, ObjectService.ObjectTypes.FILE)
                                                 .then(
-                                                        function(lockedFile) {
+                                                        function() {
                                                             var absUrl = $location.absUrl();
                                                             var baseHref = $browser.baseHref();
                                                             var appUrl = absUrl.substring(0, absUrl.indexOf(baseHref) + baseHref.length);
