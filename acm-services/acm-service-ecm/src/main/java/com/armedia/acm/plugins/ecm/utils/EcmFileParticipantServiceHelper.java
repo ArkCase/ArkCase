@@ -1,7 +1,5 @@
 package com.armedia.acm.plugins.ecm.utils;
 
-import com.antkorwin.xsync.XSync;
-
 /*-
  * #%L
  * ACM Service: Enterprise Content Management
@@ -47,7 +45,6 @@ import org.apache.logging.log4j.Logger;
 import org.slf4j.MDC;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -70,29 +67,14 @@ public class EcmFileParticipantServiceHelper implements ApplicationEventPublishe
     private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
     private ApplicationEventPublisher applicationEventPublisher;
     private ExternalAuthenticationUtils externalAuthenticationUtils;
-    private XSync<String> xSync;
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    @Async("fileParticipantsThreadPoolTaskExecutor")
     public void setParticipantsToFolderChildren(AcmFolder folder, List<AcmParticipant> participants, boolean restricted)
     {
-        // synchronize on ROOT folder
-        AcmFolder root = getRootFolder(folder);
-        xSync.execute("FOLDER" + root.getId(), () -> {
-            log.debug("Setting participants for folder children [{}-{}]", folder.getId(), folder.getName());
+        log.trace("Setting participants for folder children [{}-{}]", folder.getId(), folder.getName());
 
-            setAuditPropertyEntityAdapterUserId();
-            setParticipantsToFolderChildrenRecursively(folder, participants, restricted);
-        });
-    }
-
-    private AcmFolder getRootFolder(AcmFolder folder)
-    {
-        if (folder.getParentFolder() == null)
-        {
-            return folder;
-        }
-        return getRootFolder(folder.getParentFolder());
+        setAuditPropertyEntityAdapterUserId();
+        setParticipantsToFolderChildrenRecursively(folder, participants, restricted);
     }
 
     private void setParticipantsToFolderChildrenRecursively(AcmFolder folder, List<AcmParticipant> participants, boolean restricted)
@@ -175,7 +157,6 @@ public class EcmFileParticipantServiceHelper implements ApplicationEventPublishe
      * @param deletedParticipants
      */
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    @Async("fileParticipantsThreadPoolTaskExecutor")
     public void removeDeletedParticipantFromFolderChild(AcmFolder folder, List<AcmParticipant> deletedParticipants)
     {
         if (folder.getId() != null)
@@ -189,7 +170,6 @@ public class EcmFileParticipantServiceHelper implements ApplicationEventPublishe
     }
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    @Async("fileParticipantsThreadPoolTaskExecutor")
     public void setParticipantToFolderChildren(AcmFolder folder, AcmParticipant participant, boolean restricted)
     {
         log.trace("Setting participant [{}] with privilege [{}] for folder children [{}-{}]", participant.getParticipantLdapId(),
@@ -241,7 +221,7 @@ public class EcmFileParticipantServiceHelper implements ApplicationEventPublishe
 
     private void removeParticipantFromFolderAndChildren(AcmFolder folder, String participantLdapId, String participantType)
     {
-        log.debug("Removing [{}] privilege to folder [{}-{}] and children for participant [{}]", participantType, folder.getId(),
+        log.trace("Removing [{}] privilege to folder [{}-{}] and children for participant [{}]", participantType, folder.getId(),
                 folder.getName(), participantLdapId);
         setAuditPropertyEntityAdapterUserId();
 
@@ -329,71 +309,68 @@ public class EcmFileParticipantServiceHelper implements ApplicationEventPublishe
      */
     public void setParticipantToFile(EcmFile file, AcmParticipant participant)
     {
-        xSync.execute("FILE" + file.getId(), () -> {
-            log.debug("Setting [{}] privilege to file [{}-{}] for participant [{}]", participant.getParticipantType(), file.getId(),
-                    file.getFileName(), participant.getParticipantLdapId());
-            EcmFileParticipantChangedEvent ecmFileParticipantChangedEvent = new EcmFileParticipantChangedEvent(file);
-            boolean publishChangedEvent = false;
-            Optional<AcmParticipant> existingFileParticipant = file.getParticipants().stream()
-                    .filter(existingParticipant -> existingParticipant.getParticipantLdapId().equals(participant.getParticipantLdapId()))
-                    .findFirst();
+        log.trace("Setting [{}] privilege to file [{}-{}] for participant [{}]", participant.getParticipantType(), file.getId(),
+                file.getFileName(), participant.getParticipantLdapId());
+        EcmFileParticipantChangedEvent ecmFileParticipantChangedEvent = new EcmFileParticipantChangedEvent(file);
+        boolean publishChangedEvent = false;
+        Optional<AcmParticipant> existingFileParticipant = file.getParticipants().stream()
+                .filter(existingParticipant -> existingParticipant.getParticipantLdapId().equals(participant.getParticipantLdapId()))
+                .findFirst();
 
-            // for files and folders only one AcmParticipant per user is allowed
-            if (existingFileParticipant.isPresent())
+        // for files and folders only one AcmParticipant per user is allowed
+        if (existingFileParticipant.isPresent())
+        {
+            // change the role of the existing participant if needed
+            if (!existingFileParticipant.get().getParticipantType().equals(participant.getParticipantType()))
             {
-                // change the role of the existing participant if needed
-                if (!existingFileParticipant.get().getParticipantType().equals(participant.getParticipantType()))
-                {
-                    AcmParticipant changedParticipant = AcmParticipant.createRulesTestParticipant(participant);
-                    String ldapId = getExternalAuthenticationUtils()
-                            .getEcmServiceUserIdByParticipantLdapId(changedParticipant.getParticipantLdapId());
-                    if (ldapId != null)
-                    {
-                        changedParticipant.setParticipantLdapId(ldapId);
-                        ecmFileParticipantChangedEvent.setChangedParticipant(changedParticipant);
-                        publishChangedEvent = true;
-                    }
-
-                    AcmParticipant oldParticipant = AcmParticipant.createRulesTestParticipant(existingFileParticipant.get());
-                    String ldapIdOldParticipant = getExternalAuthenticationUtils()
-                            .getEcmServiceUserIdByParticipantLdapId(oldParticipant.getParticipantLdapId());
-                    if (ldapIdOldParticipant != null)
-                    {
-                        oldParticipant.setParticipantLdapId(ldapIdOldParticipant);
-                        ecmFileParticipantChangedEvent.setOldParticipant(oldParticipant);
-                        ecmFileParticipantChangedEvent.setChangeType(ChangedParticipantConstants.CHANGED);
-
-                        existingFileParticipant.get().setParticipantType(participant.getParticipantType());
-                        publishChangedEvent = true;
-                    }
-                }
-            }
-            else
-            {
-                AcmParticipant newParticipant = new AcmParticipant();
-                newParticipant.setParticipantType(participant.getParticipantType());
-                newParticipant.setParticipantLdapId(participant.getParticipantLdapId());
-                newParticipant.setObjectType(EcmFileConstants.OBJECT_FILE_TYPE);
-                newParticipant.setObjectId(file.getId());
-                file.getParticipants().add(newParticipant);
-
-                AcmParticipant changedParticipant = AcmParticipant.createRulesTestParticipant(newParticipant);
+                AcmParticipant changedParticipant = AcmParticipant.createRulesTestParticipant(participant);
                 String ldapId = getExternalAuthenticationUtils()
                         .getEcmServiceUserIdByParticipantLdapId(changedParticipant.getParticipantLdapId());
                 if (ldapId != null)
                 {
                     changedParticipant.setParticipantLdapId(ldapId);
                     ecmFileParticipantChangedEvent.setChangedParticipant(changedParticipant);
-                    ecmFileParticipantChangedEvent.setChangeType(ChangedParticipantConstants.ADDED);
+                    publishChangedEvent = true;
+                }
+
+                AcmParticipant oldParticipant = AcmParticipant.createRulesTestParticipant(existingFileParticipant.get());
+                String ldapIdOldParticipant = getExternalAuthenticationUtils()
+                        .getEcmServiceUserIdByParticipantLdapId(oldParticipant.getParticipantLdapId());
+                if (ldapIdOldParticipant != null)
+                {
+                    oldParticipant.setParticipantLdapId(ldapIdOldParticipant);
+                    ecmFileParticipantChangedEvent.setOldParticipant(oldParticipant);
+                    ecmFileParticipantChangedEvent.setChangeType(ChangedParticipantConstants.CHANGED);
+
+                    existingFileParticipant.get().setParticipantType(participant.getParticipantType());
                     publishChangedEvent = true;
                 }
             }
-            if (publishChangedEvent)
+        }
+        else
+        {
+            AcmParticipant newParticipant = new AcmParticipant();
+            newParticipant.setParticipantType(participant.getParticipantType());
+            newParticipant.setParticipantLdapId(participant.getParticipantLdapId());
+            newParticipant.setObjectType(EcmFileConstants.OBJECT_FILE_TYPE);
+            newParticipant.setObjectId(file.getId());
+            file.getParticipants().add(newParticipant);
+
+            AcmParticipant changedParticipant = AcmParticipant.createRulesTestParticipant(newParticipant);
+            String ldapId = getExternalAuthenticationUtils()
+                    .getEcmServiceUserIdByParticipantLdapId(changedParticipant.getParticipantLdapId());
+            if (ldapId != null)
             {
-                getApplicationEventPublisher().publishEvent(ecmFileParticipantChangedEvent);
+                changedParticipant.setParticipantLdapId(ldapId);
+                ecmFileParticipantChangedEvent.setChangedParticipant(changedParticipant);
+                ecmFileParticipantChangedEvent.setChangeType(ChangedParticipantConstants.ADDED);
+                publishChangedEvent = true;
             }
-            log.debug("Participant set to file successfully");
-        });
+        }
+        if (publishChangedEvent)
+        {
+            getApplicationEventPublisher().publishEvent(ecmFileParticipantChangedEvent);
+        }
     }
 
     /**
@@ -405,7 +382,7 @@ public class EcmFileParticipantServiceHelper implements ApplicationEventPublishe
      */
     public void setParticipantToFolder(AcmFolder folder, AcmParticipant participant)
     {
-        log.debug("Setting [{}] privilege to folder [{}-{}] for participant [{}]", participant.getParticipantType(), folder.getId(),
+        log.trace("Setting [{}] privilege to folder [{}-{}] for participant [{}]", participant.getParticipantType(), folder.getId(),
                 folder.getName(), participant.getParticipantLdapId());
         AcmFolderParticipantChangedEvent folderParticipantChangedEvent = new AcmFolderParticipantChangedEvent(folder);
         boolean publishChangedEvent = false;
@@ -468,7 +445,6 @@ public class EcmFileParticipantServiceHelper implements ApplicationEventPublishe
         {
             getApplicationEventPublisher().publishEvent(folderParticipantChangedEvent);
         }
-        log.debug("Participant set to folder successfully");
     }
 
     /**
@@ -610,15 +586,5 @@ public class EcmFileParticipantServiceHelper implements ApplicationEventPublishe
     public void setExternalAuthenticationUtils(ExternalAuthenticationUtils externalAuthenticationUtils)
     {
         this.externalAuthenticationUtils = externalAuthenticationUtils;
-    }
-
-    public XSync<String> getxSync()
-    {
-        return xSync;
-    }
-
-    public void setxSync(XSync<String> xSync)
-    {
-        this.xSync = xSync;
     }
 }
