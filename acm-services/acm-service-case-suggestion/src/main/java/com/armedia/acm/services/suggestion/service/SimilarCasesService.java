@@ -27,8 +27,9 @@ package com.armedia.acm.services.suggestion.service;
  * #L%
  */
 
+import com.armedia.acm.services.search.exception.SolrException;
 import com.armedia.acm.services.suggestion.model.SuggestedCase;
-import org.mule.api.MuleException;
+
 import org.springframework.security.core.Authentication;
 
 import java.text.ParseException;
@@ -37,6 +38,7 @@ import java.util.List;
 public interface SimilarCasesService
 {
 
-    List<SuggestedCase> findSimilarCases(String title, Boolean isPortal, Long objectId, Authentication auth) throws MuleException, ParseException;
+    List<SuggestedCase> findSimilarCases(String title, Boolean isPortal, Long objectId, Authentication auth)
+            throws ParseException, SolrException;
 
 }

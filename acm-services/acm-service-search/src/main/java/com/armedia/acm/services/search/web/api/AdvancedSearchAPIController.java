@@ -27,13 +27,13 @@ package com.armedia.acm.services.search.web.api;
  * #L%
  */
 
+import com.armedia.acm.services.search.exception.SolrException;
 import com.armedia.acm.services.search.model.SearchConstants;
-import com.armedia.acm.services.search.model.SolrCore;
+import com.armedia.acm.services.search.model.solr.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 
-import org.mule.api.MuleException;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -71,7 +71,7 @@ public class AdvancedSearchAPIController
      * @param authentication
      *            authentication token
      * @return Solr response
-     * @throws MuleException
+     * @throws SolrException
      *             on error
      */
     @RequestMapping(value = "/advancedSearch", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
@@ -82,7 +82,7 @@ public class AdvancedSearchAPIController
             @RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
             @RequestParam(value = "n", required = false, defaultValue = "10") int maxRows,
             @RequestParam(value = "fl", required = false) String fields,
-            Authentication authentication) throws MuleException
+            Authentication authentication) throws SolrException
     {
         return advancedSearch(query, sort, startRow, maxRows, fields, authentication);
     }
@@ -106,14 +106,14 @@ public class AdvancedSearchAPIController
      * @param authentication
      *            authentication token
      * @return Solr response
-     * @throws MuleException
+     * @throws SolrException
      *             on error
      */
     @RequestMapping(value = "/advancedSearch", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
     public String advancedSearchPost(
             @RequestBody Map<String, Object> requestParams,
-            Authentication authentication) throws MuleException
+            Authentication authentication) throws SolrException
     {
         String query = (String) requestParams.get("q");
         String sort = "";
@@ -148,11 +148,11 @@ public class AdvancedSearchAPIController
      * @param authentication
      *            authentication token
      * @return Solr response
-     * @throws MuleException
+     * @throws SolrException
      *             on error
      */
     private String advancedSearch(String query, String sort, int startRow, int maxRows, String fields, Authentication authentication)
-            throws MuleException
+            throws SolrException
     {
         log.debug("User [{}] is searching for [{}]", authentication.getName(), query);
 

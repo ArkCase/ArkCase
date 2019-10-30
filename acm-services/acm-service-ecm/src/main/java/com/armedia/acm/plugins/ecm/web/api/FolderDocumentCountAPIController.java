@@ -28,15 +28,15 @@ package com.armedia.acm.plugins.ecm.web.api;
  */
 
 import com.armedia.acm.core.exceptions.AcmListObjectsFailedException;
-import com.armedia.acm.services.search.model.SolrCore;
+import com.armedia.acm.services.search.exception.SolrException;
+import com.armedia.acm.services.search.model.solr.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.search.service.SearchResults;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.mule.api.MuleException;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -153,7 +153,7 @@ public class FolderDocumentCountAPIController
             return documentCounts;
 
         }
-        catch (MuleException e)
+        catch (SolrException e)
         {
             throw new AcmListObjectsFailedException("files", e.getMessage(), e);
         }
@@ -169,9 +169,9 @@ public class FolderDocumentCountAPIController
      * @param folderId
      *            The folder that we want the document counts for.
      * @return Number of documents in the folderId, plus all subfolders (if any)
-     * @throws MuleException
+     * @throws SolrException
      */
-    private int countDocsForFolder(Authentication auth, String folderId) throws MuleException
+    private int countDocsForFolder(Authentication auth, String folderId) throws SolrException
     {
         int docCount = 0;
 

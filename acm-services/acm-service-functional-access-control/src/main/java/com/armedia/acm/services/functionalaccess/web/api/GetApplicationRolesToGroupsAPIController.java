@@ -27,12 +27,11 @@ package com.armedia.acm.services.functionalaccess.web.api;
  * #L%
  */
 
-import com.armedia.acm.crypto.exceptions.AcmEncryptionException;
 import com.armedia.acm.services.functionalaccess.service.FunctionalAccessService;
+import com.armedia.acm.services.search.exception.SolrException;
 
-import org.mule.api.MuleException;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -77,7 +76,7 @@ public class GetApplicationRolesToGroupsAPIController
             @RequestParam(value = "authorized") Boolean authorized,
             @RequestParam(value = "dir", required = false, defaultValue = "name_lcs ASC") String sortDirection,
             @RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
-            @RequestParam(value = "n", required = false, defaultValue = "1000") int maxRows) throws MuleException, AcmEncryptionException
+            @RequestParam(value = "n", required = false, defaultValue = "1000") int maxRows) throws SolrException
     {
         roleName = new String(Base64.getUrlDecoder().decode(roleName.getBytes()));
         LOG.debug("Taking application to groups by role name {}: ", roleName);
@@ -99,7 +98,7 @@ public class GetApplicationRolesToGroupsAPIController
             @RequestParam(value = "fq") String filterQuery,
             @RequestParam(value = "dir", required = false, defaultValue = "name_lcs ASC") String sortDirection,
             @RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
-            @RequestParam(value = "n", required = false, defaultValue = "1000") int maxRows) throws MuleException, AcmEncryptionException
+            @RequestParam(value = "n", required = false, defaultValue = "1000") int maxRows) throws SolrException
     {
         LOG.debug("Taking application to groups by role name {}: ", roleName);
 

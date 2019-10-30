@@ -28,9 +28,9 @@ package com.armedia.acm.services.functionalaccess.service;
  */
 
 import com.armedia.acm.crypto.exceptions.AcmEncryptionException;
+import com.armedia.acm.services.search.exception.SolrException;
 import com.armedia.acm.services.users.model.AcmUser;
 
-import org.mule.api.MuleException;
 import org.springframework.security.core.Authentication;
 
 import java.util.List;
@@ -65,7 +65,7 @@ public interface FunctionalAccessService
 
     List<String> getGroupsByRole(Authentication auth, String role, Integer startRow, Integer maxRows,
             String sortDirection,
-            Boolean authorized, String filterName) throws MuleException;
+            Boolean authorized, String filterName) throws SolrException;
 
     /**
      * Retrieve groups for an application roles paged & sorted(SOLR sort)
@@ -77,7 +77,7 @@ public interface FunctionalAccessService
      */
     List<String> getGroupsByRolePaged(Authentication auth, String role, Integer startRow, Integer maxRows,
             String sortDirection,
-            Boolean authorized) throws MuleException;
+            Boolean authorized) throws SolrException;
 
     /**
      * Retrieve groups for an application roles filtered by name & paged & sorted(SOLR sort)
@@ -89,7 +89,7 @@ public interface FunctionalAccessService
      */
     List<String> getGroupsByRoleByName(Authentication auth, String role, Integer startRow, Integer maxRows,
             String sortDirection,
-            Boolean authorized, String filterQuery) throws MuleException;
+            Boolean authorized, String filterQuery) throws SolrException;
 
     Map<String, List<String>> getApplicationRolesToGroups();
 
@@ -125,11 +125,11 @@ public interface FunctionalAccessService
     /**
      * Retrieve groups by privilege
      *
-     * @param role,
+     * @param roles,
      *            rolesToGroup, startRow, maxRows, startRow, sort, auth
      * @return users
      */
     String getGroupsByPrivilege(List<String> roles, Map<String, List<String>> rolesToGroups, int startRow, int maxRows, String sort,
-            Authentication auth) throws MuleException;
+            Authentication auth) throws SolrException;
 
 }

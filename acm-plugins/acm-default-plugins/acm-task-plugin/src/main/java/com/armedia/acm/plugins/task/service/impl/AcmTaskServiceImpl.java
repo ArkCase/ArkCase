@@ -47,7 +47,6 @@ import com.armedia.acm.plugins.ecm.exception.AcmFolderException;
 import com.armedia.acm.plugins.ecm.model.AcmCmisObjectList;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
-import com.armedia.acm.plugins.ecm.model.AcmMultipartFile;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
@@ -70,10 +69,10 @@ import com.armedia.acm.services.notification.dao.NotificationDao;
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.participants.dao.AcmParticipantDao;
 import com.armedia.acm.services.participants.model.AcmParticipant;
-import com.armedia.acm.services.search.model.SolrCore;
+import com.armedia.acm.services.search.exception.SolrException;
+import com.armedia.acm.services.search.model.solr.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.search.service.SearchResults;
-import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.web.api.MDCConstants;
 import com.google.common.collect.ImmutableMap;
 
@@ -82,11 +81,10 @@ import org.activiti.engine.RuntimeService;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.mule.api.MuleException;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
 import org.slf4j.MDC;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -475,7 +473,7 @@ public class AcmTaskServiceImpl implements AcmTaskService
 
             log.debug("Acm Task ids was retrieved. count({}).", tasksIds.size());
         }
-        catch (MuleException e)
+        catch (SolrException e)
         {
             log.error("Cannot retrieve objects from Solr.", e);
         }
@@ -755,7 +753,7 @@ public class AcmTaskServiceImpl implements AcmTaskService
                 }
             }
         }
-        catch (MuleException e)
+        catch (SolrException e)
         {
             log.warn(e.getMessage());
         }
