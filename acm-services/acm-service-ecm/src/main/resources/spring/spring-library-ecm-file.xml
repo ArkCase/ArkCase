@@ -19,16 +19,15 @@
         <property name="waitForTasksToCompleteOnShutdown" value="true"/>
     </bean>
 
-    <bean id="xSync" class="com.antkorwin.xsync.XSync"/>
-    
     <bean id="fileParticipantServiceHelper" class="com.armedia.acm.plugins.ecm.utils.EcmFileParticipantServiceHelper">
         <property name="fileDao" ref="ecmFileDao"/>
         <property name="folderDao" ref="acmFolderDao"/>
         <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
         <property name="externalAuthenticationUtils" ref="externalAuthenticationUtils"/>
-        <property name="xSync" ref="xSync"/>
     </bean>
 
+    <bean id="xSync" class="com.antkorwin.xsync.XSync"/>
+    
     <bean id="fileParticipantService" class="com.armedia.acm.plugins.ecm.service.impl.EcmFileParticipantService">
         <property name="fileDao" ref="ecmFileDao"/>
         <property name="folderDao" ref="acmFolderDao"/>
@@ -37,6 +36,7 @@
         <property name="fileParticipantServiceHelper" ref="fileParticipantServiceHelper"/>
         <property name="ecmFileConfig" ref="ecmFileConfig"/>
         <property name="externalAuthenticationUtils" ref="externalAuthenticationUtils"/>
+        <property name="xSync" ref="xSync"/>
     </bean>
 
     <bean id="entityParticipantsChangedEventListener"
