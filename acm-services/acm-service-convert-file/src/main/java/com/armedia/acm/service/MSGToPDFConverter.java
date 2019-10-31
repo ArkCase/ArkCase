@@ -59,6 +59,10 @@ import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
 import java.sql.Timestamp;
 import java.text.MessageFormat;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class MSGToPDFConverter implements FileConverter {
 	private final Logger log = LogManager.getLogger(getClass().getName());
@@ -83,11 +87,43 @@ public class MSGToPDFConverter implements FileConverter {
 	}
 
 	private void createPdf(MAPIMessage msg, OutputStream fos) throws DocumentException, ChunkNotFoundException {
-		String fromEmail = msg.getDisplayFrom();
+		String fromEmail = "";
+		try
+		{
+			fromEmail = msg.getDisplayFrom();
+		}
+		catch (ChunkNotFoundException e)
+		{
+			log.debug("Sender email address is empty");
+		}
 		fromEmail = fromEmail.contains("Content_Types") ? "" : fromEmail;
-		String toEmail = msg.getDisplayTo();
-		String toCC = msg.getDisplayCC();
-		String subject = msg.getSubject();
+		String toEmail = ""; 
+		try 
+		{
+			toEmail = msg.getDisplayTo();
+		}
+		catch (ChunkNotFoundException e)
+		{
+			log.debug("Receiver email address is empty");
+		}
+		String toCC = "";
+		try 
+		{
+			toCC = msg.getDisplayCC();
+		}
+		catch (ChunkNotFoundException e)
+		{
+			log.debug("CC Receiver email address is empty");
+		}
+		String subject = "";
+		try 
+		{
+			subject = msg.getSubject();
+		}
+		catch (ChunkNotFoundException e)
+		{
+			log.debug("Subject is empty");
+		}
 		String bodyRtf = "";
 		String bodyHTML = "";
 		String bodyText = "";
@@ -97,7 +133,13 @@ public class MSGToPDFConverter implements FileConverter {
 			try {
 				bodyHTML = msg.getHtmlBody();
 			} catch (ChunkNotFoundException e1) {
-				bodyText = msg.getTextBody();
+				try {
+					bodyText = msg.getTextBody();	
+				}
+				catch (ChunkNotFoundException e2)
+				{
+					log.debug("Body is empty");
+				}
 			}
 		}
 
@@ -159,6 +201,9 @@ public class MSGToPDFConverter implements FileConverter {
 
 	private boolean parseHtml(String bodyHTML, Document document) {
 		bodyHTML = fixSmallFonSize(bodyHTML);
+		bodyHTML = fixRemToPx(bodyHTML);
+		bodyHTML = fixBlockQuoteTag(bodyHTML);
+		bodyHTML = fixBlockElements(bodyHTML);
 		// convert to correct XHTML
 		ByteArrayOutputStream xhtmlOutputStream = new ByteArrayOutputStream();
 		Tidy tidy = new Tidy();
@@ -189,5 +234,36 @@ public class MSGToPDFConverter implements FileConverter {
 	
 	private String fixSmallFonSize(String bodyHTML) {
 		return bodyHTML.replaceAll("font-size:\\s*?0px", "font-size:1px");
+	}
+	
+	private String fixRemToPx(String bodyHTML)
+	{
+		Pattern p = Pattern.compile("font-size:\\s*(\\d+)rem|font-size:?(\\s*\\d{0,}\\.\\d{1,2})rem");
+		Matcher m = p.matcher(bodyHTML);
+		Map<String, String> replacements = new HashMap<>();
+		while (m.find()) {
+			String group = m.group(1) == null ? m.group(2) : m.group(1);
+			double num = Double.parseDouble(group);
+			double remInPx = num*16;
+			if(!replacements.keySet().contains(m.group()))
+			{
+				replacements.put(m.group(), "font-size:" + remInPx + "px");
+			}
+		}
+		for(Map.Entry<String, String> entry : replacements.entrySet())
+		{
+			bodyHTML = bodyHTML.replaceAll(entry.getKey(), entry.getValue());
+		}
+		return bodyHTML;
+	}
+	
+	private String fixBlockQuoteTag(String bodyHTML)
+	{
+		return bodyHTML.replaceAll("<blockquote", "<div").replaceAll("</blockquote", "</div");
+	}
+	
+	private String fixBlockElements(String bodyHTML)
+	{
+		return bodyHTML.replaceAll("<!\\[if.*\\]>", "").replaceAll("<!\\[endif\\]>", "");
 	}
 }
