@@ -131,7 +131,6 @@ public class PortalRequestAPIController
     @ResponseBody
     public ResponseEntity uploadImage(@PathVariable("personId") Long personId,
             @RequestPart(value = "file", required = false) MultipartFile image,
-            @RequestPart("imageContentType") String imageContentType,
             Authentication auth) throws AcmCreateObjectFailedException,
             AcmUpdateObjectFailedException, IOException, AcmUserActionFailedException, AcmObjectNotFoundException, AcmFileTypesException
     {
@@ -141,7 +140,7 @@ public class PortalRequestAPIController
         {
             log.debug("Insert Image for a Person: [{}];", personId);
 
-            EcmFile uploadedFile = personService.insertImageForPortalPerson(person, image, imageContentType, auth);
+            EcmFile uploadedFile = personService.insertImageForPortalPerson(person, image, image.getContentType(), auth);
 
             return new ResponseEntity<>(uploadedFile, HttpStatus.OK);
         }
