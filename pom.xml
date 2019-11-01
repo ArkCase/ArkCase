@@ -1122,6 +1122,13 @@
                 <version>${camel.cmis.version}</version>
             </dependency>
 
+
+            <dependency>
+                <groupId>org.apache.camel</groupId>
+                <artifactId>camel-cmis-arkcase</artifactId>
+                <version>${camel.cmis.version}</version>
+            </dependency>
+
             <!-- apache libraries -->
             <dependency>
                 <groupId>org.apache.commons</groupId>
@@ -1675,6 +1682,17 @@
                 <groupId>com.hazelcast</groupId>
                 <artifactId>hazelcast-wm</artifactId>
                 <version>3.8.3</version>
+            </dependency>
+            <!-- Kryo Serialization -->
+            <dependency>
+                <groupId>com.esotericsoftware</groupId>
+                <artifactId>kryo</artifactId>
+                <version>${kryo.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>info.jerrinot</groupId>
+                <artifactId>subzero-all</artifactId>
+                <version>${subzero.version}</version>
             </dependency>
             <!-- PDF Converter dependencies -->
             <dependency>
