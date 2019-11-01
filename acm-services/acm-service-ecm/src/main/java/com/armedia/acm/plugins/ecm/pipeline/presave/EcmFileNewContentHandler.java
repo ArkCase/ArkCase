@@ -33,6 +33,7 @@ import com.armedia.acm.plugins.ecm.model.ProgressbarDetails;
 import com.armedia.acm.plugins.ecm.pipeline.EcmFileTransactionPipelineContext;
 import com.armedia.acm.plugins.ecm.service.ProgressIndicatorService;
 import com.armedia.acm.plugins.ecm.service.ProgressbarExecutor;
+import com.armedia.acm.plugins.ecm.utils.EcmFileCamelUtils;
 import com.armedia.acm.plugins.ecm.utils.EcmFileMuleUtils;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.pipeline.handler.PipelineHandler;
@@ -40,8 +41,8 @@ import com.armedia.acm.services.pipeline.handler.PipelineHandler;
 import org.apache.chemistry.opencmis.client.api.Document;
 import org.apache.commons.io.input.CountingInputStream;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.FileInputStream;
 import java.io.InputStream;
@@ -54,6 +55,7 @@ public class EcmFileNewContentHandler implements PipelineHandler<EcmFile, EcmFil
     private transient final Logger log = LogManager.getLogger(getClass());
 
     private EcmFileMuleUtils ecmFileMuleUtils;
+    private EcmFileCamelUtils ecmFileCamelUtils;
     private ProgressIndicatorService progressIndicatorService;
 
     @Override
@@ -103,7 +105,8 @@ public class EcmFileNewContentHandler implements PipelineHandler<EcmFile, EcmFil
             {
                 log.error("mule pre save handler failed: {}", e.getMessage(), e);
                 ProgressbarExecutor progressbarExecutor = progressIndicatorService.getExecutor(entity.getUuid());
-                if (StringUtils.isNotEmpty(entity.getUuid())&& progressbarExecutor != null && progressbarExecutor.getProgressbarDetails().getStage() == FileUploadStage.UPLOAD_CHUNKS_TO_FILESYSTEM.getValue())
+                if (StringUtils.isNotEmpty(entity.getUuid()) && progressbarExecutor != null
+                        && progressbarExecutor.getProgressbarDetails().getStage() == FileUploadStage.UPLOAD_CHUNKS_TO_FILESYSTEM.getValue())
                 {
                     log.debug("Stop progressbar executor in stage 2, for file {} and set file upload success to {}", entity.getUuid(),
                             false);
@@ -134,8 +137,7 @@ public class EcmFileNewContentHandler implements PipelineHandler<EcmFile, EcmFil
                 }
 
                 // Removes the document from the Alfresco content repository
-                ecmFileMuleUtils.deleteFile(entity, cmisDocument.getId());
-
+                ecmFileCamelUtils.deleteFile(entity, cmisDocument.getId());
             }
             catch (Exception e)
             { // since the rollback failed an orphan document will exist in Alfresco
@@ -164,5 +166,15 @@ public class EcmFileNewContentHandler implements PipelineHandler<EcmFile, EcmFil
     public void setProgressIndicatorService(ProgressIndicatorService progressIndicatorService)
     {
         this.progressIndicatorService = progressIndicatorService;
+    }
+
+    public EcmFileCamelUtils getEcmFileCamelUtils()
+    {
+        return ecmFileCamelUtils;
+    }
+
+    public void setEcmFileCamelUtils(EcmFileCamelUtils ecmFileCamelUtils)
+    {
+        this.ecmFileCamelUtils = ecmFileCamelUtils;
     }
 }

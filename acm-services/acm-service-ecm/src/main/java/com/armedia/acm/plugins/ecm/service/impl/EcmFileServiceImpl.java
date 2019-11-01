@@ -27,6 +27,10 @@ package com.armedia.acm.plugins.ecm.service.impl;
  * #L%
  */
 
+import com.armedia.acm.camelcontext.arkcase.cmis.ArkCaseCMISActions;
+import com.armedia.acm.camelcontext.arkcase.cmis.ArkCaseCMISConstants;
+import com.armedia.acm.camelcontext.context.CamelContextManager;
+import com.armedia.acm.camelcontext.exception.ArkCaseFileRepositoryException;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmListObjectsFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
@@ -59,6 +63,7 @@ import com.armedia.acm.plugins.ecm.service.EcmFileTransaction;
 import com.armedia.acm.plugins.ecm.service.ProgressIndicatorService;
 import com.armedia.acm.plugins.ecm.service.RecycleBinItemService;
 import com.armedia.acm.plugins.ecm.utils.CmisConfigUtils;
+import com.armedia.acm.plugins.ecm.utils.EcmFileCamelUtils;
 import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import com.armedia.acm.service.objectlock.annotation.AcmAcquireAndReleaseObjectLock;
@@ -73,6 +78,7 @@ import com.armedia.acm.services.search.model.SearchConstants;
 import com.armedia.acm.services.search.model.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.search.service.SearchResults;
+import com.armedia.acm.web.api.MDCConstants;
 
 import org.apache.chemistry.opencmis.client.api.CmisObject;
 import org.apache.chemistry.opencmis.client.api.Document;
@@ -164,6 +170,8 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     private AcmObjectLockService objectLockService;
 
     private EmailSenderConfig emailSenderConfig;
+
+    private CamelContextManager camelContextManager;
 
     private AuthenticationTokenDao authenticationTokenDao;
 
@@ -1572,14 +1580,19 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
                 : file.getVersions().get(file.getVersions().size() - 1).getVersionTag();
 
         Map<String, Object> props = new HashMap<>();
-        props.put(EcmFileConstants.ECM_FILE_ID, versionToRemoveFromEcm);
+        props.put(EcmFileConstants.CMIS_DOCUMENT_ID, versionToRemoveFromEcm);
         String cmisRepositoryId = file.getCmisRepositoryId();
         if (cmisRepositoryId == null)
         {
             cmisRepositoryId = ecmFileConfig.getDefaultCmisId();
         }
-        props.put(EcmFileConstants.CONFIGURATION_REFERENCE, cmisConfigUtils.getCmisConfiguration(cmisRepositoryId));
+        // TODO: This is hardcoded because we need camel configuration only for delete file. Should be replaced after
+        // completion of all routes. After that mule-config-alfresco-cmis.properties should be deleted from
+        // .arkcase/acm/cmis
+        props.put(EcmFileConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID);
         props.put(EcmFileConstants.ALL_VERSIONS, allVersions);
+
+        props.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, EcmFileCamelUtils.getCmisUser());
 
         try
         {
@@ -1597,10 +1610,9 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
                 file.setFileActiveVersionMimeType(current.getVersionMimeType());
                 getEcmFileDao().save(file);
             }
-
-            getMuleContextManager().send(EcmFileConstants.MULE_ENDPOINT_DELETE_FILE, file, props);
+            getCamelContextManager().send(ArkCaseCMISActions.DELETE_DOCUMENT, props);
         }
-        catch (MuleException | PersistenceException e)
+        catch (ArkCaseFileRepositoryException e)
         {
             log.error("Could not delete file {} ", e.getMessage(), e);
             throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_DELETE_FILE, EcmFileConstants.OBJECT_FILE_TYPE,
@@ -1611,16 +1623,18 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     @Override
     public void deleteCmisObject(CmisObject cmisObject, String cmisRepositoryId) throws Exception
     {
-
         Map<String, Object> props = new HashMap<>();
-        props.put(EcmFileConstants.ECM_FILE_ID, cmisObject.getProperty("cmis:versionSeriesId").getFirstValue());
+        props.put(EcmFileConstants.CMIS_DOCUMENT_ID, cmisObject.getProperty("cmis:versionSeriesId").getFirstValue());
         if (cmisRepositoryId == null)
         {
             cmisRepositoryId = ecmFileConfig.getDefaultCmisId();
         }
-        props.put(EcmFileConstants.CONFIGURATION_REFERENCE,
-                cmisConfigUtils.getCmisConfiguration(cmisRepositoryId));
+        // TODO: This is hardcoded because we need camel configuration only for delete file. Should be replaced after
+        // completion of all routes. After that mule-config-alfresco-cmis.properties should be deleted from
+        // .arkcase/acm/cmis
+        props.put(EcmFileConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID);
         props.put(EcmFileConstants.ALL_VERSIONS, false);
+        props.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, EcmFileCamelUtils.getCmisUser());
 
         List<EcmFile> listFiles = getEcmFileDao()
                 .findByCmisFileId(cmisObject.getProperty("cmis:versionSeriesId").getFirstValue().toString());
@@ -1629,8 +1643,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         {
             throw new Exception("File already exists in Arkcase, use another method for deleting Arkcase file!");
         }
-        getMuleContextManager().send(EcmFileConstants.MULE_ENDPOINT_DELETE_FILE, cmisObject, props);
-
+        getCamelContextManager().send(ArkCaseCMISActions.DELETE_DOCUMENT, props);
     }
 
     @Override
@@ -1677,7 +1690,6 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     @AcmAcquireAndReleaseObjectLock(objectIdArgIndex = 0, objectType = "FILE", lockType = "DELETE")
     public void deleteFile(Long objectId, Long parentId, String parentType) throws AcmUserActionFailedException, AcmObjectNotFoundException
     {
-
         EcmFile file = getEcmFileDao().find(objectId);
 
         if (file == null)
@@ -1686,23 +1698,27 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         }
 
         Map<String, Object> props = new HashMap<>();
-        props.put(EcmFileConstants.ECM_FILE_ID, file.getVersionSeriesId());
+        props.put(EcmFileConstants.CMIS_DOCUMENT_ID, file.getVersionSeriesId());
         String cmisRepositoryId = file.getCmisRepositoryId();
         if (cmisRepositoryId == null)
         {
             cmisRepositoryId = ecmFileConfig.getDefaultCmisId();
         }
-        props.put(EcmFileConstants.CONFIGURATION_REFERENCE, cmisConfigUtils.getCmisConfiguration(cmisRepositoryId));
-        props.put(EcmFileConstants.ALL_VERSIONS, Boolean.TRUE);
+
+        // TODO: This is hardcoded because we need camel configuration only for delete file. Should be replaced after
+        // completion of all routes. After that mule-config-alfresco-cmis.properties should be deleted from
+        // .arkcase/acm/cmis
+        props.put(EcmFileConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID);
+        props.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, EcmFileCamelUtils.getCmisUser());
+        props.put(EcmFileConstants.ALL_VERSIONS, true);
 
         try
         {
             deleteAuthenticationTokens(objectId);
             getEcmFileDao().deleteFile(objectId);
-
-            getMuleContextManager().send(EcmFileConstants.MULE_ENDPOINT_DELETE_FILE, file, props);
+            getCamelContextManager().send(ArkCaseCMISActions.DELETE_DOCUMENT, props);
         }
-        catch (MuleException | PersistenceException e)
+        catch (ArkCaseFileRepositoryException e)
         {
             log.error("Could not delete file {} ", e.getMessage(), e);
             throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_DELETE_FILE, EcmFileConstants.OBJECT_FILE_TYPE,
@@ -2232,5 +2248,15 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     public void setAuthenticationTokenDao(AuthenticationTokenDao authenticationTokenDao)
     {
         this.authenticationTokenDao = authenticationTokenDao;
+    }
+
+    public CamelContextManager getCamelContextManager()
+    {
+        return camelContextManager;
+    }
+
+    public void setCamelContextManager(CamelContextManager camelContextManager)
+    {
+        this.camelContextManager = camelContextManager;
     }
 }
