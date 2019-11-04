@@ -29,19 +29,25 @@ package com.armedia.acm.services.notification.service.provider;
 
 import com.armedia.acm.core.provider.TemplateModelProvider;
 import com.armedia.acm.services.notification.model.Notification;
+import com.armedia.acm.services.notification.model.NotificationConfig;
 import com.armedia.acm.services.notification.service.NotificationUtils;
 
 public class NotificationTemplateModelProvider implements TemplateModelProvider<Notification>
 {
 
     protected NotificationUtils notificationUtils;
+    private NotificationConfig notificationConfig;
 
     @Override
     public Notification getModel(Object object)
     {
         Notification notification = (Notification) object;
-        notification.setObjectLink(notificationUtils.buildNotificationLink(notification.getParentType(),
-                notification.getParentId(), notification.getRelatedObjectType(), notification.getRelatedObjectId()));
+
+        String relativeNotificationLink = notificationUtils.buildNotificationLink(notification.getParentType(), notification.getParentId(),
+                notification.getRelatedObjectType(), notification.getRelatedObjectId());
+        String baseUrl = notificationConfig.getBaseUrl();
+
+        notification.setObjectLink(String.format("%s%s", baseUrl, relativeNotificationLink));
         return notification;
     }
 
@@ -49,6 +55,16 @@ public class NotificationTemplateModelProvider implements TemplateModelProvider<
     public Class<Notification> getType()
     {
         return Notification.class;
+    }
+
+    public NotificationConfig getNotificationConfig()
+    {
+        return notificationConfig;
+    }
+
+    public void setNotificationConfig(NotificationConfig notificationConfig)
+    {
+        this.notificationConfig = notificationConfig;
     }
 
     public NotificationUtils getNotificationUtils()
