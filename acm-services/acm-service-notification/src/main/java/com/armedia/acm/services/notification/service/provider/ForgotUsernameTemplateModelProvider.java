@@ -45,15 +45,13 @@ public class ForgotUsernameTemplateModelProvider implements TemplateModelProvide
     public Notification getModel(Object object)
     {
         Notification notification = (Notification) object;
-        List<AcmUser> users = userDao.findByEmailAddress(notification.getUser());
-        users = users.stream()
-                .filter(user -> user.getUserState() == AcmUserState.VALID)
-                .collect(Collectors.toList());
+        List<AcmUser> users = userDao.findByEmailAddress(notification.getEmailAddresses());
         List<String> userAccounts = users.stream()
+                .filter(user -> user.getUserState() == AcmUserState.VALID)
                 .map(AcmUser::getUserId)
                 .collect(Collectors.toList());
-        notification.setAccountsNumber(users.size());
-        notification.setUserAccounts(String.join(",", userAccounts));
+        notification.setAccountsNumber(userAccounts.size());
+        notification.setUserAccounts(String.join(", ", userAccounts));
         return notification;
     }
 
