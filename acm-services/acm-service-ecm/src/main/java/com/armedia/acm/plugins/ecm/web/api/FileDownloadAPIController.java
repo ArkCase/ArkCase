@@ -28,8 +28,6 @@ package com.armedia.acm.plugins.ecm.web.api;
  */
 
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
-import com.armedia.acm.email.model.EmailSenderConfig;
-import com.armedia.acm.files.propertymanager.PropertyFileManager;
 import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
@@ -37,12 +35,10 @@ import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.model.EcmFileDownloadedEvent;
 import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
-import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.ecm.utils.CmisConfigUtils;
 import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
 
 import org.apache.chemistry.opencmis.commons.data.ContentStream;
-import org.apache.commons.io.FileUtils;
 import org.json.JSONObject;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
@@ -60,15 +56,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URLEncoder;
-import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 @RequestMapping({ "/api/v1/plugin/ecm", "/api/latest/plugin/ecm" })
 public class FileDownloadAPIController implements ApplicationEventPublisherAware
@@ -86,14 +77,6 @@ public class FileDownloadAPIController implements ApplicationEventPublisherAware
     private Logger log = LogManager.getLogger(getClass());
 
     private ObjectConverter objectConverter;
-
-    private PropertyFileManager propertyFileManager;
-
-    private String emailSenderProperties;
-    
-    private EcmFileService ecmFileService;
-
-    private EmailSenderConfig emailSenderConfig;
 
     // #parentObjectType == 'USER_ORG' applies to uploading profile picture
     @PreAuthorize("hasPermission(#fileId, 'FILE', 'read|group-read|write|group-write') or #parentObjectType == 'USER_ORG'")
@@ -172,8 +155,6 @@ public class FileDownloadAPIController implements ApplicationEventPublisherAware
         }
 
         String fileName = filePayload.getFileName();
-        String fileKey = fileName;
-        String fileExtension = "";
         // endWith will throw a NullPointerException on a null argument. But a file is not required to have an
         // extension... so the extension can be null. So we have to guard against it.
         if (ecmFileVersion != null)
@@ -182,7 +163,6 @@ public class FileDownloadAPIController implements ApplicationEventPublisherAware
                     && !fileName.endsWith(ecmFileVersion.getVersionFileNameExtension()))
             {
                 fileName = fileName + ecmFileVersion.getVersionFileNameExtension();
-                fileExtension = ecmFileVersion.getVersionFileNameExtension();
             }
         }
         else
@@ -191,39 +171,14 @@ public class FileDownloadAPIController implements ApplicationEventPublisherAware
                     && !fileName.endsWith(ecmFile.getFileActiveVersionNameExtension()))
             {
                 fileName = fileName + ecmFile.getFileActiveVersionNameExtension();
-                fileExtension = ecmFile.getFileActiveVersionNameExtension();
             }
         }
 
         InputStream fileIs = null;
 
-        InputStream pdfConvertedIs = null;
-        File tmpPdfConvertedFile = null;
-
         try
         {
             fileIs = filePayload.getStream();
-
-            //Convert file to PDF if set in Admin panel
-
-            Boolean convertFileToPdf = false;
-
-            convertFileToPdf = emailSenderConfig.getConvertDocumentsToPdf();
-
-            if(convertFileToPdf && !".pdf".equals(fileExtension))
-            {
-                tmpPdfConvertedFile = ecmFileService.convertFile(fileKey,version,fileExtension,fileName,mimeType,ecmFile);
-
-                if(tmpPdfConvertedFile.exists() && tmpPdfConvertedFile.length() > 0)
-                {
-                    pdfConvertedIs = new FileInputStream(tmpPdfConvertedFile);
-                    fileIs = pdfConvertedIs;
-                    fileName = fileKey.concat(".pdf");
-                    mimeType = "application/pdf";
-                }
-            }
-            //
-
             if (!isInline)
             {
                 response.setHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
@@ -262,23 +217,6 @@ public class FileDownloadAPIController implements ApplicationEventPublisherAware
                 {
                     log.error("Could not close CMIS content stream: {}", e.getMessage(), e);
                 }
-            }
-
-            if (Objects.nonNull(pdfConvertedIs))
-            {
-                try
-                {
-                    pdfConvertedIs.close();
-                }
-                catch (IOException e)
-                {
-                    log.error("Could not close input stream: {}", e.getMessage(), e);
-                }
-            }
-
-            if(Objects.nonNull(tmpPdfConvertedFile) && tmpPdfConvertedFile.exists())
-            {
-                FileUtils.deleteQuietly(tmpPdfConvertedFile);
             }
         }
     }
@@ -348,45 +286,5 @@ public class FileDownloadAPIController implements ApplicationEventPublisherAware
     public void setObjectConverter(ObjectConverter objectConverter)
     {
         this.objectConverter = objectConverter;
-    }
-
-    public PropertyFileManager getPropertyFileManager()
-    {
-        return propertyFileManager;
-    }
-
-    public void setPropertyFileManager(PropertyFileManager propertyFileManager)
-    {
-        this.propertyFileManager = propertyFileManager;
-    }
-
-    public String getEmailSenderProperties()
-    {
-        return emailSenderProperties;
-    }
-
-    public void setEmailSenderProperties(String emailSenderProperties)
-    {
-        this.emailSenderProperties = emailSenderProperties;
-    }
-
-    public EcmFileService getEcmFileService() 
-    {
-        return ecmFileService;
-    }
-
-    public void setEcmFileService(EcmFileService ecmFileService) 
-    {
-        this.ecmFileService = ecmFileService;
-    }
-
-    public EmailSenderConfig getEmailSenderConfig()
-    {
-        return emailSenderConfig;
-    }
-
-    public void setEmailSenderConfig(EmailSenderConfig emailSenderConfig)
-    {
-        this.emailSenderConfig = emailSenderConfig;
     }
 }
