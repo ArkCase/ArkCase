@@ -100,6 +100,7 @@ public class EcmFileParticipantServiceTest extends EasyMockSupport
         fileParticipantService.setExternalAuthenticationUtils(mockExternalAuthenticationUtils);
         fileParticipantService.setApplicationEventPublisher(mockApplicationEventPublisher);
         fileParticipantService.setxSync(new XSync<>());
+        fileParticipantService.setAuditPropertyEntityAdapter(mockAuditPropertyEntityAdapter);
 
         fileParticipantServiceHelper.setFileDao(mockFileDao);
         fileParticipantServiceHelper.setFolderDao(mockFolderDao);
@@ -1039,6 +1040,8 @@ public class EcmFileParticipantServiceTest extends EasyMockSupport
                 .andReturn(participantLdapId1).atLeastOnce();
         mockApplicationEventPublisher.publishEvent(EasyMock.anyObject());
         expectLastCall().atLeastOnce();
+
+        expect(mockAuditPropertyEntityAdapter.getUserId()).andReturn("jerry.garcia");
 
         // when
         replayAll();
