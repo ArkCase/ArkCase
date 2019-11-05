@@ -102,11 +102,11 @@ angular.module('directives').directive('arkcaseHref', [ 'UtilService', 'ObjectSe
                         element.attr('href', objectUrl);
                     });
                 } else {
-                    if(objectData.object_type_s == ObjectService.ObjectTypes.NOTIFICATION){
+                    if (objectData.object_type_s == ObjectService.ObjectTypes.NOTIFICATION) {
                         var baseUrl = window.location.href.split('/home.html#!')[0];
                         element.attr('href', baseUrl + scope.url);
                     }
-                    else{
+                    else {
                         element.attr('href', scope.url);
                     }
                 }
