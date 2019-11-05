@@ -69,15 +69,15 @@ public class EcmFileParticipantServiceHelper implements ApplicationEventPublishe
     private ExternalAuthenticationUtils externalAuthenticationUtils;
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public void setParticipantsToFolderChildren(AcmFolder folder, List<AcmParticipant> participants, boolean restricted)
+    public void setParticipantsToFolderChildren(AcmFolder folder, List<AcmParticipant> participants, boolean restricted, String auditEntityUserId)
     {
         log.trace("Setting participants for folder children [{}-{}]", folder.getId(), folder.getName());
 
-        setAuditPropertyEntityAdapterUserId();
-        setParticipantsToFolderChildrenRecursively(folder, participants, restricted);
+        getAuditPropertyEntityAdapter().setUserId(auditEntityUserId);
+        setParticipantsToFolderChildrenRecursively(folder, participants, restricted, auditEntityUserId);
     }
 
-    private void setParticipantsToFolderChildrenRecursively(AcmFolder folder, List<AcmParticipant> participants, boolean restricted)
+    private void setParticipantsToFolderChildrenRecursively(AcmFolder folder, List<AcmParticipant> participants, boolean restricted, String auditEntityUserId)
     {
 
         for (AcmParticipant participant : participants)
@@ -86,7 +86,7 @@ public class EcmFileParticipantServiceHelper implements ApplicationEventPublishe
                     participant.isReplaceChildrenParticipant(), folder.getId(), folder.getName());
             if (participant.isReplaceChildrenParticipant())
             {
-                setParticipantToFolderChildren(folder, participant, restricted);
+                setParticipantToFolderChildren(folder, participant, restricted, auditEntityUserId);
             }
         }
 
@@ -170,16 +170,18 @@ public class EcmFileParticipantServiceHelper implements ApplicationEventPublishe
     }
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public void setParticipantToFolderChildren(AcmFolder folder, AcmParticipant participant, boolean restricted)
+    public void setParticipantToFolderChildren(AcmFolder folder, AcmParticipant participant, boolean restricted, String auditEntityUserId)
     {
         log.trace("Setting participant [{}] with privilege [{}] for folder children [{}-{}]", participant.getParticipantLdapId(),
                 participant.getParticipantType(), folder.getId(), folder.getName());
-        setAuditPropertyEntityAdapterUserId();
-        setParticipantToFolderChildrenRecursively(folder, participant, restricted);
+        getAuditPropertyEntityAdapter().setUserId(auditEntityUserId);
+        setParticipantToFolderChildrenRecursively(folder, participant, restricted, auditEntityUserId);
     }
 
-    private void setParticipantToFolderChildrenRecursively(AcmFolder folder, AcmParticipant participant, boolean restricted)
+    private void setParticipantToFolderChildrenRecursively(AcmFolder folder, AcmParticipant participant, boolean restricted, String auditEntityUserId)
     {
+        getAuditPropertyEntityAdapter().setUserId(auditEntityUserId);
+
         // set participant to child folders
         List<AcmFolder> subfolders = getFolderDao().findSubFolders(folder.getId(), FlushModeType.COMMIT);
         log.trace("Setting participant [{}] (recursive: {}) to {} subfolders of [{}-{}]", participant.getParticipantLdapId(),
@@ -198,7 +200,7 @@ public class EcmFileParticipantServiceHelper implements ApplicationEventPublishe
                 // modify the instance to trigger the Solr transformers
                 subFolder.setModified(new Date());
 
-                setParticipantToFolderChildren(subFolder, participant, restricted);
+                setParticipantToFolderChildren(subFolder, participant, restricted, auditEntityUserId);
             }
         }
 
@@ -223,7 +225,6 @@ public class EcmFileParticipantServiceHelper implements ApplicationEventPublishe
     {
         log.trace("Removing [{}] privilege to folder [{}-{}] and children for participant [{}]", participantType, folder.getId(),
                 folder.getName(), participantLdapId);
-        setAuditPropertyEntityAdapterUserId();
 
         // remove participant from current folder
         boolean removed = folder.getParticipants().removeIf(participant -> participant.getParticipantLdapId().equals(participantLdapId)
@@ -288,15 +289,6 @@ public class EcmFileParticipantServiceHelper implements ApplicationEventPublishe
                         file.setModified(new Date());
                         getFileDao().save(file);
                     });
-        }
-    }
-
-    // when we execute Async methods the userId might be null, because it is a {@link ThreadLocal} variable.
-    private void setAuditPropertyEntityAdapterUserId()
-    {
-        if (getAuditPropertyEntityAdapter().getUserId() == null)
-        {
-            getAuditPropertyEntityAdapter().setUserId(MDC.get(MDCConstants.EVENT_MDC_REQUEST_USER_ID_KEY));
         }
     }
 
