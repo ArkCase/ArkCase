@@ -34,6 +34,7 @@
                 <ref bean="ocrSystemUserUpdateExecutor"/>
                 <ref bean="transcribeSystemUserUpdateExecutor"/>
                 <ref bean="solrReindexEcmFileExecutor"/>
+                <ref bean="solrReindexNotificationsExecutor"/>
             </list>
         </property>
         <property name="dataUpdateService" ref="dataUpdateService"/>
@@ -108,6 +109,10 @@
     </bean>
 
     <bean id="solrReindexEcmFileExecutor" class="com.armedia.acm.services.dataupdate.service.SolrReindexEcmFileExecutor">
+        <property name="solrReindexService" ref="solrReindexService"/>
+    </bean>
+
+    <bean id="solrReindexNotificationsExecutor" class="com.armedia.acm.services.dataupdate.service.SolrReindexNotificationsExecutor">
         <property name="solrReindexService" ref="solrReindexService"/>
     </bean>
 </beans>
