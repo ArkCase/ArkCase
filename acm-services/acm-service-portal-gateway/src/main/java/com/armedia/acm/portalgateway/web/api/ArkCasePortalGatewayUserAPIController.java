@@ -115,15 +115,8 @@ public class ArkCasePortalGatewayUserAPIController
     {
         PortalUser portalUser = new PortalUser();
         log.debug("Requesting user authentication for user at portal with [{}] ID.", portalId);
-        try
-        {
-            portalUser = portalUserService.authenticateUser(portalId, credentials);
-            return new ResponseEntity<PortalUser>(portalUser, HttpStatus.OK);
-        }
-        catch (PortalUserServiceException e)
-        {
-            return new ResponseEntity<PortalUser>(portalUser, HttpStatus.UNAUTHORIZED);
-        }
+        portalUser = portalUserService.authenticateUser(portalId, credentials);
+        return new ResponseEntity<PortalUser>(portalUser, HttpStatus.OK);
     }
 
     @CheckPortalUserAssignement
