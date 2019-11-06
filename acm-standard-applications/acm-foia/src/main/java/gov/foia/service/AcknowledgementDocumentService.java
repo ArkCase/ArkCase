@@ -75,11 +75,11 @@ public class AcknowledgementDocumentService
 
     public void emailAcknowledgement(Long requestId)
     {
-        if (!foiaConfigurationService.readConfiguration().getReceivedDateEnabled())
+        if (!foiaConfigurationService.readConfiguration().getReceivedDateEnabled() && foiaConfigurationService.readConfiguration().getReceivedDateEnabled())
         {
             FOIARequest request = getRequestDao().find(requestId);
             String emailAddress = extractRequestorEmailAddress(request.getOriginator().getPerson());
-            if (emailAddress != null)
+            if (emailAddress != null && emailAddress != "")
             {
                 EmailWithAttachmentsDTO emailData = new EmailWithAttachmentsDTO();
                 emailData.setEmailAddresses(Arrays.asList(emailAddress));
