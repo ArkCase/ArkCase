@@ -53,13 +53,13 @@ import com.armedia.acm.services.participants.model.ParticipantTypes;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.web.api.MDCConstants;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.easymock.EasyMock;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mule.api.MuleException;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
 import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
@@ -141,6 +141,7 @@ public class SplitCaseFileServiceIT extends EasyMock
     {
         String userHomePath = System.getProperty("user.home");
         System.setProperty("acm.configurationserver.propertyfile", userHomePath + "/.arkcase/acm/conf.yml");
+        System.setProperty("configuration.server.url", "http://localhost:9999");
     }
 
     private final Logger log = LogManager.getLogger(getClass());

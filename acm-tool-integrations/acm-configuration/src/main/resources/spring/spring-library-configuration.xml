@@ -6,23 +6,24 @@
        http://www.springframework.org/schema/context/spring-context.xsd">
 
     <context:annotation-config/>
-    <context:component-scan base-package="com.armedia.acm.configuration.annotations
-                                          com.armedia.acm.configuration.api,
+    <context:component-scan base-package="com.armedia.acm.configuration.api,
                                           com.armedia.acm.configuration.client,
                                           com.armedia.acm.configuration.core,
                                           com.armedia.acm.configuration.scope,
                                           com.armedia.acm.configuration.service,
                                           com.armedia.acm.configuration.yaml,
                                           com.armedia.acm.configuration.refresher.jms,
-                                          com.armedia.acm.configuration.refresher.jmx"/>
+                                          com.armedia.acm.configuration.refresher.jmx,
+                                          com.armedia.acm.configuration.annotations"/>
 
     <bean id="fileConfigurationServiceImpl" class="com.armedia.acm.configuration.service.FileConfigurationServiceImpl">
         <property name="customFilesLocation" value="#{ systemProperties ['user.home'] }/.arkcase/custom/"/>
         <property name="configurationClientConfig" ref="configurationClientConfig"/>
-        <property name="configRestTemplate" ref="restTemplate"/>
+        <property name="configRestTemplate" ref="configRestTemplate"/>
     </bean>
 
-    <bean id="brandingFileConfigurationService" class="com.armedia.acm.configuration.core.initialization.BrandingConfigurationInitialization">
+    <bean id="brandingFileConfigurationService"
+        class="com.armedia.acm.configuration.core.initialization.BrandingConfigurationInitialization">
         <property name="customFilesLocation" value="#{ systemProperties ['user.home'] }/.arkcase/custom/"/>
         <property name="fileConfigurationService" ref="fileConfigurationServiceImpl"/>
         <property name="brandingFiles">
@@ -33,22 +34,6 @@
                 <value>custom.css</value>
             </list>
         </property>
-    </bean>
-
-    <bean id="destinationResolver" class="org.springframework.jms.support.destination.DynamicDestinationResolver"/>
-
-    <bean id="jmsListenerContainerFactory" class="org.springframework.jms.config.DefaultJmsListenerContainerFactory">
-        <property name="connectionFactory" ref="jmsConnectionFactory"/>
-        <property name="destinationResolver" ref="destinationResolver"/>
-        <property name="concurrency" value="3-10"/>
-        <property name="sessionTransacted" value="true"/>
-    </bean>
-
-    <bean id="jmsTopicListenerContainerFactory" class="org.springframework.jms.config.DefaultJmsListenerContainerFactory">
-        <property name="connectionFactory" ref="jmsConnectionFactory"/>
-        <property name="destinationResolver" ref="destinationResolver"/>
-        <property name="pubSubDomain" value="true"/>
-        <property name="sessionTransacted" value="true"/>
     </bean>
 
     <bean id="configurationClientConfig" class="com.armedia.acm.configuration.model.ConfigurationClientConfig">
