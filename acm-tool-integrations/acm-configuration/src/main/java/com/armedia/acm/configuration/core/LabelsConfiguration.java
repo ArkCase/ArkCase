@@ -102,7 +102,8 @@ public class LabelsConfiguration implements ConfigurationFacade
         for (String labelsModule : modulesNames)
         {
             String key = String.format("%s-%s", labelsModule, lang);
-            labelsMap.put(key, this.configurationServiceBootClient.loadConfiguration(serverUrl, key));
+            labelsMap.put(key, this.configurationServiceBootClient.loadLangConfiguration(serverUrl, key,
+                    (Map<String, Object>) labelsMap.get(labelsModule + "-" + defaultLocale)));
             labelsDefaultMap.put(key, this.configurationServiceBootClient.loadDefaultConfiguration(serverUrl, key));
         }
     }

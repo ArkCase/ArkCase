@@ -34,11 +34,11 @@ import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.web.api.MDCConstants;
 
 import org.apache.chemistry.opencmis.client.api.Document;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
 import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -65,6 +65,7 @@ public class SetRecordMetadataServiceIT
     {
         String userHomePath = System.getProperty("user.home");
         System.setProperty("acm.configurationserver.propertyfile", userHomePath + "/.arkcase/acm/conf.yml");
+        System.setProperty("configuration.server.url", "http://localhost:9999");
     }
     private transient final Logger LOG = LogManager.getLogger(getClass());
     @Autowired
