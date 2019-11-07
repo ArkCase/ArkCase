@@ -85,6 +85,7 @@ public class ContentFileToSolrFlowIT
     {
         String userHomePath = System.getProperty("user.home");
         System.setProperty("acm.configurationserver.propertyfile", userHomePath + "/.arkcase/acm/conf.yml");
+        System.setProperty("configuration.server.url", "http://localhost:9999");
     }
 
     private transient final Logger log = LogManager.getLogger(getClass());
