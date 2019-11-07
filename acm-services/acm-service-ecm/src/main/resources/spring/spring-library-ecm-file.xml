@@ -37,6 +37,7 @@
         <property name="ecmFileConfig" ref="ecmFileConfig"/>
         <property name="externalAuthenticationUtils" ref="externalAuthenticationUtils"/>
         <property name="xSync" ref="xSync"/>
+        <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
     </bean>
 
     <bean id="entityParticipantsChangedEventListener"
