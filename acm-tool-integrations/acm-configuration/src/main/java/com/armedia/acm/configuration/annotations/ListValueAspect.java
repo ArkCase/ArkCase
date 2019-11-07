@@ -33,7 +33,7 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
@@ -43,7 +43,7 @@ import java.util.List;
  * Created by mario.gjurcheski on 08/16/2019.
  */
 @Aspect
-@Configuration
+@Component
 public class ListValueAspect
 {
 

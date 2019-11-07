@@ -112,6 +112,21 @@ public class ConfigurationServiceBootClient
         return getCompositeMap(result);
     }
 
+    /**
+     * Loads specific language and checks if there are missing labels it adds them from the default language
+     */
+    public Map<String, Object> loadLangConfiguration(String url, String name, Map<String, Object> defaultLangMap)
+    {
+        Environment result = getRemoteEnvironment(configRestTemplate(), url, name).get(0);
+        Map<String, Object> langMap = getCompositeMap(result);
+
+        if (defaultLangMap.size() != langMap.size())
+        {
+            defaultLangMap.forEach((key, value) -> langMap.putIfAbsent(key, value));
+        }
+        return langMap;
+    }
+
     public Map<String, Object> loadDefaultConfiguration(String url, String name)
     {
         Environment result = getRemoteEnvironment(configRestTemplate(), url, name).get(0);
@@ -127,7 +142,7 @@ public class ConfigurationServiceBootClient
             for (PropertySource source : result.getPropertySources())
             {
                 Map<String, Object> map = source.getSource();
-                map.forEach(compositeMap::putIfAbsent);
+                map.forEach((key, value) -> compositeMap.putIfAbsent(key, value));
             }
         }
 
