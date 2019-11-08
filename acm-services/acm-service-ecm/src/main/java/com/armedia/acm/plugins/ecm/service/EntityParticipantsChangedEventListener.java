@@ -28,6 +28,7 @@ package com.armedia.acm.plugins.ecm.service;
  */
 
 import com.armedia.acm.core.AcmObject;
+import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.plugins.ecm.model.AcmContainerEntity;
 import com.armedia.acm.plugins.ecm.service.impl.EcmFileParticipantService;
 import com.armedia.acm.services.dataaccess.model.AcmEntityParticipantsChangedEvent;
@@ -41,6 +42,7 @@ import org.springframework.context.ApplicationListener;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
 
 public class EntityParticipantsChangedEventListener implements ApplicationListener<AcmEntityParticipantsChangedEvent>
 {
@@ -48,6 +50,8 @@ public class EntityParticipantsChangedEventListener implements ApplicationListen
     private final transient Logger log = LogManager.getLogger(getClass());
 
     private EcmFileParticipantService fileParticipantService;
+    private Executor executor;
+    private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
 
     @Override
     public void onApplicationEvent(AcmEntityParticipantsChangedEvent event)
@@ -66,13 +70,15 @@ public class EntityParticipantsChangedEventListener implements ApplicationListen
                 newParticipants.forEach(participant -> participant.setReplaceChildrenParticipant(true));
             }
 
+            final String user = event.getUserId();
             CompletableFuture.runAsync(() -> {
+                getAuditPropertyEntityAdapter().setUserId(user);
                 log.debug("Inheriting file participants from " + obj.getObjectType() + "[" + obj.getId() + "]");
                 getFileParticipantService().inheritParticipantsFromAssignedObject(
                         newParticipants,
                         originalParticipants,
                         ((AcmContainerEntity) obj).getContainer(), ((AcmAssignedObject) obj).getRestricted());
-            });
+            }, getExecutor());
         }
     }
 
@@ -91,5 +97,25 @@ public class EntityParticipantsChangedEventListener implements ApplicationListen
     public void setFileParticipantService(EcmFileParticipantService fileParticipantService)
     {
         this.fileParticipantService = fileParticipantService;
+    }
+
+    public Executor getExecutor()
+    {
+        return executor;
+    }
+
+    public void setExecutor(Executor executor)
+    {
+        this.executor = executor;
+    }
+
+    public AuditPropertyEntityAdapter getAuditPropertyEntityAdapter()
+    {
+        return auditPropertyEntityAdapter;
+    }
+
+    public void setAuditPropertyEntityAdapter(AuditPropertyEntityAdapter auditPropertyEntityAdapter)
+    {
+        this.auditPropertyEntityAdapter = auditPropertyEntityAdapter;
     }
 }
