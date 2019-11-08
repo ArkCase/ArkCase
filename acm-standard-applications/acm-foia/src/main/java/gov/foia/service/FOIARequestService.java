@@ -41,10 +41,7 @@ import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.services.notification.service.NotificationSender;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
-import gov.foia.broker.FOIARequestFileBrokerClient;
-import gov.foia.dao.FOIARequestDao;
-import gov.foia.model.FOIAConstants;
-import gov.foia.model.FOIARequest;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.security.core.Authentication;
@@ -56,6 +53,11 @@ import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+
+import gov.foia.broker.FOIARequestFileBrokerClient;
+import gov.foia.dao.FOIARequestDao;
+import gov.foia.model.FOIAConstants;
+import gov.foia.model.FOIARequest;
 
 /**
  * @author sasko.tanaskoski
