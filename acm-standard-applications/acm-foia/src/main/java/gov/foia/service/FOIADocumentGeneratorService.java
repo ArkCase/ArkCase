@@ -59,7 +59,7 @@ public class FOIADocumentGeneratorService
                 .filter(documentDescriptor -> documentDescriptor.getReqAck().equals(reqAck)
                         && documentDescriptor.getType().equals(((FOIARequest) foiaObject).getRequestType()))
                 .findFirst();
-        if (optional.get() != null && optional.isPresent())
+        if (optional.isPresent())
         {
             return optional.get();
         }
