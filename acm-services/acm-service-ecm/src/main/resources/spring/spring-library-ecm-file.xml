@@ -43,6 +43,8 @@
     <bean id="entityParticipantsChangedEventListener"
         class="com.armedia.acm.plugins.ecm.service.EntityParticipantsChangedEventListener">
         <property name="fileParticipantService" ref="fileParticipantService"/>
+        <property name="executor" ref="fileParticipantsThreadPoolTaskExecutor"/>
+        <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
     </bean>
 
     <bean id="fileParticipantsChangedEventListener"
