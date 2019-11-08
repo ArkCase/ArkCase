@@ -465,7 +465,7 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
     }
 
     @Override
-    public UserResetResponse changePassword(String portalId, String userId, PortalUserCredentials portalUserCredentials)
+    public UserResetResponse changePassword(String portalId, String userId, String acmUserId, PortalUserCredentials portalUserCredentials)
             throws PortalUserServiceException
     {
 
@@ -478,7 +478,8 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
         }
         try
         {
-            ldapAuthenticateService.changeUserPassword(userId, portalUserCredentials.getPassword(), portalUserCredentials.getNewPassword());
+            ldapAuthenticateService.changeUserPassword(acmUserId, portalUserCredentials.getPassword(),
+                    portalUserCredentials.getNewPassword());
         }
 
         catch (AcmUserActionFailedException e)
@@ -489,8 +490,8 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
             }
             else
             {
-                log.debug(String.format("Couldn't update password for LDAP user %s.", userId));
-                throw new PortalUserServiceException(String.format("Couldn't update password for LDAP user %s.", userId), e);
+                log.debug(String.format("Couldn't update password for LDAP user %s %s.", acmUserId, userId));
+                throw new PortalUserServiceException(String.format("Couldn't update password for user %s.", userId), e);
             }
 
         }
