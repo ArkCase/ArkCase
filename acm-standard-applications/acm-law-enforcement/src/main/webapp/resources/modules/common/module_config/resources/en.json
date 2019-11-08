@@ -891,7 +891,8 @@
             "url": "URL",
             "url.placeholder": "Enter URL",
             "removeContactMethod": "Remove",
-            "urlType": "URL Type"
+            "urlType": "URL Type",
+            "validationMessage": "The Phone Number you entered is invalid. Should be in this format: xxx-xxx-xxxx"
         },
         "people": {
             "title": "People",

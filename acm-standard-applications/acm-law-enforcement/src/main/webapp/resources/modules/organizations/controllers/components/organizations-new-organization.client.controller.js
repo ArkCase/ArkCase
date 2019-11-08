@@ -378,8 +378,23 @@ angular.module('organizations').controller(
                     $scope.capitalizeFirstLetter = function(input) {
                         return (!!input) ? input.charAt(0).toUpperCase() + input.substr(1).toLowerCase() : '';
                     };
-
+                    
                     $scope.cancelModal = function() {
                         $scope.onModalDismiss();
                     };
+
+                    $scope.validateInput = function (caType) {
+                        var inputType = caType;
+                        var value = $scope.organization.defaultPhone.value;
+                        if (inputType == 'phone') {
+                            var regex = /^\d{3}[\-]\d{3}[\-]\d{4}$/;
+                            if (regex.test(value)) {
+                                $scope.showPhoneError = false;
+                                $scope.organization.defaultPhone.value = value;
+                            } else {
+                                $scope.showPhoneError = true;
+                                $scope.organization.defaultPhone = null;
+                            }
+                        }
+                    }
                 } ]);

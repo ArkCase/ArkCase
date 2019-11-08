@@ -365,7 +365,9 @@
                                     translate}} </label>
                                 <input type="{{caType}}" ng-model="organization['default'+capitalizeFirstLetter(caType)].value"
                                         class="input-md form-control"
-                                        placeholder="{{ 'organizations.comp.newOrganization.communicationAccounts.' + caType + '.placeholder' | translate }}">
+                                        placeholder="{{ 'organizations.comp.newOrganization.communicationAccounts.' + caType + '.placeholder' | translate }}"
+                                        ng-blur="validateInput(caType)">
+                                <span ng-if="caType == 'phone' && showPhoneError == true" translate>organizations.comp.newOrganization.communicationAccounts.validationMessage</span>
                             </div>
                             <div class="col-sm-4">
                                 <label for="defaultPhoneSubType" class="control-label">{{'organizations.comp.newOrganization.communicationAccounts.'
