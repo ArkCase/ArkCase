@@ -51,7 +51,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
@@ -142,7 +141,8 @@ public class EcmFileParticipantService implements ApplicationEventPublisherAware
         // modify the instance to trigger the Solr transformers
         folder.setModified(new Date());
 
-        getFileParticipantServiceHelper().setParticipantToFolderChildren(folder, participant, restricted, getAuditPropertyEntityAdapter().getUserId());
+        getFileParticipantServiceHelper().setParticipantToFolderChildren(folder, participant, restricted,
+                getAuditPropertyEntityAdapter().getUserId());
     }
 
     /**
@@ -210,7 +210,6 @@ public class EcmFileParticipantService implements ApplicationEventPublisherAware
      *            the restricted flag to set recursively
      */
     @Transactional(rollbackFor = Exception.class)
-    @Async("fileParticipantsThreadPoolTaskExecutor")
     public void inheritParticipantsFromAssignedObject(List<AcmParticipant> assignedObjectParticipants,
             List<AcmParticipant> originalAssignedObjectParticipants, AcmContainer acmContainer, boolean restricted)
     {
@@ -484,7 +483,8 @@ public class EcmFileParticipantService implements ApplicationEventPublisherAware
         // modify the instance to trigger the Solr transformers
         folder.setModified(new Date());
 
-        getFileParticipantServiceHelper().setParticipantsToFolderChildren(folder, participants, restricted, getAuditPropertyEntityAdapter().getUserId());
+        getFileParticipantServiceHelper().setParticipantsToFolderChildren(folder, participants, restricted,
+                getAuditPropertyEntityAdapter().getUserId());
     }
 
     /**
@@ -634,7 +634,7 @@ public class EcmFileParticipantService implements ApplicationEventPublisherAware
         this.xSync = xSync;
     }
 
-    public AuditPropertyEntityAdapter getAuditPropertyEntityAdapter() 
+    public AuditPropertyEntityAdapter getAuditPropertyEntityAdapter()
     {
         return auditPropertyEntityAdapter;
     }
