@@ -39,8 +39,12 @@ import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.casefile.service.SaveCaseService;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
-
-import com.armedia.acm.plugins.ecm.model.*;
+import com.armedia.acm.plugins.ecm.model.AcmCmisObject;
+import com.armedia.acm.plugins.ecm.model.AcmCmisObjectList;
+import com.armedia.acm.plugins.ecm.model.AcmContainer;
+import com.armedia.acm.plugins.ecm.model.AcmFolder;
+import com.armedia.acm.plugins.ecm.model.EcmFile;
+import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import com.armedia.acm.plugins.person.model.Person;
