@@ -40,6 +40,7 @@ import org.springframework.context.ApplicationListener;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 public class EntityParticipantsChangedEventListener implements ApplicationListener<AcmEntityParticipantsChangedEvent>
 {
@@ -65,11 +66,13 @@ public class EntityParticipantsChangedEventListener implements ApplicationListen
                 newParticipants.forEach(participant -> participant.setReplaceChildrenParticipant(true));
             }
 
-            log.debug("Inheriting file participants from " + obj.getObjectType() + "[" + obj.getId() + "]");
-            getFileParticipantService().inheritParticipantsFromAssignedObject(
-                    newParticipants,
-                    originalParticipants,
-                    ((AcmContainerEntity) obj).getContainer(), ((AcmAssignedObject) obj).getRestricted());
+            CompletableFuture.runAsync(() -> {
+                log.debug("Inheriting file participants from " + obj.getObjectType() + "[" + obj.getId() + "]");
+                getFileParticipantService().inheritParticipantsFromAssignedObject(
+                        newParticipants,
+                        originalParticipants,
+                        ((AcmContainerEntity) obj).getContainer(), ((AcmAssignedObject) obj).getRestricted());
+            });
         }
     }
 
