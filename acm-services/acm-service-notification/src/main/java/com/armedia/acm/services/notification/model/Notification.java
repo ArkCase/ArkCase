@@ -29,14 +29,14 @@ package com.armedia.acm.services.notification.model;
 
 import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.data.AcmEntity;
-import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.voodoodyne.jackson.jsog.JSOGGenerator;
 
-import org.apache.logging.log4j.Logger;
+import org.apache.commons.lang.StringUtils;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -340,6 +340,10 @@ public class Notification implements Serializable, AcmObject, AcmEntity
 
     public void setParentTitle(String parentTitle)
     {
+        if (parentTitle.length() > 1000)
+        {
+            parentTitle = StringUtils.left(parentTitle, 1000);
+        }
         this.parentTitle = parentTitle;
     }
 
