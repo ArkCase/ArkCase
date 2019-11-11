@@ -50,9 +50,8 @@ import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.services.notification.service.NotificationSender;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
-
-import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
