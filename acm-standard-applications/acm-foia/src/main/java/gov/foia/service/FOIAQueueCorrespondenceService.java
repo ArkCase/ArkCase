@@ -183,7 +183,13 @@ public class FOIAQueueCorrespondenceService
         FOIARequest request = requestDao.find(requestId);
         try
         {
-            FOIADocumentDescriptor documentDescriptor = documentGeneratorService.getDocumentDescriptor(request, FOIAConstants.RECEIVE_ACK);
+            FOIADocumentDescriptor documentDescriptor;
+            if (request.getRequestType().equals(FOIAConstants.APPEAL_REQUEST_TYPE)) {
+                documentDescriptor = documentGeneratorService.getDocumentDescriptor(request, FOIAConstants.ACK);
+            }
+            else {
+                documentDescriptor = documentGeneratorService.getDocumentDescriptor(request, FOIAConstants.RECEIVE_ACK);
+            }
 
             String arkcaseFilename = String.format(documentDescriptor.getFilenameFormat(), request.getId());
             String targetFolderId = request.getContainer().getAttachmentFolder() == null

@@ -118,8 +118,8 @@
             <beans:property name="userDao" ref="userJpaDao"/>
             <beans:property name="foiaConfigurationService" ref="foiaConfigurationService"/>
             <beans:property name="foiaQueueCorrespondenceService" ref="foiaQueueCorrespondenceService"/>
-            <beans:property name="templatingEngine" ref="templatingEngine"/>
-            <beans:property name="emailBodyTemplate" value="file:${user.home}/.arkcase/acm/templates/requestDocumentAttached.html"/>
+            <beans:property name="notificationDao" ref="notificationDao"/>
+
         </beans:bean>
 
         <beans:bean id="documentGeneratorService" class="gov.foia.service.FOIADocumentGeneratorService">
