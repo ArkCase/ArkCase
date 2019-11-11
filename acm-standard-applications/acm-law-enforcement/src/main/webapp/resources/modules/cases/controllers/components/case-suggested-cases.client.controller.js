@@ -43,7 +43,6 @@ angular.module('cases').controller('Cases.SuggestedCasesController', ['$scope','
                 totalItems: 0,
                 data: []
             };
-            retrieveGridData();
         };
 
         function retrieveGridData(){
@@ -61,6 +60,7 @@ angular.module('cases').controller('Cases.SuggestedCasesController', ['$scope','
 
         var onObjectInfoRetrieved = function(objectInfo) {
             $scope.objectInfo = objectInfo;
+            retrieveGridData();
         };
 
         $scope.onClickObjLink = function(event, rowEntity) {
