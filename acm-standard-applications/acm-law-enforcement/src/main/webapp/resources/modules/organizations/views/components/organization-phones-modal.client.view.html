@@ -12,7 +12,8 @@
             <div class="col-sm-6 form-group">
                 <label for="phones" translate>organizations.comp.phones.modal.value.label</label><span class="required-asterisk">*</span>
                 <input id="phones" type="text" ng-model="phone.value" class="input-md form-control" required="required"
-                        ng-blur="validateInput()" placeholder="{{ 'organizations.comp.phones.modal.value.placeholder' | translate }}">
+                        ng-blur="validateInput()"
+                        placeholder="{{ 'organizations.comp.phones.modal.value.placeholder' | translate }}">
                 <span ng-if="showPhoneError" translate>people.comp.phones.modal.validationMessage</span>
             </div>
             <div class="col-sm-6 form-group">
