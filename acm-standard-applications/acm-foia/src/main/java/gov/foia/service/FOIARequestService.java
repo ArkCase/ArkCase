@@ -196,7 +196,7 @@ public class FOIARequestService
                 {
                     person.setDefaultPhone(contact);
                 }
-                else if (type.toLowerCase().equals("email") && value != null && !value.isEmpty())
+                else if (type.toLowerCase().equals("email") && value != null)
                 {
                     person.setDefaultEmail(contact);
                 }
