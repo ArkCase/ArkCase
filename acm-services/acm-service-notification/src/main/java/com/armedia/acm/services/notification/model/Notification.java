@@ -149,7 +149,7 @@ public class Notification implements Serializable, AcmObject, AcmEntity
     @Column(name = "cm_email_addresses")
     private String emailAddresses;
 
-    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @ManyToMany(cascade = { CascadeType.MERGE, CascadeType.PERSIST })
     @JoinTable(name = "acm_notification_files", joinColumns = {
             @JoinColumn(name = "cm_notification_id", referencedColumnName = "cm_notification_id") }, inverseJoinColumns = {
                     @JoinColumn(name = "cm_file_id", referencedColumnName = "cm_file_id") })
@@ -340,7 +340,7 @@ public class Notification implements Serializable, AcmObject, AcmEntity
 
     public void setParentTitle(String parentTitle)
     {
-        if (parentTitle.length() > 1000)
+        if (parentTitle != null && parentTitle.length() > 1000)
         {
             parentTitle = StringUtils.left(parentTitle, 1000);
         }
