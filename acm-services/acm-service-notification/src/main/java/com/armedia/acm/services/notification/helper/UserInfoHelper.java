@@ -33,6 +33,7 @@ import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.group.AcmGroup;
 import com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig;
 import com.armedia.acm.spring.SpringContextHolder;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -45,6 +46,12 @@ public class UserInfoHelper
     private SpringContextHolder contextHolder;
     private AcmGroupDao acmGroupDao;
 
+    public String getUserEmail(String userId)
+    {
+        AcmUser user = getUserDao().findByUserId(userId);
+        return user.getMail();
+    }
+
     public String removeUserPrefix(String userId)
     {
         AcmUser user = getUserDao().findByUserId(userId);
@@ -52,9 +59,10 @@ public class UserInfoHelper
 
         String baseUserId = user.getUserId();
 
-        if(StringUtils.isNotBlank(directoryName))
+        if (StringUtils.isNotBlank(directoryName))
         {
-            AcmLdapSyncConfig acmLdapSyncConfig = getContextHolder().getBeanByNameIncludingChildContexts(directoryName.concat("_sync"), AcmLdapSyncConfig.class);
+            AcmLdapSyncConfig acmLdapSyncConfig = getContextHolder().getBeanByNameIncludingChildContexts(directoryName.concat("_sync"),
+                    AcmLdapSyncConfig.class);
             String userPrefix = acmLdapSyncConfig.getUserPrefix();
             if (StringUtils.isNotBlank(userPrefix))
             {
@@ -75,9 +83,10 @@ public class UserInfoHelper
 
         String baseGroupId = acmGroup.getName();
 
-        if(StringUtils.isNotBlank(directoryName))
+        if (StringUtils.isNotBlank(directoryName))
         {
-            AcmLdapSyncConfig acmLdapSyncConfig = getContextHolder().getBeanByNameIncludingChildContexts(directoryName.concat("_sync"), AcmLdapSyncConfig.class);
+            AcmLdapSyncConfig acmLdapSyncConfig = getContextHolder().getBeanByNameIncludingChildContexts(directoryName.concat("_sync"),
+                    AcmLdapSyncConfig.class);
             String groupPrefix = acmLdapSyncConfig.getGroupPrefix();
             if (StringUtils.isNotBlank(groupPrefix))
             {

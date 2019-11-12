@@ -40,7 +40,6 @@ import com.armedia.acm.services.objecttitle.service.ObjectTitleConfigurationServ
 
 import java.util.Map;
 
-
 public class AcmEntityTemplateNoUserPrefixModelProvider implements TemplateModelProvider<AcmEntityTemplateModel>
 {
     private AcmDataService dataService;
@@ -57,8 +56,10 @@ public class AcmEntityTemplateNoUserPrefixModelProvider implements TemplateModel
         String baseAssigneeLdapId = "";
         String baseModifier = "";
         String baseAssigneeGroupId = "";
+        String modifierEmail = "";
+        String assigneeEmail = "";
 
-        if(acmObject instanceof AcmAssignee)
+        if (acmObject instanceof AcmAssignee)
         {
             AcmAssignee acmAssignee = (AcmAssignee) acmObject;
 
@@ -71,6 +72,9 @@ public class AcmEntityTemplateNoUserPrefixModelProvider implements TemplateModel
             String assigneeLdapGroupId = acmAssignee.getAssigneeGroupId();
             baseAssigneeGroupId = getUserInfoHelper().removeGroupPrefix(assigneeLdapGroupId);
 
+            modifierEmail = getUserInfoHelper().getUserEmail(modifier);
+            assigneeEmail = getUserInfoHelper().getUserEmail(assigneeLdapId);
+
         }
 
         AcmEntityTemplateModel acmEntityTemplateModel = new AcmEntityTemplateModel();
@@ -78,14 +82,14 @@ public class AcmEntityTemplateNoUserPrefixModelProvider implements TemplateModel
         acmEntityTemplateModel.assigneeUserId = baseAssigneeLdapId;
         acmEntityTemplateModel.modifierUserId = baseModifier;
         acmEntityTemplateModel.assigneeGroupId = baseAssigneeGroupId;
-
+        acmEntityTemplateModel.modifierEmail = modifierEmail;
+        acmEntityTemplateModel.assigneeEmail = assigneeEmail;
 
         Map<String, TitleConfiguration> titleConfigurationMap = objectTitleConfigurationService.getObjectTitleConfig();
-        for(TitleConfiguration value: titleConfigurationMap.values())
+        for (TitleConfiguration value : titleConfigurationMap.values())
         {
             acmEntityTemplateModel.setTitleEnabled(value.getEnableTitleField());
         }
-
 
         return acmEntityTemplateModel;
     }
