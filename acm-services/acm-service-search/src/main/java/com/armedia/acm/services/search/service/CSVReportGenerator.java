@@ -59,6 +59,8 @@ public class CSVReportGenerator extends ReportGenerator
     private static final String REPLACE_QUOTES_PATTERN = "\"";
     private static final String REPLACEMENT_FOR_QUOTES_PATTERN = "\"\"";
     private static final String QUOTES_CONSTANT = "\"";
+    private static final String OBJECT_SUB_TYPE_REQUESTS = "FOIA_REQUEST";
+    private static final String REPLACEMENT_FOR_CASE_FILE_OBJECT_TYPE = "REQUEST";
 
     /**
      * ISO 8601 Date/Time pattern used by Solr (yyyy-MM-ddTHH:mm:ssZ).
@@ -73,7 +75,7 @@ public class CSVReportGenerator extends ReportGenerator
     /**
      * Formatter for formatting dates and times so Excel recognizes them.
      */
-    private static final DateTimeFormatter EXCEL_DATE_TIME_PATTERN = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    private static final DateTimeFormatter EXCEL_DATE_TIME_PATTERN = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss a");
 
     private transient final Logger log = LogManager.getLogger(getClass());
 
@@ -121,6 +123,11 @@ public class CSVReportGenerator extends ReportGenerator
                             {
                                 stringValue = data.getString("related_object_number_s");
                             }
+                        }
+
+                        if (field.equals("object_type_s") && data.has("object_sub_type_s") && data.getString("object_sub_type_s").equals(OBJECT_SUB_TYPE_REQUESTS))
+                        {
+                            stringValue = REPLACEMENT_FOR_CASE_FILE_OBJECT_TYPE;
                         }
 
                         // check if this is Solr Date/Time field in expected format
