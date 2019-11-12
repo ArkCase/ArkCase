@@ -77,27 +77,24 @@ public class AcknowledgementDocumentService
         {
             FOIARequest request = getRequestDao().find(requestId);
             String emailAddress = extractRequestorEmailAddress(request.getOriginator().getPerson());
-            if (emailAddress != null && emailAddress.isEmpty())
+            if (emailAddress != null && !emailAddress.isEmpty())
             {
                 FOIADocumentDescriptor documentDescriptor = documentGeneratorService.getDocumentDescriptor(request, FOIAConstants.ACK);
                 EcmFile letter = getEcmFileDao().findForContainerAttachmentFolderAndFileType(request.getContainer().getId(), request.getContainer().getAttachmentFolder().getId(), documentDescriptor.getDoctype());
 
-                EcmFileVersion ecmFileVersions = letter.getVersions().get(letter.getVersions().size() - 1);
+                EcmFileVersion ecmFileVersion = letter.getVersions().stream()
+                        .filter(fv -> fv.getVersionTag().equals(letter.getActiveVersionTag())).findFirst().get();
 
                 Notification notification = new Notification();
                 notification.setTemplateModelName("requestDocumentAttached");
                 notification.setEmailAddresses(emailAddress);
                 notification.setAttachFiles(true);
-                notification.setFiles(Arrays.asList(ecmFileVersions));
+                notification.setFiles(Arrays.asList(ecmFileVersion));
                 notification.setParentId(requestId);
                 notification.setParentType(request.getObjectType());
                 notification.setTitle(String.format("%s %s", request.getRequestType(), request.getCaseNumber()));
                 notification.setUser(request.getCreator());
                 notificationDao.save(notification);
-
-                notificationDao.save(notification);
-
-
             }
         }
     }
