@@ -151,7 +151,8 @@ public class PortalRequestService
     public void populateResponseRequest(FOIARequest foiaRequest, PortalFOIARequest portalFOIARequest)
     {
         portalFOIARequest.setOriginalRequestNumber(foiaRequest.getCaseNumber());
-        portalFOIARequest.setSubject(foiaRequest.getTitle());
+        portalFOIARequest.setTitle(foiaRequest.getTitle());
+        portalFOIARequest.setSubject(foiaRequest.getDetails());
         portalFOIARequest.setRequestCategory(foiaRequest.getRequestCategory());
         portalFOIARequest.setDeliveryMethodOfResponse(foiaRequest.getDeliveryMethodOfResponse());
         portalFOIARequest.setAddress1(foiaRequest.getOriginator().getPerson().getAddresses().get(0).getStreetAddress());
