@@ -104,7 +104,7 @@ public interface FunctionalAccessService
      *            roleName, auth
      * @return
      */
-    boolean saveGroupsToApplicationRole(List<String> groups, String roleName, Authentication auth) throws AcmEncryptionException;
+    boolean saveGroupsToApplicationRole(List<Object> groups, String roleName, Authentication auth) throws AcmEncryptionException;
 
     /**
      * Retrieve success(boolean) if the removing was successful
@@ -115,7 +115,7 @@ public interface FunctionalAccessService
      *            roleName, auth
      * @return
      */
-    boolean removeGroupsToApplicationRole(List<String> groups, String roleName, Authentication auth);
+    boolean removeGroupsToApplicationRole(List<Object> groups, String roleName, Authentication auth);
 
     boolean saveApplicationRolesToGroups(Map<String, List<String>> rolesToGroups, String userId);
 

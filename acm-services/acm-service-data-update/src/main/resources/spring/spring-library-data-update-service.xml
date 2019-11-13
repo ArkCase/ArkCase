@@ -34,6 +34,7 @@
                 <ref bean="ocrSystemUserUpdateExecutor"/>
                 <ref bean="transcribeSystemUserUpdateExecutor"/>
                 <ref bean="solrReindexEcmFileExecutor"/>
+                <ref bean="configurationServerRuntimeMigrationExecutor"/>
                 <ref bean="solrReindexNotificationsExecutor"/>
             </list>
         </property>
@@ -88,6 +89,14 @@
         class="com.armedia.acm.services.dataupdate.service.DocumentRepositoryParticipantTypesUpdateExecutor">
         <property name="documentDao" ref="documentRepositoryDao"/>
         <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
+    </bean>
+
+    <bean id="configurationServerRuntimeMigrationExecutor"
+        class="com.armedia.acm.services.dataupdate.service.RolesGroupsRuntimeMigrationExecutor">
+        <property name="collectionPropertiesConfigurationService" ref="collectionPropertiesConfigurationService"/>
+        <property name="configurationPropertyService" ref="configurationPropertyService"/>
+        <property name="configurationContainer" ref="configurationContainer"/>
+        <property name="jsonUnmarshaller" ref="jsonUnmarshaller"/>
     </bean>
 
     <bean id="solrReindexAssignedObjectsExecutor" class="com.armedia.acm.services.dataupdate.service.SolrReindexAssignedObjectsExecutor">
