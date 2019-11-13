@@ -57,7 +57,7 @@ public class MoveFolderRoute extends RouteBuilder implements ArkCaseRoute
     private Long timeout;
 
     @Override
-    public void configure() throws Exception
+    public void configure()
     {
         onException(Exception.class).handled(false)
                 .process(x -> {
@@ -70,7 +70,7 @@ public class MoveFolderRoute extends RouteBuilder implements ArkCaseRoute
         from("seda:" + repositoryId + "-moveFolderQueue?timeout=" + timeout).setExchangePattern(ExchangePattern.InOut)
                 .process(exchange -> {
                     map = (Map<String, Object>) exchange.getIn().getBody();
-                    exchange.getIn().getHeaders().put(PropertyIds.OBJECT_TYPE_ID, "cmis:folder");
+                    exchange.getIn().getHeaders().put(PropertyIds.OBJECT_TYPE_ID, CamelCMISConstants.CMIS_FOLDER);
                     exchange.getIn().getHeaders().put(CamelCMISConstants.CMIS_OBJECT_ID, map.get("acmFolderId"));
                     exchange.getIn().getHeaders().put(CamelCMISConstants.CMIS_DESTIONATION_FOLDER_ID, map.get("dstFolderId"));
                     exchange.getIn().getHeaders().put(CamelCMISConstants.CMIS_ACTION, CamelCMISActions.MOVE_FOLDER);
