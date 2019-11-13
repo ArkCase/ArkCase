@@ -28,56 +28,44 @@ package com.armedia.acm.configuration.annotations;
  */
 
 import com.armedia.acm.configuration.core.ConfigurationContainer;
+import com.armedia.acm.configuration.service.CollectionPropertiesConfigurationService;
 
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.AbstractMap;
 import java.util.Map;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 /**
- * Around aspect targeting annotation: {@link HashMapValue}
+ * Around aspect targeting annotation: {@link MapValue}
  *
  * Created by mario.gjurcheski on 08/16/2019.
  */
 @Aspect
 @Component
-public class HashMapValueAspect
+public class MapValueAspect
 {
     @Autowired
     private ConfigurationContainer configurationContainer;
 
+    @Autowired
+    private CollectionPropertiesConfigurationService collectionPropertiesConfigurationService;
+
     /**
-     * Around aspect targeting annotation: @{@link HashMapValue}
+     * Around aspect targeting annotation: @{@link MapValue}
      * Handled Responses:
      */
     @Around(value = "@annotation(propertyKey)")
-    public Object aroundMapPropertyValueDecoratingMethod(HashMapValue propertyKey)
+    public Object aroundMapPropertyValueDecoratingMethod(MapValue propertyKey)
     {
 
         Map<String, Object> propsFromConfiguration = configurationContainer.getConfigurationMap();
 
-        Function<Map.Entry<String, Object>, Map.Entry<String, Object>> transform = entry -> {
+        Map<String, Object> props = collectionPropertiesConfigurationService.filterAndConvertProperties(propertyKey.value() + ".",
+                propsFromConfiguration, false);
 
-            String newKey = entry.getKey().replace(propertyKey.value() + ".", "");
-            return new AbstractMap.SimpleEntry<>(newKey, entry.getValue());
-
-        };
-
-        // filter all the properties from configuration that contains the propertyKey from the annotation
-        Map<String, Object> props = propsFromConfiguration.entrySet()
-                .stream()
-                .filter(s -> s.getKey().startsWith(propertyKey.value() + "."))
-                .map(transform)
-                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
-
-        props.remove(propertyKey.value());
-
-        return configurationContainer.convertMap(props, false);
+        return props;
     }
 
 }

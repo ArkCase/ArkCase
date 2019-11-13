@@ -31,12 +31,12 @@ import com.armedia.acm.services.search.model.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
-
 import com.armedia.acm.services.users.model.ApplicationRolesToPrivilegesConfig;
+
 import org.mule.api.MuleException;
 import org.springframework.security.core.Authentication;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -127,16 +127,13 @@ public class AcmUserServiceImpl implements AcmUserService
     {
         Set<String> userPrivileges = new HashSet<>();
         Set<String> userRoles = getUserRoleService().getUserRoles(name);
-        Map<String, String> rolesPrivileges = getRolesToPrivilegesConfig().getRolesToPrivileges();
-        for (Map.Entry<String, String> entry : rolesPrivileges.entrySet())
+        Map<String, List<Object>> rolesPrivileges = getRolesToPrivilegesConfig().getRolesToPrivileges();
+        for (Map.Entry<String, List<Object>> entry : rolesPrivileges.entrySet())
         {
             if(userRoles.contains(entry.getKey()))
             {
-                String[] privileges = entry.getValue().split(",");
-                for(int i = 0; i < privileges.length; i++ )
-                {
-                    userPrivileges.add(privileges[i]);
-                }
+                String[] privileges = (String[]) entry.getValue().toArray();
+                userPrivileges.addAll(Arrays.asList(privileges));
             }
         }
         return userPrivileges;
