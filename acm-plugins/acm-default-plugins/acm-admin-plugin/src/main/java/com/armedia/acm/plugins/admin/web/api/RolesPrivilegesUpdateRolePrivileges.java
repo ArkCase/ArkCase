@@ -31,10 +31,10 @@ import com.armedia.acm.plugins.admin.exception.AcmRolesPrivilegesException;
 import com.armedia.acm.plugins.admin.model.RolePrivilegesConstants;
 import com.armedia.acm.plugins.admin.service.RolesPrivilegesService;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -48,6 +48,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Base64;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -74,7 +75,7 @@ public class RolesPrivilegesUpdateRolePrivileges implements RolePrivilegesConsta
         {
             JSONObject rolePrivilegesObject = new JSONObject(resource);
             JSONArray privelegesArray = rolePrivilegesObject.getJSONArray(PROP_PRIVILEGES);
-            List<String> privileges = new ArrayList<>();
+            List<Object> privileges = new LinkedList<>();
             for (int i = 0; i < privelegesArray.length(); i++)
             {
                 privileges.add(privelegesArray.getString(i));
@@ -96,7 +97,7 @@ public class RolesPrivilegesUpdateRolePrivileges implements RolePrivilegesConsta
     @ResponseBody
     public ResponseEntity<?> addPrivilegesToApplicationRole(
             @PathVariable(PROP_ROLE_NAME) String roleName,
-            @RequestBody List<String> privileges) throws AcmRolesPrivilegesException
+            @RequestBody List<Object> privileges) throws AcmRolesPrivilegesException
     {
         roleName = new String(Base64.getUrlDecoder().decode(roleName.getBytes()));
         try
@@ -118,7 +119,7 @@ public class RolesPrivilegesUpdateRolePrivileges implements RolePrivilegesConsta
     @ResponseBody
     public ResponseEntity<?> removePrivilegesToApplicationRole(
             @PathVariable(PROP_ROLE_NAME) String roleName,
-            @RequestBody List<String> privileges) throws AcmRolesPrivilegesException
+            @RequestBody List<Object> privileges) throws AcmRolesPrivilegesException
     {
         roleName = new String(Base64.getUrlDecoder().decode(roleName.getBytes()));
         try
