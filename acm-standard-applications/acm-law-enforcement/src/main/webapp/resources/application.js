@@ -98,7 +98,7 @@ angular.module(ApplicationConfiguration.applicationModuleName).config(
                     // Add HTTP error interceptor
                     function httpInterceptor($q, $window, $rootScope, MessageService) {
                         return {
-                            responseError : responseError
+                            responseError: responseError
                         };
 
                         // Intercept the failed response.
@@ -129,39 +129,10 @@ angular.module(ApplicationConfiguration.applicationModuleName).config(
                                 MessageService.error('User has no granted permission for this action');
                             }
 
-                            // Send error message to MessageService if
-                            // is not suppressed
-                            if (isErrorSuppressed(response)) {
-                                return $q.reject(response);
-                            } else {
-                                // Only throw http error as last resort
-                                if (response.data) {
-                                    // e.g. Task already claimed ..
-                                    // exception type is ...
-                                    MessageService.error(response.data);
-                                } else if (response.statusText) {
-                                    // e.g. Unknown Error
-                                    MessageService.error(response.statusText);
-                                } else {
-                                    // e.g. Error 404 /api/latest..
-                                    MessageService.httpError(response);
-                                }
+                            if (response.status >= 500) {
+                                MessageService.serverError();
                                 return ($q.reject(response));
                             }
-                        }
-
-                        function isErrorSuppressed(response) {
-                            // dmiller 2016-04-11 suppressing errors by
-                            // default.
-                            // TODO: need a configuration flag and/or a
-                            // smarter messaging strategy
-                            var isSuppressed = true;
-                            angular.forEach(ApplicationConfiguration.suppressedErrorList, function(error) {
-                                if (error.url == response.config.url && error.status == response.status) {
-                                    isSuppressed = true;
-                                }
-                            });
-                            return isSuppressed;
                         }
                     }
 
