@@ -401,7 +401,7 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
             getFileParticipantService().setFolderParticipantsFromParentFolder(movedFolder);
             movedFolder = getFolderDao().save(movedFolder);
         }
-        catch (PersistenceException | ArkCaseCamelException e)
+        catch (PersistenceException | ArkCaseFileRepositoryException e)
         {
             log.error("Folder {} not moved successfully {}", folderForMoving.getName(), e.getMessage(), e);
             throw new AcmUserActionFailedException(AcmFolderConstants.USER_ACTION_MOVE_FOLDER, AcmFolderConstants.OBJECT_FOLDER_TYPE,
@@ -487,7 +487,7 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
             getFileParticipantService().setFolderParticipantsFromParentFolder(movedFolder);
             movedFolder = getFolderDao().save(movedFolder);
         }
-        catch (PersistenceException | ArkCaseCamelException e)
+        catch (PersistenceException | ArkCaseFileRepositoryException e)
         {
             log.error("Folder {} not moved successfully {}", folderForMoving.getName(), e.getMessage(), e);
             throw new AcmUserActionFailedException(AcmFolderConstants.USER_ACTION_MOVE_FOLDER, AcmFolderConstants.OBJECT_FOLDER_TYPE,
