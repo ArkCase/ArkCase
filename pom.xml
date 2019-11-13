@@ -51,7 +51,7 @@
         <eclipselink-jpa.version>2.6.0</eclipselink-jpa.version>
         <ehcache.version>2.6.9</ehcache.version>
         <exchange-web-services.version>2.0</exchange-web-services.version>
-        <fasterxml-jackson-core.version>2.7.2</fasterxml-jackson-core.version>
+        <fasterxml-jackson-core.version>2.10.1</fasterxml-jackson-core.version>
         <fop.version>2.0</fop.version>
         <freemarker.version>2.3.28</freemarker.version>
         <frevvo.forms.version>6.3</frevvo.forms.version>
