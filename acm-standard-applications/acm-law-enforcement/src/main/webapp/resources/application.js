@@ -12,8 +12,9 @@ angular.module(ApplicationConfiguration.applicationModuleName).config(
                 'tmhDynamicLocaleProvider',
                 '$httpProvider',
                 'AnalyticsProvider',
+                '$provide',
                 function($locationProvider, $translateProvider, $translatePartialLoaderProvider, dynamicLocaleProvider, $httpProvider,
-                        AnalyticsProvider) {
+                        AnalyticsProvider, $provide) {
                     $locationProvider.hashPrefix('!');
 
                     $httpProvider.interceptors.push(httpInterceptor);
@@ -27,6 +28,21 @@ angular.module(ApplicationConfiguration.applicationModuleName).config(
                         }
                         return data;
                     });
+
+                    var timezoneOffset = new Date().toString().match(/([\+-][0-9]+)/g);
+                    timezoneOffset = timezoneOffset ? timezoneOffset[0] : "UTC";
+
+                    $provide.decorator('dateFilter', ['$delegate', '$injector', function($delegate, $injector) {
+                        var oldDelegate = $delegate;
+
+                        var dateFilterInterceptor = function(date, format, timezone) {
+                            if(angular.isUndefined(timezone)) {
+                                timezone = timezoneOffset;
+                            }
+                            return oldDelegate.apply(this, [date, format, timezone]);
+                        };
+                        return dateFilterInterceptor;
+                    }]);
 
                     function noCacheInterceptor() {
                         return {
