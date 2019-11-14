@@ -61,15 +61,22 @@ public class UserInfoHelper
 
         if (StringUtils.isNotBlank(directoryName))
         {
-            AcmLdapSyncConfig acmLdapSyncConfig = getContextHolder().getBeanByNameIncludingChildContexts(directoryName.concat("_sync"),
-                    AcmLdapSyncConfig.class);
-            String userPrefix = acmLdapSyncConfig.getUserPrefix();
-            if (StringUtils.isNotBlank(userPrefix))
+            try
             {
-                log.debug(String.format("User Prefix [%s]", userPrefix));
-                log.debug(String.format("Full User id: [%s]", baseUserId));
-                baseUserId = user.getUserId().replace(userPrefix.concat("."), "");
-                log.debug(String.format("User Id without prefix: [%s]", baseUserId));
+                AcmLdapSyncConfig acmLdapSyncConfig = getContextHolder().getBeanByNameIncludingChildContexts(directoryName.concat("_sync"),
+                        AcmLdapSyncConfig.class);
+                String userPrefix = acmLdapSyncConfig.getUserPrefix();
+                if (StringUtils.isNotBlank(userPrefix))
+                {
+                    log.debug(String.format("User Prefix [%s]", userPrefix));
+                    log.debug(String.format("Full User id: [%s]", baseUserId));
+                    baseUserId = user.getUserId().replace(userPrefix, "");
+                    log.debug(String.format("User Id without prefix: [%s]", baseUserId));
+                }
+            }
+            catch (Exception e)
+            {
+                log.debug("Error processing user prefix", e);
             }
         }
 
@@ -85,15 +92,22 @@ public class UserInfoHelper
 
         if (StringUtils.isNotBlank(directoryName))
         {
-            AcmLdapSyncConfig acmLdapSyncConfig = getContextHolder().getBeanByNameIncludingChildContexts(directoryName.concat("_sync"),
-                    AcmLdapSyncConfig.class);
-            String groupPrefix = acmLdapSyncConfig.getGroupPrefix();
-            if (StringUtils.isNotBlank(groupPrefix))
+            try
             {
-                log.debug(String.format("Group Prefix [%s]", groupPrefix));
-                log.debug(String.format("Full Group Name [%s]", baseGroupId));
-                baseGroupId = groupId.replace(groupPrefix.concat("."), "");
-                log.debug(String.format("Group Name without prefix: [%s]", baseGroupId));
+                AcmLdapSyncConfig acmLdapSyncConfig = getContextHolder().getBeanByNameIncludingChildContexts(directoryName.concat("_sync"),
+                        AcmLdapSyncConfig.class);
+                String groupPrefix = acmLdapSyncConfig.getGroupPrefix();
+                if (StringUtils.isNotBlank(groupPrefix))
+                {
+                    log.debug(String.format("Group Prefix [%s]", groupPrefix));
+                    log.debug(String.format("Full Group Name [%s]", baseGroupId));
+                    baseGroupId = groupId.replace(groupPrefix, "");
+                    log.debug(String.format("Group Name without prefix: [%s]", baseGroupId));
+                }
+            }
+            catch (Exception e)
+            {
+                log.debug("Error processing group prefix", e);
             }
         }
 
