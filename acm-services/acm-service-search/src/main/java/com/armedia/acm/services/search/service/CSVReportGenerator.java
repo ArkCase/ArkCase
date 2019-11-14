@@ -59,8 +59,7 @@ public class CSVReportGenerator extends ReportGenerator
     private static final String REPLACE_QUOTES_PATTERN = "\"";
     private static final String REPLACEMENT_FOR_QUOTES_PATTERN = "\"\"";
     private static final String QUOTES_CONSTANT = "\"";
-    private static final String OBJECT_SUB_TYPE_REQUESTS = "FOIA_REQUEST";
-    private static final String REPLACEMENT_FOR_CASE_FILE_OBJECT_TYPE = "REQUEST";
+    private static final String OBJECT_TYPE_CASE_FILE = "CASE_FILE";
 
     /**
      * ISO 8601 Date/Time pattern used by Solr (yyyy-MM-ddTHH:mm:ssZ).
@@ -94,7 +93,7 @@ public class CSVReportGenerator extends ReportGenerator
             headers.add(purifyForCSV(title));
         }
 
-        String headersLine = headers.stream().collect(Collectors.joining(SearchConstants.SEPARATOR_COMMA));
+        String headersLine = String.join(SearchConstants.SEPARATOR_COMMA, headers);
         sb.append(headersLine);
         sb.append("\n");
 
@@ -125,9 +124,9 @@ public class CSVReportGenerator extends ReportGenerator
                             }
                         }
 
-                        if (field.equals("object_type_s") && data.has("object_sub_type_s") && data.getString("object_sub_type_s").equals(OBJECT_SUB_TYPE_REQUESTS))
+                        if (field.equals("object_type_s") && stringValue.equals(OBJECT_TYPE_CASE_FILE) && data.has("object_sub_type_s"))
                         {
-                            stringValue = REPLACEMENT_FOR_CASE_FILE_OBJECT_TYPE;
+                            stringValue = data.getString("object_sub_type_s");
                         }
 
                         // check if this is Solr Date/Time field in expected format
