@@ -41,6 +41,7 @@ angular.module('cases').controller(
                     $scope.availableChildOutcomes = [];
                     $scope.merging = false;
                     $scope.splitting = false;
+                    $scope.showChangeCaseStatus = true;
 
 
                     ConfigService.getModuleConfig("cases").then(function(moduleConfig) {
@@ -63,7 +64,6 @@ angular.module('cases').controller(
                     var onObjectInfoRetrieved = function(objectInfo) {
                         $scope.restricted = objectInfo.restricted;
                         $scope.showBtnChildOutcomes = false;
-                        $scope.showChangeCaseStatus = true;
 
 
                         var group = ObjectModelService.getGroup(objectInfo);
