@@ -28,6 +28,7 @@ package com.armedia.acm.plugins.ecm.utils;
  */
 
 import com.armedia.acm.camelcontext.arkcase.cmis.ArkCaseCMISActions;
+import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
@@ -85,7 +86,7 @@ public class EcmFileMuleUtils
     }
 
     /**
-     * Adds a new file to the repository using the addFile mule flow.
+     * Adds a new file to the repository using the addFile camel flow.
      *
      * @param newEcmFile
      *            - contains metadata for the file whose contents will be added to the repository
@@ -93,31 +94,25 @@ public class EcmFileMuleUtils
      *            - cmis id of the folder in which the new file will be added
      * @param fileInputStream
      *            - binary content data for the new file version
-     * @throws MuleException
-     *             if the mule call to save the file to the repository fails
+     * @throws AcmUserActionFailedException
+     *             if the camel call to save the file to the repository fails
      * @returns Cmis Document object for the new repository document
      */
-    public Document addFile(EcmFile newEcmFile, String cmisFolderId, InputStream fileInputStream) throws MuleException
+    @Deprecated
+    public Document addFile(EcmFile newEcmFile, String cmisFolderId, InputStream fileInputStream) throws AcmUserActionFailedException
     {
-        // Mule does not support file names with trailing space(s)
-        newEcmFile.setFileName(newEcmFile.getFileName().trim());
-        // Mule upload request payload setup (specifies the folder in which to upload the supplied content stream)
-        Map<String, Object> messageProps = new HashMap<>();
-        messageProps.put("cmisFolderId", cmisFolderId);
-        messageProps.put("inputStream", fileInputStream);
-        messageProps.put(EcmFileConstants.CONFIGURATION_REFERENCE, cmisConfigUtils.getCmisConfiguration(newEcmFile.getCmisRepositoryId()));
-        messageProps.put(EcmFileConstants.VERSIONING_STATE, cmisConfigUtils.getVersioningState(newEcmFile.getCmisRepositoryId()));
+        log.debug("invoking Camel add file route");
 
-        log.debug("invoking the mule add file flow");
-        MuleMessage received = getMuleContextManager().send("vm://addFile.in", newEcmFile, messageProps);
-        MuleException e = received.getInboundProperty("saveException");
-        if (e != null)
+        try
         {
-            throw e;
+            return getEcmFileCamelUtils().addFile(newEcmFile, cmisFolderId, fileInputStream);
         }
-
-        // Extracts CMIS document data from the Mule response
-        return received.getPayload(Document.class);
+        catch (AcmUserActionFailedException e)
+        {
+            log.error("Could not create document {} ", e.getMessage(), e);
+            throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_UPLOAD_FILE, EcmFileConstants.OBJECT_FILE_TYPE, null,
+                    "Could not create document", e);
+        }
     }
 
     /**
@@ -158,11 +153,11 @@ public class EcmFileMuleUtils
 
     /**
      * Removes a file from the Alfresco content repository
-     * 
+     *
      * @deprecated
      *             This method is no longer acceptable
      *             Use {@link EcmFileCamelUtils#deleteFile(EcmFile, String)} instead.
-     * 
+     *
      * @param ecmFile
      *            - metadata for the file to delete
      * @param cmisFileId

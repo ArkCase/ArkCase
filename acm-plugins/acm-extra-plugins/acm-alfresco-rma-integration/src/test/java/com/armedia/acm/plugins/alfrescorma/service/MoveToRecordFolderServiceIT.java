@@ -30,6 +30,7 @@ package com.armedia.acm.plugins.alfrescorma.service;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
+import com.armedia.acm.camelcontext.context.CamelContextManager;
 import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.web.api.MDCConstants;
 
@@ -95,6 +96,8 @@ public class MoveToRecordFolderServiceIT
     @Autowired
     private MuleContextManager muleContextManager;
     @Autowired
+    private CamelContextManager camelContextManager;
+    @Autowired
     @Qualifier("declareRecordService")
     private AlfrescoService<String> declareRecordService;
     @Autowired
@@ -118,7 +121,7 @@ public class MoveToRecordFolderServiceIT
         MDC.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, "admin");
         MDC.put(MDCConstants.EVENT_MDC_REQUEST_ID_KEY, UUID.randomUUID().toString());
 
-        Document testFile = cmisFileWriter.writeTestFile(muleContextManager);
+        Document testFile = cmisFileWriter.writeTestFile(muleContextManager, camelContextManager);
         ecmFileId = testFile.getVersionSeriesId();
     }
 

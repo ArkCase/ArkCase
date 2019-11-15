@@ -13,7 +13,6 @@
             <list>
                 <value>/flows/MuleCmisConnectorFlow.xml</value>
                 <value>/flows/MuleActiveMqConnectorFlow.xml</value>
-                <value>/flows/addFileFlow.xml</value>
                 <value>/flows/addNewFolderFlow.xml</value>
                 <value>/flows/getFolderFlow.xml</value>
                 <value>/flows/moveFolderFlow.xml</value>

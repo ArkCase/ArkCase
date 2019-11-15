@@ -29,13 +29,19 @@ package com.armedia.acm.plugins.ecm.service;
 
 import static org.junit.Assert.assertNotNull;
 
+import com.armedia.acm.camelcontext.arkcase.cmis.ArkCaseCMISActions;
+import com.armedia.acm.camelcontext.arkcase.cmis.ArkCaseCMISConstants;
+import com.armedia.acm.camelcontext.context.CamelContextManager;
 import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
+import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
+import com.armedia.acm.plugins.ecm.utils.EcmFileCamelUtils;
 import com.armedia.acm.services.search.model.solr.SolrContentDocument;
 import com.armedia.acm.services.search.service.SendDocumentsToSolr;
 import com.armedia.acm.web.api.MDCConstants;
 
 import org.apache.chemistry.opencmis.client.api.Document;
+import org.apache.chemistry.opencmis.commons.PropertyIds;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.Test;
@@ -56,7 +62,7 @@ import java.util.UUID;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
-        "/spring/spring-library-add-file-mule.xml",
+        "/spring/spring-library-add-file-camel.xml",
         "/spring/spring-library-activemq.xml",
         "/spring/spring-library-property-file-manager.xml",
         "/spring/spring-library-acm-encryption.xml",
@@ -92,6 +98,8 @@ public class ContentFileToSolrFlowIT
     @Autowired
     private MuleContextManager muleContextManager;
     @Autowired
+    private CamelContextManager camelContextManager;
+    @Autowired
     private SendDocumentsToSolr sendDocumentsToSolr;
 
     @Test
@@ -117,22 +125,24 @@ public class ContentFileToSolrFlowIT
         Map<String, Object> messageProperties = new HashMap<>();
         messageProperties.put("cmisFolderId", folderId);
         messageProperties.put("inputStream", is);
-
-        messageProperties.put("configRef", muleContextManager.getMuleContext().getRegistry().lookupObject("alfresco"));
+        messageProperties.put(EcmFileConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID);
         messageProperties.put("versioningState", "MAJOR");
-        MuleMessage message = muleContextManager.send("vm://addFile.in", ecmFile, messageProperties);
+        messageProperties.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, EcmFileCamelUtils.getCmisUser());
+        messageProperties.put(PropertyIds.NAME, ecmFile.getFileName());
+        messageProperties.put(PropertyIds.CONTENT_STREAM_MIME_TYPE, "text/plain");
 
-        assertNotNull(message);
+        Document newDocument = (Document) camelContextManager.send(ArkCaseCMISActions.CREATE_DOCUMENT, messageProperties);
 
-        Document found = message.getPayload(Document.class);
-        assertNotNull(found.getVersionSeriesId());
-        assertNotNull(found.getContentStreamMimeType());
-        assertNotNull(found.getVersionLabel());
+        assertNotNull(newDocument);
 
-        log.debug("doc id: {}", found.getVersionSeriesId());
+        assertNotNull(newDocument.getVersionSeriesId());
+        assertNotNull(newDocument.getContentStreamMimeType());
+        assertNotNull(newDocument.getVersionLabel());
+
+        log.debug("doc id: {}", newDocument.getVersionSeriesId());
 
         SolrContentDocument solrContentDocument = new SolrContentDocument();
-        solrContentDocument.setCmis_version_series_id_s(found.getVersionSeriesId());
+        solrContentDocument.setCmis_version_series_id_s(newDocument.getVersionSeriesId());
         solrContentDocument.setAdditionalProperty("cmis_repository_id_s", "alfresco");
         solrContentDocument.setName("/spring/spring-library-ecm-plugin-test-mule" + System.currentTimeMillis() + ".xml");
 
