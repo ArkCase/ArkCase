@@ -29,16 +29,22 @@ package com.armedia.acm.plugins.alfrescorma.service;
 
 import static org.junit.Assert.assertNotNull;
 
+import com.armedia.acm.camelcontext.arkcase.cmis.ArkCaseCMISActions;
+import com.armedia.acm.camelcontext.arkcase.cmis.ArkCaseCMISConstants;
+import com.armedia.acm.camelcontext.context.CamelContextManager;
 import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.utils.CmisConfigUtils;
+import com.armedia.acm.plugins.ecm.utils.EcmFileCamelUtils;
+import com.armedia.acm.web.api.MDCConstants;
 
 import org.apache.chemistry.opencmis.client.api.CmisObject;
 import org.apache.chemistry.opencmis.client.api.Document;
-import org.mule.api.MuleMessage;
-import org.apache.logging.log4j.Logger;
+import org.apache.chemistry.opencmis.commons.PropertyIds;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.mule.api.MuleMessage;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 
@@ -53,7 +59,7 @@ public class CmisFileWriter
 {
     private transient final Logger LOG = LogManager.getLogger(getClass());
 
-    public Document writeTestFile(MuleContextManager muleContextManager) throws Exception
+    public Document writeTestFile(MuleContextManager muleContextManager, CamelContextManager camelContextManager) throws Exception
     {
         CmisConfigUtils cmisConfigUtils = new CmisConfigUtils();
         cmisConfigUtils.setMuleContextManager(muleContextManager);
@@ -75,22 +81,23 @@ public class CmisFileWriter
         EcmFile ecmFile = new EcmFile();
 
         ecmFile.setFileName("spring-alfresco-records-service-test.xml-" + System.currentTimeMillis());
-        ecmFile.setFileActiveVersionMimeType("text/plain");
 
         Map<String, Object> messageProperties = new HashMap<>();
         messageProperties.put("cmisFolderId", folderId);
         messageProperties.put("inputStream", is);
-        messageProperties.put("configRef", alfresco);
-        messageProperties.put(EcmFileConstants.VERSIONING_STATE, cmisConfigUtils.getVersioningState(cmisRepositoryId));
+        messageProperties.put(EcmFileConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID);
+        messageProperties.put(EcmFileConstants.VERSIONING_STATE, camelContextManager.getRepositoryConfigs()
+                .get(ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID).getCmisVersioningState());
+        messageProperties.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, EcmFileCamelUtils.getCmisUser());
+        messageProperties.put(PropertyIds.NAME, ecmFile.getFileName());
+        messageProperties.put(PropertyIds.CONTENT_STREAM_MIME_TYPE, "text/plain");
 
-        MuleMessage addFileMessage = muleContextManager.send("vm://addFile.in", ecmFile, messageProperties);
+        Document newDocument = (Document) camelContextManager.send(ArkCaseCMISActions.CREATE_DOCUMENT, messageProperties);
 
-        assertNotNull(addFileMessage);
+        assertNotNull(newDocument);
 
-        Document found = addFileMessage.getPayload(Document.class);
+        LOG.info("Created file with id {}", newDocument.getVersionSeriesId());
 
-        LOG.info("Created file with id {}", found.getVersionSeriesId());
-
-        return found;
+        return newDocument;
     }
 }

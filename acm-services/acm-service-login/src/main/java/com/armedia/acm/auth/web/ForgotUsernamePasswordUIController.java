@@ -54,8 +54,7 @@ public class ForgotUsernamePasswordUIController implements ApplicationEventPubli
     @RequestMapping(value = "/forgot-username", method = RequestMethod.POST)
     public ResponseEntity<String> publishForgotUsernameEvent(@RequestParam String email)
     {
-        List<AcmUser> users = userDao.findByEmailAddress(email);
-        users = users.stream()
+        List<AcmUser> users = userDao.findByEmailAddress(email).stream()
                 .filter(user -> user.getUserState() == AcmUserState.VALID)
                 .collect(Collectors.toList());
         if (users.size() == 0)
@@ -64,14 +63,7 @@ public class ForgotUsernamePasswordUIController implements ApplicationEventPubli
         }
         else
         {
-            List<String> userAccounts = users.stream()
-                    .map(AcmUser::getUserId)
-                    .collect(Collectors.toList());
-
-            AbstractMap.SimpleImmutableEntry<String, List<String>> emailToUserAccount = new AbstractMap.SimpleImmutableEntry<>(email,
-                    userAccounts);
-
-            ForgotUsernameEvent forgotUsernameEvent = new ForgotUsernameEvent(emailToUserAccount, AuthenticationUtils.getUserIpAddress());
+            ForgotUsernameEvent forgotUsernameEvent = new ForgotUsernameEvent(users.get(0), AuthenticationUtils.getUserIpAddress());
             forgotUsernameEvent.setSucceeded(true);
             eventPublisher.publishEvent(forgotUsernameEvent);
         }

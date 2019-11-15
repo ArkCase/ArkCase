@@ -160,6 +160,9 @@ angular.module('cases').controller(
                 $scope.config.data.payFee = $scope.payFees[0].key;
 
             });
+
+            $scope.isEmailDaliveryMethod = false;
+            
             $scope.validateForm = function (requestForm) {
 
                 $scope.formInvalid = false;
@@ -178,6 +181,7 @@ angular.module('cases').controller(
                 $scope.zipCodeEmpty = false;
                 $scope.zipCodeInvalid = false;
                 $scope.subjectEmpty = false;
+                $scope.deliveryMethodOfResponseEmpty = false;
 
                 if ($scope.isNewRequestType()) {
 
@@ -222,6 +226,9 @@ angular.module('cases').controller(
                     }
                     if (requestForm.subject.$invalid) {
                         $scope.subjectEmpty = true;
+                    }
+                    if (requestForm.deliveryMethodOfResponse.$invalid) {
+                        $scope.deliveryMethodOfResponseEmpty = true;
                     }
                     if (requestForm.$valid && !$scope.formInvalid) {
                         $scope.saveNewRequest();

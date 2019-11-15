@@ -31,6 +31,7 @@ import com.antkorwin.xsync.XSync;
 
 import com.armedia.acm.auth.ExternalAuthenticationUtils;
 import com.armedia.acm.core.exceptions.AcmParticipantsException;
+import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.plugins.ecm.dao.AcmFolderDao;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
@@ -50,7 +51,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
@@ -77,6 +77,7 @@ public class EcmFileParticipantService implements ApplicationEventPublisherAware
     private EcmFileConfig ecmFileConfig;
     private ApplicationEventPublisher applicationEventPublisher;
     private ExternalAuthenticationUtils externalAuthenticationUtils;
+    private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
     private XSync<String> xSync;
 
     /**
@@ -140,7 +141,8 @@ public class EcmFileParticipantService implements ApplicationEventPublisherAware
         // modify the instance to trigger the Solr transformers
         folder.setModified(new Date());
 
-        getFileParticipantServiceHelper().setParticipantToFolderChildren(folder, participant, restricted);
+        getFileParticipantServiceHelper().setParticipantToFolderChildren(folder, participant, restricted,
+                getAuditPropertyEntityAdapter().getUserId());
     }
 
     /**
@@ -208,7 +210,6 @@ public class EcmFileParticipantService implements ApplicationEventPublisherAware
      *            the restricted flag to set recursively
      */
     @Transactional(rollbackFor = Exception.class)
-    @Async("fileParticipantsThreadPoolTaskExecutor")
     public void inheritParticipantsFromAssignedObject(List<AcmParticipant> assignedObjectParticipants,
             List<AcmParticipant> originalAssignedObjectParticipants, AcmContainer acmContainer, boolean restricted)
     {
@@ -482,7 +483,8 @@ public class EcmFileParticipantService implements ApplicationEventPublisherAware
         // modify the instance to trigger the Solr transformers
         folder.setModified(new Date());
 
-        getFileParticipantServiceHelper().setParticipantsToFolderChildren(folder, participants, restricted);
+        getFileParticipantServiceHelper().setParticipantsToFolderChildren(folder, participants, restricted,
+                getAuditPropertyEntityAdapter().getUserId());
     }
 
     /**
@@ -630,5 +632,15 @@ public class EcmFileParticipantService implements ApplicationEventPublisherAware
     public void setxSync(XSync<String> xSync)
     {
         this.xSync = xSync;
+    }
+
+    public AuditPropertyEntityAdapter getAuditPropertyEntityAdapter()
+    {
+        return auditPropertyEntityAdapter;
+    }
+
+    public void setAuditPropertyEntityAdapter(AuditPropertyEntityAdapter auditPropertyEntityAdapter)
+    {
+        this.auditPropertyEntityAdapter = auditPropertyEntityAdapter;
     }
 }

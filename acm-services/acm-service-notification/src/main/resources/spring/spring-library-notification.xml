@@ -62,6 +62,7 @@
     <bean id="notificationTemplateModelProvider"
           class="com.armedia.acm.services.notification.service.provider.NotificationTemplateModelProvider">
         <property name="notificationUtils" ref="notificationUtils"/>
+        <property name="notificationConfig" ref="notificationConfig"/>
     </bean>
 
     <bean id="notificationGroupTemplateModelProvider"
@@ -150,6 +151,7 @@
         <property name="dataService" ref="acmDataService"/>
         <property name="templatingEngine" ref="templatingEngine"/>
         <property name="templateService" ref="filesystemTemplateConfigurationService"/>
+        <property name="notificationConfig" ref="notificationConfig"/>
     </bean>
 
     <bean id="smtpNotificationSender" class="com.armedia.acm.services.notification.service.SmtpNotificationSender"
@@ -177,7 +179,6 @@
     <bean id="notificationUtils" class="com.armedia.acm.services.notification.service.NotificationUtils">
         <property name="acmAppConfiguration" ref="acmApplication"/>
         <property name="acmDataService" ref="acmDataService"/>
-        <property name="notificationConfig" ref="notificationConfig"/>
     </bean>
 
     <bean id="notificationFormatter" class="com.armedia.acm.services.notification.service.NotificationFormatter">

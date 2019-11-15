@@ -28,4 +28,19 @@
     <bean id="activeMqPropertiesResolver" class="com.armedia.acm.tools.activemq.ActiveMqPropertiesResolver">
     </bean>
 
+    <bean id="destinationResolver" class="org.springframework.jms.support.destination.DynamicDestinationResolver"/>
+
+    <bean id="jmsListenerContainerFactory" class="org.springframework.jms.config.DefaultJmsListenerContainerFactory">
+        <property name="connectionFactory" ref="jmsConnectionFactory"/>
+        <property name="destinationResolver" ref="destinationResolver"/>
+        <property name="concurrency" value="3-10"/>
+        <property name="sessionTransacted" value="true"/>
+    </bean>
+
+    <bean id="jmsTopicListenerContainerFactory" class="org.springframework.jms.config.DefaultJmsListenerContainerFactory">
+        <property name="connectionFactory" ref="jmsConnectionFactory"/>
+        <property name="destinationResolver" ref="destinationResolver"/>
+        <property name="pubSubDomain" value="true"/>
+        <property name="sessionTransacted" value="true"/>
+    </bean>
 </beans>
