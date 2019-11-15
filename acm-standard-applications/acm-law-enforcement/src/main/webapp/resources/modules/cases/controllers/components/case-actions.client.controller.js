@@ -63,6 +63,7 @@ angular.module('cases').controller(
                     var onObjectInfoRetrieved = function(objectInfo) {
                         $scope.restricted = objectInfo.restricted;
                         $scope.showBtnChildOutcomes = false;
+                        $scope.showChangeCaseStatus = true;
 
 
                         var group = ObjectModelService.getGroup(objectInfo);
@@ -108,7 +109,6 @@ angular.module('cases').controller(
                             casefile: objectInfo
                         };
 
-                        $scope.showChangeCaseStatus = true;
                         if (objectInfo.status == 'IN APPROVAL') {
                             $scope.showChangeCaseStatus = false;
                         }
