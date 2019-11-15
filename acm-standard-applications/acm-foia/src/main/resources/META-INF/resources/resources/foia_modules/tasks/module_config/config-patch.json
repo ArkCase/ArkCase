@@ -68,10 +68,6 @@
     },
     {
         "op": "remove",
-        "path": "/components/?@.id=='documentsunderreview'/docTree/nodeCacheKeyPrefix"
-    },
-    {
-        "op": "remove",
         "path": "/components/?@.id=='tags'/columnDefs/?@.name=='creator'/lookup"
     },
     {

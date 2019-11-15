@@ -31,6 +31,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import com.armedia.acm.camelcontext.context.CamelContextManager;
 import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.web.api.MDCConstants;
 
@@ -80,6 +81,7 @@ import java.util.UUID;
         "/spring/spring-library-authentication-token.xml",
         "/spring/spring-library-configuration.xml",
         "/spring/spring-library-acm-email.xml",
+        "/spring/spring-library-camel-context.xml",
         "/spring/spring-library-folder-watcher.xml"
 })
 public class CompleteRecordServiceIT
@@ -94,6 +96,8 @@ public class CompleteRecordServiceIT
     private transient final Logger LOG = LogManager.getLogger(getClass());
     @Autowired
     private MuleContextManager muleContextManager;
+    @Autowired
+    private CamelContextManager camelContextManager;
     @Autowired
     @Qualifier("declareRecordService")
     private AlfrescoService<String> declareRecordService;
@@ -121,7 +125,7 @@ public class CompleteRecordServiceIT
         MDC.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, "admin");
         MDC.put(MDCConstants.EVENT_MDC_REQUEST_ID_KEY, UUID.randomUUID().toString());
 
-        Document testFile = cmisFileWriter.writeTestFile(muleContextManager);
+        Document testFile = cmisFileWriter.writeTestFile(muleContextManager, camelContextManager);
         ecmFileId = testFile.getVersionSeriesId();
     }
 

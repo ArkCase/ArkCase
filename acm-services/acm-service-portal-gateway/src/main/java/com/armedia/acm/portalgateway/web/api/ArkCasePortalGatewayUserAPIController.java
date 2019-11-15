@@ -162,8 +162,8 @@ public class ArkCasePortalGatewayUserAPIController
             @RequestBody PortalUserCredentials portalUserCredentials, @PathVariable String userId)
             throws PortalUserAssignementException, PortalUserServiceException
     {
-        log.debug("Changing password for [{}] user for portal with [{}] ID.", userId, portalId);
-        return portalUserService.changePassword(portalId, auth.getName(), portalUserCredentials);
+        log.debug("Changing password for [{}] [{}] user for portal with [{}] ID.", userId, auth.getName(), portalId);
+        return portalUserService.changePassword(portalId, userId, auth.getName(), portalUserCredentials);
     }
 
     @RequestMapping(method = RequestMethod.PUT, produces = { MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE })

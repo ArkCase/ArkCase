@@ -251,7 +251,6 @@
 
     <bean id="applicationPrivilegesConfig" class="com.armedia.acm.services.users.model.ApplicationPrivilegesConfig" scope="refresh">
         <aop:scoped-proxy/>
-        <property name="jsonUnmarshaller" ref="jsonUnmarshaller"/>
     </bean>
 
     <bean id="applicationRolesConfig" class="com.armedia.acm.services.users.model.ApplicationRolesConfig" scope="refresh">
@@ -260,11 +259,9 @@
 
     <bean id="rolesToGroupsConfig" class="com.armedia.acm.services.users.model.ApplicationRolesToGroupsConfig" scope="refresh">
         <aop:scoped-proxy/>
-        <property name="jsonUnmarshaller" ref="jsonUnmarshaller"/>
     </bean>
 
     <bean id="rolesToPrivileges" class="com.armedia.acm.services.users.model.ApplicationRolesToPrivilegesConfig" scope="refresh">
-        <property name="jsonUnmarshaller" ref="jsonUnmarshaller"/>
         <aop:scoped-proxy/>
     </bean>
 

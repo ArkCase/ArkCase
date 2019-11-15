@@ -31,8 +31,8 @@ import com.armedia.acm.plugins.admin.exception.AcmRolesPrivilegesException;
 import com.armedia.acm.plugins.admin.model.RolePrivilegesConstants;
 import com.armedia.acm.plugins.admin.service.RolesPrivilegesService;
 
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -42,6 +42,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -66,7 +67,7 @@ public class RolesPrivilegesAddRolesPrivileges implements RolePrivilegesConstant
         try
         {
             List<String> roles = Arrays.asList(rolesNames.split(","));
-            List<String> privileges = Arrays.asList(privilegesNames.split(","));
+            List<Object> privileges = new LinkedList<>(Arrays.asList(privilegesNames.split(",")));
             rolesPrivilegesService.addRolesPrivileges(roles, privileges);
             return "{}";
         }
