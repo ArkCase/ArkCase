@@ -28,6 +28,7 @@ package com.armedia.acm.plugins.ecm.utils;
  */
 
 import com.armedia.acm.camelcontext.arkcase.cmis.ArkCaseCMISActions;
+import com.armedia.acm.camelcontext.exception.ArkCaseFileRepositoryException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
@@ -116,7 +117,7 @@ public class EcmFileMuleUtils
     }
 
     /**
-     * Updates the contents of an existing repository item using the mule updateFile flow.
+     * Updates the contents of an existing repository item using the Camel updateFile flow.
      *
      * @param newEcmFile
      *            - metadata for the new file which will replace the old version
@@ -124,31 +125,14 @@ public class EcmFileMuleUtils
      *            - metadata for the old file whose contents will be replaced
      * @param fileInputStream
      *            - the binary data content which will be written to the repository
-     * @throws MuleException
-     *             if the mule call to replace the file contents in the repository fails
+     * @throws ArkCaseFileRepositoryException
+     *             if the Camel call to replace the file contents in the repository fails
      * @returns Cmis Document object for the updated repository document
      */
-    public Document updateFile(EcmFile newEcmFile, EcmFile originalFile, InputStream fileInputStream) throws MuleException
+    @Deprecated
+    public Document updateFile(EcmFile newEcmFile, EcmFile originalFile, InputStream fileInputStream) throws ArkCaseFileRepositoryException
     {
-        // Assembles the mule payload metadata for the file to update and the new content stream
-        Map<String, Object> messageProps = new HashMap<>();
-        messageProps.put("ecmFileId", originalFile.getVersionSeriesId());
-        messageProps.put("fileName", originalFile.getFileName());
-        messageProps.put("mimeType", originalFile.getFileActiveVersionMimeType());
-        messageProps.put("inputStream", fileInputStream);
-        messageProps.put(EcmFileConstants.CONFIGURATION_REFERENCE, cmisConfigUtils.getCmisConfiguration(newEcmFile.getCmisRepositoryId()));
-
-        // Uses Mule to transfer the updated file contents to the Alfresco content repository
-        log.debug("invoking the mule replace file flow");
-        MuleMessage received = getMuleContextManager().send("vm://updateFile.in", newEcmFile, messageProps);
-        MuleException e = received.getInboundProperty("updateException");
-        if (e != null)
-        {
-            throw e;
-        }
-
-        // Extracts CMIS document data from the Mule response
-        return received.getPayload(Document.class);
+        return ecmFileCamelUtils.updateFile(newEcmFile, originalFile, fileInputStream);
     }
 
     /**

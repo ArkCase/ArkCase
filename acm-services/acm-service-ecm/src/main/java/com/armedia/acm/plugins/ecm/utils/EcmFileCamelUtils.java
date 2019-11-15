@@ -48,7 +48,6 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
-
 /**
  * Created by Vladimir Cherepnalkovski <vladimir.cherepnalkovski@armedia.com>
  */
@@ -140,6 +139,32 @@ public class EcmFileCamelUtils
             throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_UPLOAD_FILE, EcmFileConstants.OBJECT_FILE_TYPE, null,
                     "Could not create document", e);
         }
+    }
+
+    /**
+     * Updates the contents of an existing repository item using the camel update document route.
+     *
+     * @param newEcmFile
+     *            - metadata for the new file which will replace the old version
+     * @param originalFile
+     *            - metadata for the old file whose contents will be replaced
+     * @param fileInputStream
+     *            - the binary data content which will be written to the repository
+     * @throws ArkCaseFileRepositoryException
+     *             if the camel call to replace the file contents in the repository fails
+     * @returns Cmis Document object for the updated repository document
+     */
+    public Document updateFile(EcmFile newEcmFile, EcmFile originalFile, InputStream fileInputStream) throws ArkCaseFileRepositoryException
+    {
+        Map<String, Object> messageProps = new HashMap<>();
+        messageProps.put(EcmFileConstants.CMIS_DOCUMENT_ID, originalFile.getVersionSeriesId());
+        messageProps.put("mimeType", originalFile.getFileActiveVersionMimeType());
+        messageProps.put("inputStream", fileInputStream);
+        messageProps.put("checkinComment", "");
+        messageProps.put(EcmFileConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID);
+        messageProps.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, EcmFileCamelUtils.getCmisUser());
+
+        return (Document) getCamelContextManager().send(ArkCaseCMISActions.UPDATE_DOCUMENT, messageProps);
     }
 
     public CamelContextManager getCamelContextManager()
