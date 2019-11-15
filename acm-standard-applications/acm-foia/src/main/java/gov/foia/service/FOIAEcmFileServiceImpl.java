@@ -27,6 +27,9 @@ package gov.foia.service;
  * #L%
  */
 
+import com.armedia.acm.camelcontext.arkcase.cmis.ArkCaseCMISActions;
+import com.armedia.acm.camelcontext.arkcase.cmis.ArkCaseCMISConstants;
+import com.armedia.acm.camelcontext.exception.ArkCaseFileRepositoryException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
@@ -36,15 +39,15 @@ import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
 import com.armedia.acm.plugins.ecm.model.event.EcmFileConvertEvent;
 import com.armedia.acm.plugins.ecm.service.impl.EcmFileServiceImpl;
+import com.armedia.acm.plugins.ecm.utils.EcmFileCamelUtils;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import com.armedia.acm.service.objectlock.annotation.AcmAcquireAndReleaseObjectLock;
+import com.armedia.acm.web.api.MDCConstants;
 
 import org.apache.chemistry.opencmis.client.api.Document;
 import org.apache.commons.io.FileUtils;
-import org.mule.api.MuleException;
-import org.mule.api.MuleMessage;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.persistence.PersistenceException;
 
@@ -77,7 +80,7 @@ public class FOIAEcmFileServiceImpl extends EcmFileServiceImpl implements FOIAEc
         }
         String internalFileName = getFolderAndFilesUtils().createUniqueIdentificator(file.getFileName());
         Map<String, Object> props = new HashMap<>();
-        props.put(EcmFileConstants.ECM_FILE_ID, getFolderAndFilesUtils().getActiveVersionCmisId(file));
+        props.put(EcmFileConstants.CMIS_DOCUMENT_ID, getFolderAndFilesUtils().getActiveVersionCmisId(file));
         props.put(EcmFileConstants.DST_FOLDER_ID, targetFolder.getCmisFolderId());
         props.put(EcmFileConstants.FILE_NAME, internalFileName);
         props.put(EcmFileConstants.FILE_MIME_TYPE, file.getFileActiveVersionMimeType());
@@ -86,27 +89,18 @@ public class FOIAEcmFileServiceImpl extends EcmFileServiceImpl implements FOIAEc
         {
             cmisRepositoryId = getEcmFileConfig().getDefaultCmisId();
         }
-        props.put(EcmFileConstants.CONFIGURATION_REFERENCE, getCmisConfigUtils().getCmisConfiguration(cmisRepositoryId));
-        props.put(EcmFileConstants.VERSIONING_STATE, getCmisConfigUtils().getVersioningState(cmisRepositoryId));
-        EcmFile result;
+        props.put(EcmFileConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID);
+        props.put(EcmFileConstants.VERSIONING_STATE, getCamelContextManager().getRepositoryConfigs()
+                .get(ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID).getCmisVersioningState());
+        props.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, EcmFileCamelUtils.getCmisUser());
 
         try
         {
-            MuleMessage message = getMuleContextManager().send(EcmFileConstants.MULE_ENDPOINT_COPY_FILE, file, props);
-
-            if (message.getInboundPropertyNames().contains(EcmFileConstants.COPY_FILE_EXCEPTION_INBOUND_PROPERTY))
-            {
-                MuleException muleException = message.getInboundProperty(EcmFileConstants.COPY_FILE_EXCEPTION_INBOUND_PROPERTY);
-                log.error("File can not be copied successfully {} ", muleException.getMessage(), muleException);
-                throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_COPY_FILE, EcmFileConstants.OBJECT_FILE_TYPE, fileId,
-                        "File " + file.getFileName() + " can not be copied successfully", muleException);
-            }
-
-            Document cmisObject = message.getPayload(Document.class);
+            Document cmisObject = (Document) getCamelContextManager().send(ArkCaseCMISActions.COPY_DOCUMENT, props);
 
             EcmFile fileCopy = new EcmFile();
 
-            fileCopy.setVersionSeriesId(cmisObject.getVersionSeriesId());
+            fileCopy.setVersionSeriesId(cmisObject.getPropertyValue("alfcmis:nodeRef"));
             fileCopy.setFileType(file.getFileType());
             fileCopy.setActiveVersionTag(cmisObject.getVersionLabel());
             fileCopy.setFileName(file.getFileName());
@@ -123,7 +117,7 @@ public class FOIAEcmFileServiceImpl extends EcmFileServiceImpl implements FOIAEc
             fileCopy.setSecurityField(file.getSecurityField());
 
             FOIAEcmFileVersion fileCopyVersion = new FOIAEcmFileVersion();
-            fileCopyVersion.setCmisObjectId(cmisObject.getId());
+            fileCopyVersion.setCmisObjectId(cmisObject.getPropertyValue("alfcmis:nodeRef"));
             fileCopyVersion.setVersionTag(cmisObject.getVersionLabel());
             fileCopyVersion.setReviewStatus(new String());
             fileCopyVersion.setRedactionStatus(new String());
@@ -138,13 +132,13 @@ public class FOIAEcmFileServiceImpl extends EcmFileServiceImpl implements FOIAEc
 
             fileCopy.getVersions().add(fileCopyVersion);
 
-            result = getEcmFileDao().save(fileCopy);
+            EcmFile result = getEcmFileDao().save(fileCopy);
 
             result = getFileParticipantService().setFileParticipantsFromParentFolder(result);
 
             return result;
         }
-        catch (MuleException e)
+        catch (ArkCaseFileRepositoryException e)
         {
             log.error("Could not copy file {} ", e.getMessage(), e);
             throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_COPY_FILE, EcmFileConstants.OBJECT_FILE_TYPE, file.getId(),

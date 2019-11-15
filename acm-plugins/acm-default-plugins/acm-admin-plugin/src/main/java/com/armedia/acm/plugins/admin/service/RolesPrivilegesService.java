@@ -29,8 +29,10 @@ package com.armedia.acm.plugins.admin.service;
 
 import static com.armedia.acm.plugins.admin.model.RolePrivilegesConstants.ROLE_PREFIX;
 
+import com.armedia.acm.configuration.service.CollectionPropertiesConfigurationService;
 import com.armedia.acm.configuration.service.ConfigurationPropertyException;
 import com.armedia.acm.configuration.service.ConfigurationPropertyService;
+import com.armedia.acm.configuration.util.MergeFlags;
 import com.armedia.acm.plugins.admin.exception.AcmRolesPrivilegesException;
 import com.armedia.acm.plugins.admin.model.PrivilegeItem;
 import com.armedia.acm.services.users.dao.UserDao;
@@ -40,9 +42,8 @@ import com.armedia.acm.services.users.model.ApplicationPrivilegesConfig;
 import com.armedia.acm.services.users.model.ApplicationRolesConfig;
 import com.armedia.acm.services.users.model.ApplicationRolesToPrivilegesConfig;
 
-import org.apache.commons.lang3.StringUtils;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.TransactionRequiredException;
@@ -55,12 +56,13 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import freemarker.template.Configuration;
@@ -80,6 +82,7 @@ public class RolesPrivilegesService
     private ApplicationPrivilegesConfig privilegesConfig;
     private ApplicationRolesToPrivilegesConfig rolesToPrivilegesConfig;
     private ConfigurationPropertyService configurationPropertyService;
+    private CollectionPropertiesConfigurationService collectionPropertiesConfigurationService;
 
     /**
      * Retrieve list of roles
@@ -99,7 +102,7 @@ public class RolesPrivilegesService
      */
     public Map<String, String> retrievePrivileges()
     {
-        return privilegesConfig.getPrivilegesDescriptions();
+        return privilegesConfig.getApplicationPrivileges();
     }
 
     /**
@@ -107,9 +110,9 @@ public class RolesPrivilegesService
      *
      * @return map of privileges and descriptions
      */
-    public Map<String, String> retrievePrivilegesByAuthorization(Boolean authorized, String roleName)
+    public Map<String, Object> retrievePrivilegesByAuthorization(Boolean authorized, String roleName)
     {
-        Map<String, String> privilegesByRole = loadRolePrivileges(roleName);
+        Map<String, Object> privilegesByRole = loadRolePrivileges(roleName);
         if (authorized)
         {
             return privilegesByRole;
@@ -131,7 +134,7 @@ public class RolesPrivilegesService
     public List<PrivilegeItem> getPrivilegesByRolePaged(String roleName, String sortDirection, Integer startRow, Integer maxRows,
             Boolean authorized)
     {
-        Map<String, String> privileges = retrievePrivilegesByAuthorization(authorized, roleName);
+        Map<String, Object> privileges = retrievePrivilegesByAuthorization(authorized, roleName);
 
         return getPrivilegesPaged(privileges, sortDirection, startRow, maxRows, "");
     }
@@ -144,16 +147,16 @@ public class RolesPrivilegesService
     public List<PrivilegeItem> getPrivilegesByRole(String roleName, Boolean authorized, String filterName, String sortDirection,
             Integer startRow, Integer maxRows)
     {
-        Map<String, String> privileges = retrievePrivilegesByAuthorization(authorized, roleName);
+        Map<String, Object> privileges = retrievePrivilegesByAuthorization(authorized, roleName);
 
         return getPrivilegesPaged(privileges, sortDirection, startRow, maxRows, filterName);
     }
 
-    public List<PrivilegeItem> getPrivilegesPaged(Map<String, String> privileges, String sortDirection,
+    public List<PrivilegeItem> getPrivilegesPaged(Map<String, Object> privileges, String sortDirection,
             Integer startRow, Integer maxRows, String filterName)
     {
         List<PrivilegeItem> result = privileges.entrySet().stream()
-                .map(privilege -> new PrivilegeItem(privilege.getKey(), privilege.getValue()))
+                .map(privilege -> new PrivilegeItem(privilege.getKey(), (String) privilege.getValue()))
                 .collect(Collectors.toList());
 
         if (sortDirection.contains("DESC"))
@@ -184,7 +187,7 @@ public class RolesPrivilegesService
      *
      * @return map of privileges and descriptions
      */
-    public Map<String, String> retrieveRolePrivileges(String roleName)
+    public Map<String, Object> retrieveRolePrivileges(String roleName)
     {
         return loadRolePrivileges(roleName);
     }
@@ -197,11 +200,11 @@ public class RolesPrivilegesService
      */
     public List<String> retrieveRolesByPrivilege(String privilegeName)
     {
-        Map<String, String> rolePrivileges = rolesToPrivilegesConfig.getRolesToPrivileges();
+
+        Map<String, List<Object>> rolePrivileges = rolesToPrivilegesConfig.getRolesToPrivileges();
         return rolePrivileges.entrySet()
                 .stream()
-                .filter(entry -> StringUtils.isNotBlank(entry.getValue()))
-                .filter(entry -> Arrays.asList(entry.getValue().split(",")).contains(privilegeName))
+                .filter(entry -> entry.getValue().contains(privilegeName))
                 .map(Map.Entry::getKey)
                 .collect(Collectors.toList());
     }
@@ -259,7 +262,7 @@ public class RolesPrivilegesService
      * @param privileges
      *            List of role's privileges
      */
-    public void updateRolePrivileges(String roleName, List<String> privileges) throws AcmRolesPrivilegesException
+    public void updateRolePrivileges(String roleName, List<Object> privileges) throws AcmRolesPrivilegesException
     {
         // Check if role present in system
         List<String> roles = retrieveRoles();
@@ -271,7 +274,8 @@ public class RolesPrivilegesService
         // Save new role privileges
         try
         {
-            addRolePrivileges(roleName, privileges);
+            Map<String, List<Object>> rolePrivileges = addRolePrivileges(roleName, privileges);
+            updateRolesPrivilegesConfig(rolePrivileges);
         }
         catch (ConfigurationPropertyException e)
         {
@@ -280,7 +284,7 @@ public class RolesPrivilegesService
         }
 
         // Re-generate Roles Privileges XML file
-        updateRolesPrivilegesConfig();
+
     }
 
     /**
@@ -291,7 +295,7 @@ public class RolesPrivilegesService
      * @param privileges
      *            List of role's privileges
      */
-    public void savePrivilegesToApplicationRole(String roleName, List<String> privileges) throws AcmRolesPrivilegesException
+    public void savePrivilegesToApplicationRole(String roleName, List<Object> privileges) throws AcmRolesPrivilegesException
     {
         // Check if role present in system
         boolean rolePresent = retrieveRoles().stream().anyMatch(role -> role.equalsIgnoreCase(roleName));
@@ -305,7 +309,9 @@ public class RolesPrivilegesService
         // Save new role privileges
         try
         {
-            addRolePrivileges(roleName, privileges);
+            Map<String, List<Object>> rolePrivileges = addRolePrivileges(roleName, privileges);
+            // Re-generate Roles Privileges XML file
+            updateRolesPrivilegesConfig(rolePrivileges);
         }
         catch (ConfigurationPropertyException e)
         {
@@ -313,8 +319,7 @@ public class RolesPrivilegesService
             throw new AcmRolesPrivilegesException("Failed to update privileges for role " + roleName, e);
         }
 
-        // Re-generate Roles Privileges XML file
-        updateRolesPrivilegesConfig();
+
     }
 
     /**
@@ -346,10 +351,16 @@ public class RolesPrivilegesService
         try
         {
             userDao.saveAcmRole(acmRole);
-            List<String> rolesToSave = new ArrayList<>(roles);
+            List<Object> rolesToSave = new LinkedList<>();
             rolesToSave.add(roleName);
-            saveRolesConfig(rolesToSave);
-            addRoleToPrivileges(roleName);
+
+            Map<String, Object> rolesConfig = collectionPropertiesConfigurationService.updateListEntry(
+                    ApplicationRolesConfig.MERGE_APPLICATION_ROLES_OP, "roles",
+                    rolesToSave,
+                    MergeFlags.MERGE);
+
+            configurationPropertyService.updateProperties(rolesConfig);
+
         }
         catch (IllegalArgumentException | TransactionRequiredException | ConfigurationPropertyException e)
         {
@@ -378,13 +389,26 @@ public class RolesPrivilegesService
                 roles.add(newRoleName);
                 roles.remove(roleName);
 
-                saveRolesConfig(roles);
-                Map<String, String> rolesPrivileges = rolesToPrivilegesConfig.getRolesToPrivileges();
+                Map<String, List<Object>> rolesPrivileges = rolesToPrivilegesConfig.getRolesToPrivileges();
 
-                String value = rolesPrivileges.get(roleName);
-                rolesPrivileges.remove(roleName);
-                rolesPrivileges.put(newRoleName, value);
-                saveRolesPrivilegesConfig(rolesPrivileges);
+                List<Object> value = rolesPrivileges.get(roleName);
+
+                List<Object> rolesToRemove = new LinkedList<>();
+                rolesToRemove.add(roleName);
+                List<Object> rolesToSave = new LinkedList<>();
+                rolesToSave.add(newRoleName);
+
+                Map<String, Object> rolesPrivilegesConfig = collectionPropertiesConfigurationService.updateAndRemoveMapProperties(
+                        ApplicationRolesToPrivilegesConfig.ROLES_TO_PRIVILEGES_PROP_KEY, roleName, newRoleName, value, value);
+
+                Map<String, Object> rolesConfig = collectionPropertiesConfigurationService.updateAndRemoveListProperties(
+                        ApplicationRolesConfig.MERGE_APPLICATION_ROLES_OP,
+                        "roles", rolesToRemove, rolesToSave);
+
+                Map<String, Object> configMap = new HashMap<>(rolesPrivilegesConfig);
+                configMap.putAll(rolesConfig);
+
+                configurationPropertyService.updateProperties(configMap);
             }
             catch (ConfigurationPropertyException e)
             {
@@ -394,53 +418,45 @@ public class RolesPrivilegesService
         }
     }
 
-    private void addRoleToPrivileges(String roleName) throws AcmRolesPrivilegesException
-    {
-        Map<String, String> rolesToPrivileges = rolesToPrivilegesConfig.getRolesToPrivileges();
-        rolesToPrivileges.putIfAbsent(roleName, "");
-        try
-        {
-            configurationPropertyService.updateProperties(rolesToPrivilegesConfig);
-        }
-        catch (ConfigurationPropertyException e)
-        {
-            log.error("Can't save role [{}] to role to privileges configuration", roleName, e);
-            throw new AcmRolesPrivilegesException(String.format("Can't save role '%s' to configuration", roleName), e);
-        }
-    }
-
     /**
      * Add privileges to list of roles
      *
      * @param roles
      * @param newPrivileges
      */
-    public void addRolesPrivileges(List<String> roles, List<String> newPrivileges) throws AcmRolesPrivilegesException
+    public void addRolesPrivileges(List<String> roles, List<Object> newPrivileges) throws AcmRolesPrivilegesException
     {
         try
         {
-            Map<String, String> rolesPrivileges = rolesToPrivilegesConfig.getRolesToPrivileges();
+            Map<String, List<Object>> rolesPrivileges = rolesToPrivilegesConfig.getRolesToPrivileges();
             for (String role : roles)
             {
+                Map<String, Object> rolesPrivilegesConfig = collectionPropertiesConfigurationService.updateMapProperty(
+                        ApplicationRolesToPrivilegesConfig.ROLES_TO_PRIVILEGES_PROP_KEY,
+                        role,
+                        newPrivileges,
+                        MergeFlags.MERGE);
+
+                configurationPropertyService.updateProperties(rolesPrivilegesConfig);
+
                 // Search role name in role-privileges maps
-                String propPrivileges = rolesPrivileges.get(role);
-                List<String> privileges = new LinkedList<>();
+                List<Object> propPrivileges = rolesPrivileges.get(role);
+                List<Object> privileges = new LinkedList<>();
                 if (propPrivileges != null && !propPrivileges.isEmpty())
                 {
-                    privileges.addAll(Arrays.asList(propPrivileges.split(",")));
+                    privileges.addAll(propPrivileges);
                 }
 
-                for (String newPrivilege : newPrivileges)
+                for (Object newPrivilege : newPrivileges)
                 {
                     if (!privileges.contains(newPrivilege))
                     {
                         privileges.add(newPrivilege);
                     }
                 }
-                rolesPrivileges.put(role, String.join(",", privileges));
+                rolesPrivileges.put(role, privileges);
             }
-            saveRolesPrivilegesConfig(rolesPrivileges);
-            updateRolesPrivilegesConfig();
+            updateRolesPrivilegesConfig(rolesPrivileges);
         }
         catch (Exception e)
         {
@@ -455,23 +471,32 @@ public class RolesPrivilegesService
      * @param roles
      * @param removedPrivileges
      */
-    public void removeRolesPrivileges(List<String> roles, List<String> removedPrivileges) throws AcmRolesPrivilegesException
+    public void removeRolesPrivileges(List<String> roles, List<Object> removedPrivileges) throws AcmRolesPrivilegesException
     {
         try
         {
-            Map<String, String> rolesPrivileges = rolesToPrivilegesConfig.getRolesToPrivileges();
+            Map<String, List<Object>> rolesPrivileges = rolesToPrivilegesConfig.getRolesToPrivileges();
 
             for (String role : roles)
             {
+
+                Map<String, Object> rolesPrivilegesConfig = collectionPropertiesConfigurationService.updateMapProperty(
+                        ApplicationRolesToPrivilegesConfig.ROLES_TO_PRIVILEGES_PROP_KEY,
+                        role,
+                        removedPrivileges,
+                        MergeFlags.REMOVE);
+
+                configurationPropertyService.updateProperties(rolesPrivilegesConfig);
+
                 // Search role name in role-privileges maps
-                String propPrivileges = rolesPrivileges.get(role);
-                List<String> privileges = new LinkedList<>();
+                List<Object> propPrivileges = rolesPrivileges.get(role);
+                List<Object> privileges = new LinkedList<>();
                 if (propPrivileges != null && !propPrivileges.isEmpty())
                 {
-                    privileges.addAll(Arrays.asList(propPrivileges.split(",")));
+                    privileges.addAll(propPrivileges);
                 }
 
-                for (String removedPrivilege : removedPrivileges)
+                for (Object removedPrivilege : removedPrivileges)
                 {
                     int foundIndex = privileges.indexOf(removedPrivilege);
                     if (foundIndex != -1)
@@ -479,10 +504,10 @@ public class RolesPrivilegesService
                         privileges.remove(foundIndex);
                     }
                 }
-                rolesPrivileges.put(role, String.join(",", privileges));
+                rolesPrivileges.put(role, new ArrayList<>(privileges));
             }
-            saveRolesPrivilegesConfig(rolesPrivileges);
-            updateRolesPrivilegesConfig();
+
+            updateRolesPrivilegesConfig(rolesPrivileges);
         }
         catch (Exception e)
         {
@@ -498,25 +523,23 @@ public class RolesPrivilegesService
      *            Role name
      * @return map of privileges and descriptions
      */
-    private Map<String, String> loadRolePrivileges(String roleName)
+    private Map<String, Object> loadRolePrivileges(String roleName)
     {
-        Map<String, String> rolePrivileges = new HashMap<>();
-        Map<String, String> rolePrivilegesMapping = rolesToPrivilegesConfig.getRolesToPrivileges();
+        Map<String, Object> rolePrivileges = new HashMap<>();
+        Map<String, List<Object>> rolePrivilegesMapping = rolesToPrivilegesConfig.getRolesToPrivileges();
 
         // Search roleName in role-privileges maps
-        String rolePrivilegesString = rolePrivilegesMapping.get(roleName);
-        if (StringUtils.isNotBlank(rolePrivilegesString))
+        List<Object> privileges = rolePrivilegesMapping.get(roleName);
+        if (privileges != null)
         {
-            List<String> privileges = Arrays.asList(rolePrivilegesString.split(","));
-
             // Get all privileges with descriptions
-            Map<String, String> privilegeDescriptionMapping = privilegesConfig.getPrivilegesDescriptions();
+            Map<String, String> privilegeDescriptionMapping = privilegesConfig.getApplicationPrivileges();
 
             // Combine privileges and descriptions into one map
-            for (String privilegeIter : privileges)
+            for (Object privilegeIter : privileges)
             {
-                String privilegeDescription = privilegeDescriptionMapping.getOrDefault(privilegeIter, privilegeIter);
-                rolePrivileges.put(privilegeIter, privilegeDescription);
+                String privilegeDescription = privilegeDescriptionMapping.getOrDefault(privilegeIter, (String) privilegeIter);
+                rolePrivileges.put((String) privilegeIter, privilegeDescription);
             }
         }
         return rolePrivileges;
@@ -524,46 +547,67 @@ public class RolesPrivilegesService
 
     /**
      * Save role's privileges to the file
-     *
+     * 
      * @param roleName
      *            Role name
-     * @param privileges
-     *            List of privileges
+     * @param privilegesToAdd
      */
-    private void addRolePrivileges(String roleName, List<String> privileges)
+    private Map<String, List<Object>> addRolePrivileges(String roleName, List<Object> privilegesToAdd)
             throws ConfigurationPropertyException
     {
-        Map<String, String> rolesPrivileges = rolesToPrivilegesConfig.getRolesToPrivileges();
-        String privilegesString = rolesPrivileges.get(roleName);
-        privilegesString = (StringUtils.isNotBlank(privilegesString) ? privilegesString + "," : "") + String.join(",", privileges);
-        rolesPrivileges.put(roleName, privilegesString);
-        configurationPropertyService.updateProperties(rolesToPrivilegesConfig);
+        Map<String, List<Object>> rolesPrivileges = rolesToPrivilegesConfig.getRolesToPrivileges();
+
+        Map<String, Object> rolesPrivilegesConfig = collectionPropertiesConfigurationService.updateMapProperty(
+                ApplicationRolesToPrivilegesConfig.ROLES_TO_PRIVILEGES_PROP_KEY,
+                roleName,
+                privilegesToAdd,
+                MergeFlags.MERGE);
+
+        configurationPropertyService.updateProperties(rolesPrivilegesConfig);
+
+        List<Object> privileges = rolesPrivileges.get(roleName);
+
+        Set<Object> noDuplicatePrivileges = new HashSet<>();
+
+        if (privileges != null)
+        {
+            noDuplicatePrivileges.addAll(privileges);
+        }
+
+        if (noDuplicatePrivileges == null)
+        {
+            rolesPrivileges.put(roleName, privilegesToAdd);
+        }
+        else
+        {
+            for (Object prvilege : privilegesToAdd)
+            {
+                if (!noDuplicatePrivileges.contains(prvilege))
+                {
+                    noDuplicatePrivileges.add(prvilege);
+                }
+            }
+            rolesPrivileges.put(roleName, new ArrayList<>(noDuplicatePrivileges));
+        }
+
+        return rolesPrivileges;
     }
 
-    private void saveRolesPrivilegesConfig(Map<String, String> rolesPrivileges)
-            throws ConfigurationPropertyException
+    private void updateRolesPrivilegesConfig(Map<String, List<Object>> rolePrivilegesMapping) throws AcmRolesPrivilegesException
     {
-        ApplicationRolesToPrivilegesConfig rolesToPrivilegesConfig = new ApplicationRolesToPrivilegesConfig();
-        rolesToPrivilegesConfig.setRolesToPrivileges(rolesPrivileges);
-        configurationPropertyService.updateProperties(rolesToPrivilegesConfig);
-    }
-
-    private void updateRolesPrivilegesConfig() throws AcmRolesPrivilegesException
-    {
-        Map<String, String> rolePrivilegesMapping = rolesToPrivilegesConfig.getRolesToPrivileges();
         // Create Map of lists. Roles should be grouped by privileges
         Map<String, List<String>> privileges = new HashMap<>();
 
         for (Object roleKeyIter : rolePrivilegesMapping.keySet())
         {
             String role = (String) roleKeyIter;
-            List<String> rolePrivileges = Arrays.asList(rolePrivilegesMapping.getOrDefault(role, "")
-                    .split(","));
-            for (String privilegeIter : rolePrivileges)
+            List<Object> rolePrivileges = rolePrivilegesMapping.getOrDefault(role, new ArrayList<>());
+
+            for (Object privilegeIter : rolePrivileges)
             {
                 if (!privileges.containsKey(privilegeIter))
                 {
-                    privileges.put(privilegeIter, new ArrayList<>());
+                    privileges.put(privilegeIter.toString(), new ArrayList<>());
                 }
                 // Add Role to map grouped by privilege
                 privileges.get(privilegeIter).add(role);
@@ -589,13 +633,6 @@ public class RolesPrivilegesService
             log.error("Can't update roles privileges config file", e);
             throw new AcmRolesPrivilegesException("Can't update roles privileges config file", e);
         }
-    }
-
-    private void saveRolesConfig(List<String> roles) throws ConfigurationPropertyException
-    {
-        ApplicationRolesConfig rolesConfig = new ApplicationRolesConfig();
-        rolesConfig.setApplicationRolesString(String.join(",", roles));
-        configurationPropertyService.updateProperties(rolesConfig);
     }
 
     public void setApplicationRolesPrivilegesTemplatesLocation(String applicationRolesPrivilegesTemplatesLocation)
@@ -661,5 +698,11 @@ public class RolesPrivilegesService
     public void setConfigurationPropertyService(ConfigurationPropertyService configurationPropertyService)
     {
         this.configurationPropertyService = configurationPropertyService;
+    }
+
+    public void setCollectionPropertiesConfigurationService(
+            CollectionPropertiesConfigurationService collectionPropertiesConfigurationService)
+    {
+        this.collectionPropertiesConfigurationService = collectionPropertiesConfigurationService;
     }
 }

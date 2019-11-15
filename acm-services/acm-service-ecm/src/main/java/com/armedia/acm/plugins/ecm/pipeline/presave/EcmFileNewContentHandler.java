@@ -94,7 +94,7 @@ public class EcmFileNewContentHandler implements PipelineHandler<EcmFile, EcmFil
                 // as the filename for the repository.
                 String arkcaseFilename = entity.getFileName();
                 entity.setFileName(pipelineContext.getOriginalFileName());
-                Document newDocument = ecmFileMuleUtils.addFile(entity, pipelineContext.getCmisFolderId(),
+                Document newDocument = ecmFileCamelUtils.addFile(entity, pipelineContext.getCmisFolderId(),
                         countingInputStream);
                 // now, restore the ArkCase file name
                 entity.setFileName(arkcaseFilename);

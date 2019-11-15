@@ -39,6 +39,7 @@ import com.armedia.acm.crypto.properties.AcmEncryptablePropertyUtils;
 
 import org.apache.camel.CamelContext;
 import org.apache.camel.ProducerTemplate;
+import org.apache.camel.Route;
 import org.apache.camel.RoutesBuilder;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.impl.DefaultCamelContext;
@@ -54,6 +55,7 @@ import org.springframework.context.ApplicationContextAware;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -149,6 +151,13 @@ public class CamelContextManager implements ApplicationContextAware
         createCamelQueues(camelContext);
 
         camelContext.start();
+        List<Route> routes = camelContext.getRoutes();
+        log.debug("Number of camel routes={}", routes.size());
+        for (Route route : routes)
+        {
+            log.debug("Camel route id={}, description={}, endpointURI={}", route.getId(), route.getDescription(),
+                    route.getEndpoint().getEndpointUri());
+        }
         log.debug("Camel context successfully started.");
     }
 
@@ -197,9 +206,11 @@ public class CamelContextManager implements ApplicationContextAware
                     Object routeInstance = route.newInstance();
                     if (routeInstance instanceof RouteBuilder && routeInstance instanceof ArkCaseRoute)
                     {
+
                         ((ArkCaseRoute) routeInstance).setRepositoryId(repositoryConfig.getId());
                         ((ArkCaseRoute) routeInstance).setTimeout(repositoryConfig.getTimeout());
                         camelContext.addRoutes((RoutesBuilder) routeInstance);
+                        log.debug("Successfully added route={} to camel context");
                     }
                 }
             }

@@ -30,6 +30,7 @@ package com.armedia.acm.configuration.client;
 import com.armedia.acm.configuration.api.environment.Environment;
 import com.armedia.acm.configuration.api.environment.PropertySource;
 import com.armedia.acm.configuration.service.ConfigurationPropertyException;
+import com.armedia.acm.configuration.util.MergePropertiesUtil;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -54,6 +55,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -68,8 +70,13 @@ public class ConfigurationServiceBootClient
 {
     private static final Logger logger = LogManager.getLogger(ConfigurationServiceBootClient.class);
 
+    private final static String CONFIGURATION_SERVER_URL = "configuration.server.url";
+
     @Autowired
     private ConfigurableEnvironment configurableEnvironment;
+
+    @Autowired
+    private org.springframework.core.env.Environment environment;
 
     @Bean
     public RestTemplate configRestTemplate()
@@ -86,9 +93,9 @@ public class ConfigurationServiceBootClient
         return restTemplate;
     }
 
-    public Map<String, Object> loadConfiguration(String url)
+    public Map<String, Object> loadConfiguration(List<Environment> environments)
     {
-        List<Environment> environments = getRemoteEnvironment(configRestTemplate(), url, null);
+        environments = getRemoteEnvironment(configRestTemplate(), null, environments);
         Map<String, Object> result = new HashMap<>();
         for (Environment environment : environments)
         {
@@ -99,25 +106,24 @@ public class ConfigurationServiceBootClient
 
     /**
      * Loads configuration from one specific yaml file.
-     * 
-     * @param url
+     *
      *            - url to the config server
      * @param name
      *            - name of the yaml file that should be loaded
      * @return
      */
-    public Map<String, Object> loadConfiguration(String url, String name)
+    public Map<String, Object> loadConfiguration(String name, List<Environment> environments)
     {
-        Environment result = getRemoteEnvironment(configRestTemplate(), url, name).get(0);
+        Environment result = getRemoteEnvironment(configRestTemplate(), name, environments).get(0);
         return getCompositeMap(result);
     }
 
     /**
      * Loads specific language and checks if there are missing labels it adds them from the default language
      */
-    public Map<String, Object> loadLangConfiguration(String url, String name, Map<String, Object> defaultLangMap)
+    public Map<String, Object> loadLangConfiguration(String name, Map<String, Object> defaultLangMap, List<Environment> environments)
     {
-        Environment result = getRemoteEnvironment(configRestTemplate(), url, name).get(0);
+        Environment result = getRemoteEnvironment(configRestTemplate(), name, environments).get(0);
         Map<String, Object> langMap = getCompositeMap(result);
 
         if (defaultLangMap.size() != langMap.size())
@@ -127,10 +133,22 @@ public class ConfigurationServiceBootClient
         return langMap;
     }
 
-    public Map<String, Object> loadDefaultConfiguration(String url, String name)
+    public Map<String, Object> loadRuntimeConfigurationMap(List<Environment> environments)
     {
-        Environment result = getRemoteEnvironment(configRestTemplate(), url, name).get(0);
-        return getDefaultCompositeMap(result);
+        Environment result = getRemoteEnvironment(configRestTemplate(), null, environments).get(0);
+        return getRuntimeOrDefaultCompositeMap(result, false);
+    }
+
+    public Map<String, Object> loadWithoutRuntimeConfigurationMap(List<Environment> environments)
+    {
+        Environment result = getRemoteEnvironment(configRestTemplate(), null, environments).get(0);
+        return getRuntimeOrDefaultCompositeMap(result, true);
+    }
+
+    public Map<String, Object> loadDefaultConfiguration(String name, List<Environment> environments)
+    {
+        Environment result = getRemoteEnvironment(configRestTemplate(), name, environments).get(0);
+        return getRuntimeOrDefaultCompositeMap(result, false);
     }
 
     private Map<String, Object> getCompositeMap(Environment result)
@@ -139,17 +157,19 @@ public class ConfigurationServiceBootClient
 
         if (result.getPropertySources() != null)
         {
+            Collections.reverse(result.getPropertySources());
+
             for (PropertySource source : result.getPropertySources())
             {
                 Map<String, Object> map = source.getSource();
-                map.forEach((key, value) -> compositeMap.putIfAbsent(key, value));
+                MergePropertiesUtil.mergePropertiesFromSources(compositeMap, map);
             }
         }
 
         return compositeMap;
     }
 
-    private Map<String, Object> getDefaultCompositeMap(Environment result)
+    private Map<String, Object> getRuntimeOrDefaultCompositeMap(Environment result, boolean withoutRuntime)
     {
         Map<String, Object> compositeMap = new HashMap<>();
 
@@ -157,9 +177,19 @@ public class ConfigurationServiceBootClient
         {
             for (PropertySource source : result.getPropertySources())
             {
-                if (!source.getName().contains("-runtime.yaml"))
+                if (withoutRuntime)
                 {
-                    compositeMap = source.getSource();
+                    if (!source.getName().contains("-runtime.yaml"))
+                    {
+                        compositeMap = source.getSource();
+                    }
+                }
+                else
+                {
+                    if (source.getName().contains("-runtime.yaml"))
+                    {
+                        compositeMap = source.getSource();
+                    }
                 }
             }
         }
@@ -167,16 +197,16 @@ public class ConfigurationServiceBootClient
         return compositeMap;
     }
 
-    public org.springframework.core.env.PropertySource<?> locate(String url, Object name)
+    public org.springframework.core.env.PropertySource<?> locate(Object name, List<Environment> environments)
     {
-        List<Environment> environments = getRemoteEnvironment(configRestTemplate(), url, name);
+        environments = getRemoteEnvironment(configRestTemplate(), name, environments);
         CompositePropertySource compositePropertySource = new CompositePropertySource("configService");
 
-        for (Environment environment : environments)
+        for (Environment env : environments)
         {
-            if (environment.getPropertySources() != null)
+            if (env.getPropertySources() != null)
             {
-                for (PropertySource source : environment.getPropertySources())
+                for (PropertySource source : env.getPropertySources())
                 {
                     Map<String, Object> map = source.getSource();
                     compositePropertySource.addPropertySource(new MapPropertySource(source.getName(), map));
@@ -189,11 +219,12 @@ public class ConfigurationServiceBootClient
     /**
      *
      * @param restTemplate
-     * @param url
      * @return
      */
-    private List<Environment> getRemoteEnvironment(RestTemplate restTemplate, String url, Object name)
+    public List<Environment> getRemoteEnvironment(RestTemplate restTemplate, Object name, List<Environment> environments)
     {
+        String url = environment.getProperty(CONFIGURATION_SERVER_URL);
+
         String path = "/{name}/{profile}";
 
         List<String> names;
@@ -235,20 +266,27 @@ public class ConfigurationServiceBootClient
             activeProfiles = (String) profiles;
         }
 
-        List<Environment> environments = names.parallelStream().map(nameElement -> {
-            Object[] args = new String[] { nameElement, activeProfiles };
+        if (environments == null)
+        {
+            environments = names.parallelStream().map(nameElement -> {
+                Object[] args = new String[] { nameElement, activeProfiles };
 
-            try
-            {
-                ResponseEntity<Environment> response = restTemplate.exchange(url + path, HttpMethod.GET, null, Environment.class, args);
-                return Objects.requireNonNull(response).getBody();
-            }
-            catch (Throwable t)
-            {
-                logger.error(t.getMessage(), t);
-            }
-            return null;
-        }).collect(Collectors.toList());
+                try
+                {
+                    ResponseEntity<Environment> response = restTemplate.exchange(url + path, HttpMethod.GET, null, Environment.class, args);
+                    return Objects.requireNonNull(response).getBody();
+                }
+                catch (Throwable t)
+                {
+                    logger.error(t.getMessage(), t);
+                }
+                return null;
+            }).collect(Collectors.toList());
+        }
+        else
+        {
+            return environments;
+        }
 
         return environments;
     }
@@ -271,6 +309,7 @@ public class ConfigurationServiceBootClient
 
         return restTemplate;
     }
+
 
     private static class BasicAuthorizationInterceptor implements ClientHttpRequestInterceptor
     {
@@ -371,4 +410,10 @@ public class ConfigurationServiceBootClient
     {
         this.configurableEnvironment = configurableEnvironment;
     }
+
+    public void setEnvironment(org.springframework.core.env.Environment environment)
+    {
+        this.environment = environment;
+    }
+
 }

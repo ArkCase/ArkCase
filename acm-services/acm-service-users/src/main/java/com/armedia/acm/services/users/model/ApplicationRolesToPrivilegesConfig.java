@@ -27,57 +27,23 @@ package com.armedia.acm.services.users.model;
  * #L%
  */
 
-import com.armedia.acm.objectonverter.json.JSONUnmarshaller;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-import org.json.JSONObject;
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Value;
+import com.armedia.acm.configuration.annotations.MapValue;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-public class ApplicationRolesToPrivilegesConfig implements InitializingBean
+public class ApplicationRolesToPrivilegesConfig
 {
-    @JsonProperty("application.rolesToPrivileges")
-    @Value("${application.rolesToPrivileges}")
-    private String rolesToPrivilegesString;
 
-    private JSONUnmarshaller jsonUnmarshaller;
+    public static final String ROLES_TO_PRIVILEGES_PROP_KEY = "application.rolesToPrivileges";
 
-    private Map<String, String> rolesToPrivileges = new HashMap<>();
+    private Map<String, List<Object>> rolesToPrivileges = new HashMap<>();
 
-    @JsonIgnore
-    public Map<String, String> getRolesToPrivileges()
+    @MapValue(value = "application.rolesToPrivileges")
+    public Map<String, List<Object>> getRolesToPrivileges()
     {
         return rolesToPrivileges;
     }
 
-    public void setRolesToPrivileges(Map<String, String> rolesToPrivileges)
-    {
-        this.rolesToPrivileges = rolesToPrivileges;
-    }
-
-    @Override
-    public void afterPropertiesSet()
-    {
-        rolesToPrivileges = jsonUnmarshaller.unmarshall(rolesToPrivilegesString, Map.class);
-    }
-
-    public String getRolesToPrivilegesString()
-    {
-        return new JSONObject(rolesToPrivileges).toString();
-    }
-
-    @JsonIgnore
-    public JSONUnmarshaller getJsonUnmarshaller()
-    {
-        return jsonUnmarshaller;
-    }
-
-    public void setJsonUnmarshaller(JSONUnmarshaller jsonUnmarshaller)
-    {
-        this.jsonUnmarshaller = jsonUnmarshaller;
-    }
 }
