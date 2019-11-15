@@ -115,15 +115,8 @@ public class ArkCasePortalGatewayUserAPIController
     {
         PortalUser portalUser = new PortalUser();
         log.debug("Requesting user authentication for user at portal with [{}] ID.", portalId);
-        try
-        {
-            portalUser = portalUserService.authenticateUser(portalId, credentials);
-            return new ResponseEntity<PortalUser>(portalUser, HttpStatus.OK);
-        }
-        catch (PortalUserServiceException e)
-        {
-            return new ResponseEntity<PortalUser>(portalUser, HttpStatus.UNAUTHORIZED);
-        }
+        portalUser = portalUserService.authenticateUser(portalId, credentials);
+        return new ResponseEntity<PortalUser>(portalUser, HttpStatus.OK);
     }
 
     @CheckPortalUserAssignement
@@ -169,8 +162,8 @@ public class ArkCasePortalGatewayUserAPIController
             @RequestBody PortalUserCredentials portalUserCredentials, @PathVariable String userId)
             throws PortalUserAssignementException, PortalUserServiceException
     {
-        log.debug("Changing password for [{}] user for portal with [{}] ID.", userId, portalId);
-        return portalUserService.changePassword(portalId, auth.getName(), portalUserCredentials);
+        log.debug("Changing password for [{}] [{}] user for portal with [{}] ID.", userId, auth.getName(), portalId);
+        return portalUserService.changePassword(portalId, userId, auth.getName(), portalUserCredentials);
     }
 
     @RequestMapping(method = RequestMethod.PUT, produces = { MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE })

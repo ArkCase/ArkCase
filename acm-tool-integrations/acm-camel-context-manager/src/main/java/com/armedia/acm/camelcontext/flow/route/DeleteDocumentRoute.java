@@ -70,6 +70,7 @@ public class DeleteDocumentRoute extends RouteBuilder implements ArkCaseRoute
         from("seda:" + repositoryId + "-deleteDocumentQueue?timeout=" + timeout).setExchangePattern(ExchangePattern.InOut)
                 .process(exchange -> {
                     map = (Map<String, Object>) exchange.getIn().getBody();
+                    log.debug("Sending delete request to camel for documentID={}", map.get("cmisDocumentId"));
                     exchange.getIn().getHeaders().put(PropertyIds.OBJECT_TYPE_ID, "cmis:document");
                     exchange.getIn().getHeaders().put(CamelCMISConstants.CMIS_OBJECT_ID, map.get("cmisDocumentId"));
                     exchange.getIn().getHeaders().put(CamelCMISConstants.CMIS_ACTION, CamelCMISActions.DELETE_DOCUMENT);

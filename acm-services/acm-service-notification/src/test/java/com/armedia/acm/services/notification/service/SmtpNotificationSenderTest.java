@@ -51,6 +51,7 @@ import com.armedia.acm.services.email.service.AcmMailTemplateConfigurationServic
 import com.armedia.acm.services.email.service.TemplatingEngine;
 import com.armedia.acm.services.email.smtp.SmtpService;
 import com.armedia.acm.services.notification.model.Notification;
+import com.armedia.acm.services.notification.model.NotificationConfig;
 import com.armedia.acm.services.notification.model.NotificationConstants;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
@@ -68,7 +69,7 @@ import java.util.List;
 
 public class SmtpNotificationSenderTest extends EasyMockSupport
 {
-
+    private static final String BASE_URL = "/arkcase";
     private SmtpNotificationSender smtpNotificationSender;
     private SmtpService mockSmtpService;
     private AuditPropertyEntityAdapter mockAuditPropertyEntityAdapter;
@@ -118,6 +119,9 @@ public class SmtpNotificationSenderTest extends EasyMockSupport
         smtpNotificationSender.setTemplateService(templateService);
         smtpNotificationSender.setDataService(acmDataService);
         smtpNotificationSender.setTemplatingEngine(templatingEngine);
+        NotificationConfig notificationConfig = new NotificationConfig();
+        notificationConfig.setBaseUrl(BASE_URL);
+        smtpNotificationSender.setNotificationConfig(notificationConfig);
     }
 
     @Test

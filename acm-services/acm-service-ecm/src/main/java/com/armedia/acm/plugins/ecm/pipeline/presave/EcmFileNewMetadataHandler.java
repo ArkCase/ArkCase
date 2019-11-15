@@ -74,12 +74,12 @@ public class EcmFileNewMetadataHandler implements PipelineHandler<EcmFile, EcmFi
                 throw new PipelineProcessException("cmisDocument is null");
             }
 
-            entity.setVersionSeriesId(cmisDocument.getVersionSeriesId());
+            entity.setVersionSeriesId(cmisDocument.getPropertyValue("alfcmis:nodeRef"));
             entity.setActiveVersionTag(cmisDocument.getVersionLabel());
 
             // Sets the versioning of the file
             EcmFileVersion version = new EcmFileVersion();
-            version.setCmisObjectId(cmisDocument.getId());
+            version.setCmisObjectId(cmisDocument.getPropertyValue("alfcmis:nodeRef") + ";" + cmisDocument.getVersionLabel());
             version.setVersionTag(cmisDocument.getVersionLabel());
             version.setVersionMimeType(entity.getFileActiveVersionMimeType());
             version.setVersionFileNameExtension(entity.getFileActiveVersionNameExtension());

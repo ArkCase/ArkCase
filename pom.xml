@@ -1112,14 +1112,14 @@
 
             <dependency>
                 <groupId>org.apache.camel</groupId>
-                <artifactId>camel-cmis-arkcase</artifactId>
-                <version>${camel.cmis.version}</version>
+                <artifactId>camel-support</artifactId>
+                <version>${camel.support.version}</version>
             </dependency>
 
             <dependency>
                 <groupId>org.apache.camel</groupId>
-                <artifactId>camel-support</artifactId>
-                <version>${camel.support.version}</version>
+                <artifactId>camel-cmis-arkcase</artifactId>
+                <version>${camel.cmis.version}</version>
             </dependency>
 
             <!-- apache libraries -->

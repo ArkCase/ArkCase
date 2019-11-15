@@ -34,10 +34,6 @@ public interface EcmFileConstants
 {
     String MULE_ENDPOINT_CREATE_FOLDER = "vm://createFolder.in";
 
-    String MULE_ENDPOINT_COPY_FILE = "vm://copyFile.in";
-
-    String MULE_ENDPOINT_RENAME_FILE = "vm://renameFile.in";
-
     String MULE_ENDPOINT_REPLACE_FILE = "vm://updateFile.in";
 
     String USER_ACTION_COPY_FILE = "COPY";
