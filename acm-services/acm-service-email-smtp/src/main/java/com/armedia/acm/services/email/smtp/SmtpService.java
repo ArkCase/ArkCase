@@ -1,17 +1,5 @@
 package com.armedia.acm.services.email.smtp;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.stream.Stream;
-
 /*-
  * #%L
  * ACM Service: Email SMTP
@@ -65,6 +53,18 @@ import org.mule.util.FileUtils;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.security.core.Authentication;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Stream;
 
 /**
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Jun 21, 2017
@@ -135,9 +135,10 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
 
         List<AcmEvent> sentEvents = new ArrayList<>();
         Map<String, InputStreamDataSource> attachments = processAttachments(in, user, sentEvents);
-        if(attachments.size() == 0)
+        if (attachments.size() == 0)
         {
-            sentEvents.add(new SmtpEventMailSent(in,user.getUserId(),in.getObjectId(),in.getObjectType(),AuthenticationUtils.getUserIpAddress()));
+            sentEvents.add(new SmtpEventMailSent(in, user != null ? user.getUserId() : null, in.getObjectId(), in.getObjectType(),
+                    AuthenticationUtils.getUserIpAddress()));
         }
         for (String emailAddress : in.getEmailAddresses())
         {
@@ -389,12 +390,12 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
             if (in.getModelReferenceName().equals("plainEmail"))
             {
 
-                event = new SmtpEventMailSent(in, user.getUserId(),Long.parseLong(in.getParentNumber()),
+                event = new SmtpEventMailSent(in, user != null ? user.getUserId() : null, Long.parseLong(in.getParentNumber()),
                         in.getParentType(), null);
             }
             else
             {
-                event = new SmtpSentEventHyperlink(in, user.getUserId(), parentId, in.getParentType());
+                event = new SmtpSentEventHyperlink(in, user != null ? user.getUserId() : null, parentId, in.getParentType());
             }
             boolean success = (exception == null);
             event.setSucceeded(success);
