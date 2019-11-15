@@ -37,6 +37,7 @@ import com.armedia.acm.spring.SpringContextHolder;
 import org.apache.commons.lang.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Value;
 
 public class UserInfoHelper
 {
@@ -45,6 +46,8 @@ public class UserInfoHelper
     private UserDao userDao;
     private SpringContextHolder contextHolder;
     private AcmGroupDao acmGroupDao;
+    @Value("${foia.portalserviceprovider.directory.name}")
+    private String portalDirectoryName;
 
     public String getUserEmail(String userId)
     {
@@ -61,22 +64,30 @@ public class UserInfoHelper
 
         if (StringUtils.isNotBlank(directoryName))
         {
-            try
+            if (StringUtils.isNotBlank(portalDirectoryName) && portalDirectoryName.equals(directoryName))
             {
-                AcmLdapSyncConfig acmLdapSyncConfig = getContextHolder().getBeanByNameIncludingChildContexts(directoryName.concat("_sync"),
-                        AcmLdapSyncConfig.class);
-                String userPrefix = acmLdapSyncConfig.getUserPrefix();
-                if (StringUtils.isNotBlank(userPrefix))
-                {
-                    log.debug(String.format("User Prefix [%s]", userPrefix));
-                    log.debug(String.format("Full User id: [%s]", baseUserId));
-                    baseUserId = user.getUserId().replace(userPrefix, "");
-                    log.debug(String.format("User Id without prefix: [%s]", baseUserId));
-                }
+                baseUserId = user.getMail();
             }
-            catch (Exception e)
+            else
             {
-                log.debug("Error processing user prefix", e);
+                try
+                {
+                    AcmLdapSyncConfig acmLdapSyncConfig = getContextHolder().getBeanByNameIncludingChildContexts(
+                            directoryName.concat("_sync"),
+                            AcmLdapSyncConfig.class);
+                    String userPrefix = acmLdapSyncConfig.getUserPrefix();
+                    if (StringUtils.isNotBlank(userPrefix))
+                    {
+                        log.debug(String.format("User Prefix [%s]", userPrefix));
+                        log.debug(String.format("Full User id: [%s]", baseUserId));
+                        baseUserId = user.getUserId().replace(userPrefix, "");
+                        log.debug(String.format("User Id without prefix: [%s]", baseUserId));
+                    }
+                }
+                catch (Exception e)
+                {
+                    log.debug("Error processing user prefix", e);
+                }
             }
         }
 
