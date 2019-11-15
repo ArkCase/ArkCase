@@ -34,7 +34,6 @@ public interface AcmFolderConstants
 {
 
     String MULE_ENDPOINT_RENAME_FOLDER = "vm://renameFolder.in";
-    String MULE_ENDPOINT_ADD_NEW_FOLDER = "vm://addNewFolder.in";
     String MULE_ENDPOINT_DELETE_EMPTY_FOLDER = "vm://deleteFolder.in";
     String MULE_ENDPOINT_DELETE_FOLDER_TREE = "vm://deleteFolderTree.in";
     String MULE_ENDPOINT_LIST_FOLDER = "vm://listFolder.in";
