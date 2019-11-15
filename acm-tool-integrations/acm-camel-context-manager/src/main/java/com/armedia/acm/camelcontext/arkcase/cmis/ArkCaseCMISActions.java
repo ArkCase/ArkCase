@@ -44,7 +44,8 @@ public enum ArkCaseCMISActions
     RENAME_FOLDER("RenameFolderQueue"),
     CHECK_IN("CheckInQueue"),
     CHECK_OUT("CheckOutQueue"),
-    CANCEL_CHECK_OUT("CancelCheckOutQueue");
+    CANCEL_CHECK_OUT("CancelCheckOutQueue"),
+    UPDATE_DOCUMENT("UpdateDocumentQueue");
 
     private final String queueName;
     public String queuePackage = "com.armedia.acm.camelcontext.flow.queue.";

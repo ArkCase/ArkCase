@@ -275,7 +275,6 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
                         throw new PortalUserServiceException(String.format("Couldn't create LDAP user for %s", user.getEmail()), e);
                     }
 
-                    registrationDao.delete(record);
                     return UserRegistrationResponse.accepted();
                 }
             }
@@ -328,8 +327,9 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
             }
             if (!ldapAuthenticateService.authenticate(ldapUserId, password))
             {
+                log.debug("User %s provided wrong password!", portalAcmUser.getMail());
                 throw new PortalUserServiceException(
-                        String.format("User %s provided wrong password!", ldapUserId));
+                        String.format("User %s provided wrong password!", portalAcmUser.getMail()));
             }
             else
             {
@@ -449,6 +449,7 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
                 }
                 catch (AcmUserActionFailedException e)
                 {
+                    log.debug("Couldn't update password for LDAP user %s.", acmPortalUser.getMail());
                     throw new PortalUserServiceException(
                             String.format("Couldn't update password for LDAP user %s.", acmPortalUser.getMail()), e);
                 }
@@ -464,7 +465,7 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
     }
 
     @Override
-    public UserResetResponse changePassword(String portalId, String userId, PortalUserCredentials portalUserCredentials)
+    public UserResetResponse changePassword(String portalId, String userId, String acmUserId, PortalUserCredentials portalUserCredentials)
             throws PortalUserServiceException
     {
 
@@ -477,7 +478,8 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
         }
         try
         {
-            ldapAuthenticateService.changeUserPassword(userId, portalUserCredentials.getPassword(), portalUserCredentials.getNewPassword());
+            ldapAuthenticateService.changeUserPassword(acmUserId, portalUserCredentials.getPassword(),
+                    portalUserCredentials.getNewPassword());
         }
 
         catch (AcmUserActionFailedException e)
@@ -486,7 +488,11 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
             {
                 return UserResetResponse.invalidCredentials();
             }
-            throw new PortalUserServiceException(String.format("Couldn't update password for LDAP user %s.", userId), e);
+            else
+            {
+                log.debug(String.format("Couldn't update password for LDAP user %s %s.", acmUserId, userId));
+                throw new PortalUserServiceException(String.format("Couldn't update password for user %s.", userId), e);
+            }
 
         }
 
