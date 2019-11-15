@@ -88,7 +88,7 @@ public class FOIARequestBrokerClient extends AcmObjectBrokerClient<PortalFOIAReq
 
                 if (isExternalEnable())
                 {
-                    if (entity.getUserId() == null || entity.getUserId().equals("anonymousUser"))
+                    if (entity.getUserId() == null)
                     {
                         entity.setUserId(getExternalUserId());
                     }

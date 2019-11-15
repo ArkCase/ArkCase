@@ -188,13 +188,15 @@
             <label>{{ 'admin.security.ldapConfig.data.fullSync' | translate }}</label>
             <span class="required-asterisk">*</span>
             <input name="fullSyncCron" class="form-control" type="text" ng-model="dir.fullSyncCron"
-                   placeholder="{{ 'admin.security.ldapConfig.data.placeholders.fullSync' | translate }}" required>
+                   placeholder="{{ 'admin.security.ldapConfig.data.placeholders.fullSync' | translate }}" ng-pattern="cronRegex" required>
+            <span ng-show="ldapConfigForm.fullSyncCron.$error.pattern" translate>admin.security.ldapConfig.data.fullSync.validationMessage</span>
         </div>
         <div class="form-group">
             <label>{{ 'admin.security.ldapConfig.data.partialSync' | translate }}</label>
             <span class="required-asterisk">*</span>
             <input name="partialSyncCron" class="form-control" type="text" ng-model="dir.partialSyncCron"
-                   placeholder="{{ 'admin.security.ldapConfig.data.placeholders.partialSync' | translate }}" required>
+                   placeholder="{{ 'admin.security.ldapConfig.data.placeholders.partialSync' | translate }}" ng-pattern="cronRegex" required>
+            <span ng-show="ldapConfigForm.partialSyncCron.$error.pattern" translate>admin.security.ldapConfig.data.partialSync.validationMessage</span>
         </div>
         <div class="form-check">
             <label class="form-check-label">

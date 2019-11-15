@@ -551,21 +551,20 @@ angular
                     getCacheKeyByNode : function(folderNode) {
                         var pageId = Util.goodValue(folderNode.data.startRow, 0);
                         var folderId = folderNode.data.objectId;
-                        var cacheKey = DocTree.getCacheKey(DocTree.isTopNode(folderNode) ? 0 : folderId, pageId);
+                        var cacheKey = DocTree.getCacheKey(DocTree.isTopNode(folderNode) ? 0 : folderId, pageId, DocTree.treeConfig.nodeCacheKeyPrefix);
                         return cacheKey;
                     },
-                    getCacheKey : function(folderId, pageId) {
+                    getCacheKey : function(folderId, pageId, keyPrefix) {
                         var setting = DocTree.Config.getSetting();
-                        var key = this.getObjType() + "." + this.getObjId();
+                        var key = keyPrefix ? keyPrefix + "." : "";
+                        key += this.getObjType() + "." + this.getObjId();
                         key += "." + Util.goodValue(folderId, 0); //for root folder, folderId is 0 or undefined
                         key += "." + Util.goodValue(pageId, 0);
                         key += "." + DocTree.Config.getSortBy();
                         key += "." + DocTree.Config.getSortDirection();
                         key += "." + DocTree.Config.getMaxRows();
                         return key;
-                    }
-
-                    ,
+                    },
                     getTopNode : function() {
                         var topNode = null;
                         if (DocTree.tree) {
@@ -2573,7 +2572,7 @@ angular
                                             setting.sortBy = Util.goodValue(folderList.sortBy);
                                             setting.sortDirection = Util.goodValue(folderList.sortDirection);
 
-                                            var cacheKey = DocTree.getCacheKey(folderId, pageId);
+                                            var cacheKey = DocTree.getCacheKey(folderId, pageId, DocTree.treeConfig.nodeCacheKeyPrefix);
                                             DocTree.cacheFolderList.put(cacheKey, folderList);
                                             return folderList;
                                         }

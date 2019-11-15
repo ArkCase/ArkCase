@@ -27,24 +27,21 @@ package com.armedia.acm.websockets;
  * #L%
  */
 
-import org.springframework.beans.factory.annotation.Value;
+import com.armedia.acm.configuration.annotations.ListValue;
 
 import java.util.List;
 
 public class ObjectNotificationsConfig
 {
-    @Value("#{'${acm.object.changed.notification.filter.include.object_types}'.split(',')}")
     private List<String> includedObjectTypes;
 
-    @Value("#{'${acm.object.changed.notification.filter.include.classNames}'.split(',')}")
     private List<String> includedClassNames;
 
-    @Value("#{'${acm.object.changed.notification.filter.include.parent_object_types}'.split(',')}")
     private List<String> includedParentObjectTypes;
 
-    @Value("#{'${acm.object.changed.notification.filter.include.root_parent_object_types}'.split(',')}")
     private List<String> includedRootParentObjectTypes;
 
+    @ListValue(value = "acm.object.changed.notification.filter.include.object_types")
     public List<String> getIncludedObjectTypes()
     {
         return includedObjectTypes;
@@ -55,6 +52,7 @@ public class ObjectNotificationsConfig
         this.includedObjectTypes = includedObjectTypes;
     }
 
+    @ListValue(value = "acm.object.changed.notification.filter.include.classNames")
     public List<String> getIncludedClassNames()
     {
         return includedClassNames;
@@ -65,6 +63,7 @@ public class ObjectNotificationsConfig
         this.includedClassNames = includedClassNames;
     }
 
+    @ListValue(value = "acm.object.changed.notification.filter.include.parent_object_types")
     public List<String> getIncludedParentObjectTypes()
     {
         return includedParentObjectTypes;
@@ -75,6 +74,7 @@ public class ObjectNotificationsConfig
         this.includedParentObjectTypes = includedParentObjectTypes;
     }
 
+    @ListValue(value = "acm.object.changed.notification.filter.include.root_parent_object_types")
     public List<String> getIncludedRootParentObjectTypes()
     {
         return includedRootParentObjectTypes;

@@ -47,9 +47,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by Vladimir Cherepnalkovski <vladimir.cherepnalkovski@armedia.com> on Aug, 2019
+ * Created by Vladimir Cherepnalkovski <vladimir.cherepnalkovski@armedia.com> on Oct, 2019
  */
-public class DeleteDocumentRoute extends RouteBuilder implements ArkCaseRoute
+public class CreateDocumentRoute extends RouteBuilder implements ArkCaseRoute
 {
     private Logger log = LogManager.getLogger(getClass());
     private Map<String, Object> map = new HashMap<>();
@@ -63,17 +63,19 @@ public class DeleteDocumentRoute extends RouteBuilder implements ArkCaseRoute
                 .process(x -> {
                     Exception exception = (Exception) x.getProperty(Exchange.EXCEPTION_CAUGHT);
                     String causeMessage = String.valueOf(exception.getCause());
-                    log.error("Exception deleting document: {}", causeMessage, exception);
+                    log.error("Exception while adding new document: {}", causeMessage, exception);
                     throw new ArkCaseFileRepositoryException(exception);
                 });
 
-        from("seda:" + repositoryId + "-deleteDocumentQueue?timeout=" + timeout).setExchangePattern(ExchangePattern.InOut)
+        from("seda:" + repositoryId + "-createDocumentQueue?timeout=" + timeout).setExchangePattern(ExchangePattern.InOut)
                 .process(exchange -> {
                     map = (Map<String, Object>) exchange.getIn().getBody();
-                    log.debug("Sending delete request to camel for documentID={}", map.get("cmisDocumentId"));
-                    exchange.getIn().getHeaders().put(PropertyIds.OBJECT_TYPE_ID, "cmis:document");
-                    exchange.getIn().getHeaders().put(CamelCMISConstants.CMIS_OBJECT_ID, map.get("cmisDocumentId"));
-                    exchange.getIn().getHeaders().put(CamelCMISConstants.CMIS_ACTION, CamelCMISActions.DELETE_DOCUMENT);
+                    exchange.getIn().getHeaders().put(PropertyIds.OBJECT_TYPE_ID, CamelCMISConstants.CMIS_DOCUMENT);
+                    exchange.getIn().getHeaders().put(CamelCMISConstants.CMIS_OBJECT_ID, map.get("cmisFolderId"));
+                    exchange.getIn().getHeaders().put(PropertyIds.NAME, map.get(PropertyIds.NAME));
+                    exchange.getIn().getHeaders().put(PropertyIds.CONTENT_STREAM_MIME_TYPE, map.get(PropertyIds.CONTENT_STREAM_MIME_TYPE));
+                    exchange.getIn().getHeaders().put(CamelCMISConstants.CMIS_ACTION, CamelCMISActions.CREATE);
+                    exchange.getIn().setBody(map.get("inputStream"));
                     MDC.put(HttpInvokerUtil.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY,
                             String.valueOf(map.get(HttpInvokerUtil.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY)));
                 })

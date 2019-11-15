@@ -27,34 +27,22 @@ package com.armedia.acm.services.users.model;
  * #L%
  */
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.armedia.acm.configuration.annotations.ListValue;
 
-import org.springframework.beans.factory.annotation.Value;
-
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class ApplicationRolesConfig
 {
-    @JsonProperty("application.roles")
-    @Value("${application.roles:''}")
-    private String applicationRolesString;
 
-    @JsonIgnore
+    public static final String MERGE_APPLICATION_ROLES_OP = "application.~roles";
+
+    private List<String> applicationRoles;
+
+    @ListValue(value = "application.roles")
     public List<String> getApplicationRoles()
     {
-        return Arrays.stream(applicationRolesString.split(",")).collect(Collectors.toList());
+        return applicationRoles;
     }
 
-    public void setApplicationRolesString(String applicationRolesString)
-    {
-        this.applicationRolesString = applicationRolesString;
-    }
 
-    public String getApplicationRolesString()
-    {
-        return applicationRolesString;
-    }
 }

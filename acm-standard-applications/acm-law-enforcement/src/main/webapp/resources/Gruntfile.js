@@ -244,28 +244,6 @@ module.exports = function(grunt) {
                     fs.writeFileSync(locationTmp, JSON.stringify(inputObj, null, 2));
                 }
 
-                var resourceLocation = folderName + "resources";
-                var resourceModules = "modules/" + moduleId + "/module_config/resources";
-                fs.readdirSync(resourceLocation).forEach(function (file) {
-                    inputData = fs.readFileSync(resourceLocation + "/" + file);
-                    inputObj = JSON.parse(inputData);
-                    var labelPatchFile = file.replace(".json", "-patch.json");
-                    if (fs.existsSync(resourceLocation + "/" + labelPatchFile)) {
-                        var patchLocation = resourceLocation + "/" + labelPatchFile;
-                        patchData = fs.readFileSync(patchLocation);
-                        patchObj = JSON.parse(patchData);
-
-                        var doc = clone(inputObj);
-                        doc = ooPatch(doc, patchObj).doc;
-
-                        fs.writeFileSync(resourceModules + "/" + file, JSON.stringify(doc, null, 2));
-                        fs.unlinkSync(patchLocation);
-                    }
-                    else {
-                        fs.writeFileSync(resourceModules + "/" + file, JSON.stringify(inputObj, null, 2));
-                    }
-                });
-
             }
         });
 

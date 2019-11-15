@@ -27,7 +27,9 @@ package com.armedia.acm.services.functionalaccess.service;
  * #L%
  */
 
+import com.armedia.acm.configuration.service.CollectionPropertiesConfigurationService;
 import com.armedia.acm.configuration.service.ConfigurationPropertyService;
+import com.armedia.acm.configuration.util.MergeFlags;
 import com.armedia.acm.services.search.model.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.search.service.SearchResults;
@@ -41,23 +43,21 @@ import com.armedia.acm.services.users.model.event.AdHocGroupDeletedEvent;
 import com.armedia.acm.services.users.model.event.LdapGroupDeletedEvent;
 import com.armedia.acm.services.users.model.group.AcmGroup;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.json.JSONArray;
 import org.mule.api.MuleException;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.security.core.Authentication;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * @author riste.tutureski
@@ -74,6 +74,7 @@ public class FunctionalAccessServiceImpl implements FunctionalAccessService, App
     private ApplicationRolesConfig rolesConfig;
     private ApplicationRolesToGroupsConfig rolesToGroupsConfig;
     private ConfigurationPropertyService configurationPropertyService;
+    private CollectionPropertiesConfigurationService collectionPropertiesConfigurationService;
 
     @Override
     public void onApplicationEvent(ApplicationEvent event)
@@ -232,38 +233,36 @@ public class FunctionalAccessServiceImpl implements FunctionalAccessService, App
     @Override
     public boolean saveApplicationRolesToGroups(Map<String, List<String>> rolesToGroups, String user)
     {
-        Map<String, String> rolesToGroupConfigMapping = rolesToGroups.entrySet().stream()
-                .collect(Collectors.toMap(Map.Entry::getKey, it -> String.join(",", it.getValue())));
-
         ApplicationRolesToGroupsConfig rolesToGroupsConfig = new ApplicationRolesToGroupsConfig();
-        rolesToGroupsConfig.setRolesToGroups(rolesToGroupConfigMapping);
+        rolesToGroupsConfig.setRolesToGroups(rolesToGroups);
         configurationPropertyService.updateProperties(rolesToGroupsConfig);
         getEventPublisher().publishFunctionalAccessUpdateEventOnRolesToGroupMap(rolesToGroups, user);
         return true;
     }
 
     @Override
-    public boolean saveGroupsToApplicationRole(List<String> groups, String roleName, Authentication auth)
+    public boolean saveGroupsToApplicationRole(List<Object> groups, String roleName, Authentication auth)
     {
-        Map<String, String> rolesToGroupsMap = rolesToGroupsConfig.getRolesToGroups();
-        Stream<String> groupPerRoleStream = Arrays.stream(rolesToGroupsMap.getOrDefault(roleName, "").split(","));
-        String updatedGroupsString = Stream.concat(groups.stream(), groupPerRoleStream).distinct()
-                .collect(Collectors.joining(","));
-        rolesToGroupsMap.put(roleName, updatedGroupsString);
+        Map<String, Object> rolesToGroupsConfig = collectionPropertiesConfigurationService.updateMapProperty(
+                ApplicationRolesToGroupsConfig.ROLES_TO_GROUPS_PROP_KEY, roleName,
+                groups, MergeFlags.MERGE);
+
         configurationPropertyService.updateProperties(rolesToGroupsConfig);
+
         getEventPublisher().publishFunctionalAccessUpdateEvent(groups, auth);
         return true;
     }
 
     @Override
-    public boolean removeGroupsToApplicationRole(List<String> groups, String roleName, Authentication auth)
+    public boolean removeGroupsToApplicationRole(List<Object> groups, String roleName, Authentication auth)
     {
-        Map<String, String> rolesToGroupsMap = rolesToGroupsConfig.getRolesToGroups();
-        Stream<String> groupPerRoleStream = Arrays.stream(rolesToGroupsMap.getOrDefault(roleName, "").split(","));
-        String updatedGroupsString = groupPerRoleStream.filter(it -> !groups.contains(it))
-                .collect(Collectors.joining(","));
-        rolesToGroupsMap.put(roleName, updatedGroupsString);
+
+        Map<String, Object> rolesToGroupsConfig = collectionPropertiesConfigurationService.updateMapProperty(
+                ApplicationRolesToGroupsConfig.ROLES_TO_GROUPS_PROP_KEY, roleName,
+                groups, MergeFlags.REMOVE);
+
         configurationPropertyService.updateProperties(rolesToGroupsConfig);
+
         getEventPublisher().publishFunctionalAccessUpdateEvent(groups, auth);
         return true;
     }
@@ -460,5 +459,11 @@ public class FunctionalAccessServiceImpl implements FunctionalAccessService, App
     public void setConfigurationPropertyService(ConfigurationPropertyService configurationPropertyService)
     {
         this.configurationPropertyService = configurationPropertyService;
+    }
+
+    public void setCollectionPropertiesConfigurationService(
+            CollectionPropertiesConfigurationService collectionPropertiesConfigurationService)
+    {
+        this.collectionPropertiesConfigurationService = collectionPropertiesConfigurationService;
     }
 }

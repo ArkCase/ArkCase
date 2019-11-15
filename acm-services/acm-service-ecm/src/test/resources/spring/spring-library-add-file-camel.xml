@@ -7,7 +7,6 @@
             <list>
                 <value>/flows/MuleCmisConnectorFlow.xml</value>
                 <value>/flows/MuleActiveMqConnectorFlow.xml</value>
-                <value>/flows/addFileFlow.xml</value>
                 <value>/flows/ecmFileTestFlow.xml</value>
                 <value>/flows/downloadFileFlow.xml</value>
                 <value>/flows/getObjectByIdFlow.xml</value>
@@ -17,6 +16,19 @@
     </bean>
 
     <bean id="acmMuleConfig" class="com.armedia.acm.muletools.mulecontextmanager.AcmMuleConfig"/>
+
+    <bean id="acmCamelConfig" class="com.armedia.acm.camelcontext.configuration.AcmCamelConfig"/>
+
+    <bean id="camelConfigUtils" class="com.armedia.acm.camelcontext.configuration.CamelConfigUtils">
+        <property name="propertyFileManager" ref="propertyFileManager"/>
+        <property name="acmCamelConfig" ref="acmCamelConfig"/>
+    </bean>
+
+    <bean id="camelContextManager" class="com.armedia.acm.camelcontext.context.CamelContextManager"
+          destroy-method="shutdownBeans">
+        <property name="camelConfigUtils" ref="camelConfigUtils"/>
+        <property name="encryptablePropertyUtils" ref="acmEncryptablePropertyUtils"/>
+    </bean>
 
     <bean id="logoutUrl" class="java.lang.String" factory-method="valueOf">
         <constructor-arg value="logoutUrl"/>
