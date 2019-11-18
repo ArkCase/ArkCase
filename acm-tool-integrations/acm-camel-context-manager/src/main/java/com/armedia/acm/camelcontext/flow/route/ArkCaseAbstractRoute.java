@@ -1,4 +1,4 @@
-package com.armedia.acm.camelcontext.flow;
+package com.armedia.acm.camelcontext.flow.route;
 
 import com.armedia.acm.camelcontext.arkcase.cmis.ArkCaseCMISConstants;
 
@@ -16,13 +16,15 @@ import java.util.Map;
  * This class will be parent class on all routes. All mutual methods will be placed here.
  * All classes that are instance of ArkCaseAbstract.class will be added as routes on camelContext.
  */
-public abstract class ArkCaseAbstract extends RouteBuilder
+public abstract class ArkCaseAbstractRoute extends RouteBuilder
 {
     /*
      * All properties from ArkCase services, are sent trough camel exchange object to the route.
      * First step in every route is to populate the map with those properties.
      */
     public Map<String, Object> routeProperties = new HashMap<>();
+    private String repositoryId;
+    private Long timeout;
 
     public String createUrl()
     {
@@ -34,9 +36,25 @@ public abstract class ArkCaseAbstract extends RouteBuilder
         return urlBuilder.toString();
     }
 
-    public abstract void setRepositoryId(String repositoryId);
+    public void setRepositoryId(String repositoryId)
+    {
+        this.repositoryId = repositoryId;
+    }
 
-    public abstract void setTimeout(String timeout);
+    public void setTimeout(String timeout)
+    {
+        this.timeout = Long.valueOf(timeout);
+    }
+
+    public String getRepositoryId()
+    {
+        return repositoryId;
+    }
+
+    public Long getTimeout()
+    {
+        return timeout;
+    }
 
     public Map<String, Object> getRouteProperties()
     {
