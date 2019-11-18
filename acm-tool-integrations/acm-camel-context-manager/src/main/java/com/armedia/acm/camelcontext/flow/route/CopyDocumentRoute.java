@@ -27,34 +27,26 @@ package com.armedia.acm.camelcontext.flow.route;
  * #L%
  */
 
-import com.armedia.acm.camelcontext.arkcase.cmis.ArkCaseCMISConstants;
 import com.armedia.acm.camelcontext.basic.auth.HttpInvokerUtil;
 import com.armedia.acm.camelcontext.exception.ArkCaseFileRepositoryException;
 
 import org.apache.camel.Exchange;
 import org.apache.camel.ExchangePattern;
-import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.cmis.CamelCMISActions;
 import org.apache.camel.component.cmis.CamelCMISConstants;
 import org.apache.chemistry.opencmis.commons.PropertyIds;
-import org.apache.chemistry.opencmis.commons.SessionParameter;
-import org.apache.chemistry.opencmis.commons.impl.UrlBuilder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.slf4j.MDC;
 
-import java.util.HashMap;
 import java.util.Map;
 
 /**
  * Created by Vladimir Cherepnalkovski <vladimir.cherepnalkovski@armedia.com> on Oct, 2019
  */
-public class CopyDocumentRoute extends RouteBuilder implements ArkCaseRoute
+public class CopyDocumentRoute extends ArkCaseAbstractRoute
 {
     private Logger log = LogManager.getLogger(getClass());
-    private Map<String, Object> map = new HashMap<>();
-    private String repositoryId;
-    private Long timeout;
 
     /*
      * HOW TO CHECK IF FILE WITH SAME NAME ALREADY EXISTS IN THIS FOLDER??
@@ -72,39 +64,17 @@ public class CopyDocumentRoute extends RouteBuilder implements ArkCaseRoute
                     throw new ArkCaseFileRepositoryException(exception);
                 });
 
-        from("seda:" + repositoryId + "-copyDocumentQueue?timeout=" + timeout).setExchangePattern(ExchangePattern.InOut)
+        from("seda:" + getRepositoryId() + "-copyDocumentQueue?timeout=" + getTimeout()).setExchangePattern(ExchangePattern.InOut)
                 .process(exchange -> {
-                    map = (Map<String, Object>) exchange.getIn().getBody();
+                    routeProperties = (Map<String, Object>) exchange.getIn().getBody();
                     exchange.getIn().getHeaders().put(PropertyIds.OBJECT_TYPE_ID, CamelCMISConstants.CMIS_DOCUMENT);
-                    exchange.getIn().getHeaders().put(CamelCMISConstants.CMIS_OBJECT_ID, map.get("cmisDocumentId"));
-                    exchange.getIn().getHeaders().put(CamelCMISConstants.CMIS_DESTIONATION_FOLDER_ID, map.get("dstFolderId"));
+                    exchange.getIn().getHeaders().put(CamelCMISConstants.CMIS_OBJECT_ID, routeProperties.get("cmisDocumentId"));
+                    exchange.getIn().getHeaders().put(CamelCMISConstants.CMIS_DESTIONATION_FOLDER_ID, routeProperties.get("dstFolderId"));
                     exchange.getIn().getHeaders().put(CamelCMISConstants.CMIS_ACTION, CamelCMISActions.COPY_DOCUMENT);
                     MDC.put(HttpInvokerUtil.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY,
-                            String.valueOf(map.get(HttpInvokerUtil.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY)));
+                            String.valueOf(routeProperties.get(HttpInvokerUtil.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY)));
 
                 })
                 .recipientList().method(this, "createUrl");
-    }
-
-    public String createUrl()
-    {
-        String api = ArkCaseCMISConstants.ARKCASE_CMIS_COMPONENT + map.get(ArkCaseCMISConstants.CMIS_API_URL).toString();
-        UrlBuilder urlBuilder = new UrlBuilder(api);
-        urlBuilder.addParameter("username", map.get(SessionParameter.USER).toString());
-        urlBuilder.addParameter("password", map.get(SessionParameter.PASSWORD).toString());
-
-        return urlBuilder.toString();
-    }
-
-    @Override
-    public void setRepositoryId(String repositoryId)
-    {
-        this.repositoryId = repositoryId;
-    }
-
-    @Override
-    public void setTimeout(String timeout)
-    {
-        this.timeout = Long.valueOf(timeout);
     }
 }
