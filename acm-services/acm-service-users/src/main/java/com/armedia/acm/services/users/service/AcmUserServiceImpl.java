@@ -132,7 +132,7 @@ public class AcmUserServiceImpl implements AcmUserService
         {
             if(userRoles.contains(entry.getKey()))
             {
-                String[] privileges = (String[]) entry.getValue().toArray();
+                String[] privileges = (String[]) entry.getValue().toArray(new String[0]);
                 userPrivileges.addAll(Arrays.asList(privileges));
             }
         }
