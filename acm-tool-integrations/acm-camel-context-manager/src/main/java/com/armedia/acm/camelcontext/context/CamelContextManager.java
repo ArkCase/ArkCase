@@ -31,16 +31,16 @@ import com.armedia.acm.camelcontext.arkcase.cmis.ArkCaseCMISActions;
 import com.armedia.acm.camelcontext.arkcase.cmis.ArkCaseCMISConstants;
 import com.armedia.acm.camelcontext.configuration.ArkCaseCMISConfig;
 import com.armedia.acm.camelcontext.configuration.CamelConfigUtils;
-import com.armedia.acm.camelcontext.exception.ArkCaseCamelException;
+import com.armedia.acm.camelcontext.exception.ArkCaseFileRepositoryException;
 import com.armedia.acm.camelcontext.flow.queue.ArkCaseCMISQueue;
-import com.armedia.acm.camelcontext.flow.route.ArkCaseRoute;
+import com.armedia.acm.camelcontext.flow.route.ArkCaseAbstractRoute;
 import com.armedia.acm.crypto.exceptions.AcmEncryptionException;
 import com.armedia.acm.crypto.properties.AcmEncryptablePropertyUtils;
 
 import org.apache.camel.CamelContext;
 import org.apache.camel.ProducerTemplate;
+import org.apache.camel.Route;
 import org.apache.camel.RoutesBuilder;
-import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.impl.DefaultCamelContext;
 import org.apache.camel.impl.engine.DefaultProducerTemplate;
 import org.apache.chemistry.opencmis.commons.SessionParameter;
@@ -54,6 +54,7 @@ import org.springframework.context.ApplicationContextAware;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -85,7 +86,7 @@ public class CamelContextManager implements ApplicationContextAware
             }
             catch (IOException e)
             {
-                log.error("Could not retrieve .properties files: " + e.getMessage(), e);
+                log.error("Could not retrieve .properties files: [{}]," + e.getMessage(), e);
                 throw new IllegalStateException(e);
             }
         }
@@ -141,20 +142,25 @@ public class CamelContextManager implements ApplicationContextAware
 
     private void startCamelContext(ApplicationContext applicationContext) throws Exception
     {
-        log.debug("Starting camel context");
+        log.debug("Starting Camel context");
         CamelContext camelContext = new DefaultCamelContext();
-        // Be prepared for extensive regression testing if you want access to Spring beans in any way
-        // other than this way (e.g., appRegistry.get("ArkContent").getBean("beanName")).
         camelContext.getRegistry().bind("arkContext", applicationContext);
 
         createCamelRoutes(camelContext);
         createCamelQueues(camelContext);
 
         camelContext.start();
+        List<Route> routes = camelContext.getRoutes();
+        log.debug("Number of camel routes={}", routes.size());
+        for (Route route : routes)
+        {
+            log.debug("Camel route id={}, description={}, endpointURI={}", route.getId(), route.getDescription(),
+                    route.getEndpoint().getEndpointUri());
+        }
         log.debug("Camel context successfully started.");
     }
 
-    private void createCamelQueues(CamelContext camelContext) throws ArkCaseCamelException
+    private void createCamelQueues(CamelContext camelContext) throws ArkCaseFileRepositoryException
     {
         try
         {
@@ -180,36 +186,38 @@ public class CamelContextManager implements ApplicationContextAware
         }
         catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e)
         {
-            log.error("Cant create queues for camel, REASON:{}", e.getMessage(), e);
-            throw new ArkCaseCamelException(e);
+            log.error("Cant create queues for Camel, REASON:{}", e.getMessage(), e);
+            throw new ArkCaseFileRepositoryException(e);
         }
     }
 
-    private void createCamelRoutes(CamelContext camelContext) throws ArkCaseCamelException
+    private void createCamelRoutes(CamelContext camelContext) throws ArkCaseFileRepositoryException
     {
         try
         {
             Reflections routesReflections = new Reflections(routesPackage);
-            Set<Class<? extends RouteBuilder>> routes = routesReflections.getSubTypesOf(RouteBuilder.class);
+            Set<Class<? extends ArkCaseAbstractRoute>> routes = routesReflections.getSubTypesOf(ArkCaseAbstractRoute.class);
 
             for (ArkCaseCMISConfig repositoryConfig : repositoryConfigs.values())
             {
                 for (Class route : routes)
                 {
                     Object routeInstance = route.newInstance();
-                    if (routeInstance instanceof RouteBuilder && routeInstance instanceof ArkCaseRoute)
+                    if (routeInstance instanceof ArkCaseAbstractRoute)
                     {
-                        ((ArkCaseRoute) routeInstance).setRepositoryId(repositoryConfig.getId());
-                        ((ArkCaseRoute) routeInstance).setTimeout(repositoryConfig.getTimeout());
+
+                        ((ArkCaseAbstractRoute) routeInstance).setRepositoryId(repositoryConfig.getId());
+                        ((ArkCaseAbstractRoute) routeInstance).setTimeout(repositoryConfig.getTimeout());
                         camelContext.addRoutes((RoutesBuilder) routeInstance);
+                        log.debug("Successfully added route={} to camel context", routeInstance.getClass());
                     }
                 }
             }
         }
         catch (Exception e)
         {
-            log.error("Cant add routes to camel context, REASON:{}", e.getMessage(), e);
-            throw new ArkCaseCamelException(e);
+            log.error("Can't add routes to Camel context, REASON:{}", e.getMessage(), e);
+            throw new ArkCaseFileRepositoryException(e);
         }
     }
 
@@ -225,11 +233,11 @@ public class CamelContextManager implements ApplicationContextAware
         }
         catch (Exception e)
         {
-            log.error("Could not stop Camel context: {}" + e.getMessage(), e);
+            log.error("Could not stop Camel context: {}", e.getMessage(), e);
         }
     }
 
-    public Object send(ArkCaseCMISActions action, Map<String, Object> props) throws ArkCaseCamelException
+    public Object send(ArkCaseCMISActions action, Map<String, Object> props) throws ArkCaseFileRepositoryException
     {
         log.debug("Sending message on queue={} with cmisDocumentId={}", action.getQueueName(), props.get("cmisDocumentId"));
         try
@@ -237,7 +245,7 @@ public class CamelContextManager implements ApplicationContextAware
             String cmisRepositoryId = String.valueOf(props.get("cmisRepositoryId"));
             if (cmisRepositoryId == null || cmisRepositoryId.isEmpty())
             {
-                cmisRepositoryId = "alfresco";
+                cmisRepositoryId = ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID;
             }
             ArkCaseCMISConfig config = repositoryConfigs.get(cmisRepositoryId);
             props.put(ArkCaseCMISConstants.CMIS_API_URL, config.getBaseUrl());
@@ -248,10 +256,10 @@ public class CamelContextManager implements ApplicationContextAware
 
             return queue.send(props);
         }
-        catch (AcmEncryptionException | ArkCaseCamelException e)
+        catch (AcmEncryptionException | ArkCaseFileRepositoryException e)
         {
             log.error("Error sending message on queue={} with cmisDocumentId={}", action.getQueueName(), props.get("cmisDocumentId"));
-            throw new ArkCaseCamelException(e);
+            throw new ArkCaseFileRepositoryException(e);
         }
     }
 

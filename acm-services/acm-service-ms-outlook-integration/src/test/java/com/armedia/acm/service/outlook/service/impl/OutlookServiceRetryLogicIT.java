@@ -39,12 +39,12 @@ import com.armedia.acm.service.outlook.dao.OutlookDao;
 import com.armedia.acm.service.outlook.model.AcmOutlookUser;
 import com.armedia.acm.service.outlook.service.OutlookService;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -90,6 +90,7 @@ public class OutlookServiceRetryLogicIT extends EasyMockSupport
     {
         String userHomePath = System.getProperty("user.home");
         System.setProperty("acm.configurationserver.propertyfile", userHomePath + "/.arkcase/acm/conf.yml");
+        System.setProperty("configuration.server.url", "http://localhost:9999");
     }
 
     private transient final Logger log = LogManager.getLogger(getClass());
@@ -133,9 +134,6 @@ public class OutlookServiceRetryLogicIT extends EasyMockSupport
                 eq(sortProperty),
                 eq(sortAscending),
                 eq(filter))).andThrow(new AcmOutlookFindItemsFailedException(new NullPointerException("test exception")));
-
-        // since we threw an exception, now it should disconnect, and then retry
-        mockDao.disconnect(user);
 
         // second connect, after the exception
         expect(mockDao.connect(user)).andReturn(mockExchangeService);
@@ -182,8 +180,6 @@ public class OutlookServiceRetryLogicIT extends EasyMockSupport
                 eq(filter))).andThrow(new AcmOutlookFindItemsFailedException(new NullPointerException("test exception")))
                         .times(expectedRetries);
 
-        // since we threw an exception, now it should disconnect, and then retry
-        mockDao.disconnect(user);
         expectLastCall().times(expectedRetries);
 
         replayAll();

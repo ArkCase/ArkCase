@@ -27,7 +27,7 @@ package com.armedia.acm.camelcontext.flow.queue;
  * #L%
  */
 
-import com.armedia.acm.camelcontext.exception.ArkCaseCamelException;
+import com.armedia.acm.camelcontext.exception.ArkCaseFileRepositoryException;
 
 import java.util.Map;
 
@@ -36,5 +36,5 @@ import java.util.Map;
  */
 public interface ArkCaseCMISQueue
 {
-    Object send(Map<String, Object> props) throws ArkCaseCamelException;
+    Object send(Map<String, Object> props) throws ArkCaseFileRepositoryException;
 }

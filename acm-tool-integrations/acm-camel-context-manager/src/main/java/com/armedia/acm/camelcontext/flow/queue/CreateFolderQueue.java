@@ -27,6 +27,8 @@ package com.armedia.acm.camelcontext.flow.queue;
  * #L%
  */
 
+import com.armedia.acm.camelcontext.exception.ArkCaseFileRepositoryException;
+
 import org.apache.camel.ProducerTemplate;
 
 import java.util.Map;
@@ -48,10 +50,17 @@ public class CreateFolderQueue implements ArkCaseCMISQueue
     }
 
     @Override
-    public Object send(Map<String, Object> props)
+    public Object send(Map<String, Object> props) throws ArkCaseFileRepositoryException
     {
         String queueName = "seda:" + repositoryID + "-createFolderQueue?timeout=" + timeout;
         producerTemplate.setDefaultEndpointUri(queueName);
-        return producerTemplate.requestBody(props);
+        try
+        {
+            return producerTemplate.requestBody(props);
+        }
+        catch (Exception e)
+        {
+            throw new ArkCaseFileRepositoryException(e);
+        }
     }
 }

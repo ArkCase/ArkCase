@@ -29,13 +29,15 @@ package gov.foia.service;
  * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
  * #L%
  */
-
 import static org.easymock.EasyMock.anyObject;
 import static org.easymock.EasyMock.anyString;
 import static org.easymock.EasyMock.capture;
 import static org.easymock.EasyMock.expect;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
 
+import com.armedia.acm.configuration.service.ConfigurationPropertyService;
 import com.armedia.acm.pdf.service.PdfService;
 import com.armedia.acm.pdf.service.PdfServiceImpl;
 import com.armedia.acm.plugins.addressable.model.ContactMethod;
@@ -43,14 +45,21 @@ import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
+import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
 import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
 import com.armedia.acm.services.email.model.EmailWithAttachmentsDTO;
 import com.armedia.acm.services.email.service.TemplatingEngine;
+import com.armedia.acm.services.notification.dao.NotificationDao;
+import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.service.NotificationSender;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 
+import gov.foia.model.FOIADocumentDescriptor;
+import gov.foia.model.FOIAObject;
+import gov.foia.model.FOIARequest;
+import gov.foia.model.FoiaConfiguration;
 import org.easymock.Capture;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
@@ -65,10 +74,6 @@ import java.util.List;
 import java.util.Map;
 
 import gov.foia.dao.FOIARequestDao;
-import gov.foia.model.FOIADocumentDescriptor;
-import gov.foia.model.FOIAObject;
-import gov.foia.model.FOIARequest;
-import gov.foia.model.FoiaConfiguration;
 
 /**
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Aug 17, 2016
@@ -106,7 +111,9 @@ public class AcknowledgementDocumentServiceTest extends EasyMockSupport
     private FOIADocumentGeneratorService mockDocumentGeneratorService;
     private FoiaConfigurationService mockedFoiaConfigurationService;
     private FoiaConfiguration mockedFoiaConfiguration;
-    private TemplatingEngine mockedTemplatingEngine;
+    private Notification mockedNotification;
+    private EcmFileVersion mockedEcmFileVersion;
+    private NotificationDao mockedNotificationDao;
 
     @Before
     public void setUp()
@@ -133,7 +140,9 @@ public class AcknowledgementDocumentServiceTest extends EasyMockSupport
         mockDocumentGeneratorService = createMock(FOIADocumentGeneratorService.class);
         mockedFoiaConfigurationService = createMock(FoiaConfigurationService.class);
         mockedFoiaConfiguration = createMock(FoiaConfiguration.class);
-        mockedTemplatingEngine = createMock(TemplatingEngine.class);
+        mockedNotification = createMock(Notification.class);
+        mockedEcmFileVersion = createMock(EcmFileVersion.class);
+        mockedNotificationDao = createMock(NotificationDao.class);
 
         acknowledgementService.setRequestDao(mockedFOIARequestFileDao);
         acknowledgementService.setEcmFileDao(mockedFileDao);
@@ -141,9 +150,10 @@ public class AcknowledgementDocumentServiceTest extends EasyMockSupport
         acknowledgementService.setNotificationSender(mockedNotificationSender);
         acknowledgementService.setDocumentGeneratorService(mockDocumentGeneratorService);
         acknowledgementService.setFoiaConfigurationService(mockedFoiaConfigurationService);
-        acknowledgementService.setTemplatingEngine(mockedTemplatingEngine);
+        acknowledgementService.setNotificationDao(mockedNotificationDao);
 
         mockedContactMethods = Arrays.asList(mockedContactMethod);
+
     }
 
     @Ignore
@@ -191,85 +201,41 @@ public class AcknowledgementDocumentServiceTest extends EasyMockSupport
     }
 
     @Test
-    public void testAcknowledgementEmailExternal() throws Exception
+    public void testAcknowledgementEmail() throws Exception
     {
-        testEmailExpect();
-        expect(mockedRequest.getCreator()).andReturn(userId);
-        expect(mockedRequest.isExternal()).andReturn(true);
-
-        expect(mockedTemplatingEngine.process(anyString(), anyString(), anyObject())).andReturn("body text");
-
-        Capture<EmailWithAttachmentsDTO> captureEmailWithAttachmentsDTO = Capture.newInstance();
-        Capture<Authentication> capturedAuthentication = Capture.newInstance();
-        Capture<String> capturedUserId = Capture.newInstance();
-
-        mockedNotificationSender.sendEmailWithAttachments(capture(captureEmailWithAttachmentsDTO), capture(capturedAuthentication),
-                capture(capturedUserId));
-
-        replayAll();
-
-        acknowledgementService.emailAcknowledgement(requestId);
-
-        verifyAll();
-        assertEquals(String.format("%s %s", "New Request", caseNumber), captureEmailWithAttachmentsDTO.getValue().getSubject());
-        assertEquals(emailAddress, captureEmailWithAttachmentsDTO.getValue().getEmailAddresses().get(0));
-        assertEquals(fileId, captureEmailWithAttachmentsDTO.getValue().getAttachmentIds().get(0));
-        assertEquals(userId, capturedUserId.getValue());
-    }
-
-    @Test
-    public void testAcknowledgementEmailInternal() throws Exception
-    {
-        testEmailExpect();
-        expect(mockedRequest.getCreator()).andReturn(userId);
-        expect(mockedRequest.isExternal()).andReturn(false);
-        AcmUser internalUser = new AcmUser();
-        internalUser.setUserId(userId);
-        expect(mockedUserDao.findByUserId(userId)).andReturn(internalUser);
-
-        expect(mockedTemplatingEngine.process(anyString(), anyString(), anyObject())).andReturn("body text");
-
-        Capture<EmailWithAttachmentsDTO> capturedEmailWithAttachmentsDTO = Capture.newInstance();
-        Capture<Authentication> capturedAuthentication = Capture.newInstance();
-        Capture<AcmUser> capturedAcmUser = Capture.newInstance();
-
-        mockedNotificationSender.sendEmailWithAttachments(capture(capturedEmailWithAttachmentsDTO), capture(capturedAuthentication),
-                capture(capturedAcmUser));
-
-        replayAll();
-
-        acknowledgementService.emailAcknowledgement(requestId);
-
-        verifyAll();
-        assertEquals(String.format("%s %s", "New Request", caseNumber), capturedEmailWithAttachmentsDTO.getValue().getSubject());
-        assertEquals(emailAddress, capturedEmailWithAttachmentsDTO.getValue().getEmailAddresses().get(0));
-        assertEquals(fileId, capturedEmailWithAttachmentsDTO.getValue().getAttachmentIds().get(0));
-        assertEquals(userId, capturedAcmUser.getValue().getUserId());
-    }
-
-    public void testEmailExpect()
-    {
-        expect(mockedFoiaConfigurationService.readConfiguration()).andReturn(mockedFoiaConfiguration);
         expect(mockedFoiaConfiguration.getReceivedDateEnabled()).andReturn(false);
+        expect(mockedFoiaConfigurationService.readConfiguration()).andReturn(mockedFoiaConfiguration);
         expect(mockedFOIARequestFileDao.find(requestId)).andReturn(mockedRequest);
         expect(mockedRequest.getOriginator()).andReturn(mockedPersonAssociation);
+        expect(mockedRequest.getCreator()).andReturn(userId);
+        expect(mockedRequest.getObjectType()).andReturn("CASE_FILE");
         expect(mockedPersonAssociation.getPerson()).andReturn(mockedPerson);
         expect(mockedPerson.getContactMethods()).andReturn(mockedContactMethods);
         expect(mockedContactMethod.getType()).andReturn(emailType);
         expect(mockedContactMethod.getValue()).andReturn(emailAddress);
-        expect(mockedRequest.getCaseNumber()).andReturn(caseNumber);
-        expect(mockedRequest.getContainer()).andReturn(mockedContainer).anyTimes();
-        expect(mockedContainer.getId()).andReturn(containerId).anyTimes();
-        expect(mockedContainer.getAttachmentFolder()).andReturn(mockedFolder);
-        expect(mockedFolder.getId()).andReturn(folderId).anyTimes();
-        expect(mockedRequest.getRequestType()).andReturn(requestType).anyTimes();
-        expect(mockedFile.getFileId()).andReturn(fileId);
-        expect(mockedFileDao.findForContainerAttachmentFolderAndFileType(containerId, folderId, documentType)).andReturn(mockedFile);
-
         FOIADocumentDescriptor documentDescriptor = new FOIADocumentDescriptor();
         documentDescriptor.setDoctype(documentType);
         expect(mockDocumentGeneratorService.getDocumentDescriptor(anyObject(FOIAObject.class), anyObject(String.class)))
                 .andReturn(documentDescriptor);
-    }
+        expect(mockedContainer.getId()).andReturn(containerId).anyTimes();
+        expect(mockedContainer.getAttachmentFolder()).andReturn(mockedFolder);
+        expect(mockedFolder.getId()).andReturn(folderId).anyTimes();
+        expect(mockedFileDao.findForContainerAttachmentFolderAndFileType(containerId, folderId, documentType)).andReturn(mockedFile);
+        expect(mockedFile.getVersions()).andReturn(Arrays.asList(mockedEcmFileVersion));
+        expect(mockedEcmFileVersion.getVersionTag()).andReturn("versionTag");
+        expect(mockedFile.getActiveVersionTag()).andReturn("versionTag");
+        expect(mockedRequest.getContainer()).andReturn(mockedContainer).anyTimes();
+        expect(mockedRequest.getCaseNumber()).andReturn(caseNumber);
+        expect(mockedRequest.getRequestType()).andReturn(requestType).anyTimes();
+        Capture<Notification> captureNotification = Capture.newInstance();
+        expect(mockedNotificationDao.save(capture(captureNotification))).andReturn(mockedNotification);
 
+        replayAll();
+
+        acknowledgementService.emailAcknowledgement(requestId);
+
+        verifyAll();
+        assertEquals(emailAddress, captureNotification.getValue().getEmailAddresses());
+        assertEquals(String.format("%s %s", "New Request", caseNumber), captureNotification.getValue().getTitle());
+    }
 }

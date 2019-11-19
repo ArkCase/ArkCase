@@ -83,6 +83,9 @@ public class BillingItem implements Serializable, AcmObject, AcmEntity, AcmParen
     @Column(name = "cm_billing_item_description")
     private String itemDescription;
 
+    @Column(name = "cm_billing_item_type")
+    private String itemType;
+
     @Column(name = "cm_billing_item_amount")
     private Double itemAmount;
 
@@ -114,6 +117,10 @@ public class BillingItem implements Serializable, AcmObject, AcmEntity, AcmParen
     {
         Date today = new Date();
         setCreated(today);
+        if (itemType == null)
+        {
+            setItemType(BillingConstants.BILLING_ITEM_TYPE_DEFAULT);
+        }
     }
 
     /**
@@ -166,6 +173,16 @@ public class BillingItem implements Serializable, AcmObject, AcmEntity, AcmParen
     public void setItemDescription(String itemDescription)
     {
         this.itemDescription = itemDescription;
+    }
+
+    public String getItemType()
+    {
+        return itemType;
+    }
+
+    public void setItemType(String itemType)
+    {
+        this.itemType = itemType;
     }
 
     /**

@@ -4,7 +4,7 @@ package com.armedia.acm.plugins.complaint.service;
  * #%L
  * ACM Default Plugin: Complaints
  * %%
- * Copyright (C) 2014 - 2018 ArkCase LLC
+ * Copyright (C) 2014 - 2019 ArkCase LLC
  * %%
  * This file is part of the ArkCase software. 
  * 
@@ -27,7 +27,7 @@ package com.armedia.acm.plugins.complaint.service;
  * #L%
  */
 
-import com.armedia.acm.data.exceptions.AcmAccessControlException;
+import com.armedia.acm.core.exceptions.AcmAccessControlException;
 import com.armedia.acm.plugins.complaint.dao.ComplaintDao;
 import com.armedia.acm.plugins.complaint.model.Complaint;
 import com.armedia.acm.services.dataaccess.service.AcmObjectDataAccessBatchUpdateLocator;

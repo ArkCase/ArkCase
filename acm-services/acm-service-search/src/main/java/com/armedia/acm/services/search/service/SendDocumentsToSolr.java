@@ -33,17 +33,15 @@ import com.armedia.acm.services.search.model.solr.SolrBaseDocument;
 import com.armedia.acm.services.search.model.solr.SolrContentDocument;
 import com.armedia.acm.services.search.model.solr.SolrDeleteDocumentByIdRequest;
 import com.armedia.acm.services.search.model.solr.SolrDocument;
-import com.fasterxml.jackson.core.JsonProcessingException;
 
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.jms.JmsException;
 import org.springframework.jms.core.JmsTemplate;
 
 import javax.jms.ConnectionFactory;
 
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -60,15 +58,6 @@ public class SendDocumentsToSolr implements InitializingBean
     public void afterPropertiesSet() throws Exception
     {
         jmsTemplate = new JmsTemplate(getJmsConnectionFactory());
-    }
-
-    // this method is used from Mule, do not delete it!
-    public String asJsonArray(SolrBaseDocument document) throws JsonProcessingException
-    {
-        log.trace("Converting a document to a JSON array");
-        List<SolrBaseDocument> docs = Collections.singletonList(document);
-        String json = objectConverter.getJsonMarshaller().marshal(docs);
-        return json;
     }
 
     public void sendSolrAdvancedSearchDocuments(List<SolrAdvancedSearchDocument> solrDocuments)

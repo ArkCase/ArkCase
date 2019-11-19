@@ -719,11 +719,13 @@ public class SolrDocument extends SolrAbstractDocument implements Serializable
         this.parent_deny_group_ls = parent_deny_group_ls;
     }
 
-    public Long getObject_id_i() {
+    public Long getObject_id_i()
+    {
         return object_id_i;
     }
 
-    public void setObject_id_i(Long object_id_i) {
+    public void setObject_id_i(Long object_id_i)
+    {
         this.object_id_i = object_id_i;
     }
 

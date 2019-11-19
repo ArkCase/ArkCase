@@ -27,9 +27,9 @@ package com.armedia.acm.services.users.service;
  * #L%
  */
 
+import com.armedia.acm.services.search.exception.SolrException;
 import com.armedia.acm.services.users.model.AcmUser;
 
-import org.mule.api.MuleException;
 import org.springframework.security.core.Authentication;
 
 import java.util.List;
@@ -66,7 +66,7 @@ public interface AcmUserService
      * @return users
      */
     String getUsersByName(Authentication auth, String searchFilter, String sortBy, String sortDirection, int startRow, int maxRows)
-            throws MuleException;
+            throws SolrException;
 
     /**
      * Retrieve n valid users
@@ -76,7 +76,7 @@ public interface AcmUserService
      * @return users
      */
     String getNUsers(Authentication auth, String sortBy, String sortDirection, int startRow, int maxRows)
-            throws MuleException;
+            throws SolrException;
 
     /**
      * Retrieve list of user privileges

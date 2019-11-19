@@ -34,8 +34,8 @@ import static com.armedia.acm.portalgateway.service.PortalRequestServiceProvider
 import static com.armedia.acm.portalgateway.service.PortalRequestServiceProvider.SUBMIT_REQUEST_METHOD_CREATE_REQUEST;
 import static com.armedia.acm.portalgateway.service.PortalRequestServiceProvider.SUBMIT_REQUEST_METHOD_DESERIALIZE;
 
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.http.HttpStatus;
 
 import java.util.HashMap;
@@ -109,7 +109,7 @@ public class PortalUserServiceExceptionMapper implements PortalServiceExceptionM
         }
         else
         {
-            return HttpStatus.OK;
+            return HttpStatus.INTERNAL_SERVER_ERROR;
         }
     }
 

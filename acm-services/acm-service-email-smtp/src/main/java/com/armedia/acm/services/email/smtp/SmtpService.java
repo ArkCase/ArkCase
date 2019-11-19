@@ -135,9 +135,10 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
 
         List<AcmEvent> sentEvents = new ArrayList<>();
         Map<String, InputStreamDataSource> attachments = processAttachments(in, user, sentEvents);
-        if(attachments.size() == 0)
+        if (attachments.size() == 0)
         {
-            sentEvents.add(new SmtpEventMailSent(in,user.getUserId(),in.getObjectId(),in.getObjectType(),AuthenticationUtils.getUserIpAddress()));
+            sentEvents.add(new SmtpEventMailSent(in, user != null ? user.getUserId() : null, in.getObjectId(), in.getObjectType(),
+                    AuthenticationUtils.getUserIpAddress()));
         }
         for (String emailAddress : in.getEmailAddresses())
         {
@@ -200,8 +201,8 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
             }
             catch (Exception e)
             {
-                log.error("Failed to send email to [{}].", emailAddress, exception);
                 exception = e;
+                log.error("Failed to send email to [{}].", emailAddress, exception);
             }
         }
         in.setMailSent(exception == null);
@@ -281,7 +282,7 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
                     }
                     catch (ConversionException e)
                     {
-                        log.error(String.format("Could not convert file [%s] to PDF", fileName), e);
+                        log.error("Could not convert file [{}] to PDF", fileName, e);
                     }
 
                     if (pdfConvertedFile != null)
@@ -295,7 +296,7 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
                         }
                         catch (IOException e)
                         {
-                            log.error(String.format("Could not open input stream of file [%s]", fileName), e);
+                            log.error("Could not open input stream of file [{}]", fileName, e);
                         }
                         finally
                         {
@@ -379,7 +380,7 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
             if (exception != null)
             {
                 emailResultList.add(new EmailWithEmbeddedLinksResultDTO(emailAddress, false));
-                log.error("Email message not sent ...", exception);
+                log.error("Failed to send email to [{}].", emailAddress, exception);
             }
             else
             {
@@ -389,12 +390,12 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
             if (in.getModelReferenceName().equals("plainEmail"))
             {
 
-                event = new SmtpEventMailSent(in, user.getUserId(),Long.parseLong(in.getParentNumber()),
+                event = new SmtpEventMailSent(in, user != null ? user.getUserId() : null, Long.parseLong(in.getParentNumber()),
                         in.getParentType(), null);
             }
             else
             {
-                event = new SmtpSentEventHyperlink(in, user.getUserId(), parentId, in.getParentType());
+                event = new SmtpSentEventHyperlink(in, user != null ? user.getUserId() : null, parentId, in.getParentType());
             }
             boolean success = (exception == null);
             event.setSucceeded(success);

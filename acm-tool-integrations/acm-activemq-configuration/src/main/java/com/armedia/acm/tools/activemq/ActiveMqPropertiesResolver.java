@@ -32,7 +32,6 @@ import com.armedia.acm.configuration.yaml.YamlFileConfiguration;
 import com.armedia.acm.configuration.yaml.YamlInitializer;
 
 import org.springframework.core.env.ConfigurableEnvironment;
-import org.springframework.core.env.Environment;
 import org.springframework.core.env.MapPropertySource;
 import org.springframework.core.env.MutablePropertySources;
 import org.springframework.core.env.StandardEnvironment;
@@ -47,9 +46,7 @@ import java.util.Properties;
  */
 public class ActiveMqPropertiesResolver
 {
-    private final static String CONFIGURATION_SERVER_URL = "configuration.server.url";
 
-    private Environment environment;
     private YamlFileConfiguration yamlFileConfiguration;
     private YamlInitializer yamlInitializer;
     private ConfigurableEnvironment configurableEnvironment;
@@ -57,7 +54,6 @@ public class ActiveMqPropertiesResolver
 
     public Properties getProperties()
     {
-        environment = new StandardEnvironment();
         configurationServiceBootClient = new ConfigurationServiceBootClient();
         yamlInitializer = new YamlInitializer();
         yamlFileConfiguration = yamlInitializer.getYamlFileConfiguration();
@@ -66,10 +62,9 @@ public class ActiveMqPropertiesResolver
         MutablePropertySources propertySources = configurableEnvironment.getPropertySources();
         propertySources.addFirst(new MapPropertySource("bootstrap", prepareConfigurationMap()));
         configurationServiceBootClient.setConfigurableEnvironment(configurableEnvironment);
+        configurationServiceBootClient.setEnvironment(new StandardEnvironment());
 
-        String serverUrl = environment.getProperty(CONFIGURATION_SERVER_URL);
-
-        Map<String, Object> configurationMap = configurationServiceBootClient.loadConfiguration(serverUrl, "activemq-config");
+        Map<String, Object> configurationMap = configurationServiceBootClient.loadConfiguration("arkcase-activemq", null);
         Properties props = new Properties();
         props.putAll(configurationMap);
 

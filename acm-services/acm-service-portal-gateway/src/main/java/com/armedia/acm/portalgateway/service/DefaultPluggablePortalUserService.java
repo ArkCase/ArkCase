@@ -35,8 +35,8 @@ import com.armedia.acm.portalgateway.model.UserResetRequest;
 import com.armedia.acm.portalgateway.model.UserResetResponse;
 import com.armedia.acm.spring.SpringContextHolder;
 
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.Map;
 import java.util.Optional;
@@ -157,10 +157,11 @@ public class DefaultPluggablePortalUserService implements PortalUserService
     }
 
     @Override
-    public UserResetResponse changePassword(String portalId, String userId, PortalUserCredentials portalUserCredentials) throws PortalUserServiceException
+    public UserResetResponse changePassword(String portalId, String userId, String acmUserId, PortalUserCredentials portalUserCredentials)
+            throws PortalUserServiceException
     {
-        log.debug("Changing password for [{}] for portal with [{}] ID.", userId, portalId);
-        return getServiceProvider().changePassword(portalId, userId, portalUserCredentials);
+        log.debug("Changing password for [{}] [{}] for portal with [{}] ID.", userId, acmUserId, portalId);
+        return getServiceProvider().changePassword(portalId, userId, acmUserId, portalUserCredentials);
     }
 
     /*

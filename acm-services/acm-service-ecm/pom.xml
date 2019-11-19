@@ -322,7 +322,10 @@
             <scope>compile</scope>
         </dependency>
 
-
+        <dependency>
+            <groupId>com.antkorwin</groupId>
+            <artifactId>xsync</artifactId>
+        </dependency>
     </dependencies>
 
 </project>

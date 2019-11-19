@@ -479,39 +479,61 @@ public class ArkCaseOCRServiceImpl extends ArkCaseMediaEngineServiceImpl<OCR>
     @Override
     public void verifyOCR() throws SaveConfigurationException
     {
+        boolean isWindows = System.getProperty("os.name").toLowerCase().startsWith("windows");
         Runtime rt = Runtime.getRuntime();
         Process pr;
         try
         {
-            pr = rt.exec("cmd /c tesseract --version");
+            if (isWindows)
+            {
+                pr = rt.exec("cmd /c tesseract --version");
+            }
+            else
+            {
+                pr = rt.exec("sh -c tesseract --version");
+            }
 
             pr.waitFor();
         }
         catch (Exception e)
         {
-            throw new SaveConfigurationException("The Tesseract engine must be installed in order to enable OCR");
+            throw new SaveConfigurationException("The Tesseract engine must be installed in order to enable OCR", e);
         }
 
         try
         {
-            pr = rt.exec("cmd /c qpdf --version");
+            if (isWindows)
+            {
+                pr = rt.exec("cmd /c qpdf --version");
+            }
+            else
+            {
+                pr = rt.exec("sh -c qpdf --version");
+            }
 
             pr.waitFor();
         }
         catch (Exception e)
         {
-            throw new SaveConfigurationException("The QPDF engine must be installed in order to enable OCR");
+            throw new SaveConfigurationException("The QPDF engine must be installed in order to enable OCR", e);
         }
 
         try
         {
-            pr = rt.exec("cmd /c magick --version");
+            if (isWindows)
+            {
+                pr = rt.exec("cmd /c magick --version");
+            }
+            else
+            {
+                pr = rt.exec("sh -c magick --version");
+            }
 
             pr.waitFor();
         }
         catch (Exception e)
         {
-            throw new SaveConfigurationException("The Image Magick engine must be installed in order to enable OCR");
+            throw new SaveConfigurationException("The Image Magick engine must be installed in order to enable OCR", e);
         }
     }
 

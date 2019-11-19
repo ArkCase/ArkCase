@@ -32,11 +32,14 @@ import org.springframework.beans.factory.annotation.Value;
 public class ConfigurationClientConfig
 {
 
-    @Value("${application.name}")
-    private String applicationName;
+    @Value("${application.name.default}")
+    private String defaultApplicationName;
+
+    @Value("${application.name.active}")
+    private String activeApplicationName;
 
     @Value("${configuration.server.update.file.path}")
-    private String updatePath;
+    private String updateFilePath;
 
     @Value("${application.profile}")
     private String activeProfile;
@@ -46,24 +49,34 @@ public class ConfigurationClientConfig
 
     private String updatePropertiesEndpoint;
 
-    public String getApplicationName()
+    public String getDefaultApplicationName()
     {
-        return applicationName;
+        return defaultApplicationName;
     }
 
-    public void setApplicationName(String applicationName)
+    public void setDefaultApplicationName(String defaultApplicationName)
     {
-        this.applicationName = applicationName;
+        this.defaultApplicationName = defaultApplicationName;
     }
 
-    public String getUpdatePath()
+    public String getActiveApplicationName()
     {
-        return updatePath;
+        return activeApplicationName;
     }
 
-    public void setUpdatePath(String updatePath)
+    public void setActiveApplicationName(String activeApplicationName)
     {
-        this.updatePath = updatePath;
+        this.activeApplicationName = activeApplicationName;
+    }
+
+    public String getUpdateFilePath()
+    {
+        return updateFilePath;
+    }
+
+    public void setUpdateFilePath(String updateFilePath)
+    {
+        this.updateFilePath = updateFilePath;
     }
 
     public String getActiveProfile()
@@ -86,8 +99,8 @@ public class ConfigurationClientConfig
         this.configurationUrl = configurationUrl;
     }
 
-    public String getUpdatePropertiesEndpoint()
+    public String getUpdateFilePropertiesEndpoint()
     {
-        return String.format("%s%s", this.configurationUrl, this.updatePath);
+        return String.format("%s%s", this.configurationUrl, this.updateFilePath);
     }
 }

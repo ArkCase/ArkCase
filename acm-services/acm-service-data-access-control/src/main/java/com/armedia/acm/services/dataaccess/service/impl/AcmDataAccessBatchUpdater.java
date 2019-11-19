@@ -4,7 +4,7 @@ package com.armedia.acm.services.dataaccess.service.impl;
  * #%L
  * ACM Service: Data Access Control
  * %%
- * Copyright (C) 2014 - 2018 ArkCase LLC
+ * Copyright (C) 2014 - 2019 ArkCase LLC
  * %%
  * This file is part of the ArkCase software. 
  * 
@@ -27,7 +27,7 @@ package com.armedia.acm.services.dataaccess.service.impl;
  * #L%
  */
 
-import com.armedia.acm.data.exceptions.AcmAccessControlException;
+import com.armedia.acm.core.exceptions.AcmAccessControlException;
 import com.armedia.acm.services.dataaccess.service.AcmObjectDataAccessBatchUpdateLocator;
 import com.armedia.acm.services.participants.model.AcmAssignedObject;
 

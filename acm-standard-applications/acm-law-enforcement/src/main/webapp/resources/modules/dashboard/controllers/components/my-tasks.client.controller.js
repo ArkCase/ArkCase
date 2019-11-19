@@ -13,9 +13,11 @@ angular.module('dashboard.my-tasks').controller(
                     var paginationOptions = {
                         pageNumber: 1,
                         pageSize: 5,
-                        sortBy: 'object_id_i',
-                        sortDir: 'desc'
+                        sortBy: 'dueDate_tdt',
+                        sortDir: 'asc'
                     };
+
+                    var rowTmpl = '<div ng-class="{\'overdue\':row.entity.isOverdue, \'deadline\':row.entity.isDeadline}"><div ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.colDef.name" class="ui-grid-cell" ng-class="{ \'ui-grid-row-header-cell\': col.isRowHeader }" ui-grid-cell></div></div>';
 
                     vm.gridOptions = {
                         enableColumnResizing: true,
@@ -27,6 +29,7 @@ angular.module('dashboard.my-tasks').controller(
                         multiSelect: false,
                         noUnselect: false,
                         columnDefs: [],
+                        rowTemplate: rowTmpl,
                         onRegisterApi: function(gridApi) {
                             vm.gridApi = gridApi;
 
