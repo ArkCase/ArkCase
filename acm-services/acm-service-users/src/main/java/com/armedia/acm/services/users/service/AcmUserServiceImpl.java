@@ -27,13 +27,13 @@ package com.armedia.acm.services.users.service;
  * #L%
  */
 
-import com.armedia.acm.services.search.model.SolrCore;
+import com.armedia.acm.services.search.exception.SolrException;
+import com.armedia.acm.services.search.model.solr.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.ApplicationRolesToPrivilegesConfig;
 
-import org.mule.api.MuleException;
 import org.springframework.security.core.Authentication;
 
 import java.util.Arrays;
@@ -100,7 +100,7 @@ public class AcmUserServiceImpl implements AcmUserService
     @Override
     public String getUsersByName(Authentication auth, String searchFilter, String sortBy, String sortDirection, int startRow,
             int maxRows)
-            throws MuleException
+            throws SolrException
     {
 
         String query = "object_type_s:USER AND status_lcs:VALID";
@@ -113,7 +113,7 @@ public class AcmUserServiceImpl implements AcmUserService
 
     @Override
     public String getNUsers(Authentication auth, String sortBy, String sortDirection, int startRow, int maxRows)
-            throws MuleException
+            throws SolrException
     {
 
         String query = "object_type_s:USER AND status_lcs:VALID";

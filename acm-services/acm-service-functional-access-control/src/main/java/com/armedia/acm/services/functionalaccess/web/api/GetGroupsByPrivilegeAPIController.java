@@ -29,11 +29,11 @@ package com.armedia.acm.services.functionalaccess.web.api;
 
 import com.armedia.acm.pluginmanager.service.AcmPluginManager;
 import com.armedia.acm.services.functionalaccess.service.FunctionalAccessService;
+import com.armedia.acm.services.search.exception.SolrException;
 import com.armedia.acm.services.users.dao.UserDao;
 
-import org.mule.api.MuleException;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -60,7 +60,7 @@ public class GetGroupsByPrivilegeAPIController
             @RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
             @RequestParam(value = "n", required = false, defaultValue = "50") int maxRows,
             @RequestParam(value = "s", required = false, defaultValue = "") String sort,
-            Authentication auth) throws MuleException
+            Authentication auth) throws SolrException
     {
         if (log.isDebugEnabled())
         {

@@ -27,11 +27,11 @@ package com.armedia.acm.services.search.service;
  * #L%
  */
 
-import com.armedia.acm.services.search.model.SolrCore;
+import com.armedia.acm.services.search.exception.SolrException;
+import com.armedia.acm.services.search.model.solr.SolrCore;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.mule.api.MuleException;
 import org.springframework.security.core.Authentication;
 
 import java.util.List;
@@ -48,7 +48,7 @@ public class ChildDocumentsSearchServiceImpl implements ChildDocumentsSearchServ
     @Override
     public String searchChildren(String parentType, Long parentId, String childType, boolean activeOnly,
             boolean exceptDeletedOnly, List<String> extra, String sort, int startRow, int maxRows, Authentication authentication)
-            throws MuleException
+            throws SolrException
     {
         String query = "parent_object_type_s:" + parentType + " AND parent_object_id_i:" + parentId;
 
@@ -85,7 +85,7 @@ public class ChildDocumentsSearchServiceImpl implements ChildDocumentsSearchServ
     public String searchForChildrenAndGrandchildrenTasks(String parentType, Long parentId, List<String> childTypes, String sort,
             int startRow,
             int maxRows,
-            Authentication authentication) throws MuleException
+            Authentication authentication) throws SolrException
     {
 
         String rowQueryParameters = String.format(

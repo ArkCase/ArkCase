@@ -4,7 +4,7 @@ package com.armedia.acm.services.search.model;
  * #%L
  * ACM Service: Search
  * %%
- * Copyright (C) 2014 - 2018 ArkCase LLC
+ * Copyright (C) 2014 - 2019 ArkCase LLC
  * %%
  * This file is part of the ArkCase software. 
  * 
@@ -27,41 +27,18 @@ package com.armedia.acm.services.search.model;
  * #L%
  */
 
-/**
- * Created by armdev on 2/12/15.
- */
-public enum SolrCore
+public class AcmGrantedGroupAuthorityMock extends AcmGrantedAuthorityMock
 {
-    QUICK_SEARCH("vm://quickSearchQuery.in", "acmQuickSearch"),
-    ADVANCED_SEARCH(
-            "vm://advancedSearchQuery.in",
-            "acmAdvancedSearch"),
-    ADVANCED_SUGGESTER_SEARCH(
-            "vm://advancedSuggesterQuery.in"),
-    QUICK_SUGGESTER_SEARCH("vm://quickSuggesterQuery.in");
+    private final Long groupId;
 
-    private String muleEndpointUrl;
-    private String core;
-
-    private SolrCore(String muleEndpointUrl)
+    public AcmGrantedGroupAuthorityMock(String authority, Long authorityId)
     {
-        this.muleEndpointUrl = muleEndpointUrl;
+        super(authority);
+        groupId = authorityId;
     }
 
-    private SolrCore(String muleEndpointUrl, String core)
+    public Long getGroupId()
     {
-        this.muleEndpointUrl = muleEndpointUrl;
-        this.core = core;
+        return groupId;
     }
-
-    public String getMuleEndpointUrl()
-    {
-        return muleEndpointUrl;
-    }
-
-    public String getCore()
-    {
-        return core;
-    }
-
 }

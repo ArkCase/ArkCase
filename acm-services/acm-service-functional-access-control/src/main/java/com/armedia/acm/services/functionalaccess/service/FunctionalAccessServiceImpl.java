@@ -29,8 +29,9 @@ package com.armedia.acm.services.functionalaccess.service;
 
 import com.armedia.acm.configuration.service.CollectionPropertiesConfigurationService;
 import com.armedia.acm.configuration.service.ConfigurationPropertyService;
-import com.armedia.acm.configuration.util.MergeFlags;
-import com.armedia.acm.services.search.model.SolrCore;
+import com.armedia.acm.services.search.exception.SolrException;
+import com.armedia.acm.services.search.model.solr.SolrCore;
+import com.armedia.acm.configuration.util.MergeFlags;;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.search.service.SearchResults;
 import com.armedia.acm.services.users.dao.UserDao;
@@ -46,7 +47,6 @@ import com.armedia.acm.services.users.model.group.AcmGroup;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.JSONArray;
-import org.mule.api.MuleException;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.security.core.Authentication;
@@ -152,7 +152,7 @@ public class FunctionalAccessServiceImpl implements FunctionalAccessService, App
 
     private List<String> getGroupsBySolrQuery(Authentication auth, String sortDirection,
             Integer startRow,
-            Integer maxRows, String query) throws MuleException
+            Integer maxRows, String query) throws SolrException
     {
         List<String> result = new ArrayList<>();
         String solrResponse = executeSolrQuery.getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, query, startRow, maxRows,
@@ -170,7 +170,7 @@ public class FunctionalAccessServiceImpl implements FunctionalAccessService, App
     @Override
     public List<String> getGroupsByRolePaged(Authentication auth, String roleName, Integer startRow, Integer maxRows,
             String sortDirection,
-            Boolean authorized) throws MuleException
+            Boolean authorized) throws SolrException
     {
         return getGroupsByRole(auth, roleName, startRow, maxRows, sortDirection, authorized, "");
     }
@@ -178,7 +178,7 @@ public class FunctionalAccessServiceImpl implements FunctionalAccessService, App
     @Override
     public List<String> getGroupsByRoleByName(Authentication auth, String roleName, Integer startRow, Integer maxRows,
             String sortDirection,
-            Boolean authorized, String filterQuery) throws MuleException
+            Boolean authorized, String filterQuery) throws SolrException
     {
         return getGroupsByRole(auth, roleName, startRow, maxRows, sortDirection, authorized, filterQuery);
     }
@@ -186,7 +186,7 @@ public class FunctionalAccessServiceImpl implements FunctionalAccessService, App
     @Override
     public List<String> getGroupsByRole(Authentication auth, String roleName, Integer startRow, Integer maxRows,
             String sortDirection,
-            Boolean authorized, String filterQuery) throws MuleException
+            Boolean authorized, String filterQuery) throws SolrException
     {
         Set<String> groupsByRole = roleToGroupMapping.getRoleToGroupsMap().get(roleName.toUpperCase());
         List<String> retrieveGroupsByRole = groupsByRole == null ? new ArrayList<>() : new ArrayList<>(groupsByRole);
@@ -322,7 +322,7 @@ public class FunctionalAccessServiceImpl implements FunctionalAccessService, App
 
     @Override
     public String getGroupsByPrivilege(List<String> roles, Map<String, List<String>> rolesToGroups, int startRow, int maxRows, String sort,
-            Authentication auth) throws MuleException
+            Authentication auth) throws SolrException
     {
         Set<String> groups = getAllGroupsForAllRoles(roles, rolesToGroups);
 
@@ -351,7 +351,7 @@ public class FunctionalAccessServiceImpl implements FunctionalAccessService, App
     }
 
     private String getGroupsFromSolr(List<String> groupNames, int startRow, int maxRows, String sort, Authentication auth)
-            throws MuleException
+            throws SolrException
     {
         LOG.info("Taking groups from Solr with IDs = {}", groupNames);
 
