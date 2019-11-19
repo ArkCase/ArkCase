@@ -28,7 +28,7 @@ package com.armedia.acm.camelcontext.flow.route;
  */
 
 import com.armedia.acm.camelcontext.basic.auth.HttpInvokerUtil;
-import com.armedia.acm.camelcontext.exception.ArkCaseCamelException;
+import com.armedia.acm.camelcontext.exception.ArkCaseFileRepositoryException;
 
 import org.apache.camel.Exchange;
 import org.apache.camel.ExchangePattern;
@@ -56,7 +56,7 @@ public class MoveFolderRoute extends ArkCaseAbstractRoute
                     Exception exception = (Exception) x.getProperty(Exchange.EXCEPTION_CAUGHT);
                     String causeMessage = String.valueOf(exception.getCause());
                     log.error("Exception moving folder: {}", causeMessage, exception);
-                    throw new ArkCaseCamelException(exception);
+                    throw new ArkCaseFileRepositoryException(exception);
                 });
 
         from("seda:" + getRepositoryId() + "-moveFolderQueue?timeout=" + getTimeout()).setExchangePattern(ExchangePattern.InOut)
