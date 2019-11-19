@@ -39,11 +39,11 @@ public enum SolrClientType
     /**
      * Use if Solr is running in SolrCloud mode
      */
-    CLOUD("CLOUD", SolrConfig.cloudClientBuilderFunction()),
+    CLOUD("CLOUD", ArkCaseSolrUtils.cloudClientBuilderFunction()),
     /**
      * Use if Solr is running in non-SolrCloud mode
      */
-    HTTP("HTTP", SolrConfig.httpClientBuilderFunction());
+    HTTP("HTTP", ArkCaseSolrUtils.buildHttpClient());
 
     private String clientType;
     private Function<SolrConfig, ? extends SolrClient> builderFunction;
