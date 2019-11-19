@@ -27,7 +27,8 @@ package com.armedia.acm.services.search.service;
  * #L%
  */
 
-import org.mule.api.MuleException;
+import com.armedia.acm.services.search.exception.SolrException;
+
 import org.springframework.security.core.Authentication;
 
 import java.util.List;
@@ -39,9 +40,9 @@ public interface ChildDocumentsSearchService
 {
     String searchChildren(String parentType, Long parentId, String childType, boolean activeOnly,
             boolean exceptDeletedOnly, List<String> extra, String sort, int startRow, int maxRows, Authentication authentication)
-            throws MuleException;
+            throws SolrException;
 
     String searchForChildrenAndGrandchildrenTasks(String parentType, Long parentId, List<String> childTypes, String sort, int startRow,
             int maxRows,
-            Authentication authentication) throws MuleException;
+            Authentication authentication) throws SolrException;
 }

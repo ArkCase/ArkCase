@@ -35,6 +35,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.armedia.acm.services.search.exception.SolrException;
 import com.armedia.acm.services.search.service.ChildDocumentsSearchService;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 
@@ -45,7 +46,6 @@ import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mule.api.DefaultMuleException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
@@ -194,7 +194,7 @@ public class SearchChildrenAPIControllerTest extends EasyMockSupport
         expect(mockChildDocumentsSearchService.searchChildren(eq(parentType), eq(parentId), eq(childType),
                 eq(activeOnly),
                 eq(exceptDeletedOnly), eq(null), eq(""), eq(0), eq(10),
-                capture(captureAuthentication))).andThrow(new DefaultMuleException("test Exception"));
+                capture(captureAuthentication))).andThrow(new SolrException("test Exception"));
 
         replayAll();
 

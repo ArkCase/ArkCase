@@ -32,7 +32,8 @@ import static org.easymock.EasyMock.capture;
 import static org.easymock.EasyMock.eq;
 import static org.easymock.EasyMock.expect;
 
-import com.armedia.acm.services.search.model.SolrCore;
+import com.armedia.acm.services.search.exception.SolrException;
+import com.armedia.acm.services.search.model.solr.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.users.service.group.GroupServiceImpl;
 
@@ -40,7 +41,6 @@ import org.easymock.Capture;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
-import org.mule.api.MuleException;
 import org.springframework.security.core.Authentication;
 
 import java.util.Optional;
@@ -62,7 +62,7 @@ public class GroupServiceImplTest extends EasyMockSupport
     }
 
     @Test
-    public void buildQueryForGroupWithoutSpaceAndNoStatusFilterTest() throws MuleException
+    public void buildQueryForGroupWithoutSpaceAndNoStatusFilterTest() throws SolrException
     {
         String group = "ADMIN";
         String query = "object_type_s:USER AND groups_id_ss:ADMIN";
@@ -82,7 +82,7 @@ public class GroupServiceImplTest extends EasyMockSupport
     }
 
     @Test
-    public void buildQueryForGroupWithoutSpaceAndValidStatusFilterTest() throws MuleException
+    public void buildQueryForGroupWithoutSpaceAndValidStatusFilterTest() throws SolrException
     {
         String group = "ADMIN";
         String status = "VALID";
@@ -103,7 +103,7 @@ public class GroupServiceImplTest extends EasyMockSupport
     }
 
     @Test
-    public void buildQueryForGroupWithSpaceAndValidStatusFilterTest() throws MuleException
+    public void buildQueryForGroupWithSpaceAndValidStatusFilterTest() throws SolrException
     {
         String group = "SUPER ADMIN";
         String status = "VALID";
