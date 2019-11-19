@@ -28,10 +28,10 @@ package com.armedia.acm.plugins.casefile.web.api;
  */
 
 import com.armedia.acm.plugins.casefile.service.CaseFileTasksService;
+import com.armedia.acm.services.search.exception.SolrException;
 import com.armedia.acm.services.search.model.ChildDocumentSearch;
 import com.armedia.acm.services.search.service.ChildDocumentsSearchService;
 
-import org.mule.api.MuleException;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -59,7 +59,7 @@ public class QueryCaseFileChildrenTasksAPIController
     public String findCaseFileChildrenTasks(
             @PathVariable("caseId") Long caseId,
             @RequestBody ChildDocumentSearch childDocumentSearch,
-            Authentication authentication) throws MuleException
+            Authentication authentication) throws SolrException
     {
         return getCaseFileTasksService().getCaseFileTasks(caseId, childDocumentSearch.getParentType(),
                 childDocumentSearch.getParentId(), childDocumentSearch.getChildTypes(),

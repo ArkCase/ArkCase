@@ -27,9 +27,9 @@ package com.armedia.acm.plugins.casefile.service;
  * #L%
  */
 
+import com.armedia.acm.services.search.exception.SolrException;
 import com.armedia.acm.services.search.service.ChildDocumentsSearchService;
 
-import org.mule.api.MuleException;
 import org.springframework.security.core.Authentication;
 
 import java.util.List;
@@ -43,7 +43,7 @@ public class CaseFileTasksServiceImpl implements CaseFileTasksService
 
     @Override
     public String getCaseFileTasks(Long caseId, String parentType, Long parentId, List<String> childTypes,
-            String sort, Integer startRow, Integer maxRows, Authentication authentication) throws MuleException
+            String sort, Integer startRow, Integer maxRows, Authentication authentication) throws SolrException
     {
         return getChildDocumentsSearchService().searchForChildrenAndGrandchildrenTasks(parentType, caseId, childTypes, sort, startRow,
                 maxRows,
