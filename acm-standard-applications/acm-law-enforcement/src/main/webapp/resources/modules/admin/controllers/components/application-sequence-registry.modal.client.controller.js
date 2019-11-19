@@ -16,6 +16,8 @@ angular.module('admin').controller('Admin.SequenceRegistryModalController', ['$s
             noUnselect: false,
             columnDefs: $scope.sequenceRegistryConfig.columnDefs,
             totalItems: 0,
+            paginationPageSizes: $scope.sequenceRegistryConfig.paginationPageSizes,
+            paginationPageSize: $scope.sequenceRegistryConfig.paginationPageSize,
             data: []
         };
 

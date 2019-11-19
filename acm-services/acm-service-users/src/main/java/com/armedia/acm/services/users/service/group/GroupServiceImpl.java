@@ -31,7 +31,8 @@ import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectAlreadyExistsException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
-import com.armedia.acm.services.search.model.SolrCore;
+import com.armedia.acm.services.search.exception.SolrException;
+import com.armedia.acm.services.search.model.solr.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.search.util.AcmSolrUtil;
 import com.armedia.acm.services.users.dao.UserDao;
@@ -43,9 +44,8 @@ import com.armedia.acm.services.users.model.group.AcmGroupStatus;
 import com.armedia.acm.services.users.model.group.AcmGroupType;
 import com.armedia.acm.services.users.service.AcmGroupEventPublisher;
 
-import org.mule.api.MuleException;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -119,7 +119,7 @@ public class GroupServiceImpl implements GroupService
 
     @Override
     public String buildGroupsSolrQuery(Authentication auth, Integer startRow, Integer maxRows, String sortBy, String sortDirection)
-            throws MuleException
+            throws SolrException
     {
         String query = "object_type_s:GROUP AND status_lcs:ACTIVE";
 
@@ -165,7 +165,7 @@ public class GroupServiceImpl implements GroupService
     @Override
     public String getAdHocMemberGroupsByMatchingName(Authentication auth, Integer startRow, Integer maxRows, String sortBy,
             String sortDirection,
-            Boolean authorized, String groupId, String searchFilter, String groupType) throws MuleException
+            Boolean authorized, String groupId, String searchFilter, String groupType) throws SolrException
     {
         String query = "object_type_s:GROUP AND -object_id_s:" + groupId + " AND status_lcs:ACTIVE AND object_sub_type_s:"
                 + groupType
@@ -196,7 +196,7 @@ public class GroupServiceImpl implements GroupService
 
     @Override
     public String getAdHocMemberGroups(Authentication auth, Integer startRow, Integer maxRows, String sortBy, String sortDirection,
-            Boolean authorized, String groupId, String groupType) throws MuleException
+            Boolean authorized, String groupId, String groupType) throws SolrException
     {
         groupId = groupId.replace("\\", "\\\\");
         String query = "object_type_s:GROUP AND -object_id_s:" + groupId
@@ -214,7 +214,7 @@ public class GroupServiceImpl implements GroupService
 
     @Override
     public String getGroupsByNameFilter(Authentication authentication, String nameFilter, int start, int max, String sortBy, String sortDir)
-            throws MuleException
+            throws SolrException
     {
         String query = "object_type_s:GROUP AND status_lcs:ACTIVE AND -ascendants_id_ss:* AND name_partial:"
                 + nameFilter;
@@ -223,7 +223,7 @@ public class GroupServiceImpl implements GroupService
     }
 
     @Override
-    public String getLdapGroupsForUser(Authentication authentication) throws MuleException
+    public String getLdapGroupsForUser(Authentication authentication) throws SolrException
     {
         log.info("Taking all groups and ascendant groups from Solr. Authenticated user is [{}]",
                 authentication.getName());
@@ -236,7 +236,7 @@ public class GroupServiceImpl implements GroupService
     }
 
     @Override
-    public String getUserMembersForGroup(String groupName, Optional<String> userStatus, Authentication auth) throws MuleException
+    public String getUserMembersForGroup(String groupName, Optional<String> userStatus, Authentication auth) throws SolrException
     {
         String statusQuery = userStatus.map(it -> {
             try
@@ -678,7 +678,7 @@ public class GroupServiceImpl implements GroupService
 
     @Override
     public String getGroupsByParent(String groupId, int startRow, int maxRows, String sort, Authentication auth)
-            throws MuleException
+            throws SolrException
     {
         groupId = buildSafeGroupNameForSolrSearch(groupId);
         String query = "ascendants_id_ss:" + groupId
@@ -691,7 +691,7 @@ public class GroupServiceImpl implements GroupService
 
     @Override
     public String getTopLevelGroups(List<String> groupSubtype, int startRow, int maxRows, String sort, Authentication auth)
-            throws MuleException
+            throws SolrException
     {
         String query = "object_type_s:GROUP AND -ascendants_id_ss:* AND -status_lcs:COMPLETE AND -status_lcs:DELETE "
                 + "AND -status_lcs:INACTIVE AND -status_lcs:CLOSED";

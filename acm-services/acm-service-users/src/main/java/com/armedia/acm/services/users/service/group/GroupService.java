@@ -31,10 +31,10 @@ import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectAlreadyExistsException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
+import com.armedia.acm.services.search.exception.SolrException;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.group.AcmGroup;
 
-import org.mule.api.MuleException;
 import org.springframework.security.core.Authentication;
 
 import javax.persistence.FlushModeType;
@@ -65,7 +65,7 @@ public interface GroupService
      * 
      * @return groups
      */
-    String buildGroupsSolrQuery() throws MuleException;
+    String buildGroupsSolrQuery() throws SolrException;
 
     /**
      * Retrieve all groups
@@ -76,7 +76,7 @@ public interface GroupService
      * @return groups
      */
     String buildGroupsSolrQuery(Authentication auth, Integer startRow, Integer maxRows, String sortBy, String sortDirection)
-            throws MuleException;
+            throws SolrException;
 
     /**
      * Retrieve all adHoc groups
@@ -86,7 +86,7 @@ public interface GroupService
      *
      * @return groups
      */
-    String buildGroupsAdHocSolrQuery() throws MuleException;
+    String buildGroupsAdHocSolrQuery() throws SolrException;
 
     /**
      * Retrieve all adHoc groups
@@ -96,7 +96,7 @@ public interface GroupService
      *
      * @return groups
      */
-    String buildGroupsAdHocByNameSolrQuery(String fq) throws MuleException;
+    String buildGroupsAdHocByNameSolrQuery(String fq) throws SolrException;
 
     /**
      * Retrieve groups by name
@@ -105,7 +105,7 @@ public interface GroupService
      *
      * @return groups
      */
-    String buildGroupsByNameSolrQuery(String fq) throws MuleException;
+    String buildGroupsByNameSolrQuery(String fq) throws SolrException;
 
     /**
      * Retrieve all groups that belongs to specific group type
@@ -115,7 +115,7 @@ public interface GroupService
      *
      * @return groups
      */
-    String buildGroupsForUserByNameSolrQuery(Boolean authorized, String memberId, String searchFilter) throws MuleException;
+    String buildGroupsForUserByNameSolrQuery(Boolean authorized, String memberId, String searchFilter) throws SolrException;
 
     /**
      * Retrieve all groups that belongs to specific group type
@@ -127,7 +127,7 @@ public interface GroupService
      */
     String getAdHocMemberGroupsByMatchingName(Authentication auth, Integer startRow, Integer maxRows, String sortBy,
             String sortDirection,
-            Boolean authorized, String groupId, String searchFilter, String groupType) throws MuleException;
+            Boolean authorized, String groupId, String searchFilter, String groupType) throws SolrException;
 
     /**
      * Retrieve all groups that a user belongs to
@@ -136,7 +136,7 @@ public interface GroupService
      *         userId
      * @return groups
      */
-    String buildGroupsForUserSolrQuery(Boolean authorized, String userId) throws MuleException;
+    String buildGroupsForUserSolrQuery(Boolean authorized, String userId) throws SolrException;
 
     /**
      * Retrieve all groups that a group belongs to
@@ -147,7 +147,7 @@ public interface GroupService
      */
     String getAdHocMemberGroups(Authentication auth, Integer startRow, Integer maxRows, String sortBy, String sortDirection,
             Boolean authorized,
-            String groupId, String groupType) throws MuleException;
+            String groupId, String groupType) throws SolrException;
 
     /**
      * Returns solr search results for GROUP filtered by name
@@ -159,10 +159,10 @@ public interface GroupService
      * @param sortBy
      * @param sortDir
      * @return groups
-     * @throws MuleException
+     * @throws SolrException
      */
     String getGroupsByNameFilter(Authentication authentication, String nameFilter, int start, int max, String sortBy, String sortDir)
-            throws MuleException;
+            throws SolrException;
 
     /**
      * Retrieve all LDAP groups that a user belongs to
@@ -170,7 +170,7 @@ public interface GroupService
      * @param authentication
      * @return LDAP groups
      */
-    String getLdapGroupsForUser(Authentication authentication) throws MuleException;
+    String getLdapGroupsForUser(Authentication authentication) throws SolrException;
 
     /**
      * Returns true if the user is a member of the given group
@@ -190,9 +190,9 @@ public interface GroupService
      * @param userStatus
      *            optional value for "status_lcs" field to be included in the solr query
      * @return solr results for user members in specific group
-     * @throws MuleException
+     * @throws SolrException
      */
-    String getUserMembersForGroup(String groupName, Optional<String> userStatus, Authentication auth) throws MuleException;
+    String getUserMembersForGroup(String groupName, Optional<String> userStatus, Authentication auth) throws SolrException;
 
     List<AcmGroup> findByUserMember(AcmUser user);
 
@@ -356,10 +356,10 @@ public interface GroupService
      * @param sort
      * @param auth
      * @return
-     * @throws MuleException
+     * @throws SolrException
      */
-    String getGroupsByParent(String groupId, int startRow, int maxRows, String sort, Authentication auth) throws MuleException;
+    String getGroupsByParent(String groupId, int startRow, int maxRows, String sort, Authentication auth) throws SolrException;
 
     String getTopLevelGroups(List<String> groupSubtype, int startRow, int maxRows, String sort, Authentication auth)
-            throws MuleException;
+            throws SolrException;
 }

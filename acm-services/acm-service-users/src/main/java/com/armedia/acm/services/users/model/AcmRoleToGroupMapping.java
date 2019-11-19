@@ -34,7 +34,6 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.io.Serializable;
 import java.util.AbstractMap;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -95,19 +94,23 @@ public class AcmRoleToGroupMapping implements Serializable
     {
         Map<String, List<AcmGroup>> groupsCache = new HashMap<>();
 
-        Function<String, Set<String>> groupsStringToSet = s -> {
-            String[] groupsPerRole = s.split(",");
-
-            return Arrays.stream(groupsPerRole)
-                    .filter(StringUtils::isNotBlank)
-                    .flatMap(mapGroupsString(name -> groupsCache.computeIfAbsent(name, it -> groupDao.findByMatchingName(it))))
-                    .collect(Collectors.toSet());
-        };
+        Function<List<String>, Set<String>> matchGroups = s -> s.stream()
+                .map(groupName -> {
+                    if (isUpperCase)
+                    {
+                        return groupName.trim().toUpperCase();
+                    }
+                    else
+                    {
+                        return groupName.trim();
+                    }
+                })
+                .flatMap(mapGroupsString(name -> groupsCache.computeIfAbsent(name, it -> groupDao.findByMatchingName(it))))
+                .collect(Collectors.toSet());
 
         return rolesToGroupsConfig.getRolesToGroups().entrySet()
                 .stream()
                 .filter(entry -> StringUtils.isNotBlank(entry.getKey()))
-                .filter(entry -> StringUtils.isNotBlank(entry.getValue()))
                 .collect(
                         Collectors.toMap(entry -> {
                             String roleName = isUpperCase ? entry.getKey().trim().toUpperCase() : entry.getKey().trim();
@@ -117,8 +120,7 @@ public class AcmRoleToGroupMapping implements Serializable
                             }
                             return roleName;
                         },
-                                entry -> groupsStringToSet
-                                        .apply(isUpperCase ? entry.getValue().trim().toUpperCase() : entry.getValue().trim())));
+                                entry -> matchGroups.apply(entry.getValue())));
     }
 
     public void setGroupDao(AcmGroupDao groupDao)

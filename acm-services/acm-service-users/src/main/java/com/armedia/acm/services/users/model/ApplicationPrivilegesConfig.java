@@ -27,54 +27,25 @@ package com.armedia.acm.services.users.model;
  * #L%
  */
 
-import com.armedia.acm.objectonverter.json.JSONUnmarshaller;
-import com.fasterxml.jackson.annotation.JsonAnyGetter;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.armedia.acm.configuration.annotations.MapValue;
 
-import org.json.JSONObject;
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Value;
-
-import java.util.HashMap;
 import java.util.Map;
 
-public class ApplicationPrivilegesConfig implements InitializingBean
+public class ApplicationPrivilegesConfig
 {
-    @JsonProperty("application.privileges")
-    @Value("${application.privileges}")
-    private String applicationPrivileges;
 
-    private JSONUnmarshaller jsonUnmarshaller;
+    public static final String APPLICATION_PRIVILEGES = "application.privileges";
 
-    private Map<String, String> privilegesDescriptions = new HashMap<>();
+    private Map<String, String> applicationPrivileges;
 
-    @JsonAnyGetter
-    public Map<String, String> getPrivilegesDescriptions()
+    @MapValue(value = "application.privileges")
+    public Map<String, String> getApplicationPrivileges()
     {
-        return privilegesDescriptions;
+        return applicationPrivileges;
     }
 
-    @Override
-    public void afterPropertiesSet()
+    public void setApplicationPrivileges(Map<String, String> applicationPrivileges)
     {
-        privilegesDescriptions = jsonUnmarshaller.unmarshall(applicationPrivileges, Map.class);
+        this.applicationPrivileges = applicationPrivileges;
     }
-
-    public String getApplicationPrivileges()
-    {
-        return new JSONObject(privilegesDescriptions).toString();
-    }
-
-    @JsonIgnore
-    public JSONUnmarshaller getJsonUnmarshaller()
-    {
-        return jsonUnmarshaller;
-    }
-
-    public void setJsonUnmarshaller(JSONUnmarshaller jsonUnmarshaller)
-    {
-        this.jsonUnmarshaller = jsonUnmarshaller;
-    }
-
 }

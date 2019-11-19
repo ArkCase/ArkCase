@@ -1,5 +1,7 @@
 package com.armedia.acm.web.api;
 
+import com.armedia.acm.core.exceptions.AcmAccessControlException;
+
 /*-
  * #%L
  * ACM Shared Web Artifacts
@@ -116,6 +118,13 @@ public class AcmSpringMvcErrorManager
         sendResponse(HttpStatus.FORBIDDEN, response, e.getMessage());
     }
 
+    @ExceptionHandler(AcmAccessControlException.class)
+    public void handleAccessControl(HttpServletResponse response, AcmAccessControlException e)
+    {
+        log.error("Not Authorized: " + e.getMessage(), e);
+        sendResponse(HttpStatus.FORBIDDEN, response, e.getMessage());
+    }
+    
     @ExceptionHandler(AccessDeniedException.class)
     public void accessDeniedHandler(HttpServletResponse response, AccessDeniedException e)
     {

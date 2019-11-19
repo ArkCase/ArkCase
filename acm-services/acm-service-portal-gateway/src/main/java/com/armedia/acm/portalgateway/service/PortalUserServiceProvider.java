@@ -104,7 +104,8 @@ public interface PortalUserServiceProvider
      */
     UserResetResponse resetPassword(String portalId, String resetId, String password) throws PortalUserServiceException;
 
-    UserResetResponse changePassword(String portalId, String userId, PortalUserCredentials portalUserCredentials) throws PortalUserServiceException;
+    UserResetResponse changePassword(String portalId, String userId, String acmUserId, PortalUserCredentials portalUserCredentials)
+            throws PortalUserServiceException;
 
     PortalUser retrieveUser(String portalUserId, String portalId);
 

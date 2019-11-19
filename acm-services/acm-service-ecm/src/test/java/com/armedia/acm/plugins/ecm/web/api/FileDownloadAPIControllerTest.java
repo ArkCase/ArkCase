@@ -27,15 +27,12 @@ package com.armedia.acm.plugins.ecm.web.api;
  * #L%
  */
 
-import static org.easymock.EasyMock.anyString;
 import static org.easymock.EasyMock.capture;
 import static org.easymock.EasyMock.expect;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
-import com.armedia.acm.email.model.EmailSenderConfig;
-import com.armedia.acm.files.propertymanager.PropertyFileManager;
 import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
@@ -94,8 +91,6 @@ public class FileDownloadAPIControllerTest extends EasyMockSupport
     private ContentStream mockContentStream;
     private FolderAndFilesUtils mockFolderAndFilesUtils;
     private CmisConfigUtils mockCmisConfigUtils;
-    private PropertyFileManager mockPropertyFileManager;
-    private EmailSenderConfig mockEmailSenderConfig;
 
     @Autowired
     private ExceptionHandlerExceptionResolver exceptionResolver;
@@ -114,8 +109,6 @@ public class FileDownloadAPIControllerTest extends EasyMockSupport
         mockContentStream = createMock(ContentStream.class);
         mockFolderAndFilesUtils = createMock(FolderAndFilesUtils.class);
         mockCmisConfigUtils = createMock(CmisConfigUtils.class);
-        mockPropertyFileManager = createMock(PropertyFileManager.class);
-        mockEmailSenderConfig = createMock(EmailSenderConfig.class);
 
         unit = new FileDownloadAPIController();
 
@@ -125,8 +118,6 @@ public class FileDownloadAPIControllerTest extends EasyMockSupport
         unit.setFolderAndFilesUtils(mockFolderAndFilesUtils);
         unit.setCmisConfigUtils(mockCmisConfigUtils);
         unit.setObjectConverter(ObjectConverter.createObjectConverterForTests());
-        unit.setPropertyFileManager(mockPropertyFileManager);
-        unit.setEmailSenderConfig(mockEmailSenderConfig);
 
         mockMvc = MockMvcBuilders.standaloneSetup(unit).setHandlerExceptionResolvers(exceptionResolver).build();
     }
@@ -171,7 +162,6 @@ public class FileDownloadAPIControllerTest extends EasyMockSupport
         expect(fromDb.getFileActiveVersionNameExtension()).andReturn(fileNameExtension).anyTimes();
         expect(mockContentStream.getStream()).andReturn(log4jis);
         mockEventPublisher.publishEvent(capture(capturedEvent));
-        expect(mockEmailSenderConfig.getConvertDocumentsToPdf()).andReturn(false);
 
         CMISCloudConnectorConnectionManager cmisConfig = new CMISCloudConnectorConnectionManager();
         expect(mockCmisConfigUtils.getCmisConfiguration(fromDb.getCmisRepositoryId())).andReturn(cmisConfig);
@@ -249,7 +239,6 @@ public class FileDownloadAPIControllerTest extends EasyMockSupport
         expect(mockContentStream.getFileName()).andReturn(fileName);
         expect(ecmFileVersion.getVersionFileNameExtension()).andReturn(fileNameExtension).anyTimes();
         expect(mockContentStream.getStream()).andReturn(log4jis);
-        expect(mockEmailSenderConfig.getConvertDocumentsToPdf()).andReturn(false);
         mockEventPublisher.publishEvent(capture(capturedEvent));
 
         CMISCloudConnectorConnectionManager cmisConfig = new CMISCloudConnectorConnectionManager();
@@ -328,7 +317,6 @@ public class FileDownloadAPIControllerTest extends EasyMockSupport
         expect(mockContentStream.getFileName()).andReturn(fileName);
         expect(fromDb.getFileActiveVersionNameExtension()).andReturn(fileNameExtension).anyTimes();
         expect(mockContentStream.getStream()).andReturn(log4jis);
-        expect(mockEmailSenderConfig.getConvertDocumentsToPdf()).andReturn(false);
         mockEventPublisher.publishEvent(capture(capturedEvent));
 
         CMISCloudConnectorConnectionManager cmisConfig = new CMISCloudConnectorConnectionManager();

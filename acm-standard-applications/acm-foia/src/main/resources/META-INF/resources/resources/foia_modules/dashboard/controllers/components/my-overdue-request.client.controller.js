@@ -15,6 +15,8 @@ angular.module('dashboard.my-overdue-requests').controller('Dashboard.MyOverdueR
                 sortDir: 'desc'
             };
 
+            var rowTmpl = '<div class="overdue"><div ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.colDef.name" class="ui-grid-cell" ng-class="{ \'ui-grid-row-header-cell\': col.isRowHeader }" ui-grid-cell></div></div>';
+
             vm.gridOptions = {
                 enableColumnResizing: true,
                 enableRowSelection: true,
@@ -25,6 +27,7 @@ angular.module('dashboard.my-overdue-requests').controller('Dashboard.MyOverdueR
                 multiSelect: false,
                 noUnselect: false,
                 columnDefs: [],
+                rowTemplate: rowTmpl,
                 onRegisterApi: function(gridApi) {
                     vm.gridApi = gridApi;
 

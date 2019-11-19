@@ -1580,6 +1580,14 @@
                     "width": "*"
                 },
                 {
+                    "name": "itemType",
+                    "field": "itemType",
+                    "displayName": "complaints.comp.billing.table.columns.type",
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<div>{{ row.entity.itemType || 'Adhoc' }}</div>",
+                    "width": "20%"
+                },
+                {
                     "name": "itemAmount",
                     "field": "itemAmount",
                     "displayName": "complaints.comp.billing.table.columns.amount",

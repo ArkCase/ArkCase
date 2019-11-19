@@ -33,10 +33,10 @@ import static org.junit.Assert.assertNotNull;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.services.protecturl.model.ProtectedUrl;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
@@ -68,6 +68,7 @@ public class ProtectUrlServiceImplIT
     {
         String userHomePath = System.getProperty("user.home");
         System.setProperty("acm.configurationserver.propertyfile", userHomePath + "/.arkcase/acm/conf.yml");
+        System.setProperty("configuration.server.url", "http://localhost:9999");
     }
 
     @Autowired

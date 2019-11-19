@@ -34,18 +34,18 @@ import com.armedia.acm.objectonverter.DateFormats;
 import com.armedia.acm.plugins.category.model.Category;
 import com.armedia.acm.plugins.category.model.CategoryStatus;
 import com.armedia.acm.plugins.category.service.CategoryService;
-import com.armedia.acm.services.search.model.SolrCore;
+import com.armedia.acm.services.search.exception.SolrException;
 import com.armedia.acm.services.search.model.solr.GetResponseGenerator;
 import com.armedia.acm.services.search.model.solr.PayloadProducer;
 import com.armedia.acm.services.search.model.solr.ResponseHeader;
 import com.armedia.acm.services.search.model.solr.ResponseHeaderProducer;
+import com.armedia.acm.services.search.model.solr.SolrCore;
 import com.armedia.acm.services.search.model.solr.SolrSearchResponse;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.fasterxml.jackson.databind.JsonNode;
 
-import org.mule.api.MuleException;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -95,7 +95,7 @@ public class CategoryManagementAPIController
                     Optional.<ResponseHeaderProducer<ResponseHeader>> empty(), this::extractCategories);
             return response;
         }
-        catch (MuleException | IOException e)
+        catch (IOException | SolrException e)
         {
             log.error("Error while executing Solr query: {}", query, e);
             throw new AcmObjectNotFoundException("Category", null, "Could not retreive the root categories.", e);
@@ -125,7 +125,7 @@ public class CategoryManagementAPIController
                     });
             return response;
         }
-        catch (MuleException | IOException e)
+        catch (IOException | SolrException e)
         {
             log.error("Error while executing Solr query: {}", query, e);
             throw new AcmObjectNotFoundException("Category", categoryId, String.format("Category with id %d not found.", categoryId), e);
@@ -147,7 +147,7 @@ public class CategoryManagementAPIController
                     Optional.<ResponseHeaderProducer<ResponseHeader>> empty(), this::extractCategories);
             return response;
         }
-        catch (MuleException | IOException e)
+        catch (IOException | SolrException e)
         {
             log.error("Error while executing Solr query: {}", query, e);
             throw new AcmObjectNotFoundException("Category", categoryId,
@@ -235,7 +235,7 @@ public class CategoryManagementAPIController
 
     private <K extends ResponseHeader, T> SolrSearchResponse<K, T> generateGetResponse(Authentication auth, String query, int start, int n,
             Optional<ResponseHeaderProducer<K>> headerProducer, PayloadProducer<T> payloadProducer)
-            throws MuleException, IOException, AcmObjectNotFoundException
+            throws SolrException, IOException, AcmObjectNotFoundException
     {
         String solrResponse = executeSolrQuery.getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, query, start, n, "");
         return GetResponseGenerator.generateGetResponse(solrResponse, headerProducer, payloadProducer);

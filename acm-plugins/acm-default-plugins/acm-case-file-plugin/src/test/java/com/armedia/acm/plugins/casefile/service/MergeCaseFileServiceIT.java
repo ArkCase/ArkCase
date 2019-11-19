@@ -32,11 +32,11 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import com.armedia.acm.auth.AcmGrantedAuthority;
+import com.armedia.acm.core.exceptions.AcmAccessControlException;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
-import com.armedia.acm.data.exceptions.AcmAccessControlException;
 import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
 import com.armedia.acm.plugins.casefile.exceptions.MergeCaseFilesException;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
@@ -102,7 +102,7 @@ import java.util.stream.Collectors;
         "/spring/spring-library-data-source.xml",
         "/spring/spring-library-drools-rule-monitor.xml",
         "/spring/spring-library-ecm-file.xml",
-        "/spring/spring-library-ecm-file-lock.xml",        
+        "/spring/spring-library-ecm-file-lock.xml",
         "/spring/spring-library-ecm-tika.xml",
         "/spring/spring-library-email.xml",
         "/spring/spring-library-email-smtp.xml",
@@ -115,7 +115,7 @@ import java.util.stream.Collectors;
         "/spring/spring-library-ms-outlook-plugin.xml",
         "/spring/spring-library-note.xml",
         "/spring/spring-library-notification.xml",
-        "/spring/spring-library-object-converter.xml",        
+        "/spring/spring-library-object-converter.xml",
         "/spring/spring-library-object-diff.xml",
         "/spring/spring-library-object-lock.xml",
         "/spring/spring-library-object-association-plugin.xml",
@@ -139,7 +139,7 @@ import java.util.stream.Collectors;
         "/spring/spring-library-acm-email.xml",
         "/spring/spring-library-convert-folder-service.xml",
         "/spring/spring-library-user-tracker.xml"
-    })
+})
 @TransactionConfiguration(defaultRollback = true)
 public class MergeCaseFileServiceIT
 {
@@ -147,6 +147,7 @@ public class MergeCaseFileServiceIT
     {
         String userHomePath = System.getProperty("user.home");
         System.setProperty("acm.configurationserver.propertyfile", userHomePath + "/.arkcase/acm/conf.yml");
+        System.setProperty("configuration.server.url", "http://localhost:9999");
     }
 
     private final Logger log = LogManager.getLogger(getClass());
@@ -259,19 +260,19 @@ public class MergeCaseFileServiceIT
         mergeCaseService.mergeCases(auth, ipAddress, mergeCaseOptions);
 
         sourceFiles = ecmFileDao.findForContainer(sourceSaved.getContainer().getId());
-        if ( !sourceFiles.isEmpty() )
+        if (!sourceFiles.isEmpty())
         {
             String excluded = caseConfig.getMergeExcludeDocumentTypes();
             List<String> excludedTypes = Arrays.asList(excluded.trim().replaceAll(",[\\s]*", ",").split(","));
 
             // any files left in the original case file must have a file type from
             // the exclude file types list
-            for ( EcmFile sourceFile : sourceFiles )
+            for (EcmFile sourceFile : sourceFiles)
             {
                 String found = excludedTypes.stream().filter(et -> et.equalsIgnoreCase(sourceFile.getFileType())).findFirst().orElse(null);
                 assertNotNull("File remaining in source case has type [" + sourceFile.getFileType() + "] " +
-                              "which is not in the list of excluded types [" + excluded + "]",
-                              found);
+                        "which is not in the list of excluded types [" + excluded + "]",
+                        found);
             }
         }
 

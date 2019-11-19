@@ -29,12 +29,15 @@ package com.armedia.acm.configuration.client;
 
 import com.armedia.acm.configuration.api.environment.Environment;
 import com.armedia.acm.configuration.api.environment.PropertySource;
+import com.armedia.acm.configuration.service.ConfigurationPropertyException;
+import com.armedia.acm.configuration.util.MergePropertiesUtil;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.core.env.CompositePropertySource;
 import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.env.MapPropertySource;
@@ -47,15 +50,17 @@ import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.util.Base64Utils;
 import org.springframework.util.StringUtils;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * This class provides methods for retrieving the configuration from the Spring Cloud Config Server
@@ -65,8 +70,13 @@ public class ConfigurationServiceBootClient
 {
     private static final Logger logger = LogManager.getLogger(ConfigurationServiceBootClient.class);
 
+    private final static String CONFIGURATION_SERVER_URL = "configuration.server.url";
+
     @Autowired
     private ConfigurableEnvironment configurableEnvironment;
+
+    @Autowired
+    private org.springframework.core.env.Environment environment;
 
     @Bean
     public RestTemplate configRestTemplate()
@@ -83,16 +93,62 @@ public class ConfigurationServiceBootClient
         return restTemplate;
     }
 
-    public Map<String, Object> loadConfiguration(String url)
+    public Map<String, Object> loadConfiguration(List<Environment> environments)
     {
-        Environment result = getRemoteEnvironment(configRestTemplate(), url, null);
+        environments = getRemoteEnvironment(configRestTemplate(), null, environments);
+        Map<String, Object> result = new HashMap<>();
+        for (Environment environment : environments)
+        {
+            result.putAll(getCompositeMap(environment));
+        }
+        return result;
+    }
+
+    /**
+     * Loads configuration from one specific yaml file.
+     *
+     *            - url to the config server
+     * @param name
+     *            - name of the yaml file that should be loaded
+     * @return
+     */
+    public Map<String, Object> loadConfiguration(String name, List<Environment> environments)
+    {
+        Environment result = getRemoteEnvironment(configRestTemplate(), name, environments).get(0);
         return getCompositeMap(result);
     }
 
-    public Map<String, Object> loadConfiguration(String url, String name)
+    /**
+     * Loads specific language and checks if there are missing labels it adds them from the default language
+     */
+    public Map<String, Object> loadLangConfiguration(String name, Map<String, Object> defaultLangMap, List<Environment> environments)
     {
-        Environment result = getRemoteEnvironment(configRestTemplate(), url, name);
-        return getCompositeMap(result);
+        Environment result = getRemoteEnvironment(configRestTemplate(), name, environments).get(0);
+        Map<String, Object> langMap = getCompositeMap(result);
+
+        if (defaultLangMap.size() != langMap.size())
+        {
+            defaultLangMap.forEach((key, value) -> langMap.putIfAbsent(key, value));
+        }
+        return langMap;
+    }
+
+    public Map<String, Object> loadRuntimeConfigurationMap(List<Environment> environments)
+    {
+        Environment result = getRemoteEnvironment(configRestTemplate(), null, environments).get(0);
+        return getRuntimeOrDefaultCompositeMap(result, false);
+    }
+
+    public Map<String, Object> loadWithoutRuntimeConfigurationMap(List<Environment> environments)
+    {
+        Environment result = getRemoteEnvironment(configRestTemplate(), null, environments).get(0);
+        return getRuntimeOrDefaultCompositeMap(result, true);
+    }
+
+    public Map<String, Object> loadDefaultConfiguration(String name, List<Environment> environments)
+    {
+        Environment result = getRemoteEnvironment(configRestTemplate(), name, environments).get(0);
+        return getRuntimeOrDefaultCompositeMap(result, false);
     }
 
     private Map<String, Object> getCompositeMap(Environment result)
@@ -101,51 +157,97 @@ public class ConfigurationServiceBootClient
 
         if (result.getPropertySources() != null)
         {
+            Collections.reverse(result.getPropertySources());
+
             for (PropertySource source : result.getPropertySources())
             {
                 Map<String, Object> map = source.getSource();
-                map.forEach(compositeMap::putIfAbsent);
+                MergePropertiesUtil.mergePropertiesFromSources(compositeMap, map);
             }
         }
 
         return compositeMap;
     }
 
-    public org.springframework.core.env.PropertySource<?> locate(String url, String name)
+    private Map<String, Object> getRuntimeOrDefaultCompositeMap(Environment result, boolean withoutRuntime)
     {
-        Environment result = getRemoteEnvironment(configRestTemplate(), url, name);
-        CompositePropertySource compositePropertySource = new CompositePropertySource("configService");
+        Map<String, Object> compositeMap = new HashMap<>();
 
         if (result.getPropertySources() != null)
         {
             for (PropertySource source : result.getPropertySources())
             {
-                Map<String, Object> map = source.getSource();
-                compositePropertySource.addPropertySource(new MapPropertySource(source.getName(), map));
+                if (withoutRuntime)
+                {
+                    if (!source.getName().contains("-runtime.yaml"))
+                    {
+                        compositeMap = source.getSource();
+                    }
+                }
+                else
+                {
+                    if (source.getName().contains("-runtime.yaml"))
+                    {
+                        compositeMap = source.getSource();
+                    }
+                }
             }
         }
 
+        return compositeMap;
+    }
+
+    public org.springframework.core.env.PropertySource<?> locate(Object name, List<Environment> environments)
+    {
+        environments = getRemoteEnvironment(configRestTemplate(), name, environments);
+        CompositePropertySource compositePropertySource = new CompositePropertySource("configService");
+
+        for (Environment env : environments)
+        {
+            if (env.getPropertySources() != null)
+            {
+                for (PropertySource source : env.getPropertySources())
+                {
+                    Map<String, Object> map = source.getSource();
+                    compositePropertySource.addPropertySource(new MapPropertySource(source.getName(), map));
+                }
+            }
+        }
         return compositePropertySource;
     }
 
     /**
      *
      * @param restTemplate
-     * @param url
      * @return
      */
-    private Environment getRemoteEnvironment(RestTemplate restTemplate, String url, String name)
+    public List<Environment> getRemoteEnvironment(RestTemplate restTemplate, Object name, List<Environment> environments)
     {
+        String url = environment.getProperty(CONFIGURATION_SERVER_URL);
+
         String path = "/{name}/{profile}";
 
+        List<String> names;
         if (name == null)
         {
-            name = getApplicationName();
-        }
+            name = getActiveApplicationName();
 
-        if (StringUtils.isEmpty(name))
+            if (StringUtils.isEmpty(name))
+            {
+                throw new IllegalStateException("Application name by configuration can't be empty");
+            }
+            else if (name instanceof List)
+            {
+                names = (List) name;
+            }
+            else
+            {
+                names = Arrays.asList(name.toString());
+            }
+        }
+        else
         {
-            throw new IllegalStateException("Application name by configuration can't be empty");
+            names = Arrays.asList(name.toString());
         }
 
         Object profiles = getApplicationProfile();
@@ -157,26 +259,36 @@ public class ConfigurationServiceBootClient
         }
         else if (profiles instanceof List)
         {
-            activeProfiles = String.join(",", (ArrayList) profiles);
+            activeProfiles = String.join(",", (List) profiles);
         }
         else
         {
             activeProfiles = (String) profiles;
         }
 
-        Object[] args = new String[] { name, activeProfiles };
-
-        ResponseEntity<Environment> response = null;
-        try
+        if (environments == null)
         {
-            response = restTemplate.exchange(url + path, HttpMethod.GET, null, Environment.class, args);
+            environments = names.parallelStream().map(nameElement -> {
+                Object[] args = new String[] { nameElement, activeProfiles };
+
+                try
+                {
+                    ResponseEntity<Environment> response = restTemplate.exchange(url + path, HttpMethod.GET, null, Environment.class, args);
+                    return Objects.requireNonNull(response).getBody();
+                }
+                catch (Throwable t)
+                {
+                    logger.error(t.getMessage(), t);
+                }
+                return null;
+            }).collect(Collectors.toList());
         }
-        catch (Throwable t)
+        else
         {
-            logger.error(t.getMessage(), t);
+            return environments;
         }
 
-        return Objects.requireNonNull(response).getBody();
+        return environments;
     }
 
     private RestTemplate setInterceptors(RestTemplate restTemplate, String username, String password, String authorization)
@@ -197,6 +309,7 @@ public class ConfigurationServiceBootClient
 
         return restTemplate;
     }
+
 
     private static class BasicAuthorizationInterceptor implements ClientHttpRequestInterceptor
     {
@@ -241,9 +354,46 @@ public class ConfigurationServiceBootClient
         }
     }
 
-    public String getApplicationName()
+    /**
+     * Returns list of module names from config server
+     *
+     * @return
+     */
+    public List<String> getModulesNames()
     {
-        return (String) configurableEnvironment.getPropertySources().get("bootstrap").getProperty("application.name");
+        String modulesPath = System.getProperty("configuration.server.url") + getModulesPath();
+
+        try
+        {
+            ResponseEntity<List<String>> response = configRestTemplate().exchange(
+                    modulesPath,
+                    HttpMethod.GET,
+                    null,
+                    new ParameterizedTypeReference<List<String>>()
+                    {
+                    });
+            return response.getBody();
+        }
+        catch (RestClientException e)
+        {
+            logger.warn("Failed to get modules due to {}", e.getMessage());
+            throw new ConfigurationPropertyException("Failed to get modules", e);
+        }
+    }
+
+    public Object getModulesPath()
+    {
+        return configurableEnvironment.getPropertySources().get("bootstrap").getProperty("configuration.server.modules.path");
+    }
+
+    public Object getActiveApplicationName()
+    {
+        return configurableEnvironment.getPropertySources().get("bootstrap").getProperty("application.name.active");
+    }
+
+    public Object getDefaultApplicationName()
+    {
+        return configurableEnvironment.getPropertySources().get("bootstrap").getProperty("application.name.default");
     }
 
     public Object getApplicationProfile()
@@ -260,4 +410,10 @@ public class ConfigurationServiceBootClient
     {
         this.configurableEnvironment = configurableEnvironment;
     }
+
+    public void setEnvironment(org.springframework.core.env.Environment environment)
+    {
+        this.environment = environment;
+    }
+
 }

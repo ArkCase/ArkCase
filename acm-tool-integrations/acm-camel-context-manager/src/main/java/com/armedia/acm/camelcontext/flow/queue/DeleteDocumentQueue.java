@@ -27,7 +27,11 @@ package com.armedia.acm.camelcontext.flow.queue;
  * #L%
  */
 
+import com.armedia.acm.camelcontext.exception.ArkCaseFileRepositoryException;
+
 import org.apache.camel.ProducerTemplate;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.Map;
 
@@ -39,6 +43,7 @@ public class DeleteDocumentQueue implements ArkCaseCMISQueue
     private ProducerTemplate producerTemplate;
     private String repositoryID;
     private Long timeout;
+    private Logger log = LogManager.getLogger(getClass());
 
     public DeleteDocumentQueue(ProducerTemplate producerTemplate, String repositoryID, String timeout)
     {
@@ -48,10 +53,18 @@ public class DeleteDocumentQueue implements ArkCaseCMISQueue
     }
 
     @Override
-    public Object send(Map<String, Object> props)
+    public Object send(Map<String, Object> props) throws ArkCaseFileRepositoryException
     {
         String queueName = "seda:" + repositoryID + "-deleteDocumentQueue?timeout=" + timeout;
         producerTemplate.setDefaultEndpointUri(queueName);
-        return producerTemplate.requestBody(props);
+        try
+        {
+            log.debug("Trying to delete document with ID={}", props.get("cmisDocumentId"));
+            return producerTemplate.requestBody(props);
+        }
+        catch (Exception e)
+        {
+            throw new ArkCaseFileRepositoryException(e);
+        }
     }
 }

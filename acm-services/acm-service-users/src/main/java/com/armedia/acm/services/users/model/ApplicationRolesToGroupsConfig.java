@@ -27,57 +27,28 @@ package com.armedia.acm.services.users.model;
  * #L%
  */
 
-import com.armedia.acm.objectonverter.json.JSONUnmarshaller;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-import org.json.JSONObject;
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Value;
+import com.armedia.acm.configuration.annotations.MapValue;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-public class ApplicationRolesToGroupsConfig implements InitializingBean
+public class ApplicationRolesToGroupsConfig
 {
-    @JsonProperty("application.rolesToGroups")
-    @Value("${application.rolesToGroups}")
-    private String rolesToGroupsString;
 
-    private Map<String, String> rolesToGroups = new HashMap<>();
+    public static final String ROLES_TO_GROUPS_PROP_KEY = "application.rolesToGroups";
 
-    private JSONUnmarshaller jsonUnmarshaller;
+    private Map<String, List<String>> rolesToGroups = new HashMap<>();
 
-    @JsonIgnore
-    public Map<String, String> getRolesToGroups()
+    @MapValue(value = "application.rolesToGroups")
+    public Map<String, List<String>> getRolesToGroups()
     {
         return rolesToGroups;
     }
 
-    public void setRolesToGroups(Map<String, String> rolesToGroups)
+    public void setRolesToGroups(Map<String, List<String>> rolesToGroups)
     {
         this.rolesToGroups = rolesToGroups;
     }
 
-    public String getRolesToGroupsString()
-    {
-        return new JSONObject(rolesToGroups).toString();
-    }
-
-    @JsonIgnore
-    public JSONUnmarshaller getJsonUnmarshaller()
-    {
-        return jsonUnmarshaller;
-    }
-
-    public void setJsonUnmarshaller(JSONUnmarshaller jsonUnmarshaller)
-    {
-        this.jsonUnmarshaller = jsonUnmarshaller;
-    }
-
-    @Override
-    public void afterPropertiesSet()
-    {
-        rolesToGroups = jsonUnmarshaller.unmarshall(rolesToGroupsString, Map.class);
-    }
 }

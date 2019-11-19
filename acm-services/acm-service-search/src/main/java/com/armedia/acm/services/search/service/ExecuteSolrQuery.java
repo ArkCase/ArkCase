@@ -27,28 +27,51 @@ package com.armedia.acm.services.search.service;
  * #L%
  */
 
-import com.armedia.acm.core.AcmUserAuthorityContext;
-import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
+import static com.armedia.acm.services.search.model.solr.SolrConstants.SOLR_PARAM_DEFAULT_FIELD;
+import static com.armedia.acm.services.search.model.solr.SolrConstants.SOLR_PARAM_INDENT;
+import static com.armedia.acm.services.search.model.solr.SolrConstants.SOLR_PARAM_RESPONSE;
+import static com.armedia.acm.services.search.model.solr.SolrConstants.SOLR_PARAM_WRITER;
+import static com.armedia.acm.services.search.model.solr.SolrConstants.SOLR_RAW_QUERY_PARAM_SPLITTER;
+import static com.armedia.acm.services.search.model.solr.SolrConstants.SOLR_RAW_QUERY_SPLITTER;
+import static com.armedia.acm.services.search.model.solr.SolrConstants.SOLR_SORT_CLAUSE_SPLITTER;
+import static com.armedia.acm.services.search.model.solr.SolrConstants.SOLR_WRITER_JSON;
+
 import com.armedia.acm.objectonverter.ObjectConverter;
+import com.armedia.acm.services.search.exception.SolrException;
+import com.armedia.acm.services.search.model.QueryParameter;
 import com.armedia.acm.services.search.model.SearchConstants;
-import com.armedia.acm.services.search.model.SolrCore;
+import com.armedia.acm.services.search.model.solr.ArkCaseSolrUtils;
+import com.armedia.acm.services.search.model.solr.SolrConfig;
+import com.armedia.acm.services.search.model.solr.SolrCore;
+import com.armedia.acm.services.search.model.solr.SolrDataAccessOptions;
 import com.armedia.acm.services.search.model.solr.SolrDeleteDocumentsByQueryRequest;
 import com.armedia.acm.services.search.model.solr.SolrDocumentsQuery;
-import com.armedia.acm.web.api.MDCConstants;
-import com.google.common.base.Strings;
+import com.armedia.acm.services.search.service.solr.SolrClientProvider;
+import com.armedia.acm.services.search.util.SolrDataAccessFilterUtil;
 
 import org.apache.commons.lang3.StringUtils;
-import org.mule.api.MuleException;
-import org.mule.api.MuleMessage;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
-import org.slf4j.MDC;
+import org.apache.logging.log4j.Logger;
+import org.apache.solr.client.solrj.SolrClient;
+import org.apache.solr.client.solrj.SolrQuery;
+import org.apache.solr.client.solrj.SolrRequest;
+import org.apache.solr.client.solrj.SolrServerException;
+import org.apache.solr.client.solrj.request.QueryRequest;
+import org.apache.solr.common.params.CommonParams;
+import org.apache.solr.common.util.NamedList;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.core.Authentication;
+import org.springframework.util.StopWatch;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 
 /**
  * Created by marjan.stefanoski on 02.02.2015.
@@ -58,9 +81,10 @@ public class ExecuteSolrQuery
 
     private Logger log = LogManager.getLogger(getClass());
 
-    private MuleContextManager muleContextManager;
     private ObjectConverter objectConverter;
     private SendDocumentsToSolr sendDocumentsToSolr;
+    private SolrClientProvider solrClientProvider;
+    private SolrConfig configuration;
 
     /**
      * Executes solr queries and returns results as String
@@ -78,10 +102,10 @@ public class ExecuteSolrQuery
      * @param sort
      *            sort by which field
      * @return results as String
-     * @throws MuleException
+     * @throws SolrException
      */
     public String getResultsByPredefinedQuery(Authentication auth, SolrCore core, String solrQuery, int firstRow, int maxRows, String sort)
-            throws MuleException
+            throws SolrException
     {
         return getResultsByPredefinedQuery(auth, core, solrQuery, firstRow, maxRows, sort, true);
     }
@@ -102,12 +126,12 @@ public class ExecuteSolrQuery
      * @param sort
      *            sort by which field
      * @return results as String in CompletableFuture
-     * @throws MuleException
+     * @throws SolrException
      */
     @Async
     public CompletableFuture<String> getResultsByPredefinedQueryAsync(Authentication auth, SolrCore core, String solrQuery, int firstRow,
             int maxRows, String sort)
-            throws MuleException
+            throws SolrException
     {
         return CompletableFuture.completedFuture(
                 getResultsByPredefinedQuery(auth, core, solrQuery, firstRow, maxRows, sort, true, "", true, false, "", false, ""));
@@ -131,10 +155,10 @@ public class ExecuteSolrQuery
      * @param indent
      *            boolean whether results should be indented
      * @return results as String
-     * @throws MuleException
+     * @throws SolrException
      */
     public String getResultsByPredefinedQuery(Authentication auth, SolrCore core, String solrQuery, int firstRow, int maxRows, String sort,
-            boolean indent) throws MuleException
+            boolean indent) throws SolrException
     {
         return getResultsByPredefinedQuery(auth, core, solrQuery, firstRow, maxRows, sort, indent, "", true, false);
     }
@@ -157,10 +181,10 @@ public class ExecuteSolrQuery
      * @param rowQueryParameters
      *            row query parameters
      * @return results as String
-     * @throws MuleException
+     * @throws SolrException
      */
     public String getResultsByPredefinedQuery(Authentication auth, SolrCore core, String solrQuery, int firstRow, int maxRows, String sort,
-            String rowQueryParameters) throws MuleException
+            String rowQueryParameters) throws SolrException
     {
         return getResultsByPredefinedQuery(auth, core, solrQuery, firstRow, maxRows, sort, true, rowQueryParameters);
     }
@@ -185,10 +209,10 @@ public class ExecuteSolrQuery
      * @param rowQueryParameters
      *            row query parameters
      * @return results as String
-     * @throws MuleException
+     * @throws SolrException
      */
     public String getResultsByPredefinedQuery(Authentication auth, SolrCore core, String solrQuery, int firstRow, int maxRows, String sort,
-            boolean indent, String rowQueryParameters) throws MuleException
+            boolean indent, String rowQueryParameters) throws SolrException
     {
         return getResultsByPredefinedQuery(auth, core, solrQuery, firstRow, maxRows, sort, indent, rowQueryParameters, true, false);
     }
@@ -213,10 +237,10 @@ public class ExecuteSolrQuery
      * @param filterParentRef
      *            filterParentRef
      * @return results as String
-     * @throws MuleException
+     * @throws SolrException
      */
     public String getResultsByPredefinedQuery(Authentication auth, SolrCore core, String solrQuery, int firstRow, int maxRows, String sort,
-            String rowQueryParameters, boolean filterParentRef) throws MuleException
+            String rowQueryParameters, boolean filterParentRef) throws SolrException
     {
         return getResultsByPredefinedQuery(auth, core, solrQuery, firstRow, maxRows, sort, true, rowQueryParameters, filterParentRef);
     }
@@ -243,10 +267,10 @@ public class ExecuteSolrQuery
      * @param filterParentRef
      *            filterParentRef
      * @return results as String
-     * @throws MuleException
+     * @throws SolrException
      */
     public String getResultsByPredefinedQuery(Authentication auth, SolrCore core, String solrQuery, int firstRow, int maxRows, String sort,
-            boolean indent, String rowQueryParameters, boolean filterParentRef) throws MuleException
+            boolean indent, String rowQueryParameters, boolean filterParentRef) throws SolrException
     {
         return getResultsByPredefinedQuery(auth, core, solrQuery, firstRow, maxRows, sort, indent, rowQueryParameters, filterParentRef,
                 false);
@@ -272,10 +296,10 @@ public class ExecuteSolrQuery
      * @param filterParentRef
      *            filterParentRef
      * @return results as String
-     * @throws MuleException
+     * @throws SolrException
      */
     public String getResultsByPredefinedQuery(Authentication auth, SolrCore core, String solrQuery, int firstRow, int maxRows, String sort,
-            String rowQueryParameters, boolean filterParentRef, boolean filterSubscriptionEvents) throws MuleException
+            String rowQueryParameters, boolean filterParentRef, boolean filterSubscriptionEvents) throws SolrException
     {
         return getResultsByPredefinedQuery(auth, core, solrQuery, firstRow, maxRows, sort, true, rowQueryParameters, filterParentRef,
                 filterSubscriptionEvents);
@@ -305,10 +329,10 @@ public class ExecuteSolrQuery
      * @param filterSubscriptionEvents
      *            boolean whether should filter subscription events
      * @return results as String
-     * @throws MuleException
+     * @throws SolrException
      */
     public String getResultsByPredefinedQuery(Authentication auth, SolrCore core, String solrQuery, int firstRow, int maxRows, String sort,
-            boolean indent, String rowQueryParameters, boolean filterParentRef, boolean filterSubscriptionEvents) throws MuleException
+            boolean indent, String rowQueryParameters, boolean filterParentRef, boolean filterSubscriptionEvents) throws SolrException
     {
         return getResultsByPredefinedQuery(auth, core, solrQuery, firstRow, maxRows, sort, indent, rowQueryParameters, filterParentRef,
                 filterSubscriptionEvents, SearchConstants.DEFAULT_FIELD);
@@ -316,7 +340,7 @@ public class ExecuteSolrQuery
 
     public String getResultsByPredefinedQuery(Authentication auth, SolrCore core, String solrQuery, int firstRow, int maxRows, String sort,
             boolean indent, String rowQueryParameters, boolean filterParentRef, boolean filterSubscriptionEvents, String defaultField)
-            throws MuleException
+            throws SolrException
     {
         return getResultsByPredefinedQuery(auth, core, solrQuery, firstRow, maxRows, sort, indent, rowQueryParameters, filterParentRef,
                 filterSubscriptionEvents, defaultField, null);
@@ -348,12 +372,12 @@ public class ExecuteSolrQuery
      * @param defaultField
      *            which default filed to be set. Can be null(than default field defined in solrconfig.xml is used)
      * @return results as String
-     * @throws MuleException
+     * @throws SolrException
      */
     public String getResultsByPredefinedQuery(Authentication auth, SolrCore core, String solrQuery, int firstRow, int maxRows, String sort,
             boolean indent, String rowQueryParameters, boolean filterParentRef, boolean filterSubscriptionEvents, String defaultField,
             String fields)
-            throws MuleException
+            throws SolrException
     {
         return getResultsByPredefinedQuery(auth, core, solrQuery, firstRow, maxRows, sort, indent, rowQueryParameters, filterParentRef,
                 filterSubscriptionEvents, defaultField, true, fields);
@@ -393,12 +417,12 @@ public class ExecuteSolrQuery
      * @param includeDACFilter
      *            boolean whether should add acl filters on solr query
      * @return results as String
-     * @throws MuleException
+     * @throws SolrException
      */
     @Deprecated
     public String getResultsByPredefinedQuery(Authentication authentication, SolrCore core, String solrQuery, int firstRow, int maxRows,
             String sort, boolean indent, String rowQueryParameters, boolean filterParentRef, boolean filterSubscriptionEvents,
-            String defaultField, boolean includeDACFilter, String fields) throws MuleException
+            String defaultField, boolean includeDACFilter, String fields) throws SolrException
     {
         return getResultsByPredefinedQuery(authentication, core, solrQuery, firstRow, maxRows, sort, indent, rowQueryParameters,
                 filterSubscriptionEvents, defaultField, includeDACFilter, false, false, fields);
@@ -434,7 +458,7 @@ public class ExecuteSolrQuery
      */
     public String getResultsByPredefinedQuery(Authentication authentication, SolrCore core, String solrQuery, int firstRow, int maxRows,
             String sort, boolean indent, String rowQueryParameters, boolean filterSubscriptionEvents,
-            String defaultField, boolean includeDACFilter) throws MuleException
+            String defaultField, boolean includeDACFilter) throws SolrException
     {
         return getResultsByPredefinedQuery(authentication, core, solrQuery, firstRow, maxRows, sort, indent, rowQueryParameters,
                 filterSubscriptionEvents, defaultField, includeDACFilter, false, false, null);
@@ -443,7 +467,7 @@ public class ExecuteSolrQuery
     public String getResultsByPredefinedQuery(Authentication authentication, SolrCore core, String solrQuery, int firstRow,
             int maxRows, String sort, boolean indent, String rowQueryParameters,
             boolean filterSubscriptionEvents, String defaultField, boolean includeDACFilter,
-            boolean includeDenyAccessFilter, boolean enableDocumentACL) throws MuleException
+            boolean includeDenyAccessFilter, boolean enableDocumentACL) throws SolrException
     {
         return getResultsByPredefinedQuery(authentication, core, solrQuery, firstRow, maxRows, sort, indent, rowQueryParameters,
                 filterSubscriptionEvents, defaultField, includeDACFilter, includeDenyAccessFilter, enableDocumentACL, null);
@@ -452,60 +476,298 @@ public class ExecuteSolrQuery
     public String getResultsByPredefinedQuery(Authentication authentication, SolrCore core, String solrQuery, int firstRow,
             int maxRows, String sort, boolean indent, String rowQueryParameters,
             boolean filterSubscriptionEvents, String defaultField, boolean includeDACFilter,
-            boolean includeDenyAccessFilter, boolean enableDocumentACL, String fields) throws MuleException
+            boolean includeDenyAccessFilter, boolean enableDocumentACL, String fields) throws SolrException
     {
-        AcmUserAuthorityContext authorityContext = (AcmUserAuthorityContext) authentication;
-        Map<String, Object> headers = new HashMap<>();
-        headers.put("query", solrQuery);
-        headers.put("firstRow", firstRow);
-        headers.put("maxRows", maxRows);
-        headers.put("sort", sort);
-        headers.put("acmUser", authorityContext.getUserIdentity());
-        headers.put("acmUserGroupIds", authorityContext.getGroupAuthorities());
-        headers.put("filterSubscriptionEvents", filterSubscriptionEvents);
-        headers.put("rowQueryParametars", rowQueryParameters);
-        headers.put("enableDocumentACL", includeDenyAccessFilter);
-        headers.put("includeDenyAccessFilter", enableDocumentACL);
-        headers.put("indent", indent ? true : "");
-        headers.put("df", defaultField);
-        if (!Strings.isNullOrEmpty(fields))
+        SolrClient client = getSolrClientProvider().getClient();
+        if (client == null)
         {
-            headers.put("fl", fields);
+            throw new SolrException("Unable to send Solr Request, invalid client");
+        }
+        log.trace("Using SolrClient: [{}]", client.getClass().getName());
+
+        SolrQuery query = buildQuery(authentication, solrQuery, firstRow, maxRows, sort, indent, rowQueryParameters,
+                filterSubscriptionEvents, defaultField, includeDACFilter, includeDenyAccessFilter, enableDocumentACL, fields);
+        log.trace("Using SolrQuery: [{}]", query);
+
+        if (query.toQueryString().contains("{!join"))
+        {
+            log.error("Found query using joins!: [{}]", query.toQueryString());
+        }
+
+        String collection = mapCollection(core, getConfiguration(), query);
+        log.trace("Using Core/Collection: [{}]", collection);
+
+        try
+        {
+            SolrRequest solrRequest = ArkCaseSolrUtils.configureRequest(new QueryRequest(query, SolrRequest.METHOD.GET));
+
+            StopWatch stopWatch = new StopWatch();
+            stopWatch.start();
+            NamedList<Object> response = client.request(solrRequest, collection);
+            stopWatch.stop();
+
+            log.debug("Received response from Solr in {}ms", stopWatch.getTotalTimeMillis());
+            log.trace("Received response from Solr: [{}]", response);
+            return (String) response.get(SOLR_PARAM_RESPONSE);
+        }
+        catch (SolrServerException | IOException e)
+        {
+            log.error("Unable to process query, server error: [{}]", query, e);
+            throw new SolrException("Unable to process query, server error", e);
+        }
+        catch (Exception e)
+        {
+            log.error("Unable to process query, unknown error: [{}]", query, e);
+            throw new SolrException("Unable to process query, unknown error", e);
+        }
+    }
+
+    /**
+     * @param authentication
+     *            {@link Authentication} to build Data Access Filters for
+     * @param solrQuery
+     *            {@link CommonParams#Q} query string (q)
+     * @param firstRow
+     *            {@link CommonParams#START} beginning row to return results from
+     * @param maxRows
+     *            {@link CommonParams#ROWS} max number of results to return
+     * @param sort
+     *            {@code} String representation of {@link SolrQuery.SortClause}
+     * @param indent
+     *            {@code boolean} true to indent response json
+     * @param rowQueryParameters
+     *            {@link SolrQuery#setParam(String, String...)} Raw query parameters to add to query
+     * @param filterSubscriptionEvents
+     *            {@code boolean} should add appropriate subscription filter queries to data access filter
+     *            , see {@link SolrDataAccessFilterUtil#process(Authentication, SolrQuery, SolrDataAccessOptions)}
+     * @param defaultField
+     *            which default filed to be set. Can be null(than default field defined in solrconfig.xml is used)
+     * @param isIncludeDACFilter
+     *            {@code boolean} whether should add acl filters on solr query
+     * @param isIncludeDenyAccessFilter
+     *            {@code boolean} whether to include deny access filters in query
+     * @param isEnableDocumentACL
+     *            {@code boolean} whether to include document ACLs in query
+     * @param fields
+     *            CSV of fields to request to Solr
+     * @return {@link SolrQuery} to send to Solr with {@link SolrClient}
+     * @throws SolrException
+     *             if unable to build query
+     */
+    public SolrQuery buildQuery(Authentication authentication, String solrQuery, int firstRow, int maxRows,
+            String sort, boolean indent, String rowQueryParameters, boolean filterSubscriptionEvents,
+            String defaultField, boolean isIncludeDACFilter, boolean isIncludeDenyAccessFilter, boolean isEnableDocumentACL, String fields)
+            throws SolrException
+    {
+        log.trace("Building query [{}] for user [{}]", solrQuery, authentication.getName());
+
+        SolrQuery query = new SolrQuery()
+                .setQuery(parse(solrQuery))
+                .setRows(maxRows)
+                .setStart(firstRow)
+                .setParam(SOLR_PARAM_INDENT, indent)
+                .setParam(SOLR_PARAM_WRITER, SOLR_WRITER_JSON);
+
+        if (StringUtils.isNotEmpty(sort))
+        {
+            query.addSort(buildSort(sort));
+        }
+
+        if (StringUtils.isNotEmpty(defaultField))
+        {
+            // Append to existing 'df'
+            log.trace("Adding 'df' to query: [{}]", defaultField);
+            query.add(SOLR_PARAM_DEFAULT_FIELD, defaultField);
+        }
+
+        List<QueryParameter> queryParameters = new ArrayList<>();
+        if (StringUtils.isNotEmpty(rowQueryParameters))
+        {
+            log.trace("rawQueryParameters found, parsing: [{}]", rowQueryParameters);
+            queryParameters.addAll(parseRowQueryParameters(rowQueryParameters));
+            if (!queryParameters.isEmpty())
+            {
+                queryParameters.forEach(qp -> query.add(qp.getKey(), qp.getValue()));
+            }
+        }
+
+        if (StringUtils.isNotEmpty(fields))
+        {
+            log.trace("Adding [{}] to 'fl' params", fields);
+            List<String> parsedFields = parseFields(fields);
+            log.trace("Parsed [{}] to add to 'fl' params", parsedFields);
+            parsedFields.forEach(query::addField);
+        }
+
+        log.trace("Initial query: [{}]", query);
+
+        // Apply DAC
+        SolrDataAccessOptions options = new SolrDataAccessOptions();
+        options.setFilterSubscriptionEvents(filterSubscriptionEvents);
+        options.setIncludeDACFilter(isIncludeDACFilter);
+        options.setIncludeDenyAccessFilter(isIncludeDenyAccessFilter);
+        options.setEnableDocumentACL(isEnableDocumentACL);
+        options.setQueryParameters(queryParameters);
+
+        return SolrDataAccessFilterUtil.process(authentication, options, query);
+    }
+
+    private List<String> parseFields(String fields)
+    {
+        return Arrays.stream(fields.split(",")).filter(StringUtils::isNotEmpty).map(String::trim).collect(Collectors.toList());
+    }
+
+    /**
+     * Parse and sanitize given {@code solrQuery} before sending on to SolrClient
+     *
+     * @param solrQuery
+     *            {@code String} query to parse and sanitize
+     * @return parsed and sanitized (if necessary) solrQuery, or original solrQuery if nothing was changed
+     */
+    protected String parse(String solrQuery)
+    {
+        // Try to URL decode solrQuery to maintain backwards compatibility
+        if (StringUtils.isNotEmpty(solrQuery))
+        {
+            try
+            {
+                // URL Decode any values here, this is to support backwards compatibility
+                return URLDecoder.decode(solrQuery, Charset.defaultCharset().displayName());
+            }
+            catch (UnsupportedEncodingException e)
+            {
+                log.warn("Unable to decode solrQuery!: [{}]", solrQuery);
+            }
+        }
+
+        return solrQuery;
+    }
+
+    /**
+     * Map {@link SolrCore} to appropriate SolrJ handler and/or collection/core name.
+     *
+     * @param core
+     *            {@link SolrCore} to map to collection/core/handler name for SolrJ
+     * @param configuration
+     *            {@link SolrConfig} to use to configure query
+     * @param query
+     *            {@link SolrQuery} to modify based on which core/handler specified
+     * @return {@code String} name of collection/core for SolrJ to use
+     * @throws SolrException
+     *             If unable to map {@link SolrCore} to collection/core name
+     */
+    public String mapCollection(SolrCore core, SolrConfig configuration, SolrQuery query) throws SolrException
+    {
+        if (core == null)
+        {
+            throw new SolrException("Invalid collection/core given for SolrRequest");
+        }
+
+        return core.configure(configuration, query).getCore(configuration);
+    }
+
+    /**
+     * Parse {@code rawQueryParameters} for {@link QueryParameter} to add to
+     * {@link SolrQuery#setParam(String, String...)}
+     * QueryParameters are of the format <code>QUERY_PARAM_FIELD=QUERY_PARAM_VALUE</code>. Ignores empty
+     * parameter values (i.e. 'fq=')
+     *
+     * @param rawQueryParameters
+     *            Raw query parameters to add
+     * @return {@code List} of parsed {@code rawQueryParameters}
+     */
+    public List<QueryParameter> parseRowQueryParameters(String rawQueryParameters) throws SolrException
+    {
+        List<QueryParameter> parameters = new ArrayList<>();
+        log.trace("Parsing Query Parameters");
+        if (StringUtils.isNotEmpty(rawQueryParameters))
+        {
+            try
+            {
+                // First url decode entire parameter string...backwards compatibility
+                String decodedRawQueryParameters = URLDecoder.decode(rawQueryParameters, Charset.defaultCharset().displayName());
+
+                List<String> rqps = Arrays.stream(decodedRawQueryParameters.split(SOLR_RAW_QUERY_PARAM_SPLITTER))
+                        .filter(StringUtils::isNotEmpty) // Remove errant values
+                        .collect(Collectors.toList());
+                log.trace("Un-sanitized query parameters found: [{}]", rqps);
+
+                for (String value : rqps)
+                {
+                    log.trace("Parsing...[{}]", value);
+
+                    // Only consider the first '=' to be the separator
+                    String[] qpValues = value.split(SOLR_RAW_QUERY_SPLITTER, 2);
+
+                    // ignore empty parameter values (i.e. 'fq=')
+                    if (qpValues.length < 2)
+                    {
+                        log.trace("Parsing...found empty parameter value for: [{}]", value);
+                        continue;
+                    }
+
+                    if (qpValues.length == 2)
+                    {
+                        QueryParameter qp = new QueryParameter();
+                        String qpParamField = qpValues[0];
+                        String qpParamValue = qpValues[1];
+
+                        qp.setKey(qpParamField);
+                        qp.setValue(qpParamValue);
+                        parameters.add(qp);
+                    }
+                    else
+                    {
+                        log.error("Found invalid raw query parameter, something went wrong with parsing?: [{}]", value);
+                        throw new SolrException("Found invalid raw query parameter");
+                    }
+                }
+            }
+            catch (UnsupportedEncodingException e)
+            {
+                log.warn("Unable to decode rawQueryParameters!: [{}]", rawQueryParameters);
+                throw new SolrException("Unable to decode raw query parameter!");
+            }
+
+            log.trace("Query Parameters parsed: [{}]", parameters);
         }
         else
         {
-            headers.put("fl", "");
+            log.trace("No Query Parameters found");
         }
-        headers.put("includeDACFilter", includeDACFilter);
 
-        /*
-         * AFDP-7210 The Mule HTTP transport somehow clears the MDC context. This send() call
-         * is the only use of Mule HTTP transport in ArkCase. I fix the issue by saving and then
-         * restoring the MDC variables. If we were going to keep Mule I would find a better
-         * solution. But seeing this code will remind us to remove Mule from our solution.
-         */
-        String alfrescoUser = MDC.get(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY);
-        String requestId = MDC.get(MDCConstants.EVENT_MDC_REQUEST_ID_KEY);
-        String pentahoUser = MDC.get(MDCConstants.EVENT_MDC_REQUEST_PENTAHO_USER_ID_KEY);
-        String remoteAddress = MDC.get(MDCConstants.EVENT_MDC_REQUEST_REMOTE_ADDRESS_KEY);
-        String userId = MDC.get(MDCConstants.EVENT_MDC_REQUEST_USER_ID_KEY);
+        return parameters;
+    }
 
-        MuleMessage response = getMuleContextManager().send(core.getMuleEndpointUrl(), "", headers);
-
-        MDC.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, alfrescoUser);
-        MDC.put(MDCConstants.EVENT_MDC_REQUEST_ID_KEY, requestId);
-        MDC.put(MDCConstants.EVENT_MDC_REQUEST_PENTAHO_USER_ID_KEY, pentahoUser);
-        MDC.put(MDCConstants.EVENT_MDC_REQUEST_REMOTE_ADDRESS_KEY, remoteAddress);
-        MDC.put(MDCConstants.EVENT_MDC_REQUEST_USER_ID_KEY, userId);
-
-        log.trace("Response type: {}", response.getPayload().getClass());
-
-        if (response.getPayload() instanceof String)
+    /**
+     * Build SolrJ sort parameter from ArkCase sort parameter
+     * Note: The order part of sort string will be lowercased, see {@link org.apache.solr.client.solrj.SolrQuery.ORDER}
+     *
+     * @param sort
+     *            {@code String} to parse
+     * @return {@link org.apache.solr.client.solrj.SolrQuery.SortClause} SortClause from parsed {@code sort}
+     * @throws SolrException
+     */
+    public SolrQuery.SortClause buildSort(String sort) throws SolrException
+    {
+        log.trace("Parsing sort from: [{}]", sort);
+        String[] fieldAndOrder = sort.split(SOLR_SORT_CLAUSE_SPLITTER);
+        if (fieldAndOrder.length != 2)
         {
-            return indent ? ((String) response.getPayload()) : ((String) response.getPayload()).trim();
+            log.error("Invalid sort parameter found: [{}]", sort);
+            throw new SolrException("Invalid sort parameter");
         }
-
-        throw new IllegalStateException("Unexpected payload type: " + response.getPayload().getClass().getName());
+        try
+        {
+            SolrQuery.SortClause sortClause = new SolrQuery.SortClause(fieldAndOrder[0], fieldAndOrder[1].toLowerCase());
+            log.trace("Sort clause parsed: [{}]", sortClause);
+            return sortClause;
+        }
+        catch (Exception e)
+        {
+            log.error("Unable to build sort clause: [{}]", sort);
+            throw new SolrException("Unable to build sort clause");
+        }
     }
 
     /**
@@ -516,9 +778,9 @@ public class ExecuteSolrQuery
      *            Which queue to send the request to
      * @param query
      *            Solr Search query for removing found documents
-     * @throws MuleException
+     * @throws SolrException
      */
-    public void sendSolrDeleteQuery(String queueName, String query) throws MuleException
+    public void sendSolrDeleteQuery(String queueName, String query) throws SolrException
     {
         log.debug("Received query [{}] for deletion.", query);
 
@@ -536,16 +798,6 @@ public class ExecuteSolrQuery
         }
     }
 
-    public MuleContextManager getMuleContextManager()
-    {
-        return muleContextManager;
-    }
-
-    public void setMuleContextManager(MuleContextManager muleContextManager)
-    {
-        this.muleContextManager = muleContextManager;
-    }
-
     public void setObjectConverter(ObjectConverter objectConverter)
     {
         this.objectConverter = objectConverter;
@@ -559,5 +811,25 @@ public class ExecuteSolrQuery
     public void setSendDocumentsToSolr(SendDocumentsToSolr sendDocumentsToSolr)
     {
         this.sendDocumentsToSolr = sendDocumentsToSolr;
+    }
+
+    public SolrClientProvider getSolrClientProvider()
+    {
+        return solrClientProvider;
+    }
+
+    public void setSolrClientProvider(SolrClientProvider solrClientProvider)
+    {
+        this.solrClientProvider = solrClientProvider;
+    }
+
+    public SolrConfig getConfiguration()
+    {
+        return configuration;
+    }
+
+    public void setConfiguration(SolrConfig configuration)
+    {
+        this.configuration = configuration;
     }
 }

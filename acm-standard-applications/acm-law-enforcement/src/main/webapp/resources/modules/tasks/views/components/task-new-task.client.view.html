@@ -23,7 +23,7 @@
 
                     </label>
                     <select ng-model="config.data.attachedToObjectType" ng-change="updateAssocParentType()"
-                            ng-options="attachedToObjectType.id as attachedToObjectType.name for attachedToObjectType in config.attachedToObjectType"
+                            ng-options="option.key as (option.value | translate) for option in taskParentTypes"
                             class="form-control input-md" ng-click="inputClear()" ng-disabled="modalParams.parentType">
                     </select>
                 </div>

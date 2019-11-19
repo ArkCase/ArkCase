@@ -67,7 +67,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import gov.foia.model.FOIAConstants;
 import gov.foia.model.FOIAPerson;
 import gov.foia.model.FOIARequest;
 import gov.foia.model.FOIARequesterAssociation;
@@ -159,7 +158,7 @@ public class PortalCreateRequestService
 
         request.setExternal(true);
 
-        request.setRequestType(FOIAConstants.NEW_REQUEST_TYPE);
+        request.setRequestType(in.getRequestType());
         request.setRequestSubType("FOIA");
         request.setComponentAgency("FOIA");
         request.setOriginalRequestNumber(in.getOriginalRequestNumber());

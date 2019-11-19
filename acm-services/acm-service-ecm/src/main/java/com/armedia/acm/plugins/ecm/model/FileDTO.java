@@ -34,6 +34,7 @@ public class FileDTO
 {
     private String originalId;
     private EcmFile newFile;
+    private Boolean link;
 
     public String getOriginalId()
     {
@@ -53,5 +54,15 @@ public class FileDTO
     public void setNewFile(EcmFile newFile)
     {
         this.newFile = newFile;
+    }
+
+    public Boolean getLink()
+    {
+        return link;
+    }
+
+    public void setLink(Boolean link)
+    {
+        this.link = link;
     }
 }

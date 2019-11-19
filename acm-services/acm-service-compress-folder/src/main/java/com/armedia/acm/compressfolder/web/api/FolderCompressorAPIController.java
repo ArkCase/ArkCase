@@ -32,7 +32,7 @@ package com.armedia.acm.compressfolder.web.api;
 
 import com.armedia.acm.compressfolder.FolderCompressor;
 import com.armedia.acm.compressfolder.model.CompressNode;
-import com.armedia.acm.data.exceptions.AcmAccessControlException;
+import com.armedia.acm.core.exceptions.AcmAccessControlException;
 import com.armedia.acm.plugins.ecm.exception.AcmFolderException;
 import com.armedia.acm.services.dataaccess.service.impl.ArkPermissionEvaluator;
 

@@ -70,6 +70,7 @@
         <property name="privilegesConfig" ref="applicationPrivilegesConfig"/>
         <property name="rolesToPrivilegesConfig" ref="rolesToPrivileges"/>
         <property name="configurationPropertyService" ref="configurationPropertyService"/>
+        <property name="collectionPropertiesConfigurationService" ref="collectionPropertiesConfigurationService"/>
     </bean>
 
     <bean id="historyCleanJob" class="com.armedia.acm.plugins.admin.service.HistoryCleanService">
@@ -92,13 +93,13 @@
         <property name="ldapConfigurationLocation" value="#{ systemProperties ['user.home'] }/.arkcase/acm/spring/"/>
         <property name="ldapFile" value="spring-config-%s-ldap.xml"/>
         <property name="ldapPropertiesFile" value="spring-config-%s-ldap.properties"/>
-        <property name="ldapPropertiesFileRegex" value="^spring[-d]config[-d][a-zA-Z0-9.]+[-d]ldap.properties$"/>
+        <property name="ldapPropertiesFileRegex" value="^spring[-d]config[-d][a-zA-Z0-9._]+[-d]ldap.properties$"/>
         <property name="ldapUserPropertiesFile" ref="ldapAddUserPropertiesFile"/>
-        <property name="ldapUserPropertiesFileRegex" value="^spring[-d]config[-d]user[-d][a-zA-Z0-9-.]+.properties$"/>
-        <property name="ldapUserFileRegex" value="^spring[-d]config[-d]user[-d][a-zA-Z0-9-.]+.xml$"/>
+        <property name="ldapUserPropertiesFileRegex" value="^spring[-d]config[-d]user[-d][a-zA-Z0-9-._]+.properties$"/>
+        <property name="ldapUserFileRegex" value="^spring[-d]config[-d]user[-d][a-zA-Z0-9-._]+.xml$"/>
         <property name="ldapGroupPropertiesFile" ref="ldapAddGroupPropertiesFile"/>
-        <property name="ldapGroupPropertiesFileRegex" value="^spring[-d]config[-d]group[-d][a-zA-Z0-9-.]+.properties$"/>
-        <property name="ldapGroupFileRegex" value="^spring[-d]config[-d]group[-d][a-zA-Z0-9-.]+.xml$"/>
+        <property name="ldapGroupPropertiesFileRegex" value="^spring[-d]config[-d]group[-d][a-zA-Z0-9-._]+.properties$"/>
+        <property name="ldapGroupFileRegex" value="^spring[-d]config[-d]group[-d][a-zA-Z0-9-._]+.xml$"/>
     </bean>
 
     <bean id="openLdapTemplateConfig" class="com.armedia.acm.plugins.admin.model.LdapTemplateConfig">
@@ -174,16 +175,6 @@
 
     <bean id="documentUploadPolicyConfig" class="com.armedia.acm.plugins.admin.model.DocumentUploadPolicyConfig" scope="refresh">
         <aop:scoped-proxy/>
-    </bean>
-
-    <bean id="objectTitleConfiguration" class="com.armedia.acm.plugins.admin.model.ObjectTitleConfig" scope="refresh">
-        <property name="jsonUnmarshaller" ref="jsonUnmarshaller"/>
-        <aop:scoped-proxy proxy-target-class="true"/>
-    </bean>
-
-    <bean id="objectTitleConfigurationService" class="com.armedia.acm.plugins.admin.service.ObjectTitleConfigurationService">
-        <property name="configurationPropertyService" ref="configurationPropertyService"/>
-        <property name="objectTitleConfiguration" ref="objectTitleConfiguration" />
     </bean>
 
     <bean id="googleAnalyticsConfig" class="com.armedia.acm.plugins.admin.model.GoogleAnalyticsConfig" scope="refresh">

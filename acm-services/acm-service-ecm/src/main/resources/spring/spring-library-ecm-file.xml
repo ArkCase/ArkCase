@@ -26,6 +26,8 @@
         <property name="externalAuthenticationUtils" ref="externalAuthenticationUtils"/>
     </bean>
 
+    <bean id="xSync" class="com.antkorwin.xsync.XSync"/>
+    
     <bean id="fileParticipantService" class="com.armedia.acm.plugins.ecm.service.impl.EcmFileParticipantService">
         <property name="fileDao" ref="ecmFileDao"/>
         <property name="folderDao" ref="acmFolderDao"/>
@@ -34,11 +36,15 @@
         <property name="fileParticipantServiceHelper" ref="fileParticipantServiceHelper"/>
         <property name="ecmFileConfig" ref="ecmFileConfig"/>
         <property name="externalAuthenticationUtils" ref="externalAuthenticationUtils"/>
+        <property name="xSync" ref="xSync"/>
+        <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
     </bean>
 
     <bean id="entityParticipantsChangedEventListener"
         class="com.armedia.acm.plugins.ecm.service.EntityParticipantsChangedEventListener">
         <property name="fileParticipantService" ref="fileParticipantService"/>
+        <property name="executor" ref="fileParticipantsThreadPoolTaskExecutor"/>
+        <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
     </bean>
 
     <bean id="fileParticipantsChangedEventListener"
@@ -67,6 +73,12 @@
     <bean id="ecmFileMuleUtils" class="com.armedia.acm.plugins.ecm.utils.EcmFileMuleUtils">
         <property name="muleContextManager" ref="muleContextManager"/>
         <property name="cmisConfigUtils" ref="cmisConfigUtils"/>
+        <property name="ecmFileCamelUtils" ref="ecmFileCamelUtils"/>
+    </bean>
+
+    <!-- Camel Utility Bean for downloading, updating, adding files -->
+    <bean id="ecmFileCamelUtils" class="com.armedia.acm.plugins.ecm.utils.EcmFileCamelUtils">
+        <property name="camelContextManager" ref="camelContextManager"/>
     </bean>
 
     <!-- Camel Utility Bean for downloading, updating, adding files -->
@@ -83,7 +95,7 @@
     </bean>
     <bean id="ecmFileMergedContentHandler"
         class="com.armedia.acm.plugins.ecm.pipeline.presave.EcmFileMergeContentHandler">
-        <property name="ecmFileMuleUtils" ref="ecmFileMuleUtils"/>
+        <property name="ecmFileCamelUtils" ref="ecmFileCamelUtils"/>
     </bean>
     <bean id="ecmFileNewContentHandler" class="com.armedia.acm.plugins.ecm.pipeline.presave.EcmFileNewContentHandler">
         <property name="ecmFileMuleUtils" ref="ecmFileMuleUtils"/>
@@ -109,7 +121,7 @@
     </bean>
     <bean id="ecmFileUpdateContentHandler"
         class="com.armedia.acm.plugins.ecm.pipeline.presave.EcmFileUpdateContentHandler">
-        <property name="ecmFileMuleUtils" ref="ecmFileMuleUtils"/>
+        <property name="ecmFileCamelUtils" ref="ecmFileCamelUtils"/>
     </bean>
     <bean id="ecmFileUpdateMetadataHandler"
         class="com.armedia.acm.plugins.ecm.pipeline.presave.EcmFileUpdateMetadataHandler">

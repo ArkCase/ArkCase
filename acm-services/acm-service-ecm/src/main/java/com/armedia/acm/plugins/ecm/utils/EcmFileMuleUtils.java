@@ -27,6 +27,9 @@ package com.armedia.acm.plugins.ecm.utils;
  * #L%
  */
 
+import com.armedia.acm.camelcontext.arkcase.cmis.ArkCaseCMISActions;
+import com.armedia.acm.camelcontext.exception.ArkCaseFileRepositoryException;
+import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
@@ -35,7 +38,6 @@ import org.apache.chemistry.opencmis.client.api.Document;
 import org.apache.chemistry.opencmis.commons.data.ContentStream;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.mule.api.ExceptionPayload;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 
@@ -51,6 +53,8 @@ public class EcmFileMuleUtils
     private transient final Logger log = LogManager.getLogger(getClass());
 
     private MuleContextManager muleContextManager;
+
+    private EcmFileCamelUtils ecmFileCamelUtils;
 
     private CmisConfigUtils cmisConfigUtils;
 
@@ -83,7 +87,7 @@ public class EcmFileMuleUtils
     }
 
     /**
-     * Adds a new file to the repository using the addFile mule flow.
+     * Adds a new file to the repository using the addFile camel flow.
      *
      * @param newEcmFile
      *            - contains metadata for the file whose contents will be added to the repository
@@ -91,35 +95,29 @@ public class EcmFileMuleUtils
      *            - cmis id of the folder in which the new file will be added
      * @param fileInputStream
      *            - binary content data for the new file version
-     * @throws MuleException
-     *             if the mule call to save the file to the repository fails
+     * @throws AcmUserActionFailedException
+     *             if the camel call to save the file to the repository fails
      * @returns Cmis Document object for the new repository document
      */
-    public Document addFile(EcmFile newEcmFile, String cmisFolderId, InputStream fileInputStream) throws MuleException
+    @Deprecated
+    public Document addFile(EcmFile newEcmFile, String cmisFolderId, InputStream fileInputStream) throws AcmUserActionFailedException
     {
-        // Mule does not support file names with trailing space(s)
-        newEcmFile.setFileName(newEcmFile.getFileName().trim());
-        // Mule upload request payload setup (specifies the folder in which to upload the supplied content stream)
-        Map<String, Object> messageProps = new HashMap<>();
-        messageProps.put("cmisFolderId", cmisFolderId);
-        messageProps.put("inputStream", fileInputStream);
-        messageProps.put(EcmFileConstants.CONFIGURATION_REFERENCE, cmisConfigUtils.getCmisConfiguration(newEcmFile.getCmisRepositoryId()));
-        messageProps.put(EcmFileConstants.VERSIONING_STATE, cmisConfigUtils.getVersioningState(newEcmFile.getCmisRepositoryId()));
+        log.debug("invoking Camel add file route");
 
-        log.debug("invoking the mule add file flow");
-        MuleMessage received = getMuleContextManager().send("vm://addFile.in", newEcmFile, messageProps);
-        MuleException e = received.getInboundProperty("saveException");
-        if (e != null)
+        try
         {
-            throw e;
+            return getEcmFileCamelUtils().addFile(newEcmFile, cmisFolderId, fileInputStream);
         }
-
-        // Extracts CMIS document data from the Mule response
-        return received.getPayload(Document.class);
+        catch (AcmUserActionFailedException e)
+        {
+            log.error("Could not create document {} ", e.getMessage(), e);
+            throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_UPLOAD_FILE, EcmFileConstants.OBJECT_FILE_TYPE, null,
+                    "Could not create document", e);
+        }
     }
 
     /**
-     * Updates the contents of an existing repository item using the mule updateFile flow.
+     * Updates the contents of an existing repository item using the Camel updateFile flow.
      *
      * @param newEcmFile
      *            - metadata for the new file which will replace the old version
@@ -127,40 +125,23 @@ public class EcmFileMuleUtils
      *            - metadata for the old file whose contents will be replaced
      * @param fileInputStream
      *            - the binary data content which will be written to the repository
-     * @throws MuleException
-     *             if the mule call to replace the file contents in the repository fails
+     * @throws ArkCaseFileRepositoryException
+     *             if the Camel call to replace the file contents in the repository fails
      * @returns Cmis Document object for the updated repository document
      */
-    public Document updateFile(EcmFile newEcmFile, EcmFile originalFile, InputStream fileInputStream) throws MuleException
+    @Deprecated
+    public Document updateFile(EcmFile newEcmFile, EcmFile originalFile, InputStream fileInputStream) throws ArkCaseFileRepositoryException
     {
-        // Assembles the mule payload metadata for the file to update and the new content stream
-        Map<String, Object> messageProps = new HashMap<>();
-        messageProps.put("ecmFileId", originalFile.getVersionSeriesId());
-        messageProps.put("fileName", originalFile.getFileName());
-        messageProps.put("mimeType", originalFile.getFileActiveVersionMimeType());
-        messageProps.put("inputStream", fileInputStream);
-        messageProps.put(EcmFileConstants.CONFIGURATION_REFERENCE, cmisConfigUtils.getCmisConfiguration(newEcmFile.getCmisRepositoryId()));
-
-        // Uses Mule to transfer the updated file contents to the Alfresco content repository
-        log.debug("invoking the mule replace file flow");
-        MuleMessage received = getMuleContextManager().send("vm://updateFile.in", newEcmFile, messageProps);
-        MuleException e = received.getInboundProperty("updateException");
-        if (e != null)
-        {
-            throw e;
-        }
-
-        // Extracts CMIS document data from the Mule response
-        return received.getPayload(Document.class);
+        return ecmFileCamelUtils.updateFile(newEcmFile, originalFile, fileInputStream);
     }
 
     /**
      * Removes a file from the Alfresco content repository
-     * 
+     *
      * @deprecated
      *             This method is no longer acceptable
      *             Use {@link EcmFileCamelUtils#deleteFile(EcmFile, String)} instead.
-     * 
+     *
      * @param ecmFile
      *            - metadata for the file to delete
      * @param cmisFileId
@@ -171,19 +152,10 @@ public class EcmFileMuleUtils
     @Deprecated
     public void deleteFile(EcmFile ecmFile, String cmisFileId) throws Exception
     {
-        // This is the request payload for mule including the unique cmis id for the document to delete
-        Map<String, Object> messageProps = new HashMap<>();
-        messageProps.put("ecmFileId", cmisFileId);
-        messageProps.put(EcmFileConstants.CONFIGURATION_REFERENCE, cmisConfigUtils.getCmisConfiguration(ecmFile.getCmisRepositoryId()));
-
-        // Invokes the mule flow to delete the file contents from the repository
-        log.debug("rolling back file upload for cmis id: " + cmisFileId + " using vm://deleteFile.in mule flow");
-        MuleMessage fileDeleteResponse = getMuleContextManager().send("vm://deleteFile.in", ecmFile, messageProps);
-        ExceptionPayload exceptionPayload = fileDeleteResponse.getExceptionPayload();
-        if (exceptionPayload != null)
-        {
-            throw new Exception(exceptionPayload.getRootException());
-        }
+        // Invokes the Camel route to delete the file contents from the repository
+        log.debug("Invoking delete Camel route to perform roll back on file upload for cmis id: [{}] using [{}]", cmisFileId,
+                ArkCaseCMISActions.DELETE_DOCUMENT.getQueueName());
+        getEcmFileCamelUtils().deleteFile(ecmFile, cmisFileId);
     }
 
     public MuleContextManager getMuleContextManager()
@@ -204,5 +176,15 @@ public class EcmFileMuleUtils
     public void setCmisConfigUtils(CmisConfigUtils cmisConfigUtils)
     {
         this.cmisConfigUtils = cmisConfigUtils;
+    }
+
+    public EcmFileCamelUtils getEcmFileCamelUtils()
+    {
+        return ecmFileCamelUtils;
+    }
+
+    public void setEcmFileCamelUtils(EcmFileCamelUtils ecmFileCamelUtils)
+    {
+        this.ecmFileCamelUtils = ecmFileCamelUtils;
     }
 }
