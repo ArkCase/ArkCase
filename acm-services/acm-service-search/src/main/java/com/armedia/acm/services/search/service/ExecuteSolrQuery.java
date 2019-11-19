@@ -40,6 +40,7 @@ import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.services.search.exception.SolrException;
 import com.armedia.acm.services.search.model.QueryParameter;
 import com.armedia.acm.services.search.model.SearchConstants;
+import com.armedia.acm.services.search.model.solr.ArkCaseSolrUtils;
 import com.armedia.acm.services.search.model.solr.SolrConfig;
 import com.armedia.acm.services.search.model.solr.SolrCore;
 import com.armedia.acm.services.search.model.solr.SolrDataAccessOptions;
@@ -498,7 +499,7 @@ public class ExecuteSolrQuery
 
         try
         {
-            SolrRequest solrRequest = getConfiguration().configureRequest(new QueryRequest(query, SolrRequest.METHOD.GET));
+            SolrRequest solrRequest = ArkCaseSolrUtils.configureRequest(new QueryRequest(query, SolrRequest.METHOD.GET));
 
             StopWatch stopWatch = new StopWatch();
             stopWatch.start();
