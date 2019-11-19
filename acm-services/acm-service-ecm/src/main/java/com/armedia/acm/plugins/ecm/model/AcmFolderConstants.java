@@ -33,7 +33,6 @@ package com.armedia.acm.plugins.ecm.model;
 public interface AcmFolderConstants
 {
     String MULE_ENDPOINT_LIST_FOLDER = "vm://listFolder.in";
-    String MULE_ENDPOINT_MOVE_FOLDER = "vm://moveFolder.in";
     String MULE_ENDPOINT_GET_FOLDER = "vm://getFolder.in";
     String MULE_ENDPOINT_CREATE_FOLDER_BY_PATH = "vm://createFolderByPath.in";
 
