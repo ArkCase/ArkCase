@@ -62,6 +62,7 @@ import com.armedia.acm.web.api.MDCConstants;
 
 import org.apache.chemistry.opencmis.client.api.CmisObject;
 import org.apache.chemistry.opencmis.client.api.Document;
+import org.apache.chemistry.opencmis.client.api.FileableCmisObject;
 import org.apache.chemistry.opencmis.client.api.Folder;
 import org.apache.chemistry.opencmis.client.api.ItemIterable;
 import org.apache.commons.lang.StringUtils;
@@ -384,22 +385,13 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
 
         String cmisRepositoryId = getCmisRepositoryId(folderForMoving);
 
-        properties.put(AcmFolderConstants.CONFIGURATION_REFERENCE, cmisConfigUtils.getCmisConfiguration(cmisRepositoryId));
+        properties.put(EcmFileConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID);
+        properties.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, EcmFileCamelUtils.getCmisUser());
 
         try
         {
-            MuleMessage message = getMuleContextManager().send(AcmFolderConstants.MULE_ENDPOINT_MOVE_FOLDER, folderForMoving, properties);
-
-            if (message.getInboundPropertyNames().contains(AcmFolderConstants.MOVE_FOLDER_EXCEPTION_INBOUND_PROPERTY))
-            {
-                MuleException muleException = message.getInboundProperty(AcmFolderConstants.MOVE_FOLDER_EXCEPTION_INBOUND_PROPERTY);
-                log.error("Folder can not be moved successfully {}", muleException.getMessage(), muleException);
-                throw new AcmUserActionFailedException(AcmFolderConstants.USER_ACTION_MOVE_FOLDER, AcmFolderConstants.OBJECT_FOLDER_TYPE,
-                        folderForMoving.getId(), "Folder " + folderForMoving.getName() + " can not be moved successfully", muleException);
-            }
-
-            CmisObject cmisObject = message.getPayload(CmisObject.class);
-            String newFolderId = cmisObject.getId();
+            FileableCmisObject result = (FileableCmisObject) getCamelContextManager().send(ArkCaseCMISActions.MOVE_FOLDER, properties);
+            String newFolderId = result.getPropertyValue(EcmFileConstants.REPOSITORY_VERSION_ID);
 
             folderForMoving.setCmisRepositoryId(cmisRepositoryId);
             folderForMoving.setCmisFolderId(newFolderId);
@@ -409,7 +401,7 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
             getFileParticipantService().setFolderParticipantsFromParentFolder(movedFolder);
             movedFolder = getFolderDao().save(movedFolder);
         }
-        catch (PersistenceException | MuleException e)
+        catch (PersistenceException | ArkCaseFileRepositoryException e)
         {
             log.error("Folder {} not moved successfully {}", folderForMoving.getName(), e.getMessage(), e);
             throw new AcmUserActionFailedException(AcmFolderConstants.USER_ACTION_MOVE_FOLDER, AcmFolderConstants.OBJECT_FOLDER_TYPE,
@@ -479,22 +471,14 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
 
         String cmisRepositoryId = getCmisRepositoryId(folderForMoving);
 
-        properties.put(AcmFolderConstants.CONFIGURATION_REFERENCE, cmisConfigUtils.getCmisConfiguration(cmisRepositoryId));
+        properties.put(EcmFileConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID);
+        properties.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, EcmFileCamelUtils.getCmisUser());
 
         try
         {
-            MuleMessage message = getMuleContextManager().send(AcmFolderConstants.MULE_ENDPOINT_MOVE_FOLDER, folderForMoving, properties);
+            FileableCmisObject result = (FileableCmisObject) getCamelContextManager().send(ArkCaseCMISActions.MOVE_FOLDER, properties);
 
-            if (message.getInboundPropertyNames().contains(AcmFolderConstants.MOVE_FOLDER_EXCEPTION_INBOUND_PROPERTY))
-            {
-                MuleException muleException = message.getInboundProperty(AcmFolderConstants.MOVE_FOLDER_EXCEPTION_INBOUND_PROPERTY);
-                log.error("Folder can not be moved successfully {}", muleException.getMessage(), muleException);
-                throw new AcmUserActionFailedException(AcmFolderConstants.USER_ACTION_MOVE_FOLDER, AcmFolderConstants.OBJECT_FOLDER_TYPE,
-                        folderForMoving.getId(), "Folder " + folderForMoving.getName() + " can not be moved successfully", muleException);
-            }
-
-            CmisObject cmisObject = message.getPayload(CmisObject.class);
-            String newFolderId = cmisObject.getId();
+            String newFolderId = result.getPropertyValue(EcmFileConstants.REPOSITORY_VERSION_ID);
 
             folderForMoving.setCmisRepositoryId(cmisRepositoryId);
             folderForMoving.setCmisFolderId(newFolderId);
@@ -503,7 +487,7 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
             getFileParticipantService().setFolderParticipantsFromParentFolder(movedFolder);
             movedFolder = getFolderDao().save(movedFolder);
         }
-        catch (PersistenceException | MuleException e)
+        catch (PersistenceException | ArkCaseFileRepositoryException e)
         {
             log.error("Folder {} not moved successfully {}", folderForMoving.getName(), e.getMessage(), e);
             throw new AcmUserActionFailedException(AcmFolderConstants.USER_ACTION_MOVE_FOLDER, AcmFolderConstants.OBJECT_FOLDER_TYPE,
@@ -538,6 +522,7 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
                     null);
         }
         if (dstFolder == null)
+            if (dstFolder == null)
         {
             throw new AcmObjectNotFoundException(AcmFolderConstants.OBJECT_FOLDER_TYPE, null, "Destination folder not found", null);
         }

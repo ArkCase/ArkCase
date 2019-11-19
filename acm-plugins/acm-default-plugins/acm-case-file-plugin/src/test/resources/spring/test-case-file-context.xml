@@ -8,7 +8,6 @@
                 <value>/flows/MuleCmisConnectorFlow.xml</value>
                 <value>/flows/addNewFolderFlow.xml</value>
                 <value>/flows/getFolderFlow.xml</value>
-                <value>/flows/moveFolderFlow.xml</value>
                 <value>/flows/copyFileFlow.xml</value>
                 <value>/flows/createFolderFlow.xml</value>
                 <value>/flows/caseFileTestFlow.xml</value>
