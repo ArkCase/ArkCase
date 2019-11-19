@@ -27,11 +27,11 @@ package com.armedia.acm.services.users.web.api;
  * #L%
  */
 
+import com.armedia.acm.services.search.exception.SolrException;
 import com.armedia.acm.services.users.service.group.GroupService;
 
-import org.mule.api.MuleException;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -56,7 +56,7 @@ public class GetUsersByGroupAPIController
     @ResponseBody
     public String info(Authentication auth, @PathVariable String group,
             @RequestParam(value = "status", required = false) String userStatus)
-            throws MuleException
+            throws SolrException
     {
 
         group = new String(Base64.getUrlDecoder().decode(group.getBytes()));

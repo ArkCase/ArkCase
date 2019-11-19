@@ -27,7 +27,7 @@ package com.armedia.acm.services.search.service.solr;
  * #L%
  */
 
-import com.armedia.acm.services.search.model.SolrCore;
+import com.armedia.acm.services.search.model.solr.SolrCore;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -48,16 +48,17 @@ public class DefaultSolrPostClient implements SolrPostClient
     {
         Objects.requireNonNull(core, "Core must be specified");
         Objects.requireNonNull(json, "JSON must be specified");
-        Objects.requireNonNull(core.getCore(), "The Solr core must have a value");
+        Objects.requireNonNull(core.getCore(solrRestClient.getSolrConfig()), "The Solr core must have a value");
 
         String logJson = json.length() > 50 ? json.substring(0, 50) + "..." : json;
-        logger.debug("Sending to Solr core {} with JSON {}", core.getCore(), logJson);
+        logger.debug("Sending to Solr core {} with JSON {}", core.getCore(solrRestClient.getSolrConfig()), logJson);
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
         HttpEntity<String> entity = new HttpEntity<>(json, headers);
 
-        getSolrRestClient().postToSolr(destinationQueue, core.getCore(), solrRestClient.getSolrConfig().getUpdateHandler(), entity,
+        getSolrRestClient().postToSolr(destinationQueue, core.getCore(solrRestClient.getSolrConfig()),
+                solrRestClient.getSolrConfig().getUpdateHandler(), entity,
                 logJson);
     }
 

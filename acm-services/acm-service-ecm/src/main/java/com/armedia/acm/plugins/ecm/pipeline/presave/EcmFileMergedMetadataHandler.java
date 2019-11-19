@@ -75,10 +75,10 @@ public class EcmFileMergedMetadataHandler implements PipelineHandler<EcmFile, Ec
             }
 
             // Updates the versioning of the file
-            oldFile.setVersionSeriesId(cmisDocument.getVersionSeriesId());
+            oldFile.setVersionSeriesId(cmisDocument.getPropertyValue("alfcmis:nodeRef"));
             oldFile.setActiveVersionTag(cmisDocument.getVersionLabel());
             EcmFileVersion version = new EcmFileVersion();
-            version.setCmisObjectId(cmisDocument.getId());
+            version.setCmisObjectId(cmisDocument.getPropertyValue("alfcmis:nodeRef") + ";" + cmisDocument.getVersionLabel());
             version.setVersionTag(cmisDocument.getVersionLabel());
             version.setVersionMimeType(oldFile.getFileActiveVersionMimeType());
             version.setVersionFileNameExtension(oldFile.getFileActiveVersionNameExtension());

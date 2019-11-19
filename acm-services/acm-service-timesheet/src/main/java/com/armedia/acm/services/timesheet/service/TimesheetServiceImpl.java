@@ -34,7 +34,8 @@ import com.armedia.acm.auth.AuthenticationUtils;
 import com.armedia.acm.objectonverter.DateFormats;
 import com.armedia.acm.services.pipeline.PipelineManager;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
-import com.armedia.acm.services.search.model.SolrCore;
+import com.armedia.acm.services.search.exception.SolrException;
+import com.armedia.acm.services.search.model.solr.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.timesheet.dao.AcmTimesheetDao;
 import com.armedia.acm.services.timesheet.model.AcmTime;
@@ -43,15 +44,17 @@ import com.armedia.acm.services.timesheet.model.TimesheetConfig;
 import com.armedia.acm.services.timesheet.model.TimesheetConstants;
 import com.armedia.acm.services.timesheet.pipeline.TimesheetPipelineContext;
 
-import org.codehaus.plexus.util.StringUtils;
-import org.mule.api.MuleException;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.codehaus.plexus.util.StringUtils;
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author riste.tutureski
@@ -212,7 +215,7 @@ public class TimesheetServiceImpl implements TimesheetService
 
             LOG.debug("Objects was retrieved.");
         }
-        catch (MuleException e)
+        catch (SolrException e)
         {
             LOG.error("Cannot retrieve objects from Solr.", e);
         }
@@ -247,7 +250,7 @@ public class TimesheetServiceImpl implements TimesheetService
 
             LOG.debug("Objects was retrieved.");
         }
-        catch (MuleException e)
+        catch (SolrException e)
         {
             LOG.error("Cannot retrieve objects from Solr.", e);
         }

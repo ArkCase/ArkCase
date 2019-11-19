@@ -195,7 +195,15 @@ angular.module('admin').controller('Admin.SelectPrivilegesController', [ '$scope
             return deferred.promise;
         }
     };
-    
+
+    $scope.newRole = function () {
+        $scope.showModal(null);
+    };
+
+    $scope.editRole = function () {
+        $scope.showModal($scope.lastSelectedRole.key);
+    };
+
     //dialog for edit or create new role
     $scope.showModal = function(value) {
         var modalInstance = $modal.open({
