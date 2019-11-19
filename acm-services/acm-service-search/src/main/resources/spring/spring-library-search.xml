@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:jms="http://www.springframework.org/schema/jms"
-       xmlns:aop="http://www.springframework.org/schema/aop" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.2.xsd
+    xmlns:jms="http://www.springframework.org/schema/jms"
+    xmlns:aop="http://www.springframework.org/schema/aop" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.2.xsd
 
             http://www.springframework.org/schema/jms http://www.springframework.org/schema/jms/spring-jms-4.2.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
 
@@ -41,7 +41,7 @@
     </bean>
 
     <bean id="acmJpaBatchUpdateJob" class="com.armedia.acm.services.search.service.AcmJpaBatchUpdateJobDescriptor"
-          parent="acmJobDescriptor">
+        parent="acmJobDescriptor">
         <property name="jpaBatchUpdateService" ref="acmJpaBatchUpdateService"/>
         <property name="springContextHolder" ref="acmContextHolder"/>
     </bean>
@@ -77,5 +77,9 @@
     <bean id="searchConfig" class="com.armedia.acm.services.search.model.solr.SearchConfig" scope="refresh">
         <property name="jsonUnmarshaller" ref="jsonUnmarshaller"/>
         <aop:scoped-proxy/>
+    </bean>
+
+    <bean id="childDocumentsSearchService" class="com.armedia.acm.services.search.service.ChildDocumentsSearchServiceImpl">
+        <property name="executeSolrQuery" ref="executeSolrQuery"/>
     </bean>
 </beans>
