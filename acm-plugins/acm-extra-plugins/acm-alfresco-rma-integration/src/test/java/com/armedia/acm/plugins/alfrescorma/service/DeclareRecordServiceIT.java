@@ -30,15 +30,16 @@ package com.armedia.acm.plugins.alfrescorma.service;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
+import com.armedia.acm.camelcontext.context.CamelContextManager;
 import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.web.api.MDCConstants;
 
 import org.apache.chemistry.opencmis.client.api.Document;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
 import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -71,6 +72,8 @@ public class DeclareRecordServiceIT
     @Autowired
     private MuleContextManager muleContextManager;
     @Autowired
+    private CamelContextManager camelContextManager;
+    @Autowired
     @Qualifier("declareRecordService")
     private AlfrescoService<String> service;
     private String ecmFileId;
@@ -82,7 +85,7 @@ public class DeclareRecordServiceIT
         MDC.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, "admin");
         MDC.put(MDCConstants.EVENT_MDC_REQUEST_ID_KEY, UUID.randomUUID().toString());
 
-        Document testFile = cmisFileWriter.writeTestFile(muleContextManager);
+        Document testFile = cmisFileWriter.writeTestFile(muleContextManager, camelContextManager);
         ecmFileId = testFile.getVersionSeriesId();
     }
 

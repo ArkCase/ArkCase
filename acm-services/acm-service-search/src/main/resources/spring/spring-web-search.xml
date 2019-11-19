@@ -12,6 +12,7 @@
     </bean>
     <bean id="SearchChildrenAPIController" class="com.armedia.acm.services.search.web.api.SearchChildrenAPIController">
         <property name="executeSolrQuery" ref="executeSolrQuery"/>
+        <property name="childDocumentsSearchService" ref="childDocumentsSearchService"/>
     </bean>
     <bean id="searchObjectByTypeAPIController"
         class="com.armedia.acm.services.search.web.api.SearchObjectByTypeAPIController">

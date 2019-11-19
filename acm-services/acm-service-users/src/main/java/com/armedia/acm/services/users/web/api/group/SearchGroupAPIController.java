@@ -27,9 +27,9 @@ package com.armedia.acm.services.users.web.api.group;
  * #L%
  */
 
+import com.armedia.acm.services.search.exception.SolrException;
 import com.armedia.acm.services.users.service.group.GroupService;
 
-import org.mule.api.MuleException;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -51,7 +51,7 @@ public class SearchGroupAPIController
             @RequestParam(value = "s", defaultValue = "name_lcs") String sortBy,
             @RequestParam(value = "dir", required = false, defaultValue = "ASC") String sortDirection,
             @RequestParam(value = "nameFq") String nameFilter,
-            Authentication auth) throws MuleException
+            Authentication auth) throws SolrException
     {
         return groupService.getGroupsByNameFilter(auth, nameFilter, startRow, maxRows, sortBy, sortDirection);
     }

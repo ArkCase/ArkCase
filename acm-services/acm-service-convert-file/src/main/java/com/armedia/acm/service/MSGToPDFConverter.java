@@ -204,6 +204,7 @@ public class MSGToPDFConverter implements FileConverter {
 		bodyHTML = fixRemToPx(bodyHTML);
 		bodyHTML = fixBlockQuoteTag(bodyHTML);
 		bodyHTML = fixBlockElements(bodyHTML);
+		bodyHTML = fixSmartQuotes(bodyHTML);
 		// convert to correct XHTML
 		ByteArrayOutputStream xhtmlOutputStream = new ByteArrayOutputStream();
 		Tidy tidy = new Tidy();
@@ -220,7 +221,6 @@ public class MSGToPDFConverter implements FileConverter {
 		try {
 			ElementList list = XMLWorkerHelper
 					.parseToElementList(new String(xhtmlOutputStream.toByteArray(), StandardCharsets.UTF_8), null);
-			document.add(new Paragraph("Body HTML: "));
 			for (Element element : list) {
 				document.add(element);
 			}
@@ -265,5 +265,10 @@ public class MSGToPDFConverter implements FileConverter {
 	private String fixBlockElements(String bodyHTML)
 	{
 		return bodyHTML.replaceAll("<!\\[if.*\\]>", "").replaceAll("<!\\[endif\\]>", "");
+	}
+	
+	private String fixSmartQuotes(String bodyHTML)
+	{
+		return bodyHTML.replaceAll("â€™", "\'").replaceAll("â€“", "-").replaceAll("â€œ","\"").replaceAll("â€�","\"");
 	}
 }

@@ -30,14 +30,14 @@ package com.armedia.acm.services.search.web.api;
  * #L%
  */
 
-import com.armedia.acm.services.search.model.SolrCore;
+import com.armedia.acm.services.search.exception.SolrException;
+import com.armedia.acm.services.search.model.solr.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 
 import org.apache.commons.lang3.StringUtils;
-import org.json.JSONObject;
-import org.mule.api.MuleException;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.json.JSONObject;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -72,7 +72,7 @@ public class SearchUsersAPIController
             @RequestParam(value = "searchKeyword", required = false, defaultValue = "") String searchKeyword,
             @RequestParam(value = "exclude", required = false) String exclude,
             @RequestParam(value = "userId", required = false) String userId,
-            Authentication authentication) throws MuleException, UnsupportedEncodingException
+            Authentication authentication) throws SolrException, UnsupportedEncodingException
     {
 
         String response = getUsers(startRow, maxRows, searchKeyword, sortDirection, exclude, userId, authentication);
@@ -91,7 +91,7 @@ public class SearchUsersAPIController
         return responseObject.toString();
     }
 
-    private String getOwner(int startRow, int maxRows, String owner, Authentication authentication) throws MuleException,
+    private String getOwner(int startRow, int maxRows, String owner, Authentication authentication) throws SolrException,
             UnsupportedEncodingException
     {
         owner = URLEncoder.encode(owner, StandardCharsets.UTF_8.displayName());
@@ -105,7 +105,7 @@ public class SearchUsersAPIController
     }
 
     private String getUsers(int startRow, int maxRows, String searchKeyword, String sortDirection, String exclude, String userId,
-            Authentication authentication) throws MuleException, UnsupportedEncodingException
+            Authentication authentication) throws UnsupportedEncodingException, SolrException
     {
         String searchQuery = "object_type_s:USER AND status_lcs:VALID";
 

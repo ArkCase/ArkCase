@@ -88,29 +88,17 @@ angular.module('services').factory('MessageService', [ '$injector', '$translate'
 
         /**
          * @ngdoc method
-         * @name httpError
+         * @name serverError
          * @methodOf services.service:MessageService
          *
-         * @param {HttpResponse} httpResponse Http response
-         *
          * @description
-         * This method takes information from httpResponse and displays notify error message
+         * This method displays notify error message for server errors
          */
-        httpError: function(response) {
-            var defaultOptions = {};
-            if (response && response.config) {
-                var msg = '';
-                if (response.status == 503) {
-                    msg = $translate.instant('common.service.messageService.authorizationError');
-                } else {
-                    // TODO: Use templates for different types of errors
-                    msg = [ 'ERROR: ', response.config.url, ' ', response.status ].join('');
-                }
-
-                showMessage(msg, {
-                    classes: 'alert-danger'
-                });
-            }
+        serverError: function() {
+            showMessage($translate.instant('common.service.messageService.serverError'), {
+                position: 'left',
+                classes: 'alert-danger'
+            });
         },
 
         /**

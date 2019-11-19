@@ -45,7 +45,8 @@ public enum ArkCaseCMISActions
     CHECK_IN("CheckInQueue"),
     CHECK_OUT("CheckOutQueue"),
     CANCEL_CHECK_OUT("CancelCheckOutQueue"),
-    GET_OBJECT_BY_ID("GetObjectByIdQueue");
+    GET_OBJECT_BY_ID("GetObjectByIdQueue"),
+    UPDATE_DOCUMENT("UpdateDocumentQueue");
 
     private final String queueName;
     public String queuePackage = "com.armedia.acm.camelcontext.flow.queue.";
