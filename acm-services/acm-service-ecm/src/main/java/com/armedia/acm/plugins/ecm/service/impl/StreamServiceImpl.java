@@ -28,6 +28,7 @@ package com.armedia.acm.plugins.ecm.service.impl;
  */
 
 import com.armedia.acm.camelcontext.arkcase.cmis.ArkCaseCMISActions;
+import com.armedia.acm.camelcontext.arkcase.cmis.ArkCaseCMISConstants;
 import com.armedia.acm.camelcontext.context.CamelContextManager;
 import com.armedia.acm.camelcontext.exception.ArkCaseFileRepositoryException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
@@ -108,7 +109,7 @@ public class StreamServiceImpl implements StreamService
 
         String cmisFileId = getFolderAndFilesUtils().getVersionCmisId(file, version);
         Map<String, Object> messageProps = new HashedMap();
-        messageProps.put(EcmFileConstants.CMIS_REPOSITORY_ID, "camelAlfresco");
+        messageProps.put(EcmFileConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID);
         messageProps.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, EcmFileCamelUtils.getCmisUser());
         messageProps.put(EcmFileConstants.CMIS_OBJECT_ID, cmisFileId);
 
