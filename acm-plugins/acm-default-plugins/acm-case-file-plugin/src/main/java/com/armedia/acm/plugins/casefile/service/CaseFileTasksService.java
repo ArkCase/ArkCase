@@ -1,8 +1,8 @@
-package com.armedia.acm.camelcontext.flow.route;
+package com.armedia.acm.plugins.casefile.service;
 
 /*-
  * #%L
- * acm-camel-context-manager
+ * ACM Default Plugin: Case File
  * %%
  * Copyright (C) 2014 - 2019 ArkCase LLC
  * %%
@@ -27,12 +27,16 @@ package com.armedia.acm.camelcontext.flow.route;
  * #L%
  */
 
-/**
- * Created by Vladimir Cherepnalkovski <vladimir.cherepnalkovski@armedia.com> on Sep, 2019
- */
-public interface ArkCaseRoute
-{
-    public void setRepositoryId(String repositoryId);
+import org.mule.api.MuleException;
+import org.springframework.security.core.Authentication;
 
-    public void setTimeout(String timeout);
+import java.util.List;
+
+/**
+ * @author aleksandar.bujaroski
+ */
+public interface CaseFileTasksService
+{
+    String getCaseFileTasks(Long caseId, String parentType, Long parentId, List<String> childTypes,
+            String sort, Integer startRow, Integer maxRows, Authentication authentication) throws MuleException;
 }

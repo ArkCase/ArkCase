@@ -27,6 +27,7 @@ package com.armedia.acm.services.search.web.api;
  * #L%
  */
 
+import com.armedia.acm.services.search.service.ChildDocumentsSearchService;
 import com.armedia.acm.services.search.exception.SolrException;
 import com.armedia.acm.services.search.model.solr.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
@@ -48,9 +49,9 @@ import java.util.List;
 public class SearchChildrenAPIController
 {
 
-    private transient final Logger log = LogManager.getLogger(getClass());
-
     private ExecuteSolrQuery executeSolrQuery;
+
+    private ChildDocumentsSearchService childDocumentsSearchService;
 
     @RequestMapping(value = "/children", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
@@ -66,40 +67,8 @@ public class SearchChildrenAPIController
             @RequestParam(value = "n", required = false, defaultValue = "10") int maxRows,
             Authentication authentication) throws SolrException
     {
-        String query = "parent_object_type_s:" + parentType + " AND parent_object_id_i:" + parentId;
-
-        if (!"".equals(childType))
-        {
-            query = query + " AND object_type_s:" + childType;
-        }
-        if (activeOnly)
-        {
-            query += " AND -status_s:COMPLETE AND -status_s:DELETE AND -status_s:CLOSED AND -status_s:CLOSE";
-        }
-        if (exceptDeletedOnly)
-        {
-            if (!activeOnly)
-            {
-                query += " AND -status_s:DELETED AND -status_s:DELETE";
-            }
-        }
-        if (extra != null && extra.size() > 0)
-        {
-            for (String extraParam : extra)
-            {
-                query += " AND " + extraParam;
-            }
-        }
-
-        if (log.isDebugEnabled())
-        {
-            log.debug("User '" + authentication.getName() + "' is searching for '" + query + "'");
-        }
-
-        String results = getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.QUICK_SEARCH, query,
-                startRow, maxRows, sort);
-
-        return results;
+        return getChildDocumentsSearchService().searchChildren(parentType, parentId, childType, activeOnly,
+                exceptDeletedOnly, extra, sort, startRow, maxRows, authentication);
     }
 
     @RequestMapping(value = "/children/advanced", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -116,40 +85,8 @@ public class SearchChildrenAPIController
             @RequestParam(value = "n", required = false, defaultValue = "10") int maxRows,
             Authentication authentication) throws SolrException
     {
-        String query = "parent_object_type_s:" + parentType + " AND parent_object_id_i:" + parentId;
-
-        if (!"".equals(childType))
-        {
-            query = query + " AND object_type_s:" + childType;
-        }
-        if (activeOnly)
-        {
-            query += " AND -status_s:COMPLETE AND -status_s:DELETE AND -status_s:CLOSED AND -status_s:CLOSE";
-        }
-        if (exceptDeletedOnly)
-        {
-            if (!activeOnly)
-            {
-                query += " AND -status_s:DELETED";
-            }
-        }
-        if (extra != null && extra.size() > 0)
-        {
-            for (String extraParam : extra)
-            {
-                query += " AND " + extraParam;
-            }
-        }
-
-        if (log.isDebugEnabled())
-        {
-            log.debug("User '" + authentication.getName() + "' is searching for '" + query + "'");
-        }
-
-        String results = getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.ADVANCED_SEARCH, query,
-                startRow, maxRows, sort);
-
-        return results;
+        return getChildDocumentsSearchService().searchChildren(parentType, parentId, childType, activeOnly,
+                exceptDeletedOnly, extra, sort, startRow, maxRows, authentication);
     }
 
     public ExecuteSolrQuery getExecuteSolrQuery()
@@ -160,5 +97,15 @@ public class SearchChildrenAPIController
     public void setExecuteSolrQuery(ExecuteSolrQuery executeSolrQuery)
     {
         this.executeSolrQuery = executeSolrQuery;
+    }
+
+    public ChildDocumentsSearchService getChildDocumentsSearchService()
+    {
+        return childDocumentsSearchService;
+    }
+
+    public void setChildDocumentsSearchService(ChildDocumentsSearchService childDocumentsSearchService)
+    {
+        this.childDocumentsSearchService = childDocumentsSearchService;
     }
 }

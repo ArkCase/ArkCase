@@ -33,182 +33,29 @@
                         <span translate>cases.newRequest.section1</span></h4>
                 </div>
                 <div class="panel-body">
-                    <div class="row form-group">
-                        <div class="col-sm-2">
-                            <label for="prefix" translate>cases.newRequest.prefix.label</label>
-                            <span class="required-asterisk">*</span>
+                    <div class="row">
+                        <div class="col-sm-3 form-group">
+                            <label for="requesterCategory" translate>cases.comp.main.category.label </label>
                         </div>
-                        <div class="col-sm-4">
-                            <select ng-model="config.data.originator.person.title" id="prefix" name="prefix"
-                                    ng-options="prefix.key as prefix.value | translate for prefix in prefixes"
-                                    class="form-control input-md" required>
+                        <div class="col-sm-5 form-group">
+                            <select id="requesterCategory" ng-model="config.data.requestCategory"
+                                    ng-options="category.key as category.value for category in categories"
+                                    class="form-control input-md">
                             </select>
-                            <span class="text-danger" ng-if="prefixEmpty && formInvalid" translate>
-                            cases.newRequest.prefix.validation.error</span>
                         </div>
                     </div>
-                    <div class="row form-group">
-                        <div class="col-sm-2">
-                            <label for="firstName" translate>cases.newRequest.firstName.label</label>
-                            <span class="required-asterisk">*</span>
+                    <div class="row">
+                        <div class="col-sm-3 form-group">
+                            <label for="deliveryMethodOfResponse" translate>cases.comp.main.deliveryMethodOfResponse.label </label>
+                            <span class="required-asterisk-delivery-method">*</span>
                         </div>
-                        <div class="col-sm-4">
-                            <input type="text" class="form-control" id="firstName" name="firstName"
-                                    ng-model="config.data.originator.person.givenName"
-                                    placeholder="{{'cases.newRequest.firstName.placeholder' | translate}}" required="required">
-                            <span class="text-danger" ng-if="firstNameEmpty && formInvalid" translate>
-                                cases.newRequest.firstName.validation.error</span>
-                        </div>
-                        <div class="col-sm-2">
-                            <label for="middleName" translate>cases.newRequest.middleName.label</label>
-                        </div>
-                        <div class="col-sm-4">
-                            <input type="text" class="form-control" id="middleName" ng-model="config.data.originator.person.middleName"
-                                    placeholder="{{'cases.newRequest.middleName.placeholder' | translate}}" name="middleName">
-                        </div>
-                    </div>
-                    <div class="row form-group">
-                        <div class="col-sm-2">
-                            <label for="lastName" translate>cases.newRequest.lastName.label</label>
-                            <span class="required-asterisk">*</span>
-                        </div>
-                        <div class="col-sm-4">
-                            <input type="text" class="form-control" id="lastName" ng-model="config.data.originator.person.familyName"
-                                    placeholder="{{'cases.newRequest.lastName.placeholder' | translate}}" name="lastName"
-                                    required="required">
-                            <span class="text-danger" ng-if="lastNameEmpty && formInvalid" translate>
-                                cases.newRequest.lastName.validation.error</span>
-                        </div>
-                        <div class="col-sm-2">
-                            <label for="position" translate>cases.newRequest.position.label</label>
-                        </div>
-                        <div class="col-sm-4">
-                            <input type="position" class="form-control" id="position" ng-model="config.data.originator.person.position"
-                                    placeholder="{{'cases.newRequest.position.placeholder' | translate}}" name="position">
-                        </div>
-                    </div>
-                    <div class="row form-group">
-                        <div class="col-sm-2 form-group">
-                            <label for="phone" translate>cases.newRequest.phone.label </label>
-                            <span class="required-asterisk">*</span>
-                        </div>
-                        <div class="col-sm-4 form-group">
-                            <input type="text" class="form-control" id="phone" pattern="^\d{3}[\-]\d{3}[\-]\d{4}"
-                                    ng-model="config.data.originator.person.contactMethods[0].value"
-                                    placeholder="{{'cases.newRequest.phone.placeholder' | translate}}" name="phone" required="required">
-                            <span class="text-danger" ng-if="phoneEmpty && formInvalid" translate>
-                                cases.newRequest.phone.validation.error</span>
-                            <span class="text-danger" ng-if="phoneInvalid && formInvalid && !phoneEmpty" translate>
-                                cases.newRequest.phone.validation.errorInvalid</span>
-                        </div>
-                        <div class="col-sm-2 form-group">
-                            <label for="organization" translate>cases.newRequest.organization.label </label>
-                        </div>
-                        <div class="col-sm-4 form-group">
-                            <input type="text" id="organization" ng-model="organizationValue" readonly ng-click="searchOrganization()"
-                                    class="input-md form-control" placeholder="{{'cases.newRequest.organization.placeholder' | translate}}"
-                                    name="organization">
-                        </div>
-                    </div>
-                    <div class="row form-group">
-                        <div class="col-sm-2">
-                            <label for="email" translate>cases.newRequest.email.label </label>
-                            <span ng-if="config.data.deliveryMethodOfResponse == 'Email'" class="required-asterisk">*</span>
-                        </div>
-                        <div class="col-sm-4">
-                            <input type="text" class="form-control" id="email"
-                                    ng-model="config.data.originator.person.contactMethods[2].value"
-                                    placeholder="{{'cases.newRequest.email.placeholder' | translate}}" name="email"
-                                    pattern="[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
-                                    ng-required="config.data.deliveryMethodOfResponse == 'Email'">
-                            <span class="text-danger" ng-if="config.data.deliveryMethodOfResponse == 'Email'"
-                                    translate>
-                                cases.newRequest.email.validation.error</span>
-                            <span class="text-danger" ng-if="emailInvalid && formInvalid && !emailEmpty" translate>
-                                cases.newRequest.email.validation.errorInvalid</span>
-                        </div>
-                        <div class="col-sm-2">
-                            <label for="confirmationEmail" translate>cases.newRequest.confirmationEmail.label </label>
-                            <span ng-if="config.data.deliveryMethodOfResponse == 'Email'" class="required-asterisk-confirm-email">*</span>
-                        </div>
-                        <div class="col-sm-4">
-                            <input type="text" class="form-control" id="confirmationEmail" ng-model="confirmationEmail"
-                                    placeholder="{{'cases.newRequest.confirmationEmail.placeholder' | translate}}" name="confirmationEmail"
-                                    ng-required="config.data.deliveryMethodOfResponse == 'Email'">
-                            <span class="text-danger" ng-if="confirmEmailInvalid && formInvalid && !confirmEmailEmpty" translate>
-                                cases.newRequest.confirmationEmail.validation.errorInvalid</span>
-                            <span class="text-danger"
-                                    ng-if="config.data.deliveryMethodOfResponse == 'Email'" translate>
-                                cases.newRequest.confirmationEmail.validation.error</span>
-                        </div>
-                    </div>
-                    <div class="row form-group">
-                        <div class="col-sm-2">
-                            <label for="address1" translate>cases.newRequest.address.label </label>
-                            <span ng-if="config.data.deliveryMethodOfResponse == 'Mail'" class="required-asterisk">*</span>
-
-                        </div>
-                        <div class="col-sm-4">
-                            <input type="text" class="form-control" id="address1"
-                                    ng-model="config.data.originator.person.addresses[0].streetAddress"
-                                    placeholder="{{'cases.newRequest.address.placeholder' | translate}}" name="address1"
-                                    ng-required="config.data.deliveryMethodOfResponse == 'Mail'">
-                            <span class="text-danger"
-                                    ng-if="config.data.deliveryMethodOfResponse == 'Mail'"
-                                    translate>
-                                cases.newRequest.address.validation.error</span>
-                        </div>
-                        <div class="col-sm-2">
-                            <label for="address2" translate>cases.newRequest.address2.label</label>
-
-                        </div>
-                        <div class="col-sm-4">
-                            <input type="text" class="form-control" id="address2"
-                                    ng-model="config.data.originator.person.addresses[0].streetAddress2"
-                                    placeholder="{{'cases.newRequest.address2.placeholder' | translate}}" name="address2">
-                        </div>
-                    </div>
-                    <div class="row form-group">
-                        <div class="col-sm-2">
-                            <label for="city" translate>cases.newRequest.city.label</label>
-                            <span ng-if="config.data.deliveryMethodOfResponse == 'Mail'" class="required-asterisk">*</span>
-                        </div>
-                        <div class="col-sm-4">
-                            <input type="text" class="form-control" id="city" ng-model="config.data.originator.person.addresses[0].city"
-                                    placeholder="{{'cases.newRequest.city.placeholder' | translate}}" name="city"
-                                    ng-required="config.data.deliveryMethodOfResponse == 'Mail'">
-                            <span class="text-danger"
-                                    ng-if="config.data.deliveryMethodOfResponse == 'Mail'" translate>
-                                cases.newRequest.city.validation.error</span>
-                        </div>
-                        <div class="col-sm-2">
-                            <label for="state" translate>cases.newRequest.state.label</label>
-                            <span ng-if="config.data.deliveryMethodOfResponse == 'Mail'" class="required-asterisk">*</span>
-                        </div>
-                        <div class="col-sm-4">
-                            <select id="state" name="state" ng-model="config.data.originator.person.addresses[0].state"
-                                    ng-options="state.key as state.value | translate for state in states" class="form-control input-md"
-                                    ng-required="config.data.deliveryMethodOfResponse == 'Mail'">
+                        <div class="col-sm-5 form-group">
+                            <select name="deliveryMethodOfResponse" id="deliveryMethodOfResponse"
+                                    ng-model="config.data.deliveryMethodOfResponse"
+                                    ng-options="deliveryMethodOfResponse.key as deliveryMethodOfResponse.value for deliveryMethodOfResponse in deliveryMethodOfResponses"
+                                    class="form-control input-md" required="required">
                             </select>
-                            <span class="text-danger" ng-if="config.data.deliveryMethodOfResponse == 'Mail'" translate>
-                                cases.newRequest.state.validation.error</span>
-                        </div>
-                    </div>
-                    <div class="row form-group">
-                        <div class="col-sm-2">
-                            <label for="zip" translate>cases.newRequest.zip.label</label>
-                            <span ng-if="config.data.deliveryMethodOfResponse == 'Mail'" class="required-asterisk">*</span>
-                        </div>
-                        <div class="col-sm-4">
-                            <input type="text" class="form-control" id="zip" name="zip" pattern="[0-9]{5}"
-                                    ng-model="config.data.originator.person.addresses[0].zip"
-                                    placeholder="{{'cases.newRequest.zip.placeholder' | translate}}"
-                                    ng-required="config.data.deliveryMethodOfResponse == 'Mail'">
-                            <span class="text-danger"
-                                    ng-if="config.data.deliveryMethodOfResponse == 'Mail'" translate>
-                                cases.newRequest.zip.validation.error</span>
-                            <span class="text-danger" ng-if="zipCodeInvalid && formInvalid && !zipCodeEmpty" translate>
-                                cases.newRequest.zip.validation.errorInvalid</span>
+                            <span class="text-danger" ng-if="deliveryMethodOfResponseEmpty && formInvalid" translate>cases.newRequest.deliveryMethodOfResponse.validation.error</span>
                         </div>
                     </div>
                 </div>
@@ -218,6 +65,193 @@
             <div class="panel-heading">
                 <h4 class="panel-title">
                     <span translate>cases.newRequest.section2</span>
+                </h4>
+            </div>
+            <div class="panel-body">
+                <div class="row form-group">
+                    <div class="col-sm-2">
+                        <label for="prefix" translate>cases.newRequest.prefix.label</label>
+                        <span class="required-asterisk">*</span>
+                    </div>
+                    <div class="col-sm-4">
+                        <select ng-model="config.data.originator.person.title" id="prefix" name="prefix"
+                                ng-options="prefix.key as prefix.value | translate for prefix in prefixes"
+                                class="form-control input-md" required>
+                        </select>
+                        <span class="text-danger" ng-if="prefixEmpty && formInvalid" translate>
+                            cases.newRequest.prefix.validation.error</span>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <div class="col-sm-2">
+                        <label for="firstName" translate>cases.newRequest.firstName.label</label>
+                        <span class="required-asterisk">*</span>
+                    </div>
+                    <div class="col-sm-4">
+                        <input type="text" class="form-control" id="firstName" name="firstName"
+                                ng-model="config.data.originator.person.givenName"
+                                placeholder="{{'cases.newRequest.firstName.placeholder' | translate}}" required="required">
+                        <span class="text-danger" ng-if="firstNameEmpty && formInvalid" translate>
+                                cases.newRequest.firstName.validation.error</span>
+                    </div>
+                    <div class="col-sm-2">
+                        <label for="middleName" translate>cases.newRequest.middleName.label</label>
+                    </div>
+                    <div class="col-sm-4">
+                        <input type="text" class="form-control" id="middleName" ng-model="config.data.originator.person.middleName"
+                                placeholder="{{'cases.newRequest.middleName.placeholder' | translate}}" name="middleName">
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <div class="col-sm-2">
+                        <label for="lastName" translate>cases.newRequest.lastName.label</label>
+                        <span class="required-asterisk">*</span>
+                    </div>
+                    <div class="col-sm-4">
+                        <input type="text" class="form-control" id="lastName" ng-model="config.data.originator.person.familyName"
+                                placeholder="{{'cases.newRequest.lastName.placeholder' | translate}}" name="lastName"
+                                required="required">
+                        <span class="text-danger" ng-if="lastNameEmpty && formInvalid" translate>
+                                cases.newRequest.lastName.validation.error</span>
+                    </div>
+                    <div class="col-sm-2">
+                        <label for="position" translate>cases.newRequest.position.label</label>
+                    </div>
+                    <div class="col-sm-4">
+                        <input type="position" class="form-control" id="position" ng-model="config.data.originator.person.position"
+                                placeholder="{{'cases.newRequest.position.placeholder' | translate}}" name="position">
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <div class="col-sm-2 form-group">
+                        <label for="phone" translate>cases.newRequest.phone.label </label>
+                        <span class="required-asterisk">*</span>
+                    </div>
+                    <div class="col-sm-4 form-group">
+                        <input type="text" class="form-control" id="phone" pattern="^\d{3}[\-]\d{3}[\-]\d{4}"
+                                ng-model="config.data.originator.person.contactMethods[0].value"
+                                placeholder="{{'cases.newRequest.phone.placeholder' | translate}}" name="phone" required="required">
+                        <span class="text-danger" ng-if="phoneEmpty && formInvalid" translate>
+                                cases.newRequest.phone.validation.error</span>
+                        <span class="text-danger" ng-if="phoneInvalid && formInvalid && !phoneEmpty" translate>
+                                cases.newRequest.phone.validation.errorInvalid</span>
+                    </div>
+                    <div class="col-sm-2 form-group">
+                        <label for="organization" translate>cases.newRequest.organization.label </label>
+                    </div>
+                    <div class="col-sm-4 form-group">
+                        <input type="text" id="organization" ng-model="organizationValue" readonly ng-click="searchOrganization()"
+                                class="input-md form-control" placeholder="{{'cases.newRequest.organization.placeholder' | translate}}"
+                                name="organization">
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <div class="col-sm-2">
+                        <label for="email" translate>cases.newRequest.email.label </label>
+                        <span ng-if="config.data.deliveryMethodOfResponse == 'Email'" class="required-asterisk">*</span>
+                    </div>
+                    <div class="col-sm-4">
+                        <input type="text" class="form-control" id="email"
+                                ng-model="config.data.originator.person.contactMethods[2].value"
+                                placeholder="{{'cases.newRequest.email.placeholder' | translate}}" name="email"
+                                pattern="[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
+                                ng-required="config.data.deliveryMethodOfResponse == 'Email'">
+                        <span class="text-danger" ng-if="config.data.deliveryMethodOfResponse == 'Email'"
+                                translate>
+                                cases.newRequest.email.validation.error</span>
+                        <span class="text-danger" ng-if="emailInvalid && formInvalid && !emailEmpty" translate>
+                                cases.newRequest.email.validation.errorInvalid</span>
+                    </div>
+                    <div class="col-sm-2">
+                        <label for="confirmationEmail" translate>cases.newRequest.confirmationEmail.label </label>
+                        <span ng-if="config.data.deliveryMethodOfResponse == 'Email'" class="required-asterisk-confirm-email">*</span>
+                    </div>
+                    <div class="col-sm-4">
+                        <input type="text" class="form-control" id="confirmationEmail" ng-model="confirmationEmail"
+                                placeholder="{{'cases.newRequest.confirmationEmail.placeholder' | translate}}" name="confirmationEmail"
+                                ng-required="config.data.deliveryMethodOfResponse == 'Email'">
+                        <span class="text-danger" ng-if="confirmEmailInvalid && formInvalid && !confirmEmailEmpty" translate>
+                                cases.newRequest.confirmationEmail.validation.errorInvalid</span>
+                        <span class="text-danger"
+                                ng-if="config.data.deliveryMethodOfResponse == 'Email'" translate>
+                                cases.newRequest.confirmationEmail.validation.error</span>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <div class="col-sm-2">
+                        <label for="address1" translate>cases.newRequest.address.label </label>
+                        <span ng-if="config.data.deliveryMethodOfResponse == 'Mail'" class="required-asterisk">*</span>
+
+                    </div>
+                    <div class="col-sm-4">
+                        <input type="text" class="form-control" id="address1"
+                                ng-model="config.data.originator.person.addresses[0].streetAddress"
+                                placeholder="{{'cases.newRequest.address.placeholder' | translate}}" name="address1"
+                                ng-required="config.data.deliveryMethodOfResponse == 'Mail'">
+                        <span class="text-danger"
+                                ng-if="config.data.deliveryMethodOfResponse == 'Mail'"
+                                translate>
+                                cases.newRequest.address.validation.error</span>
+                    </div>
+                    <div class="col-sm-2">
+                        <label for="address2" translate>cases.newRequest.address2.label</label>
+
+                    </div>
+                    <div class="col-sm-4">
+                        <input type="text" class="form-control" id="address2"
+                                ng-model="config.data.originator.person.addresses[0].streetAddress2"
+                                placeholder="{{'cases.newRequest.address2.placeholder' | translate}}" name="address2">
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <div class="col-sm-2">
+                        <label for="city" translate>cases.newRequest.city.label</label>
+                        <span ng-if="config.data.deliveryMethodOfResponse == 'Mail'" class="required-asterisk">*</span>
+                    </div>
+                    <div class="col-sm-4">
+                        <input type="text" class="form-control" id="city" ng-model="config.data.originator.person.addresses[0].city"
+                                placeholder="{{'cases.newRequest.city.placeholder' | translate}}" name="city"
+                                ng-required="config.data.deliveryMethodOfResponse == 'Mail'">
+                        <span class="text-danger"
+                                ng-if="config.data.deliveryMethodOfResponse == 'Mail'" translate>
+                                cases.newRequest.city.validation.error</span>
+                    </div>
+                    <div class="col-sm-2">
+                        <label for="state" translate>cases.newRequest.state.label</label>
+                        <span ng-if="config.data.deliveryMethodOfResponse == 'Mail'" class="required-asterisk">*</span>
+                    </div>
+                    <div class="col-sm-4">
+                        <select id="state" name="state" ng-model="config.data.originator.person.addresses[0].state"
+                                ng-options="state.key as state.value | translate for state in states" class="form-control input-md"
+                                ng-required="config.data.deliveryMethodOfResponse == 'Mail'">
+                        </select>
+                        <span class="text-danger" ng-if="config.data.deliveryMethodOfResponse == 'Mail'" translate>
+                                cases.newRequest.state.validation.error</span>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <div class="col-sm-2">
+                        <label for="zip" translate>cases.newRequest.zip.label</label>
+                        <span ng-if="config.data.deliveryMethodOfResponse == 'Mail'" class="required-asterisk">*</span>
+                    </div>
+                    <div class="col-sm-4">
+                        <input type="text" class="form-control" id="zip" name="zip" pattern="[0-9]{5}"
+                                ng-model="config.data.originator.person.addresses[0].zip"
+                                placeholder="{{'cases.newRequest.zip.placeholder' | translate}}"
+                                ng-required="config.data.deliveryMethodOfResponse == 'Mail'">
+                        <span class="text-danger"
+                                ng-if="config.data.deliveryMethodOfResponse == 'Mail'" translate>
+                                cases.newRequest.zip.validation.error</span>
+                        <span class="text-danger" ng-if="zipCodeInvalid && formInvalid && !zipCodeEmpty" translate>
+                                cases.newRequest.zip.validation.errorInvalid</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <span translate>cases.newRequest.section3</span>
                 </h4>
             </div>
             <div class="panel-body">
@@ -330,40 +364,6 @@
                             </button>
                         </li>
                     </ul>
-                </div>
-            </div>
-        </div>
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h4 class="panel-title">
-                    <span translate>cases.newRequest.section3</span>
-                </h4>
-            </div>
-            <div class="panel-body">
-                <div class="row">
-                    <div class="col-sm-3 form-group">
-                        <label for="requesterCategory" translate>cases.comp.main.category.label </label>
-                    </div>
-                    <div class="col-sm-5 form-group">
-                        <select id="requesterCategory" ng-model="config.data.requestCategory"
-                                ng-options="category.key as category.value for category in categories"
-                                class="form-control input-md">
-                        </select>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-3 form-group">
-                        <label for="deliveryMethodOfResponse" translate>cases.comp.main.deliveryMethodOfResponse.label </label>
-                        <span class="required-asterisk-delivery-method">*</span>
-                    </div>
-                    <div class="col-sm-5 form-group">
-                        <select name="deliveryMethodOfResponse" id="deliveryMethodOfResponse"
-                                ng-model="config.data.deliveryMethodOfResponse"
-                                ng-options="deliveryMethodOfResponse.key as deliveryMethodOfResponse.value for deliveryMethodOfResponse in deliveryMethodOfResponses"
-                                class="form-control input-md" required="required">
-                        </select>
-                        <span class="text-danger" ng-if="deliveryMethodOfResponseEmpty && formInvalid" translate>cases.newRequest.deliveryMethodOfResponse.validation.error</span>
-                    </div>
                 </div>
             </div>
         </div>
