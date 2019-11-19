@@ -54,12 +54,12 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.input.CountingInputStream;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.tika.exception.TikaException;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.mule.module.cmis.connectivity.CMISCloudConnectorConnectionManager;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
 import org.slf4j.MDC;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -393,7 +393,6 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
     @Override
     public EcmFile addFileTransaction(Authentication authentication, String ecmUniqueFilename, AcmContainer container,
             String targetCmisFolderId, EcmFile metadata, MultipartFile file)
-            throws MuleException, IOException
     {
         Document existingCmisDocument = null;
         return addFileTransaction(authentication, ecmUniqueFilename, container, targetCmisFolderId,

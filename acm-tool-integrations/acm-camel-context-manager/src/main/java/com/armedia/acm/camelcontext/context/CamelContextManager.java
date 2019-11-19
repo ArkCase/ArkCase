@@ -33,7 +33,7 @@ import com.armedia.acm.camelcontext.configuration.ArkCaseCMISConfig;
 import com.armedia.acm.camelcontext.configuration.CamelConfigUtils;
 import com.armedia.acm.camelcontext.exception.ArkCaseFileRepositoryException;
 import com.armedia.acm.camelcontext.flow.queue.ArkCaseCMISQueue;
-import com.armedia.acm.camelcontext.flow.route.ArkCaseRoute;
+import com.armedia.acm.camelcontext.flow.route.ArkCaseAbstractRoute;
 import com.armedia.acm.crypto.exceptions.AcmEncryptionException;
 import com.armedia.acm.crypto.properties.AcmEncryptablePropertyUtils;
 
@@ -41,7 +41,6 @@ import org.apache.camel.CamelContext;
 import org.apache.camel.ProducerTemplate;
 import org.apache.camel.Route;
 import org.apache.camel.RoutesBuilder;
-import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.impl.DefaultCamelContext;
 import org.apache.camel.impl.engine.DefaultProducerTemplate;
 import org.apache.chemistry.opencmis.commons.SessionParameter;
@@ -197,20 +196,20 @@ public class CamelContextManager implements ApplicationContextAware
         try
         {
             Reflections routesReflections = new Reflections(routesPackage);
-            Set<Class<? extends RouteBuilder>> routes = routesReflections.getSubTypesOf(RouteBuilder.class);
+            Set<Class<? extends ArkCaseAbstractRoute>> routes = routesReflections.getSubTypesOf(ArkCaseAbstractRoute.class);
 
             for (ArkCaseCMISConfig repositoryConfig : repositoryConfigs.values())
             {
                 for (Class route : routes)
                 {
                     Object routeInstance = route.newInstance();
-                    if (routeInstance instanceof RouteBuilder && routeInstance instanceof ArkCaseRoute)
+                    if (routeInstance instanceof ArkCaseAbstractRoute)
                     {
 
-                        ((ArkCaseRoute) routeInstance).setRepositoryId(repositoryConfig.getId());
-                        ((ArkCaseRoute) routeInstance).setTimeout(repositoryConfig.getTimeout());
+                        ((ArkCaseAbstractRoute) routeInstance).setRepositoryId(repositoryConfig.getId());
+                        ((ArkCaseAbstractRoute) routeInstance).setTimeout(repositoryConfig.getTimeout());
                         camelContext.addRoutes((RoutesBuilder) routeInstance);
-                        log.debug("Successfully added route={} to camel context");
+                        log.debug("Successfully added route={} to camel context", routeInstance.getClass());
                     }
                 }
             }
@@ -234,7 +233,7 @@ public class CamelContextManager implements ApplicationContextAware
         }
         catch (Exception e)
         {
-            log.error("Could not stop Camel context: {}" + e.getMessage(), e);
+            log.error("Could not stop Camel context: {}", e.getMessage(), e);
         }
     }
 

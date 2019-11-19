@@ -1122,13 +1122,6 @@
                 <version>${camel.cmis.version}</version>
             </dependency>
 
-
-            <dependency>
-                <groupId>org.apache.camel</groupId>
-                <artifactId>camel-cmis-arkcase</artifactId>
-                <version>${camel.cmis.version}</version>
-            </dependency>
-
             <!-- apache libraries -->
             <dependency>
                 <groupId>org.apache.commons</groupId>
@@ -1727,7 +1720,7 @@
                 <artifactId>xsync</artifactId>
                 <version>${xsync-version}</version>
             </dependency>
-            
+
         </dependencies>
     </dependencyManagement>
     <dependencies>
