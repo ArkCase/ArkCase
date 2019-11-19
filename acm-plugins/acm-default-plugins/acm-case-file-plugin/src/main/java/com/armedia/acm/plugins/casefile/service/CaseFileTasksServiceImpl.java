@@ -45,7 +45,7 @@ public class CaseFileTasksServiceImpl implements CaseFileTasksService
     public String getCaseFileTasks(Long caseId, String parentType, Long parentId, List<String> childTypes,
             String sort, Integer startRow, Integer maxRows, Authentication authentication) throws MuleException
     {
-        return getChildDocumentsSearchService().searchForChildrenAndGrandchildrenDocuments(parentType, caseId, childTypes, sort, startRow,
+        return getChildDocumentsSearchService().searchForChildrenAndGrandchildrenTasks(parentType, caseId, childTypes, sort, startRow,
                 maxRows,
                 authentication);
     }
