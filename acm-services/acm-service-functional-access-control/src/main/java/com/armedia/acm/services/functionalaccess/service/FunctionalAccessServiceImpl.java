@@ -29,9 +29,9 @@ package com.armedia.acm.services.functionalaccess.service;
 
 import com.armedia.acm.configuration.service.CollectionPropertiesConfigurationService;
 import com.armedia.acm.configuration.service.ConfigurationPropertyService;
+import com.armedia.acm.configuration.util.MergeFlags;
 import com.armedia.acm.services.search.exception.SolrException;
 import com.armedia.acm.services.search.model.solr.SolrCore;
-import com.armedia.acm.configuration.util.MergeFlags;;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.search.service.SearchResults;
 import com.armedia.acm.services.users.dao.UserDao;
