@@ -86,8 +86,8 @@ import org.apache.commons.compress.utils.IOUtils;
 import org.apache.commons.lang.WordUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -1332,9 +1332,9 @@ public class ActivitiTaskDao extends AcmAbstractDao<AcmTask> implements TaskDao,
             String legacySystemId = (String) taskLocal.get(TaskConstants.VARIABLE_NAME_LEGACY_SYSTEM_ID);
             acmTask.setLegacySystemId(legacySystemId);
         }
-        if(acmTask.getWorkflowRequestType() == null)
+        if (acmTask.getWorkflowRequestType() == null)
         {
-            String workflowRequestType = (String)taskLocal.get(TaskConstants.VARIABLE_NAME_REQUEST_TYPE);
+            String workflowRequestType = (String) taskLocal.get(TaskConstants.VARIABLE_NAME_REQUEST_TYPE);
             acmTask.setWorkflowRequestType(workflowRequestType);
         }
         Date startDate = (Date) taskLocal.get(TaskConstants.VARIABLE_NAME_START_DATE);
