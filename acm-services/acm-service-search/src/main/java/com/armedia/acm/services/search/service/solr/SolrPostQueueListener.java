@@ -27,7 +27,7 @@ package com.armedia.acm.services.search.service.solr;
  * #L%
  */
 
-import com.armedia.acm.services.search.model.SolrCore;
+import com.armedia.acm.services.search.model.solr.SolrCore;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

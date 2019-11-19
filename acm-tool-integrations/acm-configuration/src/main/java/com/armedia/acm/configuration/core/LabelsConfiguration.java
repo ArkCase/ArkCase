@@ -36,7 +36,6 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.env.Environment;
 import org.springframework.jmx.export.annotation.ManagedResource;
 
 import java.util.ArrayList;
@@ -50,7 +49,6 @@ public class LabelsConfiguration implements ConfigurationFacade
 {
     private static final Logger log = LogManager.getLogger(LabelsConfiguration.class);
 
-    private final static String CONFIGURATION_SERVER_URL = "configuration.server.url";
     private final static String defaultLocale = "en";
     private volatile static LabelsConfiguration INSTANCE;
 
@@ -59,9 +57,6 @@ public class LabelsConfiguration implements ConfigurationFacade
 
     @Autowired
     private ConfigurationServiceBootClient configurationServiceBootClient;
-
-    @Autowired
-    private Environment environment;
 
     @Bean
     public static LabelsConfiguration labelsConfiguration()
@@ -83,28 +78,26 @@ public class LabelsConfiguration implements ConfigurationFacade
 
     private synchronized void initializeLabelsMap()
     {
-        String serverUrl = this.environment.getProperty(CONFIGURATION_SERVER_URL);
         List<String> modulesNames = configurationServiceBootClient.getModulesNames();
 
         log.info("Loading labels from config server with language: {}", defaultLocale);
         for (String labelsModule : modulesNames)
         {
             String key = String.format("%s-%s", labelsModule, defaultLocale);
-            labelsMap.put(key, this.configurationServiceBootClient.loadConfiguration(serverUrl, key));
-            labelsDefaultMap.put(key, this.configurationServiceBootClient.loadDefaultConfiguration(serverUrl, key));
+            labelsMap.put(key, this.configurationServiceBootClient.loadConfiguration(key, null));
+            labelsDefaultMap.put(key, this.configurationServiceBootClient.loadDefaultConfiguration(key, null));
         }
     }
 
     public void includeOtherLanguageInLabelsMap(String lang)
     {
-        String serverUrl = this.environment.getProperty(CONFIGURATION_SERVER_URL);
         List<String> modulesNames = configurationServiceBootClient.getModulesNames();
         for (String labelsModule : modulesNames)
         {
             String key = String.format("%s-%s", labelsModule, lang);
-            labelsMap.put(key, this.configurationServiceBootClient.loadLangConfiguration(serverUrl, key,
-                    (Map<String, Object>) labelsMap.get(labelsModule + "-" + defaultLocale)));
-            labelsDefaultMap.put(key, this.configurationServiceBootClient.loadDefaultConfiguration(serverUrl, key));
+            labelsMap.put(key, this.configurationServiceBootClient.loadLangConfiguration(key,
+                    (Map<String, Object>) labelsMap.get(labelsModule + "-" + defaultLocale), null));
+            labelsDefaultMap.put(key, this.configurationServiceBootClient.loadDefaultConfiguration(key, null));
         }
     }
 
@@ -163,13 +156,4 @@ public class LabelsConfiguration implements ConfigurationFacade
         this.labelsMap = labelsMap;
     }
 
-    public Environment getEnvironment()
-    {
-        return environment;
-    }
-
-    public void setEnvironment(Environment environment)
-    {
-        this.environment = environment;
-    }
 }

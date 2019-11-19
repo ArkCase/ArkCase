@@ -27,18 +27,18 @@ package com.armedia.acm.services.search.web.api;
  * #L%
  */
 
+import com.armedia.acm.services.search.exception.SolrException;
 import com.armedia.acm.services.search.model.ReportGenerator;
 import com.armedia.acm.services.search.model.SearchConstants;
-import com.armedia.acm.services.search.model.SolrCore;
+import com.armedia.acm.services.search.model.solr.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.search.service.FacetedSearchService;
 import com.armedia.acm.spring.SpringContextHolder;
 
 import org.apache.commons.lang3.StringUtils;
-import org.json.JSONObject;
-import org.mule.api.MuleException;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.json.JSONObject;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -95,7 +95,7 @@ public class FacetedSearchAPIControllerV2
             @RequestParam(value = "getParentDocument", required = false, defaultValue = "false") boolean getParentDocument,
             @RequestParam(value = "fl", required = false) String fields,
 
-            Authentication authentication) throws MuleException, UnsupportedEncodingException
+            Authentication authentication) throws SolrException, UnsupportedEncodingException
     {
         log.debug("User '{}' is performing facet search for the query: '{}' ", authentication.getName(), q);
         MultiValueMap<String, String> headers = new HttpHeaders();

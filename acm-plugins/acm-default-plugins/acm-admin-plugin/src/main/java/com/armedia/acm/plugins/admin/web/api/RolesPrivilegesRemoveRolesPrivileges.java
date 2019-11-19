@@ -31,8 +31,8 @@ import com.armedia.acm.plugins.admin.exception.AcmRolesPrivilegesException;
 import com.armedia.acm.plugins.admin.model.RolePrivilegesConstants;
 import com.armedia.acm.plugins.admin.service.RolesPrivilegesService;
 
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -41,6 +41,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -67,7 +68,7 @@ public class RolesPrivilegesRemoveRolesPrivileges implements RolePrivilegesConst
         try
         {
             List<String> roles = Arrays.asList(rolesNames.split(","));
-            List<String> privileges = Arrays.asList(privilegesNames.split(","));
+            List<Object> privileges = new ArrayList<>(Arrays.asList(privilegesNames.split(",")));
             rolesPrivilegesService.removeRolesPrivileges(roles, privileges);
             return "{}";
         }

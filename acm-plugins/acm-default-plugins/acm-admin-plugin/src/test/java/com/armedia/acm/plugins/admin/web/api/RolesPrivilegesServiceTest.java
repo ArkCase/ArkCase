@@ -36,11 +36,15 @@ import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class RolesPrivilegesServiceTest extends EasyMockSupport
 {
-    private Map<String, String> mockPrivileges;
+    private Map<String, Object> mockPrivileges;
     private List<PrivilegeItem> expectedValue;
     private RolesPrivilegesService rolesPrivilegesService;
 
@@ -67,7 +71,7 @@ public class RolesPrivilegesServiceTest extends EasyMockSupport
         mockPrivileges.forEach((key, value) -> {
             PrivilegeItem privilegeItem = new PrivilegeItem();
             privilegeItem.setKey(key);
-            privilegeItem.setValue(value);
+            privilegeItem.setValue((String) value);
             expectedValue.add(privilegeItem);
         });
         Collections.sort(expectedValue);
@@ -86,7 +90,7 @@ public class RolesPrivilegesServiceTest extends EasyMockSupport
         mockPrivileges.forEach((key, value) -> {
             PrivilegeItem privilegeItem = new PrivilegeItem();
             privilegeItem.setKey(key);
-            privilegeItem.setValue(value);
+            privilegeItem.setValue((String) value);
             expectedValue.add(privilegeItem);
         });
         Collections.sort(expectedValue, Collections.reverseOrder());

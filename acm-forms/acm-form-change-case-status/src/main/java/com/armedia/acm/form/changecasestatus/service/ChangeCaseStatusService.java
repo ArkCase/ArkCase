@@ -112,7 +112,7 @@ public class ChangeCaseStatusService extends FrevvoFormAbstractService
         }
 
         // Skip if the case is already closed or in "in approval" and if it's not edit mode
-        if (("IN APPROVAL".equals(caseFile.getStatus()) || "CLOSED".equals(caseFile.getStatus())) && !"edit".equals(mode))
+        if (("IN APPROVAL".equals(caseFile.getStatus())) && !"edit".equals(mode))
         {
             LOG.info("The case file is already in '" + caseFile.getStatus() + "' mode. No further action will be taken.");
             return true;

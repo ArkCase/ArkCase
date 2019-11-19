@@ -39,9 +39,10 @@ angular.module('cases').controller(
 
                     $scope.showBtnChildOutcomes = false;
                     $scope.availableChildOutcomes = [];
-
                     $scope.merging = false;
                     $scope.splitting = false;
+                    $scope.showChangeCaseStatus = true;
+
 
                     ConfigService.getModuleConfig("cases").then(function(moduleConfig) {
                         $scope.caseFileSearchConfig = _.find(moduleConfig.components, {
@@ -63,6 +64,7 @@ angular.module('cases').controller(
                     var onObjectInfoRetrieved = function(objectInfo) {
                         $scope.restricted = objectInfo.restricted;
                         $scope.showBtnChildOutcomes = false;
+
 
                         var group = ObjectModelService.getGroup(objectInfo);
                         $scope.owningGroup = group;
@@ -106,6 +108,10 @@ angular.module('cases').controller(
                             isEdit: true,
                             casefile: objectInfo
                         };
+
+                        if (objectInfo.status == 'IN APPROVAL') {
+                            $scope.showChangeCaseStatus = false;
+                        }
                     };
 
                     $scope.newCaseFile = function() {
@@ -152,6 +158,7 @@ angular.module('cases').controller(
                             });
                         }
                     };
+
 
                     $scope.changeCaseStatus = function(caseInfo) {
                         var params = {

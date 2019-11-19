@@ -43,6 +43,8 @@
     <bean id="entityParticipantsChangedEventListener"
         class="com.armedia.acm.plugins.ecm.service.EntityParticipantsChangedEventListener">
         <property name="fileParticipantService" ref="fileParticipantService"/>
+        <property name="executor" ref="fileParticipantsThreadPoolTaskExecutor"/>
+        <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
     </bean>
 
     <bean id="fileParticipantsChangedEventListener"
@@ -93,7 +95,7 @@
     </bean>
     <bean id="ecmFileMergedContentHandler"
         class="com.armedia.acm.plugins.ecm.pipeline.presave.EcmFileMergeContentHandler">
-        <property name="ecmFileMuleUtils" ref="ecmFileMuleUtils"/>
+        <property name="ecmFileCamelUtils" ref="ecmFileCamelUtils"/>
     </bean>
     <bean id="ecmFileNewContentHandler" class="com.armedia.acm.plugins.ecm.pipeline.presave.EcmFileNewContentHandler">
         <property name="ecmFileMuleUtils" ref="ecmFileMuleUtils"/>
@@ -119,7 +121,7 @@
     </bean>
     <bean id="ecmFileUpdateContentHandler"
         class="com.armedia.acm.plugins.ecm.pipeline.presave.EcmFileUpdateContentHandler">
-        <property name="ecmFileMuleUtils" ref="ecmFileMuleUtils"/>
+        <property name="ecmFileCamelUtils" ref="ecmFileCamelUtils"/>
     </bean>
     <bean id="ecmFileUpdateMetadataHandler"
         class="com.armedia.acm.plugins.ecm.pipeline.presave.EcmFileUpdateMetadataHandler">

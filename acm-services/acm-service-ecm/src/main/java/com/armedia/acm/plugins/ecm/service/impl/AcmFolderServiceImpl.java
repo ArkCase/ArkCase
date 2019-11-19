@@ -685,52 +685,6 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
     }
 
     @Override
-    @AcmAcquireAndReleaseObjectLock(objectIdArgIndex = 0, objectType = "FOLDER", lockType = "DELETE", lockChildObjects = false, unlockChildObjects = false)
-    public void deleteFolderIfEmpty(Long folderId) throws AcmUserActionFailedException, AcmObjectNotFoundException
-    {
-
-        AcmFolder folder = getFolderDao().find(folderId);
-        if (folder == null)
-        {
-            throw new AcmObjectNotFoundException(AcmFolderConstants.OBJECT_FOLDER_TYPE, folderId, "Folder not found", null);
-        }
-
-        Map<String, Object> properties = new HashMap<>();
-        properties.put(AcmFolderConstants.ACM_FOLDER_ID, folder.getCmisFolderId());
-
-        String cmisRepositoryId = getCmisRepositoryId(folder);
-
-        properties.put(AcmFolderConstants.CONFIGURATION_REFERENCE, cmisConfigUtils.getCmisConfiguration(cmisRepositoryId));
-
-        try
-        {
-
-            MuleMessage message = getMuleContextManager().send(AcmFolderConstants.MULE_ENDPOINT_DELETE_EMPTY_FOLDER, folder, properties);
-
-            if (message.getInboundPropertyNames().contains(AcmFolderConstants.DELETE_FOLDER_EXCEPTION_INBOUND_PROPERTY))
-            {
-                MuleException muleException = message.getInboundProperty(AcmFolderConstants.DELETE_FOLDER_EXCEPTION_INBOUND_PROPERTY);
-                log.error("Folder not deleted successfully {}", muleException.getMessage(), muleException);
-                throw new AcmUserActionFailedException(AcmFolderConstants.USER_ACTION_DELETE_FOLDER, AcmFolderConstants.OBJECT_FOLDER_TYPE,
-                        folder.getId(), "Folder " + folder.getName() + "not deleted successfully", muleException);
-            }
-            else if (message.getInboundPropertyNames().contains(AcmFolderConstants.IS_FOLDER_NOT_EMPTY_INBOUND_PROPERTY))
-            {
-                log.error("Folder {} is not empty and is not deleted!", folder.getName());
-                throw new AcmUserActionFailedException(AcmFolderConstants.USER_ACTION_DELETE_FOLDER, AcmFolderConstants.OBJECT_FOLDER_TYPE,
-                        folder.getId(), "Folder " + folder.getName() + " not deleted successfully", null);
-            }
-            getFolderDao().deleteFolder(folderId);
-        }
-        catch (PersistenceException | MuleException e)
-        {
-            log.error("Folder {} not deleted successfully {}", folder.getName(), e.getMessage(), e);
-            throw new AcmUserActionFailedException(AcmFolderConstants.USER_ACTION_ADD_NEW_FOLDER, AcmFolderConstants.OBJECT_FOLDER_TYPE,
-                    folder.getId(), "Folder was not deleted under " + folder.getName() + " successfully", e);
-        }
-    }
-
-    @Override
     @Transactional(rollbackFor = Exception.class)
     @AcmAcquireAndReleaseObjectLock(objectIdArgIndex = 0, objectType = "FOLDER", lockType = "DELETE")
     public void deleteFolderTreeSafe(Long folderId, Authentication authentication)
@@ -771,19 +725,13 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
         properties.put(AcmFolderConstants.ACM_FOLDER_ID, folder.getCmisFolderId());
 
         String cmisRepositoryId = getCmisRepositoryId(folder);
-        properties.put(AcmFolderConstants.CONFIGURATION_REFERENCE, cmisConfigUtils.getCmisConfiguration(cmisRepositoryId));
+        properties.put(EcmFileConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID);
+        properties.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, EcmFileCamelUtils.getCmisUser());
         try
         {
-            MuleMessage message = getMuleContextManager().send(AcmFolderConstants.MULE_ENDPOINT_DELETE_FOLDER_TREE, folder, properties);
-            if (message.getInboundPropertyNames().contains(AcmFolderConstants.DELETE_FOLDER_TREE_EXCEPTION_INBOUND_PROPERTY))
-            {
-                MuleException muleException = message.getInboundProperty(AcmFolderConstants.DELETE_FOLDER_TREE_EXCEPTION_INBOUND_PROPERTY);
-                log.error("Folder not deleted successfully {}", muleException.getMessage(), muleException);
-                throw new AcmUserActionFailedException(AcmFolderConstants.USER_ACTION_DELETE_FOLDER, AcmFolderConstants.OBJECT_FOLDER_TYPE,
-                        folder.getId(), "Folder " + folder.getName() + " was not deleted successfully", muleException);
-            }
+            getCamelContextManager().send(ArkCaseCMISActions.DELETE_FOLDER, properties);
         }
-        catch (MuleException e)
+        catch (ArkCaseFileRepositoryException e)
         {
             log.error("Folder {} not deleted successfully {}", folder.getName(), e.getMessage(), e);
             throw new AcmUserActionFailedException(AcmFolderConstants.USER_ACTION_DELETE_FOLDER, AcmFolderConstants.OBJECT_FOLDER_TYPE,

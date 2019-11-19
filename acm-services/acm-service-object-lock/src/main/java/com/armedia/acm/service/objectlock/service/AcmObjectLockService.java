@@ -28,8 +28,8 @@ package com.armedia.acm.service.objectlock.service;
  */
 
 import com.armedia.acm.service.objectlock.model.AcmObjectLock;
+import com.armedia.acm.services.search.exception.SolrException;
 
-import org.mule.api.MuleException;
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -85,10 +85,10 @@ public interface AcmObjectLockService
      * @param fqParams
      *            additional filter. Can be null.
      * @return return response from solr as String
-     * @throws MuleException
+     * @throws SolrException
      */
     String getDocumentsWithoutLock(String objectType, Authentication auth, int firstRow, int maxRows, String sort, String fqParams)
-            throws MuleException;
+            throws SolrException;
 
     /**
      * queries documents which have lock.
@@ -108,10 +108,10 @@ public interface AcmObjectLockService
      * @param fqParams
      *            additional filter. Can be null.
      * @return return response from solr as String
-     * @throws MuleException
+     * @throws SolrException
      */
     String getDocumentsWithLock(String objectType, Authentication auth, String lockHeldByUser, int firstRow, int maxRows, String sort,
-            String fqParams) throws MuleException;
+            String fqParams) throws SolrException;
 
     /**
      * queries documents which holders for object lock
@@ -133,11 +133,11 @@ public interface AcmObjectLockService
      * @param fqParams
      *            additional filter. Can be null.
      * @return return response from solr as String
-     * @throws MuleException
+     * @throws SolrException
      */
     String getObjectLocks(String parentObjectType, Authentication auth, String objectId, String creator, int firstRow, int maxRows,
             String sort,
-            String fqParams) throws MuleException;
+            String fqParams) throws SolrException;
 
     @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
     void removeExpiredLocks();
