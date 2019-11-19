@@ -34,13 +34,13 @@ import com.armedia.acm.services.costsheet.model.CostsheetConstants;
 import com.armedia.acm.services.costsheet.pipeline.CostsheetPipelineContext;
 import com.armedia.acm.services.pipeline.PipelineManager;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
-import com.armedia.acm.services.search.model.SolrCore;
+import com.armedia.acm.services.search.exception.SolrException;
+import com.armedia.acm.services.search.model.solr.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 
-import org.codehaus.plexus.util.StringUtils;
-import org.mule.api.MuleException;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.codehaus.plexus.util.StringUtils;
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -166,7 +166,7 @@ public class CostsheetServiceImpl implements CostsheetService
 
             log.debug("Objects was retrieved.");
         }
-        catch (MuleException e)
+        catch (SolrException e)
         {
             log.error("Cannot retrieve objects from Solr.", e);
         }
@@ -200,7 +200,7 @@ public class CostsheetServiceImpl implements CostsheetService
 
             log.debug("Objects was retrieved.");
         }
-        catch (MuleException e)
+        catch (SolrException e)
         {
             log.error("Cannot retrieve objects from Solr.", e);
         }

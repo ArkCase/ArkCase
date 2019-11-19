@@ -38,12 +38,12 @@ import com.armedia.acm.plugins.person.model.UploadImageRequest;
 import com.armedia.acm.plugins.person.service.PersonService;
 import com.armedia.acm.services.participants.model.DecoratedAssignedObjectParticipants;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
-import com.armedia.acm.services.search.model.SolrCore;
+import com.armedia.acm.services.search.exception.SolrException;
+import com.armedia.acm.services.search.model.solr.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.mule.api.MuleException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -123,7 +123,7 @@ public class PeopleAPIController
             return executeSolrQuery.getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, query, start, n, "");
 
         }
-        catch (MuleException e)
+        catch (SolrException e)
         {
             log.error("Error while executing Solr query: {}", query, e);
             throw new AcmObjectNotFoundException("Person", null, "Could not retrieve people.", e);
@@ -163,7 +163,7 @@ public class PeopleAPIController
             return executeSolrQuery.getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, query, start, n, "");
 
         }
-        catch (MuleException e)
+        catch (SolrException e)
         {
             log.error("Error while executing Solr query: {}", query, e);
             throw new AcmObjectNotFoundException("Person", null, "Could not retrieve people.", e);
@@ -241,7 +241,7 @@ public class PeopleAPIController
         {
             return executeSolrQuery.getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, query, start, n, "");
         }
-        catch (MuleException e)
+        catch (SolrException e)
         {
             log.error("Error while executing Solr query: {}", query, e);
             throw new AcmObjectNotFoundException("Person", null,

@@ -44,14 +44,14 @@ import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.ecm.service.FileEventPublisher;
 import com.armedia.acm.plugins.ecm.service.RecycleBinItemService;
-import com.armedia.acm.services.search.model.SolrCore;
+import com.armedia.acm.services.search.exception.SolrException;
+import com.armedia.acm.services.search.model.solr.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.search.service.SearchResults;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.JSONObject;
-import org.mule.api.MuleException;
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -114,7 +114,7 @@ public class RecycleBinItemServiceImpl implements RecycleBinItemService
 
     @Override
     public RecycleBinDTO findRecycleBinItems(Authentication authentication, String sortBy, String sortDir, int pageNumber, int pageSize)
-            throws MuleException, ParseException
+            throws ParseException, SolrException
     {
         List<RecycleBinItemDTO> recycleBinItemDTOS = new ArrayList<>();
         String query = "object_type_s:" + RecycleBinConstants.OBJECT_TYPE_ITEM;

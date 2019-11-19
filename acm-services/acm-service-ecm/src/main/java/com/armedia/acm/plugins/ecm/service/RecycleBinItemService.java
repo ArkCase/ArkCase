@@ -29,6 +29,7 @@ package com.armedia.acm.plugins.ecm.service;
 /**putFileIntoRecycleBin
  * @author darko.dimitrievski
  */
+
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
@@ -37,11 +38,13 @@ import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.RecycleBinDTO;
 import com.armedia.acm.plugins.ecm.model.RecycleBinItem;
 import com.armedia.acm.plugins.ecm.model.RecycleBinItemDTO;
-import org.mule.api.MuleException;
+import com.armedia.acm.services.search.exception.SolrException;
+
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpSession;
+
 import java.text.ParseException;
 import java.util.List;
 
@@ -81,9 +84,11 @@ public interface RecycleBinItemService
      *
      * @return the file contents as EcmFile
      *
-     * @throws  MuleException, ParseException
+     * @throws SolrException,
+     *             ParseException
      */
-    RecycleBinDTO findRecycleBinItems(Authentication authentication, String sortBy, String sortDir, int pageNumber, int pageSize) throws MuleException, ParseException;
+    RecycleBinDTO findRecycleBinItems(Authentication authentication, String sortBy, String sortDir, int pageNumber, int pageSize)
+            throws ParseException, SolrException;
 
     /**
      *

@@ -27,15 +27,15 @@ package com.armedia.acm.plugins.task.web.api;
  * #L%
  */
 
-import com.armedia.acm.services.search.model.SolrCore;
+import com.armedia.acm.services.search.exception.SolrException;
+import com.armedia.acm.services.search.model.solr.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.search.service.SearchResults;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.mule.api.MuleException;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -106,7 +106,7 @@ public class RetrieveBusinessProcessTasksAPIController
             solrResponse = getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.ADVANCED_SEARCH, solrQuery, start,
                     maxRows, sort);
         }
-        catch (MuleException e)
+        catch (SolrException e)
         {
             log.error("Error while executing Solr query: {}", solrQuery, e);
         }
@@ -131,7 +131,7 @@ public class RetrieveBusinessProcessTasksAPIController
         {
             solrResponse = getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.ADVANCED_SEARCH, solrQuery, 0, 1, "");
         }
-        catch (MuleException e)
+        catch (SolrException e)
         {
             log.error("Error while executing Solr query: {}", solrQuery, e);
         }

@@ -27,7 +27,7 @@ package com.armedia.acm.plugins.ecm.service.impl;
  * #L%
  */
 
-import com.armedia.acm.services.search.model.SolrCore;
+import com.armedia.acm.services.search.model.solr.SolrCore;
 import com.armedia.acm.services.search.service.solr.SolrPostClient;
 import com.armedia.acm.services.search.service.solr.SolrPostException;
 

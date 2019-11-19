@@ -29,7 +29,8 @@ package com.armedia.acm.services.subscription.web.api;
 
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
-import com.armedia.acm.services.search.model.SolrCore;
+import com.armedia.acm.services.search.exception.SolrException;
+import com.armedia.acm.services.search.model.solr.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.subscription.model.AcmSubscription;
 import com.armedia.acm.services.subscription.model.SubscriptionConfig;
@@ -37,11 +38,10 @@ import com.armedia.acm.services.subscription.service.SubscriptionEventPublisher;
 import com.armedia.acm.services.subscription.service.SubscriptionService;
 
 import org.apache.commons.lang.exception.ExceptionUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.mule.api.MuleException;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -53,7 +53,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by marjan.stefanoski on 02.02.2015.
@@ -159,9 +158,9 @@ public class CreateSubscriptionAPIController
             solrResponseJsonString = getExecuteSolrQuery().getResultsByPredefinedQuery(auth, SolrCore.QUICK_SEARCH,
                     query, FIRST_ROW, MAX_ROWS, SORT);
         }
-        catch (MuleException e)
+        catch (SolrException e)
         {
-            log.error("Mule exception occurred while performing quick search for object: [{}]. {}", id, e.getMessage());
+            log.error("Solr exception occurred while performing quick search for object: [{}]. {}", id, e.getMessage());
             throw new AcmObjectNotFoundException(objectType, objectId, "Exception occurred while performing quick search for object:" + id,
                     e);
         }

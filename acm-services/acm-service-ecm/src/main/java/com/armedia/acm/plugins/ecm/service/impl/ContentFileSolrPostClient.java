@@ -31,8 +31,8 @@ import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.plugins.ecm.model.EcmFileContentIndexedEvent;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.ecm.utils.CmisConfigUtils;
-import com.armedia.acm.services.search.model.SolrCore;
 import com.armedia.acm.services.search.model.solr.SolrContentDocument;
+import com.armedia.acm.services.search.model.solr.SolrCore;
 import com.armedia.acm.services.search.service.solr.SolrPostClient;
 import com.armedia.acm.services.search.service.solr.SolrPostException;
 import com.armedia.acm.services.search.service.solr.SolrRestClient;
@@ -40,9 +40,9 @@ import com.armedia.acm.web.api.MDCConstants;
 
 import org.apache.chemistry.opencmis.client.api.Document;
 import org.apache.chemistry.opencmis.commons.data.ContentStream;
-import org.mule.module.cmis.connectivity.CMISCloudConnectorConnectionManager;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.mule.module.cmis.connectivity.CMISCloudConnectorConnectionManager;
 import org.slf4j.MDC;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
@@ -67,7 +67,7 @@ public class ContentFileSolrPostClient implements SolrPostClient, ApplicationEve
     public void sendToSolr(String destinationQueue, SolrCore core, String json) throws SolrPostException
     {
         Objects.requireNonNull(core, "Core must be specified");
-        Objects.requireNonNull(core.getCore(), "The Solr core must have a value");
+        Objects.requireNonNull(core.getCore(solrRestClient.getSolrConfig()), "The Solr core must have a value");
         Objects.requireNonNull(json, "JSON must be specified");
 
         final SolrContentDocument solrContentDocument = getObjectConverter().getJsonUnmarshaller().unmarshall(json,
@@ -105,7 +105,8 @@ public class ContentFileSolrPostClient implements SolrPostClient, ApplicationEve
         InputStreamResource inputStreamResource = new InputStreamResource(contentStream.getStream());
         HttpEntity<InputStreamResource> entity = new HttpEntity<>(inputStreamResource, headers);
 
-        getSolrRestClient().postToSolr(destinationQueue, core.getCore(), solrRestClient.getSolrConfig().getContentFileHandler(), entity,
+        getSolrRestClient().postToSolr(destinationQueue, core.getCore(solrRestClient.getSolrConfig()),
+                solrRestClient.getSolrConfig().getContentFileHandler(), entity,
                 logText,
                 urlWithPlaceholders, urlValues);
 
