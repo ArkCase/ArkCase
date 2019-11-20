@@ -274,5 +274,9 @@
             <beans:property name="holdQueuePurger" ref="scheduledHoldQueuePurger"/>
         </beans:bean>
 
+        <beans:bean id="requestFolderStructureService" class="gov.foia.service.RequestFolderStructureService">
+            <beans:property name="folderStructureAsString" value="#{caseConfig.folderStructure}"/>
+        </beans:bean>
+
     </beans:beans>
 </beans:beans>
