@@ -96,10 +96,6 @@ angular.module('cases').controller(
                         return DocTreeService.uploadFrevvoForm(type, folderId, onCloseForm, $scope.objectInfo, fileTypes);
                     };
 
-                    $scope.$bus.subscribe("zip_completed", function (data) {
-                        messageHandler.handleZipGenerationMessage(data.filePath);
-                    });
-
                     $scope.onInitTree = function(treeControl) {
                         $scope.treeControl = treeControl;
                         DocTreeExtCheckin.handleCheckout(treeControl, $scope);
