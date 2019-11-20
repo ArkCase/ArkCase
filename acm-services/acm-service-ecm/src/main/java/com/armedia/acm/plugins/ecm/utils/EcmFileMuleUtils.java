@@ -38,7 +38,6 @@ import org.apache.chemistry.opencmis.client.api.Document;
 import org.apache.chemistry.opencmis.commons.data.ContentStream;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 
 import java.io.InputStream;
