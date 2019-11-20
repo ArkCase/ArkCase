@@ -47,8 +47,8 @@ import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -293,6 +293,7 @@ public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<E
         additionalProperties.put("name_partial", in.getFileName());
         additionalProperties.put("description_s", in.getDescription());
         additionalProperties.put("file_lang_s", in.getFileLang());
+        additionalProperties.put("link_b", in.isLink());
     }
 
     @Override

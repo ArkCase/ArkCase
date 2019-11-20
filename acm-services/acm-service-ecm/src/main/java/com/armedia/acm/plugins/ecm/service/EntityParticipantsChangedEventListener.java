@@ -28,17 +28,21 @@ package com.armedia.acm.plugins.ecm.service;
  */
 
 import com.armedia.acm.core.AcmObject;
+import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.plugins.ecm.model.AcmContainerEntity;
 import com.armedia.acm.plugins.ecm.service.impl.EcmFileParticipantService;
 import com.armedia.acm.services.dataaccess.model.AcmEntityParticipantsChangedEvent;
 import com.armedia.acm.services.participants.model.AcmAssignedObject;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.context.ApplicationListener;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
 
 public class EntityParticipantsChangedEventListener implements ApplicationListener<AcmEntityParticipantsChangedEvent>
 {
@@ -46,27 +50,43 @@ public class EntityParticipantsChangedEventListener implements ApplicationListen
     private final transient Logger log = LogManager.getLogger(getClass());
 
     private EcmFileParticipantService fileParticipantService;
+    private Executor executor;
+    private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
 
     @Override
     public void onApplicationEvent(AcmEntityParticipantsChangedEvent event)
     {
         AcmObject obj = (AcmObject) event.getSource();
         List<AcmParticipant> originalParticipants = event.getOriginalParticipants();
+        // create copy of the participants, because DataAccessPrivilegeListener.handleParticipantsChanged changes the
+        // inherit children participant flag
+        List<AcmParticipant> newParticipants = copyParticipants(((AcmAssignedObject) obj).getParticipants());
 
         if (obj instanceof AcmAssignedObject && obj instanceof AcmContainerEntity)
         {
             // inherit participants
             if (obj.getId() == null)
             {
-                ((AcmAssignedObject) obj).getParticipants().forEach(participant -> participant.setReplaceChildrenParticipant(true));
+                newParticipants.forEach(participant -> participant.setReplaceChildrenParticipant(true));
             }
 
-            log.debug("Inheriting file participants from " + obj.getObjectType() + "[" + obj.getId() + "]");
-            getFileParticipantService().inheritParticipantsFromAssignedObject(
-                    ((AcmAssignedObject) obj).getParticipants(),
-                    originalParticipants,
-                    ((AcmContainerEntity) obj).getContainer(), ((AcmAssignedObject) obj).getRestricted());
+            final String user = event.getUserId();
+            CompletableFuture.runAsync(() -> {
+                getAuditPropertyEntityAdapter().setUserId(user);
+                log.debug("Inheriting file participants from " + obj.getObjectType() + "[" + obj.getId() + "]");
+                getFileParticipantService().inheritParticipantsFromAssignedObject(
+                        newParticipants,
+                        originalParticipants,
+                        ((AcmContainerEntity) obj).getContainer(), ((AcmAssignedObject) obj).getRestricted());
+            }, getExecutor());
         }
+    }
+
+    private List<AcmParticipant> copyParticipants(List<AcmParticipant> participants)
+    {
+        List<AcmParticipant> copiedParticipants = new ArrayList<>();
+        participants.forEach(p -> copiedParticipants.add(AcmParticipant.createRulesTestParticipant(p)));
+        return copiedParticipants;
     }
 
     public EcmFileParticipantService getFileParticipantService()
@@ -77,5 +97,25 @@ public class EntityParticipantsChangedEventListener implements ApplicationListen
     public void setFileParticipantService(EcmFileParticipantService fileParticipantService)
     {
         this.fileParticipantService = fileParticipantService;
+    }
+
+    public Executor getExecutor()
+    {
+        return executor;
+    }
+
+    public void setExecutor(Executor executor)
+    {
+        this.executor = executor;
+    }
+
+    public AuditPropertyEntityAdapter getAuditPropertyEntityAdapter()
+    {
+        return auditPropertyEntityAdapter;
+    }
+
+    public void setAuditPropertyEntityAdapter(AuditPropertyEntityAdapter auditPropertyEntityAdapter)
+    {
+        this.auditPropertyEntityAdapter = auditPropertyEntityAdapter;
     }
 }

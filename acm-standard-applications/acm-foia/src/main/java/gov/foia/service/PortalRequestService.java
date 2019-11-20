@@ -34,7 +34,8 @@ import com.armedia.acm.services.config.lookups.model.StandardLookupEntry;
 import com.armedia.acm.services.config.lookups.service.LookupDao;
 import com.armedia.acm.services.notification.dao.NotificationDao;
 import com.armedia.acm.services.notification.model.Notification;
-import com.armedia.acm.services.search.model.SolrCore;
+import com.armedia.acm.services.search.exception.SolrException;
+import com.armedia.acm.services.search.model.solr.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.search.service.SearchResults;
 import com.armedia.acm.services.users.dao.UserDao;
@@ -46,7 +47,6 @@ import org.apache.logging.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.mule.api.MuleException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
@@ -151,7 +151,8 @@ public class PortalRequestService
     public void populateResponseRequest(FOIARequest foiaRequest, PortalFOIARequest portalFOIARequest)
     {
         portalFOIARequest.setOriginalRequestNumber(foiaRequest.getCaseNumber());
-        portalFOIARequest.setSubject(foiaRequest.getTitle());
+        portalFOIARequest.setTitle(foiaRequest.getTitle());
+        portalFOIARequest.setSubject(foiaRequest.getDetails());
         portalFOIARequest.setRequestCategory(foiaRequest.getRequestCategory());
         portalFOIARequest.setDeliveryMethodOfResponse(foiaRequest.getDeliveryMethodOfResponse());
         portalFOIARequest.setAddress1(foiaRequest.getOriginator().getPerson().getAddresses().get(0).getStreetAddress());
@@ -162,7 +163,7 @@ public class PortalRequestService
     }
 
     public List<PortalFOIAReadingRoom> getReadingRoom(PortalFOIAReadingRoom readingRoom, Authentication auth)
-            throws MuleException, JSONException, ParseException
+            throws SolrException, JSONException, ParseException
     {
 
         List<PortalFOIAReadingRoom> readingRoomList = new ArrayList<>();
@@ -225,7 +226,7 @@ public class PortalRequestService
             }
 
         }
-        catch (MuleException e)
+        catch (SolrException e)
         {
             log.warn("Could not read members of request download notification group");
         }
@@ -264,7 +265,7 @@ public class PortalRequestService
         }
     }
 
-    private void setParentData(PortalFOIAReadingRoom portalReadingRoom, String parent_ref, Authentication auth) throws MuleException
+    private void setParentData(PortalFOIAReadingRoom portalReadingRoom, String parent_ref, Authentication auth) throws SolrException
     {
         log.info("Searching for corresponding request of file '{}'", portalReadingRoom.getFile().getFileName());
 
@@ -397,7 +398,7 @@ public class PortalRequestService
         {
             log.info("FOIA Requests not found for the logged user [{}]]", emailAddress);
             throw new AcmObjectNotFoundException("PortalFOIARequestStatus", null,
-                    "FOIA Requests not found for the logged user" + emailAddress + " not found");
+                    "FOIA Requests not found for the logged user " + emailAddress + " not found");
 
         }
         return responseRequests;

@@ -121,6 +121,12 @@ public class SearchResults
         return null;
     }
 
+    public boolean extractBoolean(JSONObject doc, String booleanFieldName)
+    {
+        boolean booleanField = doc.has(booleanFieldName);
+        return booleanField && doc.getBoolean(booleanFieldName);
+    }
+
     public List<String> extractStringList(JSONObject doc, String arrayField)
     {
         if (doc.has(arrayField))

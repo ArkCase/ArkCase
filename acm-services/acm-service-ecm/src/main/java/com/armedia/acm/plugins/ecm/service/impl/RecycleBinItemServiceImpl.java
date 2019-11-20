@@ -44,17 +44,19 @@ import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.ecm.service.FileEventPublisher;
 import com.armedia.acm.plugins.ecm.service.RecycleBinItemService;
-import com.armedia.acm.services.search.model.SolrCore;
+import com.armedia.acm.services.search.exception.SolrException;
+import com.armedia.acm.services.search.model.solr.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.search.service.SearchResults;
-import org.json.JSONObject;
-import org.mule.api.MuleException;
-import org.apache.logging.log4j.Logger;
+
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.json.JSONObject;
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpSession;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -88,32 +90,37 @@ public class RecycleBinItemServiceImpl implements RecycleBinItemService
             throws AcmUserActionFailedException, AcmObjectNotFoundException, AcmCreateObjectFailedException
     {
         String ipAddress = (String) session.getAttribute(EcmFileConstants.IP_ADDRESS_ATTRIBUTE);
-        AcmContainer destinationContainer = getOrCreateContainerForRecycleBin(RecycleBinConstants.OBJECT_TYPE, ecmFile.getCmisRepositoryId(), authentication);
+        AcmContainer destinationContainer = getOrCreateContainerForRecycleBin(RecycleBinConstants.OBJECT_TYPE,
+                ecmFile.getCmisRepositoryId(), authentication);
         AcmContainer sourceContainer = getFolderService().findContainerByFolderIdTransactionIndependent(ecmFile.getFolder().getId());
 
         RecycleBinItem recycleBinItem = new RecycleBinItem(ecmFile.getId(), ecmFile.getObjectType(),
-               ecmFile.getFolder().getId(), ecmFile.getCmisRepositoryId(), sourceContainer.getId());
+                ecmFile.getFolder().getId(), ecmFile.getCmisRepositoryId(), sourceContainer.getId());
         getRecycleBinItemDao().save(recycleBinItem);
-        moveToCMISFolder(ecmFile, destinationContainer.getContainerObjectId(), destinationContainer.getContainerObjectType(), destinationContainer.getFolder().getId());
+        moveToCMISFolder(ecmFile, destinationContainer.getContainerObjectId(), destinationContainer.getContainerObjectType(),
+                destinationContainer.getFolder().getId());
         log.info("File {} successfully moved in Recycle Bin, by user {}", ecmFile.getFileName(), authentication.getName());
         getFileEventPublisher().publishFileMovedInRecycleBinEvent(ecmFile, authentication, ipAddress, true);
         return recycleBinItem;
     }
 
-    private EcmFile moveToCMISFolder(EcmFile ecmFile, Long sourceContainerObjectId, String sourceContainerObjectType, Long destinationFolderId)
+    private EcmFile moveToCMISFolder(EcmFile ecmFile, Long sourceContainerObjectId, String sourceContainerObjectType,
+            Long destinationFolderId)
             throws AcmUserActionFailedException, AcmObjectNotFoundException, AcmCreateObjectFailedException
     {
-       return getEcmFileService().moveFile(ecmFile.getId(), sourceContainerObjectId,
+        return getEcmFileService().moveFile(ecmFile.getId(), sourceContainerObjectId,
                 sourceContainerObjectType, destinationFolderId);
     }
 
     @Override
-    public RecycleBinDTO findRecycleBinItems(Authentication authentication, String sortBy, String sortDir, int pageNumber, int pageSize) throws MuleException, ParseException
+    public RecycleBinDTO findRecycleBinItems(Authentication authentication, String sortBy, String sortDir, int pageNumber, int pageSize)
+            throws ParseException, SolrException
     {
         List<RecycleBinItemDTO> recycleBinItemDTOS = new ArrayList<>();
         String query = "object_type_s:" + RecycleBinConstants.OBJECT_TYPE_ITEM;
         String sortParam = sortBy + " " + sortDir;
-        String results = getSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.ADVANCED_SEARCH, query, pageNumber, pageSize, sortParam);
+        String results = getSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.ADVANCED_SEARCH, query, pageNumber, pageSize,
+                sortParam);
         for (int i = 0; i < getSearchResults().getDocuments(results).length(); i++)
         {
             JSONObject recycleBinItem = getSearchResults().getDocuments(results).getJSONObject(i);
@@ -123,7 +130,7 @@ public class RecycleBinItemServiceImpl implements RecycleBinItemService
             recycleBinItemDTO.setDateModified(generateDate(recycleBinItem.optString("modified_date_tdt")));
             recycleBinItemDTO.setFileSizeBytes(recycleBinItem.optLong("object_item_size_l"));
             recycleBinItemDTO.setFileActiveVersionNameExtension(recycleBinItem.optString("item_type_s"));
-            recycleBinItemDTO.setFileId( recycleBinItem.optLong("object_id_i"));
+            recycleBinItemDTO.setFileId(recycleBinItem.optLong("object_id_i"));
             recycleBinItemDTO.setContainerId(recycleBinItem.optLong("object_container_object_id_i"));
             recycleBinItemDTO.setContainerObjectTitle(recycleBinItem.optString("object_container_object_title_s"));
             recycleBinItemDTO.setContainerObjectType(recycleBinItem.optString("object_container_object_type_s"));
@@ -138,10 +145,10 @@ public class RecycleBinItemServiceImpl implements RecycleBinItemService
         return recycleBinDTO;
     }
 
-    private Date generateDate (String date) throws ParseException
+    private Date generateDate(String date) throws ParseException
     {
         SimpleDateFormat format = new SimpleDateFormat(DateFormats.DEFAULT_DATE_FORMAT);
-        return format.parse (date);
+        return format.parse(date);
     }
 
     @Override
@@ -154,8 +161,10 @@ public class RecycleBinItemServiceImpl implements RecycleBinItemService
             EcmFile ecmFile = getEcmFileDao().find(fileFromTrash.getFileId());
             RecycleBinItem recycleBinItem = getRecycleBinItemDao().find(fileFromTrash.getRecycleBinItemId());
             removeItemFromRecycleBin(recycleBinItem.getId());
-            AcmContainer destinationContainer = getFolderService().findContainerByFolderIdTransactionIndependent(recycleBinItem.getSourceFolderId());
-            moveToCMISFolder(ecmFile, destinationContainer.getContainerObjectId(), destinationContainer.getContainerObjectType(), recycleBinItem.getSourceFolderId());
+            AcmContainer destinationContainer = getFolderService()
+                    .findContainerByFolderIdTransactionIndependent(recycleBinItem.getSourceFolderId());
+            moveToCMISFolder(ecmFile, destinationContainer.getContainerObjectId(), destinationContainer.getContainerObjectType(),
+                    recycleBinItem.getSourceFolderId());
             log.info("Item {} from Recycle Bin successfully restored, by user {}", fileFromTrash.getFileId(), authentication.getName());
         }
 
@@ -164,7 +173,8 @@ public class RecycleBinItemServiceImpl implements RecycleBinItemService
 
     @Override
     @Transactional
-    public AcmContainer getOrCreateContainerForRecycleBin(String objectType, String cmisRepositoryId, Authentication authentication) throws AcmCreateObjectFailedException
+    public AcmContainer getOrCreateContainerForRecycleBin(String objectType, String cmisRepositoryId, Authentication authentication)
+            throws AcmCreateObjectFailedException
     {
         AcmContainer recycleBinContainer = getRecycleBinItemDao().getContainerForRecycleBin(objectType, cmisRepositoryId);
         log.info("Container for the Recycle Bin successfully retrieved (created if don't exist), by user {}", authentication.getName());
@@ -173,14 +183,18 @@ public class RecycleBinItemServiceImpl implements RecycleBinItemService
             log.debug("Recycle Bin container for cmis repository {} is not found, by user {}", cmisRepositoryId, authentication.getName());
             return getEcmFileService().createContainerFolder(objectType, 0L, EcmFileConstants.DEFAULT_CMIS_REPOSITORY_ID);
         }
-        else {
-            log.debug("Recycle Bin container {} for cmis repository {} is successfully created, by user {}", recycleBinContainer.getContainerObjectId(), cmisRepositoryId, authentication.getName());
+        else
+        {
+            log.debug("Recycle Bin container {} for cmis repository {} is successfully created, by user {}",
+                    recycleBinContainer.getContainerObjectId(), cmisRepositoryId, authentication.getName());
             return recycleBinContainer;
         }
     }
 
     @Override
-    public void removeItemFromRecycleBin(Long fileId) {
+    @Transactional
+    public void removeItemFromRecycleBin(Long fileId)
+    {
         getRecycleBinItemDao().removeItemFromRecycleBin(fileId);
     }
 
@@ -203,7 +217,6 @@ public class RecycleBinItemServiceImpl implements RecycleBinItemService
     {
         this.ecmFileService = ecmFileService;
     }
-
 
     public EcmFileDao getEcmFileDao()
     {

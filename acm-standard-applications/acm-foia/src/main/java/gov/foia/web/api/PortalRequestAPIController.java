@@ -29,7 +29,6 @@ package gov.foia.web.api;
 
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
-
 import com.armedia.acm.core.exceptions.AcmUpdateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.ecm.exception.AcmFileTypesException;
@@ -37,10 +36,12 @@ import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.plugins.person.service.PersonService;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
+import com.armedia.acm.services.search.exception.SolrException;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.json.JSONException;
 import org.mule.api.MuleException;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -52,6 +53,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+
+import javax.persistence.PersistenceException;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -62,9 +66,6 @@ import gov.foia.model.PortalFOIAReadingRoom;
 import gov.foia.model.PortalFOIARequest;
 import gov.foia.model.PortalFOIARequestStatus;
 import gov.foia.service.PortalRequestService;
-import org.springframework.web.multipart.MultipartFile;
-
-import javax.persistence.PersistenceException;
 
 /**
  * @author sasko.tanaskoski
@@ -89,16 +90,17 @@ public class PortalRequestAPIController
 
     @RequestMapping(value = "/external/user/status", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public List<PortalFOIARequestStatus> getLoggedUserExternalRequests(@RequestParam(value = "emailAddress") String emailAddress)
+    public List<PortalFOIARequestStatus> getLoggedUserExternalRequests(Authentication auth,
+            @RequestParam(value = "emailAddress") String emailAddress)
             throws AcmObjectNotFoundException
     {
-        return getPortalRequestService().getLoggedUserExternalRequests(emailAddress);
+        return getPortalRequestService().getLoggedUserExternalRequests(auth.getName());
     }
 
     @RequestMapping(value = "/external/readingroom", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public List<PortalFOIAReadingRoom> getReadingRoom(PortalFOIAReadingRoom readingRoom, Authentication auth)
-            throws UnsupportedEncodingException, MuleException, AcmObjectNotFoundException, JSONException, ParseException
+            throws SolrException, JSONException, ParseException
     {
         return getPortalRequestService().getReadingRoom(readingRoom, auth);
     }
@@ -125,12 +127,12 @@ public class PortalRequestAPIController
         }
     }
 
-    @RequestMapping(value = "/{personId}/images", method = RequestMethod.POST, consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.IMAGE_PNG_VALUE})
+    @RequestMapping(value = "/{personId}/images", method = RequestMethod.POST, consumes = { MediaType.MULTIPART_FORM_DATA_VALUE,
+            MediaType.IMAGE_PNG_VALUE })
     @ResponseBody
     public ResponseEntity uploadImage(@PathVariable("personId") Long personId,
-                                      @RequestPart(value = "file", required = false) MultipartFile image,
-                                      @RequestPart("imageContentType") String imageContentType,
-                                      Authentication auth) throws AcmCreateObjectFailedException,
+            @RequestPart(value = "file", required = false) MultipartFile image,
+            Authentication auth) throws AcmCreateObjectFailedException,
             AcmUpdateObjectFailedException, IOException, AcmUserActionFailedException, AcmObjectNotFoundException, AcmFileTypesException
     {
         Person person = personService.get(personId);
@@ -139,7 +141,7 @@ public class PortalRequestAPIController
         {
             log.debug("Insert Image for a Person: [{}];", personId);
 
-            EcmFile uploadedFile = personService.insertImageForPortalPerson(person, image, imageContentType, auth);
+            EcmFile uploadedFile = personService.insertImageForPortalPerson(person, image, image.getContentType(), auth);
 
             return new ResponseEntity<>(uploadedFile, HttpStatus.OK);
         }

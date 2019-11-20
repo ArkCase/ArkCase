@@ -100,7 +100,7 @@ public class MapperUtilsTest
     public void testUserIdMoreThen20Chars()
     {
         AcmLdapSyncConfig config = new AcmLdapSyncConfig();
-        config.setUserPrefix("dco");
+        config.setUserPrefix("dco.");
         config.setUserDomain("armedia.com");
         config.setUserIdAttributeName("sAMAccountName");
         String userId = MapperUtils.buildUserId("veryyylongusername", config);
@@ -111,7 +111,7 @@ public class MapperUtilsTest
     public void testUserIdLessThen20Chars()
     {
         AcmLdapSyncConfig config = new AcmLdapSyncConfig();
-        config.setUserPrefix("dco");
+        config.setUserPrefix("dco.");
         config.setUserDomain("armedia.com");
         config.setUserIdAttributeName("sAMAccountName");
         String userId = MapperUtils.buildUserId("ann-acm", config);
@@ -154,7 +154,7 @@ public class MapperUtilsTest
     {
         String principal = "ann-acmloooooooooong";
 
-        String result = MapperUtils.buildPrincipalName(principal, "100", "armedia.com");
+        String result = MapperUtils.buildPrincipalName(principal, "100.", "armedia.com");
 
         assertEquals("100.ann-acmloooooooo@armedia.com", result);
     }
@@ -164,7 +164,7 @@ public class MapperUtilsTest
     {
         String principal = "ann-acmloooooooooong@armedia.com";
 
-        String result = MapperUtils.buildPrincipalName(principal, "100", "armedia.com");
+        String result = MapperUtils.buildPrincipalName(principal, "100.", "armedia.com");
 
         assertEquals("100.ann-acmloooooooo@armedia.com", result);
     }

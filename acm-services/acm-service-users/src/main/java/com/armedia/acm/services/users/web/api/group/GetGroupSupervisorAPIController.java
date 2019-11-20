@@ -30,14 +30,14 @@ package com.armedia.acm.services.users.web.api.group;
  * #L%
  */
 
-import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
+import com.armedia.acm.services.search.exception.SolrException;
+import com.armedia.acm.services.search.model.solr.SolrCore;
+import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.users.dao.group.AcmGroupDao;
 
-import org.json.JSONObject;
-import org.mule.api.MuleException;
-import org.mule.api.MuleMessage;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.json.JSONObject;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -48,8 +48,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.Base64;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @author riste.tutureski
@@ -62,7 +60,7 @@ public class GetGroupSupervisorAPIController
     private Logger LOG = LogManager.getLogger(getClass());
 
     private AcmGroupDao groupDao;
-    private MuleContextManager muleContextManager;
+    private ExecuteSolrQuery executeSolrQuery;
 
     @RequestMapping(value = "/group/{groupId}/get/supervisor", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
@@ -105,7 +103,7 @@ public class GetGroupSupervisorAPIController
         throw new IllegalStateException("Cannot retrieve supervisors for group with ID = " + groupId);
     }
 
-    private String getGroup(String groupId, int startRow, int maxRows, String sort, Authentication auth) throws MuleException
+    private String getGroup(String groupId, int startRow, int maxRows, String sort, Authentication auth) throws SolrException
     {
         String query = "object_id_s:" + groupId
                 + " AND object_type_s:GROUP AND -status_lcs:COMPLETE AND -status_lcs:DELETE AND -status_lcs:INACTIVE AND -status_lcs:CLOSED";
@@ -115,29 +113,18 @@ public class GetGroupSupervisorAPIController
             LOG.debug("User '" + auth.getName() + "' is searching for '" + query + "'");
         }
 
-        Map<String, Object> headers = new HashMap<>();
-        headers.put("query", query);
-        headers.put("firstRow", startRow);
-        headers.put("maxRows", maxRows);
-        headers.put("sort", sort);
-        headers.put("acmUser", auth);
+        String response = getExecuteSolrQuery().getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, query, startRow, maxRows, sort);
 
-        MuleMessage response = getMuleContextManager().send("vm://advancedSearchQuery.in", "", headers);
-
-        LOG.debug("Response type: " + response.getPayload().getClass());
-
-        if (response.getPayload() instanceof String)
+        if (response != null)
         {
-            String responsePayload = (String) response.getPayload();
-
-            return responsePayload;
+            return response;
         }
 
-        throw new IllegalStateException("Unexpected payload type: " + response.getPayload().getClass().getName());
+        throw new IllegalStateException("There is no group with ID = " + groupId);
     }
 
     private String getSupervisor(String groupId, JSONObject supervisorId, int startRow, int maxRows, String sort, Authentication auth)
-            throws MuleException
+            throws SolrException
     {
         if (supervisorId != null)
         {
@@ -148,25 +135,13 @@ public class GetGroupSupervisorAPIController
                 LOG.debug("User '" + auth.getName() + "' is searching for '" + query + "'");
             }
 
-            Map<String, Object> headers = new HashMap<>();
-            headers.put("query", query);
-            headers.put("firstRow", startRow);
-            headers.put("maxRows", maxRows);
-            headers.put("sort", sort);
-            headers.put("acmUser", auth);
+            String response = getExecuteSolrQuery().getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, query, startRow, maxRows,
+                    sort);
 
-            MuleMessage response = getMuleContextManager().send("vm://advancedSearchQuery.in", "", headers);
-
-            LOG.debug("Response type: " + response.getPayload().getClass());
-
-            if (response.getPayload() instanceof String)
+            if (response != null)
             {
-                String responsePayload = (String) response.getPayload();
-
-                return responsePayload;
+                return response;
             }
-
-            throw new IllegalStateException("Unexpected payload type: " + response.getPayload().getClass().getName());
         }
 
         throw new IllegalStateException("There are no any supervisors for group with ID = " + groupId);
@@ -182,13 +157,13 @@ public class GetGroupSupervisorAPIController
         this.groupDao = groupDao;
     }
 
-    public MuleContextManager getMuleContextManager()
+    public ExecuteSolrQuery getExecuteSolrQuery()
     {
-        return muleContextManager;
+        return executeSolrQuery;
     }
 
-    public void setMuleContextManager(MuleContextManager muleContextManager)
+    public void setExecuteSolrQuery(ExecuteSolrQuery executeSolrQuery)
     {
-        this.muleContextManager = muleContextManager;
+        this.executeSolrQuery = executeSolrQuery;
     }
 }

@@ -34,13 +34,7 @@ public interface EcmFileConstants
 {
     String MULE_ENDPOINT_CREATE_FOLDER = "vm://createFolder.in";
 
-    String MULE_ENDPOINT_COPY_FILE = "vm://copyFile.in";
-
-    String MULE_ENDPOINT_RENAME_FILE = "vm://renameFile.in";
-
     String MULE_ENDPOINT_REPLACE_FILE = "vm://updateFile.in";
-
-    String MULE_ENDPOINT_MOVE_FILE = "vm://moveFile.in";
 
     String USER_ACTION_COPY_FILE = "COPY";
 
@@ -120,6 +114,7 @@ public interface EcmFileConstants
     String INPUT_STREAM = "inputStream";
     String RECORD = "RECORD";
     String CMIS_DOCUMENT_ID = "cmisDocumentId";
+    String REPOSITORY_VERSION_ID = "alfcmis:nodeRef";
 
     String IP_ADDRESS_ATTRIBUTE = "acm_ip_address";
 

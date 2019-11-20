@@ -30,17 +30,15 @@ package com.armedia.acm.services.notification.service;
 import static org.easymock.EasyMock.anyLong;
 import static org.easymock.EasyMock.anyString;
 import static org.easymock.EasyMock.capture;
-import static org.easymock.EasyMock.contains;
 import static org.easymock.EasyMock.eq;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.expectLastCall;
 import static org.junit.Assert.assertEquals;
 
-import com.armedia.acm.crypto.exceptions.AcmEncryptionException;
 import com.armedia.acm.core.provider.TemplateModelProvider;
+import com.armedia.acm.crypto.exceptions.AcmEncryptionException;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.email.model.EmailSenderConfig;
-import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.services.email.model.EmailWithAttachmentsDTO;
 import com.armedia.acm.services.email.service.AcmEmailSenderService;
 import com.armedia.acm.services.email.service.AcmMailTemplateConfigurationService;
@@ -56,12 +54,9 @@ import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.spring.SpringContextHolder;
 
 import org.easymock.Capture;
-import org.easymock.EasyMock;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
-import org.mule.api.MuleException;
-import org.mule.api.MuleMessage;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -74,10 +69,8 @@ public class NotificationServiceTest extends EasyMockSupport
 
     private NotificationServiceImpl notificationService;
     private NotificationDao mockNotificationDao;
-    private MuleContextManager mockMuleContextManager;
     private NotificationEventPublisher mockNotificationEventPublisher;
     private AuditPropertyEntityAdapter mockAuditPropertyEntityAdapter;
-    private MuleMessage mockMuleMessage;
     private SpringContextHolder mockSpringContextHolder;
     private SendExecutor sendExecutor;
     private PurgeExecutor purgeExecutor;
@@ -96,10 +89,8 @@ public class NotificationServiceTest extends EasyMockSupport
         notificationService = new NotificationServiceImpl();
 
         mockNotificationDao = createMock(NotificationDao.class);
-        mockMuleContextManager = createMock(MuleContextManager.class);
         mockNotificationEventPublisher = createMock(NotificationEventPublisher.class);
         mockAuditPropertyEntityAdapter = createMock(AuditPropertyEntityAdapter.class);
-        mockMuleMessage = createMock(MuleMessage.class);
         mockSpringContextHolder = createMock(SpringContextHolder.class);
         mockTemplateModelProvider = createMock(TemplateModelProvider.class);
         mockTemplateService = createMock(AcmMailTemplateConfigurationService.class);
@@ -229,21 +220,6 @@ public class NotificationServiceTest extends EasyMockSupport
                 .anyTimes();
         mockAuditPropertyEntityAdapter.setUserId(eq("NOTIFICATION-BATCH-INSERT"));
         expectLastCall().anyTimes();
-
-        Capture<Map<String, Object>> messagePropsCapture = null;
-        try
-        {
-            messagePropsCapture = EasyMock.newCapture();
-            expect(mockMuleContextManager.send(eq("vm://sendEmailViaSmtp.in"), contains("note"), capture(messagePropsCapture)))
-                    .andReturn(mockMuleMessage).anyTimes();
-        }
-        catch (MuleException e)
-        {
-
-        }
-
-        // Return null - SUCCESSFULLY SENT
-        expect(mockMuleMessage.getInboundProperty(eq("sendEmailException"))).andReturn(null).anyTimes();
 
         Capture<Notification> capturedNotification = new Capture<>();
         expect(mockNotificationDao.save(capture(capturedNotification))).andReturn(notification1).anyTimes();
@@ -405,20 +381,6 @@ public class NotificationServiceTest extends EasyMockSupport
         expect(mockNotificationFormatter.replaceFormatPlaceholders(notification1)).andReturn(notification1).atLeastOnce();
         expect(mockNotificationFormatter.replaceFormatPlaceholders(notification2)).andReturn(notification2).atLeastOnce();
         expect(mockNotificationUtils.buildNotificationLink(anyString(), anyLong(), anyString(), anyLong())).andReturn(null).anyTimes();
-
-        try
-        {
-            Capture<Map<String, Object>> messagePropsCapture = EasyMock.newCapture();
-            expect(mockMuleContextManager.send(eq("vm://sendEmailViaSmtp.in"), contains("note"), capture(messagePropsCapture)))
-                    .andReturn(mockMuleMessage).anyTimes();
-        }
-        catch (MuleException e)
-        {
-
-        }
-
-        // Return Exception - UNSUCCESSFULLY SENT
-        expect(mockMuleMessage.getInboundProperty(eq("sendEmailException"))).andReturn(new Exception("exception")).anyTimes();
 
         Capture<Notification> capturedNotification = new Capture<>();
         expect(mockNotificationDao.save(capture(capturedNotification))).andReturn(notification1).anyTimes();

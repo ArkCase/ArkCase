@@ -36,8 +36,8 @@ import com.armedia.acm.plugins.ecm.model.MoveCopyFileDto;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.ecm.service.FileEventPublisher;
 
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -91,6 +91,7 @@ public class CopyFileAPIController
             FileDTO fileDTO = new FileDTO();
             fileDTO.setNewFile(copyFile);
             fileDTO.setOriginalId(Long.toString(in.getId()));
+            fileDTO.setLink(copyFile.isLink());
             return fileDTO;
         }
         catch (AcmUserActionFailedException e)

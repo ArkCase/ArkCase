@@ -70,6 +70,7 @@
         <property name="privilegesConfig" ref="applicationPrivilegesConfig"/>
         <property name="rolesToPrivilegesConfig" ref="rolesToPrivileges"/>
         <property name="configurationPropertyService" ref="configurationPropertyService"/>
+        <property name="collectionPropertiesConfigurationService" ref="collectionPropertiesConfigurationService"/>
     </bean>
 
     <bean id="historyCleanJob" class="com.armedia.acm.plugins.admin.service.HistoryCleanService">

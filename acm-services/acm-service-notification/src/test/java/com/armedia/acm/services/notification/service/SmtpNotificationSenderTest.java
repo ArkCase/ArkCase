@@ -36,14 +36,10 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
-import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.crypto.exceptions.AcmEncryptionException;
-import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
-import com.armedia.acm.email.model.EmailSenderConfig;
 import com.armedia.acm.data.service.AcmDataService;
-import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
-import com.armedia.acm.plugins.ecm.model.EcmFile;
+import com.armedia.acm.email.model.EmailSenderConfig;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.services.authenticationtoken.dao.AuthenticationTokenDao;
 import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenService;
@@ -55,6 +51,7 @@ import com.armedia.acm.services.email.service.AcmMailTemplateConfigurationServic
 import com.armedia.acm.services.email.service.TemplatingEngine;
 import com.armedia.acm.services.email.smtp.SmtpService;
 import com.armedia.acm.services.notification.model.Notification;
+import com.armedia.acm.services.notification.model.NotificationConfig;
 import com.armedia.acm.services.notification.model.NotificationConstants;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
@@ -64,37 +61,23 @@ import org.easymock.EasyMock;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
-import org.mule.api.MuleException;
-import org.mule.api.MuleMessage;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
 public class SmtpNotificationSenderTest extends EasyMockSupport
 {
-
+    private static final String BASE_URL = "/arkcase";
     private SmtpNotificationSender smtpNotificationSender;
     private SmtpService mockSmtpService;
     private AuditPropertyEntityAdapter mockAuditPropertyEntityAdapter;
-    private MuleContextManager mockMuleContextManager;
-    private MuleException mockMuleException;
-    private MuleMessage mockMuleMessage;
     private Authentication mockAuthentication;
     private AuthenticationTokenService mockAuthenticationTokenService;
     private AuthenticationTokenDao mockAuthenticationTokenDao;
     private AcmUser mockAcmUser;
     private EcmFileService mockEcmFileService;
-    private InputStream mockInputStream;
-    private EcmFile mockEcmFile;
-    private File mockFile;
-    private FileInputStream mockFileInputStream;
-    private ApplicationEventPublisher mockApplicationEventPublisher;
     private NotificationUtils mockNotificationUtils;
     private UserDao mockUserDao;
     private EmailWithAttachmentsDTO mockEmailWithAttachmentsDTO;
@@ -102,7 +85,6 @@ public class SmtpNotificationSenderTest extends EasyMockSupport
     private EmailWithAttachmentsAndLinksDTO mockEmailWithAttachmentsAndLinksDTO;
     private AcmMailTemplateConfigurationService templateService;
     private AcmDataService acmDataService;
-    private AcmAbstractDao<AcmObject> dao;
     private TemplatingEngine templatingEngine;
 
     @Before
@@ -112,20 +94,12 @@ public class SmtpNotificationSenderTest extends EasyMockSupport
         EmailSenderConfig senderConfig = new EmailSenderConfig();
         senderConfig.setUsername("email_user_value");
         mockSmtpService = createMock(SmtpService.class);
-        mockMuleContextManager = createMock(MuleContextManager.class);
         mockAuditPropertyEntityAdapter = createMock(AuditPropertyEntityAdapter.class);
-        mockMuleException = createMock(MuleException.class);
-        mockMuleMessage = createMock(MuleMessage.class);
         mockAuthenticationTokenService = createMock(AuthenticationTokenService.class);
         mockAuthenticationTokenDao = createMock(AuthenticationTokenDao.class);
         mockAuthentication = createMock(Authentication.class);
         mockAcmUser = createMock(AcmUser.class);
         mockEcmFileService = createMock(EcmFileService.class);
-        mockInputStream = createMock(InputStream.class);
-        mockFile = createMock(File.class);
-        mockFileInputStream = createMock(FileInputStream.class);
-        mockEcmFile = createMock(EcmFile.class);
-        mockApplicationEventPublisher = createMock(ApplicationEventPublisher.class);
         mockNotificationUtils = createMock(NotificationUtils.class);
         mockUserDao = createMock(UserDao.class);
         mockEmailWithAttachmentsDTO = createMock(EmailWithAttachmentsDTO.class);
@@ -133,7 +107,6 @@ public class SmtpNotificationSenderTest extends EasyMockSupport
         mockEmailWithAttachmentsAndLinksDTO = createMock(EmailWithAttachmentsAndLinksDTO.class);
         templateService = createMock(AcmMailTemplateConfigurationService.class);
         acmDataService = createMock(AcmDataService.class);
-        dao = createMock(AcmAbstractDao.class);
         templatingEngine = createMock(TemplatingEngine.class);
 
         smtpNotificationSender.setEmailSenderService(mockSmtpService);
@@ -146,6 +119,9 @@ public class SmtpNotificationSenderTest extends EasyMockSupport
         smtpNotificationSender.setTemplateService(templateService);
         smtpNotificationSender.setDataService(acmDataService);
         smtpNotificationSender.setTemplatingEngine(templatingEngine);
+        NotificationConfig notificationConfig = new NotificationConfig();
+        notificationConfig.setBaseUrl(BASE_URL);
+        smtpNotificationSender.setNotificationConfig(notificationConfig);
     }
 
     @Test
@@ -245,7 +221,7 @@ public class SmtpNotificationSenderTest extends EasyMockSupport
     }
 
     @Test
-    public void testSendEmailWithAttachments_withAcmUser() throws MuleException, AcmEncryptionException, Exception
+    public void testSendEmailWithAttachments_withAcmUser() throws AcmEncryptionException, Exception
     {
         Capture<String> templateCapture = EasyMock.newCapture();
         mockEmailWithAttachmentsDTO.setTemplate(capture(templateCapture));
@@ -263,7 +239,7 @@ public class SmtpNotificationSenderTest extends EasyMockSupport
     }
 
     @Test
-    public void testSendEmailWithAttachments_withUserId() throws MuleException, AcmEncryptionException, Exception
+    public void testSendEmailWithAttachments_withUserId() throws AcmEncryptionException, Exception
     {
         expect(mockUserDao.findByUserId("email_user_value")).andReturn(mockAcmUser);
 
@@ -283,7 +259,7 @@ public class SmtpNotificationSenderTest extends EasyMockSupport
     }
 
     @Test
-    public void testSendEmailWithAttachmentsAndLinks() throws MuleException, AcmEncryptionException, Exception
+    public void testSendEmailWithAttachmentsAndLinks() throws AcmEncryptionException, Exception
     {
         Capture<String> templateCapture = EasyMock.newCapture();
         mockEmailWithAttachmentsAndLinksDTO.setTemplate(capture(templateCapture));

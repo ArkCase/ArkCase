@@ -33,7 +33,6 @@ import static org.junit.Assert.assertEquals;
 import com.armedia.acm.core.AcmApplication;
 import com.armedia.acm.core.AcmObjectType;
 import com.armedia.acm.services.notification.model.Notification;
-import com.armedia.acm.services.notification.model.NotificationConfig;
 import com.armedia.acm.services.notification.model.NotificationConstants;
 
 import org.easymock.EasyMockSupport;
@@ -48,7 +47,6 @@ import java.util.Properties;
 
 public class NotificationUtilsTest extends EasyMockSupport
 {
-    private static final String BASE_URL = "/arkcase";
     private List<AcmObjectType> acmObjectTypes;
     private Notification notification;
     private AcmApplication mockAcmAppConfiguration;
@@ -63,10 +61,6 @@ public class NotificationUtilsTest extends EasyMockSupport
 
         notificationUtils = new NotificationUtils();
         notificationUtils.setAcmAppConfiguration(mockAcmAppConfiguration);
-
-        NotificationConfig config = new NotificationConfig();
-        config.setBaseUrl(BASE_URL);
-        notificationUtils.setNotificationConfig(config);
     }
 
     /**
@@ -81,7 +75,7 @@ public class NotificationUtilsTest extends EasyMockSupport
         setNotification(parentType, parentId, null, null);
 
         // url pattern as defined in app-config.xml
-        String expectedLink = String.format("%s/cases/%d/main", BASE_URL, parentId);
+        String expectedLink = String.format("/cases/%d/main", parentId);
         Map<String, String> urlValues = new HashMap<>();
         urlValues.put(parentType, "/cases/%d/main");
 
@@ -105,7 +99,7 @@ public class NotificationUtilsTest extends EasyMockSupport
         Long parentId = 1L;
         String relatedObjectType = "CASE_FILE";
         Long relatedObjectId = 2L;
-        String expectedLink = String.format("%s/cases/%d/notes", BASE_URL, relatedObjectId);
+        String expectedLink = String.format("/cases/%d/notes", relatedObjectId);
 
         setNotification(parentType, parentId, relatedObjectType, relatedObjectId);
 

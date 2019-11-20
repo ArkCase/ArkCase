@@ -29,8 +29,8 @@ package com.armedia.acm.services.users.model.ldap;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.ldap.BadLdapGrammarException;
 import org.springframework.ldap.core.DirContextAdapter;
 import org.springframework.ldap.core.DistinguishedName;
@@ -173,7 +173,7 @@ public class MapperUtils
         String groupPrefix = ldapSyncConfig.getGroupPrefix();
         if (StringUtils.isNotBlank(groupPrefix) && !name.startsWith(groupPrefix))
         {
-            String groupName = String.format("%s.%s", groupPrefix, name);
+            String groupName = String.format("%s%s", prefixTrailingDot(groupPrefix), name);
             return buildGroupName(groupName, ldapSyncConfig.getUserDomain());
         }
         return buildGroupName(name, ldapSyncConfig.getUserDomain());
@@ -194,7 +194,18 @@ public class MapperUtils
                 ldapSyncConfig.getUserIdAttributeName().equalsIgnoreCase("samaccountname")
                 && !userId.startsWith(userPrefix))
         {
-            String username = String.format("%s.%s", userPrefix, userId);
+            String username = String.format("%s%s", prefixTrailingDot(userPrefix), userId);
+            if (ldapSyncConfig.isGenerateUsernameEnabled())
+            {
+                username = StringUtils.left(username, userPrefix.length())
+                        .concat(RandomStringUtils.random(20 - userPrefix.length(),
+                                "abcdefghijklmnopqrstuvwxyz0123456789"));
+            }
+            else
+            {
+                username = StringUtils.left(username, 20);
+            }
+
             username = StringUtils.left(username, 20);
             return buildUserId(username, ldapSyncConfig.getUserDomain());
         }
@@ -222,7 +233,7 @@ public class MapperUtils
 
         if (StringUtils.isNotBlank(userPrefix) && !StringUtils.startsWith(principal, userPrefix))
         {
-            principal = String.format("%s.%s", userPrefix, principal);
+            principal = String.format("%s%s", prefixTrailingDot(userPrefix), principal);
             if (userDomainIncluded)
             {
                 String userIdDomainTruncated = StringUtils.substringBeforeLast(principal, "@");
@@ -241,5 +252,14 @@ public class MapperUtils
         }
 
         return principal;
+    }
+
+    public static String prefixTrailingDot(String prefix)
+    {
+        if (!prefix.endsWith("."))
+        {
+            prefix.concat(".");
+        }
+        return prefix;
     }
 }

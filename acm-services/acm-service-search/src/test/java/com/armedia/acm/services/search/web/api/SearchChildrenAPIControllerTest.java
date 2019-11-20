@@ -27,22 +27,25 @@ package com.armedia.acm.services.search.web.api;
  * #L%
  */
 
+import static org.easymock.EasyMock.capture;
+import static org.easymock.EasyMock.eq;
 import static org.easymock.EasyMock.expect;
 import static org.junit.Assert.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.armedia.acm.services.search.model.SolrCore;
+import com.armedia.acm.services.search.exception.SolrException;
+import com.armedia.acm.services.search.service.ChildDocumentsSearchService;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.easymock.Capture;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mule.api.DefaultMuleException;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
@@ -63,6 +66,7 @@ public class SearchChildrenAPIControllerTest extends EasyMockSupport
     private MockMvc mockMvc;
     private Authentication mockAuthentication;
     private ExecuteSolrQuery mockExecuteSolrQuery;
+    private ChildDocumentsSearchService mockChildDocumentsSearchService;
 
     @Autowired
     private ExceptionHandlerExceptionResolver exceptionResolver;
@@ -83,47 +87,39 @@ public class SearchChildrenAPIControllerTest extends EasyMockSupport
         mockMvc = MockMvcBuilders.standaloneSetup(unit).setHandlerExceptionResolvers(exceptionResolver).build();
 
         mockAuthentication = createMock(Authentication.class);
+
+        mockChildDocumentsSearchService = createMock(ChildDocumentsSearchService.class);
+
+        unit.setChildDocumentsSearchService(mockChildDocumentsSearchService);
     }
 
     @Test
     public void children() throws Exception
     {
         String parentType = "COMPLAINT";
-        String parentId = "999";
+        Long parentId = 999L;
         String childType = "TASK";
-        Boolean activeOnly = false;
-        Boolean exceptDeletedOnly = true;
-
-        String query = "parent_object_type_s:" + parentType + " AND parent_object_id_i:" + parentId + " AND object_type_s:" + childType;
-
-        if (activeOnly)
-        {
-            query += " AND -status_s:COMPLETE AND -status_s:DELETE AND -status_s:CLOSED";
-        }
-        if (exceptDeletedOnly)
-        {
-            if (!activeOnly)
-            {
-                query += " AND -status_s:DELETED AND -status_s:DELETE";
-            }
-        }
+        boolean activeOnly = false;
+        boolean exceptDeletedOnly = true;
 
         String solrResponse = "{ \"solrResponse\": \"this is a test response.\" }";
 
         // MVC test classes must call getName() somehow
         expect(mockAuthentication.getName()).andReturn("user").atLeastOnce();
 
-        expect(mockExecuteSolrQuery.getResultsByPredefinedQuery(mockAuthentication, SolrCore.QUICK_SEARCH, query, 0, 10, ""))
-                .andReturn(solrResponse);
+        Capture<Authentication> captureAuthentication = Capture.newInstance();
+        expect(mockChildDocumentsSearchService.searchChildren(eq(parentType), eq(parentId), eq(childType),
+                eq(activeOnly),
+                eq(exceptDeletedOnly), eq(null), eq(""), eq(0), eq(10),
+                capture(captureAuthentication))).andReturn(solrResponse);
 
         replayAll();
 
         MvcResult result = mockMvc.perform(
                 get("/api/v1/plugin/search/children")
-                        .param("parentId", parentId)
+                        .param("parentId", "999")
                         .param("parentType", parentType)
                         .param("childType", childType)
-
                         .principal(mockAuthentication))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -143,38 +139,27 @@ public class SearchChildrenAPIControllerTest extends EasyMockSupport
     public void childrenAdvanced() throws Exception
     {
         String parentType = "COMPLAINT";
-        String parentId = "999";
+        Long parentId = 999L;
         String childType = "TASK";
-        Boolean activeOnly = false;
-        Boolean exceptDeletedOnly = true;
-
-        String query = "parent_object_type_s:" + parentType + " AND parent_object_id_i:" + parentId + " AND object_type_s:" + childType;
-
-        if (activeOnly)
-        {
-            query += " AND -status_s:COMPLETE AND -status_s:DELETE AND -status_s:CLOSED";
-        }
-        if (exceptDeletedOnly)
-        {
-            if (!activeOnly)
-            {
-                query += " AND -status_s:DELETED";
-            }
-        }
+        boolean activeOnly = false;
+        boolean exceptDeletedOnly = true;
 
         String solrResponse = "{ \"solrResponse\": \"this is a test response.\" }";
 
         // MVC test classes must call getName() somehow
         expect(mockAuthentication.getName()).andReturn("user").atLeastOnce();
 
-        expect(mockExecuteSolrQuery.getResultsByPredefinedQuery(mockAuthentication, SolrCore.ADVANCED_SEARCH, query, 0, 10, ""))
-                .andReturn(solrResponse);
+        Capture<Authentication> captureAuthentication = Capture.newInstance();
+        expect(mockChildDocumentsSearchService.searchChildren(eq(parentType), eq(parentId), eq(childType),
+                eq(activeOnly),
+                eq(exceptDeletedOnly), eq(null), eq(""), eq(0), eq(10),
+                capture(captureAuthentication))).andReturn(solrResponse);
 
         replayAll();
 
         MvcResult result = mockMvc.perform(
                 get("/api/v1/plugin/search/children/advanced")
-                        .param("parentId", parentId)
+                        .param("parentId", "999")
                         .param("parentType", parentType)
                         .param("childType", childType)
 
@@ -197,35 +182,25 @@ public class SearchChildrenAPIControllerTest extends EasyMockSupport
     {
 
         String parentType = "COMPLAINT";
-        String parentId = "999";
+        Long parentId = 999L;
         String childType = "TASK";
-        Boolean activeOnly = false;
-        Boolean exceptDeletedOnly = true;
+        boolean activeOnly = false;
+        boolean exceptDeletedOnly = true;
 
-        String query = "parent_object_type_s:" + parentType + " AND parent_object_id_i:" + parentId + " AND object_type_s:" + childType;
-
-        if (activeOnly)
-        {
-            query += " AND -status_s:COMPLETE AND -status_s:DELETE AND -status_s:CLOSED";
-        }
-        if (exceptDeletedOnly)
-        {
-            if (!activeOnly)
-            {
-                query += " AND -status_s:DELETED AND -status_s:DELETE";
-            }
-        }
         // MVC test classes must call getName() somehow
         expect(mockAuthentication.getName()).andReturn("user").atLeastOnce();
 
-        expect(mockExecuteSolrQuery.getResultsByPredefinedQuery(mockAuthentication, SolrCore.QUICK_SEARCH, query, 0, 10, ""))
-                .andThrow(new DefaultMuleException("test Exception"));
+        Capture<Authentication> captureAuthentication = Capture.newInstance();
+        expect(mockChildDocumentsSearchService.searchChildren(eq(parentType), eq(parentId), eq(childType),
+                eq(activeOnly),
+                eq(exceptDeletedOnly), eq(null), eq(""), eq(0), eq(10),
+                capture(captureAuthentication))).andThrow(new SolrException("test Exception"));
 
         replayAll();
 
         MvcResult result = mockMvc.perform(
                 get("/api/v1/plugin/search/children")
-                        .param("parentId", parentId)
+                        .param("parentId", "999")
                         .param("parentType", parentType)
                         .param("childType", childType)
                         .principal(mockAuthentication))

@@ -75,7 +75,6 @@ public class EcmFileParticipantServiceTest extends EasyMockSupport
     private EcmFileConfig ecmFileConfigMock;
     private ExternalAuthenticationUtils mockExternalAuthenticationUtils;
     private ApplicationEventPublisher mockApplicationEventPublisher;
-    private XSync<String> xSync;
 
     @Before
     public void setUp()
@@ -100,15 +99,14 @@ public class EcmFileParticipantServiceTest extends EasyMockSupport
         fileParticipantService.setEcmFileConfig(ecmFileConfigMock);
         fileParticipantService.setExternalAuthenticationUtils(mockExternalAuthenticationUtils);
         fileParticipantService.setApplicationEventPublisher(mockApplicationEventPublisher);
+        fileParticipantService.setxSync(new XSync<>());
+        fileParticipantService.setAuditPropertyEntityAdapter(mockAuditPropertyEntityAdapter);
 
         fileParticipantServiceHelper.setFileDao(mockFileDao);
         fileParticipantServiceHelper.setFolderDao(mockFolderDao);
         fileParticipantServiceHelper.setAuditPropertyEntityAdapter(mockAuditPropertyEntityAdapter);
         fileParticipantServiceHelper.setExternalAuthenticationUtils(mockExternalAuthenticationUtils);
         fileParticipantServiceHelper.setApplicationEventPublisher(mockApplicationEventPublisher);
-
-        xSync = new XSync<>();
-        fileParticipantServiceHelper.setxSync(xSync);
 
         SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken("test", "test"));
     }
@@ -1042,6 +1040,8 @@ public class EcmFileParticipantServiceTest extends EasyMockSupport
                 .andReturn(participantLdapId1).atLeastOnce();
         mockApplicationEventPublisher.publishEvent(EasyMock.anyObject());
         expectLastCall().atLeastOnce();
+
+        expect(mockAuditPropertyEntityAdapter.getUserId()).andReturn("jerry.garcia");
 
         // when
         replayAll();

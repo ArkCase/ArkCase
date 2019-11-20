@@ -6,22 +6,22 @@ package gov.foia.service;
  * %%
  * Copyright (C) 2014 - 2018 ArkCase LLC
  * %%
- * This file is part of the ArkCase software. 
- * 
- * If the software was purchased under a paid ArkCase license, the terms of 
- * the paid license agreement will prevail.  Otherwise, the software is 
+ * This file is part of the ArkCase software.
+ *
+ * If the software was purchased under a paid ArkCase license, the terms of
+ * the paid license agreement will prevail.  Otherwise, the software is
  * provided under the following open source license terms:
- * 
+ *
  * ArkCase is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *  
+ *
  * ArkCase is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
  * #L%
@@ -50,7 +50,6 @@ import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.services.notification.service.NotificationSender;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
-
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 import org.springframework.security.core.Authentication;
@@ -70,7 +69,6 @@ import gov.foia.model.FOIARequest;
 
 /**
  * @author sasko.tanaskoski
- *
  */
 public class FOIARequestService
 {
@@ -120,7 +118,8 @@ public class FOIARequestService
                     }
                 }
 
-                if (foiaRequest.getId() != null && foiaRequest.getStatus().equalsIgnoreCase("In Review") && !foiaConfigurationService.readConfiguration().getReceivedDateEnabled())
+                if (foiaRequest.getId() != null && foiaRequest.getStatus().equalsIgnoreCase("In Review")
+                        && !foiaConfigurationService.readConfiguration().getReceivedDateEnabled())
                 {
                     if (foiaRequest.getReceivedDate() != null)
                     {
@@ -129,7 +128,7 @@ public class FOIARequestService
                                 foiaRequest.getRequestType()));
                     }
                 }
-                else if(foiaRequest.getId() == null && foiaConfigurationService.readConfiguration().getReceivedDateEnabled())
+                else if (foiaRequest.getId() == null && foiaConfigurationService.readConfiguration().getReceivedDateEnabled())
                 {
                     // calculate due date from time to complete configuration
                     // override if any due date is set from UI
@@ -171,7 +170,7 @@ public class FOIARequestService
     private void setDefaultPhoneAndEmailIfAny(CaseFile saved)
     {
         Person person = saved.getOriginator().getPerson();
-        for (int i=0; i < person.getContactMethods().size(); i++)
+        for (int i = 0; i < person.getContactMethods().size(); i++)
         {
             ContactMethod contact = person.getContactMethods().get(i);
             if (contact != null)
@@ -181,7 +180,7 @@ public class FOIARequestService
                     if (i == 0)
                     {
                         contact.setType("phone");
-                     }
+                    }
                     else if (i == 1)
                     {
                         contact.setType("fax");
@@ -197,7 +196,7 @@ public class FOIARequestService
                 {
                     person.setDefaultPhone(contact);
                 }
-                else if (type.toLowerCase().equals("email") && value != null && !value.isEmpty())
+                else if (type.toLowerCase().equals("email") && value != null)
                 {
                     person.setDefaultEmail(contact);
                 }
@@ -208,7 +207,7 @@ public class FOIARequestService
     private void setDefaultAddressType(CaseFile saved)
     {
         Person person = saved.getOriginator().getPerson();
-        if ( person.getAddresses().size() != 0)
+        if (person.getAddresses().size() != 0)
         {
             PostalAddress address = person.getAddresses().get(0);
             if (address.getType() == null)
@@ -221,49 +220,15 @@ public class FOIARequestService
     private CaseFile populateAppealFromOriginalRequest(CaseFile in, CaseFile originalRequest)
     {
 
-        in.getOriginator().getPerson().setTitle(originalRequest.getOriginator().getPerson().getTitle());
-        in.getOriginator().getPerson().setGivenName(originalRequest.getOriginator().getPerson().getGivenName());
-        in.getOriginator().getPerson().setMiddleName(originalRequest.getOriginator().getPerson().getMiddleName());
-        in.getOriginator().getPerson().setFamilyName(originalRequest.getOriginator().getPerson().getFamilyName());
-        in.getOriginator().getPerson().getContactMethods().get(2)
-                .setValue(originalRequest.getOriginator().getPerson().getContactMethods().get(2).getValue());
+        in.getOriginator().setPerson(originalRequest.getOriginator().getPerson());
 
         if (in.getTitle() == null || in.getTitle().isEmpty() || in.getTitle().equals(originalRequest.getTitle()))
         {
             in.setTitle(originalRequest.getTitle() + String.format(getAppealTitleFormat(), originalRequest.getCaseNumber()));
         }
-        if (in.getOriginator().getPerson().getAddresses().get(0).getStreetAddress() == null
-                || in.getOriginator().getPerson().getAddresses().get(0).getStreetAddress().isEmpty())
-        {
-            in.getOriginator().getPerson().getAddresses().get(0)
-                    .setStreetAddress(originalRequest.getOriginator().getPerson().getAddresses().get(0).getStreetAddress());
-        }
-        if (in.getOriginator().getPerson().getAddresses().get(0).getStreetAddress2() == null
-                || in.getOriginator().getPerson().getAddresses().get(0).getStreetAddress2().isEmpty())
-        {
-            in.getOriginator().getPerson().getAddresses().get(0)
-                    .setCity(originalRequest.getOriginator().getPerson().getAddresses().get(0).getCity());
-        }
-        if (in.getOriginator().getPerson().getAddresses().get(0).getState() == null
-                || in.getOriginator().getPerson().getAddresses().get(0).getState().isEmpty())
-        {
-            in.getOriginator().getPerson().getAddresses().get(0)
-                    .setState(originalRequest.getOriginator().getPerson().getAddresses().get(0).getState());
-        }
-        if (in.getOriginator().getPerson().getAddresses().get(0).getCountry() == null
-                || in.getOriginator().getPerson().getAddresses().get(0).getCountry().isEmpty())
-        {
-            in.getOriginator().getPerson().getAddresses().get(0)
-                    .setCountry(originalRequest.getOriginator().getPerson().getAddresses().get(0).getCountry());
-        }
-        if (in.getOriginator().getPerson().getAddresses().get(0).getZip() == null
-                || in.getOriginator().getPerson().getAddresses().get(0).getZip().isEmpty())
-        {
-            in.getOriginator().getPerson().getAddresses().get(0)
-                    .setZip(originalRequest.getOriginator().getPerson().getAddresses().get(0).getZip());
-        }
 
         return in;
+
     }
 
     private CaseFile createReference(CaseFile in, CaseFile originalRequest)
@@ -503,11 +468,13 @@ public class FOIARequestService
         return queuesTimeToCompleteService;
     }
 
-    public FoiaConfigurationService getFoiaConfigurationService() {
+    public FoiaConfigurationService getFoiaConfigurationService()
+    {
         return foiaConfigurationService;
     }
 
-    public void setFoiaConfigurationService(FoiaConfigurationService foiaConfigurationService) {
+    public void setFoiaConfigurationService(FoiaConfigurationService foiaConfigurationService)
+    {
         this.foiaConfigurationService = foiaConfigurationService;
     }
 
