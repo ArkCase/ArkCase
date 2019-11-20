@@ -83,6 +83,7 @@ public class CamelContextManager implements ApplicationContextAware
             try
             {
                 repositoryConfigs = getCamelConfigUtils().getRepositoryConfigsFromFile();
+                log.debug("Number of repository configurations: [{}]", repositoryConfigs.size());
             }
             catch (IOException e)
             {
@@ -197,26 +198,31 @@ public class CamelContextManager implements ApplicationContextAware
         {
             Reflections routesReflections = new Reflections(routesPackage);
             Set<Class<? extends ArkCaseAbstractRoute>> routes = routesReflections.getSubTypesOf(ArkCaseAbstractRoute.class);
+            log.debug("Number of ArkCase-routes classes retrieved by reflection={}", routes.size());
 
             for (ArkCaseCMISConfig repositoryConfig : repositoryConfigs.values())
             {
+                log.debug("Create routes for [{}]", repositoryConfig.getId());
                 for (Class route : routes)
                 {
                     Object routeInstance = route.newInstance();
+                    log.debug("Current route=[{}] instanceOf ArkCaseAbstractRoute = [{}]", routeInstance.getClass(),
+                            (routeInstance instanceof ArkCaseAbstractRoute));
                     if (routeInstance instanceof ArkCaseAbstractRoute)
                     {
-
+                        log.debug("Trying to add route=[{}] to camel context", routeInstance.getClass());
                         ((ArkCaseAbstractRoute) routeInstance).setRepositoryId(repositoryConfig.getId());
                         ((ArkCaseAbstractRoute) routeInstance).setTimeout(repositoryConfig.getTimeout());
                         camelContext.addRoutes((RoutesBuilder) routeInstance);
-                        log.debug("Successfully added route={} to camel context", routeInstance.getClass());
+                        log.debug("Successfully added route=[{}] to camel context", routeInstance.getClass());
+                        log.debug("Current number of routes:[{}]", camelContext.getRoutes().size());
                     }
                 }
             }
         }
         catch (Exception e)
         {
-            log.error("Can't add routes to Camel context, REASON:{}", e.getMessage(), e);
+            log.error("Can't add routes to Camel context, REASON:[{}]", e.getMessage(), e);
             throw new ArkCaseFileRepositoryException(e);
         }
     }
