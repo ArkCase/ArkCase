@@ -273,12 +273,12 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
         AcmFolder acmFolder = folderDao.findByCmisFolderId(cmisFolderObjectId);
         if (acmFolder != null && acmFolder.getCmisRepositoryId() != null)
         {
-            findFolderProperties.put(EcmFileConstants.CMIS_REPOSITORY_ID, "camelAlfresco");
+            findFolderProperties.put(EcmFileConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID);
         }
         else
         {
             String defaultCmisId = ecmFileConfig.getDefaultCmisId();
-            findFolderProperties.put(EcmFileConstants.CMIS_REPOSITORY_ID, "camelAlfresco");
+            findFolderProperties.put(EcmFileConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID);
         }
         findFolderProperties.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, EcmFileCamelUtils.getCmisUser());
         Folder findFolder = null;
@@ -651,17 +651,20 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
         {
             if (child instanceof Document)
             {
-                AcmFolder acmParent = getFolderDao().findByCmisFolderId(toCopyFolder.getProperty("alfcmis:nodeRef").getValue());
-                AcmFolder dstFolder = getFolderDao().findByCmisFolderId(parentFolder.getProperty("alfcmis:nodeRef").getValue());
+                AcmFolder acmParent = getFolderDao()
+                        .findByCmisFolderId(toCopyFolder.getProperty(EcmFileConstants.REPOSITORY_VERSION_ID).getValue());
+                AcmFolder dstFolder = getFolderDao()
+                        .findByCmisFolderId(parentFolder.getProperty(EcmFileConstants.REPOSITORY_VERSION_ID).getValue());
                 EcmFile ecmFile = null;
                 try
                 {
-                    ecmFile = getFileDao().findByCmisFileIdAndFolderId(child.getProperty("alfcmis:nodeRef").getValue(), acmParent.getId());
+                    ecmFile = getFileDao().findByCmisFileIdAndFolderId(child.getProperty(EcmFileConstants.REPOSITORY_VERSION_ID).getValue(),
+                            acmParent.getId());
                 }
                 catch (NoResultException e)
                 {
                     log.debug("File with cmisId: {} not found in the DB, but returned from content repository!",
-                            child.getProperty("alfcmis:nodeRef").getValue(), e);
+                            child.getProperty(EcmFileConstants.REPOSITORY_VERSION_ID).getValue(), e);
                     continue;
                 }
                 if (ecmFile != null)
@@ -1091,7 +1094,7 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
                     folder.getId(), "Folder was not created under " + folder.getName() + " successfully", e);
         }
 
-        return result.getPropertyValue("alfcmis:nodeRef");
+        return result.getPropertyValue(EcmFileConstants.REPOSITORY_VERSION_ID);
     }
 
     @Override
