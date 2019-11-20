@@ -295,7 +295,7 @@ public class EcmFileServiceImplTest extends EasyMockSupport
         props.put(EcmFileConstants.CMIS_OBJECT_ID, toMove.getVersionSeriesId());
         props.put(EcmFileConstants.DST_FOLDER_ID, targetFolder.getCmisFolderId());
         props.put(EcmFileConstants.SRC_FOLDER_ID, toMove.getFolder().getCmisFolderId());
-        props.put(EcmFileConstants.CMIS_REPOSITORY_ID, "camelAlfresco");
+        props.put(EcmFileConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID);
         props.put(EcmFileConstants.VERSIONING_STATE, "versioningState");
         props.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, "");
 
@@ -304,9 +304,9 @@ public class EcmFileServiceImplTest extends EasyMockSupport
 
         Map<String, ArkCaseCMISConfig> configMap = new HashMap<>();
         ArkCaseCMISConfig config = new ArkCaseCMISConfig();
-        config.setRepositoryId("camelAlfresco");
+        config.setRepositoryId(ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID);
         config.setCmisVersioningState("versioningState");
-        configMap.put("camelAlfresco", config);
+        configMap.put(ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID, config);
 
         expect(mockEcmFileDao.find(fileId)).andReturn(toMove);
         expect(camelContextManager.getRepositoryConfigs()).andReturn(configMap);
