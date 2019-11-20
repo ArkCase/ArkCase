@@ -17,7 +17,6 @@ public class RequestFolderStructureService {
         {
             JSONObject jObj = jsonArray.getJSONObject(i);
             folderStructure.add(jObj.getString("name").trim());
-
         }
 
         return folderStructure;

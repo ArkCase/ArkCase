@@ -239,5 +239,4 @@
     <bean id="caseFileTasksService" class="com.armedia.acm.plugins.casefile.service.CaseFileTasksServiceImpl">
         <property name="childDocumentsSearchService" ref="childDocumentsSearchService"/>
     </bean>
-
 </beans>

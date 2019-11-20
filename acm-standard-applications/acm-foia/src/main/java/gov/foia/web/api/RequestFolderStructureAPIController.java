@@ -19,8 +19,6 @@ public class RequestFolderStructureAPIController {
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public List<String> requestFolderStructure(HttpSession session, Authentication auth) {
-
-
         return getRequestFolderStructureService().getFolderStructure();
     }
 
