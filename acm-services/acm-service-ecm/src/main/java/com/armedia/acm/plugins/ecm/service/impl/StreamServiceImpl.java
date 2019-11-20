@@ -27,9 +27,11 @@ package com.armedia.acm.plugins.ecm.service.impl;
  * #L%
  */
 
+import com.armedia.acm.camelcontext.arkcase.cmis.ArkCaseCMISActions;
+import com.armedia.acm.camelcontext.arkcase.cmis.ArkCaseCMISConstants;
+import com.armedia.acm.camelcontext.context.CamelContextManager;
+import com.armedia.acm.camelcontext.exception.ArkCaseFileRepositoryException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
-import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
-import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
@@ -37,13 +39,14 @@ import com.armedia.acm.plugins.ecm.model.Range;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.ecm.service.StreamService;
 import com.armedia.acm.plugins.ecm.utils.CmisConfigUtils;
+import com.armedia.acm.plugins.ecm.utils.EcmFileCamelUtils;
 import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
+import com.armedia.acm.web.api.MDCConstants;
 
+import org.apache.chemistry.opencmis.client.api.CmisObject;
 import org.apache.chemistry.opencmis.client.api.Document;
 import org.apache.chemistry.opencmis.commons.data.ContentStream;
 import org.apache.commons.collections.map.HashedMap;
-import org.mule.api.MuleException;
-import org.mule.api.MuleMessage;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
@@ -68,9 +71,9 @@ public class StreamServiceImpl implements StreamService
     private final String MULTIPART_BOUNDARY = "MULTIPART_BYTERANGES";
 
     private CmisConfigUtils cmisConfigUtils;
-    private MuleContextManager muleContextManager;
     private FolderAndFilesUtils folderAndFilesUtils;
     private EcmFileService ecmFileService;
+    private CamelContextManager camelContextManager;
 
     /**
      * Close the given resource.
@@ -95,7 +98,7 @@ public class StreamServiceImpl implements StreamService
 
     @Override
     public void stream(Long id, String version, HttpServletRequest request, HttpServletResponse response)
-            throws AcmUserActionFailedException, MuleException, AcmObjectNotFoundException, IOException
+            throws AcmObjectNotFoundException, IOException
     {
         EcmFile file = getEcmFileService().findById(id);
 
@@ -106,17 +109,26 @@ public class StreamServiceImpl implements StreamService
 
         String cmisFileId = getFolderAndFilesUtils().getVersionCmisId(file, version);
         Map<String, Object> messageProps = new HashedMap();
-        messageProps.put(EcmFileConstants.CONFIGURATION_REFERENCE, getCmisConfigUtils().getCmisConfiguration(file.getCmisRepositoryId()));
-        MuleMessage downloadedFile = getMuleContextManager().send("vm://getObjectById.in", cmisFileId, messageProps);
+        messageProps.put(EcmFileConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID);
+        messageProps.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, EcmFileCamelUtils.getCmisUser());
+        messageProps.put(EcmFileConstants.CMIS_OBJECT_ID, cmisFileId);
 
-        if (downloadedFile == null || downloadedFile.getPayload() == null || !(downloadedFile.getPayload() instanceof Document))
+        CmisObject downloadedFile = null;
+        try
+        {
+            downloadedFile = (CmisObject) getCamelContextManager().send(ArkCaseCMISActions.GET_OBJECT_BY_ID, messageProps);
+        }
+        catch (ArkCaseFileRepositoryException e)
+        {
+            throw new AcmObjectNotFoundException(null, file.getId(), "Exception while downloading object by id", null);
+        }
+
+        if (downloadedFile == null || !(downloadedFile instanceof Document))
         {
             throw new AcmObjectNotFoundException(null, null, "File not found", null);
         }
 
-        Document payload = (Document) downloadedFile.getPayload();
-
-        stream(payload, file, version, request, response);
+        stream((Document) downloadedFile, file, version, request, response);
     }
 
     @Override
@@ -480,14 +492,14 @@ public class StreamServiceImpl implements StreamService
         this.cmisConfigUtils = cmisConfigUtils;
     }
 
-    public MuleContextManager getMuleContextManager()
+    public CamelContextManager getCamelContextManager()
     {
-        return muleContextManager;
+        return camelContextManager;
     }
 
-    public void setMuleContextManager(MuleContextManager muleContextManager)
+    public void setCamelContextManager(CamelContextManager camelContextManager)
     {
-        this.muleContextManager = muleContextManager;
+        this.camelContextManager = camelContextManager;
     }
 
     public FolderAndFilesUtils getFolderAndFilesUtils()
