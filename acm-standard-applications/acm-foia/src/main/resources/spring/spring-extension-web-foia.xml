@@ -53,9 +53,9 @@
             <beans:property name="foiaEcmFileService" ref="ecmFileService"/>
         </beans:bean>
 
-        <bean id="requestFolderStructureAPIController" class="gov.foia.web.api.RequestFolderStructureAPIController">
-            <property name="requestFolderStructureService" ref="requestFolderStructureService"/>
-        </bean>
+        <beans:bean id="requestFolderStructureAPIController" class="gov.foia.web.api.RequestFolderStructureAPIController">
+            <beans:property name="requestFolderStructureService" ref="requestFolderStructureService"/>
+        </beans:bean>
 
     </beans:beans>
 </beans:beans>
