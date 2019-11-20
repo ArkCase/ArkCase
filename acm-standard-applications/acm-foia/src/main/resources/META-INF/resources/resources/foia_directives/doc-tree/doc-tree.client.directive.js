@@ -390,7 +390,7 @@ angular
                                     }
                                 },
                                 dragDrop : function(node, data) {
-                                    if (DocTree.readOnly) {
+                                    if (DocTree.readOnly || DocTree.isDefaultFolder(data.otherNode)) {
                                         return;
                                     }
 
@@ -496,6 +496,15 @@ angular
                                 }
                             }
                         }
+                        return false;
+                    },
+                    isDefaultFolder: function(node){
+                        var folderStructure = DocTree.treeConfig.folderStructure.data;
+                        if(_.find(folderStructure, function(folderName) {
+                            return folderName === node.data.name}) && node.parent.parent.title === "root"){
+                            return true;
+                        }
+
                         return false;
                     },
                     isNodeInResponseFolder : function(node) {
@@ -2255,6 +2264,15 @@ angular
 
                                 } else {
                                     if (item.cmd) {
+                                        if(item.cmd === "cut" || item.cmd === "remove" || item.cmd === "rename"){
+                                            var folderStructure = DocTree.treeConfig.folderStructure.data;
+                                            if( _.find(folderStructure, function (folderName) {
+                                                return folderName === nodes[0].data.name;
+                                            })){
+                                                item.disabled = true;
+                                                item.disabledExpression = true;
+                                            }
+                                        }
                                         var found = DocTree.Command.findHandler(item.cmd);
                                         var onAllowCmd = Util.goodMapValue(found, "onAllowCmd", null);
                                         if (onAllowCmd) {
