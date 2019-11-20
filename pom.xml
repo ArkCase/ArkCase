@@ -988,6 +988,12 @@
                 <artifactId>mule-module-ognl</artifactId>
                 <version>${mule.version}</version>
                 <scope>runtime</scope>
+                <exclusions>
+                    <exclusion>
+                        <groupId>jboss</groupId>
+                    	<artifactId>javassist</artifactId>
+                </exclusion>
+                </exclusions>
             </dependency>
             <dependency>
                 <groupId>org.mule.modules</groupId>
