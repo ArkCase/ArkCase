@@ -272,10 +272,6 @@ angular.module('directives').directive(
                                 $window.location.href = appUrl + SearchService.exportUrl(scope.query, 'csv', scope.config.reportFileName, fields, titles);
                             };
 
-                            scope.$bus.subscribe("zip_completed", function (data) {
-                                messageHandler.handleZipGenerationMessage(data.filePath);
-                            });
-
                             scope.downloadSelectedFiles = function() {
                                 var fileIds = [];
                                 var fileCounter = 0;
