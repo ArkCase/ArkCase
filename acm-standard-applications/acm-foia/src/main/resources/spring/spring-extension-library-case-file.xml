@@ -118,8 +118,8 @@
             <beans:property name="userDao" ref="userJpaDao"/>
             <beans:property name="foiaConfigurationService" ref="foiaConfigurationService"/>
             <beans:property name="foiaQueueCorrespondenceService" ref="foiaQueueCorrespondenceService"/>
-            <beans:property name="templatingEngine" ref="templatingEngine"/>
-            <beans:property name="emailBodyTemplate" value="file:${user.home}/.arkcase/acm/templates/requestDocumentAttached.html"/>
+            <beans:property name="notificationDao" ref="notificationDao"/>
+
         </beans:bean>
 
         <beans:bean id="documentGeneratorService" class="gov.foia.service.FOIADocumentGeneratorService">
@@ -272,6 +272,10 @@
 
         <beans:bean id="holdQueuePurgerJobDescriptor" class="gov.foia.service.HoldQueuePurgerJobDescriptor" parent="acmJobDescriptor">
             <beans:property name="holdQueuePurger" ref="scheduledHoldQueuePurger"/>
+        </beans:bean>
+
+        <beans:bean id="requestFolderStructureService" class="gov.foia.service.RequestFolderStructureService">
+            <beans:property name="folderStructureAsString" value="#{caseConfig.folderStructure}"/>
         </beans:bean>
 
     </beans:beans>

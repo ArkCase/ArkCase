@@ -48,6 +48,7 @@ import com.armedia.acm.services.email.model.EmailWithEmbeddedLinksResultDTO;
 import com.armedia.acm.services.email.service.AcmMailTemplateConfigurationService;
 import com.armedia.acm.services.email.service.TemplatingEngine;
 import com.armedia.acm.services.notification.model.Notification;
+import com.armedia.acm.services.notification.model.NotificationConfig;
 import com.armedia.acm.services.notification.model.NotificationConstants;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
@@ -65,7 +66,7 @@ import java.util.List;
 
 public class MicrosoftExchangeNotificationSenderTest extends EasyMockSupport
 {
-
+    private static final String BASE_URL = "/arkcase";
     private MicrosoftExchangeNotificationSender microsoftExchangeNotificationSender;
     private AuditPropertyEntityAdapter mockAuditPropertyEntityAdapter;
     private Authentication mockAuthentication;
@@ -110,6 +111,10 @@ public class MicrosoftExchangeNotificationSenderTest extends EasyMockSupport
         microsoftExchangeNotificationSender.setTemplateService(templateService);
         microsoftExchangeNotificationSender.setDataService(acmDataService);
         microsoftExchangeNotificationSender.setTemplatingEngine(templatingEngine);
+
+        NotificationConfig notificationConfig = new NotificationConfig();
+        notificationConfig.setBaseUrl(BASE_URL);
+        microsoftExchangeNotificationSender.setNotificationConfig(notificationConfig);
     }
 
     @Test

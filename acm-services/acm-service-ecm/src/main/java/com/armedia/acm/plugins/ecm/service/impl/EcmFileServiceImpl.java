@@ -41,6 +41,7 @@ import com.armedia.acm.objectonverter.ArkCaseBeanUtils;
 import com.armedia.acm.plugins.ecm.dao.AcmContainerDao;
 import com.armedia.acm.plugins.ecm.dao.AcmFolderDao;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
+import com.armedia.acm.plugins.ecm.exception.LinkAlreadyExistException;
 import com.armedia.acm.plugins.ecm.model.AcmCmisObject;
 import com.armedia.acm.plugins.ecm.model.AcmCmisObjectList;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
@@ -73,8 +74,9 @@ import com.armedia.acm.services.authenticationtoken.dao.AuthenticationTokenDao;
 import com.armedia.acm.services.authenticationtoken.model.AuthenticationToken;
 import com.armedia.acm.services.authenticationtoken.model.AuthenticationTokenConstants;
 import com.armedia.acm.services.participants.service.AcmParticipantService;
+import com.armedia.acm.services.search.exception.SolrException;
 import com.armedia.acm.services.search.model.SearchConstants;
-import com.armedia.acm.services.search.model.SolrCore;
+import com.armedia.acm.services.search.model.solr.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.search.service.SearchResults;
 import com.armedia.acm.web.api.MDCConstants;
@@ -196,17 +198,11 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     public CmisObject findObjectById(String cmisRepositoryId, String cmisId) throws Exception
     {
         Map<String, Object> properties = new HashMap<>();
-        properties.put(EcmFileConstants.CONFIGURATION_REFERENCE, cmisConfigUtils.getCmisConfiguration(cmisRepositoryId));
+        properties.put(EcmFileConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID);
+        properties.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, EcmFileCamelUtils.getCmisUser());
+        properties.put(EcmFileConstants.CMIS_OBJECT_ID, cmisId);
 
-        MuleMessage muleMessage = getMuleContextManager().send("vm://getObjectById.in", cmisId, properties);
-
-        if (muleMessage.getInboundProperty("findObjectByIdException") != null)
-        {
-            throw (Exception) muleMessage.getInboundProperty("findObjectByIdException");
-        }
-
-        return (CmisObject) muleMessage.getPayload();
-
+        return (CmisObject) getCamelContextManager().send(ArkCaseCMISActions.GET_OBJECT_BY_ID, properties);
     }
 
     @Override
@@ -974,6 +970,8 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
 
         object.setStatus(getSearchResults().extractString(doc, SearchConstants.PROPERTY_STATUS));
 
+        object.setLink(getSearchResults().extractBoolean(doc, SearchConstants.PROPERTY_LINK));
+
         if (object.getObjectType().equals(EcmFileConstants.FILE))
         {
             EcmFile file = getEcmFileDao().find(object.getObjectId());
@@ -1038,7 +1036,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         }
         String internalFileName = getFolderAndFilesUtils().createUniqueIdentificator(file.getFileName());
         Map<String, Object> props = new HashMap<>();
-        props.put(EcmFileConstants.ECM_FILE_ID, getFolderAndFilesUtils().getActiveVersionCmisId(file));
+        props.put(EcmFileConstants.CMIS_DOCUMENT_ID, getFolderAndFilesUtils().getActiveVersionCmisId(file));
         props.put(EcmFileConstants.DST_FOLDER_ID, targetFolder.getCmisFolderId());
         props.put(EcmFileConstants.FILE_NAME, internalFileName);
         props.put(EcmFileConstants.FILE_MIME_TYPE, file.getFileActiveVersionMimeType());
@@ -1047,39 +1045,28 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         {
             cmisRepositoryId = ecmFileConfig.getDefaultCmisId();
         }
-        props.put(EcmFileConstants.CONFIGURATION_REFERENCE, cmisConfigUtils.getCmisConfiguration(cmisRepositoryId));
-        props.put(EcmFileConstants.VERSIONING_STATE, cmisConfigUtils.getVersioningState(cmisRepositoryId));
-        EcmFile result;
+        props.put(EcmFileConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID);
+        props.put(EcmFileConstants.VERSIONING_STATE, getCamelContextManager().getRepositoryConfigs()
+                .get(ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID).getCmisVersioningState());
+        props.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, EcmFileCamelUtils.getCmisUser());
 
         try
         {
-            MuleMessage message = getMuleContextManager().send(EcmFileConstants.MULE_ENDPOINT_COPY_FILE, file, props);
-
-            if (message.getInboundPropertyNames().contains(EcmFileConstants.COPY_FILE_EXCEPTION_INBOUND_PROPERTY))
-            {
-                MuleException muleException = message.getInboundProperty(EcmFileConstants.COPY_FILE_EXCEPTION_INBOUND_PROPERTY);
-                log.error("File can not be copied successfully {} ", muleException.getMessage(), muleException);
-                throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_COPY_FILE, EcmFileConstants.OBJECT_FILE_TYPE, fileId,
-                        "File " + file.getFileName() + " can not be copied successfully", muleException);
-            }
-
-            Document cmisObject = message.getPayload(Document.class);
+            Document cmisdocument = (Document) getCamelContextManager().send(ArkCaseCMISActions.COPY_DOCUMENT, props);
 
             EcmFileVersion fileCopyVersion = new EcmFileVersion();
-            fileCopyVersion.setCmisObjectId(cmisObject.getId());
-            fileCopyVersion.setVersionTag(cmisObject.getVersionLabel());
+            fileCopyVersion.setCmisObjectId(cmisdocument.getPropertyValue("alfcmis:nodeRef"));
+            fileCopyVersion.setVersionTag(cmisdocument.getVersionLabel());
             copyFileVersionMetadata(file, fileCopyVersion);
 
-            EcmFile fileCopy = copyEcmFile(file, targetFolder, targetContainer, fileCopyVersion, cmisObject.getVersionSeriesId(),
-                    cmisObject.getVersionLabel());
+            EcmFile fileCopy = copyEcmFile(file, targetFolder, targetContainer, fileCopyVersion, cmisdocument.getVersionSeriesId(),
+                    cmisdocument.getVersionLabel());
 
-            result = getEcmFileDao().save(fileCopy);
+            EcmFile result = getEcmFileDao().save(fileCopy);
 
-            result = getFileParticipantService().setFileParticipantsFromParentFolder(result);
-
-            return result;
+            return getFileParticipantService().setFileParticipantsFromParentFolder(result);
         }
-        catch (MuleException | PersistenceException e)
+        catch (PersistenceException | ArkCaseFileRepositoryException e)
         {
             log.error("Could not copy file {} ", e.getMessage(), e);
             throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_COPY_FILE, EcmFileConstants.OBJECT_FILE_TYPE, file.getId(),
@@ -1325,7 +1312,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
                 startRow += maxRows;
             } while (docs != null && docs.length() > 0);
         }
-        catch (MuleException e)
+        catch (SolrException e)
         {
             log.error("Cannot take total count. 'Parent Object Type': {}, 'Parent Object ID': {}", parentObjectType, parentObjectId);
         }
@@ -1473,8 +1460,10 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         {
             cmisRepositoryId = ecmFileConfig.getDefaultCmisId();
         }
-        props.put(EcmFileConstants.CONFIGURATION_REFERENCE, cmisConfigUtils.getCmisConfiguration(cmisRepositoryId));
-        props.put(EcmFileConstants.VERSIONING_STATE, cmisConfigUtils.getVersioningState(cmisRepositoryId));
+        props.put(EcmFileConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID);
+        props.put(EcmFileConstants.VERSIONING_STATE,
+                camelContextManager.getRepositoryConfigs().get(ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID).getCmisVersioningState());
+        props.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, EcmFileCamelUtils.getCmisUser());
 
         AcmContainer container = getOrCreateContainer(targetObjectType, targetObjectId, cmisRepositoryId);
 
@@ -1482,13 +1471,12 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
 
         try
         {
-            MuleMessage message = getMuleContextManager().send(EcmFileConstants.MULE_ENDPOINT_MOVE_FILE, file, props);
-            CmisObject cmisObject = message.getPayload(CmisObject.class);
+            Object cmisObject = getCamelContextManager().send(ArkCaseCMISActions.MOVE_DOCUMENT, props);
 
             if (cmisObject instanceof Document)
             {
                 Document cmisDocument = (Document) cmisObject;
-                file.setVersionSeriesId(cmisDocument.getVersionSeriesId());
+                file.setVersionSeriesId(cmisDocument.getPropertyValue(EcmFileConstants.REPOSITORY_VERSION_ID));
             }
             file.setContainer(container);
 
@@ -1500,7 +1488,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
 
             return movedFile;
         }
-        catch (PersistenceException | MuleException e)
+        catch (PersistenceException | ArkCaseFileRepositoryException e)
         {
             log.error("Could not move file {} ", e.getMessage(), e);
             throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_MOVE_FILE, EcmFileConstants.OBJECT_FILE_TYPE, file.getId(),
@@ -1656,8 +1644,22 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         }
         try
         {
-            recycleBinItem = getRecycleBinItemService().putFileIntoRecycleBin(file, authentication, session);
-            log.info("File {} successfully moved into recycle bin by user: {}", objectId, file.getModifier());
+            if (!file.isLink())
+            {
+                recycleBinItem = getRecycleBinItemService().putFileIntoRecycleBin(file, authentication, session);
+                log.info("File {} successfully moved into recycle bin by user: {}", objectId, file.getModifier());
+
+                List<EcmFile> fileLinks = getEcmFileDao().getFileLinks(file.getVersionSeriesId());
+                for (EcmFile link : fileLinks)
+                {
+                    getEcmFileDao().deleteFile(link.getFileId());
+                }
+            }
+            else
+            {
+                getEcmFileDao().deleteFile(objectId);
+            }
+
         }
         catch (PersistenceException e)
         {
@@ -1746,29 +1748,29 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
             throw new AcmObjectNotFoundException(EcmFileConstants.OBJECT_FILE_TYPE, fileId, "File not found", null);
         }
         Map<String, Object> props = new HashMap<>();
-        props.put(EcmFileConstants.ECM_FILE_ID, file.getVersionSeriesId());
+        props.put(EcmFileConstants.CMIS_DOCUMENT_ID, file.getVersionSeriesId());
         props.put(EcmFileConstants.NEW_FILE_NAME, newFileName);
         String cmisRepositoryId = file.getCmisRepositoryId();
         if (cmisRepositoryId == null)
         {
             cmisRepositoryId = ecmFileConfig.getDefaultCmisId();
         }
-        props.put(EcmFileConstants.CONFIGURATION_REFERENCE, cmisConfigUtils.getCmisConfiguration(cmisRepositoryId));
+        props.put(EcmFileConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID);
+        props.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, EcmFileCamelUtils.getCmisUser());
 
         EcmFile renamedFile;
         try
         {
-            getMuleContextManager().send(EcmFileConstants.MULE_ENDPOINT_RENAME_FILE, file, props);
+            getCamelContextManager().send(ArkCaseCMISActions.RENAME_DOCUMENT, props);
             file.setFileName(newFileName);
             renamedFile = getEcmFileDao().save(file);
             return renamedFile;
         }
-        catch (MuleException e)
+        catch (ArkCaseFileRepositoryException e)
         {
             log.error("Could not rename file {} ", e.getMessage(), e);
             throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_RENAME_FILE, EcmFileConstants.OBJECT_FILE_TYPE,
                     file.getId(), "Could not rename file", e);
-
         }
     }
 
@@ -1881,6 +1883,113 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
             log.error("File upload was unsuccessful.", e);
         }
         return fileName;
+    }
+
+    @Override
+    @Transactional
+    @AcmAcquireAndReleaseObjectLock(objectIdArgIndex = 0, objectType = "FILE", lockType = "READ")
+    @AcmAcquireAndReleaseObjectLock(objectIdArgIndex = 3, objectType = "FOLDER", lockType = "WRITE", lockChildObjects = false, unlockChildObjects = false)
+    public EcmFile copyFileAsLink(Long fileId, Long targetObjectId, String targetObjectType, Long dstFolderId)
+            throws AcmUserActionFailedException, AcmObjectNotFoundException, LinkAlreadyExistException
+    {
+        try
+        {
+            AcmFolder folder = folderDao.find(dstFolderId);
+
+            AcmContainer container = getOrCreateContainer(targetObjectType, targetObjectId);
+
+            return copyFileAsLink(fileId, folder, container);
+        }
+        catch (AcmCreateObjectFailedException e)
+        {
+            log.error("Could not copy file {}", e.getMessage(), e);
+            throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_COPY_FILE, EcmFileConstants.OBJECT_FILE_TYPE, fileId,
+                    "Could not copy file", e);
+        }
+    }
+
+    @Override
+    @AcmAcquireAndReleaseObjectLock(objectIdArgIndex = 0, objectType = "FILE", lockType = "READ")
+    @AcmAcquireAndReleaseObjectLock(acmObjectArgIndex = 1, objectType = "FOLDER", lockType = "WRITE", lockChildObjects = false, unlockChildObjects = false)
+    public EcmFile copyFileAsLink(Long fileId, AcmFolder targetFolder, AcmContainer targetContainer)
+            throws AcmUserActionFailedException, AcmObjectNotFoundException, LinkAlreadyExistException
+    {
+        EcmFile file = getEcmFileDao().find(fileId);
+
+        if (file == null || targetFolder == null)
+        {
+            throw new AcmObjectNotFoundException(EcmFileConstants.OBJECT_FILE_TYPE, fileId, "File or Destination folder not found", null);
+        }
+
+        // Check if link already exists in same directory
+        if (getEcmFileDao().getFileLinkInCurrentDirectory(file.getVersionSeriesId(), targetFolder.getId()) != null)
+        {
+            log.error("File with version series id {} already exist in current directory", file.getVersionSeriesId());
+            throw new LinkAlreadyExistException("Link for file " + file.getFileName() + " already exist " +
+                    "in current directory");
+        }
+
+        EcmFile savedFile;
+
+        try
+        {
+
+            EcmFileVersion fileCopyVersion = new EcmFileVersion();
+            fileCopyVersion.setCmisObjectId(file.getVersions().get(file.getVersions().size() - 1).getCmisObjectId());
+            fileCopyVersion.setVersionTag(file.getActiveVersionTag());
+            copyFileVersionMetadata(file, fileCopyVersion);
+
+            EcmFile fileCopy = copyEcmFile(file, targetFolder, targetContainer, fileCopyVersion, file.getVersionSeriesId(),
+                    file.getActiveVersionTag());
+            fileCopy.setLink(true);
+
+            savedFile = getEcmFileDao().save(fileCopy);
+
+            savedFile = getFileParticipantService().setFileParticipantsFromParentFolder(savedFile);
+
+            return savedFile;
+        }
+        catch (PersistenceException e)
+        {
+            log.error("Could not create link to file {} ", e.getMessage(), e);
+            throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_COPY_FILE, EcmFileConstants.OBJECT_FILE_TYPE, file.getId(),
+                    "Could not create link to file", e);
+        }
+    }
+
+    @Override
+    public List<EcmFile> getFileLinks(Long fileId) throws AcmObjectNotFoundException
+    {
+        EcmFile file = getEcmFileDao().find(fileId);
+        if (file == null)
+        {
+            throw new AcmObjectNotFoundException(EcmFileConstants.OBJECT_FILE_TYPE, fileId, "File or Destination folder not found", null);
+        }
+        return getEcmFileDao().getFileLinks(file.getVersionSeriesId());
+    }
+
+    @Override
+    public void updateFileLinks(EcmFile file) throws AcmObjectNotFoundException
+    {
+        List<EcmFile> links = getFileLinks(file.getFileId());
+        links.forEach(f -> {
+            f.setFileType(file.getFileType());
+            f.setActiveVersionTag(file.getActiveVersionTag());
+            f.setFileName(file.getFileName());
+            f.setContainer(file.getContainer());
+            f.setStatus(file.getStatus());
+            f.setCategory(file.getCategory());
+            f.setFileActiveVersionMimeType(file.getFileActiveVersionMimeType());
+            f.setClassName(file.getClassName());
+            f.setFileActiveVersionNameExtension(file.getFileActiveVersionNameExtension());
+            f.setFileSource(file.getFileSource());
+            f.setLegacySystemId(file.getLegacySystemId());
+            f.setPageCount(file.getPageCount());
+            f.setSecurityField(file.getSecurityField());
+            f.getVersions().get(0).setVersionTag(file.getActiveVersionTag());
+
+            getEcmFileDao().save(f);
+        });
     }
 
     private void deleteAuthenticationTokens(Long fileId)

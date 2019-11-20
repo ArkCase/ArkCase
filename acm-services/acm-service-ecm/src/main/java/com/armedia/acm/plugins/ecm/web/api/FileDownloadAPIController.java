@@ -64,13 +64,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 @RequestMapping({ "/api/v1/plugin/ecm", "/api/latest/plugin/ecm" })
 public class FileDownloadAPIController implements ApplicationEventPublisherAware
@@ -88,14 +85,6 @@ public class FileDownloadAPIController implements ApplicationEventPublisherAware
     private Logger log = LogManager.getLogger(getClass());
 
     private ObjectConverter objectConverter;
-
-    private PropertyFileManager propertyFileManager;
-
-    private String emailSenderProperties;
-    
-    private EcmFileService ecmFileService;
-
-    private EmailSenderConfig emailSenderConfig;
 
     // #parentObjectType == 'USER_ORG' applies to uploading profile picture
     @PreAuthorize("hasPermission(#fileId, 'FILE', 'read|group-read|write|group-write') or #parentObjectType == 'USER_ORG'")
@@ -178,8 +167,6 @@ public class FileDownloadAPIController implements ApplicationEventPublisherAware
         }
 
         String fileName = filePayload.getFileName();
-        String fileKey = fileName;
-        String fileExtension = "";
         // endWith will throw a NullPointerException on a null argument. But a file is not required to have an
         // extension... so the extension can be null. So we have to guard against it.
         if (ecmFileVersion != null)
@@ -188,7 +175,6 @@ public class FileDownloadAPIController implements ApplicationEventPublisherAware
                     && !fileName.endsWith(ecmFileVersion.getVersionFileNameExtension()))
             {
                 fileName = fileName + ecmFileVersion.getVersionFileNameExtension();
-                fileExtension = ecmFileVersion.getVersionFileNameExtension();
             }
         }
         else
@@ -197,39 +183,14 @@ public class FileDownloadAPIController implements ApplicationEventPublisherAware
                     && !fileName.endsWith(ecmFile.getFileActiveVersionNameExtension()))
             {
                 fileName = fileName + ecmFile.getFileActiveVersionNameExtension();
-                fileExtension = ecmFile.getFileActiveVersionNameExtension();
             }
         }
 
         InputStream fileIs = null;
 
-        InputStream pdfConvertedIs = null;
-        File tmpPdfConvertedFile = null;
-
         try
         {
             fileIs = filePayload.getStream();
-
-            //Convert file to PDF if set in Admin panel
-
-            Boolean convertFileToPdf = false;
-
-            convertFileToPdf = emailSenderConfig.getConvertDocumentsToPdf();
-
-            if(convertFileToPdf && !".pdf".equals(fileExtension))
-            {
-                tmpPdfConvertedFile = ecmFileService.convertFile(fileKey,version,fileExtension,fileName,mimeType,ecmFile);
-
-                if(tmpPdfConvertedFile.exists() && tmpPdfConvertedFile.length() > 0)
-                {
-                    pdfConvertedIs = new FileInputStream(tmpPdfConvertedFile);
-                    fileIs = pdfConvertedIs;
-                    fileName = fileKey.concat(".pdf");
-                    mimeType = "application/pdf";
-                }
-            }
-            //
-
             if (!isInline)
             {
                 response.setHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
@@ -268,23 +229,6 @@ public class FileDownloadAPIController implements ApplicationEventPublisherAware
                 {
                     log.error("Could not close CMIS content stream: {}", e.getMessage(), e);
                 }
-            }
-
-            if (Objects.nonNull(pdfConvertedIs))
-            {
-                try
-                {
-                    pdfConvertedIs.close();
-                }
-                catch (IOException e)
-                {
-                    log.error("Could not close input stream: {}", e.getMessage(), e);
-                }
-            }
-
-            if(Objects.nonNull(tmpPdfConvertedFile) && tmpPdfConvertedFile.exists())
-            {
-                FileUtils.deleteQuietly(tmpPdfConvertedFile);
             }
         }
     }

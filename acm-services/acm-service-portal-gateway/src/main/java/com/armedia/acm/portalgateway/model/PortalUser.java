@@ -69,6 +69,8 @@ public class PortalUser
 
     private String portalUserId;
 
+    private String acmUserId;
+
     private String prefix;
 
     private String firstName;
@@ -76,8 +78,6 @@ public class PortalUser
     private String middleName;
 
     private String lastName;
-
-    private String title;
 
     private String email;
 
@@ -99,6 +99,10 @@ public class PortalUser
 
     private Long ecmFileId;
 
+    private String organization;
+
+    private String position;
+
     /**
      * @return the portalUserId
      */
@@ -114,6 +118,23 @@ public class PortalUser
     public void setPortalUserId(String portalUserId)
     {
         this.portalUserId = portalUserId;
+    }
+
+    /**
+     * @return the acmUserId
+     */
+    public String getAcmUserId()
+    {
+        return acmUserId;
+    }
+
+    /**
+     * @param acmUserId
+     *            the acmUserId to set
+     */
+    public void setAcmUserId(String acmUserId)
+    {
+        this.acmUserId = acmUserId;
     }
 
     /**
@@ -183,23 +204,6 @@ public class PortalUser
     public void setLastName(String lastName)
     {
         this.lastName = lastName;
-    }
-
-    /**
-     * @return the title
-     */
-    public String getTitle()
-    {
-        return title;
-    }
-
-    /**
-     * @param title
-     *            the title to set
-     */
-    public void setTitle(String title)
-    {
-        this.title = title;
     }
 
     /**
@@ -336,6 +340,33 @@ public class PortalUser
     public void setCountry(String country)
     {
         this.country = country;
+    }
+
+    /**
+     * @return the organization
+     */
+    public String getOrganization()
+    {
+        return organization;
+    }
+
+    /**
+     * @param organization
+     *            the organization to set
+     */
+    public void setOrganization(String organization)
+    {
+        this.organization = organization;
+    }
+
+    public String getPosition()
+    {
+        return position;
+    }
+
+    public void setPosition(String position)
+    {
+        this.position = position;
     }
 
     /**

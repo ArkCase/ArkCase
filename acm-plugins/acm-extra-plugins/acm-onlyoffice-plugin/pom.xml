@@ -70,7 +70,6 @@
         <dependency>
             <groupId>com.nimbusds</groupId>
             <artifactId>nimbus-jose-jwt</artifactId>
-            <version>5.8</version>
         </dependency>
     </dependencies>
 

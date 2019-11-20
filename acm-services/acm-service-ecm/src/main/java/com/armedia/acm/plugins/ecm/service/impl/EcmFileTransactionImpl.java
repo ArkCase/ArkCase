@@ -64,6 +64,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.tika.exception.TikaException;
 import org.mule.api.MuleException;
+import org.mule.api.MuleMessage;
+import org.mule.module.cmis.connectivity.CMISCloudConnectorConnectionManager;
 import org.slf4j.MDC;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.multipart.MultipartFile;
@@ -397,7 +399,6 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
     @Override
     public EcmFile addFileTransaction(Authentication authentication, String ecmUniqueFilename, AcmContainer container,
             String targetCmisFolderId, EcmFile metadata, MultipartFile file)
-            throws MuleException, IOException
     {
         Document existingCmisDocument = null;
         return addFileTransaction(authentication, ecmUniqueFilename, container, targetCmisFolderId,

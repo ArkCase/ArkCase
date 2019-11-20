@@ -37,12 +37,12 @@ import com.armedia.acm.plugins.person.service.OrganizationEventPublisher;
 import com.armedia.acm.plugins.person.service.OrganizationService;
 import com.armedia.acm.services.participants.model.DecoratedAssignedObjectParticipants;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
-import com.armedia.acm.services.search.model.SolrCore;
+import com.armedia.acm.services.search.exception.SolrException;
+import com.armedia.acm.services.search.model.solr.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 
-import org.mule.api.MuleException;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -124,7 +124,7 @@ public class OrganizationAPIController
             return executeSolrQuery.getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, query, start, n, "");
 
         }
-        catch (MuleException e)
+        catch (SolrException e)
         {
             log.error("Error while executing Solr query: {}", query, e);
             throw new AcmObjectNotFoundException("Organization", null, "Could not retrieve organizations.", e);
@@ -165,7 +165,7 @@ public class OrganizationAPIController
         {
             return executeSolrQuery.getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, query, start, n, "");
         }
-        catch (MuleException e)
+        catch (SolrException e)
         {
             log.error("Error while executing Solr query: {}", query, e);
             throw new AcmObjectNotFoundException("Organization", null,

@@ -105,7 +105,7 @@
         <reactor-spring.version>2.0.7.RELEASE</reactor-spring.version>
         <rome.version>1.0</rome.version>
         <slf4j.version>1.7.25</slf4j.version>
-        <solr-solrj.version>6.6.0</solr-solrj.version>
+        <solr-solrj.version>7.6.0</solr-solrj.version>
         <sonar.version>3.5.0.1254</sonar.version>
         <spring.integration.version>4.2.9.RELEASE</spring.integration.version>
         <spring.ldap.version>1.3.2.RELEASE</spring.ldap.version>
@@ -143,6 +143,7 @@
         <kryo.version>5.0.0-RC4</kryo.version>
         <subzero.version>0.9</subzero.version>
         <xsync-version>1.2</xsync-version>
+        <nimbusds.version>5.8</nimbusds.version>
     </properties>
     <organization>
         <name>ArkCase LLC</name>
@@ -1707,14 +1708,19 @@
                 <artifactId>reflections</artifactId>
                 <version>${reflections.version}</version>
             </dependency>
-            
+            <dependency>
+                <groupId>com.nimbusds</groupId>
+                <artifactId>nimbus-jose-jwt</artifactId>
+                <version>${nimbusds.version}</version>
+            </dependency>
+
             <!-- concurrency -->
             <dependency>
                 <groupId>com.antkorwin</groupId>
                 <artifactId>xsync</artifactId>
                 <version>${xsync-version}</version>
             </dependency>
-            
+
         </dependencies>
     </dependencyManagement>
     <dependencies>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.springframework.org/schema/beans"
-       xmlns:aop="http://www.springframework.org/schema/aop"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+    xmlns:aop="http://www.springframework.org/schema/aop"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
 
     <bean id="changeCaseStatusDao" class="com.armedia.acm.plugins.casefile.dao.ChangeCaseStatusDao"/>
     <bean id="dispositionDao" class="com.armedia.acm.plugins.casefile.dao.DispositionDao"/>
@@ -26,31 +26,31 @@
     </bean>
 
     <bean id="pdfChangeCaseFileStateDocumentGenerator"
-          class="com.armedia.acm.plugins.casefile.service.PDFChangeCaseFileStateDocumentGenerator"
-          parent="pdfDocumentGenerator">
+        class="com.armedia.acm.plugins.casefile.service.PDFChangeCaseFileStateDocumentGenerator"
+        parent="pdfDocumentGenerator">
         <property name="dao" ref="caseFileDao"/>
     </bean>
 
     <bean id="changeCaseStatusWorkflowListener123"
-          class="com.armedia.acm.plugins.casefile.service.ChangeCaseStatusWorkflowListener">
+        class="com.armedia.acm.plugins.casefile.service.ChangeCaseStatusWorkflowListener">
         <property name="fileWorkflowBusinessRule" ref="fileWorkflowBusinessRule"/>
         <property name="activitiRuntimeService" ref="activitiRuntimeService"/>
         <property name="changeCaseStatusTaskName" ref="changeCaseStatusTaskName"/>
     </bean>
 
     <bean id="checkChangeCaseFileState"
-          class="com.armedia.acm.plugins.casefile.pipeline.presave.CheckChangeCaseFileState">
+        class="com.armedia.acm.plugins.casefile.pipeline.presave.CheckChangeCaseFileState">
         <property name="caseFileDao" ref="caseFileDao"/>
     </bean>
 
     <bean id="changeCaseFileStateHandler"
-          class="com.armedia.acm.plugins.casefile.pipeline.postsave.ChangeCaseFileStateHandler">
+        class="com.armedia.acm.plugins.casefile.pipeline.postsave.ChangeCaseFileStateHandler">
         <property name="userActionExecutor" ref="userActionExecutor"/>
         <property name="caseFileDao" ref="caseFileDao"/>
     </bean>
 
     <bean id="createTaskChangeCaseFileHandler"
-          class="com.armedia.acm.plugins.casefile.pipeline.postsave.CreateTaskChangeCaseFileHandler">
+        class="com.armedia.acm.plugins.casefile.pipeline.postsave.CreateTaskChangeCaseFileHandler">
         <property name="ecmFileDao" ref="ecmFileDao"/>
     </bean>
 
@@ -70,7 +70,7 @@
     </bean>
 
     <bean id="changeCaseFileStateService"
-          class="com.armedia.acm.plugins.casefile.service.ChangeCaseFileStateService">
+        class="com.armedia.acm.plugins.casefile.service.ChangeCaseFileStateService">
         <property name="caseFileEventUtility" ref="caseFileEventUtility"/>
         <property name="dao" ref="caseFileDao"/>
         <property name="changeCaseStatusDao" ref="changeCaseStatusDao"/>
@@ -78,8 +78,8 @@
     </bean>
 
     <bean id="pdfChangeCaseFileStateDocumentGeneratorHandler"
-          class="com.armedia.acm.plugins.casefile.pipeline.postsave.PDFChangeCaseFileStateDocumentGeneratorHandler"
-          parent="pdfChangeCaseFileStateDocumentGenerator">
+        class="com.armedia.acm.plugins.casefile.pipeline.postsave.PDFChangeCaseFileStateDocumentGeneratorHandler"
+        parent="pdfChangeCaseFileStateDocumentGenerator">
         <property name="pdfChangeCaseFileStateDocumentGenerator" ref="pdfChangeCaseFileStateDocumentGenerator"/>
         <property name="dao" ref="caseFileDao"/>
         <property name="formsTypeCheckService" ref="formsTypeCheckService"/>
@@ -94,7 +94,7 @@
     </bean>
 
     <bean id="dispositionToSolrTransformer"
-          class="com.armedia.acm.plugins.casefile.service.DispositionToSolrTransformer">
+        class="com.armedia.acm.plugins.casefile.service.DispositionToSolrTransformer">
         <property name="dispositionDao" ref="dispositionDao"/>
     </bean>
 
@@ -115,7 +115,7 @@
     </bean>
 
     <bean id="changeCaseStatusProcessEndListener"
-          class="com.armedia.acm.plugins.casefile.service.ChangeCaseStatusProcessEndListener">
+        class="com.armedia.acm.plugins.casefile.service.ChangeCaseStatusProcessEndListener">
         <property name="changeCaseFileStateService" ref="changeCaseFileStateService"/>
     </bean>
 
@@ -130,7 +130,7 @@
     </bean>
 
     <bean id="changeCaseStatusOnBuckslipEventListener"
-          class="com.armedia.acm.plugins.casefile.listener.ChangeCaseStatusOnBuckslipEventListener">
+        class="com.armedia.acm.plugins.casefile.listener.ChangeCaseStatusOnBuckslipEventListener">
         <property name="caseFileDao" ref="caseFileDao"/>
     </bean>
 
@@ -141,7 +141,7 @@
     </bean>
 
     <bean id="caseFileDataAccessUpdateLocator"
-          class="com.armedia.acm.plugins.casefile.service.CaseFileDataAccessUpdateLocator">
+        class="com.armedia.acm.plugins.casefile.service.CaseFileDataAccessUpdateLocator">
         <property name="caseFileDao" ref="caseFileDao"/>
     </bean>
 
@@ -157,7 +157,7 @@
     </bean>
 
     <bean id="queuePropertyFileChangeWatcher"
-          class="com.armedia.acm.plugins.casefile.dao.QueuePropertyFileChangeWatcher">
+        class="com.armedia.acm.plugins.casefile.dao.QueuePropertyFileChangeWatcher">
         <property name="acmQueueDao" ref="acmQueueDao"/>
         <property name="txManager" ref="transactionManager"/>
         <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
@@ -174,19 +174,19 @@
     </bean>
 
     <bean id="caseFileNextPossibleQueuesBusinessRule"
-          class="com.armedia.acm.plugins.casefile.service.CaseFileNextPossibleQueuesBusinessRule"
-          parent="simpleStatelessSingleObjectRuleManager">
+        class="com.armedia.acm.plugins.casefile.service.CaseFileNextPossibleQueuesBusinessRule"
+        parent="simpleStatelessSingleObjectRuleManager">
         <property name="ruleSpreadsheetFilename" value="drools-next-possible-queues-rules.xlsx"/>
     </bean>
 
     <bean id="leaveCurrentQueueBusinessRule"
-          class="com.armedia.acm.plugins.casefile.service.LeaveCurrentQueueBusinessRule"
-          parent="simpleStatelessSingleObjectRuleManager">
+        class="com.armedia.acm.plugins.casefile.service.LeaveCurrentQueueBusinessRule"
+        parent="simpleStatelessSingleObjectRuleManager">
         <property name="ruleSpreadsheetFilename" value="drools-leave-current-queue-rules.xlsx"/>
     </bean>
 
     <bean id="enterQueueBusinessRule" class="com.armedia.acm.plugins.casefile.service.EnterQueueBusinessRule"
-          parent="simpleStatelessSingleObjectRuleManager">
+        parent="simpleStatelessSingleObjectRuleManager">
         <property name="ruleSpreadsheetFilename" value="drools-enter-queue-rules.xlsx"/>
     </bean>
     <bean id="systemConfigurationService" class="com.armedia.acm.plugins.casefile.service.SystemConfigurationService">
@@ -194,12 +194,12 @@
     </bean>
 
     <bean id="onLeaveQueueBusinessRule" class="com.armedia.acm.plugins.casefile.service.OnLeaveQueueBusinessRule"
-          parent="simpleStatelessSingleObjectRuleManager">
+        parent="simpleStatelessSingleObjectRuleManager">
         <property name="ruleSpreadsheetFilename" value="drools-on-leave-queue-rules.xlsx"/>
     </bean>
 
     <bean id="onEnterQueueBusinessRule" class="com.armedia.acm.plugins.casefile.service.OnEnterQueueBusinessRule"
-          parent="simpleStatelessSingleObjectRuleManager">
+        parent="simpleStatelessSingleObjectRuleManager">
         <property name="ruleSpreadsheetFilename" value="drools-on-enter-queue-rules.xlsx"/>
     </bean>
 
@@ -236,4 +236,7 @@
         <property name="caseFileDao" ref="caseFileDao"/>
     </bean>
 
+    <bean id="caseFileTasksService" class="com.armedia.acm.plugins.casefile.service.CaseFileTasksServiceImpl">
+        <property name="childDocumentsSearchService" ref="childDocumentsSearchService"/>
+    </bean>
 </beans>

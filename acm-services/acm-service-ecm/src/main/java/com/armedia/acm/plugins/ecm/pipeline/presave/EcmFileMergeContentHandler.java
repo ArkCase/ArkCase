@@ -29,13 +29,13 @@ package com.armedia.acm.plugins.ecm.pipeline.presave;
 
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.pipeline.EcmFileTransactionPipelineContext;
-import com.armedia.acm.plugins.ecm.utils.EcmFileMuleUtils;
+import com.armedia.acm.plugins.ecm.utils.EcmFileCamelUtils;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.pipeline.handler.PipelineHandler;
 
 import org.apache.chemistry.opencmis.client.api.Document;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -47,7 +47,7 @@ public class EcmFileMergeContentHandler implements PipelineHandler<EcmFile, EcmF
 {
     private transient final Logger log = LogManager.getLogger(getClass());
 
-    private EcmFileMuleUtils ecmFileMuleUtils;
+    private EcmFileCamelUtils ecmFileCamelUtils;
 
     @Override
     public void execute(EcmFile entity, EcmFileTransactionPipelineContext pipelineContext) throws PipelineProcessException
@@ -63,12 +63,12 @@ public class EcmFileMergeContentHandler implements PipelineHandler<EcmFile, EcmF
             {
                 // Updates the Alfresco content repository with the new merged version of the file
                 InputStream mergedFileInputStream = new ByteArrayInputStream(pipelineContext.getMergedFileByteArray());
-                Document updatedDocument = ecmFileMuleUtils.updateFile(entity, pipelineContext.getEcmFile(), mergedFileInputStream);
+                Document updatedDocument = ecmFileCamelUtils.updateFile(entity, pipelineContext.getEcmFile(), mergedFileInputStream);
                 pipelineContext.setCmisDocument(updatedDocument);
             }
             catch (Exception e)
             {
-                log.error("mule pre save handler failed: {}", e.getMessage(), e);
+                log.error("Camel pre save handler failed: {}", e.getMessage(), e);
                 throw new PipelineProcessException(e);
             }
         }
@@ -80,13 +80,13 @@ public class EcmFileMergeContentHandler implements PipelineHandler<EcmFile, EcmF
 
     }
 
-    public EcmFileMuleUtils getEcmFileMuleUtils()
+    public EcmFileCamelUtils getEcmFileCamelUtils()
     {
-        return ecmFileMuleUtils;
+        return ecmFileCamelUtils;
     }
 
-    public void setEcmFileMuleUtils(EcmFileMuleUtils ecmFileMuleUtils)
+    public void setEcmFileCamelUtils(EcmFileCamelUtils ecmFileCamelUtils)
     {
-        this.ecmFileMuleUtils = ecmFileMuleUtils;
+        this.ecmFileCamelUtils = ecmFileCamelUtils;
     }
 }

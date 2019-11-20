@@ -94,8 +94,6 @@ public class FileDownloadAPIControllerTest extends EasyMockSupport
     private ContentStream mockContentStream;
     private FolderAndFilesUtils mockFolderAndFilesUtils;
     private CmisConfigUtils mockCmisConfigUtils;
-    private PropertyFileManager mockPropertyFileManager;
-    private EmailSenderConfig mockEmailSenderConfig;
 
     @Autowired
     private ExceptionHandlerExceptionResolver exceptionResolver;
@@ -113,8 +111,6 @@ public class FileDownloadAPIControllerTest extends EasyMockSupport
         mockContentStream = createMock(ContentStream.class);
         mockFolderAndFilesUtils = createMock(FolderAndFilesUtils.class);
         mockCmisConfigUtils = createMock(CmisConfigUtils.class);
-        mockPropertyFileManager = createMock(PropertyFileManager.class);
-        mockEmailSenderConfig = createMock(EmailSenderConfig.class);
 
         unit = new FileDownloadAPIController();
 
@@ -124,8 +120,6 @@ public class FileDownloadAPIControllerTest extends EasyMockSupport
         unit.setFolderAndFilesUtils(mockFolderAndFilesUtils);
         unit.setCmisConfigUtils(mockCmisConfigUtils);
         unit.setObjectConverter(ObjectConverter.createObjectConverterForTests());
-        unit.setPropertyFileManager(mockPropertyFileManager);
-        unit.setEmailSenderConfig(mockEmailSenderConfig);
 
         mockMvc = MockMvcBuilders.standaloneSetup(unit).setHandlerExceptionResolvers(exceptionResolver).build();
     }
@@ -172,7 +166,6 @@ public class FileDownloadAPIControllerTest extends EasyMockSupport
         expect(fromDb.getFileActiveVersionNameExtension()).andReturn(fileNameExtension).anyTimes();
         expect(mockContentStream.getStream()).andReturn(log4jis);
         mockEventPublisher.publishEvent(capture(capturedEvent));
-        expect(mockEmailSenderConfig.getConvertDocumentsToPdf()).andReturn(false);
 
         Map<String, Object> messageProps = new HashMap<>();
         messageProps.put(EcmFileConstants.CMIS_REPOSITORY_ID, repositoryId);
@@ -251,7 +244,6 @@ public class FileDownloadAPIControllerTest extends EasyMockSupport
         expect(mockContentStream.getFileName()).andReturn(fileName);
         expect(ecmFileVersion.getVersionFileNameExtension()).andReturn(fileNameExtension).anyTimes();
         expect(mockContentStream.getStream()).andReturn(log4jis);
-        expect(mockEmailSenderConfig.getConvertDocumentsToPdf()).andReturn(false);
         mockEventPublisher.publishEvent(capture(capturedEvent));
 
         Map<String, Object> messageProps = new HashMap<>();
@@ -331,7 +323,6 @@ public class FileDownloadAPIControllerTest extends EasyMockSupport
         expect(mockContentStream.getFileName()).andReturn(fileName);
         expect(fromDb.getFileActiveVersionNameExtension()).andReturn(fileNameExtension).anyTimes();
         expect(mockContentStream.getStream()).andReturn(log4jis);
-        expect(mockEmailSenderConfig.getConvertDocumentsToPdf()).andReturn(false);
         mockEventPublisher.publishEvent(capture(capturedEvent));
 
         Map<String, Object> messageProps = new HashMap<>();

@@ -66,6 +66,8 @@ public class ConfigurationPropertyService implements InitializingBean
 
     private String resetPropertiesEndpoint;
 
+    private String resetFilePropertiesEndpoint;
+
     private static final Logger log = LogManager.getLogger(ConfigurationPropertyService.class);
 
     @Override
@@ -78,7 +80,8 @@ public class ConfigurationPropertyService implements InitializingBean
         String resetPath = (String) configurableEnvironment.getPropertySources()
                 .get("bootstrap").getProperty("configuration.server.reset.path");
         updatePropertiesEndpoint = String.format("%s%s", serverUrl, updatePath);
-        resetPropertiesEndpoint = String.format("%s%s%s", serverUrl, updatePath, resetPath);
+        resetPropertiesEndpoint = String.format("%s%s%s", serverUrl, "/config", resetPath);
+        resetFilePropertiesEndpoint = String.format("%s%s", resetPropertiesEndpoint, "/{applicationName}");
     }
 
     @Autowired
@@ -178,6 +181,21 @@ public class ConfigurationPropertyService implements InitializingBean
         try
         {
             configRestTemplate.delete(resetPropertiesEndpoint, ResponseEntity.class);
+        }
+        catch (RestClientException e)
+        {
+            log.warn("Failed to reset properties due to {}", e.getMessage());
+            throw new ConfigurationPropertyException("Failed to reset configuration", e);
+        }
+    }
+
+    public void resetFilePropertiesToDefault(String applicationName) throws ConfigurationPropertyException
+    {
+        try
+        {
+            Map<String, String> params = new HashMap<>();
+            params.put("applicationName", applicationName);
+            configRestTemplate.delete(resetFilePropertiesEndpoint, params);
         }
         catch (RestClientException e)
         {

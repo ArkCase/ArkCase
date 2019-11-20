@@ -55,9 +55,10 @@
             <beans:property name="portalPersonDao" ref="portalFOIAPersonDao"/>
             <beans:property name="portalInfoDAO" ref="portalInfoDAO"/>
             <beans:property name="ldapUserService" ref="ldapUserService"/>
-            <beans:property name="ldapAuthenticateService" ref="foiaportal_ldapAuthenticateService"/>
             <beans:property name="personDao" ref="acmPersonDao"/>
             <beans:property name="notificationDao" ref="notificationDao"/>
+            <beans:property name="acmContextHolder" ref="acmContextHolder"/>
+            <beans:property name="userDao" ref="userJpaDao"/>
         </beans:bean>
 
         <beans:bean id="portalCreateRequestService" class="gov.foia.service.PortalCreateRequestService">
@@ -329,6 +330,7 @@
             <beans:property name="fileParticipantService" ref="fileParticipantService"/>
             <beans:property name="recycleBinItemService" ref="recycleBinItemServiceImpl"/>
             <beans:property name="authenticationTokenDao" ref="authenticationTokenDao"/>
+            <property name="camelContextManager" ref="camelContextManager"/>
         </beans:bean>
 
         <beans:bean id="foiaConfig" class="gov.foia.model.FoiaConfig" scope="refresh">

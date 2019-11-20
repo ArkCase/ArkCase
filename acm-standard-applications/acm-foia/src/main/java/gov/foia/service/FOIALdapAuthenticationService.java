@@ -36,8 +36,8 @@ import com.armedia.acm.services.users.model.ldap.AcmLdapAuthenticateConfig;
 import com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig;
 import com.armedia.acm.services.users.model.ldap.LdapUser;
 
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.ldap.AuthenticationException;
 import org.springframework.ldap.core.LdapTemplate;
 
@@ -81,7 +81,7 @@ public class FOIALdapAuthenticationService
     public void changeUserPassword(String userName, String currentPassword, String newPassword) throws AcmUserActionFailedException
     {
         log.debug("Changing password for user:{}", userName);
-        AcmUser acmUser = userDao.findByUid(userName);
+        AcmUser acmUser = userDao.findByUserId(userName);
         LdapTemplate ldapTemplate = ldapDao.buildLdapTemplate(ldapAuthenticateConfig, acmUser.getDistinguishedName(), currentPassword);
         try
         {
@@ -91,10 +91,12 @@ public class FOIALdapAuthenticationService
         }
         catch (AcmLdapActionFailedException e)
         {
+            log.debug(e.getMessage(), e);
             throw new AcmUserActionFailedException("change password", "USER", null, "Change password action failed!", e.getCause());
         }
         catch (AuthenticationException e)
         {
+            log.debug(e.getMessage(), e);
             throw new AcmUserActionFailedException("change password", "USER", null, "Change password action failed!", e.getCause());
         }
         try
@@ -125,6 +127,8 @@ public class FOIALdapAuthenticationService
         }
         catch (AcmLdapActionFailedException e)
         {
+
+            log.debug(e.getMessage(), e);
             throw new AcmUserActionFailedException("reset password", "USER", null, "Change password action failed!", e);
         }
         try
@@ -141,7 +145,7 @@ public class FOIALdapAuthenticationService
     public void resetPortalUserPassword(String userName, String password) throws AcmUserActionFailedException
     {
         // TODO change the search for user, external portal has a different reset mechanism.
-        AcmUser acmUser = userDao.findByUid(userName);
+        AcmUser acmUser = userDao.findByUserId(userName);
         if (acmUser == null)
         {
             throw new AcmUserActionFailedException("reset password", "USER", null, "User not found!", null);
@@ -155,6 +159,7 @@ public class FOIALdapAuthenticationService
         }
         catch (AcmLdapActionFailedException e)
         {
+            log.debug(e.getMessage(), e);
             throw new AcmUserActionFailedException("reset password", "USER", null, "Change password action failed!", e);
         }
         try

@@ -31,6 +31,7 @@ import com.armedia.acm.services.dataupdate.service.AcmDataUpdateExecutor;
 import com.armedia.acm.services.dataupdate.service.SolrReindexService;
 import com.armedia.acm.services.notification.model.Notification;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 public class FoiaNotificationDataUpdateExecutor implements AcmDataUpdateExecutor
@@ -47,7 +48,7 @@ public class FoiaNotificationDataUpdateExecutor implements AcmDataUpdateExecutor
     @Override
     public void execute()
     {
-        solrReindexService.reindex(Arrays.asList(Notification.class));
+        solrReindexService.reindex(new ArrayList<>(Arrays.asList(Notification.class)));
     }
 
     public SolrReindexService getSolrReindexService()
