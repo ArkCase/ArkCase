@@ -91,5 +91,4 @@
         <property name="childDocumentsSearchService" ref="childDocumentsSearchService"/>
         <property name="caseFileTasksService" ref="caseFileTasksService"/>
     </bean>
-
 </beans>
