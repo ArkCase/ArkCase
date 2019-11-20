@@ -52,5 +52,10 @@
         <beans:bean id="setReviewRedactionStatusAPIController" class="gov.foia.web.api.SetReviewRedactionStatusAPIController">
             <beans:property name="foiaEcmFileService" ref="ecmFileService"/>
         </beans:bean>
+
+        <bean id="requestFolderStructureAPIController" class="gov.foia.web.api.RequestFolderStructureAPIController">
+            <property name="requestFolderStructureService" ref="requestFolderStructureService"/>
+        </bean>
+
     </beans:beans>
 </beans:beans>

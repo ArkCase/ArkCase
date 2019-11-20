@@ -9,7 +9,7 @@ angular.module('services').service('Case.FolderStructureService', function($http
     function getFolderStructure() {
         return $http({
             method: "GET",
-            url: "api/latest/plugin/casefile/folderstructure/config"
+            url: "api/latest/plugin/request/folderstructure"
         })
     }
 });
