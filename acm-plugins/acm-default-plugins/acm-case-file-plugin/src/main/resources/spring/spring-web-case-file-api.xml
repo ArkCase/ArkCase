@@ -91,4 +91,8 @@
         <property name="childDocumentsSearchService" ref="childDocumentsSearchService"/>
         <property name="caseFileTasksService" ref="caseFileTasksService"/>
     </bean>
+
+    <bean id="caseFileFolderStructureAPIController" class="com.armedia.acm.plugins.casefile.web.api.CaseFileFolderStructureAPIController">
+        <property name="caseFileFolderStructureConfigService" ref="caseFileFolderStructureConfigService"/>
+    </bean>
 </beans>
