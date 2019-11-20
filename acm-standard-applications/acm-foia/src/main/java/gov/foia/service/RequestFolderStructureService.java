@@ -1,4 +1,4 @@
-package com.armedia.acm.plugins.casefile.service;
+package gov.foia.service;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -6,7 +6,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CaseFileFolderStructureConfigService {
+public class RequestFolderStructureService {
     private String folderStructureAsString;
 
     public List<String> getFolderStructure (){
