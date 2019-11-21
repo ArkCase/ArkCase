@@ -110,7 +110,7 @@ angular
             '$timeout',
             'Websockets.MessageHandler',
             function($q, $translate, $modal, $filter, $log, $injector, Store, Util, UtilDateService, ConfigService,
-            PluginService, UserInfoService, Ecm, EmailSenderConfigurationService, LocaleHelper, PublicFlagService, RequestResponseFolderService, MessageService, ObjectLookupService, $timeout, messageHandler) {
+            PluginService, UserInfoService, Ecm, EmailSenderConfigurationService, LocaleHelper, PublicFlagService, RequestResponseFolderService, MessageService, ObjectLookupService, $timeout, MessageHandler) {
                 var cacheTree = new Store.CacheFifo();
                 var cacheFolderList = new Store.CacheFifo();
 
@@ -5276,7 +5276,7 @@ angular
                         });
 
                         DocTree.scope.$bus.subscribe("zip_completed", function (data) {
-                            messageHandler.handleZipGenerationMessage(data.filePath);
+                            MessageHandler.handleZipGenerationMessage(data.filePath);
                         });
 
                         DocTree.scope.$bus.subscribe('object.changed/' + DocTree.getObjType() + '/' + DocTree.getObjId(), function(message) {
