@@ -33,6 +33,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
+import com.armedia.acm.auth.AcmAuthenticationDetails;
 import com.armedia.acm.camelcontext.arkcase.cmis.ArkCaseCMISActions;
 import com.armedia.acm.camelcontext.arkcase.cmis.ArkCaseCMISConstants;
 import com.armedia.acm.camelcontext.context.CamelContextManager;
@@ -64,6 +65,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -118,6 +120,7 @@ public class FileDownloadAPIControllerTest extends EasyMockSupport
         unit.setFolderAndFilesUtils(mockFolderAndFilesUtils);
         unit.setCmisConfigUtils(mockCmisConfigUtils);
         unit.setObjectConverter(ObjectConverter.createObjectConverterForTests());
+        SecurityContextHolder.getContext().setAuthentication(mockAuthentication);
 
         mockMvc = MockMvcBuilders.standaloneSetup(unit).setHandlerExceptionResolvers(exceptionResolver).build();
     }
@@ -155,6 +158,7 @@ public class FileDownloadAPIControllerTest extends EasyMockSupport
         Capture<EcmFileDownloadedEvent> capturedEvent = new Capture<>();
 
         expect(mockAuthentication.getName()).andReturn(user).atLeastOnce();
+        expect(mockAuthentication.getDetails()).andReturn(AcmAuthenticationDetails.class);
         expect(mockFileDao.find(ecmFileId)).andReturn(fromDb);
         expect(mockFolderAndFilesUtils.getVersionCmisId(fromDb, "")).andReturn(cmisId);
         expect(mockFolderAndFilesUtils.getVersion(fromDb, "")).andReturn(null);
@@ -234,6 +238,7 @@ public class FileDownloadAPIControllerTest extends EasyMockSupport
         Capture<EcmFileDownloadedEvent> capturedEvent = new Capture<>();
 
         expect(mockAuthentication.getName()).andReturn(user).atLeastOnce();
+        expect(mockAuthentication.getDetails()).andReturn(AcmAuthenticationDetails.class);
         expect(mockFileDao.find(ecmFileId)).andReturn(fromDb);
         expect(mockFolderAndFilesUtils.getVersionCmisId(fromDb, version)).andReturn(cmisId);
         expect(mockFolderAndFilesUtils.getVersion(fromDb, version)).andReturn(ecmFileVersion);
@@ -313,6 +318,7 @@ public class FileDownloadAPIControllerTest extends EasyMockSupport
         Capture<EcmFileDownloadedEvent> capturedEvent = new Capture<>();
 
         expect(mockAuthentication.getName()).andReturn(user).atLeastOnce();
+        expect(mockAuthentication.getDetails()).andReturn(AcmAuthenticationDetails.class);
         expect(mockFileDao.find(ecmFileId)).andReturn(fromDb);
         expect(mockFolderAndFilesUtils.getVersionCmisId(fromDb, "")).andReturn(cmisId);
         expect(mockFolderAndFilesUtils.getVersion(fromDb, "")).andReturn(null);
