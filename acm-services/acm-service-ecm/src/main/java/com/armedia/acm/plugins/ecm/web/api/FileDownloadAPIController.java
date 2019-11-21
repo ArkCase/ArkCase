@@ -32,15 +32,12 @@ import com.armedia.acm.camelcontext.arkcase.cmis.ArkCaseCMISConstants;
 import com.armedia.acm.camelcontext.context.CamelContextManager;
 import com.armedia.acm.camelcontext.exception.ArkCaseFileRepositoryException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
-import com.armedia.acm.email.model.EmailSenderConfig;
-import com.armedia.acm.files.propertymanager.PropertyFileManager;
 import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.model.EcmFileDownloadedEvent;
 import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
-import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.ecm.utils.CmisConfigUtils;
 import com.armedia.acm.plugins.ecm.utils.EcmFileCamelUtils;
 import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
@@ -48,7 +45,6 @@ import com.armedia.acm.web.api.MDCConstants;
 
 import org.apache.camel.component.cmis.CamelCMISConstants;
 import org.apache.chemistry.opencmis.commons.data.ContentStream;
-import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.JSONObject;
@@ -288,46 +284,6 @@ public class FileDownloadAPIController implements ApplicationEventPublisherAware
     public void setObjectConverter(ObjectConverter objectConverter)
     {
         this.objectConverter = objectConverter;
-    }
-
-    public PropertyFileManager getPropertyFileManager()
-    {
-        return propertyFileManager;
-    }
-
-    public void setPropertyFileManager(PropertyFileManager propertyFileManager)
-    {
-        this.propertyFileManager = propertyFileManager;
-    }
-
-    public String getEmailSenderProperties()
-    {
-        return emailSenderProperties;
-    }
-
-    public void setEmailSenderProperties(String emailSenderProperties)
-    {
-        this.emailSenderProperties = emailSenderProperties;
-    }
-
-    public EcmFileService getEcmFileService() 
-    {
-        return ecmFileService;
-    }
-
-    public void setEcmFileService(EcmFileService ecmFileService) 
-    {
-        this.ecmFileService = ecmFileService;
-    }
-
-    public EmailSenderConfig getEmailSenderConfig()
-    {
-        return emailSenderConfig;
-    }
-
-    public void setEmailSenderConfig(EmailSenderConfig emailSenderConfig)
-    {
-        this.emailSenderConfig = emailSenderConfig;
     }
 
     public CamelContextManager getCamelContextManager()
