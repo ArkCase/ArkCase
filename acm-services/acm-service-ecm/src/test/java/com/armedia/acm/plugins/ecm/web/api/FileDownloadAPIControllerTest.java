@@ -33,7 +33,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
-import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
+import com.armedia.acm.camelcontext.arkcase.cmis.ArkCaseCMISActions;
+import com.armedia.acm.camelcontext.arkcase.cmis.ArkCaseCMISConstants;
+import com.armedia.acm.camelcontext.context.CamelContextManager;
 import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
@@ -43,18 +45,18 @@ import com.armedia.acm.plugins.ecm.model.EcmFileDownloadedEvent;
 import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
 import com.armedia.acm.plugins.ecm.utils.CmisConfigUtils;
 import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
+import com.armedia.acm.web.api.MDCConstants;
 
+import org.apache.camel.component.cmis.CamelCMISConstants;
 import org.apache.chemistry.opencmis.commons.data.ContentStream;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.easymock.Capture;
 import org.easymock.EasyMockSupport;
 import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mule.api.MuleMessage;
-import org.mule.module.cmis.connectivity.CMISCloudConnectorConnectionManager;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.core.io.ClassPathResource;
@@ -86,8 +88,7 @@ public class FileDownloadAPIControllerTest extends EasyMockSupport
     private EcmFileDao mockFileDao;
     private Authentication mockAuthentication;
     private ApplicationEventPublisher mockEventPublisher;
-    private MuleContextManager mockMuleContextManager;
-    private MuleMessage mockMuleMessage;
+    private CamelContextManager camelContextManager;
     private ContentStream mockContentStream;
     private FolderAndFilesUtils mockFolderAndFilesUtils;
     private CmisConfigUtils mockCmisConfigUtils;
@@ -104,8 +105,7 @@ public class FileDownloadAPIControllerTest extends EasyMockSupport
         mockHttpSession = new MockHttpSession();
         mockAuthentication = createMock(Authentication.class);
         mockEventPublisher = createMock(ApplicationEventPublisher.class);
-        mockMuleContextManager = createMock(MuleContextManager.class);
-        mockMuleMessage = createMock(MuleMessage.class);
+        camelContextManager = createMock(CamelContextManager.class);
         mockContentStream = createMock(ContentStream.class);
         mockFolderAndFilesUtils = createMock(FolderAndFilesUtils.class);
         mockCmisConfigUtils = createMock(CmisConfigUtils.class);
@@ -114,7 +114,7 @@ public class FileDownloadAPIControllerTest extends EasyMockSupport
 
         unit.setFileDao(mockFileDao);
         unit.setApplicationEventPublisher(mockEventPublisher);
-        unit.setMuleContextManager(mockMuleContextManager);
+        unit.setCamelContextManager(camelContextManager);
         unit.setFolderAndFilesUtils(mockFolderAndFilesUtils);
         unit.setCmisConfigUtils(mockCmisConfigUtils);
         unit.setObjectConverter(ObjectConverter.createObjectConverterForTests());
@@ -132,6 +132,8 @@ public class FileDownloadAPIControllerTest extends EasyMockSupport
         String fileName = "fileName";
         String fileType = "fileType";
         String fileNameExtension = ".extension";
+        String repositoryId = ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID;
+        String alfrescoUser = "";
 
         Resource log4j = new ClassPathResource("/spring/spring-library-ecm-plugin-test-mule.xml");
         long log4jsize = log4j.getFile().length();
@@ -156,18 +158,17 @@ public class FileDownloadAPIControllerTest extends EasyMockSupport
         expect(mockFileDao.find(ecmFileId)).andReturn(fromDb);
         expect(mockFolderAndFilesUtils.getVersionCmisId(fromDb, "")).andReturn(cmisId);
         expect(mockFolderAndFilesUtils.getVersion(fromDb, "")).andReturn(null);
-        expect(mockMuleMessage.getPayload()).andReturn(mockContentStream).anyTimes();
         expect(mockContentStream.getMimeType()).andReturn(mimeType);
         expect(mockContentStream.getFileName()).andReturn(fileName);
         expect(fromDb.getFileActiveVersionNameExtension()).andReturn(fileNameExtension).anyTimes();
         expect(mockContentStream.getStream()).andReturn(log4jis);
         mockEventPublisher.publishEvent(capture(capturedEvent));
 
-        CMISCloudConnectorConnectionManager cmisConfig = new CMISCloudConnectorConnectionManager();
-        expect(mockCmisConfigUtils.getCmisConfiguration(fromDb.getCmisRepositoryId())).andReturn(cmisConfig);
         Map<String, Object> messageProps = new HashMap<>();
-        messageProps.put(EcmFileConstants.CONFIGURATION_REFERENCE, cmisConfig);
-        expect(mockMuleContextManager.send("vm://downloadFileFlow.in", "cmisId", messageProps)).andReturn(mockMuleMessage);
+        messageProps.put(EcmFileConstants.CMIS_REPOSITORY_ID, repositoryId);
+        messageProps.put(CamelCMISConstants.CMIS_OBJECT_ID, cmisId);
+        messageProps.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, alfrescoUser);
+        expect(camelContextManager.send(ArkCaseCMISActions.DOWNLOAD_DOCUMENT, messageProps)).andReturn(mockContentStream);
 
         replayAll();
         MvcResult result = mockMvc.perform(
@@ -204,6 +205,8 @@ public class FileDownloadAPIControllerTest extends EasyMockSupport
         String fileType = "fileType";
         String fileNameExtension = ".extension";
         String version = "2.0";
+        String repositoryId = ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID;
+        String alfrescoUser = "";
 
         Resource log4j = new ClassPathResource("/spring/spring-library-ecm-plugin-test-mule.xml");
         long log4jsize = log4j.getFile().length();
@@ -234,18 +237,17 @@ public class FileDownloadAPIControllerTest extends EasyMockSupport
         expect(mockFileDao.find(ecmFileId)).andReturn(fromDb);
         expect(mockFolderAndFilesUtils.getVersionCmisId(fromDb, version)).andReturn(cmisId);
         expect(mockFolderAndFilesUtils.getVersion(fromDb, version)).andReturn(ecmFileVersion);
-        expect(mockMuleMessage.getPayload()).andReturn(mockContentStream).anyTimes();
         expect(mockContentStream.getMimeType()).andReturn(mimeType);
         expect(mockContentStream.getFileName()).andReturn(fileName);
         expect(ecmFileVersion.getVersionFileNameExtension()).andReturn(fileNameExtension).anyTimes();
         expect(mockContentStream.getStream()).andReturn(log4jis);
         mockEventPublisher.publishEvent(capture(capturedEvent));
 
-        CMISCloudConnectorConnectionManager cmisConfig = new CMISCloudConnectorConnectionManager();
-        expect(mockCmisConfigUtils.getCmisConfiguration(fromDb.getCmisRepositoryId())).andReturn(cmisConfig);
         Map<String, Object> messageProps = new HashMap<>();
-        messageProps.put(EcmFileConstants.CONFIGURATION_REFERENCE, cmisConfig);
-        expect(mockMuleContextManager.send("vm://downloadFileFlow.in", "cmisId", messageProps)).andReturn(mockMuleMessage);
+        messageProps.put(EcmFileConstants.CMIS_REPOSITORY_ID, repositoryId);
+        messageProps.put(CamelCMISConstants.CMIS_OBJECT_ID, cmisId);
+        messageProps.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, alfrescoUser);
+        expect(camelContextManager.send(ArkCaseCMISActions.DOWNLOAD_DOCUMENT, messageProps)).andReturn(mockContentStream);
 
         replayAll();
         MvcResult result = mockMvc
@@ -288,6 +290,8 @@ public class FileDownloadAPIControllerTest extends EasyMockSupport
         String fileType = "fileType";
         String fileNameExtension = ".extension";
         String tikaMimeType = "application/pdf";
+        String repositoryId = ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID;
+        String alfrescoUser = "";
 
         Resource log4j = new ClassPathResource("/spring/spring-library-ecm-plugin-test-mule.xml");
         long log4jsize = log4j.getFile().length();
@@ -312,18 +316,17 @@ public class FileDownloadAPIControllerTest extends EasyMockSupport
         expect(mockFileDao.find(ecmFileId)).andReturn(fromDb);
         expect(mockFolderAndFilesUtils.getVersionCmisId(fromDb, "")).andReturn(cmisId);
         expect(mockFolderAndFilesUtils.getVersion(fromDb, "")).andReturn(null);
-        expect(mockMuleMessage.getPayload()).andReturn(mockContentStream).anyTimes();
         expect(mockContentStream.getMimeType()).andReturn(mimeType);
         expect(mockContentStream.getFileName()).andReturn(fileName);
         expect(fromDb.getFileActiveVersionNameExtension()).andReturn(fileNameExtension).anyTimes();
         expect(mockContentStream.getStream()).andReturn(log4jis);
         mockEventPublisher.publishEvent(capture(capturedEvent));
 
-        CMISCloudConnectorConnectionManager cmisConfig = new CMISCloudConnectorConnectionManager();
-        expect(mockCmisConfigUtils.getCmisConfiguration(fromDb.getCmisRepositoryId())).andReturn(cmisConfig);
         Map<String, Object> messageProps = new HashMap<>();
-        messageProps.put(EcmFileConstants.CONFIGURATION_REFERENCE, cmisConfig);
-        expect(mockMuleContextManager.send("vm://downloadFileFlow.in", "cmisId", messageProps)).andReturn(mockMuleMessage);
+        messageProps.put(EcmFileConstants.CMIS_REPOSITORY_ID, repositoryId);
+        messageProps.put(CamelCMISConstants.CMIS_OBJECT_ID, cmisId);
+        messageProps.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, alfrescoUser);
+        expect(camelContextManager.send(ArkCaseCMISActions.DOWNLOAD_DOCUMENT, messageProps)).andReturn(mockContentStream);
 
         replayAll();
         MvcResult result = mockMvc.perform(

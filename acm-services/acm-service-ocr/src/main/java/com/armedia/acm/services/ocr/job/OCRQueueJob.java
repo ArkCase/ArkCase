@@ -27,6 +27,7 @@ package com.armedia.acm.services.ocr.job;
  * #L%
  */
 
+import com.armedia.acm.camelcontext.exception.ArkCaseFileRepositoryException;
 import com.armedia.acm.core.exceptions.AcmObjectLockException;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
@@ -55,9 +56,8 @@ import com.armedia.acm.tool.mediaengine.model.MediaEngineDTO;
 
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.runtime.ProcessInstance;
-import org.mule.api.MuleException;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.util.List;
@@ -137,7 +137,7 @@ public class OCRQueueJob
                 moveSingleProcessInstanceFromQueue(processInstance);
             }
             catch (AcmObjectLockException | GetMediaEngineException | SaveMediaEngineException
-                    | CreateMediaEngineToolException | MediaEngineProviderNotFound | IOException | MuleException e)
+                    | CreateMediaEngineToolException | MediaEngineProviderNotFound | IOException | ArkCaseFileRepositoryException e)
             {
                 LOG.error("Could not move OCR from the queue. REASON=[{}]", e.getMessage(), e);
             }
@@ -146,7 +146,7 @@ public class OCRQueueJob
 
     public void moveSingleProcessInstanceFromQueue(ProcessInstance processInstance)
             throws GetMediaEngineException, SaveMediaEngineException, CreateMediaEngineToolException,
-            MediaEngineProviderNotFound, IOException, MuleException
+            MediaEngineProviderNotFound, IOException, ArkCaseFileRepositoryException
     {
         // For OCR, ids will always return only one id.
         List<Long> ids = (List<Long>) processInstance.getProcessVariables().get("IDS");

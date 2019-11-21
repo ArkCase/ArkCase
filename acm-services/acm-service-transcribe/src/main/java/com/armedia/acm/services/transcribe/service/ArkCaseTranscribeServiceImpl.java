@@ -27,6 +27,7 @@ package com.armedia.acm.services.transcribe.service;
  * #L%
  */
 
+import com.armedia.acm.camelcontext.exception.ArkCaseFileRepositoryException;
 import com.armedia.acm.configuration.service.ConfigurationPropertyException;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectLockException;
@@ -78,14 +79,13 @@ import com.armedia.acm.tool.transcribe.model.TranscribeDTO;
 
 import org.activiti.engine.delegate.DelegateExecution;
 import org.apache.commons.lang.NotImplementedException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
-import org.mule.api.MuleException;
 import org.mule.util.FileUtils;
 import org.mule.util.StringUtils;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
@@ -741,7 +741,8 @@ public class ArkCaseTranscribeServiceImpl extends ArkCaseMediaEngineServiceImpl<
             delegateExecution.setVariable(MediaEngineBusinessProcessVariableKey.ACTION.toString(),
                     MediaEngineActionType.PROCESSING.toString());
         }
-        catch (CreateMediaEngineToolException | AcmObjectLockException | MediaEngineProviderNotFound | IOException | MuleException e)
+        catch (CreateMediaEngineToolException | AcmObjectLockException | MediaEngineProviderNotFound | IOException
+                | ArkCaseFileRepositoryException e)
         {
             LOG.error("Error while calling PROVIDER=[{}] to transcribe the media. REASON=[{}]",
                     configuration.getProvider(), e.getMessage(), e);
