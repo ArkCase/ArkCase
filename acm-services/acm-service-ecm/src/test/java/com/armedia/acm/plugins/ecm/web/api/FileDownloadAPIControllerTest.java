@@ -36,8 +36,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import com.armedia.acm.camelcontext.arkcase.cmis.ArkCaseCMISActions;
 import com.armedia.acm.camelcontext.arkcase.cmis.ArkCaseCMISConstants;
 import com.armedia.acm.camelcontext.context.CamelContextManager;
-import com.armedia.acm.email.model.EmailSenderConfig;
-import com.armedia.acm.files.propertymanager.PropertyFileManager;
 import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
@@ -137,7 +135,6 @@ public class FileDownloadAPIControllerTest extends EasyMockSupport
         String repositoryId = ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID;
         String alfrescoUser = "";
 
-        // TODO : Check this before MR
         Resource log4j = new ClassPathResource("/spring/spring-library-ecm-plugin-test-mule.xml");
         long log4jsize = log4j.getFile().length();
         InputStream log4jis = log4j.getInputStream();
