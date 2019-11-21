@@ -47,7 +47,8 @@ public enum ArkCaseCMISActions
     CANCEL_CHECK_OUT("CancelCheckOutQueue"),
     GET_OBJECT_BY_ID("GetObjectByIdQueue"),
     GET_FOLDER("GetFolderQueue"),
-    UPDATE_DOCUMENT("UpdateDocumentQueue");
+    UPDATE_DOCUMENT("UpdateDocumentQueue"),
+    DOWNLOAD_DOCUMENT("DownloadDocumentQueue");
 
     private final String queueName;
     public String queuePackage = "com.armedia.acm.camelcontext.flow.queue.";

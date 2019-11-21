@@ -39,6 +39,8 @@ import com.armedia.acm.web.api.MDCConstants;
 
 import org.apache.chemistry.opencmis.client.api.Document;
 import org.apache.chemistry.opencmis.commons.PropertyIds;
+import org.apache.camel.component.cmis.CamelCMISConstants;
+import org.apache.chemistry.opencmis.commons.data.ContentStream;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.security.core.Authentication;
@@ -165,6 +167,36 @@ public class EcmFileCamelUtils
         messageProps.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, EcmFileCamelUtils.getCmisUser());
 
         return (Document) getCamelContextManager().send(ArkCaseCMISActions.UPDATE_DOCUMENT, messageProps);
+    }
+
+    /**
+     * Downloads the contents of the specified document from the repository
+     *
+     * @param cmisRepositoryId
+     *            - cmis repository id of the document to download
+     * @param cmisDocumentId
+     *            - cmis id of the document to download
+     * @return InputStream for the document contents
+     */
+    public InputStream downloadFile(String cmisRepositoryId, String cmisDocumentId)
+    {
+        InputStream fileContentStream = null;
+        try
+        {
+            log.debug("downloading document using download document route");
+            Map<String, Object> messageProps = new HashMap<>();
+            messageProps.put(EcmFileConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID);
+            messageProps.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, EcmFileCamelUtils.getCmisUser());
+            messageProps.put(CamelCMISConstants.CMIS_OBJECT_ID, cmisDocumentId);
+            ContentStream result = (ContentStream) getCamelContextManager().send(ArkCaseCMISActions.DOWNLOAD_DOCUMENT, messageProps);
+
+            fileContentStream = result.getStream();
+        }
+        catch (Exception e)
+        {
+            log.error("Failed to get document: {}", e.getMessage(), e);
+        }
+        return fileContentStream;
     }
 
     public CamelContextManager getCamelContextManager()

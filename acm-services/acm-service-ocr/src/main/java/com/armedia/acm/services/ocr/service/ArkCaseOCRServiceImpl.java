@@ -28,6 +28,7 @@ package com.armedia.acm.services.ocr.service;
  */
 
 import com.armedia.acm.auth.AcmAuthentication;
+import com.armedia.acm.camelcontext.exception.ArkCaseFileRepositoryException;
 import com.armedia.acm.configuration.service.ConfigurationPropertyException;
 import com.armedia.acm.core.exceptions.AcmObjectLockException;
 import com.armedia.acm.plugins.ecm.model.AcmMultipartFile;
@@ -64,7 +65,6 @@ import org.activiti.engine.delegate.DelegateExecution;
 import org.apache.commons.lang.NotImplementedException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.mule.api.MuleException;
 import org.slf4j.MDC;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -336,7 +336,7 @@ public class ArkCaseOCRServiceImpl extends ArkCaseMediaEngineServiceImpl<OCR>
             LOG.error("Error while calling PROVIDER=[{}] to OCR the media for PROCESS_ID=[{}]. REASON=[{}]",
                     configuration.getService().toString(), delegateExecution.getProcessInstanceId(), e.getMessage(), e);
         }
-        catch (CreateMediaEngineToolException | AcmObjectLockException | IOException | MuleException e)
+        catch (CreateMediaEngineToolException | AcmObjectLockException | IOException | ArkCaseFileRepositoryException e)
         {
             LOG.error("Error while creating OCR with PROVIDER=[{}] for PROCESS_ID=[{}]. REASON=[{}]",
                     configuration.getService().toString(), delegateExecution.getProcessInstanceId(), e.getMessage(), e);
