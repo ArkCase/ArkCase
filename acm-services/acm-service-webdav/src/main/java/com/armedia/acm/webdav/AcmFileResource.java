@@ -41,7 +41,6 @@ import org.apache.chemistry.opencmis.commons.data.ContentStream;
 import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.mule.api.MuleException;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -178,7 +177,7 @@ public class AcmFileResource extends AcmFileSystemResource implements PropFindab
         }
         catch (ArkCaseFileRepositoryException e)
         {
-            LOGGER.error("Error while downloading file via Camel, reson: [{}]", e.getMessage(), e);
+            LOGGER.error("Error while downloading file via Camel, reason: [{}]", e.getMessage(), e);
         }
     }
 
@@ -199,9 +198,9 @@ public class AcmFileResource extends AcmFileSystemResource implements PropFindab
             getResourceFactory().getEcmFileTransaction().updateFileTransactionEventAware(
                     getResourceFactory().getSecurityManager().getAuthenticationForTicket(acmTicket), acmFile, in);
         }
-        catch (MuleException | IOException e)
+        catch (ArkCaseFileRepositoryException | IOException e)
         {
-            LOGGER.error("Error while uploading file via Mule.", e);
+            LOGGER.error("Error while uploading file via Camel.", e);
         }
 
     }

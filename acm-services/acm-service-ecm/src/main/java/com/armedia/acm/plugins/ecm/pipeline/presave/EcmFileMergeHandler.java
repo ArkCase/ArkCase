@@ -118,7 +118,7 @@ public class EcmFileMergeHandler implements PipelineHandler<EcmFile, EcmFileTran
         }
         catch (Exception e)
         {
-            log.error("mule pre save handler failed: {}", e.getMessage(), e);
+            log.error("Camel pre save handler failed: {}", e.getMessage(), e);
             throw new PipelineProcessException(e);
         }
     }

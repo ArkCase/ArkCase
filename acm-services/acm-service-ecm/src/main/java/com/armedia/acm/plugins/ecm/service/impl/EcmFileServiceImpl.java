@@ -320,7 +320,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
 
             return uploaded;
         }
-        catch (IOException | MuleException e)
+        catch (IOException | ArkCaseFileRepositoryException e)
         {
             log.error("Could not upload file: " + e.getMessage(), e);
             throw new AcmCreateObjectFailedException(metadata.getFileName(),
@@ -370,7 +370,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
 
             return uploaded;
         }
-        catch (IOException | MuleException e)
+        catch (IOException | ArkCaseFileRepositoryException e)
         {
             log.error("Could not upload file: {}", e.getMessage(), e);
             throw new AcmCreateObjectFailedException(file.getOriginalFilename(), e.getMessage(), e);
@@ -412,7 +412,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
 
             return updated;
         }
-        catch (MuleException | IOException e)
+        catch (IOException e)
         {
             log.error("Could not update file: {} ", e.getMessage(), e);
             throw new AcmCreateObjectFailedException(ecmFile.getFileName(), e.getMessage(), e);

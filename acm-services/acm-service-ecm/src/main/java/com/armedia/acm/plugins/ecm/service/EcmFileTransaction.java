@@ -32,7 +32,6 @@ import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 
 import org.apache.chemistry.opencmis.client.api.Document;
-import org.mule.api.MuleException;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -47,44 +46,44 @@ public interface EcmFileTransaction
     @Deprecated
     EcmFile addFileTransaction(Authentication authentication, String ecmUniqueFilename, AcmContainer container,
             String targetCmisFolderId, InputStream fileContents, EcmFile metadata,
-            Document existingCmisDocument) throws MuleException, IOException;
+            Document existingCmisDocument) throws ArkCaseFileRepositoryException, IOException;
 
     @Deprecated
     EcmFile addFileTransaction(Authentication authentication, String ecmUniqueFilename, AcmContainer container,
             String targetCmisFolderId, InputStream fileContents, EcmFile metadata)
-            throws MuleException, IOException;
+            throws ArkCaseFileRepositoryException, IOException;
 
     @Deprecated
     EcmFile addFileTransaction(String originalFileName, Authentication authentication, String fileType, String fileCategory,
             InputStream fileInputStream, String mimeType, String fileName, String cmisFolderId, AcmContainer container,
             String cmisRepositoryId)
-            throws MuleException, IOException;
+            throws ArkCaseFileRepositoryException, IOException;
 
     @Deprecated
     EcmFile addFileTransaction(String originalFileName, Authentication authentication, String fileType,
             String fileCategory, InputStream fileContents, String fileContentType, String fileName,
             String targetCmisFolderId, AcmContainer container, String cmisRepositoryId,
-            Document existingCmisDocument) throws MuleException, IOException;
+            Document existingCmisDocument) throws ArkCaseFileRepositoryException, IOException;
 
     EcmFile addFileTransaction(Authentication authentication, String ecmUniqueFilename, AcmContainer container,
             String targetCmisFolderId, EcmFile metadata,
-            Document existingCmisDocument, MultipartFile file) throws MuleException, IOException;
+            Document existingCmisDocument, MultipartFile file) throws ArkCaseFileRepositoryException, IOException;
 
     EcmFile addFileTransaction(Authentication authentication, String ecmUniqueFilename, AcmContainer container,
             String targetCmisFolderId, EcmFile metadata, MultipartFile file)
-            throws MuleException, IOException;
+            throws ArkCaseFileRepositoryException, IOException;
 
     EcmFile updateFileTransaction(Authentication authentication, EcmFile ecmFile, InputStream fileInputStream)
-            throws MuleException, IOException;
+            throws IOException;
 
     EcmFile updateFileTransaction(Authentication authentication, EcmFile ecmFile, InputStream fileInputStream, String fileExtension)
-            throws MuleException, IOException;
+            throws ArkCaseFileRepositoryException, IOException;
 
     EcmFile updateFileTransactionEventAware(Authentication authentication, EcmFile ecmFile, InputStream fileInputStream)
-            throws MuleException, IOException;
+            throws ArkCaseFileRepositoryException, IOException;
 
     EcmFile updateFileTransactionEventAware(Authentication authentication, EcmFile ecmFile, InputStream fileInputStream, String fileExtension)
-            throws MuleException, IOException;
+            throws ArkCaseFileRepositoryException, IOException;
 
     String downloadFileTransaction(EcmFile ecmFile) throws ArkCaseFileRepositoryException;
 
