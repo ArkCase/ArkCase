@@ -27,7 +27,7 @@ package com.armedia.acm.webdav;
  * #L%
  */
 
-import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
+import com.armedia.acm.camelcontext.context.CamelContextManager;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.EcmFileTransaction;
@@ -35,8 +35,8 @@ import com.armedia.acm.plugins.ecm.utils.CmisConfigUtils;
 import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
 import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenService;
 
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -57,7 +57,7 @@ public class AcmFileSystemResourceFactory implements ResourceFactory
     private EcmFileDao fileDao;
     private EcmFileTransaction ecmFileTransaction;
     private FolderAndFilesUtils folderAndFilesUtils;
-    private MuleContextManager muleContextManager;
+    private CamelContextManager camelContextManager;
     private LockManager lockManager;
     private AcmWebDAVSecurityManager securityManager;
     private Long maxAgeSeconds;
@@ -205,16 +205,6 @@ public class AcmFileSystemResourceFactory implements ResourceFactory
         this.ecmFileTransaction = ecmFileTransaction;
     }
 
-    public MuleContextManager getMuleContextManager()
-    {
-        return muleContextManager;
-    }
-
-    public void setMuleContextManager(MuleContextManager muleContextManager)
-    {
-        this.muleContextManager = muleContextManager;
-    }
-
     public AuthenticationTokenService getAuthenticationTokenService()
     {
         return authenticationTokenService;
@@ -233,6 +223,16 @@ public class AcmFileSystemResourceFactory implements ResourceFactory
     public void setCmisConfigUtils(CmisConfigUtils cmisConfigUtils)
     {
         this.cmisConfigUtils = cmisConfigUtils;
+    }
+
+    public CamelContextManager getCamelContextManager()
+    {
+        return camelContextManager;
+    }
+
+    public void setCamelContextManager(CamelContextManager camelContextManager)
+    {
+        this.camelContextManager = camelContextManager;
     }
 
     interface ResourceHandler
