@@ -27,6 +27,7 @@ package com.armedia.acm.plugins.wopi.api;
  * #L%
  */
 
+import com.armedia.acm.camelcontext.exception.ArkCaseFileRepositoryException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.wopi.model.WopiFileInfo;
@@ -34,9 +35,8 @@ import com.armedia.acm.plugins.wopi.model.WopiLockInfo;
 import com.armedia.acm.plugins.wopi.service.WopiAcmService;
 import com.armedia.acm.services.dataaccess.service.impl.ArkPermissionEvaluator;
 
-import org.mule.api.MuleException;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -121,7 +121,7 @@ public class WopiFilesApiController
             log.warn("File with id [{}] is not found", id, e.getMessage());
             return new ResponseEntity(HttpStatus.NOT_FOUND);
         }
-        catch (MuleException | IOException e)
+        catch (ArkCaseFileRepositoryException | IOException e)
         {
             log.error("Put file failed for file with id [{}]", id, e);
             return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
