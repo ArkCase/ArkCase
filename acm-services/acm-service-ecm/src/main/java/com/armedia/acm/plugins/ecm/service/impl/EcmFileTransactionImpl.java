@@ -64,8 +64,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.tika.exception.TikaException;
 import org.mule.api.MuleException;
-import org.mule.api.MuleMessage;
-import org.mule.module.cmis.connectivity.CMISCloudConnectorConnectionManager;
 import org.slf4j.MDC;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.multipart.MultipartFile;
@@ -122,7 +120,7 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
     @Deprecated
     public EcmFile addFileTransaction(Authentication authentication, String ecmUniqueFilename, AcmContainer container,
             String targetCmisFolderId, InputStream fileContents, EcmFile metadata,
-            Document existingCmisDocument) throws MuleException, IOException
+            Document existingCmisDocument) throws ArkCaseFileRepositoryException, IOException
     {
 
         log.debug("Creating ecm file pipeline context");
@@ -192,9 +190,9 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
                 catch (Exception e)
                 {
                     log.error("pipeline handler call failed: {}", e.getMessage(), e);
-                    if (e.getCause() != null && MuleException.class.isAssignableFrom(e.getCause().getClass()))
+                    if (e.getCause() != null && ArkCaseFileRepositoryException.class.isAssignableFrom(e.getCause().getClass()))
                     {
-                        throw (MuleException) e.getCause();
+                        throw (ArkCaseFileRepositoryException) e.getCause();
                     }
                 }
                 log.debug("Returning from addFileTransaction method");
@@ -217,7 +215,7 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
     @Override
     @Deprecated
     public EcmFile addFileTransaction(Authentication authentication, String ecmUniqueFilename, AcmContainer container,
-            String targetCmisFolderId, InputStream fileContents, EcmFile metadata) throws MuleException, IOException
+            String targetCmisFolderId, InputStream fileContents, EcmFile metadata) throws ArkCaseFileRepositoryException, IOException
     {
         Document existingCmisDocument = null;
         return addFileTransaction(authentication, ecmUniqueFilename, container, targetCmisFolderId, fileContents,
@@ -230,7 +228,7 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
     public EcmFile addFileTransaction(String originalFileName, Authentication authentication, String fileType,
             String fileCategory, InputStream fileInputStream, String mimeType, String fileName,
             String cmisFolderId, AcmContainer container, String cmisRepositoryId)
-            throws MuleException, IOException
+            throws ArkCaseFileRepositoryException, IOException
     {
         Document existingCmisDocument = null;
         return addFileTransaction(originalFileName, authentication, fileType, fileCategory, fileInputStream,
@@ -242,7 +240,7 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
     public EcmFile addFileTransaction(String originalFileName, Authentication authentication, String fileType,
             String fileCategory, InputStream fileContents, String fileContentType,
             String fileName, String targetCmisFolderId, AcmContainer container,
-            String cmisRepositoryId, Document existingCmisDocument) throws MuleException, IOException
+            String cmisRepositoryId, Document existingCmisDocument) throws ArkCaseFileRepositoryException, IOException
     {
 
         log.debug("Creating ecm file pipeline context");
@@ -698,7 +696,9 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
     }
 
     @Override
-    public EcmFile updateFileTransactionEventAware(Authentication authentication, EcmFile ecmFile, InputStream fileInputStream, String fileExtension) throws MuleException, IOException {
+    public EcmFile updateFileTransactionEventAware(Authentication authentication, EcmFile ecmFile, InputStream fileInputStream,
+            String fileExtension) throws IOException
+    {
 
         ecmFile = updateFileTransaction(authentication, ecmFile, fileInputStream, fileExtension);
         String ipAddress = null;
