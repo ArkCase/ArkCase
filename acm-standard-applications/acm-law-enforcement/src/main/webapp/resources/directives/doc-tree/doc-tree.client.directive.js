@@ -106,7 +106,8 @@ angular.module('directives').directive(
                 'ObjectService',
                 'Admin.FileUploaderConfigurationService',
                 '$timeout',
-                function($q, $translate, $modal, $filter, $log, $injector, Store, Util, UtilDateService, ConfigService, PluginService, UserInfoService, Ecm, EmailSenderConfigurationService, LocaleHelper, LookupService, MessageService, ObjectService, FileUploaderConfigurationService, $timeout) {
+                'Websockets.MessageHandler',
+            function($q, $translate, $modal, $filter, $log, $injector, Store, Util, UtilDateService, ConfigService, PluginService, UserInfoService, Ecm, EmailSenderConfigurationService, LocaleHelper, LookupService, MessageService, ObjectService, FileUploaderConfigurationService, $timeout, MessageHandler) {
                     var cacheTree = new Store.CacheFifo();
                     var cacheFolderList = new Store.CacheFifo();
 
@@ -4916,6 +4917,10 @@ angular.module('directives').directive(
 
                             DocTree.scope.$bus.subscribe('onSearchDocTree', function(data) {
                                 DocTree.onSearch(data.searchFilter);
+                            });
+
+                            DocTree.scope.$bus.subscribe("zip_completed", function (data) {
+                                MessageHandler.handleZipGenerationMessage(data.filePath);
                             });
 
                             DocTree.scope.$bus.subscribe('object.changed/' + DocTree.getObjType() + '/' + DocTree.getObjId(), function(message) {
