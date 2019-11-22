@@ -34,6 +34,8 @@ import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.dao.group.AcmGroupDao;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.group.AcmGroup;
+import com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig;
+import com.armedia.acm.spring.SpringContextHolder;
 
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
@@ -51,6 +53,8 @@ public class GroupToSolrTransformer implements AcmObjectToSolrDocTransformer<Acm
 
     private AcmGroupDao groupDao;
     private UserDao userDao;
+    private SpringContextHolder springContextHolder;
+    private AcmLdapSyncConfig acmLdapSyncConfig;
 
     @Override
     public List<AcmGroup> getObjectsModifiedSince(Date lastModified, int start, int pageSize)
@@ -61,6 +65,8 @@ public class GroupToSolrTransformer implements AcmObjectToSolrDocTransformer<Acm
     @Override
     public SolrAdvancedSearchDocument toSolrAdvancedSearch(AcmGroup in)
     {
+
+        acmLdapSyncConfig = springContextHolder.getAllBeansOfType(AcmLdapSyncConfig.class).get(in.getDirectoryName() + "_sync");
         LOG.info("Creating Solr advanced search document for Group.");
 
         SolrAdvancedSearchDocument solr = new SolrAdvancedSearchDocument();
@@ -113,12 +119,19 @@ public class GroupToSolrTransformer implements AcmObjectToSolrDocTransformer<Acm
         solr.setAdditionalProperty("name_partial", in.getName());
         solr.setAdditionalProperty("name_lcs", in.getName());
 
+        // set hidden_b to true if group is group/user control group
+        if (in.getName().equalsIgnoreCase(acmLdapSyncConfig.getGroupControlGroup())
+                || in.getName().equalsIgnoreCase(acmLdapSyncConfig.getUserControlGroup()))
+        {
+            solr.setHidden_b(true);
+        }
         return solr;
     }
 
     @Override
     public SolrDocument toSolrQuickSearch(AcmGroup in)
     {
+        acmLdapSyncConfig = springContextHolder.getAllBeansOfType(AcmLdapSyncConfig.class).get(in.getDirectoryName() + "_sync");
         LOG.info("Creating Solr quick search document for Group.");
 
         SolrDocument solr = new SolrDocument();
@@ -136,6 +149,13 @@ public class GroupToSolrTransformer implements AcmObjectToSolrDocTransformer<Acm
         solr.setStatus_s(in.getStatus().name());
         solr.setAdditionalProperty("name_partial", in.getName());
         solr.setAdditionalProperty("name_lcs", in.getName());
+
+        // set hidden_b to true if group is group/user control group
+        if (in.getName().equalsIgnoreCase(acmLdapSyncConfig.getGroupControlGroup())
+                || in.getName().equalsIgnoreCase(acmLdapSyncConfig.getUserControlGroup()))
+        {
+            solr.setHidden_b(true);
+        }
         return solr;
     }
 
@@ -169,5 +189,15 @@ public class GroupToSolrTransformer implements AcmObjectToSolrDocTransformer<Acm
     public Class<?> getAcmObjectTypeSupported()
     {
         return AcmGroup.class;
+    }
+
+    public SpringContextHolder getSpringContextHolder()
+    {
+        return springContextHolder;
+    }
+
+    public void setSpringContextHolder(SpringContextHolder springContextHolder)
+    {
+        this.springContextHolder = springContextHolder;
     }
 }

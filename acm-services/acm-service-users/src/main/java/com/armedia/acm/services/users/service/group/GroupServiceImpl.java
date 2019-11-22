@@ -42,7 +42,9 @@ import com.armedia.acm.services.users.model.AcmUserState;
 import com.armedia.acm.services.users.model.group.AcmGroup;
 import com.armedia.acm.services.users.model.group.AcmGroupStatus;
 import com.armedia.acm.services.users.model.group.AcmGroupType;
+import com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig;
 import com.armedia.acm.services.users.service.AcmGroupEventPublisher;
+import com.armedia.acm.spring.SpringContextHolder;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -54,6 +56,7 @@ import javax.persistence.FlushModeType;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
@@ -65,6 +68,8 @@ public class GroupServiceImpl implements GroupService
     private AcmGroupDao groupDao;
     private ExecuteSolrQuery executeSolrQuery;
     private AcmGroupEventPublisher acmGroupEventPublisher;
+    private SpringContextHolder springContextHolder;
+    private AcmLdapSyncConfig acmLdapSyncConfig;
 
     @Override
     public AcmGroup findByName(String name)
@@ -122,11 +127,12 @@ public class GroupServiceImpl implements GroupService
             throws SolrException
     {
         String query = "object_type_s:GROUP AND status_lcs:ACTIVE";
+        String rowQueryParameters = "fq=hidden_b:false";
 
         log.debug("User [{}] is searching for [{}]", auth.getName(), query);
 
         return executeSolrQuery.getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, query, startRow, maxRows,
-                sortBy + " " + sortDirection);
+                sortBy + " " + sortDirection, rowQueryParameters);
     }
 
     @Override
@@ -693,15 +699,47 @@ public class GroupServiceImpl implements GroupService
     public String getTopLevelGroups(List<String> groupSubtype, int startRow, int maxRows, String sort, Authentication auth)
             throws SolrException
     {
-        String query = "object_type_s:GROUP AND -ascendants_id_ss:* AND -status_lcs:COMPLETE AND -status_lcs:DELETE "
-                + "AND -status_lcs:INACTIVE AND -status_lcs:CLOSED";
+        Map<String, AcmLdapSyncConfig> ldapSyncConfigMap = springContextHolder.getAllBeansOfType(AcmLdapSyncConfig.class);
+        StringBuilder controlGroupQueryIfAnyGroup = new StringBuilder();
+
+        List<String> controlGroups = new ArrayList<>();
+        for (Map.Entry<String, AcmLdapSyncConfig> ldapSyncConfig : ldapSyncConfigMap.entrySet())
+        {
+            acmLdapSyncConfig = ldapSyncConfig.getValue();
+            if (!acmLdapSyncConfig.getGroupControlGroup().trim().equals(""))
+            {
+                controlGroups.add(acmLdapSyncConfig.getGroupControlGroup());
+            }
+            if (!acmLdapSyncConfig.getUserControlGroup().trim().equals(""))
+            {
+                controlGroups.add(acmLdapSyncConfig.getUserControlGroup());
+            }
+
+        }
+
+        if (controlGroups.size() > 0)
+        {
+            controlGroupQueryIfAnyGroup.append("(");
+            controlGroupQueryIfAnyGroup.append(String.join(" OR ", controlGroups));
+            controlGroupQueryIfAnyGroup.append(")");
+        }
+
+        String controlGroupQuery = controlGroups.size() > 0 ? "(ascendants_id_ss:" + controlGroupQueryIfAnyGroup.toString()
+                : "(ascendants_id_ss:\"\"";
+
+        String query = controlGroupQuery
+                + " AND object_type_s:GROUP AND -status_lcs:COMPLETE AND -status_lcs:DELETE "
+                + "AND -status_lcs:INACTIVE AND -status_lcs:CLOSED) OR (object_type_s:GROUP AND "
+                + "-ascendants_id_ss:* AND -status_lcs:COMPLETE AND -status_lcs:DELETE "
+                + "AND -status_lcs:INACTIVE AND -status_lcs:CLOSED)";
 
         if (groupSubtype != null && !groupSubtype.isEmpty())
         {
             query += " AND object_sub_type_s:(" + String.join(" OR ", groupSubtype) + ")";
         }
+        String rowQueryParameters = "fq=hidden_b:false";
         return executeSolrQuery.getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, query,
-                startRow, maxRows, sort);
+                startRow, maxRows, sort, rowQueryParameters);
     }
 
     public void setUserDao(UserDao userDao)
@@ -722,6 +760,16 @@ public class GroupServiceImpl implements GroupService
     public void setAcmGroupEventPublisher(AcmGroupEventPublisher acmGroupEventPublisher)
     {
         this.acmGroupEventPublisher = acmGroupEventPublisher;
+    }
+
+    public SpringContextHolder getSpringContextHolder()
+    {
+        return springContextHolder;
+    }
+
+    public void setSpringContextHolder(SpringContextHolder springContextHolder)
+    {
+        this.springContextHolder = springContextHolder;
     }
 
     @Override
