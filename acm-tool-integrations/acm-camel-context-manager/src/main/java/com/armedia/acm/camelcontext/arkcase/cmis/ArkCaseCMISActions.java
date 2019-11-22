@@ -46,6 +46,7 @@ public enum ArkCaseCMISActions
     CHECK_OUT("CheckOutQueue"),
     CANCEL_CHECK_OUT("CancelCheckOutQueue"),
     GET_OBJECT_BY_ID("GetObjectByIdQueue"),
+    GET_FOLDER("GetFolderQueue"),
     UPDATE_DOCUMENT("UpdateDocumentQueue"),
     DOWNLOAD_DOCUMENT("DownloadDocumentQueue");
 

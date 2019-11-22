@@ -60,11 +60,13 @@ import com.armedia.acm.service.objectlock.service.AcmObjectLockService;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.web.api.MDCConstants;
 
+import org.apache.camel.component.cmis.CamelCMISConstants;
 import org.apache.chemistry.opencmis.client.api.CmisObject;
 import org.apache.chemistry.opencmis.client.api.Document;
 import org.apache.chemistry.opencmis.client.api.FileableCmisObject;
 import org.apache.chemistry.opencmis.client.api.Folder;
 import org.apache.chemistry.opencmis.client.api.ItemIterable;
+import org.apache.chemistry.opencmis.commons.PropertyIds;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.logging.log4j.LogManager;
@@ -255,7 +257,6 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
                     AcmFolder foundFolder = getFolderDao().findFolderByNameInTheGivenParentFolder(targetPathComponent, parent.getId());
                     parent = foundFolder;
                 }
-
             }
         }
 
@@ -264,38 +265,34 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
     }
 
     @Override
-    public String findFolderPath(String cmisFolderObjectId) throws MuleException, AcmUserActionFailedException
+    public String findFolderPath(String cmisFolderObjectId) throws AcmUserActionFailedException
     {
-
         Map<String, Object> findFolderProperties = new HashMap<>();
-        findFolderProperties.put("parentFolderId", cmisFolderObjectId);
+        findFolderProperties.put(EcmFileConstants.CMIS_OBJECT_ID, cmisFolderObjectId);
 
         AcmFolder acmFolder = folderDao.findByCmisFolderId(cmisFolderObjectId);
         if (acmFolder != null && acmFolder.getCmisRepositoryId() != null)
         {
-            findFolderProperties.put(AcmFolderConstants.CONFIGURATION_REFERENCE,
-                    cmisConfigUtils.getCmisConfiguration(acmFolder.getCmisRepositoryId()));
+            findFolderProperties.put(EcmFileConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID);
         }
         else
         {
             String defaultCmisId = ecmFileConfig.getDefaultCmisId();
-            findFolderProperties.put(AcmFolderConstants.CONFIGURATION_REFERENCE, cmisConfigUtils.getCmisConfiguration(defaultCmisId));
+            findFolderProperties.put(EcmFileConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID);
         }
-        MuleMessage findFolderMessage = getMuleContextManager().send(AcmFolderConstants.MULE_ENDPOINT_GET_FOLDER, null,
-                findFolderProperties);
-        if (findFolderMessage.getInboundPropertyNames().contains(AcmFolderConstants.GET_FOLDER_EXCEPTION_INBOUND_PROPERTY))
+        findFolderProperties.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, EcmFileCamelUtils.getCmisUser());
+        Folder findFolder = null;
+        try
         {
-            MuleException muleException = findFolderMessage.getInboundProperty(AcmFolderConstants.GET_FOLDER_EXCEPTION_INBOUND_PROPERTY);
-
-            log.error("Folder can not be found {}", muleException.getMessage(), muleException);
-            throw new AcmUserActionFailedException(AcmFolderConstants.USER_ACTION_CREATE_FOLDER_BY_PATH,
-                    AcmFolderConstants.OBJECT_FOLDER_TYPE, null, "Folder not found", muleException);
+            findFolder = (Folder) getCamelContextManager().send(ArkCaseCMISActions.GET_FOLDER, findFolderProperties);
         }
-
-        CmisObject containerFolderObject = findFolderMessage.getPayload(CmisObject.class);
-        Folder containerFolder = (Folder) containerFolderObject;
-
-        return containerFolder.getPath();
+        catch (ArkCaseFileRepositoryException e)
+        {
+            log.error("Folder can not be found {}", e.getMessage(), e);
+            throw new AcmUserActionFailedException(AcmFolderConstants.USER_ACTION_CREATE_FOLDER_BY_PATH,
+                    AcmFolderConstants.OBJECT_FOLDER_TYPE, null, "Folder not found", e);
+        }
+        return findFolder.getPath();
     }
 
     @Override
@@ -522,7 +519,6 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
                     null);
         }
         if (dstFolder == null)
-            if (dstFolder == null)
         {
             throw new AcmObjectNotFoundException(AcmFolderConstants.OBJECT_FOLDER_TYPE, null, "Destination folder not found", null);
         }
@@ -533,16 +529,20 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
             throw new AcmFolderException("The folder: " + toBeCopied.getName() + " is a root folder, can not be moved!");
         }
 
+        String cmisRepositoryId = getCmisRepositoryId(toBeCopied);
         Map<String, Object> toBeCopiedFolderProperties = new HashMap<>();
         toBeCopiedFolderProperties.put(AcmFolderConstants.PARENT_FOLDER_ID, toBeCopied.getCmisFolderId());
-
-        String cmisRepositoryId = getCmisRepositoryId(toBeCopied);
-
-        toBeCopiedFolderProperties.put(AcmFolderConstants.CONFIGURATION_REFERENCE, cmisConfigUtils.getCmisConfiguration(cmisRepositoryId));
+        toBeCopiedFolderProperties.put(EcmFileConstants.CMIS_OBJECT_ID, toBeCopied.getCmisFolderId());
+        toBeCopiedFolderProperties.put(EcmFileConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID);
+        toBeCopiedFolderProperties.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, EcmFileCamelUtils.getCmisUser());
+        toBeCopiedFolderProperties.put(PropertyIds.OBJECT_TYPE_ID, CamelCMISConstants.CMIS_FOLDER);
 
         Map<String, Object> parentFolderProperties = new HashMap<>();
         parentFolderProperties.put(AcmFolderConstants.PARENT_FOLDER_ID, dstFolder.getCmisFolderId());
-        parentFolderProperties.put(AcmFolderConstants.CONFIGURATION_REFERENCE, cmisConfigUtils.getCmisConfiguration(cmisRepositoryId));
+        parentFolderProperties.put(EcmFileConstants.CMIS_OBJECT_ID, dstFolder.getCmisFolderId());
+        parentFolderProperties.put(EcmFileConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID);
+        parentFolderProperties.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, EcmFileCamelUtils.getCmisUser());
+        parentFolderProperties.put(PropertyIds.OBJECT_TYPE_ID, CamelCMISConstants.CMIS_FOLDER);
 
         Folder folderToBeCopied;
         Folder parentFolder;
@@ -550,34 +550,31 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
         boolean isFirstFolderFetched = false;
         try
         {
-            MuleMessage message = getMuleContextManager().send(AcmFolderConstants.MULE_ENDPOINT_GET_FOLDER, toBeCopied,
-                    toBeCopiedFolderProperties);
+            CmisObject result = (CmisObject) getCamelContextManager().send(ArkCaseCMISActions.GET_FOLDER, toBeCopiedFolderProperties);
 
-            if (message.getInboundPropertyNames().contains(AcmFolderConstants.GET_FOLDER_EXCEPTION_INBOUND_PROPERTY))
+            if (!(result instanceof Folder))
             {
-                MuleException muleException = message.getInboundProperty(AcmFolderConstants.GET_FOLDER_EXCEPTION_INBOUND_PROPERTY);
-                log.error("Folder not fetched successfully {}", muleException.getMessage(), muleException);
+                log.error("Folder not fetched successfully {}");
                 throw new AcmUserActionFailedException(AcmFolderConstants.USER_ACTION_ADD_NEW_FOLDER, AcmFolderConstants.OBJECT_FOLDER_TYPE,
-                        toBeCopied.getId(), "Folder  " + toBeCopied.getName() + "was not fetched successfully", muleException);
+                        toBeCopied.getId(), "Folder  " + toBeCopied.getName() + "was not fetched successfully", null);
             }
-            CmisObject cmisObjectNewFolder = message.getPayload(CmisObject.class);
-            folderToBeCopied = (Folder) cmisObjectNewFolder;
+
+            folderToBeCopied = (Folder) result;
 
             isFirstFolderFetched = true;
 
-            MuleMessage msg = getMuleContextManager().send(AcmFolderConstants.MULE_ENDPOINT_GET_FOLDER, dstFolder, parentFolderProperties);
+            CmisObject destinationResult = (CmisObject) getCamelContextManager().send(ArkCaseCMISActions.GET_FOLDER,
+                    parentFolderProperties);
 
-            if (message.getInboundPropertyNames().contains(AcmFolderConstants.GET_FOLDER_EXCEPTION_INBOUND_PROPERTY))
+            if (!(destinationResult instanceof Folder))
             {
-                MuleException muleException = message.getInboundProperty(AcmFolderConstants.GET_FOLDER_EXCEPTION_INBOUND_PROPERTY);
-                log.error("Folder not fetched successfully {}", muleException.getMessage(), muleException);
+                log.error("Folder not fetched successfully {}");
                 throw new AcmUserActionFailedException(AcmFolderConstants.USER_ACTION_ADD_NEW_FOLDER, AcmFolderConstants.OBJECT_FOLDER_TYPE,
-                        dstFolder.getId(), "Folder  " + dstFolder.getName() + "was not fetched successfully", muleException);
+                        dstFolder.getId(), "Folder  " + dstFolder.getName() + "was not fetched successfully", null);
             }
-            CmisObject cmisObjectParentFolder = msg.getPayload(CmisObject.class);
-            parentFolder = (Folder) cmisObjectParentFolder;
+            parentFolder = (Folder) destinationResult;
         }
-        catch (MuleException e)
+        catch (ArkCaseFileRepositoryException e)
         {
             if (isFirstFolderFetched)
             {
@@ -603,8 +600,8 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
         // TODO: We can remove this when mule will be completely removed from all Folder flows.
         // Camel getId() method return only id without workspace and spacestore. alfCmis:nodeRef returns all this
         // values, that means that we should use getPropertyValue("alfcmis:nodeRef") instead of getId().
-        String folderId = StringUtils.isNotEmpty(toBeCopiedFolder.getPropertyValue("alfcmis:nodeRef"))
-                ? toBeCopiedFolder.getPropertyValue("alfcmis:nodeRef")
+        String folderId = StringUtils.isNotEmpty(toBeCopiedFolder.getPropertyValue(EcmFileConstants.REPOSITORY_VERSION_ID))
+                ? toBeCopiedFolder.getPropertyValue(EcmFileConstants.REPOSITORY_VERSION_ID)
                 : toBeCopiedFolder.getId();
 
         AcmFolder toCopyFolder = getFolderDao().findByCmisFolderId(folderId);
@@ -612,8 +609,8 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
         String uniqueFolderName = getFolderAndFilesUtils().createUniqueFolderName(toCopyFolder.getName());
 
         // TODO: We can remove this when mule will be completely removed from all Folder flows.
-        String parentFolderId = StringUtils.isNotEmpty(parentFolder.getPropertyValue("alfcmis:nodeRef"))
-                ? parentFolder.getPropertyValue("alfcmis:nodeRef")
+        String parentFolderId = StringUtils.isNotEmpty(parentFolder.getPropertyValue(EcmFileConstants.REPOSITORY_VERSION_ID))
+                ? parentFolder.getPropertyValue(EcmFileConstants.REPOSITORY_VERSION_ID)
                 : parentFolder.getId();
         newFolderProperties.put(AcmFolderConstants.PARENT_FOLDER_ID, parentFolderId);
         newFolderProperties.put(AcmFolderConstants.NEW_FOLDER_NAME, uniqueFolderName);
@@ -628,7 +625,7 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
             newFolder = (Folder) getCamelContextManager().send(ArkCaseCMISActions.CREATE_FOLDER, newFolderProperties);
 
             acmNewFolder.setCmisRepositoryId(ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID);
-            acmNewFolder.setCmisFolderId(newFolder.getPropertyValue("alfcmis:nodeRef"));
+            acmNewFolder.setCmisFolderId(newFolder.getPropertyValue(EcmFileConstants.REPOSITORY_VERSION_ID));
             AcmFolder pFolder = getFolderDao().findByCmisFolderId(parentFolderId);
             acmNewFolder.setParentFolder(pFolder);
             acmNewFolder.setName(toCopyFolder.getName());
@@ -654,16 +651,20 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
         {
             if (child instanceof Document)
             {
-                AcmFolder acmParent = getFolderDao().findByCmisFolderId(toCopyFolder.getId());
-                AcmFolder dstFolder = getFolderDao().findByCmisFolderId(parentFolder.getId());
+                AcmFolder acmParent = getFolderDao()
+                        .findByCmisFolderId(toCopyFolder.getProperty(EcmFileConstants.REPOSITORY_VERSION_ID).getValue());
+                AcmFolder dstFolder = getFolderDao()
+                        .findByCmisFolderId(parentFolder.getProperty(EcmFileConstants.REPOSITORY_VERSION_ID).getValue());
                 EcmFile ecmFile = null;
                 try
                 {
-                    ecmFile = getFileDao().findByCmisFileIdAndFolderId(child.getId(), acmParent.getId());
+                    ecmFile = getFileDao().findByCmisFileIdAndFolderId(child.getProperty(EcmFileConstants.REPOSITORY_VERSION_ID).getValue(),
+                            acmParent.getId());
                 }
                 catch (NoResultException e)
                 {
-                    log.debug("File with cmisId: {} not found in the DB, but returned from content repository!", child.getId(), e);
+                    log.debug("File with cmisId: {} not found in the DB, but returned from content repository!",
+                            child.getProperty(EcmFileConstants.REPOSITORY_VERSION_ID).getValue(), e);
                     continue;
                 }
                 if (ecmFile != null)
@@ -1093,7 +1094,7 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
                     folder.getId(), "Folder was not created under " + folder.getName() + " successfully", e);
         }
 
-        return result.getPropertyValue("alfcmis:nodeRef");
+        return result.getPropertyValue(EcmFileConstants.REPOSITORY_VERSION_ID);
     }
 
     @Override
