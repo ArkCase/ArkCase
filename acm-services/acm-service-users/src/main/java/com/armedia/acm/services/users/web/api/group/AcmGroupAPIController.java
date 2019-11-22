@@ -108,8 +108,10 @@ public class AcmGroupAPIController
 
         LOG.debug("User [{}] is searching for [{}]", auth.getName(), solrQuery);
 
+        String rowQueryParameters = "fq=hidden_b:false";
+
         return getExecuteSolrQuery().getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, solrQuery, startRow, maxRows,
-                sortBy + " " + sortDirection);
+                sortBy + " " + sortDirection, rowQueryParameters);
     }
 
     @RequestMapping(value = "/{groupName:.+}/groups/adhoc", params = {

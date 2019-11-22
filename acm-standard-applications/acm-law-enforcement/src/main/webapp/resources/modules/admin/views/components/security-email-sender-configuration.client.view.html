@@ -158,7 +158,7 @@
                             <input type="password" name="password" id="password"
                                     placeholder="{{'admin.security.emailConfiguration.emailConfigForm.password.placeholder' | translate}}"
                                     ng-model="emailSenderConfigDataModel['email.sender.password']" class="form-control"
-                                    ng-disabled="emailSenderConfigDataModel.type !== 'smtp'" />
+                                    ng-disabled="emailSenderConfigDataModel['email.sender.type'] !== 'smtp'" />
                         </div>
                         <div class="col-lg-4 form-group">
                             <label for="userFrom" translate>
