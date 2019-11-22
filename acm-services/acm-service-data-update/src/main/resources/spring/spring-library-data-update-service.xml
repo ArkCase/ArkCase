@@ -36,6 +36,7 @@
                 <ref bean="solrReindexEcmFileExecutor"/>
                 <ref bean="configurationServerRuntimeMigrationExecutor"/>
                 <ref bean="solrReindexNotificationsExecutor"/>
+                <ref bean="acmGroupSolrReindexExecutor"/>
             </list>
         </property>
         <property name="dataUpdateService" ref="dataUpdateService"/>
@@ -121,7 +122,9 @@
         <property name="solrReindexService" ref="solrReindexService"/>
     </bean>
 
-    <bean id="solrReindexNotificationsExecutor" class="com.armedia.acm.services.dataupdate.service.SolrReindexNotificationsExecutor">
+    <bean id="solrReindexNotificationsExecutor" class="com.armedia.acm.services.dataupdate.service.SolrReindexNotificationsExecutor"/>
+
+    <bean id="acmGroupSolrReindexExecutor" class="com.armedia.acm.services.dataupdate.service.AcmGroupSolrReindexExecutor">
         <property name="solrReindexService" ref="solrReindexService"/>
     </bean>
 </beans>

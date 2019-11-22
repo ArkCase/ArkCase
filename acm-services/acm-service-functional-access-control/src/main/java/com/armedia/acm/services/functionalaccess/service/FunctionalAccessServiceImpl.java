@@ -155,8 +155,9 @@ public class FunctionalAccessServiceImpl implements FunctionalAccessService, App
             Integer maxRows, String query) throws SolrException
     {
         List<String> result = new ArrayList<>();
+        String rowQueryParameters = "fq=hidden_b:false";
         String solrResponse = executeSolrQuery.getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, query, startRow, maxRows,
-                sortDirection);
+                sortDirection, rowQueryParameters);
         SearchResults searchResults = new SearchResults();
         JSONArray docs = searchResults.getDocuments(solrResponse);
 
