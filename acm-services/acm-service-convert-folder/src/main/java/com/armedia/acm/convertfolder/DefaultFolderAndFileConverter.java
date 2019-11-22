@@ -32,6 +32,7 @@ import static com.armedia.acm.plugins.ecm.model.EcmFileConstants.OBJECT_FOLDER_T
 import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
+import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
@@ -41,6 +42,9 @@ import org.apache.logging.log4j.LogManager;
 
 import java.io.File;
 import java.io.InputStream;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -69,6 +73,8 @@ public class DefaultFolderAndFileConverter implements FolderConverter, FileConve
     private Map<String, List<FileConverter>> convertersByType;
 
     private List<String> supportedTypes;
+    
+    private EcmFileDao ecmFileDao;
 
     public DefaultFolderAndFileConverter(List<FileConverter> converters)
     {
@@ -105,6 +111,10 @@ public class DefaultFolderAndFileConverter implements FolderConverter, FileConve
                     }
                     else
                     {
+                        if(!EcmFile.class.cast(obj).getFileActiveVersionNameExtension().equals(".pdf"))
+                        {
+                            obj = checkDuplicateFileName(obj, folderId);
+                        }
                         convert(EcmFile.class.cast(obj), username);
                     }
                 }
@@ -221,6 +231,22 @@ public class DefaultFolderAndFileConverter implements FolderConverter, FileConve
         supportedTypes = Collections.unmodifiableList(new ArrayList<>(convertersByType.keySet()));
     }
 
+    private AcmObject checkDuplicateFileName(AcmObject file, Long folderId)
+    {
+        String fileName = EcmFile.class.cast(file).getFileName();
+        List<EcmFile> pdfFiles = getEcmFileDao().findByFolderId(folderId).stream()
+                .filter(obj -> obj.getFileActiveVersionNameExtension().equals(".pdf"))
+                .filter(obj -> obj.getFileName().equals(fileName))
+                .collect(Collectors.toList());
+        if(pdfFiles.size() > 0)
+        {
+            ZonedDateTime date = ZonedDateTime.now(ZoneOffset.UTC);
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
+            String timestampName = formatter.format(date);
+            EcmFile.class.cast(file).setFileName(fileName + "-" + timestampName);
+        }
+        return file;
+    }
     /**
      * @param folderService
      *            the folderService to set
@@ -230,4 +256,13 @@ public class DefaultFolderAndFileConverter implements FolderConverter, FileConve
         this.folderService = folderService;
     }
 
+    public EcmFileDao getEcmFileDao() 
+    {
+        return ecmFileDao;
+    }
+
+    public void setEcmFileDao(EcmFileDao ecmFileDao) 
+    {
+        this.ecmFileDao = ecmFileDao;
+    }
 }
