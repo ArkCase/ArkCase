@@ -53,6 +53,10 @@ public class TaskConfig implements SupportsFileTypes, AcmPluginConfigBean
     @Value("${task.plugin.fileTypes}")
     private String supportedFileTypes;
 
+    @JsonProperty("task.plugin.sendCompleteEmail")
+    @Value("${task.plugin.sendCompleteEmail}")
+    private Boolean sendCompleteEmail;
+
     public void setSearchTreeFilter(String searchTreeFilter)
     {
         this.searchTreeFilter = searchTreeFilter;
@@ -76,6 +80,16 @@ public class TaskConfig implements SupportsFileTypes, AcmPluginConfigBean
     public void setSupportedFileTypes(String supportedFileTypes)
     {
         this.supportedFileTypes = supportedFileTypes;
+    }
+
+    public Boolean getSendCompleteEmail()
+    {
+        return sendCompleteEmail;
+    }
+
+    public void setSendCompleteEmail(Boolean sendCompleteEmail)
+    {
+        this.sendCompleteEmail = sendCompleteEmail;
     }
 
     @Override
