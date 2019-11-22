@@ -14,6 +14,11 @@
         <property name="buckslipTaskHelper" ref="buckslipTaskHelper"/>
     </bean>
 
+    <bean id="adHocTaskCompletedListener" class="com.armedia.acm.plugins.task.listener.AdHocTaskCompletedListener">
+        <property name="notificationDao" ref="notificationDao"/>
+        <property name="taskConfig" ref="taskConfig"/>
+    </bean>
+
     <bean id="taskPlugin" class="com.armedia.acm.pluginmanager.model.AcmPlugin">
         <property name="pluginName" value="Task Plugin"/>
         <property name="configurationPropertyService" ref="configurationPropertyService"/>

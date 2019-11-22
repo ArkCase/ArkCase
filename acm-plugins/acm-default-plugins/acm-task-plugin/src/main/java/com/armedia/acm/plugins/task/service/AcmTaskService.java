@@ -236,5 +236,5 @@ public interface AcmTaskService
     void startArrestWarrantWorkflow(AcmTask task);
 
     void sendArrestWarrantMail(Long objectId, String objectType, String approvers);
-    
+
 }
