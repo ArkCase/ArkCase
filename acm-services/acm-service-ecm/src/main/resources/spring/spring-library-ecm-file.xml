@@ -310,6 +310,11 @@
                 <entry key="application/json">
                     <value>application/octet-stream</value>
                 </entry>
+                <entry key="application/vnd.wordperfect">
+                    <list>
+                        <value>application/octet-stream</value>
+                    </list>
+                </entry>
             </map>
         </property>
         <property name="progressIndicatorService" ref="progressIndicatorService"/>
