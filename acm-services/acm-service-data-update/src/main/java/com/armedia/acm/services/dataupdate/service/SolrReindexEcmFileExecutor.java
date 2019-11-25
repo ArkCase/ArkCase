@@ -29,7 +29,6 @@ package com.armedia.acm.services.dataupdate.service;
 
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 
 /**
@@ -49,7 +48,7 @@ public class SolrReindexEcmFileExecutor implements AcmDataUpdateExecutor
     @Override
     public void execute()
     {
-        getSolrReindexService().reindex(new ArrayList<>(Arrays.asList(EcmFile.class)));
+        getSolrReindexService().reindex(Arrays.asList(EcmFile.class));
     }
 
     public SolrReindexService getSolrReindexService()
