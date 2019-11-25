@@ -40,8 +40,11 @@ import com.armedia.acm.data.AcmEntity;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.plugins.ecm.dao.AcmFolderDao;
 import com.armedia.acm.plugins.ecm.exception.AcmFolderException;
+import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
+import com.armedia.acm.plugins.ecm.model.AcmFolderDownloadedEvent;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
+import com.armedia.acm.plugins.ecm.model.EcmFileDownloadedEvent;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.services.email.service.AcmMailTemplateConfigurationService;
@@ -53,6 +56,8 @@ import org.apache.logging.log4j.Logger;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.mule.api.MuleException;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.support.MessageBuilder;
@@ -86,7 +91,7 @@ import java.util.zip.ZipOutputStream;
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Sep 13, 2016
  *
  */
-public class DefaultFolderCompressor implements FolderCompressor
+public class DefaultFolderCompressor implements FolderCompressor, ApplicationEventPublisherAware
 {
 
     /**
@@ -117,6 +122,8 @@ public class DefaultFolderCompressor implements FolderCompressor
     private EcmFileService fileService;
 
     private CompressorServiceConfig compressorServiceConfig;
+
+    private ApplicationEventPublisher applicationEventPublisher;
 
     /**
      * A formatting string that is used to generate the output file name. It takes 3 parameters, <code>tmpDir</code>,
@@ -181,6 +188,67 @@ public class DefaultFolderCompressor implements FolderCompressor
         send(fileName, auth);
 
         return fileName;
+    }
+
+    @Override
+    @Async("fileCompressThreadPoolTaskExecutor")
+    public String compressFolder(CompressNode compressNode, Authentication auth, String ipAddress)
+            throws AcmUserActionFailedException, AcmObjectNotFoundException, AcmFolderException
+    {
+        Long rootFolderId = compressNode.getRootFolderId();
+        String fileName = compressFolder(rootFolderId, compressNode, maxSize, sizeUnit);
+
+        AcmFolder rootFolder = Optional.ofNullable(folderService.findById(rootFolderId))
+                .orElseThrow(() -> new AcmFolderException(rootFolderId));
+
+        publishDownloadEvents(rootFolder, compressNode, auth, ipAddress);
+        send(fileName, auth);
+
+        return fileName;
+    }
+
+    public void publishDownloadEvents(AcmFolder folder, CompressNode compressNode, Authentication auth, String ipAddress)
+            throws AcmUserActionFailedException, AcmObjectNotFoundException
+    {
+        List<AcmObject> folderChildren = folderService.getFolderChildren(folder.getId()).stream().filter(obj -> obj.getObjectType() != null)
+                .collect(Collectors.toList());
+
+        List<AcmObject> files = folderChildren.stream().filter(c -> OBJECT_FILE_TYPE.equals(c.getObjectType().toUpperCase()))
+                .collect(Collectors.toList());
+        for (AcmObject c : files)
+        {
+            if ((isFileSelected(c.getId(), compressNode) && !isFileParentFolderSelected(folder.getId(), compressNode))
+                    || (isRootFolderSelected(compressNode) && compressNode.getRootFolderId() == folder.getId()))
+            {
+                EcmFile file = (EcmFile) c;
+                EcmFileDownloadedEvent event = new EcmFileDownloadedEvent(file);
+                event.setIpAddress(ipAddress);
+                event.setUserId(auth.getName());
+                event.setSucceeded(true);
+                getApplicationEventPublisher().publishEvent(event);
+            }
+        }
+
+        List<AcmObject> folders = folderChildren.stream().filter(c -> OBJECT_FOLDER_TYPE.equals(c.getObjectType().toUpperCase()))
+                .collect(Collectors.toList());
+        for (AcmObject c : folders)
+        {
+            AcmFolder childFolder = (AcmFolder) c;
+
+            if (isFolderRequestedToBeCompressed(compressNode, childFolder))
+            {
+                AcmContainer container = folderService.findContainerByFolderId(childFolder.getId());
+
+                AcmFolderDownloadedEvent event = new AcmFolderDownloadedEvent(childFolder);
+                event.setIpAddress(ipAddress);
+                event.setUserId(auth.getName());
+                event.setSucceeded(true);
+                event.setParentObjectType(container.getContainerObjectType());
+                event.setParentObjectId(container.getContainerObjectId());
+                getApplicationEventPublisher().publishEvent(event);
+            }
+            publishDownloadEvents(childFolder, compressNode, auth, ipAddress);
+        }
     }
 
     /*
@@ -629,5 +697,16 @@ public class DefaultFolderCompressor implements FolderCompressor
     public void setGenericMessagesChannel(MessageChannel genericMessagesChannel)
     {
         this.genericMessagesChannel = genericMessagesChannel;
+    }
+
+    public ApplicationEventPublisher getApplicationEventPublisher()
+    {
+        return applicationEventPublisher;
+    }
+
+    @Override
+    public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher)
+    {
+        this.applicationEventPublisher = applicationEventPublisher;
     }
 }
