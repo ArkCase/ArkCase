@@ -122,7 +122,9 @@
         <property name="solrReindexService" ref="solrReindexService"/>
     </bean>
 
-    <bean id="solrReindexNotificationsExecutor" class="com.armedia.acm.services.dataupdate.service.SolrReindexNotificationsExecutor"/>
+    <bean id="solrReindexNotificationsExecutor" class="com.armedia.acm.services.dataupdate.service.SolrReindexNotificationsExecutor">
+        <property name="solrReindexService" ref="solrReindexService"/>
+    </bean>
 
     <bean id="acmGroupSolrReindexExecutor" class="com.armedia.acm.services.dataupdate.service.AcmGroupSolrReindexExecutor">
         <property name="solrReindexService" ref="solrReindexService"/>
