@@ -445,7 +445,7 @@ public class StreamServiceImpl implements StreamService
      * Get MimeType for the requested file
      *
      * @param payload
-     *            The stream returned from the Mule flow
+     *            The stream returned from the Camel route
      * @param ecmFile
      *            The EcmFile object
      * @param version
