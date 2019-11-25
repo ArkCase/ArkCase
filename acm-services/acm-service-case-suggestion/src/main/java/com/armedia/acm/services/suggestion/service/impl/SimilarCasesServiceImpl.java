@@ -191,11 +191,17 @@ public class SimilarCasesServiceImpl implements SimilarCasesService
 
                 for (int i = 0; i < fileDocFiles.length(); i++)
                 {
-                    SuggestedCase suggestedCase = new SuggestedCase();
-                    SuggestedCase.File file = new SuggestedCase.File();
 
                     JSONObject docFile = fileDocFiles.getJSONObject(i);
 
+                    if (objectId != null && Long.valueOf(docFile.getString("object_id_s")).equals(objectId))
+                    {
+                        continue;
+                    }
+
+                    SuggestedCase suggestedCase = new SuggestedCase();
+
+                    SuggestedCase.File file = new SuggestedCase.File();
                     file.setFileId(docFile.getString("object_id_s"));
                     file.setFileName(docFile.getString("title_parseable") + docFile.getString("ext_s"));
 
@@ -214,12 +220,12 @@ public class SimilarCasesServiceImpl implements SimilarCasesService
 
                         if (isPortal)
                         {
-                            caseQuery = String.format("object_type_s:CASE_FILE AND request_status_lcs:Released AND name:%s",
+                            caseQuery = String.format("object_type_s:CASE_FILE AND request_status_lcs:Released AND name:\"%s\"",
                                     sc.getCaseNumber());
                         }
                         else
                         {
-                            caseQuery = String.format("object_type_s:CASE_FILE AND name:%s", sc.getCaseNumber());
+                            caseQuery = String.format("object_type_s:CASE_FILE AND name:\"%s\"", sc.getCaseNumber());
                         }
 
                         String caseResults = getExecuteSolrQuery().getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, caseQuery, 0,
