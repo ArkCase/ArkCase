@@ -83,6 +83,7 @@ import com.armedia.acm.web.api.MDCConstants;
 
 import org.apache.chemistry.opencmis.client.api.CmisObject;
 import org.apache.chemistry.opencmis.client.api.Document;
+import org.apache.chemistry.opencmis.commons.PropertyIds;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
@@ -181,17 +182,11 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     {
         Map<String, Object> properties = new HashMap<>();
         String cmisRepositoryId = ecmFileConfig.getDefaultCmisId();
-        properties.put(EcmFileConstants.CONFIGURATION_REFERENCE, cmisConfigUtils.getCmisConfiguration(cmisRepositoryId));
+        properties.put(PropertyIds.PATH, path);
+        properties.put(EcmFileConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID);
+        properties.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, EcmFileCamelUtils.getCmisUser());
 
-        MuleMessage muleMessage = getMuleContextManager().send("vm://getObjectByPath.in", path, properties);
-
-        if (muleMessage.getInboundProperty("findObjectByPathException") != null)
-        {
-            throw (Exception) muleMessage.getInboundProperty("findObjectByPathException");
-        }
-
-        return (CmisObject) muleMessage.getPayload();
-
+        return (CmisObject) getCamelContextManager().send(ArkCaseCMISActions.GET_OBJECT_BY_PATH, properties);
     }
 
     @Override
