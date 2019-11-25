@@ -36,12 +36,15 @@
                     <div class="row">
                         <div class="col-sm-3 form-group">
                             <label for="requesterCategory" translate>cases.comp.main.category.label </label>
+                            <span class="required-asterisk">*</span>
                         </div>
                         <div class="col-sm-5 form-group">
-                            <select id="requesterCategory" ng-model="config.data.requestCategory"
+                            <select name="requesterCategory" id="requesterCategory" 
+                                    ng-model="config.data.requestCategory"
                                     ng-options="category.key as category.value for category in categories"
-                                    class="form-control input-md">
+                                    class="form-control input-md" required="required">
                             </select>
+                            <span class="text-danger" ng-if="requestCategoryEmpty && formInvalid" translate>cases.newRequest.requestCategory.validation.error</span>
                         </div>
                     </div>
                     <div class="row">
