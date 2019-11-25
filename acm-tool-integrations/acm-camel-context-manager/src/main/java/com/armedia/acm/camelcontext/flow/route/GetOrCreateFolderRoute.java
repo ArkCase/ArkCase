@@ -35,6 +35,7 @@ import org.apache.camel.ExchangePattern;
 import org.apache.camel.component.cmis.CamelCMISActions;
 import org.apache.camel.component.cmis.CamelCMISConstants;
 import org.apache.chemistry.opencmis.commons.PropertyIds;
+import org.apache.chemistry.opencmis.commons.exceptions.CmisObjectNotFoundException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.slf4j.MDC;
@@ -60,16 +61,28 @@ public class GetOrCreateFolderRoute extends ArkCaseAbstractRoute
                 });
 
         from("seda:" + getRepositoryId() + "-getOrCreateFolderQueue?timeout=" + getTimeout()).setExchangePattern(ExchangePattern.InOut)
+                .errorHandler(noErrorHandler())
                 .process(exchange -> {
                     routeProperties = (Map<String, Object>) exchange.getIn().getBody();
                     exchange.getIn().getHeaders().put(PropertyIds.PATH, routeProperties.get(PropertyIds.PATH));
-                    exchange.getIn().getHeaders().put(PropertyIds.NAME, routeProperties.get(PropertyIds.NAME));
                     exchange.getIn().getHeaders().put(CamelCMISConstants.CMIS_ACTION, CamelCMISActions.FIND_OBJECT_BY_PATH);
                     MDC.put(HttpInvokerUtil.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY,
                             String.valueOf(routeProperties.get(HttpInvokerUtil.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY)));
                 })
                 .recipientList().method(this, "createUrl")
-                .choice()
-                .when();
+                .onException(CmisObjectNotFoundException.class).handled(true)
+                .process(exchange -> {
+                    String path = (String) routeProperties.get(PropertyIds.PATH);
+                    String name = path.substring(path.lastIndexOf("/") + 1);
+                    path = path.substring(0, path.lastIndexOf("/"));
+                    exchange.getIn().getHeaders().put(PropertyIds.PATH, path);
+                    exchange.getIn().getHeaders().put(PropertyIds.NAME, name);
+                    exchange.getIn().getHeaders().put(PropertyIds.OBJECT_TYPE_ID, CamelCMISConstants.CMIS_FOLDER);
+                    exchange.getIn().getHeaders().put(CamelCMISConstants.CMIS_ACTION, CamelCMISActions.CREATE_FOLDER_BY_PATH);
+                    MDC.put(HttpInvokerUtil.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY,
+                            String.valueOf(routeProperties.get(HttpInvokerUtil.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY)));
+                })
+                .recipientList().method(this, "createUrl");
+
     }
 }
