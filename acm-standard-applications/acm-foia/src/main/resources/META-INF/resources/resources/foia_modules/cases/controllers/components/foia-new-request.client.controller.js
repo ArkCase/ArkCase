@@ -182,6 +182,7 @@ angular.module('cases').controller(
                 $scope.zipCodeInvalid = false;
                 $scope.subjectEmpty = false;
                 $scope.deliveryMethodOfResponseEmpty = false;
+                $scope.requestCategoryEmpty = false;
 
                 if ($scope.isNewRequestType()) {
 
@@ -226,6 +227,9 @@ angular.module('cases').controller(
                     }
                     if (requestForm.subject.$invalid) {
                         $scope.subjectEmpty = true;
+                    }
+                    if (requestForm.requesterCategory.$invalid) {
+                        $scope.requestCategoryEmpty = true;
                     }
                     if (requestForm.deliveryMethodOfResponse.$invalid) {
                         $scope.deliveryMethodOfResponseEmpty = true;
