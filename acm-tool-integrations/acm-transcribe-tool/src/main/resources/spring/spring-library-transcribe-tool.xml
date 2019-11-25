@@ -6,7 +6,6 @@
     <bean id="awsTranscribeService" class="com.armedia.acm.tool.transcribe.service.AWSTranscribeServiceImpl" init-method="init">
         <property name="awsTranscribeConfigurationService" ref="awsTranscribeConfigurationService"/>
         <property name="awsTranscribeCredentialsConfigurationService" ref="awsTranscribeCredentialsConfigurationService"/>
-        <property name="muleContextManager" ref="muleContextManager"/>
         <property name="mediaEngineIntegrationEventPublisher" ref="mediaEngineIntegrationEventPublisher"/>
     </bean>
 

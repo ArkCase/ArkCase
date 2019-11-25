@@ -36,6 +36,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.powermock.api.mockito.PowerMockito.mockStatic;
 
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.services.s3.AmazonS3;
@@ -48,7 +49,6 @@ import com.amazonaws.services.transcribe.model.Transcript;
 import com.amazonaws.services.transcribe.model.TranscriptionJob;
 import com.amazonaws.services.transcribe.model.TranscriptionJobStatus;
 import com.armedia.acm.files.propertymanager.PropertyFileManager;
-import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.tool.mediaengine.exception.CreateMediaEngineToolException;
 import com.armedia.acm.tool.mediaengine.service.MediaEngineIntegrationEventPublisher;
 import com.armedia.acm.tool.transcribe.model.AWSTranscribeConfiguration;
@@ -57,11 +57,17 @@ import com.armedia.acm.tool.transcribe.service.AWSTranscribeConfigurationService
 import com.armedia.acm.tool.transcribe.service.AWSTranscribeServiceImpl;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.http.HttpEntity;
+import org.apache.http.StatusLine;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mule.api.MuleMessage;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -77,8 +83,8 @@ import java.util.Map;
  * Created by Riste Tutureski <riste.tutureski@armedia.com> on 03/13/2018
  */
 @RunWith(PowerMockRunner.class)
-@PowerMockIgnore("javax.management.*")
-@PrepareForTest(AWSTranscribeServiceImpl.class)
+@PowerMockIgnore({ "javax.management.*", "javax.net.ssl.*" })
+@PrepareForTest({ AWSTranscribeServiceImpl.class, HttpClients.class, EntityUtils.class })
 public class AWSTranscribeServiceTest
 {
     private AWSTranscribeServiceImpl awsTranscribeService;
@@ -101,12 +107,6 @@ public class AWSTranscribeServiceTest
     @Mock
     private MediaEngineIntegrationEventPublisher mediaEngineIntegrationEventPublisher;
 
-    @Mock
-    private MuleContextManager muleContextManager;
-
-    @Mock
-    private MuleMessage muleMessage;
-
     @Before
     public void setUp()
     {
@@ -115,7 +115,6 @@ public class AWSTranscribeServiceTest
         awsTranscribeService.setTranscribeClient(transcribeClient);
         awsTranscribeService.setAwsTranscribeConfigurationService(awsTranscribeConfigurationService);
         awsTranscribeService.setMediaEngineIntegrationEventPublisher(mediaEngineIntegrationEventPublisher);
-        awsTranscribeService.setMuleContextManager(muleContextManager);
     }
 
     @Test
@@ -336,11 +335,19 @@ public class AWSTranscribeServiceTest
         GetTranscriptionJobResult getTranscriptionJobResult = new GetTranscriptionJobResult();
         getTranscriptionJobResult.setTranscriptionJob(transcriptionJob);
 
+        mockStatic(HttpClients.class, EntityUtils.class);
+        CloseableHttpResponse response = mock(CloseableHttpResponse.class);
+        HttpEntity entity = mock(HttpEntity.class);
+        StatusLine statusLine = mock(StatusLine.class);
+        CloseableHttpClient httpClient = mock(CloseableHttpClient.class);
+
         when(awsTranscribeConfigurationService.getAWSTranscribeConfig()).thenReturn(configuration);
         when(transcribeClient.getTranscriptionJob(any())).thenReturn(getTranscriptionJobResult);
-        when(muleContextManager.send("vm://getProviderTranscribe.in", "www.amazon.test.example.com")).thenReturn(muleMessage);
-        when(muleMessage.getInboundProperty("getProviderTranscribeException")).thenReturn(null);
-        when(muleMessage.getPayloadAsString()).thenReturn(jsonString);
+        when(HttpClients.createDefault()).thenReturn(httpClient);
+        when(httpClient.execute(any(HttpGet.class))).thenReturn(response);
+        when(response.getStatusLine()).thenReturn(statusLine);
+        when(response.getEntity()).thenReturn(entity);
+        when(EntityUtils.toString(entity)).thenReturn(jsonString);
 
         Map<String, Object> props = new HashMap<>();
         props.put("wordCountPerItem", 20);
@@ -349,9 +356,6 @@ public class AWSTranscribeServiceTest
         TranscribeDTO transcribe = (TranscribeDTO) awsTranscribeService.get(remoteId, props);
 
         verify(transcribeClient).getTranscriptionJob(any());
-        verify(muleContextManager).send("vm://getProviderTranscribe.in", "www.amazon.test.example.com");
-        verify(muleMessage).getInboundProperty("getProviderTranscribeException");
-        verify(muleMessage).getPayloadAsString();
 
         assertNotNull(transcribe);
         assertNotNull(transcribe.getTranscribeItems());
@@ -396,11 +400,19 @@ public class AWSTranscribeServiceTest
         GetTranscriptionJobResult getTranscriptionJobResult = new GetTranscriptionJobResult();
         getTranscriptionJobResult.setTranscriptionJob(transcriptionJob);
 
+        mockStatic(HttpClients.class, EntityUtils.class);
+        CloseableHttpResponse response = mock(CloseableHttpResponse.class);
+        HttpEntity entity = mock(HttpEntity.class);
+        StatusLine statusLine = mock(StatusLine.class);
+        CloseableHttpClient httpClient = mock(CloseableHttpClient.class);
+
         when(awsTranscribeConfigurationService.getAWSTranscribeConfig()).thenReturn(configuration);
         when(transcribeClient.getTranscriptionJob(any())).thenReturn(getTranscriptionJobResult);
-        when(muleContextManager.send("vm://getProviderTranscribe.in", "www.amazon.test.example.com")).thenReturn(muleMessage);
-        when(muleMessage.getInboundProperty("getProviderTranscribeException")).thenReturn(null);
-        when(muleMessage.getPayloadAsString()).thenReturn(jsonString);
+        when(HttpClients.createDefault()).thenReturn(httpClient);
+        when(httpClient.execute(any(HttpGet.class))).thenReturn(response);
+        when(response.getStatusLine()).thenReturn(statusLine);
+        when(response.getEntity()).thenReturn(entity);
+        when(EntityUtils.toString(entity)).thenReturn(jsonString);
 
         Map<String, Object> props = new HashMap<>();
         props.put("wordCountPerItem", 20);
@@ -409,9 +421,6 @@ public class AWSTranscribeServiceTest
         TranscribeDTO transcribe = (TranscribeDTO) awsTranscribeService.get(remoteId, props);
 
         verify(transcribeClient).getTranscriptionJob(any());
-        verify(muleContextManager).send("vm://getProviderTranscribe.in", "www.amazon.test.example.com");
-        verify(muleMessage).getInboundProperty("getProviderTranscribeException");
-        verify(muleMessage).getPayloadAsString();
 
         assertNotNull(transcribe);
         assertNotNull(transcribe.getTranscribeItems());
