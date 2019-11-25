@@ -114,7 +114,6 @@ import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -503,8 +502,6 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         {
             Map<String, Object> properties = new HashMap<>();
             properties.put(PropertyIds.PATH, folderPath);
-            String name = folderPath.substring(Arrays.asList(folderPath).lastIndexOf("/"));
-            properties.put(PropertyIds.NAME, name);
             properties.put(EcmFileConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID);
             properties.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, EcmFileCamelUtils.getCmisUser());
 
