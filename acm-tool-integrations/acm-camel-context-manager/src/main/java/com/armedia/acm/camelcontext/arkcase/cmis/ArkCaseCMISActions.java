@@ -50,6 +50,7 @@ public enum ArkCaseCMISActions
     UPDATE_DOCUMENT("UpdateDocumentQueue"),
     DOWNLOAD_DOCUMENT("DownloadDocumentQueue"),
     LIST_FOLDER("ListFolderQueue"),
+    GET_OBJECT_BY_PATH("GetObjectByPathQueue"),
     GET_OR_CREATE_FOLDER_BY_PATH("GetOrCreateFolderQueue");
 
     private final String queueName;
