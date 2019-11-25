@@ -49,7 +49,8 @@ public enum ArkCaseCMISActions
     GET_FOLDER("GetFolderQueue"),
     UPDATE_DOCUMENT("UpdateDocumentQueue"),
     DOWNLOAD_DOCUMENT("DownloadDocumentQueue"),
-    LIST_FOLDER("ListFolderQueue");
+    LIST_FOLDER("ListFolderQueue"),
+    GET_OBJECT_BY_PATH("GetObjectByPathQueue");
 
     private final String queueName;
     public String queuePackage = "com.armedia.acm.camelcontext.flow.queue.";
