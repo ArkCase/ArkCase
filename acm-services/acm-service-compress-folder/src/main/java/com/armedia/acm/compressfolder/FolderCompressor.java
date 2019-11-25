@@ -31,6 +31,8 @@ package com.armedia.acm.compressfolder;
  */
 
 import com.armedia.acm.compressfolder.model.CompressNode;
+import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
+import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.ecm.exception.AcmFolderException;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
 
@@ -80,6 +82,9 @@ public interface FolderCompressor
     String compressFolder(CompressNode compressNode) throws AcmFolderException;
 
     String compressFolder(CompressNode compressNode, Authentication authentication) throws AcmFolderException;
+
+    String compressFolder(CompressNode compressNode, Authentication authentication, String ipAddress)
+            throws AcmUserActionFailedException, AcmObjectNotFoundException, AcmFolderException;
 
     /**
      * Compresses the folder contents by using the <code>size</code> and <code>sizeUnit</code> arguments for setting the

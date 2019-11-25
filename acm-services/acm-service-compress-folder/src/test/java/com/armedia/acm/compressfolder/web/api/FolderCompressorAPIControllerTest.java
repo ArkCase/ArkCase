@@ -99,6 +99,8 @@ public class FolderCompressorAPIControllerTest extends EasyMockSupport
         controller.setFolderCompressor(mockedFolderCompressor);
 
         mockHttpSession = new MockHttpSession();
+        String ipAddress = "ip-address";
+        mockHttpSession.setAttribute("acm_ip_address", ipAddress);
         mockZipFile = new File(getClass().getResource("/acm-101-ROOT.zip").getFile());
         assertNotNull("Unable to load test zip file.", mockZipFile.getPath());
         mockAuthentication = createMock(Authentication.class);
@@ -212,7 +214,8 @@ public class FolderCompressorAPIControllerTest extends EasyMockSupport
 
         String fileName = mockZipFile.getPath();
 
-        expect(mockedFolderCompressor.compressFolder(isA(CompressNode.class), isA(Authentication.class))).andReturn(fileName);
+        expect(mockedFolderCompressor.compressFolder(isA(CompressNode.class), isA(Authentication.class), isA(String.class)))
+                .andReturn(fileName);
 
         expect(mockAuthentication.getName()).andReturn("***REMOVED***");
         replayAll();
