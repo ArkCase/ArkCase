@@ -6,7 +6,6 @@
         <property name="specificConfigFiles">
             <list>
                 <value>/flows/MuleCmisConnectorFlow.xml</value>
-                <value>/flows/createFolderFlow.xml</value>
                 <value>/flows/rmaTestFlow.xml</value>
             </list>
         </property>
