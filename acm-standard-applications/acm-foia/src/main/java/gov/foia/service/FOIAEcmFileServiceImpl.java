@@ -100,7 +100,7 @@ public class FOIAEcmFileServiceImpl extends EcmFileServiceImpl implements FOIAEc
 
             EcmFile fileCopy = new EcmFile();
 
-            fileCopy.setVersionSeriesId(cmisObject.getPropertyValue("alfcmis:nodeRef"));
+            fileCopy.setVersionSeriesId(cmisObject.getPropertyValue(EcmFileConstants.REPOSITORY_VERSION_ID));
             fileCopy.setFileType(file.getFileType());
             fileCopy.setActiveVersionTag(cmisObject.getVersionLabel());
             fileCopy.setFileName(file.getFileName());
@@ -117,7 +117,7 @@ public class FOIAEcmFileServiceImpl extends EcmFileServiceImpl implements FOIAEc
             fileCopy.setSecurityField(file.getSecurityField());
 
             FOIAEcmFileVersion fileCopyVersion = new FOIAEcmFileVersion();
-            fileCopyVersion.setCmisObjectId(cmisObject.getPropertyValue("alfcmis:nodeRef"));
+            fileCopyVersion.setCmisObjectId(cmisObject.getPropertyValue(EcmFileConstants.REPOSITORY_VERSION_ID));
             fileCopyVersion.setVersionTag(cmisObject.getVersionLabel());
             fileCopyVersion.setReviewStatus(new String());
             fileCopyVersion.setRedactionStatus(new String());

@@ -245,7 +245,8 @@ public class CamelContextManager implements ApplicationContextAware
 
     public Object send(ArkCaseCMISActions action, Map<String, Object> props) throws ArkCaseFileRepositoryException
     {
-        log.debug("Sending message on queue={} with cmisDocumentId={}", action.getQueueName(), props.get("cmisDocumentId"));
+        log.debug("Sending message on queue={} with cmisObjectId={}", action.getQueueName(),
+                props.get("cmisDocumentId") != null ? props.get("cmisDocumentId") : props.get("cmisObjectId"));
         try
         {
             String cmisRepositoryId = String.valueOf(props.get("cmisRepositoryId"));
@@ -264,7 +265,8 @@ public class CamelContextManager implements ApplicationContextAware
         }
         catch (AcmEncryptionException | ArkCaseFileRepositoryException e)
         {
-            log.error("Error sending message on queue={} with cmisDocumentId={}", action.getQueueName(), props.get("cmisDocumentId"));
+            log.error("Error sending message on queue={} with cmisObjectId={}", action.getQueueName(),
+                    props.get("cmisDocumentId") != null ? props.get("cmisDocumentId") : props.get("cmisObjectId"));
             throw new ArkCaseFileRepositoryException(e);
         }
     }

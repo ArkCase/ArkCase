@@ -32,7 +32,6 @@ import static org.junit.Assert.assertNotNull;
 import com.armedia.acm.camelcontext.arkcase.cmis.ArkCaseCMISActions;
 import com.armedia.acm.camelcontext.arkcase.cmis.ArkCaseCMISConstants;
 import com.armedia.acm.camelcontext.context.CamelContextManager;
-import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.utils.CmisConfigUtils;
@@ -59,10 +58,10 @@ public class CmisFileWriter
 {
     private transient final Logger LOG = LogManager.getLogger(getClass());
 
-    public Document writeTestFile(MuleContextManager muleContextManager, CamelContextManager camelContextManager) throws Exception
+    public Document writeTestFile(CamelContextManager camelContextManager) throws Exception
     {
         CmisConfigUtils cmisConfigUtils = new CmisConfigUtils();
-        cmisConfigUtils.setMuleContextManager(muleContextManager);
+        cmisConfigUtils.setCamelContextManager(camelContextManager);
 
         // create a file that we can then declare as a record and set metadata on it
         Map<String, Object> properties = new HashMap<>();
