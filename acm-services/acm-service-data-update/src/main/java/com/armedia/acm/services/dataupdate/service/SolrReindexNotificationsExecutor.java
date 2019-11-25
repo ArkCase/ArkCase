@@ -28,7 +28,7 @@ package com.armedia.acm.services.dataupdate.service;
  */
 
 import javax.management.Notification;
-import java.util.ArrayList;
+
 import java.util.Arrays;
 
 public class SolrReindexNotificationsExecutor implements AcmDataUpdateExecutor
@@ -45,7 +45,7 @@ public class SolrReindexNotificationsExecutor implements AcmDataUpdateExecutor
     @Override
     public void execute()
     {
-        getSolrReindexService().reindex(new ArrayList<>(Arrays.asList(Notification.class)));
+        getSolrReindexService().reindex(Arrays.asList(Notification.class));
     }
 
     public SolrReindexService getSolrReindexService()
