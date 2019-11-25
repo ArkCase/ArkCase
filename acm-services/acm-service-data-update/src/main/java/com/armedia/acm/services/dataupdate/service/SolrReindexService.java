@@ -31,21 +31,50 @@ import com.armedia.acm.quartz.scheduler.AcmSchedulerService;
 
 import org.quartz.JobDataMap;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.metamodel.EntityType;
+
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class SolrReindexService
 {
     private AcmSchedulerService schedulerService;
 
+    @PersistenceContext
+    private EntityManager entityManager;
+
     public void reindex(List<Class> entities)
     {
+        List<Class> entitiesAndExtendedClasses = new ArrayList<>(entities);
+        entitiesAndExtendedClasses.addAll(getExtendedClasses(entities));
+
         JobDataMap lastRunDatePerObject = schedulerService.getJobDataMap("jpaBatchUpdateJob");
         if (lastRunDatePerObject == null)
         {
             return;
         }
-        entities.forEach(entity -> lastRunDatePerObject.remove(entity.getName()));
+        entitiesAndExtendedClasses.forEach(entity -> lastRunDatePerObject.remove(entity.getName()));
+
         schedulerService.triggerJob("jpaBatchUpdateJob", lastRunDatePerObject);
+    }
+
+    private List<Class> getExtendedClasses(List<Class> entities)
+    {
+        List<Class> extendedClasses = new ArrayList<>();
+
+        for (Class clazz : entities)
+        {
+            Set<EntityType<?>> entityTypes = getEntityManager().getMetamodel().getEntities();
+            extendedClasses.addAll(entityTypes.stream()
+                    .filter(entityType -> clazz.isAssignableFrom(entityType.getJavaType()))
+                    .map(entityType -> entityType.getJavaType()).collect(Collectors.toSet()));
+        }
+
+        return extendedClasses;
     }
 
     public AcmSchedulerService getSchedulerService()
@@ -56,5 +85,15 @@ public class SolrReindexService
     public void setSchedulerService(AcmSchedulerService schedulerService)
     {
         this.schedulerService = schedulerService;
+    }
+
+    public EntityManager getEntityManager()
+    {
+        return entityManager;
+    }
+
+    public void setEntityManager(EntityManager entityManager)
+    {
+        this.entityManager = entityManager;
     }
 }
