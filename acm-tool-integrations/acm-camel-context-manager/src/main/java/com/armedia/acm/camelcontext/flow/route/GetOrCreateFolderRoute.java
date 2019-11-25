@@ -63,6 +63,7 @@ public class GetOrCreateFolderRoute extends ArkCaseAbstractRoute
                 .process(exchange -> {
                     routeProperties = (Map<String, Object>) exchange.getIn().getBody();
                     exchange.getIn().getHeaders().put(PropertyIds.PATH, routeProperties.get(PropertyIds.PATH));
+                    exchange.getIn().getHeaders().put(PropertyIds.NAME, routeProperties.get(PropertyIds.NAME));
                     exchange.getIn().getHeaders().put(CamelCMISConstants.CMIS_ACTION, CamelCMISActions.FIND_OBJECT_BY_PATH);
                     MDC.put(HttpInvokerUtil.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY,
                             String.valueOf(routeProperties.get(HttpInvokerUtil.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY)));
