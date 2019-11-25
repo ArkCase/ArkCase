@@ -61,4 +61,5 @@ public class GetObjectByPathQueue implements ArkCaseCMISQueue
         {
             throw new ArkCaseFileRepositoryException(e);
         }
+    }
 }
