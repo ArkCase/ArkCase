@@ -2,8 +2,8 @@
 
 angular.module('people').controller(
         'People.NewPersonController',
-        [ '$scope', '$stateParams', '$translate', 'Person.InfoService', '$state', 'Object.LookupService', 'MessageService', '$timeout', 'UtilService', '$modal', 'ConfigService', 'Organization.InfoService', 'ObjectService', 'modalParams', 'Mentions.Service',
-                function($scope, $stateParams, $translate, PersonInfoService, $state, ObjectLookupService, MessageService, $timeout, Util, $modal, ConfigService, OrganizationInfoService, ObjectService, modalParams, MentionsService) {
+    ['$scope', '$stateParams', '$translate', 'Person.InfoService', '$state', 'Object.LookupService', 'MessageService', '$timeout', 'UtilService', '$modal', 'ConfigService', 'Organization.InfoService', 'ObjectService', 'modalParams', 'Mentions.Service', 'PhoneValidationService',
+        function ($scope, $stateParams, $translate, PersonInfoService, $state, ObjectLookupService, MessageService, $timeout, Util, $modal, ConfigService, OrganizationInfoService, ObjectService, modalParams, MentionsService, PhoneValidationService) {
 
                     $scope.modalParams = modalParams;
                     $scope.loading = false;
@@ -363,21 +363,16 @@ angular.module('people').controller(
                         $scope.onModalDismiss();
                     };
 
-                    $scope.validateInput = function(caType) {
-
-                        var inputType = caType;
-                        var value = $scope.person.defaultPhone.value;
-                        if (inputType == 'phone') {
-
-                            var regex = /^\d{3}[\-]\d{3}[\-]\d{4}$/;
-                            if (regex.test(value)) {
-                                $scope.showPhoneError = false;
-                                $scope.person.defaultPhone.value = value;
-                            } else {
-                                $scope.showPhoneError = true;
-                                $scope.person.defaultPhone.value = null;
-                            }
-                        }
-                    };
-
-                } ]);
+            $scope.validateInput = function (caType) {
+                var inputType = caType;
+                if (inputType == 'phone') {
+                    PhoneValidationService.getPhoneRegex().then(function (response) {
+                        $timeout(function () {
+                            var validateObject = PhoneValidationService.validateInput($scope.person.defaultPhone.value, response.data);
+                            $scope.person.defaultPhone.value = validateObject.inputValue;
+                            $scope.showPhoneError = validateObject.showPhoneError;
+                        }, 0);
+                    });
+                }
+            }
+        }]);

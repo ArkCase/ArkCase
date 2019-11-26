@@ -1,4 +1,4 @@
-angular.module('organizations').controller('Organizations.PhonesModalController', [ '$scope', '$translate', '$modalInstance', 'Object.LookupService', 'params', 'Mentions.Service', function($scope, $translate, $modalInstance, ObjectLookupService, params, MentionsService) {
+angular.module('organizations').controller('Organizations.PhonesModalController', ['$scope', '$translate', '$modalInstance', 'Object.LookupService', 'params', '$timeout', 'Mentions.Service', 'PhoneValidationService', function ($scope, $translate, $modalInstance, ObjectLookupService, params, $timeout, MentionsService, PhoneValidationService) {
 
     ObjectLookupService.getContactMethodTypes().then(function(contactMethodTypes) {
         $scope.phoneTypes = _.find(contactMethodTypes, {
@@ -32,14 +32,12 @@ angular.module('organizations').controller('Organizations.PhonesModalController'
     };
 
     $scope.validateInput = function () {
-        var regex = /^\d{3}[\-]\d{3}[\-]\d{4}$/;
-        var value = $scope.phone.value;
-        if (regex.test(value)) {
-            $scope.showPhoneError = false;
-            $scope.phone.value = value;
-        } else {
-            $scope.showPhoneError = true;
-            $scope.phone.value = null;
-        }
+        PhoneValidationService.getPhoneRegex().then(function (response) {
+            $timeout(function () {
+                var validateObject = PhoneValidationService.validateInput($scope.phone.value, response.data);
+                $scope.phone.value = validateObject.inputValue;
+                $scope.showPhoneError = validateObject.showPhoneError;
+            }, 0);
+        });
     };
 } ]);

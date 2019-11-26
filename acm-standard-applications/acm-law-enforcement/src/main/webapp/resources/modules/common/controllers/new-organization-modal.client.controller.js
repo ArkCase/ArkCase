@@ -2,8 +2,8 @@
 
 angular.module('common').controller(
         'Common.NewOrganizationModalController',
-        [ '$scope', '$stateParams', '$translate', 'Organization.InfoService', '$state', 'Object.LookupService', 'UtilService', '$modal', 'ConfigService', 'MessageService', '$timeout', '$modalInstance', 'Person.InfoService',
-                function($scope, $stateParams, $translate, OrganizationInfoService, $state, ObjectLookupService, Util, $modal, ConfigService, MessageService, $timeout, $modalInstance, PersonInfoService) {
+    ['$scope', '$stateParams', '$translate', 'Organization.InfoService', '$state', 'Object.LookupService', 'UtilService', '$modal', 'ConfigService', 'MessageService', '$timeout', '$modalInstance', 'Person.InfoService', 'PhoneValidationService',
+        function ($scope, $stateParams, $translate, OrganizationInfoService, $state, ObjectLookupService, Util, $modal, ConfigService, MessageService, $timeout, $modalInstance, PersonInfoService, PhoneValidationService) {
 
                     //used for showing/hiding buttons in communication accounts
                     var contactMethodsCounts = {
@@ -354,18 +354,18 @@ angular.module('common').controller(
                     $scope.capitalizeFirstLetter = function(input) {
                         return (!!input) ? input.charAt(0).toUpperCase() + input.substr(1).toLowerCase() : '';
                     }
-                    $scope.validateInput = function (caType) {
-                        var inputType = caType;
-                        var value = $scope.organization.defaultPhone.value;
-                        if (inputType == 'phone') {
-                            var regex = /^\d{3}[\-]\d{3}[\-]\d{4}$/;
-                            if (regex.test(value)) {
-                                $scope.showPhoneError = false;
-                                $scope.organization.defaultPhone.value = value;
-                            } else {
-                                $scope.showPhoneError = true;
-                                $scope.organization.defaultPhone = null;
-                            }
-                        }
-                    }
-                } ]);
+                    
+            $scope.validateInput = function (caType) {
+                var inputType = caType;
+                if (inputType == 'phone') {
+                    PhoneValidationService.getPhoneRegex().then(function (response) {
+                        $timeout(function () {
+                            var validateObject = PhoneValidationService.validateInput($scope.person.defaultPhone.value, response.data);
+                            $scope.person.defaultPhone.value = validateObject.inputValue;
+                            $scope.showPhoneError = validateObject.showPhoneError;
+                        }, 0);
+                    });
+                }
+            }
+
+        }]);
