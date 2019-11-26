@@ -115,12 +115,12 @@ public class ContentFileToSolrFlowIT
 
         String folderId = folder.getPropertyValue(EcmFileConstants.REPOSITORY_VERSION_ID);
 
-        Resource uploadFile = new ClassPathResource("/spring/spring-library-ecm-plugin-test-mule.xml");
+        Resource uploadFile = new ClassPathResource("/spring/spring-library-add-file-camel.xml");
         InputStream is = uploadFile.getInputStream();
 
         EcmFile ecmFile = new EcmFile();
 
-        ecmFile.setFileName("spring-library-ecm-plugin-test-mule.xml-" + System.currentTimeMillis());
+        ecmFile.setFileName("spring-library-add-file-camel.xml-" + System.currentTimeMillis());
         ecmFile.setFileActiveVersionMimeType("text/plain");
 
         Map<String, Object> messageProperties = new HashMap<>();
@@ -145,7 +145,7 @@ public class ContentFileToSolrFlowIT
         SolrContentDocument solrContentDocument = new SolrContentDocument();
         solrContentDocument.setCmis_version_series_id_s(newDocument.getVersionSeriesId());
         solrContentDocument.setAdditionalProperty("cmis_repository_id_s", "alfresco");
-        solrContentDocument.setName("/spring/spring-library-ecm-plugin-test-mule" + System.currentTimeMillis() + ".xml");
+        solrContentDocument.setName("/spring/spring-library-add-file-camel" + System.currentTimeMillis() + ".xml");
 
         sendDocumentsToSolr.sendSolrContentFileIndexDocuments(Collections.singletonList(solrContentDocument));
 

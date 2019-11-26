@@ -90,8 +90,8 @@ public class FOIAEcmFileServiceImpl extends EcmFileServiceImpl implements FOIAEc
             cmisRepositoryId = getEcmFileConfig().getDefaultCmisId();
         }
         props.put(EcmFileConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID);
-        props.put(EcmFileConstants.VERSIONING_STATE, getCamelContextManager().getRepositoryConfigs()
-                .get(ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID).getCmisVersioningState());
+        props.put(EcmFileConstants.VERSIONING_STATE,
+                getCmisConfigUtils().getVersioningState(ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID));
         props.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, EcmFileCamelUtils.getCmisUser());
 
         try
