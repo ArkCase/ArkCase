@@ -32,6 +32,7 @@ import com.armedia.acm.plugins.task.model.AcmTask;
 import com.armedia.acm.plugins.task.model.TaskConfig;
 import com.armedia.acm.services.notification.dao.NotificationDao;
 import com.armedia.acm.services.notification.model.Notification;
+import com.armedia.acm.services.users.dao.UserDao;
 import org.springframework.context.ApplicationListener;
 import org.springframework.security.core.context.SecurityContextHolder;
 
@@ -39,6 +40,7 @@ public class AdHocTaskCompletedListener implements ApplicationListener<AcmApplic
 {
     private NotificationDao notificationDao;
     private TaskConfig taskConfig;
+    private UserDao userDao;
 
     @Override
     public void onApplicationEvent(AcmApplicationTaskEvent event)
@@ -61,7 +63,7 @@ public class AdHocTaskCompletedListener implements ApplicationListener<AcmApplic
         notification.setUser(SecurityContextHolder.getContext().getAuthentication().getName());
         notification.setParentType(acmTask.getObjectType());
         notification.setParentId(acmTask.getTaskId());
-        notification.setEmailAddresses(acmTask.getOwner());
+        notification.setEmailAddresses(getUserDao().findByUserId(acmTask.getOwner()).getMail());
         notificationDao.save(notification);
     }
 
@@ -83,5 +85,15 @@ public class AdHocTaskCompletedListener implements ApplicationListener<AcmApplic
     public void setTaskConfig(TaskConfig taskConfig)
     {
         this.taskConfig = taskConfig;
+    }
+
+    public UserDao getUserDao()
+    {
+        return userDao;
+    }
+
+    public void setUserDao(UserDao userDao)
+    {
+        this.userDao = userDao;
     }
 }
