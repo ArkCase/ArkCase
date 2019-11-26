@@ -315,6 +315,13 @@ angular.module('cases').controller(
                     id: $scope.objectInfo.id
                 });
             };
+
+            $scope.setExternalIdentifier = function (data) {
+                if (!Util.isEmpty(data)) {
+                    $scope.objectInfo.externalIdentifier = data;
+                    $scope.saveCase();
+                }
+            }
             
 
         } ]);
