@@ -64,6 +64,12 @@
                 </div>
                 <small class="text-muted"><span translate>cases.comp.info.modifier</span></small>
             </div>
+            <div class="col-xs-12 col-md-2">
+                <div class="h4 font-bold editable-margin-left">
+                    <a href="#" editable-text="objectInfo.externalIdentifier" onaftersave="setExternalIdentifier($data, objectInfo.externalIdentifier)">{{ objectInfo.externalIdentifier || ('common.value.unknown' | translate) }}</a>
+                </div>
+                <small class="text-muted"><span translate>cases.comp.info.externalIdentifier.label</span></small>
+            </div>
         </div>
         <div class="row">
             <div class="col-xs-12 col-md-2">
@@ -108,7 +114,7 @@
                 </div>
                 <small class="text-muted"><span translate>cases.comp.info.modified</span></small>
             </div>
-            <div ng-if="isAmendmentAdded" class="h4 font-bold">
+            <div ng-if="isAmendmentAdded" class="h4 font-bold" style="margin-left:-36px;">
                 <i class="fa fa-exclamation-circle icon-overdue"></i>
                 <small><b><span class="icon-overdue" translate>cases.comp.info.amendmentAdded.label</span></b>
                 </small>
