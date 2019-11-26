@@ -7,7 +7,6 @@
             <list>
                 <value>/flows/MuleCmisConnectorFlow.xml</value>
                 <value>/flows/MuleActiveMqConnectorFlow.xml</value>
-                <value>/flows/createFolderFlow.xml</value>
             </list>
         </property>
     </bean>
