@@ -83,6 +83,7 @@ import com.armedia.acm.web.api.MDCConstants;
 
 import org.apache.chemistry.opencmis.client.api.CmisObject;
 import org.apache.chemistry.opencmis.client.api.Document;
+import org.apache.chemistry.opencmis.client.api.Folder;
 import org.apache.chemistry.opencmis.commons.PropertyIds;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -90,8 +91,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.mule.api.MuleException;
-import org.mule.api.MuleMessage;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.messaging.MessageChannel;
@@ -502,14 +501,15 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         try
         {
             Map<String, Object> properties = new HashMap<>();
-            properties.put(EcmFileConstants.CONFIGURATION_REFERENCE, cmisConfigUtils.getCmisConfiguration(cmisRepositoryId));
+            properties.put(PropertyIds.PATH, folderPath);
+            properties.put(EcmFileConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID);
+            properties.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, EcmFileCamelUtils.getCmisUser());
 
-            MuleMessage message = getMuleContextManager().send(EcmFileConstants.MULE_ENDPOINT_CREATE_FOLDER, folderPath, properties);
-            CmisObject cmisObject = message.getPayload(CmisObject.class);
-            String cmisId = cmisObject.getId();
-            return cmisId;
+            Folder result = (Folder) getCamelContextManager().send(ArkCaseCMISActions.GET_OR_CREATE_FOLDER_BY_PATH, properties);
+
+            return result.getPropertyValue(EcmFileConstants.REPOSITORY_VERSION_ID);
         }
-        catch (MuleException e)
+        catch (ArkCaseFileRepositoryException e)
         {
             log.error("Could not create folder: {} ", e.getMessage(), e);
             throw new AcmCreateObjectFailedException("Folder", e.getMessage(), e);
