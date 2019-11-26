@@ -66,7 +66,6 @@ import java.util.UUID;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
-        "/spring/spring-library-ecm-plugin-test-mule.xml",
         "/spring/spring-library-acm-encryption.xml",
         "/spring/spring-library-context-holder.xml",
         "/spring/spring-library-data-source.xml",
@@ -120,12 +119,12 @@ public class AddFileFlowIT
 
         log.debug("Found folder id '{}'", testFolderId);
 
-        Resource uploadFile = new ClassPathResource("/spring/spring-library-ecm-plugin-test-mule.xml");
+        Resource uploadFile = new ClassPathResource("/spring/spring-library-add-file-camel.xml");
         InputStream is = uploadFile.getInputStream();
 
         EcmFile ecmFile = new EcmFile();
 
-        ecmFile.setFileName("spring-library-ecm-plugin-test-mule.xml-" + System.currentTimeMillis());
+        ecmFile.setFileName("spring-library-add-file-camel.xml-" + System.currentTimeMillis());
         ecmFile.setFileActiveVersionMimeType("text/plain");
 
         Map<String, Object> messageProperties = new HashMap<>();
@@ -184,12 +183,12 @@ public class AddFileFlowIT
 
         log.debug("Found folder id '{}'", testFolderId);
 
-        Resource uploadFile = new ClassPathResource("/spring/spring-library-ecm-plugin-test-mule.xml");
+        Resource uploadFile = new ClassPathResource("/spring/spring-library-add-file-camel.xml");
         InputStream is = uploadFile.getInputStream();
 
         EcmFile ecmFile = new EcmFile();
 
-        ecmFile.setFileName("spring-library-ecm-plugin-test-mule.xml-" + System.currentTimeMillis());
+        ecmFile.setFileName("spring-library-add-file-camel.xml-" + System.currentTimeMillis());
         ecmFile.setFileActiveVersionMimeType("text/plain");
 
         messageProperties = new HashMap<>();

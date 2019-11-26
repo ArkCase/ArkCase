@@ -41,7 +41,6 @@ import com.armedia.acm.services.search.exception.SolrException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.JSONException;
-import org.mule.api.MuleException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -58,7 +57,6 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.persistence.PersistenceException;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.util.List;
 
@@ -83,7 +81,7 @@ public class PortalRequestAPIController
     @RequestMapping(value = "/external/status", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public List<PortalFOIARequestStatus> getExternalRequests(PortalFOIARequestStatus requestStatus)
-            throws UnsupportedEncodingException, MuleException, AcmObjectNotFoundException
+            throws AcmObjectNotFoundException
     {
         return getPortalRequestService().getExternalRequests(requestStatus);
     }

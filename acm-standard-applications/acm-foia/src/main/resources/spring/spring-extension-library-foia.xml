@@ -296,7 +296,6 @@
             <beans:property name="ecmFileDao" ref="ecmFileDao"/>
             <beans:property name="containerFolderDao" ref="acmContainerFolderDao"/>
             <beans:property name="ecmFileConfig" ref="ecmFileConfig"/>
-            <beans:property name="muleContextManager" ref="muleContextManager"/>
             <beans:property name="solrQuery" ref="executeSolrQuery"/>
             <beans:property name="searchResults" ref="searchResults"/>
             <beans:property name="sortParameterNameToCmisFieldName">

@@ -1,8 +1,8 @@
-package com.armedia.acm.plugins.ecm.utils;
+package com.armedia.acm.camelcontext.flow.queue;
 
 /*-
  * #%L
- * ACM Service: Enterprise Content Management
+ * acm-camel-context-manager
  * %%
  * Copyright (C) 2014 - 2019 ArkCase LLC
  * %%
@@ -27,34 +27,40 @@ package com.armedia.acm.plugins.ecm.utils;
  * #L%
  */
 
-import com.armedia.acm.camelcontext.context.CamelContextManager;
+import com.armedia.acm.camelcontext.exception.ArkCaseFileRepositoryException;
+
+import org.apache.camel.ProducerTemplate;
+
+import java.util.Map;
 
 /**
  * Created by Vladimir Cherepnalkovski <vladimir.cherepnalkovski@armedia.com> on Nov, 2019
  */
-public class CmisConfigUtils
+public class GetOrCreateFolderQueue implements ArkCaseCMISQueue
 {
-    private CamelContextManager camelContextManager;
+    private ProducerTemplate producerTemplate;
+    private String repositoryID;
+    private Long timeout;
 
-    /**
-     * Retrieve versioning state value (used with versioningState attribute of Camel routes) for given configuration id.
-     *
-     * @param configId
-     *            configuration identifier
-     * @return versioning state value (NONE, MINOR, MAJOR)
-     */
-    public String getVersioningState(String configId)
+    public GetOrCreateFolderQueue(ProducerTemplate producerTemplate, String repositoryID, String timeout)
     {
-        return camelContextManager.getRepositoryConfigs().get(configId).getCmisVersioningState();
+        this.producerTemplate = producerTemplate;
+        this.repositoryID = repositoryID;
+        this.timeout = Long.valueOf(timeout);
     }
 
-    public CamelContextManager getCamelContextManager()
+    @Override
+    public Object send(Map<String, Object> props) throws ArkCaseFileRepositoryException
     {
-        return camelContextManager;
-    }
-
-    public void setCamelContextManager(CamelContextManager camelContextManager)
-    {
-        this.camelContextManager = camelContextManager;
+        String queueName = "seda:" + repositoryID + "-getOrCreateFolderQueue?timeout=" + timeout;
+        producerTemplate.setDefaultEndpointUri(queueName);
+        try
+        {
+            return producerTemplate.requestBody(props);
+        }
+        catch (Exception e)
+        {
+            throw new ArkCaseFileRepositoryException(e);
+        }
     }
 }

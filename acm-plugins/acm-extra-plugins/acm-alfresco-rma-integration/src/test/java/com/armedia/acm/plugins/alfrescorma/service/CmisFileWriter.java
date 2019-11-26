@@ -38,12 +38,11 @@ import com.armedia.acm.plugins.ecm.utils.CmisConfigUtils;
 import com.armedia.acm.plugins.ecm.utils.EcmFileCamelUtils;
 import com.armedia.acm.web.api.MDCConstants;
 
-import org.apache.chemistry.opencmis.client.api.CmisObject;
 import org.apache.chemistry.opencmis.client.api.Document;
+import org.apache.chemistry.opencmis.client.api.Folder;
 import org.apache.chemistry.opencmis.commons.PropertyIds;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.mule.api.MuleMessage;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 
@@ -62,17 +61,17 @@ public class CmisFileWriter
     {
         CmisConfigUtils cmisConfigUtils = new CmisConfigUtils();
         cmisConfigUtils.setCamelContextManager(camelContextManager);
+        String testPath = "/acm/test/folder";
 
         // create a file that we can then declare as a record and set metadata on it
         Map<String, Object> properties = new HashMap<>();
-        String cmisRepositoryId = "alfresco";
-        Object alfresco = muleContextManager.getMuleContext().getRegistry().lookupObject(cmisRepositoryId);
-        properties.put("configRef", alfresco);
+        properties.put(EcmFileConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID);
+        properties.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, "");
+        properties.put(PropertyIds.PATH, testPath);
 
-        String testPath = "/acm/test/folder";
-        MuleMessage createFolderMessage = muleContextManager.send("vm://createFolder.in", testPath, properties);
-        CmisObject folder = (CmisObject) createFolderMessage.getPayload();
-        String folderId = folder.getId();
+        Folder result = (Folder) camelContextManager.send(ArkCaseCMISActions.GET_OR_CREATE_FOLDER_BY_PATH, properties);
+
+        String folderId = result.getPropertyValue(EcmFileConstants.REPOSITORY_VERSION_ID);
 
         Resource uploadFile = new ClassPathResource("/spring/spring-alfresco-records-service-test.xml");
         InputStream is = uploadFile.getInputStream();
@@ -85,8 +84,8 @@ public class CmisFileWriter
         messageProperties.put("cmisFolderId", folderId);
         messageProperties.put("inputStream", is);
         messageProperties.put(EcmFileConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID);
-        messageProperties.put(EcmFileConstants.VERSIONING_STATE, camelContextManager.getRepositoryConfigs()
-                .get(ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID).getCmisVersioningState());
+        messageProperties.put(EcmFileConstants.VERSIONING_STATE,
+                cmisConfigUtils.getVersioningState(ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID));
         messageProperties.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, EcmFileCamelUtils.getCmisUser());
         messageProperties.put(PropertyIds.NAME, ecmFile.getFileName());
         messageProperties.put(PropertyIds.CONTENT_STREAM_MIME_TYPE, "text/plain");
