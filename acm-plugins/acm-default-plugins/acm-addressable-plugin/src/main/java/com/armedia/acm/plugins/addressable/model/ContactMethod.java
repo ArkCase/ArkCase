@@ -71,7 +71,6 @@ public class ContactMethod implements Serializable, AcmEntity, AcmObject
 {
     public static final Pattern EMAIL_ADDRESS_REGEX = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$",
             Pattern.CASE_INSENSITIVE);
-    public static final Pattern PHONE_REGEX = Pattern.compile("^\\d{3}[\\-]\\d{3}[\\-]\\d{4}$", Pattern.CASE_INSENSITIVE);
     private static final long serialVersionUID = 1827685289454605556L;
     private transient final Logger log = LogManager.getLogger(getClass());
     @Id

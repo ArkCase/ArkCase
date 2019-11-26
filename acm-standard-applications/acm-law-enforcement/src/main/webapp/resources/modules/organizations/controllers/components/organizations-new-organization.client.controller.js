@@ -2,8 +2,8 @@
 
 angular.module('organizations').controller(
         'Organizations.NewOrganizationController',
-        [ '$scope', '$stateParams', '$translate', 'Organization.InfoService', '$state', 'Object.LookupService', 'MessageService', '$timeout', 'UtilService', '$modal', 'ConfigService', 'Person.InfoService', 'ObjectService', 'modalParams', 'Mentions.Service',
-                function($scope, $stateParams, $translate, OrganizationInfoService, $state, ObjectLookupService, MessageService, $timeout, Util, $modal, ConfigService, PersonInfoService, ObjectService, modalParams, MentionsService) {
+    ['$scope', '$stateParams', '$translate', 'Organization.InfoService', '$state', 'Object.LookupService', 'MessageService', '$timeout', 'UtilService', '$modal', 'ConfigService', 'Person.InfoService', 'ObjectService', 'modalParams', 'Mentions.Service', 'PhoneValidationService',
+        function ($scope, $stateParams, $translate, OrganizationInfoService, $state, ObjectLookupService, MessageService, $timeout, Util, $modal, ConfigService, PersonInfoService, ObjectService, modalParams, MentionsService, PhoneValidationService) {
 
                     $scope.modalParams = modalParams;
                     $scope.loading = false;
@@ -382,19 +382,18 @@ angular.module('organizations').controller(
                     $scope.cancelModal = function() {
                         $scope.onModalDismiss();
                     };
+                    
+            $scope.validateInput = function (caType) {
+                var inputType = caType;
+                if (inputType == 'phone') {
+                    PhoneValidationService.getPhoneRegex().then(function (response) {
+                        $timeout(function () {
+                            var validateObject = PhoneValidationService.validateInput($scope.person.defaultPhone.value, response.data);
+                            $scope.person.defaultPhone.value = validateObject.inputValue;
+                            $scope.showPhoneError = validateObject.showPhoneError;
+                        }, 0);
+                    });
+                }
+            }
 
-                    $scope.validateInput = function (caType) {
-                        var inputType = caType;
-                        var value = $scope.organization.defaultPhone.value;
-                        if (inputType == 'phone') {
-                            var regex = /^\d{3}[\-]\d{3}[\-]\d{4}$/;
-                            if (regex.test(value)) {
-                                $scope.showPhoneError = false;
-                                $scope.organization.defaultPhone.value = value;
-                            } else {
-                                $scope.showPhoneError = true;
-                                $scope.organization.defaultPhone = null;
-                            }
-                        }
-                    }
-                } ]);
+        }]);
