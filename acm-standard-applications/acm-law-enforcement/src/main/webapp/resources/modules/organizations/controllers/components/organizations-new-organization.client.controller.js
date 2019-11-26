@@ -382,14 +382,14 @@ angular.module('organizations').controller(
                     $scope.cancelModal = function() {
                         $scope.onModalDismiss();
                     };
-                    
+
             $scope.validateInput = function (caType) {
                 var inputType = caType;
                 if (inputType == 'phone') {
                     PhoneValidationService.getPhoneRegex().then(function (response) {
                         $timeout(function () {
-                            var validateObject = PhoneValidationService.validateInput($scope.person.defaultPhone.value, response.data);
-                            $scope.person.defaultPhone.value = validateObject.inputValue;
+                            var validateObject = PhoneValidationService.validateInput($scope.organization.defaultPhone.value, response.data);
+                            $scope.organization.defaultPhone.value = validateObject.inputValue;
                             $scope.showPhoneError = validateObject.showPhoneError;
                         }, 0);
                     });
