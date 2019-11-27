@@ -32,10 +32,6 @@ package com.armedia.acm.plugins.ecm.model;
  */
 public interface EcmFileConstants
 {
-    String MULE_ENDPOINT_CREATE_FOLDER = "vm://createFolder.in";
-
-    String MULE_ENDPOINT_REPLACE_FILE = "vm://updateFile.in";
-
     String USER_ACTION_COPY_FILE = "COPY";
 
     String USER_ACTION_UPLOAD_FILE = "UPLOAD";
