@@ -108,8 +108,9 @@ angular
             'MessageService',
             'Object.LookupService',
             '$timeout',
+            'Websockets.MessageHandler',
             function($q, $translate, $modal, $filter, $log, $injector, Store, Util, UtilDateService, ConfigService,
-            PluginService, UserInfoService, Ecm, EmailSenderConfigurationService, LocaleHelper, PublicFlagService, RequestResponseFolderService, MessageService, ObjectLookupService, $timeout) {
+            PluginService, UserInfoService, Ecm, EmailSenderConfigurationService, LocaleHelper, PublicFlagService, RequestResponseFolderService, MessageService, ObjectLookupService, $timeout, MessageHandler) {
                 var cacheTree = new Store.CacheFifo();
                 var cacheFolderList = new Store.CacheFifo();
 
@@ -390,7 +391,7 @@ angular
                                     }
                                 },
                                 dragDrop : function(node, data) {
-                                    if (DocTree.readOnly) {
+                                    if (DocTree.readOnly || DocTree.isDefaultFolder(data.otherNode)) {
                                         return;
                                     }
 
@@ -498,6 +499,15 @@ angular
                         }
                         return false;
                     },
+                    isDefaultFolder: function(node){
+                        var folderStructure = DocTree.treeConfig.folderStructure.data;
+                        if(_.find(folderStructure, function(folderName) {
+                            return folderName === node.data.name}) && node.parent.parent.title === "root"){
+                            return true;
+                        }
+
+                        return false;
+                    },
                     isNodeInResponseFolder : function(node) {
                         if(node.parent == null) {
                             return false;
@@ -551,21 +561,20 @@ angular
                     getCacheKeyByNode : function(folderNode) {
                         var pageId = Util.goodValue(folderNode.data.startRow, 0);
                         var folderId = folderNode.data.objectId;
-                        var cacheKey = DocTree.getCacheKey(DocTree.isTopNode(folderNode) ? 0 : folderId, pageId);
+                        var cacheKey = DocTree.getCacheKey(DocTree.isTopNode(folderNode) ? 0 : folderId, pageId, DocTree.treeConfig.nodeCacheKeyPrefix);
                         return cacheKey;
                     },
-                    getCacheKey : function(folderId, pageId) {
+                    getCacheKey : function(folderId, pageId, keyPrefix) {
                         var setting = DocTree.Config.getSetting();
-                        var key = this.getObjType() + "." + this.getObjId();
+                        var key = keyPrefix ? keyPrefix + "." : "";
+                        key += this.getObjType() + "." + this.getObjId();
                         key += "." + Util.goodValue(folderId, 0); //for root folder, folderId is 0 or undefined
                         key += "." + Util.goodValue(pageId, 0);
                         key += "." + DocTree.Config.getSortBy();
                         key += "." + DocTree.Config.getSortDirection();
                         key += "." + DocTree.Config.getMaxRows();
                         return key;
-                    }
-
-                    ,
+                    },
                     getTopNode : function() {
                         var topNode = null;
                         if (DocTree.tree) {
@@ -2256,6 +2265,15 @@ angular
 
                                 } else {
                                     if (item.cmd) {
+                                        if(item.cmd === "cut" || item.cmd === "remove" || item.cmd === "rename"){
+                                            var folderStructure = DocTree.treeConfig.folderStructure.data;
+                                            if( _.find(folderStructure, function (folderName) {
+                                                return folderName === nodes[0].data.name;
+                                            })){
+                                                item.disabled = true;
+                                                item.disabledExpression = true;
+                                            }
+                                        }
                                         var found = DocTree.Command.findHandler(item.cmd);
                                         var onAllowCmd = Util.goodMapValue(found, "onAllowCmd", null);
                                         if (onAllowCmd) {
@@ -2573,7 +2591,7 @@ angular
                                             setting.sortBy = Util.goodValue(folderList.sortBy);
                                             setting.sortDirection = Util.goodValue(folderList.sortDirection);
 
-                                            var cacheKey = DocTree.getCacheKey(folderId, pageId);
+                                            var cacheKey = DocTree.getCacheKey(folderId, pageId, DocTree.treeConfig.nodeCacheKeyPrefix);
                                             DocTree.cacheFolderList.put(cacheKey, folderList);
                                             return folderList;
                                         }
@@ -5255,6 +5273,10 @@ angular
 
                         DocTree.scope.$bus.subscribe('onSearchDocTree', function(data) {
                             DocTree.onSearch(data.searchFilter);
+                        });
+
+                        DocTree.scope.$bus.subscribe("zip_completed", function (data) {
+                            MessageHandler.handleZipGenerationMessage(data.filePath);
                         });
 
                         DocTree.scope.$bus.subscribe('object.changed/' + DocTree.getObjType() + '/' + DocTree.getObjId(), function(message) {

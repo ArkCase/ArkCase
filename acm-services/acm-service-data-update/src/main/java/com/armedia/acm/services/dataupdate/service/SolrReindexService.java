@@ -49,13 +49,15 @@ public class SolrReindexService
 
     public void reindex(List<Class> entities)
     {
-        entities.addAll(getExtendedClasses(entities));
+        List<Class> entitiesAndExtendedClasses = new ArrayList<>(entities);
+        entitiesAndExtendedClasses.addAll(getExtendedClasses(entities));
+
         JobDataMap lastRunDatePerObject = schedulerService.getJobDataMap("jpaBatchUpdateJob");
         if (lastRunDatePerObject == null)
         {
             return;
         }
-        entities.forEach(entity -> lastRunDatePerObject.remove(entity.getName()));
+        entitiesAndExtendedClasses.forEach(entity -> lastRunDatePerObject.remove(entity.getName()));
 
         schedulerService.triggerJob("jpaBatchUpdateJob", lastRunDatePerObject);
     }

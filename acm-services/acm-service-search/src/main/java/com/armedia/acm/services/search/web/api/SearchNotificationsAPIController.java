@@ -28,9 +28,10 @@ package com.armedia.acm.services.search.web.api;
  */
 
 import com.armedia.acm.pluginmanager.service.AcmPluginManager;
+import com.armedia.acm.services.search.exception.SolrException;
 import com.armedia.acm.services.search.model.ApplicationSearchEvent;
 import com.armedia.acm.services.search.model.SearchConstants;
-import com.armedia.acm.services.search.model.SolrCore;
+import com.armedia.acm.services.search.model.solr.SolrCore;
 import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.services.search.model.solr.SolrResponse;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
@@ -39,9 +40,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import org.apache.commons.lang3.StringUtils;
-import org.mule.api.MuleException;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -75,7 +75,7 @@ public class SearchNotificationsAPIController
             @RequestParam(value = "owner", required = false, defaultValue = "") String owner,
             @RequestParam(value = "newOnly", required = false, defaultValue = "true") boolean newOnly,
             Authentication authentication,
-            HttpSession httpSession) throws MuleException
+            HttpSession httpSession) throws SolrException
     {
         String query = "object_type_s:" + "NOTIFICATION";
 

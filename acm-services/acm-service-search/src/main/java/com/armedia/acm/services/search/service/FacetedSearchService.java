@@ -28,16 +28,16 @@ package com.armedia.acm.services.search.service;
  */
 
 import com.armedia.acm.audit.model.AuditEventConfig;
+import com.armedia.acm.services.search.exception.SolrException;
 import com.armedia.acm.services.search.model.SearchConstants;
-import com.armedia.acm.services.search.model.SolrCore;
 import com.armedia.acm.services.search.model.solr.SearchConfig;
+import com.armedia.acm.services.search.model.solr.SolrCore;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.mule.api.MuleException;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
 import org.springframework.security.core.Authentication;
 
 import java.io.UnsupportedEncodingException;
@@ -645,7 +645,7 @@ public class FacetedSearchService
         this.auditEventConfig = auditEventConfig;
     }
 
-    public JSONObject getParentDocumentJsonObject(Authentication authentication, String res) throws MuleException
+    public JSONObject getParentDocumentJsonObject(Authentication authentication, String res) throws SolrException
     {
         JSONObject solrResponse = new JSONObject(res);
         if (solrResponse.getJSONObject("response").getLong("numFound") > 0)

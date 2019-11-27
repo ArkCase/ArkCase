@@ -27,6 +27,7 @@ package com.armedia.acm.services.mediaengine.service;
  * #L%
  */
 
+import com.armedia.acm.camelcontext.exception.ArkCaseFileRepositoryException;
 import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
 import com.armedia.acm.services.mediaengine.exception.CreateMediaEngineException;
 import com.armedia.acm.services.mediaengine.exception.GetConfigurationException;
@@ -42,7 +43,6 @@ import com.armedia.acm.services.mediaengine.model.MediaEngineType;
 
 import org.activiti.engine.delegate.DelegateExecution;
 import org.activiti.engine.runtime.ProcessInstance;
-import org.mule.api.MuleException;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
@@ -426,9 +426,9 @@ public interface MediaEngineService<T extends MediaEngine>
      *            shared folder used to store temp files.
      * @return File
      * @throws IOException
-     * @throws MuleException
+     * @throws ArkCaseFileRepositoryException
      */
-    File createTempFile(MediaEngine mediaEngine, String tempPath) throws IOException, MuleException;
+    File createTempFile(MediaEngine mediaEngine, String tempPath) throws IOException, ArkCaseFileRepositoryException;
 
     /**
      *

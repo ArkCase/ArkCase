@@ -20,6 +20,13 @@ angular.module('request-info').controller(
                         }
                     });
 
+                    $scope.childDocumentSearch = {
+                        parentType: ObjectService.ObjectTypes.CASE_FILE,
+                        childTypes:["TIMESHEET", "COSTSHEET"],
+                        startRow: Util.goodValue($scope.start, 0),
+                        maxRows: Util.goodValue($scope.pageSize, 10)
+                    };
+
                     var gridHelper = new HelperUiGridService.Grid({
                         scope: $scope
                     });
@@ -48,8 +55,9 @@ angular.module('request-info').controller(
 
                     var retrieveGridData = function() {
                         var currentObjectId = Util.goodMapValue($scope.objectInfo, "id");
+                        $scope.childDocumentSearch.parentId = currentObjectId;
                         if (Util.goodPositive(currentObjectId, false)) {
-                            ObjectTaskService.queryChildTasks(ObjectService.ObjectTypes.CASE_FILE, currentObjectId, Util.goodValue($scope.start, 0), Util.goodValue($scope.pageSize, 10), Util.goodValue($scope.sort.by), Util.goodValue($scope.sort.dir)).then(function(data) {
+                            CaseInfoService.queryCaseTasks($scope.objectInfo.id, $scope.childDocumentSearch, Util.goodMapValue($scope.sort, "by"), Util.goodMapValue($scope.sort, "dir")).then(function(data) {
                                 var tasks = data.response.docs;
                                 $scope.gridOptions = $scope.gridOptions || {};
                                 $scope.gridOptions.data = tasks;

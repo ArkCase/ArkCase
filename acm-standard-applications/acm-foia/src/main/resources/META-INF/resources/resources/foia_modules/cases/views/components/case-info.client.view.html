@@ -64,6 +64,12 @@
                 </div>
                 <small class="text-muted"><span translate>cases.comp.info.modifier</span></small>
             </div>
+            <div class="col-xs-12 col-md-2">
+                <div class="h4 font-bold editable-margin-left">
+                    <a href="#" editable-text="objectInfo.externalIdentifier" onaftersave="setExternalIdentifier($data, objectInfo.externalIdentifier)">{{ objectInfo.externalIdentifier || ('common.value.unknown' | translate) }}</a>
+                </div>
+                <small class="text-muted"><span translate>cases.comp.info.externalIdentifier.label</span></small>
+            </div>
         </div>
         <div class="row">
             <div class="col-xs-12 col-md-2">

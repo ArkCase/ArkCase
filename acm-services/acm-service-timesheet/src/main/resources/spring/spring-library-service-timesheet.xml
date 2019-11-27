@@ -64,4 +64,8 @@
         <aop:scoped-proxy/>
     </bean>
 
+    <bean id="acmTimeToSolrTransformer" class="com.armedia.acm.services.timesheet.service.AcmTimeToSolrTransformer">
+        <property name="acmTimeDao" ref="acmTimeDao"/>
+    </bean>
+
 </beans>

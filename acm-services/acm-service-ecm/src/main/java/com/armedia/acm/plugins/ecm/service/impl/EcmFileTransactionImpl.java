@@ -28,6 +28,10 @@ package com.armedia.acm.plugins.ecm.service.impl;
  */
 
 import com.armedia.acm.auth.AcmAuthenticationDetails;
+import com.armedia.acm.camelcontext.arkcase.cmis.ArkCaseCMISActions;
+import com.armedia.acm.camelcontext.arkcase.cmis.ArkCaseCMISConstants;
+import com.armedia.acm.camelcontext.context.CamelContextManager;
+import com.armedia.acm.camelcontext.exception.ArkCaseFileRepositoryException;
 import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.plugins.ecm.dao.AcmFolderDao;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
@@ -43,10 +47,12 @@ import com.armedia.acm.plugins.ecm.service.FileEventPublisher;
 import com.armedia.acm.plugins.ecm.service.ProgressIndicatorService;
 import com.armedia.acm.plugins.ecm.service.ProgressbarExecutor;
 import com.armedia.acm.plugins.ecm.utils.CmisConfigUtils;
+import com.armedia.acm.plugins.ecm.utils.EcmFileCamelUtils;
 import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
 import com.armedia.acm.services.pipeline.PipelineManager;
 import com.armedia.acm.web.api.MDCConstants;
 
+import org.apache.camel.component.cmis.CamelCMISConstants;
 import org.apache.chemistry.opencmis.client.api.Document;
 import org.apache.chemistry.opencmis.commons.data.ContentStream;
 import org.apache.commons.io.FileUtils;
@@ -54,15 +60,12 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.input.CountingInputStream;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.tika.exception.TikaException;
 import org.mule.api.MuleException;
-import org.mule.api.MuleMessage;
-import org.mule.module.cmis.connectivity.CMISCloudConnectorConnectionManager;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
 import org.slf4j.MDC;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.multipart.MultipartFile;
 import org.xml.sax.SAXException;
 
@@ -82,6 +85,7 @@ import java.util.UUID;
 public class EcmFileTransactionImpl implements EcmFileTransaction
 {
     private MuleContextManager muleContextManager;
+    private CamelContextManager camelContextManager;
     private EcmFileDao ecmFileDao;
     private AcmFolderDao folderDao;
     private FolderAndFilesUtils folderAndFilesUtils;
@@ -116,7 +120,7 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
     @Deprecated
     public EcmFile addFileTransaction(Authentication authentication, String ecmUniqueFilename, AcmContainer container,
             String targetCmisFolderId, InputStream fileContents, EcmFile metadata,
-            Document existingCmisDocument) throws MuleException, IOException
+            Document existingCmisDocument) throws ArkCaseFileRepositoryException, IOException
     {
 
         log.debug("Creating ecm file pipeline context");
@@ -186,9 +190,9 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
                 catch (Exception e)
                 {
                     log.error("pipeline handler call failed: {}", e.getMessage(), e);
-                    if (e.getCause() != null && MuleException.class.isAssignableFrom(e.getCause().getClass()))
+                    if (e.getCause() != null && ArkCaseFileRepositoryException.class.isAssignableFrom(e.getCause().getClass()))
                     {
-                        throw (MuleException) e.getCause();
+                        throw (ArkCaseFileRepositoryException) e.getCause();
                     }
                 }
                 log.debug("Returning from addFileTransaction method");
@@ -211,7 +215,7 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
     @Override
     @Deprecated
     public EcmFile addFileTransaction(Authentication authentication, String ecmUniqueFilename, AcmContainer container,
-            String targetCmisFolderId, InputStream fileContents, EcmFile metadata) throws MuleException, IOException
+            String targetCmisFolderId, InputStream fileContents, EcmFile metadata) throws ArkCaseFileRepositoryException, IOException
     {
         Document existingCmisDocument = null;
         return addFileTransaction(authentication, ecmUniqueFilename, container, targetCmisFolderId, fileContents,
@@ -224,7 +228,7 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
     public EcmFile addFileTransaction(String originalFileName, Authentication authentication, String fileType,
             String fileCategory, InputStream fileInputStream, String mimeType, String fileName,
             String cmisFolderId, AcmContainer container, String cmisRepositoryId)
-            throws MuleException, IOException
+            throws ArkCaseFileRepositoryException, IOException
     {
         Document existingCmisDocument = null;
         return addFileTransaction(originalFileName, authentication, fileType, fileCategory, fileInputStream,
@@ -236,7 +240,7 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
     public EcmFile addFileTransaction(String originalFileName, Authentication authentication, String fileType,
             String fileCategory, InputStream fileContents, String fileContentType,
             String fileName, String targetCmisFolderId, AcmContainer container,
-            String cmisRepositoryId, Document existingCmisDocument) throws MuleException, IOException
+            String cmisRepositoryId, Document existingCmisDocument) throws ArkCaseFileRepositoryException, IOException
     {
 
         log.debug("Creating ecm file pipeline context");
@@ -306,7 +310,10 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
             {
                 activeVersionMimeType = metadata.getFileActiveVersionMimeType().split(";")[0];
             }
-
+            if(detectedMetadata.getContentType() != null && detectedMetadata.getContentType().contains(";"))
+            {
+                detectedMetadata.setContentType(detectedMetadata.getContentType().split(";")[0]);
+            }
             if (activeVersionMimeType != null && detectedMetadata != null
                     && ((detectedMetadata.getContentType().equals(activeVersionMimeType)) ||
                             (getAllTikaMimeTypesForFile(mimeTypesByTika, activeVersionMimeType)
@@ -393,7 +400,6 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
     @Override
     public EcmFile addFileTransaction(Authentication authentication, String ecmUniqueFilename, AcmContainer container,
             String targetCmisFolderId, EcmFile metadata, MultipartFile file)
-            throws MuleException, IOException
     {
         Document existingCmisDocument = null;
         return addFileTransaction(authentication, ecmUniqueFilename, container, targetCmisFolderId,
@@ -693,7 +699,9 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
     }
 
     @Override
-    public EcmFile updateFileTransactionEventAware(Authentication authentication, EcmFile ecmFile, InputStream fileInputStream, String fileExtension) throws MuleException, IOException {
+    public EcmFile updateFileTransactionEventAware(Authentication authentication, EcmFile ecmFile, InputStream fileInputStream,
+            String fileExtension) throws IOException
+    {
 
         ecmFile = updateFileTransaction(authentication, ecmFile, fileInputStream, fileExtension);
         String ipAddress = null;
@@ -712,19 +720,22 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
     }
 
     @Override
-    public String downloadFileTransaction(EcmFile ecmFile) throws MuleException
+    public String downloadFileTransaction(EcmFile ecmFile) throws ArkCaseFileRepositoryException
     {
         try
         {
             Map<String, Object> messageProps = new HashMap<>();
-            messageProps.put(EcmFileConstants.CONFIGURATION_REFERENCE, cmisConfigUtils.getCmisConfiguration(ecmFile.getCmisRepositoryId()));
-            MuleMessage message = getMuleContextManager().send("vm://downloadFileFlow.in", ecmFile.getVersionSeriesId(), messageProps);
+            messageProps.put(EcmFileConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID);
+            messageProps.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, EcmFileCamelUtils.getCmisUser());
+            messageProps.put(CamelCMISConstants.CMIS_OBJECT_ID, ecmFile.getVersionSeriesId());
 
-            String result = getContent((ContentStream) message.getPayload());
+            ContentStream resultStream = (ContentStream) getCamelContextManager().send(ArkCaseCMISActions.DOWNLOAD_DOCUMENT, messageProps);
+
+            String result = getContent(resultStream);
 
             return result;
         }
-        catch (MuleException e)
+        catch (ArkCaseFileRepositoryException e)
         {
             log.error("Cannot download file: " + e.getMessage(), e);
             throw e;
@@ -732,48 +743,42 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
     }
 
     @Override
-    public InputStream downloadFileTransactionAsInputStream(EcmFile ecmFile) throws MuleException
+    public InputStream downloadFileTransactionAsInputStream(EcmFile ecmFile) throws ArkCaseFileRepositoryException
     {
         return performDownloadFileTransactionAsInputStream(ecmFile, new String());
     }
 
     @Override
-    public InputStream downloadFileTransactionAsInputStream(EcmFile ecmFile, String fileVersion) throws MuleException
+    public InputStream downloadFileTransactionAsInputStream(EcmFile ecmFile, String fileVersion) throws ArkCaseFileRepositoryException
     {
         return performDownloadFileTransactionAsInputStream(ecmFile, fileVersion);
     }
 
-    private InputStream performDownloadFileTransactionAsInputStream(EcmFile ecmFile, String fileVersion) throws MuleException
+    private InputStream performDownloadFileTransactionAsInputStream(EcmFile ecmFile, String fileVersion)
+            throws ArkCaseFileRepositoryException
     {
         try
         {
-            CMISCloudConnectorConnectionManager manager = cmisConfigUtils.getCmisConfiguration(ecmFile.getCmisRepositoryId());
-
-            String alfrescoUser = manager.getUsername();
-            Authentication authentication = SecurityContextHolder.getContext() != null
-                    ? SecurityContextHolder.getContext().getAuthentication()
-                    : null;
-
-            if (authentication != null && authentication.getName() != null)
-            {
-                alfrescoUser = StringUtils.substringBeforeLast(authentication.getName(), "@");
-            }
+            String alfrescoUser = EcmFileCamelUtils.getCmisUser();
 
             MDC.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, alfrescoUser);
             MDC.put(MDCConstants.EVENT_MDC_REQUEST_ID_KEY, UUID.randomUUID().toString());
 
-            Map<String, Object> messageProps = new HashMap<>();
-            messageProps.put(EcmFileConstants.CONFIGURATION_REFERENCE, manager);
             String cmisId = fileVersion.isEmpty() ? ecmFile.getVersionSeriesId()
                     : getFolderAndFilesUtils().getVersionCmisId(ecmFile, fileVersion);
 
-            MuleMessage message = getMuleContextManager().send("vm://downloadFileFlow.in", cmisId, messageProps);
+            Map<String, Object> messageProps = new HashMap<>();
+            messageProps.put(EcmFileConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID);
+            messageProps.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, alfrescoUser);
+            messageProps.put(CamelCMISConstants.CMIS_OBJECT_ID, cmisId);
 
-            InputStream result = ((ContentStream) message.getPayload()).getStream();
+            ContentStream resultStream = (ContentStream) getCamelContextManager().send(ArkCaseCMISActions.DOWNLOAD_DOCUMENT, messageProps);
+
+            InputStream result = resultStream.getStream();
 
             return result;
         }
-        catch (MuleException e)
+        catch (ArkCaseFileRepositoryException e)
         {
             log.error("Cannot download file: " + e.getMessage(), e);
             throw e;
@@ -932,5 +937,15 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
     public void setEcmFileConfig(EcmFileConfig ecmFileConfig)
     {
         this.ecmFileConfig = ecmFileConfig;
+    }
+
+    public CamelContextManager getCamelContextManager()
+    {
+        return camelContextManager;
+    }
+
+    public void setCamelContextManager(CamelContextManager camelContextManager)
+    {
+        this.camelContextManager = camelContextManager;
     }
 }

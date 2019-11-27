@@ -27,7 +27,8 @@ package com.armedia.acm.services.suggestion.service.impl;
  * #L%
  */
 
-import com.armedia.acm.services.search.model.SolrCore;
+import com.armedia.acm.services.search.exception.SolrException;
+import com.armedia.acm.services.search.model.solr.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.search.service.SearchResults;
 import com.armedia.acm.services.suggestion.model.SuggestedCase;
@@ -35,7 +36,6 @@ import com.armedia.acm.services.suggestion.service.SimilarCasesService;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.mule.api.MuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
@@ -59,7 +59,7 @@ public class SimilarCasesServiceImpl implements SimilarCasesService
 
     @Override
     public List<SuggestedCase> findSimilarCases(String title, Boolean isPortal, Long objectId, Authentication auth)
-            throws MuleException, ParseException
+            throws ParseException, SolrException
     {
 
         List<SuggestedCase> similarCases = new ArrayList<>();
@@ -79,7 +79,7 @@ public class SimilarCasesServiceImpl implements SimilarCasesService
     }
 
     private List<SuggestedCase> findSolrCasesByTitle(String title, Boolean isPortal, Long objectId, Authentication auth)
-            throws MuleException, ParseException
+            throws ParseException, SolrException
     {
         List<SuggestedCase> records = new ArrayList<>();
 
@@ -152,7 +152,7 @@ public class SimilarCasesServiceImpl implements SimilarCasesService
     }
 
     private List<SuggestedCase> findSolrCasesByFileContent(String title, Boolean isPortal, Long objectId, Authentication auth)
-            throws MuleException, ParseException
+            throws ParseException, SolrException
     {
         List<SuggestedCase> records = new ArrayList<>();
 
@@ -191,11 +191,17 @@ public class SimilarCasesServiceImpl implements SimilarCasesService
 
                 for (int i = 0; i < fileDocFiles.length(); i++)
                 {
-                    SuggestedCase suggestedCase = new SuggestedCase();
-                    SuggestedCase.File file = new SuggestedCase.File();
 
                     JSONObject docFile = fileDocFiles.getJSONObject(i);
 
+                    if (objectId != null && Long.valueOf(docFile.getString("object_id_s")).equals(objectId))
+                    {
+                        continue;
+                    }
+
+                    SuggestedCase suggestedCase = new SuggestedCase();
+
+                    SuggestedCase.File file = new SuggestedCase.File();
                     file.setFileId(docFile.getString("object_id_s"));
                     file.setFileName(docFile.getString("title_parseable") + docFile.getString("ext_s"));
 
@@ -214,12 +220,12 @@ public class SimilarCasesServiceImpl implements SimilarCasesService
 
                         if (isPortal)
                         {
-                            caseQuery = String.format("object_type_s:CASE_FILE AND request_status_lcs:Released AND name:%s",
+                            caseQuery = String.format("object_type_s:CASE_FILE AND request_status_lcs:Released AND name:\"%s\"",
                                     sc.getCaseNumber());
                         }
                         else
                         {
-                            caseQuery = String.format("object_type_s:CASE_FILE AND name:%s", sc.getCaseNumber());
+                            caseQuery = String.format("object_type_s:CASE_FILE AND name:\"%s\"", sc.getCaseNumber());
                         }
 
                         String caseResults = getExecuteSolrQuery().getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, caseQuery, 0,
