@@ -32,7 +32,6 @@ import com.armedia.acm.camelcontext.arkcase.cmis.ArkCaseCMISConstants;
 import com.armedia.acm.camelcontext.exception.ArkCaseFileRepositoryException;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
-import com.armedia.acm.plugins.ecm.utils.CmisConfigUtils;
 import com.armedia.acm.plugins.ecm.utils.EcmFileCamelUtils;
 import com.armedia.acm.web.api.MDCConstants;
 
@@ -72,17 +71,15 @@ public class AcmFileResource extends AcmFileSystemResource implements PropFindab
     private String fileType;
     private String lockType;
     private String acmTicket;
-    private CmisConfigUtils cmisConfigUtils;
 
     public AcmFileResource(String host, EcmFile acmFile, String fileType, String lockType, String acmTicket,
-            AcmFileSystemResourceFactory resourceFactory, CmisConfigUtils cmisConfigUtils)
+            AcmFileSystemResourceFactory resourceFactory)
     {
         super(host, resourceFactory);
         this.acmFile = acmFile;
         this.fileType = fileType;
         this.lockType = lockType;
         this.acmTicket = acmTicket;
-        this.cmisConfigUtils = cmisConfigUtils;
     }
 
     public Long getId()

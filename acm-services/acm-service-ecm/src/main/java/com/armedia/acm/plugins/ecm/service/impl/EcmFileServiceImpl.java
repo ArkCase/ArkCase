@@ -36,7 +36,6 @@ import com.armedia.acm.core.exceptions.AcmListObjectsFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.email.model.EmailSenderConfig;
-import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.objectonverter.ArkCaseBeanUtils;
 import com.armedia.acm.plugins.ecm.dao.AcmContainerDao;
 import com.armedia.acm.plugins.ecm.dao.AcmFolderDao;
@@ -141,8 +140,6 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     private Map<String, String> sortParameterNameToCmisFieldName;
 
     private Map<String, String> solrObjectTypeToAcmType;
-
-    private MuleContextManager muleContextManager;
 
     private ExecuteSolrQuery solrQuery;
 
@@ -1041,8 +1038,8 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
             cmisRepositoryId = ecmFileConfig.getDefaultCmisId();
         }
         props.put(EcmFileConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID);
-        props.put(EcmFileConstants.VERSIONING_STATE, getCamelContextManager().getRepositoryConfigs()
-                .get(ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID).getCmisVersioningState());
+        props.put(EcmFileConstants.VERSIONING_STATE,
+                getCmisConfigUtils().getVersioningState(ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID));
         props.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, EcmFileCamelUtils.getCmisUser());
 
         try
@@ -1050,7 +1047,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
             Document cmisdocument = (Document) getCamelContextManager().send(ArkCaseCMISActions.COPY_DOCUMENT, props);
 
             EcmFileVersion fileCopyVersion = new EcmFileVersion();
-            fileCopyVersion.setCmisObjectId(cmisdocument.getPropertyValue("alfcmis:nodeRef"));
+            fileCopyVersion.setCmisObjectId(cmisdocument.getPropertyValue(EcmFileConstants.REPOSITORY_VERSION_ID));
             fileCopyVersion.setVersionTag(cmisdocument.getVersionLabel());
             copyFileVersionMetadata(file, fileCopyVersion);
 
@@ -1456,8 +1453,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
             cmisRepositoryId = ecmFileConfig.getDefaultCmisId();
         }
         props.put(EcmFileConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID);
-        props.put(EcmFileConstants.VERSIONING_STATE,
-                camelContextManager.getRepositoryConfigs().get(ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID).getCmisVersioningState());
+        props.put(EcmFileConstants.VERSIONING_STATE, cmisConfigUtils.getVersioningState(ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID));
         props.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, EcmFileCamelUtils.getCmisUser());
 
         AcmContainer container = getOrCreateContainer(targetObjectType, targetObjectId, cmisRepositoryId);
@@ -2017,16 +2013,6 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     public void setEcmFileDao(EcmFileDao ecmFileDao)
     {
         this.ecmFileDao = ecmFileDao;
-    }
-
-    public MuleContextManager getMuleContextManager()
-    {
-        return muleContextManager;
-    }
-
-    public void setMuleContextManager(MuleContextManager muleContextManager)
-    {
-        this.muleContextManager = muleContextManager;
     }
 
     public Map<String, String> getSortParameterNameToCmisFieldName()

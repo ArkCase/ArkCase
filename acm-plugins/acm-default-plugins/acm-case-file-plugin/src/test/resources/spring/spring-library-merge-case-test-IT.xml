@@ -13,8 +13,6 @@
             <list>
                 <value>/flows/MuleCmisConnectorFlow.xml</value>
                 <value>/flows/MuleActiveMqConnectorFlow.xml</value>
-                <value>/flows/addNewFolderFlow.xml</value>
-                <value>/flows/copyFileFlow.xml</value>
             </list>
         </property>
     </bean>

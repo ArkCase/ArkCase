@@ -50,7 +50,7 @@ import java.time.LocalDateTime;
         "/spring/spring-library-particpants.xml",
         "/spring/spring-library-folder-watcher.xml",
         "/spring/spring-library-activiti-configuration.xml",
-        "/spring/spring-library-ecm-plugin-test-mule.xml",
+        "/spring/spring-library-add-file-camel.xml",
         "/spring/spring-library-acm-encryption.xml",
         "/spring/spring-library-audit-service.xml",
         "/spring/spring-library-user-service.xml",
