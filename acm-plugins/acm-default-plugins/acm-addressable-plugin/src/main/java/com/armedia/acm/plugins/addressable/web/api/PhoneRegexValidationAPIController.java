@@ -9,18 +9,16 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 @RequestMapping("/api/latest/plugin")
-public class PhoneRegexApiController
+public class PhoneRegexValidationAPIController
 {
 
     private PhoneRegexConfig phoneRegexConfig;
 
     @ResponseBody
-    @RequestMapping(value = "/regex", method = RequestMethod.GET, produces = MediaType.TEXT_PLAIN_VALUE)
+    @RequestMapping(value = "/phone/regex", method = RequestMethod.GET, produces = MediaType.TEXT_PLAIN_VALUE)
     public String getPhoneRegex()
     {
-
        return phoneRegexConfig.getPhoneRegex();
-
     }
 
     public PhoneRegexConfig getPhoneRegexConfig() {

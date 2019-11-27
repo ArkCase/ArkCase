@@ -7,7 +7,7 @@ angular.module('services').factory('PhoneValidationService', ['$http', function 
     function getPhoneRegex() {
         return $http({
             method: 'GET',
-            url: 'api/latest/plugin/regex',
+            url: 'api/latest/plugin/phone/regex',
         });
     }
 
