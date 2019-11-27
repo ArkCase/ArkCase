@@ -45,7 +45,7 @@ public class AdHocTaskCompletedListener implements ApplicationListener<AcmApplic
     @Override
     public void onApplicationEvent(AcmApplicationTaskEvent event)
     {
-        if (event.getTaskEvent().equals("complete") && event.isAdhocTask())
+        if (event.getTaskEvent().equals("complete"))
         {
             if (getTaskConfig().getSendCompleteEmail() && event.getAcmTask().getStatus().equals("CLOSED")
                     && (event.getAcmTask().getOwner() != null && !event.getAcmTask().getOwner().isEmpty()))
