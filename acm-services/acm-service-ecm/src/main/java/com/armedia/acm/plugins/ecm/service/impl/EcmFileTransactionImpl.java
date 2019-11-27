@@ -32,7 +32,6 @@ import com.armedia.acm.camelcontext.arkcase.cmis.ArkCaseCMISActions;
 import com.armedia.acm.camelcontext.arkcase.cmis.ArkCaseCMISConstants;
 import com.armedia.acm.camelcontext.context.CamelContextManager;
 import com.armedia.acm.camelcontext.exception.ArkCaseFileRepositoryException;
-import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.plugins.ecm.dao.AcmFolderDao;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
@@ -63,7 +62,6 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.tika.exception.TikaException;
-import org.mule.api.MuleException;
 import org.slf4j.MDC;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.multipart.MultipartFile;
@@ -84,7 +82,6 @@ import java.util.UUID;
  */
 public class EcmFileTransactionImpl implements EcmFileTransaction
 {
-    private MuleContextManager muleContextManager;
     private CamelContextManager camelContextManager;
     private EcmFileDao ecmFileDao;
     private AcmFolderDao folderDao;
@@ -362,9 +359,9 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
                 catch (Exception e)
                 {
                     log.error("pipeline handler call failed: {}", e.getMessage(), e);
-                    if (e.getCause() != null && MuleException.class.isAssignableFrom(e.getCause().getClass()))
+                    if (e.getCause() != null && ArkCaseFileRepositoryException.class.isAssignableFrom(e.getCause().getClass()))
                     {
-                        throw (MuleException) e.getCause();
+                        throw (ArkCaseFileRepositoryException) e.getCause();
                     }
                 }
                 log.debug("Returning from addFileTransaction method");
@@ -817,16 +814,6 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
         }
 
         return content;
-    }
-
-    public MuleContextManager getMuleContextManager()
-    {
-        return muleContextManager;
-    }
-
-    public void setMuleContextManager(MuleContextManager muleContextManager)
-    {
-        this.muleContextManager = muleContextManager;
     }
 
     public EcmFileDao getEcmFileDao()

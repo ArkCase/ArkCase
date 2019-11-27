@@ -34,7 +34,6 @@ import com.armedia.acm.plugins.ecm.pipeline.EcmFileTransactionPipelineContext;
 import com.armedia.acm.plugins.ecm.service.ProgressIndicatorService;
 import com.armedia.acm.plugins.ecm.service.ProgressbarExecutor;
 import com.armedia.acm.plugins.ecm.utils.EcmFileCamelUtils;
-import com.armedia.acm.plugins.ecm.utils.EcmFileMuleUtils;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.pipeline.handler.PipelineHandler;
 
@@ -54,7 +53,6 @@ public class EcmFileNewContentHandler implements PipelineHandler<EcmFile, EcmFil
 {
     private transient final Logger log = LogManager.getLogger(getClass());
 
-    private EcmFileMuleUtils ecmFileMuleUtils;
     private EcmFileCamelUtils ecmFileCamelUtils;
     private ProgressIndicatorService progressIndicatorService;
 
@@ -146,16 +144,6 @@ public class EcmFileNewContentHandler implements PipelineHandler<EcmFile, EcmFil
             }
             log.debug("Camel pre save handler rollback ended");
         }
-    }
-
-    public EcmFileMuleUtils getEcmFileMuleUtils()
-    {
-        return ecmFileMuleUtils;
-    }
-
-    public void setEcmFileMuleUtils(EcmFileMuleUtils ecmFileMuleUtils)
-    {
-        this.ecmFileMuleUtils = ecmFileMuleUtils;
     }
 
     public ProgressIndicatorService getProgressIndicatorService()
