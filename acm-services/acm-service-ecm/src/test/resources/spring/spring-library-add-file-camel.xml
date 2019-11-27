@@ -8,7 +8,6 @@
                 <value>/flows/MuleCmisConnectorFlow.xml</value>
                 <value>/flows/MuleActiveMqConnectorFlow.xml</value>
                 <value>/flows/ecmFileTestFlow.xml</value>
-                <value>/flows/downloadFileFlow.xml</value>
             </list>
         </property>
         <property name="acmMuleConfig" ref="acmMuleConfig"/>

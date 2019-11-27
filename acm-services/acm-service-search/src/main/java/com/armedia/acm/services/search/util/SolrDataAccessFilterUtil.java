@@ -136,7 +136,7 @@ public class SolrDataAccessFilterUtil
             );
 
             denyAccessFilter
-                    .append(" AND -deny_parent_user_ls")
+                    .append(" AND -deny_parent_user_ls:")
                     .append(authenticatedUserId);
 
             authenticatedUserGroupIds.forEach(groupId ->

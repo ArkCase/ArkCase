@@ -31,7 +31,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 import com.armedia.acm.camelcontext.context.CamelContextManager;
-import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.web.api.MDCConstants;
 
 import org.apache.chemistry.opencmis.client.api.CmisObject;
@@ -94,8 +93,6 @@ public class MoveToRecordFolderServiceIT
 
     private transient final Logger LOG = LogManager.getLogger(getClass());
     @Autowired
-    private MuleContextManager muleContextManager;
-    @Autowired
     private CamelContextManager camelContextManager;
     @Autowired
     @Qualifier("declareRecordService")
@@ -121,7 +118,7 @@ public class MoveToRecordFolderServiceIT
         MDC.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, "admin");
         MDC.put(MDCConstants.EVENT_MDC_REQUEST_ID_KEY, UUID.randomUUID().toString());
 
-        Document testFile = cmisFileWriter.writeTestFile(muleContextManager, camelContextManager);
+        Document testFile = cmisFileWriter.writeTestFile(camelContextManager);
         ecmFileId = testFile.getVersionSeriesId();
     }
 
