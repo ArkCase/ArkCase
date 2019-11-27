@@ -366,12 +366,9 @@ angular.module('people').controller(
             $scope.validateInput = function (caType) {
                 var inputType = caType;
                 if (inputType == 'phone') {
-                    PhoneValidationService.getPhoneRegex().then(function (response) {
-                        $timeout(function () {
-                            var validateObject = PhoneValidationService.validateInput($scope.person.defaultPhone.value, response.data);
-                            $scope.person.defaultPhone.value = validateObject.inputValue;
-                            $scope.showPhoneError = validateObject.showPhoneError;
-                        }, 0);
+                    PhoneValidationService.validateInput($scope.person.defaultPhone.value).then(function (validateObject) {
+                        $scope.person.defaultPhone.value = validateObject.inputValue;
+                        $scope.showPhoneError = validateObject.showPhoneError;
                     });
                 }
             }

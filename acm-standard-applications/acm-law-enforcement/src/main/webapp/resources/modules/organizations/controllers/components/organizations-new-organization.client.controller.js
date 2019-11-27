@@ -386,14 +386,10 @@ angular.module('organizations').controller(
             $scope.validateInput = function (caType) {
                 var inputType = caType;
                 if (inputType == 'phone') {
-                    PhoneValidationService.getPhoneRegex().then(function (response) {
-                        $timeout(function () {
-                            var validateObject = PhoneValidationService.validateInput($scope.organization.defaultPhone.value, response.data);
-                            $scope.organization.defaultPhone.value = validateObject.inputValue;
-                            $scope.showPhoneError = validateObject.showPhoneError;
-                        }, 0);
+                    PhoneValidationService.validateInput($scope.organization.defaultPhone.value).then(function (validateObject) {
+                        $scope.organization.defaultPhone.value = validateObject.inputValue;
+                        $scope.showPhoneError = validateObject.showPhoneError;
                     });
                 }
             }
-
         }]);
