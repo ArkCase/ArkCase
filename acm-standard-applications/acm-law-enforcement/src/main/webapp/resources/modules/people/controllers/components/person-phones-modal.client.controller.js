@@ -32,12 +32,10 @@ angular.module('people').controller('People.PhonesModalController', ['$scope', '
     };
 
     $scope.validateInput = function() {
-        PhoneValidationService.getPhoneRegex().then(function (response) {
-            $timeout(function () {
-                var validateObject = PhoneValidationService.validateInput($scope.phone.value, response.data);
-                $scope.phone.value = validateObject.inputValue;
-                $scope.showPhoneError = validateObject.showPhoneError;
-            }, 0);
+        PhoneValidationService.validateInput($scope.phone.value).then(function (validateObject) {
+            $scope.phone.value = validateObject.inputValue;
+            $scope.showPhoneError = validateObject.showPhoneError;
+
         });
     };
 } ]);
