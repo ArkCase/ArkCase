@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 @RequestMapping("/api/latest/plugin")
-public class PhoneRegexValidationAPIController
+public class PhoneRegexAPIController
 {
 
     private PhoneRegexConfig phoneRegexConfig;
