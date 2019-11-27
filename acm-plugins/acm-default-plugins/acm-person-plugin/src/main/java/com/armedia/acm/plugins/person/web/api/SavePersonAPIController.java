@@ -34,9 +34,8 @@ import com.armedia.acm.plugins.person.service.PersonEventPublisher;
 import com.armedia.acm.plugins.person.service.SavePersonTransaction;
 import com.armedia.acm.services.participants.model.DecoratedAssignedObjectParticipants;
 
-import org.mule.api.MuleException;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -76,7 +75,7 @@ public class SavePersonAPIController
             return saved;
 
         }
-        catch (MuleException | TransactionException e)
+        catch (TransactionException e)
         {
 
             getEventPublisher().publishPersonUpsertEvents(in, in, isInsert, false);
