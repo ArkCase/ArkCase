@@ -187,6 +187,9 @@ public class FOIARequest extends CaseFile implements FOIAObject
     @Column(name = "fo_notification_group")
     private String notificationGroup;
 
+    @Column(name = "fo_external_identifier")
+    private String externalIdentifier;
+
     @Transient
     private String originalRequestNumber;
 
@@ -677,6 +680,16 @@ public class FOIARequest extends CaseFile implements FOIAObject
     public void setRequestAmendmentDetails(String requestAmendmentDetails) 
     {
         this.requestAmendmentDetails = requestAmendmentDetails;
+    }
+
+    public String getExternalIdentifier()
+    {
+        return externalIdentifier;
+    }
+
+    public void setExternalIdentifier(String externalIdentifier)
+    {
+        this.externalIdentifier = externalIdentifier;
     }
 
     @Override
