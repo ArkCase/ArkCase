@@ -616,5 +616,19 @@ LANGUAGE plpgsql;
     <changeSet id="37-remove-five-days-reminder-column" author="stefan.sanevski" dbms="oracle,mssql,postgres,mysql">
         <dropColumn tableName="acm_case_file" columnName="fo_five_days_reminder_sent"/>
     </changeSet>
+
+    <changeSet id="38-01-acm-case-file-add-external_identifier-column" author="adrijana.maneva" dbms="oracle,mssql,postgres"
+               logicalFilePath="/ddl/tables/foia-request-db-tables-1.0.xml">
+        <addColumn tableName="acm_case_file">
+            <column name="fo_external_identifier" type="VARCHAR(128)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet id="38-02-acm-case-file-add-external_identifier-column" author="adrijana.maneva" dbms="mysql"
+               logicalFilePath="/ddl/tables/foia-request-db-tables-1.0.xml">
+        <addColumn tableName="acm_case_file">
+            <column name="fo_external_identifier" type="TEXT"/>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>
 

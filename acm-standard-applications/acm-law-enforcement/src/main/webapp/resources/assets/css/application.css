@@ -1890,3 +1890,6 @@ a.primary {
 textarea {
     resize: vertical;
 }
+.editable-margin-left form {
+    margin-left: -36px;
+}
