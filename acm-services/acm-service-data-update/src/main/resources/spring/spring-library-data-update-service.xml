@@ -34,6 +34,9 @@
                 <ref bean="ocrSystemUserUpdateExecutor"/>
                 <ref bean="transcribeSystemUserUpdateExecutor"/>
                 <ref bean="solrReindexEcmFileExecutor"/>
+                <ref bean="configurationServerRuntimeMigrationExecutor"/>
+                <ref bean="solrReindexNotificationsExecutor"/>
+                <ref bean="acmGroupSolrReindexExecutor"/>
             </list>
         </property>
         <property name="dataUpdateService" ref="dataUpdateService"/>
@@ -89,6 +92,14 @@
         <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
     </bean>
 
+    <bean id="configurationServerRuntimeMigrationExecutor"
+        class="com.armedia.acm.services.dataupdate.service.RolesGroupsRuntimeMigrationExecutor">
+        <property name="collectionPropertiesConfigurationService" ref="collectionPropertiesConfigurationService"/>
+        <property name="configurationPropertyService" ref="configurationPropertyService"/>
+        <property name="configurationContainer" ref="configurationContainer"/>
+        <property name="jsonUnmarshaller" ref="jsonUnmarshaller"/>
+    </bean>
+
     <bean id="solrReindexAssignedObjectsExecutor" class="com.armedia.acm.services.dataupdate.service.SolrReindexAssignedObjectsExecutor">
         <property name="solrReindexService" ref="solrReindexService"/>
         <property name="packages" value="#{dataSourceConfig.jpaModelPackages}"/>
@@ -108,6 +119,14 @@
     </bean>
 
     <bean id="solrReindexEcmFileExecutor" class="com.armedia.acm.services.dataupdate.service.SolrReindexEcmFileExecutor">
+        <property name="solrReindexService" ref="solrReindexService"/>
+    </bean>
+
+    <bean id="solrReindexNotificationsExecutor" class="com.armedia.acm.services.dataupdate.service.SolrReindexNotificationsExecutor">
+        <property name="solrReindexService" ref="solrReindexService"/>
+    </bean>
+
+    <bean id="acmGroupSolrReindexExecutor" class="com.armedia.acm.services.dataupdate.service.AcmGroupSolrReindexExecutor">
         <property name="solrReindexService" ref="solrReindexService"/>
     </bean>
 </beans>

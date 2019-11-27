@@ -41,7 +41,7 @@ import com.armedia.acm.portalgateway.model.UserResetResponse;
 public interface PortalUserService
 {
 
-    String PROVIDER_NOT_PRESENT = "PROVIDER_IMPLEMENTATIN_NOT_FOUND";
+    String PROVIDER_NOT_PRESENT = "PROVIDER_IMPLEMENTATION_NOT_FOUND";
 
     /**
      * @param portalId
@@ -118,7 +118,8 @@ public interface PortalUserService
      */
     PortalServiceExceptionMapper getExceptionMapper(PortalUserServiceException se);
 
-    UserResetResponse changePassword(String portalId, String userId, PortalUserCredentials portalUserCredentials) throws PortalUserServiceException;
+    UserResetResponse changePassword(String portalId, String userId, String acmUserId, PortalUserCredentials portalUserCredentials)
+            throws PortalUserServiceException;
 
     PortalUser retrieveUser(String portalUserId, String portalId) throws PortalUserServiceException;
 }

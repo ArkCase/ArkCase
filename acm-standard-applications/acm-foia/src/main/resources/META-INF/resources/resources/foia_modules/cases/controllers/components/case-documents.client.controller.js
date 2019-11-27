@@ -31,8 +31,9 @@ angular.module('cases').controller(
                 'MultiCorrespondence.Service',
                 'ModalDialogService',
                 'Websockets.MessageHandler',
+                'Case.FolderStructureService',
                 function($scope, $state, $stateParams, $modal, $q, $timeout, $translate, Util, LocaleService, ConfigService, ObjectService, ObjectLookupService, CaseInfoService, DocTreeService, HelperObjectBrowserService, Authentication, PermissionsService, ObjectModelService, DocTreeExtWebDAV,
-                         DocTreeExtCheckin, CorrespondenceService, DocTreeExtEmail, Ecm, MessageService, EmailSenderConfigurationService, MultiCorrespondenceService, ModalDialogService, messageHandler) {
+                         DocTreeExtCheckin, CorrespondenceService, DocTreeExtEmail, Ecm, MessageService, EmailSenderConfigurationService, MultiCorrespondenceService, ModalDialogService, messageHandler, CaseFolderStructureService) {
 
                     Authentication.queryUserInfo().then(function(userInfo) {
                         $scope.user = userInfo.userId;
@@ -62,16 +63,18 @@ angular.module('cases').controller(
                     var promiseFileTypes = ObjectLookupService.getFileTypes();
                     var promiseCorrespondenceForms = CorrespondenceService.getActivatedTemplatesData(ObjectService.ObjectTypes.CASE_FILE);
                     var promiseFileLanguages = LocaleService.getSettings();
+                    var promiseFolderStructure = CaseFolderStructureService.getFolderStructure();
 
                     var onConfigRetrieved = function(config) {
                         $scope.treeConfig = config.docTree;
                         $scope.allowParentOwnerToCancel = config.docTree.allowParentOwnerToCancel;
 
-                        $q.all([ promiseFormTypes, promiseFileTypes, promiseCorrespondenceForms, promiseFileLanguages ]).then(function(data) {
+                        $q.all([ promiseFormTypes, promiseFileTypes, promiseCorrespondenceForms, promiseFileLanguages, promiseFolderStructure ]).then(function(data) {
                             $scope.treeConfig.formTypes = data[0];
                             $scope.treeConfig.fileTypes = data[1];
                             $scope.treeConfig.correspondenceForms = data[2];
                             $scope.treeConfig.fileLanguages = data[3];
+                            $scope.treeConfig.folderStructure = data[4];
                             if (!Util.isEmpty($scope.treeControl)) {
                                 $scope.treeControl.refreshTree();
                             }
@@ -92,10 +95,6 @@ angular.module('cases').controller(
                         fileTypes = fileTypes.concat(Util.goodArray($scope.treeConfig.formTypes));
                         return DocTreeService.uploadFrevvoForm(type, folderId, onCloseForm, $scope.objectInfo, fileTypes);
                     };
-
-                    $scope.$bus.subscribe("zip_completed", function (data) {
-                        messageHandler.handleZipGenerationMessage(data.filePath);
-                    });
 
                     $scope.onInitTree = function(treeControl) {
                         $scope.treeControl = treeControl;

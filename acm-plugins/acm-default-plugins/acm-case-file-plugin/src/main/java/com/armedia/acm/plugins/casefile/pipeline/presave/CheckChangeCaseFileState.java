@@ -63,7 +63,7 @@ public class CheckChangeCaseFileState implements PipelineHandler<ChangeCaseStatu
         }
 
         // Skip if the case is already closed or in "in approval" and if it's not edit mode
-        if (("IN APPROVAL".equals(caseFile.getStatus()) || "CLOSED".equals(caseFile.getStatus())) && !"edit".equals(mode))
+        if (("IN APPROVAL".equals(caseFile.getStatus())) && !"edit".equals(mode))
         {
             LOG.info("The case file is already in '[{}]' mode. No further action will be taken.", caseFile.getStatus());
             message = String.format("The case file is already in '%s' mode. No further action will be taken.", caseFile.getStatus());

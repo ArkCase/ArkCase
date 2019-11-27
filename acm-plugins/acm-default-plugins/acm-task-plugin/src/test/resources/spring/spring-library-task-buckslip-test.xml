@@ -5,12 +5,8 @@
     <bean id="muleContextManager" class="com.armedia.acm.muletools.mulecontextmanager.MuleContextManager">
         <property name="specificConfigFiles">
             <list>
-                <value>/flows/solrConfigurationFlow.xml</value>
-                <value>/flows/advancedSearchQueryFlow.xml</value>
-                <value>/flows/quickSearchQueryFlow.xml</value>
                 <value>/flows/MuleCmisConnectorFlow.xml</value>
                 <value>/flows/MuleActiveMqConnectorFlow.xml</value>
-                <value>/flows/createFolderFlow.xml</value>
             </list>
         </property>
     </bean>

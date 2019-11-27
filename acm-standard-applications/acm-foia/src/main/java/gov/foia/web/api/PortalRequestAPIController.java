@@ -36,6 +36,7 @@ import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.plugins.person.service.PersonService;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
+import com.armedia.acm.services.search.exception.SolrException;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -99,7 +100,7 @@ public class PortalRequestAPIController
     @RequestMapping(value = "/external/readingroom", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public List<PortalFOIAReadingRoom> getReadingRoom(PortalFOIAReadingRoom readingRoom, Authentication auth)
-            throws UnsupportedEncodingException, MuleException, AcmObjectNotFoundException, JSONException, ParseException
+            throws SolrException, JSONException, ParseException
     {
         return getPortalRequestService().getReadingRoom(readingRoom, auth);
     }

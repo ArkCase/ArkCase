@@ -27,13 +27,13 @@ package com.armedia.acm.services.search.web.api;
  * #L%
  */
 
-import com.armedia.acm.services.search.model.SolrCore;
+import com.armedia.acm.services.search.exception.SolrException;
 import com.armedia.acm.services.search.model.TimePeriodForSearch;
+import com.armedia.acm.services.search.model.solr.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 
-import org.mule.api.MuleException;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -65,7 +65,7 @@ public class CaseFilesSearchByDueDateTimeIntervalAPIController
     public String caseFiles(@RequestParam(value = "timePeriod", required = true) String timePeriod,
             @RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
             @RequestParam(value = "n", required = false, defaultValue = "5") int maxRows, Authentication authentication,
-            HttpServletResponse httpResponse) throws MuleException, UnsupportedEncodingException
+            HttpServletResponse httpResponse) throws SolrException, UnsupportedEncodingException
     {
 
         if ("all".equals(timePeriod))

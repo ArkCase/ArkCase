@@ -27,8 +27,11 @@ package com.armedia.acm.services.functionalaccess.service;
  * #L%
  */
 
+import com.armedia.acm.configuration.service.CollectionPropertiesConfigurationService;
 import com.armedia.acm.configuration.service.ConfigurationPropertyService;
-import com.armedia.acm.services.search.model.SolrCore;
+import com.armedia.acm.configuration.util.MergeFlags;
+import com.armedia.acm.services.search.exception.SolrException;
+import com.armedia.acm.services.search.model.solr.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.search.service.SearchResults;
 import com.armedia.acm.services.users.dao.UserDao;
@@ -41,23 +44,20 @@ import com.armedia.acm.services.users.model.event.AdHocGroupDeletedEvent;
 import com.armedia.acm.services.users.model.event.LdapGroupDeletedEvent;
 import com.armedia.acm.services.users.model.group.AcmGroup;
 
-import org.json.JSONArray;
-import org.mule.api.MuleException;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.json.JSONArray;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.security.core.Authentication;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * @author riste.tutureski
@@ -74,6 +74,7 @@ public class FunctionalAccessServiceImpl implements FunctionalAccessService, App
     private ApplicationRolesConfig rolesConfig;
     private ApplicationRolesToGroupsConfig rolesToGroupsConfig;
     private ConfigurationPropertyService configurationPropertyService;
+    private CollectionPropertiesConfigurationService collectionPropertiesConfigurationService;
 
     @Override
     public void onApplicationEvent(ApplicationEvent event)
@@ -151,11 +152,12 @@ public class FunctionalAccessServiceImpl implements FunctionalAccessService, App
 
     private List<String> getGroupsBySolrQuery(Authentication auth, String sortDirection,
             Integer startRow,
-            Integer maxRows, String query) throws MuleException
+            Integer maxRows, String query) throws SolrException
     {
         List<String> result = new ArrayList<>();
+        String rowQueryParameters = "fq=hidden_b:false";
         String solrResponse = executeSolrQuery.getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, query, startRow, maxRows,
-                sortDirection);
+                sortDirection, rowQueryParameters);
         SearchResults searchResults = new SearchResults();
         JSONArray docs = searchResults.getDocuments(solrResponse);
 
@@ -169,7 +171,7 @@ public class FunctionalAccessServiceImpl implements FunctionalAccessService, App
     @Override
     public List<String> getGroupsByRolePaged(Authentication auth, String roleName, Integer startRow, Integer maxRows,
             String sortDirection,
-            Boolean authorized) throws MuleException
+            Boolean authorized) throws SolrException
     {
         return getGroupsByRole(auth, roleName, startRow, maxRows, sortDirection, authorized, "");
     }
@@ -177,7 +179,7 @@ public class FunctionalAccessServiceImpl implements FunctionalAccessService, App
     @Override
     public List<String> getGroupsByRoleByName(Authentication auth, String roleName, Integer startRow, Integer maxRows,
             String sortDirection,
-            Boolean authorized, String filterQuery) throws MuleException
+            Boolean authorized, String filterQuery) throws SolrException
     {
         return getGroupsByRole(auth, roleName, startRow, maxRows, sortDirection, authorized, filterQuery);
     }
@@ -185,7 +187,7 @@ public class FunctionalAccessServiceImpl implements FunctionalAccessService, App
     @Override
     public List<String> getGroupsByRole(Authentication auth, String roleName, Integer startRow, Integer maxRows,
             String sortDirection,
-            Boolean authorized, String filterQuery) throws MuleException
+            Boolean authorized, String filterQuery) throws SolrException
     {
         Set<String> groupsByRole = roleToGroupMapping.getRoleToGroupsMap().get(roleName.toUpperCase());
         List<String> retrieveGroupsByRole = groupsByRole == null ? new ArrayList<>() : new ArrayList<>(groupsByRole);
@@ -232,38 +234,36 @@ public class FunctionalAccessServiceImpl implements FunctionalAccessService, App
     @Override
     public boolean saveApplicationRolesToGroups(Map<String, List<String>> rolesToGroups, String user)
     {
-        Map<String, String> rolesToGroupConfigMapping = rolesToGroups.entrySet().stream()
-                .collect(Collectors.toMap(Map.Entry::getKey, it -> String.join(",", it.getValue())));
-
         ApplicationRolesToGroupsConfig rolesToGroupsConfig = new ApplicationRolesToGroupsConfig();
-        rolesToGroupsConfig.setRolesToGroups(rolesToGroupConfigMapping);
+        rolesToGroupsConfig.setRolesToGroups(rolesToGroups);
         configurationPropertyService.updateProperties(rolesToGroupsConfig);
         getEventPublisher().publishFunctionalAccessUpdateEventOnRolesToGroupMap(rolesToGroups, user);
         return true;
     }
 
     @Override
-    public boolean saveGroupsToApplicationRole(List<String> groups, String roleName, Authentication auth)
+    public boolean saveGroupsToApplicationRole(List<Object> groups, String roleName, Authentication auth)
     {
-        Map<String, String> rolesToGroupsMap = rolesToGroupsConfig.getRolesToGroups();
-        Stream<String> groupPerRoleStream = Arrays.stream(rolesToGroupsMap.getOrDefault(roleName, "").split(","));
-        String updatedGroupsString = Stream.concat(groups.stream(), groupPerRoleStream).distinct()
-                .collect(Collectors.joining(","));
-        rolesToGroupsMap.put(roleName, updatedGroupsString);
+        Map<String, Object> rolesToGroupsConfig = collectionPropertiesConfigurationService.updateMapProperty(
+                ApplicationRolesToGroupsConfig.ROLES_TO_GROUPS_PROP_KEY, roleName,
+                groups, MergeFlags.MERGE);
+
         configurationPropertyService.updateProperties(rolesToGroupsConfig);
+
         getEventPublisher().publishFunctionalAccessUpdateEvent(groups, auth);
         return true;
     }
 
     @Override
-    public boolean removeGroupsToApplicationRole(List<String> groups, String roleName, Authentication auth)
+    public boolean removeGroupsToApplicationRole(List<Object> groups, String roleName, Authentication auth)
     {
-        Map<String, String> rolesToGroupsMap = rolesToGroupsConfig.getRolesToGroups();
-        Stream<String> groupPerRoleStream = Arrays.stream(rolesToGroupsMap.getOrDefault(roleName, "").split(","));
-        String updatedGroupsString = groupPerRoleStream.filter(it -> !groups.contains(it))
-                .collect(Collectors.joining(","));
-        rolesToGroupsMap.put(roleName, updatedGroupsString);
+
+        Map<String, Object> rolesToGroupsConfig = collectionPropertiesConfigurationService.updateMapProperty(
+                ApplicationRolesToGroupsConfig.ROLES_TO_GROUPS_PROP_KEY, roleName,
+                groups, MergeFlags.REMOVE);
+
         configurationPropertyService.updateProperties(rolesToGroupsConfig);
+
         getEventPublisher().publishFunctionalAccessUpdateEvent(groups, auth);
         return true;
     }
@@ -323,7 +323,7 @@ public class FunctionalAccessServiceImpl implements FunctionalAccessService, App
 
     @Override
     public String getGroupsByPrivilege(List<String> roles, Map<String, List<String>> rolesToGroups, int startRow, int maxRows, String sort,
-            Authentication auth) throws MuleException
+            Authentication auth) throws SolrException
     {
         Set<String> groups = getAllGroupsForAllRoles(roles, rolesToGroups);
 
@@ -352,7 +352,7 @@ public class FunctionalAccessServiceImpl implements FunctionalAccessService, App
     }
 
     private String getGroupsFromSolr(List<String> groupNames, int startRow, int maxRows, String sort, Authentication auth)
-            throws MuleException
+            throws SolrException
     {
         LOG.info("Taking groups from Solr with IDs = {}", groupNames);
 
@@ -460,5 +460,11 @@ public class FunctionalAccessServiceImpl implements FunctionalAccessService, App
     public void setConfigurationPropertyService(ConfigurationPropertyService configurationPropertyService)
     {
         this.configurationPropertyService = configurationPropertyService;
+    }
+
+    public void setCollectionPropertiesConfigurationService(
+            CollectionPropertiesConfigurationService collectionPropertiesConfigurationService)
+    {
+        this.collectionPropertiesConfigurationService = collectionPropertiesConfigurationService;
     }
 }

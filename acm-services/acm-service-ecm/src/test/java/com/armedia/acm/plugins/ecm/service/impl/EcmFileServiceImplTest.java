@@ -37,6 +37,7 @@ import static org.junit.Assert.assertTrue;
 import com.armedia.acm.auth.AcmAuthenticationDetails;
 import com.armedia.acm.camelcontext.arkcase.cmis.ArkCaseCMISActions;
 import com.armedia.acm.camelcontext.arkcase.cmis.ArkCaseCMISConstants;
+import com.armedia.acm.camelcontext.configuration.ArkCaseCMISConfig;
 import com.armedia.acm.camelcontext.context.CamelContextManager;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
@@ -57,6 +58,8 @@ import com.armedia.acm.web.api.MDCConstants;
 
 import org.apache.chemistry.opencmis.client.api.CmisObject;
 import org.apache.chemistry.opencmis.client.api.Document;
+import org.apache.chemistry.opencmis.client.api.Folder;
+import org.apache.chemistry.opencmis.commons.PropertyIds;
 import org.easymock.Capture;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
@@ -143,7 +146,6 @@ public class EcmFileServiceImplTest extends EasyMockSupport
     @Test
     public void deleteFile_oneVersion_shouldNotRemoveOtherVersions() throws Exception
     {
-
         EcmFile toBeDeleted = new EcmFile();
         toBeDeleted.setFileId(500L);
         toBeDeleted.setVersionSeriesId(UUID.randomUUID().toString());
@@ -295,19 +297,26 @@ public class EcmFileServiceImplTest extends EasyMockSupport
         props.put(EcmFileConstants.CMIS_OBJECT_ID, toMove.getVersionSeriesId());
         props.put(EcmFileConstants.DST_FOLDER_ID, targetFolder.getCmisFolderId());
         props.put(EcmFileConstants.SRC_FOLDER_ID, toMove.getFolder().getCmisFolderId());
-        props.put(EcmFileConstants.CONFIGURATION_REFERENCE, null);
+        props.put(EcmFileConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID);
         props.put(EcmFileConstants.VERSIONING_STATE, "versioningState");
+        props.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, "");
+
 
         Document cmisDocument = createMock(Document.class);
 
+        Map<String, ArkCaseCMISConfig> configMap = new HashMap<>();
+        ArkCaseCMISConfig config = new ArkCaseCMISConfig();
+        config.setRepositoryId(ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID);
+        config.setCmisVersioningState("versioningState");
+        configMap.put(ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID, config);
+
         expect(mockEcmFileDao.find(fileId)).andReturn(toMove);
-        expect(mockCmisConfigUtils.getCmisConfiguration(targetFolder.getCmisRepositoryId())).andReturn(null);
-        expect(mockCmisConfigUtils.getVersioningState(targetFolder.getCmisRepositoryId())).andReturn("versioningState");
+        expect(camelContextManager.getRepositoryConfigs()).andReturn(configMap);
         expect(mockContainerDao.findFolderByObjectTypeIdAndRepositoryId(targetObjectType, targetObjectId,
                 targetFolder.getCmisRepositoryId())).andReturn(targetContainer);
-        expect(mockMuleContextManager.send(EcmFileConstants.MULE_ENDPOINT_MOVE_FILE, toMove, props)).andReturn(mockMuleMessage);
-        expect(mockMuleMessage.getPayload(CmisObject.class)).andReturn(cmisDocument);
-        expect(cmisDocument.getVersionSeriesId()).andReturn("newVersionSeriesId");
+        expect(camelContextManager.send(ArkCaseCMISActions.MOVE_DOCUMENT, props)).andReturn(cmisDocument);
+        expect(mockAuthentication.getDetails()).andReturn(AcmAuthenticationDetails.class);
+        expect(cmisDocument.getPropertyValue(EcmFileConstants.REPOSITORY_VERSION_ID)).andReturn("newVersionSeriesId");
 
         Capture<EcmFile> saved = Capture.newInstance();
         expect(mockEcmFileDao.save(capture(saved))).andReturn(null);
@@ -333,12 +342,15 @@ public class EcmFileServiceImplTest extends EasyMockSupport
         String id = "id";
         CMISCloudConnectorConnectionManager cmisConfig = new CMISCloudConnectorConnectionManager();
         Map<String, Object> messageProps = new HashMap<>();
-        messageProps.put(EcmFileConstants.CONFIGURATION_REFERENCE, cmisConfig);
+        messageProps.put(PropertyIds.PATH, path);
+        messageProps.put(EcmFileConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID);
+        messageProps.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, "");
 
-        expect(mockMuleContextManager.send("vm://createFolder.in", path, messageProps)).andReturn(mockMuleMessage);
-        expect(mockMuleMessage.getPayload(CmisObject.class)).andReturn(mockCmisObject);
-        expect(mockCmisObject.getId()).andReturn(id);
-        expect(mockCmisConfigUtils.getCmisConfiguration(defaultCmisId)).andReturn(cmisConfig);
+        Folder result = createMock(Folder.class);
+
+        expect(mockAuthentication.getDetails()).andReturn(AcmAuthenticationDetails.class);
+        expect(camelContextManager.send(ArkCaseCMISActions.GET_OR_CREATE_FOLDER_BY_PATH, messageProps)).andReturn(result);
+        expect(result.getPropertyValue(EcmFileConstants.REPOSITORY_VERSION_ID)).andReturn(id);
 
         replayAll();
 
