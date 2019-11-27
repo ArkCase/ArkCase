@@ -167,7 +167,9 @@ angular.module('queues').controller(
                      * @param row
                      */
                     function rowClick(row) {
-                        openRequestInfoPage(row.entity.request_id_lcs);
+                        $state.go('cases.main', {
+                            id: row.entity.request_id_lcs
+                        });
                     }
 
                     function applyConfig(e, componentId, config) {

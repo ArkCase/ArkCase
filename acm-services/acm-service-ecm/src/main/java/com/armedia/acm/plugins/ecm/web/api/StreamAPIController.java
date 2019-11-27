@@ -32,9 +32,8 @@ import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.ecm.service.StreamService;
 
 import org.apache.catalina.connector.ClientAbortException;
-import org.mule.api.MuleException;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -66,7 +65,7 @@ public class StreamAPIController
     public void stream(@PathVariable(value = "id") Long id,
             @RequestParam(value = "version", required = false, defaultValue = "") String version, Authentication authentication,
             HttpServletRequest request, HttpServletResponse response)
-            throws IOException, MuleException, AcmObjectNotFoundException, AcmUserActionFailedException
+            throws IOException, AcmObjectNotFoundException, AcmUserActionFailedException
     {
         LOG.info("Streaming file with ID '{}' for user '{}'", id, authentication.getName());
 

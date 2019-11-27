@@ -37,7 +37,6 @@ import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.DeleteFolderInfo;
 
 import org.json.JSONArray;
-import org.mule.api.MuleException;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.security.core.Authentication;
@@ -60,7 +59,7 @@ public interface AcmFolderService
     AcmFolder addNewFolderByPath(String targetObjectType, Long targetObjectId, String newPath)
             throws AcmCreateObjectFailedException, AcmUserActionFailedException, AcmObjectNotFoundException, AcmFolderException;
 
-    String findFolderPath(String cmisFolderObjectId) throws MuleException, AcmUserActionFailedException;
+    String findFolderPath(String cmisFolderObjectId) throws AcmUserActionFailedException;
 
     AcmFolder renameFolder(Long folderId, String newFolderName)
             throws AcmUserActionFailedException, AcmObjectNotFoundException, AcmFolderException;

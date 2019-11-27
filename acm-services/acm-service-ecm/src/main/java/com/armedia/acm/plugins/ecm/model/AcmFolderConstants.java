@@ -32,8 +32,6 @@ package com.armedia.acm.plugins.ecm.model;
  */
 public interface AcmFolderConstants
 {
-    String MULE_ENDPOINT_GET_FOLDER = "vm://getFolder.in";
-
     String OBJECT_FOLDER_TYPE = "FOLDER";
 
     String CONTAINER_OBJECT_TYPE = "objectType";

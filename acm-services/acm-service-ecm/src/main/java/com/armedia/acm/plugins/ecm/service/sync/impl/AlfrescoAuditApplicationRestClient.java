@@ -27,8 +27,8 @@ package com.armedia.acm.plugins.ecm.service.sync.impl;
  * #L%
  */
 
+import com.armedia.acm.camelcontext.basic.auth.HttpInvokerUtil;
 import com.armedia.acm.plugins.ecm.service.sync.AlfrescoSyncConfig;
-import com.armedia.mule.cmis.basic.auth.HttpInvokerUtil;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.logging.log4j.LogManager;

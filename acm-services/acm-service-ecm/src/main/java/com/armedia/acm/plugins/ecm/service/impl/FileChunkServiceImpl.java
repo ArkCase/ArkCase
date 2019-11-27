@@ -30,15 +30,23 @@ package com.armedia.acm.plugins.ecm.service.impl;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
-import com.armedia.acm.plugins.ecm.model.*;
+import com.armedia.acm.plugins.ecm.model.AcmFolder;
+import com.armedia.acm.plugins.ecm.model.AcmMultipartFile;
+import com.armedia.acm.plugins.ecm.model.EcmFile;
+import com.armedia.acm.plugins.ecm.model.EcmFileUploaderConfig;
+import com.armedia.acm.plugins.ecm.model.FileChunkDetails;
+import com.armedia.acm.plugins.ecm.model.FileDetails;
+import com.armedia.acm.plugins.ecm.model.SequenceInputStreamHolder;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.ecm.service.FileChunkService;
 import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
 import com.armedia.acm.web.api.MDCConstants;
+
 import org.apache.chemistry.opencmis.client.api.Document;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.slf4j.MDC;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.core.Authentication;
@@ -48,7 +56,11 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.SequenceInputStream;
-import java.util.*;
+import java.util.AbstractMap;
+import java.util.Enumeration;
+import java.util.List;
+import java.util.UUID;
+import java.util.Vector;
 
 public class FileChunkServiceImpl implements FileChunkService
 {
@@ -141,8 +153,7 @@ public class FileChunkServiceImpl implements FileChunkService
         String uniqueArkCaseHashFileIdentifier = ecmFileUploaderConfig.getUniqueHashFileIdentifier();
         for (FileChunkDetails part : parts)
         {
-            org.mule.util.FileUtils
-                    .deleteQuietly(new File(dirPath + File.separator + uniqueArkCaseHashFileIdentifier + "-" + part.getFileName()));
+            FileUtils.deleteQuietly(new File(dirPath + File.separator + uniqueArkCaseHashFileIdentifier + "-" + part.getFileName()));
         }
     }
 
@@ -155,7 +166,7 @@ public class FileChunkServiceImpl implements FileChunkService
         for (FileChunkDetails part : parts)
         {
             File file = new File(dirPath + File.separator + uniqueArkCaseHashFileIdentifier + "-" + part.getFileName());
-            InputStream stream = org.mule.util.FileUtils.openInputStream(file);
+            InputStream stream = FileUtils.openInputStream(file);
             inputStream.addElement(stream);
             size += file.length();
         }

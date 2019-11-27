@@ -138,7 +138,7 @@ public class FileDownloadAPIControllerTest extends EasyMockSupport
         String repositoryId = ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID;
         String alfrescoUser = "";
 
-        Resource log4j = new ClassPathResource("/spring/spring-library-ecm-plugin-test-mule.xml");
+        Resource log4j = new ClassPathResource("/spring/spring-library-add-file-camel.xml");
         long log4jsize = log4j.getFile().length();
         InputStream log4jis = log4j.getInputStream();
 
@@ -212,7 +212,7 @@ public class FileDownloadAPIControllerTest extends EasyMockSupport
         String repositoryId = ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID;
         String alfrescoUser = "";
 
-        Resource log4j = new ClassPathResource("/spring/spring-library-ecm-plugin-test-mule.xml");
+        Resource log4j = new ClassPathResource("/spring/spring-library-add-file-camel.xml");
         long log4jsize = log4j.getFile().length();
         InputStream log4jis = log4j.getInputStream();
 
@@ -298,7 +298,7 @@ public class FileDownloadAPIControllerTest extends EasyMockSupport
         String repositoryId = ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID;
         String alfrescoUser = "";
 
-        Resource log4j = new ClassPathResource("/spring/spring-library-ecm-plugin-test-mule.xml");
+        Resource log4j = new ClassPathResource("/spring/spring-library-add-file-camel.xml");
         long log4jsize = log4j.getFile().length();
         InputStream log4jis = log4j.getInputStream();
 

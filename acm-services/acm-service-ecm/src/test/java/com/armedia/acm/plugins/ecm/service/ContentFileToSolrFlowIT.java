@@ -32,7 +32,6 @@ import static org.junit.Assert.assertNotNull;
 import com.armedia.acm.camelcontext.arkcase.cmis.ArkCaseCMISActions;
 import com.armedia.acm.camelcontext.arkcase.cmis.ArkCaseCMISConstants;
 import com.armedia.acm.camelcontext.context.CamelContextManager;
-import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.utils.EcmFileCamelUtils;
@@ -41,12 +40,12 @@ import com.armedia.acm.services.search.service.SendDocumentsToSolr;
 import com.armedia.acm.web.api.MDCConstants;
 
 import org.apache.chemistry.opencmis.client.api.Document;
+import org.apache.chemistry.opencmis.client.api.Folder;
 import org.apache.chemistry.opencmis.commons.PropertyIds;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mule.api.MuleMessage;
 import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
@@ -96,8 +95,6 @@ public class ContentFileToSolrFlowIT
 
     private transient final Logger log = LogManager.getLogger(getClass());
     @Autowired
-    private MuleContextManager muleContextManager;
-    @Autowired
     private CamelContextManager camelContextManager;
     @Autowired
     private SendDocumentsToSolr sendDocumentsToSolr;
@@ -110,16 +107,20 @@ public class ContentFileToSolrFlowIT
 
         String testPath = "/acm/test/folder";
         Map<String, Object> folderMessageProperties = new HashMap<>();
-        folderMessageProperties.put("configRef", muleContextManager.getMuleContext().getRegistry().lookupObject("alfresco"));
-        MuleMessage folderMessage = muleContextManager.send("vm://getTestFolderId.in", testPath, folderMessageProperties);
-        String folderId = folderMessage.getPayloadAsString();
+        folderMessageProperties.put(EcmFileConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID);
+        folderMessageProperties.put(PropertyIds.PATH, testPath);
 
-        Resource uploadFile = new ClassPathResource("/spring/spring-library-ecm-plugin-test-mule.xml");
+        // TODO : Get or create folder by path
+        Folder folder = (Folder) camelContextManager.send(ArkCaseCMISActions.GET_FOLDER, folderMessageProperties);
+
+        String folderId = folder.getPropertyValue(EcmFileConstants.REPOSITORY_VERSION_ID);
+
+        Resource uploadFile = new ClassPathResource("/spring/spring-library-add-file-camel.xml");
         InputStream is = uploadFile.getInputStream();
 
         EcmFile ecmFile = new EcmFile();
 
-        ecmFile.setFileName("spring-library-ecm-plugin-test-mule.xml-" + System.currentTimeMillis());
+        ecmFile.setFileName("spring-library-add-file-camel.xml-" + System.currentTimeMillis());
         ecmFile.setFileActiveVersionMimeType("text/plain");
 
         Map<String, Object> messageProperties = new HashMap<>();
@@ -144,7 +145,7 @@ public class ContentFileToSolrFlowIT
         SolrContentDocument solrContentDocument = new SolrContentDocument();
         solrContentDocument.setCmis_version_series_id_s(newDocument.getVersionSeriesId());
         solrContentDocument.setAdditionalProperty("cmis_repository_id_s", "alfresco");
-        solrContentDocument.setName("/spring/spring-library-ecm-plugin-test-mule" + System.currentTimeMillis() + ".xml");
+        solrContentDocument.setName("/spring/spring-library-add-file-camel" + System.currentTimeMillis() + ".xml");
 
         sendDocumentsToSolr.sendSolrContentFileIndexDocuments(Collections.singletonList(solrContentDocument));
 
