@@ -31,7 +31,6 @@ import com.armedia.acm.camelcontext.context.CamelContextManager;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.EcmFileTransaction;
-import com.armedia.acm.plugins.ecm.utils.CmisConfigUtils;
 import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
 import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenService;
 
@@ -64,7 +63,6 @@ public class AcmFileSystemResourceFactory implements ResourceFactory
     private String filterMapping;
     private Pattern fileExtensionPattern;
     private AuthenticationTokenService authenticationTokenService;
-    private CmisConfigUtils cmisConfigUtils;
     /**
      * A pattern to distinguish between a file URL and the URL that Microsoft Office sends for an OPTIONS request. An
      * ArkCase WebDAV file URL is assumed to end in (someNumber.someExtension), e.g., "134.docx". If a WebDAV URL does
@@ -215,16 +213,6 @@ public class AcmFileSystemResourceFactory implements ResourceFactory
         this.authenticationTokenService = authenticationTokenService;
     }
 
-    public CmisConfigUtils getCmisConfigUtils()
-    {
-        return cmisConfigUtils;
-    }
-
-    public void setCmisConfigUtils(CmisConfigUtils cmisConfigUtils)
-    {
-        this.cmisConfigUtils = cmisConfigUtils;
-    }
-
     public CamelContextManager getCamelContextManager()
     {
         return camelContextManager;
@@ -262,7 +250,7 @@ public class AcmFileSystemResourceFactory implements ResourceFactory
 
             log.trace("ecmFile exists? {}", ecmFile != null);
 
-            return new AcmFileResource(host, ecmFile, fileType, lockType, acmTicket, AcmFileSystemResourceFactory.this, cmisConfigUtils);
+            return new AcmFileResource(host, ecmFile, fileType, lockType, acmTicket, AcmFileSystemResourceFactory.this);
         }
     }
 }
