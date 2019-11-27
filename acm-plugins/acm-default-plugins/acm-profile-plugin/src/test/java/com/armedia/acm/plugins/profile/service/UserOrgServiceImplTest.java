@@ -36,7 +36,10 @@ import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.expectLastCall;
 
 import com.armedia.acm.auth.AcmAuthentication;
-import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
+import com.armedia.acm.camelcontext.arkcase.cmis.ArkCaseCMISActions;
+import com.armedia.acm.camelcontext.context.CamelContextManager;
+import com.armedia.acm.camelcontext.exception.ArkCaseFileRepositoryException;
+import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.plugins.ecm.model.EcmFileConfig;
 import com.armedia.acm.plugins.person.model.Organization;
 import com.armedia.acm.plugins.person.service.OrganizationService;
@@ -47,15 +50,11 @@ import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.group.AcmGroup;
 
+import org.apache.chemistry.opencmis.client.api.Folder;
 import org.easymock.Capture;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
-import org.mule.api.MuleContext;
-import org.mule.api.MuleException;
-import org.mule.api.MuleMessage;
-import org.mule.api.registry.MuleRegistry;
-import org.mule.module.cmis.connectivity.CMISCloudConnectorConnectionManager;
 import org.springframework.security.core.Authentication;
 
 import java.util.HashSet;
@@ -67,7 +66,6 @@ public class UserOrgServiceImplTest extends EasyMockSupport
 {
     private static final String USER_ID = "ann-acm";
     private static final String COMPANY_NAME = "ARMEDIA";
-    private static final String MULE_ENDPOINT = "vm://saveUserOrg.in";
     private static final String EXCEPTION_PROPERTY = "saveException";
     private static final String DEFAULT_CMIS_ID = "alfresco";
     private UserDao mockUserDao;
@@ -76,11 +74,9 @@ public class UserOrgServiceImplTest extends EasyMockSupport
     private UserOrgServiceImpl userOrgService;
     private Authentication mockAuthentication;
     private ProfileEventPublisher mockEventPublisher;
-    private MuleContextManager mockMuleContextManager;
-    private MuleContext mockMuleContext;
-    private MuleRegistry mockMuleRegistry;
-    private Map<String, Object> muleMessageProps;
-    private CMISCloudConnectorConnectionManager cmisConfig;
+    private CamelContextManager mockCamelContextManager;
+    private Map<String, Object> messageProps;
+    private AuditPropertyEntityAdapter mockAuditPropertyEntityAdapter;
 
     @Before
     public void setUp()
@@ -90,29 +86,27 @@ public class UserOrgServiceImplTest extends EasyMockSupport
         mockUserOrgDao = createMock(UserOrgDao.class);
         mockOrganizationService = createMock(OrganizationService.class);
         mockEventPublisher = createMock(ProfileEventPublisher.class);
-        mockMuleContextManager = createMock(MuleContextManager.class);
-        mockMuleContext = createMock(MuleContext.class);
-        mockMuleRegistry = createMock(MuleRegistry.class);
+        mockCamelContextManager = createMock(CamelContextManager.class);
+        mockAuditPropertyEntityAdapter = createMock(AuditPropertyEntityAdapter.class);
 
         userOrgService = new UserOrgServiceImpl();
         userOrgService.setUserDao(mockUserDao);
         userOrgService.setUserOrgDao(mockUserOrgDao);
         userOrgService.setOrganizationService(mockOrganizationService);
         userOrgService.setEventPublisher(mockEventPublisher);
-        userOrgService.setMuleContextManager(mockMuleContextManager);
+        userOrgService.setCamelContextManager(mockCamelContextManager);
+        userOrgService.setAuditPropertyEntityAdapter(mockAuditPropertyEntityAdapter);
 
         EcmFileConfig ecmFileConfig = new EcmFileConfig();
         ecmFileConfig.setDefaultCmisId(DEFAULT_CMIS_ID);
         userOrgService.setEcmFileConfig(ecmFileConfig);
 
-        muleMessageProps = new LinkedHashMap<>();
-        muleMessageProps.put("acmUser", mockAuthentication);
-        cmisConfig = new CMISCloudConnectorConnectionManager();
-        muleMessageProps.put("configRef", cmisConfig);
+        messageProps = new LinkedHashMap<>();
+        messageProps.put("acmUser", mockAuthentication);
     }
 
     @Test
-    public void saveUserOrgInfoWhenCompanyNameIsWhiteSpaceOnlyAndUserOrgExists() throws MuleException
+    public void saveUserOrgInfoWhenCompanyNameIsWhiteSpaceOnlyAndUserOrgExists() throws ArkCaseFileRepositoryException
     {
         ProfileDTO profileDTO = createMockProfileDTO();
         profileDTO.setCompanyName(" ");
@@ -137,20 +131,12 @@ public class UserOrgServiceImplTest extends EasyMockSupport
         assertNull(userOrg.getOrganization());
     }
 
-    private void expectWhenUpdateUserOrgSuccessfully(UserOrg userOrg) throws MuleException
+    private void expectWhenUpdateUserOrgSuccessfully(UserOrg userOrg) throws ArkCaseFileRepositoryException
     {
         expect(mockAuthentication.getName()).andReturn(USER_ID);
         expect(userOrgService.getUserOrgForUserId(USER_ID)).andReturn(userOrg);
-        expect(mockMuleContextManager.getMuleContext()).andReturn(mockMuleContext);
-        expect(mockMuleContext.getRegistry()).andReturn(mockMuleRegistry);
-        expect(mockMuleRegistry.lookupObject(DEFAULT_CMIS_ID)).andReturn(cmisConfig);
 
-        MuleMessage mockMuleMessage = createMock(MuleMessage.class);
-        MuleException mockMuleException = null;
-
-        expect(mockMuleContextManager.send(MULE_ENDPOINT, userOrg, muleMessageProps)).andReturn(mockMuleMessage);
-        expect(mockMuleMessage.getPayload(UserOrg.class)).andReturn(userOrg);
-        expect(mockMuleMessage.getInboundProperty(EXCEPTION_PROPERTY)).andReturn(mockMuleException);
+        expect(mockCamelContextManager.send(ArkCaseCMISActions.GET_OR_CREATE_FOLDER_BY_PATH, messageProps)).andReturn(Folder.class);
     }
 
     private UserOrg createAndSetUserOrg()
@@ -169,7 +155,7 @@ public class UserOrgServiceImplTest extends EasyMockSupport
     }
 
     @Test
-    public void saveUserOrgInfoWhenCompanyNameNotBlankAndUserOrgExists() throws MuleException
+    public void saveUserOrgInfoWhenCompanyNameNotBlankAndUserOrgExists() throws ArkCaseFileRepositoryException
     {
         ProfileDTO profileDTO = createMockProfileDTO();
 
@@ -194,7 +180,7 @@ public class UserOrgServiceImplTest extends EasyMockSupport
     }
 
     @Test
-    public void saveUserOrgInfoWhenCompanyNameNotBlankAndUserOrgNull() throws MuleException
+    public void saveUserOrgInfoWhenCompanyNameNotBlankAndUserOrgNull()
     {
         ProfileDTO profileDTO = createMockProfileDTO();
 
@@ -206,22 +192,19 @@ public class UserOrgServiceImplTest extends EasyMockSupport
         expect(mockUserDao.findByUserId(USER_ID)).andReturn(expectedUserOrg.getUser());
         expect(mockOrganizationService.findOrCreateOrganization(COMPANY_NAME, USER_ID))
                 .andReturn(expectedUserOrg.getOrganization());
-        expect(mockMuleContextManager.getMuleContext()).andReturn(mockMuleContext);
-        expect(mockMuleContext.getRegistry()).andReturn(mockMuleRegistry);
-        expect(mockMuleRegistry.lookupObject(DEFAULT_CMIS_ID)).andReturn(cmisConfig);
-
-        MuleMessage mockMuleMessage = createMock(MuleMessage.class);
-        MuleException mockMuleException = null;
 
         Capture<UserOrg> captureUserOrg = Capture.newInstance();
         Capture<UserOrg> captureSavedUserOrg = Capture.newInstance();
 
-        expect(mockMuleContextManager.send(eq(MULE_ENDPOINT), capture(captureUserOrg),
-                eq(muleMessageProps))).andReturn(mockMuleMessage);
+        /*
+         * expect(mockMuleContextManager.send(eq(MULE_ENDPOINT), capture(captureUserOrg),
+         * eq(muleMessageProps))).andReturn(mockMuleMessage);
+         */
 
-        expect(mockMuleMessage.getPayload(UserOrg.class)).andReturn(expectedUserOrg);
-
-        expect(mockMuleMessage.getInboundProperty(EXCEPTION_PROPERTY)).andReturn(mockMuleException);
+        /*
+         * expect(mockMuleMessage.getPayload(UserOrg.class)).andReturn(expectedUserOrg);
+         * expect(mockMuleMessage.getInboundProperty(EXCEPTION_PROPERTY)).andReturn(mockMuleException);
+         */
 
         // user organization should be created, newUserOrg = true
         // userOrg is saved, succeeded = true
@@ -242,7 +225,7 @@ public class UserOrgServiceImplTest extends EasyMockSupport
     }
 
     @Test
-    public void saveUserOrgInfoWhenCompanyNameNotBlankUserOrgNullAndFailedToBeCreated() throws MuleException
+    public void saveUserOrgInfoWhenCompanyNameNotBlankUserOrgNullAndFailedToBeCreated()
     {
         ProfileDTO profileDTO = createMockProfileDTO();
 
@@ -254,21 +237,13 @@ public class UserOrgServiceImplTest extends EasyMockSupport
         expect(mockUserDao.findByUserId(USER_ID)).andReturn(expectedUserOrg.getUser());
         expect(mockOrganizationService.findOrCreateOrganization(COMPANY_NAME, USER_ID))
                 .andReturn(expectedUserOrg.getOrganization());
-        expect(mockMuleContextManager.getMuleContext()).andReturn(mockMuleContext);
-        expect(mockMuleContext.getRegistry()).andReturn(mockMuleRegistry);
-        expect(mockMuleRegistry.lookupObject(DEFAULT_CMIS_ID)).andReturn(cmisConfig);
-
-        MuleMessage mockMuleMessage = createMock(MuleMessage.class);
-        MuleException mockMuleException = createMock(MuleException.class);
 
         Capture<UserOrg> captureUserOrg = Capture.newInstance();
 
-        expect(mockMuleContextManager.send(eq(MULE_ENDPOINT), capture(captureUserOrg),
-                eq(muleMessageProps))).andReturn(mockMuleMessage);
-
-        expect(mockMuleMessage.getPayload(UserOrg.class)).andReturn(null);
-
-        expect(mockMuleMessage.getInboundProperty(EXCEPTION_PROPERTY)).andReturn(mockMuleException);
+        /*
+         * expect(mockMuleContextManager.send(eq(MULE_ENDPOINT), capture(captureUserOrg),
+         * eq(muleMessageProps))).andReturn(mockMuleMessage);
+         */
 
         // user organization should be created, newUserOrg = true
         // userOrg is saved, succeeded = false
@@ -320,7 +295,7 @@ public class UserOrgServiceImplTest extends EasyMockSupport
     }
 
     @Test
-    public void getProfileInfoWhenUserOrgNull() throws MuleException
+    public void getProfileInfoWhenUserOrgNull()
     {
         AcmUser user = new AcmUser();
         user.setUserId(USER_ID);
@@ -339,21 +314,14 @@ public class UserOrgServiceImplTest extends EasyMockSupport
         expect(mockUserDao.findByUserId(USER_ID)).andReturn(user);
         expect(mockUserDao.findByUserId(USER_ID)).andReturn(user);
 
-        MuleMessage mockMuleMessage = createMock(MuleMessage.class);
-        MuleException mockMuleException = null;
 
         Capture<UserOrg> captureUserOrg = Capture.newInstance();
-
-        expect(mockMuleContextManager.getMuleContext()).andReturn(mockMuleContext);
-        expect(mockMuleContext.getRegistry()).andReturn(mockMuleRegistry);
-        expect(mockMuleRegistry.lookupObject(DEFAULT_CMIS_ID)).andReturn(cmisConfig);
-        expect(mockMuleContextManager.send(eq(MULE_ENDPOINT), capture(captureUserOrg),
-                eq(muleMessageProps))).andReturn(mockMuleMessage);
+        /*
+         * expect(mockMuleContextManager.send(eq(MULE_ENDPOINT), capture(captureUserOrg),
+         * eq(muleMessageProps))).andReturn(mockMuleMessage);
+         */
 
         expectedUserOrg.setUserOrgId(1L);
-
-        expect(mockMuleMessage.getPayload(UserOrg.class)).andReturn(expectedUserOrg);
-        expect(mockMuleMessage.getInboundProperty(EXCEPTION_PROPERTY)).andReturn(mockMuleException);
 
         // user organization should be created, newUserOrg = true
         // userOrg is saved, succeeded = true
