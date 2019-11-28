@@ -7,7 +7,6 @@
 
     <bean id="acmUserOrgService" class="com.armedia.acm.plugins.profile.service.UserOrgServiceImpl">
         <property name="userOrgDao" ref="acmUserOrgDao"/>
-        <property name="muleContextManager" ref="muleContextManager"/>
         <property name="userDao" ref="userJpaDao"/>
         <property name="organizationService" ref="organizationService"/>
         <property name="eventPublisher" ref="profileEventPublisher"/>
@@ -15,6 +14,8 @@
         <property name="groupService" ref="groupService"/>
         <property name="ecmFileConfig" ref="ecmFileConfig"/>
         <property name="profileConfig" ref="profileConfig"/>
+        <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
+        <property name="camelContextManager" ref="camelContextManager"/>
     </bean>
 
     <bean id="profilePlugin" class="com.armedia.acm.pluginmanager.model.AcmPlugin">
