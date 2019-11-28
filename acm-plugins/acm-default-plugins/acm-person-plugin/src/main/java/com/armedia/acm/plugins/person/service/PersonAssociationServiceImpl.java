@@ -36,9 +36,8 @@ import com.armedia.acm.plugins.person.model.PersonAssociation;
 import com.armedia.acm.plugins.person.model.PersonOrganizationConstants;
 import com.armedia.acm.services.search.service.SolrJoinDocumentsServiceImpl;
 
-import org.mule.api.MuleException;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.TransactionException;
 
@@ -74,7 +73,7 @@ public class PersonAssociationServiceImpl implements PersonAssociationService
             getPersonAssociationEventPublisher().publishPersonAssociationEvent(personAssociationHistory, savedPersonAssociation, true);
             return savedPersonAssociation;
         }
-        catch (MuleException | TransactionException e)
+        catch (TransactionException e)
         {
             getPersonAssociationEventPublisher().publishPersonAssociationEvent(personAssociationHistory, personAssociation, false);
             throw new AcmCreateObjectFailedException("personAssociation", e.getMessage(), e);
