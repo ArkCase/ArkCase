@@ -37,20 +37,26 @@ import static org.easymock.EasyMock.expectLastCall;
 
 import com.armedia.acm.auth.AcmAuthentication;
 import com.armedia.acm.camelcontext.arkcase.cmis.ArkCaseCMISActions;
+import com.armedia.acm.camelcontext.arkcase.cmis.ArkCaseCMISConstants;
 import com.armedia.acm.camelcontext.context.CamelContextManager;
 import com.armedia.acm.camelcontext.exception.ArkCaseFileRepositoryException;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
+import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.EcmFileConfig;
+import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.person.model.Organization;
 import com.armedia.acm.plugins.person.service.OrganizationService;
 import com.armedia.acm.plugins.profile.dao.UserOrgDao;
+import com.armedia.acm.plugins.profile.model.ProfileConfig;
 import com.armedia.acm.plugins.profile.model.ProfileDTO;
 import com.armedia.acm.plugins.profile.model.UserOrg;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.group.AcmGroup;
+import com.armedia.acm.web.api.MDCConstants;
 
 import org.apache.chemistry.opencmis.client.api.Folder;
+import org.apache.chemistry.opencmis.commons.PropertyIds;
 import org.easymock.Capture;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
@@ -66,17 +72,18 @@ public class UserOrgServiceImplTest extends EasyMockSupport
 {
     private static final String USER_ID = "ann-acm";
     private static final String COMPANY_NAME = "ARMEDIA";
-    private static final String EXCEPTION_PROPERTY = "saveException";
     private static final String DEFAULT_CMIS_ID = "alfresco";
+    private static final String ROOT_FOLDER = "/Root";
     private UserDao mockUserDao;
     private UserOrgDao mockUserOrgDao;
     private OrganizationService mockOrganizationService;
     private UserOrgServiceImpl userOrgService;
     private Authentication mockAuthentication;
     private ProfileEventPublisher mockEventPublisher;
+    private Map<String, Object> camelMessageProperties;
     private CamelContextManager mockCamelContextManager;
-    private Map<String, Object> messageProps;
     private AuditPropertyEntityAdapter mockAuditPropertyEntityAdapter;
+    private ProfileConfig mockProfileConfig;
 
     @Before
     public void setUp()
@@ -88,6 +95,7 @@ public class UserOrgServiceImplTest extends EasyMockSupport
         mockEventPublisher = createMock(ProfileEventPublisher.class);
         mockCamelContextManager = createMock(CamelContextManager.class);
         mockAuditPropertyEntityAdapter = createMock(AuditPropertyEntityAdapter.class);
+        mockProfileConfig = createMock(ProfileConfig.class);
 
         userOrgService = new UserOrgServiceImpl();
         userOrgService.setUserDao(mockUserDao);
@@ -96,13 +104,16 @@ public class UserOrgServiceImplTest extends EasyMockSupport
         userOrgService.setEventPublisher(mockEventPublisher);
         userOrgService.setCamelContextManager(mockCamelContextManager);
         userOrgService.setAuditPropertyEntityAdapter(mockAuditPropertyEntityAdapter);
+        userOrgService.setProfileConfig(mockProfileConfig);
 
         EcmFileConfig ecmFileConfig = new EcmFileConfig();
         ecmFileConfig.setDefaultCmisId(DEFAULT_CMIS_ID);
         userOrgService.setEcmFileConfig(ecmFileConfig);
 
-        messageProps = new LinkedHashMap<>();
-        messageProps.put("acmUser", mockAuthentication);
+        camelMessageProperties = new LinkedHashMap<>();
+        camelMessageProperties.put(PropertyIds.PATH, ROOT_FOLDER + "/" + USER_ID);
+        camelMessageProperties.put(EcmFileConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID);
+        camelMessageProperties.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, "");
     }
 
     @Test
@@ -131,29 +142,6 @@ public class UserOrgServiceImplTest extends EasyMockSupport
         assertNull(userOrg.getOrganization());
     }
 
-    private void expectWhenUpdateUserOrgSuccessfully(UserOrg userOrg) throws ArkCaseFileRepositoryException
-    {
-        expect(mockAuthentication.getName()).andReturn(USER_ID);
-        expect(userOrgService.getUserOrgForUserId(USER_ID)).andReturn(userOrg);
-
-        expect(mockCamelContextManager.send(ArkCaseCMISActions.GET_OR_CREATE_FOLDER_BY_PATH, messageProps)).andReturn(Folder.class);
-    }
-
-    private UserOrg createAndSetUserOrg()
-    {
-        AcmUser user = new AcmUser();
-        user.setUserId(USER_ID);
-
-        Organization organization = new Organization();
-        organization.setOrganizationValue(COMPANY_NAME);
-
-        UserOrg userOrg = new UserOrg();
-        userOrg.setUser(user);
-        userOrg.setOrganization(organization);
-
-        return userOrg;
-    }
-
     @Test
     public void saveUserOrgInfoWhenCompanyNameNotBlankAndUserOrgExists() throws ArkCaseFileRepositoryException
     {
@@ -180,7 +168,7 @@ public class UserOrgServiceImplTest extends EasyMockSupport
     }
 
     @Test
-    public void saveUserOrgInfoWhenCompanyNameNotBlankAndUserOrgNull()
+    public void saveUserOrgInfoWhenCompanyNameNotBlankAndUserOrgNull() throws ArkCaseFileRepositoryException
     {
         ProfileDTO profileDTO = createMockProfileDTO();
 
@@ -192,18 +180,23 @@ public class UserOrgServiceImplTest extends EasyMockSupport
         expect(mockUserDao.findByUserId(USER_ID)).andReturn(expectedUserOrg.getUser());
         expect(mockOrganizationService.findOrCreateOrganization(COMPANY_NAME, USER_ID))
                 .andReturn(expectedUserOrg.getOrganization());
+        expect(mockAuthentication.getName()).andReturn(USER_ID);
+        mockAuditPropertyEntityAdapter.setUserId(USER_ID);
+        expect(mockProfileConfig.getUserProfileRootFolder()).andReturn(ROOT_FOLDER);
 
         Capture<UserOrg> captureUserOrg = Capture.newInstance();
         Capture<UserOrg> captureSavedUserOrg = Capture.newInstance();
 
-        /*
-         * expect(mockMuleContextManager.send(eq(MULE_ENDPOINT), capture(captureUserOrg),
-         * eq(muleMessageProps))).andReturn(mockMuleMessage);
-         */
+        Folder mockFolder = createMock(Folder.class);
 
+        expect(mockCamelContextManager.send(ArkCaseCMISActions.GET_OR_CREATE_FOLDER_BY_PATH, camelMessageProperties)).andReturn(mockFolder);
+        expect(mockFolder.getPropertyValue("alfcmis:nodeRef")).andReturn("folderId");
+        expect(mockUserOrgDao.save(capture(captureUserOrg))).andReturn(expectedUserOrg);
         /*
-         * expect(mockMuleMessage.getPayload(UserOrg.class)).andReturn(expectedUserOrg);
-         * expect(mockMuleMessage.getInboundProperty(EXCEPTION_PROPERTY)).andReturn(mockMuleException);
+         * AcmFolder folder = new AcmFolder();
+         * folder.setCmisFolderId("folderId");
+         * expectedUserOrg.setUserOrgId(1L);
+         * expectedUserOrg.getContainer().setFolder(folder);
          */
 
         // user organization should be created, newUserOrg = true
@@ -225,7 +218,7 @@ public class UserOrgServiceImplTest extends EasyMockSupport
     }
 
     @Test
-    public void saveUserOrgInfoWhenCompanyNameNotBlankUserOrgNullAndFailedToBeCreated()
+    public void saveUserOrgInfoWhenCompanyNameNotBlankUserOrgNullAndFailedToBeCreated() throws ArkCaseFileRepositoryException
     {
         ProfileDTO profileDTO = createMockProfileDTO();
 
@@ -237,13 +230,14 @@ public class UserOrgServiceImplTest extends EasyMockSupport
         expect(mockUserDao.findByUserId(USER_ID)).andReturn(expectedUserOrg.getUser());
         expect(mockOrganizationService.findOrCreateOrganization(COMPANY_NAME, USER_ID))
                 .andReturn(expectedUserOrg.getOrganization());
+        expect(mockAuthentication.getName()).andReturn(USER_ID);
+        mockAuditPropertyEntityAdapter.setUserId(USER_ID);
+        expect(mockProfileConfig.getUserProfileRootFolder()).andReturn(ROOT_FOLDER);
 
         Capture<UserOrg> captureUserOrg = Capture.newInstance();
 
-        /*
-         * expect(mockMuleContextManager.send(eq(MULE_ENDPOINT), capture(captureUserOrg),
-         * eq(muleMessageProps))).andReturn(mockMuleMessage);
-         */
+        expect(mockCamelContextManager.send(ArkCaseCMISActions.GET_OR_CREATE_FOLDER_BY_PATH, camelMessageProperties))
+                .andThrow(new ArkCaseFileRepositoryException("Can not create Folder"));
 
         // user organization should be created, newUserOrg = true
         // userOrg is saved, succeeded = false
@@ -295,7 +289,7 @@ public class UserOrgServiceImplTest extends EasyMockSupport
     }
 
     @Test
-    public void getProfileInfoWhenUserOrgNull()
+    public void getProfileInfoWhenUserOrgNull() throws ArkCaseFileRepositoryException
     {
         AcmUser user = new AcmUser();
         user.setUserId(USER_ID);
@@ -313,15 +307,22 @@ public class UserOrgServiceImplTest extends EasyMockSupport
         expect(mockUserOrgDao.findByUserId(USER_ID)).andReturn(null);
         expect(mockUserDao.findByUserId(USER_ID)).andReturn(user);
         expect(mockUserDao.findByUserId(USER_ID)).andReturn(user);
-
+        expect(mockAuthentication.getName()).andReturn(USER_ID);
+        mockAuditPropertyEntityAdapter.setUserId(USER_ID);
+        expect(mockProfileConfig.getUserProfileRootFolder()).andReturn(ROOT_FOLDER);
 
         Capture<UserOrg> captureUserOrg = Capture.newInstance();
-        /*
-         * expect(mockMuleContextManager.send(eq(MULE_ENDPOINT), capture(captureUserOrg),
-         * eq(muleMessageProps))).andReturn(mockMuleMessage);
-         */
 
+        Folder mockFolder = createMock(Folder.class);
+
+        expect(mockCamelContextManager.send(ArkCaseCMISActions.GET_OR_CREATE_FOLDER_BY_PATH, camelMessageProperties)).andReturn(mockFolder);
+        expect(mockFolder.getPropertyValue("alfcmis:nodeRef")).andReturn("folderId");
+
+        AcmFolder folder = new AcmFolder();
+        folder.setCmisFolderId("folderId");
         expectedUserOrg.setUserOrgId(1L);
+        expectedUserOrg.getContainer().setFolder(folder);
+        expect(mockUserOrgDao.save(capture(captureUserOrg))).andReturn(expectedUserOrg);
 
         // user organization should be created, newUserOrg = true
         // userOrg is saved, succeeded = true
@@ -338,6 +339,35 @@ public class UserOrgServiceImplTest extends EasyMockSupport
         assertEquals(profileDTO.getUserId(), expectedUserOrg.getUser().getUserId());
         assertEquals(profileDTO.getGroups().get(0), group.getName());
         assertNull(profileDTO.getCompanyName());
+    }
+
+    private void expectWhenUpdateUserOrgSuccessfully(UserOrg userOrg) throws ArkCaseFileRepositoryException
+    {
+        expect(mockAuthentication.getName()).andReturn(USER_ID).times(2);
+        expect(userOrgService.getUserOrgForUserId(USER_ID)).andReturn(userOrg);
+        mockAuditPropertyEntityAdapter.setUserId(USER_ID);
+        expect(mockProfileConfig.getUserProfileRootFolder()).andReturn(ROOT_FOLDER);
+
+        Folder mockFolder = createMock(Folder.class);
+
+        expect(mockCamelContextManager.send(ArkCaseCMISActions.GET_OR_CREATE_FOLDER_BY_PATH, camelMessageProperties)).andReturn(mockFolder);
+        expect(mockFolder.getPropertyValue("alfcmis:nodeRef")).andReturn("folderId");
+        expect(mockUserOrgDao.save(userOrg)).andReturn(userOrg);
+    }
+
+    private UserOrg createAndSetUserOrg()
+    {
+        AcmUser user = new AcmUser();
+        user.setUserId(USER_ID);
+
+        Organization organization = new Organization();
+        organization.setOrganizationValue(COMPANY_NAME);
+
+        UserOrg userOrg = new UserOrg();
+        userOrg.setUser(user);
+        userOrg.setOrganization(organization);
+
+        return userOrg;
     }
 
     private void verifyUserOrgIsPopulated(UserOrg userOrg, ProfileDTO profileDTO)
