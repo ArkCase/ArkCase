@@ -27,17 +27,16 @@ package com.armedia.acm.auth;
  * #L%
  */
 
-import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.services.authenticationtoken.model.AuthenticationToken;
 import com.armedia.acm.services.authenticationtoken.model.AuthenticationTokenConstants;
 import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenService;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationServiceException;
@@ -83,7 +82,6 @@ public class AcmBasicAndTokenAuthenticationFilter extends BasicAuthenticationFil
     private AcmLoginSuccessOperations loginSuccessOperations;
     private AcmLoginSuccessEventListener loginSuccessEventListener;
     private AuthenticationTokenService authenticationTokenService;
-    private MuleContextManager muleContextManager;
     private AcmGrantedAuthoritiesMapper acmGrantedAuthoritiesMapper;
     private UserDao userDao;
 
@@ -390,16 +388,6 @@ public class AcmBasicAndTokenAuthenticationFilter extends BasicAuthenticationFil
     public void setAuthenticationTokenService(AuthenticationTokenService authenticationTokenService)
     {
         this.authenticationTokenService = authenticationTokenService;
-    }
-
-    public MuleContextManager getMuleContextManager()
-    {
-        return muleContextManager;
-    }
-
-    public void setMuleContextManager(MuleContextManager muleContextManager)
-    {
-        this.muleContextManager = muleContextManager;
     }
 
     public AcmGrantedAuthoritiesMapper getAcmGrantedAuthoritiesMapper()
