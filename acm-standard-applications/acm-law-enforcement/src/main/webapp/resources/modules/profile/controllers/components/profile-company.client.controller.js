@@ -34,21 +34,19 @@ angular.module('profile').controller('Profile.CompanyController', [ '$scope', '$
             profileInfo.mainOfficePhone = $scope.profileCompanyMainPhone;
             profileInfo.fax = $scope.profileCompanyFax;
 
-            function res() {
-                var res = $scope.profileCompanyWebsite;
+            function profileCompanyWebsite() {
+                var pcWebsite = $scope.profileCompanyWebsite.toLowerCase();
                 var httpRegex = "(http://|https://).+";
                 var noHttpRegex = /[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)?/gi;
-                if (res.toLowerCase().match(httpRegex)) {
-                    res = res.toLowerCase();
-                } else if (res.toLowerCase().match(noHttpRegex)) {
-                    res = ("http://" + res.toLowerCase());
+                if (!pcWebsite.match(httpRegex) && pcWebsite.match(noHttpRegex)) {
+                    pcWebsite = ("http://" + pcWebsite);
                 } else {
-                    res = null;
+                    pcWebsite = null;
                 }
-                return res;
+                return pcWebsite;
             }
 
-            profileInfo.website = res();
+            profileInfo.website = profileCompanyWebsite();
 
             UserInfoService.updateUserInfo(profileInfo).then(function() {
                 refresh();
