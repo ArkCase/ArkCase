@@ -1,7 +1,6 @@
 angular.module('services').factory('PhoneValidationService', ['$http', function ($http) {
     return {
-        validateInput: validateInput,
-        getPhoneRegex: getPhoneRegex
+        validateInput: validateInput
     }
 
     function getPhoneRegex() {
