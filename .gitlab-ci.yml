@@ -303,10 +303,10 @@ security_scan_results:
     - echo "veracode_api_key_id = $VERACODE_API_KEY" >> credentials
     - echo "veracode_api_key_secret = $VERACODE_API_SECRET" >> credentials
     # Get scan info
-    - 'BUILDINFO="$(curl -k --compressed -H \"Authorization: $(./vcodeHMAC-CLI_linux -credsFile credentials -url https://analysiscenter.veracode.com/api/5.0/getbuildinfo.do -method GET)\" https://analysiscenter.veracode.com/api/5.0/getbuildinfo.do?app_id=529559 2>/dev/null)"'
+    - 'BUILDINFO="$(curl -k --compressed -H "Authorization: $(./vcodeHMAC-CLI_linux -credsFile credentials -url https://analysiscenter.veracode.com/api/5.0/getbuildinfo.do -method GET)" https://analysiscenter.veracode.com/api/5.0/getbuildinfo.do?app_id=529559 2>/dev/null)"'
     - BUILD_ID=$(grep -oPm1 "(?<=build_id=\")[^\"<]+" <<< "$BUILDINFO" | head -1)
     # Get detailed report
-    - 'DETAILED_REPORT="$(curl -k --compressed -H \"Authorization: $(./vcodeHMAC-CLI_linux -credsFile credentials -url https://analysiscenter.veracode.com/api/5.0/detailedreport.do -method GET)\" https://analysiscenter.veracode.com/api/5.0/detailedreport.do?build_id=$BUILD_ID 2>/dev/null)"'
+    - 'DETAILED_REPORT="$(curl -k --compressed -H "Authorization: $(./vcodeHMAC-CLI_linux -credsFile credentials -url https://analysiscenter.veracode.com/api/5.0/detailedreport.do -method GET)" https://analysiscenter.veracode.com/api/5.0/detailedreport.do?build_id=$BUILD_ID 2>/dev/null)"'
     - SCAN_SCORE=$(grep -oPm1 "(?<=score=\")[^\"<]+" <<< "$DETAILED_REPORT" | head -1)
     # Get detailed report as PDF
     - 'curl -k --compressed -H "Authorization: $(./vcodeHMAC-CLI_linux -credsFile credentials -url https://analysiscenter.veracode.com/api/5.0/detailedreportpdf.do -method GET)" https://analysiscenter.veracode.com/api/4.0/detailedreportpdf.do?build_id=$BUILD_ID > scan-report.pdf' 
