@@ -38,8 +38,11 @@ angular.module('profile').controller('Profile.CompanyController', [ '$scope', '$
                 var pcWebsite = $scope.profileCompanyWebsite.toLowerCase();
                 var httpRegex = "(http://|https://).+";
                 var noHttpRegex = /[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)?/gi;
-                if (!pcWebsite.match(httpRegex) && pcWebsite.match(noHttpRegex)) {
-                    pcWebsite = ("http://" + pcWebsite);
+
+                if (pcWebsite.match(noHttpRegex)) {
+                    if (!pcWebsite.match(httpRegex)) {
+                        pcWebsite = ("http://" + pcWebsite);
+                    }
                 } else {
                     pcWebsite = null;
                 }
