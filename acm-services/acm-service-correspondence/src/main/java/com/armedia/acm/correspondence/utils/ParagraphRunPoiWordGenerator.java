@@ -571,7 +571,7 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGene
         return generatedExpression;
     }
 
-    private void fixParagraphRuns(XWPFParagraph paragraph)
+    public void fixParagraphRuns(XWPFParagraph paragraph)
     {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < paragraph.getRuns().size(); i++)
