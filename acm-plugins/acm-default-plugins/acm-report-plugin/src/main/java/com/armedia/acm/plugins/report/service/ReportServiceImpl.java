@@ -28,7 +28,6 @@ package com.armedia.acm.plugins.report.service;
  */
 
 import com.armedia.acm.configuration.service.ConfigurationPropertyService;
-import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.pentaho.config.PentahoReportUrl;
 import com.armedia.acm.pentaho.config.PentahoReportsConfig;
 import com.armedia.acm.plugins.report.model.Report;
@@ -40,10 +39,14 @@ import com.armedia.acm.services.users.model.ApplicationRolesConfig;
 import com.armedia.acm.services.users.service.AcmUserRoleService;
 
 import org.apache.commons.lang3.StringUtils;
-import org.mule.api.MuleException;
-import org.mule.api.MuleMessage;
-import org.apache.logging.log4j.Logger;
+import org.apache.http.HttpEntity;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.w3c.dom.Document;
@@ -56,13 +59,9 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import java.io.ByteArrayInputStream;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -71,9 +70,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReadWriteLock;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.stream.Collectors;
 
 public class ReportServiceImpl implements ReportService
@@ -86,7 +82,6 @@ public class ReportServiceImpl implements ReportService
     private final String PENTAHO_VIEW_REPORT_URL_PRPTI_TEMPLATE_DEFAULT = "/pentaho/api/repos/{path}/prpti.view";
     private final String PENTAHO_VIEW_DASHBOARD_REPORT_URL_TEMPLATE_DEFAULT = "/pentaho/api/repos/{path}/viewer?ts={timestamp}";
     private final String PENTAHO_VIEW_ANALYSIS_REPORT_URL_TEMPLATE_DEFAULT = "/pentaho/api/repos/{path}/viewer";
-    private MuleContextManager muleContextManager;
     private PentahoReportUrl reportUrl;
     private ExecuteSolrQuery executeSolrQuery;
     private SearchResults searchResults;
@@ -110,18 +105,21 @@ public class ReportServiceImpl implements ReportService
         }
 
         String fullReportUrl = getReportUrl().getReportsUrl();
-        String reportListUrl = fullReportUrl.replace("http://", "").replace("https://", "");
 
-        String muleEndPoint = fullReportUrl.startsWith("http://") ? "vm://getPentahoReports.in" : "vm://getPentahoReportsSecure.in";
+        CloseableHttpClient httpClient = HttpClients.createDefault();
+        HttpGet request = new HttpGet(fullReportUrl);
+        request.setHeader("X-ARKCASE-EXTERNAL-USER", username);
 
-        Map<String, Object> properties = new HashMap<>();
-        properties.put("username", username);
-        MuleMessage received = getMuleContextManager().send(muleEndPoint, reportListUrl, properties);
+        String xml = null;
 
-        String xml = received.getPayload(String.class);
+        try (CloseableHttpResponse response = httpClient.execute(request))
+        {
+            LOG.debug("Response status: = [{}]", response.getStatusLine().toString());
 
-        MuleException e = received.getInboundProperty("getPantehoReportsException");
-        if (e != null)
+            HttpEntity entity = response.getEntity();
+            xml = EntityUtils.toString(entity);
+        }
+        catch (Exception e)
         {
             throw e;
         }
@@ -543,17 +541,6 @@ public class ReportServiceImpl implements ReportService
         } else {
             return new ArrayList<>();
         }
-    }
-
-
-    public MuleContextManager getMuleContextManager()
-    {
-        return muleContextManager;
-    }
-
-    public void setMuleContextManager(MuleContextManager muleContextManager)
-    {
-        this.muleContextManager = muleContextManager;
     }
 
     public PentahoReportUrl getReportUrl()
