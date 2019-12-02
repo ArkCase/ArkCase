@@ -33,8 +33,6 @@ package com.armedia.acm.compressfolder.web.api;
 import com.armedia.acm.compressfolder.FolderCompressor;
 import com.armedia.acm.compressfolder.model.CompressNode;
 import com.armedia.acm.core.exceptions.AcmAccessControlException;
-import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
-import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.ecm.exception.AcmFolderException;
 import com.armedia.acm.services.dataaccess.service.impl.ArkPermissionEvaluator;
 
@@ -57,7 +55,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -107,12 +104,10 @@ public class FolderCompressorAPIController
 
     @RequestMapping(value = "/download", method = RequestMethod.POST)
     @ResponseBody
-    public ResponseEntity<?> getCompressedSelectedFolderAndFiles(@RequestBody CompressNode compressNode, Authentication auth,
-            HttpSession httpSession)
-            throws AcmFolderException, AcmObjectNotFoundException, AcmUserActionFailedException
+    public ResponseEntity<?> getCompressedSelectedFolderAndFiles(@RequestBody CompressNode compressNode, Authentication auth)
+            throws AcmFolderException
     {
-        String ipAddress = (String) httpSession.getAttribute("acm_ip_address");
-        folderCompressor.compressFolder(compressNode, auth, ipAddress);
+        folderCompressor.compressFolder(compressNode, auth);
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
