@@ -576,81 +576,85 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGene
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < paragraph.getRuns().size(); i++)
         {
-            boolean isSpecialCase = paragraph.getRuns().get(i).getText(0).contains("${")
-                    && paragraph.getRuns().get(i).getText(0).contains("}")
-                    && (paragraph.getRuns().get(i).getText(0).indexOf("${") < paragraph.getRuns().get(i).getText(0)
-                            .indexOf("}"));
-            // This is
-            if (paragraph.getRuns().get(i).getText(0).contains("${")
-                    && paragraph.getRuns().get(i).getText(0).contains("}") && isSpecialCase)
+            boolean isSpecialCase = false;
+            if (paragraph.getRuns().get(i).getText(0) != null)
             {
-                sb.append(paragraph.getRuns().get(i).getText(0).replaceAll("[^a-zA-Z0-9]", ""));
-                paragraph.removeRun(i);
-                paragraph.insertNewRun(i).setText("${", 0);
-                paragraph.insertNewRun(++i).setText(sb.toString(), 0);
-                paragraph.insertNewRun(++i).setText("}", 0);
-                sb.setLength(0);
-            }
-            else if (paragraph.getRuns().get(i).getText(0).contains("{")
-                    && paragraph.getRuns().get(i).getText(0).length() == 2)
-            {
-                // int j = i + 1;
-                i++;
-                while (i < paragraph.getRuns().size()
-                        && !paragraph.getRuns().get(i).getText(0).contains("}"))
-
-                {
-
-                    sb.append(paragraph.getRuns().get(i).getText(0).replaceAll("[^a-zA-Z0-9]", ""));
-                    paragraph.removeRun(i);
-                    if (paragraph.getRuns().get(i).getText(0).contains("${"))
-                    {
-                        if (paragraph.getRuns().get(i).getText(0).contains("}")
-                                && paragraph.getRuns().get(i).getText(0).replaceAll("[^a-zA-Z0-9]", "").length() > 0)
-                        {
-                            String text = paragraph.getRuns().get(i).getText(0).replaceAll("\\$\\{([^}]+)\\}", "");
-                            String braces = paragraph.getRuns().get(i).getText(0).replaceAll(".*(?=})", "");
-                            paragraph.removeRun(i);
-                            paragraph.insertNewRun(i).setText("${", 0);
-                            paragraph.insertNewRun(++i).setText(text, 0);
-                            paragraph.insertNewRun(++i).setText(braces, 0);
-                        }
-                        else
-                        {
-                            String paragraphText = paragraph.getRuns().get(i).getText(0);
-                            String text = paragraphText.replaceAll("\\$\\{", "");
-                            boolean shouldAddText = false;
-                            String braces = paragraphText.replaceAll(".*(?=})", "");
-                            if (braces.length() > 2 && braces.contains("}"))
-                            {
-                                braces = paragraphText.substring(paragraphText.indexOf("}") + 1, paragraphText.indexOf("$"));
-                                if (braces.trim().length() > 0)
-                                {
-                                    shouldAddText = true;
-                                }
-                            }
-
-                            paragraph.removeRun(i);
-                            paragraph.insertNewRun(i).setText(sb.toString(), 0);
-                            sb.setLength(0);
-                            paragraph.insertNewRun(++i).setText(text, 0);
-                            if (shouldAddText)
-                            {
-                                paragraph.insertNewRun(++i).setText(braces, 0);
-                            }
-                            paragraph.insertNewRun(++i).setText("${", 0);
-                            ++i;
-                        }
-                    }
-                }
-                if (i < paragraph.getRuns().size())
+                isSpecialCase = paragraph.getRuns().get(i).getText(0).contains("${")
+                        && paragraph.getRuns().get(i).getText(0).contains("}")
+                        && (paragraph.getRuns().get(i).getText(0).indexOf("${") < paragraph.getRuns().get(i).getText(0)
+                                .indexOf("}"));
+                // This is
+                if (paragraph.getRuns().get(i).getText(0).contains("${")
+                        && paragraph.getRuns().get(i).getText(0).contains("}") && isSpecialCase)
                 {
                     sb.append(paragraph.getRuns().get(i).getText(0).replaceAll("[^a-zA-Z0-9]", ""));
-
                     paragraph.removeRun(i);
-                    paragraph.insertNewRun(i).setText(sb.toString(), 0);
+                    paragraph.insertNewRun(i).setText("${", 0);
+                    paragraph.insertNewRun(++i).setText(sb.toString(), 0);
                     paragraph.insertNewRun(++i).setText("}", 0);
                     sb.setLength(0);
+                }
+                else if (paragraph.getRuns().get(i).getText(0).contains("{")
+                        && paragraph.getRuns().get(i).getText(0).length() == 2)
+                {
+                    // int j = i + 1;
+                    i++;
+                    while (i < paragraph.getRuns().size()
+                            && !paragraph.getRuns().get(i).getText(0).contains("}"))
+
+                    {
+
+                        sb.append(paragraph.getRuns().get(i).getText(0).replaceAll("[^a-zA-Z0-9]", ""));
+                        paragraph.removeRun(i);
+                        if (paragraph.getRuns().get(i).getText(0).contains("${"))
+                        {
+                            if (paragraph.getRuns().get(i).getText(0).contains("}")
+                                    && paragraph.getRuns().get(i).getText(0).replaceAll("[^a-zA-Z0-9]", "").length() > 0)
+                            {
+                                String text = paragraph.getRuns().get(i).getText(0).replaceAll("\\$\\{([^}]+)\\}", "");
+                                String braces = paragraph.getRuns().get(i).getText(0).replaceAll(".*(?=})", "");
+                                paragraph.removeRun(i);
+                                paragraph.insertNewRun(i).setText("${", 0);
+                                paragraph.insertNewRun(++i).setText(text, 0);
+                                paragraph.insertNewRun(++i).setText(braces, 0);
+                            }
+                            else
+                            {
+                                String paragraphText = paragraph.getRuns().get(i).getText(0);
+                                String text = paragraphText.replaceAll("\\$\\{", "");
+                                boolean shouldAddText = false;
+                                String braces = paragraphText.replaceAll(".*(?=})", "");
+                                if (braces.length() > 2 && braces.contains("}"))
+                                {
+                                    braces = paragraphText.substring(paragraphText.indexOf("}") + 1, paragraphText.indexOf("$"));
+                                    if (braces.trim().length() > 0)
+                                    {
+                                        shouldAddText = true;
+                                    }
+                                }
+
+                                paragraph.removeRun(i);
+                                paragraph.insertNewRun(i).setText(sb.toString(), 0);
+                                sb.setLength(0);
+                                paragraph.insertNewRun(++i).setText(text, 0);
+                                if (shouldAddText)
+                                {
+                                    paragraph.insertNewRun(++i).setText(braces, 0);
+                                }
+                                paragraph.insertNewRun(++i).setText("${", 0);
+                                ++i;
+                            }
+                        }
+                    }
+                    if (i < paragraph.getRuns().size())
+                    {
+                        sb.append(paragraph.getRuns().get(i).getText(0).replaceAll("[^a-zA-Z0-9]", ""));
+
+                        paragraph.removeRun(i);
+                        paragraph.insertNewRun(i).setText(sb.toString(), 0);
+                        paragraph.insertNewRun(++i).setText("}", 0);
+                        sb.setLength(0);
+                    }
                 }
             }
         }
