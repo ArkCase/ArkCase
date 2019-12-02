@@ -31,6 +31,7 @@ import static com.armedia.acm.plugins.ecm.model.EcmFileConstants.OBJECT_FILE_TYP
 import static com.armedia.acm.plugins.ecm.model.EcmFileConstants.OBJECT_FOLDER_TYPE;
 import static org.apache.commons.io.IOUtils.copy;
 
+import com.armedia.acm.auth.AcmAuthenticationDetails;
 import com.armedia.acm.compressfolder.model.CompressNode;
 import com.armedia.acm.compressfolder.model.CompressorServiceConfig;
 import com.armedia.acm.core.AcmObject;
@@ -293,6 +294,7 @@ public class DefaultFolderCompressor implements FolderCompressor, ApplicationEve
 
         String filePath = null;
         getAuditPropertyEntityAdapter().setUserId(PROCESS_USER);
+        String ipAddress = ((AcmAuthenticationDetails) auth.getDetails()).getRemoteAddress();
 
         try
         {
@@ -340,6 +342,11 @@ public class DefaultFolderCompressor implements FolderCompressor, ApplicationEve
                     if (inputStream != null)
                     {
                         copy(inputStream, zos);
+                        EcmFileDownloadedEvent event = new EcmFileDownloadedEvent(fileForCompression);
+                        event.setIpAddress(ipAddress);
+                        event.setUserId(auth.getName());
+                        event.setSucceeded(true);
+                        getApplicationEventPublisher().publishEvent(event);
                     }
                 }
                 catch (IOException e)
