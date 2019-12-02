@@ -212,8 +212,7 @@ public class FolderCompressorAPIControllerTest extends EasyMockSupport
 
         String fileName = mockZipFile.getPath();
 
-        expect(mockedFolderCompressor.compressFolder(isA(CompressNode.class), isA(Authentication.class)))
-                .andReturn(fileName);
+        expect(mockedFolderCompressor.compressFolder(isA(CompressNode.class), isA(Authentication.class))).andReturn(fileName);
 
         expect(mockAuthentication.getName()).andReturn("***REMOVED***");
         replayAll();
