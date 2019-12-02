@@ -19,6 +19,8 @@ angular.module('common').controller('Common.HistoryController',
                 retrieveGridData();
             };
 
+            $scope.ObjectTypes = ObjectService.ObjectTypes;
+
             ConfigService.getModuleConfig("common").then(function(moduleConfig) {
                 $scope.config = moduleConfig;
                 onConfigRetrieved(moduleConfig.objectHistoryClientGrid);
