@@ -48,7 +48,9 @@ import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.dao.group.AcmGroupDao;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.group.AcmGroup;
+import com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig;
 import com.armedia.acm.services.users.service.group.GroupService;
+import com.armedia.acm.spring.SpringContextHolder;
 import com.armedia.acm.web.api.MDCConstants;
 
 import org.apache.chemistry.opencmis.client.api.Folder;
@@ -88,6 +90,8 @@ public class UserOrgServiceImpl implements UserOrgService
     private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
 
     private CamelContextManager camelContextManager;
+
+    private SpringContextHolder springContextHolder;
 
     @Override
     public UserOrg getUserOrgForUserId(String userId)
@@ -225,7 +229,7 @@ public class UserOrgServiceImpl implements UserOrgService
         }
 
         AcmUser user = userDao.findByUserId(userId);
-        return createProfileDTO(userOrg, user.getGroups());
+        return createProfileDTO(userOrg, removeControlGroupFromUserGroups(user.getGroups(), user.getUserDirectoryName()));
     }
 
     @Override
@@ -304,6 +308,18 @@ public class UserOrgServiceImpl implements UserOrgService
             userOrg.setOrganization(null);
         }
         return userOrg;
+    }
+
+    private Set<AcmGroup> removeControlGroupFromUserGroups(Set<AcmGroup> userGroups, String userDirectoryName)
+    {
+        AcmLdapSyncConfig acmLdapSyncConfig = springContextHolder.getAllBeansOfType(AcmLdapSyncConfig.class)
+                .get(userDirectoryName + "_sync");
+
+        return userGroups.stream()
+                .filter(userGroup -> userGroup.getDirectoryName() == null
+                        || (!userGroup.getName().equals(acmLdapSyncConfig.getUserControlGroup()) &&
+                                !userGroup.getName().equals(acmLdapSyncConfig.getGroupControlGroup())))
+                .collect(Collectors.toSet());
     }
 
     public UserDao getUserDao()
@@ -404,5 +420,15 @@ public class UserOrgServiceImpl implements UserOrgService
     public void setCamelContextManager(CamelContextManager camelContextManager)
     {
         this.camelContextManager = camelContextManager;
+    }
+
+    public SpringContextHolder getSpringContextHolder()
+    {
+        return springContextHolder;
+    }
+
+    public void setSpringContextHolder(SpringContextHolder springContextHolder)
+    {
+        this.springContextHolder = springContextHolder;
     }
 }
