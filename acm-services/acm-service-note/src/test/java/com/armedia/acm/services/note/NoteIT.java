@@ -54,7 +54,6 @@ import java.util.Date;
         "/spring/spring-library-property-file-manager.xml",
         "/spring/spring-library-acm-encryption.xml",
         "/spring/spring-library-user-service.xml",
-        "/spring/spring-library-mule-context-manager.xml",
         "/spring/spring-library-search.xml",
         "/spring/spring-library-note-plugin-test.xml",
         "/spring/spring-library-configuration.xml",
