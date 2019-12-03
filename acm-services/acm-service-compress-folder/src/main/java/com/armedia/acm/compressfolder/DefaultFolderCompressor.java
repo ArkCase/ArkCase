@@ -346,6 +346,12 @@ public class DefaultFolderCompressor implements FolderCompressor, ApplicationEve
             throws AcmUserActionFailedException, AcmObjectNotFoundException, IOException
     {
 
+        if (isFolderRequestedToBeCompressed(compressNode, folder)
+                && (Objects.isNull(folder.getParentFolder()) || !isFolderRequestedToBeCompressed(compressNode, folder.getParentFolder())))
+        {
+            publishFolderDownloadEvent(folder);
+        }
+
         List<AcmObject> folderChildren = folderService.getFolderChildren(folder.getId()).stream().filter(obj -> obj.getObjectType() != null)
                 .collect(Collectors.toList());
         List<String> fileFolderList = new ArrayList<>();
@@ -368,8 +374,7 @@ public class DefaultFolderCompressor implements FolderCompressor, ApplicationEve
                     InputStream fileByteStream = fileService.downloadAsInputStream(c.getId());
                     copy(fileByteStream, zos);
 
-                    if (!isFolderRequestedToBeCompressed(compressNode, folder)
-                            || (isRootFolderSelected(compressNode) && compressNode.getRootFolderId() == folder.getId()))
+                    if (!isFolderRequestedToBeCompressed(compressNode, folder))
                     {
                         publishFileDownloadEvent(file);
                     }
@@ -403,8 +408,6 @@ public class DefaultFolderCompressor implements FolderCompressor, ApplicationEve
                     fileFolderList.add(objectName);
                     zos.putNextEntry(new ZipEntry(entryName));
                     zos.closeEntry();
-
-                    publishFolderDownloadEvent(childFolder);
                 }
                 compressFolder(zos, childFolder, entryName, compressNode);
             }
