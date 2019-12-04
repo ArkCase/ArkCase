@@ -171,10 +171,10 @@ public class FolderCompressorTest extends EasyMockSupport
         container.setContainerObjectId(700L);
         Capture<AcmFolderDownloadedEvent> capturedEvent = new Capture<>();
 
-        expect(mockedFolderService.findContainerByFolderId(anyLong())).andReturn(container).anyTimes();
+        expect(mockedFolderService.findContainerByFolderId(anyLong())).andReturn(container);
         expect(mockedFolderService.findById(101l)).andReturn(mockedResponseFolder);
         expect(mockedResponseFolder.getName()).andReturn("Response").atLeastOnce();
-        expect(mockedResponseFolder.getId()).andReturn(101l).anyTimes();
+        expect(mockedResponseFolder.getId()).andReturn(101l).atLeastOnce();
         expect(mockedResponseFolder.getParentFolder()).andReturn(null);
         expect(mockedFolderService.getFolderChildren(101l)).andReturn(new ArrayList<>(Arrays.asList(mockedLevel1Folder, mockedLevel1File)));
         expect(mockedLevel1Folder.getObjectType()).andReturn(EcmFileConstants.OBJECT_FOLDER_TYPE).anyTimes();
@@ -198,8 +198,7 @@ public class FolderCompressorTest extends EasyMockSupport
                 expect(mockedFileService.downloadAsInputStream(101l)).andReturn(new FileInputStream(child));
             }
         }
-        expect(mockedLevel1Folder.getId()).andReturn(102l).anyTimes();
-        expect(mockedLevel1Folder.getParentFolder()).andReturn(mockedResponseFolder).anyTimes();
+        expect(mockedLevel1Folder.getId()).andReturn(102l);
         expect(mockedFolderService.getFolderChildren(102l)).andReturn(new ArrayList<>(Arrays.asList(mockedLevel2Folder, mockedLevel2File)));
         expect(mockedLevel2Folder.getObjectType()).andReturn(EcmFileConstants.OBJECT_FOLDER_TYPE).anyTimes();
         expect(mockedLevel2File.getObjectType()).andReturn(EcmFileConstants.OBJECT_FILE_TYPE).anyTimes();
@@ -222,10 +221,9 @@ public class FolderCompressorTest extends EasyMockSupport
                 expect(mockedFileService.downloadAsInputStream(102l)).andReturn(new FileInputStream(child));
             }
         }
-        expect(mockedLevel2Folder.getId()).andReturn(103l).anyTimes();
-        expect(mockedLevel2Folder.getParentFolder()).andReturn(mockedLevel1Folder).anyTimes();
+        expect(mockedLevel2Folder.getId()).andReturn(103l);
         expect(mockedFolderService.getFolderChildren(103l)).andReturn(new ArrayList<>(Arrays.asList(mockedLevel3File)));
-        expect(mockedLevel3File.getObjectType()).andReturn(EcmFileConstants.OBJECT_FILE_TYPE).times(3);
+        expect(mockedLevel3File.getObjectType()).andReturn(EcmFileConstants.OBJECT_FILE_TYPE).anyTimes();
         for (File child : folder_level_2.listFiles())
         {
             if (!child.isDirectory())
@@ -345,17 +343,9 @@ public class FolderCompressorTest extends EasyMockSupport
 
         long folderId = 101l;
 
-        AcmContainer container = new AcmContainer();
-        container.setId(600L);
-        container.setContainerObjectType("containerObjectType");
-        container.setContainerObjectId(700L);
-        Capture<AcmFolderDownloadedEvent> capturedEvent = new Capture<>();
-
-        expect(mockedFolderService.findContainerByFolderId(anyLong())).andReturn(container).anyTimes();
         expect(mockedFolderService.findById(folderId)).andReturn(mockedResponseFolder);
         expect(mockedResponseFolder.getName()).andReturn("Response").atLeastOnce();
-        expect(mockedResponseFolder.getParentFolder()).andReturn(null);
-        expect(mockedResponseFolder.getId()).andReturn(folderId).anyTimes();
+        expect(mockedResponseFolder.getId()).andReturn(folderId).atLeastOnce();
         expect(mockedFolderService.getFolderChildren(folderId)).andReturn(new ArrayList<>(Arrays.asList(mockedLevel1File)));
         expect(mockedLevel1File.getObjectType()).andReturn(EcmFileConstants.OBJECT_FILE_TYPE).anyTimes();
         expect(mockedLevel1File.getFileName()).andReturn(bigFile.getName());
@@ -363,8 +353,6 @@ public class FolderCompressorTest extends EasyMockSupport
                 .andReturn("." + FilenameUtils.getExtension(bigFile.getName())).anyTimes();
         expect(mockedLevel1File.getId()).andReturn(folderId).anyTimes();
         expect(mockedFileService.downloadAsInputStream(folderId)).andReturn(new FileInputStream(bigFile));
-
-        mockEventPublisher.publishEvent(capture(capturedEvent));
 
         replayAll();
 
