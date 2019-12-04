@@ -263,7 +263,7 @@
 
         <beans:bean id="publicFlagService" class="gov.foia.service.PublicFlagService">
             <beans:property name="ecmFileService" ref="ecmFileService"/>
-            <beans:property name="ecmFileDao" ref="ecmFileDao"/>
+            <beans:property name="foiaFileDao" ref="foiaFileDao"/>
             <beans:property name="acmFolderService" ref="acmFolderService"/>
         </beans:bean>
 
