@@ -88,6 +88,8 @@
                     parent="ecmFileToSolrTrasnformer"/>
 
         <beans:bean id="foiaRequestDao" class="gov.foia.dao.FOIARequestDao"/>
+        
+        <beans:bean id="foiaFileDao" class="gov.foia.dao.FOIAFileDao"/>
 
         <beans:bean id="foiaRequesterAssociationToSolrTransformer" class="gov.foia.transformer.FOIARequesterAssociationToSolrTransformer"
                     parent="personAssociationToSolrTransformer"/>
