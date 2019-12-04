@@ -18,4 +18,6 @@
         <property name="ecmFileDao" ref="ecmFileDao"/>
     </bean>
 
+    <bean id="raiseEventAPIController" class="com.armedia.acm.plugins.audit.web.api.RaiseEventAPIController"/>
+
 </beans>
