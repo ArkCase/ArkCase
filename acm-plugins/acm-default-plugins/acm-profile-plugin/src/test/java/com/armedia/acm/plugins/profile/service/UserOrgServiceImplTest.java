@@ -41,7 +41,6 @@ import com.armedia.acm.camelcontext.arkcase.cmis.ArkCaseCMISConstants;
 import com.armedia.acm.camelcontext.context.CamelContextManager;
 import com.armedia.acm.camelcontext.exception.ArkCaseFileRepositoryException;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
-import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.EcmFileConfig;
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
@@ -64,9 +63,6 @@ import org.easymock.Capture;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
-import org.mule.api.MuleContext;
-import org.mule.api.registry.MuleRegistry;
-import org.mule.module.cmis.connectivity.CMISCloudConnectorConnectionManager;
 import org.springframework.security.core.Authentication;
 
 import java.util.HashMap;
@@ -87,11 +83,6 @@ public class UserOrgServiceImplTest extends EasyMockSupport
     private UserOrgServiceImpl userOrgService;
     private Authentication mockAuthentication;
     private ProfileEventPublisher mockEventPublisher;
-    private MuleContextManager mockMuleContextManager;
-    private MuleContext mockMuleContext;
-    private MuleRegistry mockMuleRegistry;
-    private Map<String, Object> muleMessageProps;
-    private CMISCloudConnectorConnectionManager cmisConfig;
     private SpringContextHolder mockSpringContextHolder;
     private Map<String, Object> camelMessageProperties;
     private CamelContextManager mockCamelContextManager;
@@ -108,9 +99,6 @@ public class UserOrgServiceImplTest extends EasyMockSupport
         mockUserOrgDao = createMock(UserOrgDao.class);
         mockOrganizationService = createMock(OrganizationService.class);
         mockEventPublisher = createMock(ProfileEventPublisher.class);
-        mockMuleContextManager = createMock(MuleContextManager.class);
-        mockMuleContext = createMock(MuleContext.class);
-        mockMuleRegistry = createMock(MuleRegistry.class);
         mockSpringContextHolder = createMock(SpringContextHolder.class);
         mockCamelContextManager = createMock(CamelContextManager.class);
         mockAuditPropertyEntityAdapter = createMock(AuditPropertyEntityAdapter.class);
@@ -131,10 +119,6 @@ public class UserOrgServiceImplTest extends EasyMockSupport
 
         userOrgService.setSpringContextHolder(mockSpringContextHolder);
 
-        muleMessageProps = new LinkedHashMap<>();
-        muleMessageProps.put("acmUser", mockAuthentication);
-        cmisConfig = new CMISCloudConnectorConnectionManager();
-        muleMessageProps.put("configRef", cmisConfig);
         camelMessageProperties = new LinkedHashMap<>();
         camelMessageProperties.put(PropertyIds.PATH, ROOT_FOLDER + "/" + USER_ID);
         camelMessageProperties.put(EcmFileConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID);

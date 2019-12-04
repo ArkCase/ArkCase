@@ -33,7 +33,6 @@ import com.armedia.acm.frevvo.model.FrevvoForm;
 import com.armedia.acm.frevvo.model.FrevvoFormConstants;
 import com.armedia.acm.frevvo.model.Strings;
 import com.armedia.acm.frevvo.model.UploadedFiles;
-import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.objectonverter.AcmMarshaller;
 import com.armedia.acm.objectonverter.AcmUnmarshaller;
 import com.armedia.acm.objectonverter.DateFormats;
@@ -105,7 +104,6 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService
     private String userIpAddress;
     private EcmFileDao ecmFileDao;
     private AcmUserActionExecutor userActionExecutor;
-    private MuleContextManager muleContextManager;
     private ObjectAssociationDao objectAssociationDao;
     private FunctionalAccessService functionalAccessService;
     private SearchResults searchResults;
@@ -908,16 +906,6 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService
     public void setUserActionExecutor(AcmUserActionExecutor userActionExecutor)
     {
         this.userActionExecutor = userActionExecutor;
-    }
-
-    public MuleContextManager getMuleContextManager()
-    {
-        return muleContextManager;
-    }
-
-    public void setMuleContextManager(MuleContextManager muleContextManager)
-    {
-        this.muleContextManager = muleContextManager;
     }
 
     public ObjectAssociationDao getObjectAssociationDao()
