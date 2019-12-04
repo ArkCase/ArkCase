@@ -27,13 +27,13 @@ package com.armedia.acm.plugins.admin.service;
  * #L%
  */
 
+import com.armedia.acm.camelcontext.basic.auth.HttpInvokerUtil;
 import com.armedia.acm.camelcontext.context.CamelContextManager;
 import com.armedia.acm.crypto.exceptions.AcmEncryptionException;
 import com.armedia.acm.crypto.properties.AcmEncryptablePropertyUtils;
 import com.armedia.acm.plugins.admin.exception.AcmCmisConfigurationException;
 import com.armedia.acm.plugins.admin.model.CmisConfigurationConstants;
 import com.armedia.acm.plugins.admin.model.CmisUrlConfig;
-import com.armedia.mule.cmis.basic.auth.HttpInvokerUtil;
 
 import org.apache.chemistry.opencmis.client.api.Repository;
 import org.apache.chemistry.opencmis.client.api.SessionFactory;

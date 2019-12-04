@@ -3,49 +3,6 @@
        xmlns="http://www.springframework.org/schema/beans"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
 
-    <!-- event handlers -->
-    <bean id="startComplaintBusinessProcessAction" class="com.armedia.acm.event.EventResponse">
-        <property name="eventName" value="#{complaintConfig.workflowTriggerEventName}"/>
-        <property name="action" ref="startBusinessProcessAction"/>
-        <property name="enabled" value="#{complaintConfig.workflowEnabled}"/>
-        <property name="parameters">
-            <map>
-                <entry key="processDefinitionKey" value="#{complaintConfig.workflowActivitiName}"/>
-            </map>
-        </property>
-        <property name="respondPredicate">
-            <bean class="org.apache.commons.collections.functors.TruePredicate" factory-method="getInstance"/>
-        </property>
-    </bean>
-
-    <bean id="updateComplaintStatus_inApproval" class="com.armedia.acm.event.EventResponse">
-        <property name="eventName" value="com.armedia.acm.activiti.businessProcess.start"/>
-        <property name="action" ref="updateComplaintStatusAction"/>
-        <property name="enabled" value="true"/>
-        <property name="parameters">
-            <map>
-                <entry key="newStatus" value="#{complaintConfig.workflowActivitiInApprovalStateName}"/>
-            </map>
-        </property>
-        <property name="respondPredicate">
-            <bean class="com.armedia.acm.plugins.complaint.service.ComplaintUpdateStatusPredicate"/>
-        </property>
-    </bean>
-
-    <bean id="updateComplaintStatus_approved" class="com.armedia.acm.event.EventResponse">
-        <property name="eventName" value="com.armedia.acm.activiti.businessProcess.end"/>
-        <property name="action" ref="updateComplaintStatusAction"/>
-        <property name="enabled" value="true"/>
-        <property name="parameters">
-            <map>
-                <entry key="newStatus" value="#{complaintConfig.workflowActivitiApprovedStateName}"/>
-            </map>
-        </property>
-        <property name="respondPredicate">
-            <bean class="com.armedia.acm.plugins.complaint.service.ComplaintUpdateStatusPredicate"/>
-        </property>
-    </bean>
-
     <bean id="complaintFolderNameFormat" class="java.lang.String">
         <constructor-arg value="Complaint (%s)"/>
     </bean>
@@ -77,23 +34,6 @@
           class="com.armedia.acm.plugins.complaint.service.CloseComplaintRequestProcessEndHandler">
         <property name="closeComplaintRequestService" ref="closeComplaintRequestService"/>
     </bean>
-    <!-- end of event responses -->
-
-    <!-- event action handlers -->
-    <bean id="updateComplaintStatusAction" class="com.armedia.acm.event.AcmAction">
-        <property name="actionId" value="UPDATE_COMPLAINT_STATUS"/>
-        <property name="actionName" value="Update Complaint Status"/>
-        <property name="targetMuleEndpoint" value="jms://updateComplaintStatusQueue"/>
-        <property name="parameters">
-            <list>
-                <value>newStatus</value>
-            </list>
-        </property>
-
-    </bean>
-    <!-- end of action handlers -->
-
-    <!-- lookup tables -->
 
     <bean id="acmComplaintDao" class="com.armedia.acm.plugins.complaint.dao.ComplaintDao">
         <aop:scoped-proxy/>
