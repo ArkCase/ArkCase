@@ -25,7 +25,6 @@
         <module>acm-service-ecm</module>
         <module>acm-service-electronic-signature</module>
         <module>acm-service-email</module>
-        <module>acm-service-event</module>
         <module>acm-service-form-configuration</module>
         <module>acm-service-frevvo-forms</module>
         <module>acm-service-functional-access-control</module>

@@ -41,11 +41,6 @@
         </dependency>
         <dependency>
             <groupId>com.armedia.acm.acm-services</groupId>
-            <artifactId>acm-service-event</artifactId>
-            <version>${acm.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.armedia.acm.acm-services</groupId>
             <artifactId>acm-service-login</artifactId>
             <version>${acm.version}</version>
         </dependency>
@@ -57,11 +52,6 @@
         <dependency>
             <groupId>com.armedia.acm.acm-services</groupId>
             <artifactId>acm-service-holiday</artifactId>
-            <version>${acm.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.armedia.acm.acm-tool-integrations</groupId>
-            <artifactId>acm-activiti-actions</artifactId>
             <version>${acm.version}</version>
         </dependency>
         <dependency>
