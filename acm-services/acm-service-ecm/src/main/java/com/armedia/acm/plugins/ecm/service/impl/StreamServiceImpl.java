@@ -423,7 +423,24 @@ public class StreamServiceImpl implements StreamService
         }
         else
         {
-            input.skip(start);
+            // make sure correct number of bytes are skipped
+            long skipped = 0;
+            long totalSkipped = 0;
+            while (totalSkipped < start)
+            {
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    // do nothing
+                }
+                skipped = input.skip(start - totalSkipped);
+                if (skipped == 0)
+                {
+                    break;
+                }
+                totalSkipped += skipped;
+            }
+
             long toRead = length;
 
             while ((read = input.read(buffer)) > 0)
