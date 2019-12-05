@@ -294,6 +294,7 @@
         <beans:bean id="ecmFileService" class="gov.foia.service.FOIAEcmFileServiceImpl">
             <beans:property name="ecmFileTransaction" ref="ecmFileTransaction"/>
             <beans:property name="ecmFileDao" ref="ecmFileDao"/>
+            <beans:property name="foiaFileDao" ref="foiaFileDao"/>
             <beans:property name="containerFolderDao" ref="acmContainerFolderDao"/>
             <beans:property name="ecmFileConfig" ref="ecmFileConfig"/>
             <beans:property name="solrQuery" ref="executeSolrQuery"/>
