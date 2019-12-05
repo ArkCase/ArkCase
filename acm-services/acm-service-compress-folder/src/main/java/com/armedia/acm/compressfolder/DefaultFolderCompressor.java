@@ -224,6 +224,15 @@ public class DefaultFolderCompressor implements FolderCompressor, ApplicationEve
             throw new AcmFolderException(e);
         }
 
+        try
+        {
+            publishCompressFolderDownloadEvents(folder, compressNode);
+        }
+        catch (AcmObjectNotFoundException | AcmUserActionFailedException e)
+        {
+            log.error("Compress folder publishing error.", e);
+        }
+
         return filename;
     }
 
@@ -281,7 +290,6 @@ public class DefaultFolderCompressor implements FolderCompressor, ApplicationEve
                     if (inputStream != null)
                     {
                         copy(inputStream, zos);
-                        publishFileDownloadEvent(fileForCompression);
                     }
                 }
                 catch (IOException e)
@@ -299,6 +307,10 @@ public class DefaultFolderCompressor implements FolderCompressor, ApplicationEve
             {
                 log.warn("Could not close CMIS content stream: {}", e.getMessage(), e);
             }
+
+            filesForCompression.forEach(fileForCompression -> {
+                publishFileDownloadEvent(fileForCompression);
+            });
         }
         catch (IOException e)
         {
@@ -345,13 +357,6 @@ public class DefaultFolderCompressor implements FolderCompressor, ApplicationEve
     private void compressFolder(ZipOutputStream zos, AcmFolder folder, String parentPath, CompressNode compressNode)
             throws AcmUserActionFailedException, AcmObjectNotFoundException, IOException
     {
-
-        if (isFolderRequestedToBeCompressed(compressNode, folder)
-                && (Objects.isNull(folder.getParentFolder()) || !isFolderRequestedToBeCompressed(compressNode, folder.getParentFolder())))
-        {
-            publishFolderDownloadEvent(folder);
-        }
-
         List<AcmObject> folderChildren = folderService.getFolderChildren(folder.getId()).stream().filter(obj -> obj.getObjectType() != null)
                 .collect(Collectors.toList());
         List<String> fileFolderList = new ArrayList<>();
@@ -373,11 +378,6 @@ public class DefaultFolderCompressor implements FolderCompressor, ApplicationEve
                     zos.putNextEntry(new ZipEntry(entryName));
                     InputStream fileByteStream = fileService.downloadAsInputStream(c.getId());
                     copy(fileByteStream, zos);
-
-                    if (!isFolderRequestedToBeCompressed(compressNode, folder))
-                    {
-                        publishFileDownloadEvent(file);
-                    }
                 }
                 zos.closeEntry();
             }
@@ -423,6 +423,41 @@ public class DefaultFolderCompressor implements FolderCompressor, ApplicationEve
             }
         });
 
+    }
+
+    public void publishCompressFolderDownloadEvents(AcmFolder folder, CompressNode compressNode)
+            throws AcmObjectNotFoundException, AcmUserActionFailedException
+    {
+        if (isFolderRequestedToBeCompressed(compressNode, folder)
+                && (Objects.isNull(folder.getParentFolder()) || !isFolderRequestedToBeCompressed(compressNode, folder.getParentFolder())))
+        {
+            publishFolderDownloadEvent(folder);
+        }
+        else
+        {
+            List<AcmObject> folderChildren = folderService.getFolderChildren(folder.getId());
+
+            // all child objects of OBJECT_FILE_TYPE
+            List<AcmObject> files = folderChildren.stream().filter(c -> OBJECT_FILE_TYPE.equals(c.getObjectType().toUpperCase()))
+                    .collect(Collectors.toList());
+            for (AcmObject acmObject : files)
+            {
+                EcmFile file = EcmFile.class.cast(acmObject);
+                if (canBeCompressed(file, files, folder, compressNode))
+                {
+                    publishFileDownloadEvent(file);
+                }
+            }
+
+            // all child objects of OBJECT_FOLDER_TYPE
+            List<AcmObject> folders = folderChildren.stream().filter(c -> OBJECT_FOLDER_TYPE.equals(c.getObjectType().toUpperCase()))
+                    .collect(Collectors.toList());
+            for (AcmObject acmObject : folders)
+            {
+                AcmFolder childFolder = AcmFolder.class.cast(acmObject);
+                publishCompressFolderDownloadEvents(childFolder, compressNode);
+            }
+        }
     }
 
     public void publishFileDownloadEvent(EcmFile file)
