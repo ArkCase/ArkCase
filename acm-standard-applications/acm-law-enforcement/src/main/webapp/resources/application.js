@@ -147,8 +147,9 @@ angular.module(ApplicationConfiguration.applicationModuleName).config(
 
                             if (response.status >= 500) {
                                 MessageService.serverError();
-                                return ($q.reject(response));
                             }
+                            //Reject all unrejected responses
+                            return($q.reject(response));
                         }
                     }
 
