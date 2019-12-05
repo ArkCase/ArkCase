@@ -39,12 +39,15 @@ angular.module('directives').directive('dateTimePicker', ['moment', 'Util.DateSe
                 }
                 $scope.minYear = 1900;
                 $scope.maxYear = moment.utc($scope.dateInPicker).year() + 1;
-            }
+            };
 
             $scope.setDate($scope.data);
 
             $scope.toggleEditable = function () {
                 $scope.editable = !$scope.editable;
+                if(!moment($(comboField).combodate("getValue")).isSame($scope.dateInPicker)){
+                    $(comboField).combodate('setValue', $scope.dateInPicker);
+                }
             };
 
             var comboField = element[0].children[1].firstElementChild;
@@ -77,7 +80,6 @@ angular.module('directives').directive('dateTimePicker', ['moment', 'Util.DateSe
             });
 
             $scope.saveDate = function () {
-                $scope.toggleEditable();
                 var editedDate = $(comboField).combodate('getValue', null);
                 if ($scope.timeFormatDisabled === "true") {
                     $scope.dateInPicker = moment(editedDate);
@@ -86,6 +88,7 @@ angular.module('directives').directive('dateTimePicker', ['moment', 'Util.DateSe
                     $scope.dateInPicker = moment(editedDate);
                     $scope.data = UtilDateService.dateToIsoDateTime($scope.dateInPicker);
                 }
+                $scope.toggleEditable();
             };
 
             $scope.cancel = function () {

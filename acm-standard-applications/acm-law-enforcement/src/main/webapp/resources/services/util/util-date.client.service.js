@@ -18,7 +18,7 @@ angular.module('services').factory('Util.DateService', [ '$translate', 'UtilServ
         defaultDateTimeFormat: $translate.instant("common.defaultDateTimeFormat"),
         defaultDateLongTimeFormat: $translate.instant("common.defaultDateLongTimeFormat"),
         defaultDatePickerFormat: $translate.instant("common.defaultDatePickerFormat"),
-        defaultDateUIFormat: $translate.instant("common.defaultDateUIFormat")
+        defaultDateTimeLongUIFormatWithYearAsNumber: $translate.instant("common.defaultDateTimeLongUIFormatWithYearAsNumber")
 
         /**
          * @ngdoc method
@@ -389,8 +389,106 @@ angular.module('services').factory('Util.DateService', [ '$translate', 'UtilServ
                 from: from,
                 to: to
             };
-        }
+        },
 
+        /**
+         * @ngdoc method
+         * @name fixStartAndEndDirectiveDates
+         * @methodOf services:Util.DateService
+         *
+         * @description
+         * Date format: mm/d/yyyy
+         * Validations:
+         *      - on load sets today date
+         *      - it doesn't accept invalid date:
+         *          - characters that aren't numbers
+         *          - date format
+         *      - it validates dates that are used as part of date-time-picker directive
+         *
+         *
+         * @Returns {Object} {from: from, to: to}
+         */
+
+        fixStartAndEndDirectiveDates: function(start, end, oldValue, newValue, convertToDateFormat){
+            var todayDate = new Date();
+            var oldDate = moment(oldValue).format("DD/MM/YYYY/hh:mm:ss");
+            var newDate = moment(newValue).format("DD/MM/YYYY hh:mm:ss");
+
+            var startDate = typeof(start) === "object" ? start : new Date(start);
+            var startDateConverted;
+            var endDateConverted;
+            var startDateHelper = this.convertUTCDateToLocalDate(startDate);
+            if (moment(startDateHelper).isBefore(moment(todayDate)) && oldDate !== newDate) {
+                start = todayDate;
+            }else {
+                if(moment(newValue).isAfter(todayDate)){
+                    start = newValue;
+                }
+            }
+            if(convertToDateFormat){
+                startDateConverted = this.isoToDate(start);
+                endDateConverted = this.isoToDate(end);
+            }else {
+                startDateConverted = this.isoToLocalDateTime(start);
+                endDateConverted = this.isoToLocalDateTime(end);
+            }
+
+            if (moment(startDateConverted).isAfter(moment(endDateConverted))) {
+                end = start;
+            }
+            return {
+                start: start,
+                end: end
+            }
+        },
+
+        /**
+         * @ngdoc method
+         * @name fixDirectiveEndDate
+         * @methodOf services:Util.DateService
+         *
+         * @description
+         * Date format: mm/d/yyyy
+         * Validations:
+         *      - on load sets today date
+         *      - it doesn't accept invalid date:
+         *      - date format
+         *      - it validates dates that are used as part of date-time-picker directive
+         *      - characters that aren't numbers
+         *
+         * @Returns {Object} {endDate: endDate}
+         */
+
+        fixDirectiveEndDate: function(startDate, endDate) {
+            var todayDate = new Date();
+            if (Util.isEmpty(endDate)) {
+                endDate = todayDate;
+            }
+
+            if (moment(endDate).isBefore(startDate)) {
+                endDate = startDate;
+            }
+            endDate;
+        },
+
+        /**
+         * @ngdoc method
+         * @name convertUTCDateToLocalDate
+         * @methodOf services:Util.DateService
+         *
+         *
+         * @Returns {Object} {endDate: endDate}
+         */
+        convertUTCDateToLocalDate: function(date) {
+            var newDate = new Date(date.getTime()+date.getTimezoneOffset()*60*1000);
+
+            var offset = date.getTimezoneOffset() / 60;
+            var hours = date.getHours();
+
+            newDate.setHours(hours - offset);
+
+            return newDate;
+        }
     };
 
     return Service;
