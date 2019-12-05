@@ -423,7 +423,6 @@ public class StreamServiceImpl implements StreamService
         }
         else
         {
-
             // make sure correct number of bytes are skipped
             long skipped = 0;
             long totalSkipped = 0;
