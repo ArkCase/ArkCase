@@ -2,8 +2,8 @@
 
 angular.module('directives').controller(
         'Directives.CoreCalendarNewEventModalController',
-        [ '$scope', '$modal', '$modalInstance', 'Object.CalendarService', 'MessageService', 'Util.DateService', 'coreCalendarConfig', 'Directives.CalendarUtilService', 'params', 'Helper.LocaleService', 'Util.DateService', 'UtilService',
-                function($scope, $modal, $modalInstance, CalendarService, MessageService, DateService, coreCalendarConfig, CalendarUtilService, params, LocaleHelper, UtilDateService, Util) {
+        [ '$scope', '$modal', '$modalInstance', '$translate', 'Object.CalendarService', 'MessageService', 'Util.DateService', 'coreCalendarConfig', 'Directives.CalendarUtilService', 'params', 'Helper.LocaleService', 'UtilService',
+                function($scope, $modal, $modalInstance, $translate, CalendarService, MessageService, DateService, coreCalendarConfig, CalendarUtilService, params, LocaleHelper, Util) {
                     new LocaleHelper.Locale({
                         scope: $scope
                     });
@@ -124,8 +124,11 @@ angular.module('directives').controller(
                     };
 
                     $scope.setEventRecurrence = function() {
+                        var tmpEventDataModel = $scope.eventDataModel;
+                        tmpEventDataModel.start = DateService.isoToLocalDateTime(tmpEventDataModel.start);
+                        tmpEventDataModel.end = DateService.isoToLocalDateTime(tmpEventDataModel.end);
                         var params = {
-                            eventDataModel: $scope.eventDataModel
+                            eventDataModel: tmpEventDataModel
                         };
 
                         var modalInstance = $modal.open({
@@ -229,8 +232,8 @@ angular.module('directives').controller(
                     };
 
                     var processEventDataModel = function() {
-                        $scope.eventDataModel.start = DateService.dateToIso($scope.eventDataModel.start);
-                        $scope.eventDataModel.end = DateService.dateToIso($scope.eventDataModel.end);
+                        $scope.eventDataModel.start = DateService.dateToIso(new Date($scope.eventDataModel.start));
+                        $scope.eventDataModel.end = DateService.dateToIso(new Date($scope.eventDataModel.end));
                         if ($scope.eventDataModel.recurrenceDetails.startAt && $scope.eventDataModel.recurrenceDetails.startAt instanceof Date) {
                             $scope.eventDataModel.recurrenceDetails.startAt = DateService.dateToIso($scope.eventDataModel.recurrenceDetails.startAt);
                         }
@@ -282,35 +285,25 @@ angular.module('directives').controller(
                         });
                     };
 
-                    $scope.startDateChanged = function(startDate) {
-                        var todayDate = new Date();
-                        if (Util.isEmpty($scope.eventDataModel.start) || moment($scope.eventDataModel.start).isBefore(todayDate)) {
-                            $scope.eventDataModel.start = todayDate;
-                        }
+                    $scope.$watch("eventDataModel.start", function(newValue, oldValue, scope) {
 
-                        if (moment($scope.eventDataModel.start).isAfter($scope.eventDataModel.end)) {
-                            $scope.eventDataModel.end = UtilDateService.convertToCurrentTime($scope.eventDataModel.start);
-                        }
+                        var dates = DateService.fixStartAndEndDirectiveDates($scope.eventDataModel.start, $scope.eventDataModel.end, oldValue, newValue, $scope.eventDataModel.allDayEvent);
 
-                        $scope.eventDataModel.end = UtilDateService.setSameTime($scope.eventDataModel.start, $scope.eventDataModel.end);
+                        if(dates.start){
+                            $scope.eventDataModel.start = dates.start;
+                        }
+                        if(dates.end){
+                            $scope.eventDataModel.end = dates.end
+                        }
                         $scope.minEndDate = $scope.eventDataModel.start;
-                    };
+                    });
 
-                    $scope.endDateChanged = function() {
-                        var validateDate = DateService.validateToDate($scope.eventDataModel.start, $scope.eventDataModel.end);
-                        $scope.eventDataModel.start = validateDate.from;
-                        $scope.eventDataModel.end = validateDate.to;
-                        var todayDate = new Date();
-                        if (Util.isEmpty($scope.eventDataModel.end)) {
-                            $scope.eventDataModel.end = todayDate;
+                    $scope.$watch("eventDataModel.end", function(newValue, oldValue, scope) {
+                        var endDate = DateService.fixDirectiveEndDate($scope.eventDataModel.start, $scope.eventDataModel.end);
+                        if(endDate){
+                            $scope.eventDataModel.end = endDate;
                         }
-
-                        if (moment($scope.eventDataModel.end).isBefore($scope.eventDataModel.start)) {
-                            $scope.eventDataModel.end = UtilDateService.convertToCurrentTime($scope.eventDataModel.start);
-                        }
-
-                        $scope.eventDataModel.start = UtilDateService.setSameTime($scope.eventDataModel.start, $scope.eventDataModel.end);
-                    };
+                    });
 
                     /*Cancel the modal dialog*/
                     $scope.cancel = function() {

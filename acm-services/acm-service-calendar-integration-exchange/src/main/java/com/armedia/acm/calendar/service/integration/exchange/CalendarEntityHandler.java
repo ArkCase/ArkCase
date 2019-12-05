@@ -43,19 +43,20 @@ import com.armedia.acm.service.outlook.dao.AcmOutlookFolderCreatorDao;
 import com.armedia.acm.service.outlook.dao.OutlookDao;
 import com.armedia.acm.services.users.model.AcmUser;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Join;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.access.PermissionEvaluator;
 import org.springframework.security.core.Authentication;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -251,9 +252,9 @@ public class CalendarEntityHandler
         }
         else
         {
-           query.where(cb.equal(acmObject.get(getEntityIdForQuery()), objectId));
+            query.where(cb.equal(acmObject.get(getEntityIdForQuery()), objectId));
         }
-        TypedQuery dbQuery =  em.createQuery(query);
+        TypedQuery dbQuery = em.createQuery(query);
         List<AcmContainerEntity> resultList = dbQuery.getResultList();
         if (!resultList.isEmpty())
         {
@@ -350,10 +351,17 @@ public class CalendarEntityHandler
         CriteriaQuery query = cb.createQuery(acmObjectClass);
         Root acmObject = query.from(acmObjectClass);
         query.select(acmObject);
-        query.where(cb.and(acmObject.<String>get("status").in(closedStates), cb.equal(acmObject.get(getEntityIdForQuery()), objectId)));
+        query.where(cb.and(acmObject.<String> get("status").in(closedStates), cb.equal(acmObject.get(getEntityIdForQuery()), objectId)));
 
-        TypedQuery dbQuery =  em.createQuery(query);
-        return (boolean)dbQuery.getSingleResult();
+        TypedQuery dbQuery = em.createQuery(query);
+        try
+        {
+            return (boolean) dbQuery.getSingleResult();
+        }
+        catch (NoResultException e)
+        {
+            return false;
+        }
     }
 
     private List<AcmContainerEntity> getEntities(Integer daysClosed)
@@ -368,14 +376,14 @@ public class CalendarEntityHandler
 
         if (daysClosed == null)
         {
-            query.where(cb.and(acmObject.<String>get("status").in(closedStates), cb.isNotNull(join.get("id"))));
+            query.where(cb.and(acmObject.<String> get("status").in(closedStates), cb.isNotNull(join.get("id"))));
         }
         else
         {
-            Predicate predicate = cb.lessThanOrEqualTo(acmObject.<Date>get("dateCreated"), calculateModifiedDate(daysClosed));
-            query.where(cb.and(acmObject.<String>get("status").in(closedStates), cb.and(cb.isNotNull(join.get("id")),predicate)));
+            Predicate predicate = cb.lessThanOrEqualTo(acmObject.<Date> get("dateCreated"), calculateModifiedDate(daysClosed));
+            query.where(cb.and(acmObject.<String> get("status").in(closedStates), cb.and(cb.isNotNull(join.get("id")), predicate)));
         }
-        TypedQuery dbQuery =  em.createQuery(query);
+        TypedQuery dbQuery = em.createQuery(query);
         List<AcmContainerEntity> resultList = dbQuery.getResultList();
 
         return resultList;
@@ -549,13 +557,16 @@ public class CalendarEntityHandler
         return this.entityType;
     }
 
-    public AcmObjectUtils getAcmObjectUtils() {
+    public AcmObjectUtils getAcmObjectUtils()
+    {
         return acmObjectUtils;
     }
 
-    public void setAcmObjectUtils(AcmObjectUtils acmObjectUtils) {
+    public void setAcmObjectUtils(AcmObjectUtils acmObjectUtils)
+    {
         this.acmObjectUtils = acmObjectUtils;
     }
+
     public enum PermissionType
     {
         READ, WRITE, DELETE
