@@ -64,12 +64,6 @@
         <property name="auditConfig" ref="auditConfig"/>
     </bean>
 
-    <bean name="muleAuditMessageProcessorNotificationListener"
-        class="com.armedia.acm.audit.listeners.AcmMessageProcessorNotificationListener">
-        <property name="auditService" ref="auditService"/>
-        <property name="auditConfig" ref="auditConfig"/>
-    </bean>
-
     <bean id="auditConfig" class="com.armedia.acm.audit.model.AuditConfig" scope="refresh">
         <aop:scoped-proxy/>
     </bean>

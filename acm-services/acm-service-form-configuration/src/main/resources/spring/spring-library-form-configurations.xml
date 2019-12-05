@@ -28,7 +28,6 @@
         <property name="ecmFileService" ref="ecmFileService"/>
         <property name="folderAndFilesUtils" ref="folderAndFilesUtils"/>
         <property name="properties" ref="acm-form-properties"/>
-        <property name="muleContextManager" ref="muleContextManager"/>
         <property name="authenticationTokenService" ref="authenticationTokenService"/>
         <property name="userDao" ref="userJpaDao"/>
         <property name="userActionDao" ref="userActionDao"/>
