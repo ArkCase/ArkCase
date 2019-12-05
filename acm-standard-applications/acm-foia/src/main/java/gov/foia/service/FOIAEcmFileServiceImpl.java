@@ -32,6 +32,7 @@ import com.armedia.acm.camelcontext.arkcase.cmis.ArkCaseCMISConstants;
 import com.armedia.acm.camelcontext.exception.ArkCaseFileRepositoryException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
+import com.armedia.acm.plugins.ecm.exception.LinkAlreadyExistException;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
@@ -60,11 +61,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import gov.foia.dao.FOIAFileDao;
 import gov.foia.model.FOIAEcmFileVersion;
+import gov.foia.model.FOIAFile;
 
 public class FOIAEcmFileServiceImpl extends EcmFileServiceImpl implements FOIAEcmFileService
 {
     private transient final Logger log = LogManager.getLogger(getClass());
+
+    private FOIAFileDao foiaFileDao;
 
     @Override
     @AcmAcquireAndReleaseObjectLock(objectIdArgIndex = 0, objectType = "FILE", lockType = "READ")
@@ -72,7 +77,7 @@ public class FOIAEcmFileServiceImpl extends EcmFileServiceImpl implements FOIAEc
     public EcmFile copyFile(Long fileId, AcmFolder targetFolder, AcmContainer targetContainer)
             throws AcmUserActionFailedException, AcmObjectNotFoundException
     {
-        EcmFile file = getEcmFileDao().find(fileId);
+        FOIAFile file = getFoiaFileDao().find(fileId);
 
         if (file == null || targetFolder == null)
         {
@@ -98,7 +103,7 @@ public class FOIAEcmFileServiceImpl extends EcmFileServiceImpl implements FOIAEc
         {
             Document cmisObject = (Document) getCamelContextManager().send(ArkCaseCMISActions.COPY_DOCUMENT, props);
 
-            EcmFile fileCopy = new EcmFile();
+            FOIAFile fileCopy = new FOIAFile();
 
             fileCopy.setVersionSeriesId(cmisObject.getPropertyValue(EcmFileConstants.REPOSITORY_VERSION_ID));
             fileCopy.setFileType(file.getFileType());
@@ -116,6 +121,9 @@ public class FOIAEcmFileServiceImpl extends EcmFileServiceImpl implements FOIAEc
             fileCopy.setPageCount(file.getPageCount());
             fileCopy.setSecurityField(file.getSecurityField());
 
+            fileCopy.setPublicFlag(file.getPublicFlag());
+            fileCopy.setExemptionCodes(file.getExemptionCodes());
+
             FOIAEcmFileVersion fileCopyVersion = new FOIAEcmFileVersion();
             fileCopyVersion.setCmisObjectId(cmisObject.getPropertyValue(EcmFileConstants.REPOSITORY_VERSION_ID));
             fileCopyVersion.setVersionTag(cmisObject.getVersionLabel());
@@ -132,11 +140,9 @@ public class FOIAEcmFileServiceImpl extends EcmFileServiceImpl implements FOIAEc
 
             fileCopy.getVersions().add(fileCopyVersion);
 
-            EcmFile result = getEcmFileDao().save(fileCopy);
+            FOIAFile result = getFoiaFileDao().save(fileCopy);
 
-            result = getFileParticipantService().setFileParticipantsFromParentFolder(result);
-
-            return result;
+            return getFileParticipantService().setFileParticipantsFromParentFolder(result);
         }
         catch (ArkCaseFileRepositoryException e)
         {
@@ -150,6 +156,88 @@ public class FOIAEcmFileServiceImpl extends EcmFileServiceImpl implements FOIAEc
             throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_COPY_FILE, EcmFileConstants.OBJECT_FILE_TYPE, file.getId(),
                     "Could not copy file", e);
         }
+    }
+
+    @Override
+    @AcmAcquireAndReleaseObjectLock(objectIdArgIndex = 0, objectType = "FILE", lockType = "READ")
+    @AcmAcquireAndReleaseObjectLock(acmObjectArgIndex = 1, objectType = "FOLDER", lockType = "WRITE", lockChildObjects = false, unlockChildObjects = false)
+    public EcmFile copyFileAsLink(Long fileId, AcmFolder targetFolder, AcmContainer targetContainer)
+            throws AcmUserActionFailedException, AcmObjectNotFoundException, LinkAlreadyExistException
+    {
+        FOIAFile file = getFoiaFileDao().find(fileId);
+
+        if (file == null || targetFolder == null)
+        {
+            throw new AcmObjectNotFoundException(EcmFileConstants.OBJECT_FILE_TYPE, fileId, "File or Destination folder not found", null);
+        }
+
+        // Check if link already exists in same directory
+        if (getEcmFileDao().getFileLinkInCurrentDirectory(file.getVersionSeriesId(), targetFolder.getId()) != null)
+        {
+            log.error("File with version series id {} already exist in current directory", file.getVersionSeriesId());
+            throw new LinkAlreadyExistException("Link for file " + file.getFileName() + " already exist " +
+                    "in current directory");
+        }
+
+        FOIAFile savedFile;
+
+        try
+        {
+
+            EcmFileVersion fileCopyVersion = new EcmFileVersion();
+            fileCopyVersion.setCmisObjectId(file.getVersions().get(file.getVersions().size() - 1).getCmisObjectId());
+            fileCopyVersion.setVersionTag(file.getActiveVersionTag());
+            copyFileVersionMetadata(file, fileCopyVersion);
+
+            FOIAFile fileCopy = copyEcmFile(file, targetFolder, targetContainer, fileCopyVersion, file.getVersionSeriesId(),
+                    file.getActiveVersionTag());
+            fileCopy.setLink(true);
+
+            savedFile = getFoiaFileDao().save(fileCopy);
+
+            return getFileParticipantService().setFileParticipantsFromParentFolder(savedFile);
+
+        }
+        catch (PersistenceException e)
+        {
+            log.error("Could not create link to file {} ", e.getMessage(), e);
+            throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_COPY_FILE, EcmFileConstants.OBJECT_FILE_TYPE, file.getId(),
+                    "Could not create link to file", e);
+        }
+    }
+
+    protected FOIAFile copyEcmFile(FOIAFile originalFile, AcmFolder targetFolder, AcmContainer targetContainer,
+            EcmFileVersion fileVersion, String versionSeriesId, String activeVersionTag)
+    {
+        FOIAFile fileCopy = new FOIAFile();
+
+        fileCopy.setVersionSeriesId(versionSeriesId);
+        fileCopy.setFileType(originalFile.getFileType());
+        fileCopy.setActiveVersionTag(activeVersionTag);
+        fileCopy.setFileName(originalFile.getFileName());
+        fileCopy.setFolder(targetFolder);
+        fileCopy.setContainer(targetContainer);
+        fileCopy.setStatus(originalFile.getStatus());
+        fileCopy.setCategory(originalFile.getCategory());
+        fileCopy.setFileActiveVersionMimeType(originalFile.getFileActiveVersionMimeType());
+        fileCopy.setClassName(originalFile.getClassName());
+        fileCopy.setFileActiveVersionNameExtension(originalFile.getFileActiveVersionNameExtension());
+        fileCopy.setFileSource(originalFile.getFileSource());
+        fileCopy.setLegacySystemId(originalFile.getLegacySystemId());
+        fileCopy.setPageCount(originalFile.getPageCount());
+        fileCopy.setSecurityField(originalFile.getSecurityField());
+
+        fileCopy.setPublicFlag(originalFile.getPublicFlag());
+        fileCopy.setExemptionCodes(originalFile.getExemptionCodes());
+
+        ObjectAssociation personCopy = copyObjectAssociation(originalFile.getPersonAssociation());
+        fileCopy.setPersonAssociation(personCopy);
+
+        ObjectAssociation organizationCopy = copyObjectAssociation(originalFile.getOrganizationAssociation());
+        fileCopy.setOrganizationAssociation(organizationCopy);
+
+        fileCopy.getVersions().add(fileVersion);
+        return fileCopy;
     }
 
     @Override
@@ -213,6 +301,23 @@ public class FOIAEcmFileServiceImpl extends EcmFileServiceImpl implements FOIAEc
         tmpPdfConvertedFile = new File(tmpPdfConvertedFullFileName);
 
         return tmpPdfConvertedFile;
+    }
+
+    /**
+     * @return the foiaFileDao
+     */
+    public FOIAFileDao getFoiaFileDao()
+    {
+        return foiaFileDao;
+    }
+
+    /**
+     * @param foiaFileDao
+     *            the foiaFileDao to set
+     */
+    public void setFoiaFileDao(FOIAFileDao foiaFileDao)
+    {
+        this.foiaFileDao = foiaFileDao;
     }
 
 }

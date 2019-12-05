@@ -30,6 +30,7 @@ package gov.foia.service;
 import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
+import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 
@@ -63,6 +64,11 @@ public class PublicFlagService
             log.info("Updating public flag for file with id [{}] with status [{}]", fileId, publicFlag);
 
             FOIAFile foiaFile = getFoiaFileDao().find(fileId);
+            if (foiaFile == null)
+            {
+                throw new AcmObjectNotFoundException(EcmFileConstants.OBJECT_FILE_TYPE, fileId, "File not found", null);
+            }
+
             foiaFile.setPublicFlag(publicFlag);
 
             getEcmFileService().updateFile(foiaFile);
