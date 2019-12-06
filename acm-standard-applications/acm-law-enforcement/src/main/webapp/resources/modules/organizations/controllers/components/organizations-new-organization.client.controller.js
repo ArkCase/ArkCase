@@ -383,13 +383,17 @@ angular.module('organizations').controller(
                         $scope.onModalDismiss();
                     };
 
+            var regEx = PhoneValidationService.getPhoneRegex().then(function (response) {
+                var regExp = new RegExp(response.data);
+                regEx = regExp;
+            });
+
             $scope.validateInput = function (caType) {
                 var inputType = caType;
                 if (inputType == 'phone') {
-                    PhoneValidationService.validateInput($scope.organization.defaultPhone.value).then(function (validateObject) {
+                    var validateObject = PhoneValidationService.validateInput($scope.organization.defaultPhone.value, regEx);
                         $scope.organization.defaultPhone.value = validateObject.inputValue;
                         $scope.showPhoneError = validateObject.showPhoneError;
-                    });
                 }
             }
         }]);

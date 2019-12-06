@@ -327,13 +327,17 @@ angular.module('common').controller(
                     }
 
 
+            var regEx = PhoneValidationService.getPhoneRegex().then(function (response) {
+                var regExp = new RegExp(response.data);
+                regEx = regExp;
+            });
+
             $scope.validateInput = function (caType) {
-                        var inputType = caType;
-                        if (inputType == 'phone') {
-                            PhoneValidationService.validateInput($scope.person.defaultPhone.value).then(function (validateObject) {
-                                $scope.person.defaultPhone.value = validateObject.inputValue;
-                                $scope.showPhoneError = validateObject.showPhoneError;
-                            });
-                        }
-                    }
-                } ]);
+                var inputType = caType;
+                if (inputType == 'phone') {
+                    var validateObject = PhoneValidationService.validateInput($scope.person.defaultPhone.value, regEx);
+                    $scope.person.defaultPhone.value = validateObject.inputValue;
+                    $scope.showPhoneError = validateObject.showPhoneError;
+                }
+            }
+        }]);

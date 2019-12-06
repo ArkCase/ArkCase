@@ -1,4 +1,7 @@
-angular.module('people').controller('People.PhonesModalController', ['$scope', '$translate', '$modalInstance', 'Object.LookupService', 'params', '$timeout', 'Mentions.Service', 'PhoneValidationService', function ($scope, $translate, $modalInstance, ObjectLookupService, params, $timeout, MentionsService, PhoneValidationService) {
+angular.module('people').controller('People.PhonesModalController', ['$scope', '$translate',
+    '$modalInstance', 'Object.LookupService', 'params', '$timeout', 'Mentions.Service',
+    'PhoneValidationService', function ($scope, $translate, $modalInstance, ObjectLookupService,
+                                        params, $timeout, MentionsService, PhoneValidationService) {
 
     ObjectLookupService.getContactMethodTypes().then(function(contactMethodTypes) {
         $scope.phoneTypes = _.find(contactMethodTypes, {
