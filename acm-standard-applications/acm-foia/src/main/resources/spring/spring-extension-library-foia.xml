@@ -263,7 +263,7 @@
 
         <beans:bean id="publicFlagService" class="gov.foia.service.PublicFlagService">
             <beans:property name="ecmFileService" ref="ecmFileService"/>
-            <beans:property name="ecmFileDao" ref="ecmFileDao"/>
+            <beans:property name="foiaFileDao" ref="foiaFileDao"/>
             <beans:property name="acmFolderService" ref="acmFolderService"/>
         </beans:bean>
 
@@ -294,9 +294,9 @@
         <beans:bean id="ecmFileService" class="gov.foia.service.FOIAEcmFileServiceImpl">
             <beans:property name="ecmFileTransaction" ref="ecmFileTransaction"/>
             <beans:property name="ecmFileDao" ref="ecmFileDao"/>
+            <beans:property name="foiaFileDao" ref="foiaFileDao"/>
             <beans:property name="containerFolderDao" ref="acmContainerFolderDao"/>
             <beans:property name="ecmFileConfig" ref="ecmFileConfig"/>
-            <beans:property name="muleContextManager" ref="muleContextManager"/>
             <beans:property name="solrQuery" ref="executeSolrQuery"/>
             <beans:property name="searchResults" ref="searchResults"/>
             <beans:property name="sortParameterNameToCmisFieldName">

@@ -179,11 +179,6 @@
         </dependency>
         <dependency>
             <groupId>com.armedia.acm.acm-tool-integrations</groupId>
-            <artifactId>acm-activiti-actions</artifactId>
-            <version>${acm.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.armedia.acm.acm-tool-integrations</groupId>
             <artifactId>acm-activemq-configuration</artifactId>
             <version>${acm.version}</version>
         </dependency>

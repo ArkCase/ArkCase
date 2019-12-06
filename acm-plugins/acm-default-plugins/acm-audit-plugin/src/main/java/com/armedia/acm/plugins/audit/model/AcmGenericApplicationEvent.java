@@ -1,10 +1,10 @@
-package com.armedia.acm.event;
+package com.armedia.acm.plugins.audit.model;
 
 /*-
  * #%L
- * ACM Service: Events
+ * ACM Default Plugin: Audit
  * %%
- * Copyright (C) 2014 - 2018 ArkCase LLC
+ * Copyright (C) 2014 - 2019 ArkCase LLC
  * %%
  * This file is part of the ArkCase software. 
  * 
@@ -29,32 +29,13 @@ package com.armedia.acm.event;
 
 import com.armedia.acm.core.model.AcmEvent;
 
-import org.apache.commons.collections.Predicate;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
-
 /**
- * Created by armdev on 6/25/14.
+ * Created by Vladimir Cherepnalkovski <vladimir.cherepnalkovski@armedia.com> on Dec, 2019
  */
-public class EventSucceededPredicate implements Predicate
+public class AcmGenericApplicationEvent extends AcmEvent
 {
-    private Logger log = LogManager.getLogger(getClass());
-
-    @Override
-    public boolean evaluate(Object object)
+    public AcmGenericApplicationEvent(Object source)
     {
-        if (log.isDebugEnabled())
-        {
-            log.debug("type of event: " + object.getClass().toString());
-        }
-
-        if (!(object instanceof AcmEvent))
-        {
-            return false;
-        }
-
-        AcmEvent event = (AcmEvent) object;
-
-        return event.isSucceeded();
+        super(source);
     }
 }

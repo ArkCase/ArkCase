@@ -163,7 +163,7 @@ public class PortalRequestService
     }
 
     public List<PortalFOIAReadingRoom> getReadingRoom(PortalFOIAReadingRoom readingRoom, Authentication auth)
-            throws SolrException, JSONException, ParseException
+            throws SolrException
     {
 
         List<PortalFOIAReadingRoom> readingRoomList = new ArrayList<>();
@@ -185,15 +185,23 @@ public class PortalRequestService
 
         for (int i = 0; i < docFiles.length(); i++)
         {
-            JSONObject docFile = docFiles.getJSONObject(i);
-            PortalFOIAReadingRoom room = new PortalFOIAReadingRoom();
-            PortalFOIAReadingRoom.File file = new PortalFOIAReadingRoom.File();
-            file.setFileId(docFile.getString("object_id_s"));
-            file.setFileName(docFile.getString("title_parseable") + docFile.getString("ext_s"));
-            room.setFile(file);
-            room.setPublishedDate(formatter.parse(docFile.getString("modified_date_tdt")));
-            setParentData(room, docFile.getString("parent_ref_s"), auth);
-            readingRoomList.add(room);
+            try
+            {
+                JSONObject docFile = docFiles.getJSONObject(i);
+                PortalFOIAReadingRoom room = new PortalFOIAReadingRoom();
+                PortalFOIAReadingRoom.File file = new PortalFOIAReadingRoom.File();
+                file.setFileId(docFile.getString("object_id_s"));
+                file.setFileName(docFile.getString("title_parseable") + docFile.getString("ext_s"));
+                room.setFile(file);
+                room.setPublishedDate(formatter.parse(docFile.getString("modified_date_tdt")));
+                setParentData(room, docFile.getString("parent_ref_s"), auth);
+                readingRoomList.add(room);
+            }
+            catch (JSONException | ParseException e)
+            {
+                log.warn("Error processing JSON data retieved from Solr", e);
+            }
+
         }
 
         return readingRoomList;
@@ -265,16 +273,16 @@ public class PortalRequestService
         }
     }
 
-    private void setParentData(PortalFOIAReadingRoom portalReadingRoom, String parent_ref, Authentication auth) throws SolrException
+    private void setParentData(PortalFOIAReadingRoom portalReadingRoom, String parent_ref, Authentication auth)
+            throws SolrException, JSONException
     {
         log.info("Searching for corresponding request of file '{}'", portalReadingRoom.getFile().getFileName());
 
-        String query = "object_type_s:CASE_FILE+AND+id:" + parent_ref;
+        String query = "object_type_s:CASE_FILE+AND+id:\"" + parent_ref + "\"";
 
         query += "&fl=name,title_parseable,description_no_html_tags_parseable";
 
-        String results = getExecuteSolrQuery().getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, query, 0, 99999, "", true,
-                "", false, false, "");
+        String results = getExecuteSolrQuery().getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, query, 0, 99999, "");
 
         SearchResults searchResults = new SearchResults();
         JSONArray docRequests = searchResults.getDocuments(results);

@@ -32,9 +32,6 @@ package com.armedia.acm.plugins.alfrescorma.model;
  */
 public interface AlfrescoRmaPluginConstants
 {
-    String RECORD_MULE_ENDPOINT = "jms://rmaRecord.in";
-    String FOLDER_MULE_ENDPOINT = "jms://rmaFolder.in";
-
     String CASE_CLOSED_EVENT = "com.armedia.acm.casefile.closed";
 
     String CASE_STATUS_CHANGED_EVENT = "com.armedia.acm.casefile.status.changed";

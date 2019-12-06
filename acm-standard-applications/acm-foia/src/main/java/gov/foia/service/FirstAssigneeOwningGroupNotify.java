@@ -104,19 +104,23 @@ public class FirstAssigneeOwningGroupNotify implements ApplicationListener<CaseE
 
                     List<String> emailAddresses = new ArrayList<>(usersEmails.values());
 
-                    AcmUser user = getUserDao().findByUserId(assigneeId);
+                    if (assigneeId != null && !assigneeId.isEmpty())
+                    {
+                        AcmUser user = getUserDao().findByUserId(assigneeId);
 
-                    String assigneeFullName = user.getFullName();
+                        String assigneeFullName = user.getFullName();
 
-                    Notification notification = new Notification();
-                    notification.setTemplateModelName("requestAssigned");
-                    notification.setParentType(event.getObjectType());
-                    notification.setParentId(event.getObjectId());
-                    notification.setEmailAddresses(emailAddresses.stream().collect(Collectors.joining(",")));
-                    notification.setTitle(String.format("Request:%s assigned to %s", event.getCaseFile().getCaseNumber(), assigneeFullName));
-                    notification.setAttachFiles(false);
-                    notification.setUser(user.getUserId());
-                    notificationDao.save(notification);
+                        Notification notification = new Notification();
+                        notification.setTemplateModelName("requestAssigned");
+                        notification.setParentType(event.getObjectType());
+                        notification.setParentId(event.getObjectId());
+                        notification.setEmailAddresses(emailAddresses.stream().collect(Collectors.joining(",")));
+                        notification.setTitle(
+                                String.format("Request:%s assigned to %s", event.getCaseFile().getCaseNumber(), assigneeFullName));
+                        notification.setAttachFiles(false);
+                        notification.setUser(user.getUserId());
+                        notificationDao.save(notification);
+                    }
                 }
                 catch (SolrException e)
                 {

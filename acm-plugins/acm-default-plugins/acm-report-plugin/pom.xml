@@ -30,28 +30,13 @@
             <version>${acm.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.armedia.acm.acm-tool-integrations</groupId>
-            <artifactId>acm-mule-context-manager</artifactId>
-            <version>${acm.version}</version>
-        </dependency>
-        <dependency>
             <groupId>com.armedia.acm.acm-services</groupId>
             <artifactId>acm-service-plugin-manager</artifactId>
             <version>${acm.version}</version>
         </dependency>
         <dependency>
             <groupId>com.armedia.acm.acm-services</groupId>
-            <artifactId>acm-service-event</artifactId>
-            <version>${acm.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.armedia.acm.acm-services</groupId>
             <artifactId>acm-service-login</artifactId>
-            <version>${acm.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.armedia.acm.acm-tool-integrations</groupId>
-            <artifactId>acm-activiti-actions</artifactId>
             <version>${acm.version}</version>
         </dependency>
         <dependency>
@@ -98,11 +83,6 @@
         <dependency>
             <groupId>com.armedia.acm.acm-tool-integrations</groupId>
             <artifactId>acm-reload-properties</artifactId>
-            <version>${acm.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.armedia.acm.acm-tool-integrations</groupId>
-            <artifactId>acm-mule-module-cmis</artifactId>
             <version>${acm.version}</version>
         </dependency>
         <dependency>
@@ -160,29 +140,6 @@
             <groupId>org.liquibase</groupId>
             <artifactId>liquibase-core</artifactId>
             <scope>runtime</scope>
-        </dependency>
-
-        <!-- mule -->
-        <dependency>
-            <groupId>org.mule</groupId>
-            <artifactId>mule-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.mule.modules</groupId>
-            <artifactId>mule-module-client</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.mule.modules</groupId>
-            <artifactId>mule-module-spring-config</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.mule.transports</groupId>
-            <artifactId>mule-transport-vm</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.mule.modules</groupId>
-            <artifactId>mule-module-scripting</artifactId>
-            <scope>compile</scope>
         </dependency>
 
         <!-- activiti -->

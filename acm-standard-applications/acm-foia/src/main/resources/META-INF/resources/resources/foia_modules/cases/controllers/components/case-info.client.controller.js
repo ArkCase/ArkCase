@@ -135,16 +135,7 @@ angular.module('cases').controller(
                 });
 
             };
-            $scope.userOrGroupSearch = function() {
-                var assigneUserName = _.find($scope.userFullNames, function (user)
-                {
-                    return user.id === $scope.assignee
-                });
 
-
-                $scope.isAmendmentAdded = data.amendmentFlag;
-
-            };
             $scope.userOrGroupSearch = function() {
                 var assigneUserName = _.find($scope.userFullNames, function (user)
                 {
@@ -159,7 +150,7 @@ angular.module('cases').controller(
                     templateUrl: 'modules/common/views/user-group-picker-modal.client.view.html',
                     controller: 'Common.UserGroupPickerController',
                     size: 'lg',
-                            backdrop: 'static',
+                    backdrop: 'static',
                     resolve: {
                         $filter: function() {
                             return $scope.userOrGroupSearchConfig.userOrGroupSearchFilters.userOrGroupFacetFilter;
@@ -252,7 +243,7 @@ angular.module('cases').controller(
              */
             function saveCase() {
                 var promiseSaveInfo = Util.errorPromise($translate.instant("common.service.error.invalidData"));
-                        if (CaseInfoService.validateCaseInfo($scope.objectInfo)) {
+                if (CaseInfoService.validateCaseInfo($scope.objectInfo)) {
                     var objectInfo = Util.omitNg($scope.objectInfo);
                     promiseSaveInfo = CaseInfoService.saveFoiaRequestInfo(objectInfo);
                     promiseSaveInfo.then(function(caseInfo) {

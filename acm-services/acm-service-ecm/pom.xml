@@ -31,17 +31,7 @@
         </dependency>
         <dependency>
             <groupId>com.armedia.acm.acm-tool-integrations</groupId>
-            <artifactId>acm-mule-context-manager</artifactId>
-            <version>${acm.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.armedia.acm.acm-tool-integrations</groupId>
             <artifactId>acm-cmis-configuration</artifactId>
-            <version>${acm.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.armedia.acm.acm-services</groupId>
-            <artifactId>acm-service-event</artifactId>
             <version>${acm.version}</version>
         </dependency>
         <dependency>
@@ -57,11 +47,6 @@
         <dependency>
             <groupId>com.armedia.acm.acm-tool-integrations</groupId>
             <artifactId>acm-drools-rule-monitor</artifactId>
-            <version>${acm.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.armedia.acm.acm-tool-integrations</groupId>
-            <artifactId>acm-activiti-actions</artifactId>
             <version>${acm.version}</version>
         </dependency>
         <dependency>
@@ -97,11 +82,6 @@
         <dependency>
             <groupId>com.armedia.acm.acm-services</groupId>
             <artifactId>acm-service-object-lock</artifactId>
-            <version>${acm.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.armedia.acm.acm-tool-integrations</groupId>
-            <artifactId>acm-mule-module-cmis</artifactId>
             <version>${acm.version}</version>
         </dependency>
         <dependency>
@@ -177,6 +157,12 @@
             <artifactId>drools-decisiontables</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>org.apache.activemq</groupId>
+            <artifactId>activemq-client</artifactId>
+            <version>${activemq.version}</version>
+        </dependency>
+
         <!-- activiti -->
         <dependency>
             <groupId>org.activiti</groupId>
@@ -195,36 +181,6 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-        </dependency>
-
-        <!-- mule -->
-        <dependency>
-            <groupId>org.mule</groupId>
-            <artifactId>mule-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.mule.modules</groupId>
-            <artifactId>mule-module-client</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.mule.modules</groupId>
-            <artifactId>mule-module-spring-config</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.mule.transports</groupId>
-            <artifactId>mule-transport-vm</artifactId>
-        </dependency>
-        <!-- The Mule CMIS module depends on an outdated version of some OSGi OGNL library. If the core ECM service
-             specifically depends on mule-module-ognl, then that forces Maven to use the right version of the library,
-             and extensions will build OK. Without a specific dependency, extensions may pull the older version. -->
-        <dependency>
-            <groupId>org.mule.modules</groupId>
-            <artifactId>mule-module-ognl</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.mule.modules</groupId>
-            <artifactId>mule-module-scripting</artifactId>
-            <scope>compile</scope>
         </dependency>
 
         <!-- Chemistry API -->

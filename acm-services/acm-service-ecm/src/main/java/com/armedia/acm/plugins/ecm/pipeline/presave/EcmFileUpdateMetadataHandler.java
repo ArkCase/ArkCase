@@ -30,6 +30,7 @@ package com.armedia.acm.plugins.ecm.pipeline.presave;
 import com.armedia.acm.plugins.ecm.dao.AcmFolderDao;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
+import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
 import com.armedia.acm.plugins.ecm.pipeline.EcmFileTransactionPipelineContext;
 import com.armedia.acm.plugins.ecm.service.PageCountService;
@@ -74,11 +75,12 @@ public class EcmFileUpdateMetadataHandler implements PipelineHandler<EcmFile, Ec
             }
 
             entity.setActiveVersionTag(cmisDocument.getVersionLabel());
-            entity.setVersionSeriesId(cmisDocument.getPropertyValue("alfcmis:nodeRef"));
+            entity.setVersionSeriesId(cmisDocument.getPropertyValue(EcmFileConstants.REPOSITORY_VERSION_ID));
 
             // Sets the versioning of the file
             EcmFileVersion version = new EcmFileVersion();
-            version.setCmisObjectId(cmisDocument.getPropertyValue("alfcmis:nodeRef") + ";" + cmisDocument.getVersionLabel());
+            version.setCmisObjectId(
+                    cmisDocument.getPropertyValue(EcmFileConstants.REPOSITORY_VERSION_ID) + ";" + cmisDocument.getVersionLabel());
             version.setVersionTag(cmisDocument.getVersionLabel());
             version.setVersionMimeType(entity.getFileActiveVersionMimeType());
             version.setVersionFileNameExtension(entity.getFileActiveVersionNameExtension());

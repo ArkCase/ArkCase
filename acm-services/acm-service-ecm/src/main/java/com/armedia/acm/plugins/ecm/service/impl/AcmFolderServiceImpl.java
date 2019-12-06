@@ -37,7 +37,6 @@ import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.data.AcmProgressEvent;
 import com.armedia.acm.data.AcmProgressIndicator;
-import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.plugins.ecm.dao.AcmContainerDao;
 import com.armedia.acm.plugins.ecm.dao.AcmFolderDao;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
@@ -108,7 +107,6 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
     private AcmFolderDao folderDao;
     private AcmContainerDao containerDao;
     private EcmFileDao fileDao;
-    private MuleContextManager muleContextManager;
     private EcmFileService fileService;
     private FolderAndFilesUtils folderAndFilesUtils;
     private CmisConfigUtils cmisConfigUtils;
@@ -1500,16 +1498,6 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
     public void setContainerDao(AcmContainerDao containerDao)
     {
         this.containerDao = containerDao;
-    }
-
-    public MuleContextManager getMuleContextManager()
-    {
-        return muleContextManager;
-    }
-
-    public void setMuleContextManager(MuleContextManager muleContextManager)
-    {
-        this.muleContextManager = muleContextManager;
     }
 
     public EcmFileService getFileService()

@@ -27,15 +27,14 @@ package com.armedia.acm.plugins.alfrescorma.service;
  * #L%
  */
 
+import com.armedia.acm.camelcontext.basic.auth.HttpInvokerUtil;
 import com.armedia.acm.plugins.alfrescorma.exception.AlfrescoServiceException;
 import com.armedia.acm.plugins.alfrescorma.model.AlfrescoConfig;
-import com.armedia.acm.plugins.alfrescorma.model.AlfrescoRmaConfig;
-import com.armedia.mule.cmis.basic.auth.HttpInvokerUtil;
 
 import org.apache.commons.codec.binary.Base64;
-import org.json.JSONObject;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.json.JSONObject;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;

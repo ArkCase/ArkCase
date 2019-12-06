@@ -107,7 +107,8 @@ public class ConfigurationServiceBootClient
     /**
      * Loads configuration from one specific yaml file.
      *
-     *            - url to the config server
+     * - url to the config server
+     * 
      * @param name
      *            - name of the yaml file that should be loaded
      * @return
@@ -148,7 +149,7 @@ public class ConfigurationServiceBootClient
     public Map<String, Object> loadDefaultConfiguration(String name, List<Environment> environments)
     {
         Environment result = getRemoteEnvironment(configRestTemplate(), name, environments).get(0);
-        return getRuntimeOrDefaultCompositeMap(result, false);
+        return getRuntimeOrDefaultCompositeMap(result, true);
     }
 
     private Map<String, Object> getCompositeMap(Environment result)
@@ -309,7 +310,6 @@ public class ConfigurationServiceBootClient
 
         return restTemplate;
     }
-
 
     private static class BasicAuthorizationInterceptor implements ClientHttpRequestInterceptor
     {
