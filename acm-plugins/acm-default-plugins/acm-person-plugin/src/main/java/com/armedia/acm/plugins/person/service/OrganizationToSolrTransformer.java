@@ -37,7 +37,7 @@ import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 
-import org.mule.util.StringUtils;
+import org.apache.commons.lang.StringUtils;
 
 import java.util.Date;
 import java.util.List;

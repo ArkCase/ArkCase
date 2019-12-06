@@ -268,13 +268,19 @@ deploy_backend_bcgeu_dev:
     variables:
       - $START_SECURITY_SCAN
   script:
+    - wget https://github.com/brian1917/vcodeHMAC-CLI/releases/download/v1.0/vcodeHMAC-CLI_linux
+    - chmod 755 vcodeHMAC-CLI_linux
+    - touch credentials
+    - echo "[DEFAULT]" >> credendials
+    - echo "veracode_api_key_id = $VERACODE_API_KEY" >> credentials
+    - echo "veracode_api_key_secret = $VERACODE_API_SECRET" >> credentials
     # get arkcase.war version from Nexus
     - mvn -B dependency:get -DremoteRepositories=http://***REMOVED***/repository/$ARKCASE_REPOSITORY -DgroupId=com.armedia.acm.acm-standard-applications -DartifactId=acm-law-enforcement -Dversion=$ARKCASE_VERSION -Dpackaging=war -Dtransitive=false
     - mvn -B dependency:copy -Dartifact=com.armedia.acm.acm-standard-applications:acm-law-enforcement:$ARKCASE_VERSION:war -DoutputDirectory=.
     # Upload war
-    - curl -k --compressed -u $VERACODE_USER:$VERACODE_PASSWORD https://analysiscenter.veracode.com/api/5.0/uploadfile.do -F "app_id=529559" -F "file=@acm-law-enforcement-$ARKCASE_VERSION.war"
+    - 'curl -k --compressed -H "Authorization: $(./vcodeHMAC-CLI_linux -credsFile credentials -url https://analysiscenter.veracode.com/api/5.0/uploadfile.do -method POST)" https://analysiscenter.veracode.com/api/5.0/uploadfile.do -F "app_id=529559" -F "file=@acm-law-enforcement-$ARKCASE_VERSION.war"'
     # Begin static scan
-    - curl -k --compressed -u $VERACODE_USER:$VERACODE_PASSWORD https://analysiscenter.veracode.com/api/5.0/beginprescan.do -F "app_id=529559"
+    - 'curl -k --compressed -H "Authorization: $(./vcodeHMAC-CLI_linux -credsFile credentials -url https://analysiscenter.veracode.com/api/5.0/beginprescan.do -method POST)" https://analysiscenter.veracode.com/api/5.0/beginprescan.do -F "app_id=529559"'
     # Start Software Composition Analysis
     - curl -sSL https://download.sourceclear.com/ci.sh | sh
 
@@ -290,15 +296,20 @@ security_scan_results:
     variables:
       - $SECURITY_SCAN_RESULTS
   script:
+    - wget https://github.com/brian1917/vcodeHMAC-CLI/releases/download/v1.0/vcodeHMAC-CLI_linux
+    - chmod 755 vcodeHMAC-CLI_linux
+    - touch credentials
+    - echo "[DEFAULT]" >> credendials
+    - echo "veracode_api_key_id = $VERACODE_API_KEY" >> credentials
+    - echo "veracode_api_key_secret = $VERACODE_API_SECRET" >> credentials
     # Get scan info
-    - curl -k --compressed -u $VERACODE_USER:$VERACODE_PASSWORD https://analysiscenter.veracode.com/api/5.0/getbuildinfo.do -F "app_id=529559"
-    - BUILDINFO="$(curl -k --compressed -u $VERACODE_USER:$VERACODE_PASSWORD https://analysiscenter.veracode.com/api/5.0/getbuildinfo.do -F 'app_id=529559' 2>/dev/null)"
+    - 'BUILDINFO=$(curl -k --compressed -H "Authorization: $(./vcodeHMAC-CLI_linux -credsFile credentials -url https://analysiscenter.veracode.com/api/5.0/getbuildinfo.do -method POST)" https://analysiscenter.veracode.com/api/5.0/getbuildinfo.do -F "app_id=529559" 2>/dev/null)'
     - BUILD_ID=$(grep -oPm1 "(?<=build_id=\")[^\"<]+" <<< "$BUILDINFO" | head -1)
     # Get detailed report
-    - DETAILED_REPORT="$(curl -k --compressed -u $VERACODE_USER:$VERACODE_PASSWORD https://analysiscenter.veracode.com/api/5.0/detailedreport.do?build_id=$BUILD_ID 2>/dev/null)"
+    - 'DETAILED_REPORT=$(curl -k --compressed -H "Authorization: $(./vcodeHMAC-CLI_linux -credsFile credentials -url https://analysiscenter.veracode.com/api/5.0/detailedreport.do -method POST)" https://analysiscenter.veracode.com/api/5.0/detailedreport.do -F "build_id=$BUILD_ID" 2>/dev/null)'
     - SCAN_SCORE=$(grep -oPm1 "(?<=score=\")[^\"<]+" <<< "$DETAILED_REPORT" | head -1)
     # Get detailed report as PDF
-    - curl -k --compressed -u $VERACODE_USER:$VERACODE_PASSWORD https://analysiscenter.veracode.com/api/4.0/detailedreportpdf.do?build_id=$BUILD_ID > scan-report.pdf 
+    - 'curl -k --compressed -H "Authorization: $(./vcodeHMAC-CLI_linux -credsFile credentials -url https://analysiscenter.veracode.com/api/4.0/detailedreportpdf.do -method POST)" https://analysiscenter.veracode.com/api/4.0/detailedreportpdf.do -F "build_id=$BUILD_ID" > scan-report.pdf' 
     # Send results via email
     - echo 'set from = "veracode-scan@armedia.com"' >> ~/.muttrc
     - echo 'set realname = "Veracode Scan"' >> ~/.muttrc
@@ -307,6 +318,7 @@ security_scan_results:
     - echo 'set ssl_starttls = no' >> ~/.muttrc
     - echo "Detailed scan result attached" | mutt -s "Veracode scan of Arkcase code on $(date +%m-%d-%y) finished with score $SCAN_SCORE" $EMAIL_ADDRESSES -a scan-report.pdf
 
+    
 .restart:
   stage: restart
   script:

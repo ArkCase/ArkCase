@@ -82,7 +82,6 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGene
     private CorrespondenceMergeFieldManager mergeFieldManager;
     private ApplicationConfig appConfig;
 
-
     @Override
     public void generate(Resource wordTemplate, OutputStream targetStream, String objectType, Long parentObjectId) throws IOException
     {
@@ -230,7 +229,7 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGene
                          * Here we duplicate only the simple attributes...
                          */
                         newRun.setText(texts[i]);
-                        newRun.setBold(run.isBold());
+                        newRun.setBold(true);
                         newRun.setCapitalized(run.isCapitalized());
                         // run.getCharacterSpacing() throws NullPointerException. Maybe in future version of the library
                         // this will be fixed.
@@ -273,6 +272,7 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGene
         {
             found = false;
             int pos = paragraph.getText().indexOf(SUBSTITUTION_PREFIX);
+            fixParagraphRuns(paragraph);
             if (pos >= 0)
             {
                 found = true;
@@ -284,8 +284,9 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGene
                 String texts[] = { "" };
                 StringBuilder sb = new StringBuilder();
 
-                //if the both suffix and prefix are in the same run
-                if (runNum == lastRunNum) {
+                // if the both suffix and prefix are in the same run
+                if (runNum == lastRunNum)
+                {
                     sb.append(paragraph.getRuns().get(runNum).getText(0));
                 }
                 else
@@ -330,7 +331,7 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGene
                          * Here we duplicate only the simple attributes...
                          */
                         newRun.setText(texts[i]);
-                        newRun.setBold(run.isBold());
+                        newRun.setBold(true);
                         newRun.setCapitalized(run.isCapitalized());
                         // run.getCharacterSpacing() throws NullPointerException. Maybe in future version of the library
                         // this will be fixed.
@@ -350,10 +351,12 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGene
                         newRun.setUnderline(run.getUnderline());
                     }
                 }
+
                 for (int i = lastRunNum + texts.length - 1; i > runNum + texts.length - 1; i--)
                 {
                     paragraph.removeRun(i);
                 }
+                paragraph.getRuns().get(runNum).setBold(true);
             }
         }
     }
@@ -464,10 +467,11 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGene
         AcmAbstractDao<AcmEntity> correspondedObjectDao = getCorrespondenceService().getAcmAbstractDao(objectType);
         Object correspondenedObject = correspondedObjectDao.find(parentObjectId);
 
-        //Passing the object of Corresponded Object class to StandardEvaluationContext, which is going to evaluate the expressions in the context of this object.
+        // Passing the object of Corresponded Object class to StandardEvaluationContext, which is going to evaluate the
+        // expressions in the context of this object.
         StandardEvaluationContext stContext = new StandardEvaluationContext(correspondenedObject);
 
-        //Creating an object of SpelExpressionParser class, used to parse the SpEL expression
+        // Creating an object of SpelExpressionParser class, used to parse the SpEL expression
         SpelParserConfiguration config = new SpelParserConfiguration(true, true);
         SpelExpressionParser parser = new SpelExpressionParser(config);
 
@@ -480,7 +484,8 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGene
             }
         }
 
-        //Calling parseRaw() method of SpelExpressionParser, which parses the expression and returns an SpelEpression object
+        // Calling parseRaw() method of SpelExpressionParser, which parses the expression and returns an SpelEpression
+        // object
         SpelExpression expression = parser.parseRaw(spelExpression);
 
         if (isExistingMergeField)
@@ -511,7 +516,7 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGene
         else
         {
 
-            //check if the expression is currentDate, files or baseURL
+            // check if the expression is currentDate, files or baseURL
             if (CURRENT_DATE.equalsIgnoreCase(spelExpression))
             {
                 generatedExpression = formatter.format(new Date());
@@ -561,10 +566,99 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGene
                     generatedExpression = "";
                 }
 
-
             }
         }
         return generatedExpression;
+    }
+
+    public void fixParagraphRuns(XWPFParagraph paragraph)
+    {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < paragraph.getRuns().size(); i++)
+        {
+            boolean isSpecialCase = false;
+            if (paragraph.getRuns().get(i).getText(0) != null)
+            {
+                isSpecialCase = paragraph.getRuns().get(i).getText(0).contains("${")
+                        && paragraph.getRuns().get(i).getText(0).contains("}")
+                        && (paragraph.getRuns().get(i).getText(0).indexOf("${") < paragraph.getRuns().get(i).getText(0)
+                                .indexOf("}"));
+                // This is
+                if (paragraph.getRuns().get(i).getText(0).contains("${")
+                        && paragraph.getRuns().get(i).getText(0).contains("}") && isSpecialCase)
+                {
+                    sb.append(paragraph.getRuns().get(i).getText(0).replaceAll("[^a-zA-Z0-9]", ""));
+                    paragraph.removeRun(i);
+                    paragraph.insertNewRun(i).setText("${", 0);
+                    paragraph.insertNewRun(++i).setText(sb.toString(), 0);
+                    paragraph.insertNewRun(++i).setText("}", 0);
+                    sb.setLength(0);
+                }
+                else if (paragraph.getRuns().get(i).getText(0).contains("{")
+                        && paragraph.getRuns().get(i).getText(0).length() == 2)
+                {
+                    // int j = i + 1;
+                    i++;
+                    while (i < paragraph.getRuns().size()
+                            && !paragraph.getRuns().get(i).getText(0).contains("}"))
+
+                    {
+
+                        sb.append(paragraph.getRuns().get(i).getText(0).replaceAll("[^a-zA-Z0-9]", ""));
+                        paragraph.removeRun(i);
+                        if (paragraph.getRuns().get(i).getText(0).contains("${"))
+                        {
+                            if (paragraph.getRuns().get(i).getText(0).contains("}")
+                                    && paragraph.getRuns().get(i).getText(0).replaceAll("[^a-zA-Z0-9]", "").length() > 0)
+                            {
+                                String text = paragraph.getRuns().get(i).getText(0).replaceAll("\\$\\{([^}]+)\\}", "");
+                                String braces = paragraph.getRuns().get(i).getText(0).replaceAll(".*(?=})", "");
+                                paragraph.removeRun(i);
+                                paragraph.insertNewRun(i).setText("${", 0);
+                                paragraph.insertNewRun(++i).setText(text, 0);
+                                paragraph.insertNewRun(++i).setText(braces, 0);
+                            }
+                            else
+                            {
+                                String paragraphText = paragraph.getRuns().get(i).getText(0);
+                                String text = paragraphText.replaceAll("\\$\\{", "");
+                                boolean shouldAddText = false;
+                                String braces = paragraphText.replaceAll(".*(?=})", "");
+                                if (braces.length() > 2 && braces.contains("}"))
+                                {
+                                    braces = paragraphText.substring(paragraphText.indexOf("}") + 1, paragraphText.indexOf("$"));
+                                    if (braces.trim().length() > 0)
+                                    {
+                                        shouldAddText = true;
+                                    }
+                                }
+
+                                paragraph.removeRun(i);
+                                paragraph.insertNewRun(i).setText(sb.toString(), 0);
+                                sb.setLength(0);
+                                paragraph.insertNewRun(++i).setText(text, 0);
+                                if (shouldAddText)
+                                {
+                                    paragraph.insertNewRun(++i).setText(braces, 0);
+                                }
+                                paragraph.insertNewRun(++i).setText("${", 0);
+                                ++i;
+                            }
+                        }
+                    }
+                    if (i < paragraph.getRuns().size())
+                    {
+                        sb.append(paragraph.getRuns().get(i).getText(0).replaceAll("[^a-zA-Z0-9]", ""));
+
+                        paragraph.removeRun(i);
+                        paragraph.insertNewRun(i).setText(sb.toString(), 0);
+                        paragraph.insertNewRun(++i).setText("}", 0);
+                        sb.setLength(0);
+                    }
+                }
+            }
+        }
+
     }
 
     public CorrespondenceService getCorrespondenceService()

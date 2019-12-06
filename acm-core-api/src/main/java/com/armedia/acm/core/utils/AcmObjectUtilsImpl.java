@@ -58,11 +58,14 @@ public class AcmObjectUtilsImpl implements AcmObjectUtils
         Set<Class<? extends AcmObject>> acmObjects = reflections.getSubTypesOf(AcmObject.class);
         for (Class acmObject : acmObjects)
         {
-            try {
-                if(!acmObject.isInterface() && ((AcmObject)acmObject.newInstance()).getObjectType().equals(upperUnderScoreToCamelCase(objectType)))
+            try
+            {
+                if (!acmObject.isInterface() && ((AcmObject) acmObject.newInstance()).getObjectType() != null
+                        && ((AcmObject) acmObject.newInstance()).getObjectType().equals(upperUnderScoreToCamelCase(objectType)))
                     return acmObject;
             }
-            catch (Exception e){
+            catch (Exception e)
+            {
                 log.error("Error while casting to AcmObject ", e);
             }
         }
@@ -71,7 +74,8 @@ public class AcmObjectUtilsImpl implements AcmObjectUtils
 
     /**
      *
-     * @param propertyName ex: CaseFile
+     * @param propertyName
+     *            ex: CaseFile
      * @return upperUnderScore of property ex: CASE_FILE
      */
     private String upperUnderScoreToCamelCase(String propertyName)
@@ -82,11 +86,13 @@ public class AcmObjectUtilsImpl implements AcmObjectUtils
         return goodPropertyName.toUpperCase();
     }
 
-    public String getPackagesToScan() {
+    public String getPackagesToScan()
+    {
         return packagesToScan;
     }
 
-    public void setPackagesToScan(String packagesToScan) {
+    public void setPackagesToScan(String packagesToScan)
+    {
         this.packagesToScan = packagesToScan;
     }
 }

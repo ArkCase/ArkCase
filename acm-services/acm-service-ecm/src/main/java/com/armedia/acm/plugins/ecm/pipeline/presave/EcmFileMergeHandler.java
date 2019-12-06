@@ -32,7 +32,6 @@ import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.pipeline.EcmFileTransactionPipelineContext;
 import com.armedia.acm.plugins.ecm.utils.EcmFileCamelUtils;
-import com.armedia.acm.plugins.ecm.utils.EcmFileMuleUtils;
 import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
 import com.armedia.acm.plugins.ecm.utils.PDFUtils;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
@@ -56,7 +55,6 @@ public class EcmFileMergeHandler implements PipelineHandler<EcmFile, EcmFileTran
     private CaptureConfig captureConfig;
     private EcmFileDao ecmFileDao;
     private FolderAndFilesUtils folderAndFilesUtils;
-    private EcmFileMuleUtils ecmFileMuleUtils;
     private EcmFileCamelUtils ecmFileCamelUtils;
 
     @Override
@@ -184,16 +182,6 @@ public class EcmFileMergeHandler implements PipelineHandler<EcmFile, EcmFileTran
     public void setFolderAndFilesUtils(FolderAndFilesUtils folderAndFilesUtils)
     {
         this.folderAndFilesUtils = folderAndFilesUtils;
-    }
-
-    public EcmFileMuleUtils getEcmFileMuleUtils()
-    {
-        return ecmFileMuleUtils;
-    }
-
-    public void setEcmFileMuleUtils(EcmFileMuleUtils ecmFileMuleUtils)
-    {
-        this.ecmFileMuleUtils = ecmFileMuleUtils;
     }
 
     public EcmFileCamelUtils getEcmFileCamelUtils()

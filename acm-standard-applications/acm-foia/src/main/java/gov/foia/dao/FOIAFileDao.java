@@ -1,10 +1,10 @@
-package com.armedia.acm.event.model;
+package gov.foia.dao;
 
 /*-
  * #%L
- * ACM Service: Events
+ * ACM Standard Application: Freedom of Information Act
  * %%
- * Copyright (C) 2014 - 2018 ArkCase LLC
+ * Copyright (C) 2014 - 2019 ArkCase LLC
  * %%
  * This file is part of the ArkCase software. 
  * 
@@ -27,15 +27,25 @@ package com.armedia.acm.event.model;
  * #L%
  */
 
-import com.armedia.acm.core.model.AcmEvent;
+import com.armedia.acm.data.AcmAbstractDao;
+
+import gov.foia.model.FOIAFile;
 
 /**
- * Created by armdev on 6/26/15.
+ * @author sasko.tanaskoski
+ *
  */
-public class AcmGenericApplicationEvent extends AcmEvent
+public class FOIAFileDao extends AcmAbstractDao<FOIAFile>
 {
-    public AcmGenericApplicationEvent(Object source)
+
+    /*
+     * (non-Javadoc)
+     * @see com.armedia.acm.data.AcmAbstractDao#getPersistenceClass()
+     */
+    @Override
+    protected Class<FOIAFile> getPersistenceClass()
     {
-        super(source);
+        return FOIAFile.class;
     }
+
 }

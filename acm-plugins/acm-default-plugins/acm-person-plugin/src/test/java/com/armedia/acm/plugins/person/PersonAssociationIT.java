@@ -56,7 +56,6 @@ import java.util.List;
         "/spring/spring-library-data-source.xml",
         "/spring/spring-library-person.xml",
         "/spring/spring-library-person-plugin-test.xml",
-        "/spring/spring-library-person-plugin-test-mule.xml",
         "/spring/spring-library-context-holder.xml",
         "/spring/spring-library-property-file-manager.xml",
         "/spring/spring-library-acm-encryption.xml",

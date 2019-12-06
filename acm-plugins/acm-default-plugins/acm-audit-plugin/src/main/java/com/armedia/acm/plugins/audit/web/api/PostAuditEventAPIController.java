@@ -30,12 +30,12 @@ package com.armedia.acm.plugins.audit.web.api;
  * #L%
  */
 
-import com.armedia.acm.event.model.AcmGenericApplicationEvent;
+import com.armedia.acm.plugins.audit.model.AcmGenericApplicationEvent;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.security.core.Authentication;
