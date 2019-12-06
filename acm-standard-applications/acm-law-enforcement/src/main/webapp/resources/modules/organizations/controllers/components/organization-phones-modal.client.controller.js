@@ -1,4 +1,4 @@
-angular.module('organizations').controller('Organizations.PhonesModalController', ['$scope', '$translate', '$modalInstance', 'Object.LookupService', 'params', '$timeout', 'Mentions.Service', 'PhoneValidationService', function ($scope, $translate, $modalInstance, ObjectLookupService, params, $timeout, MentionsService, PhoneValidationService) {
+angular.module('organizations').controller('Organizations.PhonesModalController', ['$scope', '$translate', '$modalInstance', 'Object.LookupService', 'params', 'Mentions.Service', 'PhoneValidationService', function ($scope, $translate, $modalInstance, ObjectLookupService, params, MentionsService, PhoneValidationService) {
 
     ObjectLookupService.getContactMethodTypes().then(function(contactMethodTypes) {
         $scope.phoneTypes = _.find(contactMethodTypes, {
@@ -31,10 +31,15 @@ angular.module('organizations').controller('Organizations.PhonesModalController'
         });
     };
 
-    $scope.validateInput = function () {
-        PhoneValidationService.validateInput($scope.phone.value).then(function (validateObject) {
-            $scope.phone.value = validateObject.inputValue;
-            $scope.showPhoneError = validateObject.showPhoneError;
-        });
+    var regEx = PhoneValidationService.getPhoneRegex().then(function (response) {
+        var regExp = new RegExp(response.data);
+        regEx = regExp;
+    });
+
+    $scope.validateInput = function() {
+        var validateObject = PhoneValidationService.validateInput($scope.phone.value, regEx);
+        $scope.phone.value = validateObject.inputValue;
+        $scope.showPhoneError = validateObject.showPhoneError;
+
     };
 } ]);

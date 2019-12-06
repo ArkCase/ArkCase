@@ -1,5 +1,6 @@
 angular.module('services').factory('PhoneValidationService', ['$http', function ($http) {
     return {
+        getPhoneRegex: getPhoneRegex,
         validateInput: validateInput
     }
 
@@ -10,23 +11,19 @@ angular.module('services').factory('PhoneValidationService', ['$http', function 
         });
     }
 
-    function validateInput(inputValue) {
-        return getPhoneRegex().then(function (response) {
-            var regExp = new RegExp(response.data);
-            var value = inputValue;
-            var showPhoneError = false;
-            if (regExp.test(value)) {
-                inputValue = value;
-                showPhoneError = false;
-            } else {
-                inputValue = null;
-                showPhoneError = true;
-            }
-            return {
-                inputValue: inputValue,
-                showPhoneError: showPhoneError
-            };
-        })
-    };
-
+    function validateInput(inputValue, regEx) {
+        var value = inputValue;
+        var showPhoneError = false;
+        if (regEx.test(value)) {
+            inputValue = value;
+            showPhoneError = false;
+        } else {
+            inputValue = null;
+            showPhoneError = true;
+        }
+        return {
+            inputValue: inputValue,
+            showPhoneError: showPhoneError
+        };
+    }
 }]);
