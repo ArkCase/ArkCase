@@ -1,7 +1,7 @@
 angular.module('people').controller('People.PhonesModalController', ['$scope', '$translate',
-    '$modalInstance', 'Object.LookupService', 'params', '$timeout', 'Mentions.Service',
+    '$modalInstance', 'Object.LookupService', 'params', 'Mentions.Service',
     'PhoneValidationService', function ($scope, $translate, $modalInstance, ObjectLookupService,
-                                        params, $timeout, MentionsService, PhoneValidationService) {
+                                        params, MentionsService, PhoneValidationService) {
 
     ObjectLookupService.getContactMethodTypes().then(function(contactMethodTypes) {
         $scope.phoneTypes = _.find(contactMethodTypes, {
@@ -33,12 +33,15 @@ angular.module('people').controller('People.PhonesModalController', ['$scope', '
             usersMentioned: $scope.params.usersMentioned
         });
     };
+    var regEx = PhoneValidationService.getPhoneRegex().then(function (response) {
+        var regExp = new RegExp(response.data);
+        regEx = regExp;
+    });
 
     $scope.validateInput = function() {
-        PhoneValidationService.validateInput($scope.phone.value).then(function (validateObject) {
-            $scope.phone.value = validateObject.inputValue;
-            $scope.showPhoneError = validateObject.showPhoneError;
+        var validateObject = PhoneValidationService.validateInput($scope.phone.value, regEx);
+        $scope.phone.value = validateObject.inputValue;
+        $scope.showPhoneError = validateObject.showPhoneError;
 
-        });
     };
 } ]);
