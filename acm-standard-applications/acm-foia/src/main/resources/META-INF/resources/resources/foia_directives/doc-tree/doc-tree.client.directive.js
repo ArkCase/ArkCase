@@ -500,8 +500,8 @@ angular
                         return false;
                     },
                     isDefaultFolder: function(node){
-                        var folderStructure = DocTree.treeConfig.folderStructure.data;
-                        if(_.find(folderStructure, function(folderName) {
+                        var folderStructure = DocTree.treeConfig.folderStructure;
+                        if (folderStructure && _.find(folderStructure.data, function (folderName) {
                             return folderName === node.data.name}) && node.parent.parent.title === "root"){
                             return true;
                         }
@@ -2266,8 +2266,8 @@ angular
                                 } else {
                                     if (item.cmd) {
                                         if(item.cmd === "cut" || item.cmd === "remove" || item.cmd === "rename"){
-                                            var folderStructure = DocTree.treeConfig.folderStructure.data;
-                                            if( _.find(folderStructure, function (folderName) {
+                                            var folderStructure = DocTree.treeConfig.folderStructure;
+                                            if (folderStructure && _.find(folderStructure.data, function (folderName) {
                                                 return folderName === nodes[0].data.name;
                                             })){
                                                 item.disabled = true;
