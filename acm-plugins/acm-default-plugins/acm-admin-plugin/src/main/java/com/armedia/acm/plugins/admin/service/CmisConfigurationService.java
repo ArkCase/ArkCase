@@ -36,7 +36,6 @@ import com.armedia.acm.plugins.admin.model.CmisConfigurationConstants;
 import com.armedia.acm.plugins.admin.model.CmisUrlConfig;
 
 import org.apache.chemistry.opencmis.client.api.Repository;
-import org.apache.chemistry.opencmis.client.api.SessionFactory;
 import org.apache.chemistry.opencmis.client.runtime.SessionFactoryImpl;
 import org.apache.chemistry.opencmis.commons.SessionParameter;
 import org.apache.chemistry.opencmis.commons.enums.BindingType;
@@ -69,11 +68,9 @@ public class CmisConfigurationService
     private AcmEncryptablePropertyUtils encryptablePropertyUtils;
 
     private String cmisConfigurationLocation;
-    private String cmisFile;
     private String cmisPropertiesFile;
 
     private String cmisConfigurationTemplatesLocation;
-    private String cmisTemplateXmlFile;
     private String cmisTemplatePropertiesFile;
 
     private Pattern cmisIdPattern;
@@ -102,7 +99,7 @@ public class CmisConfigurationService
         }
 
         // Check if CMIS files exist
-        if (propertiesFileExist(cmisId) || cmisFileExist(cmisId))
+        if (propertiesFileExist(cmisId))
         {
             log.error("CMIS config with ID '{}' already exists", cmisId);
             throw new AcmCmisConfigurationException(String.format("CMIS config with ID='%s' exists", cmisId));
@@ -113,8 +110,6 @@ public class CmisConfigurationService
             log.debug("Attempting to create CMIS Configuration Properties File");
             createPropertiesFile(cmisId, props);
 
-            log.debug("Attempting to create CMIS Configuration XML file");
-            createCmisFile(cmisId, props);
             getCamelContextManager().updateRepositoryConfigs();
         }
         catch (Exception e)
@@ -124,7 +119,6 @@ public class CmisConfigurationService
 
             // Delete created files quietly
             deletePropertiesFileQuietly(cmisId);
-            deleteCmisFileQuietly(cmisId);
 
             throw new AcmCmisConfigurationException(String.format("Can't create CMIS config with ID='%s'", cmisId), e);
         }
@@ -176,7 +170,6 @@ public class CmisConfigurationService
         // Delete CMIS config files. If something goes wrong then go ahead add information to the log only
 
         forceDeleteFileQuietly(getPropertiesFileName(cmisId));
-        forceDeleteFileQuietly(getCmisFileName(cmisId));
 
         getCamelContextManager().updateRepositoryConfigs();
     }
@@ -253,40 +246,6 @@ public class CmisConfigurationService
         {
             log.error("Failed to write CMIS Properties file with ID '{}' ", cmisId, e);
             throw new AcmCmisConfigurationException("Can't write CMIS properties file ", e);
-        }
-    }
-
-    /**
-     * Create CMIS file
-     *
-     * @param cmisId
-     *            Config identifier
-     * @param props
-     *            Config properties data
-     * @throws IOException
-     * @throws AcmCmisConfigurationException
-     */
-    private void createCmisFile(String cmisId, Map<String, Object> props) throws IOException, AcmCmisConfigurationException
-    {
-        String cmisFileName = getCmisFileName(cmisId);
-        String tempFileName = getTempCmisFileName(cmisId);
-
-        if (cmisFileExist(cmisId))
-        {
-            throw new AcmCmisConfigurationException(String.format("CMIS file '%s' is present in the system.", cmisFileName));
-        }
-
-        try
-        {
-            // CMIS file
-            log.debug("Writing CMIS XML file with ID '{}' ", cmisId);
-            writeFileFromTemplate(props, cmisTemplateXmlFile, cmisFileName, tempFileName);
-
-        }
-        catch (Exception e)
-        {
-            log.error("Can't create CMIS file with ID '{}' ", cmisId, e);
-            throw new AcmCmisConfigurationException("Can't create CMIS file ", e);
         }
     }
 
@@ -375,11 +334,6 @@ public class CmisConfigurationService
         FileUtils.deleteQuietly(new File(getPropertiesFileName(cmisId)));
     }
 
-    private void deleteCmisFileQuietly(String cmisId)
-    {
-        FileUtils.deleteQuietly(new File(getCmisFileName(cmisId)));
-    }
-
     private void deleteFileQuietly(String target)
     {
         FileUtils.deleteQuietly(new File(target));
@@ -387,22 +341,12 @@ public class CmisConfigurationService
 
     public String getTempPropertiesFileName(String cmisId)
     {
-        return FileUtils.getTempDirectoryPath() + String.format(cmisPropertiesFile, cmisId);
-    }
-
-    public String getTempCmisFileName(String cmisId)
-    {
-        return FileUtils.getTempDirectoryPath() + String.format(cmisFile, cmisId);
+        return FileUtils.getTempDirectoryPath() + "/" + String.format(cmisPropertiesFile, cmisId);
     }
 
     public String getPropertiesFileName(String cmisId)
     {
         return cmisConfigurationLocation + String.format(cmisPropertiesFile, cmisId);
-    }
-
-    public String getCmisFileName(String cmisId)
-    {
-        return cmisConfigurationLocation + String.format(cmisFile, cmisId);
     }
 
     public boolean propertiesFileExist(String cmisId)
@@ -412,17 +356,8 @@ public class CmisConfigurationService
         return new File(fileName).exists();
     }
 
-    public boolean cmisFileExist(String cmisId)
-    {
-        String fileName = getCmisFileName(cmisId);
-        log.debug("Checking if CMIS Configuration file '{}' exists", fileName);
-        return new File(fileName).exists();
-    }
-
     public List<Repository> getRepositories(CmisUrlConfig cmisUrlConfig) throws AcmEncryptionException
     {
-
-        SessionFactory sessionFactory = SessionFactoryImpl.newInstance();
         Map<String, String> parameters = new HashMap<>();
         parameters.put(SessionParameter.USER, cmisUrlConfig.getUsername());
         parameters.put(SessionParameter.PASSWORD, encryptablePropertyUtils.decryptPropertyValue(cmisUrlConfig.getPassword()));
@@ -439,11 +374,6 @@ public class CmisConfigurationService
         this.cmisConfigurationLocation = cmisConfigurationLocation;
     }
 
-    public void setCmisFile(String cmisFile)
-    {
-        this.cmisFile = cmisFile;
-    }
-
     public void setCmisPropertiesFile(String cmisPropertiesFile)
     {
         this.cmisPropertiesFile = cmisPropertiesFile;
@@ -452,11 +382,6 @@ public class CmisConfigurationService
     public void setCmisConfigurationTemplatesLocation(String cmisConfigurationTemplatesLocation)
     {
         this.cmisConfigurationTemplatesLocation = cmisConfigurationTemplatesLocation;
-    }
-
-    public void setCmisTemplateXmlFile(String cmisTemplateXmlFile)
-    {
-        this.cmisTemplateXmlFile = cmisTemplateXmlFile;
     }
 
     public void setCmisTemplatePropertiesFile(String cmisTemplatePropertiesFile)
