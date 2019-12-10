@@ -2096,7 +2096,7 @@ angular.module('directives').directive(
                                             item.invisible = true;
                                         } else if ("disable" === allowResult) {
                                             item.disabled = true;
-                                        } else if(!item.disabled) {
+                                        } else {
                                             if (item.disabledExpression) {
                                                 item.disabled = eval(item.disabledExpression);
                                             } else {

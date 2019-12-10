@@ -31,7 +31,6 @@ import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.expectLastCall;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
-import static org.mockito.Mockito.mock;
 
 import com.antkorwin.xsync.XSync;
 import com.armedia.acm.auth.ExternalAuthenticationUtils;
@@ -827,6 +826,7 @@ public class EcmFileParticipantServiceTest extends EasyMockSupport
         expect(mockFolderService.saveFolder(folder)).andReturn(folder);
         expect(mockFolderDao.findSubFolders(objectId, FlushModeType.COMMIT)).andReturn(new ArrayList<>());
         EntityManager em = mock(EntityManager.class);
+        em.detach(folder);
         expect(mockFolderDao.getEm()).andReturn(em).anyTimes();
         em.flush();
         expectLastCall();

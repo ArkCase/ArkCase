@@ -44,13 +44,14 @@ import com.armedia.acm.plugins.dashboard.service.DashboardService;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.easymock.Capture;
+import org.easymock.EasyMock;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpSession;
@@ -113,7 +114,7 @@ public class SetDashboardConfigAPIControllerTest extends EasyMockSupport
     {
 
         String userId = "ann-acm";
-        
+
         Dashboard dashboard = new Dashboard();
         dashboard.setDashboardConfig("UPDATE TEST");
 
@@ -121,11 +122,11 @@ public class SetDashboardConfigAPIControllerTest extends EasyMockSupport
         user.setUserId(userId);
 
         DashboardDto dashboardDto = new DashboardDto();
-        dashboardDto.setDashboardConfig("{\r\n" + 
-        		"    \"fruit\": \"Apple\",\r\n" + 
-        		"    \"size\": \"Large\",\r\n" + 
-        		"    \"color\": \"Red\"\r\n" + 
-        		"}");
+        dashboardDto.setDashboardConfig("{\r\n" +
+                "    \"fruit\": \"Apple\",\r\n" +
+                "    \"size\": \"Large\",\r\n" +
+                "    \"color\": \"Red\"\r\n" +
+                "}");
 
         ObjectMapper objectMapper = new ObjectMapper();
         String in = objectMapper.writeValueAsString(dashboardDto);
@@ -134,18 +135,18 @@ public class SetDashboardConfigAPIControllerTest extends EasyMockSupport
         // MVC test classes must call getName() somehow
         expect(mockAuthentication.getName()).andReturn("ann-acm").atLeastOnce();
 
-        Capture<DashboardDto> savedDashboardDto = new Capture<>();
-        Capture<Dashboard> publishedDashboard = new Capture<>();
+        Capture<DashboardDto> savedDashboardDto = EasyMock.newCapture();
+        Capture<Dashboard> publishedDashboard = EasyMock.newCapture();
 
         List<String> retList = new ArrayList<>();
         retList.add(DashboardConstants.DASHBOARD_MODULE_NAME);
 
         expect(mockDashboardPropertyReader.getModuleNameList()).andReturn(retList);
         expect(mockDashboardService.getUserByUserId(userId)).andReturn(user);
-        
+
         expect(mockDashboardService.getDashboardConfigForUserAndModuleName(user, DashboardConstants.DASHBOARD_MODULE_NAME))
                 .andReturn(dashboard);
-        
+
         expect(mockDashboardService.setDashboardConfigForUserAndModule(eq(user), capture(savedDashboardDto),
                 eq(DashboardConstants.DASHBOARD_MODULE_NAME))).andReturn(1);
 
@@ -177,25 +178,25 @@ public class SetDashboardConfigAPIControllerTest extends EasyMockSupport
         String notDashboardJson = "{ \"user\": \"dmiller\" }";
 
         String userId = "ann-acm";
-        
+
         Dashboard dashboard = new Dashboard();
         dashboard.setDashboardConfig("UPDATE TEST");
 
         AcmUser user = new AcmUser();
         user.setUserId(userId);
 
-        Capture<DashboardDto> savedDashboardDto = new Capture<>();
-        Capture<Dashboard> publishedDashboard = new Capture<>();
+        Capture<DashboardDto> savedDashboardDto = EasyMock.newCapture();
+        Capture<Dashboard> publishedDashboard = EasyMock.newCapture();
 
         List<String> retList = new ArrayList<>();
         retList.add(DashboardConstants.DASHBOARD_MODULE_NAME);
 
         expect(mockDashboardPropertyReader.getModuleNameList()).andReturn(retList);
         expect(mockDashboardService.getUserByUserId(userId)).andReturn(user);
-        
+
         expect(mockDashboardService.getDashboardConfigForUserAndModuleName(user, DashboardConstants.DASHBOARD_MODULE_NAME))
                 .andReturn(dashboard);
-		
+
         // With upgrading spring version, bad JSON is not the problem for entering the execution in the controller
         expect(mockDashboardService.setDashboardConfigForUserAndModule(eq(user), capture(savedDashboardDto),
                 eq(DashboardConstants.DASHBOARD_MODULE_NAME))).andThrow(new RuntimeException());

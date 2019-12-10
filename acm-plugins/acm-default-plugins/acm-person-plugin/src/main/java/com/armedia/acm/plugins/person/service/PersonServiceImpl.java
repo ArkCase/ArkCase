@@ -34,6 +34,7 @@ import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.plugins.addressable.exceptions.AcmContactMethodValidationException;
 import com.armedia.acm.plugins.addressable.service.ContactMethodsUtil;
+import com.armedia.acm.plugins.addressable.service.PhoneRegexConfig;
 import com.armedia.acm.plugins.ecm.exception.AcmFileTypesException;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
@@ -97,6 +98,7 @@ public class PersonServiceImpl implements PersonService
     private ObjectConverter objectConverter;
     private EcmTikaFileService ecmTikaFileService;
     private PersonConfig personConfig;
+    private PhoneRegexConfig phoneRegexConfig;
 
     @Override
     public Person get(Long id)
@@ -422,7 +424,7 @@ public class PersonServiceImpl implements PersonService
         validateOrganizationAssociations(in);
         try
         {
-            ContactMethodsUtil.validateContactMethodFields(in.getContactMethods());
+            ContactMethodsUtil.validateContactMethodFields(in.getContactMethods(), phoneRegexConfig);
         }
         catch (AcmContactMethodValidationException e)
         {
@@ -659,5 +661,15 @@ public class PersonServiceImpl implements PersonService
     public void setPersonConfig(PersonConfig personConfig)
     {
         this.personConfig = personConfig;
+    }
+
+    public PhoneRegexConfig getPhoneRegexConfig()
+    {
+        return phoneRegexConfig;
+    }
+
+    public void setPhoneRegexConfig(PhoneRegexConfig phoneRegexConfig)
+    {
+        this.phoneRegexConfig = phoneRegexConfig;
     }
 }

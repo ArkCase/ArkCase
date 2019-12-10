@@ -33,8 +33,8 @@ import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.personnelsecurity.cvs.model.ClearanceVerificationSystemDeterminationRecord;
 import com.armedia.acm.plugins.personnelsecurity.cvs.model.PersonnelSecurityConstants;
 
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 
 import java.io.ByteArrayInputStream;
@@ -76,7 +76,7 @@ public class ClearanceVerificationSystemExportService
 
         try
         {
-            // TODO: use JMS to handle this upload via Mule so we get some retry logic
+            // TODO: use JMS to handle this upload via Camel so we get some retry logic
             getEcmFileService().upload(
                     PersonnelSecurityConstants.CVS_FILE_NAME,
                     PersonnelSecurityConstants.CVS_FILE_TYPE,

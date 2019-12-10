@@ -351,7 +351,9 @@
                                 <span ng-show="organization['default'+capitalizeFirstLetter(caType)].value" class="required-asterisk">*</span>
                                 <input type="text" ng-model="organization['default'+capitalizeFirstLetter(caType)].value"
                                         class="input-md form-control"
-                                        placeholder="{{ 'common.newOrganization.communicationAccounts.' + caType + '.placeholder' | translate }}">
+                                        placeholder="{{ 'common.newOrganization.communicationAccounts.' + caType + '.placeholder' | translate }}"
+                                        ng-blur="validateInput(caType)">
+                                <span ng-if="caType == 'phone' && showPhoneError == true" translate>common.newOrganization.communicationAccounts.validationMessage</span>
                             </div>
                             <div class="col-sm-4">
                                 <label class="control-label">{{'common.newOrganization.communicationAccounts.'

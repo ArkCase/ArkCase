@@ -49,6 +49,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.easymock.Capture;
+import org.easymock.EasyMock;
 import org.easymock.EasyMockSupport;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -128,7 +129,7 @@ public class TimesheetServiceTest extends EasyMockSupport
 
         timesheet.setTimes(Arrays.asList(time1, time2));
 
-        Capture<AcmTimesheet> timesheetCapture = new Capture<>();
+        Capture<AcmTimesheet> timesheetCapture = EasyMock.newCapture();
 
         expect(mockAcmTimesheetDao.save(capture(timesheetCapture))).andReturn(timesheet);
         expect(pipelineManager.executeOperation(anyObject(AcmTimesheet.class), anyObject(TimesheetPipelineContext.class),
@@ -166,7 +167,7 @@ public class TimesheetServiceTest extends EasyMockSupport
 
         timesheet.setTimes(Arrays.asList(time1, time2));
 
-        Capture<AcmTimesheet> timesheetCapture = new Capture<>();
+        Capture<AcmTimesheet> timesheetCapture = EasyMock.newCapture();
 
         expect(mockAcmTimesheetDao.save(capture(timesheetCapture))).andReturn(timesheet);
         expect(pipelineManager.executeOperation(anyObject(AcmTimesheet.class), anyObject(TimesheetPipelineContext.class),
@@ -205,7 +206,7 @@ public class TimesheetServiceTest extends EasyMockSupport
 
         timesheet.setTimes(Arrays.asList(time1, time2));
 
-        Capture<AcmTimesheet> timesheetCapture = new Capture<>();
+        Capture<AcmTimesheet> timesheetCapture = EasyMock.newCapture();
 
         expect(mockAcmTimesheetDao.save(capture(timesheetCapture))).andReturn(timesheet);
         expect(pipelineManager.executeOperation(anyObject(AcmTimesheet.class), anyObject(TimesheetPipelineContext.class),

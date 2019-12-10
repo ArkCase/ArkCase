@@ -1,4 +1,4 @@
-angular.module('organizations').controller('Organizations.FaxesModalController', [ '$scope', '$translate', '$modalInstance', 'Object.LookupService', 'params', 'Mentions.Service', function($scope, $translate, $modalInstance, ObjectLookupService, params, MentionsService) {
+angular.module('organizations').controller('Organizations.FaxesModalController', ['$scope', '$translate', '$modalInstance', 'Object.LookupService', 'params', 'Mentions.Service', 'PhoneValidationService', function ($scope, $translate, $modalInstance, ObjectLookupService, params, MentionsService, PhoneValidationService) {
 
     ObjectLookupService.getContactMethodTypes().then(function(contactMethodTypes) {
         $scope.faxTypes = _.find(contactMethodTypes, {
@@ -31,16 +31,16 @@ angular.module('organizations').controller('Organizations.FaxesModalController',
         });
     };
 
-    $scope.validateInput = function () {
-        var regex = /^\d{3}[\-]\d{3}[\-]\d{4}$/;
-        var value = $scope.fax.value;
-        if (regex.test(value)) {
-            $scope.showPhoneError = false;
-            $scope.fax.value = value;
-        } else {
-            $scope.showPhoneError = true;
-            $scope.fax.value = null;
-        }
+    var regEx = PhoneValidationService.getPhoneRegex().then(function (response) {
+        var regExp = new RegExp(response.data);
+        regEx = regExp;
+    });
+
+    $scope.validateInput = function() {
+        var validateObject = PhoneValidationService.validateInput($scope.fax.value, regEx);
+        $scope.fax.value = validateObject.inputValue;
+        $scope.showPhoneError = validateObject.showPhoneError;
+
     };
 
 } ]);

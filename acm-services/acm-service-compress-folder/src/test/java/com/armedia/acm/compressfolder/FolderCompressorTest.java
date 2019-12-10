@@ -54,11 +54,11 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.easymock.Capture;
+import org.easymock.EasyMock;
 import org.easymock.EasyMockSupport;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.mule.api.MuleException;
 import org.slf4j.MDC;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.core.io.ClassPathResource;
@@ -159,7 +159,6 @@ public class FolderCompressorTest extends EasyMockSupport
      *
      * @throws AcmObjectNotFoundException
      * @throws AcmUserActionFailedException
-     * @throws MuleException
      * @throws FileNotFoundException
      */
     @Test
@@ -169,7 +168,7 @@ public class FolderCompressorTest extends EasyMockSupport
         container.setId(600L);
         container.setContainerObjectType("containerObjectType");
         container.setContainerObjectId(700L);
-        Capture<AcmFolderDownloadedEvent> capturedEvent = new Capture<>();
+        Capture<AcmFolderDownloadedEvent> capturedEvent = EasyMock.newCapture();
 
         expect(mockedFolderService.findContainerByFolderId(anyLong())).andReturn(container);
         expect(mockedFolderService.findById(101l)).andReturn(mockedResponseFolder);
@@ -343,6 +342,13 @@ public class FolderCompressorTest extends EasyMockSupport
 
         long folderId = 101l;
 
+        AcmContainer container = new AcmContainer();
+        container.setId(600L);
+        container.setContainerObjectType("containerObjectType");
+        container.setContainerObjectId(700L);
+        Capture<AcmFolderDownloadedEvent> capturedEvent = EasyMock.newCapture();
+
+        expect(mockedFolderService.findContainerByFolderId(anyLong())).andReturn(container).anyTimes();
         expect(mockedFolderService.findById(folderId)).andReturn(mockedResponseFolder);
         expect(mockedResponseFolder.getName()).andReturn("Response").atLeastOnce();
         expect(mockedResponseFolder.getId()).andReturn(folderId).atLeastOnce();

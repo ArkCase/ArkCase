@@ -49,6 +49,8 @@ import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.plugins.task.service.AcmTaskService;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.easymock.Capture;
 import org.easymock.EasyMock;
 import org.easymock.EasyMockSupport;
@@ -56,9 +58,6 @@ import org.easymock.IAnswer;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mule.api.MuleException;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.test.context.ContextConfiguration;
@@ -121,7 +120,7 @@ public class SplitCaseFileServiceTest extends EasyMockSupport
     }
 
     @Test
-    public void splitCaseTest() throws MergeCaseFilesException, MuleException, AcmUserActionFailedException, AcmCreateObjectFailedException,
+    public void splitCaseTest() throws MergeCaseFilesException, AcmUserActionFailedException, AcmCreateObjectFailedException,
             IOException, SplitCaseFileException, AcmFolderException, AcmObjectNotFoundException, PipelineProcessException
     {
         assertNotNull(splitCaseService);
@@ -137,8 +136,8 @@ public class SplitCaseFileServiceTest extends EasyMockSupport
 
         EasyMock.expect(auth.getName()).andReturn("ann-acm").anyTimes();
 
-        Capture<CaseFile> caseFileCapture = new Capture<>();
-        Capture<Map<String, CaseFile>> toSplitCaseRulesCapture = new Capture<>();
+        Capture<CaseFile> caseFileCapture = EasyMock.newCapture();
+        Capture<Map<String, CaseFile>> toSplitCaseRulesCapture = EasyMock.newCapture();
 
         EasyMock.expect(caseFileDao.find(sourceId)).andReturn(sourceCaseFile).anyTimes();
         EasyMock.expect(mockSplitCaseFileBusinessRule.applyRules(capture(toSplitCaseRulesCapture))).andReturn(null);
@@ -166,9 +165,9 @@ public class SplitCaseFileServiceTest extends EasyMockSupport
 
         EasyMock.expect(saveCaseService.saveCase(eq(sourceCaseFile), eq(auth), eq(ipAddress))).andReturn(sourceCaseFile);
 
-        Capture<Long> folderIdCapture = new Capture<>();
-        Capture<AcmContainer> tContainerCapture = new Capture<>();
-        Capture<AcmFolder> tFolderCapture = new Capture<>();
+        Capture<Long> folderIdCapture = EasyMock.newCapture();
+        Capture<AcmContainer> tContainerCapture = EasyMock.newCapture();
+        Capture<AcmFolder> tFolderCapture = EasyMock.newCapture();
         acmFolderService.copyFolderStructure(capture(folderIdCapture), capture(tContainerCapture), capture(tFolderCapture));
         expectLastCall().andAnswer(new IAnswer<Object>()
         {
@@ -181,9 +180,9 @@ public class SplitCaseFileServiceTest extends EasyMockSupport
             }
         }).anyTimes();
 
-        Capture<Long> documentIdCapture = new Capture<>();
-        Capture<AcmContainer> ttContainerCapture = new Capture<>();
-        Capture<AcmFolder> ttFolderCapture = new Capture<>();
+        Capture<Long> documentIdCapture = EasyMock.newCapture();
+        Capture<AcmContainer> ttContainerCapture = EasyMock.newCapture();
+        Capture<AcmFolder> ttFolderCapture = EasyMock.newCapture();
         acmFolderService.copyDocumentStructure(capture(documentIdCapture), capture(ttContainerCapture), capture(ttFolderCapture));
         expectLastCall().andAnswer(new IAnswer<Object>()
         {

@@ -405,18 +405,20 @@ public class AuditConfig
     {
         this.organizationaHistroyEventsArrayString = organizationaHistroyEventsArrayString;
     }
+
     @JsonIgnore
     public String getEventTypeByKey(String objectType)
     {
-        switch (objectType) {
-            case "COMPLAINT":
-                return complaintHistoryEventsArrayString;
-            case "CASE_FILE":
-                return caseFileHistoryEventsArrayString;
-            case "TASK":
-                return taskHistoryEventsArrayString;
-            case "DOC_REPO":
-                return docRepoHistoryEventsArrayString;
+        switch (objectType)
+        {
+        case "COMPLAINT":
+            return complaintHistoryEventsArrayString;
+        case "CASE_FILE":
+            return caseFileHistoryEventsArrayString;
+        case "TASK":
+            return taskHistoryEventsArrayString;
+        case "DOC_REPO":
+            return docRepoHistoryEventsArrayString;
         }
         return "";
     }

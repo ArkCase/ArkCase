@@ -32,6 +32,7 @@ import com.armedia.acm.plugins.addressable.exceptions.AcmContactMethodValidation
 import com.armedia.acm.plugins.addressable.model.ContactMethod;
 
 import java.util.List;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public final class ContactMethodsUtil
@@ -45,8 +46,10 @@ public final class ContactMethodsUtil
      * @throws AcmCreateObjectFailedException
      *             when at least one of the {@link ContactMethod} is not valid.
      */
-    public static void validateContactMethodFields(List<ContactMethod> contactMethods) throws AcmContactMethodValidationException
+    public static void validateContactMethodFields(List<ContactMethod> contactMethods, PhoneRegexConfig phoneRegexConfig)
+            throws AcmContactMethodValidationException
     {
+        Pattern phoneRegex = Pattern.compile(phoneRegexConfig.getPhoneRegex(), Pattern.CASE_INSENSITIVE);
         List<ContactMethod> invalidEmails = contactMethods.stream()
                 .filter(m -> "email".equals(m.getType().toLowerCase()))
                 .filter(m -> !ContactMethod.EMAIL_ADDRESS_REGEX.matcher(m.getValue()).matches())
@@ -55,7 +58,7 @@ public final class ContactMethodsUtil
         List<ContactMethod> invalidPhones = contactMethods.stream()
                 .filter(m -> "phone".equals(m.getType().toLowerCase()))
                 .filter(m -> !m.getValue().isEmpty())
-                .filter(m -> !ContactMethod.PHONE_REGEX.matcher(m.getValue()).matches())
+                .filter(m -> !phoneRegex.matcher(m.getValue()).matches())
                 .collect(Collectors.toList());
 
         if (invalidEmails.size() > 0)

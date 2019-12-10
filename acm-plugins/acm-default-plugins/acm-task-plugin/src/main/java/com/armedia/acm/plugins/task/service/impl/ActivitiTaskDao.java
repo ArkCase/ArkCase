@@ -343,7 +343,7 @@ public class ActivitiTaskDao extends AcmAbstractDao<AcmTask> implements TaskDao,
             // to ensure that the participants for new and updated ad-hoc tasks are visible to the client right away, we
             // have to apply the assignment and data access control rules right here, inline with the save operation.
             // Tasks generated or updated by the Activiti engine will have participants set by a specialized
-            // Mule flow.
+            // Camel flow.
 
             try
             {

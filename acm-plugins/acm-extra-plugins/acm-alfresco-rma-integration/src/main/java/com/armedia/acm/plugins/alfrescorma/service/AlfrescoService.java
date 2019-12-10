@@ -52,7 +52,7 @@ import java.util.Map;
 public abstract class AlfrescoService<T>
 {
     private static final String KERBEROS_USERNAME_PREFIX = "KERBEROS/";
-    private static final String APP_CONFIGURATION_ENTRY_NAME = "MuleAlfrescoLogin";
+    private static final String APP_CONFIGURATION_ENTRY_NAME = "AlfrescoLogin";
     private final Logger LOG = LogManager.getLogger(getClass());
     private RestTemplate restTemplate;
     private String basicAuthenticationHeaderValue;

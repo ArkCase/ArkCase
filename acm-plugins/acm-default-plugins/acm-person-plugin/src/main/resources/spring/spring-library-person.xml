@@ -18,6 +18,7 @@
     <bean id="organizationService" class="com.armedia.acm.plugins.person.service.OrganizationServiceImpl">
         <property name="organizationDao" ref="acmOrganizationDao"/>
         <property name="organizationPipelineManager" ref="organizationPipelineManager"/>
+        <property name="phoneRegexConfig" ref="phoneRegexConfig"/>
     </bean>
     <bean id="organizationPipelineManager" class="com.armedia.acm.services.pipeline.PipelineManager">
         <property name="preSaveHandlers">
@@ -48,6 +49,7 @@
         <property name="objectConverter" ref="objectConverter"/>
         <property name="ecmTikaFileService" ref="ecmTikaFileService"/>
         <property name="personConfig" ref="personConfig"/>
+        <property name="phoneRegexConfig" ref="phoneRegexConfig"/>
     </bean>
 
     <bean id="personPipelineManager" class="com.armedia.acm.services.pipeline.PipelineManager">

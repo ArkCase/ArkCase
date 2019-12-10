@@ -41,6 +41,7 @@ import com.armedia.acm.service.objecthistory.dao.AcmObjectHistoryDao;
 import com.armedia.acm.service.objecthistory.model.AcmObjectHistory;
 
 import org.easymock.Capture;
+import org.easymock.EasyMock;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
@@ -94,7 +95,7 @@ public class AcmObjectHistoryServiceImplTest extends EasyMockSupport
         history.setObjectString(json);
         history.setDate(date);
 
-        Capture<AcmObjectHistory> found = new Capture<AcmObjectHistory>();
+        Capture<AcmObjectHistory> found = EasyMock.newCapture();
 
         expect(mockObjectHistoryDao.save(capture(found))).andReturn(history);
         mockAcmObjectHistoryEventPublisher.publishCreatedEvent(history, ipAddress);
@@ -131,7 +132,7 @@ public class AcmObjectHistoryServiceImplTest extends EasyMockSupport
         history.setObjectString(json);
         history.setDate(date);
 
-        Capture<AcmObjectHistory> found = new Capture<AcmObjectHistory>();
+        Capture<AcmObjectHistory> found = EasyMock.newCapture();
 
         expect(mockObjectHistoryDao.save(capture(found))).andReturn(history);
         mockAcmObjectHistoryEventPublisher.publishCreatedEvent(history, ipAddress);
