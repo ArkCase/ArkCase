@@ -98,7 +98,7 @@ public class SplitCaseFilesAPIControllerTest extends EasyMockSupport
         SplitCaseOptions options = new SplitCaseOptions();
         options.setCaseFileId(1l);
 
-        Capture<SplitCaseOptions> capture = new Capture<>();
+        Capture<SplitCaseOptions> capture = EasyMock.newCapture();
         EasyMock.expect(splitCaseService.splitCase(eq(mockAuthentication), eq("127.0.0.1"), EasyMock.capture(capture)))
                 .andAnswer(new IAnswer<CaseFile>()
                 {

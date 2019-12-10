@@ -34,6 +34,7 @@ import static org.junit.Assert.fail;
 
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmUpdateObjectFailedException;
+import com.armedia.acm.plugins.addressable.service.PhoneRegexConfig;
 import com.armedia.acm.plugins.person.model.Organization;
 import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.plugins.person.model.PersonOrganizationAssociation;
@@ -56,6 +57,7 @@ public class OrganizationServiceImplTest extends EasyMockSupport
 {
     OrganizationServiceImpl organizationService;
     PipelineManager<Organization, OrganizationPipelineContext> mockOrganizationPipelineManager;
+    PhoneRegexConfig mockPhoneRegexConfig;
 
     @SuppressWarnings("unchecked")
     @Before
@@ -64,6 +66,8 @@ public class OrganizationServiceImplTest extends EasyMockSupport
         organizationService = new OrganizationServiceImpl();
         mockOrganizationPipelineManager = createMock(PipelineManager.class);
         organizationService.setOrganizationPipelineManager(mockOrganizationPipelineManager);
+        mockPhoneRegexConfig = createMock(PhoneRegexConfig.class);
+        organizationService.setPhoneRegexConfig(mockPhoneRegexConfig);
     }
 
     @SuppressWarnings("unchecked")
@@ -99,11 +103,13 @@ public class OrganizationServiceImplTest extends EasyMockSupport
         personAssociation3.setPersonToOrganizationAssociationType("director");
         personAssociation3.setOrganizationToPersonAssociationType("director");
         personAssociations.add(personAssociation3);
+        String phoneRegex = "/^\\d{3}[\\-]\\d{3}[\\-]\\d{4}$/";
 
         organization.setPersonAssociations(personAssociations);
 
         expect(mockOrganizationPipelineManager.executeOperation(anyObject(Organization.class), anyObject(OrganizationPipelineContext.class),
                 anyObject(PipelineManagerOperation.class))).andReturn(organization);
+        expect(mockPhoneRegexConfig.getPhoneRegex()).andReturn(phoneRegex);
 
         replayAll();
 

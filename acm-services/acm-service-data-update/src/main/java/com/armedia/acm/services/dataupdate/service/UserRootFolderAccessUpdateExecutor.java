@@ -36,8 +36,8 @@ import com.armedia.acm.services.dataaccess.service.impl.ArkPermissionEvaluator;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.web.api.MDCConstants;
 
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.slf4j.MDC;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -75,7 +75,7 @@ public class UserRootFolderAccessUpdateExecutor implements AcmDataUpdateExecutor
         try
         {
             // since this code is run via a executor, there is no authenticated user, so we need to specify the user to
-            // be used for CMIS connections. Some changes can trigger Mule flows.
+            // be used for CMIS connections. Some changes can trigger Camel flows.
             MDC.put(MDCConstants.EVENT_MDC_REQUEST_USER_ID_KEY, "DATA_UPDATE");
             MDC.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, "admin");
             MDC.put(MDCConstants.EVENT_MDC_REQUEST_ID_KEY, UUID.randomUUID().toString());

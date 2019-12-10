@@ -71,7 +71,6 @@ import java.util.UUID;
         "/spring/spring-library-case-file-save.xml",
         "/spring/spring-library-complaint.xml",
         "/spring/spring-library-complaint-plugin-test.xml",
-        "/spring/spring-library-complaint-plugin-test-mule.xml",
         "/spring/spring-library-context-holder.xml",
         "/spring/spring-library-data-access-control.xml",
         "/spring/spring-library-data-source.xml",

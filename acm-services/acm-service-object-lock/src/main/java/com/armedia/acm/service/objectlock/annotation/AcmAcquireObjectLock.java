@@ -45,10 +45,10 @@ import java.lang.annotation.Target;
  * 
  * // @formatter:off
  *       @AcmAcquireObjectLock(objectIdArgIndex = 0, objectType = "FILE", lockType = "WRITE", expiryTimeInMilliseconds = 600_000)
- *       public String downloadWithLock(Long id) throws MuleException
+ *       public String downloadWithLock(Long id)
  *       
  *       @AcmAcquireObjectLock(acmObjectArgIndex = 0, objectType = "FOLDER", lockType = "WRITE", lockChildObjects = false)
- *       public String downloadWithLock(AcmFolder folder) throws MuleException
+ *       public String downloadWithLock(AcmFolder folder)
  * // @formatter:on
  * 
  * Created by bojan.milenkoski on 03/05/2018.

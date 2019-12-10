@@ -37,9 +37,8 @@ import com.armedia.acm.plugins.casefile.service.SplitCaseService;
 import com.armedia.acm.plugins.ecm.exception.AcmFolderException;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 
-import org.mule.api.MuleException;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -65,7 +64,7 @@ public class SplitCaseFilesAPIController
     public CaseFile splitCaseFiles(
             @RequestBody SplitCaseOptions splitCaseOptions,
             HttpSession session,
-            Authentication auth) throws MuleException, AcmCreateObjectFailedException, AcmUserActionFailedException, SplitCaseFileException,
+            Authentication auth) throws AcmCreateObjectFailedException, AcmUserActionFailedException, SplitCaseFileException,
             AcmFolderException, AcmObjectNotFoundException, PipelineProcessException
     {
 

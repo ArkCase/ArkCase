@@ -42,13 +42,14 @@ import com.armedia.acm.plugins.task.service.TaskDao;
 import com.armedia.acm.plugins.task.service.TaskEventPublisher;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.easymock.Capture;
+import org.easymock.EasyMock;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -107,7 +108,7 @@ public class CompleteTaskWithOutcomeAPIControllerTest extends EasyMockSupport
         AcmTask request = new AcmTask();
         request.setTaskId(taskId);
 
-        Capture<AcmTask> toSave = new Capture<>();
+        Capture<AcmTask> toSave = EasyMock.newCapture();
 
         AcmTask found = new AcmTask();
         found.setTaskId(taskId);
@@ -118,7 +119,7 @@ public class CompleteTaskWithOutcomeAPIControllerTest extends EasyMockSupport
         AcmTask completed = new AcmTask();
         completed.setTaskId(taskId);
 
-        Capture<AcmApplicationTaskEvent> capturedEvent = new Capture<>();
+        Capture<AcmApplicationTaskEvent> capturedEvent = EasyMock.newCapture();
 
         mockHttpSession.setAttribute("acm_ip_address", ipAddress);
 
@@ -185,7 +186,7 @@ public class CompleteTaskWithOutcomeAPIControllerTest extends EasyMockSupport
         available.setDescription("outcome description");
         found.getAvailableOutcomes().add(available);
 
-        Capture<AcmApplicationTaskEvent> capturedEvent = new Capture<>();
+        Capture<AcmApplicationTaskEvent> capturedEvent = EasyMock.newCapture();
 
         mockHttpSession.setAttribute("acm_ip_address", ipAddress);
 
@@ -244,7 +245,7 @@ public class CompleteTaskWithOutcomeAPIControllerTest extends EasyMockSupport
         available.setDescription("outcome description");
         found.getAvailableOutcomes().add(available);
 
-        Capture<AcmApplicationTaskEvent> capturedEvent = new Capture<>();
+        Capture<AcmApplicationTaskEvent> capturedEvent = EasyMock.newCapture();
 
         mockHttpSession.setAttribute("acm_ip_address", ipAddress);
 
@@ -304,7 +305,7 @@ public class CompleteTaskWithOutcomeAPIControllerTest extends EasyMockSupport
         available.getFieldsRequiredWhenOutcomeIsChosen().add("reworkInstructions");
         found.getAvailableOutcomes().add(available);
 
-        Capture<AcmApplicationTaskEvent> capturedEvent = new Capture<>();
+        Capture<AcmApplicationTaskEvent> capturedEvent = EasyMock.newCapture();
 
         mockHttpSession.setAttribute("acm_ip_address", ipAddress);
 
@@ -366,7 +367,7 @@ public class CompleteTaskWithOutcomeAPIControllerTest extends EasyMockSupport
         available.getFieldsRequiredWhenOutcomeIsChosen().add("reworkInstructions");
         found.getAvailableOutcomes().add(available);
 
-        Capture<AcmTask> toSave = new Capture<>();
+        Capture<AcmTask> toSave = EasyMock.newCapture();
 
         AcmTask saved = new AcmTask();
         saved.setTaskId(taskId);
@@ -374,7 +375,7 @@ public class CompleteTaskWithOutcomeAPIControllerTest extends EasyMockSupport
         AcmTask completed = new AcmTask();
         completed.setTaskId(taskId);
 
-        Capture<AcmApplicationTaskEvent> capturedEvent = new Capture<>();
+        Capture<AcmApplicationTaskEvent> capturedEvent = EasyMock.newCapture();
 
         mockHttpSession.setAttribute("acm_ip_address", ipAddress);
 
