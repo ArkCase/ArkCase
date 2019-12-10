@@ -55,11 +55,9 @@ import com.armedia.acm.web.api.MDCConstants;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.easymock.EasyMock;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mule.api.MuleException;
 import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
@@ -134,7 +132,7 @@ import java.util.UUID;
         "/spring/spring-library-calendar-integration-exchange-service.xml"
 })
 @TransactionConfiguration(defaultRollback = true)
-public class SplitCaseFileServiceIT extends EasyMock
+public class SplitCaseFileServiceIT
 {
     static
     {
@@ -172,7 +170,7 @@ public class SplitCaseFileServiceIT extends EasyMock
 
     @Test
     @Transactional
-    public void splitCaseTest() throws MergeCaseFilesException, MuleException, AcmUserActionFailedException, AcmCreateObjectFailedException,
+    public void splitCaseTest() throws MergeCaseFilesException, AcmUserActionFailedException, AcmCreateObjectFailedException,
             IOException, SplitCaseFileException, AcmFolderException, AcmObjectNotFoundException, PipelineProcessException
     {
         auditAdapter.setUserId("auditUser");

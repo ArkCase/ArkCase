@@ -41,14 +41,14 @@ import com.armedia.acm.plugins.ecm.service.impl.EcmFileServiceImpl;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.easymock.Capture;
 import org.easymock.EasyMock;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -106,7 +106,7 @@ public class UpdateFileTypeAPIControllerTest extends EasyMockSupport
 
         String newFileType = "new_file_type";
 
-        Capture<EcmFile> saved = new Capture<>();
+        Capture<EcmFile> saved = EasyMock.newCapture();
         expect(mockAuthentication.getName()).andReturn("user");
         expect(mockEcmFileDao.find(file.getId())).andReturn(file);
         expect(mockEcmFileDao.save(capture(saved))).andReturn(file);

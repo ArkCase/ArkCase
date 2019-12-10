@@ -114,6 +114,13 @@
             <version>${acm.version}</version>
             <scope>compile</scope>
         </dependency>
+
+        <!-- servlet -->
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
 </project>

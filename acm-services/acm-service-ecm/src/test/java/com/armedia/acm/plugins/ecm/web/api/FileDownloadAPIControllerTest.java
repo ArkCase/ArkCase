@@ -53,6 +53,7 @@ import org.apache.chemistry.opencmis.commons.data.ContentStream;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.easymock.Capture;
+import org.easymock.EasyMock;
 import org.easymock.EasyMockSupport;
 import org.json.JSONObject;
 import org.junit.Before;
@@ -155,7 +156,7 @@ public class FileDownloadAPIControllerTest extends EasyMockSupport
         acmContainer.setContainerObjectType("DOC_REPO");
         fromDb.setContainer(acmContainer);
 
-        Capture<EcmFileDownloadedEvent> capturedEvent = new Capture<>();
+        Capture<EcmFileDownloadedEvent> capturedEvent = EasyMock.newCapture();
 
         expect(mockAuthentication.getName()).andReturn(user).atLeastOnce();
         expect(mockAuthentication.getDetails()).andReturn(AcmAuthenticationDetails.class);
@@ -235,7 +236,7 @@ public class FileDownloadAPIControllerTest extends EasyMockSupport
         ecmFileVersion.setVersionMimeType(mimeType);
         ecmFileVersion.setVersionFileNameExtension(fileNameExtension);
 
-        Capture<EcmFileDownloadedEvent> capturedEvent = new Capture<>();
+        Capture<EcmFileDownloadedEvent> capturedEvent = EasyMock.newCapture();
 
         expect(mockAuthentication.getName()).andReturn(user).atLeastOnce();
         expect(mockAuthentication.getDetails()).andReturn(AcmAuthenticationDetails.class);
@@ -315,7 +316,7 @@ public class FileDownloadAPIControllerTest extends EasyMockSupport
         acmContainer.setContainerObjectType("DOC_REPO");
         fromDb.setContainer(acmContainer);
 
-        Capture<EcmFileDownloadedEvent> capturedEvent = new Capture<>();
+        Capture<EcmFileDownloadedEvent> capturedEvent = EasyMock.newCapture();
 
         expect(mockAuthentication.getName()).andReturn(user).atLeastOnce();
         expect(mockAuthentication.getDetails()).andReturn(AcmAuthenticationDetails.class);

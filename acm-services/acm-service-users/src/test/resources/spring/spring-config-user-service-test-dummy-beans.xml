@@ -11,12 +11,6 @@
 
     <bean id="exceptionResolver" class="org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver"/>
 
-    <bean id="muleContextManager" class="com.armedia.acm.muletools.mulecontextmanager.MuleContextManager">
-        <property name="specificConfigFiles">
-            <list/>
-        </property>
-    </bean>
-
     <bean id="acmApplication" class="com.armedia.acm.core.AcmApplication"/>
 
     <bean id="configList" class="java.util.ArrayList">

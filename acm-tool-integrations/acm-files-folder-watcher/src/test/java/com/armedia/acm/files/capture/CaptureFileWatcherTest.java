@@ -42,15 +42,16 @@ import org.apache.commons.vfs2.FileName;
 import org.apache.commons.vfs2.FileObject;
 import org.apache.commons.vfs2.FileSystemException;
 import org.apache.commons.vfs2.FileTypeSelector;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.easymock.Capture;
+import org.easymock.EasyMock;
 import org.easymock.EasyMockRunner;
 import org.easymock.EasyMockSupport;
 import org.easymock.Mock;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
 import org.springframework.context.ApplicationEventPublisher;
 
 import java.io.File;
@@ -188,7 +189,7 @@ public class CaptureFileWatcherTest extends EasyMockSupport
     {
         unit.setApplicationEventPublisher(mockPublisher);
 
-        Capture<FileEvent> capturedEvent = new Capture<>();
+        Capture<FileEvent> capturedEvent = EasyMock.newCapture();
 
         expect(mockFileChangeEvent.getFile()).andReturn(mockFileObject).atLeastOnce();
         expect(mockFileObject.getName()).andReturn(mockFileName).anyTimes();
