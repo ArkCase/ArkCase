@@ -73,9 +73,9 @@ import com.armedia.acm.services.email.service.TemplatingEngine;
 import com.armedia.acm.services.users.model.AcmUser;
 
 import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.mule.util.FileUtils;
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;

@@ -42,10 +42,10 @@ import java.lang.annotation.Target;
  * 
  * // @formatter:off
  *       @AcmReleaseObjectLock(objectIdArgIndex = 0, objectType = "FILE", lockType = "WRITE")
- *       public String uploadFileWithUnlock(Long id) throws MuleException
+ *       public String uploadFileWithUnlock(Long id)
  *       
  *       @AcmAcquireObjectLock(acmObjectArgIndex = 0, objectType = "FOLDER", lockType = "WRITE", lockChildObjects = false)
- *       public String uploadFilesWithUnlock(AcmFolder folder, List<EcmFile> files) throws MuleException
+ *       public String uploadFilesWithUnlock(AcmFolder folder, List<EcmFile> files)
  * // @formatter:on
  * 
  * Created by bojan.milenkoski on 03/05/2018.

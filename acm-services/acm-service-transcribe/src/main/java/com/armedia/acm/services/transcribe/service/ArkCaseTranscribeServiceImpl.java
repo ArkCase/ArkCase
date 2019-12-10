@@ -78,14 +78,14 @@ import com.armedia.acm.tool.mediaengine.model.MediaEngineDTO;
 import com.armedia.acm.tool.transcribe.model.TranscribeDTO;
 
 import org.activiti.engine.delegate.DelegateExecution;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.NotImplementedException;
+import org.apache.commons.lang.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
-import org.mule.util.FileUtils;
-import org.mule.util.StringUtils;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 

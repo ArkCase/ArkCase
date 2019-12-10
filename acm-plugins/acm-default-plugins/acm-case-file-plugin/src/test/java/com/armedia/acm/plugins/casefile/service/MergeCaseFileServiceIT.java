@@ -58,7 +58,6 @@ import org.apache.logging.log4j.Logger;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mule.api.MuleException;
 import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
@@ -190,7 +189,7 @@ public class MergeCaseFileServiceIT
 
     @Test
     @Transactional
-    public void mergeCaseFilesTest() throws MergeCaseFilesException, MuleException, AcmUserActionFailedException,
+    public void mergeCaseFilesTest() throws MergeCaseFilesException, AcmUserActionFailedException,
             AcmCreateObjectFailedException, IOException, AcmObjectNotFoundException, PipelineProcessException, AcmAccessControlException
     {
         auditAdapter.setUserId("auditUser");
@@ -310,7 +309,7 @@ public class MergeCaseFileServiceIT
 
     @Test
     @Transactional
-    public void mergeCaseFilesParticipantSameAssigneeTest() throws MergeCaseFilesException, MuleException, AcmUserActionFailedException,
+    public void mergeCaseFilesParticipantSameAssigneeTest() throws MergeCaseFilesException, AcmUserActionFailedException,
             AcmCreateObjectFailedException, IOException, AcmObjectNotFoundException, PipelineProcessException, AcmAccessControlException
     {
         auditAdapter.setUserId("auditUser");
@@ -383,7 +382,7 @@ public class MergeCaseFileServiceIT
 
     @Test
     @Transactional
-    public void mergeCaseFilesParticipantDifferentAssigneeTest() throws MergeCaseFilesException, MuleException,
+    public void mergeCaseFilesParticipantDifferentAssigneeTest() throws MergeCaseFilesException,
             AcmUserActionFailedException, AcmCreateObjectFailedException, IOException, AcmObjectNotFoundException, PipelineProcessException,
             AcmAccessControlException
     {
