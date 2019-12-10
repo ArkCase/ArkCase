@@ -49,6 +49,7 @@ import com.google.gson.GsonBuilder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.easymock.Capture;
+import org.easymock.EasyMock;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
@@ -138,7 +139,7 @@ public class SearchObjectByTypeAPIControllerTest extends EasyMockSupport
 
         String solrResponse = "{\"responseHeader\":{\"status\":0,\"QTime\":3,\"params\":{\"sort\":\"\",\"indent\":\"true\",\"start\":\"0\",\"q\":\"object_type_s:Complaint\",\"wt\":\"json\",\"rows\":\"10\"}},\"response\":{\"numFound\":5,\"start\":0,\"docs\":[{\"id\":\"142-Complaint\",\"status_s\":\"DRAFT\",\"author\":\"tester\",\"author_s\":\"tester\",\"modifier_s\":\"testModifier\",\"last_modified\":\"2014-08-15T17:13:55Z\",\"create_tdt\":\"2014-08-15T17:13:55Z\",\"title_t\":\"testTitle\",\"name\":\"20140815_142\",\"object_id_s\":\"142\",\"owner_s\":\"tester\",\"object_type_s\":\"Complaint\",\"_version_\":1477062417430085632}]}}";
 
-        Capture<ApplicationSearchEvent> capturedEvent = new Capture<>();
+        Capture<ApplicationSearchEvent> capturedEvent = EasyMock.newCapture();
 
         // MVC test classes must call getName() somehow
         expect(mockAuthentication.getName()).andReturn("user").atLeastOnce();

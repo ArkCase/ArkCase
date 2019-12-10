@@ -35,9 +35,8 @@ import com.armedia.acm.plugins.admin.exception.AcmCmisConfigurationException;
 import com.armedia.acm.plugins.admin.model.CmisConfigurationConstants;
 import com.armedia.acm.plugins.admin.model.CmisUrlConfig;
 
+import org.apache.camel.component.cmis.SessionFactoryLocator;
 import org.apache.chemistry.opencmis.client.api.Repository;
-import org.apache.chemistry.opencmis.client.api.SessionFactory;
-import org.apache.chemistry.opencmis.client.runtime.SessionFactoryImpl;
 import org.apache.chemistry.opencmis.commons.SessionParameter;
 import org.apache.chemistry.opencmis.commons.enums.BindingType;
 import org.apache.commons.io.FileUtils;
@@ -421,8 +420,6 @@ public class CmisConfigurationService
 
     public List<Repository> getRepositories(CmisUrlConfig cmisUrlConfig) throws AcmEncryptionException
     {
-
-        SessionFactory sessionFactory = SessionFactoryImpl.newInstance();
         Map<String, String> parameters = new HashMap<>();
         parameters.put(SessionParameter.USER, cmisUrlConfig.getUsername());
         parameters.put(SessionParameter.PASSWORD, encryptablePropertyUtils.decryptPropertyValue(cmisUrlConfig.getPassword()));
@@ -431,7 +428,7 @@ public class CmisConfigurationService
         parameters.put(SessionParameter.ATOMPUB_URL, cmisUrlConfig.getBaseUrl());
         parameters.put(SessionParameter.BINDING_TYPE, BindingType.ATOMPUB.value());
 
-        return SessionFactoryImpl.newInstance().getRepositories(parameters);
+        return SessionFactoryLocator.getSessionFactory().getRepositories(parameters);
     }
 
     public void setCmisConfigurationLocation(String cmisConfigurationLocation)

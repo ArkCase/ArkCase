@@ -62,7 +62,6 @@ import java.util.regex.Pattern;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
         "/spring/spring-library-activemq.xml",
-        "/spring/spring-mule-activemq-test.xml",
         "/spring/spring-library-property-file-manager.xml",
         "/spring/spring-library-acm-encryption.xml"
 })

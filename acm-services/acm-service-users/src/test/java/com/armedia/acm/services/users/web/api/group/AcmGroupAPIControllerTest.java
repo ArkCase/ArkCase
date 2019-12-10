@@ -46,7 +46,6 @@ import org.easymock.TestSubject;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mule.api.MuleMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -66,8 +65,6 @@ import java.util.Base64;
 @RunWith(EasyMockRunner.class)
 public class AcmGroupAPIControllerTest extends EasyMockSupport implements HandlerExceptionResolver
 {
-    @Mock
-    MuleMessage muleMessage;
     private Logger log = LogManager.getLogger(getClass());
     private MockMvc mockMvc;
     @Mock

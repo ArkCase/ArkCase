@@ -56,7 +56,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
-import org.mule.api.MuleException;
 import org.slf4j.MDC;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
@@ -349,7 +348,6 @@ public class DefaultFolderCompressor implements FolderCompressor, ApplicationEve
      *             can be thrown while querying for folder children.
      * @throws AcmObjectNotFoundException
      *             can be thrown while querying for folder children.
-     * @throws MuleException
      *             can be thrown while retrieving the <code>InputStream</code> for a file.
      * @throws IOException
      *             can be thrown while writing to the output zip file.

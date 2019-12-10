@@ -42,13 +42,14 @@ import com.armedia.acm.services.signature.service.SignatureEventPublisher;
 import com.armedia.acm.services.users.service.ldap.LdapAuthenticateManager;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.easymock.Capture;
+import org.easymock.EasyMock;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -115,8 +116,8 @@ public class SignatureAPIControllerTest extends EasyMockSupport
         foundSignature.setObjectId(objectId);
         foundSignature.setObjectType(objectType);
 
-        Capture<Signature> signatureToSave = new Capture<>();
-        Capture<ApplicationSignatureEvent> capturedEvent = new Capture<>();
+        Capture<Signature> signatureToSave = EasyMock.newCapture();
+        Capture<ApplicationSignatureEvent> capturedEvent = EasyMock.newCapture();
 
         mockHttpSession.setAttribute("acm_ip_address", ipAddress);
 
@@ -206,8 +207,8 @@ public class SignatureAPIControllerTest extends EasyMockSupport
         Signature foundSignature = new Signature();
         foundSignature.setObjectId(objectId);
 
-        Capture<Signature> signatureToSave = new Capture<>();
-        Capture<ApplicationSignatureEvent> capturedEvent = new Capture<>();
+        Capture<Signature> signatureToSave = EasyMock.newCapture();
+        Capture<ApplicationSignatureEvent> capturedEvent = EasyMock.newCapture();
 
         mockHttpSession.setAttribute("acm_ip_address", ipAddress);
 

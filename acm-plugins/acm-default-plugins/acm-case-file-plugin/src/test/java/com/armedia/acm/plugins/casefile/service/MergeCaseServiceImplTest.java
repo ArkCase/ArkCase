@@ -112,7 +112,7 @@ public class MergeCaseServiceImplTest extends EasyMockSupport
         EasyMock.expect(saveCaseService.saveCase(targetCaseFile, auth, ipAddress)).andReturn(targetCaseFile);
         EasyMock.expect(acmParticipantService.saveParticipant("ann-acm", "assignee", 2l, "CASE_FILE")).andReturn(new AcmParticipant());
 
-        Capture<AcmFolder> folderCapture = new Capture<>();
+        Capture<AcmFolder> folderCapture = EasyMock.newCapture();
 
         EasyMock.expect(caseFileDao.find(sourceId)).andReturn(sourceCaseFile);
         EasyMock.expect(caseFileDao.find(targetId)).andReturn(targetCaseFile);

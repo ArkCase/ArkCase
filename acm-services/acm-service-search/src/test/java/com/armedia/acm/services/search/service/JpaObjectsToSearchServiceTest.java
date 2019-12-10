@@ -44,6 +44,7 @@ import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.spring.SpringContextHolder;
 
 import org.easymock.Capture;
+import org.easymock.EasyMock;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
@@ -99,12 +100,12 @@ public class JpaObjectsToSearchServiceTest extends EasyMockSupport
 
         expect(mockContextHolder.getAllBeansOfType(AcmObjectToSolrDocTransformer.class)).andReturn(transformerMap);
 
-        Capture<SolrAdvancedSearchDocument> capturedAdvancedSearch = new Capture<>();
-        Capture<SolrDocument> capturedQuickSearch = new Capture<>();
-        Capture<SolrContentDocument> capturedContentFileIndex = new Capture<>();
-        Capture<SolrDeleteDocumentByIdRequest> capturedAdvancedDeleteRequest = new Capture<>();
-        Capture<SolrDeleteDocumentByIdRequest> capturedQuickDeleteRequest = new Capture<>();
-        Capture<SolrDeleteDocumentByIdRequest> capturedContentFileIndexDeleteRequest = new Capture<>();
+        Capture<SolrAdvancedSearchDocument> capturedAdvancedSearch = EasyMock.newCapture();
+        Capture<SolrDocument> capturedQuickSearch = EasyMock.newCapture();
+        Capture<SolrContentDocument> capturedContentFileIndex = EasyMock.newCapture();
+        Capture<SolrDeleteDocumentByIdRequest> capturedAdvancedDeleteRequest = EasyMock.newCapture();
+        Capture<SolrDeleteDocumentByIdRequest> capturedQuickDeleteRequest = EasyMock.newCapture();
+        Capture<SolrDeleteDocumentByIdRequest> capturedContentFileIndexDeleteRequest = EasyMock.newCapture();
 
         mockSendToSolr.sendSolrAdvancedSearchDocuments(Arrays.asList(capture(capturedAdvancedSearch)));
         mockSendToSolr.sendSolrQuickSearchDocuments(Arrays.asList(capture(capturedQuickSearch)));

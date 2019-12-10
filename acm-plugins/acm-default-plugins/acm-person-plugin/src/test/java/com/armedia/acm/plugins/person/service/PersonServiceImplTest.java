@@ -36,6 +36,7 @@ import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUpdateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
+import com.armedia.acm.plugins.addressable.service.PhoneRegexConfig;
 import com.armedia.acm.plugins.person.model.Organization;
 import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.plugins.person.model.PersonOrganizationAssociation;
@@ -58,6 +59,7 @@ public class PersonServiceImplTest extends EasyMockSupport
 {
     PersonServiceImpl personService;
     PipelineManager<Person, PersonPipelineContext> mockPersonPipelineManager;
+    PhoneRegexConfig mockPhoneRegexConfig;
 
     @SuppressWarnings("unchecked")
     @Before
@@ -66,6 +68,8 @@ public class PersonServiceImplTest extends EasyMockSupport
         personService = new PersonServiceImpl();
         mockPersonPipelineManager = createMock(PipelineManager.class);
         personService.setPersonPipelineManager(mockPersonPipelineManager);
+        mockPhoneRegexConfig = createMock(PhoneRegexConfig.class);
+        personService.setPhoneRegexConfig(mockPhoneRegexConfig);
     }
 
     @SuppressWarnings("unchecked")
@@ -104,8 +108,11 @@ public class PersonServiceImplTest extends EasyMockSupport
 
         person.setOrganizationAssociations(organizationAssociations);
 
+        String phoneRegex = "/^\\d{3}[\\-]\\d{3}[\\-]\\d{4}$/";
+
         expect(mockPersonPipelineManager.executeOperation(anyObject(Person.class), anyObject(PersonPipelineContext.class),
                 anyObject(PipelineManagerOperation.class))).andReturn(person);
+        expect(mockPhoneRegexConfig.getPhoneRegex()).andReturn(phoneRegex);
 
         replayAll();
 

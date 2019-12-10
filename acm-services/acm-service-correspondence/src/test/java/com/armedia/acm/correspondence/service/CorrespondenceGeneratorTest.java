@@ -44,6 +44,7 @@ import com.armedia.acm.services.labels.service.TranslationService;
 import com.armedia.acm.spring.SpringContextHolder;
 
 import org.easymock.Capture;
+import org.easymock.EasyMock;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
@@ -219,9 +220,9 @@ public class CorrespondenceGeneratorTest extends EasyMockSupport
         Long parentObjectId = 500L;
         String objectCaseFile = "CASE_FILE";
 
-        Capture<Resource> captureResourceTemplate = new Capture<>();
+        Capture<Resource> captureResourceTemplate = EasyMock.newCapture();
 
-        Capture<String> filename = new Capture<>();
+        Capture<String> filename = EasyMock.newCapture();
 
         expect(mockLookupDao.getMergedLookups()).andReturn(lookupData()).anyTimes();
 
@@ -257,9 +258,9 @@ public class CorrespondenceGeneratorTest extends EasyMockSupport
         Long parentObjectId = 500L;
         String parentObjectType = "CASE_FILE";
 
-        Capture<Resource> captureResourceTemplate = new Capture<>();
+        Capture<Resource> captureResourceTemplate = EasyMock.newCapture();
 
-        Capture<String> filename = new Capture<>();
+        Capture<String> filename = EasyMock.newCapture();
 
         expect(mockLookupDao.getMergedLookups()).andReturn(lookupData()).anyTimes();
 

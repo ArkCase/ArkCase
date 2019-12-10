@@ -39,13 +39,14 @@ import com.armedia.acm.plugins.dashboard.model.userPreference.PreferredWidgetsDt
 import com.armedia.acm.plugins.dashboard.service.UserPreferenceService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.easymock.Capture;
+import org.easymock.EasyMock;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -120,7 +121,7 @@ public class SetUserPreferredWidgetsPerModuleTest extends EasyMockSupport
         // MVC test classes must call getName() somehow
         expect(mockAuthentication.getName()).andReturn("user").atLeastOnce();
 
-        Capture<PreferredWidgetsDto> savedPreferredWidgetsDto = new Capture<>();
+        Capture<PreferredWidgetsDto> savedPreferredWidgetsDto = EasyMock.newCapture();
 
         mockHttpSession.setAttribute("acm_ip_address", "127.0.0.1");
 

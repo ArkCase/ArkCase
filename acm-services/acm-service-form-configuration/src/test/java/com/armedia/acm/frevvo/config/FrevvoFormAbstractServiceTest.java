@@ -42,6 +42,7 @@ import com.armedia.acm.plugins.ecm.model.AcmMultipartFile;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 
 import org.easymock.Capture;
+import org.easymock.EasyMock;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
@@ -127,8 +128,8 @@ public class FrevvoFormAbstractServiceTest extends EasyMockSupport
         files.add(formXml);
         attachments.put("form_" + unit.getFormName(), files);
 
-        Capture<MultipartFile> capturedFile = new Capture<>();
-        Capture<String> fileName = new Capture<>();
+        Capture<MultipartFile> capturedFile = EasyMock.newCapture();
+        Capture<String> fileName = EasyMock.newCapture();
 
         expect(mockRequest.getParameter("mode")).andReturn("create");
         expect(mockRequest.getParameter("containerId")).andReturn("501");
