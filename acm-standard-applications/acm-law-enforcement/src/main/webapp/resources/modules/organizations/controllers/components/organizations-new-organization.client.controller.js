@@ -2,8 +2,8 @@
 
 angular.module('organizations').controller(
         'Organizations.NewOrganizationController',
-        [ '$scope', '$stateParams', '$translate', 'Organization.InfoService', '$state', 'Object.LookupService', 'MessageService', '$timeout', 'UtilService', '$modal', 'ConfigService', 'Person.InfoService', 'ObjectService', 'modalParams', 'Mentions.Service',
-                function($scope, $stateParams, $translate, OrganizationInfoService, $state, ObjectLookupService, MessageService, $timeout, Util, $modal, ConfigService, PersonInfoService, ObjectService, modalParams, MentionsService) {
+    ['$scope', '$stateParams', '$translate', 'Organization.InfoService', '$state', 'Object.LookupService', 'MessageService', '$timeout', 'UtilService', '$modal', 'ConfigService', 'Person.InfoService', 'ObjectService', 'modalParams', 'Mentions.Service', 'PhoneValidationService',
+        function ($scope, $stateParams, $translate, OrganizationInfoService, $state, ObjectLookupService, MessageService, $timeout, Util, $modal, ConfigService, PersonInfoService, ObjectService, modalParams, MentionsService, PhoneValidationService) {
 
                     $scope.modalParams = modalParams;
                     $scope.loading = false;
@@ -378,8 +378,22 @@ angular.module('organizations').controller(
                     $scope.capitalizeFirstLetter = function(input) {
                         return (!!input) ? input.charAt(0).toUpperCase() + input.substr(1).toLowerCase() : '';
                     };
-
+                    
                     $scope.cancelModal = function() {
                         $scope.onModalDismiss();
                     };
-                } ]);
+
+            var regEx = PhoneValidationService.getPhoneRegex().then(function (response) {
+                var regExp = new RegExp(response.data);
+                regEx = regExp;
+            });
+
+            $scope.validateInput = function (caType) {
+                var inputType = caType;
+                if (inputType == 'phone') {
+                    var validateObject = PhoneValidationService.validateInput($scope.organization.defaultPhone.value, regEx);
+                        $scope.organization.defaultPhone.value = validateObject.inputValue;
+                        $scope.showPhoneError = validateObject.showPhoneError;
+                }
+            }
+        }]);
