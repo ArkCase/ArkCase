@@ -45,6 +45,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.easymock.Capture;
+import org.easymock.EasyMock;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
@@ -126,8 +127,8 @@ public class CreateTaskItemAPIControllerTest extends EasyMockSupport
         user.setMail("test@armedia.com");
         session.setAttribute("acm_user", user);
 
-        Capture<AcmOutlookUser> outlookUserCapture = new Capture<>();
-        Capture<OutlookTaskItem> taskItemCapture = new Capture<>();
+        Capture<AcmOutlookUser> outlookUserCapture = EasyMock.newCapture();
+        Capture<OutlookTaskItem> taskItemCapture = EasyMock.newCapture();
 
         taskItem.setId("some_fake_id");
         expect(outlookService.createOutlookTaskItem(capture(outlookUserCapture), eq(WellKnownFolderName.Tasks), capture(taskItemCapture)))

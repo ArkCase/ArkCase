@@ -49,7 +49,7 @@ import javax.security.auth.login.Configuration;
 public class AlfrescoAuditApplicationRestClient
 {
     private static final String KERBEROS_USERNAME_PREFIX = "KERBEROS/";
-    private static final String APP_CONFIGURATION_ENTRY_NAME = "MuleAlfrescoLogin";
+    private static final String APP_CONFIGURATION_ENTRY_NAME = "AlfrescoLogin";
     private transient final Logger LOG = LogManager.getLogger(getClass());
     private AlfrescoSyncConfig alfrescoSyncConfig;
 

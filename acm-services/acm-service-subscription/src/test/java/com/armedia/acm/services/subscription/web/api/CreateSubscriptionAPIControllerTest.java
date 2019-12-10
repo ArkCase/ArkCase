@@ -45,6 +45,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.easymock.Capture;
+import org.easymock.EasyMock;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
@@ -129,7 +130,7 @@ public class CreateSubscriptionAPIControllerTest extends EasyMockSupport
 
         String jsonString = "{response:{docs:[{name:a,title_parseable:aa},{name:d,title_parseable:bb}]}}";
 
-        Capture<AcmSubscription> subscriptionToSave = new Capture<>();
+        Capture<AcmSubscription> subscriptionToSave = EasyMock.newCapture();
 
         expect(mockExecuteSolrQuery.getResultsByPredefinedQuery(mockAuthentication, SolrCore.QUICK_SEARCH, solrQuery, 0, 1, ""))
                 .andReturn(jsonString).once();

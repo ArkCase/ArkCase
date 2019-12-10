@@ -129,7 +129,7 @@ public class AcmBpmnServiceTest extends EasyMockSupport
         File f = resourceFile.getFile();
         assertTrue(f.exists());
         EasyMock.expect(acmBpmnDao.getByKeyAndDigest("TestActivitiSpringProcessUnitTest", resourceFileMD5Sum)).andReturn(null);
-        capture = new Capture<>();
+        capture = EasyMock.newCapture();
         EasyMock.expect(acmBpmnDao.save(EasyMock.capture(capture))).andAnswer(new IAnswer<AcmProcessDefinition>()
         {
             @Override
@@ -183,7 +183,7 @@ public class AcmBpmnServiceTest extends EasyMockSupport
         fromDBExisting.setKey("TestActivitiSpringProcessUnitTest");
         EasyMock.expect(acmBpmnDao.getByKeyAndDigest("TestActivitiSpringProcessUnitTest", resourceFileNotChangedMD5Sum))
                 .andReturn(fromDBExisting);
-        capture = new Capture<>();
+        capture = EasyMock.newCapture();
         EasyMock.expect(acmBpmnDao.save(EasyMock.capture(capture))).andAnswer(new IAnswer<AcmProcessDefinition>()
         {
             @Override
@@ -236,7 +236,7 @@ public class AcmBpmnServiceTest extends EasyMockSupport
         File f1 = resourceFileChanged.getFile();
 
         assertTrue(f.exists());
-        capture = new Capture<>();
+        capture = EasyMock.newCapture();
         EasyMock.expect(acmBpmnDao.getByKeyAndDigest("TestActivitiSpringProcessUnitTest", resourceFileMD5Sum)).andReturn(null);
         EasyMock.expect(acmBpmnDao.getByKeyAndDigest("TestActivitiSpringProcessUnitTest", resourceFileChangedMD5Sum)).andReturn(null);
         EasyMock.expect(acmBpmnDao.save(EasyMock.capture(capture))).andAnswer(new IAnswer<AcmProcessDefinition>()
