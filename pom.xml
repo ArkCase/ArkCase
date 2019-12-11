@@ -136,7 +136,7 @@
         <camel.spring.version>3.0.0-M3</camel.spring.version>
         <camel.spi.version>3.0.0-M3</camel.spi.version>
         <camel.core.version>3.0.0-M3</camel.core.version>
-        <camel.cmis.version>3.0.0-M3-rc1</camel.cmis.version>
+        <camel.cmis.version>3.0.0-M3-rc2</camel.cmis.version>
         <camel.support.version>3.0.0-M3</camel.support.version>
         <camel.api.version>3.0.0-M3</camel.api.version>
 
