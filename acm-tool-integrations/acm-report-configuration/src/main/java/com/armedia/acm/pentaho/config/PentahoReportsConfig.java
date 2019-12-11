@@ -27,20 +27,18 @@ package com.armedia.acm.pentaho.config;
  * #L%
  */
 
-import com.armedia.acm.objectonverter.json.JSONMarshaller;
-import com.armedia.acm.objectonverter.json.JSONUnmarshaller;
-import com.fasterxml.jackson.annotation.JsonAnyGetter;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.armedia.acm.configuration.annotations.MapValue;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
 
-import java.util.HashMap;
 import java.util.Map;
 
-public class PentahoReportsConfig implements InitializingBean
+public class PentahoReportsConfig
 {
+
+    public static final String REPORT_CONFIG_PROP_KEY = "report.config.reports";
+
     @JsonProperty("report.plugin.PENTAHO_SERVER_URL")
     @Value("${report.plugin.PENTAHO_SERVER_URL}")
     private String serverUrl;
@@ -137,21 +135,7 @@ public class PentahoReportsConfig implements InitializingBean
     @Value("${report.plugin.CMIS_STORE_REPORT_USER}")
     private String cmisStoreReportUser;
 
-    @JsonProperty("report.config.reports")
-    @Value("${report.config.reports}")
-    private String reports;
-
-    private Map<String, String> reportToUrlMap = new HashMap<>();
-
-    private JSONUnmarshaller jsonUnmarshaller;
-
-    private JSONMarshaller jsonMarshaller;
-
-    @JsonIgnore
-    public Map<String, String> getReportToUrlMap()
-    {
-        return reportToUrlMap;
-    }
+    private Map<String, String> reports;
 
     public String getServerUrl()
     {
@@ -393,39 +377,14 @@ public class PentahoReportsConfig implements InitializingBean
         this.cmisStoreReportUser = cmisStoreReportUser;
     }
 
-    public String getReports()
+    @MapValue(value = "report.config.reports")
+    public Map<String, String> getReports()
     {
-        return jsonMarshaller.marshal(getReportToUrlMap());
+        return reports;
     }
 
-    public void setReports(String reports)
+    public void setReports(Map<String, String> reports)
     {
         this.reports = reports;
-    }
-
-    @JsonIgnore
-    public JSONUnmarshaller getJsonUnmarshaller()
-    {
-        return jsonUnmarshaller;
-    }
-
-    public void setJsonUnmarshaller(JSONUnmarshaller jsonUnmarshaller)
-    {
-        this.jsonUnmarshaller = jsonUnmarshaller;
-    }
-
-    @JsonIgnore
-    public JSONMarshaller getJsonMarshaller() {
-        return jsonMarshaller;
-    }
-
-    public void setJsonMarshaller(JSONMarshaller jsonMarshaller) {
-        this.jsonMarshaller = jsonMarshaller;
-    }
-
-    @Override
-    public void afterPropertiesSet()
-    {
-        reportToUrlMap = jsonUnmarshaller.unmarshall(reports, Map.class);
     }
 }
