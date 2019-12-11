@@ -59,7 +59,7 @@ public class AcmEntityTemplateNoUserPrefixModelProvider implements TemplateModel
         String modifierEmail = "";
         String assigneeEmail = "";
 
-        if (acmObject instanceof AcmAssignee)
+        if (acmObject instanceof AcmAssignee && ((AcmAssignee) acmObject).getAssigneeLdapId() != null)
         {
             AcmAssignee acmAssignee = (AcmAssignee) acmObject;
 
