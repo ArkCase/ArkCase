@@ -6,22 +6,22 @@ package com.armedia.acm.services.dataupdate.service;
  * %%
  * Copyright (C) 2014 - 2019 ArkCase LLC
  * %%
- * This file is part of the ArkCase software. 
- * 
- * If the software was purchased under a paid ArkCase license, the terms of 
- * the paid license agreement will prevail.  Otherwise, the software is 
+ * This file is part of the ArkCase software.
+ *
+ * If the software was purchased under a paid ArkCase license, the terms of
+ * the paid license agreement will prevail.  Otherwise, the software is
  * provided under the following open source license terms:
- * 
+ *
  * ArkCase is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *  
+ *
  * ArkCase is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
  * #L%
@@ -60,14 +60,17 @@ public class RolesGroupsRuntimeMigrationExecutor implements AcmDataUpdateExecuto
     @Override
     public String getUpdateId()
     {
-        return "roles-groups-runtime-migration-v1";
+        return "roles-groups-runtime-migration-v2";
     }
 
     @Override
     public void execute()
     {
         List<String> propertiesForMigration = new LinkedList(
-                Arrays.asList("application.roles", "application.privileges", "application.rolesToGroups", "application.rolesToPrivileges"));
+                Arrays.asList("application.roles", "application.privileges", "application.rolesToGroups", "application.rolesToPrivileges",
+                        "report.config.reportsToRoles", "report.config.reports"));
+
+        List<String> propertiesForRemove = new LinkedList<>();
 
         Map<String, Object> configMap = configurationContainer.getWithoutRuntimeConfigurationMap();
 
@@ -105,6 +108,8 @@ public class RolesGroupsRuntimeMigrationExecutor implements AcmDataUpdateExecuto
             }
 
         }
+
+        configurationPropertyService.removeRuntimeProperties(initializeRemovePropertiesMap(propertiesForRemove));
 
     }
 
@@ -153,6 +158,36 @@ public class RolesGroupsRuntimeMigrationExecutor implements AcmDataUpdateExecuto
                 log.info("property key %s with property value %s is updated in runtime", combinedKey, propertyValue);
             }
         }
+    }
+
+    private List<String> initializeRemovePropertiesMap(List<String> properties)
+    {
+        properties.add("report.plugin.PENTAHO_DELETE_SCHEDULE_API");
+        properties.add("report.plugin.PENTAHO_SERVER_USER");
+        properties.add("report.plugin.PENTAHO_SERVER_PASSWORD");
+        properties.add("report.plugin.PENTAHO_REPORTS_URL");
+        properties.add("report.plugin.PENTAHO_SCHEDULE_API");
+        properties.add("report.plugin.REPORT_TYPES");
+        properties.add("report.plugin.PENTAHO_RETRIEVE_SCHEDULES_API");
+        properties.add("report.plugin.PENTAHO_SCHEDULE_OUTPUT_FOLDER");
+        properties.add("report.plugin.PENTAHO_DOWNLOAD_API");
+        properties.add("report.plugin.CMIS_STORE_REPORT_USER");
+        properties.add("report.plugin.REPORT_RECURRENCE");
+        properties.add("report.plugin.REPORT_OUTPUT_TYPES");
+        properties.add("report.plugin.PENTAHO_SERVER_PORT");
+        properties.add("report.plugin.PENTAHO_REMOVE_FILE_API");
+        properties.add("report.plugin.PENTAHO_SERVER_URL");
+        properties.add("report.plugin.PENTAHO_VIEW_ANALYSIS_REPORT_URL_TEMPLATE");
+        properties.add("report.plugin.PENTAHO_SCHEDULE_INPUT_FOLDER");
+        properties.add("report.plugin.PENTAHO_REPORT_URL_TEMPLATE");
+        properties.add("report.plugin.PENTAHO_REPORT_DOCUMENT_REPOSITORY_NAME");
+        properties.add("report.plugin.PENTAHO_SERVER_INTERNAL_PORT");
+        properties.add("report.plugin.PENTAHO_VIEW_DASHBOARD_REPORT_URL_TEMPLATE");
+        properties.add("report.plugin.PENTAHO_SERVER_INTERNAL_URL");
+        properties.add("report.plugin.PENTAHO_VIEW_REPORT_URL_PRPTI_TEMPLATE");
+        properties.add("report.plugin.PENTAHO_FILE_PROPERTIES_API");
+
+        return properties;
     }
 
     public void setCollectionPropertiesConfigurationService(

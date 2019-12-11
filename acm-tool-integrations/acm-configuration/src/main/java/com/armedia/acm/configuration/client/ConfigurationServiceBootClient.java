@@ -108,7 +108,7 @@ public class ConfigurationServiceBootClient
      * Loads configuration from one specific yaml file.
      *
      * - url to the config server
-     * 
+     *
      * @param name
      *            - name of the yaml file that should be loaded
      * @return
