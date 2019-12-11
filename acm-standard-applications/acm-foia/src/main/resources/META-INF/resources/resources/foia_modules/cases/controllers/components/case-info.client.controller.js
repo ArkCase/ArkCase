@@ -274,7 +274,7 @@ angular.module('cases').controller(
             $scope.$on('dueDate-changed', dueDateChanged);
 
             function dueDateChanged(e, newDueDate) {
-                $scope.objectInfo.dueDate = UtilDateService.dateToIso(UtilDateService.isoToDate(newDueDate));
+                $scope.objectInfo.dueDate = new Date(newDueDate).toISOString();
                 $scope.dueDate = newDueDate.replace(/(\d{4})\-(\d{2})\-(\d{2}).*/, '$2/$3/$1');
                 if(!$scope.includeWeekends) {
                     $scope.calculateDaysObj = DueDateService.daysLeft($scope.holidays, $scope.objectInfo.dueDate);
