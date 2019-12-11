@@ -27,7 +27,9 @@ package com.armedia.acm.plugins.report.service;
  * #L%
  */
 
+import com.armedia.acm.configuration.service.CollectionPropertiesConfigurationService;
 import com.armedia.acm.configuration.service.ConfigurationPropertyService;
+import com.armedia.acm.configuration.util.MergeFlags;
 import com.armedia.acm.pentaho.config.PentahoReportUrl;
 import com.armedia.acm.pentaho.config.PentahoReportsConfig;
 import com.armedia.acm.plugins.report.model.Report;
@@ -82,6 +84,7 @@ public class ReportServiceImpl implements ReportService
     private final String PENTAHO_VIEW_REPORT_URL_PRPTI_TEMPLATE_DEFAULT = "/pentaho/api/repos/{path}/prpti.view";
     private final String PENTAHO_VIEW_DASHBOARD_REPORT_URL_TEMPLATE_DEFAULT = "/pentaho/api/repos/{path}/viewer?ts={timestamp}";
     private final String PENTAHO_VIEW_ANALYSIS_REPORT_URL_TEMPLATE_DEFAULT = "/pentaho/api/repos/{path}/viewer";
+    private CollectionPropertiesConfigurationService collectionPropertiesConfigurationService;
     private PentahoReportUrl reportUrl;
     private ExecuteSolrQuery executeSolrQuery;
     private SearchResults searchResults;
@@ -145,7 +148,7 @@ public class ReportServiceImpl implements ReportService
     @Override
     public List<Report> getAcmReports()
     {
-        return reportsConfig.getReportToUrlMap().entrySet()
+        return reportsConfig.getReports().entrySet()
                 .stream()
                 .map(entry -> {
                     Report report = new Report();
@@ -254,17 +257,21 @@ public class ReportServiceImpl implements ReportService
     public List<Report> sync() throws Exception
     {
         List<Report> reports = getPentahoReports();
+        Map<String, List<String>> reportsToRolesMapping = reportsToRolesConfig.getReportsToRolesMap();
+
         if (reports != null)
         {
             List<String> propertiesToDelete = new ArrayList<>();
-            Map<String, String> reportToUrlMapping = reportsConfig.getReportToUrlMap();
-            List<Report> missgingReports = reports.stream()
-                    .filter(item ->!reportToUrlMapping.containsKey(item.getPropertyName()))
+            Map<String, String> reportToUrlMapping = reportsConfig.getReports();
+            List<Report> missingReports = reports.stream()
+                    .filter(item -> !reportToUrlMapping.containsKey(item.getPropertyName()))
                     .collect(Collectors.toList());
-            for (Report report : missgingReports)
+
+            if (!missingReports.isEmpty())
             {
-                updateReportsConfig(report, report.getTitle());
+                updateReportsConfig(missingReports);
             }
+
             for (Entry<String, String> entry : reportToUrlMapping.entrySet())
             {
                 Report found = reports.stream()
@@ -277,15 +284,11 @@ public class ReportServiceImpl implements ReportService
                 }
             }
 
-            Map<String, String> reportsToRolesMapping = reportsToRolesConfig.getReportsToRolesMap();
-
             propertiesToDelete.forEach(item -> {
                 reportToUrlMapping.remove(item);
                 reportsToRolesMapping.remove(item);
             });
 
-            configurationPropertyService.updateProperties(reportsConfig);
-            configurationPropertyService.updateProperties(reportsToRolesConfig);
         }
 
         return reports;
@@ -294,7 +297,7 @@ public class ReportServiceImpl implements ReportService
     @Override
     public boolean saveReports(List<Report> reports)
     {
-        Map<String, String> reportToUrlMapping = reportsConfig.getReportToUrlMap();
+        Map<String, String> reportToUrlMapping = reportsConfig.getReports();
         if (reports != null && reports.size() > 0)
         {
             for (Report report : reports)
@@ -311,7 +314,10 @@ public class ReportServiceImpl implements ReportService
                     reportToUrlMapping.remove(key);
                 }
             }
-            configurationPropertyService.updateProperties(reportToUrlMapping);
+            Map<String, Object> runtimeMapWithRootKey = new HashMap<>();
+            runtimeMapWithRootKey.put(PentahoReportsConfig.REPORT_CONFIG_PROP_KEY, reportToUrlMapping);
+
+            configurationPropertyService.updateProperties(runtimeMapWithRootKey);
         }
         return true;
     }
@@ -360,7 +366,7 @@ public class ReportServiceImpl implements ReportService
         {
             InputStream inputStream = new ByteArrayInputStream(xml.getBytes());
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-            dbf.setFeature( "http://apache.org/xml/features/disallow-doctype-decl", true);
+            dbf.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
             dbf.setFeature("http://xml.org/sax/features/external-general-entities", false);
             dbf.setFeature("http://xml.org/sax/features/external-parameter-entities", false);
             dbf.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
@@ -380,32 +386,35 @@ public class ReportServiceImpl implements ReportService
         return obj;
     }
 
-    private Map<String, String> prepareReportToRolesMapForSaving(Map<String, List<String>> reportsToRolesMap)
+    private void updateReportsConfig(List<Report> missingReports)
     {
-        return reportsToRolesMap.entrySet().stream()
-                .collect(Collectors.toMap(Entry::getKey, it -> StringUtils.join(it.getValue(), ",")));
-    }
+        Map<String, Object> reportsRolesConfig = new HashMap<>();
+        Map<String, String> reportsConfig = new HashMap<>();
 
-    private Map<String, List<String>> prepareReportToRolesMapForRetrieving(Map<String, String> reportsToRolesMap)
-    {
-        return reportsToRolesMap.entrySet().stream()
-                .filter(entry -> StringUtils.isNotBlank(entry.getValue()))
-                .collect(Collectors.toMap(Entry::getKey,
-                        entry -> Arrays.stream(entry.getValue().split(","))
-                                .collect(Collectors.toList())));
-    }
+        for (Report report : missingReports)
+        {
+            reportsConfig.put(createReportKeyFromTitle(report.getTitle()), createPentahoReportUri(report));
 
-    private void updateReportsConfig(Report report, String title)
-    {
-        reportsConfig.getReportToUrlMap().put(createReportKeyFromTitle(title), createPentahoReportUri(report));
-        reportsToRolesConfig.getReportsToRolesMap().put(createReportKeyFromTitle(title), "");
+            collectionPropertiesConfigurationService.addEmptyListCollection(
+                    ReportsToRolesConfig.REPORTS_TO_ROLES_PROP_KEY,
+                    createReportKeyFromTitle(report.getTitle()),
+                    MergeFlags.MERGE.toString(),
+                    reportsRolesConfig);
+        }
+
+        Map<String, Object> runtimeMapWithRootKey = new HashMap<>();
+        runtimeMapWithRootKey.put(ReportsToRolesConfig.REPORTS_TO_ROLES_PROP_KEY, reportsRolesConfig);
+        runtimeMapWithRootKey.put(PentahoReportsConfig.REPORT_CONFIG_PROP_KEY, reportsConfig);
+
+        configurationPropertyService.updateProperties(runtimeMapWithRootKey);
+
     }
 
 
     @Override
     public Map<String, List<String>> getReportToRolesMap()
     {
-        return prepareReportToRolesMapForRetrieving(reportsToRolesConfig.getReportsToRolesMap());
+        return reportsToRolesConfig.getReportsToRolesMap();
     }
 
     @Override
@@ -452,56 +461,64 @@ public class ReportServiceImpl implements ReportService
     @Override
     public boolean saveReportToRolesMap(Map<String, List<String>> reportToRolesMap, Authentication auth)
     {
-        configurationPropertyService.updateProperties(reportToRolesMap);
         return true;
     }
 
     @Override
-    public List<String> saveRolesToReport(String reportName, List<String> roles, Authentication auth)
+    public List<String> saveRolesToReport(String reportName, List<Object> roles, Authentication auth)
     {
-        Map<String, String> reportsToRolesMapping = reportsToRolesConfig.getReportsToRolesMap();
-        String[] rolesForReport = reportsToRolesMapping.get(reportName).split(",");
+        Map<String, List<String>> reportsToRolesMapping = reportsToRolesConfig.getReportsToRolesMap();
+        List<String> rolesForReport = reportsToRolesMapping.get(reportName);
 
-        Set<String> updatedRolesForReport = Arrays.stream(rolesForReport).collect(Collectors.toSet());
-        updatedRolesForReport.addAll(roles);
+        rolesForReport.addAll((List<String>) (Object) roles);
 
-        reportsToRolesMapping.put(reportName, String.join(",", updatedRolesForReport));
-        configurationPropertyService.updateProperties(reportsToRolesConfig);
-        return new ArrayList<>(updatedRolesForReport);
+        Map<String, Object> reportRolesConfig = collectionPropertiesConfigurationService.updateMapProperty(
+                ReportsToRolesConfig.REPORTS_TO_ROLES_PROP_KEY, reportName,
+                roles,
+                MergeFlags.MERGE);
+
+        configurationPropertyService.updateProperties(reportRolesConfig);
+
+        return rolesForReport;
     }
 
     @Override
-    public List<String> removeRolesToReport(String reportName, List<String> roles, Authentication auth)
+    public List<Object> removeRolesToReport(String reportName, List<Object> roles, Authentication auth)
     {
-        Map<String, String> reportsToRolesMapping = reportsToRolesConfig.getReportsToRolesMap();
-        String[] rolesForReport = reportsToRolesMapping.get(reportName).split(",");
+        Map<String, List<String>> reportsToRolesMapping = reportsToRolesConfig.getReportsToRolesMap();
+        List<String> rolesForReport = reportsToRolesMapping.get(reportName);
 
-        List<String> updatedRolesForReport = Arrays.stream(rolesForReport)
+        List<Object> updatedRolesForReport = rolesForReport.stream()
                 .filter(role -> !roles.contains(role))
                 .collect(Collectors.toList());
 
-        reportsToRolesMapping.put(reportName, String.join(",", updatedRolesForReport));
-        configurationPropertyService.updateProperties(reportsToRolesConfig);
+        Map<String, Object> reportRolesConfig = collectionPropertiesConfigurationService.updateMapProperty(
+                ReportsToRolesConfig.REPORTS_TO_ROLES_PROP_KEY, reportName,
+                roles,
+                MergeFlags.REMOVE);
+
+        configurationPropertyService.updateProperties(reportRolesConfig);
+
         return updatedRolesForReport;
     }
 
     @Override
     public List<String> getRolesForReport(Boolean authorized, String reportId)
     {
-        String reportsToRolesConfigString = reportsToRolesConfig.getReportsToRolesMap().get(reportId);
+        List<String> reportsToRolesConfigString = reportsToRolesConfig.getReportsToRolesMap().get(reportId);
 
         if (reportsToRolesConfigString != null)
         {
-            String[] rolesForReport = reportsToRolesConfigString.split(",");
+            List<String> rolesForReport = reportsToRolesConfigString;
 
             if (!authorized)
             {
                 return rolesConfig.getApplicationRoles().stream()
-                        .filter(role -> Arrays.stream(rolesForReport).noneMatch(r -> r.trim().equals(role)))
+                        .filter(role -> rolesForReport.stream().noneMatch(r -> r.equals(role)))
                         .collect(Collectors.toList());
             }
 
-            return Arrays.asList(rolesForReport);
+            return rolesForReport;
         }
         else
         {
@@ -511,18 +528,18 @@ public class ReportServiceImpl implements ReportService
 
     @Override
     public List<String> getRolesForReport(Boolean authorized, String reportId, int startRow, int maxRows, String sortBy, String sortDirection) {
-        String reportsToRolesConfigString = reportsToRolesConfig.getReportsToRolesMap().get(reportId);
+        List<String> reportsToRolesConfigString = reportsToRolesConfig.getReportsToRolesMap().get(reportId);
 
         if (reportsToRolesConfigString != null) {
-            String[] rolesForReport = reportsToRolesConfigString.split(",");
+            List<String> rolesForReport = reportsToRolesConfigString;
             List<String> result = null;
 
             if (!authorized) {
                 result = rolesConfig.getApplicationRoles().stream()
-                        .filter(role -> Arrays.stream(rolesForReport).noneMatch(r -> r.trim().equals(role)))
+                        .filter(role -> rolesForReport.stream().noneMatch(r -> r.equals(role)))
                         .collect(Collectors.toList());
             } else {
-                result = Arrays.asList(rolesForReport);
+                result = rolesForReport;
             }
 
 
@@ -623,4 +640,9 @@ public class ReportServiceImpl implements ReportService
         this.rolesConfig = rolesConfig;
     }
 
+    public void setCollectionPropertiesConfigurationService(
+            CollectionPropertiesConfigurationService collectionPropertiesConfigurationService)
+    {
+        this.collectionPropertiesConfigurationService = collectionPropertiesConfigurationService;
+    }
 }

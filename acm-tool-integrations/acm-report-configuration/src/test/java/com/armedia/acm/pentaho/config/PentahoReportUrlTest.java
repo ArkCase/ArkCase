@@ -66,7 +66,7 @@ public class PentahoReportUrlTest extends EasyMockSupport
     {
         expect(reportsConfig.getServerUrl()).andReturn(PENTAHO_SERVER_URL);
         expect(reportsConfig.getServerPort()).andReturn(PENTAHO_SERVER_PORT);
-        expect(reportsConfig.getReportToUrlMap()).andReturn(reportsProperties);
+        expect(reportsConfig.getReports()).andReturn(reportsProperties);
 
         replayAll();
         Map<String, String> urlMap = reportUrl.getNewReportUrlList();
@@ -85,7 +85,7 @@ public class PentahoReportUrlTest extends EasyMockSupport
     {
         expect(reportsConfig.getServerUrl()).andReturn(PENTAHO_SERVER_URL);
         expect(reportsConfig.getServerPort()).andReturn(PENTAHO_SERVER_PORT);
-        expect(reportsConfig.getReportToUrlMap()).andReturn(reportsProperties);
+        expect(reportsConfig.getReports()).andReturn(reportsProperties);
 
         replayAll();
         String path = reportUrl.getNewReportUrl(ReportName.COMPLAINT_REPORT.name());

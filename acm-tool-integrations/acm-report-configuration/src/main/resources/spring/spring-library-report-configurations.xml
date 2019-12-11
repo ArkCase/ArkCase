@@ -17,13 +17,10 @@
     </bean>
 
     <bean id="pentahoReportsConfig" class="com.armedia.acm.pentaho.config.PentahoReportsConfig" scope="refresh">
-        <property name="jsonUnmarshaller" ref="jsonUnmarshaller"/>
-        <property name="jsonMarshaller" ref="jsonMarshaller"/>
         <aop:scoped-proxy/>
     </bean>
 
     <bean id="reportsToRolesConfig" class="com.armedia.acm.report.config.ReportsToRolesConfig" scope="refresh">
-        <property name="jsonUnmarshaller" ref="jsonUnmarshaller"/>
         <aop:scoped-proxy/>
     </bean>
 </beans>

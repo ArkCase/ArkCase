@@ -29,12 +29,16 @@ package com.armedia.acm.plugins.report.web.api;
 
 import com.armedia.acm.plugins.report.service.ReportService;
 
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
 import java.util.Map;
@@ -61,7 +65,7 @@ public class SaveReportToRolesMapAPIController
 
     @RequestMapping(value = "/{reportName:.+}/roles", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public List<String> addRolesToReport(@PathVariable("reportName") String reportName, @RequestBody List<String> roles,
+    public List<String> addRolesToReport(@PathVariable("reportName") String reportName, @RequestBody List<Object> roles,
             Authentication auth) throws Exception
     {
         LOG.debug("Saving roles to report [{}]", reportName);
@@ -71,7 +75,7 @@ public class SaveReportToRolesMapAPIController
 
     @RequestMapping(value = "/{reportName:.+}/roles", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public List<String> removeRolesToReport(@PathVariable("reportName") String reportName, @RequestBody List<String> roles,
+    public List<Object> removeRolesToReport(@PathVariable("reportName") String reportName, @RequestBody List<Object> roles,
             Authentication auth) throws Exception
     {
         LOG.debug("Saving roles to report [{}]", reportName);
