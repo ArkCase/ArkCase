@@ -40,6 +40,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -75,7 +76,7 @@ public class AcmUserServiceImpl implements AcmUserService
                     AcmUser user = userDao.findByUserId(userId);
                     return user;
                 })
-                .filter(user -> user != null)
+                .filter(Objects::nonNull)
                 .collect(Collectors.toList());
     }
 
@@ -132,8 +133,7 @@ public class AcmUserServiceImpl implements AcmUserService
         {
             if(userRoles.contains(entry.getKey()))
             {
-                String[] privileges = (String[]) entry.getValue().toArray(new String[0]);
-                userPrivileges.addAll(Arrays.asList(privileges));
+                userPrivileges.addAll(Arrays.asList(entry.getValue().toArray(new String[0])));
             }
         }
         return userPrivileges;

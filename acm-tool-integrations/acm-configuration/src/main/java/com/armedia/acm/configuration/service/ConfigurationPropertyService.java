@@ -45,6 +45,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service("configurationPropertyService")
@@ -64,6 +65,8 @@ public class ConfigurationPropertyService implements InitializingBean
 
     private String updatePropertiesEndpoint;
 
+    private String removePropertiesEndpoint;
+
     private String resetPropertiesEndpoint;
 
     private String resetFilePropertiesEndpoint;
@@ -75,11 +78,14 @@ public class ConfigurationPropertyService implements InitializingBean
     {
         String updatePath = (String) configurableEnvironment.getPropertySources()
                 .get("bootstrap").getProperty("configuration.server.update.path");
+        String removePath = (String) configurableEnvironment.getPropertySources()
+                .get("bootstrap").getProperty("configuration.server.remove.path");
         String serverUrl = (String) configurableEnvironment.getPropertySources()
                 .get("bootstrap").getProperty("configuration.server.url");
         String resetPath = (String) configurableEnvironment.getPropertySources()
                 .get("bootstrap").getProperty("configuration.server.reset.path");
         updatePropertiesEndpoint = String.format("%s%s", serverUrl, updatePath);
+        removePropertiesEndpoint = String.format("%s%s", serverUrl, removePath);
         resetPropertiesEndpoint = String.format("%s%s%s", serverUrl, "/config", resetPath);
         resetFilePropertiesEndpoint = String.format("%s%s", resetPropertiesEndpoint, "/{applicationName}");
     }
@@ -173,6 +179,28 @@ public class ConfigurationPropertyService implements InitializingBean
         {
             log.warn("Failed to update property due to {}", e.getMessage());
             throw new ConfigurationPropertyException("Failed to update configuration", e);
+        }
+    }
+
+    /**
+     * Removes properties sent with the map 'properties' in the file
+     * with name 'applicationName'
+     *
+     * @param properties
+     * @throws ConfigurationPropertyException
+     */
+    public void removeRuntimeProperties(List<String> properties) throws ConfigurationPropertyException
+    {
+        try
+        {
+            Map<String, String> params = new HashMap<>();
+            params.put("applicationName", configurationClientConfig.getDefaultApplicationName());
+            configRestTemplate.postForEntity(removePropertiesEndpoint, properties, ResponseEntity.class, params);
+        }
+        catch (RestClientException e)
+        {
+            log.warn("Failed to remove property due to {}", e.getMessage());
+            throw new ConfigurationPropertyException("Failed to update configuration");
         }
     }
 

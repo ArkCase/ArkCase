@@ -52,7 +52,7 @@ public interface ReportService
 
     boolean saveReports(List<Report> reports) throws AcmEncryptionException;
 
-    Map<String, List<String>> getReportToRolesMap();
+    public Map<String, List<String>> getReportToRolesMap();
 
     List<String> getReportToRoles(String sortDirection, Integer startRow, Integer maxRows, String filterName) throws IOException;
 
@@ -63,11 +63,11 @@ public interface ReportService
 
     boolean saveReportToRolesMap(Map<String, List<String>> reportToRolesMap, Authentication auth);
 
-    List<String> saveRolesToReport(String reportName, List<String> roles, Authentication auth) throws AcmEncryptionException;
+    public List<String> saveRolesToReport(String reportName, List<Object> roles, Authentication auth) throws AcmEncryptionException;
 
-    List<String> removeRolesToReport(String reportName, List<String> roles, Authentication auth) throws Exception;
+    public List<Object> removeRolesToReport(String reportName, List<Object> roles, Authentication auth) throws Exception;
 
-    List<String> getRolesForReport(Boolean authorized, String reportId) throws AcmEncryptionException;
+    public List<String> getRolesForReport(Boolean authorized, String reportId) throws AcmEncryptionException;
 
     List<Report> sync() throws Exception;
 
