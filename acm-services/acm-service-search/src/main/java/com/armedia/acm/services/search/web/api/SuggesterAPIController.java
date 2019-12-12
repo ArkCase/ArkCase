@@ -73,7 +73,7 @@ public class SuggesterAPIController
             filterQueries = Arrays.asList(filter).stream().map(f -> getFacetedSearchService().buildSolrQuery(f))
                     .collect(Collectors.joining(""));
         }
-        filterQueries = filterQueries.trim().length() > 0 ? "&fq=hidden_b:false" : "fq=hidden_b:false";
+        filterQueries += filterQueries.trim().length() > 0 ? "&fq=hidden_b:false" : "fq=hidden_b:false";
 
         switch (core)
         {
