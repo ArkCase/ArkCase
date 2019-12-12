@@ -71,7 +71,9 @@
                 <div class="form-group col-sm-3">
                     <label class="control-label" translate> cases.comp.main.otherReason.label</label>
                     <input type="text" id="otherReason" ng-model="objectInfo.otherReason" name="otherReason" class="input-md form-control"
-                            ng-disabled="isDisabled" placeholder="{{ 'cases.comp.main.otherReason.placeholder'  | translate }}">
+                            ng-readonly="isDisabled" placeholder="{{ 'cases.comp.main.otherReason.placeholder'  | translate }}"
+                            permission="editRequestData" permission-object-type="CASE_FILE" permission-properties="objectInfo"
+                            permission-action="disable">
                 </div>
             </div>
             <div class="row">
