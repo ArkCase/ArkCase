@@ -5,6 +5,6 @@
 
   <groupId>org.apache.camel</groupId>
   <artifactId>camel-cmis-arkcase</artifactId>
-  <version>3.0.0-M3-rc1</version>
+  <version>3.0.0-M3-rc2</version>
   <packaging>jar</packaging>
 </project>

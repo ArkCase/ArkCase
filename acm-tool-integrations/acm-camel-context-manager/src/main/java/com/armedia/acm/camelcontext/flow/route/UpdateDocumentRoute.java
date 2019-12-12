@@ -68,6 +68,7 @@ public class UpdateDocumentRoute extends ArkCaseAbstractRoute
                     MDC.put(HttpInvokerUtil.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY,
                             String.valueOf(routeProperties.get(HttpInvokerUtil.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY)));
                 })
+                .delayer(1000)
                 .recipientList().method(this, "createUrl")
                 .process(exchange -> {
                     exchange.getIn().getHeaders().put(PropertyIds.OBJECT_TYPE_ID, CamelCMISConstants.CMIS_DOCUMENT);
