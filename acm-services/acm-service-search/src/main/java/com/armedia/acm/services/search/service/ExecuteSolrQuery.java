@@ -561,9 +561,63 @@ public class ExecuteSolrQuery
     {
         log.trace("Building query [{}] for user [{}]", solrQuery, authentication.getName());
 
-        SolrQuery query = new SolrQuery()
-                .setQuery(parse(solrQuery))
-                .setRows(maxRows)
+        SolrQuery query = new SolrQuery();
+
+        String[] params = solrQuery.split("&");
+
+        for (String param : params)
+        {
+            if (param.startsWith("fq="))
+            {
+                query.addFilterQuery(param.substring("fq=".length()));
+            }
+            else if (param.equals("facet=true"))
+            {
+                query.setFacet(true);
+            }
+            else if (param.startsWith("facet.field="))
+            {
+                query.addFacetField(param.substring("facet.field=".length()));
+            }
+            else if (param.startsWith("facet.mincount="))
+            {
+                query.setFacetMinCount(Integer.parseInt(param.substring("facet.mincount=".length())));
+            }
+            else if (param.startsWith("fl="))
+            {
+                query.setFields(param.substring("fl=".length()));
+            }
+            else if (param.startsWith("indent="))
+            {
+                // we set indentation according to method parameter. See bellow.
+            }
+            else if (param.startsWith("wt="))
+            {
+                // we set the output to json by default. See bellow.
+            }
+            else if (param.startsWith("start="))
+            {
+                // we set start row according to method parameter. See bellow.
+            }
+            else if (param.startsWith("rows="))
+            {
+                // we set rows according to method parameter. See bellow.
+            }
+            else if (param.startsWith("sort="))
+            {
+                // we set rows according to method parameter. See bellow.
+            }
+            else if (param.startsWith("omitHeader="))
+            {
+                // we set omitHeader to true or false by configuration. Check "solr.omitHeader" configuration
+            }
+            else
+            {
+                query.setQuery(parse(param));
+            }
+        }
+
+        query.setRows(maxRows)
                 .setStart(firstRow)
                 .setParam(SOLR_PARAM_INDENT, indent)
                 .setParam(SOLR_PARAM_WRITER, SOLR_WRITER_JSON);

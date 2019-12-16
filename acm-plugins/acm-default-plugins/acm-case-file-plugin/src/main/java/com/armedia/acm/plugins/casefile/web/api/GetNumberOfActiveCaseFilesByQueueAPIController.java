@@ -95,11 +95,13 @@ public class GetNumberOfActiveCaseFilesByQueueAPIController
     private String getSolrQueuesResponse(Authentication authentication, int start, int n)
     {
         String solrResponse = null;
-        String query = "object_type_s:QUEUE&sort=" + SearchConstants.PROPERTY_QUEUE_ORDER + " ASC";
+        String query = "object_type_s:QUEUE";
+        String sortParam = SearchConstants.PROPERTY_QUEUE_ORDER + " ASC";
 
         try
         {
-            solrResponse = getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.QUICK_SEARCH, query, start, n, "");
+            solrResponse = getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.QUICK_SEARCH, query, start, n,
+                    sortParam);
         }
         catch (SolrException e)
         {
