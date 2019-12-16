@@ -81,24 +81,25 @@ public class LabelsConfiguration implements ConfigurationFacade
         List<String> modulesNames = configurationServiceBootClient.getModulesNames();
 
         log.info("Loading labels from config server with language: {}", defaultLocale);
-        for (String labelsModule : modulesNames)
-        {
+        modulesNames.parallelStream().forEach(labelsModule -> {
             String key = String.format("%s-%s", labelsModule, defaultLocale);
+            log.trace("Loading {} labels", labelsModule);
             labelsMap.put(key, this.configurationServiceBootClient.loadConfiguration(key, null));
             labelsDefaultMap.put(key, this.configurationServiceBootClient.loadDefaultConfiguration(key, null));
-        }
+            log.trace("Labels {} loaded", labelsModule);
+        });
+        log.info("Finished loading labels with language: {}");
     }
 
     public void includeOtherLanguageInLabelsMap(String lang)
     {
         List<String> modulesNames = configurationServiceBootClient.getModulesNames();
-        for (String labelsModule : modulesNames)
-        {
+        modulesNames.parallelStream().forEach(labelsModule -> {
             String key = String.format("%s-%s", labelsModule, lang);
             labelsMap.put(key, this.configurationServiceBootClient.loadLangConfiguration(key,
                     (Map<String, Object>) labelsMap.get(labelsModule + "-" + defaultLocale), null));
             labelsDefaultMap.put(key, this.configurationServiceBootClient.loadDefaultConfiguration(key, null));
-        }
+        });
     }
 
     /**
