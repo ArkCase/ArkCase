@@ -102,7 +102,8 @@ public class GetNumberOfActiveCaseFilesByQueueAPIControllerTest extends EasyMock
         AcmQueue distribution = new AcmQueue(5L, "Distribution", 5);
         AcmQueue nonCompliance = new AcmQueue(6L, "Non-Compliance", 6);
 
-        String queuesQuery = "object_type_s:QUEUE&sort=" + SearchConstants.PROPERTY_QUEUE_ORDER + " ASC";
+        String queuesQuery = "object_type_s:QUEUE";
+        String sortParam = SearchConstants.PROPERTY_QUEUE_ORDER + " ASC";
         String facetQuery = "object_type_s:CASE_FILE AND " + SearchConstants.PROPERTY_QUEUE_NAME_S
                 + ":*&rows=1&fl=id&wt=json&indent=true&facet=true&facet.field=" + SearchConstants.PROPERTY_QUEUE_NAME_S;
 
@@ -115,9 +116,9 @@ public class GetNumberOfActiveCaseFilesByQueueAPIControllerTest extends EasyMock
         String facetSolrResponse = IOUtils.toString(facetInputStream, Charset.forName("UTF-8"));
 
         expect(mockAuthentication.getName()).andReturn("user");
-        expect(mockExecuteSolrQuery.getResultsByPredefinedQuery(mockAuthentication, SolrCore.QUICK_SEARCH, queuesQuery, 0, 50, ""))
+        expect(mockExecuteSolrQuery.getResultsByPredefinedQuery(mockAuthentication, SolrCore.QUICK_SEARCH, queuesQuery, 0, 50, sortParam))
                 .andReturn(queuesSolrResponse);
-        expect(mockExecuteSolrQuery.getResultsByPredefinedQuery(mockAuthentication, SolrCore.QUICK_SEARCH, queuesQuery, 50, 50, ""))
+        expect(mockExecuteSolrQuery.getResultsByPredefinedQuery(mockAuthentication, SolrCore.QUICK_SEARCH, queuesQuery, 50, 50, sortParam))
                 .andReturn(null);
         expect(mockExecuteSolrQuery.getResultsByPredefinedQuery(mockAuthentication, SolrCore.QUICK_SEARCH, facetQuery, 0, 1, ""))
                 .andReturn(facetSolrResponse);
