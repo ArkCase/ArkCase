@@ -15,7 +15,7 @@ angular.module('cases').controller(
 
             AdminObjectTitleConfigurationService.getObjectTitleConfiguration().then(function (configTitleData) {
                 var disableSuggestedCases = !configTitleData.data.CASE_FILE.enableTitleField;
-                HelperObjectBrowserService.toggleNodeDisabled('cases', 'Suggested Cases', disableSuggestedCases);
+                HelperObjectBrowserService.toggleNodeDisabled('cases', 'Suggested Requests', disableSuggestedCases);
             });
 
             $scope.currentRoute = $state.current.name;
