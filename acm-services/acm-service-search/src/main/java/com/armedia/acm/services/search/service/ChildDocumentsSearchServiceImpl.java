@@ -91,7 +91,7 @@ public class ChildDocumentsSearchServiceImpl implements ChildDocumentsSearchServ
         String rowQueryParameters = String.format(
                 "q1=parent_object_type_s:%1$s AND object_type_s:%2$s AND parent_object_id_s:%3$s" +
                         "&q2=({!join from=timesheet_id_i to=object_id_i}parent_object_id_s:%3$s) AND object_type_s:%4$s" +
-                        "&fq=object_type_s:TASK",
+                        "&fq=object_type_s:TASK&fq=-status_s:DELETE",
                 parentType,
                 childTypes.get(1),
                 parentId.toString(),
