@@ -620,7 +620,11 @@ public class ExecuteSolrQuery
 
         for (String param : params)
         {
-            if (param.startsWith("fq="))
+            if (param.startsWith("q="))
+            {
+                query.setQuery(parse(param.substring("q=".length())));
+            }
+            else if (param.startsWith("fq="))
             {
                 query.addFilterQuery(param.substring("fq=".length()));
             }
