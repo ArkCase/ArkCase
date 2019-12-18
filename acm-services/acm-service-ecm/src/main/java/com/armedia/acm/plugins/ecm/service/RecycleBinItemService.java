@@ -114,7 +114,7 @@ public interface RecycleBinItemService
      * @throws  AcmCreateObjectFailedException
      */
     @Transactional
-    AcmContainer getOrCreateContainerForRecycleBin(String objectType, String cmisRepositoryId, Authentication authentication) throws AcmCreateObjectFailedException;
+    AcmContainer getOrCreateContainerForRecycleBin(String objectType, String cmisRepositoryId) throws AcmCreateObjectFailedException;
 
     /**
      *
