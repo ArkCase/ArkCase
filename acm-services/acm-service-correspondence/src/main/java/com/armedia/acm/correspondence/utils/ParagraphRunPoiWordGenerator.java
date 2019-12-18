@@ -55,7 +55,9 @@ import org.springframework.expression.spel.support.StandardEvaluationContext;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -68,6 +70,7 @@ import java.util.StringJoiner;
 public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGenerator
 {
     public static final String DATE_TYPE = "Date";
+    public static final String DATE_TIME_TYPE = "LocalDateTime";
     public static final String CURRENT_DATE = "currentDate";
     public static final String BASE_URL = "baseUrl";
     public static final String FILES = "files";
@@ -460,9 +463,10 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGene
 
     private String evaluateSpelExpression(String objectType, Long parentObjectId, String spelExpression)
     {
-        String generatedExpression;
+        String generatedExpression = "";
         boolean isExistingMergeField = false;
         SimpleDateFormat formatter = new SimpleDateFormat(DateFormats.WORKFLOW_DATE_FORMAT);
+        SimpleDateFormat dateTimeFormatter = new SimpleDateFormat(DateFormats.CORRESPONDENCE_DATE_FORMAT);
 
         AcmAbstractDao<AcmEntity> correspondedObjectDao = getCorrespondenceService().getAcmAbstractDao(objectType);
         Object correspondenedObject = correspondedObjectDao.find(parentObjectId);
@@ -497,6 +501,12 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGene
                     if (expression.getValue(stContext).getClass().getSimpleName().equalsIgnoreCase(DATE_TYPE))
                     {
                         generatedExpression = formatter.format(expression.getValue(stContext));
+                    }
+                    else if (expression.getValue(stContext).getClass().getSimpleName().equalsIgnoreCase(DATE_TIME_TYPE))
+                    {
+
+                        generatedExpression = formatter.format(
+                                dateTimeFormatter.parse((((LocalDateTime) expression.getValue(stContext)).toLocalDate().toString())));
                     }
                     else
                     {
@@ -547,6 +557,19 @@ public class ParagraphRunPoiWordGenerator implements SpELWordEvaluator, WordGene
                         if (expression.getValue(stContext).getClass().getSimpleName().equalsIgnoreCase(DATE_TYPE))
                         {
                             generatedExpression = formatter.format(expression.getValue(stContext));
+                        }
+                        else if (expression.getValue(stContext).getClass().getSimpleName().equalsIgnoreCase(DATE_TIME_TYPE))
+                        {
+                            try
+                            {
+                                generatedExpression = formatter.format(dateTimeFormatter
+                                        .parse((((LocalDateTime) expression.getValue(stContext)).toLocalDate().toString())));
+                            }
+                            catch (ParseException e)
+                            {
+                                e.printStackTrace();
+                            }
+
                         }
                         else
                         {
