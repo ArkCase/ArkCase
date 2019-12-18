@@ -37,6 +37,7 @@
                 <ref bean="configurationServerRuntimeMigrationExecutor"/>
                 <ref bean="solrReindexNotificationsExecutor"/>
                 <ref bean="acmGroupSolrReindexExecutor"/>
+                <ref bean="cmisRepositoryRecycleBinContainerExecutor"/>
             </list>
         </property>
         <property name="dataUpdateService" ref="dataUpdateService"/>
@@ -56,6 +57,11 @@
         <property name="fileDao" ref="ecmFileDao"/>
         <property name="folderDao" ref="acmFolderDao"/>
         <property name="arkPermissionEvaluator" ref="arkPermissionEvaluator"/>
+    </bean>
+
+    <bean id="cmisRepositoryRecycleBinContainerExecutor"
+          class="com.armedia.acm.services.dataupdate.service.CmisRepositoryRecycleBinContainerExecutor">
+        <property name="recycleBinItemService" ref="recycleBinItemServiceImpl"/>
     </bean>
 
     <bean id="userIdGroupNameDomainUpdateExecutor" class="com.armedia.acm.services.dataupdate.service.UserIdGroupNameDomainUpdateExecutor">
