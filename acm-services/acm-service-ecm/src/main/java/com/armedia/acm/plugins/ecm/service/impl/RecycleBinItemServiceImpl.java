@@ -91,7 +91,7 @@ public class RecycleBinItemServiceImpl implements RecycleBinItemService
     {
         String ipAddress = (String) session.getAttribute(EcmFileConstants.IP_ADDRESS_ATTRIBUTE);
         AcmContainer destinationContainer = getOrCreateContainerForRecycleBin(RecycleBinConstants.OBJECT_TYPE,
-                ecmFile.getCmisRepositoryId(), authentication);
+                ecmFile.getCmisRepositoryId());
         AcmContainer sourceContainer = getFolderService().findContainerByFolderIdTransactionIndependent(ecmFile.getFolder().getId());
 
         RecycleBinItem recycleBinItem = new RecycleBinItem(ecmFile.getId(), ecmFile.getObjectType(),
@@ -173,20 +173,17 @@ public class RecycleBinItemServiceImpl implements RecycleBinItemService
 
     @Override
     @Transactional
-    public AcmContainer getOrCreateContainerForRecycleBin(String objectType, String cmisRepositoryId, Authentication authentication)
+    public AcmContainer getOrCreateContainerForRecycleBin(String objectType, String cmisRepositoryId)
             throws AcmCreateObjectFailedException
     {
         AcmContainer recycleBinContainer = getRecycleBinItemDao().getContainerForRecycleBin(objectType, cmisRepositoryId);
-        log.info("Container for the Recycle Bin successfully retrieved (created if don't exist), by user {}", authentication.getName());
         if (recycleBinContainer == null)
         {
-            log.debug("Recycle Bin container for cmis repository {} is not found, by user {}", cmisRepositoryId, authentication.getName());
-            return getEcmFileService().createContainerFolder(objectType, 0L, EcmFileConstants.DEFAULT_CMIS_REPOSITORY_ID);
+            log.debug("Recycle Bin container for cmis repository {} is not found, and will be created", cmisRepositoryId);
+            return getEcmFileService().createContainerFolder(objectType, 0L, cmisRepositoryId);
         }
         else
         {
-            log.debug("Recycle Bin container {} for cmis repository {} is successfully created, by user {}",
-                    recycleBinContainer.getContainerObjectId(), cmisRepositoryId, authentication.getName());
             return recycleBinContainer;
         }
     }
