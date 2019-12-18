@@ -52,7 +52,7 @@
                     "name": "modified_date_tdt",
                     "type": "date",
                     "sort": {
-                        "direction": "asc"
+                        "direction": "desc"
                     },
                     "displayName": "notifications.comp.grid.columns.modified",
                     "headerCellFilter": "translate",
