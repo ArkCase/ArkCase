@@ -69,6 +69,7 @@
             "start": 0,
             "filter": "\"Object Type\": NOTIFICATION & \"Owner\": userId",
             "filterName": "Object Type",
+            "sort": "modified_date_tdt desc",
             "reportFileName": "notifications",
             "autoSuggestObjectType": "NOTIFICATION",
             "isAutoSuggestActive": true,
