@@ -239,4 +239,8 @@
     <bean id="caseFileTasksService" class="com.armedia.acm.plugins.casefile.service.CaseFileTasksServiceImpl">
         <property name="childDocumentsSearchService" ref="childDocumentsSearchService"/>
     </bean>
+
+    <bean id="activeCaseFileByQueueService" class="com.armedia.acm.plugins.casefile.service.ActiveCaseFileByQueueServiceImpl">
+        <property name="executeSolrQuery" ref="executeSolrQuery"/>
+    </bean>
 </beans>

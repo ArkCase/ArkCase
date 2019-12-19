@@ -58,7 +58,7 @@
 
     <bean id="getNumberOfActiveCaseFilesByQueueAPIController"
         class="com.armedia.acm.plugins.casefile.web.api.GetNumberOfActiveCaseFilesByQueueAPIController">
-        <property name="executeSolrQuery" ref="executeSolrQuery"/>
+        <property name="activeCaseFileByQueueService" ref="activeCaseFileByQueueService"/>
     </bean>
 
     <bean id="caseFileNextPossibleQueuesAPIController"
