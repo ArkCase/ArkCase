@@ -51,11 +51,10 @@
                 {
                     "name": "modified_date_tdt",
                     "type": "date",
-                    "displayName": "notifications.comp.grid.columns.modified",
                     "sort": {
-                        "by" : "modified_date_tdt",
                         "direction": "desc"
                     },
+                    "displayName": "notifications.comp.grid.columns.modified",
                     "headerCellFilter": "translate",
                     "cellTemplate": "<div>{{(row.entity.modified_date_tdt || row.entity.action_date_tdt) | date : 'short' }}</div>"
                 }
