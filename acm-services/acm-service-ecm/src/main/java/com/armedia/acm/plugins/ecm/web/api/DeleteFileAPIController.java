@@ -139,8 +139,7 @@ public class DeleteFileAPIController
     {
         for (RecycleBinItemDTO file : filesToBeDeleted)
         {
-            getRecycleBinItemService().removeItemFromRecycleBin(file.getRecycleBinItemId());
-            deleteFile(file.getFileId(), authentication, session);
+            getFileService().deleteFilePermanently(file.getRecycleBinItemId(), file.getFileId());
         }
     }
 

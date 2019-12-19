@@ -1663,6 +1663,23 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
 
     @Override
     @Transactional(rollbackFor = Exception.class)
+    public void deleteFilePermanently(Long recycleBinId, Long objectId) throws AcmUserActionFailedException
+    {
+        try
+        {
+            deleteFile(objectId, null, null);
+            getRecycleBinItemService().removeItemFromRecycleBin(recycleBinId);
+            log.info("File with id: {} permanently deleted", objectId);
+        }
+        catch (AcmUserActionFailedException | AcmObjectNotFoundException e)
+        {
+            throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_DELETE_FILE, EcmFileConstants.OBJECT_FILE_TYPE,
+                    objectId, "Could not delete file", e);
+        }
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
     @AcmAcquireAndReleaseObjectLock(objectIdArgIndex = 0, objectType = "FILE", lockType = "DELETE")
     public void deleteFile(Long objectId, Long parentId, String parentType) throws AcmUserActionFailedException, AcmObjectNotFoundException
     {
