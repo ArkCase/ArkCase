@@ -39,7 +39,7 @@ public interface DateFormats
     public final String TASK_NAME_DATE_FORMAT = "yyyyMMdd";
     public final String TIMESHEET_DATE_FORMAT = "M/dd/yyyy";
     public final String WORKFLOW_DATE_FORMAT = "M/dd/yyyy";
-    public final String CORRESPONDENCE_DATE_FORMAT = "MM/dd/yyyy";
+    public final String CORRESPONDENCE_DATE_FORMAT = "yyyy-MM-dd";
 
     /**
      * The date format SOLR expects. Any other date format causes SOLR to throw an exception.
