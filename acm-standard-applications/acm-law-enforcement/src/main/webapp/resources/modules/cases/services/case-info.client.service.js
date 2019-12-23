@@ -124,7 +124,6 @@ angular.module('services').factory('Case.InfoService', [ '$resource', '$translat
 
     Service.CacheNames = {
         CHILD_TASK_DATA: "ChildTaskData",
-        MY_TASKS: "MyTasks"
     };
 
     /**
