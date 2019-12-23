@@ -38,7 +38,7 @@ angular.module('complaints').controller(
                             gridHelper.setColumnDefs(updatedConfig);
                             gridHelper.setBasicOptions(updatedConfig);
                             gridHelper.disableGridScrolling(updatedConfig);
-                            gridHelper.setExternalPaging(updatedConfig, $scope.retrieveGridData);
+                            gridHelper.setExternalPaging(updatedConfig, retrieveGridData);
                         });
                         componentHelper.doneConfig(config);
                         return false;

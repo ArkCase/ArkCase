@@ -67,6 +67,8 @@ angular.module('cases').controller(
                     var retrieveGridData = function() {
                         var currentObjectId = Util.goodMapValue($scope.objectInfo, "id");
                         $scope.childDocumentSearch.parentId = currentObjectId;
+                        $scope.childDocumentSearch.startRow = Util.goodValue($scope.start, 0);
+                        $scope.childDocumentSearch.maxRows = Util.goodValue($scope.pageSize, 10);
                         if (Util.goodPositive(currentObjectId, false)) {
                             
                             ObjectTaskService.resetChildTasks(ObjectService.ObjectTypes.CASE_FILE, currentObjectId);
@@ -80,7 +82,7 @@ angular.module('cases').controller(
                                 });
                                 $scope.gridOptions = $scope.gridOptions || {};
                                 $scope.gridOptions.data = tasks;
-                                $scope.gridOptions.totalItems = data.length;
+                                $scope.gridOptions.totalItems = data.response.numFound;
 
                                 return data;
                             });
