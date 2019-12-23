@@ -124,7 +124,6 @@ angular.module('services').factory('Case.InfoService', [ '$resource', '$translat
 
     Service.CacheNames = {
         CHILD_TASK_DATA: "ChildTaskData",
-        MY_TASKS: "MyTasks"
     };
 
     /**
@@ -393,8 +392,8 @@ angular.module('services').factory('Case.InfoService', [ '$resource', '$translat
      * @returns {Object} Promise
      */
     Service.queryCaseTasks = function(caseId, childDocumentSearch, sortBy, sortDir) {
-        var cacheChildTaskData = new Store.CacheFifo(Service.CacheNames.MY_TASKS);
-        var cacheKey = childDocumentSearch.parentType + "." + childDocumentSearch.parentId + "." + childDocumentSearch.start + "." + childDocumentSearch.n + "." + childDocumentSearch.sortBy + "." + childDocumentSearch.sortDir;
+        var cacheChildTaskData = new Store.CacheFifo(Service.CacheNames.CHILD_TASK_DATA);
+        var cacheKey = childDocumentSearch.parentType + "." + childDocumentSearch.parentId + "." + childDocumentSearch.startRow + "." + childDocumentSearch.maxRows + "." + sortBy + "." + sortDir;
         var taskData = cacheChildTaskData.get(cacheKey);
 
         if (!Util.isEmpty(sortBy)) {
