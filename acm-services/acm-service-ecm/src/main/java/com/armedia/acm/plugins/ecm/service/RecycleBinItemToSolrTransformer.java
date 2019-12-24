@@ -120,7 +120,6 @@ public class RecycleBinItemToSolrTransformer implements AcmObjectToSolrDocTransf
             additionalProperties.put("object_container_object_id_i", container.getId());
             additionalProperties.put("object_container_object_title_s", container.getContainerObjectTitle());
             additionalProperties.put("object_container_object_type_s", container.getContainerObjectType());
-
         }
         catch (AcmObjectNotFoundException e)
         {
