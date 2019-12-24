@@ -1664,6 +1664,43 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     @Override
     @Transactional(rollbackFor = Exception.class)
     @AcmAcquireAndReleaseObjectLock(objectIdArgIndex = 0, objectType = "FILE", lockType = "DELETE")
+    public void deleteFilePermanently(Long fileId, Long recycleBinId) throws AcmUserActionFailedException, AcmObjectNotFoundException
+    {
+        EcmFile file = getEcmFileDao().find(fileId);
+
+        if (file == null)
+        {
+            throw new AcmObjectNotFoundException(EcmFileConstants.OBJECT_FILE_TYPE, fileId, "File not found", null);
+        }
+
+        Map<String, Object> props = new HashMap<>();
+        props.put(EcmFileConstants.CMIS_DOCUMENT_ID, file.getVersionSeriesId());
+        String cmisRepositoryId = file.getCmisRepositoryId();
+        if (cmisRepositoryId == null)
+        {
+            cmisRepositoryId = ecmFileConfig.getDefaultCmisId();
+        }
+        props.put(EcmFileConstants.CMIS_REPOSITORY_ID, cmisRepositoryId);
+        props.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, EcmFileCamelUtils.getCmisUser());
+        props.put(EcmFileConstants.ALL_VERSIONS, true);
+        try
+        {
+            deleteAuthenticationTokens(file.getId());
+            getEcmFileDao().deleteFile(file.getId());
+            getRecycleBinItemService().removeItemFromRecycleBin(recycleBinId);
+            getCamelContextManager().send(ArkCaseCMISActions.DELETE_DOCUMENT, props);
+        }
+        catch (ArkCaseFileRepositoryException e)
+        {
+            log.error("Could not delete file {} ", e.getMessage(), e);
+            throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_DELETE_FILE, EcmFileConstants.OBJECT_FILE_TYPE,
+                    file.getId(), "Could not delete file", e);
+        }
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    @AcmAcquireAndReleaseObjectLock(objectIdArgIndex = 0, objectType = "FILE", lockType = "DELETE")
     public void deleteFile(Long objectId, Long parentId, String parentType) throws AcmUserActionFailedException, AcmObjectNotFoundException
     {
         EcmFile file = getEcmFileDao().find(objectId);
