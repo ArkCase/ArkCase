@@ -237,15 +237,15 @@ public class NotificationServiceTest extends EasyMockSupport
         smtpNotificationServer.setUserDao(mockUserDao);
         smtpNotificationServer.setEmailSenderService(mockEmailSenderService);
 
-        expect(mockTemplateService.getTemplate("test.html")).andReturn(template).times(4);
+        expect(mockTemplateService.getTemplate("test.html")).andReturn(template).times(2);
 
         for (Notification notification : notifications)
         {
             Capture<EmailWithAttachmentsDTO> emailWithAttachmentsDTOCapture = Capture.newInstance();
 
             expect(smtpNotificationServer.getTemplatingEngine().process(template, notification.getTemplateModelName(), notification))
-                    .andReturn("Body").times(2);
-            expect(mockTemplateModelProvider.getModel(notification)).andReturn(notification).times(2);
+                    .andReturn("Body").times(1);
+            expect(mockTemplateModelProvider.getModel(notification)).andReturn(notification).times(1);
 
             smtpNotificationServer.getEmailSenderService().sendEmail(capture(emailWithAttachmentsDTOCapture), eq(null), eq(null));
             expectLastCall().anyTimes();
@@ -362,15 +362,15 @@ public class NotificationServiceTest extends EasyMockSupport
         smtpNotificationServer.setUserDao(mockUserDao);
         smtpNotificationServer.setEmailSenderService(mockEmailSenderService);
 
-        expect(mockTemplateService.getTemplate("test.html")).andReturn(template).times(4);
+        expect(mockTemplateService.getTemplate("test.html")).andReturn(template).times(2);
 
         for (Notification notification : notifications)
         {
             Capture<EmailWithAttachmentsDTO> emailWithAttachmentsDTOCapture = Capture.newInstance();
 
             expect(smtpNotificationServer.getTemplatingEngine().process(template, notification.getTemplateModelName(), notification))
-                    .andReturn("Body").times(2);
-            expect(mockTemplateModelProvider.getModel(notification)).andReturn(notification).times(2);
+                    .andReturn("Body").times(1);
+            expect(mockTemplateModelProvider.getModel(notification)).andReturn(notification).times(1);
 
             smtpNotificationServer.getEmailSenderService().sendEmail(capture(emailWithAttachmentsDTOCapture), eq(null), eq(null));
             expectLastCall().anyTimes();
