@@ -32,6 +32,7 @@ package com.armedia.acm.services.notification.service;
 
 import com.armedia.acm.core.provider.TemplateModelProvider;
 import com.armedia.acm.services.notification.model.Notification;
+import com.armedia.acm.services.notification.model.NotificationConstants;
 import com.armedia.acm.spring.SpringContextHolder;
 
 import java.util.Map;
@@ -60,7 +61,9 @@ public class SendExecutor implements Executor
             for (NotificationSenderFactory senderFactory : senderFactoryList.values())
             {
                 // Send notification
-                notification = senderFactory.getNotificationSender().send(notification, templateModelProvider.getModel(notification));
+                if(notification.getState() == null || !notification.getState().equals(NotificationConstants.STATE_SENT)) {
+                    notification = senderFactory.getNotificationSender().send(notification, templateModelProvider.getModel(notification));
+                }
             }
         }
 
