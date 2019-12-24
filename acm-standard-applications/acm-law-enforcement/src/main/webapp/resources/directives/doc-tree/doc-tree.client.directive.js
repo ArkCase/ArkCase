@@ -2641,7 +2641,7 @@ angular.module('directives').directive(
                                         onSuccess: function(data) {
                                             if (Validator.validateCopyFolderInfo(data)) {
                                                 var copyFolderInfo = data;
-                                                if (copyFolderInfo.originalFolderId == subFolderId && copyFolderInfo.newFolder.parentFolderId == toFolderId) {
+                                                if (copyFolderInfo.originalFolderId == subFolderId && copyFolderInfo.newFolder.parentFolder.id == toFolderId) {
                                                     var frFolderList = DocTree.cacheFolderList.get(frCacheKey);
                                                     var toFolderList = DocTree.cacheFolderList.get(toCacheKey);
                                                     if (Validator.validateFolderList(frFolderList) && Validator.validateFolderList(toFolderList)) {
@@ -2649,7 +2649,7 @@ angular.module('directives').directive(
                                                         if (0 <= idx) {
                                                             var folderData = DocTree.folderToSolrData(frFolderList.children[idx]);
                                                             folderData.objectId = copyFolderInfo.newFolder.id;
-                                                            folderData.folderId = copyFolderInfo.newFolder.parentFolderId;
+                                                            folderData.folderId = copyFolderInfo.newFolder.parentFolder.id;
                                                             folderData.modified = Util.goodValue(copyFolderInfo.newFolder.modified);
                                                             folderData.modifier = Util.goodValue(copyFolderInfo.newFolder.modifier);
                                                             toFolderList.children.push(folderData);
@@ -4713,7 +4713,7 @@ angular.module('directives').directive(
                             if (Util.isEmpty(data.newFolder.id)) {
                                 return false;
                             }
-                            if (Util.isEmpty(data.newFolder.parentFolderId)) {
+                            if (Util.isEmpty(data.newFolder.parentFolder.id)) {
                                 return false;
                             }
                             return true;
