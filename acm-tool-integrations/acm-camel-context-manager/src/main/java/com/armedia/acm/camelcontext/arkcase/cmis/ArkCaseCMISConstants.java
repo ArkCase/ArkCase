@@ -34,5 +34,5 @@ public class ArkCaseCMISConstants
 {
     public static final String CMIS_API_URL = "cmisApiURL";
     public static final String ARKCASE_CMIS_COMPONENT = "arkcase-cmis://";
-    public static final String CAMEL_CMIS_DEFAULT_REPO_ID = "camelAlfresco";
+    public static final String CAMEL_CMIS_DEFAULT_REPO_ID = "alfresco";
 }

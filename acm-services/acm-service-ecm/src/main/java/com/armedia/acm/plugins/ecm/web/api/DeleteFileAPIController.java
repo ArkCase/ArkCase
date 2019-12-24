@@ -135,11 +135,15 @@ public class DeleteFileAPIController
     @RequestMapping(value = "/permanent", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public void removeItemsFromRecycleBin(@RequestBody List<RecycleBinItemDTO> filesToBeDeleted,
-            Authentication authentication, HttpSession session) throws AcmUserActionFailedException
+            Authentication authentication, HttpSession session) throws AcmUserActionFailedException, AcmObjectNotFoundException
     {
+        String ipAddress = (String) session.getAttribute(EcmFileConstants.IP_ADDRESS_ATTRIBUTE);
         for (RecycleBinItemDTO file : filesToBeDeleted)
         {
-            getFileService().deleteFilePermanently(file.getRecycleBinItemId(), file.getFileId());
+            EcmFile source = getFileService().findById(file.getFileId());
+            getFileService().deleteFilePermanently(source.getId(), file.getRecycleBinItemId());
+            log.info("File with id: {} permanently deleted", file.getFileId());
+            getFileEventPublisher().publishFileDeletedEvent(source, authentication, ipAddress, true);
         }
     }
 

@@ -333,7 +333,7 @@ public interface EcmFileService
 
     void deleteCmisObject(CmisObject cmisObject, String cmisRepositoryId) throws Exception;
 
-    void deleteFilePermanently(Long recycleBinId, Long objectId) throws AcmUserActionFailedException;
+    void deleteFilePermanently(Long fileId, Long recycleBinId) throws AcmUserActionFailedException, AcmObjectNotFoundException;
 
     void deleteFile(Long fileId, Long parentId, String parentType) throws AcmUserActionFailedException, AcmObjectNotFoundException;
 
