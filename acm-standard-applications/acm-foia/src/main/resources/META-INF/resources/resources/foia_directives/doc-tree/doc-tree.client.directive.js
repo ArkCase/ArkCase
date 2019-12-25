@@ -2849,7 +2849,7 @@ angular
                                             if (Validator.validateCopyFolderInfo(data)) {
                                                 var copyFolderInfo = data;
                                                 if (copyFolderInfo.originalFolderId == subFolderId
-                                                    && copyFolderInfo.newFolder.parentFolderId == toFolderId) {
+                                                    && copyFolderInfo.newFolder.parentFolder.id == toFolderId) {
                                                     var frFolderList = DocTree.cacheFolderList.get(frCacheKey);
                                                     var toFolderList = DocTree.cacheFolderList.get(toCacheKey);
                                                     if (Validator.validateFolderList(frFolderList)
@@ -2859,7 +2859,7 @@ angular
                                                             var folderData = DocTree
                                                                 .folderToSolrData(frFolderList.children[idx]);
                                                             folderData.objectId = copyFolderInfo.newFolder.id;
-                                                            folderData.folderId = copyFolderInfo.newFolder.parentFolderId;
+                                                            folderData.folderId = copyFolderInfo.newFolder.parentFolder.id;
                                                             folderData.modified = Util
                                                                 .goodValue(copyFolderInfo.newFolder.modified);
                                                             folderData.modifier = Util
@@ -5060,7 +5060,7 @@ angular
                         if (Util.isEmpty(data.newFolder.id)) {
                             return false;
                         }
-                        if (Util.isEmpty(data.newFolder.parentFolderId)) {
+                        if (Util.isEmpty(data.newFolder.parentFolder.id)) {
                             return false;
                         }
                         return true;
