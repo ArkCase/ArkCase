@@ -41,8 +41,8 @@ import com.armedia.acm.services.users.service.ldap.LdapEntryTransformer;
 import com.armedia.acm.spring.SpringContextHolder;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.ldap.NameAlreadyBoundException;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -85,7 +85,8 @@ public class LdapGroupService
             log.debug("Group with name: [{}] already exists!", group.getName());
             throw new NameAlreadyBoundException(null);
         }
-        String groupDN = buildDnForGroup(group.getName(), ldapSyncConfig);
+
+        String groupDN = buildDnForGroup(groupName, ldapSyncConfig);
 
         group.setName(groupName);
         group.setDisplayName(groupName);
