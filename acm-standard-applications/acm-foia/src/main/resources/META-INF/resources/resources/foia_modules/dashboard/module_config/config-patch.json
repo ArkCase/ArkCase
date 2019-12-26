@@ -64,7 +64,7 @@
                 "displayName": "dashboard.widgets.myTasks.table.header.parentType",
                 "headerCellFilter": "translate",
                 "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.parent_type_s == 'CASE_FILE' ? 'REQUEST' : row.entity.parent_type_s}}</div>",
-                "width": 100
+                "width": 110
             },
             {
                 "name": "title_parseable",
@@ -83,7 +83,7 @@
                 "displayName": "dashboard.widgets.myTasks.table.header.dueDate",
                 "headerCellFilter": "translate",
                 "cellTemplate": "<div>{{ row.entity.dueDate_tdt | date : ('common.defaultDateUIFormat' | translate)}}</div>",
-                "width": 70
+                "width": 110
             },
             {
                 "field": "alerts",
@@ -98,7 +98,7 @@
                 "displayName": "dashboard.widgets.myTasks.table.header.parentTitle",
                 "headerCellFilter": "translate",
                 "cellTemplate": "<a data-ui-sref=\"cases.main({title: row.entity.parent_title_s})\">{{COL_FIELD}}<\/a>",
-                "width": 100
+                "width": 130
             }
         ]
     },
