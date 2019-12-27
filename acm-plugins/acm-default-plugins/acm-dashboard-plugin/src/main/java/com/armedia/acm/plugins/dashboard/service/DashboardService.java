@@ -40,6 +40,7 @@ import com.armedia.acm.plugins.dashboard.model.widget.Widget;
 import com.armedia.acm.plugins.dashboard.model.widget.WidgetRoleName;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmRole;
+import com.armedia.acm.services.users.model.AcmRoleType;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.service.AcmUserRoleService;
 
@@ -58,6 +59,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import static com.armedia.acm.services.users.model.AcmRoleType.APPLICATION_ROLE;
 
 /**
  * Created by marjan.stefanoski on 19.01.2016.
@@ -237,7 +240,8 @@ public class DashboardService
 
     public List<RolesGroupByWidgetDto> addNotAuthorizedRolesPerWidget(List<RolesGroupByWidgetDto> rolesPerWidget)
     {
-        List<AcmRole> allRoles = getUserDao().findAllRoles();
+
+        List<AcmRole> allRoles = getUserDao().findAllRolesByRoleType(APPLICATION_ROLE);
         List<Widget> allWidgets = getWidgetDao().findAll();
         List<WidgetRoleName> notAuthorizedWidgetRoleNames = new ArrayList<>();
         List<RolesGroupByWidgetDto> tmpRolesPerWidget = new ArrayList<>();
