@@ -132,7 +132,7 @@ public class LdapGroupService
         memberOfGroups.add(parentGroup.getDistinguishedName());
 
         AcmGroup acmGroup;
-        String groupDN = buildDnForGroup(givenName, ldapSyncConfig);
+        String groupDN = buildDnForGroup(groupName.substring(0, groupName.indexOf("@")), ldapSyncConfig);
         if (existingGroup == null)
         {
             acmGroup = new AcmGroup();
