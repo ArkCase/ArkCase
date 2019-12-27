@@ -86,7 +86,7 @@ public class LdapGroupService
             throw new NameAlreadyBoundException(null);
         }
 
-        String groupDN = buildDnForGroup(groupName, ldapSyncConfig);
+        String groupDN = buildDnForGroup(groupName.substring(0, groupName.indexOf("@")), ldapSyncConfig);
 
         group.setName(groupName);
         group.setDisplayName(groupName);
