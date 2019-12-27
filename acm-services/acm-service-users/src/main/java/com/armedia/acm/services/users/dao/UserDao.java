@@ -177,7 +177,7 @@ public class UserDao extends AcmAbstractDao<AcmUser>
     public List<AcmRole> findAllRolesByRoleType(AcmRoleType acmRoleType)
     {
         Query roleQuery = getEntityManager().createQuery("SELECT role FROM AcmRole role WHERE role.roleType= :roleType");
-        roleQuery.setParameter("roleType", acmRoleType.getRoleName());
+        roleQuery.setParameter("roleType", acmRoleType);
         List<AcmRole> retval = roleQuery.getResultList();
         return retval;
     }
