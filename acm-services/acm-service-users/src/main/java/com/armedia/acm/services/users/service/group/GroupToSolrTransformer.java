@@ -120,10 +120,12 @@ public class GroupToSolrTransformer implements AcmObjectToSolrDocTransformer<Acm
         solr.setAdditionalProperty("name_lcs", in.getName());
 
         // set hidden_b to true if group is group/user control group
-        if (in.getName().equalsIgnoreCase(acmLdapSyncConfig.getGroupControlGroup())
-                || in.getName().equalsIgnoreCase(acmLdapSyncConfig.getUserControlGroup()))
-        {
-            solr.setHidden_b(true);
+        if (acmLdapSyncConfig != null) {
+            if (in.getName().equalsIgnoreCase(acmLdapSyncConfig.getGroupControlGroup())
+                    || in.getName().equalsIgnoreCase(acmLdapSyncConfig.getUserControlGroup()))
+            {
+                solr.setHidden_b(true);
+            }
         }
         return solr;
     }
@@ -151,10 +153,12 @@ public class GroupToSolrTransformer implements AcmObjectToSolrDocTransformer<Acm
         solr.setAdditionalProperty("name_lcs", in.getName());
 
         // set hidden_b to true if group is group/user control group
-        if (in.getName().equalsIgnoreCase(acmLdapSyncConfig.getGroupControlGroup())
-                || in.getName().equalsIgnoreCase(acmLdapSyncConfig.getUserControlGroup()))
-        {
-            solr.setHidden_b(true);
+        if (acmLdapSyncConfig != null) {
+            if (in.getName().equalsIgnoreCase(acmLdapSyncConfig.getGroupControlGroup())
+                    || in.getName().equalsIgnoreCase(acmLdapSyncConfig.getUserControlGroup()))
+            {
+                solr.setHidden_b(true);
+            }
         }
         return solr;
     }
