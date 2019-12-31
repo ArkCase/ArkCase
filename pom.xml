@@ -346,13 +346,13 @@
                 </executions>
             </plugin>
             <plugin>
-￼	        <groupId>com.amashchenko.maven.plugin</groupId>
+       ￼        <groupId>com.amashchenko.maven.plugin</groupId>
                 <artifactId>gitflow-maven-plugin</artifactId>
                 <version>${gitflow-maven-plugin.version}</version>
                 <configuration>
                     <!-- optional configuration -->
                 </configuration>
-	    </plugin>
+            </plugin>
             <!-- code quality section -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
