@@ -8,6 +8,7 @@ angular.module('time-tracking').config([ '$stateProvider', function($stateProvid
             translatePartialLoader: [ '$translate', '$translatePartialLoader', function($translate, $translatePartialLoader) {
                 $translatePartialLoader.addPart('common');
                 $translatePartialLoader.addPart('time-tracking');
+                $translatePartialLoader.addPart('request-info');
                 return $translate.refresh();
             } ]
         }
