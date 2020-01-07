@@ -34,8 +34,8 @@ import com.armedia.acm.auth.okta.services.FactorVerificationService;
 import com.google.common.base.Preconditions;
 
 import org.json.simple.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -45,7 +45,7 @@ import org.springframework.http.ResponseEntity;
  */
 public class FactorVerificationServiceImpl implements FactorVerificationService
 {
-    private static final Logger LOGGER = LoggerFactory.getLogger(FactorVerificationServiceImpl.class);
+    private static final Logger LOGGER = LogManager.getLogger(FactorVerificationServiceImpl.class);
     private OktaRestService oktaRestService;
 
     @Override

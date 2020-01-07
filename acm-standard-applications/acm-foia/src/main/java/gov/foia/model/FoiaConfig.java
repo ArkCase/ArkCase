@@ -27,36 +27,52 @@ package gov.foia.model;
  * #L%
  */
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.beans.factory.annotation.Value;
 
 public class FoiaConfig
 {
+    @JsonProperty("maxDaysInHoldQueue")
     @Value("${maxDaysInHoldQueue}")
     private Integer maxDaysInHoldQueue;
 
+    @JsonProperty("dashboard.banner.enable")
     @Value("${dashboard.banner.enable}")
     private Boolean dashboardBannerEnabled;
 
+    @JsonProperty("requestExtensionWorkingDaysEnabled")
     @Value("${requestExtensionWorkingDaysEnabled}")
     private Boolean requestExtensionWorkingDaysEnabled;
 
+    @JsonProperty("maxDaysInBillingQueue")
     @Value("${maxDaysInBillingQueue}")
     private Integer maxDaysInBillingQueue;
 
+    @JsonProperty("receivedDateEnabled")
     @Value("${receivedDateEnabled}")
     private Boolean receivedDateEnabled;
 
+    @JsonProperty("holdedAndAppealedRequestsDueDateUpdateEnabled")
     @Value("${holdedAndAppealedRequestsDueDateUpdateEnabled}")
     private Boolean holdedAndAppealedRequestsDueDateUpdateEnabled;
 
-    @Value("${purgeRequestEnabled}")
-    private Boolean purgeRequestEnabled;
+    @JsonProperty("purgeRequestWhenInHoldEnabled")
+    @Value("${purgeRequestWhenInHoldEnabled}")
+    private Boolean purgeRequestWhenInHoldEnabled;
 
+    @JsonProperty("request.extensionWorkingDays")
     @Value("${request.extensionWorkingDays}")
     private Integer requestExtensionWorkingDays;
 
+    @JsonProperty("notification.groups.enabled")
     @Value("${notification.groups.enabled}")
     private Boolean notificationGroupsEnabled;
+
+    @JsonProperty("moveToBillingQueueEnabled")
+     @Value("${moveToBillingQueueEnabled}")
+    private Boolean moveToBillingQueueEnabled;
+
+
 
     public Integer getMaxDaysInHoldQueue()
     {
@@ -118,14 +134,14 @@ public class FoiaConfig
         this.holdedAndAppealedRequestsDueDateUpdateEnabled = holdedAndAppealedRequestsDueDateUpdateEnabled;
     }
 
-    public Boolean getPurgeRequestEnabled()
+    public Boolean getPurgeRequestWhenInHoldEnabled()
     {
-        return purgeRequestEnabled;
+        return purgeRequestWhenInHoldEnabled;
     }
 
-    public void setPurgeRequestEnabled(Boolean purgeRequestEnabled)
+    public void setPurgeRequestWhenInHoldEnabled(Boolean purgeRequestWhenInHoldEnabled)
     {
-        this.purgeRequestEnabled = purgeRequestEnabled;
+        this.purgeRequestWhenInHoldEnabled = purgeRequestWhenInHoldEnabled;
     }
 
     public Integer getRequestExtensionWorkingDays()
@@ -146,5 +162,15 @@ public class FoiaConfig
     public void setNotificationGroupsEnabled(Boolean notificationGroupsEnabled)
     {
         this.notificationGroupsEnabled = notificationGroupsEnabled;
+    }
+
+    public Boolean getMoveToBillingQueueEnabled()
+    {
+        return moveToBillingQueueEnabled;
+    }
+
+    public void setMoveToBillingQueueEnabled(Boolean moveToBillingQueueEnabled)
+    {
+        this.moveToBillingQueueEnabled = moveToBillingQueueEnabled;
     }
 }

@@ -40,33 +40,40 @@
                         <div class="h4 font-bold">{{ecmFile.status || 'common.value.unknown' | translate}}</div>
                         <small class="text-muted" translate>documentDetails.status</small>
                     </div>
-                    <div class="col-sm-6 col-md-2" ng-controller="Document.OCRController" ng-show="ocrInfoActive">
-                        <div class="h4 font-bold" ng-style="{'color': colorOcrStatus}">{{ocrObjectModel.status
-                            || 'documentDetails.comp.ocr.readyForOCR' | translate}}
-                        </div>
-                        <small class="text-muted" translate>documentDetails.comp.ocr.ocrStatus</small>
-                    </div>
-
                 </div>
+
                 <div class="row" ng-if="transcribeEnabled && showVideoPlayer">
-                    <div class="col-sm-6 col-md-3">
+                    <div class="col-sm-6 col-md-2">
                         <div class="h4 font-bold">{{transcribeObjectModel.language || 'common.value.unknown' | translate}}</div>
                         <small class="text-muted" translate>documentDetails.comp.transcription.mediaViewer.language</small>
                     </div>
 
-                    <div class="col-sm-6 col-md-3">
+                    <div class="col-sm-6 col-md-2">
                         <div class="h4 font-bold">{{transcribeObjectModel.wordCount || 0}}</div>
                         <small class="text-muted" translate>documentDetails.comp.transcription.mediaViewer.wordCount</small>
                     </div>
-                    <div class="col-sm-6 col-md-3">
+                    <div class="col-sm-6 col-md-2">
                         <div class="h4 font-bold">{{transcribeObjectModel.confidence || 0}}%</div>
                         <small class="text-muted" translate>documentDetails.comp.transcription.mediaViewer.confidence</small>
                     </div>
-                    <div class="col-sm-6 col-md-3">
+                    <div class="col-sm-6 col-md-2">
                         <div class="h4 font-bold" ng-style="{'color': colorTranscribeStatus}">{{transcribeObjectModel.status ||
                             'documentDetails.comp.transcription.mediaViewer.readyForTranscription' | translate}}
+
+                            <a ng-show="transcribeObjectModel.status == 'FAILED' " class="fa fa-info-circle"
+                                    ng-click="showFailureMessage()">
+                            </a>
                         </div>
                         <small class="text-muted" translate>documentDetails.comp.transcription.mediaViewer.transcriptStatus</small>
+
+                    </div>
+                </div>
+                <div class="row align-items-end" ng-show="ocrInfoActive">
+                    <div class="col-sm-6 col-sm-offset-6 col-md-2" ng-controller="Document.OCRController">
+                        <div class="h4 font-bold" ng-style="{'color': colorOcrStatus}">{{ocrObjectModel.status
+                            || 'documentDetails.comp.ocr.readyForOCR' | translate}}
+                        </div>
+                        <small class="text-muted" translate>documentDetails.comp.ocr.ocrStatus</small>
                     </div>
                 </div>
             </div>
@@ -124,6 +131,9 @@
                     <tab active="transcriptionTabActive" ng-show="showVideoPlayer && transcribeEnabled"
                             heading="{{'documentDetails.comp.transcription.title' | translate}}">
                         <div ng-include="'modules/document-details/views/components/transcription.client.view.html'"></div>
+                    </tab>
+                    <tab heading="{{'documentDetails.comp.billing.title' | translate}}" ng-if="billingPrivilege">
+                        <div ng-include="'modules/document-details/views/components/billing.client.view.html'"></div>
                     </tab>
 
                 </tabset>

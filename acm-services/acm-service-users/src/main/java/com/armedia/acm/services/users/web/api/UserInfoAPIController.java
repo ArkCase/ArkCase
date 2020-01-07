@@ -31,8 +31,11 @@ import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.AcmUserInfoDTO;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.armedia.acm.services.users.model.ApplicationRolesToPrivilegesConfig;
+import com.armedia.acm.services.users.service.AcmUserRoleService;
+import com.armedia.acm.services.users.service.AcmUserService;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -44,6 +47,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -55,8 +59,9 @@ import java.util.stream.Collectors;
         "/api/latest/users" })
 public class UserInfoAPIController
 {
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
     private UserDao userDao;
+    private AcmUserService acmUserService;
 
     @RequestMapping(method = RequestMethod.GET, value = "/info", produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody AcmUserInfoDTO info(Authentication auth, HttpSession session)
@@ -109,6 +114,14 @@ public class UserInfoAPIController
         return lang;
     }
 
+    @RequestMapping(method = RequestMethod.GET, value = "/userPrivileges", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public Set<String> getUserPrivileges(Authentication authentication)
+    {
+
+        return getAcmUserService().getUserPrivileges(authentication.getName());
+    }
+
     public UserDao getUserDao()
     {
         return userDao;
@@ -117,5 +130,13 @@ public class UserInfoAPIController
     public void setUserDao(UserDao userDao)
     {
         this.userDao = userDao;
+    }
+
+    public AcmUserService getAcmUserService() {
+        return acmUserService;
+    }
+
+    public void setAcmUserService(AcmUserService acmUserService) {
+        this.acmUserService = acmUserService;
     }
 }

@@ -27,6 +27,8 @@ package com.armedia.acm.core;
  * #L%
  */
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.util.Set;
 
 /**
@@ -38,4 +40,10 @@ public interface AcmNotifiableEntity
     Set<AcmNotificationReceiver> getReceivers();
 
     String getNotifiableEntityTitle();
+    
+    @JsonIgnore
+    default String getNotifiableEntityNumber()
+    {
+        return "";
+    }
 }

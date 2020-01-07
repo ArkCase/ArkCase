@@ -30,8 +30,8 @@ package com.armedia.acm.plugins.report.web;
 import com.armedia.acm.plugins.report.model.Report;
 import com.armedia.acm.plugins.report.service.ReportService;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -42,7 +42,7 @@ import java.util.List;
 @RequestMapping("/plugin/report")
 public class ReportUiController
 {
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
     private ReportService reportService;
 
     @RequestMapping(method = RequestMethod.GET)

@@ -27,8 +27,8 @@ package com.armedia.acm.auth;
  * #L%
  */
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.security.authentication.AuthenticationDetailsSource;
 
 import javax.servlet.http.HttpServletRequest;
@@ -38,7 +38,7 @@ import java.util.Enumeration;
 public class AcmAuthenticationDetailsFactory
         implements AuthenticationDetailsSource<HttpServletRequest, AcmAuthenticationDetails>
 {
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
 
     @Override
     public AcmAuthenticationDetails buildDetails(HttpServletRequest context)

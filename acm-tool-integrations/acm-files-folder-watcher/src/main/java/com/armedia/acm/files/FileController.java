@@ -29,8 +29,8 @@ package com.armedia.acm.files;
 
 import org.apache.commons.vfs2.FileObject;
 import org.apache.commons.vfs2.impl.DefaultFileMonitor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 /**
  * This controller control starting and stopping monitoring folder
@@ -39,7 +39,7 @@ import org.slf4j.LoggerFactory;
  */
 public class FileController
 {
-    private Logger LOG = LoggerFactory.getLogger(getClass());
+    private Logger LOG = LogManager.getLogger(getClass());
 
     private FileObject watchFolder;
     private DefaultFileMonitor fileMonitor;

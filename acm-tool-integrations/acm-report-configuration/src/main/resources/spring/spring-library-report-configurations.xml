@@ -18,6 +18,7 @@
 
     <bean id="pentahoReportsConfig" class="com.armedia.acm.pentaho.config.PentahoReportsConfig" scope="refresh">
         <property name="jsonUnmarshaller" ref="jsonUnmarshaller"/>
+        <property name="jsonMarshaller" ref="jsonMarshaller"/>
         <aop:scoped-proxy/>
     </bean>
 

@@ -38,8 +38,8 @@ import com.armedia.acm.services.search.model.solr.SolrDocumentId;
 import com.armedia.acm.spring.SpringContextHolder;
 
 import org.json.JSONArray;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.context.ApplicationListener;
 
 import java.util.ArrayList;
@@ -54,7 +54,7 @@ import java.util.stream.Collectors;
 public class JpaObjectsToSearchService implements ApplicationListener<AcmDatabaseChangesEvent>
 {
     private SpringContextHolder springContextHolder;
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
     private SendDocumentsToSolr sendToSolr;
 
     @Override
@@ -172,8 +172,8 @@ public class JpaObjectsToSearchService implements ApplicationListener<AcmDatabas
                         }
                         catch (Exception e)
                         {
-                            log.error("[{}]: unable to generate Advanced search document for [{}]", transformer.getClass(),
-                                    jpaObject.toString());
+                            log.error("[{}]: unable to generate Advanced search document for [{}]. Reason: [{}]", transformer.getClass(),
+                                    jpaObject.toString(), e.getMessage());
                         }
 
                         try
@@ -186,8 +186,8 @@ public class JpaObjectsToSearchService implements ApplicationListener<AcmDatabas
                         }
                         catch (Exception e)
                         {
-                            log.error("[{}]: unable to generate Quick search document for [{}]", transformer.getClass(),
-                                    jpaObject.toString());
+                            log.error("[{}]: unable to generate Quick search document for [{}]. Reason: [{}]", transformer.getClass(),
+                                    jpaObject.toString(), e.getMessage());
                         }
 
                         try
@@ -201,8 +201,8 @@ public class JpaObjectsToSearchService implements ApplicationListener<AcmDatabas
                         }
                         catch (Exception e)
                         {
-                            log.error("[{}]: unable to add index updates for [{}]", transformer.getClass(),
-                                    jpaObject.toString());
+                            log.error("[{}]: unable to add index updates for [{}]. Reason: [{}]", transformer.getClass(),
+                                    jpaObject.toString(), e.getMessage());
                         }
 
                         try
@@ -215,7 +215,8 @@ public class JpaObjectsToSearchService implements ApplicationListener<AcmDatabas
                         }
                         catch (Exception e)
                         {
-                            log.error("[{}]: unable to generate Content file index for [{}]", transformer.getClass(), jpaObject.toString());
+                            log.error("[{}]: unable to generate Content file index for [{}]. Reason: [{}]", transformer.getClass(),
+                                    jpaObject.toString(), e.getMessage());
                         }
                     }
                 }

@@ -33,8 +33,8 @@ import com.armedia.acm.services.users.model.group.AcmGroup;
 import com.armedia.acm.services.users.model.group.AcmGroupStatus;
 import com.armedia.acm.services.users.model.group.AcmGroupType;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.FlushModeType;
@@ -53,7 +53,7 @@ import java.util.Set;
  */
 public class AcmGroupDao extends AcmAbstractDao<AcmGroup>
 {
-    private final Logger LOG = LoggerFactory.getLogger(getClass());
+    private final Logger LOG = LogManager.getLogger(getClass());
 
     @Transactional
     public AcmGroup findByName(String name)

@@ -32,8 +32,8 @@ import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.services.dataaccess.model.AcmEntityParticipantsChangedEvent;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 
@@ -41,7 +41,7 @@ import java.util.List;
 
 public class EntityParticipantsChangedEventPublisher implements ApplicationEventPublisherAware
 {
-    private Logger LOG = LoggerFactory.getLogger(getClass());
+    private Logger LOG = LogManager.getLogger(getClass());
 
     private ApplicationEventPublisher applicationEventPublisher;
 

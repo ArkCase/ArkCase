@@ -27,6 +27,7 @@ package com.armedia.acm.service.outlook.model;
  * #L%
  */
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -89,7 +90,7 @@ public class OutlookConfig
     private String participantsTypesAsOutlookPermission;
 
     @JsonProperty("outlook.exchange.integration.send.notification.from.system.user")
-    @Value("${outlook.exchange.integration.send.notification.from.system.user}")
+    @Value("${outlook.exchange.integration.send.notification.from.system.user:false}")
     private Boolean sendNotificationFromSystemUser;
 
     public String getDefaultAccess()
@@ -222,6 +223,7 @@ public class OutlookConfig
         this.participantsTypesAsOutlookPermission = participantsTypesAsOutlookPermission;
     }
 
+    @JsonIgnore
     public List<String> getParticipantTypes()
     {
         return Arrays.asList(participantsTypesAsOutlookPermission.split(","));

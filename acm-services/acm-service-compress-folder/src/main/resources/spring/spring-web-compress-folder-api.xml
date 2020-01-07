@@ -4,6 +4,7 @@
 
     <bean id="compressFolderAPIController" class="com.armedia.acm.compressfolder.web.api.FolderCompressorAPIController">
         <property name="folderCompressor" ref="folderCompressor"/>
+        <property name="arkPermissionEvaluator" ref="arkPermissionEvaluator"/>
     </bean>
 
 </beans>

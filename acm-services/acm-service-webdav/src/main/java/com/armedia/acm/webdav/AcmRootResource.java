@@ -27,8 +27,8 @@ package com.armedia.acm.webdav;
  * #L%
  */
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,7 +45,7 @@ import io.milton.resource.Resource;
  */
 public class AcmRootResource extends AcmAbstractResource implements MakeCollectionableResource, CollectionResource
 {
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
     private ArrayList<Resource> children;
 
     public AcmRootResource(AcmFileSystemResourceFactory resourceFactory)

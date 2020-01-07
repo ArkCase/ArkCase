@@ -43,8 +43,8 @@ import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 
 import org.json.JSONArray;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.util.Date;
 import java.util.List;
@@ -55,7 +55,7 @@ import java.util.stream.Collectors;
  */
 public class TaskToSolrTransformer implements AcmObjectToSolrDocTransformer<AcmTask>
 {
-    private final transient Logger log = LoggerFactory.getLogger(getClass());
+    private final transient Logger log = LogManager.getLogger(getClass());
     private UserDao userDao;
     private TaskDao taskDao;
     private AcmDataService acmDataService;

@@ -25,13 +25,16 @@ angular.module('time-tracking').controller(
                 'Helper.UiGridService',
                 'Admin.TimesheetConfigurationService',
                 'Mentions.Service',
+                'Case.InfoService',
+                'Complaint.InfoService',
                 function($scope, $q, $stateParams, $translate, $modalInstance, TimeTrackingInfoService, ObjectLookupService, MessageService, $timeout, Util, UtilDateService, $modal, ConfigService, ObjectService, modalParams, PersonInfoService, ObjectModelService, ObjectParticipantService,
-                        UserInfoService, HelperUiGridService, TimesheetConfigurationService, MentionsService) {
+                         UserInfoService, HelperUiGridService, TimesheetConfigurationService, MentionsService, CaseInfoService, ComplaintInfoService) {
 
                     $scope.modalParams = modalParams;
                     $scope.loading = false;
                     $scope.loadingIcon = "fa fa-floppy-o";
                     $scope.isEdit = $scope.modalParams.isEdit;
+                    $scope.timesheetProperties = {};
                     var participantTypeApprover = 'approver';
                     var participantTypeOwningGroup = "owning group";
 
@@ -45,7 +48,7 @@ angular.module('time-tracking').controller(
                         UserInfoService.getUserInfo().then(function(infoData) {
                             if (!$scope.isEdit) {
                                 //new timesheet with predefined values
-                                $scope.isTypeSelected = false;
+                                $scope.isTypeSelected = true;
                                 $scope.isApproverAdded = false;
                                 $scope.timesheet = {
                                     className: $scope.config.className,
@@ -61,15 +64,19 @@ angular.module('time-tracking').controller(
                                 $scope.selectedWeek = updateChoosedWeekText($scope.selectedDate);
 
                                 $scope.timesForms = [ {
+                                    type: 'CASE_FILE',
                                     totalWeekHours: 0,
                                     totalCost: 0,
                                     dayHours: [ 0, 0, 0, 0, 0, 0, 0 ]
                                 } ];
 
+                                $scope.timeTypeLabel = 'Case';
+
                                 if (!Util.isEmpty($scope.modalParams.timeType) && !Util.isEmpty($scope.modalParams.timeNumber) && !Util.isEmpty($scope.modalParams.timeId)) {
                                     $scope.timesForms[0].objectId = $scope.modalParams.timeId;
                                     $scope.timesForms[0].type = $scope.modalParams.timeType;
                                     $scope.timesForms[0].code = $scope.modalParams.timeNumber;
+                                    $scope.timesForms[0].typesName = $scope.modalParams.typesName;
                                     $scope.isTypeSelected = true;
                                 }
                             }
@@ -105,6 +112,25 @@ angular.module('time-tracking').controller(
                     });
                     ObjectLookupService.getTimesheetStatuses().then(function(timesheetStatuses) {
                         $scope.timesheetStatuses = timesheetStatuses;
+                        TimesheetConfigurationService.getProperties().then(function (response) {
+                            if (!Util.isEmpty(response.data)) {
+                                $scope.timesheetProperties = response.data;
+                            }
+
+                            if (!$scope.timesheetProperties['time.plugin.useApprovalWorkflow']) {
+                                for (var i = $scope.timesheetStatuses.length - 1; i >= 0; i--) {
+                                    if ($scope.timesheetStatuses[i].key !== "DRAFT" && $scope.timesheetStatuses[i].key !== "FINAL") {
+                                        $scope.timesheetStatuses.splice(i, 1);
+                                    }
+                                }
+                            } else {
+                                for (var i = $scope.timesheetStatuses.length - 1; i >= 0; i--) {
+                                    if ($scope.timesheetStatuses[i].key == "FINAL") {
+                                        $scope.timesheetStatuses.splice(i, 1);
+                                    }
+                                }
+                            }
+                        });
                     });
 
                     // ---------------------   mention   ---------------------------------
@@ -206,14 +232,51 @@ angular.module('time-tracking').controller(
                                         startDate = addOneDay(startDate);
                                     }
 
-                                    var timesForm = {
-                                        type: timeArray[0].type,
-                                        code: timeArray[0].code,
-                                        chargeRole: timeArray[0].chargeRole,
-                                        dayHours: dayHours,
-                                    };
-                                    $scope.updateTotalWeekHours(timesForm);
-                                    $scope.timesForms.push(timesForm);
+                                    if (timeArray[0].type == ObjectService.ObjectTypes.CASE_FILE) {
+                                        CaseInfoService.getCaseInfoByNumber(timeArray[0].code).then(function(caseInfo) {
+                                            var timesForm = {
+                                                type: timeArray[0].type,
+                                                code: timeArray[0].code,
+                                                chargeRole: timeArray[0].chargeRole,
+                                                typesName: caseInfo.title,
+                                                dayHours: dayHours,
+                                            };
+
+                                            changeTimeTypeLabel(timeArray[0]);
+
+                                            $scope.updateTotalWeekHours(timesForm);
+                                            $scope.timesForms.push(timesForm);
+                                        });
+                                    } else if (timeArray[0].type == ObjectService.ObjectTypes.COMPLAINT) {
+                                        ComplaintInfoService.getComplaintByNumber(timeArray[0].code).then(function(complaint) {
+                                            var timesForm = {
+                                                type: timeArray[0].type,
+                                                code: timeArray[0].code,
+                                                chargeRole: timeArray[0].chargeRole,
+                                                typesName: complaint.complaintTitle,
+                                                dayHours: dayHours,
+                                            };
+
+                                            changeTimeTypeLabel(timeArray[0]);
+
+                                            $scope.updateTotalWeekHours(timesForm);
+                                            $scope.timesForms.push(timesForm);
+                                        });
+                                    } else {
+                                        var timesForm = {
+                                            type: timeArray[0].type,
+                                            code: timeArray[0].code,
+                                            chargeRole: timeArray[0].chargeRole,
+                                            typesName: " ",
+                                            dayHours: dayHours,
+                                        };
+
+                                        changeTimeTypeLabel(timeArray[0]);
+
+                                        $scope.updateTotalWeekHours(timesForm);
+                                        $scope.timesForms.push(timesForm);
+                                    }
+
                                 });
 
                             } else {
@@ -289,13 +352,26 @@ angular.module('time-tracking').controller(
                     }
 
                     // -----------------------------------------------------------------------------------------------
+                    function changeTimeTypeLabel(time) {
+                        if (time.type == ObjectService.ObjectTypes.CASE_FILE) {
+                            $scope.timeTypeLabel = "Case";
+                        } else if (time.type == ObjectService.ObjectTypes.COMPLAINT) {
+                            $scope.timeTypeLabel = "Complaint";
+                        } else {
+                            $scope.timeTypeLabel = "Other";
+                        }
+                    }
+
                     $scope.updateIsTypeSelected = function(time) {
                         if (time.type == undefined) {
                             $scope.isTypeSelected = false;
                         } else {
                             $scope.isTypeSelected = true;
+
+                            changeTimeTypeLabel(time);
                         }
                         time.code = "";
+                        time.typesName = "";
                     };
 
                     $scope.chooseChargeCode = function(time) {
@@ -343,6 +419,7 @@ angular.module('time-tracking').controller(
                             if (!Util.isEmpty(selected)) {
                                 time.code = selected.name;
                                 time.objectId = selected.object_id_s;
+                                time.typesName = selected.title_parseable;
                             }
                         });
 
@@ -456,8 +533,8 @@ angular.module('time-tracking').controller(
                                     } else {
                                         var alreadyExists = false;
                                         _.forEach(timesheet.times, function(timesheetTime) {
-                                            if (moment(timesheetTime.date).format("YYYY-MM-DD") == moment(time.date).format("YYYY-MM-DD") && timesheetTime.type == time.type && timesheetTime.code == time.code && timesheetTime.chargeRole == time.chargeRole) {
-                                                if (timesheetTime.value != time.value) {
+                                            if (moment(timesheetTime.date).format("YYYY-MM-DD") === moment(time.date).format("YYYY-MM-DD") && timesheetTime.type === time.type && timesheetTime.code === time.code && timesheetTime.chargeRole === time.chargeRole) {
+                                                if (timesheetTime.value !== time.value) {
                                                     timesheetTime.value = time.value;
                                                     timesheetTime.totalCost = time.totalCost;
                                                 }
@@ -493,6 +570,7 @@ angular.module('time-tracking').controller(
                                 $scope.filter = params.filter;
                                 $scope.config = params.config;
                                 $scope.secondGrid = params.secondGrid;
+                                $scope.extraFilter = params.extraFilter;
                             } ],
                             animation: true,
                             size: 'lg',
@@ -584,6 +662,9 @@ angular.module('time-tracking').controller(
                                 $scope.loading = true;
                                 $scope.loadingIcon = "fa fa-circle-o-notch fa-spin";
                                 fillTimes($scope.timesheet);
+                                if ($scope.timesheet.status === "FINAL") {
+                                    submissionName = "SaveFinal";
+                                }
                                 TimeTrackingInfoService.saveNewTimesheetInfo(clearNotFilledElements(_.cloneDeep($scope.timesheet)), submissionName).then(function(objectInfo) {
                                     var objectTypeString = $translate.instant('common.objectTypes.' + ObjectService.ObjectTypes.TIMESHEET);
                                     var timesheetUpdatedMessage = $translate.instant('{{objectType}} {{timesheetTitle}} was created.', {
@@ -592,7 +673,6 @@ angular.module('time-tracking').controller(
                                     });
                                     MentionsService.sendEmailToMentionedUsers($scope.paramsSummernote.emailAddresses, $scope.paramsSummernote.usersMentioned, ObjectService.ObjectTypes.TIMESHEET, "DETAILS", objectInfo.id, objectInfo.details);
                                     MessageService.info(timesheetUpdatedMessage);
-                                    ObjectService.showObject(ObjectService.ObjectTypes.TIMESHEET, objectInfo.id);
                                     $modalInstance.close(objectInfo);
                                     $scope.loading = false;
                                     $scope.loadingIcon = "fa fa-floppy-o";
@@ -615,6 +695,9 @@ angular.module('time-tracking').controller(
                                 checkForChanges($scope.objectInfo);
                                 if (TimeTrackingInfoService.validateTimesheet($scope.objectInfo)) {
                                     var objectInfo = Util.omitNg($scope.objectInfo);
+                                    if ($scope.timesheet.status === "FINAL") {
+                                        submissionName = "SaveFinal";
+                                    }
                                     promiseSaveInfo = TimeTrackingInfoService.saveTimesheetInfo(objectInfo, submissionName);
                                     promiseSaveInfo.then(function(timesheetInfo) {
                                         $scope.$emit("report-object-updated", timesheetInfo);

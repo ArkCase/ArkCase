@@ -6,22 +6,22 @@ package com.armedia.acm.plugins.ecm.service;
  * %%
  * Copyright (C) 2014 - 2018 ArkCase LLC
  * %%
- * This file is part of the ArkCase software. 
- * 
- * If the software was purchased under a paid ArkCase license, the terms of 
- * the paid license agreement will prevail.  Otherwise, the software is 
+ * This file is part of the ArkCase software.
+ *
+ * If the software was purchased under a paid ArkCase license, the terms of
+ * the paid license agreement will prevail.  Otherwise, the software is
  * provided under the following open source license terms:
- * 
+ *
  * ArkCase is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *  
+ *
  * ArkCase is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
  * #L%
@@ -36,6 +36,7 @@ import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 
+import com.armedia.acm.plugins.ecm.model.RecycleBinItem;
 import org.apache.chemistry.opencmis.client.api.CmisObject;
 import org.apache.chemistry.opencmis.client.api.Document;
 import org.springframework.retry.annotation.Backoff;
@@ -44,8 +45,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.persistence.PersistenceException;
+import javax.servlet.http.HttpSession;
 
 import java.io.File;
 import java.io.IOException;
@@ -205,11 +208,11 @@ public interface EcmFileService
 
     /**
      * Returns the file with the given Id and acquires a WRITE lock.
-     * 
+     *
      * @param id
      *            the file id
      * @return the file contents as String
-     * 
+     *
      * @throws AcmUserActionFailedException
      */
     String checkout(Long id) throws AcmUserActionFailedException;
@@ -231,6 +234,8 @@ public interface EcmFileService
      */
 
     InputStream downloadAsInputStream(Long id) throws AcmUserActionFailedException;
+
+    InputStream downloadAsInputStream(EcmFile ecmFile) throws AcmUserActionFailedException;
 
     InputStream downloadAsInputStream(Long id, String version) throws AcmUserActionFailedException;
 
@@ -320,6 +325,8 @@ public interface EcmFileService
 
     void deleteFile(Long fileId) throws AcmUserActionFailedException, AcmObjectNotFoundException;
 
+    RecycleBinItem putFileIntoRecycleBin(Long fileId, Authentication authentication, HttpSession session) throws AcmUserActionFailedException, AcmObjectNotFoundException, AcmCreateObjectFailedException;
+
     void deleteFile(Long fileId, Boolean allVersions) throws AcmUserActionFailedException, AcmObjectNotFoundException;
 
     void deleteCmisObject(CmisObject cmisObject, String cmisRepositoryId) throws Exception;
@@ -334,6 +341,8 @@ public interface EcmFileService
     EcmFile renameFileInArkcase(EcmFile file, String newFileName);
 
     EcmFile findById(Long fileId);
+
+    List<EcmFile> findByIds(List<Long> ids);
 
     AcmCmisObjectList listAllSubFolderChildren(String category, Authentication auth, AcmContainer container, Long folderId, int startRow,
             int maxRows, String sortBy, String sortDirection) throws AcmListObjectsFailedException, AcmObjectNotFoundException;
@@ -376,8 +385,10 @@ public interface EcmFileService
      * @return whether the delete was successful
      */
     boolean deleteTempFile(String uniqueFileName);
-    
+
     File convertFile(String fileKey, String version, String fileExtension, String fileName, String mimeType, EcmFile ecmFile) throws IOException;
 
     void removeLockAndSendMessage(Long objectId, String message);
+
+    String uploadFileChunk(MultipartHttpServletRequest request, String fileName, String uniqueArkCaseHashFileIdentifier);
 }

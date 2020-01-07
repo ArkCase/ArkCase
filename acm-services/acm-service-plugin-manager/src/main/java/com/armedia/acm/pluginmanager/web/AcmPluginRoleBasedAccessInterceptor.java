@@ -31,8 +31,8 @@ import com.armedia.acm.core.exceptions.AcmNotAuthorizedException;
 import com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege;
 import com.armedia.acm.pluginmanager.service.AcmPluginManager;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import javax.servlet.http.HttpServletRequest;
@@ -50,7 +50,7 @@ public class AcmPluginRoleBasedAccessInterceptor extends HandlerInterceptorAdapt
 {
     private AcmPluginManager acmPluginManager;
 
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws AcmNotAuthorizedException

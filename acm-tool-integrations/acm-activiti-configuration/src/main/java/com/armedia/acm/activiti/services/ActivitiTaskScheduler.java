@@ -27,8 +27,8 @@ package com.armedia.acm.activiti.services;
  * #L%
  */
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -45,7 +45,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  */
 public class ActivitiTaskScheduler extends ThreadPoolTaskExecutor implements ApplicationContextAware
 {
-    private transient final Logger LOG = LoggerFactory.getLogger(getClass());
+    private transient final Logger LOG = LogManager.getLogger(getClass());
     private AtomicBoolean initialized = new AtomicBoolean(false);
 
     @Override

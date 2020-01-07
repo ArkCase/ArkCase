@@ -35,8 +35,8 @@ import com.armedia.acm.services.email.model.EmailTemplateValidationResponse;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.multipart.MultipartFile;
@@ -67,7 +67,7 @@ import java.util.stream.Stream;
 public class AcmFilesystemMailTemplateConfigurationService implements AcmMailTemplateConfigurationService
 {
     private ObjectConverter objectConverter;
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
     private Resource templateConfigurations;
     private String templateFolderPath;
     private ReadWriteLock lock = new ReentrantReadWriteLock();

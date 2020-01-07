@@ -29,10 +29,12 @@ package com.armedia.acm.plugins.casefile.model;
 
 import com.armedia.acm.core.AcmNotifiableEntity;
 import com.armedia.acm.core.AcmNotificationReceiver;
+import com.armedia.acm.core.AcmObjectNumber;
 import com.armedia.acm.core.AcmStatefulEntity;
 import com.armedia.acm.core.AcmTitleEntity;
 import com.armedia.acm.data.AcmEntity;
 import com.armedia.acm.data.AcmLegacySystemEntity;
+import com.armedia.acm.data.AcmAssignee;
 import com.armedia.acm.data.converter.BooleanToStringConverter;
 import com.armedia.acm.data.converter.LocalDateConverter;
 import com.armedia.acm.data.converter.LocalDateTimeConverter;
@@ -41,6 +43,7 @@ import com.armedia.acm.plugins.ecm.model.AcmContainerEntity;
 import com.armedia.acm.plugins.objectassociation.model.AcmChildObjectEntity;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociationConstants;
+import com.armedia.acm.plugins.person.model.AcmObjectOriginator;
 import com.armedia.acm.plugins.person.model.OrganizationAssociation;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
 import com.armedia.acm.service.milestone.model.AcmMilestone;
@@ -51,6 +54,7 @@ import com.armedia.acm.services.sequence.annotation.AcmSequence;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.voodoodyne.jackson.jsog.JSOGGenerator;
@@ -107,8 +111,11 @@ import java.util.Set;
 @DiscriminatorValue("com.armedia.acm.plugins.casefile.model.CaseFile")
 @JsonPropertyOrder(value = { "id", "personAssociations", "originator" })
 @JsonIdentityInfo(generator = JSOGGenerator.class)
+@JsonIgnoreProperties(ignoreUnknown = true)
+
 public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity,
-        AcmContainerEntity, AcmChildObjectEntity, AcmLegacySystemEntity, AcmNotifiableEntity, AcmStatefulEntity, AcmTitleEntity
+        AcmContainerEntity, AcmChildObjectEntity, AcmLegacySystemEntity, AcmNotifiableEntity, AcmStatefulEntity, AcmTitleEntity,
+        AcmObjectNumber, AcmObjectOriginator, AcmAssignee
 {
     private static final long serialVersionUID = -6035628455385955008L;
 
@@ -850,11 +857,19 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity,
         return groupName;
     }
 
+    @Override
     @JsonIgnore
     public String getAssigneeLdapId()
     {
         return getParticipants().stream().filter(p -> CaseFileConstants.ASSIGNEE.equals(p.getParticipantType()))
                 .findFirst().map(p -> p.getParticipantLdapId()).orElse(null);
+    }
+    
+    @Override
+    @JsonIgnore
+    public String getNotifiableEntityNumber()
+    {
+        return caseNumber;
     }
 
     public LocalDateTime getQueueEnterDate()
@@ -895,5 +910,17 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity,
     public void setOrganizationAssociations(List<OrganizationAssociation> organizationAssociations)
     {
         this.organizationAssociations = organizationAssociations;
+    }
+
+    @Override
+    public String getAcmObjectNumber()
+    {
+        return getCaseNumber();
+    }
+
+    @Override
+    public PersonAssociation getAcmObjectOriginator()
+    {
+        return getOriginator();
     }
 }

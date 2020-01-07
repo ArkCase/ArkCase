@@ -33,6 +33,7 @@ import org.mule.api.MuleException;
 import org.springframework.security.core.Authentication;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by nebojsha on 25.01.2017.
@@ -76,4 +77,13 @@ public interface AcmUserService
      */
     String getNUsers(Authentication auth, String sortBy, String sortDirection, int startRow, int maxRows)
             throws MuleException;
+
+    /**
+     * Retrieve list of user privileges
+     *
+     * @param name
+     *
+     * @return userPrivileges
+     */
+    Set<String> getUserPrivileges(String name);
 }

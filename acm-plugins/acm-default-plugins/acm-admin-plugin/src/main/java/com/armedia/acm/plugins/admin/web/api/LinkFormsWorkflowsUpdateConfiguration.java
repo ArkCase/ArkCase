@@ -31,8 +31,8 @@ import com.armedia.acm.plugins.admin.exception.AcmLinkFormsWorkflowException;
 import com.armedia.acm.plugins.admin.service.LinkFormsWorkflowsService;
 
 import org.activiti.engine.impl.util.json.JSONArray;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -51,7 +51,7 @@ import java.util.List;
 @RequestMapping({ "/api/v1/plugin/admin", "/api/latest/plugin/admin" })
 public class LinkFormsWorkflowsUpdateConfiguration
 {
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
 
     private LinkFormsWorkflowsService linkFormsWorkflowsService;
 

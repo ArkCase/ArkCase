@@ -4,6 +4,7 @@ angular.module('cases').controller(
         'Cases.InfoController',
         [
                 '$scope',
+                '$state',
                 '$stateParams',
                 '$translate',
                 '$modal',
@@ -23,8 +24,9 @@ angular.module('cases').controller(
                 'Helper.UiGridService',
                 'Dialog.BootboxService',
                 '$filter',
-                function($scope, $stateParams, $translate, $modal, Util, UtilDateService, ConfigService, ObjectLookupService, CaseLookupService, CaseInfoService, ObjectModelService, MessageService, ObjectService, ObjectParticipantService, SearchService, SearchQueryBuilder,
-                        HelperObjectBrowserService, HelperUiGridService, DialogService, $filter) {
+                'Cases.SuggestedCases',
+                function($scope, $state, $stateParams, $translate, $modal, Util, UtilDateService, ConfigService, ObjectLookupService, CaseLookupService, CaseInfoService, ObjectModelService, MessageService, ObjectService, ObjectParticipantService, SearchService, SearchQueryBuilder,
+                        HelperObjectBrowserService, HelperUiGridService, DialogService, $filter, SuggestedCasesService) {
 
                     new HelperObjectBrowserService.Component({
                         scope: $scope,
@@ -192,6 +194,11 @@ angular.module('cases').controller(
                             $scope.assignees = options;
                             return approvers;
                         });
+
+                        SuggestedCasesService.getSuggestedCases($scope.objectInfo.title, $scope.objectInfo.id).then(function (value) {
+                            $scope.hasSuggestedCases = value.data.length > 0 ? true : false;
+                            $scope.numberOfSuggestedCases = value.data.length;
+                        });
                     };
 
                     // Updates the ArkCase database when the user changes a case attribute
@@ -232,6 +239,12 @@ angular.module('cases').controller(
                             $scope.objectInfo.dueDate = $scope.dueDateBeforeChange;
                             $scope.saveCase();
                         }
+                    };
+                    
+                    $scope.suggestedCases = function () {
+                        $state.go('cases.suggestedCases',{
+                            id: $scope.objectInfo.id
+                        });
                     };
 
                 } ]);

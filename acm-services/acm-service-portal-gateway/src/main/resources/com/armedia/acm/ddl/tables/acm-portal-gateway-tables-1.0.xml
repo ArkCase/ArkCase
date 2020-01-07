@@ -1,0 +1,52 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="
+            http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <property name="cmUserIdLength" value="1024" dbms="postgresql,oracle"/>
+    <property name="cmUserIdLength" value="255" dbms="mysql,mssql"/>
+
+    <property name="cmGroupNameLength" value="1024" dbms="postgresql,oracle"/>
+    <property name="cmGroupNameLength" value="255" dbms="mysql,mssql"/>
+
+    <changeSet id="01-create-table-acm_portal_info-fixed" author="dmiller" dbms="oracle,postgresql,mssql,mysql">
+        <createTable tableName="acm_portal_info">
+            <column name="cm_portal_info_id" type="${idType}">
+                <constraints primaryKeyName="pk_acm_portal_info" primaryKey="true"/>
+            </column>
+            <column name="cm_portal_id" type="VARCHAR(256)">
+                <constraints unique="true" uniqueConstraintName="uk_portal_id" nullable="false"/>
+            </column>
+            <column name="cm_portal_description" type="VARCHAR(4000)"/>
+            <column name="cm_portal_url" type="VARCHAR(1000)">
+                <constraints unique="true" uniqueConstraintName="uk_portal_url" nullable="false"/>
+            </column>
+            <column name="cm_user_id" type="VARCHAR(${cmUserIdLength})"/>
+        </createTable>
+        <createIndex tableName="acm_portal_info" indexName="portal_info_unique_portal_id" unique="true">
+            <column name="cm_portal_id"/>
+        </createIndex>
+        <createTable tableName="acm_portal_info_id">
+            <column name="cm_seq_num" type="${idType}"/>
+            <column name="cm_seq_name" type="VARCHAR(255)"/>
+        </createTable>
+        <insert tableName="acm_portal_info_id">
+            <column name="cm_seq_num" value="100"></column>
+            <column name="cm_seq_name" value="acm_portal_info"></column>
+        </insert>
+    </changeSet>
+
+    <changeSet id="02-alter-table-acm_portal_info-add-cm_group_name-fixed" author="dmiller" dbms="oracle,postgresql,mssql,mysql">
+        <addColumn tableName="acm_portal_info">
+            <column name="cm_group_name" type="VARCHAR(${cmGroupNameLength}))" defaultValue="0"/>
+        </addColumn>    
+    </changeSet>
+
+    <changeSet id="03-alter-table-acm_portal_info-add-cm_portal_authentication_flag" author="ana.serafimoska"
+               dbms="oracle,postgresql,mssql,mysql">
+        <addColumn tableName="acm_portal_info">
+            <column name="cm_portal_authentication_flag" type="BOOLEAN" defaultValueBoolean="false"></column>
+        </addColumn>
+    </changeSet>
+
+
+</databaseChangeLog>

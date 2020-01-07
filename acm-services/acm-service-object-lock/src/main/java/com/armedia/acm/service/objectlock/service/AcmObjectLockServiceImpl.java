@@ -27,6 +27,7 @@ package com.armedia.acm.service.objectlock.service;
  * #L%
  */
 
+import com.armedia.acm.auth.AuthenticationUtils;
 import com.armedia.acm.service.objectlock.dao.AcmObjectLockDao;
 import com.armedia.acm.service.objectlock.model.AcmObjectLock;
 import com.armedia.acm.service.objectlock.model.AcmObjectLockEvent;
@@ -36,8 +37,8 @@ import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 
 import org.apache.commons.lang.StringUtils;
 import org.mule.api.MuleException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.security.core.Authentication;
@@ -52,7 +53,7 @@ import java.util.Date;
 public class AcmObjectLockServiceImpl implements AcmObjectLockService, ApplicationEventPublisherAware
 {
 
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
 
     private AcmObjectLockDao acmObjectLockDao;
     private ExecuteSolrQuery executeSolrQuery;
@@ -102,6 +103,7 @@ public class AcmObjectLockServiceImpl implements AcmObjectLockService, Applicati
         objectLock.setCreated(new Date());
         objectLock.setCreator(userId);
         objectLock.setLockType(lockType);
+        objectLock.setModifier(userId);
 
         objectLock.setExpiry(new Date(objectLock.getCreated().getTime() + expiry));
 
@@ -109,7 +111,7 @@ public class AcmObjectLockServiceImpl implements AcmObjectLockService, Applicati
         {
             log.info("Saving lock [{}] for object [{}:{}]", objectLock.getLockType(), objectLock.getObjectType(), objectLock.getObjectId());
             AcmObjectLock lock = acmObjectLockDao.save(objectLock);
-            AcmObjectLockEvent event = new AcmObjectLockEvent(lock, userId, true);
+            AcmObjectLockEvent event = new AcmObjectLockEvent(lock, userId, true, AuthenticationUtils.getUserIpAddress());
             getApplicationEventPublisher().publishEvent(event);
 
             return lock;
@@ -167,7 +169,7 @@ public class AcmObjectLockServiceImpl implements AcmObjectLockService, Applicati
 
         acmObjectLockDao.remove(objectLock);
 
-        AcmObjectUnlockEvent event = new AcmObjectUnlockEvent(objectLock, userId, true);
+        AcmObjectUnlockEvent event = new AcmObjectUnlockEvent(objectLock, userId, true, AuthenticationUtils.getUserIpAddress());
         getApplicationEventPublisher().publishEvent(event);
     }
 

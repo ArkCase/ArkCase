@@ -28,14 +28,15 @@ package com.armedia.acm.services.notification.service;
  */
 
 import com.armedia.acm.core.AcmApplication;
+import com.armedia.acm.core.ApplicationConfig;
 import com.armedia.acm.services.email.model.EmailMentionsDTO;
 import com.armedia.acm.services.email.service.AcmEmailServiceException;
 import com.armedia.acm.services.email.service.TemplatingEngine;
 import com.armedia.acm.services.notification.dao.NotificationDao;
 import com.armedia.acm.services.notification.model.Notification;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -46,15 +47,16 @@ import java.util.stream.Collectors;
 public class AcmEmailMentionsService
 {
 
-    private final Logger log = LoggerFactory.getLogger(getClass());
+    private final Logger log = LogManager.getLogger(getClass());
 
     private AcmApplication acmAppConfiguration;
     private TemplatingEngine templatingEngine;
     private NotificationDao notificationDao;
+    private ApplicationConfig applicationConfig;
 
     private String buildObjectUrl(EmailMentionsDTO in)
     {
-        String baseUrl = acmAppConfiguration.getBaseUrl();
+        String baseUrl = applicationConfig.getBaseUrl();
         if (in.getUrlPath() != null)
         {
             return baseUrl + in.getUrlPath();
@@ -110,5 +112,10 @@ public class AcmEmailMentionsService
     public void setNotificationDao(NotificationDao notificationDao)
     {
         this.notificationDao = notificationDao;
+    }
+
+    public void setApplicationConfig(ApplicationConfig applicationConfig)
+    {
+        this.applicationConfig = applicationConfig;
     }
 }

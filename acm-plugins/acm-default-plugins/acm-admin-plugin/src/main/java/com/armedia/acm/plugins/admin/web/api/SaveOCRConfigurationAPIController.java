@@ -27,12 +27,13 @@ package com.armedia.acm.plugins.admin.web.api;
  * #L%
  */
 
-import com.armedia.acm.ocr.exception.SaveConfigurationException;
-import com.armedia.acm.ocr.model.OCRConfiguration;
-import com.armedia.acm.ocr.service.ArkCaseOCRService;
+import com.armedia.acm.services.mediaengine.exception.MediaEngineServiceNotFoundException;
+import com.armedia.acm.services.mediaengine.exception.SaveConfigurationException;
+import com.armedia.acm.services.ocr.model.OCRConfiguration;
+import com.armedia.acm.services.ocr.service.ArkCaseOCRService;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -44,13 +45,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @RequestMapping({ "/api/v1/plugin/admin/ocr/configuration", "/api/latest/plugin/admin/ocr/configuration" })
 public class SaveOCRConfigurationAPIController
 {
-    private static final Logger LOGGER = LoggerFactory.getLogger(SaveOCRConfigurationAPIController.class);
+    private static final Logger LOGGER = LogManager.getLogger(SaveOCRConfigurationAPIController.class);
     private ArkCaseOCRService arkCaseOCRService;
 
     @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = { MediaType.APPLICATION_JSON_VALUE,
             MediaType.TEXT_PLAIN_VALUE })
     @ResponseBody
-    public void saveConfiguration(@RequestBody OCRConfiguration configuration) throws SaveConfigurationException
+    public void saveConfiguration(@RequestBody OCRConfiguration configuration)
+            throws SaveConfigurationException, MediaEngineServiceNotFoundException
     {
         getArkCaseOCRService().saveConfiguration(configuration);
     }

@@ -31,8 +31,8 @@ import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.services.signature.model.Signature;
 import com.google.common.base.Preconditions;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -43,7 +43,7 @@ import java.util.List;
 
 public class SignatureDao extends AcmAbstractDao<Signature>
 {
-    private final Logger log = LoggerFactory.getLogger(getClass());
+    private final Logger log = LogManager.getLogger(getClass());
     @PersistenceContext
     private EntityManager entityManager;
     private String lookupByObjectIdObjectType = "SELECT d " +

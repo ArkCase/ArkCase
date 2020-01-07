@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ehcache updateCheck="true" monitoring="autodetect" dynamicConfig="true">
+
+    <cache name="portal_info_cache" maxEntriesLocalHeap="100" eternal="false" overflowToDisk="true" diskSpoolBufferSizeMB="5"
+        timeToIdleSeconds="1800" timeToLiveSeconds="0" memoryStoreEvictionPolicy="LFU" transactionalMode="off"/>
+
+</ehcache>

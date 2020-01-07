@@ -27,12 +27,15 @@ package com.armedia.acm.services.transcribe.dao;
  * #L%
  */
 
-import com.armedia.acm.data.AcmAbstractDao;
-import com.armedia.acm.services.transcribe.exception.GetTranscribeException;
+import com.armedia.acm.services.mediaengine.dao.MediaEngineDao;
+import com.armedia.acm.services.mediaengine.exception.GetMediaEngineException;
+import com.armedia.acm.services.mediaengine.model.MediaEngine;
 import com.armedia.acm.services.transcribe.model.Transcribe;
+import com.armedia.acm.services.transcribe.model.TranscribeConstants;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.commons.lang.NotImplementedException;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import javax.persistence.NoResultException;
 import javax.persistence.NonUniqueResultException;
@@ -40,14 +43,16 @@ import javax.persistence.TypedQuery;
 
 import java.util.List;
 
+
 /**
  * Created by Riste Tutureski <riste.tutureski@armedia.com> on 03/05/2018
  */
-public class TranscribeDao extends AcmAbstractDao<Transcribe>
+public class TranscribeDao extends MediaEngineDao<Transcribe>
 {
-    private final Logger LOG = LoggerFactory.getLogger(getClass());
+    private final Logger LOG = LogManager.getLogger(getClass());
 
-    public Transcribe findByMediaVersionId(Long mediaVersionId) throws GetTranscribeException
+    @Override
+    public Transcribe findByMediaVersionId(Long mediaVersionId) throws GetMediaEngineException
     {
         String queryString = "SELECT t FROM Transcribe t WHERE t.mediaEcmFileVersion.id=:mediaVersionId";
 
@@ -78,11 +83,12 @@ public class TranscribeDao extends AcmAbstractDao<Transcribe>
             LOG.error(reason, e);
         }
 
-        throw new GetTranscribeException(
+        throw new GetMediaEngineException(
                 String.format("Transcribe for MEDIA_VERSION_ID=[%d] was not retrieved successfully. REASON=[%s]", mediaVersionId, reason));
     }
 
-    public List<Transcribe> findAllByStatus(String status) throws GetTranscribeException
+    @Override
+    public List<Transcribe> findAllByStatus(String status) throws GetMediaEngineException
     {
         String queryString = "SELECT t FROM Transcribe t WHERE t.status=:status";
 
@@ -95,14 +101,26 @@ public class TranscribeDao extends AcmAbstractDao<Transcribe>
         }
         catch (Exception e)
         {
-            throw new GetTranscribeException(String
+            throw new GetMediaEngineException(String
                     .format("Transcribe objects with STATUS=[%s] was not retrieved successfully. REASON=[%s]", status, e.getMessage()));
         }
+    }
+
+    @Override
+    public MediaEngine findByFileId(Long fileId) throws GetMediaEngineException
+    {
+        throw new NotImplementedException();
     }
 
     @Override
     protected Class<Transcribe> getPersistenceClass()
     {
         return Transcribe.class;
+    }
+
+    @Override
+    public String getSupportedObjectType()
+    {
+        return TranscribeConstants.OBJECT_TYPE;
     }
 }

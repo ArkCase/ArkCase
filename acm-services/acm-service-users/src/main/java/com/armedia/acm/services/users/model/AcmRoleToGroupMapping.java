@@ -66,6 +66,11 @@ public class AcmRoleToGroupMapping implements Serializable
         };
     }
 
+    /**
+     *
+     * @return Returns groups to roles mapping from configuration.
+     * Both keys and values strings are upper case.
+     */
     public Map<String, List<String>> getGroupToRolesMap()
     {
         // generate all value-key pairs from the original map and then group the keys by these values

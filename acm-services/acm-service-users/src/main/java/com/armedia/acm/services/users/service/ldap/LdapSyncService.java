@@ -27,29 +27,27 @@ package com.armedia.acm.services.users.service.ldap;
  * #L%
  */
 
-import com.armedia.acm.core.exceptions.AcmEncryptionException;
 import com.armedia.acm.data.AcmServiceLdapSyncEvent;
 import com.armedia.acm.data.AcmServiceLdapSyncResult;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.files.propertymanager.PropertyFileManager;
+import com.armedia.acm.quartz.scheduler.AcmSchedulerService;
 import com.armedia.acm.services.users.dao.ldap.SpringLdapDao;
 import com.armedia.acm.services.users.dao.ldap.SpringLdapUserDao;
-import com.armedia.acm.services.users.model.ldap.AcmLdapConstants;
 import com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig;
 import com.armedia.acm.services.users.model.ldap.LdapGroup;
 import com.armedia.acm.services.users.model.ldap.LdapUser;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.scheduling.annotation.Async;
 
-import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -77,16 +75,15 @@ import java.util.Optional;
  */
 public class LdapSyncService implements ApplicationEventPublisherAware
 {
-    private final Logger log = LoggerFactory.getLogger(getClass());
+    private final Logger log = LogManager.getLogger(getClass());
     private SpringLdapDao ldapDao;
     private AcmLdapSyncConfig ldapSyncConfig;
     private boolean syncEnabled = true;
     private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
     private SpringLdapUserDao springLdapUserDao;
-    private PropertyFileManager propertyFileManager;
-    private String ldapLastSyncPropertyFileLocation;
     private LdapSyncProcessor ldapSyncProcessor;
     private ApplicationEventPublisher applicationEventPublisher;
+    private AcmSchedulerService schedulerService;
 
     // this method is used by scheduled jobs in Spring beans loaded dynamically from the ACM configuration folder
     // ($HOME/.acm).
@@ -115,7 +112,7 @@ public class LdapSyncService implements ApplicationEventPublisherAware
 
     // this method is used by scheduled jobs in Spring beans loaded dynamically from the ACM configuration folder
     // ($HOME/.acm).
-    public void ldapPartialSync()
+    public void ldapPartialSync(Date lastRun)
     {
         if (!isSyncEnabled())
         {
@@ -125,22 +122,20 @@ public class LdapSyncService implements ApplicationEventPublisherAware
 
         getAuditPropertyEntityAdapter().setUserId(getLdapSyncConfig().getAuditUserId());
 
-        Optional<String> ldapLastSyncDate = readLastLdapSyncDate(getLdapSyncConfig().getDirectoryName());
-        boolean isFullSync = !ldapLastSyncDate.isPresent();
+        Optional<String> lastRunDate = lastRun == null ? Optional.empty()
+                : Optional.of(DateTimeFormatter.ISO_INSTANT.format(lastRun.toInstant()));
 
-        log.info("Starting {} sync of directory: [{}]; ldap URL: [{}]", isFullSync ? "full" : "partial",
+        log.info("Starting {} sync of directory: [{}]; ldap URL: [{}]", lastRunDate.map(it -> "partial").orElse("full"),
                 getLdapSyncConfig().getDirectoryName(),
                 getLdapSyncConfig().getLdapUrl());
 
         LdapTemplate template = getLdapDao().buildLdapTemplate(getLdapSyncConfig());
 
         // only changed users are retrieved
-        List<LdapUser> ldapUsers = getLdapDao().findUsersPaged(template, getLdapSyncConfig(), ldapLastSyncDate);
+        List<LdapUser> ldapUsers = getLdapDao().findUsersPaged(template, getLdapSyncConfig(), lastRunDate);
         List<LdapGroup> ldapGroups = getLdapDao().findGroupsPaged(template, getLdapSyncConfig(), Optional.empty());
 
-        getLdapSyncProcessor().sync(ldapUsers, ldapGroups, getLdapSyncConfig(), isFullSync);
-
-        writeLastLdapSync(getLdapSyncConfig().getDirectoryName());
+        getLdapSyncProcessor().sync(ldapUsers, ldapGroups, getLdapSyncConfig(), !lastRunDate.isPresent());
     }
 
     @Async
@@ -169,7 +164,8 @@ public class LdapSyncService implements ApplicationEventPublisherAware
             }
             else
             {
-                ldapPartialSync();
+                ldapPartialSync(schedulerService.getTriggerPreviousFireTime(String.format("%s_ldapPartialSyncJobTrigger",
+                        getLdapSyncConfig().getDirectoryName())));
             }
 
         }
@@ -224,33 +220,10 @@ public class LdapSyncService implements ApplicationEventPublisherAware
 
         LdapUser user = getSpringLdapUserDao().findUserByLookup(dn, template, getLdapSyncConfig());
         List<LdapUser> ldapUsers = Arrays.asList(user);
-        List<LdapGroup> ldapGroups = getLdapDao().findGroupsPaged(template, getLdapSyncConfig(), Optional.ofNullable(null));
+        List<LdapGroup> ldapGroups = getLdapDao().findGroupsPaged(template, getLdapSyncConfig(), Optional.empty());
 
         ldapSyncProcessor.sync(ldapUsers, ldapGroups, getLdapSyncConfig(), false);
         return user;
-    }
-
-    public Optional<String> readLastLdapSyncDate(String directoryName)
-    {
-        String date = null;
-        try
-        {
-            date = propertyFileManager.load(ldapLastSyncPropertyFileLocation,
-                    String.format("%s.%s", directoryName, AcmLdapConstants.LDAP_LAST_SYNC_PROPERTY_KEY), null);
-        }
-        catch (AcmEncryptionException e)
-        {
-            log.warn("Failed to read [{}] date property. All users will be synced ", AcmLdapConstants.LDAP_LAST_SYNC_PROPERTY_KEY,
-                    e.getMessage());
-        }
-        return Optional.ofNullable(date);
-    }
-
-    public void writeLastLdapSync(String directoryName)
-    {
-        propertyFileManager.store(String.format("%s.%s", directoryName, AcmLdapConstants.LDAP_LAST_SYNC_PROPERTY_KEY),
-                ZonedDateTime.now(ZoneOffset.UTC).format(DateTimeFormatter.ISO_INSTANT),
-                ldapLastSyncPropertyFileLocation, false);
     }
 
     public SpringLdapDao getLdapDao()
@@ -303,26 +276,6 @@ public class LdapSyncService implements ApplicationEventPublisherAware
         this.springLdapUserDao = springLdapUserDao;
     }
 
-    public PropertyFileManager getPropertyFileManager()
-    {
-        return propertyFileManager;
-    }
-
-    public void setPropertyFileManager(PropertyFileManager propertyFileManager)
-    {
-        this.propertyFileManager = propertyFileManager;
-    }
-
-    public String getLdapLastSyncPropertyFileLocation()
-    {
-        return ldapLastSyncPropertyFileLocation;
-    }
-
-    public void setLdapLastSyncPropertyFileLocation(String ldapLastSyncPropertyFileLocation)
-    {
-        this.ldapLastSyncPropertyFileLocation = ldapLastSyncPropertyFileLocation;
-    }
-
     public LdapSyncProcessor getLdapSyncProcessor()
     {
         return ldapSyncProcessor;
@@ -337,5 +290,15 @@ public class LdapSyncService implements ApplicationEventPublisherAware
     public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher)
     {
         this.applicationEventPublisher = applicationEventPublisher;
+    }
+
+    public AcmSchedulerService getSchedulerService()
+    {
+        return schedulerService;
+    }
+
+    public void setSchedulerService(AcmSchedulerService schedulerService)
+    {
+        this.schedulerService = schedulerService;
     }
 }

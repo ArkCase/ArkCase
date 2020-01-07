@@ -38,16 +38,5 @@ public interface SubscriptionConstants
     String SUBSCRIPTION_USER = "SUBSCRIPTION-BATCH-INSERT";
     int NO_ROW_DELETED = 0;
 
-    /**
-     * The default run date to use if this generator has never run before (or if the properties file that stores the
-     * last run date is missing)
-     */
-    String DEFAULT_LAST_RUN_DATE = "1970-01-01T00:00:00Z";
-
-    /**
-     * The property key to use in the properties file that stores the last run date.
-     */
-    String SUBSCRIPTION_EVENT_LAST_RUN_DATE_PROPERTY_KEY = "subscription.event.last.run.date";
     String DATE_FORMAT = DateFormats.DEFAULT_DATE_FORMAT;
-
 }

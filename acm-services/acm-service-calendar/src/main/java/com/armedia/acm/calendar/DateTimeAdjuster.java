@@ -27,8 +27,8 @@ package com.armedia.acm.calendar;
  * #L%
  */
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -45,7 +45,7 @@ import microsoft.exchange.webservices.data.util.TimeZoneUtils;
 public class DateTimeAdjuster
 {
     private static final String UTC = "(UTC";
-    public static Logger LOG = LoggerFactory.getLogger(DateTimeAdjuster.class);
+    public static Logger LOG = LogManager.getLogger(DateTimeAdjuster.class);
 
     /**
      * @param text

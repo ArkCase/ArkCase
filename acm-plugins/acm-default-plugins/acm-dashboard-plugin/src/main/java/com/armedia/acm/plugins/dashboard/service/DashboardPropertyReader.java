@@ -47,8 +47,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -70,7 +70,7 @@ public class DashboardPropertyReader
     private DashboardDao dashboardDao;
     private UserPreferenceService userPreferenceService;
     private ModuleEventPublisher moduleEventPublisher;
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
     private List<String> moduleNameList;
     private List<Widget> widgetList;
     private List<Widget> dashboardWidgetsOnly;

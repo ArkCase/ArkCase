@@ -39,8 +39,8 @@ import com.frevvo.forms.client.SchemaEntry;
 
 import org.apache.activemq.util.ByteArrayInputStream;
 import org.apache.commons.io.Charsets;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -62,7 +62,7 @@ import java.util.List;
 public class FrevvoServiceImpl implements FrevvoService
 {
 
-    private Logger LOG = LoggerFactory.getLogger(getClass());
+    private Logger LOG = LogManager.getLogger(getClass());
     private FrevvoFormUrl formUrl;
     private ThreadLocal<FormsService> service = new ThreadLocal<>();
 
@@ -213,6 +213,10 @@ public class FrevvoServiceImpl implements FrevvoService
             {
 
                 DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+                factory.setFeature( "http://apache.org/xml/features/disallow-doctype-decl", true);
+                factory.setFeature("http://xml.org/sax/features/external-general-entities", false);
+                factory.setFeature("http://xml.org/sax/features/external-parameter-entities", false);
+                factory.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
                 DocumentBuilder builder = factory.newDocumentBuilder();
 
                 Document document = builder.parse(stream);

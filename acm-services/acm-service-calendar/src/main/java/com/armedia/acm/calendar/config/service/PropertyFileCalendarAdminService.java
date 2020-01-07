@@ -35,8 +35,8 @@ import com.armedia.acm.core.exceptions.AcmEncryptionException;
 import com.armedia.acm.crypto.properties.AcmEncryptablePropertyUtils;
 
 import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.http.HttpStatus;
@@ -54,7 +54,7 @@ import java.util.stream.Collectors;
 public class PropertyFileCalendarAdminService implements CalendarAdminService, ApplicationEventPublisherAware
 {
     private static final String CALENDAR_CONFIG_SERVICE_USER_ID = "CALENDAR_CONFIG_SERVICE";
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
     private AcmEncryptablePropertyUtils encryptablePropertyUtils;
     private ApplicationEventPublisher applicationEventPublisher;
     private CalendarConfig calendarConfig;
@@ -84,12 +84,30 @@ public class PropertyFileCalendarAdminService implements CalendarAdminService, A
                 .entrySet().stream()
                 .map(entry -> {
                     CalendarConfiguration configuration = entry.getValue();
+
+                    CalendarConfiguration configurationByType = new CalendarConfiguration();
+                    configurationByType.setSystemEmail(configuration.getSystemEmail());
+                    configurationByType.setIntegrationEnabled(configuration.isIntegrationEnabled());
+                    configurationByType.setPurgeOptions(configuration.getPurgeOptions());
+                    configurationByType.setDaysClosed(configuration.getDaysClosed());
                     if (!includePassword)
                     {
-                        configuration.setPassword("");
+                        configurationByType.setPassword("");
                     }
-                    return new SimpleImmutableEntry<>(entry.getKey(), configuration);
-
+                    else
+                    {
+                        String password = configuration.getPassword();
+                        try
+                        {
+                            password = encryptablePropertyUtils.decryptPropertyValue(configuration.getPassword());
+                        }
+                        catch (AcmEncryptionException e)
+                        {
+                            log.warn("Could not decrypt outlook password.");
+                        }
+                        configurationByType.setPassword(password);
+                    }
+                    return new SimpleImmutableEntry<>(entry.getKey(), configurationByType);
                 }).collect(Collectors.toMap(Entry::getKey, Entry::getValue));
 
         for (String objectType : calendarConfig.getObjectTypes())

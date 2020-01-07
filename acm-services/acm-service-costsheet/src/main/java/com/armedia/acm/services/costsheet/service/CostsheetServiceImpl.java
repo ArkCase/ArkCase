@@ -39,8 +39,8 @@ import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 
 import org.codehaus.plexus.util.StringUtils;
 import org.mule.api.MuleException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -54,7 +54,7 @@ import java.util.Properties;
 public class CostsheetServiceImpl implements CostsheetService
 {
 
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
 
     private Properties properties;
     private AcmCostsheetDao acmCostsheetDao;

@@ -27,7 +27,6 @@ package com.armedia.broker;
  * #L%
  */
 
-
 import com.armedia.acm.objectonverter.AcmUnmarshaller;
 import com.armedia.acm.objectonverter.ObjectConverter;
 

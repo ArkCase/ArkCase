@@ -34,8 +34,8 @@ import com.armedia.acm.service.stateofarkcase.model.StateOfArkcase;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -45,7 +45,7 @@ import java.time.LocalDateTime;
  */
 public class StateOfArkcaseReportGenerator
 {
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private transient final Logger log = LogManager.getLogger(getClass());
     private StateOfArkcaseRegistry stateOfArkcaseRegistry;
     private ObjectMapper mapper;
 

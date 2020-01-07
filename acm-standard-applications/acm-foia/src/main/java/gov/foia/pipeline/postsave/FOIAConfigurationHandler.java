@@ -31,15 +31,15 @@ import com.armedia.acm.plugins.casefile.pipeline.CaseFilePipelineContext;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.pipeline.handler.PipelineHandler;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import gov.foia.model.FOIARequest;
 import gov.foia.service.FoiaConfigurationService;
 
 public class FOIAConfigurationHandler implements PipelineHandler<FOIARequest, CaseFilePipelineContext>
 {
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private transient final Logger log = LogManager.getLogger(getClass());
 
     private FoiaConfigurationService foiaConfigurationService;
 

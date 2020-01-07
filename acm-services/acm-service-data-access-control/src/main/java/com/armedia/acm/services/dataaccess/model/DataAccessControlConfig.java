@@ -37,10 +37,6 @@ public class DataAccessControlConfig
     @Value("${dac.batchUpdateBasedOnLastModifiedEnabled}")
     private Boolean batchUpdateBasedOnLastModifiedEnabled;
 
-    @JsonProperty("dac.batchUpdateFrequencyInMilliseconds")
-    @Value("${dac.batchUpdateFrequencyInMilliseconds}")
-    private Integer batchUpdateFrequencyInMilliseconds;
-
     @JsonProperty("dac.batchUpdateBatchSize")
     @Value("${dac.batchUpdateBatchSize}")
     private Integer batchUpdateBatchSize;
@@ -77,16 +73,6 @@ public class DataAccessControlConfig
     public void setBatchUpdateBasedOnLastModifiedEnabled(Boolean batchUpdateBasedOnLastModifiedEnabled)
     {
         this.batchUpdateBasedOnLastModifiedEnabled = batchUpdateBasedOnLastModifiedEnabled;
-    }
-
-    public Integer getBatchUpdateFrequencyInMilliseconds()
-    {
-        return batchUpdateFrequencyInMilliseconds;
-    }
-
-    public void setBatchUpdateFrequencyInMilliseconds(Integer batchUpdateFrequencyInMilliseconds)
-    {
-        this.batchUpdateFrequencyInMilliseconds = batchUpdateFrequencyInMilliseconds;
     }
 
     public Integer getBatchUpdateBatchSize()

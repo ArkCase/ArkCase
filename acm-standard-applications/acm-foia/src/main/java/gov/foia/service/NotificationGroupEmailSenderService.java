@@ -40,8 +40,8 @@ import com.armedia.acm.services.notification.dao.NotificationDao;
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.users.model.AcmUser;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.security.core.Authentication;
 
 import java.io.FileNotFoundException;
@@ -54,7 +54,7 @@ public class NotificationGroupEmailSenderService
 {
     private final String REQUEST_FORM_TYPE = "Request Form";
 
-    private final transient Logger log = LoggerFactory.getLogger(this.getClass());
+    private final transient Logger log = LogManager.getLogger(this.getClass());
 
     private CaseFileDao caseFileDao;
     private EcmFileDao ecmFileDao;
@@ -102,15 +102,13 @@ public class NotificationGroupEmailSenderService
 
             if (Objects.nonNull(requestFormFile))
             {
-                String subject = String.format("Request [%s - %s] Form Document", caseFile.getCaseNumber(), caseFile.getTitle());
+                String subject = "Executive Email";
 
                 log.info("Trying to send a Request Form email to Notification Group [%s]", notificationGroupName);
 
                 List<EcmFileVersion> fileVersions = new ArrayList<>();
-                for (EcmFile file : requestFiles)
-                {
-                    fileVersions.add(file.getVersions().get(file.getVersions().size() - 1));
-                }
+                fileVersions.add(requestFormFile.getVersions().get(requestFormFile.getVersions().size() - 1));
+
                 Notification notification = new Notification();
                 notification.setTemplateModelName("notificationGroup");
                 notification.setAttachFiles(true);
@@ -118,6 +116,8 @@ public class NotificationGroupEmailSenderService
                 notification.setFiles(fileVersions);
                 notification.setParentType(caseFile.getObjectType());
                 notification.setParentId(caseId);
+                notification.setParentName(caseFile.getCaseNumber());
+                notification.setParentTitle(caseFile.getDetails());
                 notification.setUser(acmUser.getUserId());
                 notification.setEmailAddresses(emailAddresses.stream().collect(Collectors.joining(",")));
                 notificationDao.save(notification);

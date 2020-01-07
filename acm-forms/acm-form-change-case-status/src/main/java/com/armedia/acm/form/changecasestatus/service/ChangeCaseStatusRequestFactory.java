@@ -35,8 +35,8 @@ import com.armedia.acm.form.config.Item;
 import com.armedia.acm.plugins.casefile.model.ChangeCaseStatus;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.security.core.Authentication;
 
 import java.util.ArrayList;
@@ -64,7 +64,7 @@ public class ChangeCaseStatusRequestFactory
     private List<AcmParticipant> convertItemsToParticipants(List<Item> items)
     {
         List<AcmParticipant> participants = new ArrayList<>();
-        Logger log = LoggerFactory.getLogger(getClass());
+        Logger log = LogManager.getLogger(getClass());
         log.debug("# of incoming approvers: " + items.size());
         if (items != null)
         {

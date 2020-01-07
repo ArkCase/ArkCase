@@ -35,8 +35,8 @@ import com.armedia.acm.services.search.model.solr.SolrDeleteDocumentByIdRequest;
 import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.jms.JmsException;
 import org.springframework.jms.core.JmsTemplate;
@@ -51,7 +51,7 @@ import java.util.List;
  */
 public class SendDocumentsToSolr implements InitializingBean
 {
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private transient final Logger log = LogManager.getLogger(getClass());
     private ObjectConverter objectConverter;
     private ConnectionFactory jmsConnectionFactory;
     private JmsTemplate jmsTemplate;

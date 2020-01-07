@@ -40,12 +40,13 @@ import org.mule.api.context.notification.ServerNotificationListener;
 import org.mule.api.transformer.DataType;
 import org.mule.config.AnnotationsConfigurationBuilder;
 import org.mule.config.ConfigResource;
+import org.mule.config.DefaultMuleConfiguration;
 import org.mule.config.spring.SpringXmlConfigurationBuilder;
 import org.mule.context.DefaultMuleContextBuilder;
 import org.mule.context.DefaultMuleContextFactory;
 import org.mule.context.notification.MessageProcessorNotification;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.slf4j.MDC;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.context.ApplicationContext;
@@ -65,9 +66,10 @@ public class MuleContextManager implements ApplicationContextAware
 {
 
     private MuleContext muleContext;
-    private transient Logger log = LoggerFactory.getLogger(getClass());
+    private transient Logger log = LogManager.getLogger(getClass());
     private String muleConfigFilePattern;
     private List<String> specificConfigFiles;
+    private AcmMuleConfig acmMuleConfig;
 
     public void dispatch(String endpoint, Object payload, Map<String, Object> messageProperties) throws MuleException
     {
@@ -164,12 +166,18 @@ public class MuleContextManager implements ApplicationContextAware
         // ensure Mule processes Mule annotations in Spring beans
         AnnotationsConfigurationBuilder annotationsConfigurationBuilder = new AnnotationsConfigurationBuilder();
 
+
         List<ConfigurationBuilder> builders = new ArrayList<>();
         builders.add(springXmlConfigurationBuilder);
         builders.add(annotationsConfigurationBuilder);
 
-        MuleContextFactory muleContextFactory = new DefaultMuleContextFactory();
-        MuleContext muleContext = muleContextFactory.createMuleContext(builders, new DefaultMuleContextBuilder());
+        DefaultMuleContextBuilder muleContextBuilder = new DefaultMuleContextBuilder();
+        DefaultMuleConfiguration muleConfig = new DefaultMuleConfiguration();
+        muleConfig.setWorkingDirectory(acmMuleConfig.getWorkingDirectory());
+        muleContextBuilder.setMuleConfiguration(muleConfig);
+
+        MuleContextFactory muleContextFactory =  new DefaultMuleContextFactory();
+        MuleContext muleContext = muleContextFactory.createMuleContext(builders, muleContextBuilder);
 
         // Note, do not make the Spring application context a parent to the Mule context. Strange things will
         // happen. Be prepared for extensive regression testing if you want access to Spring beans in any way
@@ -321,5 +329,15 @@ public class MuleContextManager implements ApplicationContextAware
     public void setSpecificConfigFiles(List<String> specificConfigFiles)
     {
         this.specificConfigFiles = specificConfigFiles;
+    }
+
+    public AcmMuleConfig getAcmMuleConfig()
+    {
+        return acmMuleConfig;
+    }
+
+    public void setAcmMuleConfig(AcmMuleConfig acmMuleConfig)
+    {
+        this.acmMuleConfig = acmMuleConfig;
     }
 }

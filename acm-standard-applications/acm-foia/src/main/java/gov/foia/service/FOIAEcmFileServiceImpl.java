@@ -43,8 +43,8 @@ import org.apache.chemistry.opencmis.client.api.Document;
 import org.apache.commons.io.FileUtils;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import javax.persistence.PersistenceException;
 
@@ -61,7 +61,7 @@ import gov.foia.model.FOIAEcmFileVersion;
 
 public class FOIAEcmFileServiceImpl extends EcmFileServiceImpl implements FOIAEcmFileService
 {
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private transient final Logger log = LogManager.getLogger(getClass());
 
     @Override
     @AcmAcquireAndReleaseObjectLock(objectIdArgIndex = 0, objectType = "FILE", lockType = "READ")

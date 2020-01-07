@@ -33,8 +33,8 @@ import com.armedia.acm.services.users.model.ldap.LdapUser;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.test.context.ContextConfiguration;
@@ -71,7 +71,7 @@ public class SpringLdapDaoIT
         System.setProperty("acm.configurationserver.propertyfile", userHomePath + "/.arkcase/acm/conf.yml");
     }
 
-    static final Logger log = LoggerFactory.getLogger(SpringLdapDaoIT.class);
+    static final Logger log = LogManager.getLogger(SpringLdapDaoIT.class);
 
     static final int RUNS = 10;
 

@@ -31,8 +31,8 @@ import com.armedia.acm.data.AcmEntity;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.voodoodyne.jackson.jsog.JSOGGenerator;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -57,7 +57,7 @@ import java.util.Date;
 public class OrganizationDBA implements Serializable, AcmEntity
 {
     private static final long serialVersionUID = 7413755227864370548L;
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private transient final Logger log = LogManager.getLogger(getClass());
 
     @Id
     @TableGenerator(name = "acm_organization_dba_gen", table = "acm_organization_dba_id", pkColumnName = "cm_seq_name", valueColumnName = "cm_seq_num", pkColumnValue = "acm_organization_dba", initialValue = 100, allocationSize = 1)

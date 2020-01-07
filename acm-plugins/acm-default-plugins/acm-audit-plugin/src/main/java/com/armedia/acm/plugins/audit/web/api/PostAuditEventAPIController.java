@@ -34,8 +34,8 @@ import com.armedia.acm.event.model.AcmGenericApplicationEvent;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.security.core.Authentication;
@@ -69,7 +69,7 @@ import java.util.Map;
 @RequestMapping({ "/api/v1/plugin/audit", "/api/latest/plugin/audit" })
 public class PostAuditEventAPIController implements ApplicationEventPublisherAware
 {
-    private final Logger log = LoggerFactory.getLogger(getClass());
+    private final Logger log = LogManager.getLogger(getClass());
     private ApplicationEventPublisher applicationEventPublisher;
     private EcmFileDao ecmFileDao;
 

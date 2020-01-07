@@ -49,8 +49,8 @@ import org.easymock.Mock;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.context.ApplicationEventPublisher;
 
 import java.io.File;
@@ -79,7 +79,7 @@ public class CaptureFileWatcherTest extends EasyMockSupport
     // for this test to pass, Windows and Linux require different file URL prefixes
     private final String fileUrlPrefix = runningOnWindows ? "file:///C:" : "file:///";
     private final String baseFolderPath = fileUrlPrefix + fileSeparator + "temp";
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
 
     @Before
     public void setUp() throws Exception

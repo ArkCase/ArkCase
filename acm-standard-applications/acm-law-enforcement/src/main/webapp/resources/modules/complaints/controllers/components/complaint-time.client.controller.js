@@ -53,7 +53,8 @@ angular.module('complaints').controller(
                             $scope.newTimesheetParamsFromObject = {
                                 _id: objectInfo.complaintId,
                                 _type: ObjectService.ObjectTypes.COMPLAINT,
-                                _number: objectInfo.complaintNumber
+                                _number: objectInfo.complaintNumber,
+                                _title: objectInfo.complaintTitle
                             }
                             ObjectTimeService.queryTimesheets(ObjectService.ObjectTypes.COMPLAINT, componentHelper.currentObjectId).then(function(timesheets) {
                                 componentHelper.promiseConfig.then(function(config) {
@@ -91,7 +92,8 @@ angular.module('complaints').controller(
                             isEdit: false,
                             timeType: $scope.newTimesheetParamsFromObject._type,
                             timeNumber: $scope.newTimesheetParamsFromObject._number,
-                            timeId: $scope.newTimesheetParamsFromObject._id
+                            timeId: $scope.newTimesheetParamsFromObject._id,
+                            typesName: $scope.newTimesheetParamsFromObject._title
                         };
                         showModal(params);
                     };

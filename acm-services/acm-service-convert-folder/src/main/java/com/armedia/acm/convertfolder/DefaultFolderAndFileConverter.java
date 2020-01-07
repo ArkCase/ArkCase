@@ -36,8 +36,8 @@ import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.io.File;
 import java.io.InputStream;
@@ -59,7 +59,7 @@ public class DefaultFolderAndFileConverter implements FolderConverter, FileConve
     /**
      * Logger instance.
      */
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
 
     /**
      * Used to retrieve folder information from the system.

@@ -51,6 +51,8 @@ public class AcmLdapSyncConfig extends AcmLdapConfig
     private String changedGroupSearchFilter;
     private String groupsSortingAttribute;
     private String[] userSyncAttributes;
+    private String partialSyncCron;
+    private String fullSyncCron;
 
     public String getGroupSearchBase()
     {
@@ -270,5 +272,25 @@ public class AcmLdapSyncConfig extends AcmLdapConfig
     public void setUserSyncAttributes(String[] userSyncAttributes)
     {
         this.userSyncAttributes = userSyncAttributes;
+    }
+
+    public String getPartialSyncCron()
+    {
+        return partialSyncCron;
+    }
+
+    public void setPartialSyncCron(String partialSyncCron)
+    {
+        this.partialSyncCron = partialSyncCron;
+    }
+
+    public String getFullSyncCron()
+    {
+        return fullSyncCron;
+    }
+
+    public void setFullSyncCron(String fullSyncCron)
+    {
+        this.fullSyncCron = fullSyncCron;
     }
 }

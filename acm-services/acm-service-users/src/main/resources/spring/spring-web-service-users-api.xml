@@ -4,6 +4,7 @@
 
     <bean id="userInfoAPIController" class="com.armedia.acm.services.users.web.api.UserInfoAPIController">
         <property name="userDao" ref="userJpaDao"/>
+        <property name="acmUserService" ref="acmUserService"/>
     </bean>
 
     <bean id="findParticipantTypesForObjectTypeNameAPIController"

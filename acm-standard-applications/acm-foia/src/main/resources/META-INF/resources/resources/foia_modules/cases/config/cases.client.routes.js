@@ -12,6 +12,7 @@ angular.module('cases').config([ '$stateProvider', function($stateProvider) {
                 $translatePartialLoader.addPart('common');
                 $translatePartialLoader.addPart('cases');
                 $translatePartialLoader.addPart('request-info');
+                $translatePartialLoader.addPart('admin');
                 return $translate.refresh();
             } ]
         }
@@ -134,4 +135,8 @@ angular.module('cases').config([ '$stateProvider', function($stateProvider) {
             url: '/:id/billing',
             templateUrl: 'modules/cases/views/components/case-billing.client.view.html'
         })
+    .state('cases.suggestedCases', {
+        url: '/:id/suggested',
+        templateUrl: 'modules/cases/views/components/case-suggested-cases.client.view.html'
+    })
 } ]);

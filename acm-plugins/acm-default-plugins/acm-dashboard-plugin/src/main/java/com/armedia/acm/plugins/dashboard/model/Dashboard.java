@@ -29,8 +29,8 @@ package com.armedia.acm.plugins.dashboard.model;
 
 import com.armedia.acm.services.users.model.AcmUser;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -55,7 +55,7 @@ public class Dashboard implements Serializable
 {
 
     private static final long serialVersionUID = -1154137631399833851L;
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private transient final Logger log = LogManager.getLogger(getClass());
 
     @Id
     @TableGenerator(name = "acm_dashboard_gen", table = "acm_dashboard_id", pkColumnName = "cm_seq_name", valueColumnName = "cm_seq_num", pkColumnValue = "acm_dashboard", initialValue = 100, allocationSize = 1)

@@ -29,6 +29,7 @@ package com.armedia.acm.plugins.complaint.model;
 
 import com.armedia.acm.core.AcmNotifiableEntity;
 import com.armedia.acm.core.AcmNotificationReceiver;
+import com.armedia.acm.core.AcmObjectNumber;
 import com.armedia.acm.core.AcmStatefulEntity;
 import com.armedia.acm.core.AcmTitleEntity;
 import com.armedia.acm.data.AcmEntity;
@@ -40,6 +41,7 @@ import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.AcmContainerEntity;
 import com.armedia.acm.plugins.objectassociation.model.AcmChildObjectEntity;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
+import com.armedia.acm.plugins.person.model.AcmObjectOriginator;
 import com.armedia.acm.plugins.person.model.OrganizationAssociation;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
 import com.armedia.acm.services.participants.model.AcmAssignedObject;
@@ -47,12 +49,13 @@ import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.sequence.annotation.AcmSequence;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.voodoodyne.jackson.jsog.JSOGGenerator;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -102,11 +105,12 @@ import java.util.Set;
 @DiscriminatorValue("com.armedia.acm.plugins.complaint.model.Complaint")
 @JsonPropertyOrder(value = { "complaintId", "personAssociations", "originator" })
 @JsonIdentityInfo(generator = JSOGGenerator.class)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Complaint implements Serializable, AcmAssignedObject, AcmEntity, AcmContainerEntity, AcmChildObjectEntity,
-        AcmLegacySystemEntity, AcmNotifiableEntity, AcmStatefulEntity, AcmTitleEntity
+        AcmLegacySystemEntity, AcmNotifiableEntity, AcmStatefulEntity, AcmTitleEntity, AcmObjectNumber, AcmObjectOriginator
 {
     private static final long serialVersionUID = -1154137631399833851L;
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private transient final Logger log = LogManager.getLogger(getClass());
 
     @Id
     @TableGenerator(name = "complaint_gen", table = "acm_complaint_id", pkColumnName = "cm_seq_name", valueColumnName = "cm_seq_num", pkColumnValue = "acm_complaint", initialValue = 100, allocationSize = 1)
@@ -711,6 +715,12 @@ public class Complaint implements Serializable, AcmAssignedObject, AcmEntity, Ac
         return groupName;
     }
 
+    @Override
+    @JsonIgnore
+    public String getNotifiableEntityNumber() {
+        return complaintNumber;
+    }
+
     public List<OrganizationAssociation> getOrganizationAssociations()
     {
         return organizationAssociations;
@@ -719,5 +729,17 @@ public class Complaint implements Serializable, AcmAssignedObject, AcmEntity, Ac
     public void setOrganizationAssociations(List<OrganizationAssociation> organizationAssociations)
     {
         this.organizationAssociations = organizationAssociations;
+    }
+
+    @Override
+    public String getAcmObjectNumber()
+    {
+        return getComplaintNumber();
+    }
+
+    @Override
+    public PersonAssociation getAcmObjectOriginator()
+    {
+        return getOriginator();
     }
 }

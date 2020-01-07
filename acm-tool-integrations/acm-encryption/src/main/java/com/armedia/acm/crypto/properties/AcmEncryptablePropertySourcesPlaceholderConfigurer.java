@@ -30,8 +30,8 @@ package com.armedia.acm.crypto.properties;
 import com.armedia.acm.core.exceptions.AcmEncryptionException;
 
 import org.bouncycastle.crypto.RuntimeCryptoException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 
 import java.io.IOException;
@@ -52,7 +52,7 @@ import java.util.Properties;
  */
 public class AcmEncryptablePropertySourcesPlaceholderConfigurer extends PropertySourcesPlaceholderConfigurer
 {
-    private final Logger log = LoggerFactory.getLogger(getClass());
+    private final Logger log = LogManager.getLogger(getClass());
 
     private AcmEncryptablePropertyUtils encryptablePropertyUtils;
     private int propertiesEncryptionKeySize;

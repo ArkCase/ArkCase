@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://xmlns.jcp.org/xml/ns/javaee"
-         xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd" version="3.1"
-         metadata-complete="true">
+    xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd" version="3.1"
+    metadata-complete="true">
     <!-- 
         These settings save 23 seconds on Tomcat startup (Scan jars step is down from 30s to 7 s):
         
@@ -42,6 +42,102 @@
         <param-name>spring.profiles.default</param-name>
         <param-value>ldap</param-value>
     </context-param>
+
+    <filter>
+        <filter-name>hazelcast-filter</filter-name>
+        <filter-class>com.hazelcast.web.spring.SpringAwareWebFilter</filter-class>
+        <!--
+            Name of the distributed map storing
+            your web session objects
+        -->
+        <init-param>
+            <param-name>map-name</param-name>
+            <param-value>sessions-map</param-value>
+        </init-param>
+        <!--
+            How is your load-balancer configured?
+            stick-session means all requests of a session
+            is routed to the node where the session is first created.
+            This is excellent for performance.
+            If sticky-session is set to false, when a session is updated
+            on a node, entry for this session on all other nodes is invalidated.
+            You have to know how your load-balancer is configured before
+            setting this parameter. Default is true.
+        -->
+        <init-param>
+            <param-name>sticky-session</param-name>
+            <param-value>false</param-value>
+        </init-param>
+        <!--
+            Name of session id cookie
+        -->
+        <init-param>
+            <param-name>cookie-name</param-name>
+            <param-value>DSESSIONID</param-value>
+        </init-param>
+        <!--
+            Should cookie only be sent using a secure protocol? Default is false.
+        -->
+        <init-param>
+            <param-name>cookie-secure</param-name>
+            <param-value>false</param-value>
+        </init-param>
+        <!--
+            Should HttpOnly attribute be set on cookie ? Default is false.
+        -->
+        <init-param>
+            <param-name>cookie-http-only</param-name>
+            <param-value>false</param-value>
+        </init-param>
+        <!--
+            Are you debugging? Default is false.
+        -->
+        <init-param>
+            <param-name>debug</param-name>
+            <param-value>true</param-value>
+        </init-param>
+
+        <init-param>
+            <param-name>instance-name</param-name>
+            <param-value>acmHazelcastInstance</param-value>
+        </init-param>
+
+        <!--
+            Do you want to connect as a client to an existing cluster?
+            Default is false.
+        -->
+        <init-param>
+            <param-name>use-client</param-name>
+            <param-value>false</param-value>
+        </init-param>
+        <!--
+            Client configuration location;
+                * as servlet resource OR
+                * as classpath resource OR
+                * as URL
+            Default is null.
+        -->
+        <!--
+            Do you want to shutdown HazelcastInstance during
+            web application undeploy process?
+            Default is true.
+        -->
+        <init-param>
+            <param-name>shutdown-on-destroy</param-name>
+            <param-value>true</param-value>
+        </init-param>
+    </filter>
+    <filter-mapping>
+        <filter-name>hazelcast-filter</filter-name>
+        <url-pattern>/*</url-pattern>
+        <dispatcher>FORWARD</dispatcher>
+        <dispatcher>INCLUDE</dispatcher>
+        <dispatcher>REQUEST</dispatcher>
+    </filter-mapping>
+
+    <listener>
+        <listener-class>com.hazelcast.web.SessionListener</listener-class>
+    </listener>
 
     <filter>
         <filter-name>requestdumper</filter-name>
@@ -86,14 +182,6 @@
     <!--
 		SPRING SECURITY
 	-->
-
-    <!-- To use concurrent session support -->
-    <listener>
-        <listener-class>
-            org.springframework.security.web.session.HttpSessionEventPublisher
-        </listener-class>
-    </listener>
-
     <filter>
         <filter-name>springSecurityFilterChain</filter-name>
         <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>

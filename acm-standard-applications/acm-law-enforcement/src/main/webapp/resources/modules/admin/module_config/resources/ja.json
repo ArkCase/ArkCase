@@ -217,6 +217,7 @@
                     "cancelBtn": "キャンセル",
                     "deleteBtn": "削除",
                     "headerText": "グループを削除しようとしています：",
+                    "controlGroupHeaderWarning": "You are about to delete {{groupName}} group which is a member in the control group {{controlGroupName}}",
                     "bodyText": "本気ですか？"
                 }
             },
@@ -248,7 +249,7 @@
             },
 			 "searchFilter.placeholder": "サーチ"
         },
-        "security.selectPrivileges": "役割の作成/特権の選択",
+        "security.selectPrivileges": "特権を選択",
         "security.selectPrivileges.applicationRole": "役割の適用",
         "security.selectPrivileges.createRole": "役割の作成",
         "security.selectPrivileges.editRole": "役割の編集",
@@ -709,6 +710,29 @@
                     }
                 }
             },
+            "sequenceManagementReset": {
+                "title": "Reset List",
+                "editBtn": "Edit",
+                "viewBtn": "View",
+                "removeBtn": "Remove",
+                "cancelBtn": "Cancel",
+                "saveBtn": "Save",
+                "grid": {
+                    "startResetDate": "Start Reset Date",
+                    "executedDate": "Executed Date",
+                    "repeat": "Repeat",
+                    "repeatPeriod": "Repeat Period"
+                },
+                "detailsModal": {
+                    "title": "Autoincrement Reset",
+                    "addTitle": "Add Autoincrement Reset",
+                    "editTitle": "Edit Autoincrement Reset",
+                    "resetStartDate": "Reset Start Date",
+                    "repeatReset": "Repeat reset",
+                    "repeatResetPeriod": "Repeat reset period (days)",
+                    "sequenceResetScheduledWarning": "Sequence reset scheduled for today"
+                }
+            },
             "login.config": {
                 "title": "ログインの設定",
                 "idleLimit.label": "ログインアイドル制限（ミリ秒単位）",
@@ -963,15 +987,6 @@
                 "enableOCR.checkbox": "Enable OCR_JA"
             }
         },
-        "ocr": {
-            "title": "OCR Services_JA",
-            "ocrManagement": "OCR Management_JA",
-            "ocrConfigForm": {
-                "save.button": "Save_JA",
-                "enableOCR.label": "OCR Configuration_JA",
-                "enableOCR.checkbox": "Enable OCR_JA"
-            }
-        },
         "stateOfArkcase": {
             "title": "Arkcaseの状態",
             "pickDate": "ピック・デート",
@@ -1021,6 +1036,43 @@
             },
             "emailTemplates": {
                 "title": "メールテンプレート"
+            }
+        },
+        "portals.portalsConfiguration": {
+            "nodeTitle": "ja_Portals Service",
+            "title": "ja_Portals Configuration",
+            "url": "ja_URL",
+            "id": "ja_ID",
+            "portalId": "ja_Portal ID",
+            "portalDescription": "ja_Description",
+            "portalUser": "ja_User",
+            "save": "ja_Save",
+            "cancel": "ja_Cancel",
+            "placeholder": {
+                "portalUrl": "ja_Enter Portal URL",
+                "portalId": "ja_ID will be generate",
+                "portalDescription": "ja_Enter Portal Description",
+                "portalUser": "ja_Select Portal User"
+            },
+            "message": {
+                "edit": "ja_Portal is successfully edited",
+                "add": "ja_Portal is successfully added",
+                "delete": "ja_Portal is successfully deleted"
+            }
+        },
+        "userSearch": {
+            "title": "ja_User Search",
+            "cancelButton": "ja_Cancel",
+            "confirmButton": "ja_Save",
+            "search": {
+                "placeholder": "ja_Search for the user to assign to this portal",
+                "btn": "ja_Search"
+            },
+            "assigneeGridColumns": {
+                "name": "ja_Name",
+                "type": "ja_Type",
+                "title": "ja_Title",
+                "username": "ja_Username"
             }
         }
     }

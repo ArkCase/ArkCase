@@ -27,7 +27,23 @@ angular.module('request-info').controller('RequestInfo.SnowBoundViewer', [ '$roo
         }, SNOWBOUND_TIMEOUT);
     }
 
+    function onShowLoader() {
+        var loaderModal = $modal.open({
+            animation: true,
+            templateUrl: 'modules/common/views/object.modal.loading-spinner.html',
+            size: 'sm',
+            backdrop: 'static'
+        });
+        $scope.loaderModal = loaderModal;
+    }
+
+    function onHideLoader() {
+        $scope.loaderModal.close();
+    }
+
     $scope.iframeLoaded = function() {
+        ArkCaseCrossWindowMessagingService.addHandler('show-loader', onShowLoader);
+        ArkCaseCrossWindowMessagingService.addHandler('hide-loader', onHideLoader);
         ArkCaseCrossWindowMessagingService.addHandler('close-document', onCloseDocument);
         ArkCaseCrossWindowMessagingService.start();
 

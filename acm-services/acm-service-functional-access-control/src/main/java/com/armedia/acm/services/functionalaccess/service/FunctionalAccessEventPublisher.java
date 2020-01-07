@@ -27,6 +27,7 @@ package com.armedia.acm.services.functionalaccess.service;
  * #L%
  */
 
+import com.armedia.acm.auth.AuthenticationUtils;
 import com.armedia.acm.services.functionalaccess.model.FunctionalAccessUpdatedEvent;
 
 import org.springframework.context.ApplicationEventPublisher;
@@ -49,7 +50,7 @@ public class FunctionalAccessEventPublisher implements ApplicationEventPublisher
 
     public void publishFunctionalAccessUpdateEventOnRolesToGroupMap(Object source, String userId)
     {
-        FunctionalAccessUpdatedEvent event = new FunctionalAccessUpdatedEvent(source, userId);
+        FunctionalAccessUpdatedEvent event = new FunctionalAccessUpdatedEvent(source, userId, AuthenticationUtils.getUserIpAddress());
         getEventPublisher().publishEvent(event);
     }
 

@@ -32,7 +32,8 @@ module.exports = {
                     'node_modules/@bower_components/angular-notify/dist/angular-notify.css', 'node_modules/@bower_components/handsontable/dist/handsontable.full.css',
                     'node_modules/@bower_components/ng-tags-input/ng-tags-input.css', 'node_modules/@bower_components/fullcalendar/dist/fullcalendar.css',
                     'node_modules/@bower_components/angular-chart.js/dist/angular-chart.css',
-                    'node_modules/@bower_components/pdf.js-viewer/viewer.css'],
+                    'node_modules/@bower_components/pdf.js-viewer/viewer.css',
+                    'node_modules/angular-bootstrap-nav-tree/dist/abn_tree.css'],
             customJs : [ 'https://project.armedia.com/jira/s/272b7e5d0b48558abb6f76f2cc38fb4c-T/en_US-f0xdna/6346/2/1.4.16/_/download/batch/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector.js?locale=en-US&collectorId=2b76dcde' ],
             js : [ 'node_modules/@bower_components/jquery/dist/jquery.min.js', 'node_modules/@bower_components/jquery-ui/jquery-ui.min.js', 'node_modules/@bower_components/bootstrap/dist/js/bootstrap.min.js',
                     'node_modules/@bower_components/lodash/lodash.min.js', 'node_modules/@bower_components/moment/min/moment.min.js', 'node_modules/@bower_components/multi-download/browser.js',
@@ -51,7 +52,7 @@ module.exports = {
                     'node_modules/@bower_components/fancytree/dist/src/jquery.fancytree.dnd.js', 'node_modules/@bower_components/fancytree/dist/src/jquery.fancytree.filter.js',
                     'node_modules/@bower_components/ng-file-upload/ng-file-upload.min.js', 'node_modules/@bower_components/ng-file-upload-shim/ng-file-upload-shim.min.js',
                     'node_modules/@bower_components/ng-tags-input/ng-tags-input.min.js', 'node_modules/@bower_components/summernote/dist/summernote.min.js',
-                    'node_modules/@bower_components/ui-contextmenu/jquery.ui-contextmenu.min.js', 'node_modules/@bower_components/bootbox/bootbox.js', 'node_modules/@bower_components/ngBootbox/ngBootbox.js', // Don't use minified version here. It is broken.
+                    'node_modules/@bower_components/ui-contextmenu/jquery.ui-contextmenu.min.js', 'node_modules/bootbox/bootbox.js', 'node_modules/@bower_components/ngBootbox/ngBootbox.js', // Don't use minified version here. It is broken.
                     'node_modules/@bower_components/handsontable/dist/handsontable.full.min.js', 'node_modules/@bower_components/ngHandsontable/dist/ngHandsontable.min.js',
                     'node_modules/@bower_components/ace-builds/src-min-noconflict/ace.js', 'node_modules/@bower_components/angular-ui-ace/ui-ace.min.js',
                     'node_modules/@bower_components/fullcalendar/dist/fullcalendar.min.js', 'node_modules/@bower_components/fullcalendar/dist/gcal.js',
@@ -68,7 +69,9 @@ module.exports = {
                     'node_modules/@bower_components/angular-pdfjs-viewer/dist/angular-pdfjs-viewer.js',
                     'node_modules/angular-aria/angular-aria.js',
                     'node_modules/@bower_components/combodate/src/combodate.js',
-                    'node_modules/@bower_components/ment.io/dist/mentio.js']
+                    'node_modules/@bower_components/ment.io/dist/mentio.js',
+                    'node_modules/angular-bootstrap-contextmenu/contextMenu.js',
+                    'node_modules/angular-bootstrap-nav-tree/dist/abn_tree_directive.js']
         },
         css : [ 'assets/css/application.css', 'modules/**/css/*.css', 'assets/css/arkcase-extension.css'],
         scss : [ 'modules/**/scss/*.scss'],

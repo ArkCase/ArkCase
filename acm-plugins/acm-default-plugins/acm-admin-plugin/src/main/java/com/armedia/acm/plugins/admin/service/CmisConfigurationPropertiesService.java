@@ -32,8 +32,8 @@ import com.armedia.acm.plugins.admin.exception.AcmCmisConfigurationException;
 import org.apache.commons.io.FileUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.io.File;
 import java.io.InputStream;
@@ -45,7 +45,7 @@ import java.util.Properties;
  */
 public class CmisConfigurationPropertiesService
 {
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
 
     private CmisConfigurationService cmisConfigurationService;
 

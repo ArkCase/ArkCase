@@ -37,8 +37,8 @@ import org.mule.api.retry.RetryPolicyTemplate;
 import org.mule.api.routing.filter.Filter;
 import org.mule.retry.DefaultRetryContext;
 import org.mule.retry.PolicyStatus;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import javax.annotation.Generated;
 
@@ -50,7 +50,7 @@ import java.util.Map;
 public class RetryProcessInterceptor<T, O> implements ProcessInterceptor<T, O>
 {
 
-    private static Logger logger = LoggerFactory.getLogger(RetryProcessInterceptor.class);
+    private static Logger logger = LogManager.getLogger(RetryProcessInterceptor.class);
     private final ProcessInterceptor<T, O> next;
     private final RetryPolicyTemplate retryPolicyTemplate;
     private final Map<Object, Object> metaInfo = null;

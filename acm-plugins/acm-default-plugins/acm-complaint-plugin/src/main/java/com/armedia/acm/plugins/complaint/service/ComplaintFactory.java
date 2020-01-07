@@ -45,8 +45,8 @@ import com.armedia.acm.plugins.person.dao.PersonDao;
 import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -55,7 +55,7 @@ import java.util.List;
 
 public class ComplaintFactory extends FrevvoFormFactory
 {
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private transient final Logger log = LogManager.getLogger(getClass());
     private PersonDao personDao;
     private PersonAssociationDao personAssociationDao;
     private EcmFileService fileService;

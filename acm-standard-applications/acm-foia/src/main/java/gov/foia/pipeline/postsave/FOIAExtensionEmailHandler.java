@@ -34,7 +34,6 @@ import static gov.foia.model.FOIARequestUtils.extractRequestorEmailAddress;
 
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
-import com.armedia.acm.core.exceptions.CorrespondenceMergeFieldVersionException;
 import com.armedia.acm.plugins.casefile.pipeline.CaseFilePipelineContext;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
@@ -48,8 +47,8 @@ import com.armedia.acm.services.pipeline.handler.PipelineHandler;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
@@ -64,7 +63,7 @@ import gov.foia.service.FOIADocumentGeneratorService;
 
 public class FOIAExtensionEmailHandler implements PipelineHandler<FOIARequest, CaseFilePipelineContext>
 {
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private transient final Logger log = LogManager.getLogger(getClass());
 
     private static final String NEW_EXTENSION_FILE = "NEW_EXTENSION_FILE";
     private static final String EXTENSION_FILE_ID = "EXTENSION_FILE_ID";
@@ -92,7 +91,7 @@ public class FOIAExtensionEmailHandler implements PipelineHandler<FOIARequest, C
                 file = generateExtensionDocument(entity, pipelineContext);
                 ecmFileVersion = file.getVersions().get(file.getVersions().size() - 1);
             }
-            catch (CorrespondenceMergeFieldVersionException e)
+            catch (Exception e)
             {
                 throw new PipelineProcessException(e);
             }
@@ -100,6 +99,7 @@ public class FOIAExtensionEmailHandler implements PipelineHandler<FOIARequest, C
             log.debug("Emailing extension document");
 
             AcmUser user = userDao.findByUserId(entity.getAssigneeLdapId());
+            String emailAddress = extractRequestorEmailAddress(entity.getOriginator().getPerson());
 
             Notification notification = new Notification();
             notification.setTemplateModelName("requestExtension");
@@ -107,7 +107,7 @@ public class FOIAExtensionEmailHandler implements PipelineHandler<FOIARequest, C
             notification.setParentId(entity.getId());
             notification.setTitle(String.format("FOIA Extension Notification %s", entity.getCaseNumber()));
             notification.setAttachFiles(true);
-            notification.setEmailAddresses(user.getMail());
+            notification.setEmailAddresses(emailAddress);
             notification.setFiles(Arrays.asList(ecmFileVersion));
             notification.setUser(user.getUserId());
             notificationDao.save(notification);
@@ -140,7 +140,7 @@ public class FOIAExtensionEmailHandler implements PipelineHandler<FOIARequest, C
     }
 
     private EcmFile generateExtensionDocument(FOIARequest entity, CaseFilePipelineContext pipelineContext)
-            throws PipelineProcessException, CorrespondenceMergeFieldVersionException
+            throws PipelineProcessException
     {
         FOIADocumentDescriptor documentDescriptor = getDocumentGeneratorService().getDocumentDescriptor(entity,
                 FOIAConstants.REQ_EXTENSION);

@@ -28,8 +28,8 @@ package com.armedia.acm.pentaho.config;
  */
 
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 public enum ReportName
 {
@@ -44,7 +44,7 @@ public enum ReportName
             "Billing Report"),
     BACKGROUND_INVESTIGATION_SUMMARY_REPORT("Background Investigations Report");
 
-    protected transient static Logger log = LoggerFactory
+    protected transient static Logger log = LogManager
             .getLogger(ReportName.class);
     private String displayName;
 

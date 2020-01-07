@@ -27,46 +27,34 @@ package com.armedia.acm.services.dataupdate.service;
  * #L%
  */
 
-import static com.armedia.acm.services.search.service.AcmJpaBatchUpdateService.SOLR_LAST_RUN_DATE_PROPERTY_KEY;
+import com.armedia.acm.quartz.scheduler.AcmSchedulerService;
 
-import com.armedia.acm.files.propertymanager.PropertyFileManager;
+import org.quartz.JobDataMap;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class SolrReindexService
 {
-    private String lastBatchUpdatePropertyFileLocation;
-    private PropertyFileManager propertyFileManager;
+    private AcmSchedulerService schedulerService;
 
     public void reindex(List<Class> entities)
     {
-        List<String> propertiesToDelete = new ArrayList<>();
-        for (Class entity : entities)
+        JobDataMap lastRunDatePerObject = schedulerService.getJobDataMap("jpaBatchUpdateJob");
+        if (lastRunDatePerObject == null)
         {
-            propertiesToDelete.add(SOLR_LAST_RUN_DATE_PROPERTY_KEY + "." + entity.getName());
+            return;
         }
-
-        propertyFileManager.removeMultiple(propertiesToDelete, lastBatchUpdatePropertyFileLocation);
+        entities.forEach(entity -> lastRunDatePerObject.remove(entity.getName()));
+        schedulerService.triggerJob("jpaBatchUpdateJob", lastRunDatePerObject);
     }
 
-    public String getLastBatchUpdatePropertyFileLocation()
+    public AcmSchedulerService getSchedulerService()
     {
-        return lastBatchUpdatePropertyFileLocation;
+        return schedulerService;
     }
 
-    public void setLastBatchUpdatePropertyFileLocation(String lastBatchUpdatePropertyFileLocation)
+    public void setSchedulerService(AcmSchedulerService schedulerService)
     {
-        this.lastBatchUpdatePropertyFileLocation = lastBatchUpdatePropertyFileLocation;
-    }
-
-    public PropertyFileManager getPropertyFileManager()
-    {
-        return propertyFileManager;
-    }
-
-    public void setPropertyFileManager(PropertyFileManager propertyFileManager)
-    {
-        this.propertyFileManager = propertyFileManager;
+        this.schedulerService = schedulerService;
     }
 }

@@ -30,8 +30,8 @@ package com.armedia.acm.compressfolder;
  * #L%
  */
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -56,7 +56,7 @@ public class MaxThroughputAwareFileOutputStream extends FileOutputStream
     /**
      * Logger instance.
      */
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
     /**
      * Total number of bytes written so far.
      */

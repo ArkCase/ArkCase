@@ -217,6 +217,7 @@
                     "cancelBtn": "Annuler",
                     "deleteBtn": "Effacer",
                     "headerText": "Vous êtes sur le point de supprimer le groupe:",
+                    "controlGroupHeaderWarning": "You are about to delete {{groupName}} group which is a member in the control group {{controlGroupName}}",
                     "bodyText": "Êtes-vous sûr?"
                 }
             },
@@ -248,7 +249,7 @@
             },
 			"searchFilter.placeholder": "Chercher"
         },
-        "security.selectPrivileges": "Créer des privilèges de rôle / sélection",
+        "security.selectPrivileges": "Sélectionner des privilèges",
         "security.selectPrivileges.applicationRole": "Rôle d'application",
         "security.selectPrivileges.createRole": "Créer un rôle",
         "security.selectPrivileges.editRole": "Modifier le rôle",
@@ -709,6 +710,29 @@
                     }
                 }
             },
+            "sequenceManagementReset": {
+                "title": "Reset List",
+                "editBtn": "Edit",
+                "viewBtn": "View",
+                "removeBtn": "Remove",
+                "cancelBtn": "Cancel",
+                "saveBtn": "Save",
+                "grid": {
+                    "startResetDate": "Start Reset Date",
+                    "executedDate": "Executed Date",
+                    "repeat": "Repeat",
+                    "repeatPeriod": "Repeat Period"
+                },
+                "detailsModal": {
+                    "title": "Autoincrement Reset",
+                    "addTitle": "Add Autoincrement Reset",
+                    "editTitle": "Edit Autoincrement Reset",
+                    "resetStartDate": "Reset Start Date",
+                    "repeatReset": "Repeat reset",
+                    "repeatResetPeriod": "Repeat reset period (days)",
+                    "sequenceResetScheduledWarning": "Sequence reset scheduled for today"
+                }
+            },
             "login.config": {
                 "title": "Configuration de connexion",
                 "idleLimit.label": "Limite d'inactivité de connexion (en millisecondes)",
@@ -963,15 +987,6 @@
                 "enableOCR.checkbox": "Enable OCR_FR"
             }
         },
-        "ocr": {
-            "title": "OCR Services_FR",
-            "ocrManagement": "OCR Management_FR",
-            "ocrConfigForm": {
-                "save.button": "Save_FR",
-                "enableOCR.label": "OCR Configuration_FR",
-                "enableOCR.checkbox": "Enable OCR_FR"
-            }
-        },
         "stateOfArkcase": {
             "title": "Etat de Arkcase",
             "pickDate": "Choisir la date",
@@ -1021,6 +1036,43 @@
             },
             "emailTemplates": {
                 "title": "Modèles d'e-mail"
+            }
+        },
+        "portals.portalsConfiguration": {
+            "nodeTitle": "fr_Portals Service",
+            "title": "fr_Portals Configuration",
+            "url": "fr_URL",
+            "id": "fr_ID",
+            "portalId": "fr_Portal ID",
+            "portalDescription": "fr_Description",
+            "portalUser": "fr_User",
+            "save": "fr_Save",
+            "cancel": "fr_Cancel",
+            "placeholder": {
+                "portalUrl": "fr_Enter Portal URL",
+                "portalId": "fr_ID will be generate",
+                "portalDescription": "fr_Enter Portal Description",
+                "portalUser": "fr_Select Portal User"
+            },
+            "message": {
+                "edit": "fr_Portal is successfully edited",
+                "add": "fr_Portal is successfully added",
+                "delete": "fr_Portal is successfully deleted"
+            }
+        },
+        "userSearch": {
+            "title": "fr_User Search",
+            "cancelButton": "fr_Cancel",
+            "confirmButton": "fr_Save",
+            "search": {
+                "placeholder": "fr_Search for the user to assign to this portal",
+                "btn": "fr_Search"
+            },
+            "assigneeGridColumns": {
+                "name": "fr_Name",
+                "type": "fr_Type",
+                "title": "fr_Title",
+                "username": "fr_Username"
             }
         }
     }

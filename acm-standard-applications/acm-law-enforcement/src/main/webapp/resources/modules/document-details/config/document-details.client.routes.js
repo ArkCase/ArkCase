@@ -10,6 +10,8 @@ angular.module('document-details').config([ '$stateProvider', function($statePro
                 $translatePartialLoader.addPart('common');
                 $translatePartialLoader.addPart('tasks');
                 $translatePartialLoader.addPart('preference');
+                $translatePartialLoader.addPart('cases');
+                $translatePartialLoader.addPart('complaints');
                 return $translate.refresh();
             } ]
         }

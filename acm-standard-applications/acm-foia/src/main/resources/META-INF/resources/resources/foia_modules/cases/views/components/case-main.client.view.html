@@ -21,21 +21,25 @@
                 <div class="col-sm-3">
                     <label for="recordSearchDateFrom" translate> cases.comp.main.recordSearchDateFrom.label </label>
                     <div>
-                        <div class="form-group">
-                            <date-time-picker data="objectInfo.recordSearchDateFrom" property="startDate"
-                                              date-picker-id="comboDate1"></date-time-picker>
+                        <fieldset ng-disabled="true">
+                            <div class="form-group">
+                                <date-time-picker data="objectInfo.recordSearchDateFrom" property="startDate"
+                                        date-picker-id="comboDate1"></date-time-picker>
 
-                        </div>
+                            </div>
+                        </fieldset>
                     </div>
                 </div>
                 <div class="col-sm-3">
                     <label for="recordSearchDateTo" translate> cases.comp.main.recordSearchDateTo.label </label>
                     <div>
-                        <div class="form-group">
-                            <date-time-picker data="objectInfo.recordSearchDateTo" property="startDate"
-                                              date-picker-id="comboDate1"></date-time-picker>
+                        <fieldset ng-disabled="true">
+                            <div class="form-group">
+                                <date-time-picker data="objectInfo.recordSearchDateTo" property="startDate"
+                                        date-picker-id="comboDate1"></date-time-picker>
 
-                        </div>
+                            </div>
+                        </fieldset>
                     </div>
                 </div>
             </div>
@@ -73,6 +77,10 @@
                 </div>
             </div>
             <div class="row">
+                <div class="col-sm-3" ng-if="enableTitle">
+                    <label for="title" translate> cases.comp.main.title.label </label>
+                    <input type="text" id="title" ng-model="objectInfo.title" class="input-md form-control" ng-disabled="true" maxlength="50"/>
+                </div>
                 <div class="col-sm-3">
                     <label translate> cases.comp.main.description.label </label>
                     <textarea rows=5 ng-model="objectInfo.details" class="input-md form-control" ng-disabled="true"></textarea>
@@ -82,7 +90,7 @@
                     <div>
                         <div class="form-group">
                             <date-time-picker data="objectInfo.releasedDate" property="startDate"
-                                              date-picker-id="comboDate1"></date-time-picker>
+                                    date-picker-id="comboDate1"></date-time-picker>
 
                         </div>
                     </div>
@@ -131,7 +139,8 @@
                 <div class="col-sm-3">
                     <div class="checkbox">
                         <label>
-                            <input type="checkbox" ng-model="objectInfo.amendmentFlag" ng-change="objectInfo.requestAmendmentDetails= !objectInfo.amendmentFlag ? '' : objectInfo.requestAmendmentDetails"
+                            <input type="checkbox" ng-model="objectInfo.amendmentFlag"
+                                    ng-change="objectInfo.requestAmendmentDetails= !objectInfo.amendmentFlag ? '' : objectInfo.requestAmendmentDetails"
                                     permission="editRequestData" permission-object-type="CASE_FILE" permission-properties="objectInfo"
                                     permission-action="disable" id="amendmentFlag">
                             <span translate>cases.comp.main.amendmentFlag.label </span>
@@ -172,8 +181,8 @@
                 </div>
                 <div class="col-sm-3">
                     <label for="requestExpediteReason" translate> cases.comp.main.requestAmendmentDetails.label </label>
-                    <textarea rows=5 id="requestAmendmentDetails" ng-model="objectInfo.requestAmendmentDetails" name="requestAmendmentDetails"
-                            class="input-md form-control" ng-disabled="!objectInfo.amendmentFlag"
+                    <textarea rows=5 id="requestAmendmentDetails" ng-model="objectInfo.requestAmendmentDetails"
+                            name="requestAmendmentDetails" class="input-md form-control" ng-disabled="!objectInfo.amendmentFlag"
                             placeholder="{{ 'cases.comp.main.requestAmendmentDetails.placeholder'  | translate }}"
                             ng-required="objectInfo.amendmentFlag"></textarea>
                 </div>

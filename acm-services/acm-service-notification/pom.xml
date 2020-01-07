@@ -3,7 +3,7 @@
     <parent>
         <artifactId>acm-services</artifactId>
         <groupId>com.armedia.acm</groupId>
-        <version>3.3.1-r1</version>
+        <version>3.3.2-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -136,11 +136,30 @@
 
         <dependency>
             <groupId>com.armedia.acm.acm-services</groupId>
+            <artifactId>acm-service-holiday</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.armedia.acm.acm-services</groupId>
             <artifactId>acm-service-calendar-integration-exchange</artifactId>
             <version>${acm.version}</version>
             <scope>runtime</scope>
         </dependency>
 
+        <dependency>
+            <groupId>com.armedia.acm.acm-tool-integrations</groupId>
+            <artifactId>acm-hazelcast-integration</artifactId>
+            <version>${acm.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.armedia.acm.acm-services</groupId>
+            <artifactId>acm-service-correspondence</artifactId>
+            <version>${acm.version}</version>
+            <scope>test</scope>
+        </dependency>
         <!-- bean validation -->
         <dependency>
             <groupId>javax.validation</groupId>

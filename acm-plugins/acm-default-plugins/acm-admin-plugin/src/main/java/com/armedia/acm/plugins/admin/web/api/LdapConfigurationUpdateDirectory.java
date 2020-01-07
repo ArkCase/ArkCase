@@ -31,8 +31,8 @@ import com.armedia.acm.plugins.admin.exception.AcmLdapConfigurationException;
 import com.armedia.acm.plugins.admin.service.LdapConfigurationService;
 
 import org.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -41,7 +41,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.io.IOException;
 import java.util.Map;
 
 /**
@@ -51,7 +50,7 @@ import java.util.Map;
 @RequestMapping({ "/api/v1/plugin/admin", "/api/latest/plugin/admin" })
 public class LdapConfigurationUpdateDirectory
 {
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
 
     private LdapConfigurationService ldapConfigurationService;
 
@@ -62,21 +61,20 @@ public class LdapConfigurationUpdateDirectory
     @ResponseBody
     public String updateDirectory(
             @RequestBody String resource,
-            @PathVariable("directoryId") String directoryId) throws IOException, AcmLdapConfigurationException
+            @PathVariable("directoryId") String directoryId) throws AcmLdapConfigurationException
     {
+
+        if (directoryId == null)
+        {
+            throw new AcmLdapConfigurationException("Directory Id is undefined");
+        }
 
         try
         {
 
             JSONObject ldapObject = new JSONObject(resource);
-            if (directoryId == null)
-            {
-                throw new AcmLdapConfigurationException("Directory Id is undefined");
-            }
-
             Map<String, Object> props = ldapConfigurationService.getProperties(ldapObject);
             ldapConfigurationService.updateLdapDirectory(directoryId, props);
-
         }
         catch (Exception e)
         {

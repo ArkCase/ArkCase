@@ -7,6 +7,9 @@
         <property name="acmFolderService" ref="acmFolderService"/>
         <property name="objectConverter" ref="objectConverter"/>
         <property name="arkPermissionEvaluator" ref="arkPermissionEvaluator"/>
+        <property name="fileChunkService" ref="fileChunkService"/>
+        <property name="ecmFileUploaderConfig" ref="ecmFileUploaderConfig"/>
+        <property name="permissionEvaluator" ref="arkPermissionEvaluator"/>
     </bean>
 
     <bean id="fileDownloadAPIController" class="com.armedia.acm.plugins.ecm.web.api.FileDownloadAPIController">
@@ -68,6 +71,8 @@
     <bean id="deleteFileAPIController" class="com.armedia.acm.plugins.ecm.web.api.DeleteFileAPIController">
         <property name="fileService" ref="ecmFileService"/>
         <property name="fileEventPublisher" ref="fileEventPublisher"/>
+        <property name="recycleBinItemService" ref="recycleBinItemServiceImpl"/>
+        <property name="recycleBinItemEventPublisher" ref="recycleBinItemEventPublisher"/>
     </bean>
 
     <bean id="moveFileAPIController" class="com.armedia.acm.plugins.ecm.web.api.MoveFileAPIController">
@@ -151,4 +156,7 @@
         <property name="fileParticipantService" ref="fileParticipantService"/>
     </bean>
 
+    <bean id="ecmFileUploaderManagementAPIController" class="com.armedia.acm.plugins.ecm.web.api.EcmFileUploaderManagementAPIController">
+        <property name="ecmFileUploaderConfigurationService" ref="ecmFileUploaderConfigurationService"/>
+    </bean>
 </beans>

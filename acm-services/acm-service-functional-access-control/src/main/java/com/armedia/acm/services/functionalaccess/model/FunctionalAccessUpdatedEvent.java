@@ -44,18 +44,20 @@ public class FunctionalAccessUpdatedEvent extends AcmEvent
 
     private static final String EVENT_TYPE = "com.armedia.acm.functionalaccess.updated";
 
-    public FunctionalAccessUpdatedEvent(Object source, Authentication auth)
+    public FunctionalAccessUpdatedEvent(Object source, Authentication auth, String ipAddress)
     {
         super(source);
         setEventDate(new Date());
         setUserId(auth.getName());
+        setIpAddress(ipAddress);
     }
 
-    public FunctionalAccessUpdatedEvent(Object source, String userId)
+    public FunctionalAccessUpdatedEvent(Object source, String userId, String ipAddress)
     {
         super(source);
         setEventDate(new Date());
         setUserId(userId);
+        setIpAddress(ipAddress);
     }
 
     @Override

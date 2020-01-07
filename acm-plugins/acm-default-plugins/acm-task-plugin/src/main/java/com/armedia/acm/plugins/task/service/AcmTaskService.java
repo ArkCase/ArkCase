@@ -232,4 +232,9 @@ public interface AcmTaskService
 
     List<AcmTask> startReviewDocumentsWorkflow(AcmTask task, String businessProcessName, Authentication authentication, List<MultipartFile> filesToUpload)
             throws AcmTaskException, IOException, AcmCreateObjectFailedException, AcmUserActionFailedException;
+    
+    void startArrestWarrantWorkflow(AcmTask task);
+
+    void sendArrestWarrantMail(Long objectId, String objectType, String approvers);
+    
 }

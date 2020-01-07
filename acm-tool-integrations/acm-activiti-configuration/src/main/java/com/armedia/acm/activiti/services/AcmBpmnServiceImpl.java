@@ -32,6 +32,7 @@ import com.armedia.acm.activiti.exceptions.NotValidBpmnFileException;
 import com.armedia.acm.activiti.model.AcmProcessDefinition;
 import com.armedia.acm.activiti.services.dao.AcmBpmnDao;
 
+import javax.xml.XMLConstants;
 import org.activiti.engine.ActivitiException;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.repository.Deployment;
@@ -40,8 +41,8 @@ import org.activiti.engine.repository.ProcessDefinition;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.transaction.annotation.Transactional;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
@@ -71,7 +72,7 @@ import java.util.List;
  */
 public class AcmBpmnServiceImpl implements AcmBpmnService
 {
-    private transient Logger log = LoggerFactory.getLogger(getClass());
+    private transient Logger log = LogManager.getLogger(getClass());
 
     private String processDefinitionsFolder;
     private RepositoryService activitiRepositoryService;
@@ -258,6 +259,10 @@ public class AcmBpmnServiceImpl implements AcmBpmnService
         try
         {
             DocumentBuilderFactory domFactory = DocumentBuilderFactory.newInstance();
+            domFactory.setFeature( "http://apache.org/xml/features/disallow-doctype-decl", true);
+            domFactory.setFeature("http://xml.org/sax/features/external-general-entities", false);
+            domFactory.setFeature("http://xml.org/sax/features/external-parameter-entities", false);
+            domFactory.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
             domFactory.setNamespaceAware(false);
             DocumentBuilder builder = domFactory.newDocumentBuilder();
             Document doc = builder.parse(processDefinitionFile);

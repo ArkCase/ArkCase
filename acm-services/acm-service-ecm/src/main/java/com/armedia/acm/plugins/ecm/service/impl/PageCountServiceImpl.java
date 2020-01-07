@@ -32,8 +32,8 @@ import com.armedia.acm.plugins.ecm.service.PageCountService;
 import org.apache.commons.io.FileUtils;
 import org.apache.pdfbox.io.MemoryUsageSetting;
 import org.apache.pdfbox.pdmodel.PDDocument;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -41,7 +41,7 @@ import java.io.IOException;
 
 public class PageCountServiceImpl implements PageCountService
 {
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private transient final Logger log = LogManager.getLogger(getClass());
 
     private MemoryUsageSetting mixedMemoryAndTempFile = MemoryUsageSetting.setupMixed(1024 * 1024).setTempDir(
             new File(System.getProperty("java.io.tmpdir")));

@@ -1,29 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:task="http://www.springframework.org/schema/task"
-       xmlns="http://www.springframework.org/schema/beans" xmlns:aop="http://www.springframework.org/schema/aop" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
-       http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
-
-    <!--<task:scheduler id="subscriptionEventTaskScheduler" pool-size="1"/>-->
-
-    <task:executor id="deleteTaskExecutor" pool-size="1"/>
-
-    <task:scheduler id="subscriptionTaskScheduler" pool-size="1"/>
-    <task:scheduled-tasks scheduler="subscriptionTaskScheduler">
-        <task:scheduled ref="arm_subscriptionEventBatchInsertJob" method="insertNewSubscriptionEvents"
-                        fixed-delay="#{subscriptionConfig.batchUpdateFrequencyInMilliseconds}"/>
-    </task:scheduled-tasks>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="http://www.springframework.org/schema/beans" xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:task="http://www.springframework.org/schema/task" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+         http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd">
 
     <bean id="arm_subscriptionEventBatchInsertJob"
           class="com.armedia.acm.services.subscription.service.SubscriptionEventBatchInsertService">
-        <property name="userHomeDir" value="${user.home}"/>
-        <property name="lastBatchInsertPropertyFileLocation" value="/.arkcase/acm/subscriptionEventLastBatchInsert.properties"/>
-        <property name="propertyFileManager" ref="propertyFileManager"/>
-        <property name="springContextHolder" ref="acmContextHolder"/>
         <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
         <property name="subscriptionDao" ref="subscriptionDao"/>
         <property name="subscriptionEventDao" ref="subscriptionEventDao"/>
         <property name="subscriptionEventPublisher" ref="subscriptionEventPublisher"/>
         <property name="subscriptionConfig" ref="subscriptionConfig"/>
+    </bean>
+
+    <bean id="subscriptionEventInsertJobDescriptor" class="com.armedia.acm.services.subscription.service.SubscriptionEventJobDescriptor"
+          parent="acmJobDescriptor">
+        <property name="subscriptionEventBatchInsertService" ref="arm_subscriptionEventBatchInsertJob"/>
     </bean>
 
     <bean id="subscriptionService" class="com.armedia.acm.services.subscription.service.impl.SubscriptionServiceImpl">
@@ -57,4 +49,6 @@
     <bean id="subscriptionConfig" class="com.armedia.acm.services.subscription.model.SubscriptionConfig" scope="refresh">
         <aop:scoped-proxy/>
     </bean>
+
+    <task:executor id="deleteTaskExecutor" pool-size="1"/>
 </beans>

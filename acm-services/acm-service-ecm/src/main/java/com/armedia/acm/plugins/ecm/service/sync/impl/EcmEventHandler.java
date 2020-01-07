@@ -29,8 +29,8 @@ package com.armedia.acm.plugins.ecm.service.sync.impl;
 
 import com.armedia.acm.plugins.ecm.model.sync.EcmEvent;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.context.ApplicationListener;
 
 /**
@@ -38,7 +38,7 @@ import org.springframework.context.ApplicationListener;
  */
 public class EcmEventHandler implements ApplicationListener<EcmEvent>
 {
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private transient final Logger log = LogManager.getLogger(getClass());
 
     @Override
     public void onApplicationEvent(EcmEvent ecmEvent)

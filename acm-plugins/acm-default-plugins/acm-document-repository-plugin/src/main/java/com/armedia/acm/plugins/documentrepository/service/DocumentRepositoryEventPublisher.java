@@ -31,14 +31,14 @@ import com.armedia.acm.auth.AuthenticationUtils;
 import com.armedia.acm.plugins.documentrepository.model.DocumentRepository;
 import com.armedia.acm.plugins.documentrepository.model.DocumentRepositoryEvent;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 
 public class DocumentRepositoryEventPublisher implements ApplicationEventPublisherAware
 {
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private transient final Logger log = LogManager.getLogger(getClass());
     private ApplicationEventPublisher eventPublisher;
 
     @Override

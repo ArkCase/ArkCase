@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.springframework.org/schema/beans"
-       xmlns:task="http://www.springframework.org/schema/task" xmlns:aop="http://www.springframework.org/schema/aop" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-             http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+       xmlns:aop="http://www.springframework.org/schema/aop" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+               http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
 
     <bean id="buckslipTaskHelper" class="com.armedia.acm.plugins.task.listener.BuckslipTaskHelper"/>
 
@@ -17,6 +17,7 @@
     <bean id="taskPlugin" class="com.armedia.acm.pluginmanager.model.AcmPlugin">
         <property name="pluginName" value="Task Plugin"/>
         <property name="configurationPropertyService" ref="configurationPropertyService"/>
+        <property name="pluginConfig" ref="taskConfig"/>
         <property name="suportedObjectTypesNames">
             <list>
                 <value>TASK</value>
@@ -131,6 +132,10 @@
         <property name="objectConverter" ref="objectConverter"/>
         <property name="authenticationManager" ref="acmAuthenticationManager"/>
         <property name="saveBusinessProcess" ref="saveBusinessProcess"/>
+        <property name="notificationDao" ref="notificationDao"/>
+        <property name="acmDataService" ref="acmDataService"/>
+        <property name="fileWorkflowBusinessRule" ref="fileWorkflowBusinessRule"/>
+        <property name="activitiRuntimeService" ref="activitiRuntimeService"/>
     </bean>
 
     <bean id="acmApplicationTaskEventHandler" class="com.armedia.acm.plugins.task.service.impl.AcmApplicationTaskEventHandler">
@@ -175,17 +180,27 @@
     <bean id="upcomingTasksNotifier" class="com.armedia.acm.plugins.task.service.impl.UpcomingTasksNotifier">
         <property name="activitiTaskService" ref="activitiTaskService"/>
         <property name="activitiTaskDao" ref="acmTaskDao"/>
-        <property name="senderFactory" ref="notificationSenderFactory"/>
         <property name="userDao" ref="userJpaDao"/>
         <property name="notificationDao" ref="notificationDao"/>
+        <property name="taskNotificationConfig" ref="taskNotificationConfig"/>
+    </bean>
+
+    <bean id="upcomingTaskNotifierJobDescription" class="com.armedia.acm.plugins.task.service.UpcomingTaskNotifierJobDescription"
+          parent="acmJobDescriptor">
+        <property name="upcomingTasksNotifier" ref="upcomingTasksNotifier"/>
     </bean>
 
     <bean id="overdueTasksNotifier" class="com.armedia.acm.plugins.task.service.impl.OverdueTasksNotifier">
         <property name="activitiTaskService" ref="activitiTaskService"/>
         <property name="activitiTaskDao" ref="acmTaskDao"/>
-        <property name="senderFactory" ref="notificationSenderFactory"/>
         <property name="userDao" ref="userJpaDao"/>
         <property name="notificationDao" ref="notificationDao"/>
+        <property name="taskNotificationConfig" ref="taskNotificationConfig"/>
+    </bean>
+
+    <bean id="overdueTaskNotifierJobDescriptor" class="com.armedia.acm.plugins.task.service.OverdueTaskNotifierJobDescriptor"
+          parent="acmJobDescriptor">
+        <property name="overdueTasksNotifier" ref="overdueTasksNotifier"/>
     </bean>
 
     <bean id="createAdHocTaskService" class="com.armedia.acm.plugins.task.service.impl.CreateAdHocTaskService">
@@ -194,16 +209,6 @@
         <property name="executeSolrQuery" ref="executeSolrQuery"/>
         <property name="searchResults" ref="searchResults"/>
     </bean>
-
-    <task:scheduler id="dueTasksNotifierScheduler" pool-size="1"/>
-    <task:scheduled-tasks scheduler="dueTasksNotifierScheduler">
-        <!-- checks for upcoming tasks every day at 00:00 AM-->
-        <task:scheduled ref="upcomingTasksNotifier" method="notifyTaskAssignees" cron="0 0 0 * * *"/>
-        <!-- <task:scheduled ref="upcomingTasksNotifier" method="notifyTaskAssignees" initial-delay="60000" fixed-rate="60000"/> -->
-        <!-- checks for overdue tasks every day at 00:00 AM-->
-        <task:scheduled ref="overdueTasksNotifier" method="notifyTaskAssignees" cron="0 0 0 * * *"/>
-        <!-- <task:scheduled ref="overdueTasksNotifier" method="notifyTaskAssignees" initial-delay="60000" fixed-rate="60000"/> -->
-    </task:scheduled-tasks>
 
     <bean id="taskNotificationConfig" class="com.armedia.acm.plugins.task.model.TaskNotificationConfig" scope="refresh">
         <aop:scoped-proxy/>

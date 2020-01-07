@@ -31,16 +31,16 @@ import static gov.foia.model.FOIAConstants.MIME_TYPE_PDF;
 
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
-import com.armedia.acm.core.exceptions.CorrespondenceMergeFieldVersionException;
 import com.armedia.acm.pdf.PdfServiceException;
 import com.armedia.acm.pdf.service.PdfService;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 
+import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
 import org.apache.commons.io.FileUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
@@ -58,17 +58,17 @@ import gov.foia.model.FOIAObject;
  */
 public class PDFDocumentGenerator implements DocumentGenerator
 {
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
     private final DateTimeFormatter datePattern = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     private EcmFileService ecmFileService;
     private EcmFileDao ecmFileDao;
     private PdfService pdfService;
+    private FolderAndFilesUtils folderAndFilesUtils;
 
     @Override
     public EcmFile generateAndUpload(FOIADocumentDescriptor documentDescriptor, FOIAObject acmObject, String targetCmisFolderId,
-            String targetFilename, Map<String, String> substitutions)
-            throws DocumentGeneratorException, CorrespondenceMergeFieldVersionException
+            String targetFilename, Map<String, String> substitutions) throws DocumentGeneratorException
     {
         String filename = null;
 
@@ -145,5 +145,13 @@ public class PDFDocumentGenerator implements DocumentGenerator
     public void setEcmFileDao(EcmFileDao ecmFileDao)
     {
         this.ecmFileDao = ecmFileDao;
+    }
+
+    public FolderAndFilesUtils getFolderAndFilesUtils() {
+        return folderAndFilesUtils;
+    }
+
+    public void setFolderAndFilesUtils(FolderAndFilesUtils folderAndFilesUtils) {
+        this.folderAndFilesUtils = folderAndFilesUtils;
     }
 }

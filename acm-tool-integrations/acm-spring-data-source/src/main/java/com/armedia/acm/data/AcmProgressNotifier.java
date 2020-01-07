@@ -27,8 +27,8 @@ package com.armedia.acm.data;
  * #L%
  */
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.context.ApplicationListener;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
@@ -37,7 +37,7 @@ import java.util.Map;
 
 public class AcmProgressNotifier implements ApplicationListener<AcmProgressEvent>
 {
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
     private MessageChannel genericMessagesChannel;
     private Map<String, AcmProgressNotifierMessageBuilder> messageBuilders;
 

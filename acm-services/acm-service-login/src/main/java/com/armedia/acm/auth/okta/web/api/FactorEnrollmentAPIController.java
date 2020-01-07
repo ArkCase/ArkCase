@@ -36,8 +36,8 @@ import com.armedia.acm.auth.okta.services.FactorService;
 import com.armedia.acm.auth.okta.services.OktaUserService;
 import com.google.common.base.Preconditions;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -56,7 +56,7 @@ import java.util.List;
 @RequestMapping({ "/api/v1/plugin/okta/factor/enrollment", "/api/latest/plugin/okta/factor/enrollment" })
 public class FactorEnrollmentAPIController
 {
-    private static final Logger LOGGER = LoggerFactory.getLogger(FactorEnrollmentAPIController.class);
+    private static final Logger LOGGER = LogManager.getLogger(FactorEnrollmentAPIController.class);
     private FactorService factorService;
     private FactorLifecycleService factorLifecycleService;
     private OktaUserService oktaUserService;

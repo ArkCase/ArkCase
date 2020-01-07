@@ -33,8 +33,8 @@ import com.armedia.acm.services.users.model.group.AcmGroup;
 import com.armedia.acm.services.users.service.group.GroupService;
 
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.security.core.GrantedAuthority;
 
 import java.util.Collection;
@@ -48,7 +48,7 @@ import java.util.stream.Stream;
 public class AcmGrantedAuthoritiesMapper
 {
 
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private transient final Logger log = LogManager.getLogger(getClass());
 
     /**
      * This mapping is the effective mapping used when a user logs in to see

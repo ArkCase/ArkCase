@@ -33,8 +33,8 @@ import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
 import com.armedia.acm.services.transcribe.dao.TranscribeDao;
 import com.armedia.acm.services.transcribe.model.Transcribe;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.util.Date;
 import java.util.List;
@@ -44,7 +44,7 @@ import java.util.List;
  */
 public class TranscribeToSolrTransformer implements AcmObjectToSolrDocTransformer<Transcribe>
 {
-    private final Logger LOG = LoggerFactory.getLogger(getClass());
+    private final Logger LOG = LogManager.getLogger(getClass());
 
     private TranscribeDao transcribeDao;
 

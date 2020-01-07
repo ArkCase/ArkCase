@@ -2,8 +2,8 @@
 
 angular.module('complaints').controller(
         'Complaints.TasksController',
-        [ '$scope', '$state', '$stateParams', '$q', '$translate', 'UtilService', 'ConfigService', 'ObjectService', 'Object.TaskService', 'Task.WorkflowService', 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'Complaint.InfoService', 'Task.AlertsService', 'ModalDialogService',
-                function($scope, $state, $stateParams, $q, $translate, Util, ConfigService, ObjectService, ObjectTaskService, TaskWorkflowService, HelperUiGridService, HelperObjectBrowserService, ComplaintInfoService, TaskAlertsService, ModalDialogService) {
+        [ '$scope', '$state', '$stateParams', '$q', '$translate', 'UtilService', 'ConfigService', 'ObjectService', 'Object.TaskService', 'Task.WorkflowService', 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'Complaint.InfoService', 'Task.AlertsService', 'ModalDialogService', '$timeout',
+                function($scope, $state, $stateParams, $q, $translate, Util, ConfigService, ObjectService, ObjectTaskService, TaskWorkflowService, HelperUiGridService, HelperObjectBrowserService, ComplaintInfoService, TaskAlertsService, ModalDialogService, $timeout) {
 
                     var componentHelper = new HelperObjectBrowserService.Component({
                         scope: $scope,
@@ -51,6 +51,7 @@ angular.module('complaints').controller(
 
                     var retrieveGridData = function() {
                         if (Util.goodPositive(componentHelper.currentObjectId, false)) {
+                            ObjectTaskService.resetChildTasks(ObjectService.ObjectTypes.COMPLAINT, componentHelper.currentObjectId);
                             ObjectTaskService.queryChildTasks(ObjectService.ObjectTypes.COMPLAINT, componentHelper.currentObjectId,
                                     Util.goodValue($scope.start, 0), Util.goodValue($scope.pageSize, 10),
                                     Util.goodMapValue($scope.sort, "by"), Util.goodMapValue($scope.sort, "dir")).then(function(data) {
@@ -70,19 +71,25 @@ angular.module('complaints').controller(
                     };
 
                     $scope.addNew = function() {
+                        var modalParams = {};
+                        modalParams.parentType = ObjectService.ObjectTypes.COMPLAINT;
+                        modalParams.parentObject = $scope.objectInfo.complaintNumber;
+                        modalParams.parentId = $scope.objectInfo.complaintId;
+                        modalParams.parentTitle = $scope.objectInfo.title;
+                        modalParams.taskType = 'ACM_TASK';
+
                         var modalMetadata = {
                             moduleName: "tasks",
                             templateUrl: "modules/tasks/views/components/task-new-task.client.view.html",
                             controllerName: "Tasks.NewTaskController",
-                            params: {
-                                parentType: ObjectService.ObjectTypes.COMPLAINT,
-                                parentObject: $scope.objectInfo.complaintNumber,
-                                parentId: $scope.objectInfo.complaintId,
-                                parentTitle: $scope.objectInfo.title,
-                                taskType: 'ACM_TASK'
-                            }
+                            params: modalParams
                         };
-                        ModalDialogService.showModal(modalMetadata);
+                        ModalDialogService.showModal(modalMetadata).then(function (value) {
+                            $timeout(function() {
+                                retrieveGridData();
+                                //3 seconds delay so solr can index the new task
+                            }, 3000);
+                        });
                     };
 
                     $scope.deleteRow = function(rowEntity) {

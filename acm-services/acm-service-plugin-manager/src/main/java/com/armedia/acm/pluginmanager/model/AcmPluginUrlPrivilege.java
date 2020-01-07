@@ -27,8 +27,8 @@ package com.armedia.acm.pluginmanager.model;
  * #L%
  */
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.http.HttpMethod;
 
 /**
@@ -43,7 +43,7 @@ public class AcmPluginUrlPrivilege
     private static final String JSON_EXTENSION = ".json";
     private static final int XML_EXTENSION_LENGTH = XML_EXTENSION.length();
     private static final int JSON_EXTENSION_LENGTH = JSON_EXTENSION.length();
-    private final Logger log = LoggerFactory.getLogger(getClass());
+    private final Logger log = LogManager.getLogger(getClass());
     private String url;
     private HttpMethod httpMethod;
     private AcmPluginPrivilege requiredPrivilege;

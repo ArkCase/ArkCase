@@ -27,10 +27,13 @@ package com.armedia.acm.audit.service.systemlogger;
  * #L%
  */
 
-import com.armedia.acm.core.AcmApplication;
+import com.armedia.acm.audit.model.AuditConfig;
+import com.armedia.acm.core.ApplicationConfig;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.commons.exec.CommandLine;
+import org.apache.commons.exec.DefaultExecutor;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 
@@ -46,47 +49,47 @@ import java.io.IOException;
 public class WindowsEventLogger implements ISystemLogger
 {
     private static final String level = "Information";
-    private Logger log = LoggerFactory.getLogger(getClass());
-    private AcmApplication acmApplication;
-    private int eventId;
+    private Logger log = LogManager.getLogger(getClass());
+    private AuditConfig auditConfig;
+    private ApplicationConfig applicationConfig;
 
     @Override
     public void log(String message)
     {
         String command = "eventcreate "
                 + " /l APPLICATION"
-                + " /so \"" + getAcmApplication().getApplicationName() + "\""
+                + " /so \"" + applicationConfig.getApplicationName() + "\""
                 + " /t " + level
-                + " /id " + getEventId()
+                + " /id " + auditConfig.getSystemLogWindowsEventLogEventId()
                 + " /d \"" + message + "\"";
 
         try
         {
-            Runtime.getRuntime().exec(command);
+            CommandLine commandToBeExecuted = CommandLine.parse(command);
+            DefaultExecutor executor = new DefaultExecutor();
+            executor.execute(commandToBeExecuted);
+            executor.wait();
         }
         catch (IOException e)
         {
             log.error("Error writing to Windows Event Log!", e);
+        } catch (InterruptedException e) {
+           log.error("Command cannot be executed");
         }
     }
 
-    public AcmApplication getAcmApplication()
+    public AuditConfig getAuditConfig()
     {
-        return acmApplication;
+        return auditConfig;
     }
 
-    public void setAcmApplication(AcmApplication acmApplication)
+    public void setAuditConfig(AuditConfig auditConfig)
     {
-        this.acmApplication = acmApplication;
+        this.auditConfig = auditConfig;
     }
 
-    public int getEventId()
+    public void setApplicationConfig(ApplicationConfig applicationConfig)
     {
-        return eventId;
-    }
-
-    public void setEventId(int eventId)
-    {
-        this.eventId = eventId;
+        this.applicationConfig = applicationConfig;
     }
 }

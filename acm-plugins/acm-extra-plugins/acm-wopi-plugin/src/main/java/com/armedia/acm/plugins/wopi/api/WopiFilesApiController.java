@@ -35,8 +35,8 @@ import com.armedia.acm.plugins.wopi.service.WopiAcmService;
 import com.armedia.acm.services.dataaccess.service.impl.ArkPermissionEvaluator;
 
 import org.mule.api.MuleException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -58,7 +58,7 @@ public class WopiFilesApiController
 {
     private WopiAcmService wopiService;
     private ArkPermissionEvaluator permissionEvaluator;
-    private static final Logger log = LoggerFactory.getLogger(WopiFilesApiController.class);
+    private static final Logger log = LogManager.getLogger(WopiFilesApiController.class);
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody

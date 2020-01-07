@@ -3,7 +3,7 @@
     <parent>
         <groupId>com.armedia.acm</groupId>
         <artifactId>acm-forms</artifactId>
-        <version>3.3.1-r1</version>
+        <version>3.3.2-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -15,7 +15,7 @@
     <dependencies>
         <!-- acm -->
         <dependency>
-            <groupId>com.armedia.acm.com.armedia.acm.acm-services</groupId>
+            <groupId>com.armedia.acm.acm-services</groupId>
             <artifactId>acm-service-form-configuration</artifactId>
             <version>${acm.version}</version>
         </dependency>
@@ -78,7 +78,7 @@
         <dependency>
             <groupId>com.armedia.acm.acm-plugins.acm-default-plugins</groupId>
             <artifactId>acm-admin-plugin</artifactId>
-            <version>3.3.1-r1</version>
+            <version>3.3.2-SNAPSHOT</version>
         </dependency>
 
     </dependencies>

@@ -69,10 +69,6 @@ public class SolrConfig
     @Value("${solr.enableBatchUpdateBasedOnLastModified}")
     private Boolean enableBatchUpdateBasedOnLastModified;
 
-    @JsonProperty("solr.batchUpdateFrequencyInMilliseconds")
-    @Value("${solr.batchUpdateFrequencyInMilliseconds}")
-    private Integer batchUpdateFrequencyInMilliseconds;
-
     @JsonProperty("solr.batchUpdateBatchSize")
     @Value("${solr.batchUpdateBatchSize}")
     private Integer batchUpdateBatchSize;
@@ -82,7 +78,7 @@ public class SolrConfig
     private Boolean enableContentFileIndexing;
 
     @JsonProperty("solr.suggestHandler")
-    @Value("${solr.suggestHandler:''}")
+    @Value("${solr.suggestHandler}")
     private String suggestHandler;
 
     public String getHost()
@@ -173,16 +169,6 @@ public class SolrConfig
     public void setEnableBatchUpdateBasedOnLastModified(Boolean enableBatchUpdateBasedOnLastModified)
     {
         this.enableBatchUpdateBasedOnLastModified = enableBatchUpdateBasedOnLastModified;
-    }
-
-    public Integer getBatchUpdateFrequencyInMilliseconds()
-    {
-        return batchUpdateFrequencyInMilliseconds;
-    }
-
-    public void setBatchUpdateFrequencyInMilliseconds(Integer batchUpdateFrequencyInMilliseconds)
-    {
-        this.batchUpdateFrequencyInMilliseconds = batchUpdateFrequencyInMilliseconds;
     }
 
     public Integer getBatchUpdateBatchSize()

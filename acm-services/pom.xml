@@ -3,7 +3,7 @@
     <parent>
         <artifactId>acm</artifactId>
         <groupId>com.armedia</groupId>
-        <version>3.3.1-r1</version>
+        <version>3.3.2-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -64,6 +64,11 @@
         <module>acm-service-billing</module>
         <module>acm-service-sequence-manager</module>
         <module>acm-service-ocr</module>
+        <module>acm-service-media-engine</module>
+        <module>acm-service-holiday</module>
+        <module>acm-service-convert-file</module>
+        <module>acm-service-case-suggestion</module>
+        <module>acm-service-portal-gateway</module>
     </modules>
 
 </project>

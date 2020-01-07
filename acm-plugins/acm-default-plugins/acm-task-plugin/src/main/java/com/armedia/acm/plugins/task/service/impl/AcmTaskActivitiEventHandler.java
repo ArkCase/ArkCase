@@ -43,8 +43,8 @@ import com.armedia.acm.services.search.service.SendDocumentsToSolr;
 
 import org.activiti.engine.TaskService;
 import org.activiti.engine.task.Task;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.context.ApplicationListener;
 import org.springframework.security.core.context.SecurityContextHolder;
 
@@ -64,7 +64,7 @@ public class AcmTaskActivitiEventHandler implements ApplicationListener<AcmTaskA
     private SendDocumentsToSolr sendDocumentsToSolr;
     private TaskToSolrTransformer taskToSolrTransformer;
     private List<String> eventList;
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
     private TaskService taskService;
 
     @Override

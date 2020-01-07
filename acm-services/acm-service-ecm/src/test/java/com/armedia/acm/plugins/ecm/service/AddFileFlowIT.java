@@ -38,14 +38,14 @@ import com.armedia.acm.web.api.MDCConstants;
 import org.apache.chemistry.opencmis.client.api.Document;
 import org.apache.chemistry.opencmis.commons.data.ContentStream;
 import org.apache.commons.io.IOUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mule.api.MuleMessage;
 import org.mule.api.transformer.TransformerException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
@@ -70,7 +70,8 @@ import java.util.UUID;
         "/spring/spring-library-audit-service.xml",
         "/spring/spring-library-drools-rule-monitor.xml",
         "/spring/spring-library-object-converter.xml",
-        "/spring/spring-library-configuration.xml" })
+        "/spring/spring-library-configuration.xml",
+        "/spring/spring-test-quartz-scheduler.xml" })
 public class AddFileFlowIT
 {
     static
@@ -84,7 +85,7 @@ public class AddFileFlowIT
 
     private String testFolderId;
 
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
 
     @Before
     public void setUp() throws Exception

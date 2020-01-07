@@ -34,8 +34,8 @@ import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -48,7 +48,7 @@ public class BusinessProcessDao extends AcmAbstractDao<BusinessProcess>
 {
     private RuntimeService activitiRuntimeService;
     private TaskService activitiTaskService;
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
 
     @Override
     protected Class<BusinessProcess> getPersistenceClass()

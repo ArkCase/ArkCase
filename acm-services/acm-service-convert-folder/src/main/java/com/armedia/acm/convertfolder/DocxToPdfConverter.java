@@ -35,8 +35,8 @@ import org.docx4j.convert.out.FOSettings;
 import org.docx4j.model.fields.FieldUpdater;
 import org.docx4j.openpackaging.exceptions.Docx4JException;
 import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -60,7 +60,7 @@ public class DocxToPdfConverter extends PdfConverterBase implements FileConverte
     /**
      * Logger instance.
      */
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
 
     /*
      * (non-Javadoc)

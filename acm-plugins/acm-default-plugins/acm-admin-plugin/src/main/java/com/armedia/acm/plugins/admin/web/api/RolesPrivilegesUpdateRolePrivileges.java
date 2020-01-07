@@ -33,8 +33,8 @@ import com.armedia.acm.plugins.admin.service.RolesPrivilegesService;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -58,7 +58,7 @@ import java.util.List;
 public class RolesPrivilegesUpdateRolePrivileges implements RolePrivilegesConstants
 {
     private final String PROP_PRIVILEGES = "privileges";
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
     private RolesPrivilegesService rolesPrivilegesService;
 
     @RequestMapping(value = "/rolesprivileges/roles/{roleName}/privileges", method = RequestMethod.PUT, produces = {

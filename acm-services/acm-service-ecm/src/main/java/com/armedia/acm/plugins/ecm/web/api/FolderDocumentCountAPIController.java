@@ -35,8 +35,8 @@ import com.armedia.acm.services.search.service.SearchResults;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.mule.api.MuleException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -57,7 +57,7 @@ import java.util.Map;
 @RequestMapping({ "/api/v1/service/ecm", "/api/latest/service/ecm" })
 public class FolderDocumentCountAPIController
 {
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
     private ExecuteSolrQuery executeSolrQuery;
     private SearchResults searchResults;
 

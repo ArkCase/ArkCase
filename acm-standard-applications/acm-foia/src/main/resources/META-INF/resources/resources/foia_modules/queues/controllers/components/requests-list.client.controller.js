@@ -241,10 +241,10 @@ angular.module('queues').controller(
 
                                         var totalDaysLeft = DueDateService.daysLeftWithWeekends(holidaySchedule.data.holidays, dueDateTotal);
                                         var queueDaysLeft = DueDateService.daysLeftWithWeekends(holidaySchedule.data.holidays, request.queueDueDate);
-                                        request.daysToComplete = queueDaysLeft + '/' + totalDaysLeft;
+                                        request.daysToComplete = queueDaysLeft.days + '/' + totalDaysLeft.days;
                                         //calculate to show how many days until time to complete per queue / per request
                                     } else {
-                                        dueDateTotal = DueDateService.dueDateWorkingDays(request.create_date_tdt, queuesTotal, holidaySchedule.data.holidays);
+                                        dueDateTotal = DueDateService.dueDateWorkingDays(request.create_date_tdt.toUTCString(), queuesTotal, holidaySchedule.data.holidays);
                                         request.queueDueDate = DueDateService.dueDateWorkingDays(request.queue_enter_date_tdt, numDays, holidaySchedule.data.holidays);
                                         //calculate to show the due date on the entered queue with working days without holidays and weekends
 
@@ -253,7 +253,7 @@ angular.module('queues').controller(
 
                                         var totalDaysLeft = DueDateService.daysLeft(holidaySchedule.data.holidays, dueDateTotal);
                                         var queueDaysLeft = DueDateService.daysLeft(holidaySchedule.data.holidays, request.queueDueDate);
-                                        request.daysToComplete = queueDaysLeft + '/' + totalDaysLeft;
+                                        request.daysToComplete = queueDaysLeft.days + '/' + totalDaysLeft.days;
                                         //calculate to show how many days until time to complete per queue / per request
                                     }
 

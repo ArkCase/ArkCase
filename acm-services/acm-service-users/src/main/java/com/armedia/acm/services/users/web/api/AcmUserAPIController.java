@@ -38,8 +38,8 @@ import com.armedia.acm.services.users.service.AcmUserEventPublisher;
 import com.armedia.acm.services.users.service.ldap.LdapAuthenticateService;
 import com.armedia.acm.services.users.service.ldap.LdapUserService;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -71,7 +71,7 @@ public class AcmUserAPIController extends SecureLdapController
     private AcmUserEventPublisher acmUserEventPublisher;
     private AcmSpringActiveProfile acmSpringActiveProfile;
 
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
 
     @RequestMapping(value = "/{directory:.+}/editingEnabled", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
@@ -183,7 +183,8 @@ public class AcmUserAPIController extends SecureLdapController
     }
 
     @RequestMapping(value = "{directory:.+}/users/{userId:.+}", method = RequestMethod.DELETE)
-    public ResponseEntity<?> deleteUser(@PathVariable("userId") String userId, @PathVariable("directory") String directory)
+    public ResponseEntity<?> deleteUser(@PathVariable("userId") String userId, @PathVariable("directory") String directory,
+            HttpSession session)
             throws AcmUserActionFailedException, AcmAppErrorJsonMsg
     {
         AcmUser source = getLdapUserService().getUserDao().findByUserId(userId);
@@ -191,7 +192,7 @@ public class AcmUserAPIController extends SecureLdapController
         try
         {
             ldapUserService.deleteAcmUser(userId, directory);
-            getAcmUserEventPublisher().publishLdapUserDeletedEvent(source);
+            getAcmUserEventPublisher().publishLdapUserDeletedEvent(source, (String) session.getAttribute("acm_ip_address"));
 
             return new ResponseEntity<>(HttpStatus.OK);
         }

@@ -6,8 +6,18 @@
     <bean id="folderCompressor" class="com.armedia.acm.compressfolder.DefaultFolderCompressor">
         <property name="folderService" ref="acmFolderService"/>
         <property name="fileService" ref="ecmFileService"/>
-        <property name="compressedFileNameFormat" value="#{compressorServiceConfig.fileNameFormat}"/>
         <property name="acmFolderDao" ref="acmFolderDao"/>
+        <property name="templateService" ref="filesystemTemplateConfigurationService"/>
+        <property name="notificationDao" ref="notificationDao"/>
+        <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
+        <property name="compressorServiceConfig" ref="compressorServiceConfig"/>
+        <property name="genericMessagesChannel" ref="genericMessagesChannel"/>
+    </bean>
+
+    <bean id="fileCompressThreadPoolTaskExecutor" class="com.armedia.acm.web.api.MDCThreadPoolTaskExecutor">
+        <property name="corePoolSize" value="5"/>
+        <property name="threadPriority" value="1"/>
+        <property name="waitForTasksToCompleteOnShutdown" value="true"/>
     </bean>
 
     <bean id="compressorServiceConfig" class="com.armedia.acm.compressfolder.model.CompressorServiceConfig" scope="refresh">

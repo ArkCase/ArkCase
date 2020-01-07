@@ -27,17 +27,16 @@ package com.armedia.acm.plugins.admin.service;
  * #L%
  */
 
-import org.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.armedia.acm.configuration.service.ConfigurationPropertyService;
+import com.armedia.acm.plugins.admin.model.GoogleAnalyticsConfig;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
-import java.util.Properties;
+import java.util.Map;
 
 import freemarker.template.Configuration;
 import freemarker.template.Template;
@@ -49,16 +48,14 @@ import freemarker.template.TemplateException;
  */
 public class GoogleAnalyticsConfigService
 {
-
     /**
      * Logger instance.
      */
-    private Logger logger = LoggerFactory.getLogger(getClass());
+    private Logger logger = LogManager.getLogger(getClass());
 
-    /**
-     * Configuration file.
-     */
-    private File configFile;
+    private GoogleAnalyticsConfig config;
+
+    private ConfigurationPropertyService configurationPropertyService;
 
     /**
      * config.js Freemarker template
@@ -89,18 +86,15 @@ public class GoogleAnalyticsConfigService
      */
     public String getGoogleAnalyticsSettingsJs()
     {
-        Properties properties = new Properties();
-
-        try (FileInputStream fis = new FileInputStream(configFile);
-                Writer stringWriter = new StringWriter())
+        try (Writer stringWriter = new StringWriter())
         {
-            properties.load(fis);
-            template.process(properties, stringWriter);
+            Map<String, Object> configProperties = configurationPropertyService.getProperties(config);
+            template.process(configProperties, stringWriter);
             return stringWriter.toString();
         }
         catch (IOException e)
         {
-            logger.error("Cannot read configuration file [{}]", configFile.getAbsolutePath(), e);
+            logger.error("Cannot write to template", e);
         }
         catch (TemplateException e)
         {
@@ -115,69 +109,47 @@ public class GoogleAnalyticsConfigService
     }
 
     /**
-     * Retrieve Google Analytics configuration as JSON object (used in Admin UI).
+     * Retrieve Google Analytics configuration (used in Admin UI).
      *
-     * @return configuration represented as JSON
+     * @return configuration
      */
-    public String getGoogleAnalyticsSettings()
+    public GoogleAnalyticsConfig getGoogleAnalyticsSettings()
     {
-        // TODO: this method probably needs improvement/adaptation once Admin UI is developed
         logger.debug("Retrieving Google Analytics configuration");
-        Properties properties = new Properties();
-        try (FileInputStream fis = new FileInputStream(configFile))
-        {
-            properties.load(fis);
-
-        }
-        catch (IOException e)
-        {
-            logger.error("Cannot read configuration file [{}]", configFile.getAbsolutePath(), e);
-        }
-        JSONObject jsonObject = new JSONObject();
-        for (Object key : properties.keySet())
-        {
-            jsonObject.put((String) key, properties.get(key));
-        }
-        return jsonObject.toString();
+        return config;
     }
 
     /**
      * Store Google Analytics configuration as key-value properties (used in Admin UI).
      *
-     * @param configuration
-     *            JSON representation of GA settings
+     * @param config
+     *            GA settings
      * @return properties
      */
-    public String setGoogleAnalyticsSettings(String configuration)
+    public GoogleAnalyticsConfig setGoogleAnalyticsSettings(GoogleAnalyticsConfig config)
     {
-        // TODO: this method probably needs improvement/adaptation once Admin UI is developed
         logger.debug("Storing Google Analytics properties");
-        JSONObject jsonConfiguration = new JSONObject(configuration);
-        Properties properties = new Properties();
-        for (Object key : jsonConfiguration.keySet())
-        {
-            // FIXME: validate keys!
-            properties.put(key, jsonConfiguration.get((String) key));
-        }
-        try (FileOutputStream fos = new FileOutputStream(configFile))
-        {
-            properties.store(fos, "Google Analytics configuration");
-            logger.debug("Google Analytics configuration stored");
-        }
-        catch (IOException e)
-        {
-            logger.error("Cannot write configuration file [{}]", configFile.getAbsolutePath(), e);
-        }
-        return properties.toString();
+        configurationPropertyService.updateProperties(config);
+        return config;
     }
 
-    public File getConfigFile()
+    public GoogleAnalyticsConfig getConfig()
     {
-        return configFile;
+        return config;
     }
 
-    public void setConfigFile(File configFile)
+    public void setConfig(GoogleAnalyticsConfig config)
     {
-        this.configFile = configFile;
+        this.config = config;
+    }
+
+    public ConfigurationPropertyService getConfigurationPropertyService()
+    {
+        return configurationPropertyService;
+    }
+
+    public void setConfigurationPropertyService(ConfigurationPropertyService configurationPropertyService)
+    {
+        this.configurationPropertyService = configurationPropertyService;
     }
 }

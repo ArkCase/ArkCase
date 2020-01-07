@@ -1,0 +1,86 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:activiti="http://activiti.org/bpmn"
+    xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC"
+    xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema"
+    expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.activiti.org/processdef"
+    xmlns:modeler="http://activiti.com/modeler" modeler:version="1.0ev" modeler:exportDateTime="20180106214344" modeler:modelId="1039064"
+    modeler:modelVersion="1" modeler:modelLastUpdated="1515275019192">
+    <process id="CorrectiveActionPlan" name="Corrective Action Plan - Review" isExecutable="true">
+        <documentation>First task assignee reviews a document, then the workflow originator finalizes the document.</documentation>
+        <startEvent id="startEvent1">
+            <extensionElements>
+                <modeler:editor-resource-id><![CDATA[startEvent1]]></modeler:editor-resource-id>
+            </extensionElements>
+        </startEvent>
+        <userTask id="sid-6374BAA5-A27B-4DEB-B19F-0D9B109C762F" name="Review Document &quot;${OBJECT_NAME}&quot;"
+            activiti:assignee="${assignee}" activiti:candidateGroups="${candidateGroups}" activiti:dueDate="${dueDate}">
+            <extensionElements>
+                <modeler:allow-send-email><![CDATA[true]]></modeler:allow-send-email>
+                <modeler:initiator-can-complete><![CDATA[false]]></modeler:initiator-can-complete>
+                <modeler:editor-resource-id><![CDATA[sid-6374BAA5-A27B-4DEB-B19F-0D9B109C762F]]></modeler:editor-resource-id>
+            </extensionElements>
+        </userTask>
+        <sequenceFlow id="sid-8C8CCA30-997E-43EE-9869-4ED0F549E66B" sourceRef="startEvent1"
+            targetRef="sid-6374BAA5-A27B-4DEB-B19F-0D9B109C762F">
+            <extensionElements>
+                <modeler:editor-resource-id><![CDATA[sid-8C8CCA30-997E-43EE-9869-4ED0F549E66B]]></modeler:editor-resource-id>
+            </extensionElements>
+        </sequenceFlow>
+        <userTask id="sid-7BBC995A-E9CA-4218-BADB-FF68B0D3CAD3" name="Finalize Document &quot;${OBJECT_NAME}&quot;"
+            activiti:assignee="${documentAuthor}" activiti:candidateGroups="${candidateGroups}" activiti:dueDate="${dueDate}">
+            <extensionElements>
+                <modeler:allow-send-email><![CDATA[true]]></modeler:allow-send-email>
+                <modeler:initiator-can-complete><![CDATA[false]]></modeler:initiator-can-complete>
+                <modeler:editor-resource-id><![CDATA[sid-7BBC995A-E9CA-4218-BADB-FF68B0D3CAD3]]></modeler:editor-resource-id>
+            </extensionElements>
+        </userTask>
+        <sequenceFlow id="sid-9F8EC8FB-4F3F-4019-9793-0ACE2F887231" sourceRef="sid-6374BAA5-A27B-4DEB-B19F-0D9B109C762F"
+            targetRef="sid-7BBC995A-E9CA-4218-BADB-FF68B0D3CAD3">
+            <extensionElements>
+                <modeler:editor-resource-id><![CDATA[sid-9F8EC8FB-4F3F-4019-9793-0ACE2F887231]]></modeler:editor-resource-id>
+            </extensionElements>
+        </sequenceFlow>
+        <endEvent id="sid-4697BEA4-B893-4558-9CD8-460586A8F647">
+            <extensionElements>
+                <modeler:editor-resource-id><![CDATA[sid-4697BEA4-B893-4558-9CD8-460586A8F647]]></modeler:editor-resource-id>
+            </extensionElements>
+        </endEvent>
+        <sequenceFlow id="sid-247EA07D-7580-4AA6-9F83-49C55D2BE754" sourceRef="sid-7BBC995A-E9CA-4218-BADB-FF68B0D3CAD3"
+            targetRef="sid-4697BEA4-B893-4558-9CD8-460586A8F647">
+            <extensionElements>
+                <modeler:editor-resource-id><![CDATA[sid-247EA07D-7580-4AA6-9F83-49C55D2BE754]]></modeler:editor-resource-id>
+            </extensionElements>
+        </sequenceFlow>
+    </process>
+    <bpmndi:BPMNDiagram id="BPMNDiagram_CorrectiveActionPlan">
+        <bpmndi:BPMNPlane bpmnElement="CorrectiveActionPlan" id="BPMNPlane_CorrectiveActionPlan">
+            <bpmndi:BPMNShape bpmnElement="startEvent1" id="BPMNShape_startEvent1">
+                <omgdc:Bounds height="30.0" width="30.0" x="100.0" y="163.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="sid-6374BAA5-A27B-4DEB-B19F-0D9B109C762F"
+                id="BPMNShape_sid-6374BAA5-A27B-4DEB-B19F-0D9B109C762F">
+                <omgdc:Bounds height="80.0" width="100.0" x="195.0" y="135.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="sid-7BBC995A-E9CA-4218-BADB-FF68B0D3CAD3"
+                id="BPMNShape_sid-7BBC995A-E9CA-4218-BADB-FF68B0D3CAD3">
+                <omgdc:Bounds height="80.0" width="100.0" x="360.0" y="135.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="sid-4697BEA4-B893-4558-9CD8-460586A8F647"
+                id="BPMNShape_sid-4697BEA4-B893-4558-9CD8-460586A8F647">
+                <omgdc:Bounds height="28.0" width="28.0" x="540.0" y="161.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNEdge bpmnElement="sid-247EA07D-7580-4AA6-9F83-49C55D2BE754" id="BPMNEdge_sid-247EA07D-7580-4AA6-9F83-49C55D2BE754">
+                <omgdi:waypoint x="460.0" y="175.0"/>
+                <omgdi:waypoint x="540.0" y="175.0"/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="sid-9F8EC8FB-4F3F-4019-9793-0ACE2F887231" id="BPMNEdge_sid-9F8EC8FB-4F3F-4019-9793-0ACE2F887231">
+                <omgdi:waypoint x="295.0" y="175.0"/>
+                <omgdi:waypoint x="360.0" y="175.0"/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="sid-8C8CCA30-997E-43EE-9869-4ED0F549E66B" id="BPMNEdge_sid-8C8CCA30-997E-43EE-9869-4ED0F549E66B">
+                <omgdi:waypoint x="129.9960075117219" y="177.65393828819103"/>
+                <omgdi:waypoint x="195.0" y="176.15384615384616"/>
+            </bpmndi:BPMNEdge>
+        </bpmndi:BPMNPlane>
+    </bpmndi:BPMNDiagram>
+</definitions>

@@ -38,8 +38,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -59,7 +59,7 @@ import java.util.List;
 public class GetApplicationRolesAPIControllerTest extends EasyMockSupport
 {
 
-    private Logger LOG = LoggerFactory.getLogger(getClass());
+    private Logger LOG = LogManager.getLogger(getClass());
 
     private MockMvc mockMvc;
     private GetApplicationRolesAPIController unit;

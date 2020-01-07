@@ -10,6 +10,9 @@
                 <value>/flows/MuleCmisConnectorFlow.xml</value>
             </list>
         </property>
+        <property name="acmMuleConfig" ref="acmMuleConfig"/>
     </bean>
+
+    <bean id="acmMuleConfig" class="com.armedia.acm.muletools.mulecontextmanager.AcmMuleConfig"/>
 
 </beans>

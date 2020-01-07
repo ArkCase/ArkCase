@@ -11,6 +11,7 @@ angular.module('document-details').controller(
                     });
 
                     $scope.viewerOnly = false;
+                    var userPrivilegesPromise =  Authentication.getUserPrivileges();
                     $scope.documentExpand = function() {
                         $scope.viewerOnly = true;
                     };
@@ -31,12 +32,35 @@ angular.module('document-details').controller(
                         }
                     };
 
+                    $scope.showFailureMessage = function showFailureMessage() {
+                        DialogService.alert($scope.transcribeObjectModel.failureReason);
+                    }
+
+                     function onShowLoader() {
+                        var loaderModal = $modal.open({
+                            animation: true,
+                            templateUrl: 'modules/common/views/object.modal.loading-spinner.html',
+                            size: 'sm',
+                            backdrop: 'static'
+                        });
+                        $scope.loaderModal = loaderModal;
+                    }
+
+                    function onHideLoader() {
+                        $scope.loaderModal.close();
+                    }
+
                     $scope.iframeLoaded = function() {
+                        ArkCaseCrossWindowMessagingService.addHandler('show-loader', onShowLoader);
+                        ArkCaseCrossWindowMessagingService.addHandler('hide-loader', onHideLoader);
+
                         ObjectLookupService.getLookupByLookupName("annotationTags").then(function (allAnnotationTags) {
                             $scope.allAnnotationTags = allAnnotationTags;
                             ArkCaseCrossWindowMessagingService.addHandler('select-annotation-tags', onSelectAnnotationTags);
                             ArkCaseCrossWindowMessagingService.start('snowbound', $scope.ecmFileProperties['ecm.viewer.snowbound']);
                         });
+                        onHideLoader();
+                        $scope.loaderOpened = false;
                     };
 
                     function onSelectAnnotationTags(data) {
@@ -89,6 +113,7 @@ angular.module('document-details').controller(
                     $scope.showPdfJs = false;
                     $scope.transcriptionTabActive = false;
                     $scope.ocrInfoActive = false;
+                    $scope.loaderOpened = false;
 
                     var scopeToColor =
                         {
@@ -120,6 +145,12 @@ angular.module('document-details').controller(
                         if (videoElement) {
                             track = videoElement.addTextTrack("subtitles", "Transcription", $scope.transcribeObjectModel.language);
                             videoElement.addEventListener("play", function() {
+                                var numberOfTracks = videoElement.textTracks.length;
+                                for (var i = 0; i < numberOfTracks; i++)
+                                {
+                                    var currentTrack = videoElement.textTracks[i];
+                                    currentTrack.mode = "hidden";
+                                }
                                 track.mode = "showing";
                             });
                         }
@@ -161,7 +192,7 @@ angular.module('document-details').controller(
                                 $log.warn("Browser does not support TextTrackCue");
                             }
                         }
-                    }
+                    };
 
                     $scope.playAt = function(seconds) {
                         var videoElement = angular.element(document.getElementsByTagName("video")[0])[0];
@@ -170,13 +201,20 @@ angular.module('document-details').controller(
                             videoElement.currentTime = seconds;
                             videoElement.play();
                         }
-                    }
+                    };
 
                     /**
                      * Builds the snowbound url based on the parameters passed into the controller state and opens the specified document in
                      * an iframe which points to snowbound
                      */
                     $scope.openSnowboundViewer = function() {
+                        if ($scope.loaderOpened == false) {
+                            onShowLoader();
+                            $scope.loaderOpened == true;
+                        } else {
+                            onHideLoader();
+                            $scope.loaderOpened == false;
+                        }
                         var viewerUrl = SnowboundService.buildSnowboundUrl($scope.ecmFileProperties, $scope.acmTicket, $scope.userId, $scope.userFullName, $scope.fileInfo, !$scope.editingMode, $scope.caseInfo.caseNumber);
                         $scope.documentViewerUrl = $sce.trustAsResourceUrl(viewerUrl);
                     };
@@ -227,7 +265,7 @@ angular.module('document-details').controller(
                         $scope.caseInfo.caseNumber = '';
                     }
 
-                    $q.all([ ticketInfo, userInfo, totalUserInfo, ecmFileConfig, ecmFileInfo.$promise, ecmFileEvents.$promise, ecmFileParticipants.$promise, formsConfig, transcriptionConfigurationPromise]).then(function(data) {
+                    $q.all([ ticketInfo, userInfo, totalUserInfo, ecmFileConfig, ecmFileInfo.$promise, ecmFileEvents.$promise, ecmFileParticipants.$promise, formsConfig, transcriptionConfigurationPromise, userPrivilegesPromise]).then(function(data) {
                         $scope.acmTicket = data[0].data;
                         $scope.userId = data[1].userId;
                         $scope.userFullName = data[1].fullName;
@@ -242,7 +280,16 @@ angular.module('document-details').controller(
                         // default view == snowbound
                         $scope.view = "modules/document-details/views/document-viewer-snowbound.client.view.html";
 
-                        $scope.transcribeEnabled = $scope.transcriptionConfiguration.data.enabled;
+                        $scope.transcribeEnabled = $scope.transcriptionConfiguration.data['transcribe.enabled'];
+
+                        var privilegesList = data[9];
+                        $scope.billingPrivilege = false;
+                        for(var i = 0; i < privilegesList.length; i++){
+                            if(privilegesList[i] === 'acmListBillingItemsPrivilege'){
+                                $scope.billingPrivilege = true;
+                                break;
+                            }
+                        }
 
                         $timeout(function() {
                             $scope.$broadcast('document-data', $scope.ecmFile);
@@ -285,13 +332,13 @@ angular.module('document-details').controller(
 
                     $scope.onPlayerReady = function(API) {
                         $scope.videoAPI = API;
-                    }
+                    };
 
                     $scope.enableEditing = function() {
                         ObjectLockingService.lockObject($scope.ecmFile.fileId, ObjectService.ObjectTypes.FILE, ObjectService.LockTypes.WRITE, true).then(function(lockedFile) {
                             $scope.editingMode = true;
                             $scope.openSnowboundViewer();
-                            
+
                             // count user idle time. When user is idle for more then 1 minute, don't acquire lock
                             $scope._idleSecondsCounter = 0;
                             document.onclick = function() {
@@ -302,12 +349,12 @@ angular.module('document-details').controller(
                             };
                             document.onkeypress = function() {
                                 $scope._idleSecondsCounter = 0;
-                            };                            
+                            };
                             function incrementIdleSecondsCounter() {
                                 $scope._idleSecondsCounter++;
                             }
                             window.setInterval(incrementIdleSecondsCounter, 1000);
-                            
+
                             // Refresh editing lock on timer
                             UtilTimerService.useTimer('refreshFileEditingLock', 60000 // every 1 minute
                             , function() {
@@ -322,20 +369,40 @@ angular.module('document-details').controller(
                             MessageService.error(errorMessage.data);
                         });
 
-                    }
+                    };
 
                     // Release editing lock on window unload, if acquired
-                    $window.addEventListener('beforeunload', function() {
+                    $window.addEventListener('unload', function () {
+                    	$scope.data = {
+                                objectId: $scope.ecmFile.fileId,
+                                objectType: ObjectService.ObjectTypes.FILE,
+                                lockType: ObjectService.LockTypes.WRITE
+                            };
+
+                        var data = angular.toJson($scope.data);
+
+                        var url = 'api/v1/plugin/' + ObjectService.ObjectTypes.FILE + '/' + $scope.ecmFile.fileId + '/lock?lockType=' + ObjectService.LockTypes.WRITE;
+
                         if ($scope.editingMode) {
-                            ObjectLockingService.unlockObject($scope.ecmFile.fileId, ObjectService.ObjectTypes.FILE, ObjectService.LockTypes.WRITE, true);
+                        	if("sendBeacon" in navigator)
+                            {
+                        		navigator.sendBeacon(url, data);
+                            } else {
+	                            var xmlhttp = new XMLHttpRequest();
+	                            xmlhttp.open("POST", url, false); //false - synchronous call
+	                            xmlhttp.setRequestHeader("Content-type", "application/json");
+	                            xmlhttp.send(data);
+                            }
                         }
                     });
 
-                    $rootScope.$bus.subscribe("object.changed/FILE/" + $stateParams.id, function() {
+                    $rootScope.$bus.subscribe("object.changed/FILE/" + $stateParams.id, function () {
                         DialogService.alert($translate.instant("documentDetails.fileChangedAlert")).then(function() {
                             $scope.openSnowboundViewer();
                             $scope.$broadcast('refresh-ocr');
                         });
+                        onHideLoader();
+                        $scope.loaderOpened = true;
                     });
 
                     $scope.$bus.subscribe('sync-progress', function(data) {
@@ -347,7 +414,7 @@ angular.module('document-details').controller(
  * 2018-06-01 David Miller. This block is needed to tell the PDF.js angular module, where the PDF.js library is. Without this, on minified
  * systems the PDF.js viewer will not work. I copied this from the project web page,
  * https://github.com/legalthings/angular-pdfjs-viewer#advanced-configuration.
- * 
+ *
  * @param pdfjsViewerConfigProvider
  * @returns
  */

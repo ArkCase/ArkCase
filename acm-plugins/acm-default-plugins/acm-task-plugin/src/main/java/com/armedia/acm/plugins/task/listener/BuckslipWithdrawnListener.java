@@ -29,12 +29,12 @@ package com.armedia.acm.plugins.task.listener;
 
 import org.activiti.engine.delegate.DelegateExecution;
 import org.activiti.engine.delegate.JavaDelegate;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 public class BuckslipWithdrawnListener implements JavaDelegate
 {
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private transient final Logger log = LogManager.getLogger(getClass());
     private BuckslipTaskHelper buckslipTaskHelper;
 
     @Override

@@ -37,8 +37,8 @@ import com.armedia.acm.audit.model.AuditEvent;
 import com.armedia.acm.audit.service.systemlogger.ISystemLogger;
 
 import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -49,7 +49,7 @@ import java.util.Map;
  */
 public class AuditServiceImpl implements AuditService
 {
-    private final Logger LOG = LoggerFactory.getLogger(getClass());
+    private final Logger LOG = LogManager.getLogger(getClass());
 
     private AuditConfig auditConfig;
     private ISystemLogger systemLogger;
@@ -81,7 +81,7 @@ public class AuditServiceImpl implements AuditService
         {
             convertConfidentialProperties(auditEvent);
 
-            if (auditConfig.getDatabaseChangesLoggingEnabled())
+            if (auditConfig.getDatabaseEnabled())
             {
                 auditDao.save(auditEvent);
             }

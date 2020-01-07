@@ -36,6 +36,7 @@ import static org.junit.Assert.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
 import com.armedia.acm.audit.dao.AuditDao;
+import com.armedia.acm.audit.model.AuditConfig;
 import com.armedia.acm.audit.model.AuditEvent;
 import com.armedia.acm.audit.model.AuditEventConfig;
 import com.armedia.acm.core.query.QueryResultPageWithTotalCount;
@@ -49,8 +50,8 @@ import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -92,7 +93,8 @@ public class GetAuditByObjectTypeAndObjectIdAPIControllerTest
     @Autowired
     private ExceptionHandlerExceptionResolver exceptionResolver;
     private AuditEventConfig auditEventConfigMock;
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private AuditConfig auditConfig;
+    private Logger log = LogManager.getLogger(getClass());
 
     @Before
     public void setUp() throws Exception
@@ -102,10 +104,12 @@ public class GetAuditByObjectTypeAndObjectIdAPIControllerTest
         mockAuthentication = createMock(Authentication.class);
         mockReplaceEventTypeNames = createMock(ReplaceEventTypeNames.class);
         auditEventConfigMock = createMock(AuditEventConfig.class);
+        auditConfig = createMock(AuditConfig.class);
         unit = new GetAuditByObjectTypeAndObjectIdAPIController();
         unit.setAuditDao(mockAuditDao);
         unit.setReplaceEventTypeNames(mockReplaceEventTypeNames);
         unit.setAuditEventConfig(auditEventConfigMock);
+        unit.setAuditConfig(auditConfig);
 
         mockMvc = MockMvcBuilders.standaloneSetup(unit).setHandlerExceptionResolvers(exceptionResolver).build();
 
@@ -146,16 +150,16 @@ public class GetAuditByObjectTypeAndObjectIdAPIControllerTest
     @Test
     public void getEventsByObjectTypeAndObjectId() throws Exception
     {
-        expect(auditEventConfigMock.getEventTypes())
-                .andReturn(Collections.singletonMap(key, "com.armedia.acm.app.task.create, com.armedia.acm.casefile.created"));
+        expect(auditConfig.getEventTypeByKey("OBJECT_TYPE"))
+                .andReturn("com.armedia.acm.app.task.create, com.armedia.acm.casefile.created");
         executeTest(false);
     }
 
     @Test
     public void getEventsByObjectTypeAndObjectIdWhenEventTypesNull() throws Exception
     {
-        expect(auditEventConfigMock.getEventTypes())
-                .andReturn(Collections.singletonMap(key, null));
+        expect(auditConfig.getEventTypeByKey("OBJECT_TYPE"))
+                .andReturn(null);
         executeTest(true);
     }
 

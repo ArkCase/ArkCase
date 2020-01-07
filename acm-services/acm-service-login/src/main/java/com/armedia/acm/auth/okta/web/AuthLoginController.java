@@ -55,8 +55,8 @@ import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.http.MediaType;
@@ -85,7 +85,7 @@ import java.util.stream.Collectors;
 @RequestMapping({ "/mfa" })
 public class AuthLoginController implements ApplicationEventPublisherAware
 {
-    private Logger LOGGER = LoggerFactory.getLogger(getClass());
+    private Logger LOGGER = LogManager.getLogger(getClass());
     private OktaUserService oktaUserService;
     private FactorService factorService;
     private FactorLifecycleService factorLifecycleService;

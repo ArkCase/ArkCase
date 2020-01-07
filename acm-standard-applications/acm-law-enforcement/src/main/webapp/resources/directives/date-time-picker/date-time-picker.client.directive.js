@@ -7,7 +7,8 @@ angular.module('directives').directive('dateTimePicker', ['moment', 'Util.DateSe
             property: '@',
             timeFormatDisabled: '@',
             datePickerId: '@',
-            afterSave : '&onAfterSave'
+            afterSave : '&onAfterSave',
+            isRequired: '=?'
         },
         link: function ($scope, element) {
             $scope.editable = false;
@@ -35,7 +36,7 @@ angular.module('directives').directive('dateTimePicker', ['moment', 'Util.DateSe
                     } else {
                         $scope.today = UtilDateService.isoToLocalDateTime(date);
                     }
-                    $scope.dateInPicker = $scope.today;
+                    $scope.dateInPicker = UtilDateService.isoToDate($scope.today);
                 }
                 $scope.minYear = moment.utc($scope.dateInPicker).year() - 50;
                 $scope.maxYear = moment.utc($scope.dateInPicker).year() + 1;

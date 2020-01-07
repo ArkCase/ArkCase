@@ -38,8 +38,8 @@ import com.armedia.acm.plugins.person.pipeline.OrganizationPipelineContext;
 import com.armedia.acm.services.pipeline.PipelineManager;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -55,7 +55,7 @@ public class OrganizationServiceImpl implements OrganizationService
 
     private PipelineManager<Organization, OrganizationPipelineContext> organizationPipelineManager;
 
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
 
     @Override
     public Organization findOrCreateOrganization(String organizationName, String userId)

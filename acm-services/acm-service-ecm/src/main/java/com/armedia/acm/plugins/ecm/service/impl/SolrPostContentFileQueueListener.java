@@ -31,8 +31,8 @@ import com.armedia.acm.services.search.model.SolrCore;
 import com.armedia.acm.services.search.service.solr.SolrPostClient;
 import com.armedia.acm.services.search.service.solr.SolrPostException;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.jms.annotation.JmsListener;
 
 /**
@@ -40,7 +40,7 @@ import org.springframework.jms.annotation.JmsListener;
  */
 public class SolrPostContentFileQueueListener
 {
-    private transient final Logger logger = LoggerFactory.getLogger(getClass());
+    private transient final Logger logger = LogManager.getLogger(getClass());
 
     private SolrPostClient solrPostClient;
 

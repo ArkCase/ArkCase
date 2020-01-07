@@ -38,12 +38,12 @@ import com.armedia.acm.plugins.person.model.PersonOrganizationAssociation;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.users.service.tracker.UserTrackerService;
 import com.armedia.acm.web.api.MDCConstants;
-import gov.foia.model.*;
+
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItem;
 import org.apache.commons.io.IOUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.slf4j.MDC;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -51,15 +51,30 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Base64;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import gov.foia.model.FOIAConstants;
+import gov.foia.model.FOIAPerson;
+import gov.foia.model.FOIARequest;
+import gov.foia.model.FOIARequesterAssociation;
+import gov.foia.model.PortalFOIARequest;
+import gov.foia.model.PortalFOIARequestFile;
 
 public class PortalCreateRequestService
 {
-    private final Logger log = LoggerFactory.getLogger(getClass());
+    private final Logger log = LogManager.getLogger(getClass());
 
     private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
 
@@ -85,23 +100,25 @@ public class PortalCreateRequestService
 
         FOIARequest request = populateRequest(in);
 
-
         Map<String, List<MultipartFile>> filesMap = new HashMap<>();
-        for (Map.Entry<String, List<PortalFOIARequestFile>> entry : in.getFiles().entrySet())
+        if (in.getFiles() != null)
         {
-            List<MultipartFile> files = new ArrayList<>();
-            for (PortalFOIARequestFile requestFile : entry.getValue())
+            for (Map.Entry<String, List<PortalFOIARequestFile>> entry : in.getFiles().entrySet())
             {
-                try
+                List<MultipartFile> files = new ArrayList<>();
+                for (PortalFOIARequestFile requestFile : entry.getValue())
                 {
-                    files.add(portalRequestFileToMultipartFile(requestFile));
+                    try
+                    {
+                        files.add(portalRequestFileToMultipartFile(requestFile));
+                    }
+                    catch (IOException e)
+                    {
+                        log.error("Failed to receive file {}, {}", requestFile.getFileName(), e.getMessage());
+                    }
                 }
-                catch (IOException e)
-                {
-                    log.error("Failed to receive file {}, {}", requestFile.getFileName(), e.getMessage());
-                }
+                filesMap.put(entry.getKey(), files);
             }
-            filesMap.put(entry.getKey(), files);
         }
 
         FOIARequest saved = (FOIARequest) getSaveFOIARequestService().savePortalRequest(request, filesMap, auth, ipAddress);
@@ -145,6 +162,11 @@ public class PortalCreateRequestService
         request.setRequestCategory(in.getRequestCategory());
         request.setDeliveryMethodOfResponse(in.getDeliveryMethodOfResponse());
 
+        if(in.getTitle() != null)
+        {
+            request.setTitle(in.getTitle());
+        }
+
         request.setDetails(in.getSubject());
         request.setRecordSearchDateFrom(in.getRecordSearchDateFrom());
         request.setRecordSearchDateTo(in.getRecordSearchDateTo());
@@ -169,7 +191,7 @@ public class PortalCreateRequestService
         requester.setFamilyName(in.getLastName());
         requester.setMiddleName(in.getMiddleName());
         requester.setTitle(in.getPrefix());
-        requester.setPosition(in.getTitle());
+        requester.setPosition(in.getPosition());
         // requester.setCompany(in.getOrganization());
 
         if (in.getOrganization() != null && in.getOrganization().length() > 0)
@@ -179,15 +201,13 @@ public class PortalCreateRequestService
             organization.setOrganizationType("Corporation");
             requester.getOrganizations().add(organization);
 
-            PostalAddress orgAddress = new PostalAddress();
-            orgAddress.setType("Business");
-            organization.getAddresses().add(orgAddress);
-
             List<PersonOrganizationAssociation> personOrganizationAssociations = new ArrayList<>();
             PersonOrganizationAssociation personOrganizationAssociation = new PersonOrganizationAssociation();
             personOrganizationAssociation.setOrganization(organization);
             personOrganizationAssociation.setDefaultOrganization(true);
             personOrganizationAssociation.setPerson(requester);
+            personOrganizationAssociation.setPersonToOrganizationAssociationType("owner");
+            personOrganizationAssociation.setOrganizationToPersonAssociationType("owned");
             personOrganizationAssociations.add(personOrganizationAssociation);
             requester.setOrganizationAssociations(personOrganizationAssociations);
         }
@@ -200,18 +220,46 @@ public class PortalCreateRequestService
         address.setStreetAddress2(in.getAddress2());
         address.setZip(in.getZip());
         address.setType("Business");
-        requester.getAddresses().add(address);
+        if((address.getStreetAddress() != null && !address.getStreetAddress().equals(""))
+                || (address.getStreetAddress2() != null && !address.getStreetAddress2().equals(""))
+                || (address.getCity() != null && !address.getCity().equals(""))
+                || (address.getZip() != null && !address.getZip().equals(""))
+                || (address.getState() != null && !address.getState().equals(""))){
+            requester.getAddresses().add(address);
+        }
 
         // the UI expects the contact methods in this order: Phone, Fax, Email
+        List<ContactMethod> contactMethod = new ArrayList<>();
+        requester.setContactMethods(contactMethod);
         ContactMethod phone = buildContactMethod("phone", in.getPhone());
-        requester.getContactMethods().add(phone);
+        if (phone.getValue() != null && !phone.getValue().equals(""))
+        {
+            requester.getContactMethods().add(0, phone);
+        }
+        else
+        {
+            requester.getContactMethods().add(0, null);
+        }
         ContactMethod fax = buildContactMethod("fax", null);
-        requester.getContactMethods().add(fax);
+        if (fax.getValue() != null && !fax.getValue().equals(""))
+        {
+            requester.getContactMethods().add(1, fax);
+        }
+        else
+        {
+            requester.getContactMethods().add(1, null);
+        }
         ContactMethod email = buildContactMethod("email", in.getEmail());
-        requester.getContactMethods().add(email);
+        if (email.getValue() != null && !email.getValue().equals(""))
+        {
+            requester.getContactMethods().add(2, email);
+        }
+        else
+        {
+            requester.getContactMethods().add(2, null);
+        }
 
         return request;
-
     }
 
     private ContactMethod buildContactMethod(String type, String value)

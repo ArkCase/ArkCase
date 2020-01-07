@@ -28,16 +28,15 @@ package com.armedia.acm.plugins.admin.service;
  */
 
 import com.armedia.acm.audit.dao.AuditDao;
+import com.armedia.acm.core.ApplicationConfig;
 import com.armedia.acm.objectonverter.DateFormats;
-import com.armedia.acm.plugins.admin.exception.AcmPropertiesManagementException;
 import com.armedia.acm.services.notification.dao.NotificationDao;
 import com.armedia.acm.services.notification.model.NotificationConstants;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 
-import org.json.JSONException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.mule.api.MuleException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -48,25 +47,19 @@ import java.util.Date;
  */
 public class HistoryCleanService
 {
-    private JsonPropertiesManagementService jsonPropertiesManagementService;
+    private ApplicationPropertiesManagementService applicationPropertiesManagementService;
     private AuditDao auditDao;
     private NotificationDao notificationDao;
     private ExecuteSolrQuery executeSolrQuery;
+    private ApplicationConfig applicationConfig;
 
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
 
     public void cleanHistory()
     {
         int historyDays = 0;
-        try
-        {
-            historyDays = jsonPropertiesManagementService.getProperties().getInt("historyDays");
-        }
-        catch (AcmPropertiesManagementException | JSONException | NullPointerException | ClassCastException e)
-        {
-            log.warn("History clean setting is not defined, disabling by default.");
-            return;
-        }
+
+        historyDays = applicationConfig.getHistoryDays();
 
         if (historyDays <= 0)
         {
@@ -113,14 +106,9 @@ public class HistoryCleanService
         return calendar.getTime();
     }
 
-    public JsonPropertiesManagementService getJsonPropertiesManagementService()
+    public void setApplicationPropertiesManagementService(ApplicationPropertiesManagementService applicationPropertiesManagementService)
     {
-        return jsonPropertiesManagementService;
-    }
-
-    public void setJsonPropertiesManagementService(JsonPropertiesManagementService jsonPropertiesManagementService)
-    {
-        this.jsonPropertiesManagementService = jsonPropertiesManagementService;
+        this.applicationPropertiesManagementService = applicationPropertiesManagementService;
     }
 
     public AuditDao getAuditDao()
@@ -146,5 +134,10 @@ public class HistoryCleanService
     public void setExecuteSolrQuery(ExecuteSolrQuery executeSolrQuery)
     {
         this.executeSolrQuery = executeSolrQuery;
+    }
+
+    public void setApplicationConfig(ApplicationConfig applicationConfig)
+    {
+        this.applicationConfig = applicationConfig;
     }
 }

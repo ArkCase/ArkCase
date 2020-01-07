@@ -30,8 +30,8 @@ package com.armedia.acm.web.api;
 import com.armedia.acm.core.AcmSpringActiveProfile;
 import com.armedia.acm.web.api.service.LoginWarningMessageService;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -51,7 +51,7 @@ public class LoginController
 {
     private LoginWarningMessageService loginWarningMessageService;
     private AcmSpringActiveProfile acmSpringActiveProfile;
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
 
     @RequestMapping(value = { "/login", "/login.html" }, method = RequestMethod.GET)
     public String getLogin(Model model, HttpSession httpSession)

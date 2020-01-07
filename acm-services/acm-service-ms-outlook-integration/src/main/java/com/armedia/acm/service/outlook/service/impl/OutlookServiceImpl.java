@@ -48,6 +48,7 @@ import com.armedia.acm.service.outlook.dao.OutlookPasswordDao;
 import com.armedia.acm.service.outlook.model.AcmOutlookFolderCreator;
 import com.armedia.acm.service.outlook.model.AcmOutlookUser;
 import com.armedia.acm.service.outlook.model.OutlookCalendarItem;
+import com.armedia.acm.service.outlook.model.OutlookConfig;
 import com.armedia.acm.service.outlook.model.OutlookContactItem;
 import com.armedia.acm.service.outlook.model.OutlookDTO;
 import com.armedia.acm.service.outlook.model.OutlookFolder;
@@ -73,8 +74,8 @@ import com.armedia.acm.services.users.model.AcmUser;
 
 import org.apache.commons.codec.digest.DigestUtils;
 import org.mule.util.FileUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -123,7 +124,7 @@ import microsoft.exchange.webservices.data.search.filter.SearchFilter;
  */
 public class OutlookServiceImpl implements OutlookService, OutlookFolderService
 {
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private transient final Logger log = LogManager.getLogger(getClass());
 
     private OutlookDao dao;
     private AcmOutlookFolderCreatorDao folderCreatorDao;
@@ -132,11 +133,7 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
     private TemplatingEngine templatingEngine;
 
     private OutlookEventPublisher outlookEventPublisher;
-
-    private Boolean sendFromSystemUser = false;
-    private String systemUserEmail;
-    private String systemUserPass;
-    private String systemUserId;
+    private OutlookConfig outlookConfig;
 
     private AcmEmailContentGeneratorService acmEmailContentGeneratorService;
     private AcmCryptoUtils acmCryptoUtils;
@@ -387,9 +384,10 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
             throws Exception
     {
         AcmOutlookUser outlookUser;
-        if (getSendFromSystemUser())
+        if (outlookConfig.getSendNotificationFromSystemUser())
         {
-            outlookUser = new AcmOutlookUser(getSystemUserId(), getSystemUserEmail(), getSystemUserPass());
+            outlookUser = new AcmOutlookUser(outlookConfig.getSystemUserId(), outlookConfig.getSystemUserEmail(),
+                    outlookConfig.getSystemUserPassword());
         }
         else
         {
@@ -425,7 +423,7 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
         emailMessage.setSubject(emailWithAttachmentsDTO.getSubject());
         emailMessage.setBody(MessageBody.getMessageBodyFromText(emailWithAttachmentsDTO.getMessageBody()));
         emailMessage.getBody().setBodyType(BodyType.HTML);
-        emailMessage.getToRecipients().add(systemUserEmail);
+        emailMessage.getToRecipients().add(outlookConfig.getSystemUserEmail());
 
         if (emailWithAttachmentsDTO.getEmailAddresses() != null && !emailWithAttachmentsDTO.getEmailAddresses().isEmpty())
         {
@@ -458,9 +456,10 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
 
         AcmOutlookUser outlookUser;
 
-        if (getSendFromSystemUser())
+        if (outlookConfig.getSendNotificationFromSystemUser())
         {
-            outlookUser = new AcmOutlookUser(getSystemUserId(), getSystemUserEmail(), getSystemUserPass());
+            outlookUser = new AcmOutlookUser(outlookConfig.getSystemUserId(), outlookConfig.getSystemUserEmail(),
+                    outlookConfig.getSystemUserPassword());
         }
         else
         {
@@ -552,12 +551,15 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
                     try
                     {
                         pdfConvertedFile = getDefaultFolderAndFileConverter().convertAndReturnConvertedFile(ecmFile);
-                        pdfConvertedFileInputStream = new FileInputStream(pdfConvertedFile);
-                        contents = pdfConvertedFileInputStream;
-                        fileName = fileKey.concat(".pdf");
+                        if(pdfConvertedFile != null)
+                        {
+                            pdfConvertedFileInputStream = new FileInputStream(pdfConvertedFile);
+                            contents = pdfConvertedFileInputStream;
+                            fileName = fileKey.concat(".pdf");
 
-                        tmpFiles.add(pdfConvertedFile);
-                        tmpFilesInputStream.add(pdfConvertedFileInputStream);
+                            tmpFiles.add(pdfConvertedFile);
+                            tmpFilesInputStream.add(pdfConvertedFileInputStream);
+                        }
                     }
                     catch (ConversionException | FileNotFoundException e)
                     {
@@ -597,9 +599,10 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
         OutlookDTO outlookDTO = retrieveOutlookPasswordInternal(authentication);
         AcmOutlookUser outlookUser = new AcmOutlookUser(authentication.getName(), user.getMail(), outlookDTO.getOutlookPassword());
 
-        if (getSendFromSystemUser())
+        if (outlookConfig.getSendNotificationFromSystemUser())
         {
-            outlookUser = new AcmOutlookUser(getSystemUserId(), getSystemUserEmail(), getSystemUserPass());
+            outlookUser = new AcmOutlookUser(outlookConfig.getSystemUserId(), outlookConfig.getSystemUserEmail(),
+                    outlookConfig.getSystemUserPassword());
         }
 
         ExchangeService service = connect(outlookUser);
@@ -1093,46 +1096,6 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
         this.outlookEventPublisher = outlookEventPublisher;
     }
 
-    public Boolean getSendFromSystemUser()
-    {
-        return sendFromSystemUser;
-    }
-
-    public void setSendFromSystemUser(Boolean sendFromSystemUser)
-    {
-        this.sendFromSystemUser = sendFromSystemUser;
-    }
-
-    public String getSystemUserEmail()
-    {
-        return systemUserEmail;
-    }
-
-    public void setSystemUserEmail(String systemUserEmail)
-    {
-        this.systemUserEmail = systemUserEmail;
-    }
-
-    public String getSystemUserPass()
-    {
-        return systemUserPass;
-    }
-
-    public void setSystemUserPass(String systemUserPass)
-    {
-        this.systemUserPass = systemUserPass;
-    }
-
-    public String getSystemUserId()
-    {
-        return systemUserId;
-    }
-
-    public void setSystemUserId(String systemUserId)
-    {
-        this.systemUserId = systemUserId;
-    }
-
     public AcmContainerDao getAcmContainerDao()
     {
         return acmContainerDao;
@@ -1241,5 +1204,15 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
     public void setDefaultFolderAndFileConverter(DefaultFolderAndFileConverter defaultFolderAndFileConverter)
     {
         this.defaultFolderAndFileConverter = defaultFolderAndFileConverter;
+    }
+
+    public OutlookConfig getOutlookConfig()
+    {
+        return outlookConfig;
+    }
+
+    public void setOutlookConfig(OutlookConfig outlookConfig)
+    {
+        this.outlookConfig = outlookConfig;
     }
 }

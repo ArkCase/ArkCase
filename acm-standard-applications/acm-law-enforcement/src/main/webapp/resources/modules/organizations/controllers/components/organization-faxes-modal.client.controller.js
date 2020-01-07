@@ -30,4 +30,17 @@ angular.module('organizations').controller('Organizations.FaxesModalController',
             usersMentioned: $scope.params.usersMentioned
         });
     };
+
+    $scope.validateInput = function () {
+        var regex = /^\d{3}[\-]\d{3}[\-]\d{4}$/;
+        var value = $scope.fax.value;
+        if (regex.test(value)) {
+            $scope.showPhoneError = false;
+            $scope.fax.value = value;
+        } else {
+            $scope.showPhoneError = true;
+            $scope.fax.value = null;
+        }
+    };
+
 } ]);

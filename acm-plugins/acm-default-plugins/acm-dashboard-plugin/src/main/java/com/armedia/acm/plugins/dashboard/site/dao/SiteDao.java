@@ -30,8 +30,8 @@ package com.armedia.acm.plugins.dashboard.site.dao;
 import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.plugins.dashboard.site.model.Site;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import javax.persistence.TypedQuery;
 
@@ -43,7 +43,7 @@ import java.util.List;
  */
 public class SiteDao extends AcmAbstractDao<Site>
 {
-    private static final Logger LOGGER = LoggerFactory.getLogger(SiteDao.class);
+    private static final Logger LOGGER = LogManager.getLogger(SiteDao.class);
 
     @Override
     public Class<Site> getPersistenceClass()

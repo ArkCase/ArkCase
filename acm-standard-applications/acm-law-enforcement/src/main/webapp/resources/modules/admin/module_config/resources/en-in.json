@@ -217,6 +217,7 @@
                     "cancelBtn": "Cancel",
                     "deleteBtn": "Delete",
                     "headerText": "You are about to delete group: ",
+                    "controlGroupHeaderWarning": "You are about to delete {{groupName}} group which is a member in the control group {{controlGroupName}}",
                     "bodyText": "Are you sure?"
                 }
             },
@@ -248,7 +249,7 @@
             },
             "searchFilter.placeholder": "Search"
         },
-        "security.selectPrivileges": "Create Role/Select Privileges",
+        "security.selectPrivileges": "Select Privileges",
         "security.selectPrivileges.applicationRole": "Application Role",
         "security.selectPrivileges.createRole": "Create Role",
         "security.selectPrivileges.editRole": "Edit Role",
@@ -712,6 +713,29 @@
                     }
                 }
             },
+            "sequenceManagementReset": {
+                "title": "Reset List",
+                "editBtn": "Edit",
+                "viewBtn": "View",
+                "removeBtn": "Remove",
+                "cancelBtn": "Cancel",
+                "saveBtn": "Save",
+                "grid": {
+                    "startResetDate": "Start Reset Date",
+                    "executedDate": "Executed Date",
+                    "repeat": "Repeat",
+                    "repeatPeriod": "Repeat Period"
+                },
+                "detailsModal": {
+                    "title": "Autoincrement Reset",
+                    "addTitle": "Add Autoincrement Reset",
+                    "editTitle": "Edit Autoincrement Reset",
+                    "resetStartDate": "Reset Start Date",
+                    "repeatReset": "Repeat reset",
+                    "repeatResetPeriod": "Repeat reset period (days)",
+                    "sequenceResetScheduledWarning": "Sequence reset scheduled for today"
+                }
+            },
             "login.config": {
                 "title": "Login Configuration",
                 "idleLimit.label": "Login idle limit (in milliseconds)",
@@ -975,6 +999,43 @@
                 "enableOCR.checkbox": "Enable OCR"
             }
         },
+        "portals.portalsConfiguration": {
+            "nodeTitle": "en-in_Portals Service",
+            "title": "Portals Configuration",
+            "url": "en-in_URL",
+            "id": "en-in_ID",
+            "portalId": "en-in_Portal ID",
+            "portalDescription": "en-in_Description",
+            "portalUser": "en-in_User",
+            "save": "en-in_Save",
+            "cancel": "en-in_Cancel",
+            "placeholder": {
+                "portalUrl": "en-in_Enter Portal URL",
+                "portalId": "en-in_ID will be generate",
+                "portalDescription": "en-in_Enter Portal Description",
+                "portalUser": "en-in_Select Portal User"
+            },
+            "message": {
+                "edit": "en-in_Portal is successfully edited",
+                "add": "en-in_Portal is successfully added",
+                "delete": "en-in_Portal is successfully deleted"
+            }
+        },
+        "userSearch": {
+            "title": "en-in_User Search",
+            "cancelButton": "en-in_Cancel",
+            "confirmButton": "en-in_Save",
+            "search": {
+                "placeholder": "en-in_Search for the user to assign to this portal",
+                "btn": "en-in_Search"
+            },
+            "assigneeGridColumns": {
+                "name": "en-in_Name",
+                "type": "en-in_Type",
+                "title": "en-in_Title",
+                "username": "en-in_Username"
+	        }
+	    },
         "stateOfArkcase": {
             "title": "State of Arkcase",
             "pickDate": "Pick Date",

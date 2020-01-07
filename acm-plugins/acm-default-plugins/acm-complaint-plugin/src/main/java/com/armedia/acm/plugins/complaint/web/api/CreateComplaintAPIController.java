@@ -39,8 +39,8 @@ import com.armedia.acm.plugins.complaint.service.SaveComplaintTransaction;
 import com.armedia.acm.services.participants.model.DecoratedAssignedObjectParticipants;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -57,7 +57,7 @@ import java.util.Date;
 
 public class CreateComplaintAPIController
 {
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
 
     private SaveComplaintTransaction complaintTransaction;
     private ComplaintEventPublisher eventPublisher;

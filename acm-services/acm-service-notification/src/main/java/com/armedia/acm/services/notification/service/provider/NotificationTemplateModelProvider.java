@@ -27,20 +27,28 @@ package com.armedia.acm.services.notification.service.provider;
  * #L%
  */
 
+import com.armedia.acm.core.provider.TemplateModelProvider;
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.service.NotificationUtils;
 
-public class NotificationTemplateModelProvider implements TemplateModelProvider
+public class NotificationTemplateModelProvider implements TemplateModelProvider<Notification>
 {
 
     protected NotificationUtils notificationUtils;
 
     @Override
-    public Object getModel(Notification notification)
+    public Notification getModel(Object object)
     {
+        Notification notification = (Notification) object;
         notification.setObjectLink(notificationUtils.buildNotificationLink(notification.getParentType(),
                 notification.getParentId(), notification.getRelatedObjectType(), notification.getRelatedObjectId()));
         return notification;
+    }
+
+    @Override
+    public Class<Notification> getType()
+    {
+        return Notification.class;
     }
 
     public NotificationUtils getNotificationUtils()

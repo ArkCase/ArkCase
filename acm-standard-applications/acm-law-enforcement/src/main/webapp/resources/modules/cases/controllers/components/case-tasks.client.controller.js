@@ -2,8 +2,8 @@
 
 angular.module('cases').controller(
         'Cases.TasksController',
-        [ '$scope', '$state', '$stateParams', '$q', '$translate', 'UtilService', 'ConfigService', 'ObjectService', 'Object.TaskService', 'Task.WorkflowService', 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'Case.InfoService', 'Task.AlertsService', 'ModalDialogService', 'PermissionsService',
-                function($scope, $state, $stateParams, $q, $translate, Util, ConfigService, ObjectService, ObjectTaskService, TaskWorkflowService, HelperUiGridService, HelperObjectBrowserService, CaseInfoService, TaskAlertsService, ModalDialogService, PermissionsService) {
+        [ '$scope', '$state', '$stateParams', '$q', '$translate', 'UtilService', 'ConfigService', 'ObjectService', 'Object.TaskService', 'Task.WorkflowService', 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'Case.InfoService', 'Task.AlertsService', 'ModalDialogService', 'PermissionsService', '$timeout',
+                function($scope, $state, $stateParams, $q, $translate, Util, ConfigService, ObjectService, ObjectTaskService, TaskWorkflowService, HelperUiGridService, HelperObjectBrowserService, CaseInfoService, TaskAlertsService, ModalDialogService, PermissionsService, $timeout) {
 
                     var componentHelper = new HelperObjectBrowserService.Component({
                         scope: $scope,
@@ -59,6 +59,9 @@ angular.module('cases').controller(
                     var retrieveGridData = function() {
                         var currentObjectId = Util.goodMapValue($scope.objectInfo, "id");
                         if (Util.goodPositive(currentObjectId, false)) {
+                            
+                            ObjectTaskService.resetChildTasks(ObjectService.ObjectTypes.CASE_FILE, currentObjectId);
+                            
                             ObjectTaskService.queryChildTasks(ObjectService.ObjectTypes.CASE_FILE, currentObjectId, Util.goodValue($scope.start, 0), Util.goodValue($scope.pageSize, 10), Util.goodMapValue($scope.sort, "by"), Util.goodMapValue($scope.sort, "dir")).then(function(data) {
                                 var tasks = data.response.docs;
                                 angular.forEach(tasks, function(task) {
@@ -76,19 +79,26 @@ angular.module('cases').controller(
                     };
 
                     $scope.addNew = function() {
+                        var modalParams = {};
+                        modalParams.parentType = ObjectService.ObjectTypes.CASE_FILE;
+                        modalParams.parentObject = $scope.objectInfo.caseNumber;
+                        modalParams.parentId = $scope.objectInfo.id;
+                        modalParams.parentTitle = $scope.objectInfo.title;
+                        modalParams.taskType = 'ACM_TASK';
+
                         var modalMetadata = {
                             moduleName: "tasks",
                             templateUrl: "modules/tasks/views/components/task-new-task.client.view.html",
                             controllerName: "Tasks.NewTaskController",
-                            params: {
-                                parentType: ObjectService.ObjectTypes.CASE_FILE,
-                                parentObject: $scope.objectInfo.caseNumber,
-                                parentId: $scope.objectInfo.id,
-                                parentTitle: $scope.objectInfo.title,
-                                taskType: 'ACM_TASK'
-                            }
+                            params: modalParams
                         };
-                        ModalDialogService.showModal(modalMetadata);
+                        ModalDialogService.showModal(modalMetadata).then(function (value) {
+                            $timeout(function() {
+                                retrieveGridData();
+                                //3 seconds delay so solr can index the new task
+                            }, 3000);
+                        });
+
                     };
 
                     $scope.deleteRow = function(rowEntity) {

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans:beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
              xmlns:beans="http://www.springframework.org/schema/beans"
-             xmlns:task="http://www.springframework.org/schema/task" xmlns:aop="http://www.springframework.org/schema/aop"
+             xmlns:aop="http://www.springframework.org/schema/aop"
              xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-            http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+              http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
 
     <beans:beans profile="extension-foia">
 
@@ -22,6 +22,43 @@
             </beans:property>
         </beans:bean>
 
+        <!-- property placeholder for all properties needed for the proxy -->
+        <beans:bean id="arkCasePropertyConfigurerFOIA" class="com.armedia.acm.crypto.properties.AcmEncryptablePropertySourcesPlaceholderConfigurer">
+            <beans:property name="encryptablePropertyUtils" ref="acmEncryptablePropertyUtils"/>
+            <beans:property name="ignoreResourceNotFound" value="true"/>
+            <beans:property name="localOverride" value="false"/>
+            <beans:property name="order" value="42"/>
+            <beans:property name="ignoreUnresolvablePlaceholders" value="true"/>
+            <beans:property name="locations">
+                <beans:list>
+                    <beans:value>file:${user.home}/.arkcase/acm/foiaPortalProvider.properties</beans:value>
+                </beans:list>
+            </beans:property>
+        </beans:bean>
+        
+        <beans:bean id="foiaPortalRequestServiceProvider" class="gov.foia.service.FOIAPortalRequestServiceProvider">
+            <beans:property name="createRequestService" ref="portalCreateRequestService"/>
+            <beans:property name="portalRequestService" ref="portalRequestService"/>
+        </beans:bean>
+    
+        <beans:bean id="userRegistrationRequestDao" class="gov.foia.dao.UserRegistrationRequestDao"/>
+    
+        <beans:bean id="userResetRequestDao" class="gov.foia.dao.UserResetRequestDao"/>
+    
+        <beans:bean id="portalFOIAPersonDao" class="gov.foia.dao.PortalFOIAPersonDao"/>
+    
+        <beans:bean id="foiaPortalUserServiceProvider" class="gov.foia.service.FOIAPortalUserServiceProvider">
+            <beans:property name="emailSenderService" ref="configurableEmailSenderService"/>
+            <beans:property name="registrationDao" ref="userRegistrationRequestDao"/>
+            <beans:property name="resetDao" ref="userResetRequestDao"/>
+            <beans:property name="portalPersonDao" ref="portalFOIAPersonDao"/>
+            <beans:property name="portalInfoDAO" ref="portalInfoDAO"/>
+            <beans:property name="ldapUserService" ref="ldapUserService"/>
+            <beans:property name="ldapAuthenticateService" ref="foiaportal_ldapAuthenticateService"/>
+            <beans:property name="personDao" ref="acmPersonDao"/>
+        </beans:bean>
+        
+
         <beans:bean id="portalCreateRequestService" class="gov.foia.service.PortalCreateRequestService">
             <beans:property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
             <beans:property name="userTrackerService" ref="userTrackerService"/>
@@ -30,13 +67,24 @@
 
         <beans:bean id="portalRequestService" class="gov.foia.service.PortalRequestService">
             <beans:property name="requestDao" ref="foiaRequestDao"/>
+            <beans:property name="caseFileDao" ref="caseFileDao"/>
             <beans:property name="executeSolrQuery" ref="executeSolrQuery"/>
             <beans:property name="getCaseByNumberService" ref="getCaseByNumberService"/>
+            <beans:property name="userDao" ref="userJpaDao"/>
+            <beans:property name="lookupDao" ref="lookupDao"/>
+            <beans:property name="notificationDao" ref="notificationDao"/>
+            <beans:property name="groupService" ref="groupService"/>
+            <beans:property name="searchResults" ref="searchResults"/>
         </beans:bean>
 
         <beans:bean id="holdedAndAppealedRequestsDueDateUpdate" class="gov.foia.service.HoldedAndAppealedRequestsDueDateUpdate">
             <beans:property name="requestDao" ref="foiaRequestDao"/>
             <beans:property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
+            <beans:property name="foiaConfig" ref="foiaConfig"/>
+        </beans:bean>
+
+        <beans:bean id="dueDateUpdateJobDescriptor" class="gov.foia.service.DueDateUpdateJobDescriptor" parent="acmJobDescriptor">
+            <beans:property name="holdedAndAppealedRequestsDueDateUpdate" ref="holdedAndAppealedRequestsDueDateUpdate"/>
         </beans:bean>
 
         <beans:bean id="pdfConverter" class="com.armedia.acm.objectdataprocessing.PluggableDocumentConverter">
@@ -54,13 +102,6 @@
         <beans:bean id="folderNamePredicate" class="gov.foia.service.JavaScriptEvaluatingPredicate">
             <beans:property name="javaScript" ref="releaseFolderRule"/>
         </beans:bean> -->
-
-        <task:scheduler id="dueDateUpdateScheduler" pool-size="1"/>
-        <task:scheduled-tasks scheduler="dueDateUpdateScheduler">
-            <!-- updates due date of requests in appeal and hold queue at 00:00 AM-->
-            <task:scheduled ref="holdedAndAppealedRequestsDueDateUpdate" method="updateDueDate" cron="0 0 0 * * *"/>
-            <!-- <task:scheduled ref="holdedAndAppealedRequestsDueDateUpdate" method="updateDueDate" initial-delay="120000" fixed-rate="60000"/> -->
-        </task:scheduled-tasks>
 
         <beans:bean id="foiaDocumentPrintService" class="gov.foia.service.FoiaDocumentPrintService">
             <beans:property name="acmContainerDao" ref="acmContainerFolderDao"/>
@@ -125,15 +166,8 @@
             <beans:property name="requestDao" ref="foiaRequestDao"/>
         </beans:bean>
 
-        <beans:bean id="foiaCostsheetBillingListener" class="gov.foia.listener.FOIACostsheetBillingListener">
-            <beans:property name="acmCostsheetDao" ref="acmCostsheetDao"/>
-            <beans:property name="billingService" ref="billingService"/>
-        </beans:bean>
-
-        <beans:bean id="foiaTimesheetBillingListener" class="gov.foia.listener.FOIATimesheetBillingListener">
-            <beans:property name="acmTimesheetDao" ref="acmTimesheetDao"/>
-            <beans:property name="billingService" ref="billingService"/>
-            <beans:property name="timesheetService" ref="timesheetService"/>
+        <beans:bean id="dueDateReminderSentListener" class="gov.foia.listener.DueDateReminderSentListener">
+            <beans:property name="foiaRequestDao" ref="foiaRequestDao"/>
         </beans:bean>
 
         <beans:bean id="newRequestDocumentDescriptor" class="gov.foia.model.FOIADocumentDescriptor">
@@ -218,27 +252,6 @@
             <beans:property name="template" value="Request Extension Letter"/>
         </beans:bean>
 
-        <beans:bean id="billingInvoiceCreatedHandler" class="gov.foia.listener.BillingInvoiceCreatedHandler">
-            <beans:property name="billingInvoiceDocumentGenerator" ref="billingInvoiceDocumentGenerator"/>
-        </beans:bean>
-
-        <beans:bean id="billingInvoiceDocumentGenerator" class="gov.foia.service.BillingInvoiceDocumentGenerator">
-            <beans:property name="caseFileDao" ref="caseFileDao"/>
-            <beans:property name="billingService" ref="billingService"/>
-            <beans:property name="ecmFileService" ref="ecmFileService"/>
-            <beans:property name="ecmFileDao" ref="ecmFileDao"/>
-            <beans:property name="billingInvoiceDao" ref="billingInvoiceDao"/>
-            <beans:property name="pdfService" ref="pdfService"/>
-        </beans:bean>
-
-        <beans:bean id="billingInvoiceEmailSenderService" class="gov.foia.service.BillingInvoiceEmailSenderService">
-            <beans:property name="caseFileDao" ref="caseFileDao"/>
-            <beans:property name="billingService" ref="billingService"/>
-            <beans:property name="notificationSender" ref="notificationSender"/>
-            <beans:property name="notificationDao" ref="notificationDao"/>
-            <beans:property name="fileService" ref="ecmFileService"/>
-        </beans:bean>
-
         <beans:bean id="publicFlagService" class="gov.foia.service.PublicFlagService">
             <beans:property name="ecmFileService" ref="ecmFileService"/>
             <beans:property name="ecmFileDao" ref="ecmFileDao"/>
@@ -306,6 +319,7 @@
             <beans:property name="folderAndFilesUtils" ref="folderAndFilesUtils"/>
             <beans:property name="cmisConfigUtils" ref="cmisConfigUtils"/>
             <beans:property name="fileParticipantService" ref="fileParticipantService"/>
+            <beans:property name="recycleBinItemService" ref="recycleBinItemServiceImpl"/>
         </beans:bean>
 
         <beans:bean id="foiaConfig" class="gov.foia.model.FoiaConfig" scope="refresh">

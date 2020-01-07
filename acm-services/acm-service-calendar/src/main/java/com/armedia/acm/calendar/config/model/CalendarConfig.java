@@ -28,7 +28,7 @@ package com.armedia.acm.calendar.config.model;
  */
 
 import com.armedia.acm.calendar.config.service.CalendarConfiguration;
-import com.armedia.acm.objectonverter.json.JSONUnmarshaller;
+import com.armedia.acm.objectonverter.ObjectConverter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -48,13 +48,13 @@ public class CalendarConfig implements InitializingBean
     @Value("${calendar.configured_object_types:''}")
     private String configuredObjectTypesString;
 
+    @JsonProperty("calendar.configuration")
     @Value("${calendar.configuration:''}")
     private String configurationByObjectTypeString;
 
-    @JsonProperty("calendar.configuration")
     private Map<String, CalendarConfiguration> configurationsByObjectType;
 
-    private JSONUnmarshaller jsonUnmarshaller;
+    private ObjectConverter objectConverter;
 
     public String getConfiguredObjectTypesString()
     {
@@ -66,10 +66,9 @@ public class CalendarConfig implements InitializingBean
         this.configuredObjectTypesString = configuredObjectTypesString;
     }
 
-    @JsonIgnore
     public String getConfigurationByObjectTypeString()
     {
-        return configurationByObjectTypeString;
+        return objectConverter.getJsonMarshaller().marshal(configurationsByObjectType, Map.class);
     }
 
     public void setConfigurationByObjectTypeString(String configurationByObjectTypeString)
@@ -78,14 +77,14 @@ public class CalendarConfig implements InitializingBean
     }
 
     @JsonIgnore
-    public JSONUnmarshaller getJsonUnmarshaller()
+    public ObjectConverter getObjectConverter()
     {
-        return jsonUnmarshaller;
+        return objectConverter;
     }
 
-    public void setJsonUnmarshaller(JSONUnmarshaller jsonUnmarshaller)
+    public void setObjectConverter(ObjectConverter objectConverter)
     {
-        this.jsonUnmarshaller = jsonUnmarshaller;
+        this.objectConverter = objectConverter;
     }
 
     @Override
@@ -96,11 +95,12 @@ public class CalendarConfig implements InitializingBean
         jsonObject.keySet().forEach(key -> {
             String keyString = key.toString();
             JSONObject object = jsonObject.getJSONObject(keyString);
-            CalendarConfiguration calendarConfiguration = jsonUnmarshaller.unmarshall(object.toString(), CalendarConfiguration.class);
+            CalendarConfiguration calendarConfiguration = objectConverter.getJsonUnmarshaller().unmarshall(object.toString(), CalendarConfiguration.class);
             configurationsByObjectType.put(keyString, calendarConfiguration);
         });
     }
 
+    @JsonIgnore
     public Map<String, CalendarConfiguration> getConfigurationsByObjectType()
     {
         return configurationsByObjectType;

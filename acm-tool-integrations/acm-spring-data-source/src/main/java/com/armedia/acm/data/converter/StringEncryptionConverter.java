@@ -31,8 +31,8 @@ import com.armedia.acm.core.exceptions.AcmEncryptionBadKeyOrDataException;
 import com.armedia.acm.crypto.AcmCryptoUtils;
 
 import org.bouncycastle.openpgp.PGPEncryptedDataGenerator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
@@ -50,7 +50,7 @@ public class StringEncryptionConverter implements AttributeConverter<String, byt
     private static Boolean encryptionEnabled;
     private static String encryptionPassphrase;
     private static Boolean databaseEncryptionSupported;
-    private final Logger log = LoggerFactory.getLogger(getClass());
+    private final Logger log = LogManager.getLogger(getClass());
 
     public static void setAcmDecryptionProperties(Boolean encryptionEnabled, AcmCryptoUtils acmCryptoUtils, String encryptionPassphrase,
             Boolean databaseEncryptionSupported)

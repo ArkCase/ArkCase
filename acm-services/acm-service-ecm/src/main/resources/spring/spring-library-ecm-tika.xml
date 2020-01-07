@@ -22,6 +22,15 @@
         <property name="contentTypeFixes">
             <map>
                 <entry key="audio/vnd.wave" value="audio/wav"/>
+                <entry key="audio/mpeg" value="audio/mp3"/>
+                <entry key="audio/x-flac" value="audio/flac"/>
+                <entry key="video/quicktime" value="audio/mp3"/>
+            </map>
+        </property>
+        <property name="nameExtensionFixes">
+            <map>
+                <entry key=".mpga" value=".mp3"/>
+                <entry key=".qt" value=".mp3"/>
             </map>
         </property>
     </bean>

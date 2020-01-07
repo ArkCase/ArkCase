@@ -2,17 +2,24 @@
     <div class="clearfix">
         <div class="row">
             <div class="col-xs-6">
-                <div ng-if="calculateOverdueObj.isOverdue && objectInfo.queue.name != 'Release'" class="h4 font-bold">
+                <div ng-if="calculateDaysObj.isOverdue && objectInfo.queue.name != 'Release'" class="h4 font-bold">
                     {{objectInfo.title || 'common.value.unknown' | translate }}
                     <i class="fa fa-exclamation-circle icon-overdue"></i>
                     <small><b><span class="icon-overdue" translate>cases.comp.info.daysOverdue.label</span></b>
                     </small>
-                    <small><span class="icon-overdue">({{calculateOverdueObj.countOverdueDays}}) </span></small>
+                    <small><span class="icon-overdue">({{calculateDaysObj.days}}) </span></small>
                 </div>
-                <div ng-if="!calculateOverdueObj.isOverdue || (calculateOverdueObj.isOverdue && objectInfo.queue.name == 'Release')" class="h4 font-bold">{{objectInfo.title || 'common.value.unknown' | translate }} <small>({{daysLeft}}) <span translate>cases.comp.info.daysToComplete.label</span></small></div>
+                <div ng-if="!calculateDaysObj.isOverdue && objectInfo.queue.name != 'Release'" class="h4 font-bold">{{objectInfo.title || 'common.value.unknown' | translate }} <small>({{calculateDaysObj.days}}) <span translate>cases.comp.info.daysToComplete.label</span></small></div>
+                <div ng-if="objectInfo.queue.name == 'Release'">{{objectInfo.title || 'common.value.unknown' | translate }}</div>
             </div>
             <div class="col-xs-6 text-right">
                 <h4>{{objectInfo.caseNumber}}</h4>
+                <small ng-if="hasSuggestedCases" style="margin-right: 3%">
+                    <i class="fa fa-lightbulb-o" aria-hidden="true" style="color:#e6b800"/>
+                    <a href="javascript:;" ng-click="suggestedCases()">
+                        {{'cases.comp.suggestedCases.title' | translate}}({{numberOfSuggestedCases}})
+                    </a>
+                </small>
             </div>
         </div>
         <div class="row">
@@ -85,7 +92,7 @@
 
             <div class="col-xs-12 col-md-2">
                 <div class="h4 font-bold">
-                    {{ (objectInfo.dueDate | date: ('common.defaultDateUIFormat' | translate)) || 'common.value.unknown' | translate }}
+                    {{ dueDate || 'common.value.unknown' | translate }}
                 </div>
                 <small class="text-muted"><span translate>cases.comp.info.dueDate.label</span></small>
             </div>

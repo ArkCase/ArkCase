@@ -34,19 +34,21 @@ import com.armedia.acm.objectonverter.ArkCaseBeanUtils;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
+import com.armedia.acm.services.dataaccess.model.DataAccessControlConfig;
 import com.armedia.acm.services.dataaccess.service.SearchAccessControlFields;
 import com.armedia.acm.services.participants.model.AcmAssignedObject;
 import com.armedia.acm.services.participants.utils.ParticipantUtils;
 import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
 import com.armedia.acm.services.search.model.solr.SolrBaseDocument;
+import com.armedia.acm.services.search.model.solr.SolrConfig;
 import com.armedia.acm.services.search.model.solr.SolrContentDocument;
 import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -60,14 +62,13 @@ import java.util.Map;
 public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<EcmFile>
 {
 
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private transient final Logger log = LogManager.getLogger(getClass());
     private EcmFileDao ecmFileDao;
     private UserDao userDao;
     private SearchAccessControlFields searchAccessControlFields;
     private ArkCaseBeanUtils arkCaseBeanUtils = new ArkCaseBeanUtils();
-    // whether to index file contents or just store document-related metadata
-    private Boolean enableContentFileIndexing;
-    private Boolean enableDocumentACL;
+    private SolrConfig solrConfig;
+    private DataAccessControlConfig dacConfig;
     private AcmDataService acmDataService;
 
     @Override
@@ -79,7 +80,8 @@ public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<E
     @Override
     public SolrContentDocument toContentFileIndex(EcmFile in)
     {
-        if (enableContentFileIndexing)
+        // whether to index file contents or just store document-related metadata
+        if (solrConfig.getEnableContentFileIndexing())
         {
             return mapContentDocumentProperties(in);
         }
@@ -90,7 +92,7 @@ public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<E
     @Override
     public SolrAdvancedSearchDocument toSolrAdvancedSearch(EcmFile in)
     {
-        if (enableContentFileIndexing)
+        if (solrConfig.getEnableContentFileIndexing())
         {
             return null;
         }
@@ -156,7 +158,7 @@ public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<E
 
     private void mapParentAclProperties(SolrBaseDocument doc, EcmFile in)
     {
-        if (!enableDocumentACL && in.getParentObjectType() != null)
+        if (!dacConfig.getEnableDocumentACL() && in.getParentObjectType() != null)
         {
             AcmAbstractDao<AcmObject> parentDAO = acmDataService.getDaoByObjectType(in.getParentObjectType());
             AcmObject parent = parentDAO.find(in.getParentObjectId());
@@ -333,26 +335,6 @@ public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<E
         this.ecmFileDao = ecmFileDao;
     }
 
-    public Boolean getEnableContentFileIndexing()
-    {
-        return enableContentFileIndexing;
-    }
-
-    public void setEnableContentFileIndexing(Boolean enableContentFileIndexing)
-    {
-        this.enableContentFileIndexing = enableContentFileIndexing;
-    }
-
-    public Boolean getEnableDocumentACL()
-    {
-        return enableDocumentACL;
-    }
-
-    public void setEnableDocumentACL(Boolean enableDocumentACL)
-    {
-        this.enableDocumentACL = enableDocumentACL;
-    }
-
     public UserDao getUserDao()
     {
         return userDao;
@@ -392,5 +374,25 @@ public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<E
     public void setAcmDataService(AcmDataService acmDataService)
     {
         this.acmDataService = acmDataService;
+    }
+
+    public SolrConfig getSolrConfig()
+    {
+        return solrConfig;
+    }
+
+    public void setSolrConfig(SolrConfig solrConfig)
+    {
+        this.solrConfig = solrConfig;
+    }
+
+    public DataAccessControlConfig getDacConfig()
+    {
+        return dacConfig;
+    }
+
+    public void setDacConfig(DataAccessControlConfig dacConfig)
+    {
+        this.dacConfig = dacConfig;
     }
 }

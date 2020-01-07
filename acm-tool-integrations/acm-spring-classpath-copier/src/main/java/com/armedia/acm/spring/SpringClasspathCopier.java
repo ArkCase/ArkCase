@@ -27,8 +27,8 @@ package com.armedia.acm.spring;
  * #L%
  */
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -51,57 +51,47 @@ public class SpringClasspathCopier implements ApplicationContextAware
 
     private PathMatchingResourcePatternResolver resolver;
 
-    private transient Logger log = LoggerFactory.getLogger(getClass());
+    private transient Logger log = LogManager.getLogger(getClass());
 
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException
     {
-        if (log.isInfoEnabled())
-        {
-            log.info("Scanning for resources matching '" + getResourcePattern() + "'");
-        }
+        log.info("Scanning for resources matching [{}]", getResourcePattern());
 
         try
         {
             if (!getDeployFolder().exists())
             {
-                if (log.isInfoEnabled())
-                {
-                    log.info("Creating folder '" + getDeployFolder().getCanonicalPath() + "'");
-                }
+                log.info("Creating folder [{}]", getDeployFolder().getCanonicalPath());
                 getDeployFolder().mkdirs();
             }
 
-            Resource[] matchingResources = getResolver().getResources(getResourcePattern());
-            for (Resource resource : matchingResources)
+            String[] patterns = getResourcePattern().split(",");
+            for (String pattern : patterns)
             {
-                String resourceFilename = resource.getFilename();
-                if (log.isInfoEnabled())
+                Resource[] matchingResources = getResolver().getResources(pattern);
+                for (Resource resource : matchingResources)
                 {
-                    log.info("Found resource '" + resourceFilename + "'");
-                }
+                    String resourceFilename = resource.getFilename();
+                    log.info("Found resource [{}]", resourceFilename);
 
-                File target = new File(getDeployFolder() + File.separator + resourceFilename);
-                if (!target.exists())
-                {
-                    if (log.isDebugEnabled())
+                    File target = new File(getDeployFolder() + File.separator + resourceFilename);
+                    if (!target.exists())
                     {
-                        log.debug("Copying resource '" + resourceFilename + "' to deploy folder.");
+                        log.debug("Copying resource [{}] to deploy folder.", resourceFilename);
+
+                        // NOTE: FileCopyUtils will close both the input and the output streams.
+                        FileCopyUtils.copy(resource.getInputStream(), new FileOutputStream(target));
                     }
-                    // NOTE: FileCopyUtils will close both the input and the output streams.
-                    FileCopyUtils.copy(resource.getInputStream(), new FileOutputStream(target));
                 }
             }
         }
         catch (IOException e)
         {
-            log.error("Could not copy resource: " + e.getMessage(), e);
+            log.error("Could not copy resource: [{}]", e.getMessage(), e);
         }
 
-        if (log.isInfoEnabled())
-        {
-            log.info("Done scanning for resources matching " + getResourcePattern() + "'");
-        }
+        log.info("Done scanning for resources matching [{}]", getResourcePattern());
     }
 
     public File getDeployFolder()

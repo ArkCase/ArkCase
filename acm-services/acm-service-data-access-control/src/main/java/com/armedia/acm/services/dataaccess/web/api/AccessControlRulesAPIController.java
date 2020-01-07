@@ -30,8 +30,8 @@ package com.armedia.acm.services.dataaccess.web.api;
 import com.armedia.acm.services.dataaccess.model.AccessControlRules;
 import com.armedia.acm.services.dataaccess.service.AccessControlRuleChecker;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -55,7 +55,7 @@ public class AccessControlRulesAPIController
     /**
      * Logger instance.
      */
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
 
     /**
      * Retrieve AC rules configuration

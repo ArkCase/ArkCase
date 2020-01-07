@@ -40,8 +40,8 @@ import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.services.pipeline.PipelineManager;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -57,7 +57,7 @@ import java.util.Objects;
  */
 public class SaveCaseServiceImpl implements SaveCaseService
 {
-    private final Logger log = LoggerFactory.getLogger(getClass());
+    private final Logger log = LogManager.getLogger(getClass());
     private CaseFileDao caseFileDao;
     private PipelineManager<CaseFile, CaseFilePipelineContext> pipelineManager;
     private EcmFileService ecmFileService;

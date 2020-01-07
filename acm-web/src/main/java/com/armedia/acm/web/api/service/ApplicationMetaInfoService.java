@@ -27,8 +27,8 @@ package com.armedia.acm.web.api.service;
  * #L%
  */
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.web.context.ServletContextAware;
 
@@ -44,7 +44,7 @@ import java.util.Properties;
 public class ApplicationMetaInfoService implements InitializingBean, ServletContextAware
 {
 
-    private final Logger log = LoggerFactory.getLogger(getClass());
+    private final Logger log = LogManager.getLogger(getClass());
     ServletContext servletContext;
     private String version;
 

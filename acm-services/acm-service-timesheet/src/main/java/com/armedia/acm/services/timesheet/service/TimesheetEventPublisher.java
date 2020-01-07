@@ -34,8 +34,8 @@ import com.armedia.acm.frevvo.model.UploadedFiles;
 import com.armedia.acm.services.timesheet.model.AcmTimesheet;
 import com.armedia.acm.services.timesheet.model.AcmTimesheetEvent;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 
@@ -46,7 +46,7 @@ import org.springframework.context.ApplicationEventPublisherAware;
 public class TimesheetEventPublisher implements ApplicationEventPublisherAware
 {
 
-    private Logger LOG = LoggerFactory.getLogger(getClass());
+    private Logger LOG = LogManager.getLogger(getClass());
 
     private ApplicationEventPublisher applicationEventPublisher;
 

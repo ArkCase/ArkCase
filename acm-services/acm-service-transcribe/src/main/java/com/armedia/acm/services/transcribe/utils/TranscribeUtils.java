@@ -31,8 +31,8 @@ import com.armedia.acm.objectonverter.ArkCaseBeanUtils;
 import com.armedia.acm.services.transcribe.model.TranscribeItem;
 
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -48,7 +48,7 @@ import java.util.stream.Collectors;
  */
 public class TranscribeUtils
 {
-    private final static Logger LOG = LoggerFactory.getLogger(TranscribeUtils.class);
+    private final static Logger LOG = LogManager.getLogger(TranscribeUtils.class);
 
     public static String getFirstWords(String text, int numberOfWords)
     {
@@ -115,7 +115,7 @@ public class TranscribeUtils
 
     public static String getText(List<TranscribeItem> items)
     {
-        if (items != null && items.size() > 0)
+        if (items != null && !items.isEmpty())
         {
             return String.join(" ", items.stream().map(item -> item.getText()).collect(Collectors.toList()));
         }

@@ -54,7 +54,7 @@ import org.eclipse.persistence.jaxb.dynamic.DynamicJAXBContextFactory;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.security.core.Authentication;
 
 import javax.xml.bind.Unmarshaller;
@@ -124,7 +124,7 @@ public class ComplaintCaptureFileEventListenerTest extends EasyMockSupport
         complaintCaptureFileEventListener.setSaveComplaintTransaction(mockSavaSaveComplaintTransaction);
         complaintCaptureFileEventListener.setAuditPropertyEntityAdapter(mockAuditPropertyEntityAdapter);
         complaintCaptureFileEventListener.setEcmFileService(mockEcmFileService);
-        complaintCaptureFileEventListener.setLOG(LoggerFactory.getLogger(getClass()));
+        complaintCaptureFileEventListener.setLOG(LogManager.getLogger(getClass()));
     }
 
     @Test

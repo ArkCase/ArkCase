@@ -35,8 +35,8 @@ import com.armedia.acm.plugins.admin.service.CmisConfigurationService;
 import org.apache.chemistry.opencmis.client.api.Repository;
 import org.apache.chemistry.opencmis.commons.exceptions.CmisConnectionException;
 import org.apache.chemistry.opencmis.commons.exceptions.CmisUnauthorizedException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -53,7 +53,7 @@ import java.util.Map;
 @RequestMapping({ "/api/v1/plugin/admin/config/cmis/validate-url", "/api/latest/plugin/admin/config/cmis/validate-url" })
 public class CmisConfigurationUrlValidation
 {
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
 
     private CmisConfigurationService cmisConfigurationService;
 

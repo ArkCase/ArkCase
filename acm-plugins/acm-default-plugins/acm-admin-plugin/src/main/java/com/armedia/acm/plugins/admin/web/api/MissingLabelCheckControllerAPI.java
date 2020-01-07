@@ -28,8 +28,8 @@ package com.armedia.acm.plugins.admin.web.api;
 
 import com.armedia.acm.services.labels.service.LabelCheckService;
 import org.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -48,7 +48,7 @@ import java.util.List;
 @RequestMapping({"/api/v1/plugin/admin/labelcheck"})
 public class MissingLabelCheckControllerAPI
 {
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
     private LabelCheckService labelCheckService;
 
     @RequestMapping(method = RequestMethod.GET)

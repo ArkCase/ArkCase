@@ -29,8 +29,8 @@ package com.armedia.acm.event.web.api;
 
 import com.armedia.acm.event.model.AcmGenericApplicationEvent;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.http.MediaType;
@@ -49,7 +49,7 @@ import java.util.Date;
 @RequestMapping({ "/api/v1/service/event", "/api/latest/service/event" })
 public class RaiseEventAPIController implements ApplicationEventPublisherAware
 {
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private transient final Logger log = LogManager.getLogger(getClass());
     private ApplicationEventPublisher applicationEventPublisher;
 
     @RequestMapping(method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)

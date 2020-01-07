@@ -42,8 +42,8 @@ import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.context.ApplicationListener;
 
 /**
@@ -52,7 +52,7 @@ import org.springframework.context.ApplicationListener;
 public class EcmFileFolderMovedEventHandler implements ApplicationListener<EcmEvent>
 {
 
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private transient final Logger log = LogManager.getLogger(getClass());
     private static String MOVED_MESSAGE = "The %s you were working on was moved from the content repository.";
     private static String MOVED_INTO_MESSAGE = "Into the folder you were working on was added %s from the content repository.";
     private AuditPropertyEntityAdapter auditPropertyEntityAdapter;

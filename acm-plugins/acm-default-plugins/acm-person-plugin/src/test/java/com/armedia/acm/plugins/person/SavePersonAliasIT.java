@@ -34,11 +34,11 @@ import com.armedia.acm.plugins.person.dao.PersonDao;
 import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.plugins.person.model.PersonAlias;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -79,7 +79,8 @@ import java.util.List;
         "/spring/spring-library-service-data.xml",
         "/spring/spring-library-configuration.xml",
         "/spring/spring-library-folder-watcher.xml",
-        "/spring/spring-library-acm-email.xml"})
+        "/spring/spring-library-acm-email.xml",
+        "/spring/spring-test-quartz-scheduler.xml" })
 @TransactionConfiguration(defaultRollback = true, transactionManager = "transactionManager")
 public class SavePersonAliasIT
 {
@@ -98,7 +99,7 @@ public class SavePersonAliasIT
     @Autowired
     private AuditPropertyEntityAdapter auditAdapter;
 
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
 
     @Before
     public void setUp()

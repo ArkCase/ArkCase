@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:jms="http://www.springframework.org/schema/jms"
-       xmlns:task="http://www.springframework.org/schema/task" xmlns:aop="http://www.springframework.org/schema/aop" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.2.xsd
-            http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-4.2.xsd
+       xmlns:aop="http://www.springframework.org/schema/aop" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.2.xsd
+
             http://www.springframework.org/schema/jms http://www.springframework.org/schema/jms/spring-jms-4.2.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
 
     <bean id="csvReportGenerator" class="com.armedia.acm.services.search.service.CSVReportGenerator"/>
@@ -14,7 +14,6 @@
     </bean>
 
     <bean id="solrPostClient" class="com.armedia.acm.services.search.service.solr.DefaultSolrPostClient">
-        <property name="solrUpdateHandler" value="#{solrConfig.updateHandler}"/>
         <property name="solrRestClient" ref="solrRestClient"/>
     </bean>
 
@@ -33,21 +32,17 @@
         <property name="sendToSolr" ref="sendDocumentsToSolr"/>
     </bean>
 
-    <task:scheduler id="searchTaskScheduler" pool-size="1"/>
-    <task:scheduled-tasks scheduler="searchTaskScheduler">
-        <task:scheduled ref="acmJpaBatchUpdateService" method="jpaBatchUpdate"
-                        fixed-delay="#{solrConfig.batchUpdateFrequencyInMilliseconds}"/>
-    </task:scheduled-tasks>
-
     <bean id="acmJpaBatchUpdateService" class="com.armedia.acm.services.search.service.AcmJpaBatchUpdateService">
-        <property name="batchUpdateBasedOnLastModifiedEnabled" value="#{solrConfig.enableBatchUpdateBasedOnLastModified}"/>
-        <property name="lastBatchUpdatePropertyFileLocation" value="${user.home}/.arkcase/acm/solrLastBatchUpdate.properties"/>
-        <property name="propertyFileManager" ref="propertyFileManager"/>
         <property name="springContextHolder" ref="acmContextHolder"/>
-        <property name="batchSize" value="#{solrConfig.batchUpdateBatchSize}"/>
         <property name="objectsToSearchService" ref="jpaObjectsToSearchService"/>
         <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
         <property name="solrConfig" ref="solrConfig"/>
+    </bean>
+
+    <bean id="acmJpaBatchUpdateJob" class="com.armedia.acm.services.search.service.AcmJpaBatchUpdateJobDescriptor"
+          parent="acmJobDescriptor">
+        <property name="jpaBatchUpdateService" ref="acmJpaBatchUpdateService"/>
+        <property name="springContextHolder" ref="acmContextHolder"/>
     </bean>
 
     <bean id="executeSolrQuery" class="com.armedia.acm.services.search.service.ExecuteSolrQuery">

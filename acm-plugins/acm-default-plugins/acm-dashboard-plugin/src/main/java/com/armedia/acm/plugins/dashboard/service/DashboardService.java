@@ -28,7 +28,6 @@ package com.armedia.acm.plugins.dashboard.service;
  */
 
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
-import com.armedia.acm.pluginmanager.model.AcmPlugin;
 import com.armedia.acm.plugins.dashboard.dao.DashboardDao;
 import com.armedia.acm.plugins.dashboard.dao.WidgetDao;
 import com.armedia.acm.plugins.dashboard.exception.AcmWidgetException;
@@ -48,8 +47,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.security.core.Authentication;
 
 import javax.servlet.http.HttpSession;
@@ -65,7 +64,7 @@ import java.util.stream.Collectors;
  */
 public class DashboardService
 {
-    private transient static final Logger log = LoggerFactory.getLogger(DashboardService.class);
+    private transient static final Logger log = LogManager.getLogger(DashboardService.class);
     private DashboardConfig dashboardConfig;
     private DashboardDao dashboardDao;
     private UserDao userDao;
@@ -181,22 +180,17 @@ public class DashboardService
     public Dashboard prepareDashboardStringBasedOnUserRoles(String userId, String moduleName) throws AcmObjectNotFoundException
     {
         AcmUser user = userDao.findByUserId(userId);
-        Dashboard dashboard;
-        try
-        {
-            dashboard = dashboardDao.getDashboardConfigForUserAndModuleName(user, moduleName);
-        }
-        catch (AcmObjectNotFoundException e)
-        {
-            throw e;
-        }
+
+        Dashboard dashboard = dashboardDao.getDashboardConfigForUserAndModuleName(user, moduleName);
+
         String dashboardModifiedString = dashboard.getDashboardConfig();
         Set<String> roles = userRoleService.getUserRoles(userId);
         try
         {
             List<Widget> result = onlyUniqueValues(widgetDao.getAllWidgetsByRoles(roles));
             List<Widget> listOfDashboardWidgetsOnly = dashboardPropertyReader.getDashboardWidgetsOnly();
-            List<Widget> dashboardWidgetsOnly = result.stream().filter(w -> listOfDashboardWidgetsOnly.contains(w))
+            List<Widget> dashboardWidgetsOnly = result.stream()
+                    .filter(listOfDashboardWidgetsOnly::contains)
                     .collect(Collectors.toList());
 
             JSONObject dashboardJSONObject = new JSONObject(dashboard.getDashboardConfig());

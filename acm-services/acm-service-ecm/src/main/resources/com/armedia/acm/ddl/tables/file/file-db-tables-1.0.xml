@@ -657,5 +657,54 @@
         </addColumn>
     </changeSet>
 
+    <changeSet id="64-create-recycle-bin-table" author="darko.dimitrievski">
+        <createTable tableName="acm_recycle_bin_item">
+            <column name="cm_rb_item_id" type="${idType}">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_recycle_bin"/>
+            </column>
+            <column name="cm_source_object_id" type="${idType}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="cm_source_object_type" type="VARCHAR(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="cm_source_folder_id" type="${idType}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="cm_source_cmis_repository_id" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_rb_item_container_id" type="${idType}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="cm_rb_item_creator" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_rb_item_modifier" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_rb_item_created" type="${timestampType}" defaultValueComputed="${timestampFunction}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_rb_item_modified" type="${timestampType}" defaultValueComputed="${timestampFunction}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_rb_class_name" type="VARCHAR(400)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="65-create-recycle-bin-id-table" author="darko.dimitrievski">
+        <createTable tableName="acm_recycle_bin_item_id">
+            <column name="cm_seq_num" type="${idType}"/>
+            <column name="cm_seq_name" type="VARCHAR(255)"/>
+        </createTable>
+        <insert tableName="acm_recycle_bin_item_id">
+            <column name="cm_seq_num" value="100"></column>
+            <column name="cm_seq_name" value="acm_recycle_bin_item"></column>
+        </insert>
+    </changeSet>
+
 </databaseChangeLog>
 

@@ -35,8 +35,8 @@ import org.mule.api.lifecycle.Initialisable;
 import org.mule.api.lifecycle.Startable;
 import org.mule.api.lifecycle.Stoppable;
 import org.mule.module.cmis.adapters.CMISCloudConnectorConnectionIdentifierAdapter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import javax.annotation.Generated;
 
@@ -44,7 +44,7 @@ import javax.annotation.Generated;
 public class CMISCloudConnectorConnectionFactory implements KeyedPoolableObjectFactory
 {
 
-    private static Logger logger = LoggerFactory.getLogger(CMISCloudConnectorConnectionFactory.class);
+    private static Logger logger = LogManager.getLogger(CMISCloudConnectorConnectionFactory.class);
     private CMISCloudConnectorConnectionManager connectionManager;
 
     public CMISCloudConnectorConnectionFactory(CMISCloudConnectorConnectionManager connectionManager)

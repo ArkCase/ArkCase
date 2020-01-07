@@ -41,8 +41,8 @@ import com.armedia.acm.services.users.service.ldap.LdapEntryTransformer;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.ArrayUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.ldap.AuthenticationException;
 import org.springframework.ldap.core.ContextSource;
 import org.springframework.ldap.core.DirContextAdapter;
@@ -65,7 +65,7 @@ public class SpringLdapUserDao
 
     private PasswordLengthValidationRule passwordLengthValidationRule;
 
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
 
     public LdapUser findUser(String username, LdapTemplate template, AcmLdapSyncConfig config, String[] attributes)
     {

@@ -40,15 +40,15 @@ import com.armedia.acm.plugins.casefile.service.PDFCasefileDocumentGenerator;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.pipeline.handler.PipelineHandler;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import javax.xml.parsers.ParserConfigurationException;
 
 public class CasefileDocumentHandler extends PDFCasefileDocumentGenerator<CaseFileDao, CaseFile>
         implements PipelineHandler<CaseFile, CaseFilePipelineContext>
 {
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private transient final Logger log = LogManager.getLogger(getClass());
     private FormsTypeCheckService formsTypeCheckService;
 
     @Override

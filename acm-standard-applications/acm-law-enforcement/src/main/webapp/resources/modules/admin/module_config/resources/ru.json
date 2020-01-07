@@ -217,6 +217,7 @@
                     "cancelBtn": "Отмена",
                     "deleteBtn": "Удалить",
                     "headerText": "Вы собираетесь удалить группу:",
+                    "controlGroupHeaderWarning": "You are about to delete {{groupName}} group which is a member in the control group {{controlGroupName}}",
                     "bodyText": "Ты уверен?"
                 }
             },
@@ -248,7 +249,7 @@
             },
 			"searchFilter.placeholder": "Поиск"
         },
-        "security.selectPrivileges": "Создание роли / выбора привилегий",
+        "security.selectPrivileges": "Выберите привилегии",
         "security.selectPrivileges.applicationRole": "Роль приложения",
         "security.selectPrivileges.createRole": "Создать роль",
         "security.selectPrivileges.editRole": "Изменить роль",
@@ -709,6 +710,29 @@
                     }
                 }
             },
+            "sequenceManagementReset": {
+                "title": "Reset List",
+                "editBtn": "Edit",
+                "viewBtn": "View",
+                "removeBtn": "Remove",
+                "cancelBtn": "Cancel",
+                "saveBtn": "Save",
+                "grid": {
+                    "startResetDate": "Start Reset Date",
+                    "executedDate": "Executed Date",
+                    "repeat": "Repeat",
+                    "repeatPeriod": "Repeat Period"
+                },
+                "detailsModal": {
+                    "title": "Autoincrement Reset",
+                    "addTitle": "Add Autoincrement Reset",
+                    "editTitle": "Edit Autoincrement Reset",
+                    "resetStartDate": "Reset Start Date",
+                    "repeatReset": "Repeat reset",
+                    "repeatResetPeriod": "Repeat reset period (days)",
+                    "sequenceResetScheduledWarning": "Sequence reset scheduled for today"
+                }
+            },
             "login.config": {
                 "title": "Конфигурация входа",
                 "idleLimit.label": "Предел простоя входа (в миллисекундах)",
@@ -963,15 +987,6 @@
                 "enableOCR.checkbox": "Enable OCR_RU"
             }
         },
-        "ocr": {
-            "title": "OCR Services_RU",
-            "ocrManagement": "OCR Management_RU",
-            "ocrConfigForm": {
-                "save.button": "Save_RU",
-                "enableOCR.label": "OCR Configuration_RU",
-                "enableOCR.checkbox": "Enable OCR_RU"
-            }
-        },
         "stateOfArkcase": {
             "title": "Состояние Arkcase",
             "pickDate": "Выберите дату",
@@ -1021,6 +1036,43 @@
             },
             "emailTemplates": {
                 "title": "Шаблоны электронной почты"
+            }
+        },
+        "portals.portalsConfiguration": {
+            "nodeTitle": "ru_Portals Service",
+            "title": "ru_Portals Configuration",
+            "url": "ru_URL",
+            "id": "ru_ID",
+            "portalId": "ru_Portal ID",
+            "portalDescription": "ru_Description",
+            "portalUser": "ru_User",
+            "save": "ru_Save",
+            "cancel": "ru_Cancel",
+            "placeholder": {
+                "portalUrl": "ru_Enter Portal URL",
+                "portalId": "ru_ID will be generate",
+                "portalDescription": "ru_Enter Portal Description",
+                "portalUser": "ru_Select Portal User"
+            },
+            "message": {
+                "edit": "ru_Portal is successfully edited",
+                "add": "ru_Portal is successfully added",
+                "delete": "ru_Portal is successfully deleted"
+            }
+        },
+        "userSearch": {
+            "title": "ru_User Search",
+            "cancelButton": "ru_Cancel",
+            "confirmButton": "ru_Save",
+            "search": {
+                "placeholder": "ru_Search for the user to assign to this portal",
+                "btn": "ru_Search"
+            },
+            "assigneeGridColumns": {
+                "name": "ru_Name",
+                "type": "ru_Type",
+                "title": "ru_Title",
+                "username": "ru_Username"
             }
         }
     }

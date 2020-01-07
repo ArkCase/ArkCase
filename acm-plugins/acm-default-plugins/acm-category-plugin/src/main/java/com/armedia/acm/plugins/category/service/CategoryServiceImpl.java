@@ -45,8 +45,8 @@ import com.armedia.acm.plugins.category.model.Category;
 import com.armedia.acm.plugins.category.model.CategoryEvent;
 import com.armedia.acm.plugins.category.model.CategoryStatus;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.transaction.annotation.Transactional;
@@ -62,7 +62,7 @@ import java.util.Optional;
 public class CategoryServiceImpl implements CategoryService, ApplicationEventPublisherAware
 {
 
-    private final Logger log = LoggerFactory.getLogger(getClass());
+    private final Logger log = LogManager.getLogger(getClass());
 
     private ApplicationEventPublisher eventPublisher;
 

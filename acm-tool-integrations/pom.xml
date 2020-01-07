@@ -3,7 +3,7 @@
     <parent>
         <artifactId>acm</artifactId>
         <groupId>com.armedia</groupId>
-        <version>3.3.1-r1</version>
+        <version>3.3.2-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -25,6 +25,7 @@
         <module>acm-files-folder-watcher</module>
         <module>acm-files-property-file-manager</module>
         <module>acm-form-configuration</module>
+        <module>acm-hazelcast-integration</module>
         <module>acm-mule-context-manager</module>
         <module>acm-mule-module-cmis</module>
         <module>acm-object-converter</module>
@@ -38,7 +39,11 @@
         <module>acm-spring-data-source</module>
         <module>acm-reload-properties</module>
         <module>acm-websockets</module>
+        <module>acm-media-engine</module>
         <module>acm-configuration</module>
+        <module>acm-ocr-tool</module>
+        <module>acm-transcribe-tool</module>
+        <module>acm-quartz-scheduler</module>
     </modules>
 
 </project>

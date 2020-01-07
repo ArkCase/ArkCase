@@ -27,8 +27,8 @@ package com.armedia.acm.websockets;
  * #L%
  */
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
@@ -42,7 +42,7 @@ import java.security.Principal;
 @Controller
 public class MessageReceiver
 {
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
 
     @MessageMapping("/print-message")
     public void messagePrinter(Message<Object> message) throws Exception

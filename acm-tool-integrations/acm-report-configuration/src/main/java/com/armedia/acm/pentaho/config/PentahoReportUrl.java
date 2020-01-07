@@ -29,8 +29,8 @@ package com.armedia.acm.pentaho.config;
 
 import com.armedia.acm.report.config.ReportUrl;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.util.Map;
 import java.util.TreeMap;
@@ -38,7 +38,7 @@ import java.util.TreeMap;
 public class PentahoReportUrl implements ReportUrl
 {
     private PentahoReportsConfig reportsConfig;
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
 
     @Override
     public String getNewReportUrl(String reportName)

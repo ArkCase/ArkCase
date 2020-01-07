@@ -18,7 +18,9 @@
         <constructor-arg>
             <list>
                 <ref bean="docxToPdfConverter"/>
+                <!--
                 <ref bean="imageToPdfConverter"/>
+                -->
                 <ref bean="pptXToPdfConverter"/>
             </list>
         </constructor-arg>

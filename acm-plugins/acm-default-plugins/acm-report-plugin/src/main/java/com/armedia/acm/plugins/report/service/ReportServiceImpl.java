@@ -42,8 +42,8 @@ import com.armedia.acm.services.users.service.AcmUserRoleService;
 import org.apache.commons.lang3.StringUtils;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.w3c.dom.Document;
@@ -56,9 +56,13 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -67,6 +71,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.stream.Collectors;
 
 public class ReportServiceImpl implements ReportService
@@ -74,7 +81,7 @@ public class ReportServiceImpl implements ReportService
     private static final String PENTAHO_DASHBOARD_REPORT_EXTENSION = ".xdash";
     private static final String PENTAHO_ANALYSIS_REPORT_EXTENSION = ".xanalyzer";
     private static final String PENTAHO_INTERACTIVE_REPORT_EXTENSION = ".prpti";
-    private final Logger LOG = LoggerFactory.getLogger(getClass());
+    private final Logger LOG = LogManager.getLogger(getClass());
     private final String PENTAHO_REPORT_URL_TEMPLATE_DEFAULT = "/pentaho/api/repos/{path}/viewer";
     private final String PENTAHO_VIEW_REPORT_URL_PRPTI_TEMPLATE_DEFAULT = "/pentaho/api/repos/{path}/prpti.view";
     private final String PENTAHO_VIEW_DASHBOARD_REPORT_URL_TEMPLATE_DEFAULT = "/pentaho/api/repos/{path}/viewer?ts={timestamp}";
@@ -87,6 +94,7 @@ public class ReportServiceImpl implements ReportService
     private ReportsToRolesConfig reportsToRolesConfig;
     private ConfigurationPropertyService configurationPropertyService;
     private AcmUserRoleService userRoleService;
+    private ApplicationRolesConfig rolesConfig;
 
     @Override
     public List<Report> getPentahoReports() throws Exception
@@ -164,6 +172,23 @@ public class ReportServiceImpl implements ReportService
         return retval;
     }
 
+    private String createReportKeyFromTitle(String title) throws RuntimeException
+    {
+        String reportKey = "";
+
+        if(title != null && !title.isEmpty())
+        {
+            String[] titleArray =  title.replaceAll("\\s","").split("(?=[A-Z])");
+            List<String> titleList = Arrays.asList(titleArray);
+            reportKey = titleList.stream().map(element -> StringUtils.capitalize(element.toUpperCase())).collect(Collectors.joining("_"));
+        }
+        else
+        {
+            throw new RuntimeException("Report title must not be empty");
+        }
+        return reportKey;
+    }
+
     @Override
     public List<Report> getAcmReports(String userId)
     {
@@ -235,6 +260,13 @@ public class ReportServiceImpl implements ReportService
         {
             List<String> propertiesToDelete = new ArrayList<>();
             Map<String, String> reportToUrlMapping = reportsConfig.getReportToUrlMap();
+            List<Report> missgingReports = reports.stream()
+                    .filter(item ->!reportToUrlMapping.containsKey(item.getPropertyName()))
+                    .collect(Collectors.toList());
+            for (Report report : missgingReports)
+            {
+                updateReportsConfig(report, report.getTitle());
+            }
             for (Entry<String, String> entry : reportToUrlMapping.entrySet())
             {
                 Report found = reports.stream()
@@ -248,13 +280,14 @@ public class ReportServiceImpl implements ReportService
             }
 
             Map<String, String> reportsToRolesMapping = reportsToRolesConfig.getReportsToRolesMap();
+
             propertiesToDelete.forEach(item -> {
                 reportToUrlMapping.remove(item);
                 reportsToRolesMapping.remove(item);
             });
 
-            configurationPropertyService.updateProperties(reportToUrlMapping);
-            configurationPropertyService.updateProperties(reportsToRolesMapping);
+            configurationPropertyService.updateProperties(reportsConfig);
+            configurationPropertyService.updateProperties(reportsToRolesConfig);
         }
 
         return reports;
@@ -328,7 +361,12 @@ public class ReportServiceImpl implements ReportService
         try
         {
             InputStream inputStream = new ByteArrayInputStream(xml.getBytes());
-            DocumentBuilder documentBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+            DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+            dbf.setFeature( "http://apache.org/xml/features/disallow-doctype-decl", true);
+            dbf.setFeature("http://xml.org/sax/features/external-general-entities", false);
+            dbf.setFeature("http://xml.org/sax/features/external-parameter-entities", false);
+            dbf.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
+            DocumentBuilder documentBuilder = dbf.newDocumentBuilder();
             Document document = documentBuilder.parse(inputStream);
             Element element = document.getDocumentElement();
             JAXBContext context = JAXBContext.newInstance(c);
@@ -358,6 +396,13 @@ public class ReportServiceImpl implements ReportService
                         entry -> Arrays.stream(entry.getValue().split(","))
                                 .collect(Collectors.toList())));
     }
+
+    private void updateReportsConfig(Report report, String title)
+    {
+        reportsConfig.getReportToUrlMap().put(createReportKeyFromTitle(title), createPentahoReportUri(report));
+        reportsToRolesConfig.getReportsToRolesMap().put(createReportKeyFromTitle(title), "");
+    }
+
 
     @Override
     public Map<String, List<String>> getReportToRolesMap()
@@ -423,7 +468,7 @@ public class ReportServiceImpl implements ReportService
         updatedRolesForReport.addAll(roles);
 
         reportsToRolesMapping.put(reportName, String.join(",", updatedRolesForReport));
-        configurationPropertyService.updateProperties(reportsToRolesMapping);
+        configurationPropertyService.updateProperties(reportsToRolesConfig);
         return new ArrayList<>(updatedRolesForReport);
     }
 
@@ -438,25 +483,68 @@ public class ReportServiceImpl implements ReportService
                 .collect(Collectors.toList());
 
         reportsToRolesMapping.put(reportName, String.join(",", updatedRolesForReport));
-        configurationPropertyService.updateProperties(reportsToRolesMapping);
+        configurationPropertyService.updateProperties(reportsToRolesConfig);
         return updatedRolesForReport;
     }
 
     @Override
     public List<String> getRolesForReport(Boolean authorized, String reportId)
     {
+        String reportsToRolesConfigString = reportsToRolesConfig.getReportsToRolesMap().get(reportId);
 
-        String[] rolesForReport = reportsToRolesConfig.getReportsToRolesMap().get(reportId).split(",");
-
-        if (!authorized)
+        if (reportsToRolesConfigString != null)
         {
-            return Arrays.stream(rolesForReport)
-                    .filter(role -> Arrays.stream(rolesForReport).noneMatch(r -> r.trim().equals(role)))
-                    .collect(Collectors.toList());
-        }
+            String[] rolesForReport = reportsToRolesConfigString.split(",");
 
-        return Arrays.asList(rolesForReport);
+            if (!authorized)
+            {
+                return rolesConfig.getApplicationRoles().stream()
+                        .filter(role -> Arrays.stream(rolesForReport).noneMatch(r -> r.trim().equals(role)))
+                        .collect(Collectors.toList());
+            }
+
+            return Arrays.asList(rolesForReport);
+        }
+        else
+        {
+            return new ArrayList<>();
+        }
     }
+
+    @Override
+    public List<String> getRolesForReport(Boolean authorized, String reportId, int startRow, int maxRows, String sortBy, String sortDirection) {
+        String reportsToRolesConfigString = reportsToRolesConfig.getReportsToRolesMap().get(reportId);
+
+        if (reportsToRolesConfigString != null) {
+            String[] rolesForReport = reportsToRolesConfigString.split(",");
+            List<String> result = null;
+
+            if (!authorized) {
+                result = rolesConfig.getApplicationRoles().stream()
+                        .filter(role -> Arrays.stream(rolesForReport).noneMatch(r -> r.trim().equals(role)))
+                        .collect(Collectors.toList());
+            } else {
+                result = Arrays.asList(rolesForReport);
+            }
+
+
+            if (sortDirection.contains("DESC")) {
+                Collections.sort(result, Collections.reverseOrder());
+            } else {
+                Collections.sort(result);
+            }
+
+            if (startRow > result.size()) {
+                return result;
+            }
+            maxRows = maxRows > result.size() ? result.size() : maxRows;
+
+            return result.stream().skip(startRow).limit(maxRows).collect(Collectors.toList());
+        } else {
+            return new ArrayList<>();
+        }
+    }
+
 
     public MuleContextManager getMuleContextManager()
     {
@@ -537,4 +625,15 @@ public class ReportServiceImpl implements ReportService
     {
         this.userRoleService = userRoleService;
     }
+
+    public ApplicationRolesConfig getRolesConfig()
+    {
+        return rolesConfig;
+    }
+
+    public void setRolesConfig(ApplicationRolesConfig rolesConfig)
+    {
+        this.rolesConfig = rolesConfig;
+    }
+
 }

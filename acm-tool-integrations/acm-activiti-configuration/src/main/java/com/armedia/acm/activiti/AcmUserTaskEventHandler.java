@@ -30,8 +30,8 @@ package com.armedia.acm.activiti;
 
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.task.Task;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 
@@ -43,7 +43,7 @@ import java.util.Map;
 public class AcmUserTaskEventHandler implements ApplicationEventPublisherAware
 {
     private ApplicationEventPublisher applicationEventPublisher;
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
     private RuntimeService runtimeService;
 
     public void handleTaskEvent(String eventName, Task task)

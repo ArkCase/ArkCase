@@ -47,8 +47,8 @@ import org.mule.endpoint.DefaultOutboundEndpoint;
 import org.mule.interceptor.TimerInterceptor;
 import org.mule.module.cmis.processors.AbstractConnectedProcessor;
 import org.mule.module.scripting.transformer.ScriptTransformer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.slf4j.MDC;
 
 import java.util.Date;
@@ -67,7 +67,7 @@ public class AcmMessageProcessorNotificationListener implements MessageProcessor
 {
     public static final String EVENT_TYPE = "com.armedia.acm.audit.mule.flow";
 
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
 
     private AuditService auditService;
     private AuditConfig auditConfig;

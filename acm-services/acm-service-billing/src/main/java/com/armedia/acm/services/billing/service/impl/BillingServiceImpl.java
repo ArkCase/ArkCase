@@ -13,8 +13,8 @@ import com.armedia.acm.services.billing.model.BillingItem;
 import com.armedia.acm.services.billing.rules.BillingInvoiceBusinessRule;
 import com.armedia.acm.services.billing.service.BillingService;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import javax.persistence.PersistenceException;
 
@@ -54,7 +54,7 @@ import java.util.List;
 public class BillingServiceImpl implements BillingService
 {
 
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
     private BillingItemDao billingItemDao;
     private BillingInvoiceDao billingInvoiceDao;
     private BillingInvoiceBusinessRule billingInvoiceBusinessRule;
@@ -193,7 +193,6 @@ public class BillingServiceImpl implements BillingService
         getBillingEventPublisher().publishBillingInvoiceCreatedEvent(updated);
         return updated;
     }
-
     /**
      * @return the billingItemDao
      */
@@ -244,5 +243,4 @@ public class BillingServiceImpl implements BillingService
     {
         this.billingInvoiceBusinessRule = billingInvoiceBusinessRule;
     }
-
 }

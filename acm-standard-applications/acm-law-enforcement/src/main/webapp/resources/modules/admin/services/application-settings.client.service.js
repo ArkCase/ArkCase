@@ -13,71 +13,51 @@
 angular.module('admin').factory('Admin.ApplicationSettingsService', [ '$http', function($http) {
     return {
         PROPERTIES: {
-            DISPLAY_USERNAME: 'displayUserName',
-            IDLE_LIMIT: 'idleLimit',
-            IDLE_PULL: 'idlePull',
-            IDLE_CONFIRM: 'idleConfirm',
-            HISTORY_DAYS: 'historyDays'
+            DISPLAY_USERNAME: 'application.properties.displayUserName',
+            IDLE_LIMIT: 'application.properties.idleLimit',
+            IDLE_PULL: 'application.properties.idlePull',
+            IDLE_CONFIRM: 'application.properties.idleConfirm',
+            HISTORY_DAYS: 'application.properties.historyDays'
         },
 
         /**
          * @ngdoc method
-         * @name getSettings
-         * @methodOf admin.service:Admin.ApplicationSettingsService
-         *
-         * @description
-         * Performs retrieving all application settings
-         *
-         *
-         * @returns {Object} Application seting structure
-         */
-        getSettings: function() {
-            return $http({
-                method: 'GET',
-                url: 'api/latest/plugin/admin/app-properties'
-            });
-        },
-
-        /**
-         * @ngdoc method
-         * @name getProperty
-         * @methodOf admin.service:Admin.ApplicationSettingsService
-         *
-         * @description
-         * Get property of application settings
-         *
-         * @param {Object} propertyName Name of application property.
-         *
-         * @returns {String} Application settings value
-         */
-        getProperty: function(propertyName) {
-            return $http({
-                method: 'GET',
-                url: 'api/latest/plugin/admin/app-properties/' + propertyName
-            });
-        },
-
-        /**
-         * @ngdoc method
-         * @name setProperty
+         * @name setPropertyConfiguration
          * @methodOf admin.service:Admin.ApplicationSettingsService
          *
          * @description
          * Set property of application settings
          *
-         * @param {Object} params Map of input parameter.
+         * @param {Object} Object of input parameter.
          *
-         * @returns {String} updated Application settings value
+         * @returns {Object} updated Application settings value
          */
-        setProperty: function(propertyName, propertyValue) {
-            var data = {};
-            data[propertyName] = propertyValue;
-
+        saveApplicationPropertyConfig: function (data) {
             return $http({
                 method: 'PUT',
                 url: 'api/latest/plugin/admin/app-properties',
-                data: data
+                data: data,
+                headers: {
+                    "Content-Type": "application/json"
+                }
             });
+        },
+
+        /**
+         * @ngdoc method
+         * @name getApplicationPropertiesConfig
+         * @methodOf admin.service:Admin.ApplicationSettingsService
+         *
+         * @description
+         * Get properties of application settings
+         *
+         * @returns {Object} updated Application settings value
+         */
+        getApplicationPropertiesConfig: function () {
+            return $http({
+                method: "GET",
+                url: "api/latest/plugin/admin/app-properties"
+            })
         }
     }
 } ]);

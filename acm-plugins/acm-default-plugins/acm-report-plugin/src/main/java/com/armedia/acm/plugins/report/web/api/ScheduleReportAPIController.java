@@ -28,14 +28,15 @@ package com.armedia.acm.plugins.report.web.api;
  */
 
 import com.armedia.acm.objectonverter.DateFormats;
+import com.armedia.acm.pentaho.config.PentahoReportsConfig;
 import com.armedia.acm.plugins.report.model.PentahoReportSchedule;
 import com.armedia.acm.plugins.report.model.PentahoScheduleRequest;
 import com.armedia.acm.plugins.report.model.ScheduleReportException;
 import com.armedia.acm.plugins.report.service.ScheduleReportService;
 
 import org.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -57,10 +58,9 @@ import java.util.Date;
 @RequestMapping({ "/api/v1/plugin/report", "/api/latest/plugin/report" })
 public class ScheduleReportAPIController
 {
-    private static final Logger LOGGER = LoggerFactory.getLogger(ScheduleReportAPIController.class);
+    private static final Logger LOGGER = LogManager.getLogger(ScheduleReportAPIController.class);
     private ScheduleReportService scheduleReportService;
-    private String scheduleInputFolder;
-    private String scheduleOutputFolder;
+    private PentahoReportsConfig pentahoReportsConfig;
 
     @RequestMapping(value = "/schedule", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
@@ -79,7 +79,7 @@ public class ScheduleReportAPIController
 
         try
         {
-            if (pentahoReportSchedule.getEndTime() != "")
+            if (!pentahoReportSchedule.getEndTime().isEmpty())
             {
                 Date startTime = convertTime(pentahoReportSchedule.getStartTime());
                 Date endTime = convertTime(pentahoReportSchedule.getEndTime());
@@ -104,7 +104,7 @@ public class ScheduleReportAPIController
                 pentahoReportSchedule.getStartTime(),
                 pentahoReportSchedule.getEndTime(), pentahoReportSchedule.getJobName(), pentahoReportSchedule.getEmails(),
                 pentahoReportSchedule.getFilterStartDate(), pentahoReportSchedule.getFilterEndDate(), pentahoReportSchedule.getReportFile(),
-                scheduleInputFolder, scheduleOutputFolder);
+                pentahoReportsConfig.getScheduleInputFolder(), pentahoReportsConfig.getScheduleOutputFolder());
         getScheduleReportService().scheduleReport(pentahoScheduleRequest.toJSONSting());
 
         LOGGER.debug(pentahoReportSchedule.toString());
@@ -145,29 +145,19 @@ public class ScheduleReportAPIController
         this.scheduleReportService = scheduleReportService;
     }
 
-    public String getScheduleInputFolder()
-    {
-        return scheduleInputFolder;
-    }
-
-    public void setScheduleInputFolder(String scheduleInputFolder)
-    {
-        this.scheduleInputFolder = scheduleInputFolder;
-    }
-
-    public String getScheduleOutputFolder()
-    {
-        return scheduleOutputFolder;
-    }
-
-    public void setScheduleOutputFolder(String scheduleOutputFolder)
-    {
-        this.scheduleOutputFolder = scheduleOutputFolder;
-    }
-
     private Date convertTime(String date) throws ParseException
     {
         Date formattedDate = new SimpleDateFormat(DateFormats.DEFAULT_DATE_TIME_FORMAT).parse(date);
         return formattedDate;
+    }
+
+    public PentahoReportsConfig getPentahoReportsConfig()
+    {
+        return pentahoReportsConfig;
+    }
+
+    public void setPentahoReportsConfig(PentahoReportsConfig pentahoReportsConfig)
+    {
+        this.pentahoReportsConfig = pentahoReportsConfig;
     }
 }

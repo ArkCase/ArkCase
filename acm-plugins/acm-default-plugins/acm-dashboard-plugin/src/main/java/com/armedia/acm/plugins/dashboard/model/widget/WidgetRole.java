@@ -27,8 +27,8 @@ package com.armedia.acm.plugins.dashboard.model.widget;
  * #L%
  */
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -47,7 +47,7 @@ public class WidgetRole
 {
 
     private static final long serialVersionUID = -1154137631399833851L;
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private transient final Logger log = LogManager.getLogger(getClass());
 
     @Id
     @Column(name = "cm_widget_id")

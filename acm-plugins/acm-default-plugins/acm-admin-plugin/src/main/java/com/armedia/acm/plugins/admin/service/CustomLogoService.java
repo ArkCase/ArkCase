@@ -30,8 +30,8 @@ package com.armedia.acm.plugins.admin.service;
 import com.armedia.acm.plugins.admin.exception.AcmCustomLogoException;
 
 import org.apache.commons.io.FileUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.core.io.InputStreamSource;
 
 import java.io.File;
@@ -42,7 +42,7 @@ import java.io.InputStream;
  */
 public class CustomLogoService
 {
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
 
     private String brandingFilesLocation;
     private String headerLogoFile;

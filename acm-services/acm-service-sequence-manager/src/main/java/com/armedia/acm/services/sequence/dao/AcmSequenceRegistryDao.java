@@ -26,16 +26,15 @@ package com.armedia.acm.services.sequence.dao;
  * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
  * #L%
  */
+
 import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.services.sequence.model.AcmSequenceRegistry;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import javax.persistence.FlushModeType;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,7 +44,7 @@ import java.util.List;
  */
 public class AcmSequenceRegistryDao extends AcmAbstractDao<AcmSequenceRegistry>
 {
-    private final Logger log = LoggerFactory.getLogger(getClass());
+    private final Logger log = LogManager.getLogger(getClass());
 
     @Override
     protected Class<AcmSequenceRegistry> getPersistenceClass()
@@ -108,6 +107,21 @@ public class AcmSequenceRegistryDao extends AcmAbstractDao<AcmSequenceRegistry>
         query.setParameter("sequenceName", sequenceName);
         query.setParameter("sequencePartName", sequencePartName);
         query.setParameter("sequencePartValueUsedFlag", sequencePartValueUsedFlag);
+
+        List<AcmSequenceRegistry> sequenceRegistryList = query.getResultList();
+        if (null == sequenceRegistryList)
+        {
+            sequenceRegistryList = new ArrayList<AcmSequenceRegistry>();
+        }
+        return sequenceRegistryList;
+    }
+
+    public List<AcmSequenceRegistry> getSequenceRegistryList()
+    {
+        String queryText = "SELECT sequenceRegistry " +
+                "FROM AcmSequenceRegistry sequenceRegistry";
+
+        TypedQuery<AcmSequenceRegistry> query = getEm().createQuery(queryText, AcmSequenceRegistry.class);
 
         List<AcmSequenceRegistry> sequenceRegistryList = query.getResultList();
         if (null == sequenceRegistryList)

@@ -38,8 +38,8 @@ import com.armedia.acm.plugins.dashboard.service.DashboardPropertyReader;
 import com.armedia.acm.plugins.dashboard.service.DashboardService;
 import com.armedia.acm.services.users.model.AcmUser;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -47,8 +47,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-import javax.servlet.http.HttpSession;
 
 import java.util.List;
 
@@ -63,14 +61,13 @@ public class SetDashboardConfigAPIController
     private DashboardService dashboardService;
     private DashboardPropertyReader dashboardPropertyReader;
     private DashboardEventPublisher eventPublisher;
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
 
     @RequestMapping(value = "/set", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
     public DashboardDto setDashboardConfig(
             @RequestBody DashboardDto updateDashboardDto,
-            Authentication authentication,
-            HttpSession session) throws AcmObjectNotFoundException, AcmUserActionFailedException, AcmDashboardException
+            Authentication authentication) throws AcmUserActionFailedException, AcmDashboardException
     {
         String userId = authentication.getName();
         AcmUser user = dashboardService.getUserByUserId(userId);
@@ -111,7 +108,10 @@ public class SetDashboardConfigAPIController
         }
         catch (Exception e)
         {
-            getEventPublisher().publishDashboardEvent(d, authentication, false, false);
+            if (d != null)
+            {
+                getEventPublisher().publishDashboardEvent(d, authentication, false, false);
+            }
             throw new AcmUserActionFailedException("update", "dashboard", null, e.getMessage(), e);
         }
     }

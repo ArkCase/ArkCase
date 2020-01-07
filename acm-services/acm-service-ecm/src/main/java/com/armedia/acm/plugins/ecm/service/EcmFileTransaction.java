@@ -33,6 +33,7 @@ import com.armedia.acm.plugins.ecm.model.EcmFile;
 import org.apache.chemistry.opencmis.client.api.Document;
 import org.mule.api.MuleException;
 import org.springframework.security.core.Authentication;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -42,10 +43,12 @@ import java.io.InputStream;
  */
 public interface EcmFileTransaction
 {
+    @Deprecated
     EcmFile addFileTransaction(Authentication authentication, String ecmUniqueFilename, AcmContainer container,
             String targetCmisFolderId, InputStream fileContents, EcmFile metadata,
             Document existingCmisDocument) throws MuleException, IOException;
 
+    @Deprecated
     EcmFile addFileTransaction(Authentication authentication, String ecmUniqueFilename, AcmContainer container,
             String targetCmisFolderId, InputStream fileContents, EcmFile metadata)
             throws MuleException, IOException;
@@ -62,10 +65,24 @@ public interface EcmFileTransaction
             String targetCmisFolderId, AcmContainer container, String cmisRepositoryId,
             Document existingCmisDocument) throws MuleException, IOException;
 
+    EcmFile addFileTransaction(Authentication authentication, String ecmUniqueFilename, AcmContainer container,
+            String targetCmisFolderId, InputStream fileContents, EcmFile metadata,
+            Document existingCmisDocument, MultipartFile file) throws MuleException, IOException;
+
+    EcmFile addFileTransaction(Authentication authentication, String ecmUniqueFilename, AcmContainer container,
+            String targetCmisFolderId, InputStream fileContents, EcmFile metadata, MultipartFile file)
+            throws MuleException, IOException;
+
     EcmFile updateFileTransaction(Authentication authentication, EcmFile ecmFile, InputStream fileInputStream)
             throws MuleException, IOException;
 
+    EcmFile updateFileTransaction(Authentication authentication, EcmFile ecmFile, InputStream fileInputStream, String fileExtension)
+            throws MuleException, IOException;
+
     EcmFile updateFileTransactionEventAware(Authentication authentication, EcmFile ecmFile, InputStream fileInputStream)
+            throws MuleException, IOException;
+
+    EcmFile updateFileTransactionEventAware(Authentication authentication, EcmFile ecmFile, InputStream fileInputStream, String fileExtension)
             throws MuleException, IOException;
 
     String downloadFileTransaction(EcmFile ecmFile) throws MuleException;

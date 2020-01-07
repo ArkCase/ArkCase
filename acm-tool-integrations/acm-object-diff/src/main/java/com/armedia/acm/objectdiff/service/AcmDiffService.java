@@ -47,8 +47,8 @@ import com.armedia.acm.objectonverter.ObjectConverter;
 import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.expression.EvaluationContext;
 import org.springframework.expression.EvaluationException;
 import org.springframework.expression.Expression;
@@ -73,7 +73,7 @@ import java.util.Map;
  */
 public class AcmDiffService
 {
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
     private Map<String, AcmDiffBeanConfiguration> configurationMap = new HashMap<>();
     private ExpressionParser expressionParser = new SpelExpressionParser();
     private ObjectConverter objectConverter;

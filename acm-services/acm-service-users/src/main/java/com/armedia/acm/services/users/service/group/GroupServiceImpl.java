@@ -44,8 +44,8 @@ import com.armedia.acm.services.users.model.group.AcmGroupType;
 import com.armedia.acm.services.users.service.AcmGroupEventPublisher;
 
 import org.mule.api.MuleException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -59,7 +59,7 @@ import java.util.Set;
 
 public class GroupServiceImpl implements GroupService
 {
-    private final Logger log = LoggerFactory.getLogger(getClass());
+    private final Logger log = LogManager.getLogger(getClass());
 
     private UserDao userDao;
     private AcmGroupDao groupDao;
@@ -347,7 +347,6 @@ public class GroupServiceImpl implements GroupService
             catch (AcmObjectNotFoundException e)
             {
                 log.warn("Group [{}] cannot be removed", group);
-                e.printStackTrace();
             }
         });
         return result;

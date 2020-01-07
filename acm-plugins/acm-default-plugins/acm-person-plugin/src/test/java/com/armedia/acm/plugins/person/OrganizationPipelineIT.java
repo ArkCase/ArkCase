@@ -41,8 +41,8 @@ import com.armedia.acm.plugins.person.service.OrganizationService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -84,7 +84,8 @@ import java.util.Date;
         "/spring/spring-library-configuration.xml",
         "/spring/spring-library-person-plugin-test.xml",
         "/spring/spring-library-folder-watcher.xml",
-        "/spring/spring-library-acm-email.xml"
+        "/spring/spring-library-acm-email.xml",
+        "/spring/spring-test-quartz-scheduler.xml"
 })
 @TransactionConfiguration(defaultRollback = false, transactionManager = "transactionManager")
 public class OrganizationPipelineIT
@@ -104,7 +105,7 @@ public class OrganizationPipelineIT
 
     private Organization organization = new Organization();
 
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
 
     @PersistenceContext
     private EntityManager entityManager;

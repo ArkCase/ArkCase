@@ -35,8 +35,8 @@ import com.armedia.acm.services.users.model.ldap.LdapGroupNode;
 import com.armedia.acm.services.users.service.group.AcmGroupUtils;
 
 import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -52,7 +52,7 @@ import java.util.stream.Collectors;
  */
 public class AcmGroupsSyncResult
 {
-    private final Logger log = LoggerFactory.getLogger(getClass());
+    private final Logger log = LogManager.getLogger(getClass());
     private List<AcmGroup> newGroups;
     private List<AcmGroup> modifiedGroups;
     private List<AcmGroup> deletedGroups;

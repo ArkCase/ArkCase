@@ -33,15 +33,15 @@ import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.PasswordResetToken;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 public class ResetPasswordService {
 
     private NotificationDao notificationDao;
     private UserDao userDao;
     private AcmSpringActiveProfile acmSpringActiveProfile;
-    private final Logger log = LoggerFactory.getLogger(getClass());
+    private final Logger log = LogManager.getLogger(getClass());
     
     public void sendPasswordResetNotification(AcmUser user)
     {
@@ -60,6 +60,7 @@ public class ResetPasswordService {
         notification.setAttachFiles(false);
         notification.setEmailAddresses(user.getMail());
         notification.setTitle("Reset password");
+        notification.setUser(user.getUserId());
         notificationDao.save(notification);
     }
 

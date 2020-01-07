@@ -31,8 +31,8 @@ import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.plugins.person.model.Organization;
 import com.armedia.acm.plugins.person.model.OrganizationAssociation;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
@@ -43,7 +43,7 @@ import java.util.List;
 
 public class OrganizationAssociationDao extends AcmAbstractDao<OrganizationAssociation>
 {
-    private transient final Logger LOG = LoggerFactory.getLogger(getClass());
+    private transient final Logger LOG = LogManager.getLogger(getClass());
 
     @PersistenceContext
     private EntityManager entityManager;

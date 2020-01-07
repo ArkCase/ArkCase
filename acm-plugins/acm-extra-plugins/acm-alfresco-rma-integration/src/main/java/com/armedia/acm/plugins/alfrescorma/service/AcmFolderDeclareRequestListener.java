@@ -37,14 +37,14 @@ import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.model.EcmFolderDeclareRequestEvent;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.context.ApplicationListener;
 
 public class AcmFolderDeclareRequestListener implements ApplicationListener<EcmFolderDeclareRequestEvent>
 {
 
-    private transient Logger log = LoggerFactory.getLogger(getClass());
+    private transient Logger log = LogManager.getLogger(getClass());
     private AlfrescoRecordsService alfrescoRecordsService;
     private AcmFolderService acmFolderService;
     private AcmFolderDao acmFolderDao;

@@ -27,18 +27,15 @@ package com.armedia.acm.services.alfresco.ldap.syncer;
  * #L%
  */
 
-import com.armedia.acm.core.exceptions.AcmEncryptionException;
-import com.armedia.acm.crypto.properties.AcmEncryptablePropertyUtils;
 import com.armedia.acm.data.AcmServiceLdapSyncEvent;
 import com.armedia.acm.data.AcmServiceLdapSyncResult;
 import com.armedia.acm.services.ldap.syncer.ExternalLdapSyncer;
 
 import org.apache.commons.codec.binary.Base64;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
-import org.springframework.core.io.Resource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -49,11 +46,8 @@ import org.springframework.util.concurrent.ListenableFuture;
 import org.springframework.util.concurrent.ListenableFutureCallback;
 import org.springframework.web.client.AsyncRestTemplate;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.util.Arrays;
-import java.util.Properties;
 
 /**
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Jan 3, 2018
@@ -62,25 +56,13 @@ import java.util.Properties;
 public class AlfrescoLdapSyncer implements ApplicationEventPublisherAware, ExternalLdapSyncer
 {
 
-    private static final String DEFAULT_ALFRESCO_BASEURL = "https://acm-arkcase/alfresco/s/enterprise/admin/admin-sync";
-
-    private static final String DEFAULT_ADMIN_USERNAME = "admin";
-
-    private static final String DEFAULT_ADMIN_PASSWORD = "admin";
-
     private static final String US_ASCII_CHARSET = "US-ASCII";
 
-    private Logger log = LoggerFactory.getLogger(getClass());
-
-    private Resource alfrescoPropertiesResource;
-
-    private AcmEncryptablePropertyUtils encryptablePropertyUtils;
-
-    private String baseUrl;
-
-    private byte[] encodedAuth;
+    private Logger log = LogManager.getLogger(getClass());
 
     private ApplicationEventPublisher applicationEventPublisher;
+
+    private AlfrescoLdapSyncerConfig config;
 
     /*
      * (non-Javadoc)
@@ -96,15 +78,17 @@ public class AlfrescoLdapSyncer implements ApplicationEventPublisherAware, Exter
         requestHeaders.setContentType(MediaType.TEXT_PLAIN);
         requestHeaders.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
 
-        loadFromProperties();
+        String username = config.getAdminUsername();
+        String password = config.getAdminPassword();
+        String auth = String.format("%s:%s", username, password);
+        byte[] encodedAuth = Base64.encodeBase64(auth.getBytes(Charset.forName(US_ASCII_CHARSET)));
 
         String authHeader = "Basic " + new String(encodedAuth);
-        encodedAuth = null;
         requestHeaders.add("Authorization", authHeader);
 
         HttpEntity<String> entity = new HttpEntity<>("parameters", requestHeaders);
-        ListenableFuture<ResponseEntity<SyncResult>> futureEntity = restTemplate.postForEntity(baseUrl, entity, SyncResult.class);
-        baseUrl = null;
+        ListenableFuture<ResponseEntity<SyncResult>> futureEntity = restTemplate.postForEntity(config.getAdminBaseUrl(), entity,
+                SyncResult.class);
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
@@ -152,53 +136,6 @@ public class AlfrescoLdapSyncer implements ApplicationEventPublisherAware, Exter
         });
     }
 
-    private void loadFromProperties()
-    {
-        Properties alfrescoProperties = new Properties();
-        try (InputStream objectTypesInputStream = alfrescoPropertiesResource.getInputStream())
-        {
-
-            alfrescoProperties.load(objectTypesInputStream);
-            baseUrl = alfrescoProperties.getProperty("alfresco.admin.baseurl", DEFAULT_ALFRESCO_BASEURL);
-            String username = alfrescoProperties.getProperty("alfresco.admin.username", DEFAULT_ADMIN_USERNAME);
-            String password = getPassword(alfrescoProperties);
-            String auth = String.format("%s:%s", username, password);
-            encodedAuth = Base64.encodeBase64(auth.getBytes(Charset.forName(US_ASCII_CHARSET)));
-
-        }
-        catch (IOException ioe)
-        {
-
-            log.error("Could not read properties from [{}] file.", alfrescoPropertiesResource.getFilename(), ioe);
-
-            baseUrl = DEFAULT_ALFRESCO_BASEURL;
-            String auth = String.format("%s:%s", DEFAULT_ADMIN_USERNAME, DEFAULT_ADMIN_PASSWORD);
-            encodedAuth = Base64.encodeBase64(auth.getBytes(Charset.forName(US_ASCII_CHARSET)));
-
-        }
-    }
-
-    private String getPassword(Properties alfrescoProperties)
-    {
-        String password = alfrescoProperties.getProperty("alfresco.admin.password");
-        if (password != null)
-        {
-            try
-            {
-                return encryptablePropertyUtils.decryptPropertyValue(password);
-            }
-            catch (AcmEncryptionException e)
-            {
-                log.error("Could not decrypt \"alfresco.admin.password\" from  " + alfrescoPropertiesResource.getFilename() + ".");
-                return DEFAULT_ADMIN_PASSWORD;
-            }
-        }
-        else
-        {
-            return DEFAULT_ADMIN_PASSWORD;
-        }
-    }
-
     /*
      * (non-Javadoc)
      * @see org.springframework.context.ApplicationEventPublisherAware#setApplicationEventPublisher(org.springframework.
@@ -210,22 +147,13 @@ public class AlfrescoLdapSyncer implements ApplicationEventPublisherAware, Exter
         this.applicationEventPublisher = applicationEventPublisher;
     }
 
-    /**
-     * @param alfrescoPropertiesResource
-     *            the alfrescoPropertiesResource to set
-     */
-    public void setAlfrescoPropertiesResource(Resource alfrescoPropertiesResource)
+    public AlfrescoLdapSyncerConfig getConfig()
     {
-        this.alfrescoPropertiesResource = alfrescoPropertiesResource;
+        return config;
     }
 
-    /**
-     * @param encryptablePropertyUtils
-     *            the encryptablePropertyUtils to set
-     */
-    public void setEncryptablePropertyUtils(AcmEncryptablePropertyUtils encryptablePropertyUtils)
+    public void setConfig(AlfrescoLdapSyncerConfig config)
     {
-        this.encryptablePropertyUtils = encryptablePropertyUtils;
+        this.config = config;
     }
-
 }

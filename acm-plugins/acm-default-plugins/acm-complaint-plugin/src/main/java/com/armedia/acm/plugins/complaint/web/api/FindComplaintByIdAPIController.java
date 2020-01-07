@@ -34,8 +34,8 @@ import com.armedia.acm.plugins.complaint.model.Complaint;
 import com.armedia.acm.plugins.complaint.service.ComplaintEventPublisher;
 import com.armedia.acm.services.participants.model.DecoratedAssignedObjectParticipants;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.TransactionException;
@@ -54,7 +54,7 @@ public class FindComplaintByIdAPIController
     private ComplaintDao complaintDao;
     private ComplaintEventPublisher eventPublisher;
 
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
 
     @RequestMapping(value = "/byId/{complaintId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @DecoratedAssignedObjectParticipants

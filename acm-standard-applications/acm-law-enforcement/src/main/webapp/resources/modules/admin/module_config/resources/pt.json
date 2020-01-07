@@ -217,6 +217,7 @@
                     "cancelBtn": "Cancelar",
                     "deleteBtn": "Excluir",
                     "headerText": "Você está prestes a excluir grupo:",
+                    "controlGroupHeaderWarning": "You are about to delete {{groupName}} group which is a member in the control group {{controlGroupName}}",
                     "bodyText": "Você tem certeza?"
                 }
             },
@@ -248,7 +249,7 @@
             },
 			"searchFilter.placeholder": "Pesquisa"
         },
-        "security.selectPrivileges": "Criar privilégios de função / seleção",
+        "security.selectPrivileges": "Selecione privilégios",
         "security.selectPrivileges.applicationRole": "Função de aplicação",
         "security.selectPrivileges.createRole": "Criar papel",
         "security.selectPrivileges.editRole": "Editar papel",
@@ -709,6 +710,29 @@
                     }
                 }
             },
+            "sequenceManagementReset": {
+                "title": "Reset List",
+                "editBtn": "Edit",
+                "viewBtn": "View",
+                "removeBtn": "Remove",
+                "cancelBtn": "Cancel",
+                "saveBtn": "Save",
+                "grid": {
+                    "startResetDate": "Start Reset Date",
+                    "executedDate": "Executed Date",
+                    "repeat": "Repeat",
+                    "repeatPeriod": "Repeat Period"
+                },
+                "detailsModal": {
+                    "title": "Autoincrement Reset",
+                    "addTitle": "Add Autoincrement Reset",
+                    "editTitle": "Edit Autoincrement Reset",
+                    "resetStartDate": "Reset Start Date",
+                    "repeatReset": "Repeat reset",
+                    "repeatResetPeriod": "Repeat reset period (days)",
+                    "sequenceResetScheduledWarning": "Sequence reset scheduled for today"
+                }
+            },
             "login.config": {
                 "title": "Configuração de login",
                 "idleLimit.label": "Inicie sessão no limite ocioso (em milissegundos)",
@@ -963,15 +987,6 @@
                 "enableOCR.checkbox": "Enable OCR_PT"
             }
         },
-        "ocr": {
-            "title": "OCR Services_PT",
-            "ocrManagement": "OCR Management_PT",
-            "ocrConfigForm": {
-                "save.button": "Save_PT",
-                "enableOCR.label": "OCR Configuration_PT",
-                "enableOCR.checkbox": "Enable OCR_PT"
-            }
-        },
         "stateOfArkcase": {
             "title": "Estado de Arkcase",
             "pickDate": "Data de coleta",
@@ -1021,6 +1036,43 @@
             },
             "emailTemplates": {
                 "title": "Modelos de e-mail"
+            }
+        },
+        "portals.portalsConfiguration": {
+            "nodeTitle": "pt_Portals Service",
+            "title": "pt_Portals Configuration",
+            "url": "pt_URL",
+            "id": "pt_ID",
+            "portalId": "pt_Portal ID",
+            "portalDescription": "pt_Description",
+            "portalUser": "pt_User",
+            "save": "pt_Save",
+            "cancel": "pt_Cancel",
+            "placeholder": {
+                "portalUrl": "pt_Enter Portal URL",
+                "portalId": "pt_ID will be generate",
+                "portalDescription": "pt_Enter Portal Description",
+                "portalUser": "pt_Select Portal User"
+            },
+            "message": {
+                "edit": "pt_Portal is successfully edited",
+                "add": "pt_Portal is successfully added",
+                "delete": "pt_Portal is successfully deleted"
+            }
+        },
+        "userSearch": {
+            "title": "pt_User Search",
+            "cancelButton": "pt_Cancel",
+            "confirmButton": "pt_Save",
+            "search": {
+                "placeholder": "pt_Search for the user to assign to this portal",
+                "btn": "pt_Search"
+            },
+            "assigneeGridColumns": {
+                "name": "pt_Name",
+                "type": "pt_Type",
+                "title": "pt_Title",
+                "username": "pt_Username"
             }
         }
     }

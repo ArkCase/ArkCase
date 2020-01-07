@@ -41,8 +41,8 @@ import com.armedia.acm.web.api.MDCConstants;
 import org.apache.chemistry.opencmis.client.api.Document;
 import org.apache.chemistry.opencmis.commons.data.ContentStream;
 import org.mule.module.cmis.connectivity.CMISCloudConnectorConnectionManager;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.slf4j.MDC;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
@@ -56,13 +56,11 @@ import java.util.UUID;
 
 public class ContentFileSolrPostClient implements SolrPostClient, ApplicationEventPublisherAware
 {
-
-    private transient final Logger logger = LoggerFactory.getLogger(getClass());
+    private transient final Logger logger = LogManager.getLogger(getClass());
     private ObjectConverter objectConverter;
     private EcmFileService ecmFileService;
     private CmisConfigUtils cmisConfigUtils;
     private SolrRestClient solrRestClient;
-    private String solrContentFileHandler;
     private ApplicationEventPublisher applicationEventPublisher;
 
     @Override
@@ -107,7 +105,8 @@ public class ContentFileSolrPostClient implements SolrPostClient, ApplicationEve
         InputStreamResource inputStreamResource = new InputStreamResource(contentStream.getStream());
         HttpEntity<InputStreamResource> entity = new HttpEntity<>(inputStreamResource, headers);
 
-        getSolrRestClient().postToSolr(core.getCore(), getSolrContentFileHandler(), entity, logText, urlWithPlaceholders, urlValues);
+        getSolrRestClient().postToSolr(core.getCore(), solrRestClient.getSolrConfig().getContentFileHandler(), entity, logText,
+                urlWithPlaceholders, urlValues);
 
         applicationEventPublisher.publishEvent(new EcmFileContentIndexedEvent(solrContentDocument));
 
@@ -158,16 +157,6 @@ public class ContentFileSolrPostClient implements SolrPostClient, ApplicationEve
     public void setCmisConfigUtils(CmisConfigUtils cmisConfigUtils)
     {
         this.cmisConfigUtils = cmisConfigUtils;
-    }
-
-    public String getSolrContentFileHandler()
-    {
-        return solrContentFileHandler;
-    }
-
-    public void setSolrContentFileHandler(String solrContentFileHandler)
-    {
-        this.solrContentFileHandler = solrContentFileHandler;
     }
 
     public SolrRestClient getSolrRestClient()

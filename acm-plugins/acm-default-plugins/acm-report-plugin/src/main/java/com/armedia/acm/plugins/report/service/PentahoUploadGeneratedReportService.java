@@ -44,8 +44,8 @@ import com.armedia.acm.plugins.report.model.PentahoReportScheduleConstants;
 import com.armedia.acm.pentaho.config.PentahoReportsConfig;
 import com.armedia.acm.web.api.MDCConstants;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.slf4j.MDC;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -65,7 +65,7 @@ import java.util.UUID;
  */
 public class PentahoUploadGeneratedReportService
 {
-    private static final Logger LOGGER = LoggerFactory.getLogger(PentahoUploadGeneratedReportService.class);
+    private static final Logger LOGGER = LogManager.getLogger(PentahoUploadGeneratedReportService.class);
     private EcmFileService ecmFileService;
     private AcmFolderService acmFolderService;
     private DocumentRepositoryDao documentRepositoryDao;

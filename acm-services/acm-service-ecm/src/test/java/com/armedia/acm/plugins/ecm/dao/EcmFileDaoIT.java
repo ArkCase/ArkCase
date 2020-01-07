@@ -35,11 +35,11 @@ import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -76,7 +76,8 @@ import java.time.LocalDateTime;
         "/spring/spring-library-ecm-file-lock.xml",
         "/spring/spring-library-service-data.xml",
         "/spring/spring-library-configuration.xml",
-        "/spring/spring-library-acm-email.xml" })
+        "/spring/spring-library-acm-email.xml",
+        "/spring/spring-test-quartz-scheduler.xml" })
 @TransactionConfiguration(defaultRollback = true, transactionManager = "transactionManager")
 public class EcmFileDaoIT
 {
@@ -95,7 +96,7 @@ public class EcmFileDaoIT
     @Autowired
     private AuditPropertyEntityAdapter auditAdapter;
 
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
 
     @Before
     public void setUp() throws Exception

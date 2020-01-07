@@ -30,6 +30,8 @@ package com.armedia.acm.auth;
 import com.armedia.acm.services.authenticationtoken.model.AuthenticationToken;
 import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenService;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.session.SessionInformation;
 import org.springframework.security.core.session.SessionRegistry;
@@ -47,7 +49,7 @@ public class AcmConcurrentSessionControlAuthenticationStrategy extends Concurren
 
     private final AuthenticationTokenService authenticationTokenService;
 
-    private SessionControlConfig sessionControlConfig;
+    private static final Logger logger = LoggerFactory.getLogger(AcmConcurrentSessionControlAuthenticationStrategy.class);
 
     /**
      * @param sessionRegistry
@@ -78,7 +80,7 @@ public class AcmConcurrentSessionControlAuthenticationStrategy extends Concurren
 
         if (allowedSessions == -1)
         {
-            // We permit unlimited logins
+            // We permit unlimited login
             return;
         }
 
@@ -133,28 +135,8 @@ public class AcmConcurrentSessionControlAuthenticationStrategy extends Concurren
             // If the session is null, a new one will be created by the parent class, exceeding the allowed number
         }
 
+        logger.warn("Allowed sessions [{}] for user [{}] exceeded.", allowedSessions, authentication.getName());
         allowableSessionsExceeded(sessions, allowedSessions, sessionRegistry);
     }
 
-    public SessionControlConfig getSessionControlConfig()
-    {
-        return sessionControlConfig;
-    }
-
-    public void setSessionControlConfig(SessionControlConfig sessionControlConfig)
-    {
-        this.sessionControlConfig = sessionControlConfig;
-    }
-
-    @Override
-    public void setMaximumSessions(int maximumSessions)
-    {
-        super.setMaximumSessions(sessionControlConfig.getMaximumSessions());
-    }
-
-    @Override
-    public void setExceptionIfMaximumExceeded(boolean exceptionIfMaximumExceeded)
-    {
-        super.setExceptionIfMaximumExceeded(sessionControlConfig.getExceptionIfMaximumExceeded());
-    }
 }

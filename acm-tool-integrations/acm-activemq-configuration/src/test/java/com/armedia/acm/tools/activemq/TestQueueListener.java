@@ -27,8 +27,8 @@ package com.armedia.acm.tools.activemq;
  * #L%
  */
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.jms.annotation.JmsListener;
 
 import javax.jms.Message;
@@ -41,7 +41,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public class TestQueueListener implements MessageListener
 {
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private transient final Logger log = LogManager.getLogger(getClass());
 
     private AtomicInteger received = new AtomicInteger(0);
 

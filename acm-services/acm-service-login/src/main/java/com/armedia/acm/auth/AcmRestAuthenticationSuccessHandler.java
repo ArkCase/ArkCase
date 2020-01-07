@@ -27,8 +27,8 @@ package com.armedia.acm.auth;
  * #L%
  */
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
@@ -53,7 +53,7 @@ import java.io.IOException;
  */
 public class AcmRestAuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler
 {
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
 
     private RequestCache requestCache = new HttpSessionRequestCache();
 

@@ -33,8 +33,8 @@ import com.armedia.acm.services.labels.model.ModuleConfig;
 import org.apache.commons.io.FileUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.context.ApplicationEventPublisher;
 
 import java.io.File;
@@ -50,7 +50,7 @@ import java.util.Map;
 public class LabelManagementService
 {
     private final String MODULE_CORE_ID = "core";
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
     private String customResourcesLocation;
     private String customResourceFile;
     private String modulesLocation;
@@ -112,13 +112,13 @@ public class LabelManagementService
      * @param createIfAbsent
      * @return
      */
-    public JSONObject getResource(String moduleId, String lang, boolean createIfAbsent) throws AcmLabelManagementException
+    public JSONObject getResource(String moduleId, String lang) throws AcmLabelManagementException
     {
         String fileName = String.format(resourcesLocation + resourceFile, moduleId, lang);
         JSONObject resource = loadResource(fileName);
 
         // Try to create resource if required
-        if (resource == null && createIfAbsent)
+        if (resource == null)
         {
             resource = updateResource(moduleId, lang);
         }
@@ -131,7 +131,6 @@ public class LabelManagementService
      *
      * @param moduleId
      * @param lang
-     * @param createIfAbsent
      * @return
      */
     public JSONObject getCachedResource(String moduleId, String lang) throws AcmLabelManagementException
@@ -140,7 +139,7 @@ public class LabelManagementService
 
         if (moduleResource == null)
         {
-            JSONObject jsonObject = getResource(moduleId, lang, true);
+            JSONObject jsonObject = getResource(moduleId, lang);
             moduleResource = new HashMap<>();
             moduleResource.put(lang, jsonObject);
             cachedResources.put(moduleId, moduleResource);
@@ -150,7 +149,7 @@ public class LabelManagementService
 
         if (json == null)
         {
-            json = getResource(moduleId, lang, true);
+            json = getResource(moduleId, lang);
             moduleResource.put(lang, json);
         }
 
@@ -329,9 +328,15 @@ public class LabelManagementService
         String fileName = String.format(resourcesLocation + resourceFile, moduleId, lang);
         try
         {
-            File resourceFile = new File(fileName);
-            FileUtils.writeStringToFile(resourceFile, resource.toString(), "UTF-8");
-
+            for (String moduleName : getModulesNames())
+            {
+                if (fileName.contains(moduleName))
+                {
+                    File resourceFile = new File(fileName);
+                    FileUtils.writeStringToFile(resourceFile, resource.toString(), "UTF-8");
+                    break;
+                }
+            }
         }
         catch (Exception e)
         {

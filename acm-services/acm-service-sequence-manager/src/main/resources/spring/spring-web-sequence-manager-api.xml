@@ -4,9 +4,14 @@
 
     <bean id="handleSequenceConfiguration" class="com.armedia.acm.services.sequence.web.api.SequenceConfigurationAPIController">
         <property name="sequenceConfigurationService" ref="acmSequenceConfigurationService"/>
+        <property name="sequenceService" ref="acmSequenceService"/>
     </bean>
 
     <bean id="handleSequenceReset" class="com.armedia.acm.services.sequence.web.api.SequenceResetAPIController">
+        <property name="sequenceService" ref="acmSequenceService"/>
+    </bean>
+
+    <bean id="sequenceRegistryAPIController" class="com.armedia.acm.services.sequence.web.api.SequenceRegistryAPIController">
         <property name="sequenceService" ref="acmSequenceService"/>
     </bean>
 

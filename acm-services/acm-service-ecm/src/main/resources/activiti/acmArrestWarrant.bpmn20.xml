@@ -1,0 +1,159 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.activiti.org/processdef" xmlns:modeler="http://activiti.com/modeler" modeler:version="1.0ev" modeler:exportDateTime="20190502133910" modeler:modelId="1059623" modeler:modelVersion="1" modeler:modelLastUpdated="1556800738370">
+  <process id="arrestWarrant" name="arrestWarrant" isExecutable="true">
+    <startEvent id="startEvent1">
+      <extensionElements>
+        <modeler:editor-resource-id><![CDATA[startEvent1]]></modeler:editor-resource-id>
+      </extensionElements>
+    </startEvent>
+    <userTask id="approveTask1" name="${currentTaskName}" activiti:assignee="${approver1}" activiti:candidateGroups="${owningGroup}" activiti:dueDate="${execution.getVariable('dueDate') != null ? dueDate : P3D}">
+      <extensionElements>
+        <modeler:allow-send-email><![CDATA[true]]></modeler:allow-send-email>
+        <modeler:initiator-can-complete><![CDATA[false]]></modeler:initiator-can-complete>
+        <modeler:editor-resource-id><![CDATA[sid-BEC905A1-3CCC-4E75-855D-6C4760B9B8EC]]></modeler:editor-resource-id>
+      </extensionElements>
+    </userTask>
+    <sequenceFlow id="sid-E3D1F68A-4074-46BC-ADB6-5D5E506D5D9E" sourceRef="startEvent1" targetRef="approveTask1">
+      <extensionElements>
+        <modeler:editor-resource-id><![CDATA[sid-E3D1F68A-4074-46BC-ADB6-5D5E506D5D9E]]></modeler:editor-resource-id>
+      </extensionElements>
+    </sequenceFlow>
+    <sequenceFlow id="sid-A68C297E-D1A2-4237-AF93-B370E64C96F3" sourceRef="approveTask1" targetRef="systemSetTask1StatusToApproved">
+      <extensionElements>
+        <modeler:editor-resource-id><![CDATA[sid-A68C297E-D1A2-4237-AF93-B370E64C96F3]]></modeler:editor-resource-id>
+      </extensionElements>
+    </sequenceFlow>
+    <manualTask id="systemSetTask1StatusToApproved" name="System sets task status to App">
+      <extensionElements>
+        <modeler:editor-resource-id><![CDATA[sid-C636B888-E0AF-4DE3-9755-B4C02F1F8E36]]></modeler:editor-resource-id>
+      </extensionElements>
+    </manualTask>
+    <userTask id="approveTask2" name="${currentTaskName}" activiti:assignee="${approver2}" activiti:candidateGroups="${owningGroup}" activiti:dueDate="${execution.getVariable('dueDate') != null ? dueDate : P3D}">
+      <extensionElements>
+        <modeler:allow-send-email><![CDATA[true]]></modeler:allow-send-email>
+        <modeler:initiator-can-complete><![CDATA[false]]></modeler:initiator-can-complete>
+        <modeler:editor-resource-id><![CDATA[sid-C008B22B-7014-4060-B082-F81C9937050D]]></modeler:editor-resource-id>
+      </extensionElements>
+    </userTask>
+    <sequenceFlow id="sid-1259AE50-B016-4726-9317-E37A61FE97D6" sourceRef="systemSetTask1StatusToApproved" targetRef="approveTask2">
+      <extensionElements>
+        <modeler:editor-resource-id><![CDATA[sid-1259AE50-B016-4726-9317-E37A61FE97D6]]></modeler:editor-resource-id>
+      </extensionElements>
+    </sequenceFlow>
+    <sequenceFlow id="sid-0D75F1F9-09EF-467C-8452-CC6960E1C58C" sourceRef="approveTask2" targetRef="systemSetsTask2StatusToApproved">
+      <extensionElements>
+        <modeler:editor-resource-id><![CDATA[sid-0D75F1F9-09EF-467C-8452-CC6960E1C58C]]></modeler:editor-resource-id>
+      </extensionElements>
+    </sequenceFlow>
+    <manualTask id="systemSetsTask2StatusToApproved" name="System sets task status to Approved">
+      <extensionElements>
+        <modeler:editor-resource-id><![CDATA[sid-B047B709-BEE6-4CCB-9C90-B0E6CCE77BF6]]></modeler:editor-resource-id>
+      </extensionElements>
+    </manualTask>
+    <userTask id="approveTask3" name="${currentTaskName}" activiti:assignee="${approver3}" activiti:candidateGroups="${owningGroup}" activiti:dueDate="${execution.getVariable('dueDate') != null ? dueDate : P3D}">
+      <extensionElements>
+        <modeler:allow-send-email><![CDATA[true]]></modeler:allow-send-email>
+        <modeler:initiator-can-complete><![CDATA[false]]></modeler:initiator-can-complete>
+        <modeler:editor-resource-id><![CDATA[sid-8249E1DA-8470-4FCB-898F-E34379B9726F]]></modeler:editor-resource-id>
+      </extensionElements>
+    </userTask>
+    <sequenceFlow id="sid-1C0A5841-486D-40F0-B90F-2E56A0B964A7" sourceRef="systemSetsTask2StatusToApproved" targetRef="approveTask3">
+      <extensionElements>
+        <modeler:editor-resource-id><![CDATA[sid-1C0A5841-486D-40F0-B90F-2E56A0B964A7]]></modeler:editor-resource-id>
+      </extensionElements>
+    </sequenceFlow>
+    <sequenceFlow id="sid-ED07E360-BD2C-4124-B342-C54017404045" sourceRef="approveTask3" targetRef="systemSetsTask3StatusToApproved">
+      <extensionElements>
+        <modeler:editor-resource-id><![CDATA[sid-ED07E360-BD2C-4124-B342-C54017404045]]></modeler:editor-resource-id>
+      </extensionElements>
+    </sequenceFlow>
+    <manualTask id="systemSetsTask3StatusToApproved" name="System sets task status to Approved">
+      <extensionElements>
+        <modeler:editor-resource-id><![CDATA[sid-28227A28-3386-4422-A043-9DEB219057A6]]></modeler:editor-resource-id>
+      </extensionElements>
+    </manualTask>
+    <sequenceFlow id="sid-F8B04509-CCD5-431D-B361-7A4A8C1854E1" sourceRef="systemSetsTask3StatusToApproved" targetRef="sendEmailNotification">
+      <extensionElements>
+        <modeler:editor-resource-id><![CDATA[sid-F8B04509-CCD5-431D-B361-7A4A8C1854E1]]></modeler:editor-resource-id>
+      </extensionElements>
+    </sequenceFlow>
+    <serviceTask id="sendEmailNotification" name="Send Email Notification" activiti:expression="#{acmTaskService.sendArrestWarrantMail(PARENT_OBJECT_ID, PARENT_OBJECT_TYPE, approvers)}">
+      <extensionElements>
+        <modeler:editor-resource-id><![CDATA[sid-4DAEE649-F7EC-4B5C-88BA-321A6299F2AE]]></modeler:editor-resource-id>
+      </extensionElements>
+    </serviceTask>
+    <endEvent id="sid-E8757DE9-F1DA-458D-B403-DCD4A65A0D8A">
+      <extensionElements>
+        <modeler:editor-resource-id><![CDATA[sid-E8757DE9-F1DA-458D-B403-DCD4A65A0D8A]]></modeler:editor-resource-id>
+      </extensionElements>
+    </endEvent>
+    <sequenceFlow id="sid-34C3A8F6-8EB2-4225-8822-819937498C52" sourceRef="sendEmailNotification" targetRef="sid-E8757DE9-F1DA-458D-B403-DCD4A65A0D8A">
+      <extensionElements>
+        <modeler:editor-resource-id><![CDATA[sid-34C3A8F6-8EB2-4225-8822-819937498C52]]></modeler:editor-resource-id>
+      </extensionElements>
+    </sequenceFlow>
+  </process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_arrestWarrant">
+    <bpmndi:BPMNPlane bpmnElement="arrestWarrant" id="BPMNPlane_arrestWarrant">
+      <bpmndi:BPMNShape bpmnElement="startEvent1" id="BPMNShape_startEvent1">
+        <omgdc:Bounds height="30.0" width="30.0" x="90.0" y="150.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="approveTask1" id="BPMNShape_approveTask1">
+        <omgdc:Bounds height="80.0" width="100.0" x="165.0" y="125.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="systemSetTask1StatusToApproved" id="BPMNShape_systemSetTask1StatusToApproved">
+        <omgdc:Bounds height="80.0" width="100.0" x="310.0" y="125.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="approveTask2" id="BPMNShape_approveTask2">
+        <omgdc:Bounds height="80.0" width="100.0" x="455.0" y="125.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="systemSetsTask2StatusToApproved" id="BPMNShape_systemSetsTask2StatusToApproved">
+        <omgdc:Bounds height="80.0" width="100.0" x="600.0" y="125.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="approveTask3" id="BPMNShape_approveTask3">
+        <omgdc:Bounds height="80.0" width="100.0" x="745.0" y="125.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="systemSetsTask3StatusToApproved" id="BPMNShape_systemSetsTask3StatusToApproved">
+        <omgdc:Bounds height="80.0" width="100.0" x="885.0" y="125.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="sendEmailNotification" id="BPMNShape_sendEmailNotification">
+        <omgdc:Bounds height="80.0" width="100.0" x="1030.0" y="125.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="sid-E8757DE9-F1DA-458D-B403-DCD4A65A0D8A" id="BPMNShape_sid-E8757DE9-F1DA-458D-B403-DCD4A65A0D8A">
+        <omgdc:Bounds height="28.0" width="28.0" x="1175.0" y="151.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge bpmnElement="sid-34C3A8F6-8EB2-4225-8822-819937498C52" id="BPMNEdge_sid-34C3A8F6-8EB2-4225-8822-819937498C52">
+        <omgdi:waypoint x="1130.0" y="165.0"/>
+        <omgdi:waypoint x="1175.0" y="165.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-1259AE50-B016-4726-9317-E37A61FE97D6" id="BPMNEdge_sid-1259AE50-B016-4726-9317-E37A61FE97D6">
+        <omgdi:waypoint x="410.0" y="165.0"/>
+        <omgdi:waypoint x="455.0" y="165.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-0D75F1F9-09EF-467C-8452-CC6960E1C58C" id="BPMNEdge_sid-0D75F1F9-09EF-467C-8452-CC6960E1C58C">
+        <omgdi:waypoint x="555.0" y="165.0"/>
+        <omgdi:waypoint x="600.0" y="165.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-ED07E360-BD2C-4124-B342-C54017404045" id="BPMNEdge_sid-ED07E360-BD2C-4124-B342-C54017404045">
+        <omgdi:waypoint x="845.0" y="165.0"/>
+        <omgdi:waypoint x="885.0" y="165.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-F8B04509-CCD5-431D-B361-7A4A8C1854E1" id="BPMNEdge_sid-F8B04509-CCD5-431D-B361-7A4A8C1854E1">
+        <omgdi:waypoint x="985.0" y="165.0"/>
+        <omgdi:waypoint x="1030.0" y="165.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-E3D1F68A-4074-46BC-ADB6-5D5E506D5D9E" id="BPMNEdge_sid-E3D1F68A-4074-46BC-ADB6-5D5E506D5D9E">
+        <omgdi:waypoint x="120.0" y="165.0"/>
+        <omgdi:waypoint x="165.0" y="165.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-A68C297E-D1A2-4237-AF93-B370E64C96F3" id="BPMNEdge_sid-A68C297E-D1A2-4237-AF93-B370E64C96F3">
+        <omgdi:waypoint x="265.0" y="165.0"/>
+        <omgdi:waypoint x="310.0" y="165.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-1C0A5841-486D-40F0-B90F-2E56A0B964A7" id="BPMNEdge_sid-1C0A5841-486D-40F0-B90F-2E56A0B964A7">
+        <omgdi:waypoint x="700.0" y="165.0"/>
+        <omgdi:waypoint x="745.0" y="165.0"/>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>

@@ -39,8 +39,8 @@ import org.apache.chemistry.opencmis.client.api.Document;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mule.api.MuleMessage;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
@@ -76,7 +76,8 @@ import java.util.UUID;
         "/spring/spring-library-service-data.xml",
         "/spring/spring-library-configuration.xml",
         "/spring/spring-library-object-converter.xml",
-        "/spring/spring-library-acm-email.xml"
+        "/spring/spring-library-acm-email.xml",
+        "/spring/spring-test-quartz-scheduler.xml"
 })
 public class ContentFileToSolrFlowIT
 {
@@ -86,7 +87,7 @@ public class ContentFileToSolrFlowIT
         System.setProperty("acm.configurationserver.propertyfile", userHomePath + "/.arkcase/acm/conf.yml");
     }
 
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private transient final Logger log = LogManager.getLogger(getClass());
     @Autowired
     private MuleContextManager muleContextManager;
     @Autowired

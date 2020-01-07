@@ -30,12 +30,13 @@ package com.armedia.acm.plugins.ecm.service.lock;
 import com.armedia.acm.core.exceptions.AcmObjectLockException;
 import com.armedia.acm.plugins.ecm.dao.AcmContainerDao;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
+import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.service.objectlock.model.AcmObjectLock;
 import com.armedia.acm.service.objectlock.service.AcmObjectLockService;
 import com.armedia.acm.service.objectlock.service.ObjectLockingProvider;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
@@ -47,12 +48,18 @@ import java.util.Date;
  */
 public class ContainerLockingProvider implements ObjectLockingProvider
 {
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
 
     private AcmObjectLockService objectLockService;
     private AcmContainerDao containerDao;
     private FolderLockingProvider folderLockingProvider;
     private Long expiryTimeInMilliseconds;
+
+    @Override
+    public String getObjectType()
+    {
+        return EcmFileConstants.OBJECT_CONTAINER_TYPE;
+    }
 
     @Override
     public void checkIfObjectLockCanBeAcquired(Long objectId, String objectType, String lockType, boolean checkChildObjects, String userId)

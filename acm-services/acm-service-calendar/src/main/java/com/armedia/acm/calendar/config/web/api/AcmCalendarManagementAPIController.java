@@ -35,8 +35,8 @@ import com.armedia.acm.calendar.config.service.EmailCredentials;
 import com.armedia.acm.calendar.config.service.EmailCredentialsVerifierService;
 import com.armedia.acm.services.users.model.AcmUser;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -57,7 +57,7 @@ import javax.servlet.http.HttpSession;
 @RequestMapping({ "/api/v1/service/calendar/configure", "/api/latest/service/calendar/configure" })
 public class AcmCalendarManagementAPIController
 {
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
 
     private CalendarAdminService calendarService;
 

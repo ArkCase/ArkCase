@@ -33,8 +33,8 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.voodoodyne.jackson.jsog.JSOGGenerator;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -61,7 +61,7 @@ public class AcmAssociatedTag implements AcmEntity, Serializable, AcmObject
 {
 
     public static final String OBJECT_TYPE = "ASSOCIATED_TAG";
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private transient final Logger log = LogManager.getLogger(getClass());
 
     @Id
     @TableGenerator(name = "acm_associated_tag_gen", table = "acm_associated_tag_id", pkColumnName = "cm_seq_name", valueColumnName = "cm_seq_num", pkColumnValue = "acm_associated_tag", initialValue = 100, allocationSize = 1)

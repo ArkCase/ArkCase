@@ -36,8 +36,8 @@ import org.mule.api.lifecycle.Startable;
 import org.mule.api.lifecycle.Stoppable;
 import org.mule.config.MuleManifest;
 import org.mule.module.cmis.CMISCloudConnector;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import javax.annotation.Generated;
 
@@ -68,7 +68,7 @@ public class CMISCloudConnectorLifecycleAdapter
     public void initialise()
             throws InitialisationException
     {
-        Logger log = LoggerFactory.getLogger(CMISCloudConnectorLifecycleAdapter.class);
+        Logger log = LogManager.getLogger(CMISCloudConnectorLifecycleAdapter.class);
         String runtimeVersion = MuleManifest.getProductVersion();
         if (runtimeVersion.equals("Unknown"))
         {

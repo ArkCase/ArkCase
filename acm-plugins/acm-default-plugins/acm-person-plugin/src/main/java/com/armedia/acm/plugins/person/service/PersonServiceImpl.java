@@ -58,8 +58,8 @@ import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.tika.exception.TikaException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.expression.EvaluationContext;
 import org.springframework.expression.Expression;
 import org.springframework.expression.ExpressionParser;
@@ -85,7 +85,7 @@ import java.util.stream.Collectors;
  */
 public class PersonServiceImpl implements PersonService
 {
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
 
     private PipelineManager<Person, PersonPipelineContext> personPipelineManager;
     private PersonDao personDao;

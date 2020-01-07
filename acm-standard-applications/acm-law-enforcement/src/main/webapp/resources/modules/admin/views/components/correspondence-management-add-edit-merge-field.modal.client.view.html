@@ -1,0 +1,37 @@
+<div class="modal-header">
+    <span translate>admin.correspondenceManagement.mergefields.addModal.mergeFieldForm</span>
+</div>
+<div class="modal-body">
+   <form name="modifyMergeFieldForm">
+        <div class="form-group">
+            <label for="fieldId" translate>admin.correspondenceManagement.mergefields.addModal.fieldId</label><span class="required-asterisk">*</span>
+            <input ng-model="fieldId" id="fieldId" type="text" class="input-md form-control" data-ng-required="true"
+                    placeholder="{{ 'admin.correspondenceManagement.mergefields.addModal.placeHolders.fieldId' | translate }}" ng-readonly="isEdit">
+        </div>
+        <div class="form-group">
+            <label for="fieldValue" translate>admin.correspondenceManagement.mergefields.addModal.fieldValue</label><span class="required-asterisk">*</span>
+            <input ng-model="fieldValue" id="fieldValue" type="text" class="input-md form-control" required="required"
+                    placeholder="{{ 'admin.correspondenceManagement.mergefields.addModal.placeHolders.fieldValue' | translate }}">
+        </div>
+        <div class="form-group">
+            <label for="fieldDescription" translate>admin.correspondenceManagement.mergefields.addModal.fieldDescription</label><span class="required-asterisk">*</span>
+            <input ng-model="fieldDescription" id="fieldDescription" type="text" class="input-md form-control" required="required"
+                    placeholder="{{ 'admin.correspondenceManagement.mergefields.addModal.placeHolders.fieldDescription' | translate }}">
+        </div>
+        <div class="form-group">
+            <label for="fieldObjectType" translate>admin.correspondenceManagement.mergefields.addModal.objectType</label><span class="required-asterisk">*</span>
+            <select id="fieldObjectType" ng-model="fieldObjectType" ng-options="objectType.key as objectType.value | translate for objectType in correspondenceObjectTypes"
+                    ng-change="changeType()"
+                    required>
+            </select>
+        </div>
+   </form>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-secondary" ng-click="onClickCancel()">
+        <span translate>admin.correspondenceManagement.templates.modal.btnCancel.text</span>
+    </button>
+    <button class="btn btn-primary" ng-click="addMergeField()" ng-disabled="modifyMergeFieldForm.$invalid">
+        <span translate>admin.correspondenceManagement.mergefields.addModal.addMergeField</span>
+    </button>
+</div>

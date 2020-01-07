@@ -38,8 +38,8 @@ import com.armedia.acm.spring.events.ContextRemovedEvent;
 import com.armedia.acm.spring.events.ContextReplacedEvent;
 
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -57,7 +57,7 @@ public class AcmPluginManager implements ApplicationContextAware, ApplicationLis
 {
 
     public static final String PLUGINS_PRIVILEGES_FOLDER_NAME = "spring-config-acm-plugins";
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
     private SpringContextHolder springContextHolder;
     private Collection<AcmPlugin> acmPlugins = new ArrayList<>();
     private Map<String, List<String>> privilegesByRole = new HashMap<>();

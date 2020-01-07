@@ -3074,6 +3074,7 @@ angular
                                     DocTree.markNodeOk(frNode);
                                     dfd.resolve(moveFileInfo);
                                 }, function(errorData) {
+                                    MessageService.error(errorData.data);
                                     DocTree.markNodeError(frNode);
                                     dfd.reject();
                                 });
@@ -3217,7 +3218,7 @@ angular
 
                                     var fileId = node.data.objectId;
                                     Util.serviceCall({
-                                        service : Ecm.deleteFile,
+                                        service : Ecm.deleteFileTemporary,
                                         param : {
                                             fileId : fileId
                                         },
@@ -3237,10 +3238,14 @@ angular
                                                     }
                                                 }
                                             }
+                                        },
+                                        onError: function(error) {
+                                            MessageService.error(error.data.message);
                                         }
                                     }).then(function(deletedFileId) {
                                         dfd.resolve(deletedFileId);
                                     }, function(errorData) {
+                                        MessageService.error(errorData.data);
                                         DocTree.markNodeError(node);
                                         dfd.reject();
                                     });
@@ -3310,6 +3315,7 @@ angular
                                         DocTree.markNodeOk(node);
                                         dfd.resolve(renamedInfo);
                                     }, function(errorData) {
+                                        MessageService.error(errorData.data);
                                         DocTree.markNodeError(node);
                                         dfd.reject();
                                     });
@@ -3360,6 +3366,7 @@ angular
                                         DocTree.markNodeOk(node);
                                         dfd.resolve(renamedInfo);
                                     }, function(errorData) {
+                                        MessageService.error(errorData.data);
                                         DocTree.markNodeError(node);
                                         dfd.reject();
                                     });
@@ -5044,6 +5051,7 @@ angular
 
                         scope.treeControl = {
                             getSelectedNodes : DocTree.getSelectedNodes,
+                            getTopNode: DocTree.getTopNode,
                             refreshTree : DocTree.refreshTree,
                             refreshNode : DocTree.refreshNode,
                             updateNodeData : DocTree.updateNodeData,

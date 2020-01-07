@@ -43,8 +43,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.mule.api.MuleException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.security.core.Authentication;
 
 import javax.servlet.http.HttpSession;
@@ -55,7 +55,7 @@ public class CreateAdHocTaskService {
     private ExecuteSolrQuery executeSolrQuery;
 
     private SearchResults searchResults = new SearchResults();
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
 
     public AcmTask createAdHocTask(AcmTask in, Authentication authentication, String ipAddress) throws AcmCreateObjectFailedException, AcmAppErrorJsonMsg
     {

@@ -29,8 +29,8 @@ package com.armedia.acm.services.search.service.solr;
 
 import com.armedia.acm.services.search.model.solr.SolrConfig;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
@@ -45,7 +45,7 @@ public class SolrRestClient
 {
 
     private transient final RestTemplate restTemplate = new RestTemplate();
-    private transient final Logger logger = LoggerFactory.getLogger(getClass());
+    private transient final Logger logger = LogManager.getLogger(getClass());
     private SolrConfig solrConfig;
 
     public void postToSolr(String core, String contentHandler, HttpEntity<InputStreamResource> entity, String logText,

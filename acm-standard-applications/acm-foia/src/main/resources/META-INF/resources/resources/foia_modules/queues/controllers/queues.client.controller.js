@@ -3,7 +3,8 @@
 angular.module('queues').controller(
         'QueuesController',
         [ '$scope', '$stateParams', '$rootScope', '$timeout', '$state', '$window', '$modal', 'ConfigService', 'Queues.QueuesService', 'Authentication', '$q', 'MessageService', '$translate', 'LookupService', 'Admin.FoiaConfigService', 'Object.ModelService', 'UtilService', 'Case.InfoService',
-                'Util.DateService', function($scope, $stateParams, $rootScope, $timeout, $state, $window, $modal, ConfigService, QueuesService, Authentication, $q, MessageService, $translate, LookupService, AdminFoiaConfigService, ObjectModelService, Util, CaseInfoService, UtilDateService) {
+                'Util.DateService', 'EcmService',
+                function($scope, $stateParams, $rootScope, $timeout, $state, $window, $modal, ConfigService, QueuesService, Authentication, $q, MessageService, $translate, LookupService, AdminFoiaConfigService, ObjectModelService, Util, CaseInfoService, UtilDateService, EcmService) {
 
                     $scope.config = ConfigService.getModule({
                         moduleId: 'queues'
@@ -33,7 +34,7 @@ angular.module('queues').controller(
 
                     function assignSelectedQueues() {
                         if ($scope.selectedRequests.length === 0) {
-                            return MessageService.info($translate.instant("selectRequest"));
+                            return MessageService.info($translate.instant("queues.selectRequest.selectMinOneRequest"));
                         } else {
                             $scope.userOrGroupSearch();
                         }
@@ -195,6 +196,13 @@ angular.module('queues').controller(
                         $scope.$broadcast('queue-selected', selectedQueue);
                     }
 
+                    function getFileId(repositoryInfo) {
+                        return EcmService.findFileByContainerAndFileType({
+                            containerId: repositoryInfo,
+                            fileType: 'Request Form'
+                        });
+                    }
+
                     /**
                      * find a request to work on
                      * Open the first unassigned request in queue, and then assign that request to the current user.
@@ -206,13 +214,16 @@ angular.module('queues').controller(
 
                         var requestPromise = QueuesService.startWorking($scope.selectedQueue.id);
                         requestPromise.then(function(request) {
-                            var url = $state.href('request-info', {
-                                id: request.id
-                            }, {
-                                absolute: true
-                            })
-                            newTabWindow.location.href = url;
-                            $scope.$emit("report-object-updated", request);
+                            getFileId(request.container.id).$promise.then(function(fileInfo) {
+                                var url = $state.href('request-info', {
+                                    id: request.id,
+                                    fileId: fileInfo.fileId
+                                }, {
+                                    absolute: true
+                                });
+                                newTabWindow.location.href = url;
+                                $scope.$emit("report-object-updated", request);
+                            });
                         }, function() {
                             //nothing found, nothing to do
                             newTabWindow.close();

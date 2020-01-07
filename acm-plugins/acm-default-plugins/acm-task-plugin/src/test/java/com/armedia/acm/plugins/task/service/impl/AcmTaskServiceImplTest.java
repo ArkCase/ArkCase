@@ -98,6 +98,7 @@ public class AcmTaskServiceImplTest extends EasyMockSupport
         List<String> candidateGroup = new ArrayList<>();
         candidateGroup.add("Test Group");
         reviewTask.setCandidateGroups(candidateGroup);
+        reviewTask.setDetails("Details");
 
         Map<String, Object> pVars = new HashMap<>();
         List<String> reviewers = new ArrayList<>();
@@ -116,6 +117,7 @@ public class AcmTaskServiceImplTest extends EasyMockSupport
         pVars.put("PARENT_OBJECT_TYPE", "COMPLAINT");
         pVars.put("PARENT_OBJECT_ID", 500l);
         pVars.put("REQUEST_TYPE", "DOCUMENT_REVIEW");
+        pVars.put("DETAILS","Details");
 
         expect(mockAuthentication.getName()).andReturn("assignee").atLeastOnce();
         expect(mockTaskDao.startBusinessProcess(pVars, businessProcessName)).andReturn(reviewTask);

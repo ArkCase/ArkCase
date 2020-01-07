@@ -29,13 +29,14 @@ package com.armedia.acm.services.email.service;
  */
 
 import com.armedia.acm.core.AcmApplication;
+import com.armedia.acm.core.ApplicationConfig;
 import com.armedia.acm.services.email.model.EmailBodyBuilder;
 import com.armedia.acm.services.email.model.EmailBuilder;
 import com.armedia.acm.services.email.model.EmailMentionsDTO;
 import com.armedia.acm.services.email.model.MentionsEmailConfig;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.AbstractMap;
 import java.util.ArrayList;
@@ -50,13 +51,14 @@ import java.util.stream.Stream;
 public class AcmEmailMentionsService
 {
 
-    private final Logger log = LoggerFactory.getLogger(getClass());
+    private final Logger log = LogManager.getLogger(getClass());
 
     private AcmEmailSenderService emailSenderService;
     private AcmApplication acmAppConfiguration;
     private MentionsEmailConfig mentionsEmailConfig;
     private String mentionsEmailBodyTemplate;
     private TemplatingEngine templatingEngine;
+    private ApplicationConfig applicationConfig;
 
     private String buildEmailSubject(EmailMentionsDTO in, String userFullName)
     {
@@ -76,7 +78,7 @@ public class AcmEmailMentionsService
 
     private String buildObjectUrl(EmailMentionsDTO in)
     {
-        String baseUrl = acmAppConfiguration.getBaseUrl();
+        String baseUrl = applicationConfig.getBaseUrl();
         if (in.getUrlPath() != null)
         {
             return baseUrl + in.getUrlPath();

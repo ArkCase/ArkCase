@@ -28,15 +28,15 @@ package com.armedia.acm.plugins.ecm.service.sync.impl;
  */
 
 import com.armedia.acm.core.exceptions.AcmEncryptionException;
-import com.armedia.acm.files.propertymanager.PropertyFileManager;
 import com.armedia.acm.plugins.ecm.model.sync.EcmEvent;
 import com.armedia.acm.plugins.ecm.service.sync.EcmAuditResponseReader;
 import com.armedia.acm.web.api.MDCConstants;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.quartz.JobDataMap;
 import org.slf4j.MDC;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
@@ -53,14 +53,12 @@ import java.util.UUID;
  */
 public class AlfrescoSyncService implements ApplicationEventPublisherAware
 {
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
-    private PropertyFileManager propertyFileManager;
+    private transient final Logger log = LogManager.getLogger(getClass());
     private AlfrescoAuditApplicationRestClient auditApplicationRestClient;
     private Map<String, EcmAuditResponseReader> auditApplications;
-    private String auditApplicationLastAuditIdsFilename;
     private ApplicationEventPublisher applicationEventPublisher;
 
-    public void queryAlfrescoAuditApplications()
+    public void queryAlfrescoAuditApplications(JobDataMap lastAuditIdsPerApplication)
     {
         if (MDC.get(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY) == null)
         {
@@ -72,7 +70,8 @@ public class AlfrescoSyncService implements ApplicationEventPublisherAware
 
         for (Map.Entry<String, EcmAuditResponseReader> auditApplication : getAuditApplications().entrySet())
         {
-            List<EcmEvent> eventsForAuditApp = collectAuditEvents(auditApplication.getKey(), auditApplication.getValue());
+            List<EcmEvent> eventsForAuditApp = collectAuditEvents(auditApplication.getKey(), auditApplication.getValue(),
+                    lastAuditIdsPerApplication);
             if (eventsForAuditApp != null && !eventsForAuditApp.isEmpty())
             {
                 log.info("Fetched {} audit records for audit application {}", eventsForAuditApp.size(), auditApplication.getKey());
@@ -80,39 +79,38 @@ public class AlfrescoSyncService implements ApplicationEventPublisherAware
             }
         }
 
-        allEvents.stream().sorted(Comparator.comparing(EcmEvent::getAuditId)).forEach(e -> applicationEventPublisher.publishEvent(e));
-
+        allEvents.stream()
+                .sorted(Comparator.comparing(EcmEvent::getAuditId))
+                .forEach(e -> applicationEventPublisher.publishEvent(e));
     }
 
-    protected List<EcmEvent> collectAuditEvents(String applicationName, EcmAuditResponseReader reader)
+    protected List<EcmEvent> collectAuditEvents(String applicationName, EcmAuditResponseReader reader,
+            JobDataMap lastAuditIdsPerApplication)
     {
-        String lastAuditIdFetched = null;
-
         log.info("Starting Alfresco sync for audit application {}", applicationName);
 
         try
         {
             String lastAuditIdKey = applicationName + ".lastAuditId";
+            long lastAuditId;
+            try
+            {
+                lastAuditId = lastAuditIdsPerApplication.getLong(lastAuditIdKey) + 1;
+            }
+            catch (ClassCastException e)
+            {
+                log.debug("Last audit id is not found, start from the first one");
+                lastAuditId = 1;
+            }
 
-            lastAuditIdFetched = getPropertyFileManager().load(getAuditApplicationLastAuditIdsFilename(),
-                    lastAuditIdKey, "0");
-            // start from the *next* audit Id
-            long lastAuditId = Long.valueOf(lastAuditIdFetched);
-            long startingAuditId = lastAuditId + 1;
-            JSONObject auditEntries = getAuditApplicationRestClient().service(applicationName, startingAuditId);
-            updatePropertiesWithLastAuditId(lastAuditIdKey, auditEntries);
+            JSONObject auditEntries = getAuditApplicationRestClient().service(applicationName, lastAuditId);
+            updatePropertiesWithLastAuditId(lastAuditIdKey, auditEntries, lastAuditIdsPerApplication);
 
-            List<EcmEvent> events = reader.read(auditEntries);
-
-            return events;
+            return reader.read(auditEntries);
         }
         catch (AcmEncryptionException e)
         {
             log.error("Could not decrypt property {}.lastAuditId", applicationName, e);
-        }
-        catch (NumberFormatException e)
-        {
-            log.error("The last audit id {} should be a number, but it is not!", lastAuditIdFetched);
         }
         catch (Exception e)
         {
@@ -122,7 +120,8 @@ public class AlfrescoSyncService implements ApplicationEventPublisherAware
         return null;
     }
 
-    protected void updatePropertiesWithLastAuditId(String lastAuditIdKey, JSONObject fullAuditResponse)
+    protected void updatePropertiesWithLastAuditId(String lastAuditIdKey, JSONObject fullAuditResponse,
+            JobDataMap lastAuditIdsPerApplication)
     {
         // some of the readers ignore some events. So we want to store the last audit id from the full
         // response... not the last audit id returned by the reader.
@@ -132,19 +131,9 @@ public class AlfrescoSyncService implements ApplicationEventPublisherAware
         if (numAudits > 0)
         {
             long lastAuditFromFullResponse = allAudits.getJSONObject(numAudits - 1).getLong("id");
-            Map<String, String> properties = Collections.singletonMap(lastAuditIdKey, String.valueOf(lastAuditFromFullResponse));
-            getPropertyFileManager().storeMultiple(properties, getAuditApplicationLastAuditIdsFilename(), false);
+            Map<String, Long> properties = Collections.singletonMap(lastAuditIdKey, lastAuditFromFullResponse);
+            lastAuditIdsPerApplication.putAll(properties);
         }
-    }
-
-    public PropertyFileManager getPropertyFileManager()
-    {
-        return propertyFileManager;
-    }
-
-    public void setPropertyFileManager(PropertyFileManager propertyFileManager)
-    {
-        this.propertyFileManager = propertyFileManager;
     }
 
     public AlfrescoAuditApplicationRestClient getAuditApplicationRestClient()
@@ -155,16 +144,6 @@ public class AlfrescoSyncService implements ApplicationEventPublisherAware
     public void setAuditApplicationRestClient(AlfrescoAuditApplicationRestClient auditApplicationRestClient)
     {
         this.auditApplicationRestClient = auditApplicationRestClient;
-    }
-
-    public String getAuditApplicationLastAuditIdsFilename()
-    {
-        return auditApplicationLastAuditIdsFilename;
-    }
-
-    public void setAuditApplicationLastAuditIdsFilename(String auditApplicationLastAuditIdsFilename)
-    {
-        this.auditApplicationLastAuditIdsFilename = auditApplicationLastAuditIdsFilename;
     }
 
     @Override

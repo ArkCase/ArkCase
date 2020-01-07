@@ -30,8 +30,8 @@ package com.armedia.acm.configuration.refresher.jms;
 import com.armedia.acm.configuration.api.ConfigurationFacade;
 import com.armedia.acm.configuration.api.RefreshScopeFacade;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jms.annotation.JmsListener;
@@ -42,7 +42,7 @@ import javax.inject.Named;
 @Configuration
 public class ConfigurationChangedSubscriber
 {
-    private static final Logger log = LoggerFactory.getLogger(ConfigurationChangedSubscriber.class);
+    private static final Logger log = LogManager.getLogger(ConfigurationChangedSubscriber.class);
 
     @Autowired
     @Named("proxyRefreshScopeFacade")
@@ -56,13 +56,14 @@ public class ConfigurationChangedSubscriber
     public void onConfigurationChanged(Message message)
     {
         log.info("Refresh beans on configuration change...");
-        if (refreshScopeFacade != null)
-        {
-            refreshScopeFacade.refresh();
-        }
         if (configurationFacade != null)
         {
             configurationFacade.refresh();
+        }
+
+        if (refreshScopeFacade != null)
+        {
+            refreshScopeFacade.refresh();
         }
     }
 }

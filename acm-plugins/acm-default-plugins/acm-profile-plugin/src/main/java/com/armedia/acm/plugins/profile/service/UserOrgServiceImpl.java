@@ -28,6 +28,7 @@ package com.armedia.acm.plugins.profile.service;
  */
 
 import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
+import com.armedia.acm.plugins.ecm.model.EcmFileConfig;
 import com.armedia.acm.plugins.person.model.Organization;
 import com.armedia.acm.plugins.person.service.OrganizationService;
 import com.armedia.acm.plugins.profile.dao.UserOrgDao;
@@ -43,8 +44,8 @@ import com.armedia.acm.services.users.service.group.GroupService;
 import org.apache.commons.lang3.StringUtils;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -56,7 +57,7 @@ import java.util.stream.Collectors;
 
 public class UserOrgServiceImpl implements UserOrgService
 {
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
 
     private UserOrgDao userOrgDao;
 
@@ -74,7 +75,7 @@ public class UserOrgServiceImpl implements UserOrgService
 
     private GroupService groupService;
 
-    private String defaultCmisId;
+    private EcmFileConfig ecmFileConfig;
 
     @Override
     public UserOrg getUserOrgForUserId(String userId)
@@ -94,7 +95,7 @@ public class UserOrgServiceImpl implements UserOrgService
     {
         Map<String, Object> messageProps = new HashMap<>();
         messageProps.put("acmUser", authentication);
-        messageProps.put("configRef", muleContextManager.getMuleContext().getRegistry().lookupObject(defaultCmisId));
+        messageProps.put("configRef", muleContextManager.getMuleContext().getRegistry().lookupObject(ecmFileConfig.getDefaultCmisId()));
 
         MuleMessage received = getMuleContextManager().send("vm://saveUserOrg.in", userOrgInfo, messageProps);
 
@@ -328,16 +329,6 @@ public class UserOrgServiceImpl implements UserOrgService
         this.groupService = groupService;
     }
 
-    public String getDefaultCmisId()
-    {
-        return defaultCmisId;
-    }
-
-    public void setDefaultCmisId(String defaultCmisId)
-    {
-        this.defaultCmisId = defaultCmisId;
-    }
-
     public ProfileConfig getProfileConfig()
     {
         return profileConfig;
@@ -346,5 +337,15 @@ public class UserOrgServiceImpl implements UserOrgService
     public void setProfileConfig(ProfileConfig profileConfig)
     {
         this.profileConfig = profileConfig;
+    }
+
+    public EcmFileConfig getEcmFileConfig()
+    {
+        return ecmFileConfig;
+    }
+
+    public void setEcmFileConfig(EcmFileConfig ecmFileConfig)
+    {
+        this.ecmFileConfig = ecmFileConfig;
     }
 }

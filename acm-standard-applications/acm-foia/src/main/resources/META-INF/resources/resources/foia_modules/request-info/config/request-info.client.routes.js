@@ -59,16 +59,6 @@ angular.module('request-info').config([ '$stateProvider', function($stateProvide
                 return $translate.refresh();
             } ]
         }
-    }).state('request-details', {
-        url: '/requests/:id',
-        templateUrl: 'modules/request-info/views/request-info.client.view.html',
-        resolve: {
-            translatePartialLoader: [ '$translate', '$translatePartialLoader', function($translate, $translatePartialLoader) {
-                $translatePartialLoader.addPart('request-info');
-                $translatePartialLoader.addPart('common');
-                return $translate.refresh();
-            } ]
-        }
     });
 
 } ]);

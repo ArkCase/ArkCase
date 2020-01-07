@@ -41,8 +41,8 @@ import com.frevvo.forms.client.FormTypeEntry;
 import com.frevvo.forms.client.SchemaEntry;
 
 import org.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -58,7 +58,7 @@ import java.util.Optional;
 public class PlainConfigurationFormService extends FrevvoFormAbstractService
 {
 
-    private Logger LOG = LoggerFactory.getLogger(getClass());
+    private Logger LOG = LogManager.getLogger(getClass());
 
     private String plainFormPropertiesLocation;
     private FrevvoService frevvoService;

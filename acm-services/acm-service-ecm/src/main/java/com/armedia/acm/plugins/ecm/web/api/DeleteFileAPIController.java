@@ -27,26 +27,32 @@ package com.armedia.acm.plugins.ecm.web.api;
  * #L%
  */
 
+import com.armedia.acm.core.exceptions.AcmAppErrorJsonMsg;
+import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
+import com.armedia.acm.plugins.ecm.model.RecycleBinItemDTO;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.ecm.service.FileEventPublisher;
-
+import com.armedia.acm.plugins.ecm.service.RecycleBinItemEventPublisher;
+import com.armedia.acm.plugins.ecm.service.RecycleBinItemService;
 import org.activiti.engine.impl.util.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
 /**
  * Created by marjan.stefanoski on 06.04.2015.
@@ -56,9 +62,11 @@ import javax.servlet.http.HttpSession;
 public class DeleteFileAPIController
 {
 
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private transient final Logger log = LogManager.getLogger(getClass());
     private EcmFileService fileService;
     private FileEventPublisher fileEventPublisher;
+    private RecycleBinItemService recycleBinItemService;
+    private RecycleBinItemEventPublisher recycleBinItemEventPublisher;
 
     @PreAuthorize("hasPermission(#objectId, 'FILE', 'write|group-write')")
     @RequestMapping(value = "/id/{fileId}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -66,39 +74,68 @@ public class DeleteFileAPIController
     public String deleteFile(@PathVariable("fileId") Long objectId, Authentication authentication, HttpSession session)
             throws AcmUserActionFailedException
     {
-
-        if (log.isInfoEnabled())
-        {
-            log.info("File with id: " + objectId + " will be deleted");
-        }
+        log.info("File with id: {} will be deleted", objectId);
         String ipAddress = (String) session.getAttribute(EcmFileConstants.IP_ADDRESS_ATTRIBUTE);
         EcmFile source = getFileService().findById(objectId);
         try
         {
             getFileService().deleteFile(objectId, source.getParentObjectId(), source.getParentObjectType());
-            if (log.isInfoEnabled())
-            {
-                log.info("File with id: " + objectId + " successfully deleted");
-            }
+            log.info("File with id: {} successfully deleted, by user {} ", objectId, authentication.getName());
             getFileEventPublisher().publishFileDeletedEvent(source, authentication, ipAddress, true);
             return prepareJsonReturnMsg(EcmFileConstants.SUCCESS_DELETE_MSG, objectId, source.getFileName());
         }
         catch (AcmUserActionFailedException e)
         {
-            if (log.isErrorEnabled())
-            {
-                log.error("Exception occurred while trying to delete file with id: " + objectId);
-            }
+            log.error("Exception occurred while trying to delete file with id: {}, reason {}", objectId, e.getMessage(), e);
             getFileEventPublisher().publishFileDeletedEvent(source, authentication, ipAddress, false);
             throw e;
         }
         catch (AcmObjectNotFoundException e)
         {
-            if (log.isErrorEnabled())
-            {
-                log.debug("File with id: " + objectId + " not found in the DB");
-            }
+            log.debug("File with id: {} not found in the DB, reason {} ", objectId, e.getMessage(), e);
+            getFileEventPublisher().publishFileDeletedEvent(source, authentication, ipAddress, false);
             return prepareJsonReturnMsg(EcmFileConstants.SUCCESS_DELETE_MSG, objectId);
+        }
+    }
+
+    @PreAuthorize("hasPermission(#objectId, 'FILE', 'write|group-write')")
+    @RequestMapping(value = "temporary/id/{fileId}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public String putFileIntoRecycleBin(@PathVariable("fileId") Long objectId, Authentication authentication, HttpSession session)
+            throws AcmUserActionFailedException, AcmCreateObjectFailedException, AcmAppErrorJsonMsg
+    {
+        log.info("File with id: {} will be temporary deleted, by user: {}", objectId, authentication.getName());
+        String ipAddress = (String) session.getAttribute(EcmFileConstants.IP_ADDRESS_ATTRIBUTE);
+        EcmFile source = getFileService().findById(objectId);
+        try
+        {
+            getFileService().putFileIntoRecycleBin(objectId, authentication, session);
+            log.info("File with id: {} temporary deleted, by {}", objectId, source.getModifier());
+            getRecycleBinItemEventPublisher().publishFileMovedToRecycleBinEvent(source, authentication, ipAddress, true);
+            return prepareJsonReturnMsg(EcmFileConstants.SUCCESS_TEMPORARY_DELETE_MSG, objectId, source.getFileName());
+        }
+        catch (AcmUserActionFailedException e)
+        {
+            log.error("Exception occurred while trying to temporary delete file with id: {}, reason {}", objectId, e.getMessage(), e);
+            getRecycleBinItemEventPublisher().publishFileMovedToRecycleBinEvent(source, authentication, ipAddress, false);
+            throw e;
+        }
+        catch (AcmObjectNotFoundException e)
+        {
+            log.debug("File with id: {} not found in the DB, reason {}", objectId, e.getMessage(), e);
+            throw new AcmAppErrorJsonMsg(EcmFileConstants.FILE_NOT_FOUND_DB, EcmFileConstants.FILE, "fileId", e);
+        }
+    }
+
+    @RequestMapping(value = "/permanent", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public void removeItemsFromRecycleBin(@RequestBody List<RecycleBinItemDTO> filesToBeDeleted,
+            Authentication authentication, HttpSession session) throws AcmUserActionFailedException
+    {
+        for (RecycleBinItemDTO file : filesToBeDeleted)
+        {
+            getRecycleBinItemService().removeItemFromRecycleBin(file.getRecycleBinItemId());
+            deleteFile(file.getFileId(), authentication, session);
         }
     }
 
@@ -141,5 +178,25 @@ public class DeleteFileAPIController
     public void setFileService(EcmFileService fileService)
     {
         this.fileService = fileService;
+    }
+
+    public RecycleBinItemService getRecycleBinItemService()
+    {
+        return recycleBinItemService;
+    }
+
+    public void setRecycleBinItemService(RecycleBinItemService recycleBinItemService)
+    {
+        this.recycleBinItemService = recycleBinItemService;
+    }
+
+    public RecycleBinItemEventPublisher getRecycleBinItemEventPublisher()
+    {
+        return recycleBinItemEventPublisher;
+    }
+
+    public void setRecycleBinItemEventPublisher(RecycleBinItemEventPublisher recycleBinItemEventPublisher)
+    {
+        this.recycleBinItemEventPublisher = recycleBinItemEventPublisher;
     }
 }

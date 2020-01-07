@@ -27,6 +27,7 @@ package com.armedia.acm.plugins.complaint.pipeline.postsave;
  * #L%
  */
 
+import com.armedia.acm.auth.AuthenticationUtils;
 import com.armedia.acm.plugins.complaint.dao.ComplaintDao;
 import com.armedia.acm.plugins.complaint.model.CloseComplaintRequest;
 import com.armedia.acm.plugins.complaint.model.Complaint;
@@ -55,7 +56,8 @@ public class CloseComplaintHandler
 
             ctx.setComplaint(updatedComplaint);
 
-            ComplaintUpdatedEvent complaintUpdatedEvent = new ComplaintUpdatedEvent(updatedComplaint);
+            ComplaintUpdatedEvent complaintUpdatedEvent = new ComplaintUpdatedEvent(updatedComplaint,
+                    AuthenticationUtils.getUserIpAddress());
             complaintUpdatedEvent.setSucceeded(true);
             ctx.addProperty("complaintUpdated", complaintUpdatedEvent);
             getApplicationEventPublisher().publishEvent(complaintUpdatedEvent);

@@ -39,8 +39,8 @@ import com.armedia.acm.services.users.model.AcmUser;
 
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.runtime.ProcessInstance;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.context.ApplicationListener;
 
 import java.util.ArrayList;
@@ -56,7 +56,7 @@ import java.util.stream.Collectors;
  */
 public class FileCreatedBuckslipWorkflowHandler implements ApplicationListener<EcmFileAddedEvent>
 {
-    private transient final Logger LOG = LoggerFactory.getLogger(getClass());
+    private transient final Logger LOG = LogManager.getLogger(getClass());
     private FileWorkflowBusinessRule fileWorkflowBusinessRule;
     private RuntimeService activitiRuntimeService;
     private ObjectConverter objectConverter;

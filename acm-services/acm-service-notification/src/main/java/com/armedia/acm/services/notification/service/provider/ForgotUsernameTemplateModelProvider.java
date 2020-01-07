@@ -27,6 +27,7 @@ package com.armedia.acm.services.notification.service.provider;
  * #L%
  */
 
+import com.armedia.acm.core.provider.TemplateModelProvider;
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
@@ -35,14 +36,15 @@ import com.armedia.acm.services.users.model.AcmUserState;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class ForgotUsernameTemplateModelProvider implements TemplateModelProvider
+public class ForgotUsernameTemplateModelProvider implements TemplateModelProvider<Notification>
 {
 
     private UserDao userDao;
 
     @Override
-    public Object getModel(Notification notification)
+    public Notification getModel(Object object)
     {
+        Notification notification = (Notification) object;
         List<AcmUser> users = userDao.findByEmailAddress(notification.getUser());
         users = users.stream()
                 .filter(user -> user.getUserState() == AcmUserState.VALID)
@@ -53,6 +55,12 @@ public class ForgotUsernameTemplateModelProvider implements TemplateModelProvide
         notification.setAccountsNumber(users.size());
         notification.setUserAccounts(String.join(",", userAccounts));
         return notification;
+    }
+
+    @Override
+    public Class<Notification> getType()
+    {
+        return Notification.class;
     }
 
     public UserDao getUserDao()

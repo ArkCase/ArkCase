@@ -33,19 +33,10 @@ import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
 import static org.junit.Assert.assertEquals;
+import static org.powermock.api.mockito.PowerMockito.mockStatic;
+import static org.powermock.api.mockito.PowerMockito.when;
 
-import java.nio.file.Files;
-
-import org.easymock.Capture;
-import org.easymock.EasyMock;
-import org.junit.Before;
-import org.junit.Test;
-import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-
+import com.armedia.acm.auth.AuthenticationUtils;
 import com.armedia.acm.service.objectlock.dao.AcmObjectLockDao;
 import com.armedia.acm.service.objectlock.model.AcmObjectLock;
 import com.armedia.acm.service.objectlock.model.AcmObjectLockEvent;
@@ -54,9 +45,29 @@ import com.armedia.acm.services.search.model.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.search.service.SearchResults;
 
+import org.easymock.Capture;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+
+import javax.servlet.http.HttpServletRequest;
+
+import java.nio.file.Files;
+
 /**
  * Created by nebojsha on 25.08.2015.
  */
+@RunWith(PowerMockRunner.class)
+@PowerMockIgnore({ "javax.management.*", "javax.net.ssl.*", "javax.security.*" })
+@PrepareForTest({ AuthenticationUtils.class })
 public class AcmObjectLockServiceImplTest 
 {
     private AcmObjectLockServiceImpl acmObjectLockService;
@@ -64,12 +75,15 @@ public class AcmObjectLockServiceImplTest
     private AcmObjectLockDao acmObjectLockDao;
     private Authentication authMock;
     private String authName = "auditUser";
+    // private AuthenticationUtils authenticationUtils;
 
     private ExecuteSolrQuery executeSolrQueryMock;
 
     private ApplicationEventPublisher mockApplicationEventPublisher;
 
     private Object[] mocks;
+
+    private HttpServletRequest mockRequest;
 
     @Before
     public void setUp()
@@ -85,8 +99,11 @@ public class AcmObjectLockServiceImplTest
         executeSolrQueryMock = createMock(ExecuteSolrQuery.class);
         acmObjectLockService.setExecuteSolrQuery(executeSolrQueryMock);
 
+        mockStatic(AuthenticationUtils.class);
+
         authMock = createMock(Authentication.class);
-        EasyMock.expect(authMock.getName()).andReturn(authName).anyTimes();
+        mockRequest = createMock(HttpServletRequest.class);
+        expect(authMock.getName()).andReturn(authName).anyTimes();
 
         SecurityContextHolder.getContext().setAuthentication(authMock);
 
@@ -106,8 +123,9 @@ public class AcmObjectLockServiceImplTest
 
         expect(acmObjectLockDao.findLock(objectId, objectType)).andReturn(lock);
         expect(acmObjectLockDao.save(lock)).andReturn(lock);
+        when(AuthenticationUtils.getUserIpAddress()).thenReturn("");
         mockApplicationEventPublisher.publishEvent(capture(event));
-        
+
         replay(mocks);
 
         acmObjectLockService.createLock(objectId, objectType, lockType, 1000l, authMock);

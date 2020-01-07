@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
+
+    <bean id="mediaEngineArkCaseBeanUtils" class="com.armedia.acm.objectonverter.ArkCaseBeanUtils">
+        <property name="excludeFields">
+            <list value-type="java.lang.String">
+                <value>id</value>
+                <value>mediaEcmFileVersion</value>
+                <value>className</value>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="mediaEngineCheckStatusDelegate" class="com.armedia.acm.services.mediaengine.delegate.MediaEngineCheckStatusDelegate">
+        <property name="mediaEngineServiceFactory" ref="mediaEngineServiceFactory"/>
+    </bean>
+
+    <bean id="mediaEngineProcessDelegate" class="com.armedia.acm.services.mediaengine.delegate.MediaEngineProcessDelegate">
+        <property name="mediaEngineServiceFactory" ref="mediaEngineServiceFactory"/>
+    </bean>
+
+    <bean id="mediaEnginePurgeDelegate" class="com.armedia.acm.services.mediaengine.delegate.MediaEnginePurgeDelegate">
+        <property name="mediaEngineServiceFactory" ref="mediaEngineServiceFactory"/>
+    </bean>
+
+    <bean id="mediaEngineRemoveProcessIdDelegate" class="com.armedia.acm.services.mediaengine.delegate.MediaEngineRemoveProcessIdDelegate">
+        <property name="mediaEngineServiceFactory" ref="mediaEngineServiceFactory"/>
+    </bean>
+
+    <bean id="mediaEngineServiceFactory" class="com.armedia.acm.services.mediaengine.factory.MediaEngineServiceFactory">
+        <property name="springContextHolder" ref="acmContextHolder"/>
+    </bean>
+
+    <bean id="mediaEngineEcmFileAddedListener" class="com.armedia.acm.services.mediaengine.listener.EcmFileAddedListener">
+        <property name="mediaEngineServiceFactory" ref="mediaEngineServiceFactory"/>
+        <property name="folderAndFilesUtils" ref="folderAndFilesUtils"/>
+    </bean>
+
+    <bean id="mediaEngineMapper" class="com.armedia.acm.services.mediaengine.mapper.MediaEngineMapper">
+    </bean>
+
+    <bean id="mediaEngineEcmFileCopiedListener" class="com.armedia.acm.services.mediaengine.listener.EcmFileCopiedListener">
+        <property name="mediaEngineServiceFactory" ref="mediaEngineServiceFactory"/>
+        <property name="folderAndFilesUtils" ref="folderAndFilesUtils"/>
+    </bean>
+
+    <bean id="mediaEngineEcmFileReplacedListener" class="com.armedia.acm.services.mediaengine.listener.EcmFileReplacedListener">
+        <property name="mediaEngineServiceFactory" ref="mediaEngineServiceFactory"/>
+        <property name="folderAndFilesUtils" ref="folderAndFilesUtils"/>
+    </bean>
+
+    <bean id="mediaEngineProviderFailedListener" class="com.armedia.acm.services.mediaengine.listener.MediaEngineProviderFailedListener">
+        <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
+        <property name="mediaEngineServiceFactory" ref="mediaEngineServiceFactory"/>
+    </bean>
+
+    <bean id="mediaEngineIntegrationProviderFailedListener"
+          class="com.armedia.acm.services.mediaengine.listener.MediaEngineIntegrationProviderFailedListener">
+        <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
+        <property name="mediaEngineServiceFactory" ref="mediaEngineServiceFactory"/>
+    </bean>
+
+    <!-- pre-save handlers -->
+    <bean id="mediaEngineInitHandler" class="com.armedia.acm.services.mediaengine.pipeline.presave.MediaEngineInitHandler"/>
+
+    <!-- post-save handlers -->
+    <bean id="mediaEngineRulesHandler" class="com.armedia.acm.services.mediaengine.pipeline.postsave.MediaEngineRulesHandler">
+        <property name="activitiRuntimeService" ref="activitiRuntimeService"/>
+        <property name="rules" ref="mediaEngineDroolsRules"/>
+        <property name="mediaEngineEventPublisher" ref="mediaEngineEventPublisher"/>
+    </bean>
+
+    <bean id="mediaEngineBusinessProcessHandler"
+          class="com.armedia.acm.services.mediaengine.pipeline.postsave.MediaEngineBusinessProcessHandler">
+        <property name="activitiRuntimeService" ref="activitiRuntimeService"/>
+        <property name="mediaEngineEventPublisher" ref="mediaEngineEventPublisher"/>
+        <property name="mediaEngineServiceFactory" ref="mediaEngineServiceFactory"/>
+    </bean>
+
+    <bean id="mediaEnginePipelineManager" class="com.armedia.acm.services.pipeline.PipelineManager">
+        <property name="preSaveHandlers">
+            <list value-type="com.armedia.acm.services.pipeline.handler.PipelineHandler">
+                <ref bean="mediaEngineInitHandler"/>
+            </list>
+        </property>
+        <property name="postSaveHandlers">
+            <list value-type="com.armedia.acm.services.pipeline.handler.PipelineHandler">
+                <ref bean="mediaEngineRulesHandler"/>
+                <ref bean="mediaEngineBusinessProcessHandler"/>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="mediaEngineDroolsRules" class="java.util.HashMap">
+        <constructor-arg>
+            <map key-type="java.lang.String" value-type="com.armedia.acm.services.mediaengine.rules.MediaEngineBusinessRulesExecutor">
+            </map>
+        </constructor-arg>
+    </bean>
+
+    <bean id="mediaEngineDrollsProcessRules" class="java.util.HashMap">
+        <constructor-arg>
+            <map key-type="java.lang.String"
+                 value-type="com.armedia.acm.services.mediaengine.rules.MediaEngineBusinessProcessRulesExecutor">
+            </map>
+        </constructor-arg>
+    </bean>
+
+    <bean id="mediaEngineActivitiService" class="com.armedia.acm.services.mediaengine.service.MediaEngineActivitiService">
+        <property name="mediaEngineServiceFactory" ref="mediaEngineServiceFactory"/>
+    </bean>
+
+    <bean id="mediaEngineEventPublisher" class="com.armedia.acm.services.mediaengine.service.MediaEngineEventPublisher"/>
+
+</beans>

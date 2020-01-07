@@ -33,8 +33,8 @@ import com.armedia.acm.plugins.alfrescorma.model.AlfrescoRmaPluginConstants;
 import com.armedia.acm.plugins.casefile.model.CaseEvent;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.context.ApplicationListener;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -43,7 +43,7 @@ import java.util.Collections;
 
 public class AcmCaseFileClosedListener implements ApplicationListener<CaseEvent>
 {
-    private transient Logger LOG = LoggerFactory.getLogger(getClass());
+    private transient Logger LOG = LogManager.getLogger(getClass());
     private AlfrescoRecordsService alfrescoRecordsService;
     private AcmAuthenticationManager authenticationManager;
 

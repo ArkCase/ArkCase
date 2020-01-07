@@ -32,8 +32,8 @@ import com.armedia.acm.services.timesheet.model.TimesheetConfig;
 import com.armedia.acm.services.timesheet.model.TimesheetConfigDTO;
 import com.armedia.acm.services.timesheet.service.TimesheetConfigurationService;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -47,7 +47,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @RequestMapping({ "/api/v1/service/timesheet", "/api/latest/service/timesheet" })
 public class TimesheetConfigurationAPIController
 {
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
 
     private TimesheetConfigurationService timesheetConfigurationService;
 

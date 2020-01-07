@@ -1,0 +1,30 @@
+<panel-view header="{{'admin.documentManagement.fileUploader.title' | translate}}" collapsible="false">
+    <div ng-controller="Admin.FileUploaderController" class="well-sm">
+        <form>
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" ng-model="enableFileChunkUpload">
+                    <span translate>admin.documentManagement.fileUploader.enableFileChunkUpload.label</span>
+                </label>
+            </div>
+            <div class="text" ng-if="enableFileChunkUpload">
+                <label class="control-label" for="uploadFileSizeLimit">
+                    <span translate>admin.documentManagement.fileUploader.uploadFileSizeLimit.label</span>
+                </label>
+                <input ng-model="model.uploadFileSizeLimit" class="form-control input-sm" id="uploadFileSizeLimit" />
+            </div>
+            <div class="text" ng-if="enableFileChunkUpload">
+                <label class="control-label" for="singleChunkFileSizeLimit">
+                    <span translate>admin.documentManagement.fileUploader.singleChunkFileSizeLimit.label</span>
+                </label>
+                <input ng-model="model.singleChunkFileSizeLimit" class="form-control input-sm" id="singleChunkFileSizeLimit" />
+            </div>
+
+            <div class="form-group">
+                <button ng-click="applyChanges()" class="btn btn-sm btn-primary" translate>
+                    admin.documentManagement.fileUploader.apply.label
+                </button>
+            </div>
+        </form>
+    </div>
+</panel-view>

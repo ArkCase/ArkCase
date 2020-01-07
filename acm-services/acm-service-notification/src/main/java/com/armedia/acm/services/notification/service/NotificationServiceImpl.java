@@ -28,7 +28,6 @@ package com.armedia.acm.services.notification.service;
  */
 
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
-import com.armedia.acm.files.propertymanager.PropertyFileManager;
 import com.armedia.acm.services.notification.dao.NotificationDao;
 import com.armedia.acm.services.notification.model.ApplicationNotificationEvent;
 import com.armedia.acm.services.notification.model.Notification;
@@ -37,8 +36,8 @@ import com.armedia.acm.services.notification.model.NotificationConstants;
 import com.armedia.acm.services.notification.model.NotificationRule;
 import com.armedia.acm.spring.SpringContextHolder;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -51,10 +50,8 @@ import java.util.Map;
 public class NotificationServiceImpl implements NotificationService
 {
 
-    private final Logger LOG = LoggerFactory.getLogger(getClass());
+    private final Logger LOG = LogManager.getLogger(getClass());
 
-    private PropertyFileManager propertyFileManager;
-    private String notificationPropertyFileLocation;
     private NotificationConfig notificationConfig;
     private NotificationDao notificationDao;
     private NotificationEventPublisher notificationEventPublisher;
@@ -66,7 +63,7 @@ public class NotificationServiceImpl implements NotificationService
      * This method is called by scheduled task
      */
     @Override
-    public void run()
+    public void run(Date lastRun)
     {
         if (!notificationConfig.getUserBatchRun())
         {
@@ -75,15 +72,8 @@ public class NotificationServiceImpl implements NotificationService
 
         getAuditPropertyEntityAdapter().setUserId(NotificationConstants.SYSTEM_USER);
 
-        LOG.debug("Getting last batch run date from {}", NotificationConstants.LAST_BATCH_RUN_PROPERTY_FILE);
-
         try
         {
-            String lastRunDate = getPropertyFileManager().load(NotificationConstants.LAST_BATCH_RUN_PROPERTY_FILE,
-                    NotificationConstants.SOLR_LAST_RUN_DATE_PROPERTY_KEY, NotificationConstants.DEFAULT_LAST_RUN_DATE);
-
-            SimpleDateFormat dateFormat = new SimpleDateFormat(NotificationConstants.DATE_FORMAT);
-
             // Riste Tutureski on 28 November 2017: I will comment this method that make correction of the last
             // notification run date for one minute
             // For now we will use date without correction, because we have problem if the run is set less than one
@@ -91,9 +81,7 @@ public class NotificationServiceImpl implements NotificationService
             // Needed further investigation on DEV environments before removing commented line below. Locally works
             // fine.
 
-            // Date lastRun = getLastRunDate(lastRunDate, dateFormat);
-            Date lastRun = dateFormat.parse(lastRunDate);
-            setLastRunDate(dateFormat);
+            // Date lastRun = getLastRunDate(lastRun, dateFormat);
 
             Map<String, NotificationRule> rules = getSpringContextHolder().getAllBeansOfType(NotificationRule.class);
 
@@ -104,7 +92,6 @@ public class NotificationServiceImpl implements NotificationService
                     runRule(lastRun, rule);
                 }
             }
-
         }
         catch (Exception e)
         {
@@ -162,21 +149,6 @@ public class NotificationServiceImpl implements NotificationService
         date = calendar.getTime();
 
         return date;
-    }
-
-    /**
-     * Save last run date in the properties file
-     *
-     * @param dateFormat
-     */
-    private void setLastRunDate(SimpleDateFormat dateFormat)
-    {
-        String lastRunDate = dateFormat.format(new Date());
-
-        Map<String, String> properties = new HashMap<>();
-        properties.put(NotificationConstants.SOLR_LAST_RUN_DATE_PROPERTY_KEY, lastRunDate);
-
-        getPropertyFileManager().storeMultiple(properties, NotificationConstants.LAST_BATCH_RUN_PROPERTY_FILE, true);
     }
 
     /**
@@ -272,25 +244,5 @@ public class NotificationServiceImpl implements NotificationService
     public void setNotificationConfig(NotificationConfig notificationConfig)
     {
         this.notificationConfig = notificationConfig;
-    }
-
-    public PropertyFileManager getPropertyFileManager()
-    {
-        return propertyFileManager;
-    }
-
-    public void setPropertyFileManager(PropertyFileManager propertyFileManager)
-    {
-        this.propertyFileManager = propertyFileManager;
-    }
-
-    public String getNotificationPropertyFileLocation()
-    {
-        return notificationPropertyFileLocation;
-    }
-
-    public void setNotificationPropertyFileLocation(String notificationPropertyFileLocation)
-    {
-        this.notificationPropertyFileLocation = notificationPropertyFileLocation;
     }
 }

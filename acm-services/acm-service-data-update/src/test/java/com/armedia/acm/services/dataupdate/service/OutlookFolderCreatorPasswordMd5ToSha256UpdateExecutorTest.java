@@ -40,8 +40,8 @@ import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
@@ -54,7 +54,7 @@ import java.util.List;
 public class OutlookFolderCreatorPasswordMd5ToSha256UpdateExecutorTest extends EasyMockSupport
 {
 
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private transient final Logger log = LogManager.getLogger(getClass());
     private OutlookFolderCreatorPasswordMd5ToSha256UpdateExecutor unit;
     private EntityManager mockEntityManager;
     private TypedQuery mockQuery;

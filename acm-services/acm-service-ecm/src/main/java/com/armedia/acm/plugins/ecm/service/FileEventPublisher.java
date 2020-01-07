@@ -39,8 +39,8 @@ import com.armedia.acm.plugins.ecm.model.event.EcmFileMovedEvent;
 import com.armedia.acm.plugins.ecm.model.event.EcmFileRenamedEvent;
 import com.armedia.acm.plugins.ecm.model.event.EcmFileReplacedEvent;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.security.core.Authentication;
@@ -48,7 +48,7 @@ import org.springframework.security.core.Authentication;
 public class FileEventPublisher implements ApplicationEventPublisherAware
 {
 
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private transient final Logger log = LogManager.getLogger(getClass());
     private ApplicationEventPublisher eventPublisher;
 
     @Override
@@ -100,6 +100,17 @@ public class FileEventPublisher implements ApplicationEventPublisherAware
 
         eventPublisher.publishEvent(fileMovedEvent);
     }
+
+    public void publishFileMovedInRecycleBinEvent(EcmFile source, Authentication auth, String ipAddress, boolean succeeded)
+    {
+
+        log.debug("Publishing a file moved in Recycle Bin event.");
+        EcmFileMovedEvent fileMovedEvent = new EcmFileMovedEvent(source, auth.getName(), ipAddress);
+        fileMovedEvent.setSucceeded(succeeded);
+
+        eventPublisher.publishEvent(fileMovedEvent);
+    }
+
 
     public void publishFileRenamedEvent(EcmFile source, Authentication auth, String ipAddress, boolean succeeded)
     {

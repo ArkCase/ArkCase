@@ -49,8 +49,8 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDResources;
 import org.apache.pdfbox.pdmodel.font.PDFont;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 
 import javax.persistence.NoResultException;
@@ -67,7 +67,7 @@ import java.util.List;
 public class FolderAndFilesUtils
 {
 
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
     private AcmFolderDao folderDao;
     private EcmFileDao fileDao;
     private AcmFolderService folderService;

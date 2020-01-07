@@ -32,8 +32,8 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.voodoodyne.jackson.jsog.JSOGGenerator;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -73,7 +73,7 @@ public class PostalAddress implements Serializable, AcmEntity
 
     private static final long serialVersionUID = 673622283387112922L;
 
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private transient final Logger log = LogManager.getLogger(getClass());
 
     @Id
     @TableGenerator(name = "postal_address_gen", table = "acm_postal_address_id", pkColumnName = "cm_seq_name", valueColumnName = "cm_seq_num", pkColumnValue = "acm_postal_address", initialValue = 100, allocationSize = 1)

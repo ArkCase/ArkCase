@@ -39,8 +39,8 @@ import com.armedia.acm.services.participants.model.DecoratedAssignedObjectPartic
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.users.service.tracker.UserTrackerService;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -64,7 +64,7 @@ import java.util.Map;
 @RequestMapping({ "/api/v1/plugin/casefile", "/api/latest/plugin/casefile" })
 public class SaveCaseFileAPIController
 {
-    private final Logger log = LoggerFactory.getLogger(getClass());
+    private final Logger log = LogManager.getLogger(getClass());
 
     private SaveCaseService saveCaseService;
 

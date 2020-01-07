@@ -43,8 +43,8 @@ import com.armedia.acm.plugins.casefile.web.api.CaseFileEnqueueResponse;
 import com.armedia.acm.plugins.casefile.web.api.CaseFileEnqueueResponse.ErrorReason;
 import com.armedia.acm.service.objectlock.service.AcmObjectLockService;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
@@ -54,7 +54,7 @@ import java.util.Map;
 
 public class EnqueueCaseFileServiceImpl implements EnqueueCaseFileService
 {
-    private final Logger log = LoggerFactory.getLogger(getClass());
+    private final Logger log = LogManager.getLogger(getClass());
 
     private CaseFileDao caseFileDao;
 

@@ -34,9 +34,9 @@ public class AcmObjectUnlockEvent extends AcmObjectLockUnlockEvent
 {
     private static final String UNLOCK_EVENT_TYPE = "com.armedia.acm.objectlock.unlock";
 
-    public AcmObjectUnlockEvent(AcmObjectLock source, String userId, Boolean success)
+    public AcmObjectUnlockEvent(AcmObjectLock source, String userId, Boolean success, String ipAddress)
     {
-        super(source, userId, success);
+        super(source, userId, success, ipAddress);
     }
 
     @Override

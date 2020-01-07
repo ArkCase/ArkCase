@@ -31,6 +31,7 @@ import com.armedia.acm.auth.AuthenticationUtils;
 import com.armedia.acm.convertfolder.ConversionException;
 import com.armedia.acm.convertfolder.DefaultFolderAndFileConverter;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
+import com.armedia.acm.core.model.AcmEvent;
 import com.armedia.acm.email.model.EmailSenderConfig;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
@@ -46,13 +47,14 @@ import com.armedia.acm.services.email.service.AcmEmailSenderService;
 import com.armedia.acm.services.email.service.TemplatingEngine;
 import com.armedia.acm.services.users.model.AcmUser;
 
+import org.mule.api.MuleException;
+import org.mule.api.MuleMessage;
+import org.mule.util.FileUtils;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.security.core.Authentication;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.mule.util.FileUtils;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -133,9 +135,12 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
 
         Exception exception = null;
 
-        List<SmtpEventSentEvent> sentEvents = new ArrayList<>();
+        List<AcmEvent> sentEvents = new ArrayList<>();
         Map<String, InputStreamDataSource> attachments = processAttachments(in, user, sentEvents);
-
+        if(attachments.size() == 0)
+        {
+            sentEvents.add(new SmtpEventMailSent(in,user.getUserId(),in.getObjectId(),in.getObjectType(),AuthenticationUtils.getUserIpAddress()));
+        }
         for (String emailAddress : in.getEmailAddresses())
         {
             try
@@ -148,8 +153,9 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
                 exception = e;
                 log.error("Failed to send email to [{}].", emailAddress, exception);
             }
+            in.setMailSent(exception == null);
         }
-        for (SmtpEventSentEvent event : sentEvents)
+        for (AcmEvent event : sentEvents)
         {
             boolean success = (exception == null);
             event.setSucceeded(success);
@@ -184,7 +190,7 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
 
         setFilenames(in);
 
-        List<SmtpEventSentEvent> sentEvents = new ArrayList<>();
+        List<AcmEvent> sentEvents = new ArrayList<>();
         Map<String, InputStreamDataSource> attachments = processAttachments(in, user, sentEvents);
 
         for (String emailAddress : in.getEmailAddresses())
@@ -200,8 +206,8 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
                 exception = e;
             }
         }
-
-        for (SmtpEventSentEvent event : sentEvents)
+        in.setMailSent(exception == null);
+        for (AcmEvent event : sentEvents)
         {
             boolean success = (exception == null);
             event.setSucceeded(success);
@@ -238,7 +244,7 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
      * @throws FileNotFoundException
      */
     private Map<String, InputStreamDataSource> processAttachments(AttachmentsProcessableDTO in, AcmUser user,
-            List<SmtpEventSentEvent> sentEvents)
+            List<AcmEvent> sentEvents)
             throws AcmUserActionFailedException, FileNotFoundException
     {
         Map<String, InputStreamDataSource> attachments = new HashMap<>();
@@ -298,6 +304,10 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
                             FileUtils.deleteQuietly(pdfConvertedFile);
                         }
                     }
+                    else
+                    {
+                        attachments.put(fileKey, new InputStreamDataSource(contents, fileName));
+                    }
                 }
                 else
                 {
@@ -305,7 +315,10 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
                 }
 
                 String ipAddress = AuthenticationUtils.getUserIpAddress();
-
+                for (String mailAddress : in.getEmailAddresses())
+                {
+                    ecmFile.setMailAddress(mailAddress);
+                }
                 sentEvents
                         .add(new SmtpEventSentEvent(ecmFile, user.getUserId(), ecmFile.getParentObjectId(), ecmFile.getParentObjectType(),
                                 ipAddress));

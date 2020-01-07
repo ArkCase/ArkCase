@@ -34,8 +34,8 @@ import com.armedia.acm.calendar.service.AcmCalendarInfo;
 import com.armedia.acm.calendar.service.AcmEventAttachmentDTO;
 import com.armedia.acm.calendar.service.CalendarServiceException;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -60,7 +60,7 @@ import microsoft.exchange.webservices.data.property.definition.ExtendedPropertyD
 public class ExchangeCalendar implements AcmCalendar
 {
 
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
 
     private ExchangeService service;
 

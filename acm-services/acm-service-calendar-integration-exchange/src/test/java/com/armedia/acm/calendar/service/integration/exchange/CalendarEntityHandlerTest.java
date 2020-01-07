@@ -45,6 +45,7 @@ import com.armedia.acm.plugins.ecm.model.AcmContainerEntity;
 import com.armedia.acm.service.outlook.dao.OutlookDao;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -80,6 +81,7 @@ import microsoft.exchange.webservices.data.search.FindItemsResults;
 @RunWith(PowerMockRunner.class)
 @PowerMockIgnore({ "javax.management.*", "javax.net.ssl.*" })
 @PrepareForTest({ CalendarFolder.class, FindItemsResults.class, Appointment.class })
+@Ignore
 public class CalendarEntityHandlerTest
 {
 

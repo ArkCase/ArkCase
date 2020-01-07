@@ -29,19 +29,23 @@ package com.armedia.acm.plugins.admin.web.api;
 
 import com.armedia.acm.plugins.admin.exception.AcmCmisConfigurationException;
 import com.armedia.acm.plugins.admin.model.CmisConfigurationConstants;
+import com.armedia.acm.plugins.admin.model.CmisDTO;
 import com.armedia.acm.plugins.admin.service.CmisConfigurationService;
 
+import com.google.gson.GsonBuilder;
 import org.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import com.google.gson.Gson;
 
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.util.HashMap;
 
 /**
@@ -51,15 +55,14 @@ import java.util.HashMap;
 @RequestMapping({ "/api/v1/plugin/admin", "/api/latest/plugin/admin" })
 public class CmisConfigurationCreateConfig
 {
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
     private CmisConfigurationService cmisConfigurationService;
 
-    @RequestMapping(value = "/cmisconfiguration/config", method = RequestMethod.POST, produces = {
-            MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE
-    })
+    @RequestMapping(value = "/cmisconfiguration/config", method = RequestMethod.POST,
+            produces = MediaType.APPLICATION_JSON_VALUE)
 
     @ResponseBody
-    public String createDirectory(
+    public CmisDTO createDirectory(
             @RequestBody String resource) throws IOException, AcmCmisConfigurationException
     {
         try
@@ -80,8 +83,9 @@ public class CmisConfigurationCreateConfig
 
             // Create CMIS Configuration
             cmisConfigurationService.createCmisConfig(id, props);
+            Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
-            return newCmisObject.toString();
+            return gson.fromJson(resource, CmisDTO.class);
         }
         catch (Exception e)
         {

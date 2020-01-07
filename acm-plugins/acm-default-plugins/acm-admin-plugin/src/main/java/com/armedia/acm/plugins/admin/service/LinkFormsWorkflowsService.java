@@ -44,8 +44,8 @@ import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -66,7 +66,7 @@ import java.util.Set;
 public class LinkFormsWorkflowsService implements LinkFormsWorkflowsConstants
 {
     private final String[] START_PROCESS_VALUES = new String[] { "", "true", "false" };
-    private Logger log = LoggerFactory.getLogger(LdapConfigurationService.class);
+    private Logger log = LogManager.getLogger(LdapConfigurationService.class);
     private String configurationLocation;
     private String configurationFile;
     private String configurationFileBackupTemplate;

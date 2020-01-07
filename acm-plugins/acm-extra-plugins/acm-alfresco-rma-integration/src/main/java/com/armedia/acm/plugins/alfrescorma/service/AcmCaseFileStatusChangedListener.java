@@ -34,8 +34,8 @@ import com.armedia.acm.plugins.alfrescorma.model.AlfrescoRmaPluginConstants;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.casefile.model.CaseFileModifiedEvent;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ApplicationListener;
 import org.springframework.security.authentication.AuthenticationServiceException;
@@ -51,7 +51,7 @@ import java.util.stream.Collectors;
 public class AcmCaseFileStatusChangedListener implements ApplicationListener<CaseFileModifiedEvent>, InitializingBean
 {
 
-    private transient Logger LOG = LoggerFactory.getLogger(getClass());
+    private transient Logger LOG = LogManager.getLogger(getClass());
     private AlfrescoRecordsService alfrescoRecordsService;
     private List<String> caseClosedStatuses = new ArrayList<>();
     private AcmAuthenticationManager authenticationManager;

@@ -30,8 +30,8 @@ package com.armedia.acm.websockets;
  * #L%
  */
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.MessageHeaders;
@@ -47,7 +47,7 @@ import java.security.Principal;
 public class AcmWebSocketChannelInterceptor extends ChannelInterceptorAdapter
 {
 
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
 
     @Override
     public Message<?> preSend(Message<?> message, MessageChannel channel)

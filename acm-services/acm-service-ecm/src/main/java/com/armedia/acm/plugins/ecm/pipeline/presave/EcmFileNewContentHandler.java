@@ -28,14 +28,20 @@ package com.armedia.acm.plugins.ecm.pipeline.presave;
  */
 
 import com.armedia.acm.plugins.ecm.model.EcmFile;
+import com.armedia.acm.plugins.ecm.model.FileUploadStage;
+import com.armedia.acm.plugins.ecm.model.ProgressbarDetails;
 import com.armedia.acm.plugins.ecm.pipeline.EcmFileTransactionPipelineContext;
+import com.armedia.acm.plugins.ecm.service.ProgressIndicatorService;
+import com.armedia.acm.plugins.ecm.service.ProgressbarExecutor;
 import com.armedia.acm.plugins.ecm.utils.EcmFileMuleUtils;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.pipeline.handler.PipelineHandler;
 
 import org.apache.chemistry.opencmis.client.api.Document;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.commons.io.input.CountingInputStream;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.io.FileInputStream;
 import java.io.InputStream;
@@ -45,9 +51,10 @@ import java.io.InputStream;
  */
 public class EcmFileNewContentHandler implements PipelineHandler<EcmFile, EcmFileTransactionPipelineContext>
 {
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private transient final Logger log = LogManager.getLogger(getClass());
 
     private EcmFileMuleUtils ecmFileMuleUtils;
+    private ProgressIndicatorService progressIndicatorService;
 
     @Override
     public void execute(EcmFile entity, EcmFileTransactionPipelineContext pipelineContext) throws PipelineProcessException
@@ -64,19 +71,44 @@ public class EcmFileNewContentHandler implements PipelineHandler<EcmFile, EcmFil
 
             try (InputStream fileInputStream = new FileInputStream(pipelineContext.getFileContents()))
             {
+                log.debug("Putting fileInputStream in a decorator stream so that the number of bytes can be counted");
+                CountingInputStream countingInputStream = new CountingInputStream(fileInputStream);
+                if (StringUtils.isNotEmpty(entity.getUuid()))
+                {
+                    ProgressbarDetails progressbarDetails = new ProgressbarDetails();
+                    progressbarDetails.setProgressbar(true);
+                    progressbarDetails.setStage(3);
+                    progressbarDetails.setUuid(entity.getUuid());
+                    progressbarDetails.setObjectId(pipelineContext.getContainer().getContainerObjectId());
+                    progressbarDetails.setObjectType(pipelineContext.getContainer().getContainerObjectType());
+                    progressbarDetails.setFileName(entity.getFileName());
+                    progressbarDetails.setObjectNumber(pipelineContext.getContainer().getContainerObjectTitle());
+                    log.debug("Start stage three for file {}. The file will be written to Alfresco", entity.getFileName());
+                    progressIndicatorService.start(countingInputStream, pipelineContext.getFileContents().length(),
+                            pipelineContext.getContainer().getContainerObjectId(), pipelineContext.getContainer().getContainerObjectType(),
+                            pipelineContext.getFileContents().getName(), pipelineContext.getAuthentication().getName(), progressbarDetails);
+                }
                 // Adds the file to the ECM content repository as a new document... using the context filename
                 // as the filename for the repository.
                 String arkcaseFilename = entity.getFileName();
                 entity.setFileName(pipelineContext.getOriginalFileName());
                 Document newDocument = ecmFileMuleUtils.addFile(entity, pipelineContext.getCmisFolderId(),
-                        fileInputStream);
+                        countingInputStream);
                 // now, restore the ArkCase file name
                 entity.setFileName(arkcaseFilename);
                 pipelineContext.setCmisDocument(newDocument);
+
             }
             catch (Exception e)
             {
                 log.error("mule pre save handler failed: {}", e.getMessage(), e);
+                ProgressbarExecutor progressbarExecutor = progressIndicatorService.getExecutor(entity.getUuid());
+                if (StringUtils.isNotEmpty(entity.getUuid())&& progressbarExecutor != null && progressbarExecutor.getProgressbarDetails().getStage() == FileUploadStage.UPLOAD_CHUNKS_TO_FILESYSTEM.getValue())
+                {
+                    log.debug("Stop progressbar executor in stage 2, for file {} and set file upload success to {}", entity.getUuid(),
+                            false);
+                    progressIndicatorService.end(entity.getUuid(), false);
+                }
                 throw new PipelineProcessException(e);
             }
 
@@ -122,5 +154,15 @@ public class EcmFileNewContentHandler implements PipelineHandler<EcmFile, EcmFil
     public void setEcmFileMuleUtils(EcmFileMuleUtils ecmFileMuleUtils)
     {
         this.ecmFileMuleUtils = ecmFileMuleUtils;
+    }
+
+    public ProgressIndicatorService getProgressIndicatorService()
+    {
+        return progressIndicatorService;
+    }
+
+    public void setProgressIndicatorService(ProgressIndicatorService progressIndicatorService)
+    {
+        this.progressIndicatorService = progressIndicatorService;
     }
 }

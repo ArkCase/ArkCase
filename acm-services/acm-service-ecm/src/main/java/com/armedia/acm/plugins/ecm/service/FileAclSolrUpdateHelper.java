@@ -29,6 +29,7 @@ package com.armedia.acm.plugins.ecm.service;
 
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
+import com.armedia.acm.services.dataaccess.model.DataAccessControlConfig;
 import com.armedia.acm.services.dataaccess.service.SearchAccessControlFields;
 import com.armedia.acm.services.participants.model.AcmAssignedObject;
 
@@ -43,12 +44,12 @@ public class FileAclSolrUpdateHelper
 {
     private EcmFileDao ecmFileDao;
     private SearchAccessControlFields searchAccessControlFields;
-    private Boolean enableDocumentACL;
+    private DataAccessControlConfig dacConfig;
 
     public JSONArray buildFileAclUpdates(Long containerId, AcmAssignedObject assignedObject)
     {
         JSONArray updates = new JSONArray();
-        if (!enableDocumentACL)
+        if (!dacConfig.getEnableDocumentACL())
         {
             List<EcmFile> filesPerContainer = ecmFileDao.findForContainer(containerId, FlushModeType.COMMIT);
             filesPerContainer.forEach(it -> {
@@ -71,14 +72,14 @@ public class FileAclSolrUpdateHelper
         this.ecmFileDao = ecmFileDao;
     }
 
-    public Boolean getEnableDocumentACL()
+    public DataAccessControlConfig getDacConfig()
     {
-        return enableDocumentACL;
+        return dacConfig;
     }
 
-    public void setEnableDocumentACL(Boolean enableDocumentACL)
+    public void setDacConfig(DataAccessControlConfig dacConfig)
     {
-        this.enableDocumentACL = enableDocumentACL;
+        this.dacConfig = dacConfig;
     }
 
     public SearchAccessControlFields getSearchAccessControlFields()

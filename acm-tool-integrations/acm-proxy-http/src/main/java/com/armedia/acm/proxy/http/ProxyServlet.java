@@ -73,8 +73,8 @@ import org.apache.http.message.HeaderGroup;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.util.EntityUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.slf4j.MDC;
 import org.springframework.http.MediaType;
 
@@ -230,7 +230,7 @@ public class ProxyServlet extends HttpServlet
     /**
      * Logger instance.
      */
-    public final Logger logger = LoggerFactory.getLogger(ProxyServlet.class);
+    public final Logger logger = LogManager.getLogger(ProxyServlet.class);
     /**
      * List containing urls which need to be matched for rewriting strings in the content.
      */

@@ -106,6 +106,9 @@
             "enabled": true,
             "type": "grid",
             "enableFiltering": false,
+            "enableRowSelection": true,
+            "enableRowHeaderSelection": true,
+            "enableFullRowSelection": true,
             "configurable": true,
             "columnDefs": [
                 {
@@ -136,55 +139,6 @@
                 50
             ],
             "paginationPageSize": 20
-        },
-        {
-            "id": "correspondenceManagementMergeFieldsVersions",
-            "title": "admin.comp.correspondenceManagementMergeFieldsVersions.title",
-            "enabled": true,
-            "type": "grid",
-            "enableFiltering": false,
-            "configurable": true,
-            "columnDefs": [
-                {
-                    "name": "mergingActiveVersion",
-                    "displayName": "admin.correspondenceManagement.mergefields.version.grid.mergingActiveVersion",
-                    "visible": true,
-                    "headerCellFilter": "translate",
-                    "cellTemplate": "<div align='center'><span ng-if='!row.entity.mergingActiveVersion' class='label label-warning'>No</span><span ng-if='row.entity.mergingActiveVersion' class='label label-success'>Yes</span></div>'",
-                    "width": 70
-                },
-                {
-                    "name": "mergingVersion",
-                    "displayName": "admin.correspondenceManagement.mergefields.version.grid.mergingVersion",
-                    "visible": true,
-                    "headerCellFilter": "translate",
-                    "sort": {
-                        "direction": "desc"
-                    },
-                    "width": 80
-                },
-                {
-                    "name": "modified",
-                    "displayName": "admin.correspondenceManagement.mergefields.version.grid.modified",
-                    "visible": true,
-                    "cellTemplate": "<div>{{ row.entity.modified | date : 'shortDate' }}</div>",
-                    "headerCellFilter": "translate"
-                },
-                {
-                    "name": "modifier",
-                    "displayName": "admin.correspondenceManagement.mergefields.version.grid.modifier",
-                    "visible": true,
-                    "headerCellFilter": "translate",
-                    "lookup": "userFullNames"
-                }
-            ],
-            "paginationPageSizes": [
-                5,
-                10,
-                20,
-                50
-            ],
-            "paginationPageSize": 10
         },
         {
             "id": "correspondenceManagementTemplates",
@@ -223,6 +177,14 @@
                     "cellTemplate": "<div class='ui-grid-cell-contents'>{{ grid.appScope.utils.getLookupValue(grid.appScope.correspondenceObjectTypes, row.entity.objectType) | translate }}</div>",
                     "headerCellFilter": "translate",
                     "width": 120
+                },
+                {
+                    "name": "templateModelProvider",
+                    "displayName": "admin.correspondenceManagement.templates.grid.templateModelProvider",
+                    "visible": true,
+                    "headerCellFilter": "translate",
+                    "width": 320,
+                    "cellTemplate": "<div><span>{{ row.entity.templateModelProvider.substr(row.entity.templateModelProvider.lastIndexOf(\".\") + 1) }}</span> <i class='fa fa-info-circle' style='cursor :pointer' ng-click='grid.appScope.getNavBarTree(row.entity.templateModelProvider)'></i> </div>"
                 },
                 {
                     "name": "modified",
@@ -998,6 +960,58 @@
             "paginationPageSize": 20
         },
         {
+            "id": "recycleBin",
+            "title": "admin.application.recycleBin.title",
+            "enabled": true,
+            "type": "grid",
+            "enableFiltering": false,
+            "configurable": true,
+            "columnDefs": [
+                {
+                    "name": "fileName",
+                    "displayName": "admin.application.recycleBin.grid.fileName",
+                    "visible": true,
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<div context-menu='grid.appScope.contextmenuOptions(row)'>{{row.entity.fileName}}</div>"
+                },
+                {
+                    "name": "containerObjectTitle",
+                    "displayName": "admin.application.recycleBin.grid.containerObjectTitle",
+                    "visible": true,
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<a context-menu='grid.appScope.contextmenuOptions(row)' href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity)'>{{row.entity.containerObjectTitle}}</a>"
+                },
+                {
+                    "name": "dateModified",
+                    "displayName": "admin.application.recycleBin.grid.dateModified",
+                    "visible": true,
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<div context-menu='grid.appScope.contextmenuOptions(row)'>{{ row.entity.dateModified | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>"
+                },
+                {
+                    "name": "fileSizeBytes",
+                    "displayName": "admin.application.recycleBin.grid.fileSizeBytes",
+                    "visible": true,
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<div context-menu='grid.appScope.contextmenuOptions(row)'>{{row.entity.fileSizeBytes}}</div>"
+                },
+                {
+                    "name": "fileActiveVersionNameExtension",
+                    "displayName": "admin.application.recycleBin.grid.fileActiveVersionNameExtension",
+                    "visible": true,
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<div context-menu='grid.appScope.contextmenuOptions(row)'>{{row.entity.fileActiveVersionNameExtension}}</div>"
+                }
+            ],
+            "paginationPageSizes": [
+                5,
+                10,
+                20,
+                50
+            ],
+            "paginationPageSize": 20
+        },
+        {
             "id": "sequenceManagementConfiguration",
             "title": "admin.application.sequenceManagement.config.title",
             "enabled": true,
@@ -1010,7 +1024,9 @@
                     "displayName": "admin.application.sequenceManagement.config.grid.sequenceName",
                     "visible": true,
                     "headerCellFilter": "translate",
-                    "cellClass": "ui-grid-cell-contents-auto"
+                    "cellClass": "ui-grid-cell-contents-auto",
+                    "cellTemplate": "<div class='ui-grid-cell-contents'>{{ grid.appScope.utils.getLookupValue(grid.appScope.sequences, row.entity.sequenceName) | translate }}</div>"
+
                 },
                 {
                     "name": "sequenceDescription",
@@ -1063,7 +1079,7 @@
                     {
                         "name": "act",
                         "cellEditableCondition": false,
-                        "width": "70",
+                        "width": "90",
                         "headerCellTemplate": "<span></span>",
                         "cellTemplate": ""
                     }
@@ -1126,6 +1142,144 @@
                     "paginationPageSize": 20
                 }
             }
+        },
+        {
+            "id": "sequenceRegistry",
+            "title": "admin.application.sequenceRegistry.title",
+            "enabled": true,
+            "type": "grid",
+            "enableFiltering": false,
+            "configurable": true,
+            "paginationPageSizes": [
+            5,
+            10,
+            20,
+            50
+            ],
+            "paginationPageSize": 20,
+            "columnDefs": [
+                {
+                    "name": "sequenceValue",
+                    "displayName": "admin.application.sequenceRegistry.sequenceValue",
+                    "visible": true,
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "sequenceName",
+                    "displayName": "admin.application.sequenceRegistry.sequenceName",
+                    "visible": true,
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "sequencePartName",
+                    "displayName": "admin.application.sequenceRegistry.sequencePartName",
+                    "visible": true,
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "sequencePartValue",
+                    "displayName": "admin.application.sequenceRegistry.sequencePartValue",
+                    "visible": true,
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "sequencePartValueUsedFlag",
+                    "displayName": "admin.application.sequenceRegistry.sequencePartValueUsedFlag",
+                    "visible": true,
+                    "headerCellFilter": "translate"
+                }
+            ]
+        },
+        {
+            "id": "objectTitleConfiguration",
+            "title": "admin.application.objectTitleConfiguration.title",
+            "columnDefs": [
+                {
+                    "name": "objectType",
+                    "displayName": "admin.application.objectTitleConfiguration.objectType",
+                    "visible": true,
+                    "cellTemplate": "<div class='ui-grid-cell-contents'>{{ grid.appScope.getObjectTypeValue(row.entity.objectType) | translate }}</div>",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "enableTitleField",
+                    "displayName": "admin.application.objectTitleConfiguration.enableTitleField",
+                    "visible": true,
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "title",
+                    "displayName": "admin.application.objectTitleConfiguration.titleOption",
+                    "visible": true,
+                    "cellTemplate": "<div class='ui-grid-cell-contents'>{{ grid.appScope.getTitleValue(row.entity.title) | translate }}</div>",
+                    "headerCellFilter": "translate"
+                }
+            ],
+            "radioButtonTitle": {
+                "objectId": "admin.application.objectTitleConfiguration.objectId",
+                "titleTitle": "admin.application.objectTitleConfiguration.titleTitle",
+                "objectIdTitle": "admin.application.objectTitleConfiguration.objectIdTitle",
+                "titleObjectId": "admin.application.objectTitleConfiguration.titleObjectId"
+            },
+            "objectTypeValue":{
+                "CASE_FILE": "admin.application.objectTitleConfiguration.caseFile",
+                "COMPLAINT": "admin.application.objectTitleConfiguration.complaint"
+            }
+        },
+        {
+            "id": "scheduledJobs",
+            "title": "admin.application.scheduled.jobs.title",
+            "enabled": true,
+            "type": "grid",
+            "enableFiltering": true,
+            "configurable": true,
+            "columnDefs": [
+              {
+                  "name": "jobName",
+                  "displayName": "admin.application.scheduled.jobs.column.jobName.title",
+                  "visible": true,
+                  "headerCellFilter": "translate",
+                  "width": "20%"
+              },
+              {
+                  "name": "trigger",
+                  "displayName": "admin.application.scheduled.jobs.column.trigger.title",
+                  "visible": true,
+                  "headerCellFilter": "translate",
+                  "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.cronExpression != null ? row.entity.cronExpression : row.entity.repeatIntervalInSeconds}}</div>",
+                  "width": "20%"
+              },
+              {
+                  "name": "lastRun",
+                  "displayName": "admin.application.scheduled.jobs.column.lastRun.title",
+                  "headerCellFilter": "translate",
+                  "cellTemplate": "<div>{{ row.entity.lastRun | date: ('common.defaultDateTimeLongUIFormat' | translate)}}</div>",
+                  "visible": true,
+                  "width": "20%"
+              },
+              {
+                  "name": "nextRun",
+                  "displayName": "admin.application.scheduled.jobs.column.nextRun.title",
+                  "headerCellFilter": "translate",
+                  "cellTemplate": "<div>{{ row.entity.nextRun | date: ('common.defaultDateTimeLongUIFormat' | translate)}}</div>",
+                  "visible": true,
+                  "width": "20%"
+               },
+              {
+                  "name": "act",
+                  "cellEditableCondition": false,
+                  "width": "20%",
+                  "headerCellTemplate": "<span></span>",
+                  "cellTemplate": ""
+              }
+            ],
+            "paginationPageSizes": [
+                5,
+                10,
+                20,
+                50
+            ],
+            "paginationPageSize": 20
         }
     ],
     "tree": {
@@ -1234,6 +1388,13 @@
                 ]
             },
             {
+                "type": "p/security/documentUploadPolicy",
+                "label": "admin.security.documentUploadPolicy.title",
+                "components": [
+                    "document-upload-policy-configuration"
+                ]
+            },
+            {
                 "type": "p/dashboard",
                 "label": "admin.dashboard.title",
                 "icon": "fa fa-wrench",
@@ -1319,6 +1480,13 @@
                 "components": []
             },
             {
+                "type": "p/application/applicationVersion",
+                "label": "admin.application.version.config.title",
+                "components": [
+                    "application.version.config"
+                ]
+            },
+            {
                 "type": "p/application/labels",
                 "label": "admin.application.labels.config.title",
                 "components": [
@@ -1375,6 +1543,27 @@
                 ]
             },
             {
+                "type": "p/application/objectTitleConfiguration",
+                "label": "admin.application.objectTitleConfiguration.title",
+                "components": [
+                    "application-object-title-configuration"
+                ]
+            },
+            {
+                "type": "p/application/recycleBin",
+                "label": "admin.application.recycleBin.title",
+                "components": [
+                    "application-recycle-bin.config"
+                ]
+            },
+            {
+                "type": "p/application/scheduledJobs",
+                "label": "admin.application.scheduled.jobs.title",
+                "components": [
+                    "application-scheduled-jobs-management"
+                ]
+            },
+            {
                 "type": "p/branding",
                 "label": "admin.branding.title",
                 "icon": "fa fa-wrench",
@@ -1428,6 +1617,13 @@
                 ]
             },
             {
+                "type": "p/document/fileUploader",
+                "label": "admin.documentManagement.fileUploader.title",
+                "components": [
+                    "file-uploader"
+                ]
+            },
+            {
                 "type": "p/mediaServices",
                 "label": "admin.mediaServices.title",
                 "icon": "fa fa-wrench",
@@ -1448,6 +1644,13 @@
                 ]
             },
             {
+                "type": "p/mediaServices/awsManagement",
+                "label": "admin.mediaServices.awsManagement",
+                "components": [
+                    "aws-transcription-management"
+                ]
+            },
+            {
                 "type": "p/stateOfArkcase",
                 "label": "admin.stateOfArkcase.title",
                 "icon": "fa fa-wrench",
@@ -1463,4 +1666,3 @@
         ]
     }
 }
-

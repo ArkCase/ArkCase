@@ -12,7 +12,7 @@
             <div class="col-sm-6 form-group">
                 <label for="status" translate>timeTracking.comp.newTimesheet.status</label>
                 <select id="status" ng-model="timesheet.status" class="form-control input-md"
-                        ng-disabled="timesheetProperties.useApprovalWorkflow === 'true'" required>
+                        ng-disabled="timesheetProperties['time.plugin.useApprovalWorkflow']" required>
                     <option ng-repeat="option in timesheetStatuses" value="{{option.key}}">
                         {{option.value | translate}}
                     </option>
@@ -179,7 +179,7 @@
                 </div>
             </div>
         </div>
-        <div class="panel panel-default" ng-show="timesheetProperties.useApprovalWorkflow === 'true'">
+        <div class="panel panel-default" ng-show="timesheetProperties['time.plugin.useApprovalWorkflow']">
             <div class="panel-heading">
                 <h4 class="panel-title">
                     <a data-toggle="collapse" data-parent="#accordion4" href="#collapseApprovers" translate>timeTracking.comp.newTimesheet.approver.title</a>
@@ -208,7 +208,7 @@
             <span translate>timeTracking.comp.newTimesheet.cancelButton</span>
         </button>
         <button type="button" ng-disabled="timesheetForm.$invalid || loading" class="btn btn-primary btn-sm" data-toggle="tooltip"
-                data-title="Send for Approval" ng-click="sendForApproval()" ng-show="isApproverAdded && timesheetProperties.useApprovalWorkflow === 'true'">
+                data-title="Send for Approval" ng-click="sendForApproval()" ng-show="isApproverAdded && timesheetProperties['time.plugin.useApprovalWorkflow']">
             <span translate>timeTracking.comp.newTimesheet.sendForApproval</span>
         </button>
         <button type="submit" ng-disabled="timesheetForm.$invalid || loading" class="btn btn-primary btn-sm" data-toggle="tooltip"

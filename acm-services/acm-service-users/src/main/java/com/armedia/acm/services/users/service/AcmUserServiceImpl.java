@@ -32,10 +32,15 @@ import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 
+import com.armedia.acm.services.users.model.ApplicationRolesToPrivilegesConfig;
 import org.mule.api.MuleException;
 import org.springframework.security.core.Authentication;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -46,6 +51,10 @@ public class AcmUserServiceImpl implements AcmUserService
     private UserDao userDao;
 
     private ExecuteSolrQuery executeSolrQuery;
+
+    private AcmUserRoleService userRoleService;
+
+    private ApplicationRolesToPrivilegesConfig rolesToPrivilegesConfig;
 
     /**
      * queries each user for given id's and returns list of users
@@ -113,6 +122,27 @@ public class AcmUserServiceImpl implements AcmUserService
                 sortBy + " " + sortDirection);
     }
 
+    @Override
+    public Set<String> getUserPrivileges(String name)
+    {
+        Set<String> userPrivileges = new HashSet<>();
+        Set<String> userRoles = getUserRoleService().getUserRoles(name);
+        Map<String, String> rolesPrivileges = getRolesToPrivilegesConfig().getRolesToPrivileges();
+        for (Map.Entry<String, String> entry : rolesPrivileges.entrySet())
+        {
+            if(userRoles.contains(entry.getKey()))
+            {
+                String[] privileges = entry.getValue().split(",");
+                for(int i = 0; i < privileges.length; i++ )
+                {
+                    userPrivileges.add(privileges[i]);
+                }
+            }
+        }
+        return userPrivileges;
+    }
+
+
     public void setUserDao(UserDao userDao)
     {
         this.userDao = userDao;
@@ -128,4 +158,19 @@ public class AcmUserServiceImpl implements AcmUserService
         this.executeSolrQuery = executeSolrQuery;
     }
 
+    public AcmUserRoleService getUserRoleService() {
+        return userRoleService;
+    }
+
+    public void setUserRoleService(AcmUserRoleService userRoleService) {
+        this.userRoleService = userRoleService;
+    }
+
+    public ApplicationRolesToPrivilegesConfig getRolesToPrivilegesConfig() {
+        return rolesToPrivilegesConfig;
+    }
+
+    public void setRolesToPrivilegesConfig(ApplicationRolesToPrivilegesConfig rolesToPrivilegesConfig) {
+        this.rolesToPrivilegesConfig = rolesToPrivilegesConfig;
+    }
 }

@@ -30,6 +30,7 @@ package com.armedia.acm.auth;
 import static java.time.temporal.ChronoUnit.DAYS;
 
 import com.armedia.acm.core.AcmApplication;
+import com.armedia.acm.core.ApplicationConfig;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.pluginmanager.service.AcmPluginManager;
@@ -37,8 +38,8 @@ import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.web.api.MDCConstants;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.slf4j.MDC;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -58,12 +59,13 @@ import java.util.Map;
 public class AcmLoginSuccessOperations
 {
     private static final int DAYS_TO_PASSWORD_EXPIRATION = 10;
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
     private AcmPluginManager acmPluginManager;
     private AcmApplication acmApplication;
     private UserDao userDao;
     private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
     private ObjectConverter objectConverter;
+    private ApplicationConfig applicationConfig;
 
     public void onSuccessfulAuthentication(HttpServletRequest request, Authentication authentication)
     {
@@ -147,7 +149,16 @@ public class AcmLoginSuccessOperations
 
     private String getAlfrescoUserIdLdapAttributeValue(AcmUser acmUser)
     {
-        switch (getAcmApplication().getAlfrescoUserIdLdapAttribute().toLowerCase())
+        /*
+         * alfrescoUserIdLdapAttribute controls the user id that is sent to Alfresco in the
+         * X-Alfresco-Remote-User header, so that Alfresco knows who the real user is. In
+         * Kerberos and CAC (smart card) environments, sometimes the ArkCase user id is not the
+         * same as the Alfresco user id... The ArkCase user id could be "david.miller@armedia.com"
+         * and the Alfresco user id would be some number from the smart card, e.g. "9283923892".
+         * So with this attribute we can control what is sent to Alfresco.
+         * Valid values: uid, samAccountName, userPrincipalName, distinguishedName
+         */
+        switch (applicationConfig.getAlfrescoUserIdLdapAttribute().toLowerCase())
         {
         case "samaccountname":
             return acmUser.getsAMAccountName();
@@ -213,12 +224,12 @@ public class AcmLoginSuccessOperations
         HttpSession session = request.getSession(true);
 
         session.setAttribute("acm_application", getAcmApplication());
-
+        session.setAttribute("issue_collector_flag", applicationConfig.getIssueCollectorFlag());
         String json = getObjectConverter().getJsonMarshaller().marshal(getAcmApplication().getObjectTypes());
         json = json == null || "null".equals(json) ? "[]" : json;
         session.setAttribute("acm_object_types", json);
 
-        log.debug("Added ACM application named '{}' to user session.", getAcmApplication().getApplicationName());
+        log.debug("Added ACM application named '{}' to user session.", applicationConfig.getApplicationName());
 
     }
 
@@ -284,5 +295,10 @@ public class AcmLoginSuccessOperations
     public void setObjectConverter(ObjectConverter objectConverter)
     {
         this.objectConverter = objectConverter;
+    }
+
+    public void setApplicationConfig(ApplicationConfig applicationConfig)
+    {
+        this.applicationConfig = applicationConfig;
     }
 }
