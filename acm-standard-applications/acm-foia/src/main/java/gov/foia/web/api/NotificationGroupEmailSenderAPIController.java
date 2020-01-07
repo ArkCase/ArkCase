@@ -29,8 +29,8 @@ package gov.foia.web.api;
 
 import com.armedia.acm.services.users.model.AcmUser;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -46,7 +46,7 @@ import gov.foia.service.NotificationGroupEmailSenderService;
 @RequestMapping({ "/api/v1/plugin/casefile", "/api/latest/plugin/casefile" })
 public class NotificationGroupEmailSenderAPIController
 {
-    private final Logger log = LoggerFactory.getLogger(this.getClass());
+    private final Logger log = LogManager.getLogger(this.getClass());
     private NotificationGroupEmailSenderService notificationGroupEmailSenderService;
 
     @RequestMapping(value = "/{caseId}/notification/{notificationGroup}/email", method = RequestMethod.PUT)

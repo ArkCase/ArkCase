@@ -42,8 +42,8 @@ import com.armedia.acm.plugins.dashboard.model.widget.WidgetRolePersistenceEvent
 import com.armedia.acm.plugins.dashboard.model.widget.WidgetRoleUpdatedEvent;
 import com.armedia.acm.plugins.dashboard.model.widget.WidgetUpdatedEvent;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.security.core.Authentication;
@@ -56,7 +56,7 @@ import java.util.List;
 public class WidgetEventPublisher implements ApplicationEventPublisherAware
 {
 
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private transient final Logger log = LogManager.getLogger(getClass());
     private ApplicationEventPublisher eventPublisher;
 
     @Override

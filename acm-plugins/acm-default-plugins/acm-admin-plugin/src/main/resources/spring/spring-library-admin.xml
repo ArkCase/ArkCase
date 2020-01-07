@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:task="http://www.springframework.org/schema/task"
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns="http://www.springframework.org/schema/beans" xmlns:aop="http://www.springframework.org/schema/aop" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
-       http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-4.1.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+         http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
 
     <bean id="adminPlugin" class="com.armedia.acm.pluginmanager.model.AcmPlugin">
         <property name="pluginName" value="Admin Plugin"/>
@@ -50,16 +50,9 @@
         <property name="configurationContainer" ref="configurationContainer"/>
     </bean>
 
-    <bean id="googleAnalyticsConfigurationFile" class="java.io.File">
-        <constructor-arg value="${user.home}/.arkcase/acm/googleAnalytics.properties"/>
-    </bean>
-
     <bean id="googleAnalyticsConfigService" class="com.armedia.acm.plugins.admin.service.GoogleAnalyticsConfigService">
-        <property name="configFile" ref="googleAnalyticsConfigurationFile"/>
-    </bean>
-
-    <bean id="angularPropertiesManagementService" class="com.armedia.acm.plugins.admin.service.JsonPropertiesManagementService">
-        <property name="propertiesFileLocation" value="#{ systemProperties ['user.home'] }/.arkcase/acm/app-properties/properties.json"/>
+        <property name="config" ref="googleAnalyticsConfig"/>
+        <property name="configurationPropertyService" ref="configurationPropertyService"/>
     </bean>
 
     <!-- Roles Privileges API-->
@@ -76,18 +69,16 @@
         <property name="configurationPropertyService" ref="configurationPropertyService"/>
     </bean>
 
-    <task:scheduler id="historyCleanScheduler" pool-size="1"/>
-
-    <!-- How often to purge older history events. -->
-    <task:scheduled-tasks scheduler="historyCleanScheduler">
-        <task:scheduled ref="historyCleanJob" method="cleanHistory" cron="0 0 0/6 * * *"/>
-    </task:scheduled-tasks>
-
     <bean id="historyCleanJob" class="com.armedia.acm.plugins.admin.service.HistoryCleanService">
-        <property name="jsonPropertiesManagementService" ref="angularPropertiesManagementService"/>
+        <property name="applicationPropertiesManagementService" ref="applicationPropertiesManagementService"/>
         <property name="auditDao" ref="auditDao"/>
         <property name="notificationDao" ref="notificationDao"/>
         <property name="executeSolrQuery" ref="executeSolrQuery"/>
+        <property name="applicationConfig" ref="applicationProperties"/>
+    </bean>
+
+    <bean id="cleanHistoryJobDescriptor" class="com.armedia.acm.plugins.admin.service.CleanHistoryJobDescriptor" parent="acmJobDescriptor">
+        <property name="historyCleanService" ref="historyCleanJob"/>
     </bean>
 
     <bean id="ldapDirectoryConfig" class="com.armedia.acm.plugins.admin.model.LdapDirectoryConfig">
@@ -98,13 +89,13 @@
         <property name="ldapConfigurationLocation" value="#{ systemProperties ['user.home'] }/.arkcase/acm/spring/"/>
         <property name="ldapFile" value="spring-config-%s-ldap.xml"/>
         <property name="ldapPropertiesFile" value="spring-config-%s-ldap.properties"/>
-        <property name="ldapPropertiesFileRegex" value="^spring[-d]config[-d][a-zA-Z0-9.]+[-d]ldap.properties$"/>
+        <property name="ldapPropertiesFileRegex" value="^spring[-d]config[-d][a-zA-Z0-9._]+[-d]ldap.properties$"/>
         <property name="ldapUserPropertiesFile" ref="ldapAddUserPropertiesFile"/>
-        <property name="ldapUserPropertiesFileRegex" value="^spring[-d]config[-d]user[-d][a-zA-Z0-9-.]+.properties$"/>
-        <property name="ldapUserFileRegex" value="^spring[-d]config[-d]user[-d][a-zA-Z0-9-.]+.xml$"/>
+        <property name="ldapUserPropertiesFileRegex" value="^spring[-d]config[-d]user[-d][a-zA-Z0-9-._]+.properties$"/>
+        <property name="ldapUserFileRegex" value="^spring[-d]config[-d]user[-d][a-zA-Z0-9-._]+.xml$"/>
         <property name="ldapGroupPropertiesFile" ref="ldapAddGroupPropertiesFile"/>
-        <property name="ldapGroupPropertiesFileRegex" value="^spring[-d]config[-d]group[-d][a-zA-Z0-9-.]+.properties$"/>
-        <property name="ldapGroupFileRegex" value="^spring[-d]config[-d]group[-d][a-zA-Z0-9-.]+.xml$"/>
+        <property name="ldapGroupPropertiesFileRegex" value="^spring[-d]config[-d]group[-d][a-zA-Z0-9-._]+.properties$"/>
+        <property name="ldapGroupFileRegex" value="^spring[-d]config[-d]group[-d][a-zA-Z0-9-._]+.xml$"/>
     </bean>
 
     <bean id="openLdapTemplateConfig" class="com.armedia.acm.plugins.admin.model.LdapTemplateConfig">
@@ -163,17 +154,41 @@
         </property>
     </bean>
 
-    <bean id="holidayConfigurationService" class="com.armedia.acm.plugins.admin.service.HolidayConfigurationService">
-        <property name="holidayFile" value="file:${user.home}/.arkcase/acm/holidayFile.json"/>
-        <property name="objectConverter" ref="objectConverter"/>
-    </bean>
-
     <bean id="pdfConversionConfigurationService" class="com.armedia.acm.plugins.admin.service.PDFConversionConfigurationService">
         <property name="pdfConversionConfig" ref="pdfConversionConfig"/>
+        <property name="configurationPropertyService" ref="configurationPropertyService"/>
+    </bean>
+
+    <bean id="documentUploadPolicyConfigurationService" class="com.armedia.acm.plugins.admin.service.DocumentUploadPolicyConfigurationService">
+        <property name="documentUploadPolicyConfig" ref="documentUploadPolicyConfig"/>
         <property name="configurationPropertyService" ref="configurationPropertyService"/>
     </bean>
 
     <bean id="pdfConversionConfig" class="com.armedia.acm.plugins.admin.model.PdfConversionConfig" scope="refresh">
         <aop:scoped-proxy/>
     </bean>
+
+    <bean id="documentUploadPolicyConfig" class="com.armedia.acm.plugins.admin.model.DocumentUploadPolicyConfig" scope="refresh">
+        <aop:scoped-proxy/>
+    </bean>
+
+    <bean id="objectTitleConfiguration" class="com.armedia.acm.plugins.admin.model.ObjectTitleConfig" scope="refresh">
+        <property name="jsonUnmarshaller" ref="jsonUnmarshaller"/>
+        <aop:scoped-proxy proxy-target-class="true"/>
+    </bean>
+
+    <bean id="objectTitleConfigurationService" class="com.armedia.acm.plugins.admin.service.ObjectTitleConfigurationService">
+        <property name="configurationPropertyService" ref="configurationPropertyService"/>
+        <property name="objectTitleConfiguration" ref="objectTitleConfiguration" />
+    </bean>
+
+    <bean id="googleAnalyticsConfig" class="com.armedia.acm.plugins.admin.model.GoogleAnalyticsConfig" scope="refresh">
+        <aop:scoped-proxy/>
+    </bean>
+
+    <bean id="applicationPropertiesManagementService" class="com.armedia.acm.plugins.admin.service.ApplicationPropertiesManagementService">
+        <property name="confApplicationConfig" ref="applicationProperties"/>
+        <property name="configurationPropertyService" ref="configurationPropertyService"/>
+    </bean>
+
 </beans>

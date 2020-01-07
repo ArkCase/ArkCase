@@ -29,19 +29,19 @@ angular.module('admin').controller('Admin.SecurityEmailSenderConfigurationContro
     $scope.changeEncryption = function(encryptionType) {
         switch (encryptionType) {
         case 'off':
-            $scope.emailSenderConfigDataModel.port = 25;
+            $scope.emailSenderConfigDataModel['email.sender.port'] = 25;
             break;
         case 'ssl-tls':
-            $scope.emailSenderConfigDataModel.port = 465;
+            $scope.emailSenderConfigDataModel['email.sender.port'] = 465;
             break;
         case 'starttls':
-            $scope.emailSenderConfigDataModel.port = 587;
+            $scope.emailSenderConfigDataModel['email.sender.port'] = 587;
         }
     };
 
     $scope.validateSmtpConfiguration = function(smtpConfiguration) {
         EmailSenderConfigurationService.validateSmtpConfiguration(smtpConfiguration).then(function(res) {
-            if (res.data && $scope.emailSenderConfigDataModel.host) {
+            if (res.data && $scope.emailSenderConfigDataModel['email.sender.host']) {
                 $scope.isSmtpValid = true;
             } else {
                 $scope.isSmtpValid = false;

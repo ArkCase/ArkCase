@@ -35,22 +35,20 @@ import static gov.foia.model.FOIAConstants.NEW_FILE;
 
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
-import com.armedia.acm.core.exceptions.CorrespondenceMergeFieldVersionException;
 import com.armedia.acm.plugins.casefile.pipeline.CaseFilePipelineContext;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.pipeline.handler.PipelineHandler;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import gov.foia.dao.FOIARequestDao;
 import gov.foia.model.FOIAConstants;
 import gov.foia.model.FOIADocumentDescriptor;
 import gov.foia.model.FOIARequest;
 import gov.foia.service.DocumentGenerator;
-import gov.foia.service.DocumentGeneratorException;
 import gov.foia.service.FOIADocumentGeneratorService;
 
 /**
@@ -66,7 +64,7 @@ public class RequestDocumentHandler implements PipelineHandler<FOIARequest, Case
     /**
      * Logger instance.
      */
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private transient final Logger log = LogManager.getLogger(getClass());
 
     @Override
     public void execute(FOIARequest request, CaseFilePipelineContext ctx)
@@ -93,7 +91,7 @@ public class RequestDocumentHandler implements PipelineHandler<FOIARequest, Case
                     ecmFile = documentGenerator.generateAndUpload(documentDescriptor, businessObject, targetFolderId, arkcaseFilename,
                             documentGeneratorService.getReportSubstitutions(businessObject));
                 }
-                catch (CorrespondenceMergeFieldVersionException e)
+                catch (Exception e)
                 {
                     throw new PipelineProcessException(e);
                 }
@@ -104,7 +102,7 @@ public class RequestDocumentHandler implements PipelineHandler<FOIARequest, Case
                     ctx.addProperty(FILE_ID, ecmFile.getId());
                 }
             }
-            catch (DocumentGeneratorException e)
+            catch (Exception e)
             {
                 throw new PipelineProcessException(e);
             }

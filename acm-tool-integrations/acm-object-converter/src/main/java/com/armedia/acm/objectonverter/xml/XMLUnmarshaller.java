@@ -34,8 +34,8 @@ import com.armedia.acm.objectonverter.AcmUnmarshaller;
 import com.google.common.base.Charsets;
 
 import org.apache.commons.lang3.NotImplementedException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -56,7 +56,7 @@ import java.util.Collection;
 public class XMLUnmarshaller implements AcmUnmarshaller
 {
 
-    private Logger LOG = LoggerFactory.getLogger(getClass());
+    private Logger LOG = LogManager.getLogger(getClass());
 
     @Override
     public <E> E unmarshall(String source, Class<E> c)
@@ -65,7 +65,12 @@ public class XMLUnmarshaller implements AcmUnmarshaller
         try
         {
             InputStream inputStream = new ByteArrayInputStream(source.getBytes(Charsets.UTF_8));
-            DocumentBuilder documentBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+            DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+            dbf.setFeature( "http://apache.org/xml/features/disallow-doctype-decl", true);
+            dbf.setFeature("http://xml.org/sax/features/external-general-entities", false);
+            dbf.setFeature("http://xml.org/sax/features/external-parameter-entities", false);
+            dbf.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
+            DocumentBuilder documentBuilder = dbf.newDocumentBuilder();
             Document document = documentBuilder.parse(inputStream);
             Element element = document.getDocumentElement();
 

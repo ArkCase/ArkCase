@@ -43,6 +43,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import gov.foia.model.FOIARequest;
 import gov.foia.model.PortalFOIARequestStatus;
@@ -165,6 +166,83 @@ public class FOIARequestDao extends AcmAbstractDao<FOIARequest>
         }
 
         return requestStatusList;
+    }
+
+    /**
+     * @param portalUserId
+     * @return
+     */
+    public List<PortalFOIARequestStatus> getExternalRequests(String portalUserId)
+    {
+        String queryText = "SELECT cf.caseNumber, cf.status, cf.modified, cf.publicFlag, cf.requestType FROM FOIARequest cf JOIN PersonAssociation pa JOIN pa.person p"
+                + " WHERE cf.id = pa.parentId"
+                + " AND pa.parentType='CASE_FILE'"
+                + " AND pa.personType = 'Requester'";
+
+        if (portalUserId != null)
+        {
+            queryText += " AND p.id = :portalUserId";
+        }
+
+        TypedQuery<Object[]> foiaRequests = getEm().createQuery(queryText, Object[].class);
+
+        if (portalUserId != null)
+        {
+            foiaRequests.setParameter("portalUserId", Long.valueOf(portalUserId));
+        }
+
+        List<Object[]> resultList = foiaRequests.getResultList();
+
+        return resultList.stream().map(this::mapRequestStatus).collect(Collectors.toList());
+    }
+
+    /**
+     * @param portalUserId
+     * @param requestId
+     * @return
+     */
+    public PortalFOIARequestStatus getExternalRequest(String portalUserId, String requestId)
+    {
+        String queryText = "SELECT cf.caseNumber, cf.status, cf.modified, cf.publicFlag, cf.requestType FROM FOIARequest cf JOIN PersonAssociation pa JOIN pa.person p"
+                + " WHERE cf.id = pa.parentId"
+                + " AND pa.parentType='CASE_FILE'"
+                + " AND pa.personType = 'Requester'";
+
+        if (portalUserId != null)
+        {
+            queryText += " AND p.id = :portalUserId";
+        }
+
+        if (requestId != null)
+        {
+            queryText += " AND cf.caseNumber = :requestId";
+        }
+
+        TypedQuery<Object[]> foiaRequests = getEm().createQuery(queryText, Object[].class);
+
+        if (portalUserId != null)
+        {
+            foiaRequests.setParameter("portalUserId", Long.valueOf(portalUserId));
+        }
+
+        if (portalUserId != null)
+        {
+            foiaRequests.setParameter("requestId", requestId);
+        }
+
+        Object[] result = foiaRequests.getSingleResult();
+        return mapRequestStatus(result);
+    }
+
+    private PortalFOIARequestStatus mapRequestStatus(Object[] r)
+    {
+        PortalFOIARequestStatus requestStatus = new PortalFOIARequestStatus();
+        requestStatus.setRequestId((String) r[0]);
+        requestStatus.setRequestStatus((String) r[1]);
+        requestStatus.setUpdateDate((Date) r[2]);
+        requestStatus.setIsPublic((Boolean) r[3]);
+        requestStatus.setRequestType((String) r[4]);
+        return requestStatus;
     }
 
 }

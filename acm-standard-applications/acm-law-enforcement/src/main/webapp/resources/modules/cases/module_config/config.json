@@ -101,6 +101,16 @@
                 "value": "name ASC"
             },
             {
+                "desc": "cases.tree.sorters.dueDateAsc",
+                "name": "sort-by-due-date-asc",
+                "value": "dueDate_tdt ASC"
+            },
+            {
+                "desc": "cases.tree.sorters.dueDateDesc",
+                "name": "sort-by-due-date-desc",
+                "value": "dueDate_tdt DESC"
+            },
+            {
                 "desc": "cases.tree.sorters.noSort",
                 "name": "",
                 "value": ""
@@ -132,7 +142,9 @@
                     "cost",
                     "tags",
                     "calendar",
-                    "approvalRouting"
+                    "suggestedCases",
+                    "approvalRouting",
+                    "billing"
                 ]
             },
             {
@@ -240,12 +252,31 @@
                 ]
             },
             {
+                "type": "p/CASE_FILE/suggestedCases",
+                "label": "cases.tree.nodeTypes.suggestedCases.label",
+                "icon": "fa fa-files-o",
+                "components": [
+                    "suggestedCases"
+                ]
+            },
+            {
                 "type": "p/CASE_FILE/apr",
                 "label": "cases.tree.nodeTypes.approvalRouting.label",
                 "icon": "fa fa-sort-amount-desc",
                 "components": [
                     "approvalRouting"
                 ]
+            },
+            {
+                "type": "p/CASE_FILE/billing",
+                "label": "cases.tree.nodeTypes.billing.label",
+                "icon": "fa fa-pencil-square-o",
+                "components": [
+                    "billing"
+                ],
+                "requiredPrivileges": [
+                    "acmListBillingItemsPrivilege"
+                    ]
             },
             {
                 "type": "p/ERROR",
@@ -993,8 +1024,7 @@
                 {
                     "name": "eventType",
                     "displayName": "cases.comp.history.table.columns.eventType",
-                    "headerCellFilter": "translate",
-                    "cellTemplate": "<div> <span ng-if='row.entity.parentObjectType'>{{('common.objectTypes.'+row.entity.parentObjectType) | translate}} Updated - </span> {{row.entity.eventDescription || row.entity.eventType}}</div>"
+                    "headerCellFilter": "translate"
                 },
                 {
                     "name": "eventDate",
@@ -1487,6 +1517,132 @@
             ],
             "paginationPageSize": 10,
             "start": 0
+        },
+        {
+            "id": "billing",
+            "title": "cases.comp.billing.title",
+            "icon": "fa fa-pencil-square-o",
+            "enabled": true,
+            "showColumnFooter": true,
+            "type": "grid",
+            "columnDefs": [
+                {
+                    "name": "itemNumber",
+                    "field": "itemNumber",
+                    "displayName": "cases.comp.billing.table.columns.item",
+                    "headerCellFilter": "translate",
+                    "width": "15%"
+                },
+                {
+                    "name": "itemDescription",
+                    "field": "itemDescription",
+                    "displayName": "cases.comp.billing.table.columns.description",
+                    "headerCellFilter": "translate",
+                    "footerCellTemplate": "<div class='ui-grid-cell-contents pull-right'>Total: </div>",
+                    "width": "*"
+                },
+                {
+                    "name": "itemAmount",
+                    "field": "itemAmount",
+                    "displayName": "cases.comp.billing.table.columns.amount",
+                    "headerCellFilter": "translate",
+                    "aggregationType": 2,
+                    "footerCellFilter": "currency",
+                    "aggregationHideLabel": true,
+                    "cellTemplate": "<div>{{ row.entity.itemAmount | currency }}</div>",
+                    "width": "20%"
+                }
+            ]
+        },
+        {
+            "id": "listInvoices",
+            "title": "cases.comp.billing.title",
+            "icon": "fa fa-pencil-square-o",
+            "enabled": true,
+            "showColumnFooter": true,
+            "type": "grid",
+            "columnDefs": [
+                {
+                    "name": "invoiceNumber",
+                    "field": "invoiceNumber",
+                    "displayName": "cases.comp.billing.invoice.table.columns.invoiceNumber",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "creator",
+                    "field": "creator",
+                    "displayName": "cases.comp.billing.invoice.table.columns.creator",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "created",
+                    "field": "created",
+                    "displayName": "cases.comp.billing.invoice.table.columns.created",
+                    "cellTemplate": "<div>{{ row.entity.created | date:'yyyy-MM-dd HH:mm:ss' }}</div>",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "view",
+                    "field": "view",
+                    "displayName": "",
+                    "cellTemplate": "<button class='btn btn-info btn-xs' style='margin-left:6px;margin-top:3px' ng-dblclick='grid.appScope.toggle()' ng-click='grid.appScope.viewInvoice(row.entity)' translate>cases.comp.billing.invoice.table.columns.view</button>",
+                    "width": 50,
+                    "enableSorting": false,
+                    "enableColumnMenu": false
+                }
+            ]
+        },
+        {
+            "id": "suggestedCases",
+            "title": "cases.comp.suggestedCases.title",
+            "icon": "fa fa-files-o",
+            "enabled": true,
+            "configurable": true,
+            "type": "grid",
+            "enableFiltering": true,
+            "paginationPageSizes": [
+                5,
+                10,
+                20,
+                50
+            ],
+            "paginationPageSize": 10,
+            "columnDefs": [
+                {
+                    "name": "caseNumber",
+                    "displayName": "cases.comp.suggestedCases.table.columns.number",
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity, true)'>{{row.entity.caseNumber}}</a>"
+                },
+                {
+                    "name": "caseTitle",
+                    "displayName": "cases.comp.suggestedCases.table.columns.title",
+                    "headerCellFilter": "translate"
+
+                },
+                {
+                    "name": "objectType",
+                    "displayName": "cases.comp.suggestedCases.table.columns.referenceType",
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<div class='ui-grid-cell-contents'>{{ grid.appScope.getObjectTypeValue(row.entity.objectType) | translate }}</div>"
+                },
+                {
+                    "name": "modifiedDate",
+                    "displayName": "cases.comp.suggestedCases.table.columns.modified",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "caseStatus",
+                    "displayName": "cases.comp.suggestedCases.table.columns.status",
+                    "headerCellFilter": "translate"
+                }
+
+            ],
+            "objectTypeValue":{
+                "CASE_FILE": "admin.application.objectTitleConfiguration.caseFile",
+                "COMPLAINT": "admin.application.objectTitleConfiguration.complaint"
+            }
         }
+
     ]
 }

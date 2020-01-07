@@ -57,8 +57,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.test.context.ContextConfiguration;
@@ -72,7 +72,7 @@ import java.util.Map;
 @ContextConfiguration(locations = { "/spring/spring-library-task-activiti-test.xml" })
 public class BuckslipActivitiIT extends EasyMockSupport
 {
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private transient final Logger log = LogManager.getLogger(getClass());
     @Autowired
     private ProcessEngine pe;
     @Autowired

@@ -32,6 +32,7 @@ import com.armedia.acm.core.exceptions.AcmOutlookCreateItemFailedException;
 import com.armedia.acm.core.exceptions.AcmOutlookItemNotFoundException;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.service.outlook.model.AcmOutlookUser;
+import com.armedia.acm.service.outlook.model.OutlookConfig;
 import com.armedia.acm.service.outlook.model.OutlookFolder;
 import com.armedia.acm.service.outlook.model.OutlookFolderPermission;
 import com.armedia.acm.service.outlook.service.OutlookFolderRecreator;
@@ -41,8 +42,8 @@ import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -59,7 +60,7 @@ public class DefaultOutlookFolderRecreator implements OutlookFolderRecreator
     /**
      * Logger instance.
      */
-    private final Logger log = LoggerFactory.getLogger(getClass());
+    private final Logger log = LogManager.getLogger(getClass());
 
     private Map<String, CalendarFolderHandler> folderHandlers;
 
@@ -67,15 +68,7 @@ public class DefaultOutlookFolderRecreator implements OutlookFolderRecreator
 
     private OutlookFolderService outlookFolderService;
 
-    private List<String> participantsTypesForOutlookFolder;
-
-    private String defaultAccess;
-
-    private String approverAccess;
-
-    private String assigneeAccess;
-
-    private String followerAccess;
+    private OutlookConfig outlookConfig;
 
     @Override
     @Transactional
@@ -107,7 +100,8 @@ public class DefaultOutlookFolderRecreator implements OutlookFolderRecreator
     private List<OutlookFolderPermission> mapParticipantsToFolderPermission(List<AcmParticipant> participantsForObject)
     {
         List<OutlookFolderPermission> folderPermissionsToBeAdded = new LinkedList<>();
-        if (participantsTypesForOutlookFolder == null || participantsTypesForOutlookFolder.isEmpty())
+        if (outlookConfig.getParticipantsTypesAsOutlookPermission() == null
+                || outlookConfig.getParticipantsTypesAsOutlookPermission().isEmpty())
         {
             // this will cause all permissions in folder to be removed
             log.warn("There are not defined participants types to include");
@@ -116,7 +110,7 @@ public class DefaultOutlookFolderRecreator implements OutlookFolderRecreator
         {
             for (AcmParticipant ap : participantsForObject)
             {
-                if (participantsTypesForOutlookFolder.contains(ap.getParticipantType()))
+                if (outlookConfig.getParticipantTypes().contains(ap.getParticipantType()))
                 {
                     // add participant to access calendar folder
                     AcmUser user = userDao.findByUserId(ap.getParticipantLdapId());
@@ -129,9 +123,9 @@ public class DefaultOutlookFolderRecreator implements OutlookFolderRecreator
                     switch (ap.getParticipantType())
                     {
                     case "follower":
-                        if (followerAccess != null)
+                        if (outlookConfig.getFollowerAccess() != null)
                         {
-                            outlookFolderPermission.setLevel(FolderPermissionLevel.valueOf(followerAccess));
+                            outlookFolderPermission.setLevel(FolderPermissionLevel.valueOf(outlookConfig.getFollowerAccess()));
                             break;
                         }
                         else
@@ -140,9 +134,9 @@ public class DefaultOutlookFolderRecreator implements OutlookFolderRecreator
                             break;
                         }
                     case "assignee":
-                        if (assigneeAccess != null)
+                        if (outlookConfig.getAssigneeAccess() != null)
                         {
-                            outlookFolderPermission.setLevel(FolderPermissionLevel.valueOf(assigneeAccess));
+                            outlookFolderPermission.setLevel(FolderPermissionLevel.valueOf(outlookConfig.getAssigneeAccess()));
                             break;
                         }
                         else
@@ -151,9 +145,9 @@ public class DefaultOutlookFolderRecreator implements OutlookFolderRecreator
                             break;
                         }
                     case "approver":
-                        if (approverAccess != null)
+                        if (outlookConfig.getApproverAccess() != null)
                         {
-                            outlookFolderPermission.setLevel(FolderPermissionLevel.valueOf(approverAccess));
+                            outlookFolderPermission.setLevel(FolderPermissionLevel.valueOf(outlookConfig.getApproverAccess()));
                             break;
                         }
                         else
@@ -162,9 +156,9 @@ public class DefaultOutlookFolderRecreator implements OutlookFolderRecreator
                             break;
                         }
                     default:
-                        if (defaultAccess != null)
+                        if (outlookConfig.getDefaultAccess() != null)
                         {
-                            outlookFolderPermission.setLevel(FolderPermissionLevel.valueOf(defaultAccess));
+                            outlookFolderPermission.setLevel(FolderPermissionLevel.valueOf(outlookConfig.getDefaultAccess()));
                             break;
                         }
                         else
@@ -203,49 +197,13 @@ public class DefaultOutlookFolderRecreator implements OutlookFolderRecreator
         this.outlookFolderService = outlookFolderService;
     }
 
-    /**
-     * @param participantsTypesForOutlookFolder
-     *            the participantsTypesForOutlookFolder to set
-     */
-    public void setParticipantsTypesForOutlookFolder(List<String> participantsTypesForOutlookFolder)
+    public OutlookConfig getOutlookConfig()
     {
-        this.participantsTypesForOutlookFolder = participantsTypesForOutlookFolder;
+        return outlookConfig;
     }
 
-    /**
-     * @param defaultAccess
-     *            the defaultAccess to set
-     */
-    public void setDefaultAccess(String defaultAccess)
+    public void setOutlookConfig(OutlookConfig outlookConfig)
     {
-        this.defaultAccess = defaultAccess;
+        this.outlookConfig = outlookConfig;
     }
-
-    /**
-     * @param approverAccess
-     *            the approverAccess to set
-     */
-    public void setApproverAccess(String approverAccess)
-    {
-        this.approverAccess = approverAccess;
-    }
-
-    /**
-     * @param assigneeAccess
-     *            the assigneeAccess to set
-     */
-    public void setAssigneeAccess(String assigneeAccess)
-    {
-        this.assigneeAccess = assigneeAccess;
-    }
-
-    /**
-     * @param followerAccess
-     *            the followerAccess to set
-     */
-    public void setFollowerAccess(String followerAccess)
-    {
-        this.followerAccess = followerAccess;
-    }
-
 }

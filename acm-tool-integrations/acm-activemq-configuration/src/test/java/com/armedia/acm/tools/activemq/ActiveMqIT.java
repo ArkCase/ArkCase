@@ -40,8 +40,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jms.core.JmsTemplate;
@@ -72,7 +72,7 @@ import java.util.regex.Pattern;
  */
 public class ActiveMqIT
 {
-    public transient final Logger log = LoggerFactory.getLogger(getClass());
+    public transient final Logger log = LogManager.getLogger(getClass());
 
     private final MessageCounter messageCounter = new MessageCounter();
 

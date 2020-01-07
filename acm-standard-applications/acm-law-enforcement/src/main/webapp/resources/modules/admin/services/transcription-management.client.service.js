@@ -28,6 +28,7 @@ angular.module('admin').factory('Admin.TranscriptionManagementService', [ '$http
                 url: 'api/v1/plugin/admin/transcribe/configuration'
             });
         },
+
         /**
          * @ngdoc method
          * @name saveTranscribeConfiguration
@@ -40,7 +41,6 @@ angular.module('admin').factory('Admin.TranscriptionManagementService', [ '$http
          *
          * @returns {Object} http promise
          */
-
         saveTranscribeConfiguration: function(transcribeConfig) {
             return $http({
                 method: 'POST',
@@ -48,6 +48,25 @@ angular.module('admin').factory('Admin.TranscriptionManagementService', [ '$http
                 data: transcribeConfig
             })
 
+        },
+
+        /**
+         * @ngdoc method
+         * @name getTranscriptionFailureReason
+         * @methodOf admin.service:Admin.TranscriptionManagementService
+         *
+         * @description
+         * Gets transcription failure reason
+         *
+         * @param mediaVersionId - id of the failed media version transcription object
+         *
+         * @returns {Object} http promise
+         */
+        getTranscriptionFailureReason: function(mediaVersionId) {
+            return $http({
+                method: 'GET',
+                url: 'api/v1/service/transcribe/mediaFailure/' + mediaVersionId
+            });
         }
     };
 

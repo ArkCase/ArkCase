@@ -30,8 +30,8 @@ import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.services.sequence.model.AcmSequenceEntity;
 import com.armedia.acm.services.sequence.model.AcmSequenceEntityId;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import javax.persistence.FlushModeType;
 import javax.persistence.NoResultException;
@@ -43,7 +43,7 @@ import javax.persistence.TypedQuery;
  */
 public class AcmSequenceDao extends AcmAbstractDao<AcmSequenceEntity>
 {
-    private final Logger log = LoggerFactory.getLogger(getClass());
+    private final Logger log = LogManager.getLogger(getClass());
 
     @Override
     protected Class<AcmSequenceEntity> getPersistenceClass()

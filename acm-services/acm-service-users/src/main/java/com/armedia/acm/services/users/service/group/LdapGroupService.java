@@ -41,8 +41,8 @@ import com.armedia.acm.services.users.service.ldap.LdapEntryTransformer;
 import com.armedia.acm.spring.SpringContextHolder;
 
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.ldap.NameAlreadyBoundException;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -63,7 +63,7 @@ public class LdapGroupService
 
     private AcmGroupEventPublisher acmGroupEventPublisher;
 
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
 
     @Transactional(rollbackFor = Exception.class)
     public AcmGroup createLdapGroup(AcmGroup group, String directoryName) throws AcmLdapActionFailedException,
@@ -206,14 +206,6 @@ public class LdapGroupService
     {
         AcmLdapSyncConfig ldapSyncConfig = getLdapSyncConfig(directoryName);
 
-        // prevent removing the user from the control group if configured
-        String controlGroup = ldapSyncConfig.getGroupControlGroup();
-        if (parentGroupName.equals(ldapSyncConfig.getGroupControlGroup()))
-        {
-            throw new AcmLdapActionFailedException(
-                    String.format("'%s' group is a required parent system group and group can't be removed from it.", controlGroup));
-        }
-
         AcmGroup acmGroup = groupService.removeGroupMembership(groupName, parentGroupName, true);
         AcmGroup parentGroup = groupService.findByName(parentGroupName);
 
@@ -236,6 +228,11 @@ public class LdapGroupService
     {
         String cnRdn = String.format("cn=%s", cn);
         return MapperUtils.appendToDn(cnRdn, ldapSyncConfig.getGroupSearchBase(), ldapSyncConfig.getBaseDC());
+    }
+
+    public String getControlGroup(String directory)
+    {
+        return getLdapSyncConfig(directory).getGroupControlGroup();
     }
 
     public GroupService getGroupService()

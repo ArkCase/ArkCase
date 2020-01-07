@@ -30,6 +30,7 @@ package com.armedia.acm.form.closecomplaint.service;
  * #L%
  */
 
+import com.armedia.acm.auth.AuthenticationUtils;
 import com.armedia.acm.form.closecomplaint.model.CloseComplaintForm;
 import com.armedia.acm.form.closecomplaint.model.CloseComplaintFormEvent;
 import com.armedia.acm.form.closecomplaint.model.ExistingCase;
@@ -49,9 +50,10 @@ import com.armedia.acm.plugins.complaint.model.ComplaintUpdatedEvent;
 import com.armedia.acm.services.users.model.AcmUserActionName;
 
 import org.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -60,10 +62,10 @@ import java.util.Date;
 /**
  * @author riste.tutureski
  */
-public class CloseComplaintService extends FrevvoFormAbstractService
+public class CloseComplaintService extends FrevvoFormAbstractService implements ApplicationEventPublisherAware
 {
 
-    private Logger LOG = LoggerFactory.getLogger(CloseComplaintService.class);
+    private Logger LOG = LogManager.getLogger(CloseComplaintService.class);
     private ComplaintDao complaintDao;
     private CaseFileDao caseFileDao;
     private CloseComplaintRequestDao closeComplaintRequestDao;
@@ -177,7 +179,8 @@ public class CloseComplaintService extends FrevvoFormAbstractService
             complaint.setStatus("IN APPROVAL");
             Complaint updatedComplaint = getComplaintDao().save(complaint);
 
-            ComplaintUpdatedEvent complaintUpdatedEvent = new ComplaintUpdatedEvent(updatedComplaint);
+            ComplaintUpdatedEvent complaintUpdatedEvent = new ComplaintUpdatedEvent(updatedComplaint,
+                    AuthenticationUtils.getUserIpAddress());
             complaintUpdatedEvent.setSucceeded(true);
             getApplicationEventPublisher().publishEvent(complaintUpdatedEvent);
         }
@@ -319,6 +322,7 @@ public class CloseComplaintService extends FrevvoFormAbstractService
         return applicationEventPublisher;
     }
 
+    @Override
     public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher)
     {
         this.applicationEventPublisher = applicationEventPublisher;

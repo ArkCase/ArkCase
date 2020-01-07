@@ -23,8 +23,8 @@ import com.armedia.acm.spring.SpringContextHolder;
 import org.apache.commons.lang3.StringUtils;
 import org.mule.api.MuleException;
 import org.reflections.Reflections;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.security.access.PermissionEvaluator;
 import org.springframework.security.core.Authentication;
@@ -89,7 +89,7 @@ import java.util.stream.Stream;
  */
 public class ArkPermissionEvaluator implements PermissionEvaluator, InitializingBean
 {
-    private final transient Logger log = LoggerFactory.getLogger(getClass());
+    private final transient Logger log = LogManager.getLogger(getClass());
 
     private ExecuteSolrQuery executeSolrQuery;
     private SearchResults searchResults;
@@ -97,7 +97,6 @@ public class ArkPermissionEvaluator implements PermissionEvaluator, Initializing
     private AcmGroupDao groupDao;
     private UserDao userDao;
     private AccessControlRuleChecker accessControlRuleChecker;
-    private boolean enableDocumentACL;
     private AcmDataService acmDataService;
     private SpringContextHolder springContextHolder;
     private JSONMarshaller jsonMarshaller;
@@ -126,7 +125,8 @@ public class ArkPermissionEvaluator implements PermissionEvaluator, Initializing
             return false;
         }
 
-        if (!isEnableDocumentACL() && (targetType == null || targetType.equals("FILE") || targetType.equals("FOLDER")))
+        if (!dataAccessControlConfig.getEnableDocumentACL()
+                && (targetType == null || targetType.equals("FILE") || targetType.equals("FOLDER")))
         {
             return true;
         }
@@ -437,12 +437,7 @@ public class ArkPermissionEvaluator implements PermissionEvaluator, Initializing
 
     public boolean isEnableDocumentACL()
     {
-        return enableDocumentACL;
-    }
-
-    public void setEnableDocumentACL(boolean enableDocumentACL)
-    {
-        this.enableDocumentACL = enableDocumentACL;
+        return dataAccessControlConfig.getEnableDocumentACL();
     }
 
     public AcmDataService getAcmDataService()

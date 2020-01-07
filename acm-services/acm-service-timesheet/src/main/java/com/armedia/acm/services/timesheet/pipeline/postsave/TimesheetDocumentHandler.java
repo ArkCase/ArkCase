@@ -43,15 +43,15 @@ import com.armedia.acm.services.timesheet.model.AcmTimesheet;
 import com.armedia.acm.services.timesheet.pipeline.TimesheetPipelineContext;
 import com.armedia.acm.services.timesheet.service.PDFTimesheetDocumentGenerator;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import javax.xml.parsers.ParserConfigurationException;
 
 public class TimesheetDocumentHandler extends PDFTimesheetDocumentGenerator<AcmTimesheetDao, AcmTimesheet>
         implements PipelineHandler<AcmTimesheet, TimesheetPipelineContext> {
 
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private transient final Logger log = LogManager.getLogger(getClass());
     private FormsTypeCheckService formsTypeCheckService;
 
     @Override

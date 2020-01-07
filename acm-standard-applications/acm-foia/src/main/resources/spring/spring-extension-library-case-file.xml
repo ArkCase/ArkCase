@@ -38,9 +38,9 @@
             <beans:property name="foiaRequestDao" ref="foiaRequestDao"/>
             <beans:property name="holidayConfigurationService" ref="holidayConfigurationService"/>
             <beans:property name="arkPermissionEvaluator" ref="arkPermissionEvaluator"/>
-            <beans:property name="extensionWorkingDays" value="#{foiaConfig.requestExtensionWorkingDays}"/>
-            <beans:property name="requestExtensionWorkingDaysEnabled" value="#{foiaConfig.requestExtensionWorkingDaysEnabled}"/>
+            <beans:property name="foiaConfig" ref="foiaConfig"/>
         </beans:bean>
+
         <beans:bean id="foiaConfigurationHandler" class="gov.foia.pipeline.postsave.FOIAConfigurationHandler">
             <beans:property name="foiaConfigurationService" ref="foiaConfigurationService"/>
         </beans:bean>
@@ -96,6 +96,7 @@
             <beans:property name="ecmFileService" ref="ecmFileService"/>
             <beans:property name="pdfService" ref="pdfService"/>
             <beans:property name="ecmFileDao" ref="ecmFileDao"/>
+            <beans:property name="folderAndFilesUtils" ref="folderAndFilesUtils"/>
         </beans:bean>
 
         <beans:bean id="correspondenceDocumentGenerator" class="gov.foia.service.CorrespondenceDocumentGenerator">
@@ -136,12 +137,14 @@
             <beans:property name="requestDao" ref="foiaRequestDao"/>
             <beans:property name="startBusinessProcessService" ref="startBusinessProcessService"/>
             <beans:property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
+            <beans:property name="foiaConfigurationService" ref="foiaConfigurationService"/>
         </beans:bean>
 
         <beans:bean id="scheduledHoldQueuePurger" class="gov.foia.service.ScheduledHoldQueuePurger">
             <beans:property name="requestDao" ref="foiaRequestDao"/>
             <beans:property name="startBusinessProcessService" ref="startBusinessProcessService"/>
             <beans:property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
+            <beans:property name="foiaConfigurationService" ref="foiaConfigurationService"/>
         </beans:bean>
 
         <beans:bean id="responseFolderConverterService" class="gov.foia.service.ResponseFolderConverterService">
@@ -257,6 +260,17 @@
             <beans:property name="responseFolderCompressorService" ref="responseFolderCompressorService"/>
             <beans:property name="foiaRequestFileBrokerClient" ref="foiaRequestFileBrokerClient"/>
             <beans:property name="responseFolderNotifyService" ref="responseFolderNotifyService"/>
+        </beans:bean>
+
+        <beans:bean id="billingQueuePurgerJobDescriptor" class="gov.foia.service.BillingQueuePurgerJobDescriptor" parent="acmJobDescriptor">
+            <beans:property name="billingQueuePurger" ref="scheduledBillingQueuePurger"/>
+        </beans:bean>
+
+        <bean id="foiaRequestTemplateModelProvider" class="gov.foia.model.provider.FOIARequestTemplateModelProvider">
+        </bean>
+
+        <beans:bean id="holdQueuePurgerJobDescriptor" class="gov.foia.service.HoldQueuePurgerJobDescriptor" parent="acmJobDescriptor">
+            <beans:property name="holdQueuePurger" ref="scheduledHoldQueuePurger"/>
         </beans:bean>
 
     </beans:beans>

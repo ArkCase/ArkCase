@@ -40,8 +40,8 @@ import com.google.common.base.Strings;
 import org.apache.commons.lang3.StringUtils;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.slf4j.MDC;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.core.Authentication;
@@ -56,7 +56,7 @@ import java.util.concurrent.CompletableFuture;
 public class ExecuteSolrQuery
 {
 
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
 
     private MuleContextManager muleContextManager;
     private ObjectConverter objectConverter;
@@ -109,7 +109,8 @@ public class ExecuteSolrQuery
             int maxRows, String sort)
             throws MuleException
     {
-        return CompletableFuture.completedFuture(getResultsByPredefinedQuery(auth, core, solrQuery, firstRow, maxRows, sort, true));
+        return CompletableFuture.completedFuture(
+                getResultsByPredefinedQuery(auth, core, solrQuery, firstRow, maxRows, sort, true, "", true, false, "", false, ""));
     }
 
     /**

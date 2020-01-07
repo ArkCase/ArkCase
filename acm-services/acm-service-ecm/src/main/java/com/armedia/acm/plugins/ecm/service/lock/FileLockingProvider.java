@@ -28,12 +28,13 @@ package com.armedia.acm.plugins.ecm.service.lock;
  */
 
 import com.armedia.acm.core.exceptions.AcmObjectLockException;
+import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.service.objectlock.model.AcmObjectLock;
 import com.armedia.acm.service.objectlock.service.AcmObjectLockService;
 import com.armedia.acm.service.objectlock.service.ObjectLockingProvider;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.util.Date;
 
@@ -44,10 +45,16 @@ import java.util.Date;
  */
 public class FileLockingProvider implements ObjectLockingProvider
 {
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
 
     private AcmObjectLockService objectLockService;
     private Long expiryTimeInMilliseconds;
+
+    @Override
+    public String getObjectType()
+    {
+        return EcmFileConstants.OBJECT_FILE_TYPE;
+    }
 
     @Override
     public void checkIfObjectLockCanBeAcquired(Long objectId, String objectType, String lockType, boolean checkChildObjects, String userId)
@@ -226,9 +233,11 @@ public class FileLockingProvider implements ObjectLockingProvider
                 throwErrorOnExistingLockExceptForReadLock(objectId, objectType, lockType, userId, existingLock, false);
                 break;
             case DELETE:
-                throw new AcmObjectLockException(String.format(
-                        "[{}] not able to release object lock[objectId={}, objectType={}, lockType={}]. Reason: Object already has a lock of type {} by user: [{}]",
-                        userId, objectId, objectType, lockType, existingLock.getLockType(), existingLock.getCreator()));
+                log.error(
+                        " {} not able to release object lock[objectId={}, objectType={}, lockType={}]. Reason: Object already has a lock of type {} by user: {}",
+                        userId, objectId, objectType, lockType, existingLock.getLockType(), existingLock.getCreator());
+                throw new AcmObjectLockException(
+                        "Document is locked and can't be modified or moved");
             default:
                 throw new AcmObjectLockException("Unimplemented handling of lock type: " + lockType);
             }
@@ -243,9 +252,10 @@ public class FileLockingProvider implements ObjectLockingProvider
         if (!existingLock.getLockType().equals(FileLockType.READ.name())
                 && (errorOnSameExistingLockType || !existingLock.getLockType().equals(lockType)))
         {
-            throw new AcmObjectLockException(String.format(
-                    "%s not able to acquire object lock[objectId=%s, objectType=%s, lockType=%s]. Reason: Object already has a lock of type %s by user: [%s]",
-                    userId, objectId, objectType, lockType, existingLock.getLockType(), existingLock.getCreator()));
+            log.error(
+                    " {} not able to release object lock[objectId={}, objectType={}, lockType={}]. Reason: Object already has a lock of type {} by user: {}",
+                    userId, objectId, objectType, lockType, existingLock.getLockType(), existingLock.getCreator());
+            throw new AcmObjectLockException(String.format("This document is locked by %s", existingLock.getCreator()));
         }
     }
 

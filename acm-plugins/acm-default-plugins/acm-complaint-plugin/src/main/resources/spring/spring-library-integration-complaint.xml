@@ -64,5 +64,6 @@
         <property name="writePermission" value="editComplaint"/>
         <property name="deletePermission" value="editComplaint"/>
         <property name="folderCreatorDao" ref="outlookFolderCreatorDao"/>
+        <property name="acmObjectUtils" ref="acmObjectUtils"/>
     </bean>
 </beans>

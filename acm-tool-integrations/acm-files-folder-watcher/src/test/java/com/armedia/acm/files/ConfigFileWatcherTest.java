@@ -45,8 +45,8 @@ import org.easymock.Mock;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.context.ApplicationEventPublisher;
 
 import java.io.File;
@@ -72,7 +72,7 @@ public class ConfigFileWatcherTest extends EasyMockSupport
     private FileName mockFileName;
     private ConfigFileWatcher unit;
     private String fileSeparator = File.separator;
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
 
     @Before
     public void setUp() throws Exception

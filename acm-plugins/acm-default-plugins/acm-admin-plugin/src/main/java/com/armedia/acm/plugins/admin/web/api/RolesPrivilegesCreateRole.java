@@ -32,16 +32,14 @@ import com.armedia.acm.plugins.admin.model.RolePrivilegesConstants;
 import com.armedia.acm.plugins.admin.service.RolesPrivilegesService;
 
 import org.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-import java.io.IOException;
 
 /**
  * Created by sergey.kolomiets on 6/2/15.
@@ -50,7 +48,7 @@ import java.io.IOException;
 @RequestMapping({ "/api/v1/plugin/admin", "/api/latest/plugin/admin" })
 public class RolesPrivilegesCreateRole implements RolePrivilegesConstants
 {
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
 
     private RolesPrivilegesService rolesPrivilegesService;
 
@@ -59,8 +57,7 @@ public class RolesPrivilegesCreateRole implements RolePrivilegesConstants
     })
 
     @ResponseBody
-    public String createRole(
-            @RequestBody String resource) throws IOException, AcmRolesPrivilegesException
+    public String createRole(@RequestBody String resource) throws AcmRolesPrivilegesException
     {
 
         try

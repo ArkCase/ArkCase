@@ -150,7 +150,8 @@
                     "cost",
                     "tags",
                     "calendar",
-                    "approvalRouting"
+                    "approvalRouting",
+                    "billing"
                 ]
             },
             {
@@ -271,6 +272,17 @@
                 "icon": "fa fa-sort-amount-desc",
                 "components": [
                     "approvalRouting"
+                ]
+            },
+            {
+                "type": "p/COMPLAINT/billing",
+                "label": "complaints.tree.nodeTypes.billing.label",
+                "icon": "fa fa-pencil-square-o",
+                "components": [
+                    "billing"
+                ],
+                "requiredPrivileges": [
+                    "acmListBillingItemsPrivilege"
                 ]
             },
             {
@@ -1543,6 +1555,80 @@
             ],
             "paginationPageSize": 10,
             "start": 0
+        },
+        {
+            "id": "billing",
+            "title": "complaints.comp.billing.title",
+            "icon": "fa fa-pencil-square-o",
+            "enabled": true,
+            "showColumnFooter": true,
+            "type": "grid",
+            "columnDefs": [
+                {
+                    "name": "itemNumber",
+                    "field": "itemNumber",
+                    "displayName": "complaints.comp.billing.table.columns.item",
+                    "headerCellFilter": "translate",
+                    "width": "15%"
+                },
+                {
+                    "name": "itemDescription",
+                    "field": "itemDescription",
+                    "displayName": "complaints.comp.billing.table.columns.description",
+                    "headerCellFilter": "translate",
+                    "footerCellTemplate": "<div class='ui-grid-cell-contents pull-right'>Total: </div>",
+                    "width": "*"
+                },
+                {
+                    "name": "itemAmount",
+                    "field": "itemAmount",
+                    "displayName": "complaints.comp.billing.table.columns.amount",
+                    "headerCellFilter": "translate",
+                    "aggregationType": 2,
+                    "footerCellFilter": "currency",
+                    "aggregationHideLabel": true,
+                    "cellTemplate": "<div>{{ row.entity.itemAmount | currency }}</div>",
+                    "width": "20%"
+                }
+            ]
+        },
+        {
+            "id": "listInvoices",
+            "title": "complaints.comp.billing.title",
+            "icon": "fa fa-pencil-square-o",
+            "enabled": true,
+            "showColumnFooter": true,
+            "type": "grid",
+            "columnDefs": [
+                {
+                    "name": "invoiceNumber",
+                    "field": "invoiceNumber",
+                    "displayName": "complaints.comp.billing.invoice.table.columns.invoiceNumber",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "creator",
+                    "field": "creator",
+                    "displayName": "complaints.comp.billing.invoice.table.columns.creator",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "created",
+                    "field": "created",
+                    "displayName": "complaints.comp.billing.invoice.table.columns.created",
+                    "cellTemplate": "<div>{{ row.entity.created | date:'yyyy-MM-dd HH:mm:ss' }}</div>",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "view",
+                    "field": "view",
+                    "displayName": "",
+                    "cellTemplate": "<button class='btn btn-info btn-xs' style='margin-left:6px;margin-top:3px' ng-dblclick='grid.appScope.toggle()' ng-click='grid.appScope.viewInvoice(row.entity)' translate>cases.comp.billing.invoice.table.columns.view</button>",
+                    "width": 50,
+                    "enableSorting": false,
+                    "enableColumnMenu": false
+                }
+            ]
         }
     ]
 }

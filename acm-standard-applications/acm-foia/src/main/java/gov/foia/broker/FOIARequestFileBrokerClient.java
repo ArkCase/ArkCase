@@ -37,8 +37,8 @@ import com.armedia.acm.web.api.MDCConstants;
 import com.armedia.broker.AcmFileBrokerClient;
 
 import org.apache.activemq.ActiveMQConnectionFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.slf4j.MDC;
 
 import javax.jms.JMSException;
@@ -59,7 +59,7 @@ import gov.foia.service.ResponseFolderCompressorService;
 public class FOIARequestFileBrokerClient extends AcmFileBrokerClient
 {
 
-    private transient Logger LOG = LoggerFactory.getLogger(getClass());
+    private transient Logger LOG = LogManager.getLogger(getClass());
 
     private ResponseFolderCompressorService responseFolderCompressorService;
     private CaseFileDao caseFileDao;
@@ -110,6 +110,7 @@ public class FOIARequestFileBrokerClient extends AcmFileBrokerClient
         if (!file.exists())
         {
             LOG.error("Required FOIA request release file was not found on file system " + file);
+            return;
         }
 
         Map<String, Object> properties = new HashMap<>();

@@ -2,8 +2,8 @@
 
 angular.module('time-tracking').controller(
         'TimeTracking.TasksController',
-        [ '$scope', '$stateParams', 'UtilService', 'ConfigService', 'Helper.UiGridService', 'TimeTracking.InfoService', 'Helper.ObjectBrowserService', 'LookupService', 'Task.AlertsService', 'Object.TaskService', 'ObjectService', 'ModalDialogService', 'Task.WorkflowService',
-                function($scope, $stateParams, Util, ConfigService, HelperUiGridService, TimeTrackingInfoService, HelperObjectBrowserService, LookupService, TaskAlertsService, ObjectTaskService, ObjectService, ModalDialogService, TaskWorkflowService) {
+        [ '$scope', '$stateParams', 'UtilService', 'ConfigService', 'Helper.UiGridService', 'TimeTracking.InfoService', 'Helper.ObjectBrowserService', 'LookupService', 'Task.AlertsService', 'Object.TaskService', 'ObjectService', 'ModalDialogService', 'Task.WorkflowService', '$timeout',
+                function($scope, $stateParams, Util, ConfigService, HelperUiGridService, TimeTrackingInfoService, HelperObjectBrowserService, LookupService, TaskAlertsService, ObjectTaskService, ObjectService, ModalDialogService, TaskWorkflowService, $timeout) {
 
                     var componentHelper = new HelperObjectBrowserService.Component({
                         scope: $scope,
@@ -57,6 +57,7 @@ angular.module('time-tracking').controller(
                     var retrieveGridData = function() {
                         var currentObjectId = Util.goodMapValue($scope.objectInfo, "id");
                         if (Util.goodPositive(currentObjectId, false)) {
+                            ObjectTaskService.resetChildTasks(ObjectService.ObjectTypes.TIMESHEET, currentObjectId);
                             ObjectTaskService.queryChildTasks(ObjectService.ObjectTypes.TIMESHEET, currentObjectId, Util.goodValue($scope.start, 0), Util.goodValue($scope.pageSize, 10), Util.goodValue($scope.sort.by), Util.goodValue($scope.sort.dir)).then(function(data) {
                                 var tasks = data.response.docs;
                                 angular.forEach(tasks, function(task) {
@@ -86,7 +87,12 @@ angular.module('time-tracking').controller(
                                 taskType: 'ACM_TASK'
                             }
                         };
-                        ModalDialogService.showModal(modalMetadata);
+                        ModalDialogService.showModal(modalMetadata).then(function (value) {
+                            $timeout(function() {
+                                retrieveGridData();
+                                //3 seconds delay so solr can index the new task
+                            }, 3000);
+                        });
                     };
 
                     $scope.isDeleteDisabled = function(rowEntity) {

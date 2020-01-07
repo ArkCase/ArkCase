@@ -34,6 +34,10 @@ import com.armedia.acm.compressfolder.model.CompressNode;
 import com.armedia.acm.plugins.ecm.exception.AcmFolderException;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
 
+import org.springframework.security.core.Authentication;
+
+import java.util.List;
+
 /**
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Sep 20, 2016
  *
@@ -75,6 +79,8 @@ public interface FolderCompressor
      */
     String compressFolder(CompressNode compressNode) throws AcmFolderException;
 
+    String compressFolder(CompressNode compressNode, Authentication authentication) throws AcmFolderException;
+
     /**
      * Compresses the folder contents by using the <code>size</code> and <code>sizeUnit</code> arguments for setting the
      * output file size limit.
@@ -93,7 +99,10 @@ public interface FolderCompressor
      */
     String compressFolder(Long folderId, long size, SizeUnit sizeUnit) throws AcmFolderException;
 
-    String compressFolder(Long folderId, CompressNode compressNode, long size, SizeUnit sizeUnit) throws AcmFolderException;
+    String compressFolder(Long folderId, CompressNode compressNode, long size, SizeUnit sizeUnit)
+            throws AcmFolderException;
+
+    void compressFiles(List<Long> fileIds, Authentication authentication) throws Exception;
 
     /**
      * Returns path for the compressed folder file

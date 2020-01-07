@@ -30,8 +30,8 @@ import com.armedia.acm.auth.AuthenticationUtils;
 import com.armedia.acm.services.sequence.model.AcmSequenceConfiguration;
 import com.armedia.acm.services.sequence.model.AcmSequenceReset;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 
@@ -43,7 +43,7 @@ import java.util.List;
  */
 public class AcmSequenceEventPublisher implements ApplicationEventPublisherAware
 {
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private transient final Logger log = LogManager.getLogger(getClass());
     private ApplicationEventPublisher applicationEventPublisher;
 
     public void publishSequenceConfigurationUpdatedEvent(List<AcmSequenceConfiguration> source)

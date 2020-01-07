@@ -33,8 +33,8 @@ import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import com.armedia.acm.plugins.objectassociation.service.AcmObjectAssociationException;
 import com.armedia.acm.plugins.objectassociation.service.ObjectAssociationService;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
@@ -56,7 +56,7 @@ import java.util.Objects;
 @RequestMapping({ "/api/v1/service/objectassociations", "/api/latest/service/objectassociations" })
 public class ObjectAssociationAPIController
 {
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
 
     private ObjectAssociationService objectAssociationService;
 

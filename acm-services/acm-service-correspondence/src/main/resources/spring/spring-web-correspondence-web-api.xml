@@ -10,6 +10,7 @@
     <bean id="listCorrespondenceTemplatesAPIController"
         class="com.armedia.acm.correspondence.web.api.ListCorrespondenceTemplatesAPIController">
         <property name="contextHolder" ref="acmContextHolder"/>
+        <property name="correspondenceService" ref="correspondenceService"/>
     </bean>
 
 </beans>

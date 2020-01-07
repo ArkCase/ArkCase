@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('admin').controller('Admin.SequenceManagementResetDetailsController', [ '$scope', '$rootScope', '$modalInstance', 'params', 'Util.DateService', 'moment', 'Admin.SequenceManagementResetService', 'MessageService', 'Object.LookupService', '$q', function($scope, $rootScope, $modalInstance, params, UtilDateService, moment, SequenceManagementResetService, MessageService, ObjectLookupService, $q) {
+angular.module('admin').controller('Admin.SequenceManagementResetDetailsController', ['$scope', '$rootScope', '$modalInstance', 'params', 'Util.DateService', 'moment', 'Admin.SequenceManagementResetService', 'MessageService', 'Object.LookupService', '$q', 'Dialog.BootboxService', function ($scope, $rootScope, $modalInstance, params, UtilDateService, moment, SequenceManagementResetService, MessageService, ObjectLookupService, $q, DialogService) {
 
     $scope.config = angular.copy(params.config);
     var data = angular.copy(params.row);
@@ -39,13 +39,21 @@ angular.module('admin').controller('Admin.SequenceManagementResetDetailsControll
     };
     
     $scope.dateSelected = function() {
-      $scope.enableSave = $scope.sequenceReset.resetStartDate == "" ? true : false;  
+        $scope.enableSave = $scope.sequenceReset.resetStartDate == "" ? true : false;
+        var selectedDate = new Date($scope.sequenceReset.resetStartDate);
+        var currentDate = new Date();
+        if (moment(selectedDate).isSame(currentDate, 'day')) {
+            $scope.sameDateWarning = true;
+        }
+        else {
+            $scope.sameDateWarning = false;
+        }
     };
     
     $scope.onClickSave = function(){
 
-        $scope.sequenceReset.resetDate =$scope.sequenceReset.resetStartDate;
-        $scope.sequenceReset.resetRepeatablePeriod = $scope.sequenceReset.resetRepeatPeriodOption == "0" ? $scope.sequenceReset.resetRepeatablePeriod : $scope.resetRepeatPeriodOption;
+        $scope.sequenceReset.resetDate = $scope.sequenceReset.resetStartDate;
+        $scope.sequenceReset.resetRepeatablePeriod = $scope.sequenceReset.resetRepeatPeriodOption == "0" ? $scope.sequenceReset.resetRepeatablePeriod : $scope.sequenceReset.resetRepeatPeriodOption;
 
         SequenceManagementResetService.saveSequenceReset($scope.sequenceReset).success(function () {
             MessageService.succsessAction();

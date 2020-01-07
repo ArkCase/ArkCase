@@ -32,8 +32,8 @@ import com.armedia.acm.pluginmanager.service.AcmPluginManager;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
@@ -43,7 +43,7 @@ import java.util.Map;
 @RequestMapping("/plugin/search")
 public class SearchUiController
 {
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
     private AcmPlugin plugin;
     private AcmPluginManager pluginManager;
 

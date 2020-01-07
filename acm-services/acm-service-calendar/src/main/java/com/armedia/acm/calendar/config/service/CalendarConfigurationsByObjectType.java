@@ -27,9 +27,6 @@ package com.armedia.acm.calendar.config.service;
  * #L%
  */
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -37,7 +34,6 @@ import java.util.Map;
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Mar 16, 2017
  *
  */
-@JsonInclude(Include.NON_NULL)
 public class CalendarConfigurationsByObjectType
 {
 

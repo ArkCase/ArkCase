@@ -33,8 +33,8 @@ package com.armedia.acm.plugins.report.web.api;
 import com.armedia.acm.plugins.report.model.Report;
 import com.armedia.acm.plugins.report.service.ReportService;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -50,7 +50,7 @@ import java.util.List;
 public class SaveReportsAPIController
 {
 
-    private final Logger LOG = LoggerFactory.getLogger(getClass());
+    private final Logger LOG = LogManager.getLogger(getClass());
 
     private ReportService reportService;
 

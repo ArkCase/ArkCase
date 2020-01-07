@@ -80,11 +80,11 @@
                                 cases.newRequest.lastName.validation.error</span>
                         </div>
                         <div class="col-sm-2">
-                            <label for="title" translate>cases.newRequest.title.label</label>
+                            <label for="position" translate>cases.newRequest.position.label</label>
                         </div>
                         <div class="col-sm-4">
-                            <input type="title" class="form-control" id="title" ng-model="config.data.originator.person.position"
-                                    placeholder="{{'cases.newRequest.title.placeholder' | translate}}" name="title">
+                            <input type="position" class="form-control" id="position" ng-model="config.data.originator.person.position"
+                                    placeholder="{{'cases.newRequest.position.placeholder' | translate}}" name="position">
                         </div>
                     </div>
                     <div class="row form-group">
@@ -213,6 +213,18 @@
                 </h4>
             </div>
             <div class="panel-body">
+                <div class="row" ng-if="enableTitle">
+                    <div class="col-sm-3 form-group">
+                        <label for="title" translate>cases.newRequest.title.label</label>
+                        <span class="required-asterisk">*</span>
+                    </div>
+                    <div class="col-sm-9 form-group">
+                        <input id="title" name="title" class="form-control" ng-model="config.data.title" maxlength="50"
+                                placeholder="{{'cases.newRequest.title.placeholder' | translate}}" required="required" />
+                        <span class="text-danger" ng-if="titleEmpty && formInvalid" translate>
+                                cases.newRequest.title.validation.error</span>
+                    </div>
+                </div>
                 <div class="row">
                     <div class="col-sm-3 form-group">
                         <label for="subject" translate>cases.newRequest.subject.label</label>

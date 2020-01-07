@@ -49,6 +49,14 @@ angular.module('services').factory('ObjectService', [ '$state', '$window', '$log
         }
 
         ,
+        UploadFileStatus: {
+            READY: "READY",
+            IN_PROGRESS: "IN_PROGRESS",
+            FAILED: "FAILED",
+            FINISHED: "FINISHED"
+        }
+
+        ,
         gotoUrl: function(objType, objId) {
             $log.warn("WARNING: Object.ObjectService.gotoUrl() is phasing out. Please use Object.ObjectService.showObject() instead");
             this.showObject(objType, objId);

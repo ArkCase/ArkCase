@@ -42,8 +42,8 @@ import com.armedia.acm.plugins.person.model.OrganizationAssociationUpdatedEvent;
 import com.armedia.acm.plugins.person.model.OrganizationEvent;
 import com.armedia.acm.plugins.person.model.Person;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.scheduling.annotation.Async;
@@ -57,7 +57,7 @@ import java.util.stream.IntStream;
 
 public class OrganizationAssociationEventPublisher implements ApplicationEventPublisherAware
 {
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private transient final Logger log = LogManager.getLogger(getClass());
     private ApplicationEventPublisher eventPublisher;
     private ObjectConverter objectConverter;
 

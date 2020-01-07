@@ -34,8 +34,8 @@ import com.armedia.acm.services.participants.model.AcmParticipantDeletedEvent;
 import com.armedia.acm.services.participants.model.AcmParticipantUpdatedEvent;
 import com.armedia.acm.web.api.MDCConstants;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.slf4j.MDC;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
@@ -43,7 +43,7 @@ import org.springframework.context.ApplicationEventPublisherAware;
 public class AcmParticipantEventPublisher implements ApplicationEventPublisherAware
 {
 
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private transient final Logger log = LogManager.getLogger(getClass());
     private ApplicationEventPublisher eventPublisher;
 
     @Override

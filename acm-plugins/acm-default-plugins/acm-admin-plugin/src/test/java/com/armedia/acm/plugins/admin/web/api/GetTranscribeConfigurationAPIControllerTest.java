@@ -34,9 +34,8 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
-import com.armedia.acm.services.transcribe.exception.GetConfigurationException;
+import com.armedia.acm.services.mediaengine.exception.GetConfigurationException;
 import com.armedia.acm.services.transcribe.model.TranscribeConfiguration;
-import com.armedia.acm.services.transcribe.model.TranscribeServiceProvider;
 import com.armedia.acm.services.transcribe.service.ArkCaseTranscribeService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -47,8 +46,8 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
@@ -57,7 +56,6 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.math.BigDecimal;
-import java.util.Arrays;
 
 /**
  * Created by Riste Tutureski <riste.tutureski@armedia.com> on 02/28/2018
@@ -65,7 +63,7 @@ import java.util.Arrays;
 @RunWith(MockitoJUnitRunner.class)
 public class GetTranscribeConfigurationAPIControllerTest extends EasyMockSupport
 {
-    private Logger LOG = LoggerFactory.getLogger(getClass());
+    private Logger LOG = LogManager.getLogger(getClass());
 
     private MockMvc mockMvc;
 
@@ -92,14 +90,13 @@ public class GetTranscribeConfigurationAPIControllerTest extends EasyMockSupport
         TranscribeConfiguration configuration = new TranscribeConfiguration();
         configuration.setEnabled(true);
         configuration.setAutomaticEnabled(true);
-        configuration.setNewTranscriptionForNewVersion(false);
-        configuration.setCopyTranscriptionForNewVersion(true);
+        configuration.setNewMediaEngineForNewVersion(false);
+        configuration.setCopyMediaEngineForNewVersion(true);
         configuration.setCost(new BigDecimal("0.001"));
         configuration.setConfidence(80);
         configuration.setNumberOfFilesForProcessing(10);
         configuration.setWordCountPerItem(30);
-        configuration.setProvider(TranscribeServiceProvider.AWS);
-        configuration.setProviders(Arrays.asList(TranscribeServiceProvider.AWS));
+        configuration.setProvider("AWS");
 
         when(mockAuthentication.getName()).thenReturn("user");
         when(mockArkCaseTranscribeService.getConfiguration()).thenReturn(configuration);

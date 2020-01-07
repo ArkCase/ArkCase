@@ -30,8 +30,8 @@ package com.armedia.acm.auth;
 import com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig;
 
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.ldap.search.LdapUserSearch;
@@ -45,7 +45,7 @@ import org.springframework.security.ldap.userdetails.LdapUserDetailsService;
 public class AcmLdapUserDetailsService extends LdapUserDetailsService
 {
     private AcmLdapSyncConfig acmLdapSyncConfig;
-    private static final Logger log = LoggerFactory.getLogger(AcmLdapUserDetailsService.class);
+    private static final Logger log = LogManager.getLogger(AcmLdapUserDetailsService.class);
 
     /**
      * @param userSearch {@link LdapUserSearch}

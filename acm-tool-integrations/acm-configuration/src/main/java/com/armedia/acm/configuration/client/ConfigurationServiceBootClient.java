@@ -30,8 +30,8 @@ package com.armedia.acm.configuration.client;
 import com.armedia.acm.configuration.api.environment.Environment;
 import com.armedia.acm.configuration.api.environment.PropertySource;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -63,7 +63,7 @@ import java.util.Objects;
 @Configuration
 public class ConfigurationServiceBootClient
 {
-    private static final Logger logger = LoggerFactory.getLogger(ConfigurationServiceBootClient.class);
+    private static final Logger logger = LogManager.getLogger(ConfigurationServiceBootClient.class);
 
     @Autowired
     private ConfigurableEnvironment configurableEnvironment;

@@ -35,8 +35,8 @@ import com.armedia.acm.services.users.service.ldap.PasswordValidationService;
 import com.armedia.acm.spring.SpringContextHolder;
 
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -53,7 +53,7 @@ public class ResetPasswordUIController
     private LdapUserService ldapUserService;
     private SpringContextHolder acmContextHolder;
     private PasswordValidationService passwordValidationService;
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
 
     @RequestMapping(method = RequestMethod.GET)
     public ModelAndView getResetPassword(@RequestParam String token)

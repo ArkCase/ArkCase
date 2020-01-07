@@ -33,8 +33,8 @@ import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.personnelsecurity.cvs.model.ClearanceVerificationSystemDeterminationRecord;
 import com.armedia.acm.plugins.personnelsecurity.cvs.model.PersonnelSecurityConstants;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 
 import java.io.ByteArrayInputStream;
@@ -46,7 +46,7 @@ import java.util.Date;
  */
 public class ClearanceVerificationSystemExportService
 {
-    private final Logger log = LoggerFactory.getLogger(getClass());
+    private final Logger log = LogManager.getLogger(getClass());
     private EcmFileService ecmFileService;
 
     public void exportDeterminationRecord(

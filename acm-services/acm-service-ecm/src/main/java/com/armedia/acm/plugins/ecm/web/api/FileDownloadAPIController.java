@@ -46,8 +46,8 @@ import org.apache.commons.io.FileUtils;
 import org.json.JSONObject;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -64,6 +64,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URLEncoder;
 import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Map;
@@ -82,7 +83,7 @@ public class FileDownloadAPIController implements ApplicationEventPublisherAware
 
     private CmisConfigUtils cmisConfigUtils;
 
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
 
     private ObjectConverter objectConverter;
 
@@ -213,7 +214,7 @@ public class FileDownloadAPIController implements ApplicationEventPublisherAware
             {
                 tmpPdfConvertedFile = ecmFileService.convertFile(fileKey,version,fileExtension,fileName,mimeType,ecmFile);
 
-                if(tmpPdfConvertedFile.exists())
+                if(tmpPdfConvertedFile.exists() && tmpPdfConvertedFile.length() > 0)
                 {
                     pdfConvertedIs = new FileInputStream(tmpPdfConvertedFile);
                     fileIs = pdfConvertedIs;

@@ -28,14 +28,11 @@ package com.armedia.acm.calendar.config.service;
  */
 
 import com.armedia.acm.calendar.config.model.PurgeOptions;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 /**
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Mar 9, 2017
  *
  */
-@JsonInclude(Include.NON_NULL)
 public class CalendarConfiguration
 {
     private boolean integrationEnabled;

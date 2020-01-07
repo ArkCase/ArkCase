@@ -36,8 +36,8 @@ import com.armedia.acm.plugins.ecm.model.event.AcmFolderDeletedEvent;
 import com.armedia.acm.plugins.ecm.model.event.AcmFolderMovedEvent;
 import com.armedia.acm.plugins.ecm.model.event.AcmFolderRenamedEvent;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.security.core.Authentication;
@@ -45,7 +45,7 @@ import org.springframework.security.core.Authentication;
 public class FolderEventPublisher implements ApplicationEventPublisherAware
 {
 
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private transient final Logger log = LogManager.getLogger(getClass());
     private ApplicationEventPublisher eventPublisher;
 
     @Override

@@ -34,7 +34,6 @@ import static gov.foia.model.FOIARequestUtils.extractRequestorEmailAddress;
 
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
-import com.armedia.acm.core.exceptions.CorrespondenceMergeFieldVersionException;
 import com.armedia.acm.plugins.ecm.exception.AcmFolderException;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
@@ -47,8 +46,8 @@ import com.armedia.acm.services.notification.service.NotificationSender;
 import com.armedia.acm.services.users.dao.UserDao;
 
 import com.armedia.acm.services.users.model.AcmUser;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.BeanUtils;
 import org.springframework.core.io.Resource;
 import org.springframework.security.core.Authentication;
@@ -76,7 +75,7 @@ import gov.foia.model.FOIARequest;
 public class FOIAQueueCorrespondenceService
 {
 
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
 
     private ResponseFolderService responseFolderService;
     private NotificationSender notificationSender;
@@ -196,11 +195,13 @@ public class FOIAQueueCorrespondenceService
             
             EcmFileVersion ecmFileVersions = letter.getVersions().get(letter.getVersions().size() - 1);
             
-            AcmUser user = userDao.findByUserId(request.getAssigneeLdapId()); 
+            AcmUser user = userDao.findByUserId(request.getAssigneeLdapId());
+
+            String emailAddress = extractRequestorEmailAddress(request.getOriginator().getPerson());
             
             Notification notification = new Notification();
             notification.setTemplateModelName("requestDocumentAttached");
-            notification.setEmailAddresses(user.getMail());
+            notification.setEmailAddresses(emailAddress);
             notification.setAttachFiles(true);
             notification.setFiles(Arrays.asList(ecmFileVersions));
             notification.setParentId(requestId);
@@ -217,8 +218,7 @@ public class FOIAQueueCorrespondenceService
     }
 
     public EcmFile generateCorrespondenceLetter(FOIARequest request, FOIADocumentDescriptor documentDescriptor)
-            throws AcmObjectNotFoundException, DocumentGeneratorException, AcmFolderException, AcmUserActionFailedException,
-            CorrespondenceMergeFieldVersionException
+            throws AcmObjectNotFoundException, DocumentGeneratorException, AcmFolderException, AcmUserActionFailedException
     {
         String arkcaseFilename = String.format(documentDescriptor.getFilenameFormat(), request.getId());
 

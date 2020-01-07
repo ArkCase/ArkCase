@@ -1,0 +1,36 @@
+<div class="modal-container">
+    <div class="modal-header">
+        <h3 translate>core.progressBar.header</h3>
+    </div>
+    <div class="modal-body">
+        <div class="row" ng-repeat="element in hashMapOfAllFiles">
+            <div class="text-left"><strong>{{ element.objectType }}</strong> / <strong>{{ element.parentObjectNumber }}</strong> / <strong>{{
+                element.fileName }}</strong></div>
+            <div class="col-sm-9">
+                <div class="progress">
+                    <div ng-class="{'progress-bar' : element.success, 'progress-bar-danger' : !element.success}" role="progressbar"
+                            aria-valuenow="{{ element.currentProgress }}" aria-valuemin="0" aria-valuemax="100"
+                            ng-style="{width: element.currentProgress + '%'}">
+                        {{element.currentProgress + ' %'}}
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-1">
+                <button ng-click="onClickHideTheUploadedFile(element.uuid)" ng-show="element.currentProgress >= 100"><i
+                        class="fa fa-times"></i></button>
+            </div>
+            <div class="col-sm-2">
+                <button class="btn btn-secondary" ng-click="onClickRetryUploadFile(element.uuid)" ng-show="!element.success"><span translate>core.progressBar.retry</span>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-secondary" ng-click="onClickCloseModal()" ng-show="!activeUploadFileProcess">
+            <span translate>core.progressBar.close</span>
+        </button>
+        <button class="btn btn-primary" ng-click="onClickHideModal()">
+            <span translate>core.progressBar.hide</span>
+        </button>
+    </div>
+</div>

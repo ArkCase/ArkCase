@@ -30,12 +30,14 @@ package com.armedia.acm.services.sequence.listener;
 import com.armedia.acm.data.AcmDatabaseRollbackChangesEvent;
 import com.armedia.acm.data.AcmEntity;
 import com.armedia.acm.data.AcmObjectRollbacklist;
+import com.armedia.acm.services.sequence.annotation.AcmSequence;
 import com.armedia.acm.services.sequence.annotation.AcmSequenceAnnotationReader;
+import com.armedia.acm.services.sequence.generator.AcmSequenceGeneratorManager;
 import com.armedia.acm.services.sequence.service.AcmSequenceService;
 
 import org.apache.commons.beanutils.PropertyUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.context.ApplicationListener;
 
 import java.lang.reflect.Field;
@@ -47,9 +49,11 @@ import java.util.List;
  */
 public class AcmSequenceDatabaseRollbackChangesHandler implements ApplicationListener<AcmDatabaseRollbackChangesEvent>
 {
-    private transient Logger log = LoggerFactory.getLogger(getClass());
+    private transient Logger log = LogManager.getLogger(getClass());
 
     private AcmSequenceAnnotationReader sequenceAnnotationReader;
+
+    private AcmSequenceGeneratorManager sequenceGeneratorManager;
 
     private AcmSequenceService sequenceService;
 
@@ -72,8 +76,12 @@ public class AcmSequenceDatabaseRollbackChangesHandler implements ApplicationLis
                 {
                     try
                     {
-                        String sequenceValue = PropertyUtils.getProperty(object, annotatedField.getName()).toString();
-                        getSequenceService().updateSequenceRegistryAsUnused(sequenceValue);
+                        String sequenceName = annotatedField.getAnnotation(AcmSequence.class).sequenceName();
+                        if (getSequenceGeneratorManager().isSequenceEnabled(sequenceName))
+                        {
+                            String sequenceValue = PropertyUtils.getProperty(object, annotatedField.getName()).toString();
+                            getSequenceService().updateSequenceRegistryAsUnused(sequenceValue);
+                        }
                     }
                     catch (Exception e)
                     {
@@ -100,6 +108,23 @@ public class AcmSequenceDatabaseRollbackChangesHandler implements ApplicationLis
     public void setSequenceAnnotationReader(AcmSequenceAnnotationReader sequenceAnnotationReader)
     {
         this.sequenceAnnotationReader = sequenceAnnotationReader;
+    }
+
+    /**
+     * @return the sequenceGeneratorManager
+     */
+    public AcmSequenceGeneratorManager getSequenceGeneratorManager()
+    {
+        return sequenceGeneratorManager;
+    }
+
+    /**
+     * @param sequenceGeneratorManager
+     *            the sequenceGeneratorManager to set
+     */
+    public void setSequenceGeneratorManager(AcmSequenceGeneratorManager sequenceGeneratorManager)
+    {
+        this.sequenceGeneratorManager = sequenceGeneratorManager;
     }
 
     /**

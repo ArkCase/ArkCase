@@ -32,8 +32,8 @@ import com.armedia.acm.plugins.task.model.AcmTask;
 import com.armedia.acm.service.objecthistory.service.AcmObjectHistoryService;
 
 import org.activiti.engine.task.Task;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.context.ApplicationListener;
 
 /**
@@ -42,7 +42,7 @@ import org.springframework.context.ApplicationListener;
 public class ActivitiTaskHistoryListener implements ApplicationListener<AcmTaskActivitiEvent>
 {
     private static final String OBJECT_TYPE = "TASK";
-    private final Logger LOG = LoggerFactory.getLogger(getClass());
+    private final Logger LOG = LogManager.getLogger(getClass());
     private AcmObjectHistoryService acmObjectHistoryService;
     private TaskDao activitiTaskDao;
 

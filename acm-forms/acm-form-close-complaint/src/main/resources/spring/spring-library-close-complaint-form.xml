@@ -22,6 +22,5 @@
         <property name="complaintDao" ref="acmComplaintDao"/>
         <property name="caseFileDao" ref="caseFileDao"/>
         <property name="closeComplaintRequestDao" ref="closeComplaintRequestDao"/>
-        <property name="applicationEventPublisher" ref="frevvoApplicationEventPublisher"/>
     </bean>
 </beans>

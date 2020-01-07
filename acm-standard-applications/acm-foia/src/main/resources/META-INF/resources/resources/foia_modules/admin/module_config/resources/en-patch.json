@@ -25,7 +25,9 @@
                 "receivedDateEnabled": "Automatically set Request Received Date to be same as Request Created Date",
                 "requestExtensionEnabled": "Enable Request Extension",
                 "purgeRequestEnabled": "Purge Requests from Hold Queue",
-                "notificationGroupsEnable": "Enable executive groups"
+                "notificationGroupsEnable": "Enable executive groups",
+                "moveToBillingQueueEnabled": "Automatically move Requests into the Hold Queue, when in Billing Queue more than (in days)",
+                "moveRequestToBillingQueue": "Move Requests from Billing in Hold Queue"
             },
             "save.btn": "Save"
         }
@@ -69,5 +71,10 @@
                 "appeal": "Appeal"
             }
         }
+    },
+    {
+        "op": "replace",
+        "path": "/admin/application/objectTitleConfiguration/caseFile",
+        "value": "Request"
     }
 ]

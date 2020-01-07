@@ -52,7 +52,7 @@
     </bean>
 
     <bean id="correspondenceServiceClass" class="java.lang.Class" factory-method="forName">
-        <constructor-arg value="com.armedia.acm.correspondence.service.CorrespondenceService"/>
+        <constructor-arg value="com.armedia.acm.correspondence.service.CorrespondenceServiceImpl"/>
     </bean>
     <bean id="correspondenceService" class="org.easymock.EasyMock" factory-method="createMock">
         <constructor-arg ref="correspondenceServiceClass"/>

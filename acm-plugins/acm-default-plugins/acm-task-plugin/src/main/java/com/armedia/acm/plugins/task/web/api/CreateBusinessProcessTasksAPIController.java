@@ -36,8 +36,8 @@ import com.armedia.acm.plugins.task.model.TaskConstants;
 import com.armedia.acm.plugins.task.service.AcmTaskService;
 import com.armedia.acm.plugins.task.service.TaskEventPublisher;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -63,7 +63,7 @@ public class CreateBusinessProcessTasksAPIController
     private TaskEventPublisher taskEventPublisher;
     private AcmTaskService taskService;
 
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
 
     @RequestMapping(value = "/documents/review", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
@@ -74,7 +74,16 @@ public class CreateBusinessProcessTasksAPIController
     {
         try
         {
-            List<AcmTask> acmTasks = getTaskService().startReviewDocumentsWorkflow(in, businessProcessName, authentication);
+            List<AcmTask> acmTasks = null;
+            if(businessProcessName.equals("arrestWarrant"))
+            {
+                getTaskService().startArrestWarrantWorkflow(in);
+            }
+            else
+            {
+                acmTasks = getTaskService().startReviewDocumentsWorkflow(in, businessProcessName, authentication);   
+            }
+             
             return acmTasks;
         }
         catch (AcmTaskException e)

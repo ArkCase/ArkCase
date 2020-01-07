@@ -17,6 +17,12 @@
             </div>
             <div class="col-xs-6  text-right">
                 <h4>{{objectInfo.caseNumber}}</h4>
+                <small ng-if="hasSuggestedCases" style="margin-right: 3%">
+                    <i class="fa fa-lightbulb-o" aria-hidden="true" style="color:#e6b800"/>
+                    <a href="javascript:;" ng-click="suggestedCases()">
+                        {{'cases.comp.suggestedCases.title' | translate}} ({{numberOfSuggestedCases}})
+                    </a>
+                </small>
             </div>
         </div>
         <div class="row">

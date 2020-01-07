@@ -32,8 +32,8 @@ import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
 import com.armedia.acm.plugins.person.service.PersonAssociationService;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
@@ -55,7 +55,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 public class PersonAssociationAPIController
 {
 
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
 
     private PersonAssociationService personAssociationService;
 
@@ -80,6 +80,7 @@ public class PersonAssociationAPIController
             @RequestParam(value = "n", required = false, defaultValue = "10") int n,
             @RequestParam(value = "sort", required = false, defaultValue = "id asc") String sort) throws AcmObjectNotFoundException
     {
+
         return personAssociationService.getPersonAssociations(personId, parentType, start, n, sort, auth);
     }
 

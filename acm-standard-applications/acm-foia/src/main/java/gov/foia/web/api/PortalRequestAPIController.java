@@ -31,11 +31,14 @@ import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 
 import org.json.JSONException;
 import org.mule.api.MuleException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -57,7 +60,7 @@ import gov.foia.service.PortalRequestService;
 @RequestMapping({ "/api/v1/plugin/casefile", "/api/latest/plugin/casefile" })
 public class PortalRequestAPIController
 {
-    private final Logger log = LoggerFactory.getLogger(getClass());
+    private final Logger log = LogManager.getLogger(getClass());
 
     private PortalRequestService portalRequestService;
 
@@ -82,6 +85,21 @@ public class PortalRequestAPIController
     public PortalFOIARequest checkRequestStatus(PortalFOIARequest portalFOIARequest) throws JSONException
     {
         return getPortalRequestService().checkRequestStatus(portalFOIARequest);
+    }
+
+    @RequestMapping(value = "/external/requestDownloadTriggered/{requestId}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity<Boolean> requestDownloadTriggered(@PathVariable("requestId") String requestNumber)
+    {
+        try
+        {
+            getPortalRequestService().sendRequestDownloadedEmailToOfficersGroup(requestNumber);
+            return new ResponseEntity<>(true, HttpStatus.OK);
+        }
+        catch (Exception e)
+        {
+            return new ResponseEntity<>(false, HttpStatus.BAD_REQUEST);
+        }
     }
 
     /**

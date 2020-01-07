@@ -5,18 +5,6 @@
         "value": 40
     },
     {
-        "op": "remove",
-        "path": "/tree/filters/?@.desc=='organizations.tree.filters.iHaveCreatedActive'"
-    },
-    {
-        "op": "remove",
-        "path": "/tree/filters/?@.desc=='organizations.tree.filters.active'"
-    },
-    {
-        "op": "remove",
-        "path": "/tree/filters/?@.desc=='organizations.tree.filters.inActive'"
-    },
-    {
         "op": "replace",
         "path": "/tree/nodeTypes/?@.type=='p/ORGANIZATION'/components",
         "value": [

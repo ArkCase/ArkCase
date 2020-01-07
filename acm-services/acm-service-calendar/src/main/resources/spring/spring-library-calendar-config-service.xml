@@ -14,8 +14,12 @@
         <property name="calendarService" ref="calendarServiceProvider"/>
     </bean>
 
+    <bean id="purgeCalendarJobDescriptor" class="com.armedia.acm.calendar.service.PurgeCalendarJobDescriptor" parent="acmJobDescriptor">
+        <property name="calendarPurger" ref="scheduledCalendarPurger"/>
+    </bean>
+
     <bean id="calendarConfig" class="com.armedia.acm.calendar.config.model.CalendarConfig" scope="refresh">
-        <property name="jsonUnmarshaller" ref="jsonUnmarshaller"/>
+        <property name="objectConverter" ref="objectConverter"/>
         <aop:scoped-proxy/>
     </bean>
 

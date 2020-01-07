@@ -36,8 +36,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.mule.api.MuleException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.security.core.Authentication;
 
 import java.io.UnsupportedEncodingException;
@@ -56,7 +56,7 @@ import java.util.regex.Pattern;
  */
 public class FacetedSearchService
 {
-    private transient final Logger log = LoggerFactory.getLogger(this.getClass());
+    private transient final Logger log = LogManager.getLogger(this.getClass());
     private SearchConfig searchConfig;
     private AuditEventConfig auditEventConfig;
     private ExecuteSolrQuery executeSolrQuery;

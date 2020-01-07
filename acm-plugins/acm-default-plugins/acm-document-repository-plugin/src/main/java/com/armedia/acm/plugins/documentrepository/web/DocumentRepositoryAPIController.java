@@ -39,8 +39,8 @@ import com.armedia.acm.plugins.documentrepository.service.DocumentRepositoryServ
 import com.armedia.acm.services.participants.model.DecoratedAssignedObjectParticipants;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -62,7 +62,7 @@ import java.util.Objects;
 public class DocumentRepositoryAPIController
 {
 
-    final private Logger log = LoggerFactory.getLogger(getClass());
+    final private Logger log = LogManager.getLogger(getClass());
     private DocumentRepositoryService documentRepositoryService;
     private DocumentRepositoryEventPublisher documentRepositoryEventPublisher;
 

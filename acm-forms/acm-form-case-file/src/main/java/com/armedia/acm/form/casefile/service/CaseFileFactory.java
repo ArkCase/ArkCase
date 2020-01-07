@@ -46,8 +46,8 @@ import com.armedia.acm.plugins.person.model.PersonAssociation;
 import com.armedia.acm.service.history.dao.AcmHistoryDao;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,7 +63,7 @@ public class CaseFileFactory extends FrevvoFormFactory
     public static final String PERSON_IDENTIFICATION_SSN = "SSN";
     public static final String OBJECT_TYPE_POSTAL_ADDRESS = "POSTAL_ADDRESS";
     public static final String OBJECT_TYPE_ORGANIZATION = "ORGANIZATION";
-    private final Logger LOG = LoggerFactory.getLogger(getClass());
+    private final Logger LOG = LogManager.getLogger(getClass());
     private ObjectAssociationDao objectAssociationDao;
     private EcmFileDao ecmFileDao;
     private AcmHistoryDao acmHistoryDao;

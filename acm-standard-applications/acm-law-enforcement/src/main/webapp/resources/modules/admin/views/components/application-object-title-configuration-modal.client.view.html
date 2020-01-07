@@ -1,0 +1,66 @@
+<div class="modal-header">
+    <h3><span translate>admin.application.objectTitleConfiguration.title</span></h3>
+</div>
+<div class="modal-body">
+    <form name="objectTitleConfigurationForm">
+        <div class="row">
+            <div class="col-sm-12 form-group">
+                <label translate>admin.application.objectTitleConfiguration.objectType</label><span class="required-asterisk">*</span><br />
+                <select ng-model="objectTitleTypes.objectType" ng-disabled="isEdit == true" class="form-control input-md"
+                        ng-options="objectTitleTypesDropdownOption.key as objectTitleTypesDropdownOption.value | translate for objectTitleTypesDropdownOption in objectTitleTypesDropdownOptions"
+                        required />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12 form-group">
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" ng-model="objectTitleTypes.enableTitleField" />
+                        <span translate>admin.application.objectTitleConfiguration.enableTitleField</span>
+                    </label>
+                </div>
+
+            </div>
+        </div>
+        <div class="row">
+            <div class="well-sm">
+                <label translate>admin.application.objectTitleConfiguration.displayOptions</label>
+            </div>
+            <div class="well-sm">
+            <div class="radio">
+                <label>
+                    <input type="radio" ng-model="objectTitleTypes.title" value="objectId" />
+                    <span translate>admin.application.objectTitleConfiguration.objectId</span>
+                </label>
+            </div>
+            <div class="radio">
+                <label>
+                    <input type="radio" ng-model="objectTitleTypes.title" value="objectIdTitle" />
+                    <span translate>admin.application.objectTitleConfiguration.objectIdTitle</span>
+                </label>
+            </div>
+            <div class="radio">
+                <label>
+                    <input type="radio" ng-model="objectTitleTypes.title" value="titleObjectId" />
+                    <span translate>admin.application.objectTitleConfiguration.titleObjectId</span>
+                </label>
+            </div>
+            <div class="radio">
+                <label>
+                    <input type="radio" ng-model="objectTitleTypes.title" value="titleTitle" />
+                    <span translate>admin.application.objectTitleConfiguration.titleTitle</span>
+                </label>
+            </div>
+            </div>
+        </div>
+    </form>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-default" ng-click="onClickCancel()" translate>
+        admin.application.objectTitleConfiguration.button.cancel
+    </button>
+    <button type="button" class="btn btn-primary" ng-click="onClickOk()" ng-disabled="objectTitleConfigurationForm.$invalid">
+        <span translate>admin.application.objectTitleConfiguration.button.save</span>
+    </button>
+</div>
+

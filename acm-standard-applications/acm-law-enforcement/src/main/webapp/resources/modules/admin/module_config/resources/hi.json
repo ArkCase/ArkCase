@@ -217,6 +217,7 @@
                     "cancelBtn": "रद्द करना",
                     "deleteBtn": "हटाना",
                     "headerText": "आप समूह को हटाना चाहते हैं:",
+                    "controlGroupHeaderWarning": "You are about to delete {{groupName}} group which is a member in the control group {{controlGroupName}}",
                     "bodyText": "क्या आपको यकीन है?"
                 }
             },
@@ -248,7 +249,7 @@
             },
 			"searchFilter.placeholder": "खोज"
         },
-        "security.selectPrivileges": "भूमिका बनाएं / विशेषाधिकारों का चयन करें",
+        "security.selectPrivileges": "विशेषाधिकार चुनें",
         "security.selectPrivileges.applicationRole": "आवेदन भूमिका",
         "security.selectPrivileges.createRole": "रोल बनाएं",
         "security.selectPrivileges.editRole": "भूमिका संपादित करें",
@@ -709,6 +710,29 @@
                     }
                 }
             },
+            "sequenceManagementReset": {
+                "title": "Reset List",
+                "editBtn": "Edit",
+                "viewBtn": "View",
+                "removeBtn": "Remove",
+                "cancelBtn": "Cancel",
+                "saveBtn": "Save",
+                "grid": {
+                    "startResetDate": "Start Reset Date",
+                    "executedDate": "Executed Date",
+                    "repeat": "Repeat",
+                    "repeatPeriod": "Repeat Period"
+                },
+                "detailsModal": {
+                    "title": "Autoincrement Reset",
+                    "addTitle": "Add Autoincrement Reset",
+                    "editTitle": "Edit Autoincrement Reset",
+                    "resetStartDate": "Reset Start Date",
+                    "repeatReset": "Repeat reset",
+                    "repeatResetPeriod": "Repeat reset period (days)",
+                    "sequenceResetScheduledWarning": "Sequence reset scheduled for today"
+                }
+            },
             "login.config": {
                 "title": "लॉग इन कॉन्फ़िगरेशन",
                 "idleLimit.label": "निष्क्रिय सीमा लॉगिन करें (मिलीसेकंड में)",
@@ -963,15 +987,6 @@
                 "enableOCR.checkbox": "Enable OCR_HI"
             }
         },
-        "ocr": {
-            "title": "OCR Services_HI",
-            "ocrManagement": "OCR Management_HI",
-            "ocrConfigForm": {
-                "save.button": "Save_HI",
-                "enableOCR.label": "OCR Configuration_HI",
-                "enableOCR.checkbox": "Enable OCR_HI"
-            }
-        },
         "stateOfArkcase": {
             "title": "आर्ककेस राज्य",
             "pickDate": "तिथि उठाओ",
@@ -1021,6 +1036,43 @@
             },
             "emailTemplates": {
                 "title": "ईमेल टेम्पलेट्स"
+            }
+        },
+        "portals.portalsConfiguration": {
+            "nodeTitle": "hi_Portals Service",
+            "title": "hi_Portals Configuration",
+            "url": "hi_URL",
+            "id": "hi_ID",
+            "portalId": "hi_Portal ID",
+            "portalDescription": "hi_Description",
+            "portalUser": "hi_User",
+            "save": "hi_Save",
+            "cancel": "hi_Cancel",
+            "placeholder": {
+                "portalUrl": "hi_Enter Portal URL",
+                "portalId": "hi_ID will be generate",
+                "portalDescription": "hi_Enter Portal Description",
+                "portalUser": "hi_Select Portal User"
+            },
+            "message": {
+                "edit": "hi_Portal is successfully edited",
+                "add": "hi_Portal is successfully added",
+                "delete": "hi_Portal is successfully deleted"
+            }
+        },
+        "userSearch": {
+            "title": "hi_User Search",
+            "cancelButton": "hi_Cancel",
+            "confirmButton": "hi_Save",
+            "search": {
+                "placeholder": "hi_Search for the user to assign to this portal",
+                "btn": "hi_Search"
+            },
+            "assigneeGridColumns": {
+                "name": "hi_Name",
+                "type": "hi_Type",
+                "title": "hi_Title",
+                "username": "hi_Username"
             }
         }
     }

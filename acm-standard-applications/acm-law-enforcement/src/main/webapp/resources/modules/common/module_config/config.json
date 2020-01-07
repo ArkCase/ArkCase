@@ -945,6 +945,48 @@
         "userOrGroupFacetFilter": "fq=\"object_type_s\":(GROUP OR USER)&fq=\"status_lcs\":(ACTIVE OR VALID)",
         "userOrGroupFacetExtraFilter": "&fq=\"name\": "
       }
+    },
+    {
+      "id": "groupSearch",
+      "title": "tasks.userOrGroupSearch.title",
+      "enableFiltering": false,
+      "configurable": true,
+      "multiSelect": false,
+      "showFacets": false,
+      "columnDefs": [
+        {
+          "name": "name",
+          "displayName": "common.userOrGroupSearch.assigneeGridColumns.name",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "object_type_s",
+          "displayName": "common.userOrGroupSearch.assigneeGridColumns.type",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "title",
+          "displayName": "common.userOrGroupSearch.assigneeGridColumns.title",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "object_id_s",
+          "displayName": "common.userOrGroupSearch.assigneeGridColumns.username",
+          "headerCellFilter": "translate"
+        }
+      ],
+      "paginationPageSizes": [
+        5,
+        10,
+        20,
+        50
+      ],
+      "paginationPageSize": 10,
+      "start": 0,
+      "groupSearchFilters": {
+        "groupFacetFilter": "fq=\"object_type_s\":GROUP&fq=\"status_lcs\":(ACTIVE OR VALID)",
+        "groupFacetExtraFilter": "&fq=\"name\": "
+      }
     }
   ]
 

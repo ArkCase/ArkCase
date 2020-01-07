@@ -24,8 +24,8 @@ import com.armedia.acm.services.notification.model.NotificationConstants;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.core.io.Resource;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -73,7 +73,7 @@ import freemarker.template.TemplateException;
 public abstract class NotificationSender
 {
 
-    private final Logger LOG = LoggerFactory.getLogger(getClass());
+    private final Logger LOG = LogManager.getLogger(getClass());
 
     protected AuditPropertyEntityAdapter auditPropertyEntityAdapter;
     protected AuthenticationTokenService authenticationTokenService;
@@ -149,7 +149,8 @@ public abstract class NotificationSender
 
             in.setSubject(notification.getTitle());
             in.setEmailAddresses(Arrays.asList(notification.getEmailAddresses().split(",")));
-
+            in.setObjectId(notification.getParentId());
+            in.setObjectType(notification.getParentType());
             Authentication authentication = SecurityContextHolder.getContext() != null
                     ? SecurityContextHolder.getContext().getAuthentication()
                     : null;

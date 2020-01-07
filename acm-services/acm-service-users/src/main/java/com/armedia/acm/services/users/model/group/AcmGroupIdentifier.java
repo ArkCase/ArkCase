@@ -35,9 +35,11 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 
+import java.io.Serializable;
+
 @Entity
 @Table(name = "acm_group_identifier")
-public class AcmGroupIdentifier
+public class AcmGroupIdentifier implements Serializable
 {
     @Id
     @TableGenerator(name = "group_identifier_generator", table = "acm_group_identifier_id", pkColumnName = "cm_seq_name", valueColumnName = "cm_seq_num", pkColumnValue = "acm_group_identifier", initialValue = 100, allocationSize = 1)

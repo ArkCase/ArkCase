@@ -34,14 +34,14 @@ import com.armedia.acm.services.pipeline.handler.PipelineHandler;
 import com.armedia.acm.services.timesheet.model.AcmTimesheet;
 import com.armedia.acm.services.timesheet.pipeline.TimesheetPipelineContext;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 /**
  * Create Alfresco folder on saving a Timesheet.
  */
 public class TimesheetEcmFolderHandler implements PipelineHandler<AcmTimesheet, TimesheetPipelineContext> {
-    private final Logger log = LoggerFactory.getLogger(getClass());
+    private final Logger log = LogManager.getLogger(getClass());
     private EcmFileService ecmFileService;
 
     @Override

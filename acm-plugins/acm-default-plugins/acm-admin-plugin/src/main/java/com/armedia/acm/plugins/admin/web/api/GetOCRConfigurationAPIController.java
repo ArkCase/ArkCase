@@ -27,9 +27,9 @@ package com.armedia.acm.plugins.admin.web.api;
  * #L%
  */
 
-import com.armedia.acm.ocr.exception.GetConfigurationException;
-import com.armedia.acm.ocr.model.OCRConfiguration;
-import com.armedia.acm.ocr.service.ArkCaseOCRService;
+import com.armedia.acm.services.mediaengine.exception.GetConfigurationException;
+import com.armedia.acm.services.mediaengine.model.MediaEngineConfiguration;
+import com.armedia.acm.services.ocr.service.ArkCaseOCRService;
 
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -45,7 +45,7 @@ public class GetOCRConfigurationAPIController
 
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public OCRConfiguration getConfiguration() throws GetConfigurationException
+    public MediaEngineConfiguration getConfiguration() throws GetConfigurationException
     {
         return getArkCaseOCRService().getConfiguration();
     }

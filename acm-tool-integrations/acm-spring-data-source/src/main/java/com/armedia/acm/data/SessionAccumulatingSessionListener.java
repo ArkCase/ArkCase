@@ -29,8 +29,8 @@ package com.armedia.acm.data;
 
 import org.eclipse.persistence.sessions.SessionEvent;
 import org.eclipse.persistence.sessions.SessionEventAdapter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 
@@ -41,7 +41,7 @@ import java.util.UUID;
  */
 public class SessionAccumulatingSessionListener extends SessionEventAdapter implements ApplicationEventPublisherAware
 {
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
     private ObjectChangesBySessionAccumulator descriptorListener;
 
     private ApplicationEventPublisher applicationEventPublisher;

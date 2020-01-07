@@ -30,6 +30,150 @@
         }
     },
     {
+        "path": "/components/",
+        "op": "add",
+        "value": {
+            "id": "portalsConfiguration",
+            "title": "admin.portals.portalsConfiguration.title",
+            "enabled": true,
+            "type": "grid",
+            "enableFiltering": false,
+            "configurable": true,
+            "columnDefs": [
+                {
+                    "name": "portalUrl",
+                    "displayName": "admin.portals.portalsConfiguration.url",
+                    "visible": true,
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "portalId",
+                    "displayName": "admin.portals.portalsConfiguration.portalId",
+                    "visible": true,
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<div class='ui-grid-cell-contents' id='{{row.entity.portalId}}'>{{row.entity.portalId}}</div>"
+                },
+                {
+                    "name": "groupName",
+                    "displayName": "admin.portals.portalsConfiguration.groupName",
+                    "visible": true,
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "portalDescription",
+                    "displayName": "admin.portals.portalsConfiguration.portalDescription",
+                    "visible": true,
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "fullName",
+                    "displayName": "admin.portals.portalsConfiguration.portalUser",
+                    "visible": true,
+                    "headerCellFilter": "translate"
+                }
+            ],
+            "paginationPageSizes": [
+                5,
+                10,
+                20,
+                50
+            ],
+            "paginationPageSize": 20
+        }
+    },
+    {
+        "path": "/components/",
+        "op": "add",
+        "value": {
+            "id": "userSearch",
+            "title": "admin.userSearch.title",
+            "enableFiltering": false,
+            "configurable": true,
+            "multiSelect": false,
+            "showFacets": false,
+            "columnDefs": [
+                {
+                    "name": "name",
+                    "displayName": "admin.userSearch.assigneeGridColumns.name",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "object_type_s",
+                    "displayName": "admin.userSearch.assigneeGridColumns.type",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "title",
+                    "displayName": "admin.userSearch.assigneeGridColumns.title",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "object_id_s",
+                    "displayName": "admin.userSearch.assigneeGridColumns.username",
+                    "headerCellFilter": "translate"
+                }
+            ],
+            "paginationPageSizes": [
+                5,
+                10,
+                20,
+                50
+            ],
+            "paginationPageSize": 10,
+            "start": 0,
+            "userSearch": {
+                "userFacetFilter": "fq=\"object_type_s\":USER&fq=\"status_lcs\":VALID",
+                "userFacetExtraFilter": "&fq=\"name\": "
+            }
+        }
+    },
+    {
+        "path": "/components/",
+        "op": "add",
+        "value": {
+            "id": "groupSearch",
+            "title": "admin.groupSearch.title",
+            "enableFiltering": false,
+            "configurable": true,
+            "multiSelect": false,
+            "showFacets": false,
+            "columnDefs": [
+                {
+                    "name": "name",
+                    "displayName": "admin.groupSearch.assigneeGridColumns.name",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "object_type_s",
+                    "displayName": "admin.groupSearch.assigneeGridColumns.type",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "title",
+                    "displayName": "admin.groupSearch.assigneeGridColumns.title",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "object_id_s",
+                    "displayName": "admin.groupSearch.assigneeGridColumns.username",
+                    "headerCellFilter": "translate"
+                }
+            ],
+            "paginationPageSizes": [
+                5,
+                10,
+                20,
+                50
+            ],
+            "paginationPageSize": 10,
+            "start": 0,
+            "groupSearch": {
+                "groupFacetFilter": "fq=\"object_type_s\":GROUP&fq=\"status_lcs\":ACTIVE",
+                "groupFacetExtraFilter": "&fq=\"name\": "
+            }
+        }
+    },
+    {
         "path": "/tree/nodeTypes/",
         "op": "add",
         "value": {
@@ -48,6 +192,27 @@
             "label": "admin.documentManagement.pdfConversion.title",
             "components": [
                 "pdf-conversion"
+            ]
+        }
+    },
+    {
+        "path": "/tree/nodeTypes/-",
+        "op": "add",
+        "value": {
+            "type": "p/portalsService",
+            "label": "admin.portals.portalsConfiguration.nodeTitle",
+            "icon": "fa fa-wrench",
+            "components": []
+        }
+    },
+    {
+        "path": "/tree/nodeTypes/-",
+        "op": "add",
+        "value": {
+            "type": "p/portalsService/portalsConfiguration",
+            "label": "admin.portals.portalsConfiguration.title",
+            "components": [
+                "portals.config"
             ]
         }
     }

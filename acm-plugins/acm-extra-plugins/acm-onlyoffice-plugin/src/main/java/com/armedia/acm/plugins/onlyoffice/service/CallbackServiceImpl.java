@@ -45,8 +45,8 @@ import com.armedia.acm.service.objectlock.model.AcmObjectLock;
 import com.armedia.acm.service.objectlock.service.AcmObjectLockService;
 import com.armedia.acm.service.objectlock.service.AcmObjectLockingManager;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 
@@ -59,7 +59,7 @@ import java.util.Objects;
 
 public class CallbackServiceImpl implements CallbackService
 {
-    private Logger logger = LoggerFactory.getLogger(getClass());
+    private Logger logger = LogManager.getLogger(getClass());
     private EcmFileDao ecmFileDao;
     private EcmFileService ecmFileService;
     private AcmObjectLockService objectLockService;

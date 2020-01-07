@@ -37,8 +37,8 @@ import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
 import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.services.search.service.SendDocumentsToSolr;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.context.ApplicationListener;
 
 import java.util.Arrays;
@@ -56,7 +56,7 @@ public class AcmApplicationTaskEventHandler implements ApplicationListener<AcmAp
     private SendDocumentsToSolr sendDocumentsToSolr;
     private TaskToSolrTransformer taskToSolrTransformer;
     private List<String> eventList;
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
 
     @Override
     public void onApplicationEvent(AcmApplicationTaskEvent event)

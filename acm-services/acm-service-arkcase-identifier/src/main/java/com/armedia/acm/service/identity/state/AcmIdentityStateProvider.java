@@ -27,15 +27,15 @@ package com.armedia.acm.service.identity.state;
  * #L%
  */
 
-import com.armedia.acm.core.AcmApplication;
+import com.armedia.acm.core.ApplicationConfig;
 import com.armedia.acm.service.identity.exceptions.AcmIdentityException;
 import com.armedia.acm.service.identity.model.AcmArkcaseIdentity;
 import com.armedia.acm.service.identity.service.AcmArkcaseIdentityService;
 import com.armedia.acm.service.stateofarkcase.interfaces.StateOfModule;
 import com.armedia.acm.service.stateofarkcase.interfaces.StateOfModuleProvider;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -43,9 +43,9 @@ import java.time.LocalDate;
 
 public class AcmIdentityStateProvider implements StateOfModuleProvider
 {
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private transient final Logger log = LogManager.getLogger(getClass());
     private AcmArkcaseIdentityService acmArkcaseIdentityService;
-    private AcmApplication acmApplication;
+    private ApplicationConfig applicationConfig;
 
     @Override
     public String getModuleName()
@@ -80,7 +80,7 @@ public class AcmIdentityStateProvider implements StateOfModuleProvider
 
     private String getDomainName() throws AcmIdentityException
     {
-        String baseUrl = acmApplication.getBaseUrl();
+        String baseUrl = applicationConfig.getBaseUrl();
         try
         {
             URL url = new URL(baseUrl);
@@ -97,8 +97,8 @@ public class AcmIdentityStateProvider implements StateOfModuleProvider
         this.acmArkcaseIdentityService = acmArkcaseIdentityService;
     }
 
-    public void setAcmApplication(AcmApplication acmApplication)
+    public void setApplicationConfig(ApplicationConfig applicationConfig)
     {
-        this.acmApplication = acmApplication;
+        this.applicationConfig = applicationConfig;
     }
 }

@@ -373,6 +373,38 @@
             "approverDecision": "承認者の決定"
         }
     },
+    "cases.comp.billing": {
+        "title": "Billing",
+        "table.columns": {
+            "item": "Item #",
+            "description": "Description",
+            "amount": "Amount",
+            "total": "Total: ",
+            "buttons": {
+                "listInvoices": "List Invoices",
+                "emailInvoice": "Email Invoice",
+                "generateInvoice": "Generate Invoice"
+            }
+        },
+        "modal": {
+            "title": "Add Billing Item",
+            "cancel.btn": "Cancel",
+            "save.btn": "Save",
+            "billingItems.title": "Billing items for"
+        },
+        "invoice": {
+            "title": "Invoices",
+            "table.columns": {
+                "invoiceNumber": "Invoice Number",
+                "status": "Status",
+                "creator": "Creator",
+                "created": "Created",
+                "view": "View"
+            }
+        },
+        "amount.title": "Please enter billing amount",
+        "description.title": "Please enter billing description"
+    },
     "cases.comp.change.status": {
         "title": "ja_Change Case Status",
         "description.label": "ja_Description",
@@ -461,7 +493,8 @@
             "cost.label": "支出",
             "tags.label": "タグ",
             "calendar.label": "日報",
-            "approvalRouting.label": "承認ルーティング"
+            "approvalRouting.label": "承認ルーティング",
+            "billing.label": "Billing"
         },
         "filters": {
             "opened": "開いているすべての",

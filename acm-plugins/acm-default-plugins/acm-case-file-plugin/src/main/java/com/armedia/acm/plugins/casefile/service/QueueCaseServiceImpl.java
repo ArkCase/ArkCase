@@ -37,9 +37,11 @@ import com.armedia.acm.plugins.casefile.pipeline.postsave.CaseFileRulesHandler;
 import com.armedia.acm.services.pipeline.PipelineManager;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.users.service.tracker.UserTrackerService;
+import com.armedia.acm.web.api.MDCConstants;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.slf4j.MDC;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.security.core.Authentication;
@@ -55,7 +57,7 @@ import java.util.Date;
  */
 public class QueueCaseServiceImpl implements QueueCaseService, ApplicationEventPublisherAware
 {
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private transient final Logger log = LogManager.getLogger(getClass());
     private PipelineManager<CaseFile, CaseFilePipelineContext> queuePipelineManager;
     private CaseFileDao caseFileDao;
     private UserTrackerService userTrackerService;
@@ -137,8 +139,15 @@ public class QueueCaseServiceImpl implements QueueCaseService, ApplicationEventP
                 caseFile.getQueue() == null ? "null" : caseFile.getQueue().getName());
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-
-        applicationPublisher.publishEvent(new QueuedEvent(caseFile, auth.getName(), eventType, new Date()));
+        if (auth == null)
+        {
+            String userId = MDC.get(MDCConstants.EVENT_MDC_REQUEST_USER_ID_KEY);
+            applicationPublisher.publishEvent(new QueuedEvent(caseFile, userId, eventType, new Date()));
+        }
+        else
+        {
+            applicationPublisher.publishEvent(new QueuedEvent(caseFile, auth.getName(), eventType, new Date()));
+        }
 
         return caseFile;
     }

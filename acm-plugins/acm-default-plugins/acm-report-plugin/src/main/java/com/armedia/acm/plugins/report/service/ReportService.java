@@ -72,4 +72,6 @@ public interface ReportService
 
     public List<Report> sync() throws Exception;
 
+    public List<String> getRolesForReport(Boolean authorized, String reportId, int startRow, int maxRows, String sortBy, String sortDirection);
+
 }

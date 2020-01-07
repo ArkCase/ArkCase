@@ -637,34 +637,48 @@ angular.module('admin').controller(
                     }
 
                     $scope.onDeleteLdapGroup = function(group, parent) {
+
                         var deferred = $q.defer();
-                        var modalOptions = {
-                            closeButtonText: $translate.instant('admin.security.organizationalHierarchy.dialog.group.confirm.delete.cancelBtn'),
-                            actionButtonText: $translate.instant('admin.security.organizationalHierarchy.dialog.group.confirm.delete.deleteBtn'),
-                            headerText: $translate.instant('admin.security.organizationalHierarchy.dialog.group.confirm.delete.headerText') + group.name,
-                            bodyText: $translate.instant('admin.security.organizationalHierarchy.dialog.group.confirm.delete.bodyText')
-                        };
-                        ModalDialogService.showModal({}, modalOptions).then(function() {
-                            //ok btn
-                            if (!_.isEmpty(parent)) {
-                                organizationalHierarchyService.removeLdapGroupMembership(group, parent).then(function(payload) {
-                                    refreshPageData();
-                                    deferred.resolve(payload);
-                                }, function(payload) {
-                                    deferred.reject(payload);
-                                });
-                            } else {
-                                organizationalHierarchyService.deleteLdapGroup(group).then(function(payload) {
-                                    refreshPageData();
-                                    deferred.resolve(payload);
-                                }, function(payload) {
-                                    deferred.reject(payload);
+                        var controlGroup;
+
+                        organizationalHierarchyService.getControlGroup(group.directory_name_s).then(function (response) {
+                            controlGroup = response.data;
+                            var headerText = $translate.instant('admin.security.organizationalHierarchy.dialog.group.confirm.delete.headerText') + group.name;
+                            if (parent.name == controlGroup) {
+                                headerText = $translate.instant('admin.security.organizationalHierarchy.dialog.group.confirm.delete.controlGroupHeaderWarning', {
+                                    groupName: group.name,
+                                    controlGroupName: controlGroup
                                 });
                             }
-                        }, function() {
-                            //cancel btn
-                            deferred.reject("cancel");
+                            var modalOptions = {
+                                closeButtonText: $translate.instant('admin.security.organizationalHierarchy.dialog.group.confirm.delete.cancelBtn'),
+                                actionButtonText: $translate.instant('admin.security.organizationalHierarchy.dialog.group.confirm.delete.deleteBtn'),
+                                headerText: headerText,
+                                bodyText: $translate.instant('admin.security.organizationalHierarchy.dialog.group.confirm.delete.bodyText')
+                            };
+                            ModalDialogService.showModal({}, modalOptions).then(function () {
+                                //ok btn
+                                if (!_.isEmpty(parent)) {
+                                    organizationalHierarchyService.removeLdapGroupMembership(group, parent).then(function (payload) {
+                                        refreshPageData();
+                                        deferred.resolve(payload);
+                                    }, function (payload) {
+                                        deferred.reject(payload);
+                                    });
+                                } else {
+                                    organizationalHierarchyService.deleteLdapGroup(group).then(function (payload) {
+                                        refreshPageData();
+                                        deferred.resolve(payload);
+                                    }, function (payload) {
+                                        deferred.reject(payload);
+                                    });
+                                }
+                            }, function () {
+                                //cancel btn
+                                deferred.reject("cancel");
+                            });
                         });
+
                         return deferred.promise;
                     };
 

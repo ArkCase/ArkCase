@@ -27,8 +27,8 @@ package com.armedia.acm.audit.service;
  * #L%
  */
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -48,7 +48,7 @@ import java.util.stream.Stream;
  */
 public class AuditPatternsSubstitution
 {
-    private final static Logger LOG = LoggerFactory.getLogger(AuditPatternsSubstitution.class);
+    private final static Logger LOG = LogManager.getLogger(AuditPatternsSubstitution.class);
 
     private static List<Pattern> PATTERNS = new ArrayList<>();
     private static String SUBSTITUTION = "$1*****$3";

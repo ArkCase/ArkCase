@@ -101,10 +101,10 @@ angular.module('admin').controller(
                             "enableSorting": false,
                             "visible": true,
                             "headerCellFilter": "translate",
-                            "cellTemplate": "<a target='_blank'" + " href='api/latest/plugin/admin/workflowconfiguration/workflows/{{row.entity.key}}/versions/{{row.entity.version}}/file' class='inline animated btn btn-default btn-xs'><i class='fa fa-download'></i></a>"
-                                    + "<a ng-disabled='uploadingInProgress' ng-click='grid.appScope.uploadReplaceBpmn()' href='' class='inline animated btn btn-default btn-xs'><i" + " class='fa fa-upload'></i></a>"
-                                    + "<a ng-click='grid.appScope.showHistory(row.entity)' href='' class='inline animated btn btn-default btn-xs'><i class='fa fa-retweet'></i></a>"
-                                    + "<a ng-click='grid.appScope.diagram(row.entity)' href='' class='inline animated btn btn-default btn-xs'><i class='fa fa-sitemap'></i></a>"
+                            "cellTemplate": "<a target='_blank'" + " href='api/latest/plugin/admin/workflowconfiguration/workflows/{{row.entity.key}}/versions/{{row.entity.version}}/file' class='inline animated btn btn-default btn-xs' title='" + $translate.instant("admin.workflows.config.links.download") + "'><i class='fa fa-download'></i></a>"
+                                + "<a ng-disabled='uploadingInProgress' ng-click='grid.appScope.uploadReplaceBpmn()' href='' class='inline animated btn btn-default btn-xs' title='" + $translate.instant("admin.workflows.config.links.replaceFile") + "'><i" + " class='fa fa-upload'></i></a>"
+                                + "<a ng-click='grid.appScope.showHistory(row.entity)' href='' class='inline animated btn btn-default btn-xs' title='" + $translate.instant("admin.workflows.config.links.versionHistory") + "'><i class='fa fa-retweet'></i></a>"
+                                + "<a ng-click='grid.appScope.diagram(row.entity)' href='' class='inline animated btn btn-default btn-xs' title='" + $translate.instant("admin.workflows.config.links.diagram") + "'><i class='fa fa-sitemap'></i></a>"
                         }
                     }
 

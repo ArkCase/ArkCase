@@ -27,18 +27,27 @@ package com.armedia.acm.services.notification.service.provider;
  * #L%
  */
 
+import com.armedia.acm.core.provider.TemplateModelProvider;
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.users.dao.UserDao;
+import com.armedia.acm.services.users.model.AcmUser;
 
-public class AcmUserTemplateModelProvider implements TemplateModelProvider
+public class AcmUserTemplateModelProvider implements TemplateModelProvider<AcmUser>
 {
 
     private UserDao userDao;
 
     @Override
-    public Object getModel(Notification notification)
+    public AcmUser getModel(Object notification)
     {
-        return userDao.findByUserId(notification.getParentName());
+        return userDao.findByUserId(((Notification) notification).getParentName());
+
+    }
+
+    @Override
+    public Class<AcmUser> getType()
+    {
+        return AcmUser.class;
     }
 
     public UserDao getUserDao()

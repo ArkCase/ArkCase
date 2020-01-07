@@ -68,6 +68,7 @@
     </bean>
     <bean id="ecmFileNewContentHandler" class="com.armedia.acm.plugins.ecm.pipeline.presave.EcmFileNewContentHandler">
         <property name="ecmFileMuleUtils" ref="ecmFileMuleUtils"/>
+        <property name="progressIndicatorService" ref="progressIndicatorService"/>
     </bean>
     <bean id="ecmFileNewMetadataHandler" class="com.armedia.acm.plugins.ecm.pipeline.presave.EcmFileNewMetadataHandler">
         <property name="ecmFileDao" ref="ecmFileDao"/>
@@ -100,6 +101,12 @@
           class="com.armedia.acm.plugins.ecm.pipeline.postsave.EcmFileParticipantsHandler">
         <property name="fileParticipantService" ref="fileParticipantService"/>
     </bean>
+    <bean id="fileUploadConversionHandler" class="com.armedia.acm.plugins.ecm.pipeline.postsave.FileUploadConversionHandler" scope="refresh">
+        <aop:scoped-proxy/>
+        <property name="fileConverterFactory" ref="fileConverterFactory"/>
+        <property name="ecmFileService" ref="ecmFileService"/>
+        <property name="ecmFileDao" ref="ecmFileDao"/>
+    </bean>
     <!-- This pipeline uploads document content to Alfresco and the metadata to the acm3 database -->
     <bean id="ecmFileUploadPipelineManager" class="com.armedia.acm.services.pipeline.PipelineManager">
         <property name="preSaveHandlers">
@@ -115,6 +122,7 @@
         <property name="postSaveHandlers">
             <list>
                 <ref bean="ecmFileParticipantsHandler"/>
+                <ref bean="fileUploadConversionHandler"/>
             </list>
         </property>
     </bean>
@@ -142,7 +150,7 @@
         <property name="ecmFileUploadPipelineManager" ref="ecmFileUploadPipelineManager"/>
         <property name="ecmFileUpdatePipelineManager" ref="ecmFileUpdatePipelineManager"/>
         <property name="cmisConfigUtils" ref="cmisConfigUtils"/>
-        <property name="ocrEnabled" value="#{ecmFileConfig.snowboundEnableOcr}"/>
+        <property name="ecmFileConfig" ref="ecmFileConfig"/>
         <property name="mimeTypesByTika">
             <map>
                 <entry key="text/plain">
@@ -186,6 +194,11 @@
                         <value>audio/mp3</value>
                     </list>
                 </entry>
+                <entry key="audio/mpga">
+                    <list>
+                        <value>audio/mp3</value>
+                    </list>
+                </entry>
                 <entry key="audio/x-aac">
                     <list>
                         <value>audio/vnd.dlna.adts</value>
@@ -209,6 +222,16 @@
                 <entry key="audio/x-oggflac">
                     <list>
                         <value>audio/ogg</value>
+                    </list>
+                </entry>
+                <entry key="audio/vorbis">
+                    <list>
+                        <value>audio/ogg</value>
+                    </list>
+                </entry>
+                <entry key="video/theora">
+                    <list>
+                        <value>video/ogg</value>
                     </list>
                 </entry>
                 <entry key="audio/mp4">
@@ -241,8 +264,38 @@
                         <value>application/octet-stream</value>
                     </list>
                 </entry>
+                <entry key="text/csv">
+                    <list>
+                        <value>application/vnd.ms-excel</value>
+                    </list>
+                </entry>
+                <entry key="application/zip">
+                    <list>
+                        <value>application/x-zip-compressed</value>
+                    </list>
+                </entry>
+                <entry key="application/x-dosexec">
+                    <value>application/octet-stream</value>
+                </entry>
             </map>
         </property>
+        <property name="progressIndicatorService" ref="progressIndicatorService"/>
+    </bean>
+
+    <import resource="file:${user.home}/.arkcase/acm/activeMqSpringConfig.xml"/>
+
+    <bean id="jmsTemplate" class="org.springframework.jms.core.JmsTemplate">
+        <constructor-arg index="0" ref="amqConnectionFactory"/>
+        <property name="deliveryMode" value="2"/>
+        <property name="receiveTimeout" value="500"/>
+    </bean>
+
+    <bean id="progressIndicatorService" class="com.armedia.acm.plugins.ecm.service.ProgressIndicatorService">
+    </bean>
+
+    <bean id="progressbarExecutor" class="com.armedia.acm.plugins.ecm.service.ProgressbarExecutor" scope="prototype">
+        <property name="activeMQConnectionFactory" ref="amqConnectionFactory"/>
+        <property name="jmsTemplate" ref="jmsTemplate"/>
     </bean>
 
     <bean id="ecmFileService" class="com.armedia.acm.plugins.ecm.service.impl.EcmFileServiceImpl">
@@ -282,18 +335,21 @@
         <property name="cmisConfigUtils" ref="cmisConfigUtils"/>
         <property name="fileParticipantService" ref="fileParticipantService"/>
         <property name="ecmFileConfig" ref="ecmFileConfig"/>
+        <property name="recycleBinItemService" ref="recycleBinItemServiceImpl"/>
         <property name="genericMessagesChannel" ref="genericMessagesChannel"/>
         <property name="objectLockService" ref="objectLockService"/>
         <property name="emailSenderConfig" ref="emailSenderConfig"/>
+        <property name="progressIndicatorService" ref="progressIndicatorService"/>
     </bean>
 
     <bean id="ecmFileToSolrTrasnformer" class="com.armedia.acm.plugins.ecm.service.EcmFileToSolrTransformer">
         <property name="ecmFileDao" ref="ecmFileDao"/>
-        <property name="enableDocumentACL" value="#{dacConfig.enableDocumentACL}"/>
-        <property name="enableContentFileIndexing" value="#{solrConfig.enableContentFileIndexing}"/>
+        <property name="dacConfig" ref="dacConfig"/>
+        <property name="solrConfig" ref="solrConfig"/>
         <property name="userDao" ref="userJpaDao"/>
         <property name="searchAccessControlFields" ref="searchAccessControlFields"/>
         <property name="acmDataService" ref="acmDataService"/>
+
     </bean>
 
     <bean id="acmContainerToSolrTransformer" class="com.armedia.acm.plugins.ecm.service.AcmContainerToSolrTransformer">
@@ -309,7 +365,6 @@
         <property name="ecmFileService" ref="ecmFileService"/>
         <property name="objectConverter" ref="objectConverter"/>
         <property name="cmisConfigUtils" ref="cmisConfigUtils"/>
-        <property name="solrContentFileHandler" value="#{solrConfig.contentFileHandler}"/>
         <property name="solrRestClient" ref="solrRestClient"/>
     </bean>
 
@@ -320,6 +375,14 @@
     <bean id="fileWorkflowBusinessRule" class="com.armedia.acm.plugins.ecm.service.impl.FileWorkflowBusinessRule"
           parent="simpleStatelessSingleObjectRuleManager">
         <property name="ruleSpreadsheetFilename" value="drools-form-business-process-rules.xlsx"/>
+    </bean>
+
+    <bean id="recycleBinToSolrTransformer" class="com.armedia.acm.plugins.ecm.service.RecycleBinItemToSolrTransformer">
+        <property name="recycleBinItemDao" ref="recycleBinItemDao"/>
+        <property name="ecmFileDao" ref="ecmFileDao"/>
+        <property name="acmContainerDao" ref="acmContainerFolderDao"/>
+        <property name="folderService" ref="acmFolderService"/>
+        <property name="ecmFileService" ref="ecmFileService"/>
     </bean>
 
     <!--<bean id="ecmFileTagChangeListener" class="com.armedia.acm.plugins.ecm.service.EcmFileAssociatedTagChangeListener">-->
@@ -350,6 +413,8 @@
     <bean id="fileEventPublisher" class="com.armedia.acm.plugins.ecm.service.FileEventPublisher"/>
 
     <bean id="folderEventPublisher" class="com.armedia.acm.plugins.ecm.service.FolderEventPublisher"/>
+
+    <bean id="recycleBinItemEventPublisher" class="com.armedia.acm.plugins.ecm.service.RecycleBinItemEventPublisher"/>
 
     <bean id="ecmFilePlugin" class="com.armedia.acm.pluginmanager.model.AcmPlugin">
         <property name="pluginName" value="ECM File Plugin"/>
@@ -393,12 +458,26 @@
         <property name="ecmFileService" ref="ecmFileService"/>
         <property name="pdfService" ref="pdfService"/>
         <property name="ecmFileDao" ref="ecmFileDao"/>
+        <property name="folderAndFilesUtils" ref="folderAndFilesUtils"/>
+    </bean>
+
+    <bean id="recycleBinItemDao" class="com.armedia.acm.plugins.ecm.dao.RecycleBinItemDao">
+    </bean>
+
+    <bean id="recycleBinItemServiceImpl" class="com.armedia.acm.plugins.ecm.service.impl.RecycleBinItemServiceImpl">
+        <property name="recycleBinItemDao" ref="recycleBinItemDao"/>
+        <property name="ecmFileService" ref="ecmFileService"/>
+        <property name="ecmFileDao" ref="ecmFileDao"/>
+        <property name="searchResults" ref="searchResults"/>
+        <property name="solrQuery" ref="executeSolrQuery"/>
+        <property name="folderService" ref="acmFolderService"/>
+        <property name="fileEventPublisher" ref="fileEventPublisher"/>
     </bean>
 
     <bean id="fileAclSolrUpdateHelper" class="com.armedia.acm.plugins.ecm.service.FileAclSolrUpdateHelper">
         <property name="ecmFileDao" ref="ecmFileDao"/>
-        <property name="enableDocumentACL" value="#{dacConfig.enableDocumentACL}"/>
         <property name="searchAccessControlFields" ref="searchAccessControlFields"/>
+        <property name="dacConfig" ref="dacConfig"/>
     </bean>
 
     <bean id="ecmFileConfig" class="com.armedia.acm.plugins.ecm.model.EcmFileConfig" scope="refresh">
@@ -407,5 +486,32 @@
 
     <bean id="updateMetadataConfig" class="com.armedia.acm.plugins.ecm.model.UpdateMetadataConfig" scope="refresh">
         <aop:scoped-proxy/>
+    </bean>
+
+    <bean id="fileChunkService" class="com.armedia.acm.plugins.ecm.service.impl.FileChunkServiceImpl">
+        <property name="folderAndFilesUtils" ref="folderAndFilesUtils"/>
+        <property name="ecmFileService" ref="ecmFileService"/>
+        <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
+        <property name="ecmFileUploaderConfig" ref="ecmFileUploaderConfig"/>
+    </bean>
+
+    <bean id="ecmFileUploaderConfig" class="com.armedia.acm.plugins.ecm.model.EcmFileUploaderConfig" scope="refresh">
+        <aop:scoped-proxy/>
+    </bean>
+
+    <bean id="ecmFileUploaderConfigurationService" class="com.armedia.acm.plugins.ecm.service.impl.EcmFileUploaderConfigurationServiceImpl">
+        <property name="ecmFileUploaderConfig" ref="ecmFileUploaderConfig"/>
+        <property name="configurationPropertyService" ref="configurationPropertyService"/>
+    </bean>
+
+    <bean id="removeExpiredFilesService" class="com.armedia.acm.plugins.ecm.service.RemoveExpiredFilesService">
+        <property name="fileChunkService" ref="fileChunkService"/>
+        <property name="ecmFileService" ref="ecmFileService"/>
+        <property name="ecmFileUploaderConfig" ref="ecmFileUploaderConfig"/>
+    </bean>
+
+    <bean id="removeExpiredFilesJobDescriptor" class="com.armedia.acm.plugins.ecm.service.RemoveExpiredFilesJobDescriptor"
+          parent="acmJobDescriptor">
+        <property name="removeExpiredFilesService" ref="removeExpiredFilesService"/>
     </bean>
 </beans>

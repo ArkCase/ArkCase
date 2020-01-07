@@ -32,8 +32,8 @@ import com.armedia.acm.plugins.dashboard.site.dao.SiteDao;
 import com.armedia.acm.plugins.dashboard.site.model.Site;
 import com.armedia.acm.plugins.dashboard.site.model.SiteConstants;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -50,7 +50,7 @@ import java.util.List;
 @RequestMapping({ "/api/v1/plugin/dashboard/widgets/site", "/api/latest/plugin/dashboard/widgets/site" })
 public class ListSiteAPIController
 {
-    private static final Logger LOGGER = LoggerFactory.getLogger(ListSiteAPIController.class);
+    private static final Logger LOGGER = LogManager.getLogger(ListSiteAPIController.class);
     private SiteDao siteDao;
 
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)

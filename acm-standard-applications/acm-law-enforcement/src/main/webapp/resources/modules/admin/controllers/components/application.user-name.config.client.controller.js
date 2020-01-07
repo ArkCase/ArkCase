@@ -1,15 +1,20 @@
 'use strict';
 
 angular.module('admin').controller('Admin.UserNameConfigController', [ '$scope', '$q', '$modal', 'Admin.ApplicationSettingsService', 'MessageService', function($scope, $q, $modal, ApplicationSettingsService, messageService) {
+
     var oldPropertyValue;
-    ApplicationSettingsService.getProperty(ApplicationSettingsService.PROPERTIES.DISPLAY_USERNAME).then(function(response) {
+    $scope.configDataModel = {};
+
+    ApplicationSettingsService.getApplicationPropertiesConfig().then(function (response) {
         $scope.nameProperty = response.data[ApplicationSettingsService.PROPERTIES.DISPLAY_USERNAME];
         oldPropertyValue = $scope.nameProperty;
+        $scope.configDataModel = response.data;
     });
 
     $scope.applyChanges = function() {
         if (oldPropertyValue != $scope.nameProperty) {
-            ApplicationSettingsService.setProperty(ApplicationSettingsService.PROPERTIES.DISPLAY_USERNAME, $scope.nameProperty);
+            $scope.configDataModel[ApplicationSettingsService.PROPERTIES.DISPLAY_USERNAME] = $scope.nameProperty;
+            ApplicationSettingsService.saveApplicationPropertyConfig($scope.configDataModel);
             var modalInstance = $modal.open({
                 templateUrl: 'modules/admin/views/components/application-user-name.config.modal-info.client.view.html',
                 controller: 'AdminUserInfoModalController',

@@ -13,6 +13,7 @@ angular.module('cases').config([ '$stateProvider', function($stateProvider) {
                 $translatePartialLoader.addPart('cases');
                 $translatePartialLoader.addPart('document-details');
                 $translatePartialLoader.addPart('preference');
+                $translatePartialLoader.addPart('admin');
                 $translate.resetDataDict().addDataDictFromLabels(LocaleService.getLabelResources([ "cases", "common" ], "en")).addDataDictFromLookup(ObjectLookupService.getLookupByLookupName("caseFileTypes")).addDataDictFromLookup(ObjectLookupService.getLookupByLookupName("priorities"));
                 return $translate.refresh();
             } ]
@@ -117,6 +118,16 @@ angular.module('cases').config([ '$stateProvider', function($stateProvider) {
     .state('cases.approvalRouting', {
         url: '/:type/:id/approvals',
         templateUrl: 'modules/cases/views/components/case-approval-routing.client.view.html'
+    })
+
+    .state('cases.billing', {
+        url: '/:id/billing',
+        templateUrl: 'modules/cases/views/components/case-billing.client.view.html'
+     })
+
+    .state('cases.suggestedCases', {
+        url: '/:id/suggested',
+        templateUrl: 'modules/cases/views/components/case-suggested-cases.client.view.html'
     })
 
 } ]).run([ 'Helper.DashboardService', function(DashboardHelper) {

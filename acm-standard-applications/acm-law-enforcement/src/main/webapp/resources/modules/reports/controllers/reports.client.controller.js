@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('reports').controller('ReportsController',
-        [ '$scope', '$q', '$window', 'UtilService', 'Util.DateService', 'ConfigService', 'LookupService', 'Reports.BuildUrl', 'Reports.Data', 'Helper.LocaleService', function($scope, $q, $window, Util, UtilDateService, ConfigService, LookupService, BuildUrl, Data, LocaleHelper) {
+    ['$scope', '$q', '$window', '$modal', 'UtilService', 'Util.DateService', 'ConfigService', 'LookupService', 'Reports.BuildUrl', 'Reports.Data', 'Helper.LocaleService', function ($scope, $q, $window, $modal, Util, UtilDateService, ConfigService, LookupService, BuildUrl, Data, LocaleHelper) {
 
             new LocaleHelper.Locale({
                 scope: $scope
@@ -12,6 +12,10 @@ angular.module('reports').controller('ReportsController',
             $scope.showXmlReport = false;
 
             $scope.data = Data.getData();
+
+             $scope.iframeLoadedCallBack = function () {
+                $scope.modalInstance.close();
+            };
 
             $scope.data.fiscalYears = [];
             
@@ -66,6 +70,15 @@ angular.module('reports').controller('ReportsController',
             });
 
             $scope.generateReport = function() {
+
+                var modalInstance = $modal.open({
+                    animation: true,
+                    templateUrl: 'modules/common/views/object.modal.loading-spinner.html',
+                    size: 'sm',
+                    backdrop: 'static'
+                });
+                $scope.modalInstance = modalInstance;
+
                 if ($scope.data.dateSearchType == 'FISCAL_YEAR') {
                     var fiscalYear = _.find($scope.data.fiscalYears, {
                         "id": $scope.data.fiscalYear
@@ -96,4 +109,5 @@ angular.module('reports').controller('ReportsController',
                 }
             }
             ;
+
         } ]);

@@ -30,11 +30,12 @@ package com.armedia.acm.audit.dao;
 import com.armedia.acm.audit.model.AuditEvent;
 import com.armedia.acm.data.AcmAbstractDao;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
@@ -53,7 +54,7 @@ import java.util.List;
  */
 public class AuditDao extends AcmAbstractDao<AuditEvent>
 {
-    private final Logger LOG = LoggerFactory.getLogger(getClass());
+    private final Logger LOG = LogManager.getLogger(getClass());
 
     @PersistenceContext
     private EntityManager em;
@@ -292,5 +293,28 @@ public class AuditDao extends AcmAbstractDao<AuditEvent>
 
         Long count = (Long) query.getSingleResult();
         return count;
+    }
+
+    public AuditEvent getLastAuditEventByObjectIdAndTrackId(Long objectId, String trackId)
+    {
+        String queryText = "SELECT ae " +
+                "FROM   AuditEvent ae " +
+                "WHERE  ae.objectId = :objectId " +
+                "AND 	ae.trackId = :trackId " +
+                "AND 	ae.parentObjectType = 'FILE' " +
+                "ORDER BY ae.eventDate desc ";
+
+        Query findAudits = getEm().createQuery(queryText);
+        findAudits.setParameter("objectId", objectId);
+        findAudits.setParameter("trackId", trackId);
+        findAudits.setMaxResults(1);
+
+        List<AuditEvent> resultList = findAudits.getResultList();
+        if (!resultList.isEmpty())
+        {
+            return resultList.get(0);
+        }
+
+        throw new NoResultException();
     }
 }

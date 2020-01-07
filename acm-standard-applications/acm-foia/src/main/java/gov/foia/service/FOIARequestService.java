@@ -34,6 +34,7 @@ import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUpdateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.addressable.model.ContactMethod;
+import com.armedia.acm.plugins.addressable.model.PostalAddress;
 import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.casefile.service.SaveCaseService;
@@ -50,8 +51,8 @@ import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.services.notification.service.NotificationSender;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -74,7 +75,7 @@ import gov.foia.model.FOIARequest;
 public class FOIARequestService
 {
 
-    private final Logger log = LoggerFactory.getLogger(getClass());
+    private final Logger log = LogManager.getLogger(getClass());
     private SaveCaseService saveCaseService;
     private ResponseFolderCompressorService responseFolderCompressorService;
     private FOIARequestFileBrokerClient foiaRequestFileBrokerClient;
@@ -153,6 +154,7 @@ public class FOIARequestService
                 else
                 {
                     setDefaultPhoneAndEmailIfAny(in);
+                    setDefaultAddressType(in);
                     saved = getSaveCaseService().saveCase(in, filesMap, auth, ipAddress);
 
                 }
@@ -169,17 +171,49 @@ public class FOIARequestService
     private void setDefaultPhoneAndEmailIfAny(CaseFile saved)
     {
         Person person = saved.getOriginator().getPerson();
-        for (ContactMethod contact : person.getContactMethods())
+        for (int i=0; i < person.getContactMethods().size(); i++)
         {
-            String type = contact.getType();
-            String value = contact.getValue();
-            if (type.toLowerCase().equals("phone") && value != null && !value.isEmpty())
+            ContactMethod contact = person.getContactMethods().get(i);
+            if (contact != null)
             {
-                person.setDefaultPhone(contact);
+                if (contact.getType() == null)
+                {
+                    if (i == 0)
+                    {
+                        contact.setType("phone");
+                     }
+                    else if (i == 1)
+                    {
+                        contact.setType("fax");
+                    }
+                    else
+                    {
+                        contact.setType("email");
+                    }
+                }
+                String type = contact.getType();
+                String value = contact.getValue();
+                if (type.toLowerCase().equals("phone") && value != null && !value.isEmpty())
+                {
+                    person.setDefaultPhone(contact);
+                }
+                else if (type.toLowerCase().equals("email") && value != null && !value.isEmpty())
+                {
+                    person.setDefaultEmail(contact);
+                }
             }
-            else if (type.toLowerCase().equals("email") && value != null && !value.isEmpty())
+        }
+    }
+
+    private void setDefaultAddressType(CaseFile saved)
+    {
+        Person person = saved.getOriginator().getPerson();
+        if ( person.getAddresses().size() != 0)
+        {
+            PostalAddress address = person.getAddresses().get(0);
+            if (address.getType() == null)
             {
-                person.setDefaultEmail(contact);
+                address.setType("Business");
             }
         }
     }

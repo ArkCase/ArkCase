@@ -43,7 +43,7 @@ public class ComplaintClosedEvent extends ComplaintPersistenceEvent
 
     private static final String EVENT_TYPE = "com.armedia.acm.complaint.closed";
 
-    public ComplaintClosedEvent(Complaint source, boolean succeeded, String user, Date closeDate)
+    public ComplaintClosedEvent(Complaint source, boolean succeeded, String user, Date closeDate, String ipAddress)
     {
         super(source);
         setObjectId(source.getComplaintId());
@@ -52,6 +52,7 @@ public class ComplaintClosedEvent extends ComplaintPersistenceEvent
         setComplaintNumber(source.getComplaintNumber());
         setEventDate(closeDate);
         setUserId(user);
+        setIpAddress(ipAddress);
     }
 
     @Override

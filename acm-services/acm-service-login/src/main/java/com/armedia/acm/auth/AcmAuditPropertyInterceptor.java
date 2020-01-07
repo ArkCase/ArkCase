@@ -29,8 +29,8 @@ package com.armedia.acm.auth;
 
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import javax.servlet.http.HttpServletRequest;
@@ -42,7 +42,7 @@ import javax.servlet.http.HttpSession;
  */
 public class AcmAuditPropertyInterceptor extends HandlerInterceptorAdapter
 {
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
     private AuditPropertyEntityAdapter entityAdapter;
 
     @Override

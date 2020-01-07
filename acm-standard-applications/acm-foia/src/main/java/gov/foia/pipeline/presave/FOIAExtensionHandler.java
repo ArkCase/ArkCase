@@ -4,7 +4,7 @@ package gov.foia.pipeline.presave;
  * #%L
  * ACM Standard Application: Freedom of Information Act
  * %%
- * Copyright (C) 2014 - 2018 ArkCase LLC
+ * Copyright (C) 2014 - 2019 ArkCase LLC
  * %%
  * This file is part of the ArkCase software. 
  * 
@@ -26,36 +26,35 @@ package gov.foia.pipeline.presave;
  * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
  * #L%
  */
-
-import com.armedia.acm.plugins.admin.service.HolidayConfigurationService;
 import com.armedia.acm.plugins.casefile.pipeline.CaseFilePipelineContext;
 import com.armedia.acm.services.dataaccess.service.impl.ArkPermissionEvaluator;
+import com.armedia.acm.services.holiday.service.HolidayConfigurationService;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.pipeline.handler.PipelineHandler;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import gov.foia.dao.FOIARequestDao;
 import gov.foia.model.FOIAConstants;
 import gov.foia.model.FOIARequest;
+import gov.foia.model.FoiaConfig;
 
 public class FOIAExtensionHandler implements PipelineHandler<FOIARequest, CaseFilePipelineContext>
 {
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private transient final Logger log = LogManager.getLogger(getClass());
 
     private FOIARequestDao foiaRequestDao;
     private HolidayConfigurationService holidayConfigurationService;
     private ArkPermissionEvaluator arkPermissionEvaluator;
-    private int extensionWorkingDays;
-    private String requestExtensionWorkingDaysEnabled;
+    private FoiaConfig foiaConfig;
 
     @Override
     public void execute(FOIARequest entity, CaseFilePipelineContext pipelineContext) throws PipelineProcessException
     {
         log.debug("FOIARequest extension pre save handler called for RequestId={}", entity.getId());
 
-        if (Boolean.parseBoolean(requestExtensionWorkingDaysEnabled))
+        if (foiaConfig.getRequestExtensionWorkingDaysEnabled())
         {
             if (entity.getId() != null)
             {
@@ -76,8 +75,8 @@ public class FOIAExtensionHandler implements PipelineHandler<FOIARequest, CaseFi
                                         + "} is not allowed to extend request due date!");
                     }
 
-                    entity.setDueDate(
-                            getHolidayConfigurationService().addWorkingDaysToDate(originalRequest.getDueDate(), extensionWorkingDays));
+                    entity.setDueDate(getHolidayConfigurationService().addWorkingDaysToDate(originalRequest.getDueDate(),
+                            foiaConfig.getRequestExtensionWorkingDays()));
 
                     // we set this property, so we can send a correspondence email to the requester in the postsave
                     // FOIAExtensionEmailHandler
@@ -115,26 +114,6 @@ public class FOIAExtensionHandler implements PipelineHandler<FOIARequest, CaseFi
         this.holidayConfigurationService = holidayConfigurationService;
     }
 
-    public int getExtensionWorkingDays()
-    {
-        return extensionWorkingDays;
-    }
-
-    public void setExtensionWorkingDays(int extensionWorkingDays)
-    {
-        this.extensionWorkingDays = extensionWorkingDays;
-    }
-
-    public String getRequestExtensionWorkingDaysEnabled()
-    {
-        return requestExtensionWorkingDaysEnabled;
-    }
-
-    public void setRequestExtensionWorkingDaysEnabled(String requestExtensionWorkingDaysEnabled)
-    {
-        this.requestExtensionWorkingDaysEnabled = requestExtensionWorkingDaysEnabled;
-    }
-
     public ArkPermissionEvaluator getArkPermissionEvaluator()
     {
         return arkPermissionEvaluator;
@@ -143,5 +122,15 @@ public class FOIAExtensionHandler implements PipelineHandler<FOIARequest, CaseFi
     public void setArkPermissionEvaluator(ArkPermissionEvaluator arkPermissionEvaluator)
     {
         this.arkPermissionEvaluator = arkPermissionEvaluator;
+    }
+
+    public FoiaConfig getFoiaConfig()
+    {
+        return foiaConfig;
+    }
+
+    public void setFoiaConfig(FoiaConfig foiaConfig)
+    {
+        this.foiaConfig = foiaConfig;
     }
 }

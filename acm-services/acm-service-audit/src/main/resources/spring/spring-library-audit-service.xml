@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:task="http://www.springframework.org/schema/task" xmlns:aop="http://www.springframework.org/schema/aop" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
-       http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-4.1.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+       xmlns:aop="http://www.springframework.org/schema/aop" xmlns:task="http://www.springframework.org/schema/task" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+         http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd">
+
+    <task:executor id="auditorExecutor" pool-size="5"/>
 
     <bean id="expressionParser" class="org.springframework.expression.spel.standard.SpelExpressionParser"/>
 
@@ -11,26 +13,16 @@
         <property name="auditEventDescriptionConfig" ref="auditEventDescriptionConfig"/>
     </bean>
 
-    <task:executor id="auditorExecutor" pool-size="5"/>
-
     <bean id="auditDao" class="com.armedia.acm.audit.dao.AuditDao"/>
 
-    <!-- Task Scheduler - once a day -->
-    <task:scheduler id="auditTaskScheduler" pool-size="1"/>
-    <task:scheduled-tasks scheduler="auditTaskScheduler">
-        <task:scheduled ref="auditService" method="purgeBatchRun" fixed-delay="#{auditConfig.batchFrequency}"/>
-    </task:scheduled-tasks>
-
     <bean id="auditSyslogLogger" class="com.armedia.acm.audit.service.systemlogger.SyslogLogger">
-        <property name="protocol" value="#{auditConfig.systemLogSysLogProtocol}"/>
-        <property name="host" value="#{auditConfig.systemLogSysLogHost}"/>
-        <property name="port" value="#{auditConfig.systemLogSysLogPort}"/>
-        <property name="acmApplication" ref="acmApplication"/>
+        <property name="auditConfig" ref="auditConfig"/>
+        <property name="applicationConfig" ref="applicationProperties"/>
     </bean>
 
     <bean id="auditWindowsEventLogger" class="com.armedia.acm.audit.service.systemlogger.WindowsEventLogger">
-        <property name="acmApplication" ref="acmApplication"/>
-        <property name="eventId" value="#{auditConfig.systemLogWindowsEventLogEventId}"/>
+        <property name="applicationConfig" ref="applicationProperties"/>
+        <property name="auditConfig" ref="auditConfig"/>
     </bean>
 
     <bean id="auditSystemLoggerFactory" class="com.armedia.acm.audit.service.systemlogger.SystemLoggerFactory">
@@ -44,6 +36,10 @@
         <property name="auditDao" ref="auditDao"/>
         <property name="systemLogger" ref="auditSystemLogger"/>
         <property name="auditConfig" ref="auditConfig"/>
+    </bean>
+
+    <bean class="com.armedia.acm.audit.service.PurgeAuditJobDescriptor" parent="acmJobDescriptor">
+        <property name="auditService" ref="auditService"/>
     </bean>
 
     <bean id="acmAuditRequestInterceptor" class="com.armedia.acm.audit.listeners.AcmAuditRequestInterceptor">

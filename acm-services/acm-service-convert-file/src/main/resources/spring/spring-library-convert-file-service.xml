@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="htmlToPDFConverter" class="com.armedia.acm.service.HTMLToPDFConverter"/>
+
+    <bean id="msgToPDFConverter" class="com.armedia.acm.service.MSGToPDFConverter"/>
+
+    <bean id="emlToPDFConverter" class="com.armedia.acm.service.EMLToPDFConverter"/>
+
+    <bean id="fileConverterFactory" class="com.armedia.acm.service.FileConverterFactory">
+        <property name="typeConverters">
+            <map>
+                <entry key=".html" value="htmlToPDFConverter" />
+                <entry key=".msg" value="msgToPDFConverter" />
+                <entry key=".eml" value="emlToPDFConverter" />
+            </map>
+        </property>
+    </bean>
+
+</beans>

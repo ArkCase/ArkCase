@@ -41,8 +41,8 @@ import com.armedia.acm.services.users.model.ApplicationRolesConfig;
 import com.armedia.acm.services.users.model.ApplicationRolesToPrivilegesConfig;
 
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.TransactionRequiredException;
@@ -71,7 +71,7 @@ import freemarker.template.Template;
  */
 public class RolesPrivilegesService
 {
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
     private String applicationRolesPrivilegesTemplatesLocation;
     private String applicationRolesPrivilegesTemplateFile;
     private String applicationRolesPrivilegesFile;
@@ -353,7 +353,7 @@ public class RolesPrivilegesService
         }
         catch (IllegalArgumentException | TransactionRequiredException | ConfigurationPropertyException e)
         {
-            throw new AcmRolesPrivilegesException("Failed to save new role [" + roleName + ".", e);
+            throw new AcmRolesPrivilegesException("Failed to save new role [" + roleName + "]", e);
         }
     }
 
@@ -404,7 +404,7 @@ public class RolesPrivilegesService
         }
         catch (ConfigurationPropertyException e)
         {
-            log.error("Can't save role [{}] to configuration", roleName, e);
+            log.error("Can't save role [{}] to role to privileges configuration", roleName, e);
             throw new AcmRolesPrivilegesException(String.format("Can't save role '%s' to configuration", roleName), e);
         }
     }

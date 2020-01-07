@@ -2,23 +2,16 @@ package com.armedia.acm.correspondence.service;
 
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
-import com.armedia.acm.core.exceptions.CorrespondenceMergeFieldVersionException;
-import com.armedia.acm.correspondence.model.CorrespondenceMergeField;
-import com.armedia.acm.correspondence.model.CorrespondenceQuery;
 import com.armedia.acm.correspondence.model.CorrespondenceTemplate;
-import com.armedia.acm.correspondence.utils.PoiWordGenerator;
+import com.armedia.acm.correspondence.utils.SpELWordEvaluator;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.services.config.lookups.service.LookupDao;
 import com.armedia.acm.services.labels.service.TranslationService;
 import com.armedia.acm.spring.SpringContextHolder;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
-import org.jsoup.Jsoup;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.security.core.Authentication;
@@ -26,21 +19,12 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.text.DecimalFormat;
-import java.text.Format;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
 /*-
  * #%L
@@ -76,10 +60,10 @@ public class CorrespondenceGenerator
 {
     protected static final String WORD_MIME_TYPE = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
     protected static final String CORRESPONDENCE_CATEGORY = "Correspondence";
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private transient final Logger log = LogManager.getLogger(getClass());
     @PersistenceContext
     private EntityManager entityManager;
-    private PoiWordGenerator wordGenerator;
+    private SpELWordEvaluator spelWordGenerator;
     private EcmFileService ecmFileService;
     private EcmFileDao ecmFileDao;
     private String correspondenceFolderName;
@@ -122,22 +106,13 @@ public class CorrespondenceGenerator
     public EcmFile generateCorrespondence(Authentication user, String parentObjectType, Long parentObjectId, String targetFolderCmisId,
             CorrespondenceTemplate template, Object[] queryArguments, OutputStream correspondenceOutputStream,
             InputStream correspondenceInputStream)
-            throws IOException, AcmCreateObjectFailedException, AcmUserActionFailedException, CorrespondenceMergeFieldVersionException
+            throws IOException, AcmCreateObjectFailedException, AcmUserActionFailedException
     {
-        Map<String, Object> queryResult = query(template, queryArguments);
-
-        if (queryResult == null || queryResult.isEmpty())
-        {
-            throw new IllegalStateException("Database query returned no results");
-        }
-
-        Map<String, String> substitutions = prepareSubstitutionMap(template, queryResult);
-
         Resource templateFile = new FileSystemResource(getCorrespondenceFolderName() + File.separator + template.getTemplateFilename());
 
         log.debug("Generating correspondence from template '{}'", templateFile.getFile().getAbsolutePath());
 
-        getWordGenerator().generate(templateFile, correspondenceOutputStream, substitutions);
+        getSpelWordGenerator().generate(templateFile, correspondenceOutputStream, template.getObjectType(), parentObjectId);
 
         EcmFile retval = null;
 
@@ -163,20 +138,12 @@ public class CorrespondenceGenerator
     }
 
     public OutputStream generateCorrespondenceOutputStream(CorrespondenceTemplate template, Object[] queryArguments,
-            OutputStream correspondenceOutputStream) throws IOException, CorrespondenceMergeFieldVersionException
+            OutputStream correspondenceOutputStream, Long parentObjectId) throws IOException
     {
-
-        Map<String, Object> queryResult = query(template, queryArguments);
-        if (queryResult == null || queryResult.isEmpty())
-        {
-            throw new IllegalStateException("Database query returned no results");
-        }
-
-        Map<String, String> substitutions = prepareSubstitutionMap(template, queryResult);
         Resource templateFile = new FileSystemResource(getCorrespondenceFolderName() + File.separator + template.getTemplateFilename());
 
         log.debug("Generating correspondence from template '{}'", templateFile.getFile().getAbsolutePath());
-        getWordGenerator().generate(templateFile, correspondenceOutputStream, substitutions);
+        getSpelWordGenerator().generate(templateFile, correspondenceOutputStream, template.getObjectType(), parentObjectId);
 
         return correspondenceOutputStream;
     }
@@ -185,200 +152,6 @@ public class CorrespondenceGenerator
     {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMdd-HHmmss-SSS");
         return template.getDocumentType() + " " + sdf.format(new Date()) + ".docx";
-    }
-
-    private Map<String, String> prepareSubstitutionMap(CorrespondenceTemplate template, Map<String, Object> queryResult)
-            throws IOException, CorrespondenceMergeFieldVersionException
-    {
-        Map<String, String> retval = new HashMap<>();
-
-        List<CorrespondenceMergeField> mergeFields = getCorrespondenceService().getActiveVersionMergeFieldsByType(template.getObjectType());
-
-        for (CorrespondenceMergeField mergeField : mergeFields)
-        {
-            Object value = queryResult.get(mergeField.getFieldId());
-            value = formatValue(value, Date.class, new SimpleDateFormat(template.getDateFormatString()), mergeField);
-            value = formatValue(value, Number.class, new DecimalFormat(template.getNumberFormatString()), mergeField);
-
-            // Remove all HTML elements if the value is not null
-            String columnValue = value == null ? null : Jsoup.parse(value.toString()).text();
-            if (columnValue != null && !columnValue.isEmpty())
-            {
-                columnValue = getTranslationService().translate(getLookupValue(columnValue));
-            }
-            retval.put(mergeField.getFieldValue(), columnValue);
-
-        }
-
-        return retval;
-    }
-
-    private String getLookupValue(String key)
-    {
-        JSONObject jsonObject = new JSONObject(getLookupDao().getMergedLookups());
-
-        String lookupSearch = searchByLookupType("standardLookup", key, jsonObject);
-        if (!lookupSearch.equals(key))
-        {
-            return lookupSearch;
-        }
-        else
-        {
-            lookupSearch = searchByLookupType("nestedLookup", key, jsonObject);
-            if (!lookupSearch.equals(key))
-            {
-                return lookupSearch;
-            }
-            else
-            {
-                lookupSearch = searchByLookupType("inverseValuesLookup", key, jsonObject);
-                if (!lookupSearch.equals(key))
-                {
-                    return lookupSearch;
-                }
-            }
-        }
-        return key;
-    }
-
-    private String searchByLookupType(String lookupType, String key, JSONObject jsonObject)
-    {
-        if (jsonObject.get(lookupType) != null)
-        {
-            JSONArray lookupArray = jsonObject.getJSONArray(lookupType);
-            for (int i = 0; i < lookupArray.length(); i++)
-            {
-                if (((JSONObject) lookupArray.get(i)).get("entries") != null)
-                {
-                    JSONArray entries = ((JSONObject) lookupArray.get(i)).getJSONArray("entries");
-                    for (int j = 0; j < entries.length(); j++)
-                    {
-                        if (((JSONObject) entries.get(j)).get("key").equals(key))
-                        {
-                            return ((JSONObject) entries.get(j)).getString("value");
-                        }
-                        if (lookupType.equals("nestedLookup"))
-                        {
-                            if (((JSONObject) entries.get(j)).get("subLookup") != null)
-                            {
-                                JSONArray subLookup = ((JSONObject) entries.get(j)).getJSONArray("subLookup");
-                                for (int k = 0; k < subLookup.length(); k++)
-                                {
-                                    if (((JSONObject) subLookup.get(k)).get("key").equals(key))
-                                    {
-                                        return ((JSONObject) subLookup.get(k)).getString("value");
-                                    }
-                                }
-                            }
-                        }
-                        else if (lookupType.equals("inverseValuesLookup"))
-                        {
-                            if (((JSONObject) entries.get(j)).get("inverseKey").equals(key))
-                            {
-                                return ((JSONObject) entries.get(j)).getString("inverseValue");
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        return key;
-    }
-
-    private Object formatValue(Object result, Class toBeFormatted, Format format, CorrespondenceMergeField mergeField)
-    {
-
-        if (result != null && toBeFormatted.isAssignableFrom(result.getClass()))
-        {
-            result = format.format(result);
-        }
-
-        return result;
-    }
-
-    private int stringToInt(String str)
-    {
-        try
-        {
-            return Integer.parseInt(str);
-        }
-        catch (NumberFormatException e)
-        {
-            log.warn("[{}] is not valid string representation of an integer.", str);
-        }
-
-        return 0;
-    }
-
-    private int getUnitInInt(String str)
-    {
-        if (str != null)
-        {
-            switch (str.toUpperCase())
-            {
-            case "MILLISECONDS":
-                return Calendar.MILLISECOND;
-            case "SECONDS":
-                return Calendar.SECOND;
-            case "MINUTES":
-                return Calendar.MINUTE;
-            case "HOURS":
-                return Calendar.HOUR;
-            case "DAYS":
-                return Calendar.DATE;
-            case "YEARS":
-                return Calendar.YEAR;
-            }
-        }
-
-        return 0;
-    }
-
-    private Map<String, Object> query(CorrespondenceTemplate template, Object[] queryArguments)
-    {
-        Map<String, CorrespondenceQuery> correspondenceQueryBeansMap = springContextHolder.getAllBeansOfType(CorrespondenceQuery.class);
-        Optional<CorrespondenceQuery> optionalCorrespondenceQuery = correspondenceQueryBeansMap.values().stream()
-                .filter(cQuery -> cQuery.getType().toString().equals(template.getObjectType())).findFirst();
-
-        CorrespondenceQuery correspondenceQuery;
-        if (optionalCorrespondenceQuery.isPresent())
-        {
-            correspondenceQuery = optionalCorrespondenceQuery.get();
-        }
-        else
-        {
-            return new HashMap<>();
-        }
-
-        Query select = getEntityManager().createNativeQuery(correspondenceQuery.getSqlQuery());
-
-        for (int a = 0; a < queryArguments.length; a++)
-        {
-            // parameter indexes are 1-based
-            select = select.setParameter(a + 1, queryArguments[a]);
-        }
-
-        List<Object[]> results = select.getResultList();
-
-        Map<String, Object> resultMap = new HashMap<>();
-        List<String> queryFields = correspondenceQuery.getFieldNames();
-        if (results != null && !results.isEmpty() && queryFields != null && !queryFields.isEmpty())
-        {
-            Object[] queryValues = results.get(0);
-            if (queryValues != null)
-            {
-                if (queryValues.length != queryFields.size())
-                {
-                    throw new IllegalStateException("Query must have as many columns as defined fieldNames.");
-                }
-
-                for (int i = 0; i < queryValues.length; i++)
-                {
-                    resultMap.put(queryFields.get(i), queryValues[i]);
-                }
-            }
-        }
-        return resultMap;
     }
 
     public EntityManager getEntityManager()
@@ -391,14 +164,14 @@ public class CorrespondenceGenerator
         this.entityManager = entityManager;
     }
 
-    public PoiWordGenerator getWordGenerator()
+    public SpELWordEvaluator getSpelWordGenerator()
     {
-        return wordGenerator;
+        return spelWordGenerator;
     }
 
-    public void setWordGenerator(PoiWordGenerator wordGenerator)
+    public void setSpelWordGenerator(SpELWordEvaluator spelWordGenerator)
     {
-        this.wordGenerator = wordGenerator;
+        this.spelWordGenerator = spelWordGenerator;
     }
 
     public EcmFileService getEcmFileService()

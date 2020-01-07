@@ -31,10 +31,9 @@ import com.armedia.acm.calendar.config.service.CalendarAdminService;
 import com.armedia.acm.calendar.config.service.CalendarConfiguration;
 import com.armedia.acm.calendar.config.service.CalendarConfigurationException;
 import com.armedia.acm.calendar.config.service.CalendarConfigurationsByObjectType;
-import com.armedia.acm.scheduler.AcmSchedulableBean;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.util.Map;
 
@@ -42,10 +41,10 @@ import java.util.Map;
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Jul 18, 2017
  *
  */
-public class AcmScheduledCalendarPurger implements AcmSchedulableBean
+public class AcmScheduledCalendarPurger
 {
 
-    private final Logger log = LoggerFactory.getLogger(getClass());
+    private final Logger log = LogManager.getLogger(getClass());
 
     private CalendarAdminService calendarAdminService;
 
@@ -69,11 +68,6 @@ public class AcmScheduledCalendarPurger implements AcmSchedulableBean
         this.calendarService = calendarService;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see com.armedia.acm.scheduler.AcmSchedulableBean#executeTask()
-     */
-    @Override
     public void executeTask()
     {
         try

@@ -38,6 +38,11 @@ angular.module('services').factory(
                             "clickFn": "deleteRow",
                             "icon": "fa fa-trash-o",
                             "readOnlyFn": "isReadOnly"
+                        }, {
+                            "name": "copy",
+                            "clickFn": "copyRow",
+                            "icon": "fa fa-copy",
+                            "readOnlyFn": "isReadOnly"
                         } ]
 
                         /**
@@ -624,7 +629,7 @@ angular.module('services').factory(
                          *     not subject to any read only function control (i.e., it is always regardless if grid is read only or not)
                          */
                         ,
-                        addButton: function(config, name, icon, clickFn, readOnlyFn) {
+                        addButton: function(config, name, icon, clickFn, readOnlyFn, title) {
                             if (Util.isEmpty(icon) || Util.isEmpty(clickFn) || Util.isEmpty(readOnlyFn)) {
                                 var found = _.find(Service.CommonButtons, {
                                     name: name
@@ -650,7 +655,7 @@ angular.module('services').factory(
                             //}
                             //cellTemplate += "></i></span>";
 
-                            var cellTemplate = "<a title='' class='inline animated btn btn-default btn-xs'" + " ng-click='grid.appScope." + clickFn + "(row.entity)'";
+                            var cellTemplate = title ? "<a title=" + title + " class='inline animated btn btn-default btn-xs'" + " ng-click='grid.appScope." + clickFn + "(row.entity)'" : "<a title='' class='inline animated btn btn-default btn-xs'" + " ng-click='grid.appScope." + clickFn + "(row.entity)'";
                             if (readOnlyFn) {
                                 cellTemplate += " ng-hide='grid.appScope." + readOnlyFn + "(row.entity)'";
                             }
@@ -672,7 +677,7 @@ angular.module('services').factory(
                                     //, enableSorting: false
                                     //, enableColumnResizing: false
                                     ,
-                                    width: 50,
+                                    width: 65,
                                     headerCellTemplate: "<span></span>",
                                     cellTemplate: cellTemplate
                                 };

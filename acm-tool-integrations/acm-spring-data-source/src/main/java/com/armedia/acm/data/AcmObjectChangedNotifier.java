@@ -34,8 +34,8 @@ import static com.armedia.acm.data.AcmObjectEventConstants.ACTION_UPDATE;
 import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.core.AcmParentObjectInfo;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.context.ApplicationListener;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
@@ -48,7 +48,7 @@ import java.util.Date;
  */
 public class AcmObjectChangedNotifier implements ApplicationListener<AcmDatabaseChangesEvent>
 {
-    private transient Logger log = LoggerFactory.getLogger(getClass());
+    private transient Logger log = LogManager.getLogger(getClass());
     private MessageChannel objectEventChannel;
 
     @Override

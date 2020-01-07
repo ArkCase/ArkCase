@@ -98,7 +98,7 @@ public class ReleaseBusinessProcessIT
     public void setUp() throws Exception
     {
         // deploy
-        repo.createDeployment().addClasspathResource("activiti/foia-extension-release-process_v9.bpmn20.xml").deploy();
+        repo.createDeployment().addClasspathResource("activiti/foia-extension-release-process_v11.bpmn20.xml").deploy();
     }
 
     @After

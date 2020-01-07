@@ -37,8 +37,8 @@ import com.armedia.acm.plugins.onlyoffice.service.DocumentHistoryManager;
 import com.armedia.acm.services.dataaccess.service.impl.ArkPermissionEvaluator;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -62,7 +62,7 @@ import java.net.URL;
 @RequestMapping(value = "/api/onlyoffice")
 public class OnlyOfficeApiController
 {
-    private Logger logger = LoggerFactory.getLogger(getClass());
+    private Logger logger = LogManager.getLogger(getClass());
     private CallbackService callbackService;
     private ObjectMapper objectMapper;
     private DocumentHistoryManager documentHistoryManager;

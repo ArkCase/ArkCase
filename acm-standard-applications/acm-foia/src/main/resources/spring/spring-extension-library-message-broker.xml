@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans:beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
              xmlns:beans="http://www.springframework.org/schema/beans"
-             xmlns:context="http://www.springframework.org/schema/context" xmlns:aop="http://www.springframework.org/schema/aop"
-             xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+             xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
     <beans:beans profile="extension-foia">
         <!-- FOIA Request Broker -->
@@ -18,7 +16,7 @@
 
         <beans:bean id="portalEntity" class="gov.foia.model.PortalFOIARequest"/>
 
-        <beans:bean id="foiaRequestBrokerClient" class="gov.foia.broker.FOIARequestBrokerClient" scope="refresh">
+        <beans:bean id="foiaRequestBrokerClient" class="gov.foia.broker.FOIARequestBrokerClient">
             <beans:constructor-arg index="0" ref="connectionFactory"/>
             <beans:constructor-arg index="1" value="#{foiaRequestBrokerConfig.queuesExternalRequestStatusUpdates}"/>
             <beans:constructor-arg index="2" value="#{foiaRequestBrokerConfig.queuesExternalRequests}"/>
@@ -26,7 +24,6 @@
             <beans:property name="maxConcurrentWorkers" value="#{foiaRequestBrokerConfig.maxConcurrentWorkers}"/>
             <beans:property name="maxConcurrentConsumers" value="#{foiaRequestBrokerConfig.maxConcurrentListeners}"/>
             <beans:lookup-method name="getEntity" bean="portalEntity"/>
-            <aop:scoped-proxy/>
         </beans:bean>
 
         <beans:bean id="foiaRequestFileBrokerClient" class="gov.foia.broker.FOIARequestFileBrokerClient">

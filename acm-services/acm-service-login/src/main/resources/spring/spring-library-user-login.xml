@@ -39,6 +39,7 @@
         <property name="userDao" ref="userJpaDao"/>
         <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
         <property name="objectConverter" ref="objectConverter"/>
+        <property name="applicationConfig" ref="applicationProperties"/>
     </bean>
 
     <bean id="acmLoginFailureListener" class="com.armedia.acm.auth.AcmLoginFailureEventListener"/>
@@ -87,7 +88,8 @@
           class="com.armedia.acm.auth.AcmConcurrentSessionControlAuthenticationStrategy">
         <constructor-arg name="sessionRegistry" ref="sessionRegistry"/>
         <constructor-arg name="authenticationTokenService" ref="authenticationTokenService"/>
-        <property name="sessionControlConfig" ref="sessionConfig"/>
+        <property name="maximumSessions" value="#{sessionConfig.maximumSessions}"/>
+        <property name="exceptionIfMaximumExceeded" value="#{sessionConfig.exceptionIfMaximumExceeded}"/>
     </bean>
 
     <bean id="sessionRegistry" class="org.springframework.security.core.session.SessionRegistryImpl"/>

@@ -217,6 +217,7 @@
                     "cancelBtn": "Stornieren",
                     "deleteBtn": "Löschen",
                     "headerText": "Sie sind dabei, Gruppe zu löschen:",
+                    "controlGroupHeaderWarning": "You are about to delete {{groupName}} group which is a member in the control group {{controlGroupName}}",
                     "bodyText": "Bist du sicher?"
                 }
             },
@@ -248,7 +249,7 @@
             },
             "searchFilter.placeholder": "Suche"
         },
-        "security.selectPrivileges": "Rolle erstellen / Rechte auswählen",
+        "security.selectPrivileges": "Wählen Sie Privilegien aus",
         "security.selectPrivileges.applicationRole": "Anwendungsrolle",
         "security.selectPrivileges.createRole": "Rolle erstellen",
         "security.selectPrivileges.editRole": "Rolle bearbeiten",
@@ -709,6 +710,29 @@
                     }
                 }
             },
+            "sequenceManagementReset": {
+                "title": "Reset List",
+                "editBtn": "Edit",
+                "viewBtn": "View",
+                "removeBtn": "Remove",
+                "cancelBtn": "Cancel",
+                "saveBtn": "Save",
+                "grid": {
+                    "startResetDate": "Start Reset Date",
+                    "executedDate": "Executed Date",
+                    "repeat": "Repeat",
+                    "repeatPeriod": "Repeat Period"
+                },
+                "detailsModal": {
+                    "title": "Autoincrement Reset",
+                    "addTitle": "Add Autoincrement Reset",
+                    "editTitle": "Edit Autoincrement Reset",
+                    "resetStartDate": "Reset Start Date",
+                    "repeatReset": "Repeat reset",
+                    "repeatResetPeriod": "Repeat reset period (days)",
+                    "sequenceResetScheduledWarning": "Sequence reset scheduled for today"
+                }
+            },
             "login.config": {
                 "title": "Login-Konfiguration",
                 "idleLimit.label": "Login-Leerungslimit (in Millisekunden)",
@@ -963,15 +987,6 @@
                 "enableOCR.checkbox": "Enable OCR_DE"
             }
         },
-        "ocr": {
-            "title": "OCR Services_DE",
-            "ocrManagement": "OCR Management_DE",
-            "ocrConfigForm": {
-                "save.button": "Save_DE",
-                "enableOCR.label": "OCR Configuration_DE",
-                "enableOCR.checkbox": "Enable OCR_DE"
-            }
-        },
         "stateOfArkcase": {
             "title": "Staat von Arkcase",
             "pickDate": "Wählen Sie Datum aus",
@@ -1021,6 +1036,43 @@
             },
             "emailTemplates": {
                 "title": "E-Mail-Vorlagen"
+            }
+        },
+        "portals.portalsConfiguration": {
+            "nodeTitle": "de_Portals Service",
+            "title": "de_Portals Configuration",
+            "url": "de_URL",
+            "id": "de_ID",
+            "portalId": "de_Portal ID",
+            "portalDescription": "de_Description",
+            "portalUser": "de_User",
+            "save": "de_Save",
+            "cancel": "de_Cancel",
+            "placeholder": {
+                "portalUrl": "de_Enter Portal URL",
+                "portalId": "de_ID will be generate",
+                "portalDescription": "de_Enter Portal Description",
+                "portalUser": "de_Select Portal User"
+            },
+            "message": {
+                "edit": "de_Portal is successfully edited",
+                "add": "de_Portal is successfully added",
+                "delete": "de_Portal is successfully deleted"
+            }
+        },
+        "userSearch": {
+            "title": "de_User Search",
+            "cancelButton": "de_Cancel",
+            "confirmButton": "de_Save",
+            "search": {
+                "placeholder": "de_Search for the user to assign to this portal",
+                "btn": "de_Search"
+            },
+            "assigneeGridColumns": {
+                "name": "de_Name",
+                "type": "de_Type",
+                "title": "de_Title",
+                "username": "de_Username"
             }
         }
     }

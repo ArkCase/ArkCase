@@ -59,7 +59,8 @@ angular.module('cases').controller(
                             $scope.newTimesheetParamsFromObject = {
                                 _id: objectInfo.id,
                                 _type: ObjectService.ObjectTypes.CASE_FILE,
-                                _number: objectInfo.caseNumber
+                                _number: objectInfo.caseNumber,
+                                _title: objectInfo.title
                             };
 
                             ObjectTimeService.queryTimesheets(ObjectService.ObjectTypes.CASE_FILE, currentObjectId).then(function(timesheets) {
@@ -94,7 +95,8 @@ angular.module('cases').controller(
                             isEdit: false,
                             timeType: $scope.newTimesheetParamsFromObject._type,
                             timeNumber: $scope.newTimesheetParamsFromObject._number,
-                            timeId: $scope.newTimesheetParamsFromObject._id
+                            timeId: $scope.newTimesheetParamsFromObject._id,
+                            typesName: $scope.newTimesheetParamsFromObject._title
                         };
                         showModal(params);
                     };

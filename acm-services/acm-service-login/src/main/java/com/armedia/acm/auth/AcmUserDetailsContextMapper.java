@@ -30,8 +30,8 @@ package com.armedia.acm.auth;
 import com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig;
 import com.armedia.acm.services.users.model.ldap.AcmUserContextMapper;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.ldap.core.DirContextOperations;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -46,10 +46,11 @@ import java.util.Collection;
 public class AcmUserDetailsContextMapper extends LdapUserDetailsMapper
 {
     private AcmLdapSyncConfig acmLdapSyncConfig;
-    private static final Logger log = LoggerFactory.getLogger(AcmUserContextMapper.class);
+    private static final Logger log = LogManager.getLogger(AcmUserContextMapper.class);
 
     /**
-     * @param acmLdapSyncConfig LDAP directory properties configuration
+     * @param acmLdapSyncConfig
+     *            LDAP directory properties configuration
      */
     public AcmUserDetailsContextMapper(AcmLdapSyncConfig acmLdapSyncConfig)
     {

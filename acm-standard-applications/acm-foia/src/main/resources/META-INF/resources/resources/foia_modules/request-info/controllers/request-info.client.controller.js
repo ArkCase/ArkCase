@@ -60,7 +60,7 @@ angular.module('request-info').controller(
                   HelperObjectBrowserService, ObjectLookupService, ObjectModelService, CaseLookupService, UtilDateService, QueuesSvc, ObjectSubscriptionService, Util, SnowboundService, EcmService, DocumentPrintingService, NotesService, UserInfoService, MessageService, $translate,
                   DueDateService, AdminHolidayService, AdminFoiaConfigService, TranscriptionManagementService, $window, ArkCaseCrossWindowMessagingService, ObjectLockingService, UtilTimerService, DialogService) {
 
-            // $scope.openOtherDocuments = [];
+            $scope.openOtherDocuments = [];
             // $scope.fileChangeEvents = [];
             // $scope.fileChangeDate = null;
             // $scope.versionChangeRequest = false;
@@ -92,12 +92,17 @@ angular.module('request-info').controller(
             };
 
             $scope.iframeLoaded = function () {
+                ArkCaseCrossWindowMessagingService.addHandler('close-document', onCloseDocument);
                 ObjectLookupService.getLookupByLookupName("annotationTags").then(function (allAnnotationTags) {
                     $scope.allAnnotationTags = allAnnotationTags;
                     ArkCaseCrossWindowMessagingService.addHandler('select-annotation-tags', onSelectAnnotationTags);
                     ArkCaseCrossWindowMessagingService.start('snowbound', $scope.ecmFileProperties['ecm.viewer.snowbound']);
                 });
             };
+
+            function onCloseDocument(data) {
+                $scope.$bus.publish('remove-from-opened-documents-list', {id: data.id, version: data.version});
+            }
 
             function onSelectAnnotationTags(data) {
                 var params = $scope.allAnnotationTags;
@@ -357,6 +362,7 @@ angular.module('request-info').controller(
             $scope.expandPreview = expandPreview;
 
             $scope.acmTicket = '';
+            $scope.ecmFileProperties = '';
             $scope.userId = '';
             $scope.userFullName = '';
             $scope.ecmFileProperties = {};
@@ -576,7 +582,7 @@ angular.module('request-info').controller(
                         $scope.requestInfo.disposition = $scope.dispositionTypes[0].key;
                     }
                 });
-            };
+            }
 
             function populateRequestTrack(objectInfo) {
                 ObjectLookupService.getRequestTrack().then(function (requestTrack) {
@@ -636,6 +642,7 @@ angular.module('request-info').controller(
                 $scope.transcriptionConfiguration = data[8];
                 $scope.fileInfo = buildFileInfo($scope.ecmFile, $scope.ecmFile.container.id);
                 $scope.requestInfo.caseNumber = data[9].caseNumber;
+                $scope.openOtherDocuments.push($scope.fileInfo);
 
                 // default view == snowbound
                 $scope.view = "modules/document-details/views/document-viewer-snowbound.client.view.html";
@@ -668,7 +675,7 @@ angular.module('request-info').controller(
                             fileId: $stateParams['fileId']
                         });
                         ecmFile.$promise.then(function (file) {
-                            var fileInfo = buildFileInfo(file, $stateParams.id);
+                            var fileInfo = buildFileInfo(file, file.container.id);
                             $scope.openOtherDocuments.push(fileInfo);
                             openViewerMultiple();
                         });
@@ -778,6 +785,7 @@ angular.module('request-info').controller(
              */
             $scope.loadViewerIframe = function (url) {
                 $scope.$broadcast('change-viewer-document', url);
+                $scope.documentViewerUrl = $sce.trustAsResourceUrl(url);
             };
 
             /**
@@ -802,7 +810,7 @@ angular.module('request-info').controller(
                 // Generates and loads a url that will open the selected documents in the viewer
                 if ($scope.openOtherDocuments.length > 0) {
                     registerFileChangeEvents();
-                    var snowUrl = buildViewerUrlMultiple($scope.ecmFileConfig, $scope.acmTicket, $scope.userId, $scope.userFullName, $scope.openOtherDocuments, !$scope.editingMode, $scope.requestInfo.caseNumber);
+                    var snowUrl = buildViewerUrlMultiple($scope.ecmFileProperties, $scope.acmTicket, $scope.userId, $scope.userFullName, $scope.openOtherDocuments, !$scope.editingMode, $scope.requestInfo.caseNumber);
                     if (snowUrl) {
                         $scope.loadViewerIframe(snowUrl);
                     }
@@ -873,7 +881,7 @@ angular.module('request-info').controller(
                     fileId: fileId,
                     removeOlderFileVersionFromSnowboundTabs: true && !$scope.versionChangeRequest
                 }]);
-            }
+            };
 
             $scope.$bus.subscribe('update-viewer-open-documents', function (data) {
                 // Retrieves the metadata for the file which is being opened in the viewer
@@ -893,15 +901,15 @@ angular.module('request-info').controller(
                         $scope.openOtherDocuments = _.filter($scope.openOtherDocuments, function (currentObject) {
                             if (typeof currentObject.id === 'string' || currentObject.id instanceof String) {
                                 if (data[index].removeOlderFileVersionFromSnowboundTabs) {
-                                    return !currentObject.id.startsWith(fileInfo.id + ":");
+                                    return !currentObject.id.startsWith(fileInfo.fileId + ":");
                                 }
-                                return !(currentObject.id.startsWith(fileInfo.id + ":") && currentObject.versionTag === fileInfo.versionTag);
+                                return !(currentObject.id.startsWith(fileInfo.fileId + ":") && currentObject.versionTag === fileInfo.versionTag);
                             }
 
                             if (data[index].removeOlderFileVersionFromSnowboundTabs) {
-                                return !(currentObject.id === fileInfo.id);
+                                return !(currentObject.id === fileInfo.fileId);
                             }
-                            return !(currentObject.id === fileInfo.id && currentObject.versionTag === fileInfo.versionTag);
+                            return !(currentObject.id === fileInfo.fileId && currentObject.versionTag === fileInfo.versionTag);
                         });
                         $scope.openOtherDocuments.push(fileInfo);
                     });
@@ -1331,12 +1339,13 @@ angular.module('request-info').controller(
 
             function buildFileInfo(file, containerId) {
                 return {
-                    id: file.fileId,
+                    fileId: file.fileId,
+                    id: file.fileId + ':' + file.activeVersionTag,
                     containerId: containerId,
                     containerType: 'CASE_FILE',
                     name: file.fileName,
                     mimeType: file.fileActiveVersionMimeType,
-                    selectedIds: '',
+                    selectedIds: file.fileId + ':' + file.activeVersionTag,
                     versionTag: file.activeVersionTag
                 };
             }
@@ -1438,15 +1447,43 @@ angular.module('request-info').controller(
             };
 
             // Release editing lock on window unload, if acquired
-            $window.addEventListener('beforeunload', function () {
-                if ($scope.editingMode) {
-                    ObjectLockingService.unlockObject($scope.ecmFile.fileId, ObjectService.ObjectTypes.FILE, ObjectService.LockTypes.WRITE);
-                }
-            });
+            $window.addEventListener('unload', function () {
+            	$scope.data = {
+                        objectId: $scope.ecmFile.fileId,
+                        objectType: ObjectService.ObjectTypes.FILE,
+                        lockType: ObjectService.LockTypes.WRITE
+                    };
 
-            $rootScope.$bus.subscribe("object.changed/FILE/" + $stateParams.id, function () {
-                DialogService.alert($translate.instant("documentDetails.fileChangedAlert")).then(function () {
-                    $scope.openSnowboundViewer();
+                var data = angular.toJson($scope.data);
+            	
+                var url = 'api/v1/plugin/' + ObjectService.ObjectTypes.FILE + '/' + $scope.ecmFile.fileId + '/lock?lockType=' + ObjectService.LockTypes.WRITE;
+                
+                if ($scope.editingMode) {
+                	if("sendBeacon" in navigator)
+                    {
+                		navigator.sendBeacon(url, data);
+                    } else {
+                        var xmlhttp = new XMLHttpRequest();
+                        xmlhttp.open("POST", url, false); //false - synchronous call
+                        xmlhttp.setRequestHeader("Content-type", "application/json");
+                        xmlhttp.send(data);
+                    }
+                }                        
+            });
+            
+            $rootScope.$bus.subscribe("object.changed/FILE/" + $stateParams.fileId, function() {
+                var ecmFile = EcmService.getFile({
+                    fileId: $scope.ecmFile.fileId
+                });
+                ecmFile.$promise.then(function(file) {
+                    $scope.ecmFile = file;
+                    $scope.fileId = file.fileId;
+                    $scope.fileInfo.id= file.fileId + ':' + file.activeVersionTag;
+                    $scope.fileInfo.selectedIds= file.fileId + ':' + file.activeVersionTag;
+                    $scope.fileInfo.versionTag= file.activeVersionTag;
+                    DialogService.alert($translate.instant("documentDetails.fileChangedAlert")).then(function() {
+                        $scope.openSnowboundViewer();
+                    });
                 });
             });
         }]);

@@ -43,8 +43,8 @@ import com.armedia.acm.services.users.service.group.GroupService;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.mule.api.MuleException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.context.ApplicationListener;
 import org.springframework.core.io.Resource;
 import org.springframework.security.core.Authentication;
@@ -65,7 +65,7 @@ import freemarker.template.TemplateException;
 
 public class FirstAssigneeOwningGroupNotify implements ApplicationListener<CaseEvent>
 {
-    private transient Logger LOG = LoggerFactory.getLogger(getClass());
+    private transient Logger LOG = LogManager.getLogger(getClass());
     private GroupService groupService;
     private SearchResults searchResults;
     private UserDao userDao;
@@ -121,6 +121,7 @@ public class FirstAssigneeOwningGroupNotify implements ApplicationListener<CaseE
                     notification.setEmailAddresses(emailAddresses.stream().collect(Collectors.joining(",")));
                     notification.setTitle(String.format("Request:%s assigned to %s", event.getCaseFile().getCaseNumber(), assigneeFullName));
                     notification.setAttachFiles(false);
+                    notification.setUser(user.getUserId());
                     notificationDao.save(notification);
                 }
                 catch (MuleException e)

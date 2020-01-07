@@ -32,11 +32,12 @@ import com.armedia.acm.service.objectlock.model.AcmObjectLock;
 import com.armedia.acm.service.objectlock.service.AcmObjectLockService;
 import com.armedia.acm.service.objectlock.service.AcmObjectLockingManager;
 
+import org.apache.commons.lang.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.mule.api.MuleException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -59,7 +60,7 @@ import java.util.List;
 @Controller
 public class AcmObjectLockAPIController
 {
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
 
     private AcmObjectLockService objectLockService;
     private AcmObjectLockingManager objectLockingManager;
@@ -107,7 +108,7 @@ public class AcmObjectLockAPIController
      */
     @PreAuthorize("hasPermission(#objectId, #objectType, 'unlock')")
     @RequestMapping(value = { "/api/v1/plugin/{objectType}/{objectId}/lock",
-            "/api/latest/plugin/{objectType}/{objectId}/lock" }, method = RequestMethod.DELETE)
+            "/api/latest/plugin/{objectType}/{objectId}/lock" }, method = { RequestMethod.DELETE, RequestMethod.POST })
     @ResponseStatus(value = HttpStatus.OK)
     public void unlockObject(@PathVariable(value = "objectType") String objectType, @PathVariable(value = "objectId") Long objectId,
             @RequestParam(value = "lockType", required = false, defaultValue = "OBJECT_LOCK") String lockType,
@@ -206,11 +207,11 @@ public class AcmObjectLockAPIController
         {
             JSONObject result = new JSONObject();
             result.put("id", objectId);
-            log.debug("Trying to remove the lock on object [{}] of type [{}]", objectId, objectType);
+            log.debug("Trying to remove the lock on object [{}] of type [{}]", objectId, StringUtils.normalizeSpace(objectType));
             try
             {
                 objectLockingManager.releaseObjectLock(objectId, objectType, lockType, true, auth.getName(), null);
-                log.debug("Successfully removed the lock on object [{}] of type [{}]", objectId, objectType);
+                log.debug("Successfully removed the lock on object [{}] of type [{}]", objectId, StringUtils.normalizeSpace(objectType));
                 result.put("status", "Success");
             }
             catch (AcmObjectLockException e)

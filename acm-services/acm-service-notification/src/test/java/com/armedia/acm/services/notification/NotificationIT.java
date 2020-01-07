@@ -35,8 +35,8 @@ import com.armedia.acm.services.notification.model.Notification;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -48,14 +48,16 @@ import org.springframework.transaction.annotation.Transactional;
         "/spring/spring-library-acm-encryption.xml",
         "/spring/spring-library-authentication-token.xml",
         "/spring/spring-library-context-holder.xml",
+        "/spring/spring-library-object-converter.xml",
+        "/spring/spring-library-notification-plugin-IT.xml",
+        "/spring/spring-library-ecm-file-lock.xml",
+        "/spring/spring-library-core-api.xml",
         "/spring/spring-library-data-access-control.xml",
         "/spring/spring-library-data-source.xml",
         "/spring/spring-library-ecm-file.xml",
         "/spring/spring-library-ecm-tika.xml",
         "/spring/spring-library-ms-outlook-integration.xml",
         "/spring/spring-library-notification.xml",
-        "/spring/spring-library-notification-plugin-IT.xml",
-        "/spring/spring-library-notification-plugin-test.xml",
         "/spring/spring-library-particpants.xml",
         "/spring/spring-library-property-file-manager.xml",
         "/spring/spring-library-search.xml",
@@ -67,13 +69,13 @@ import org.springframework.transaction.annotation.Transactional;
         "/spring/spring-library-email.xml",
         "/spring/spring-library-email-smtp.xml",
         "/spring/spring-library-calendar-config-service.xml",
-        "/spring/spring-library-object-converter.xml",
-        "/spring/spring-library-ecm-file-lock.xml",
-        "/spring/spring-library-core-api.xml",
         "/spring/spring-library-configuration.xml",
         "/spring/spring-library-convert-folder-service.xml",
         "/spring/spring-library-folder-watcher.xml",
-        "/spring/spring-library-calendar-integration-exchange-service.xml"
+        "/spring/spring-library-calendar-integration-exchange-service.xml",
+        "/spring/spring-library-hazelcast-config.xml",
+        "/spring/spring-library-holiday.xml",
+        "/spring/spring-test-quartz-scheduler.xml"
 })
 @TransactionConfiguration(defaultRollback = true, transactionManager = "transactionManager")
 public class NotificationIT
@@ -86,7 +88,7 @@ public class NotificationIT
 
     @Autowired
     private NotificationDao notificationDao;
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
 
     @Autowired
     private AuditPropertyEntityAdapter auditPropertyEntityAdapter;

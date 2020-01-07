@@ -28,11 +28,11 @@ package gov.foia.service;
  */
 
 import com.armedia.acm.objectonverter.ObjectConverter;
-import com.armedia.acm.plugins.admin.service.HolidayConfigurationService;
+import com.armedia.acm.services.holiday.service.HolidayConfigurationService;
 
 import org.apache.commons.io.FileUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.core.io.Resource;
 
 import java.io.IOException;
@@ -49,7 +49,7 @@ public class QueuesTimeToCompleteService
 
     private Resource queueConfigFile;
     private ReadWriteLock lock = new ReentrantReadWriteLock();
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
     private HolidayConfigurationService holidayConfigurationService;
 
     private ObjectConverter objectConverter;

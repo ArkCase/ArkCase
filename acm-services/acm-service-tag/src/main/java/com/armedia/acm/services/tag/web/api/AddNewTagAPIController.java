@@ -32,8 +32,8 @@ import com.armedia.acm.services.tag.model.AcmTag;
 import com.armedia.acm.services.tag.service.TagEventPublisher;
 import com.armedia.acm.services.tag.service.TagService;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -50,7 +50,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class AddNewTagAPIController
 {
 
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private transient final Logger log = LogManager.getLogger(getClass());
     private TagService tagService;
     private TagEventPublisher tagEventPublisher;
 

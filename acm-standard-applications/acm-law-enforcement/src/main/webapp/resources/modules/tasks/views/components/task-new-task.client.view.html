@@ -113,7 +113,7 @@
                                 </ul>
                             </label>
                         </fieldset>
-                    <span ng-if="taskType === 'REVIEW_DOCUMENT' && documentsToReviewIds.length === 0 && selectedBusinessProcessType == 'acmDocumentTaskWorkflow' " class="text-danger" translate>
+                    <span ng-if="taskType === 'REVIEW_DOCUMENT' && documentsToReviewIds.length === 0 && selectedBusinessProcessType != 'notDefinedWorkflow' " class="text-danger" translate>
                       tasks.newTask.noSelectedReviewDocsErrorMsg
                     </span>
                     <span ng-if="taskType === 'REVIEW_DOCUMENT' && filesToUpload.length > 0 && selectedBusinessProcessType != 'acmDocumentTaskWorkflow' && documentsToReviewIds.length === 0" class="text-danger" translate>
@@ -125,7 +125,7 @@
                     <span ng-if="(taskType != 'REVIEW_DOCUMENT' && filesToUpload.length > 0 && selectedBusinessProcessType != 'acmDocumentTaskWorkflow')" class="text-danger" translate>
                       tasks.newTask.noSelectedWorkflowErrorMsg
                     </span>
-                    <span ng-if="(taskType === 'REVIEW_DOCUMENT' && documentsToReviewIds.length > 0 && selectedBusinessProcessType != 'acmDocumentTaskWorkflow')" class="text-danger" translate>
+                    <span ng-if="(taskType === 'REVIEW_DOCUMENT' && documentsToReviewIds.length > 0 && selectedBusinessProcessType == 'notDefinedWorkflow')" class="text-danger" translate>
                       tasks.newTask.noSelectedWorkflowErrorMsg
                     </span>
                 </div>
@@ -144,7 +144,7 @@
         </button>
         <button type="submit"
                 ng-disabled="task.$invalid || saved || (taskType === 'REVIEW_DOCUMENT' && documentsToReview && documentsToReviewIds.length === 0)
-                             || (selectedBusinessProcessType != 'acmDocumentTaskWorkflow' && filesToUpload.length > 0 && taskType === 'REVIEW_DOCUMENT')
+                             || (selectedBusinessProcessType == 'notDefinedWorkflow' && (filesToUpload.length > 0 || taskType === 'REVIEW_DOCUMENT') )
                              || (taskType != 'REVIEW_DOCUMENT' && filesToUpload.length > 0 && selectedBusinessProcessType != 'acmDocumentTaskWorkflow')"
                 class="btn btn-primary btn-sm" data-toggle="tooltip" id="saveButton" data-title="Save">
             <i class="fa fa-floppy-o" ng-hide="loading"></i>

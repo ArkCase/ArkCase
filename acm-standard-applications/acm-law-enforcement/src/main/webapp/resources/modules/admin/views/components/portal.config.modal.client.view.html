@@ -1,0 +1,50 @@
+<div class="modal-header">
+    <h3><span translate>admin.portals.portalsConfiguration.title</span></h3>
+</div>
+<div class="modal-body">
+    <form name="portalForm">
+        <div class="row">
+            <div class="col-sm-12 form-group">
+                <label for="portalUrl" translate>admin.portals.portalsConfiguration.url</label><span
+                    class="required-asterisk">*</span><br />
+                <input type="text" id="portalUrl" name="portalUrl" ng-model="portal.portalUrl" class="input-md form-control"
+                        placeholder="{{'admin.portals.portalsConfiguration.placeholder.portalUrl' | translate}}" required>
+            </div>
+            <div class="col-sm-12 form-group">
+                <label for="portalId" translate>admin.portals.portalsConfiguration.id</label><br />
+                <input type="text" id="portalId" name="portalId" ng-model="portal.portalId" class="input-md form-control"
+                        placeholder="{{'admin.portals.portalsConfiguration.placeholder.portalId' | translate}}" ng-disabled="true">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12 form-group">
+                <label for="fullName" translate>admin.portals.portalsConfiguration.portalUser</label><span
+                    class="required-asterisk">*</span><br />
+                <input type="text" id="fullName" name="fullName" ng-model="portal.fullName" class="input-md form-control"
+                        placeholder="{{'admin.portals.portalsConfiguration.placeholder.portalUser' | translate}}"
+                        style="background-color: white;" ng-click="userSearch()" required>
+            </div>
+            <div class="col-sm-12 form-group">
+                <label for="groupName" translate>admin.portals.portalsConfiguration.groupName</label><span
+                    class="required-asterisk">*</span><br />
+                <input type="text" id="groupName" name="groupName" ng-model="portal.groupName" class="input-md form-control"
+                        placeholder="{{'admin.portals.portalsConfiguration.placeholder.groupName' | translate}}"
+                        style="background-color: white;" ng-click="groupSearch()" required>
+            </div>
+            <div class="col-sm-12 form-group">
+                <label for="portalDescription" translate>admin.portals.portalsConfiguration.portalDescription</label>
+                <textarea class="form-control" rows="3" id="portalDescription" name="portalDescription" ng-model="portal.portalDescription"
+                        placeholder="{{'admin.portals.portalsConfiguration.placeholder.portalDescription' | translate}}"></textarea>
+            </div>
+        </div>
+    </form>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-default" ng-click="onClickCancel()" translate>
+        admin.portals.portalsConfiguration.cancel
+    </button>
+    <button type="button" class="btn btn-primary" ng-click="onClickOk()" ng-disabled="portalForm.$invalid">
+        <span translate>admin.portals.portalsConfiguration.save</span>
+    </button>
+</div>
+

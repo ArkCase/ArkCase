@@ -31,23 +31,16 @@ package gov.foia.service;
  */
 
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
-import com.armedia.acm.files.AbstractConfigurationFileEvent;
-import com.armedia.acm.files.ConfigurationFileAddedEvent;
-import com.armedia.acm.files.ConfigurationFileChangedEvent;
 import com.armedia.acm.plugins.businessprocess.service.StartBusinessProcessService;
-import com.armedia.acm.scheduler.AcmSchedulableBean;
+import com.armedia.acm.web.api.MDCConstants;
 
-import org.slf4j.Logger;
-import org.springframework.context.ApplicationListener;
+import org.apache.logging.log4j.Logger;
+import org.slf4j.MDC;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 
 import gov.foia.dao.FOIARequestDao;
 import gov.foia.model.FOIARequest;
@@ -55,11 +48,8 @@ import gov.foia.model.FOIARequest;
 /**
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Sep 5, 2016
  */
-public abstract class AbstractScheduledQueuePurger implements AcmSchedulableBean, ApplicationListener<AbstractConfigurationFileEvent>
+public abstract class AbstractScheduledQueuePurger
 {
-    private int maxDaysInQueue;
-
-    private String purgeEnabled;
 
     private FOIARequestDao requestDao;
 
@@ -67,36 +57,8 @@ public abstract class AbstractScheduledQueuePurger implements AcmSchedulableBean
 
     private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
 
-    @Override
-    public void onApplicationEvent(AbstractConfigurationFileEvent event)
-    {
-        if (isPropertyFileChange(event))
-        {
-            File configFile = event.getConfigFile();
-            try (FileInputStream fis = new FileInputStream(configFile))
-            {
-                getLog().debug("Loading configaration for {} from {} file.", getClassName(), configFile.getName());
+    private FoiaConfigurationService foiaConfigurationService;
 
-                Properties billingQueuePurgerProperties = new Properties();
-                billingQueuePurgerProperties.load(fis);
-
-                maxDaysInQueue = Integer.parseInt(billingQueuePurgerProperties.getProperty(getMaxDaysInQueueProperty()));
-                purgeEnabled = billingQueuePurgerProperties.getProperty(getPurgeRequestWhenInHoldEnabled());
-
-            }
-            catch (IOException e)
-            {
-                getLog().error("Could not load configuration for {} from {} file.", getClassName(), configFile.getName(), e);
-            }
-        }
-    }
-
-    protected boolean isPropertyFileChange(AbstractConfigurationFileEvent abstractConfigurationFileEvent)
-    {
-        return (abstractConfigurationFileEvent instanceof ConfigurationFileAddedEvent
-                || abstractConfigurationFileEvent instanceof ConfigurationFileChangedEvent)
-                && abstractConfigurationFileEvent.getConfigFile().getName().equals("foia.properties");
-    }
 
     /**
      * @return the log
@@ -111,27 +73,27 @@ public abstract class AbstractScheduledQueuePurger implements AcmSchedulableBean
     /**
      * @return
      */
-    protected abstract String getMaxDaysInQueueProperty();
+    protected abstract Integer getMaxDaysInQueueProperty();
 
     /**
      * @return
      */
-    protected abstract String getPurgeRequestWhenInHoldEnabled();
+    protected abstract Boolean getPurgeRequestEnabled();
 
-    @Override
     public void executeTask()
     {
-        if (Boolean.parseBoolean(purgeEnabled))
+        if (getPurgeRequestEnabled())
         {
-            if (maxDaysInQueue == 0)
+            if (getMaxDaysInQueueProperty() == 0)
             {
                 return;
             }
             try
             {
-                List<FOIARequest> requestsForPurging = getAllRequestsInQueueBefore(LocalDate.now().minusDays(maxDaysInQueue));
+                List<FOIARequest> requestsForPurging = getAllRequestsInQueueBefore(LocalDate.now().minusDays(getMaxDaysInQueueProperty()));
 
                 auditPropertyEntityAdapter.setUserId(getProcessUser());
+                MDC.put(MDCConstants.EVENT_MDC_REQUEST_USER_ID_KEY, getProcessUser());
 
                 for (FOIARequest request : requestsForPurging)
                 {
@@ -168,7 +130,7 @@ public abstract class AbstractScheduledQueuePurger implements AcmSchedulableBean
      */
     protected int getMaxDaysInQueue()
     {
-        return maxDaysInQueue;
+        return getMaxDaysInQueueProperty();
     }
 
     /**
@@ -204,5 +166,15 @@ public abstract class AbstractScheduledQueuePurger implements AcmSchedulableBean
     public void setAuditPropertyEntityAdapter(AuditPropertyEntityAdapter auditPropertyEntityAdapter)
     {
         this.auditPropertyEntityAdapter = auditPropertyEntityAdapter;
+    }
+
+    public FoiaConfigurationService getFoiaConfigurationService()
+    {
+        return foiaConfigurationService;
+    }
+
+    public void setFoiaConfigurationService(FoiaConfigurationService foiaConfigurationService)
+    {
+        this.foiaConfigurationService = foiaConfigurationService;
     }
 }

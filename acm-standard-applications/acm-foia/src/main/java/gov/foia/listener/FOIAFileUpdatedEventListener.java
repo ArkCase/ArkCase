@@ -34,8 +34,8 @@ import com.armedia.acm.plugins.ecm.service.EcmFileService;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.context.ApplicationListener;
 
 import javax.jms.JMSException;
@@ -57,7 +57,7 @@ import gov.foia.model.FOIAFile;
 public class FOIAFileUpdatedEventListener implements ApplicationListener<EcmFileUpdatedEvent>
 {
 
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private transient final Logger log = LogManager.getLogger(getClass());
     private FOIARequestFileBrokerClient foiaRequestFileBrokerClient;
     private EcmFileService ecmFileService;
 

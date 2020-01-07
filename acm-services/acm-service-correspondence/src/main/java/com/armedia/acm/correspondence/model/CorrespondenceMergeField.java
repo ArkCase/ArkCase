@@ -48,9 +48,7 @@ public class CorrespondenceMergeField
 
     private String fieldDescription;
 
-    private String fieldType;
-
-    private String fieldVersion;
+    private String fieldObjectType;
 
     /**
      * @return the fieldId
@@ -104,37 +102,19 @@ public class CorrespondenceMergeField
     }
 
     /**
-     * @return the fieldType
+     * @return the fieldObjectType
      */
-    public String getFieldType()
+    public String getFieldObjectType()
     {
-        return fieldType;
+        return fieldObjectType;
     }
 
     /**
-     * @param fieldType
-     *            the fieldType to set
+     * @param fieldObjectType
+     *            the fieldObjectType to set
      */
-    public void setFieldType(String fieldType)
+    public void setFieldObjectType(String fieldObjectType)
     {
-        this.fieldType = fieldType;
+        this.fieldObjectType = fieldObjectType;
     }
-
-    /**
-     * @return the fieldVersion
-     */
-    public String getFieldVersion()
-    {
-        return fieldVersion;
-    }
-
-    /**
-     * @param fieldVersion
-     *            the fieldVersion to set
-     */
-    public void setFieldVersion(String fieldVersion)
-    {
-        this.fieldVersion = fieldVersion;
-    }
-
 }

@@ -29,8 +29,8 @@ package com.armedia.acm.services.authenticationtoken.web.api;
 
 import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenService;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -42,7 +42,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @RequestMapping(value = { "/api/v1/authenticationtoken", "/api/latest/authenticationtoken" })
 public class GetAuthenticationTokenAPIController
 {
-    private final Logger log = LoggerFactory.getLogger(getClass());
+    private final Logger log = LogManager.getLogger(getClass());
     private AuthenticationTokenService authenticationTokenService;
 
     /**

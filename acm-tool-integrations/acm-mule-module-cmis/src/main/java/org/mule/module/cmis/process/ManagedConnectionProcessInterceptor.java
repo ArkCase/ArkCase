@@ -40,8 +40,8 @@ import org.mule.module.cmis.connection.UnableToReleaseConnectionException;
 import org.mule.module.cmis.connectivity.CMISCloudConnectorConnectionKey;
 import org.mule.module.cmis.processors.AbstractConnectedProcessor;
 import org.mule.module.cmis.processors.AbstractExpressionEvaluator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import javax.annotation.Generated;
 
@@ -53,7 +53,7 @@ public class ManagedConnectionProcessInterceptor<T>
         implements ProcessInterceptor<T, CMISCloudConnectorConnectionIdentifierAdapter>
 {
 
-    private static Logger logger = LoggerFactory.getLogger(ManagedConnectionProcessInterceptor.class);
+    private static Logger logger = LogManager.getLogger(ManagedConnectionProcessInterceptor.class);
     private final ConnectionManager<CMISCloudConnectorConnectionKey, CMISCloudConnectorConnectionIdentifierAdapter> connectionManager;
     private final MuleContext muleContext;
     private final ProcessInterceptor<T, CMISCloudConnectorConnectionIdentifierAdapter> next;

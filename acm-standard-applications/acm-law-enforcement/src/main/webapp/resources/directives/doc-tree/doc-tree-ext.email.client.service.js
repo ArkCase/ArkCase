@@ -181,7 +181,7 @@ angular.module('services').factory('DocTreeExt.Email',
                     emailData.emailAddresses = emailModel.recipients;
                     emailData.fileIds = emailModel.selectedFilesToEmail;
                     emailData.baseUrl = Email._makeBaseUrl();
-                    emailData.parentType = match[Util.goodMapValue(DocTree, "treeConfig.email.objectTypeRegexGroup")];
+                    emailData.parentType = DocTree.getObjType();
                     var objectNumber = match[Util.goodMapValue(DocTree, "treeConfig.email.objectNumberRegexGroup")];
                     emailData.parentNumber = DocTree.objectInfo[objectNumber];
                     emailData.modelReferenceName = 'documentLinked';

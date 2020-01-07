@@ -49,6 +49,8 @@ public class EmailWithAttachmentsDTO extends MessageBodyFactory implements Attac
     private String body;
     private List<String> users;
     private List<String> emailAddresses;
+    
+    private Boolean mailSent = true;
 
     /*
      * (non-Javadoc)
@@ -165,4 +167,13 @@ public class EmailWithAttachmentsDTO extends MessageBodyFactory implements Attac
         this.filePaths = filePaths;
     }
 
+    public Boolean getMailSent() 
+    {
+        return mailSent;
+    }
+
+    public void setMailSent(Boolean mailSent) 
+    {
+        this.mailSent = mailSent;
+    }
 }

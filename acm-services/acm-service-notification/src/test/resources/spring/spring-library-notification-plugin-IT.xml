@@ -23,4 +23,13 @@
     <bean id="auditEventConfig" class="com.armedia.acm.audit.model.AuditEventConfig">
         <property name="jsonUnmarshaller" ref="jsonUnmarshaller"/>
     </bean>
+
+    <bean id="acmMuleConfig" class="com.armedia.acm.muletools.mulecontextmanager.AcmMuleConfig"/>
+
+    <bean id="muleContextManager" class="com.armedia.acm.muletools.mulecontextmanager.MuleContextManager" destroy-method="shutdownBean">
+        <property name="specificConfigFiles">
+            <list/>
+        </property>
+        <property name="acmMuleConfig" ref="acmMuleConfig"/>
+    </bean>
 </beans>

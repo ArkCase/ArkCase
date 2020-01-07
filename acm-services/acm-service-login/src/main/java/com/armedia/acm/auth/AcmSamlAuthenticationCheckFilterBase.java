@@ -27,8 +27,8 @@ package com.armedia.acm.auth;
  * #L%
  */
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.context.ApplicationContext;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
@@ -60,7 +60,7 @@ abstract class AcmSamlAuthenticationCheckFilterBase extends GenericFilterBean
 {
     private static final String FILTER_APPLIED = "__spring_security_filterAuthenticationCheck_filterApplied";
     private static final String LAST_AUTHENTICATION_CHECK = "acmLastAuthenticationCheck";
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
     private long authenticationCheckIntervalInSeconds;
     private RequestCache requestCache = new HttpSessionRequestCache();
 

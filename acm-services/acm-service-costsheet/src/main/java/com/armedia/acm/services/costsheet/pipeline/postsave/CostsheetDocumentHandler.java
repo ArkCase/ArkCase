@@ -43,8 +43,8 @@ import com.armedia.acm.services.costsheet.service.PDFCostsheetDocumentGenerator;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.pipeline.handler.PipelineHandler;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -52,7 +52,7 @@ public class CostsheetDocumentHandler extends PDFCostsheetDocumentGenerator<AcmC
         implements PipelineHandler<AcmCostsheet, CostsheetPipelineContext>
 {
 
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private transient final Logger log = LogManager.getLogger(getClass());
     private FormsTypeCheckService formsTypeCheckService;
 
     @Override

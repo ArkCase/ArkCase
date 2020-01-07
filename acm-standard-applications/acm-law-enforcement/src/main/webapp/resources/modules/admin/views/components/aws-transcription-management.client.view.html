@@ -1,0 +1,98 @@
+<div ng-controller="Admin.AWSTranscriptionManagementController">
+    <ng-form name="AWSConfigurationForm">
+        <div class="panel panel-success panel-grid">
+            <div class="pull-right well">
+                <div class="btn-group">
+                    <button class="btn btn-xs btn-link" ng-click="saveChanges()" ng-disabled="AWSConfigurationForm.$invalid">
+                        <i class="fa fa-save"></i>
+                        <span translate>
+			            	admin.mediaServices.awsConfigForm.save.button
+                        </span>
+                    </button>
+                </div>
+            </div>
+            <panel-view header="{{'admin.mediaServices.awsConfigForm.title' | translate}}" collapsible="false">
+                <div class="row">
+                    <div class="col-lg-3 form-group">
+                        <label translate>
+                            admin.mediaServices.awsConfigForm.awsConfig.bucket.label
+                        </label>
+                        <span class="required-asterisk">*</span>
+                        <input name="bucketName" class="form-control" ng-model="awsTranscribeConfiguration['aws.config.bucket']" type="text"
+                                required>
+                        <span ng-if="!AWSConfigurationForm.bucketName.$invalid ||
+                        !AWSConfigurationForm.bucketName.$dirty">
+                             &nbsp;
+                            </span>
+                        <span ng-if="AWSConfigurationForm.bucketName.$error.required" class="text-danger" translate>
+                            admin.mediaServices.awsConfigForm.validation.messages.requiredErrorMsg
+                        </span>
+                    </div>
+                    <div class="col-lg-3 form-group">
+                        <label translate>
+                            admin.mediaServices.awsConfigForm.awsConfig.region.label
+                        </label>
+                        <span class="required-asterisk">*</span>
+                        <input name="region" class="form-control" ng-model="awsTranscribeConfiguration['aws.config.region']" type="text"
+                                required>
+                        <span ng-if="!AWSConfigurationForm.region.$invalid || !AWSConfigurationForm.region.$dirty">
+                             &nbsp;
+                            </span>
+                        <span ng-if="AWSConfigurationForm.region.$error.required" class="text-danger" translate>
+                                admin.mediaServices.awsConfigForm.validation.messages.requiredErrorMsg
+                            </span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-3 form-group">
+                        <label translate>
+                            admin.mediaServices.awsConfigForm.awsConfig.host.label
+                        </label>
+                        <span class="required-asterisk">*</span>
+                        <input name="host" class="form-control" ng-model="awsTranscribeConfiguration['aws.config.host']" required>
+                        <span ng-if="AWSConfigurationForm.host.$invalid && AWSConfigurationForm.host.$dirty">
+                             &nbsp;
+                            </span>
+                        <span ng-if="AWSConfigurationForm.host.$error.required" class="text-danger" translate>
+                                admin.mediaServices.awsConfigForm.validation.messages.requiredErrorMsg
+                            </span>
+                    </div>
+                    <div class="col-lg-3 form-group">
+                        <label translate>
+                            admin.mediaServices.awsConfigForm.awsConfig.profile.label
+                        </label>
+                        <span class="required-asterisk">*</span>
+                        <input name="profile" class="form-control" ng-model="awsTranscribeConfiguration['aws.config.profile']" required>
+                        <span ng-if="AWSConfigurationForm.profile.$error.required" class="text-danger" translate>
+                                admin.mediaServices.awsConfigForm.validation.messages.requiredErrorMsg
+                            </span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-3 form-group">
+                        <label translate>
+                            admin.mediaServices.awsConfigForm.awsCredentials.accessKeyId.label
+                        </label>
+                        <span class="required-asterisk">*</span>
+                        <input name="accessKeyId" class="form-control" ng-model="credentialsConfiguration['aws.credentials.awsAccessKeyId']"
+                                required>
+                        <span ng-if="AWSConfigurationForm.accessKeyId.$error.required" class="text-danger" translate>
+                                admin.mediaServices.awsConfigForm.validation.messages.requiredErrorMsg
+                            </span>
+                    </div>
+                    <div class="col-lg-3 form-group">
+                        <label translate>
+                            admin.mediaServices.awsConfigForm.awsCredentials.secretAccessKey.label
+                        </label>
+                        <span class="required-asterisk">*</span>
+                        <input name="secretAccessKey" class="form-control"
+                                ng-model="credentialsConfiguration['aws.credentials.awsSecretAccessKey']" required>
+                        <span ng-if="AWSConfigurationForm.secretAccessKey.$error.required" class="text-danger" translate>
+                                admin.mediaServices.awsConfigForm.validation.messages.requiredErrorMsg
+                            </span>
+                    </div>
+                </div>
+            </panel-view>
+        </div>
+    </ng-form>
+</div>

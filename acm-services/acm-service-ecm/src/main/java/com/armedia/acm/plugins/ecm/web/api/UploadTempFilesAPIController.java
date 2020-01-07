@@ -31,8 +31,8 @@ import com.armedia.acm.plugins.ecm.model.DeleteFileResult;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -53,7 +53,7 @@ import java.util.List;
 @RequestMapping({ "/api/v1/plugin/ecm/temp", "/api/latest/plugin/ecm/temp" })
 public class UploadTempFilesAPIController
 {
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private transient final Logger log = LogManager.getLogger(getClass());
     private EcmFileService fileFolderService;
 
     @RequestMapping(value = "upload", method = RequestMethod.POST, produces = { MediaType.APPLICATION_JSON_VALUE })

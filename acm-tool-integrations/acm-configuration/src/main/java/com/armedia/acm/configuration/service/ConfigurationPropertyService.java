@@ -30,8 +30,8 @@ package com.armedia.acm.configuration.service;
 import com.armedia.acm.configuration.core.ConfigurationContainer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.aop.support.AopUtils;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,7 +61,7 @@ public class ConfigurationPropertyService implements InitializingBean
 
     private String updatePropertiesEndpoint;
 
-    private static final Logger log = LoggerFactory.getLogger(ConfigurationPropertyService.class);
+    private static final Logger log = LogManager.getLogger(ConfigurationPropertyService.class);
 
     @Override
     public void afterPropertiesSet()
@@ -125,7 +125,7 @@ public class ConfigurationPropertyService implements InitializingBean
         catch (RestClientException e)
         {
             log.warn("Failed to update property due to {}", e.getMessage());
-            throw new ConfigurationPropertyException("Failed to update configuration");
+            throw new ConfigurationPropertyException("Failed to update configuration", e);
         }
     }
 }

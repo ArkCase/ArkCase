@@ -27,8 +27,8 @@ package com.armedia.acm.plugins.admin.web.api;
  * #L%
  */
 
-import com.armedia.acm.services.transcribe.exception.GetConfigurationException;
-import com.armedia.acm.services.transcribe.model.TranscribeConfiguration;
+import com.armedia.acm.services.mediaengine.exception.GetConfigurationException;
+import com.armedia.acm.services.mediaengine.model.MediaEngineConfiguration;
 import com.armedia.acm.services.transcribe.service.ArkCaseTranscribeService;
 
 import org.springframework.http.MediaType;
@@ -48,7 +48,7 @@ public class GetTranscribeConfigurationAPIController
 
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public TranscribeConfiguration getConfiguration() throws GetConfigurationException
+    public MediaEngineConfiguration getConfiguration() throws GetConfigurationException
     {
         return getArkCaseTranscribeService().getConfiguration();
     }

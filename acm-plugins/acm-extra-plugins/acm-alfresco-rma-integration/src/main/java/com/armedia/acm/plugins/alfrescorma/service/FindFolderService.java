@@ -32,8 +32,8 @@ import com.armedia.acm.plugins.alfrescorma.model.AlfrescoRmaConfig;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 
 import org.apache.chemistry.opencmis.client.api.Folder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.util.Map;
 
@@ -43,7 +43,7 @@ import java.util.Map;
 public class FindFolderService extends AlfrescoService<Folder>
 {
     private static final String BASE_PATH = "/Sites/rm/documentLibrary/";
-    private transient final Logger LOG = LoggerFactory.getLogger(getClass());
+    private transient final Logger LOG = LogManager.getLogger(getClass());
     private EcmFileService ecmFileService;
     private AlfrescoRmaConfig rmaConfig;
 

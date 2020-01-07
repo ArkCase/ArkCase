@@ -31,8 +31,8 @@ import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.services.users.dao.group.AcmGroupDao;
 import com.armedia.acm.services.users.model.group.AcmGroup;
 import com.armedia.acm.services.users.service.group.AcmGroupUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -41,7 +41,7 @@ public class GroupAscendantsStringUpdateExecutor implements AcmDataUpdateExecuto
 {
     private AcmGroupDao groupDao;
     private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
-    private static final Logger log = LoggerFactory.getLogger(GroupAscendantsStringUpdateExecutor.class);
+    private static final Logger log = LogManager.getLogger(GroupAscendantsStringUpdateExecutor.class);
 
     @Override
     public String getUpdateId()

@@ -4,7 +4,7 @@ angular.module('admin').controller('Admin.PDFConversionController',
         [ '$scope', 'Admin.PDFConversionService', 'MessageService', 'UtilService', function($scope, PDFConversionService, MessageService, Util) {
 
             $scope.pdfConversionProperties = {
-                "responseFolderConversion": "false"
+                "responseFolderConversion": false
             };
 
             PDFConversionService.getProperties().then(function(response) {

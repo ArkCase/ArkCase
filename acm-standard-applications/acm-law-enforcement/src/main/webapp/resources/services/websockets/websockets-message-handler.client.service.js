@@ -1,11 +1,15 @@
 'use strict';
 
-angular.module('services').factory('Websockets.MessageHandler', [ '$q', '$rootScope', 'Acm.StoreService', 'Object.AuditService', 'TimeTracking.InfoService', 'ObjectService', function($q, $rootScope, Store, ObjectAuditService, TimeTrackingInfoService, ObjectService) {
+angular.module('services').factory('Websockets.MessageHandler', ['$q', '$rootScope', 'Acm.StoreService', 'Object.AuditService', 'TimeTracking.InfoService', 'ObjectService', 'UtilService', 'DocTreeExt.DownloadSelectedAsZip', 'FileSaver', 'Blob', '$filter', function ($q, $rootScope, Store, ObjectAuditService, TimeTrackingInfoService, ObjectService, Util, DownloadSelectedAsZip, FileSaver, Blob, $filter) {
     var Service = {};
 
     Service.handleMessage = handleMessage;
 
     Service.handleGenericMessage = handleGenericMessage;
+
+    Service.handleZipGenerationMessage = handleZipGenerationMessage;
+
+    Service.handleScheduledJobStatusMessage = handleScheduledJobStatusMessage;
 
     return Service;
 
@@ -22,8 +26,29 @@ angular.module('services').factory('Websockets.MessageHandler', [ '$q', '$rootSc
     }
 
     function handleGenericMessage(message) {
+        if (!Util.isEmpty(message.progressbar)) {
+            if (message.success === false || message.currentProgress === 100) {
+                $rootScope.$bus.publish('progressbar-current-progress-finished', message);
+            } else {
+                $rootScope.$bus.publish('progressbar-current-progress-updated', message);
+            }
+        }
         var eventName = message.eventType;
         $rootScope.$bus.publish(eventName, message);
+    }
+
+    function handleScheduledJobStatusMessage(message) {
+        $rootScope.$bus.publish("scheduled-jobs-status-update", message);
+    }
+
+    function handleZipGenerationMessage(message) {
+        DownloadSelectedAsZip.downloadZipFile(message).then(function (result) {
+            var dateStr = $filter('date')(new Date(), 'HH:mm:ss');
+            var data = new Blob([result.data], {
+                type: 'application/octet-stream'
+            });
+            FileSaver.saveAs(data, 'acm-documents-' + dateStr + '.zip');
+        });
     }
 
     function handleCache(message) {

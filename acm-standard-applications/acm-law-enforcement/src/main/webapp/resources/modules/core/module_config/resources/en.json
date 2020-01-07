@@ -5,6 +5,7 @@
                 "home": "Home",
                 "other": "Other",
                 "owning-group": "Owning Group",
+                "collaborator-group": "Collaborator Group",
                 "collaborator": "Collaborator",
                 "reader": "Reader",
                 "no-access": "No Access",
@@ -532,13 +533,20 @@
                     "hotel": "Hotel",
                     "overtime": "Overtime",
                     "food": "Food"
+                },
+                "statuses": {
+                    "draft": "Draft",
+                    "inapproval": "In Approval",
+                    "approved": "Approved",
+                    "final": "Final"
                 }
             },
             "timesheet": {
                 "statuses": {
                     "draft": "Draft",
                     "inapproval": "In Approval",
-                    "approved": "Approved"
+                    "approved": "Approved",
+                    "final": "Final"
                 },
                 "other": {
                     "leap": "LEAP",
@@ -577,7 +585,8 @@
             },
             "businessProcessTypes": {
                 "acmDocumentWorkflow": "ACM Document Workflow",
-                "notDefinedWorkflow": "Ad-Hoc Task"
+                "notDefinedWorkflow": "Ad-Hoc Task",
+                "arrestWarrant": "Arrest Warrant"
             },
             "reportStates": {
                 "draft": "Draft",
@@ -608,6 +617,20 @@
                 "weekly": "Weekly",
                 "monthly": "Monthly",
                 "yearly": "Yearly"
+            },
+            "sequenceName": {
+                "caseNumberSequence": "Case Number Sequence",
+                "complaintNumberSequence": "Complaint Number Sequence"
+            },
+            "sequenceObjectProperty": {
+                "id": "id",
+                "caseType": "case type",
+                "status": "status",
+                "priority": "priority"
+            },
+            "objectTitleTypes": {
+                "caseFile": "Case File",
+                "complaint": "Complaint"
             }
         },
         "userInfo": {
@@ -624,6 +647,20 @@
             "toggle.btn": "Toggle Navigation",
             "search.placeholder": "Search ArkCase",
             "locale.updateList": "Refresh Above List"
+        },
+        "progressBar": {
+            "header": "Uploading Details...",
+            "viewDetails": "View Upload Details",
+            "addMoreFiles": "Add more files",
+            "currentFileProgress": "Current File Progress",
+            "totalProgress": "Total Progress",
+            "hide": "Hide",
+            "footer": "File Upload Completed",
+            "done": "Done",
+            "close": "Close",
+            "failed": "File upload failed!",
+            "uploading": "Uploading...",
+            "retry": "RETRY"
         },
         "loginWarning": {
             "btnOK.text": "OK",

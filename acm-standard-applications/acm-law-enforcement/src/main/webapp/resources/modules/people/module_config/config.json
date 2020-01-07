@@ -463,7 +463,7 @@
                             "name": "organization.organizationValue",
                             "displayName": "people.comp.organizations.table.columns.value",
                             "headerCellFilter": "translate",
-                            "cellTemplate": "<a class='primary' data-ui-sref=\"organizations.main({id: row.entity.organization.organizationId})\">{{COL_FIELD}} <\/a><span ng-if='grid.appScope.isDefault(row.entity)' translate>common.labels.primary</span>"
+                            "cellTemplate": "<span><a class='primary' data-ui-sref=\"organizations.main({id: row.entity.organization.organizationId})\">{{COL_FIELD}} <span ng-if='grid.appScope.isDefault(row.entity)' translate>common.labels.primary</span> <\/a></span>"
                         },
                         {
                             "name": "organization.defaultIdentification.identificationNumber",
@@ -1132,7 +1132,7 @@
                     "name": "organization.organizationValue",
                     "displayName": "people.comp.organizations.table.columns.value",
                     "headerCellFilter": "translate",
-                    "cellTemplate": "<a class='primary' data-ui-sref=\"organizations.main({id: row.entity.organization.organizationId})\">{{COL_FIELD}} <\/a><span ng-if='grid.appScope.isDefault(row.entity)' translate>common.labels.primary</span>"
+                    "cellTemplate": "<span><a class='primary' data-ui-sref=\"organizations.main({id: row.entity.organization.organizationId})\">{{COL_FIELD}} <span ng-if='grid.appScope.isDefault(row.entity)' translate>common.labels.primary</span> <\/a></span>"
                 },
                 {
                     "name": "organization.defaultIdentification.identificationNumber",

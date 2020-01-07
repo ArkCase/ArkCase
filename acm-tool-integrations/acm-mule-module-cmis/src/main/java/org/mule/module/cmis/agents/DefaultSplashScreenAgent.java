@@ -36,8 +36,8 @@ import org.mule.api.registry.Registry;
 import org.mule.module.cmis.basic.MetadataAware;
 import org.mule.module.cmis.devkit.SplashScreenAgent;
 import org.mule.util.StringMessageUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import javax.annotation.Generated;
 
@@ -53,7 +53,7 @@ import java.util.Map;
 public class DefaultSplashScreenAgent implements Agent, MuleContextAware, SplashScreenAgent
 {
 
-    private static Logger logger = LoggerFactory.getLogger(DefaultSplashScreenAgent.class);
+    private static Logger logger = LogManager.getLogger(DefaultSplashScreenAgent.class);
     private int extensionsCount;
     private MuleContext muleContext;
 

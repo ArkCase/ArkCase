@@ -264,42 +264,6 @@
     },
     {
         "op": "add",
-        "path": "/cases.comp.billing",
-        "value": {
-            "title": "Billing",
-            "table.columns": {
-                "item": "Item #",
-                "description": "Description",
-                "amount": "Amount",
-                "total": "Total: ",
-                "buttons": {
-                    "listInvoices": "List Invoices",
-                    "emailInvoice": "Email Invoice",
-                    "generateInvoice": "Generate Invoice"
-                }
-            },
-            "modal": {
-                "title": "Add Billing Item",
-                "cancel.btn": "Cancel",
-                "save.btn": "Save",
-                "billingItems.title": "Billing items for"
-            },
-            "invoice": {
-                "title": "Invoices",
-                "table.columns": {
-                    "invoiceNumber": "Invoice Number",
-                    "status": "Status",
-                    "creator": "Creator",
-                    "created": "Created",
-                    "view": "View"
-                }
-            },
-            "amount.title": "Please enter billing amount",
-            "description.title": "Please enter billing description"
-        }
-    },
-    {
-        "op": "add",
         "path": "/cases.comp.main/overview.label",
         "value": "Overview"
     },
@@ -567,6 +531,14 @@
     },
     {
         "op": "add",
+        "path": "/cases.comp.main/title",
+        "value": {
+            "label": "Title",
+            "placeholder": "Enter Title"
+        }
+    },
+    {
+        "op": "add",
         "path": "/cases.comp.returnReason",
         "value": {
             "modal": {
@@ -633,9 +605,16 @@
                 "label": "Last Name",
                 "validation.error": "Please enter Last Name"
             },
+            "position": {
+                "placeholder": "Enter Position",
+                "label": "Position",
+                "validation.error": "Please enter Position"
+            },
             "title": {
                 "placeholder": "Enter Title",
-                "label": "Title"
+                "label": "Title",
+                "validation.error": "Please enter Title",
+                "validation.errorInvalid": "The Title you entered is invalid. Should contain maximum 50 characters"
             },
             "phone": {
                 "label": "Phone",
@@ -760,11 +739,6 @@
         "value": "Exemption Codes"
     },
     {
-        "op": "add",
-        "path": "/cases.tree/nodeTypes/billing.label",
-        "value": "Billing"
-    },
-    {
         "op": "replace",
         "path": "/cases.tree/filters/opened",
         "value": "All Open Requests"
@@ -788,5 +762,15 @@
         "op": "replace",
         "path": "/cases.tree/sorters/nameAsc",
         "value": "Sort By Request Name"
+    },
+    {
+        "op": "replace",
+        "path": "/cases.comp.suggestedCases/title",
+        "value": "Suggested Requests"
+    },
+    {
+        "op": "replace",
+        "path": "/cases.tree/nodeTypes/suggestedCases.label",
+        "value": "Suggested Requests"
     }
 ]

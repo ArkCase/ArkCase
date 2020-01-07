@@ -16,5 +16,6 @@
         <property name="writePermission" value="editCase"/>
         <property name="deletePermission" value="editCase"/>
         <property name="folderCreatorDao" ref="outlookFolderCreatorDao"/>
+        <property name="acmObjectUtils" ref="acmObjectUtils"/>
     </bean>
 </beans>

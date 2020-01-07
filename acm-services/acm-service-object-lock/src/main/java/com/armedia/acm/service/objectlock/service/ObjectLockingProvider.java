@@ -108,4 +108,13 @@ public interface ObjectLockingProvider
      */
     void releaseObjectLock(Long objectId, String objectType, String lockType, boolean unlockChildObjects, String userId, Long lockId)
             throws AcmObjectLockException;
+
+    /**
+     *
+     * @return String
+     *         the type of object this provider works with
+     *         Use {@link DefaultObjectLockingProvider} when no object type specified
+     *
+     */
+    String getObjectType();
 }

@@ -31,15 +31,15 @@ import com.armedia.acm.auth.LoginEvent;
 
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.context.ApplicationListener;
 import org.springframework.security.core.Authentication;
 
 public class OnLoginCheckPasswordExpiration implements ApplicationListener<LoginEvent>
 {
     private ResetPasswordService resetPasswordService;
-    private final Logger log = LoggerFactory.getLogger(getClass());
+    private final Logger log = LogManager.getLogger(getClass());
     private UserDao userDao;
     
     @Override

@@ -36,8 +36,8 @@ import com.armedia.acm.spring.SpringContextHolder;
 
 import org.apache.commons.lang3.StringUtils;
 import org.mule.api.MuleException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
@@ -65,7 +65,7 @@ import java.util.stream.Collectors;
 public class FacetedSearchAPIController
 {
 
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private transient final Logger log = LogManager.getLogger(getClass());
 
     private SpringContextHolder springContextHolder;
 
@@ -181,7 +181,7 @@ public class FacetedSearchAPIController
             // The output stream is already closed as report is exported
             return "";
         }
-        return res;
+        return URLEncoder.encode(res, "UTF-8");
     }
 
     public void export(ReportGenerator generator, String content, HttpServletResponse response, String reportName)
@@ -192,7 +192,7 @@ public class FacetedSearchAPIController
             response.setHeader("Content-Disposition",
                     String.format("attachment; filename=\"%s\"", generator.generateReportName(reportName)));
             response.setContentLength(content.length());
-            writer.write(content);
+            writer.write(URLEncoder.encode(content, "UTF-8"));
         }
         catch (IOException e)
         {

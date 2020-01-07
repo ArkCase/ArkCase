@@ -32,6 +32,7 @@
                 <ref bean="solrReindexAssignedObjectsExecutor"/>
                 <ref bean="groupAscendantsStringUpdateExecutor"/>
                 <ref bean="ocrSystemUserUpdateExecutor"/>
+                <ref bean="transcribeSystemUserUpdateExecutor"/>
             </list>
         </property>
         <property name="dataUpdateService" ref="dataUpdateService"/>
@@ -66,8 +67,7 @@
         <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
     </bean>
     <bean id="solrReindexService" class="com.armedia.acm.services.dataupdate.service.SolrReindexService">
-        <property name="lastBatchUpdatePropertyFileLocation" value="${user.home}/.arkcase/acm/solrLastBatchUpdate.properties"/>
-        <property name="propertyFileManager" ref="propertyFileManager"/>
+        <property name="schedulerService" ref="acmSchedulerService"/>
     </bean>
 
     <bean id="triggerSolrUpdateExecutor" class="com.armedia.acm.services.dataupdate.service.TriggerSolrUpdateExecutor">
@@ -99,6 +99,10 @@
     </bean>
 
     <bean id="ocrSystemUserUpdateExecutor" class="com.armedia.acm.services.dataupdate.service.OCRSystemUserUpdateExecutor">
+        <property name="userDao" ref="userJpaDao"/>
+    </bean>
+
+    <bean id="transcribeSystemUserUpdateExecutor" class="com.armedia.acm.services.dataupdate.service.TranscribeSystemUserUpdateExecutor">
         <property name="userDao" ref="userJpaDao"/>
     </bean>
 </beans>

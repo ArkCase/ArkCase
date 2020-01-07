@@ -217,6 +217,7 @@
                     "cancelBtn": "取消",
                     "deleteBtn": "刪除",
                     "headerText": "您即將刪除組：",
+                    "controlGroupHeaderWarning": "You are about to delete {{groupName}} group which is a member in the control group {{controlGroupName}}",
                     "bodyText": "你確定？"
                 }
             },
@@ -248,7 +249,7 @@
             },
 			"searchFilter.placeholder": "搜索"
         },
-        "security.selectPrivileges": "創建角色並選擇特權",
+        "security.selectPrivileges": "選擇權限",
         "security.selectPrivileges.applicationRole": "應用角色",
         "security.selectPrivileges.createRole": "創建角色",
         "security.selectPrivileges.editRole": "編輯角色",
@@ -709,6 +710,29 @@
                     }
                 }
             },
+            "sequenceManagementReset": {
+                "title": "Reset List",
+                "editBtn": "Edit",
+                "viewBtn": "View",
+                "removeBtn": "Remove",
+                "cancelBtn": "Cancel",
+                "saveBtn": "Save",
+                "grid": {
+                    "startResetDate": "Start Reset Date",
+                    "executedDate": "Executed Date",
+                    "repeat": "Repeat",
+                    "repeatPeriod": "Repeat Period"
+                },
+                "detailsModal": {
+                    "title": "Autoincrement Reset",
+                    "addTitle": "Add Autoincrement Reset",
+                    "editTitle": "Edit Autoincrement Reset",
+                    "resetStartDate": "Reset Start Date",
+                    "repeatReset": "Repeat reset",
+                    "repeatResetPeriod": "Repeat reset period (days)",
+                    "sequenceResetScheduledWarning": "Sequence reset scheduled for today"
+                }
+            },
         "login.config": {
             "title": "登錄配置",
             "idleLimit.label": "登錄空閒限制（以毫秒為單位）",
@@ -963,15 +987,6 @@
                 "enableOCR.checkbox": "Enable OCR_ZH_TW"
             }
         },
-        "ocr": {
-            "title": "OCR Services_ZH_TW",
-            "ocrManagement": "OCR Management_ZH_TW",
-            "ocrConfigForm": {
-                "save.button": "Save_ZH_TW",
-                "enableOCR.label": "OCR Configuration_ZH_TW",
-                "enableOCR.checkbox": "Enable OCR_ZH_TW"
-            }
-        },
         "stateOfArkcase": {
             "title": "Arkcase的狀態",
             "pickDate": "選擇日期",
@@ -1023,5 +1038,81 @@
                 "title": "電郵模板"
             }
         }
+    },
+    "portals.portalsConfiguration": {
+        "nodeTitle": "zh-tw_Portals Service",
+        "title": "zh-tw_Portals Configuration",
+        "url": "zh-tw_URL",
+        "id": "zh-tw_ID",
+        "portalId": "zh-tw_Portal ID",
+        "portalDescription": "zh-tw_Description",
+        "portalUser": "zh-tw_User",
+        "save": "zh-tw_Save",
+        "cancel": "zh-tw_Cancel",
+        "placeholder": {
+            "portalUrl": "zh-tw_Enter Portal URL",
+            "portalId": "zh-tw_ID will be generate",
+            "portalDescription": "zh-tw_Enter Portal Description",
+            "portalUser": "zh-tw_Select Portal User"
+        },
+        "message": {
+            "edit": "zh-tw_Portal is successfully edited",
+            "add": "zh-tw_Portal is successfully added",
+            "delete": "zh-tw_Portal is successfully deleted"
+        }
+    },
+    "userSearch": {
+        "title": "zh-tw_User Search",
+        "cancelButton": "zh-tw_Cancel",
+        "confirmButton": "zh-tw_Save",
+        "search": {
+            "placeholder": "zh-tw_Search for the user to assign to this portal",
+            "btn": "zh-tw_Search"
+        },
+        "assigneeGridColumns": {
+            "name": "zh-tw_Name",
+            "type": "zh-tw_Type",
+            "title": "zh-tw_Title",
+            "username": "zh-tw_Username"
+        }
+    },
+    "admin.comp.securityLdapConfig": {
+        "title": "安全 - Ldap配置網格"
+    },
+    "admin.comp.correspondenceManagementMergeFields": {
+        "title": "通信管理合併字段網格"
+    },
+    "admin.comp.correspondenceManagementMergeFieldsVersions": {
+        "title": "通信管理合併字段版本網格"
+    },
+    "admin.comp.correspondenceManagementTemplates": {
+        "title": "通信管理模板網格"
+    },
+    "admin.comp.correspondenceManagementTemplateVersions": {
+        "title": "對應管理模板版本網格"
+    },
+    "admin.comp.labelsConfig": {
+        "title": "應用 - 標籤配置網格"
+    },
+    "admin.comp.plainFormsConfig": {
+        "title": "表格 - 表格配置網格"
+    },
+    "admin.comp.workflowsConfig": {
+        "title": "工作流程 - 工作流配置網格"
+    },
+    "admin.comp.workflowsHistoryDialogConfig": {
+        "title": "工作流程 - 工作流程配置歷史記錄對話框"
+    },
+    "admin.comp.usersPicker": {
+        "title": "選擇用戶"
+    },
+    "admin.comp.orgHierarchy": {
+        "title": "組織層次結構"
+    },
+    "admin.comp.cmisConfiguration": {
+        "title": "CMIS配置網格"
+    },
+    "admin.comp.emailTemplates": {
+        "title": "電子郵件模板"
     }
 }

@@ -60,4 +60,6 @@ public interface LdapConfigurationProperties
     String LDAP_PROP_SYNC_PAGE_SIZE = "ldapConfig.syncPageSize";
     String LDAP_PROP_ADD_USER_TEMPLATE = "ldapConfig.addUserTemplate";
     String LDAP_PROP_ADD_GROUP_TEMPLATE = "ldapConfig.addGroupTemplate";
+    String LDAP_FULL_SYNC_CRON = "ldapConfig.fullSyncCron";
+    String LDAP_PARTIAL_SYNC_CRON = "ldapConfig.partialSyncCron";
 }

@@ -27,19 +27,21 @@ package com.armedia.acm.services.transcribe.model;
  * #L%
  */
 
-import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.core.AcmStatefulEntity;
 import com.armedia.acm.data.AcmEntity;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
-import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
-import com.armedia.acm.services.transcribe.exception.CreateTranscribeException;
-import com.armedia.acm.services.transcribe.exception.SaveTranscribeException;
+import com.armedia.acm.services.mediaengine.exception.CreateMediaEngineException;
+import com.armedia.acm.services.mediaengine.exception.SaveMediaEngineException;
+import com.armedia.acm.services.mediaengine.model.MediaEngine;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.voodoodyne.jackson.jsog.JSOGGenerator;
 
 import org.apache.commons.lang3.StringUtils;
 
+import javax.persistence.AssociationOverride;
+import javax.persistence.AttributeOverride;
+import javax.persistence.AttributeOverrides;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorColumn;
@@ -58,12 +60,9 @@ import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 import java.io.Serializable;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -71,12 +70,26 @@ import java.util.List;
  */
 @Entity
 @Table(name = "acm_transcribe")
+@AttributeOverrides({
+        @AttributeOverride(name = "remoteId", column = @Column(name = "cm_transcribe_remote_id")),
+        @AttributeOverride(name = "type", column = @Column(name = "cm_transcribe_type")),
+        @AttributeOverride(name = "language", column = @Column(name = "cm_transcribe_language")),
+        @AttributeOverride(name = "mediaEcmFileVersion", column = @Column(name = "cm_media_file_version_id")),
+        @AttributeOverride(name = "status", column = @Column(name = "cm_transcribe_status")),
+        @AttributeOverride(name = "processId", column = @Column(name = "cm_transcribe_process_id")),
+        @AttributeOverride(name = "creator", column = @Column(name = "cm_transcribe_creator")),
+        @AttributeOverride(name = "created", column = @Column(name = "cm_transcribe_created")),
+        @AttributeOverride(name = "modifier", column = @Column(name = "cm_transcribe_modifier")),
+        @AttributeOverride(name = "modified", column = @Column(name = "cm_transcribe_modified")),
+        @AttributeOverride(name = "class_name", column = @Column(name = "cm_transcribe_class_name"))
+})
+@AssociationOverride(name = "mediaEcmFileVersion", joinColumns = @JoinColumn(name = "cm_media_file_version_id"))
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.EXISTING_PROPERTY, property = "className", defaultImpl = Transcribe.class)
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "cm_transcribe_class_name", discriminatorType = DiscriminatorType.STRING)
 @DiscriminatorValue("com.armedia.acm.services.transcribe.model.Transcribe")
 @JsonIdentityInfo(generator = JSOGGenerator.class)
-public class Transcribe implements AcmObject, AcmEntity, AcmStatefulEntity, Serializable
+public class Transcribe extends MediaEngine implements AcmEntity, AcmStatefulEntity, Serializable
 {
     @Id
     @TableGenerator(name = "transcribe_gen", table = "acm_transcribe_id", pkColumnName = "cm_seq_name", valueColumnName = "cm_seq_num", pkColumnValue = "acm_transcribe", initialValue = 100, allocationSize = 1)
@@ -84,31 +97,12 @@ public class Transcribe implements AcmObject, AcmEntity, AcmStatefulEntity, Seri
     @Column(name = "cm_transcribe_id")
     private Long id;
 
-    @Column(name = "cm_transcribe_remote_id")
-    private String remoteId;
-
-    @Column(name = "cm_transcribe_type")
-    private String type;
-
-    @Column(name = "cm_transcribe_language")
-    private String language;
-
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "transcribe", orphanRemoval = true)
     private List<TranscribeItem> transcribeItems;
 
     @OneToOne
-    @JoinColumn(name = "cm_transcribe_media_file_version_id")
-    private EcmFileVersion mediaEcmFileVersion;
-
-    @OneToOne
     @JoinColumn(name = "cm_transcribe_file_id")
     private EcmFile transcribeEcmFile;
-
-    @Column(name = "cm_transcribe_status")
-    private String status;
-
-    @Column(name = "cm_transcribe_process_id")
-    private String processId;
 
     @Column(name = "cm_transcribe_word_count")
     private long wordCount;
@@ -116,31 +110,17 @@ public class Transcribe implements AcmObject, AcmEntity, AcmStatefulEntity, Seri
     @Column(name = "cm_transcribe_confidence")
     private int confidence;
 
-    @Column(name = "cm_transcribe_creator")
-    private String creator;
-
-    @Column(name = "cm_transcribe_created")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date created;
-
-    @Column(name = "cm_transcribe_modifier")
-    private String modifier;
-
-    @Column(name = "cm_transcribe_modified")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date modified;
-
     @Column(name = "cm_transcribe_class_name")
     private String className = this.getClass().getName();
 
     @PrePersist
-    protected void beforeInsert() throws CreateTranscribeException
+    protected void beforeInsert() throws CreateMediaEngineException
     {
         setUpTranscribeItems();
     }
 
     @PreUpdate
-    protected void beforeUpdate() throws SaveTranscribeException
+    protected void beforeUpdate() throws SaveMediaEngineException
     {
         setUpTranscribeItems();
     }
@@ -172,39 +152,10 @@ public class Transcribe implements AcmObject, AcmEntity, AcmStatefulEntity, Seri
         return id;
     }
 
+    @Override
     public void setId(Long id)
     {
         this.id = id;
-    }
-
-    public String getRemoteId()
-    {
-        return remoteId;
-    }
-
-    public void setRemoteId(String remoteId)
-    {
-        this.remoteId = remoteId;
-    }
-
-    public String getType()
-    {
-        return type;
-    }
-
-    public void setType(String type)
-    {
-        this.type = type;
-    }
-
-    public String getLanguage()
-    {
-        return language;
-    }
-
-    public void setLanguage(String language)
-    {
-        this.language = language;
     }
 
     public List<TranscribeItem> getTranscribeItems()
@@ -225,16 +176,6 @@ public class Transcribe implements AcmObject, AcmEntity, AcmStatefulEntity, Seri
         this.transcribeItems = transcribeItems;
     }
 
-    public EcmFileVersion getMediaEcmFileVersion()
-    {
-        return mediaEcmFileVersion;
-    }
-
-    public void setMediaEcmFileVersion(EcmFileVersion mediaEcmFileVersion)
-    {
-        this.mediaEcmFileVersion = mediaEcmFileVersion;
-    }
-
     public EcmFile getTranscribeEcmFile()
     {
         return transcribeEcmFile;
@@ -243,16 +184,6 @@ public class Transcribe implements AcmObject, AcmEntity, AcmStatefulEntity, Seri
     public void setTranscribeEcmFile(EcmFile transcribeEcmFile)
     {
         this.transcribeEcmFile = transcribeEcmFile;
-    }
-
-    public String getProcessId()
-    {
-        return processId;
-    }
-
-    public void setProcessId(String processId)
-    {
-        this.processId = processId;
     }
 
     public long getWordCount()
@@ -276,76 +207,18 @@ public class Transcribe implements AcmObject, AcmEntity, AcmStatefulEntity, Seri
     }
 
     @Override
-    public String getCreator()
-    {
-        return creator;
-    }
-
-    @Override
-    public void setCreator(String creator)
-    {
-        this.creator = creator;
-    }
-
-    @Override
-    public Date getCreated()
-    {
-        return created;
-    }
-
-    @Override
-    public void setCreated(Date created)
-    {
-        this.created = created;
-    }
-
-    @Override
-    public String getModifier()
-    {
-        return modifier;
-    }
-
-    @Override
-    public void setModifier(String modifier)
-    {
-        this.modifier = modifier;
-    }
-
-    @Override
-    public Date getModified()
-    {
-        return modified;
-    }
-
-    @Override
-    public void setModified(Date modified)
-    {
-        this.modified = modified;
-    }
-
-    @Override
-    public String getStatus()
-    {
-        return status;
-    }
-
-    @Override
-    public void setStatus(String status)
-    {
-        this.status = status;
-    }
-
-    @Override
     public String getObjectType()
     {
         return TranscribeConstants.OBJECT_TYPE;
     }
 
+    @Override
     public String getClassName()
     {
         return className;
     }
 
+    @Override
     public void setClassName(String className)
     {
         this.className = className;

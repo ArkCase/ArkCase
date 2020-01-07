@@ -31,8 +31,8 @@ import com.armedia.acm.services.functionalaccess.service.FunctionalAccessService
 import com.armedia.acm.services.search.model.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -52,7 +52,7 @@ import java.util.stream.Collectors;
 @RequestMapping({ "/api/v1/service/functionalaccess/groups", "/api/latest/service/functionalaccess/groups" })
 public class GetGroupFilteredAPIController
 {
-    private transient final Logger LOG = LoggerFactory.getLogger(getClass());
+    private transient final Logger LOG = LogManager.getLogger(getClass());
     private ExecuteSolrQuery executeSolrQuery;
     private FunctionalAccessService functionalAccessService;
 

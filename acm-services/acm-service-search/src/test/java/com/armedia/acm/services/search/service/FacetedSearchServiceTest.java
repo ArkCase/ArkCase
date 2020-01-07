@@ -109,12 +109,12 @@ public class FacetedSearchServiceTest
         searchConfig.getFacets().put("first_name_s", "First Name");
         searchConfig.getFacets().put("last_name_s", "Last Name");
         searchConfig.getFacets().put("date.birth_date_tdt", "Birth Date");
-        String expected = "field=" +
+        String expected = "facet.field=" +
                 URLEncoder.encode("{!key='First Name'}first_name_s", SearchConstants.FACETED_SEARCH_ENCODING) +
                 "&facet.query=" +
                 URLEncoder.encode("{!key='Birth Date, Previous Week'}birth_date_tdt", SearchConstants.FACETED_SEARCH_ENCODING) +
                 ":" + URLEncoder.encode("[NOW/DAY-7DAY TO *]", SearchConstants.FACETED_SEARCH_ENCODING) +
-                "&field=" +
+                "&facet.field=" +
                 URLEncoder.encode("{!key='Last Name'}last_name_s", SearchConstants.FACETED_SEARCH_ENCODING);
         String found = unit.getFacetKeys();
 

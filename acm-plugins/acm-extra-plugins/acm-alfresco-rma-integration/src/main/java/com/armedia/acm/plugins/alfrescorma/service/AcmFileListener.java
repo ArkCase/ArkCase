@@ -31,8 +31,8 @@ import com.armedia.acm.plugins.alfrescorma.exception.AlfrescoServiceException;
 import com.armedia.acm.plugins.alfrescorma.model.AlfrescoRmaConfig;
 import com.armedia.acm.plugins.ecm.model.EcmFileAddedEvent;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.context.ApplicationListener;
 
 /**
@@ -41,7 +41,7 @@ import org.springframework.context.ApplicationListener;
 public class AcmFileListener implements ApplicationListener<EcmFileAddedEvent>
 {
 
-    private transient Logger log = LoggerFactory.getLogger(getClass());
+    private transient Logger log = LogManager.getLogger(getClass());
     private AlfrescoRecordsService alfrescoRecordsService;
 
     @Override

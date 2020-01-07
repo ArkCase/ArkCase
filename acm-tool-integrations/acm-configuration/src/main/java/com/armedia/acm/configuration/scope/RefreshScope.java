@@ -27,8 +27,8 @@ package com.armedia.acm.configuration.scope;
  * #L%
  */
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
@@ -51,7 +51,7 @@ import java.util.concurrent.ConcurrentMap;
  */
 public class RefreshScope implements Scope, BeanFactoryPostProcessor
 {
-    private static final Logger logger = LoggerFactory.getLogger(RefreshScope.class);
+    private static final Logger logger = LogManager.getLogger(RefreshScope.class);
     private volatile static RefreshScope INSTANCE;
     private ConcurrentMap<String, BeanWrapper> cache = new ConcurrentHashMap<>();
     private static final String NAME = "refresh";

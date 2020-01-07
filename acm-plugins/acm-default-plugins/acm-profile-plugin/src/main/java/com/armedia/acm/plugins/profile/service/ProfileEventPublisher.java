@@ -35,8 +35,8 @@ import com.armedia.acm.plugins.profile.model.UserOrgPersistentEvent;
 import com.armedia.acm.plugins.profile.model.UserOrgUpdateEvent;
 import com.armedia.acm.service.outlook.model.OutlookPassword;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.security.core.Authentication;
@@ -44,7 +44,7 @@ import org.springframework.security.core.Authentication;
 public class ProfileEventPublisher implements ApplicationEventPublisherAware
 {
 
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private transient final Logger log = LogManager.getLogger(getClass());
     private ApplicationEventPublisher eventPublisher;
 
     @Override

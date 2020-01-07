@@ -35,8 +35,8 @@ import com.armedia.acm.plugins.ecm.service.EcmTikaFileService;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
@@ -54,7 +54,7 @@ import java.util.List;
 })
 public class TikaMetadataIT
 {
-    private transient final Logger logger = LoggerFactory.getLogger(getClass());
+    private transient final Logger logger = LogManager.getLogger(getClass());
 
     @Autowired
     private EcmTikaFileService ecmTikaFileService;

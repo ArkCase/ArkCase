@@ -29,8 +29,8 @@ package com.armedia.acm.services.users.model.ldap;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.ldap.BadLdapGrammarException;
 import org.springframework.ldap.core.DirContextAdapter;
 import org.springframework.ldap.core.DistinguishedName;
@@ -95,7 +95,7 @@ public class MapperUtils
             password.getBytes());
     public static final Function<String, BasicAttribute> openLdapCurrentPasswordToAttribute = password -> new BasicAttribute(
             "userPassword");
-    private static Logger log = LoggerFactory.getLogger(MapperUtils.class);
+    private static Logger log = LogManager.getLogger(MapperUtils.class);
     public static final Function<String, BasicAttribute> activeDirectoryPasswordToAttribute = password -> {
         final byte[] passwordBytes;
         passwordBytes = MapperUtils.encodeUTF16LE(password);

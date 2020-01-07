@@ -8,7 +8,7 @@ angular.module('admin').controller(
                     $scope.opened = false;
 
                     $scope.download = function() {
-                        var dateStr = $scope.date.toISOString().substring(0, 10);
+                        var dateStr = new Date($scope.date).toISOString().substring(0, 10);
                         StateOfArkcaseService.getStateOfArkcase(dateStr).then(function(responseData) {
                             var data = new Blob([ responseData.data ], {
                                 type : 'application/octet-stream'

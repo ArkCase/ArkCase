@@ -42,8 +42,8 @@ import org.apache.chemistry.opencmis.commons.enums.BindingType;
 import org.apache.commons.io.FileUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -64,7 +64,7 @@ import freemarker.template.Template;
  */
 public class CmisConfigurationService
 {
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
     private AcmEncryptablePropertyUtils encryptablePropertyUtils;
 
     private String cmisConfigurationLocation;

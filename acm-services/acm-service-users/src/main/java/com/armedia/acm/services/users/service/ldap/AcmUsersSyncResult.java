@@ -33,8 +33,8 @@ import com.armedia.acm.services.users.model.ldap.LdapUser;
 
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,7 +50,7 @@ import java.util.stream.Collectors;
 public class AcmUsersSyncResult
 {
     private final boolean fullSync;
-    private final Logger log = LoggerFactory.getLogger(getClass());
+    private final Logger log = LogManager.getLogger(getClass());
     private List<AcmUser> modifiedUsers;
     private List<AcmUser> newUsers;
     private List<AcmUser> deletedUsers;

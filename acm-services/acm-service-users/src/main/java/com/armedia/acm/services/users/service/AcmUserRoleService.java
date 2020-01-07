@@ -34,8 +34,8 @@ import com.armedia.acm.services.users.model.AcmRoleType;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.group.AcmGroup;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -48,7 +48,7 @@ public class AcmUserRoleService
 {
     private UserDao userDao;
     private AcmRoleToGroupMapping roleToGroupConfig;
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
 
     public Set<String> getUserRoles(String userId)
     {
@@ -58,10 +58,13 @@ public class AcmUserRoleService
         Set<AcmGroup> userGroups = user.getGroups();
 
         Set<String> userGroupNames = Stream
-                .concat(userGroups.stream().map(AcmGroup::getName), userGroups.stream().flatMap(AcmGroup::getAscendantsStream))
+                .concat(userGroups.stream().map(AcmGroup::getName).map(String::toUpperCase),
+                        userGroups.stream().flatMap(AcmGroup::getAscendantsStream).map(String::toUpperCase))
                 .collect(Collectors.toSet());
 
-        return userGroupNames.stream().filter(groupToRoleMap::containsKey).flatMap(g -> groupToRoleMap.get(g).stream())
+        return userGroupNames.stream()
+                .filter(groupToRoleMap::containsKey)
+                .flatMap(g -> groupToRoleMap.get(g).stream())
                 .collect(Collectors.toSet());
     }
 

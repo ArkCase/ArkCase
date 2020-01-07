@@ -34,8 +34,8 @@ import org.apache.logging.log4j.core.Appender;
 import org.apache.logging.log4j.core.LoggerContext;
 import org.apache.logging.log4j.core.appender.RollingFileAppender;
 import org.apache.logging.log4j.core.appender.rolling.PatternProcessor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import javax.annotation.PostConstruct;
 
@@ -48,7 +48,7 @@ import java.util.Map;
  */
 public class ErrorsLogFileService
 {
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private transient final Logger log = LogManager.getLogger(getClass());
     private String appenderName;
     private LoggerContext ctx;
     private String reason;
@@ -156,7 +156,7 @@ public class ErrorsLogFileService
         StringBuilder fileName = new StringBuilder();
         filePatternProcessor.getNextTime(System.currentTimeMillis(), days, false);
         filePatternProcessor.updateTime();
-        filePatternProcessor.formatFileName(fileName, true, new Object[] {});
+        filePatternProcessor.formatFileName(fileName, false, new Object[] {});
         return fileName.toString();
     }
 

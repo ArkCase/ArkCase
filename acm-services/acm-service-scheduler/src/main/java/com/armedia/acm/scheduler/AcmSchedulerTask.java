@@ -27,8 +27,8 @@ package com.armedia.acm.scheduler;
  * #L%
  */
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.core.task.TaskExecutor;
 
 import java.util.concurrent.CountDownLatch;
@@ -42,7 +42,7 @@ import java.util.concurrent.CountDownLatch;
 public class AcmSchedulerTask
 {
 
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private transient final Logger log = LogManager.getLogger(getClass());
     /**
      * The Spring bean implementing the <code>AcmSchedulableBean</code> interface.
      *

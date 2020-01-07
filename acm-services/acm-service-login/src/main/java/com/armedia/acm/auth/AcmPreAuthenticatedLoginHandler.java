@@ -27,8 +27,8 @@ package com.armedia.acm.auth;
  * #L%
  */
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.preauth.RequestHeaderAuthenticationFilter;
 
@@ -42,7 +42,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class AcmPreAuthenticatedLoginHandler extends RequestHeaderAuthenticationFilter
 {
-    private transient final Logger LOG = LoggerFactory.getLogger(getClass());
+    private transient final Logger LOG = LogManager.getLogger(getClass());
 
     private AcmLoginSuccessOperations loginSuccessOperations;
 

@@ -34,8 +34,8 @@ import com.armedia.acm.objectonverter.AcmMarshaller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 /**
  * @author riste.tutureski
@@ -43,7 +43,7 @@ import org.slf4j.LoggerFactory;
  */
 public class JSONMarshaller implements AcmMarshaller
 {
-    private Logger LOG = LoggerFactory.getLogger(getClass());
+    private Logger LOG = LogManager.getLogger(getClass());
     private ObjectMapper mapper;
 
     @Override

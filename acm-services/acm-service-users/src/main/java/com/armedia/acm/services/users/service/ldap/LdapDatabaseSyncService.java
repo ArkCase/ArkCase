@@ -35,8 +35,8 @@ import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.AcmUserState;
 import com.armedia.acm.services.users.service.AcmGroupEventPublisher;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -45,7 +45,7 @@ import java.util.stream.Collectors;
 
 public class LdapDatabaseSyncService
 {
-    private final static Logger log = LoggerFactory.getLogger(LdapDatabaseSyncService.class);
+    private final static Logger log = LogManager.getLogger(LdapDatabaseSyncService.class);
     private UserDao userDao;
     private AcmGroupDao groupDao;
     private AcmGroupEventPublisher acmGroupEventPublisher;

@@ -32,8 +32,8 @@ import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 
 import gov.foia.model.FoiaConfiguration;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.StringUtils;
 
@@ -46,7 +46,7 @@ import gov.foia.model.FOIARequest;
  */
 public class FOIAExecutiveGroupNotificationService
 {
-    private final Logger log = LoggerFactory.getLogger(this.getClass());
+    private final Logger log = LogManager.getLogger(this.getClass());
 
     private CaseFileDao caseFileDao;
     private NotificationGroupEmailSenderService notificationGroupEmailSenderService;

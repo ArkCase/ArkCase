@@ -30,8 +30,8 @@ package com.armedia.acm.plugins.report.service;
 import com.armedia.acm.pentaho.config.PentahoReportsConfig;
 import com.armedia.acm.plugins.report.model.ScheduleReportException;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -47,7 +47,7 @@ import java.util.Arrays;
  */
 public class PentahoDownloadGeneratedReportService
 {
-    private static final Logger LOGGER = LoggerFactory.getLogger(PentahoDownloadGeneratedReportService.class);
+    private static final Logger LOGGER = LogManager.getLogger(PentahoDownloadGeneratedReportService.class);
     private ResponseEntity<byte[]> response;
     private PentahoReportsConfig reportsConfig;
 
@@ -79,8 +79,8 @@ public class PentahoDownloadGeneratedReportService
 
     public String buildDownloadUrl(String fileName)
     {
-        return reportsConfig.getServerUrl()
-                + ((reportsConfig.getServerPort() != null ? ":" + reportsConfig.getServerPort() : ""))
+        return reportsConfig.getServerInternalUrl()
+                + ((reportsConfig.getServerInternalPort() != null ? ":" + reportsConfig.getServerInternalPort() : ""))
                 + reportsConfig.getDownloadApi().replace("{reportFileName}", fileName);
     }
 

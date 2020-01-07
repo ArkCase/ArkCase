@@ -33,8 +33,8 @@ import com.armedia.acm.service.identity.exceptions.AcmIdentityException;
 import com.armedia.acm.service.identity.exceptions.AcmIdentityNotReadyException;
 import com.armedia.acm.service.identity.model.AcmArkcaseIdentity;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
@@ -44,7 +44,7 @@ import org.springframework.context.event.ContextRefreshedEvent;
  */
 public class AcmArkcaseIdentityServiceImpl implements AcmArkcaseIdentityService, ApplicationListener<ContextRefreshedEvent>
 {
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private transient final Logger log = LogManager.getLogger(getClass());
     private boolean initialized = false;
     private AcmArkcaseIdentity identity;
     private AcmArkcaseLocalIdentityDao localIdentityDao;

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
+    xmlns:aop="http://www.springframework.org/schema/aop"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
 
     <bean id="acmConfigPlugin" class="com.armedia.acm.pluginmanager.model.AcmPlugin">
         <property name="pluginName" value="Config Service Plugin"/>
@@ -78,11 +79,12 @@
                     <property name="config" ref="rmaConfig"/>
                     <property name="jsonMarshaller" ref="jsonMarshaller"/>
                 </bean>
-                <bean class="com.armedia.acm.services.config.model.ConfigMap">
+                <bean class="com.armedia.acm.services.config.model.ConfigMap" scope="refresh">
                     <property name="configName" value="applicationRoleToUserGroup"/>
                     <property name="description" value="Application Role To User Group"/>
                     <property name="configMapping" value="#{rolesToGroupsConfig.getRolesToGroups()}"/>
                     <property name="jsonMarshaller" ref="jsonMarshaller"/>
+                    <aop:scoped-proxy/>
                 </bean>
                 <bean class="com.armedia.acm.services.config.model.ConfigBean">
                     <property name="configName" value="audit"/>
@@ -132,11 +134,12 @@
                     <property name="config" ref="ecmFileConfig"/>
                     <property name="jsonMarshaller" ref="jsonMarshaller"/>
                 </bean>
-                <bean class="com.armedia.acm.services.config.model.ConfigMap">
+                <bean class="com.armedia.acm.services.config.model.ConfigMap" scope="refresh">
                     <property name="configName" value="eventType"/>
                     <property name="description" value="Event Type"/>
                     <property name="configMapping" value="#{auditEventConfig.getEventTypes()}"/>
                     <property name="jsonMarshaller" ref="jsonMarshaller"/>
+                    <aop:scoped-proxy/>
                 </bean>
                 <bean class="com.armedia.acm.services.config.model.ConfigBean">
                     <property name="configName" value="msOutlookIntegration"/>
@@ -156,11 +159,12 @@
                     <property name="config" ref="profileConfig"/>
                     <property name="jsonMarshaller" ref="jsonMarshaller"/>
                 </bean>
-                <bean class="com.armedia.acm.services.config.model.ConfigMap">
+                <bean class="com.armedia.acm.services.config.model.ConfigMap" scope="refresh">
                     <property name="configName" value="acm-reports"/>
                     <property name="description" value="Acm Reports"/>
                     <property name="configMapping" value="#{pentahoReportsConfig.getReportToUrlMap()}"/>
                     <property name="jsonMarshaller" ref="jsonMarshaller"/>
+                    <aop:scoped-proxy/>
                 </bean>
                 <bean class="com.armedia.acm.services.config.model.JsonConfig">
                     <property name="configName" value="reportsParameters"/>
@@ -173,11 +177,12 @@
                     <property name="config" ref="pentahoReportsConfig"/>
                     <property name="jsonMarshaller" ref="jsonMarshaller"/>
                 </bean>
-                <bean class="com.armedia.acm.services.config.model.ConfigBean">
+                <bean class="com.armedia.acm.services.config.model.ConfigMap" scope="refresh">
                     <property name="configName" value="reportToRolesMap"/>
                     <property name="description" value="Reports to Roles map"/>
-                    <property name="config" ref="reportsToRolesConfig"/>
+                    <property name="configMapping" value="#{reportsToRolesConfig.getReportsToRolesMap()}"/>
                     <property name="jsonMarshaller" ref="jsonMarshaller"/>
+                    <aop:scoped-proxy/>
                 </bean>
                 <bean class="com.armedia.acm.services.config.model.ConfigBean">
                     <property name="configName" value="acm-roles"/>
@@ -253,6 +258,13 @@
                     <property name="description" value="Fiscal year definition"/>
                     <property name="config" ref="fiscalYearConfig"/>
                     <property name="jsonMarshaller" ref="jsonMarshaller"/>
+                </bean>
+                <bean class="com.armedia.acm.services.config.model.PropertyConfig">
+                    <property name="configName" value="acm-forms"/>
+                    <property name="configDescription" value="Acm Forms"/>
+                    <property name="properties" ref="acm-forms-properties"/>
+                    <property name="encryptablePropertyUtils" ref="acmEncryptablePropertyUtils"/>
+                    <property name="objectConverter" ref="objectConverter"/>
                 </bean>
             </list>
         </constructor-arg>

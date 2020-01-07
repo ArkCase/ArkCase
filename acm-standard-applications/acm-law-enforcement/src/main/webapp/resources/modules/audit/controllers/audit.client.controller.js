@@ -4,8 +4,8 @@
 
 angular.module('audit').controller(
         'AuditController',
-        [ '$scope', '$sce', '$q', 'ConfigService', 'LookupService', 'AuditController.BuildUrl', 'UtilService', 'Util.DateService', '$window', 'Helper.LocaleService', 'Object.LookupService',
-                function($scope, $sce, $q, ConfigService, LookupService, BuildUrl, Util, UtilDateService, $window, LocaleHelper, ObjectLookupService) {
+    ['$scope', '$sce', '$q', '$modal', 'ConfigService', 'LookupService', 'AuditController.BuildUrl', 'UtilService', 'Util.DateService', '$window', 'Helper.LocaleService', 'Object.LookupService',
+        function ($scope, $sce, $q, $modal, ConfigService, LookupService, BuildUrl, Util, UtilDateService, $window, LocaleHelper, ObjectLookupService) {
                     new LocaleHelper.Locale({
                         scope: $scope
                     });
@@ -14,6 +14,10 @@ angular.module('audit').controller(
                         $scope.config = config;
                         return config;
                     });
+
+                    $scope.iframeLoadedCallBack = function () {
+                         $scope.modalInstance.close();
+                    };
 
                     $scope.showXmlReport = false;
 
@@ -69,13 +73,22 @@ angular.module('audit').controller(
 
                         $scope.pentahoHost = $scope.acmReportsProperties['report.plugin.PENTAHO_SERVER_URL'];
                         $scope.pentahoPort = $scope.acmReportsProperties['report.plugin.PENTAHO_SERVER_PORT'];
-                        $scope.auditReportUri = $scope.auditPluginProperties['report.plugin.AUDIT_REPORT'];
+                        $scope.auditReportUri = $scope.auditPluginProperties['audit.plugin.AUDIT_REPORT'];
                         $scope.pentahoUser = $scope.acmReportsProperties['report.plugin.PENTAHO_SERVER_USER'];
                         $scope.pentahoPassword = $scope.acmReportsProperties['report.plugin.PENTAHO_SERVER_PASSWORD'];
                         $scope.auditDropdown = data[2];
                     });
 
                     $scope.showIframe = function() {
+
+                        var modalInstance = $modal.open({
+                            animation: true,
+                            templateUrl: 'modules/common/views/object.modal.loading-spinner.html',
+                            size: 'sm',
+                            backdrop: 'static'
+                        });
+                        $scope.modalInstance = modalInstance;
+
                         var reportUri = $scope.auditReportUri;
                         if ($scope.showXmlReport) {
                             reportUri = reportUri.substring(0, reportUri.indexOf('viewer')) + 'report';
@@ -84,4 +97,4 @@ angular.module('audit').controller(
                             $scope.auditReportUrl = BuildUrl.getUrl($scope.pentahoHost, $scope.pentahoPort, $scope.auditReportUri, $scope.dateFrom, $scope.dateTo, $scope.objectType, $scope.objectId, true, $scope.pentahoUser, $scope.pentahoPassword, $scope.showXmlReport);
                         }
                     }
-                } ]);
+        }]);

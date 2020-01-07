@@ -36,8 +36,8 @@ import com.armedia.acm.plugins.dashboard.model.widget.WidgetRoleName;
 import com.armedia.acm.plugins.dashboard.model.widget.WidgetRolePrimaryKey;
 import com.armedia.acm.services.users.model.AcmRole;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
@@ -58,7 +58,7 @@ public class WidgetDao extends AcmAbstractDao<Widget>
     @PersistenceContext
     private EntityManager entityManager;
 
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
 
     @Transactional
     public Widget saveWidget(Widget in)
@@ -202,6 +202,11 @@ public class WidgetDao extends AcmAbstractDao<Widget>
 
     public List<Widget> getAllWidgetsByRoles(Set<String> roles) throws AcmObjectNotFoundException
     {
+        if (roles.isEmpty())
+        {
+            throw new AcmObjectNotFoundException("dashboard", null, "No widgets since roles list is empty.", null);
+        }
+
         TypedQuery<Widget> widgetsByRoles = getEntityManager().createQuery("SELECT widget FROM Widget widget, WidgetRole widgetRole "
                 + "WHERE widget.widgetId = widgetRole.widgetId AND widgetRole.roleName IN :roleNames ", Widget.class);
         widgetsByRoles.setParameter("roleNames", roles);

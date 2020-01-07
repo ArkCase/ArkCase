@@ -33,8 +33,8 @@ import com.armedia.acm.pentaho.config.PentahoReportsConfig;
 import com.armedia.acm.plugins.report.model.Report;
 import com.armedia.acm.plugins.report.model.ScheduleReportException;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -54,7 +54,7 @@ import java.util.stream.Collectors;
  */
 public class PentahoFilePropertiesService
 {
-    private static final Logger LOGGER = LoggerFactory.getLogger(PentahoFilePropertiesService.class);
+    private static final Logger LOGGER = LogManager.getLogger(PentahoFilePropertiesService.class);
     private PentahoReportFiles pentahoReportFiles;
     private ResponseEntity<PentahoReportFiles> response;
     private ReportService reportService;
@@ -142,8 +142,8 @@ public class PentahoFilePropertiesService
 
     public String buildFilePropertiesUrl()
     {
-        return reportsConfig.getServerUrl()
-                + (reportsConfig.getServerPort() != null ? ":" + reportsConfig.getServerPort() : "")
+        return reportsConfig.getServerInternalUrl()
+                + (reportsConfig.getServerInternalPort() != null ? ":" + reportsConfig.getServerInternalPort() : "")
                 + reportsConfig.getFilePropertiesApi();
     }
 

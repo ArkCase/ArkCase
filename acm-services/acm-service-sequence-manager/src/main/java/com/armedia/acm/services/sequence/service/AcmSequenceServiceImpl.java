@@ -38,8 +38,8 @@ import com.armedia.acm.services.sequence.model.AcmSequenceRegistry;
 import com.armedia.acm.services.sequence.model.AcmSequenceReset;
 import com.armedia.acm.services.sequence.model.AcmSequenceResetId;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -53,7 +53,7 @@ import java.util.List;
  */
 public class AcmSequenceServiceImpl implements AcmSequenceService
 {
-    private final Logger log = LoggerFactory.getLogger(getClass());
+    private final Logger log = LogManager.getLogger(getClass());
 
     private AcmSequenceDao sequenceDao;
 
@@ -178,6 +178,35 @@ public class AcmSequenceServiceImpl implements AcmSequenceService
         {
             throw new AcmSequenceException(
                     String.format("Unable to get Sequence Registry List for [%s] [%s]", sequenceName, sequencePartName), e);
+        }
+    }
+
+    @Override
+    public List<AcmSequenceRegistry> getSequenceRegistryList() throws AcmSequenceException
+    {
+        log.info("Getting Sequence Registry List");
+        try
+        {
+            return getSequenceRegistryDao().getSequenceRegistryList();
+        }
+        catch (Exception e)
+        {
+            throw new AcmSequenceException(String.format("Unable to get Sequence Registry List"), e);
+        }
+    }
+
+    @Override
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public AcmSequenceEntity updateSequenceEntity(AcmSequenceEntity acmSequenceEntity) throws AcmSequenceException
+    {
+        log.info("Update Sequence Number");
+        try
+        {
+            return getSequenceDao().save(acmSequenceEntity);
+        }
+        catch (Exception e)
+        {
+            throw new AcmSequenceException(String.format("Unable to update Sequence Number"), e);
         }
     }
 

@@ -6,22 +6,22 @@ package com.armedia.acm.calendar.service.integration.exchange;
  * %%
  * Copyright (C) 2014 - 2018 ArkCase LLC
  * %%
- * This file is part of the ArkCase software. 
- * 
- * If the software was purchased under a paid ArkCase license, the terms of 
- * the paid license agreement will prevail.  Otherwise, the software is 
+ * This file is part of the ArkCase software.
+ *
+ * If the software was purchased under a paid ArkCase license, the terms of
+ * the paid license agreement will prevail.  Otherwise, the software is
  * provided under the following open source license terms:
- * 
+ *
  * ArkCase is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *  
+ *
  * ArkCase is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
  * #L%
@@ -34,6 +34,7 @@ import com.armedia.acm.calendar.service.AcmCalendarEvent;
 import com.armedia.acm.calendar.service.AcmCalendarEventInfo;
 import com.armedia.acm.calendar.service.AcmCalendarInfo;
 import com.armedia.acm.calendar.service.CalendarServiceException;
+import com.armedia.acm.core.utils.AcmObjectUtils;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.plugins.ecm.dao.AcmContainerDao;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
@@ -42,6 +43,11 @@ import com.armedia.acm.service.outlook.dao.AcmOutlookFolderCreatorDao;
 import com.armedia.acm.service.outlook.dao.OutlookDao;
 import com.armedia.acm.services.users.model.AcmUser;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.access.PermissionEvaluator;
@@ -101,6 +107,7 @@ public class CalendarEntityHandler
     private Object writePermission;
     private Object deletePermission;
     private AcmOutlookFolderCreatorDao folderCreatorDao;
+    private AcmObjectUtils acmObjectUtils;
 
     public CalendarEntityHandler()
     {
@@ -232,20 +239,22 @@ public class CalendarEntityHandler
      */
     private AcmContainerEntity getEntity(String objectId, boolean restrictedOnly)
     {
-        TypedQuery<AcmContainerEntity> query;
+        Class acmObjectClass = getAcmObjectUtils().getClassFromObjectType(entityTypeForQuery);
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+
+        CriteriaQuery query = cb.createQuery(acmObjectClass);
+        Root acmObject = query.from(acmObjectClass);
+        query.select(acmObject);
         if (restrictedOnly)
         {
-            query = em.createQuery(String.format("SELECT ot FROM %s ot WHERE ot.%s = :objectId AND ot.restricted = :restricted",
-                    entityTypeForQuery, entityIdForQuery), AcmContainerEntity.class);
-            query.setParameter("restricted", true);
+            query.where(cb.and(cb.equal(acmObject.get(getEntityIdForQuery()), objectId)), cb.equal(acmObject.get("restricted"), true));
         }
         else
         {
-            query = em.createQuery(String.format("SELECT ot FROM %s ot WHERE ot.%s = :objectId", entityTypeForQuery, entityIdForQuery),
-                    AcmContainerEntity.class);
+           query.where(cb.equal(acmObject.get(getEntityIdForQuery()), objectId));
         }
-        query.setParameter("objectId", Long.valueOf(objectId));
-        List<AcmContainerEntity> resultList = query.getResultList();
+        TypedQuery dbQuery =  em.createQuery(query);
+        List<AcmContainerEntity> resultList = dbQuery.getResultList();
         if (!resultList.isEmpty())
         {
             return resultList.get(0);
@@ -335,35 +344,39 @@ public class CalendarEntityHandler
 
     boolean isObjectClosed(Long objectId)
     {
-        TypedQuery<AcmContainerEntity> query = em
-                .createQuery(String.format("SELECT obj FROM %s obj WHERE obj.status IN :statuses AND obj.%s = :objectId",
-                        entityTypeForQuery, entityIdForQuery), AcmContainerEntity.class);
-        query.setParameter("statuses", closedStates);
-        query.setParameter("objectId", objectId);
-        List<AcmContainerEntity> resultList = query.getResultList();
+        Class acmObjectClass = getAcmObjectUtils().getClassFromObjectType(entityTypeForQuery);
+        CriteriaBuilder cb = em.getCriteriaBuilder();
 
-        return !resultList.isEmpty();
+        CriteriaQuery query = cb.createQuery(acmObjectClass);
+        Root acmObject = query.from(acmObjectClass);
+        query.select(acmObject);
+        query.where(cb.and(acmObject.<String>get("status").in(closedStates), cb.equal(acmObject.get(getEntityIdForQuery()), objectId)));
+
+        TypedQuery dbQuery =  em.createQuery(query);
+        return (boolean)dbQuery.getSingleResult();
     }
 
     private List<AcmContainerEntity> getEntities(Integer daysClosed)
     {
-        TypedQuery<AcmContainerEntity> query;
+        Class acmObjectClass = getAcmObjectUtils().getClassFromObjectType(entityTypeForQuery);
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+
+        CriteriaQuery query = cb.createQuery(acmObjectClass);
+        Root acmObject = query.from(acmObjectClass);
+        query.select(acmObject);
+        Join join = acmObject.join("container");
+
         if (daysClosed == null)
         {
-            query = em.createQuery(
-                    String.format("SELECT obj FROM %s obj WHERE obj.status IN :statuses AND obj.container.calendarFolderId IS NOT NULL",
-                            entityTypeForQuery),
-                    AcmContainerEntity.class);
+            query.where(cb.and(acmObject.<String>get("status").in(closedStates), cb.isNotNull(join.get("id"))));
         }
         else
         {
-            query = em.createQuery(String.format(
-                    "SELECT obj FROM %s obj WHERE obj.status IN :statuses AND obj.container.calendarFolderId IS NOT NULL AND obj.modified <= :modified",
-                    entityTypeForQuery), AcmContainerEntity.class);
-            query.setParameter("modified", calculateModifiedDate(daysClosed));
+            Predicate predicate = cb.lessThanOrEqualTo(acmObject.<Date>get("dateCreated"), calculateModifiedDate(daysClosed));
+            query.where(cb.and(acmObject.<String>get("status").in(closedStates), cb.and(cb.isNotNull(join.get("id")),predicate)));
         }
-        query.setParameter("statuses", closedStates);
-        List<AcmContainerEntity> resultList = query.getResultList();
+        TypedQuery dbQuery =  em.createQuery(query);
+        List<AcmContainerEntity> resultList = dbQuery.getResultList();
 
         return resultList;
     }
@@ -497,6 +510,11 @@ public class CalendarEntityHandler
         this.entityIdForQuery = entityIdForQuery;
     }
 
+    public String getEntityIdForQuery()
+    {
+        return this.entityIdForQuery;
+    }
+
     public void setPermissionEvaluator(PermissionEvaluator permissionEvaluator)
     {
         this.permissionEvaluator = permissionEvaluator;
@@ -526,11 +544,18 @@ public class CalendarEntityHandler
         this.folderCreatorDao = folderCreatorDao;
     }
 
-    public String getEntityType() 
+    public String getEntityType()
     {
         return this.entityType;
     }
 
+    public AcmObjectUtils getAcmObjectUtils() {
+        return acmObjectUtils;
+    }
+
+    public void setAcmObjectUtils(AcmObjectUtils acmObjectUtils) {
+        this.acmObjectUtils = acmObjectUtils;
+    }
     public enum PermissionType
     {
         READ, WRITE, DELETE

@@ -35,8 +35,8 @@ import com.github.fge.jsonschema.core.report.ProcessingReport;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 
@@ -45,7 +45,7 @@ import java.io.IOException;
 public class EcmFileJsonSchemaValidTest
 {
 
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private transient final Logger log = LogManager.getLogger(getClass());
 
     private JsonSchemaValidator jsonSchemaValidator;
 

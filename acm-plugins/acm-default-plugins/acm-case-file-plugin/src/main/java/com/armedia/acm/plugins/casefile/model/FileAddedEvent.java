@@ -39,7 +39,7 @@ public class FileAddedEvent extends AcmEvent
 
     private static final String EVENT_TYPE = "com.armedia.acm.casefile.file.added";
 
-    public FileAddedEvent(CaseFile source)
+    public FileAddedEvent(CaseFile source, String ipAddress)
     {
 
         super(source);
@@ -47,6 +47,7 @@ public class FileAddedEvent extends AcmEvent
         setObjectId(source.getId());
         setObjectType(source.getObjectType());
         setEventDate(new Date());
+        setIpAddress(ipAddress);
     }
 
     @Override

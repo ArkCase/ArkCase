@@ -29,8 +29,8 @@ package com.armedia.acm.plugins.ecm.utils;
 
 import org.apache.pdfbox.io.MemoryUsageSetting;
 import org.apache.pdfbox.multipdf.PDFMergerUtility;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
@@ -44,7 +44,7 @@ public class PDFUtils
      * Use no more than 32MB of main memory when merging PDFs, the disk is used for the rest.
      */
     public static final int MAX_MAIN_MEMORY_BYTES = 1024 * 1024 * 32;
-    private static transient final Logger log = LoggerFactory.getLogger(PDFUtils.class);
+    private static transient final Logger log = LogManager.getLogger(PDFUtils.class);
 
     /**
      * Merges together the two supplied PDF documents

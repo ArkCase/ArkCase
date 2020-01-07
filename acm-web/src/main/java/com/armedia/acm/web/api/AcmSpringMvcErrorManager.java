@@ -41,14 +41,13 @@ import com.armedia.acm.core.exceptions.AcmResourceNotModifiableException;
 import com.armedia.acm.core.exceptions.AcmStateOfArkcaseGenerateReportException;
 import com.armedia.acm.core.exceptions.AcmUpdateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
-import com.armedia.acm.core.exceptions.CorrespondenceMergeFieldVersionException;
 import com.armedia.acm.core.exceptions.InvalidLookupException;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.AccessDeniedException;
@@ -66,7 +65,7 @@ import java.util.Map;
 @ControllerAdvice
 public class AcmSpringMvcErrorManager
 {
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
 
     @ExceptionHandler(AcmParticipantsException.class)
     public void handleException(HttpServletResponse response, AcmParticipantsException e)
@@ -171,13 +170,6 @@ public class AcmSpringMvcErrorManager
     {
         log.error("AcmObjectLockException occurred: " + e.getMessage(), e);
         sendResponse(HttpStatus.CONFLICT, response, e.getMessage());
-    }
-
-    @ExceptionHandler(CorrespondenceMergeFieldVersionException.class)
-    public void handleCorrespondenceMergeFieldExceptions(HttpServletResponse response, AcmObjectLockException e)
-    {
-        log.error("CorrespondenceMergeFieldVersionException occurred", e.getMessage(), e);
-        sendResponse(HttpStatus.NOT_FOUND, response, e.getMessage());
     }
 
     @ExceptionHandler(AcmStateOfArkcaseGenerateReportException.class)

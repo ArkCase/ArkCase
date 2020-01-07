@@ -304,4 +304,29 @@
         <aop:scoped-proxy/>
     </bean>
 
+    <bean id="complaintBillingInvoiceEmailSenderService"
+        class="com.armedia.acm.plugins.complaint.service.ComplaintBillingInvoiceEmailSenderService">
+        <property name="complaintDao" ref="acmComplaintDao"/>
+        <property name="billingService" ref="billingService"/>
+        <property name="notificationSender" ref="notificationSender"/>
+        <property name="notificationDao" ref="notificationDao"/>
+        <property name="fileService" ref="ecmFileService"/>
+    </bean>
+
+    <bean id="getComplaintByNumberService" class="com.armedia.acm.plugins.complaint.service.GetComplaintByNumberService">
+        <property name="complaintDao" ref="acmComplaintDao"/>
+    </bean>
+
+    <bean id="complaintBillingInvoiceCreatedHandler"
+        class="com.armedia.acm.plugins.complaint.listener.ComplaintBillingInvoiceCreatedHandler">
+        <property name="complaintBillingInvoiceDocumentGenerator" ref="billingInvoiceDocumentGenerator"/>
+    </bean>
+
+    <bean id="getComplaintService" class="com.armedia.acm.plugins.complaint.service.GetComplaintServiceImpl">
+        <property name="complaintDao" ref="acmComplaintDao"/>
+    </bean>
+
+    <bean id="complaintTemplateModelProvider" class="com.armedia.acm.plugins.complaint.model.provider.ComplaintTemplateModelProvider">
+    </bean>
+
 </beans>

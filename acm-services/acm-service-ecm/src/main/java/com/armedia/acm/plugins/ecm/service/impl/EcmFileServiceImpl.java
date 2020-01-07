@@ -50,9 +50,13 @@ import com.armedia.acm.plugins.ecm.model.EcmFileDeclareRequestEvent;
 import com.armedia.acm.plugins.ecm.model.EcmFileUpdatedEvent;
 import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
 import com.armedia.acm.plugins.ecm.model.EcmFolderDeclareRequestEvent;
+import com.armedia.acm.plugins.ecm.model.ProgressbarDetails;
 import com.armedia.acm.plugins.ecm.model.event.EcmFileConvertEvent;
+import com.armedia.acm.plugins.ecm.model.RecycleBinItem;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.ecm.service.EcmFileTransaction;
+import com.armedia.acm.plugins.ecm.service.ProgressIndicatorService;
+import com.armedia.acm.plugins.ecm.service.RecycleBinItemService;
 import com.armedia.acm.plugins.ecm.utils.CmisConfigUtils;
 import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
@@ -65,16 +69,16 @@ import com.armedia.acm.services.search.model.SearchConstants;
 import com.armedia.acm.services.search.model.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.search.service.SearchResults;
-
 import org.apache.chemistry.opencmis.client.api.CmisObject;
 import org.apache.chemistry.opencmis.client.api.Document;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.messaging.MessageChannel;
@@ -85,9 +89,10 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.persistence.PersistenceException;
-
+import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -108,7 +113,7 @@ import java.util.UUID;
  */
 public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFileService
 {
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
 
     private EcmFileTransaction ecmFileTransaction;
 
@@ -139,6 +144,12 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     private EcmFileParticipantService fileParticipantService;
 
     private AcmParticipantService participantService;
+
+    private RecycleBinItemService recycleBinItemService;
+
+    private ProgressIndicatorService progressIndicatorService;
+
+    private ProgressbarDetails progressbarDetails;
 
     private EcmFileConfig ecmFileConfig;
 
@@ -315,6 +326,8 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         log.info("File size: {}; content type: {}", file.getSize(), file.getContentType());
 
         AcmContainer container = getOrCreateContainer(parentObjectType, parentObjectId);
+        // makes a problem when trying to upload file to a children node folder
+
         // TODO: disgusting hack here. getOrCreateContainer is transactional, and may update the container or the
         // container folder, e.g. by adding participants. If it does, the object we get back won't have those changes,
         // so we could get a unique constraint violation later on. Hence the need to update the object
@@ -331,7 +344,13 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
 
             metadata.setCmisRepositoryId(cmisRepositoryId);
             EcmFile uploaded = getEcmFileTransaction().addFileTransaction(authentication, file.getOriginalFilename(), container,
-                    targetCmisFolderId, fileInputStream, metadata);
+                    targetCmisFolderId, fileInputStream, metadata, file);
+
+            if (StringUtils.isNotEmpty(uploaded.getUuid()))
+            {
+                log.debug("Stop progressbar executor in stage 3, for file {} and set file upload success to {}", uploaded.getUuid(), true);
+                progressIndicatorService.end(uploaded.getUuid(), true);
+            }
 
             event = new EcmFileAddedEvent(uploaded, authentication);
             event.setUserId(authentication.getName());
@@ -440,6 +459,24 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
             log.error("Could not create folder: {} ", e.getMessage(), e);
             throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_DOWNLOAD_FILE_AS_INPUTSTREAM,
                     EcmFileConstants.OBJECT_FILE_TYPE, id, "Download as InputStream failed", e);
+        }
+    }
+
+    @Override
+    @AcmAcquireAndReleaseObjectLock(acmObjectArgIndex = 0, objectType = "FILE", lockType = "READ")
+    public InputStream downloadAsInputStream(EcmFile ecmFile) throws AcmUserActionFailedException
+    {
+        try
+        {
+            InputStream content = getEcmFileTransaction().downloadFileTransactionAsInputStream(ecmFile);
+
+            return content;
+        }
+        catch (MuleException e)
+        {
+            log.error("Content could not be retrieved from {}. Cause: {} ", ecmFile.getCmisRepositoryId(), e.getMessage(), e);
+            throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_DOWNLOAD_FILE_AS_INPUTSTREAM,
+                    EcmFileConstants.OBJECT_FILE_TYPE, ecmFile.getId(), "Download as InputStream failed", e);
         }
     }
 
@@ -1571,6 +1608,29 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
 
     @Override
     @AcmAcquireAndReleaseObjectLock(objectIdArgIndex = 0, objectType = "FILE", lockType = "DELETE")
+    public RecycleBinItem putFileIntoRecycleBin(Long objectId, Authentication authentication, HttpSession session)
+            throws AcmObjectNotFoundException, AcmUserActionFailedException, AcmCreateObjectFailedException
+    {
+        EcmFile file = getEcmFileDao().find(objectId);
+        RecycleBinItem recycleBinItem = null;
+        if (file == null)
+        {
+            throw new AcmObjectNotFoundException(EcmFileConstants.OBJECT_FILE_TYPE, objectId, "File not found", null);
+        }
+        try
+        {
+            recycleBinItem = getRecycleBinItemService().putFileIntoRecycleBin(file, authentication, session);
+            log.info("File {} successfully moved into recycle bin by user: {}", objectId, file.getModifier());
+        }
+        catch (PersistenceException e)
+        {
+            log.error("Could not delete file {}, reason {} ", objectId, e.getMessage(), e);
+        }
+        return recycleBinItem;
+    }
+
+    @Override
+    @AcmAcquireAndReleaseObjectLock(objectIdArgIndex = 0, objectType = "FILE", lockType = "DELETE")
     public void deleteFile(Long objectId, Long parentId, String parentType) throws AcmUserActionFailedException, AcmObjectNotFoundException
     {
 
@@ -1698,6 +1758,12 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     }
 
     @Override
+    public List<EcmFile> findByIds(List<Long> fileIds)
+    {
+        return getEcmFileDao().findByIds(fileIds);
+    }
+
+    @Override
     public EcmFile findFileByContainerAndFileType(Long containerId, String fileType)
     {
         return getEcmFileDao().findForContainerAndFileType(containerId, fileType);
@@ -1727,6 +1793,45 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         tmpPdfConvertedFile = new File(tmpPdfConvertedFullFileName);
 
         return tmpPdfConvertedFile;
+    }
+
+    @Override
+    public String uploadFileChunk(MultipartHttpServletRequest request, String fileName, String uniqueArkCaseHashFileIdentifier)
+    {
+        String dirPath = System.getProperty("java.io.tmpdir");
+        try
+        {
+            MultipartHttpServletRequest multipartHttpServletRequest = request;
+            MultiValueMap<String, MultipartFile> attachments = multipartHttpServletRequest.getMultiFileMap();
+            if (attachments != null)
+            {
+                for (Map.Entry<String, List<MultipartFile>> entry : attachments.entrySet())
+                {
+
+                    final List<MultipartFile> attachmentsList = entry.getValue();
+
+                    if (attachmentsList != null && !attachmentsList.isEmpty())
+                    {
+
+                        for (final MultipartFile attachment : attachmentsList)
+                        {
+                            fileName = attachment.getOriginalFilename();
+                            File dir = new File(dirPath);
+                            if (dir.exists())
+                            {
+                                File file = new File(dirPath + File.separator + uniqueArkCaseHashFileIdentifier + "-" + fileName);
+                                attachment.transferTo(file);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            log.error("File upload was unsuccessful.", e);
+        }
+        return fileName;
     }
 
     public EcmFileTransaction getEcmFileTransaction()
@@ -1880,6 +1985,26 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         this.participantService = participantService;
     }
 
+    public ProgressIndicatorService getProgressIndicatorService()
+    {
+        return progressIndicatorService;
+    }
+
+    public void setProgressIndicatorService(ProgressIndicatorService progressIndicatorService)
+    {
+        this.progressIndicatorService = progressIndicatorService;
+    }
+
+    public ProgressbarDetails getProgressbarDetails()
+    {
+        return progressbarDetails;
+    }
+
+    public void setProgressbarDetails(ProgressbarDetails progressbarDetails)
+    {
+        this.progressbarDetails = progressbarDetails;
+    }
+
     public EcmFileConfig getEcmFileConfig()
     {
         return ecmFileConfig;
@@ -1919,4 +2044,15 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     {
         this.objectLockService = objectLockService;
     }
+
+    public RecycleBinItemService getRecycleBinItemService()
+    {
+        return recycleBinItemService;
+    }
+
+    public void setRecycleBinItemService(RecycleBinItemService recycleBinItemService)
+    {
+        this.recycleBinItemService = recycleBinItemService;
+    }
+
 }

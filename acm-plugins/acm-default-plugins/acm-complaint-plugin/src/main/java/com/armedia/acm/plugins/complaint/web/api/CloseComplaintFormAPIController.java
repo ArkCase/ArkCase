@@ -31,8 +31,8 @@ import com.armedia.acm.plugins.complaint.model.CloseComplaintRequest;
 import com.armedia.acm.plugins.complaint.service.CloseComplaintService;
 import com.armedia.acm.plugins.complaint.service.CloseComplaintServiceImpl;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -52,7 +52,7 @@ import java.util.Map;
 @RequestMapping({ "/api/latest/plugin/complaint" })
 public class CloseComplaintFormAPIController
 {
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
     private CloseComplaintService closeComplaintService;
 
     @RequestMapping(value = "/close/{mode}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)

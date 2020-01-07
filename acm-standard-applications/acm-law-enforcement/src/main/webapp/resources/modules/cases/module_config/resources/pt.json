@@ -373,6 +373,38 @@
             "approverDecision": "Decisão Aprovação"
         }
     },
+    "cases.comp.billing": {
+        "title": "Billing",
+        "table.columns": {
+            "item": "Item #",
+            "description": "Description",
+            "amount": "Amount",
+            "total": "Total: ",
+            "buttons": {
+                "listInvoices": "List Invoices",
+                "emailInvoice": "Email Invoice",
+                "generateInvoice": "Generate Invoice"
+            }
+        },
+        "modal": {
+            "title": "Add Billing Item",
+            "cancel.btn": "Cancel",
+            "save.btn": "Save",
+            "billingItems.title": "Billing items for"
+        },
+        "invoice": {
+            "title": "Invoices",
+            "table.columns": {
+                "invoiceNumber": "Invoice Number",
+                "status": "Status",
+                "creator": "Creator",
+                "created": "Created",
+                "view": "View"
+            }
+        },
+        "amount.title": "Please enter billing amount",
+        "description.title": "Please enter billing description"
+    },
     "cases.comp.change.status": {
         "title": "pt_Change Case Status",
         "description.label": "pt_Description",
@@ -461,7 +493,8 @@
             "cost.label": "Custo",
             "tags.label": "Etiquetas",
             "calendar.label": "Calendário",
-            "approvalRouting.label": "Roteamento de Aprovação"
+            "approvalRouting.label": "Roteamento de Aprovação",
+            "billing.label": "Billing"
         },
         "filters": {
             "opened": "Todas as queixas abertas",

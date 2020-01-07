@@ -33,12 +33,12 @@ import com.armedia.acm.services.timesheet.model.AcmTimesheet;
 import com.armedia.acm.services.timesheet.pipeline.TimesheetPipelineContext;
 import com.armedia.acm.services.timesheet.service.SaveTimesheetBusinessRule;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 public class TimesheetRuleHandler implements PipelineHandler<AcmTimesheet, TimesheetPipelineContext>
 {
-    private final Logger log = LoggerFactory.getLogger(getClass());
+    private final Logger log = LogManager.getLogger(getClass());
     private SaveTimesheetBusinessRule timesheetBusinessRule;
 
     @Override

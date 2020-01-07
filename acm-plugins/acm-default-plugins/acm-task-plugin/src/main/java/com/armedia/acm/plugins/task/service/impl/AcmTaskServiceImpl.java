@@ -29,11 +29,15 @@ package com.armedia.acm.plugins.task.service.impl;
 
 import com.armedia.acm.auth.AcmAuthentication;
 import com.armedia.acm.auth.AcmAuthenticationManager;
+import com.armedia.acm.core.AcmNotifiableEntity;
+import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmListObjectsFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
+import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.data.BuckslipFutureTask;
+import com.armedia.acm.data.service.AcmDataService;
 import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.plugins.businessprocess.model.BusinessProcess;
 import com.armedia.acm.plugins.businessprocess.service.SaveBusinessProcess;
@@ -48,6 +52,8 @@ import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
+import com.armedia.acm.plugins.ecm.service.impl.FileWorkflowBusinessRule;
+import com.armedia.acm.plugins.ecm.workflow.EcmFileWorkflowConfiguration;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import com.armedia.acm.plugins.objectassociation.service.ObjectAssociationService;
 import com.armedia.acm.plugins.task.exception.AcmTaskException;
@@ -60,23 +66,27 @@ import com.armedia.acm.plugins.task.service.TaskDao;
 import com.armedia.acm.plugins.task.service.TaskEventPublisher;
 import com.armedia.acm.services.note.dao.NoteDao;
 import com.armedia.acm.services.note.model.Note;
+import com.armedia.acm.services.notification.dao.NotificationDao;
+import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.participants.dao.AcmParticipantDao;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.search.model.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.search.service.SearchResults;
+import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.web.api.MDCConstants;
 import com.google.common.collect.ImmutableMap;
 
 import org.activiti.engine.ActivitiException;
+import org.activiti.engine.RuntimeService;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.mule.api.MuleException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.slf4j.MDC;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -90,6 +100,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -97,6 +108,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * Created by nebojsha on 22.06.2015.
@@ -104,7 +116,7 @@ import java.util.Objects;
 public class AcmTaskServiceImpl implements AcmTaskService
 {
 
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
     private TaskDao taskDao;
     private NoteDao noteDao;
     private EcmFileDao fileDao;
@@ -119,6 +131,10 @@ public class AcmTaskServiceImpl implements AcmTaskService
     private ObjectConverter objectConverter;
     private AcmAuthenticationManager authenticationManager;
     private SaveBusinessProcess saveBusinessProcess;
+    private NotificationDao notificationDao;
+    private AcmDataService acmDataService;
+    private FileWorkflowBusinessRule fileWorkflowBusinessRule;
+    private RuntimeService activitiRuntimeService;
 
     @Override
     public List<BuckslipProcess> getBuckslipProcessesForObject(String objectType, Long objectId)
@@ -586,20 +602,12 @@ public class AcmTaskServiceImpl implements AcmTaskService
                 pVars.put("pdfRenditionId", documentToReview.getFileId());
                 pVars.put("formXmlId", null);
                 pVars.put("candidateGroups", String.join(",", task.getCandidateGroups()));
-
+                pVars.put("DETAILS", task.getDetails());
                 pVars.put("OBJECT_TYPE", "FILE");
                 pVars.put("OBJECT_ID", documentToReview.getFileId());
                 pVars.put("OBJECT_NAME", documentToReview.getFileName());
-                if(documentToReview.getContainer() != null)
-                {
-                    pVars.put("PARENT_OBJECT_TYPE", documentToReview.getContainer().getContainerObjectType());
-                    pVars.put("PARENT_OBJECT_ID", documentToReview.getContainer().getContainerObjectId());
-                }
-                else 
-                {
-                    pVars.put("PARENT_OBJECT_TYPE", parentObjectType);
-                    pVars.put("PARENT_OBJECT_ID", parentObjectId);
-                }
+                pVars.put("PARENT_OBJECT_TYPE", parentObjectType);
+                pVars.put("PARENT_OBJECT_ID", parentObjectId);
                 pVars.put("REQUEST_TYPE", "DOCUMENT_REVIEW");
 
                 AcmTask createdAcmTask = taskDao.startBusinessProcess(pVars, businessProcessName);
@@ -624,6 +632,15 @@ public class AcmTaskServiceImpl implements AcmTaskService
         AcmFolder folder = container.getAttachmentFolder();
 
         List<EcmFile> uploadedFiles = new ArrayList<>();
+        
+        String fileParentObjectType = businessProcess.getObjectType();
+        Long fileParentObjectId = businessProcess.getId();
+        
+        if(StringUtils.isNotBlank(task.getAttachedToObjectType()) && task.getAttachedToObjectId() != null)
+        {
+            fileParentObjectType = task.getAttachedToObjectType();
+            fileParentObjectId = task.getAttachedToObjectId();
+        }
 
         if(filesToUpload != null)
         {
@@ -631,7 +648,7 @@ public class AcmTaskServiceImpl implements AcmTaskService
             for (MultipartFile file : filesToUpload) {
 
                 EcmFile temp = ecmFileService.upload(file.getOriginalFilename(), "Other", file, authentication,
-                        folder.getCmisFolderId(), businessProcess.getObjectType(), businessProcess.getId());
+                        folder.getCmisFolderId(), fileParentObjectType, fileParentObjectId);
                 uploadedFiles.add(temp);
             }
         }
@@ -644,10 +661,75 @@ public class AcmTaskServiceImpl implements AcmTaskService
         else
         {
             task.setDocumentsToReview(uploadedFiles);
-            task.setAttachedToObjectType(businessProcess.getObjectType());
-            task.setAttachedToObjectId(businessProcess.getId());
+            task.setAttachedToObjectType(StringUtils.isNotBlank(task.getAttachedToObjectType()) ? task.getAttachedToObjectType() : businessProcess.getObjectType());
+            task.setAttachedToObjectId(task.getAttachedToObjectId() != null ? task.getAttachedToObjectId() : businessProcess.getId());
         }
         return startReviewDocumentsWorkflow(task, businessProcessName, authentication);
+    }
+
+    @Override
+    public void sendArrestWarrantMail(Long objectId, String objectType, String approvers)
+    {
+        AcmAbstractDao<AcmObject> dao = getAcmDataService().getDaoByObjectType(objectType);
+        AcmObject object = dao.find(objectId);
+        Notification notification = new Notification();
+        notification.setParentId(objectId);
+        notification.setParentType(objectType);
+        notification.setTitle(String.format("%s - Arrest Warrant", ((AcmNotifiableEntity) object).getNotifiableEntityNumber()));
+        notification.setEmailAddresses(approvers);
+        notification.setTemplateModelName("arrestWarrant");
+        notificationDao.save(notification);
+
+    }
+
+    @Override
+    public void startArrestWarrantWorkflow(AcmTask task) 
+    {
+        EcmFile source = task.getDocumentsToReview().get(0);
+
+        EcmFileWorkflowConfiguration configuration = new EcmFileWorkflowConfiguration();
+        source.setFileType("file");
+        configuration.setEcmFile(source);
+        
+
+
+        configuration = getFileWorkflowBusinessRule().applyRules(configuration);
+        if (!configuration.isBuckslipProcess())
+        {
+            return;
+        }
+
+
+        if (configuration.isStartProcess())
+        {
+            String processName = configuration.getProcessName();
+
+            Map<String, Object> pvars = new HashMap<>();
+
+            String approversCsv = configuration.getApprovers();
+            List<String> approvers = approversCsv == null ? new ArrayList<>()
+                    : Arrays.stream(approversCsv.split(",")).filter(s -> s != null).map(s -> s.trim()).collect(Collectors.toList());
+            pvars.put("approvers", approversCsv);
+            pvars.put("taskName", configuration.getTaskName());
+
+            pvars.put("PARENT_OBJECT_TYPE", task.getAttachedToObjectType());
+            pvars.put("PARENT_OBJECT_ID", task.getAttachedToObjectId());
+
+            pvars.put("taskDueDateExpression", configuration.getTaskDueDateExpression());
+            pvars.put("taskPriority", configuration.getTaskPriority());
+
+
+            pvars.put("approver1", approvers.get(0));
+            pvars.put("approver2", approvers.get(1));
+            pvars.put("approver3", approvers.get(2));
+            
+            pvars.put("currentTaskName", configuration.getTaskName());
+            pvars.put("owningGroup", "");
+            pvars.put("dueDate", configuration.getTaskDueDateExpression());
+            
+            getActivitiRuntimeService().startProcessInstanceByKey(processName, pvars);
+            
+        }
     }
 
     private Long getBusinessProcessIdFromSolr(String objectType, Long objectId, Authentication authentication)
@@ -774,5 +856,45 @@ public class AcmTaskServiceImpl implements AcmTaskService
     public void setSaveBusinessProcess(SaveBusinessProcess saveBusinessProcess) 
     {
         this.saveBusinessProcess = saveBusinessProcess;
+    }
+
+    public NotificationDao getNotificationDao() 
+    {
+        return notificationDao;
+    }
+
+    public void setNotificationDao(NotificationDao notificationDao) 
+    {
+        this.notificationDao = notificationDao;
+    }
+
+    public AcmDataService getAcmDataService() 
+    {
+        return acmDataService;
+    }
+
+    public void setAcmDataService(AcmDataService acmDataService) 
+    {
+        this.acmDataService = acmDataService;
+    }
+
+    public FileWorkflowBusinessRule getFileWorkflowBusinessRule() 
+    {
+        return fileWorkflowBusinessRule;
+    }
+
+    public void setFileWorkflowBusinessRule(FileWorkflowBusinessRule fileWorkflowBusinessRule) 
+    {
+        this.fileWorkflowBusinessRule = fileWorkflowBusinessRule;
+    }
+
+    public RuntimeService getActivitiRuntimeService() 
+    {
+        return activitiRuntimeService;
+    }
+
+    public void setActivitiRuntimeService(RuntimeService activitiRuntimeService) 
+    {
+        this.activitiRuntimeService = activitiRuntimeService;
     }
 }

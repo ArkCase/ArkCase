@@ -27,12 +27,13 @@ package com.armedia.acm.plugins.ecm.service.sync.impl;
  * #L%
  */
 
+import com.armedia.acm.plugins.ecm.service.sync.AlfrescoSyncConfig;
 import com.armedia.mule.cmis.basic.auth.HttpInvokerUtil;
 
 import org.apache.commons.codec.binary.Base64;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -49,20 +50,16 @@ public class AlfrescoAuditApplicationRestClient
 {
     private static final String KERBEROS_USERNAME_PREFIX = "KERBEROS/";
     private static final String APP_CONFIGURATION_ENTRY_NAME = "MuleAlfrescoLogin";
-    private transient final Logger LOG = LoggerFactory.getLogger(getClass());
-    private String protocol;
-    private String host;
-    private String port;
-    private String contextRoot;
-    private String username;
-    private String password;
+    private transient final Logger LOG = LogManager.getLogger(getClass());
+    private AlfrescoSyncConfig alfrescoSyncConfig;
+
     private RestTemplate restTemplate;
     private String basicAuthenticationHeaderValue;
 
     public String baseUrl()
     {
-        String url = getProtocol() + "://" + getHost() + ":" + getPort() + "/" + getContextRoot();
-        return url;
+        return String.format("%s://%s:%d/%s", alfrescoSyncConfig.getProtocol(), alfrescoSyncConfig.getHost(),
+                alfrescoSyncConfig.getPort(), alfrescoSyncConfig.getContextRoot());
     }
 
     public JSONObject service(String applicationName, long startingAuditId) throws Exception
@@ -106,7 +103,7 @@ public class AlfrescoAuditApplicationRestClient
 
     private AlfrescoAuthenticationType findAlfrescoAuthenticationType()
     {
-        if (getUsername().startsWith(KERBEROS_USERNAME_PREFIX))
+        if (alfrescoSyncConfig.getUsername().startsWith(KERBEROS_USERNAME_PREFIX))
         {
             return AlfrescoAuthenticationType.KERBEROS;
         }
@@ -119,52 +116,12 @@ public class AlfrescoAuditApplicationRestClient
     {
         if (basicAuthenticationHeaderValue == null)
         {
-            String auth = username + ":" + password;
+            String auth = alfrescoSyncConfig.getUsername() + ":" + alfrescoSyncConfig.getPassword();
             byte[] encodedAuth = Base64.encodeBase64(auth.getBytes());
             basicAuthenticationHeaderValue = "Basic " + new String(encodedAuth);
         }
 
         return basicAuthenticationHeaderValue;
-    }
-
-    public String getProtocol()
-    {
-        return protocol;
-    }
-
-    public void setProtocol(String protocol)
-    {
-        this.protocol = protocol;
-    }
-
-    public String getHost()
-    {
-        return host;
-    }
-
-    public void setHost(String host)
-    {
-        this.host = host;
-    }
-
-    public String getPort()
-    {
-        return port;
-    }
-
-    public void setPort(String port)
-    {
-        this.port = port;
-    }
-
-    public String getContextRoot()
-    {
-        return contextRoot;
-    }
-
-    public void setContextRoot(String contextRoot)
-    {
-        this.contextRoot = contextRoot;
     }
 
     synchronized protected RestTemplate getRestTemplate()
@@ -198,38 +155,14 @@ public class AlfrescoAuditApplicationRestClient
         }
     }
 
-    /**
-     * @return the username
-     */
-    public String getUsername()
+    public AlfrescoSyncConfig getAlfrescoSyncConfig()
     {
-        return username;
+        return alfrescoSyncConfig;
     }
 
-    /**
-     * @param username
-     *            the username to set
-     */
-    public void setUsername(String username)
+    public void setAlfrescoSyncConfig(AlfrescoSyncConfig alfrescoSyncConfig)
     {
-        this.username = username;
-    }
-
-    /**
-     * @return the password
-     */
-    public String getPassword()
-    {
-        return password;
-    }
-
-    /**
-     * @param password
-     *            the password to set
-     */
-    public void setPassword(String password)
-    {
-        this.password = password;
+        this.alfrescoSyncConfig = alfrescoSyncConfig;
     }
 
     private enum AlfrescoAuthenticationType

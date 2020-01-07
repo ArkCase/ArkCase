@@ -1,13 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:task="http://www.springframework.org/schema/task"
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:util="http://www.springframework.org/schema/util" xmlns="http://www.springframework.org/schema/beans"
        xmlns:aop="http://www.springframework.org/schema/aop"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
-       http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-4.1.xsd
        http://www.springframework.org/schema/util
        http://www.springframework.org/schema/util/spring-util-2.5.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
-
-    <task:scheduler id="ldapSyncTaskScheduler" pool-size="1"/>
 
     <bean id="springLdapPagedDao" class="com.armedia.acm.services.users.dao.ldap.SpringLdapPagedDao"/>
 
@@ -31,6 +28,8 @@
     <bean id="acmUserService" class="com.armedia.acm.services.users.service.AcmUserServiceImpl">
         <property name="userDao" ref="userJpaDao"/>
         <property name="executeSolrQuery" ref="executeSolrQuery"/>
+        <property name="userRoleService" ref="userRoleService"/>
+        <property name="rolesToPrivilegesConfig" ref="rolesToPrivileges"/>
     </bean>
 
     <bean id="userRoleService" class="com.armedia.acm.services.users.service.AcmUserRoleService">
@@ -38,22 +37,7 @@
         <property name="roleToGroupConfig" ref="acmRoleToGroupConfig"/>
     </bean>
 
-    <!-- UserDao caching functionality -->
-    <bean id="quietUserLookupCacheManager" class="org.springframework.cache.ehcache.EhCacheCacheManager">
-        <property name="cacheManager" ref="quietUserLookupConnectionEhCache"/>
-    </bean>
-
-    <bean id="quietUserLookupConnectionEhCache" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
-        <property name="configLocation" value="classpath:/ehcache/quietUserLookupCacheConfig.xml"/>
-        <property name="cacheManagerName" value="acm-service-users"/>
-    </bean>
-
-    <bean id="quietUserLookupCache" factory-bean="quietUserLookupCacheManager" factory-method="getCache">
-        <constructor-arg value="quiet-user-cache"/>
-    </bean>
-
     <bean id="userJpaDao" class="com.armedia.acm.services.users.dao.UserDao" init-method="init">
-        <property name="quietUserLookupCache" ref="quietUserLookupCache"/>
         <property name="configList" ref="configList"/>
     </bean>
     <!-- End UserDao caching functionality -->
@@ -166,7 +150,7 @@
         to be able to read the file; otherwise it will try to read from the
         classpath -->
         <property name="location"
-                  value="file:${user.home}/.arkcase/acm/spring/spring-config-ldap-add-group.properties"/>
+            value="file:${user.home}/.arkcase/acm/spring/spring-config-ldap-add-group.properties"/>
         <property name="ignoreResourceNotFound" value="true"/>
         <property name="localOverride" value="false"/>
         <property name="properties">
@@ -185,7 +169,7 @@
         to be able to read the file; otherwise it will try to read from the
         classpath -->
         <property name="location"
-                  value="file:${user.home}/.arkcase/acm/spring/spring-config-ldap-edit-user.properties"/>
+            value="file:${user.home}/.arkcase/acm/spring/spring-config-ldap-edit-user.properties"/>
         <property name="ignoreResourceNotFound" value="true"/>
         <property name="localOverride" value="false"/>
         <property name="properties">
@@ -219,39 +203,39 @@
     </util:list>
 
     <bean id="passwordShouldNotContainUserId"
-          class="com.armedia.acm.services.users.model.ldap.PasswordShouldNotContainUserId"/>
+        class="com.armedia.acm.services.users.model.ldap.PasswordShouldNotContainUserId"/>
 
     <bean id="passwordShouldMatchLowerCasePattern"
-          class="com.armedia.acm.services.users.model.ldap.PasswordShouldMatchPattern">
+        class="com.armedia.acm.services.users.model.ldap.PasswordShouldMatchPattern">
         <constructor-arg type="java.lang.String" name="pattern" value="^.*?[a-z].*$"/>
         <constructor-arg type="java.lang.String" name="message"
-                         value="Password must contain at least one lowercase character"/>
+            value="Password must contain at least one lowercase character"/>
     </bean>
 
     <bean id="passwordShouldMatchUpperCasePattern"
-          class="com.armedia.acm.services.users.model.ldap.PasswordShouldMatchPattern">
+        class="com.armedia.acm.services.users.model.ldap.PasswordShouldMatchPattern">
         <constructor-arg type="java.lang.String" name="pattern" value="^.*?[A-Z].*$"/>
         <constructor-arg type="java.lang.String" name="message"
-                         value="Password must contain at least one uppercase character"/>
+            value="Password must contain at least one uppercase character"/>
     </bean>
 
     <bean id="passwordShouldMatchDigitPattern"
-          class="com.armedia.acm.services.users.model.ldap.PasswordShouldMatchPattern">
+        class="com.armedia.acm.services.users.model.ldap.PasswordShouldMatchPattern">
         <constructor-arg type="java.lang.String" name="pattern" value="^.*?[0-9].*$"/>
         <constructor-arg type="java.lang.String" name="message" value="Password must contain at least one digit (0-9)"/>
     </bean>
 
     <bean id="passwordShouldMatchSpecialCharPattern"
-          class="com.armedia.acm.services.users.model.ldap.PasswordShouldMatchPattern">
+        class="com.armedia.acm.services.users.model.ldap.PasswordShouldMatchPattern">
         <constructor-arg type="java.lang.String" name="pattern">
             <value><![CDATA[^.*?[[~!@#$%^&*_+=`|\(){}:;"'<>,.?/-]].*$]]></value>
         </constructor-arg>
         <constructor-arg type="java.lang.String" name="message"
-                         value="Password must contain at least one special character"/>
+            value="Password must contain at least one special character"/>
     </bean>
 
     <bean id="passwordLengthValidationRule"
-          class="com.armedia.acm.services.users.model.ldap.PasswordLengthValidationRule">
+        class="com.armedia.acm.services.users.model.ldap.PasswordLengthValidationRule">
         <constructor-arg type="int" name="minLength" value="7"/>
         <constructor-arg type="java.lang.String" name="message" value="Password must be of minimum length of 7"/>
     </bean>
@@ -282,6 +266,12 @@
     <bean id="rolesToPrivileges" class="com.armedia.acm.services.users.model.ApplicationRolesToPrivilegesConfig" scope="refresh">
         <property name="jsonUnmarshaller" ref="jsonUnmarshaller"/>
         <aop:scoped-proxy/>
+    </bean>
+
+    <bean id="ldapContextChangedUpdateScheduler" class="com.armedia.acm.services.users.service.ldap.OnLdapContextChangedUpdateScheduler">
+        <property name="schedulerService" ref="acmSchedulerService"/>
+        <property name="contextHolder" ref="acmContextHolder"/>
+        <property name="jobFactory" ref="acmJobFactory"/>
     </bean>
 
 </beans>

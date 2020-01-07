@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
+
+    <bean id="acmJobFactory" class="com.armedia.acm.quartz.scheduler.AcmJobFactory">
+        <property name="unmarshaller" ref="jsonUnmarshaller"/>
+        <property name="springContextHolder" ref="acmContextHolder"/>
+        <property name="jobsJsonConfig" ref="jobsJsonConfig"/>
+    </bean>
+
+    <bean id="acmQuartzScheduler" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+        <property name="dataSource" ref="acmDataSource"/>
+        <property name="configLocation" value="file:${user.home}/.arkcase/acm/quartz.properties"/>
+        <property name="transactionManager" ref="transactionManager"/>
+        <property name="jobFactory" ref="acmJobFactory"/>
+        <property name="triggers" value="#{acmJobFactory.getTriggerList()}"/>
+        <property name="jobDetails" value="#{acmJobFactory.getJobDetailList()}"/>
+        <property name="globalTriggerListeners" ref="acmTriggerListener"/>
+    </bean>
+
+    <bean id="jobsJsonConfig" class="org.apache.commons.io.IOUtils" factory-method="toString">
+        <constructor-arg type="java.io.InputStream">
+            <bean class="java.io.FileInputStream" destroy-method="close">
+                <constructor-arg type="java.io.File" value="#{systemProperties['user.home']}/.arkcase/acm/scheduledJobs.json"/>
+            </bean>
+        </constructor-arg>
+        <constructor-arg value="UTF-8"/>
+    </bean>
+
+    <bean id="acmJobRegistryPostProcessor" class="com.armedia.acm.quartz.scheduler.AcmJobRegistryPostProcessor">
+        <property name="jobsJsonConfig" ref="jobsJsonConfig"/>
+        <property name="unmarshaller" ref="jsonUnmarshaller"/>
+    </bean>
+
+    <bean id="acmSchedulerService" class="com.armedia.acm.quartz.scheduler.AcmSchedulerService">
+        <property name="scheduler" ref="acmQuartzScheduler"/>
+        <property name="jobEventPublisher" ref="jobEventPublisher"/>
+    </bean>
+
+    <bean id="jobEventPublisher" class="com.armedia.acm.quartz.scheduler.AcmJobEventPublisher"/>
+
+    <bean id="acmJobDescriptor" class="com.armedia.acm.quartz.scheduler.AcmJobDescriptor" abstract="true">
+        <property name="jobEventPublisher" ref="jobEventPublisher"/>
+    </bean>
+
+    <bean id="acmTriggerListener" class="com.armedia.acm.quartz.scheduler.AcmTriggerListener">
+        <property name="jobEventPublisher" ref="jobEventPublisher"/>
+    </bean>
+
+    <bean id="jobStatusNotifier" class="com.armedia.acm.quartz.scheduler.AcmJobStateNotifier">
+        <property name="jobsStatusChannel" ref="jobsStatusChannel"/>
+    </bean>
+</beans>

@@ -27,9 +27,10 @@ package com.armedia.acm.services.transcribe.web.api;
  * #L%
  */
 
-import com.armedia.acm.services.transcribe.exception.CreateTranscribeException;
+import com.armedia.acm.services.mediaengine.exception.CreateMediaEngineException;
+import com.armedia.acm.services.mediaengine.model.MediaEngine;
+import com.armedia.acm.services.mediaengine.model.MediaEngineType;
 import com.armedia.acm.services.transcribe.model.Transcribe;
-import com.armedia.acm.services.transcribe.model.TranscribeType;
 import com.armedia.acm.services.transcribe.service.ArkCaseTranscribeService;
 
 import org.springframework.http.MediaType;
@@ -51,17 +52,17 @@ public class CreateTranscribeAPIController
 
     @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public Transcribe createTranscribe(@RequestBody Transcribe transcribe) throws CreateTranscribeException
+    public MediaEngine createTranscribe(@RequestBody Transcribe transcribe) throws CreateMediaEngineException
     {
         return getArkCaseTranscribeService().create(transcribe);
     }
 
     @RequestMapping(value = "/{mediaVersionId}/automatic", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public Transcribe createAutomaticTranscribe(@PathVariable(value = "mediaVersionId") Long mediaVersionId)
-            throws CreateTranscribeException
+    public MediaEngine createAutomaticTranscribe(@PathVariable(value = "mediaVersionId") Long mediaVersionId)
+            throws CreateMediaEngineException
     {
-        return getArkCaseTranscribeService().create(mediaVersionId, TranscribeType.AUTOMATIC);
+        return getArkCaseTranscribeService().create(mediaVersionId, MediaEngineType.AUTOMATIC);
     }
 
     public ArkCaseTranscribeService getArkCaseTranscribeService()

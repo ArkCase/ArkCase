@@ -30,15 +30,15 @@ package com.armedia.acm.event;
 import com.armedia.acm.core.model.AcmEvent;
 
 import org.apache.commons.collections.Predicate;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 /**
  * Created by armdev on 6/25/14.
  */
 public class EventSucceededPredicate implements Predicate
 {
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
 
     @Override
     public boolean evaluate(Object object)

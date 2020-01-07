@@ -20,7 +20,7 @@ angular.module('document-details').controller('Document.OCRController',
                 if (!Util.isEmpty(ecmFile)) {
                     activeVersion = $scope.getEcmFileActiveVersion(ecmFile);
                     OcrManagementService.getProperties().then(function (configResult) {
-                        if (!Util.isEmpty(configResult) && !Util.isEmpty(configResult.data) && configResult.data.enableOCR) {
+                        if (!Util.isEmpty(configResult) && !Util.isEmpty(configResult.data) && configResult.data['ocr.enabled']) {
                             if (!Util.isEmpty(activeVersion)) {
                                 OCRService.getOCRbyFileId(ecmFile.fileId).then(function (ocrResult) {
                                     var ocrRes = Util.omitNg(ocrResult);

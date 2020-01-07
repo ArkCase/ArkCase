@@ -32,8 +32,8 @@ import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.spring.SpringContextHolder;
 
 import org.mule.api.MuleException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.context.ApplicationListener;
 
 import java.util.HashMap;
@@ -44,7 +44,7 @@ import java.util.Map;
  */
 public class AcmEventResponseLauncher implements ApplicationListener<AcmEvent>
 {
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
 
     private SpringContextHolder contextHolder;
 

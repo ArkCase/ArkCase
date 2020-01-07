@@ -77,7 +77,36 @@ angular.module('services').factory('Object.LookupService', [ '$q', '$resource', 
     Service.getResetRepeatPeriod = function() {
         return Service.getLookupByLookupName("sequenceResetPeriod");
     };
-    
+
+    /**
+     * @ngdoc method
+     * @name getSequenceName
+     * @methodOf services:Object.LookupService
+     *
+     * @description
+     * Returns a list of sequence names
+     *
+     * @returns {Object} An array returned by $resource
+     */
+
+    Service.getSequenceName = function() {
+        return Service.getLookupByLookupName("sequenceName");
+    };
+
+    /**
+     * @ngdoc method
+     * @name getSequenceObjectProperty
+     * @methodOf services:Object.LookupService
+     *
+     * @description
+     * Returns a list of sequence object properties
+     *
+     * @returns {Object} An array returned by $resource
+     */
+
+    Service.getSequenceObjectProperty = function() {
+        return Service.getLookupByLookupName("sequenceObjectProperty");
+    };
 
     /**
      * @ngdoc method
@@ -847,6 +876,21 @@ angular.module('services').factory('Object.LookupService', [ '$q', '$resource', 
      */
     Service.getTimesheetChargeRoles = function() {
         return Service.getLookupByLookupName('timesheetChargeRoles');
+    };
+
+
+    /**
+     * @ngdoc method
+     * @name getObjectTitleTypes
+     * @methodOf services:Object.LookupService
+     *
+     * @description
+     * Query list of Object Titles
+     *
+     * @returns {Object} An array returned by $resource
+     */
+    Service.getObjectTitleTypes = function() {
+        return Service.getLookupByLookupName('objectTitleTypes');
     };
 
     /**

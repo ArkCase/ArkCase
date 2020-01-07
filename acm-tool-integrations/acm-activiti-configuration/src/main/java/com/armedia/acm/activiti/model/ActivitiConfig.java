@@ -28,6 +28,7 @@ package com.armedia.acm.activiti.model;
  */
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+
 import org.springframework.beans.factory.annotation.Value;
 
 public class ActivitiConfig
@@ -35,6 +36,9 @@ public class ActivitiConfig
     @JsonProperty("activiti.job.executor.activate")
     @Value("${activiti.job.executor.activate}")
     private Boolean jobExecutorActivate;
+
+    @Value("${activiti.workflow.file.pattern}")
+    private String activitiWorkflowFilePattern;
 
     public Boolean getJobExecutorActivate()
     {
@@ -44,5 +48,22 @@ public class ActivitiConfig
     public void setJobExecutorActivate(Boolean jobExecutorActivate)
     {
         this.jobExecutorActivate = jobExecutorActivate;
+    }
+
+    /**
+     * @return the activitiWorkflowFilePattern
+     */
+    public String getActivitiWorkflowFilePattern()
+    {
+        return activitiWorkflowFilePattern;
+    }
+
+    /**
+     * @param activitiWorkflowFilePattern
+     *            the activitiWorkflowFilePattern to set
+     */
+    public void setActivitiWorkflowFilePattern(String activitiWorkflowFilePattern)
+    {
+        this.activitiWorkflowFilePattern = activitiWorkflowFilePattern;
     }
 }

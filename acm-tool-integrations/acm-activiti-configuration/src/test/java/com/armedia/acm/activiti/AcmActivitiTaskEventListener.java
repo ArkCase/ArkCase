@@ -27,8 +27,8 @@ package com.armedia.acm.activiti;
  * #L%
  */
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.context.ApplicationListener;
 
 /**
@@ -37,7 +37,7 @@ import org.springframework.context.ApplicationListener;
 public class AcmActivitiTaskEventListener implements ApplicationListener<AcmTaskActivitiEvent>
 {
     private int timesCalled;
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
 
     @Override
     public void onApplicationEvent(AcmTaskActivitiEvent event)

@@ -30,8 +30,8 @@ package com.armedia.acm.plugins.alfrescorma.service;
 import com.armedia.acm.plugins.alfrescorma.exception.AlfrescoServiceException;
 
 import org.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
@@ -52,7 +52,7 @@ public class SetRecordMetadataService extends AlfrescoService<String> implements
 {
     private final RestTemplate restTemplate;
     private final String service = "/s/api/node";
-    private transient final Logger LOG = LoggerFactory.getLogger(getClass());
+    private transient final Logger LOG = LogManager.getLogger(getClass());
     private BigDecimal alfrescoRmaModuleVersion;
     private String publicationDateField;
     private String originatorField;

@@ -61,6 +61,14 @@ public class EcmFileConfig implements InitializingBean
     @Value("${ecm.defaultPath.DOC_REPO}")
     private String defaultPathDocumentRepository;
 
+    @JsonProperty("ecm.defaultPath.RECYCLE_BIN")
+    @Value("${ecm.defaultPath.RECYCLE_BIN}")
+    private String defaultPathRecycleBin;
+
+    @JsonProperty("ecm.defaultPath.BUSINESS_PROCESS")
+    @Value("${ecm.defaultPath.BUSINESS_PROCESS}")
+    private String defaultPathBusinessProcess;
+
     @JsonProperty("ecm.documentsParticipantTypes.mappings.group-write")
     @Value("${ecm.documentsParticipantTypes.mappings.group-write}")
     private String documentParticipantTypeGroupWrite;
@@ -92,6 +100,10 @@ public class EcmFileConfig implements InitializingBean
     @JsonProperty("ecm.viewer.js")
     @Value("${ecm.viewer.js}")
     private String viewerJs;
+
+    @JsonProperty("ecm.viewer.snowbound.tabHeader")
+    @Value("${ecm.viewer.snowbound.tabHeader}")
+    private String snowboundTabHeader;
 
     @JsonProperty("ecm.viewer.snowbound")
     @Value("${ecm.viewer.snowbound}")
@@ -135,6 +147,8 @@ public class EcmFileConfig implements InitializingBean
         defaultPathByObjectType.put("TASK", defaultPathTask);
         defaultPathByObjectType.put("DOC_REPO", defaultPathDocumentRepository);
         defaultPathByObjectType.put("CASE_FILE", defaultPathCaseFile);
+        defaultPathByObjectType.put("RECYCLE_BIN", defaultPathRecycleBin);
+        defaultPathByObjectType.put("BUSINESS_PROCESS", defaultPathBusinessProcess);
     }
 
     public String getDefaultCmisId()
@@ -297,6 +311,23 @@ public class EcmFileConfig implements InitializingBean
         this.viewerJs = viewerJs;
     }
 
+    /**
+     * @return the snowboundTabHeader
+     */
+    public String getSnowboundTabHeader()
+    {
+        return snowboundTabHeader;
+    }
+
+    /**
+     * @param snowboundTabHeader
+     *            the snowboundTabHeader to set
+     */
+    public void setSnowboundTabHeader(String snowboundTabHeader)
+    {
+        this.snowboundTabHeader = snowboundTabHeader;
+    }
+
     public String getSnowboundUrl()
     {
         return snowboundUrl;
@@ -365,5 +396,39 @@ public class EcmFileConfig implements InitializingBean
     public void setSnowboundEnableOcr(Boolean snowboundEnableOcr)
     {
         this.snowboundEnableOcr = snowboundEnableOcr;
+    }
+
+    /**
+     * @return the defaultPathRecycleBin
+     */
+    public String getDefaultPathRecycleBin()
+    {
+        return defaultPathRecycleBin;
+    }
+
+    /**
+     * @param defaultPathRecycleBin
+     *            the defaultPathRecycleBin to set
+     */
+    public void setDefaultPathRecycleBin(String defaultPathRecycleBin)
+    {
+        this.defaultPathRecycleBin = defaultPathRecycleBin;
+    }
+
+    /**
+     * @return the defaultPathBusinessProcess
+     */
+    public String getDefaultPathBusinessProcess()
+    {
+        return defaultPathBusinessProcess;
+    }
+
+    /**
+     * @param defaultPathBusinessProcess
+     *            the defaultPathBusinessProcess to set
+     */
+    public void setDefaultPathBusinessProcess(String defaultPathBusinessProcess)
+    {
+        this.defaultPathBusinessProcess = defaultPathBusinessProcess;
     }
 }

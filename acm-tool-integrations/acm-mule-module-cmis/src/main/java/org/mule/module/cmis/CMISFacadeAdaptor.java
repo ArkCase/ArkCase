@@ -38,8 +38,8 @@ package org.mule.module.cmis;
 import org.apache.chemistry.opencmis.commons.exceptions.CmisConnectionException;
 import org.mule.module.cmis.exception.CMISConnectorConnectionException;
 import org.mule.module.cmis.exception.CMISConnectorException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
@@ -49,7 +49,7 @@ import java.lang.reflect.Proxy;
 public class CMISFacadeAdaptor
 {
 
-    private static Logger LOGGER = LoggerFactory.getLogger(CMISFacadeAdaptor.class);
+    private static Logger LOGGER = LogManager.getLogger(CMISFacadeAdaptor.class);
 
     public static CMISFacade adapt(CMISFacade facade)
     {

@@ -33,8 +33,8 @@ import com.armedia.acm.services.subscription.model.AcmSubscription;
 import com.armedia.acm.services.subscription.model.AcmSubscriptionEvent;
 import com.armedia.acm.services.subscription.model.SubscriptionConstants;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.Query;
@@ -50,7 +50,7 @@ import java.util.List;
  */
 public class SubscriptionDao extends AcmAbstractDao<AcmSubscription>
 {
-    private Logger LOG = LoggerFactory.getLogger(getClass());
+    private Logger LOG = LogManager.getLogger(getClass());
 
     @Override
     protected Class<AcmSubscription> getPersistenceClass()

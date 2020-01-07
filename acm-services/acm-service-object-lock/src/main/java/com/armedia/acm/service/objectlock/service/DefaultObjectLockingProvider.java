@@ -30,8 +30,8 @@ package com.armedia.acm.service.objectlock.service;
 import com.armedia.acm.core.exceptions.AcmObjectLockException;
 import com.armedia.acm.service.objectlock.model.AcmObjectLock;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.util.Date;
 import java.util.Map;
@@ -45,7 +45,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class DefaultObjectLockingProvider implements ObjectLockingProvider
 {
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
 
     private Map<String, Object> locks = new ConcurrentHashMap<>();
 
@@ -132,6 +132,12 @@ public class DefaultObjectLockingProvider implements ObjectLockingProvider
         {
             objectLockService.removeLock(objectId, objectType, lockType, userId);
         }
+    }
+
+    @Override
+    public String getObjectType()
+    {
+        return "DEFAULT";
     }
 
     @Override

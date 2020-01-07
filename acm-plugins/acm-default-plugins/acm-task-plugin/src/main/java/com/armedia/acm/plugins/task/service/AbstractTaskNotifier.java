@@ -27,29 +27,21 @@ package com.armedia.acm.plugins.task.service;
  * #L%
  */
 
-import com.armedia.acm.files.AbstractConfigurationFileEvent;
-import com.armedia.acm.files.ConfigurationFileAddedEvent;
-import com.armedia.acm.files.ConfigurationFileChangedEvent;
 import com.armedia.acm.plugins.task.model.AcmTask;
+import com.armedia.acm.plugins.task.model.TaskNotificationConfig;
 import com.armedia.acm.services.notification.dao.NotificationDao;
 import com.armedia.acm.services.notification.model.Notification;
-import com.armedia.acm.services.notification.service.NotificationSenderFactory;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 
 import org.activiti.engine.TaskService;
 import org.activiti.engine.task.Task;
 import org.activiti.engine.task.TaskQuery;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.context.ApplicationListener;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.util.Date;
 import java.util.List;
-import java.util.Properties;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -58,22 +50,19 @@ import java.util.stream.Stream;
  *
  */
 public abstract class AbstractTaskNotifier
-        implements ApplicationListener<AbstractConfigurationFileEvent>
 {
 
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private transient final Logger log = LogManager.getLogger(getClass());
 
     private TaskService activitiTaskService;
 
     private TaskDao activitiTaskDao;
 
-    private NotificationSenderFactory senderFactory;
-
-    private boolean notificationsEnabled;
-
     private NotificationDao notificationDao;
 
     private UserDao userDao;
+
+    private TaskNotificationConfig taskNotificationConfig;
 
     /**
      * @param activitiTaskService
@@ -93,53 +82,9 @@ public abstract class AbstractTaskNotifier
         this.activitiTaskDao = activitiTaskDao;
     }
 
-    /**
-     * @param senderFactory
-     *            the senderFactory to set
-     */
-    public void setSenderFactory(NotificationSenderFactory senderFactory)
-    {
-        this.senderFactory = senderFactory;
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see
-     * org.springframework.context.ApplicationListener#onApplicationEvent(org.springframework.context.ApplicationEvent)
-     */
-    @Override
-    public void onApplicationEvent(AbstractConfigurationFileEvent event)
-    {
-        if (isPropertyFileChange(event))
-        {
-            File configFile = event.getConfigFile();
-            try (FileInputStream fis = new FileInputStream(configFile))
-            {
-                log.debug("Loading configaration for {} from {} file.", getClass().getName(), configFile.getName());
-
-                Properties dueTasksNotifierProperties = new Properties();
-                dueTasksNotifierProperties.load(fis);
-
-                notificationsEnabled = Boolean.parseBoolean(dueTasksNotifierProperties.getProperty("due.tasks.notification.enabled"));
-
-            }
-            catch (IOException e)
-            {
-                log.error("Could not load configuration for {} from {} file.", getClass().getName(), configFile.getName(), e);
-            }
-        }
-    }
-
-    private boolean isPropertyFileChange(AbstractConfigurationFileEvent abstractConfigurationFileEvent)
-    {
-        return (abstractConfigurationFileEvent instanceof ConfigurationFileAddedEvent
-                || abstractConfigurationFileEvent instanceof ConfigurationFileChangedEvent)
-                && abstractConfigurationFileEvent.getConfigFile().getName().equals("dueTasksNotifier.properties");
-    }
-
     public void notifyTaskAssignees()
     {
-        if (notificationsEnabled)
+        if (getTaskNotificationConfig().getDueTasksNotificationEnabled())
         {
             Date now = new Date();
 
@@ -203,5 +148,15 @@ public abstract class AbstractTaskNotifier
     public void setUserDao(UserDao userDao)
     {
         this.userDao = userDao;
+    }
+
+    public TaskNotificationConfig getTaskNotificationConfig()
+    {
+        return taskNotificationConfig;
+    }
+
+    public void setTaskNotificationConfig(TaskNotificationConfig taskNotificationConfig)
+    {
+        this.taskNotificationConfig = taskNotificationConfig;
     }
 }

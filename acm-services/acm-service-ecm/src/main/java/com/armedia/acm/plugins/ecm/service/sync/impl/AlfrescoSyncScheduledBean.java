@@ -27,31 +27,51 @@ package com.armedia.acm.plugins.ecm.service.sync.impl;
  * #L%
  */
 
-import com.armedia.acm.scheduler.AcmSchedulableBean;
+import com.armedia.acm.plugins.ecm.service.sync.AlfrescoSyncConfig;
+import com.armedia.acm.quartz.scheduler.AcmJobDescriptor;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.quartz.JobDataMap;
+import org.quartz.JobExecutionContext;
+import org.quartz.JobExecutionException;
 
 /**
  * Created by dmiller on 5/15/17.
  */
-public class AlfrescoSyncScheduledBean implements AcmSchedulableBean
+public class AlfrescoSyncScheduledBean extends AcmJobDescriptor
 {
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private transient final Logger log = LogManager.getLogger(getClass());
     private AlfrescoSyncService alfrescoSyncService;
-    private boolean enabled;
+    private AlfrescoSyncConfig alfrescoSyncConfig;
 
     @Override
-    public void executeTask()
+    public String getJobName()
     {
-        if (!isEnabled())
+        return "alfrescoSyncScheduledJob";
+    }
+
+    @Override
+    public void executeJob(JobExecutionContext context) throws JobExecutionException
+    {
+        if (!alfrescoSyncConfig.getEnabled())
         {
             log.info("Alfresco sync service is disabled - returning immediately.");
             return;
         }
 
-        getAlfrescoSyncService().queryAlfrescoAuditApplications();
+        JobDataMap lastAuditIdsPerApplication = context.getJobDetail().getJobDataMap();
+        alfrescoSyncService.queryAlfrescoAuditApplications(lastAuditIdsPerApplication);
+    }
 
+    public AlfrescoSyncConfig getAlfrescoSyncConfig()
+    {
+        return alfrescoSyncConfig;
+    }
+
+    public void setAlfrescoSyncConfig(AlfrescoSyncConfig alfrescoSyncConfig)
+    {
+        this.alfrescoSyncConfig = alfrescoSyncConfig;
     }
 
     public AlfrescoSyncService getAlfrescoSyncService()
@@ -63,15 +83,4 @@ public class AlfrescoSyncScheduledBean implements AcmSchedulableBean
     {
         this.alfrescoSyncService = alfrescoSyncService;
     }
-
-    public boolean isEnabled()
-    {
-        return enabled;
-    }
-
-    public void setEnabled(boolean enabled)
-    {
-        this.enabled = enabled;
-    }
-
 }

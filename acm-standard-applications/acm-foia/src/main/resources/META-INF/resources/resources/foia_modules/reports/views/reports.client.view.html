@@ -23,7 +23,8 @@
                     </div>
 
                     <div>
-                        <button class="btn btn-sm" ng-show="showReportParameters" ng-click="generateReport()" ng-disabled="!data.reportSelected">
+                        <button class="btn btn-sm" id="generateReportButton" ng-click="generateReport()"
+                                ng-disabled="!data.reportSelected">
                             <span translate>reports.btn.generateReport</span>
                         </button>
                     </div>
@@ -34,7 +35,8 @@
         <div class="content-body">
             <div ng-switch on="showXmlReport">
                 <div ng-switch-when="false">
-                    <iframe name="reports-iframe" class="reports-iframe" frameborder="0" ng-src="{{reportUrl}}"></iframe>
+                    <iframe name="reports-iframe" id="reportsIframe" iframe-onload="iframeLoadedCallBack()" class="reports-iframe"
+                            frameborder="0" ng-src="{{reportUrl}}"></iframe>
                 </div>
             </div>
         </div>

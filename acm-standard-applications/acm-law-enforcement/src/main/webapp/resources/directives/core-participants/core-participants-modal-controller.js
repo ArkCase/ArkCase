@@ -4,7 +4,7 @@ angular.module('directives').controller('Directives.CoreParticipantsModalControl
     $scope.participantEdit = {
         participantType: $scope.participant.participantType,
         participantLdapId: $scope.participant.participantLdapId,
-        replaceChildrenParticipant: $scope.participant.showReplaceChildrenParticipants
+        replaceChildrenParticipant: $scope.participant.replaceChildrenParticipant
     };
     $scope.onClickOk = function() {
         $modalInstance.close({
@@ -22,11 +22,11 @@ angular.module('directives').controller('Directives.CoreParticipantsModalControl
         var params = {};
         $scope.owningGroup = paramsOwn.owningGroup;
 
-        if ($scope.participant.participantType == "assignee" || $scope.participant.participantType == "owner") {
+        if ($scope.participantEdit.participantType == "assignee" || $scope.participantEdit.participantType == "owner") {
             params.header = $translate.instant("common.directive.coreParticipants.modal.dialogUserPicker.header");
             params.filter = 'fq="object_type_s": USER &fq="status_lcs": VALID &fq="groups_id_ss": ' + $scope.owningGroup;
             params.config = Util.goodMapValue($scope.config, "dialogUserPicker");
-        } else if ($scope.participant.participantType != "owning group" && $scope.participant.participantType.lastIndexOf("group-", 0) != 0) {
+        } else if ($scope.participantEdit.participantType != "collaborator group" && $scope.participantEdit.participantType != "owning group" && $scope.participantEdit.participantType.lastIndexOf("group-", 0) != 0) {
             params.header = $translate.instant("common.directive.coreParticipants.modal.dialogUserPicker.header");
             params.filter = '"Object Type": USER &fq="status_lcs": VALID';
             params.config = Util.goodMapValue($scope.config, "dialogUserPicker");

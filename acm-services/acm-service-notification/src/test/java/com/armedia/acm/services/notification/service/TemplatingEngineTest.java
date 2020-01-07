@@ -1,3 +1,4 @@
+
 package com.armedia.acm.services.notification.service;
 
 /*-
@@ -29,7 +30,7 @@ package com.armedia.acm.services.notification.service;
 
 import static org.junit.Assert.fail;
 
-import com.armedia.acm.core.AcmApplication;
+import com.armedia.acm.core.ApplicationConfig;
 import com.armedia.acm.services.email.service.TemplatingEngine;
 
 import org.junit.Before;
@@ -52,10 +53,10 @@ public class TemplatingEngineTest
     {
         templatingEngine = new TemplatingEngine();
 
-        AcmApplication acmApplication = new AcmApplication();
-        acmApplication.setBaseUrl("https://test.com/arkcase");
+        ApplicationConfig appConfig = new ApplicationConfig();
+        appConfig.setBaseUrl("https://test.com/arkcase");
 
-        templatingEngine.setAcmApplication(acmApplication);
+        templatingEngine.setApplicationConfig(appConfig);
     }
 
     public class Model

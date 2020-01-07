@@ -26,7 +26,7 @@ angular.module('document-details').controller('Document.TranscriptionController'
                 activeVersion = $scope.getEcmFileActiveVersion(ecmFile);
 
                 TranscriptionManagementService.getTranscribeConfiguration().then(function(configResult) {
-                    if (!Util.isEmpty(configResult) && !Util.isEmpty(configResult.data) && configResult.data.enabled) {
+                    if (!Util.isEmpty(configResult) && !Util.isEmpty(configResult.data) && configResult.data['transcribe.enabled']) {
                         if (!Util.isEmpty(activeVersion)) {
                             TranscriptionAppService.getTranscription(activeVersion.id).then(function(transcribeResult) {
                                 var transcribeRes = Util.omitNg(transcribeResult);
@@ -35,9 +35,19 @@ angular.module('document-details').controller('Document.TranscriptionController'
                                     return;
                                 }
 
-                                $scope.transcribeConfidence = configResult.data.confidence;
+                                if(transcribeResult.status == 'FAILED')
+                                {
+                                    TranscriptionManagementService.getTranscriptionFailureReason(transcribeResult.id)
+                                        .then(function(response) {
+                                            transcribeResult.failureReason = response.data.failureReason;
+                                            $scope.$emit('transcribe-data-model', transcribeResult);
+                                        });
+                                }
+                                else {
+                                        $scope.transcribeConfidence = configResult.data['transcribe.confidence'];
+                                        $scope.$emit('transcribe-data-model', transcribeResult);
+                                }
 
-                                $scope.$emit('transcribe-data-model', transcribeResult);
                                 $scope.transcribeDataModel = transcribeResult;
                                 //disable editing on time inputs
                                 if ($scope.transcribeDataModel.type === 'AUTOMATIC') {

@@ -14,7 +14,8 @@
                     </div>
                     <div class="col-sm-6 form-group">
                         <label for="status" translate>costTracking.comp.newCostsheet.status</label>
-                        <select id="status" ng-model="costsheet.status" class="form-control input-md" ng-disabled="true" required>
+                        <select id="status" ng-model="costsheet.status" class="form-control input-md"
+                                ng-disabled="costsheetProperties['cost.plugin.useApprovalWorkflow']" required>
                             <option ng-repeat="option in costsheetStatuses" value="{{option.key}}">
                                 {{option.value | translate}}
                             </option>
@@ -129,7 +130,7 @@
                 </div>
             </div>
         </div>
-        <div class="panel panel-default">
+        <div class="panel panel-default" ng-if="costsheetProperties['cost.plugin.useApprovalWorkflow']">
             <div class="panel-heading">
                 <h4 class="panel-title">
                     <a data-toggle="collapse" data-parent="#accordion4" href="#collapseApprovers" translate>costTracking.comp.newCostsheet.approver.title</a>
@@ -161,7 +162,9 @@
                 data-title="Send for Approval" ng-click="sendForApproval()" ng-show="isApproverAdded">
             <span translate>costTracking.comp.newCostsheet.sendForApproval</span>
         </button>
-        <button type="submit" ng-disabled="costForm.$invalid || loading" class="btn btn-primary btn-sm" data-toggle="tooltip"
+
+        <button type="submit" ng-disabled="costForm.$invalid || loading" class="btn btn-primary btn-sm"
+                data-toggle="tooltip"
                 id="saveButton" data-title="Save">
             <i class="{{loadingIcon}}"></i>
             <span ng-show="!isEdit" translate>costTracking.comp.newCostsheet.saveButton</span>

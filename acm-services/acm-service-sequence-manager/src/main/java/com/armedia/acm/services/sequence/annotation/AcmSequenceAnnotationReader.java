@@ -27,8 +27,8 @@ package com.armedia.acm.services.sequence.annotation;
  * #L%
  */
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -45,7 +45,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class AcmSequenceAnnotationReader
 {
 
-    private final Logger log = LoggerFactory.getLogger(getClass());
+    private final Logger log = LogManager.getLogger(getClass());
 
     private Map<String, List<Field>> classToSequenceAttributes = new ConcurrentHashMap<>();
 

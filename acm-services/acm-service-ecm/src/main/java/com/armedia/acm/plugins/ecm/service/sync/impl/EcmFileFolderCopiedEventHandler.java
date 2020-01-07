@@ -43,8 +43,8 @@ import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.context.ApplicationListener;
 
 import java.util.List;
@@ -55,7 +55,7 @@ import java.util.List;
 public class EcmFileFolderCopiedEventHandler implements ApplicationListener<EcmEvent>
 {
 
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private transient final Logger log = LogManager.getLogger(getClass());
     private static String COPY_MESSAGE = "The %s you were working on was copied from the content repository.";
     private static String COPY_INTO_MESSAGE = "Into the folder you were working on was added %s from the content repository.";
     private AuditPropertyEntityAdapter auditPropertyEntityAdapter;

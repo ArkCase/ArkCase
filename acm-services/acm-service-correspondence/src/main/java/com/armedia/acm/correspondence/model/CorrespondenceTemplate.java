@@ -76,6 +76,11 @@ public class CorrespondenceTemplate
     private String objectType;
 
     /**
+     * The class type for generated object that will be used as a model into the template
+     */
+    private String templateModelProvider;
+
+    /**
      * The date format that should be applied to any date. All date columns will be displayed in the generated
      * correspondence in this format. Must be a valid date format according to Java DateFormat rules.
      */
@@ -297,4 +302,20 @@ public class CorrespondenceTemplate
         this.modified = modified;
     }
 
+    /**
+     * @return the templateModelProvider
+     */
+    public String getTemplateModelProvider()
+    {
+        return templateModelProvider;
+    }
+
+    /**
+     * @param templateModelProvider
+     *            the modified to set
+     */
+    public void setTemplateModelProvider(String templateModelProvider)
+    {
+        this.templateModelProvider = templateModelProvider;
+    }
 }

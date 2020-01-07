@@ -27,7 +27,9 @@ angular.module('admin').service('Admin.CMTemplatesService', [ '$http', 'Upload',
         getTemplateVersionData: getTemplateVersionData,
         saveTemplateData: saveTemplateData,
         deleteTemplate: deleteTemplate,
-        deleteTemplateByIdAndVersion: deleteTemplateByIdAndVersion
+        deleteTemplateByIdAndVersion: deleteTemplateByIdAndVersion,
+        listAllProperties: listAllProperties,
+        listTemplateModelProviders: listTemplateModelProviders
     });
 
     /**
@@ -282,6 +284,41 @@ angular.module('admin').service('Admin.CMTemplatesService', [ '$http', 'Upload',
             url: 'api/latest/plugin/admin/template/timestamp',
             file: files
         });
-    }
-    ;
+    };
+
+    /**
+     * @ngdoc method
+     * @name uploadTemplateTimestamp
+     * @methodOf admin.service:Admin.CMTemplatesService
+     *
+     * @description
+     * Uploads correspondence management template with timestamp name
+     *
+     * @param {array} files array of files
+     *
+     * @returns
+     */
+    function listAllProperties(classPath) {
+        return $http({
+            method: "GET",
+            url: "api/latest/service/correspondence/listAllProperties",
+            params: {
+                classPath: classPath
+            },
+            headers: {
+                "Content-Type": "application/json"
+            }
+        });
+    };
+
+    function listTemplateModelProviders() {
+        return $http({
+            method: "GET",
+            url: "api/latest/service/correspondence/listTemplateModelProviders",
+            headers: {
+                "Content-Type": "application/json"
+            }
+        });
+    };
+
 } ]);

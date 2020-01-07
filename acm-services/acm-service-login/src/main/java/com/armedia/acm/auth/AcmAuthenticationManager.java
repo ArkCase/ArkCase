@@ -33,8 +33,8 @@ import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.spring.SpringContextHolder;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.AuthenticationServiceException;
@@ -57,7 +57,7 @@ public class AcmAuthenticationManager implements AuthenticationManager
     private AcmGrantedAuthoritiesMapper authoritiesMapper;
     private DefaultAuthenticationEventPublisher authenticationEventPublisher;
     private UserDao userDao;
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException
@@ -146,6 +146,7 @@ public class AcmAuthenticationManager implements AuthenticationManager
         }
         catch (RuntimeException e)
         {
+            log.debug("Runtime exception: ", e);
             if (e instanceof NoProviderFoundException)
                 throw e;
             else if (lastException != null)

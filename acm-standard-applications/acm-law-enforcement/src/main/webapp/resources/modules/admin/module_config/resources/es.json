@@ -217,6 +217,7 @@
                     "cancelBtn": "Cancelar",
                     "deleteBtn": "Eliminar",
                     "headerText": "Está a punto de eliminar el grupo: ",
+                    "controlGroupHeaderWarning": "You are about to delete {{groupName}} group which is a member in the control group {{controlGroupName}}",
                     "bodyText": "¿Está seguro?"
                 }
             },
@@ -248,9 +249,9 @@
             },
             "searchFilter.placeholder": "Búsqueda"
         },
-        "security.selectPrivileges": "Crear funciones e instaurar privilegios",
+        "security.selectPrivileges": "Seleccionar privilegios",
         "security.selectPrivileges.applicationRole": "una función en la aplicación",
-        "security.selectPrivileges.createRole": "Cree la función",
+        "security.selectPrivileges.createRole": "Seleccionar rol",
         "security.selectPrivileges.editRole": "Edite la función",
         "security.selectPrivileges.applyChanges": "Aplique los cambios",
         "security.selectPrivileges.enterRoleName": "Ingrese el nombre de la función en el cuadro a continuación",
@@ -709,6 +710,29 @@
                     }
                 }
             },
+            "sequenceManagementReset": {
+                "title": "Reset List",
+                "editBtn": "Edit",
+                "viewBtn": "View",
+                "removeBtn": "Remove",
+                "cancelBtn": "Cancel",
+                "saveBtn": "Save",
+                "grid": {
+                    "startResetDate": "Start Reset Date",
+                    "executedDate": "Executed Date",
+                    "repeat": "Repeat",
+                    "repeatPeriod": "Repeat Period"
+                },
+                "detailsModal": {
+                    "title": "Autoincrement Reset",
+                    "addTitle": "Add Autoincrement Reset",
+                    "editTitle": "Edit Autoincrement Reset",
+                    "resetStartDate": "Reset Start Date",
+                    "repeatReset": "Repeat reset",
+                    "repeatResetPeriod": "Repeat reset period (days)",
+                    "sequenceResetScheduledWarning": "Sequence reset scheduled for today"
+                }
+            },
             "login.config": {
                 "title": "Configuración de acceso",
                 "idleLimit.label": "Límite inactivo de inicio de sesión (en milisegundos)",
@@ -927,8 +951,45 @@
                 "test.conection.success": "Conectado con éxito."
             }
         },
+        "portals.portalsConfiguration": {
+            "nodeTitle": "es_Portals Service",
+            "title": "es_Portals Configuration",
+            "url": "es_URL",
+            "id": "es_ID",
+            "portalId": "es_Portal ID",
+            "portalDescription": "es_Description",
+            "portalUser": "es_User",
+            "save": "es_Save",
+            "cancel": "es_Cancel",
+            "placeholder": {
+                "portalUrl": "es_Enter Portal URL",
+                "portalId": "es_ID will be generate",
+                "portalDescription": "es_Enter Portal Description",
+                "portalUser": "es_Select Portal User"
+            },
+            "message": {
+                "edit": "es_Portal is successfully edited",
+                "add": "es_Portal is successfully added",
+                "delete": "es_Portal is successfully deleted"
+            }
+        },
+        "userSearch": {
+            "title": "es_User Search",
+            "cancelButton": "es_Cancel",
+            "confirmButton": "es_Save",
+            "search": {
+                "placeholder": "es_Search for the user to assign to this portal",
+                "btn": "es_Search"
+            },
+            "assigneeGridColumns": {
+                "name": "es_Name",
+                "type": "es_Type",
+                "title": "es_Title",
+                "username": "es_Username"
+            }
+        },
         "mediaServices": {
-            "title": "Media Services_ES",
+            "title": "Servicios de transcripción",
             "transcriptionManagement": "Gestión de la transcripción",
             "transcriptionConfigForm": {
                 "title": "Servicios de transcripción",
@@ -960,15 +1021,6 @@
             "ocrConfigForm": {
                 "title": "OCR Services_ES",
                 "save.button": "Save_ES",
-                "enableOCR.checkbox": "Enable OCR_ES"
-            }
-        },
-        "ocr": {
-            "title": "OCR Services_ES",
-            "ocrManagement": "OCR Management_ES",
-            "ocrConfigForm": {
-                "save.button": "Save_ES",
-                "enableOCR.label": "OCR Configuration_ES",
                 "enableOCR.checkbox": "Enable OCR_ES"
             }
         },

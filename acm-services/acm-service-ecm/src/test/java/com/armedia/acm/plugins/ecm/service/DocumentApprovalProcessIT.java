@@ -55,8 +55,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.test.context.ContextConfiguration;
@@ -93,7 +93,7 @@ public class DocumentApprovalProcessIT
     @Qualifier(value = "changeObjectStatusService")
     private MockChangeObjectStatusService changeObjectStatusService;
 
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
 
     private List<String> reviewers;
     private ProcessInstance pi;
@@ -106,7 +106,7 @@ public class DocumentApprovalProcessIT
 
         // deploy
         repo.createDeployment()
-                .addClasspathResource("activiti/acmDocumentWorkflow_v4.bpmn20.xml")
+                .addClasspathResource("activiti/acmDocumentWorkflow_v5.bpmn20.xml")
                 .deploy();
 
         Map<String, Object> pvars = new HashMap<>();

@@ -27,11 +27,8 @@ package com.armedia.acm.plugins.admin.web.api;
  * #L%
  */
 
-import com.armedia.acm.core.exceptions.CorrespondenceMergeFieldVersionException;
 import com.armedia.acm.correspondence.model.CorrespondenceMergeField;
-import com.armedia.acm.correspondence.model.CorrespondenceMergeFieldVersion;
 import com.armedia.acm.correspondence.service.CorrespondenceService;
-
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -52,7 +49,6 @@ import java.util.List;
 @RequestMapping({ "/api/v1/plugin/admin", "/api/latest/plugin/admin" })
 public class CorrespondenceMergeFieldAPIController
 {
-
     private CorrespondenceService correspondenceService;
 
     @RequestMapping(value = "/mergefields", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -62,43 +58,35 @@ public class CorrespondenceMergeFieldAPIController
         return correspondenceService.getMergeFields();
     }
 
-    @RequestMapping(value = "/mergefields/versions", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
-    public List<CorrespondenceMergeFieldVersion> getMergeFieldVersions() throws IOException
-    {
-        return correspondenceService.getMergeFieldVersions();
-    }
-
-    @RequestMapping(value = "/mergefields/versions/{objectType}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
-    public List<CorrespondenceMergeFieldVersion> getMergeFieldVersionsByType(@PathVariable(value = "objectType") String objectType)
-            throws IOException
-    {
-        return correspondenceService.getMergeFieldVersionsByType(objectType);
-    }
-
     @RequestMapping(value = "/mergefields/active/{objectType}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public List<CorrespondenceMergeField> getActiveVersionMergeFieldsByType(@PathVariable(value = "objectType") String objectType)
-            throws IOException, CorrespondenceMergeFieldVersionException
+    public List<CorrespondenceMergeField> getMergeFieldsByType(@PathVariable(value = "objectType") String objectType)
+            throws IOException
     {
-        return correspondenceService.getActiveVersionMergeFieldsByType(objectType);
+        return correspondenceService.getMergeFieldsByType(objectType);
     }
 
     @RequestMapping(value = "/mergefields", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public List<CorrespondenceMergeField> saveMergeFieldsData(@RequestBody List<CorrespondenceMergeField> mergeFields, Authentication auth)
-            throws IOException, CorrespondenceMergeFieldVersionException
+            throws IOException
     {
         return correspondenceService.saveMergeFieldsData(mergeFields, auth);
     }
 
-    @RequestMapping(value = "/mergefields/version/active", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/mergefields/addMergeField", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public CorrespondenceMergeFieldVersion setActiveMergingVersion(@RequestBody CorrespondenceMergeFieldVersion mergeFieldVersion,
-            Authentication auth) throws IOException, CorrespondenceMergeFieldVersionException
+    public void addMergeField(@RequestBody CorrespondenceMergeField newMergeField) throws IOException
     {
-        return correspondenceService.setActiveMergingVersion(mergeFieldVersion, auth);
+        correspondenceService.addMergeField(newMergeField);
+    }
+
+    @RequestMapping(value = "/mergefields/{mergeFieldId}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public void deleteMergeFields(@PathVariable(value = "mergeFieldId") String mergeFieldId) throws IOException
+    {
+
+        correspondenceService.deleteMergeFields(mergeFieldId);
     }
 
     /**

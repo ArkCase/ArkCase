@@ -29,11 +29,14 @@ package com.armedia.acm.service.objectlock.service;
 
 import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.core.exceptions.AcmObjectLockException;
-import com.armedia.acm.scheduler.AcmSchedulableBean;
 import com.armedia.acm.service.objectlock.model.AcmObjectLock;
+import com.armedia.acm.spring.SpringContextHolder;
 
-import java.util.HashMap;
+import org.springframework.beans.factory.InitializingBean;
+
 import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * This class is used throughout the application to acquire and release locks on {@link AcmObject}.
@@ -43,12 +46,11 @@ import java.util.Map;
  * 
  * Created by bojan.milenkoski on 03/05/20186.
  */
-public class AcmObjectLockingManager implements AcmSchedulableBean
+public class AcmObjectLockingManager implements InitializingBean
 {
-    private Map<String, ObjectLockingProvider> objectLockingProvidersMap = new HashMap<>();
+    private Map<String, ObjectLockingProvider> objectLockingProvidersMap;
     private ObjectLockingProvider defaultObjectLockingProvider;
-
-    private AcmObjectLockService acmObjectLockService;
+    private SpringContextHolder springContextHolder;
 
     /**
      * Checks if a lock type can be acquired for a given {@link AcmObject}, specified by the objectId and object type.
@@ -161,14 +163,22 @@ public class AcmObjectLockingManager implements AcmSchedulableBean
         this.defaultObjectLockingProvider = defaultObjectLockingProvider;
     }
 
-    public void setAcmObjectLockService(AcmObjectLockService acmObjectLockService)
+    public SpringContextHolder getSpringContextHolder()
     {
-        this.acmObjectLockService = acmObjectLockService;
+        return springContextHolder;
+    }
+
+    public void setSpringContextHolder(SpringContextHolder springContextHolder)
+    {
+        this.springContextHolder = springContextHolder;
     }
 
     @Override
-    public void executeTask()
+    public void afterPropertiesSet()
     {
-        acmObjectLockService.removeExpiredLocks();
+        objectLockingProvidersMap = springContextHolder.getAllBeansOfType(ObjectLockingProvider.class)
+                .values()
+                .stream()
+                .collect(Collectors.toMap(ObjectLockingProvider::getObjectType, Function.identity()));
     }
 }

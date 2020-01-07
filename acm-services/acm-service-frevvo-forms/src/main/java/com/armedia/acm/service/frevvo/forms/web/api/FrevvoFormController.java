@@ -80,8 +80,8 @@ import com.armedia.acm.services.users.service.ldap.AcmUserActionExecutor;
 import org.activiti.engine.RuntimeService;
 import org.apache.commons.io.IOUtils;
 import org.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.security.core.Authentication;
@@ -108,7 +108,7 @@ public class FrevvoFormController implements ApplicationEventPublisherAware
 {
     private ApplicationEventPublisher applicationEventPublisher;
 
-    private Logger LOG = LoggerFactory.getLogger(FrevvoFormController.class);
+    private Logger LOG = LogManager.getLogger(FrevvoFormController.class);
 
     private Map<String, Object> properties;
     private AuthenticationTokenService authenticationTokenService;

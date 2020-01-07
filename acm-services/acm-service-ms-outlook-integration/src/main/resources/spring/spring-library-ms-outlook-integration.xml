@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
-       xmlns="http://www.springframework.org/schema/beans" xmlns:task="http://www.springframework.org/schema/task"
-       xmlns:aop="http://www.springframework.org/schema/aop" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+    xmlns="http://www.springframework.org/schema/beans" xmlns:task="http://www.springframework.org/schema/task"
+    xmlns:aop="http://www.springframework.org/schema/aop" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
        http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.1.xsd
        http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-4.1.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
 
@@ -12,10 +12,6 @@
         <property name="acmContainerDao" ref="acmContainerFolderDao"/>
         <property name="ecmFileService" ref="ecmFileService"/>
         <property name="outlookEventPublisher" ref="outlookEventPublisher"/>
-        <property name="sendFromSystemUser" value="#{outlookConfig.sendNotificationFromSystemUser}"/>
-        <property name="systemUserEmail" value="#{outlookConfig.systemUserEmail}"/>
-        <property name="systemUserPass" value="#{outlookConfig.systemUserPassword}"/>
-        <property name="systemUserId" value="#{outlookConfig.systemUserId}"/>
         <property name="acmCryptoUtils" ref="acmCryptoUtils"/>
         <property name="outlookPasswordDao" ref="outlookPasswordDao"/>
         <property name="acmEmailContentGeneratorService" ref="acmEmailContentGeneratorService"/>
@@ -23,29 +19,12 @@
         <property name="templatingEngine" ref="templatingEngine"/>
         <property name="emailSenderConfigurationService" ref="emailSenderConfigurationService"/>
         <property name="defaultFolderAndFileConverter" ref="folderConverter"/>
-    </bean>
-
-    <bean id="outlookCacheManager" class="org.springframework.cache.ehcache.EhCacheCacheManager">
-        <property name="cacheManager" ref="outlookUserConnectionEhCache"/>
-    </bean>
-
-    <bean id="outlookUserConnectionEhCache" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
-        <property name="configLocation" value="classpath:/ehcache/outlookUserConnectionCacheConfig.xml"/>
-        <property name="cacheManagerName" value="acm-service-ms-outlook-integration"/>
-        <property name="shared" value="true"/>
-    </bean>
-
-    <bean id="outlookUserConnectionCache" factory-bean="outlookCacheManager" factory-method="getCache">
-        <constructor-arg value="outlook_user_connection_cache"/>
+        <property name="outlookConfig" ref="outlookConfig"/>
     </bean>
 
     <bean id="exchangeWebServicesOutlookDao" class="com.armedia.acm.service.outlook.dao.impl.ExchangeWebServicesOutlookDao">
         <property name="exchangeConfigurationService" ref="exchangeConfigurationService"/>
-        <property name="exchangeVersion" value="#{outlookConfig.serverVersion}"/>
-        <property name="autodiscoveryEnabled" value="#{outlookConfig.enableAutoDiscovery}"/>
-        <property name="clientAccessServer" value="#{outlookConfig.clientAccessServer}"/>
-        <property name="outlookUserConnectionCache" ref="outlookUserConnectionCache"/>
-        <property name="defaultAccess" value="#{outlookConfig.defaultAccess}"/>
+        <property name="outlookConfig" ref="outlookConfig"/>
         <property name="sortFields">
             <map>
                 <entry key="subject" value-ref="propertyDefinitionSubject"/>
@@ -63,7 +42,8 @@
     <bean id="outlookPasswordDao" class="com.armedia.acm.service.outlook.dao.OutlookPasswordDao"/>
 
     <bean id="exchangeConfigurationService" class="com.armedia.acm.service.outlook.service.impl.ExchangeConfigurationServiceImpl">
-        <property name="exchangePropertiesResource" value="file:${user.home}/.arkcase/acm/msOutlookIntegration.properties"/>
+        <property name="configurationPropertyService" ref="configurationPropertyService"/>
+        <property name="outlookConfig" ref="outlookConfig"/>
     </bean>
 
     <bean id="outlookFolderCreatorDao" class="com.armedia.acm.service.outlook.dao.impl.JPAAcmOutlookFolderCreatorDao">
@@ -86,11 +66,7 @@
     <bean id="outlookFolderRecreator" class="com.armedia.acm.service.outlook.service.impl.DefaultOutlookFolderRecreator">
         <property name="userDao" ref="userJpaDao"/>
         <property name="outlookFolderService" ref="outlookService"/>
-        <property name="participantsTypesForOutlookFolder" value="#{outlookConfig.participantsTypesAsOutlookPermission}"/>
-        <property name="defaultAccess" value="#{outlookConfig.defaultAccess}"/>
-        <property name="approverAccess" value="#{outlookConfig.approverAccess}"/>
-        <property name="assigneeAccess" value="#{outlookConfig.followerAccess}"/>
-        <property name="followerAccess" value="#{outlookConfig.assigneeAccess}"/>
+        <property name="outlookConfig" ref="outlookConfig"/>
         <property name="folderHandlers">
             <map>
                 <entry key="CASE_FILE" value-ref="caseFileCalendarFolderHandler"/>
@@ -114,25 +90,26 @@
     </bean>
 
     <bean id="acmRecreateOutlookFoldersProgressNotifierMessageBuilder"
-          class="com.armedia.acm.service.outlook.service.impl.AcmRecreateOutlookFoldersProgressNotifierMessageBuilder"/>
+        class="com.armedia.acm.service.outlook.service.impl.AcmRecreateOutlookFoldersProgressNotifierMessageBuilder"/>
 
     <util:constant id="propertyDefinitionSubject"
-                   static-field="microsoft.exchange.webservices.data.core.service.schema.ItemSchema.Subject"/>
+        static-field="microsoft.exchange.webservices.data.core.service.schema.ItemSchema.Subject"/>
     <util:constant id="propertyDefinitionDateTimeCreated"
-                   static-field="microsoft.exchange.webservices.data.core.service.schema.ItemSchema.DateTimeCreated"/>
+        static-field="microsoft.exchange.webservices.data.core.service.schema.ItemSchema.DateTimeCreated"/>
     <util:constant id="propertyDefinitionDateTimeReceived"
-                   static-field="microsoft.exchange.webservices.data.core.service.schema.ItemSchema.DateTimeReceived"/>
+        static-field="microsoft.exchange.webservices.data.core.service.schema.ItemSchema.DateTimeReceived"/>
     <util:constant id="propertyDefinitionDateTimeSent"
-                   static-field="microsoft.exchange.webservices.data.core.service.schema.ItemSchema.DateTimeSent"/>
+        static-field="microsoft.exchange.webservices.data.core.service.schema.ItemSchema.DateTimeSent"/>
     <util:constant id="propertyDefinitionHasAttachments"
-                   static-field="microsoft.exchange.webservices.data.core.service.schema.ItemSchema.HasAttachments"/>
+        static-field="microsoft.exchange.webservices.data.core.service.schema.ItemSchema.HasAttachments"/>
     <util:constant id="propertyDefinitionDisplayTo"
-                   static-field="microsoft.exchange.webservices.data.core.service.schema.ItemSchema.DisplayTo"/>
+        static-field="microsoft.exchange.webservices.data.core.service.schema.ItemSchema.DisplayTo"/>
     <util:constant id="propertyDefinitionSize" static-field="microsoft.exchange.webservices.data.core.service.schema.ItemSchema.Size"/>
     <util:constant id="propertyDefinitionStart"
-                   static-field="microsoft.exchange.webservices.data.core.service.schema.AppointmentSchema.Start"/>
+        static-field="microsoft.exchange.webservices.data.core.service.schema.AppointmentSchema.Start"/>
 
     <bean id="outlookConfig" class="com.armedia.acm.service.outlook.model.OutlookConfig" scope="refresh">
         <aop:scoped-proxy/>
     </bean>
+
 </beans>

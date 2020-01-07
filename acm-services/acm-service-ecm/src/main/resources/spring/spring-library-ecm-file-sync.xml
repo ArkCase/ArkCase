@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
 
     <!-- simple logging handler -->
     <bean id="ecmEventHandler" class="com.armedia.acm.plugins.ecm.service.sync.impl.EcmEventHandler"/>
@@ -56,5 +57,50 @@
         <property name="fileService" ref="ecmFileService"/>
         <property name="folderService" ref="acmFolderService"/>
         <property name="folderAndFilesUtils" ref="folderAndFilesUtils"/>
+    </bean>
+
+    <bean id="alfrescoSyncScheduledJobDescriptor" class="com.armedia.acm.plugins.ecm.service.sync.impl.AlfrescoSyncScheduledBean"
+          parent="acmJobDescriptor">
+        <property name="alfrescoSyncService" ref="arkcase-alfrescoSyncService"/>
+        <property name="alfrescoSyncConfig" ref="alfrescoSyncConfig"/>
+    </bean>
+
+    <bean id="arkcase-alfrescoSyncService" class="com.armedia.acm.plugins.ecm.service.sync.impl.AlfrescoSyncService">
+        <property name="auditApplicationRestClient" ref="arkcase-auditApplicationRestClient"/>
+        <property name="auditApplications">
+            <map>
+                <entry key="AuditArkCaseExtractors" value-ref="arkcase-nodeServiceCreateReader"/>
+                <entry key="AuditArkCaseCreate" value-ref="arkcase-fileFolderServiceCreateReader"/>
+                <entry key="AuditArkCaseDeleteExtractors" value-ref="arkcase-nodeServiceDeleteReader"/>
+                <entry key="AuditArkCaseMoveFrom" value-ref="arkcase-fileFolderServiceMoveReader"/>
+                <entry key="AuditArkCaseCopy" value-ref="arkcase-copyServiceCopyReader"/>
+                <entry key="AuditArkCaseRename" value-ref="arkcase-fileFolderServiceRenameReader"/>
+                <entry key="AuditArkCaseMetadata" value-ref="arkcase-nodeServiceMetadataUpdateReader"/>
+            </map>
+        </property>
+    </bean>
+
+    <bean id="arkcase-nodeServiceCreateReader"
+          class="com.armedia.acm.plugins.ecm.service.sync.impl.AlfrescoNodeServiceCreateNodeAuditResponseReader"/>
+    <bean id="arkcase-nodeServiceDeleteReader"
+          class="com.armedia.acm.plugins.ecm.service.sync.impl.AlfrescoNodeServiceDeleteNodeAuditResponseReader"/>
+    <bean id="arkcase-fileFolderServiceCreateReader"
+          class="com.armedia.acm.plugins.ecm.service.sync.impl.AlfrescoFileFolderServiceCreateAuditResponseReader"/>
+    <bean id="arkcase-fileFolderServiceMoveReader"
+          class="com.armedia.acm.plugins.ecm.service.sync.impl.AlfrescoFileFolderServiceMoveAuditResponseReader"/>
+    <bean id="arkcase-copyServiceCopyReader"
+          class="com.armedia.acm.plugins.ecm.service.sync.impl.AlfrescoCopyServiceCopyAuditResponseReader"/>
+    <bean id="arkcase-fileFolderServiceRenameReader"
+          class="com.armedia.acm.plugins.ecm.service.sync.impl.AlfrescoFileFolderServiceRenameAuditResponseReader"/>
+    <bean id="arkcase-nodeServiceMetadataUpdateReader"
+          class="com.armedia.acm.plugins.ecm.service.sync.impl.AlfrescoNodeServiceUpdateMetadataAuditResponseReader"/>
+
+    <bean id="arkcase-auditApplicationRestClient"
+          class="com.armedia.acm.plugins.ecm.service.sync.impl.AlfrescoAuditApplicationRestClient">
+        <property name="alfrescoSyncConfig" ref="alfrescoSyncConfig"/>
+    </bean>
+
+    <bean id="alfrescoSyncConfig" class="com.armedia.acm.plugins.ecm.service.sync.AlfrescoSyncConfig" scope="refresh">
+        <aop:scoped-proxy/>
     </bean>
 </beans>

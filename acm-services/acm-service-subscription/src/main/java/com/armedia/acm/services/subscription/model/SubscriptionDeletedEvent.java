@@ -42,13 +42,14 @@ public class SubscriptionDeletedEvent extends SubscriptionPersistenceEvent
         super(source);
     }
 
-    public SubscriptionDeletedEvent(String userId, Long objectId, String objectType)
+    public SubscriptionDeletedEvent(String userId, Long objectId, String objectType, String ipAddress)
     {
         super(new AcmSubscription());
         setObjectType(objectType);
         setObjectId(objectId);
         setEventDate(new Date());
         setUserId(userId);
+        setIpAddress(ipAddress);
     }
 
     @Override

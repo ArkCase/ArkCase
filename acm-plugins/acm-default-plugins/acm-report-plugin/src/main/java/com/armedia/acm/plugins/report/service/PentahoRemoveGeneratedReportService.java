@@ -30,8 +30,8 @@ package com.armedia.acm.plugins.report.service;
 import com.armedia.acm.pentaho.config.PentahoReportsConfig;
 import com.armedia.acm.plugins.report.model.ScheduleReportException;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -47,7 +47,7 @@ import java.util.Arrays;
  */
 public class PentahoRemoveGeneratedReportService
 {
-    private static final Logger LOGGER = LoggerFactory.getLogger(PentahoRemoveGeneratedReportService.class);
+    private static final Logger LOGGER = LogManager.getLogger(PentahoRemoveGeneratedReportService.class);
     private ResponseEntity<String> response;
     private PentahoReportsConfig reportsConfig;
 
@@ -77,8 +77,8 @@ public class PentahoRemoveGeneratedReportService
 
     public String buildRemoveFileUrl()
     {
-        return reportsConfig.getServerUrl()
-                + (reportsConfig.getServerPort() != null ? ":" + reportsConfig.getServerPort() : "")
+        return reportsConfig.getServerInternalUrl()
+                + (reportsConfig.getServerInternalPort() != null ? ":" + reportsConfig.getServerInternalPort() : "")
                 + reportsConfig.getRemoveFileApi();
     }
 

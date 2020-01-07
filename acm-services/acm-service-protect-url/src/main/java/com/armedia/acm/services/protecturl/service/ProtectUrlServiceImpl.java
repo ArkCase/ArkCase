@@ -30,8 +30,8 @@ package com.armedia.acm.services.protecturl.service;
 import com.armedia.acm.services.protecturl.dao.ProtectedUrlDao;
 import com.armedia.acm.services.protecturl.model.ProtectedUrl;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import javax.persistence.NoResultException;
 
@@ -52,7 +52,7 @@ public class ProtectUrlServiceImpl implements ProtectUrlService
     /**
      * Logger instance.
      */
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
 
     /**
      * ProtectedUrlDao instance.

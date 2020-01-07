@@ -60,8 +60,8 @@ import org.apache.http.impl.auth.SPNegoSchemeFactory;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.protocol.HTTP;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import javax.security.auth.Subject;
 import javax.security.auth.callback.Callback;
@@ -91,7 +91,7 @@ import java.util.stream.Collectors;
 public class KerberosHttpInvoker implements HttpInvoker
 {
     private static final String APP_CONFIGURATION_ENTRY_NAME = "MuleAlfrescoLogin";
-    private final Logger LOG = LoggerFactory.getLogger(getClass());
+    private final Logger LOG = LogManager.getLogger(getClass());
     private HttpClient httpClient;
 
     public KerberosHttpInvoker()

@@ -135,6 +135,10 @@ angular.module('organizations').controller(
                             url.subType = data.url.subLookup;
                             url.value = data.url.value;
                             url.description = data.url.description;
+                            
+                            if (!_.contains(url.value, 'https://') && !_.contains(url.value, 'http://')) {
+                                url.value = "https://" + url.value;
+                            }
 
                             if (!data.isEdit) {
                                 $scope.objectInfo.contactMethods.push(url);

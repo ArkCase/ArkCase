@@ -30,8 +30,8 @@ package com.armedia.acm.activiti;
 import com.armedia.acm.core.model.AcmEvent;
 
 import org.activiti.engine.runtime.ProcessInstance;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.util.Date;
 import java.util.Map;
@@ -44,7 +44,7 @@ public class AcmBusinessProcessEvent extends AcmEvent
     private ProcessInstance source;
     private Map<String, Object> processVariables;
 
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
 
     public AcmBusinessProcessEvent(ProcessInstance source)
     {

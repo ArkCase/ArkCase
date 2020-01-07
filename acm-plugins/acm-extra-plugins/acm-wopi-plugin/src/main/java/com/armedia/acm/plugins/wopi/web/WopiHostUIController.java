@@ -31,8 +31,8 @@ import com.armedia.acm.plugins.wopi.model.WopiConfig;
 import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenService;
 import com.armedia.acm.services.users.model.AcmUser;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -47,7 +47,7 @@ import javax.servlet.http.HttpSession;
 @RequestMapping("/plugin/office")
 public class WopiHostUIController
 {
-    private static final Logger log = LoggerFactory.getLogger(WopiHostUIController.class);
+    private static final Logger log = LogManager.getLogger(WopiHostUIController.class);
 
     private WopiConfig wopiConfig;
     private AuthenticationTokenService tokenService;

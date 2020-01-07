@@ -35,8 +35,8 @@ import com.armedia.acm.audit.service.AuditService;
 import com.armedia.acm.web.api.MDCConstants;
 
 import org.activiti.engine.delegate.event.ActivitiEvent;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.slf4j.MDC;
 import org.springframework.context.ApplicationListener;
 
@@ -55,7 +55,7 @@ public class AcmActivitiEventListener implements ApplicationListener<SpringActiv
 {
     private static final String EVENT_TYPE = "com.armedia.acm.audit.activiti.event";
 
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
 
     private AuditService auditService;
 

@@ -41,7 +41,7 @@ public interface SearchConstants
 
     String DATE_FACET_PRE_KEY = "date.";
 
-    String FACET_FILED = "field=";
+    String FACET_FILED = "facet.field=";
     String FACET_QUERY = "facet.query=";
 
     String SOLR_FILTER_QUERY_ATTRIBUTE_NAME = "&fq=";

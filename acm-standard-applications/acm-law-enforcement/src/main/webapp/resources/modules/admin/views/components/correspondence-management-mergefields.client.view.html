@@ -1,22 +1,37 @@
 <div ng-controller="Admin.CMMergeFieldsController">
     <div class="pull-right well">
-        <select ng-model="mergingType" ng-options="objectType.key as objectType.value | translate for objectType in correspondenceObjectTypes"
-                ng-change="changeType()"
-                required>
+        <select ng-model="mergingType"
+                ng-options="objectType.key as objectType.value | translate for objectType in correspondenceObjectTypes"
+                ng-change="changeType()" required class="marginTop">
         </select>
-        <div class="btn-group">
-            <button class="btn btn-xs btn-link" ng-click="showVersion()">
-                <i class="glyphicon glyphicon-info-sign"></i>
-                <span translate>admin.correspondenceManagement.mergefields.versionMergeFields</span>
-            </button>
-            <button class="btn btn-xs btn-link" ng-click="save()">
-                <i class="fa fa-save"></i>
-                <span translate>admin.correspondenceManagement.mergefields.saveMergeFields</span>
-            </button>
+
+        <div class="pull-right well">
+            <div class="btn-group">
+                <button class="btn btn-default btn-xs" ng-click="addNewMergeField()">
+                    <i class="fa fa-lg fa-plus"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="pull-right well">
+            <div class="btn-group">
+                <button class="btn btn-xs btn-link" ng-click="save()">
+                    <i class="fa fa-save"></i>
+                    <span translate>admin.correspondenceManagement.mergefields.saveMergeFields</span>
+                </button>
+            </div>
+        </div>
+        <div class="pull-right well">
+            <div class="btn-group">
+                <button class="btn btn-xs btn-link" ng-click="deleteMergeFields()" ng-disabled="selectedRows.length < 1">
+                    <i class="fa fa-trash"></i>
+                    <span translate>admin.correspondenceManagement.templates.deleteTemplate</span>
+                </button>
+            </div>
         </div>
     </div>
     <panel-view header="{{'admin.correspondenceManagement.mergefields' | translate}}" collapsible="false">
         <div ui-grid="gridOptions" ui-grid-resize-columns adjust-table-height="gridOptions.data.length" ui-grid-auto-resize
-                ui-grid-pagination class="grid"></div>
+                ui-grid-pagination ui-grid-selection class="grid"></div>
     </panel-view>
 </div>

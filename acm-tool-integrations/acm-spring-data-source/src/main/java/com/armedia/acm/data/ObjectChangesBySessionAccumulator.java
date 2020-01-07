@@ -29,8 +29,8 @@ package com.armedia.acm.data;
 
 import org.eclipse.persistence.descriptors.DescriptorEvent;
 import org.eclipse.persistence.descriptors.DescriptorEventAdapter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -38,7 +38,7 @@ import java.util.Map;
 
 public class ObjectChangesBySessionAccumulator extends DescriptorEventAdapter
 {
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
 
     private Map<String, AcmObjectChangelist> changesBySession = Collections.synchronizedMap(new HashMap<>());
 

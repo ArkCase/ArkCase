@@ -182,7 +182,7 @@ public class CorrespondenceTemplateAPIController
     }
 
     /**
-     * @param templateByFileName
+     * @param templateHolder
      * @return
      */
     private CorrespondenceTemplateRequestResponse mapTemplateToResponse(Optional<CorrespondenceTemplate> templateHolder)
@@ -203,6 +203,7 @@ public class CorrespondenceTemplateAPIController
         response.setActivated(template.isActivated());
         response.setModifier(template.getModifier());
         response.setModified(template.getModified());
+        response.setTemplateModelProvider(template.getTemplateModelProvider());
 
         return response;
     }
@@ -227,6 +228,7 @@ public class CorrespondenceTemplateAPIController
         template.setActivated(request.isActivated());
         template.setModifier(auth.getName());
         template.setModified(new Date());
+        template.setTemplateModelProvider(request.getTemplateModelProvider());
 
         return template;
     }

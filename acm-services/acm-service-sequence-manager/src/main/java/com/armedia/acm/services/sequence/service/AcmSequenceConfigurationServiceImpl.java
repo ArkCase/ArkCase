@@ -34,8 +34,8 @@ import com.armedia.acm.services.sequence.exception.AcmSequenceException;
 import com.armedia.acm.services.sequence.model.AcmSequenceConfiguration;
 
 import org.apache.commons.io.FileUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ApplicationListener;
 
@@ -57,7 +57,7 @@ public class AcmSequenceConfigurationServiceImpl
         implements AcmSequenceConfigurationService, ApplicationListener<AbstractConfigurationFileEvent>, InitializingBean
 {
 
-    private final Logger log = LoggerFactory.getLogger(getClass());
+    private final Logger log = LogManager.getLogger(getClass());
 
     private ObjectConverter objectConverter;
 

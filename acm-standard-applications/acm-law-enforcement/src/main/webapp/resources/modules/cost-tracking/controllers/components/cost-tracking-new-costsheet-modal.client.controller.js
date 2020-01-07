@@ -21,8 +21,9 @@ angular.module('cost-tracking').controller(
                 'Object.ParticipantService',
                 'Profile.UserInfoService',
                 'Mentions.Service',
+                'Admin.CostsheetConfigurationService',
                 function($scope, $stateParams, $translate, $modalInstance, CostTrackingInfoService, ObjectLookupService, MessageService, $timeout, Util, $modal, ConfigService, ObjectService, modalParams, PersonInfoService, ObjectModelService, ObjectParticipantService, UserInfoService,
-                        MentionsService) {
+                        MentionsService, CostsheetConfigurationService) {
 
                     $scope.modalParams = modalParams;
                     $scope.loading = false;
@@ -30,6 +31,8 @@ angular.module('cost-tracking').controller(
                     $scope.isEdit = $scope.modalParams.isEdit;
                     $scope.sumAmount = 0;
                     $scope.disableCostType = false;
+                    $scope.costsheetProperties = {};
+
                     var participantTypeApprover = 'approver';
                     var participantTypeOwningGroup = "owning group";
 
@@ -48,9 +51,12 @@ angular.module('cost-tracking').controller(
                                     parentType: '',
                                     parentNumber: '',
                                     details: '',
-                                    costs: [ {} ],
+                                    costs: [ {
+                                        date: new Date()
+                                    } ],
                                     participants: []
                                 };
+
                                 $scope.costsheet.user = infoData;
 
                                 $scope.approverName = "";
@@ -142,6 +148,25 @@ angular.module('cost-tracking').controller(
                     });
                     ObjectLookupService.getCostsheetStatuses().then(function(costsheetStatuses) {
                         $scope.costsheetStatuses = costsheetStatuses;
+                        CostsheetConfigurationService.getProperties().then(function(response) {
+                            if (!Util.isEmpty(response.data)) {
+                                $scope.costsheetProperties = response.data;
+                            }
+
+                            if (!$scope.costsheetProperties['cost.plugin.useApprovalWorkflow']) {
+                                for (var i = $scope.costsheetStatuses.length - 1; i >= 0; i--) {
+                                    if ($scope.costsheetStatuses[i].key !== "DRAFT" && $scope.costsheetStatuses[i].key !== "FINAL") {
+                                        $scope.costsheetStatuses.splice(i, 1);
+                                    }
+                                }
+                            } else {
+                                for (var i = $scope.costsheetStatuses.length - 1; i >= 0; i--) {
+                                    if ($scope.costsheetStatuses[i].key == "FINAL") {
+                                        $scope.costsheetStatuses.splice(i, 1);
+                                    }
+                                }
+                            }
+                        });
                     });
 
                     // ---------------------   mention   ---------------------------------
@@ -204,7 +229,9 @@ angular.module('cost-tracking').controller(
                     $scope.addCost = function() {
                         $timeout(function() {
                             if (!_.isEmpty($scope.costsheet.costs[0])) {
-                                $scope.costsheet.costs.push({});
+                                $scope.costsheet.costs.push({
+                                    date: new Date()
+                                });
                             }
                         }, 0);
                     };
@@ -235,6 +262,7 @@ angular.module('cost-tracking').controller(
                                 $scope.filter = params.filter;
                                 $scope.config = params.config;
                                 $scope.secondGrid = params.secondGrid;
+                                $scope.extraFilter = params.extraFilter;
                             } ],
                             animation: true,
                             size: 'lg',
@@ -331,9 +359,11 @@ angular.module('cost-tracking').controller(
                                     objectType: objectTypeString,
                                     costsheetTitle: objectInfo.title
                                 });
+                                if ($scope.costsheet.status === "FINAL") {
+                                    submissionName = "SaveFinal";
+                                }
                                 MentionsService.sendEmailToMentionedUsers($scope.paramsSummernote.emailAddresses, $scope.paramsSummernote.usersMentioned, ObjectService.ObjectTypes.COSTSHEET, "DETAILS", objectInfo.id, objectInfo.details);
                                 MessageService.info(costsheetUpdatedMessage);
-                                ObjectService.showObject(ObjectService.ObjectTypes.COSTSHEET, objectInfo.id);
                                 $modalInstance.close(objectInfo);
                                 $scope.loading = false;
                                 $scope.loadingIcon = "fa fa-floppy-o";
@@ -355,6 +385,9 @@ angular.module('cost-tracking').controller(
                             checkForChanges($scope.objectInfo);
                             if (CostTrackingInfoService.validateCostsheet($scope.objectInfo)) {
                                 var objectInfo = Util.omitNg($scope.objectInfo);
+                                if ($scope.objectInfo.status === "FINAL") {
+                                    submissionName = "SaveFinal";
+                                }
                                 promiseSaveInfo = CostTrackingInfoService.saveCostsheetInfo(objectInfo, submissionName);
                                 promiseSaveInfo.then(function(costsheetInfo) {
                                     objectInfo.modified = costsheetInfo.modified;
@@ -396,6 +429,9 @@ angular.module('cost-tracking').controller(
                         }
                         if (objectInfo.details != $scope.costsheet.details) {
                             objectInfo.details = $scope.costsheet.details;
+                        }
+                        if (objectInfo.status != $scope.costsheet.status) {
+                            objectInfo.status = $scope.costsheet.status;
                         }
 
                         objectInfo.costs = $scope.costsheet.costs;

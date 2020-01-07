@@ -29,8 +29,8 @@ package com.armedia.acm.plugins.admin.web.api;
 
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
@@ -54,7 +54,7 @@ import java.nio.file.Paths;
 @RequestMapping({ "/api/v1/plugin/admin", "/api/latest/plugin/admin" })
 public class TemplateDownloadControllerAPI
 {
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
     private String correspondenceFolderName;
 
     @RequestMapping(value = "/template", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE,

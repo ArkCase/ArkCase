@@ -38,6 +38,10 @@ angular.module('admin').controller('Admin.SequenceManagementPartsModalConfigCont
             $scope.sequencePartsCurrentlySelected[$scope.selectedItem.key] = true;
         });
 
+        ObjectLookupService.getSequenceObjectProperty().then(function(sequenceObjectProperty){
+            $scope.sequenceObjectProperties = sequenceObjectProperty;
+        });
+
         $scope.onClickOk = function () {
             var object = {};
             object.sequencePartType = $scope.selectedItem.key;

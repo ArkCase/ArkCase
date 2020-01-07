@@ -39,8 +39,8 @@ import com.armedia.acm.services.users.service.group.GroupService;
 
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -60,7 +60,7 @@ import java.util.Map;
 @RequestMapping({ "/api/v1/users", "/api/latest/users" })
 public class AcmGroupAPIController
 {
-    private Logger LOG = LoggerFactory.getLogger(getClass());
+    private Logger LOG = LogManager.getLogger(getClass());
 
     private GroupService groupService;
     private MuleContextManager muleContextManager;

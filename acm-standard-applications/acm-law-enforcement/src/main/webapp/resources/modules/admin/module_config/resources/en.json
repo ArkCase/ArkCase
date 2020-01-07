@@ -62,8 +62,18 @@
             "changedGroupSearchPageFilter": "Changed Group Search Page Filter",
             "enableEditingLdapUsers": "Enable managing users and groups",
             "syncEnabled": "Enable synchronize users",
+            "fullSync": "Full Sync Cron Expression",
+            "partialSync": "Partial Sync Cron Expression",
             "cancel": "Cancel",
             "ok": "Save"
+        },
+        "security.documentUploadPolicy": {
+            "title": "Document Upload Policy",
+            "table.title": "File Conversion to PDF Before Upload",
+            "convertHtml.checkbox": "Convert HTML to PDF",
+            "convertMsg.checkbox": "Convert MSG to PDF",
+            "convertEml.checkbox": "Convert EML to PDF",
+            "save.button": "Save"
         },
         "menus": {
             "leftnav.item": "Admin"
@@ -97,7 +107,9 @@
             "changedGroupSearchPageFilter": "Enter filter including sort-attribute for all changed groups",
             "groupSearchPageFilter": "Enter filter including sort-attribute (e.g. (&(objectClass=group)(gidNumber>=%s)))",
             "enableEditingLdapUsers": "Check if managing users and groups to your DS is allowed",
-            "syncEnabled": "Check if synchronize users to your DS is allowed"
+            "syncEnabled": "Check if synchronize users to your DS is allowed",
+            "fullSync": "Enter cron expression for full sync job",
+            "partialSync": "Enter cron expression for partial sync job"
         },
         "security.ldapConfig.messages": {
             "delete.success": "Successfully deleted row.",
@@ -225,6 +237,7 @@
                     "cancelBtn": "Cancel",
                     "deleteBtn": "Delete",
                     "headerText": "You are about to delete group: ",
+                    "controlGroupHeaderWarning": "You are about to delete {{groupName}} group which is a member in the control group {{controlGroupName}}",
                     "bodyText": "Are you sure?"
                 }
             },
@@ -256,7 +269,7 @@
             },
             "searchFilter.placeholder": "Search"
         },
-        "security.selectPrivileges": "Create Role/Select Privileges",
+        "security.selectPrivileges": "Select Privileges",
         "security.selectPrivileges.applicationRole": "Application Role",
         "security.selectPrivileges.createRole": "Create Role",
         "security.selectPrivileges.editRole": "Edit Role",
@@ -484,6 +497,60 @@
             "workflow": "Approval Workflow Configuration",
             "useWorkflowCheckbox": "Use Approval Workflow"
         },
+        "portals.portalsConfiguration": {
+            "nodeTitle": "Portals Service",
+            "title": "Portals Configuration",
+            "url": "URL",
+            "id": "ID",
+            "portalId": "Portal ID",
+            "portalDescription": "Description",
+            "portalUser": "User",
+            "groupName": "Group",
+            "save": "Save",
+            "cancel": "Cancel",
+            "placeholder": {
+                "portalUrl": "Enter Portal URL",
+                "portalId": "ID will be generate",
+                "portalDescription": "Enter Portal Description",
+                "portalUser": "Select Portal User",
+                "groupName": "Select Group"
+            },
+            "message": {
+                "edit": "Portal is successfully edited",
+                "add": "Portal is successfully added",
+                "delete": "Portal is successfully deleted"
+            }
+        },
+        "userSearch": {
+            "title": "User Search",
+            "cancelButton": "Cancel",
+            "confirmButton": "Save",
+            "search": {
+                "placeholder": "Search for the user to assign to this portal",
+                "btn": "Search"
+            },
+            "assigneeGridColumns": {
+                "name": "Name",
+                "type": "Type",
+                "title": "Title",
+                "username": "Username"
+            }
+        },
+        "groupSearch": {
+            "title": "Group Search",
+            "cancelButton": "Cancel",
+            "confirmButton": "Save",
+            "search": {
+                "placeholder": "Search for the group where to add portal users",
+                "btn": "Search"
+            },
+            "assigneeGridColumns": {
+                "name": "Name",
+                "type": "Type",
+                "title": "Title",
+                "username": "Username"
+            }
+        },
         "dashboard.title": "Dashboard",
         "dashboard.config": "Dashboard Configuration",
         "dashboard.widgets": "Widgets",
@@ -602,6 +669,9 @@
                 "title": "Locale Configuration",
                 "defaultLabel": "Default Locale:"
             },
+            "version.config": {
+                "title": "Application Version"
+            },
             "labels.config": {
                 "title": "Label Configuration",
                 "progressMessage": "Updating labels...Please wait",
@@ -707,6 +777,13 @@
                     "sequenceEnabled": "Sequence Enabled",
                     "cancel": "Cancel",
                     "save": "Save"
+                },
+                "registry": "Registry",
+                "editSequenceNumber": {
+                    "modal": {
+                        "title": "Edit Sequence Number",
+                        "sequencePartValue": "Sequence Number"
+                    }
                 }
             },
             "sequenceManagementParts.config": {
@@ -770,8 +847,19 @@
                     "editTitle": "Edit Autoincrement Reset",
                     "resetStartDate": "Reset Start Date",
                     "repeatReset": "Repeat reset",
-                    "repeatResetPeriod": "Repeat reset period (days)"
+                    "repeatResetPeriod": "Repeat reset period (days)",
+                    "sequenceResetScheduledWarning": "Sequence reset scheduled for today"
                 }
+            },
+            "sequenceRegistry": {
+                "title": "View/Edit Sequence Registry",
+                "sequenceValue": "Sequence Value",
+                "sequenceName": "Sequence Name",
+                "sequencePartName": "Sequence Part Name",
+                "sequencePartValue": "Sequence Part Value",
+                "sequencePartValueUsedFlag": "Sequence Part Value Used Flag",
+                "cancel": "Cancel",
+                "save": "Save"
             },
             "login.config": {
                 "title": "Login Configuration",
@@ -804,6 +892,56 @@
                 "placeholder": {
                     "name": "Enter Name of Holiday",
                     "date": "Enter Date of Holiday"
+                }
+            },
+            "recycleBin": {
+                "title": "Recycle Bin",
+                "grid": {
+                    "fileName": "File Name",
+                    "containerObjectTitle": "Original Location (Parent Object Id)",
+                    "dateModified": "Date Deleted",
+                    "fileSizeBytes": "Size",
+                    "fileActiveVersionNameExtension": "Item Type"
+                }
+            },
+            "objectTitleConfiguration": {
+                "title": "Object Title Configuration",
+                "save": "Save",
+                "enableTitleField": "Enable Title Field",
+                "displayOptions": "Title Display Options: ",
+                "objectId": "Use the 'Object ID' as a Title",
+                "titleTitle": "Use the 'Title' as a Title",
+                "titleObjectId": "Use the 'Title - Object ID' as a Title",
+                "objectIdTitle": "Use the 'Object ID - Title' as a Title",
+                "objectType": "Object Type",
+                "titleOption": "Title",
+                "caseFile": "Case File",
+                "complaint": "Complaint",
+                "message": {
+                    "success": "Object Title Configuration is successfully saved",
+                    "error": "Error. Object Title Configuration is not saved.",
+                    "exist1": "Object Title Configuration for ",
+                    "exist2": " already exist.",
+                    "editRow": "Edit of the row did not succeed"
+                },
+                "button": {
+                    "save": "Save",
+                    "cancel": "Cancel"
+                }
+            },
+            "scheduled.jobs": {
+                "title": "Scheduled Jobs",
+                "column": {
+                    "jobName.title": "Job Name",
+                    "trigger.title": "Trigger interval(seconds) / cron",
+                    "lastRun.title": "Last Run",
+                    "nextRun.title": "Next Run"
+                },
+                "btn": {
+                    "run": "Run",
+                    "spin": "Executing",
+                    "pause": "Pause",
+                    "resume": "Resume"
                 }
             }
         },
@@ -851,7 +989,8 @@
                 "statusActivated": "Activated",
                 "objectType": "Object Type",
                 "version": "Version",
-                "templateVersionActive": "Active"
+                "templateVersionActive": "Active",
+                "templateModelProvider": "Template Model Provider"
             },
             "templates.fieldNames.label": "Map fields to values from the template",
             "templates.querySelect": {
@@ -870,14 +1009,20 @@
                 "querySelect.label": "Query Select",
                 "label.label": "Display Name",
                 "btnCancel.text": "Cancel",
-                "btnOk.text": "Upload Template"
+                "btnOk.text": "Upload Template",
+                "templateModelProvider.label": "Template Model Provider",
+                "navigationBar": "Correspondence Templates Fields"
             },
             "templates.version.modal": {
                 "btnOk.text": "Confirm"
             },
+            "templates.tabs": {
+                "firstTab" : "Correspondence Object Tree View",
+                "secondTab" : "Merge Fields"
+            },
             "mergefields": "Merge Fields Configuration",
             "mergefields.saveMergeFields": "Save",
-            "mergefields.versionMergeFields": "Versions",
+            "mergefields.deleteMergeFields": "Delete",
             "mergefields.grid": {
                 "fieldId": "ID",
                 "fieldValue": "Value",
@@ -892,6 +1037,19 @@
             "mergefields.version.modal": {
                 "btnLoadVersion.text": "Load Version",
                 "btnCancel.text": "Cancel"
+            },
+            "mergefields.addModal": {
+                "fieldId": "Field Id",
+                "fieldValue": "Field Value",
+                "fieldDescription": "Field Description",
+                "objectType": "Object Type",
+                "mergeFieldForm": "Merge Field Configuration",
+                "addMergeField": "Add Merge Field"
+            },
+            "mergefields.addModal.placeHolders": {
+                "fieldId": "Enter Merge Field Id",
+                "fieldValue": "Enter Merge Field Value",
+                "fieldDescription": "Enter Merge Field Description"
             }
         },
         "forms.defaultValue": "Select Target",
@@ -994,6 +1152,17 @@
                 "update.success": "Successfully updated configuration row.",
                 "update.error": "Error updating configuration row.",
                 "test.conection.success": "Successfully connected."
+            },
+            "fileUploader": {
+                "title": "File Uploader Settings",
+                "uploadFileSizeLimit.label": "Upload in chunks over this file size",
+                "singleChunkFileSizeLimit.label": "Single chunk file size",
+                "enableFileChunkUpload.label": "Enable file chunk upload",
+                "inform": "Settings will take effect for all new files",
+                "apply.label": "Apply",
+                "dialog": {
+                    "OKBtn": "Confirm"
+                }
             }
         },
         "mediaServices": {
@@ -1030,15 +1199,24 @@
                 "title": "OCR Services",
                 "save.button": "Save",
                 "enableOCR.checkbox": "Enable OCR"
-            }
-        },
-        "ocr": {
-            "title": "OCR Services",
-            "ocrManagement": "OCR Management",
-            "ocrConfigForm": {
+            },
+            "awsManagement": "AWS Transcription Management",
+            "awsConfigForm": {
+                "title": "AWS Transcription Service",
                 "save.button": "Save",
-                "enableOCR.label": "OCR Configuration",
-                "enableOCR.checkbox": "Enable OCR"
+                "awsConfig": {
+                    "bucket.label": "Bucket name",
+                    "region.label": "Region",
+                    "host.label": "Host",
+                    "profile.label": "Profile"
+                },
+                "awsCredentials": {
+                    "accessKeyId.label": "Access Key Id",
+                    "secretAccessKey.label": "Secret Access Key Id"
+                },
+                "validation.messages": {
+                    "requiredErrorMsg": "This field is required"
+                }
             }
         },
         "stateOfArkcase": {
@@ -1092,5 +1270,10 @@
                 "title": "Email templates"
             }
         }
+    },
+    "contextMenu.options": {
+        "restore": "Restore",
+        "delete" : "Delete",
+        "copyVariablePath": "Copy Variable Path"
     }
 }

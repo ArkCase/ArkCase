@@ -121,7 +121,7 @@
         </beans:bean>
 
         <beans:bean id="correspondenceServiceClass" class="java.lang.Class" factory-method="forName">
-            <beans:constructor-arg value="com.armedia.acm.correspondence.service.CorrespondenceService"/>
+            <beans:constructor-arg value="com.armedia.acm.correspondence.service.CorrespondenceServiceImpl"/>
         </beans:bean>
 
         <beans:bean id="correspondenceService" class="org.easymock.EasyMock" factory-method="createMock">

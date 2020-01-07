@@ -46,8 +46,8 @@ import com.armedia.acm.plugins.complaint.model.FindComplaintByIdEvent;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.security.core.Authentication;
@@ -59,7 +59,7 @@ import java.util.Date;
  */
 public class ComplaintEventPublisher implements ApplicationEventPublisherAware
 {
-    private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private transient final Logger log = LogManager.getLogger(getClass());
 
     private AcmDiffService acmDiffService;
     private ApplicationEventPublisher eventPublisher;
@@ -77,10 +77,11 @@ public class ComplaintEventPublisher implements ApplicationEventPublisherAware
         log.debug("Publishing a complaint event.");
 
         ComplaintPersistenceEvent complaintPersistenceEvent = isNewComplaint ? new ComplaintCreatedEvent(updatedComplaint)
-                : new ComplaintUpdatedEvent(updatedComplaint);
+                : new ComplaintUpdatedEvent(updatedComplaint, AuthenticationUtils.getUserIpAddress());
         complaintPersistenceEvent.setSucceeded(succeeded);
 
-        if (authentication.getDetails() != null && authentication.getDetails() instanceof AcmAuthenticationDetails)
+        if (authentication.getDetails() != null && authentication.getDetails() instanceof AcmAuthenticationDetails
+                && complaintPersistenceEvent instanceof ComplaintCreatedEvent)
         {
             complaintPersistenceEvent.setIpAddress(((AcmAuthenticationDetails) authentication.getDetails()).getRemoteAddress());
         }
@@ -123,7 +124,6 @@ public class ComplaintEventPublisher implements ApplicationEventPublisherAware
     public void publishFindComplaintByIdEvent(Complaint source, Authentication authentication, String ipAddress, boolean succeeded)
     {
         FindComplaintByIdEvent event = new FindComplaintByIdEvent(source);
-
         String user = authentication.getName();
         event.setUserId(user);
         event.setIpAddress(ipAddress);
@@ -134,7 +134,7 @@ public class ComplaintEventPublisher implements ApplicationEventPublisherAware
 
     public void publishComplaintClosedEvent(Complaint source, String userId, boolean succeeded, Date closeDate)
     {
-        ComplaintClosedEvent event = new ComplaintClosedEvent(source, succeeded, userId, closeDate);
+        ComplaintClosedEvent event = new ComplaintClosedEvent(source, succeeded, userId, closeDate, AuthenticationUtils.getUserIpAddress());
         eventPublisher.publishEvent(event);
     }
 
@@ -180,7 +180,7 @@ public class ComplaintEventPublisher implements ApplicationEventPublisherAware
 
     public void publishComplaintUpdated(Complaint in, String userId)
     {
-        ComplaintUpdatedEvent event = new ComplaintUpdatedEvent(in);
+        ComplaintUpdatedEvent event = new ComplaintUpdatedEvent(in, AuthenticationUtils.getUserIpAddress());
         event.setUserId(userId);
         eventPublisher.publishEvent(event);
     }

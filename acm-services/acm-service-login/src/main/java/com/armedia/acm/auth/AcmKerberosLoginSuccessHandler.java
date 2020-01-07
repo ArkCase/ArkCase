@@ -27,8 +27,8 @@ package com.armedia.acm.auth;
  * #L%
  */
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
@@ -48,7 +48,7 @@ import java.io.IOException;
  */
 public class AcmKerberosLoginSuccessHandler implements AuthenticationSuccessHandler
 {
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LogManager.getLogger(getClass());
 
     private AcmLoginSuccessOperations loginSuccessOperations;
 
