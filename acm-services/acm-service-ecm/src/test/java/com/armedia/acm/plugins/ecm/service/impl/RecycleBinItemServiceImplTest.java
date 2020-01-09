@@ -249,8 +249,8 @@ public class RecycleBinItemServiceImplTest extends EasyMockSupport
         Long recycleBinItemId = 141L;
         Long recycleBinFolderId = 1231L;
         RecycleBinItemDTO recycleBinItemDTO = new RecycleBinItemDTO();
-        recycleBinItemDTO.setSourceId(fileFromRecycleBinId);
-        recycleBinItemDTO.setSourceType(EcmFileConstants.OBJECT_FILE_TYPE);
+        recycleBinItemDTO.setObjectId(fileFromRecycleBinId);
+        recycleBinItemDTO.setObjectType(EcmFileConstants.OBJECT_FILE_TYPE);
         recycleBinItemDTO.setId(recycleBinItemId);
         List<RecycleBinItemDTO> itemsFromRecycleBin = new ArrayList<>();
         itemsFromRecycleBin.add(recycleBinItemDTO);
@@ -286,7 +286,7 @@ public class RecycleBinItemServiceImplTest extends EasyMockSupport
         expect(mockRecycleBinItemDao.removeItemFromRecycleBin(recycleBinItemId)).andReturn(recycleBinItem);
         expect(mockAcmFolderService.findContainerByFolderIdTransactionIndependent(recycleBinFolderId)).andReturn(container);
 
-        expect(mockEcmFileService.moveFile(recycleBinItemDTO.getSourceId(), container.getContainerObjectId(),
+        expect(mockEcmFileService.moveFile(recycleBinItemDTO.getObjectId(), container.getContainerObjectId(),
                 container.getContainerObjectType(), recycleBinItem.getSourceFolderId())).andReturn(fileToBeRestored);
 
         replayAll();
@@ -295,8 +295,8 @@ public class RecycleBinItemServiceImplTest extends EasyMockSupport
 
         verifyAll();
 
-        assertEquals(fileToBeRestored.getFileId(), restoredFiles.get(0).getSourceId());
+        assertEquals(fileToBeRestored.getFileId(), restoredFiles.get(0).getObjectId());
         assertEquals(fileToBeRestored.getFileExtension(), restoredFiles.get(0).getFileActiveVersionNameExtension());
-        assertEquals(fileToBeRestored.getFileName(), restoredFiles.get(0).getSourceName());
+        assertEquals(fileToBeRestored.getFileName(), restoredFiles.get(0).getObjectName());
     }
 }
