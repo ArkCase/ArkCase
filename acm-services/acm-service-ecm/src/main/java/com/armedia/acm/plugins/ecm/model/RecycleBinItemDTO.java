@@ -35,37 +35,36 @@ import java.util.Date;
 
 public class RecycleBinItemDTO
 {
-
-    private Long sourceId;
-    private String sourceName;
-    private String sourceType;
+    private Long id;
+    private Long objectId;
+    private String objectName;
+    private String objectType;
     private Date dateModified;
     private String fileActiveVersionNameExtension;
     private Long fileSizeBytes;
     private Long containerId;
     private String containerObjectTitle;
     private String containerObjectType;
-    private Long id;
 
     public RecycleBinItemDTO()
     {
 
     }
 
-    public RecycleBinItemDTO(Long sourceId, String sourceName, String sourceType, Date dateModified,
+    public RecycleBinItemDTO(Long objectId, String objectName, String objectType, Date dateModified,
             String fileActiveVersionNameExtension, Long fileSizeBytes,
             Long containerId, String containerObjectTitle, String containerObjectType, Long id)
     {
-        this.sourceId = sourceId;
-        this.sourceName = sourceName;
-        this.sourceType = sourceType;
+        this.id = id;
+        this.objectId = objectId;
+        this.objectName = objectName;
+        this.objectType = objectType;
         this.dateModified = dateModified;
         this.fileActiveVersionNameExtension = fileActiveVersionNameExtension;
         this.fileSizeBytes = fileSizeBytes;
         this.containerId = containerId;
         this.containerObjectTitle = containerObjectTitle;
         this.containerObjectType = containerObjectType;
-        this.id = id;
 
     }
 
@@ -79,34 +78,34 @@ public class RecycleBinItemDTO
         this.containerId = containerId;
     }
 
-    public Long getSourceId()
+    public Long getObjectId()
     {
-        return sourceId;
+        return objectId;
     }
 
-    public void setSourceId(Long sourceId)
+    public void setObjectId(Long objectId)
     {
-        this.sourceId = sourceId;
+        this.objectId = objectId;
     }
 
-    public String getSourceName()
+    public String getObjectName()
     {
-        return sourceName;
+        return objectName;
     }
 
-    public String getSourceType()
+    public String getObjectType()
     {
-        return sourceType;
+        return objectType;
     }
 
-    public void setSourceType(String sourceType)
+    public void setObjectType(String objectType)
     {
-        this.sourceType = sourceType;
+        this.objectType = objectType;
     }
 
-    public void setSourceName(String sourceName)
+    public void setObjectName(String objectName)
     {
-        this.sourceName = sourceName;
+        this.objectName = objectName;
     }
 
     public Date getDateModified()

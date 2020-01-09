@@ -149,17 +149,17 @@ public class RecycleBinItemServiceImpl implements RecycleBinItemService
             JSONObject recycleBinItem = getSearchResults().getDocuments(results).getJSONObject(i);
             RecycleBinItemDTO recycleBinItemDTO = new RecycleBinItemDTO();
 
-            recycleBinItemDTO.setSourceName(recycleBinItem.optString("object_name_s"));
-            recycleBinItemDTO.setSourceType(recycleBinItem.optString("object_item_type_s"));
+            recycleBinItemDTO.setObjectName(recycleBinItem.optString("object_name_s"));
+            recycleBinItemDTO.setObjectType(recycleBinItem.optString("object_item_type_s"));
             recycleBinItemDTO.setDateModified(generateDate(recycleBinItem.optString("modified_date_tdt")));
             recycleBinItemDTO.setFileSizeBytes(recycleBinItem.optLong("object_item_size_l"));
             recycleBinItemDTO.setFileActiveVersionNameExtension(recycleBinItem.optString("item_type_s"));
-            recycleBinItemDTO.setSourceId(recycleBinItem.optLong("object_id_i"));
+            recycleBinItemDTO.setObjectId(recycleBinItem.optLong("object_id_i"));
             recycleBinItemDTO.setContainerId(recycleBinItem.optLong("object_container_object_id_i"));
             recycleBinItemDTO.setContainerObjectTitle(recycleBinItem.optString("object_container_object_title_s"));
             recycleBinItemDTO.setContainerObjectType(recycleBinItem.optString("object_container_object_type_s"));
             recycleBinItemDTO.setId(recycleBinItem.optLong("item_id_i"));
-            if (recycleBinItemDTO.getSourceType().equals(AcmFolderConstants.OBJECT_FOLDER_TYPE))
+            if (recycleBinItemDTO.getObjectType().equals(AcmFolderConstants.OBJECT_FOLDER_TYPE))
             {
                 recycleBinItemDTO.setFileSizeBytes(null);
             }
@@ -193,19 +193,19 @@ public class RecycleBinItemServiceImpl implements RecycleBinItemService
 
             if (recycleBinItem.getSourceObjectType().equals(AcmFolderConstants.OBJECT_FOLDER_TYPE))
             {
-                AcmFolder acmFolder = getFolderService().findById(fileFromTrash.getSourceId());
+                AcmFolder acmFolder = getFolderService().findById(fileFromTrash.getObjectId());
                 AcmFolder destinationFolder = getFolderService().findById(recycleBinItem.getSourceFolderId());
                 getFolderService().moveFolder(acmFolder, destinationFolder);
 
             }
             else
             {
-                EcmFile ecmFile = getEcmFileDao().find(fileFromTrash.getSourceId());
+                EcmFile ecmFile = getEcmFileDao().find(fileFromTrash.getObjectId());
                 moveToCMISFolder(ecmFile, destinationContainer.getContainerObjectId(), destinationContainer.getContainerObjectType(),
                         recycleBinItem.getSourceFolderId());
             }
             removeItemFromRecycleBin(recycleBinItem.getId());
-            log.info("Item {} from Recycle Bin successfully restored, by user {}", fileFromTrash.getSourceId(), authentication.getName());
+            log.info("Item {} from Recycle Bin successfully restored, by user {}", fileFromTrash.getObjectId(), authentication.getName());
         }
 
         return itemsToBeRestored;
@@ -216,10 +216,10 @@ public class RecycleBinItemServiceImpl implements RecycleBinItemService
     public void deleteRecycleBinItemPermanently(RecycleBinItemDTO itemToDelete, Authentication authentication, String ipAddress)
             throws AcmObjectNotFoundException, AcmUserActionFailedException
     {
-        Long itemId = itemToDelete.getSourceId();
+        Long itemId = itemToDelete.getObjectId();
         Long recycleBinId = itemToDelete.getId();
 
-        if (itemToDelete.getSourceType().equals(AcmFolderConstants.OBJECT_FOLDER_TYPE))
+        if (itemToDelete.getObjectType().equals(AcmFolderConstants.OBJECT_FOLDER_TYPE))
         {
             AcmFolder source = getFolderService().findById(itemId);
 

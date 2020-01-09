@@ -138,7 +138,8 @@ public class DeleteFolderAPIController
         catch (AcmUserActionFailedException | AcmFolderException | AcmCreateObjectFailedException e)
         {
             getRecycleBinItemEventPublisher().publishFolderMovedToRecycleBinEvent(source, authentication, ipAddress, false);
-            log.error("Exception occurred while trying to move folder with id: [{}] to recycle bin", folderId, e);
+            log.error("Exception occurred while trying to move folder with id: [{}] to recycle bin, Reason [{}]", folderId,
+                    e.getMessage(), e);
             throw new AcmUserActionFailedException(AcmFolderConstants.USER_ACTION_MOVE_FOLDER, AcmFolderConstants.OBJECT_FOLDER_TYPE,
                     source.getId(), "Folder was not moved under " + RecycleBinConstants.OBJECT_TYPE + " successfully", e);
         }

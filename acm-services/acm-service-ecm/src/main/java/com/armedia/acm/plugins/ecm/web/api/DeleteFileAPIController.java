@@ -140,9 +140,9 @@ public class DeleteFileAPIController
         String ipAddress = (String) session.getAttribute(EcmFileConstants.IP_ADDRESS_ATTRIBUTE);
         for (RecycleBinItemDTO file : filesToBeDeleted)
         {
-            EcmFile source = getFileService().findById(file.getSourceId());
+            EcmFile source = getFileService().findById(file.getObjectId());
             getFileService().deleteFilePermanently(source.getId(), file.getId());
-            log.info("File with id: {} permanently deleted", file.getSourceId());
+            log.info("File with id: {} permanently deleted", file.getObjectId());
             getFileEventPublisher().publishFileDeletedEvent(source, authentication, ipAddress, true);
         }
     }

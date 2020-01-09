@@ -968,11 +968,11 @@
             "configurable": true,
             "columnDefs": [
                 {
-                    "name": "sourceName",
-                    "displayName": "admin.application.recycleBin.grid.fileName",
+                    "name": "objectName",
+                    "displayName": "admin.application.recycleBin.grid.objectName",
                     "visible": true,
                     "headerCellFilter": "translate",
-                    "cellTemplate": "<div context-menu='grid.appScope.contextmenuOptions(row)'>{{row.entity.sourceName}}</div>"
+                    "cellTemplate": "<div context-menu='grid.appScope.contextmenuOptions(row)'>{{row.entity.objectName}}</div>"
                 },
                 {
                     "name": "containerObjectTitle",
