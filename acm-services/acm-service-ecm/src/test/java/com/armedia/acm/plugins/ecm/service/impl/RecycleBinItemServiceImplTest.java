@@ -27,12 +27,24 @@ package com.armedia.acm.plugins.ecm.service.impl;
  * #L%
  */
 
+import static org.easymock.EasyMock.capture;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.expectLastCall;
+import static org.junit.Assert.assertEquals;
+
 import com.armedia.acm.plugins.ecm.dao.AcmContainerDao;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.dao.RecycleBinItemDao;
-import com.armedia.acm.plugins.ecm.model.*;
+import com.armedia.acm.plugins.ecm.model.AcmContainer;
+import com.armedia.acm.plugins.ecm.model.AcmFolder;
+import com.armedia.acm.plugins.ecm.model.EcmFile;
+import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
+import com.armedia.acm.plugins.ecm.model.RecycleBinConstants;
+import com.armedia.acm.plugins.ecm.model.RecycleBinItem;
+import com.armedia.acm.plugins.ecm.model.RecycleBinItemDTO;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.plugins.ecm.service.FileEventPublisher;
+
 import org.easymock.Capture;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
@@ -42,11 +54,6 @@ import org.springframework.security.core.Authentication;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static org.easymock.EasyMock.capture;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.expectLastCall;
-import static org.junit.Assert.assertEquals;
 
 /**
  * @author darko.dimitrievski
@@ -161,14 +168,90 @@ public class RecycleBinItemServiceImplTest extends EasyMockSupport
     }
 
     @Test
+    public void putFolderIntoRecycleBin() throws Exception
+    {
+        Long fileId = 500L;
+        String targetObjectType = RecycleBinConstants.OBJECT_TYPE;
+        Long targetObjectId = 42L;
+        Long sourceFolderId = 131L;
+        Long folderId = 514L;
+        Long destinationContainerId = 666L;
+        Long recycleBinItemId = 555L;
+        Long sourceContainerId = 1314L;
+
+        EcmFile toBeDeleted = new EcmFile();
+        toBeDeleted.setFileId(fileId);
+        AcmFolder folderToDelete = new AcmFolder();
+        folderToDelete.setId(sourceFolderId);
+        toBeDeleted.setFolder(folderToDelete);
+        folderToDelete.setCmisFolderId("sourceCmisFolderId");
+        folderToDelete.setCmisRepositoryId(EcmFileConstants.DEFAULT_CMIS_REPOSITORY_ID);
+        toBeDeleted.setVersionSeriesId("versionSeriesId");
+        toBeDeleted.setCmisRepositoryId(EcmFileConstants.DEFAULT_CMIS_REPOSITORY_ID);
+        AcmContainer sourceContainer = new AcmContainer();
+
+        AcmFolder parentFolder = new AcmFolder();
+        parentFolder.setId(564L);
+
+        folderToDelete.setParentFolder(parentFolder);
+
+        AcmFolder targetFolder = new AcmFolder();
+        targetFolder.setId(folderId);
+        targetFolder.setCmisFolderId("targetCmisFolderId");
+        targetFolder.setCmisRepositoryId("targetCmisRepositoryId");
+
+        sourceContainer.setId(sourceContainerId);
+        sourceContainer.setContainerObjectId(targetObjectId);
+        sourceContainer.setContainerObjectType(targetObjectType);
+        toBeDeleted.setContainer(sourceContainer);
+        sourceContainer.setFolder(folderToDelete);
+
+        List<AcmContainer> acmContainerList = new ArrayList<>();
+        acmContainerList.add(sourceContainer);
+
+        RecycleBinItem recycleBinItem = new RecycleBinItem();
+        recycleBinItem.setId(recycleBinItemId);
+        recycleBinItem.setSourceObjectId(destinationContainerId);
+        recycleBinItem.setSourceFolderId(folderId);
+        recycleBinItem.setSourceCmisRepositoryId(EcmFileConstants.DEFAULT_CMIS_REPOSITORY_ID);
+
+        AcmContainer destinationContainer = new AcmContainer();
+        destinationContainer.setId(destinationContainerId);
+        destinationContainer.setContainerObjectType(RecycleBinConstants.OBJECT_TYPE);
+        destinationContainer.setCmisRepositoryId(EcmFileConstants.DEFAULT_CMIS_REPOSITORY_ID);
+        destinationContainer.setFolder(targetFolder);
+
+        expect(mockRecycleBinItemDao.getContainerForRecycleBin(RecycleBinConstants.OBJECT_TYPE,
+                EcmFileConstants.DEFAULT_CMIS_REPOSITORY_ID)).andReturn(destinationContainer);
+
+        expect(mockAcmFolderService.findContainerByFolderIdTransactionIndependent(sourceFolderId)).andReturn(sourceContainer);
+
+        Capture<RecycleBinItem> saved = Capture.newInstance();
+        expect(mockRecycleBinItemDao.save(capture(saved))).andReturn(recycleBinItem);
+
+        expect(mockAcmFolderService.moveFolder(folderToDelete, targetFolder)).andReturn(folderToDelete);
+
+        expectLastCall();
+        replayAll();
+
+        RecycleBinItem deletedFolder = unit.putFolderIntoRecycleBin(folderToDelete);
+
+        verifyAll();
+
+        assertEquals(folderToDelete.getId(), deletedFolder.getSourceObjectId());
+        assertEquals(EcmFileConstants.DEFAULT_CMIS_REPOSITORY_ID, deletedFolder.getSourceCmisRepositoryId());
+    }
+
+    @Test
     public void restoreItemsFromRecycleBin() throws Exception
     {
         Long fileFromRecycleBinId = 231L;
         Long recycleBinItemId = 141L;
         Long recycleBinFolderId = 1231L;
         RecycleBinItemDTO recycleBinItemDTO = new RecycleBinItemDTO();
-        recycleBinItemDTO.setFileId(fileFromRecycleBinId);
-        recycleBinItemDTO.setRecycleBinItemId(recycleBinItemId);
+        recycleBinItemDTO.setSourceId(fileFromRecycleBinId);
+        recycleBinItemDTO.setSourceType(EcmFileConstants.OBJECT_FILE_TYPE);
+        recycleBinItemDTO.setId(recycleBinItemId);
         List<RecycleBinItemDTO> itemsFromRecycleBin = new ArrayList<>();
         itemsFromRecycleBin.add(recycleBinItemDTO);
 
@@ -176,6 +259,7 @@ public class RecycleBinItemServiceImplTest extends EasyMockSupport
         fileToBeRestored.setFileId(fileFromRecycleBinId);
         RecycleBinItem recycleBinItem = new RecycleBinItem();
         recycleBinItem.setId(recycleBinItemId);
+        recycleBinItem.setSourceObjectType(EcmFileConstants.OBJECT_FILE_TYPE);
         recycleBinItem.setSourceFolderId(recycleBinFolderId);
 
         Long containerId = 1314L;
@@ -202,7 +286,7 @@ public class RecycleBinItemServiceImplTest extends EasyMockSupport
         expect(mockRecycleBinItemDao.removeItemFromRecycleBin(recycleBinItemId)).andReturn(recycleBinItem);
         expect(mockAcmFolderService.findContainerByFolderIdTransactionIndependent(recycleBinFolderId)).andReturn(container);
 
-        expect(mockEcmFileService.moveFile(recycleBinItemDTO.getFileId(), container.getContainerObjectId(),
+        expect(mockEcmFileService.moveFile(recycleBinItemDTO.getSourceId(), container.getContainerObjectId(),
                 container.getContainerObjectType(), recycleBinItem.getSourceFolderId())).andReturn(fileToBeRestored);
 
         replayAll();
@@ -211,8 +295,8 @@ public class RecycleBinItemServiceImplTest extends EasyMockSupport
 
         verifyAll();
 
-        assertEquals(fileToBeRestored.getFileId(), restoredFiles.get(0).getFileId());
+        assertEquals(fileToBeRestored.getFileId(), restoredFiles.get(0).getSourceId());
         assertEquals(fileToBeRestored.getFileExtension(), restoredFiles.get(0).getFileActiveVersionNameExtension());
-        assertEquals(fileToBeRestored.getFileName(), restoredFiles.get(0).getFileName());
+        assertEquals(fileToBeRestored.getFileName(), restoredFiles.get(0).getSourceName());
     }
 }

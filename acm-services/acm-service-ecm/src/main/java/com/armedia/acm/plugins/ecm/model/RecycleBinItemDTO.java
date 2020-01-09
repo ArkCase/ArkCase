@@ -36,34 +36,36 @@ import java.util.Date;
 public class RecycleBinItemDTO
 {
 
-    private Long fileId;
-    private String fileName;
+    private Long sourceId;
+    private String sourceName;
+    private String sourceType;
     private Date dateModified;
     private String fileActiveVersionNameExtension;
     private Long fileSizeBytes;
     private Long containerId;
     private String containerObjectTitle;
     private String containerObjectType;
-    private Long recycleBinItemId;
+    private Long id;
 
     public RecycleBinItemDTO()
     {
 
     }
 
-    public RecycleBinItemDTO(Long fileId, String fileName, Date dateModified,
+    public RecycleBinItemDTO(Long sourceId, String sourceName, String sourceType, Date dateModified,
             String fileActiveVersionNameExtension, Long fileSizeBytes,
-            Long containerId, String containerObjectTitle, String containerObjectType, Long recycleBinItemId)
+            Long containerId, String containerObjectTitle, String containerObjectType, Long id)
     {
-        this.fileId = fileId;
-        this.fileName = fileName;
+        this.sourceId = sourceId;
+        this.sourceName = sourceName;
+        this.sourceType = sourceType;
         this.dateModified = dateModified;
         this.fileActiveVersionNameExtension = fileActiveVersionNameExtension;
         this.fileSizeBytes = fileSizeBytes;
         this.containerId = containerId;
         this.containerObjectTitle = containerObjectTitle;
         this.containerObjectType = containerObjectType;
-        this.recycleBinItemId = recycleBinItemId;
+        this.id = id;
 
     }
 
@@ -77,24 +79,34 @@ public class RecycleBinItemDTO
         this.containerId = containerId;
     }
 
-    public Long getFileId()
+    public Long getSourceId()
     {
-        return fileId;
+        return sourceId;
     }
 
-    public void setFileId(Long fileId)
+    public void setSourceId(Long sourceId)
     {
-        this.fileId = fileId;
+        this.sourceId = sourceId;
     }
 
-    public String getFileName()
+    public String getSourceName()
     {
-        return fileName;
+        return sourceName;
     }
 
-    public void setFileName(String fileName)
+    public String getSourceType()
     {
-        this.fileName = fileName;
+        return sourceType;
+    }
+
+    public void setSourceType(String sourceType)
+    {
+        this.sourceType = sourceType;
+    }
+
+    public void setSourceName(String sourceName)
+    {
+        this.sourceName = sourceName;
     }
 
     public Date getDateModified()
@@ -147,13 +159,13 @@ public class RecycleBinItemDTO
         this.containerObjectTitle = containerObjectTitle;
     }
 
-    public Long getRecycleBinItemId()
+    public Long getId()
     {
-        return recycleBinItemId;
+        return id;
     }
 
-    public void setRecycleBinItemId(Long recycleBinItemId)
+    public void setId(Long id)
     {
-        this.recycleBinItemId = recycleBinItemId;
+        this.id = id;
     }
 }

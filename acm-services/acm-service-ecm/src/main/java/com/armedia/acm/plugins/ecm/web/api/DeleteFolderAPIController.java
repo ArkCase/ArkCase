@@ -27,17 +27,21 @@ package com.armedia.acm.plugins.ecm.web.api;
  * #L%
  */
 
+import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
+import com.armedia.acm.plugins.ecm.exception.AcmFolderException;
 import com.armedia.acm.plugins.ecm.model.AcmDeletedFolderDto;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.AcmFolderConstants;
 import com.armedia.acm.plugins.ecm.model.DeleteFolderInfo;
+import com.armedia.acm.plugins.ecm.model.RecycleBinConstants;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.plugins.ecm.service.FolderEventPublisher;
+import com.armedia.acm.plugins.ecm.service.RecycleBinItemEventPublisher;
 
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -57,6 +61,7 @@ public class DeleteFolderAPIController
     private transient final Logger log = LogManager.getLogger(getClass());
     private AcmFolderService folderService;
     private FolderEventPublisher folderEventPublisher;
+    private RecycleBinItemEventPublisher recycleBinItemEventPublisher;
 
     @PreAuthorize("hasPermission(#folderId, 'FOLDER', 'write|group-write')")
     @RequestMapping(value = "/folder/{folderId}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -106,6 +111,39 @@ public class DeleteFolderAPIController
         return result;
     }
 
+    @PreAuthorize("hasPermission(#folderId, 'FOLDER', 'write|group-write')")
+    @RequestMapping(value = "/folder/deleteTemporary/{folderId}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public AcmDeletedFolderDto putFolderIntoRecycleBin(@PathVariable("folderId") Long folderId, Authentication authentication,
+            HttpSession session)
+            throws AcmUserActionFailedException
+    {
+        log.info("Folder with id: [{}] will be moved to recycle bin", folderId);
+
+        String ipAddress = (String) session.getAttribute(AcmFolderConstants.IP_ADDRESS_ATTRIBUTE);
+        AcmFolder source = getFolderService().findById(folderId);
+        try
+        {
+            getFolderService().putFolderIntoRecycleBin(folderId);
+
+            log.info("Folder with id: [{}] moved to Recycle Bin", folderId);
+            getRecycleBinItemEventPublisher().publishFolderMovedToRecycleBinEvent(source, authentication, ipAddress, false);
+            return prepareResult(AcmFolderConstants.SUCCESS_FOLDER_DELETE_MSG, folderId);
+        }
+        catch (AcmObjectNotFoundException e)
+        {
+            log.debug("Folder with id: [{}] not found in the DB", folderId);
+            return prepareResult(AcmFolderConstants.SUCCESS_FOLDER_DELETE_MSG, folderId);
+        }
+        catch (AcmUserActionFailedException | AcmFolderException | AcmCreateObjectFailedException e)
+        {
+            getRecycleBinItemEventPublisher().publishFolderMovedToRecycleBinEvent(source, authentication, ipAddress, false);
+            log.error("Exception occurred while trying to move folder with id: [{}] to recycle bin", folderId, e);
+            throw new AcmUserActionFailedException(AcmFolderConstants.USER_ACTION_MOVE_FOLDER, AcmFolderConstants.OBJECT_FOLDER_TYPE,
+                    source.getId(), "Folder was not moved under " + RecycleBinConstants.OBJECT_TYPE + " successfully", e);
+        }
+    }
+
     public FolderEventPublisher getFolderEventPublisher()
     {
         return folderEventPublisher;
@@ -124,5 +162,15 @@ public class DeleteFolderAPIController
     public void setFolderService(AcmFolderService folderService)
     {
         this.folderService = folderService;
+    }
+
+    public RecycleBinItemEventPublisher getRecycleBinItemEventPublisher()
+    {
+        return recycleBinItemEventPublisher;
+    }
+
+    public void setRecycleBinItemEventPublisher(RecycleBinItemEventPublisher recycleBinItemEventPublisher)
+    {
+        this.recycleBinItemEventPublisher = recycleBinItemEventPublisher;
     }
 }

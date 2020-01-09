@@ -32,7 +32,10 @@ import com.armedia.acm.plugins.ecm.dao.AcmContainerDao;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.dao.RecycleBinItemDao;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
+import com.armedia.acm.plugins.ecm.model.AcmFolder;
+import com.armedia.acm.plugins.ecm.model.AcmFolderConstants;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
+import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
 import com.armedia.acm.plugins.ecm.model.RecycleBinConstants;
 import com.armedia.acm.plugins.ecm.model.RecycleBinItem;
@@ -106,17 +109,17 @@ public class RecycleBinItemToSolrTransformer implements AcmObjectToSolrDocTransf
     {
         try
         {
-            EcmFile file = getEcmFileDao().find(in.getSourceObjectId());
             AcmContainer container = getFolderService().findContainerByFolderIdTransactionIndependent(in.getSourceFolderId());
-            if (file != null)
+
+            if (in.getSourceObjectType().equals(EcmFileConstants.OBJECT_FILE_TYPE))
             {
-                additionalProperties.put("object_name_s", file.getFileName());
-                additionalProperties.put("object_item_type_s", file.getObjectType());
-                additionalProperties.put("item_type_s", file.getFileActiveVersionNameExtension());
-                additionalProperties.put("object_item_size_l", getSizeBytes(file));
-                additionalProperties.put("object_folder_id_i", file.getFolder().getId());
-                additionalProperties.put("item_id_i", in.getId());
+                mapAdditionalFileProperties(additionalProperties, in.getSourceObjectId());
             }
+            else if (in.getSourceObjectType().equals(AcmFolderConstants.OBJECT_FOLDER_TYPE))
+            {
+                mapAdditionalFolderProperties(additionalProperties, in.getSourceObjectId());
+            }
+            additionalProperties.put("item_id_i", in.getId());
             additionalProperties.put("object_container_object_id_i", container.getId());
             additionalProperties.put("object_container_object_title_s", container.getContainerObjectTitle());
             additionalProperties.put("object_container_object_type_s", container.getContainerObjectType());
@@ -124,6 +127,33 @@ public class RecycleBinItemToSolrTransformer implements AcmObjectToSolrDocTransf
         catch (AcmObjectNotFoundException e)
         {
             log.error("Container with folder id: {} does not exists, reason {}  ", in.getSourceFolderId(), e.getMessage());
+        }
+    }
+
+    private void mapAdditionalFolderProperties(Map<String, Object> additionalProperties, Long folderId)
+    {
+        AcmFolder folder = getFolderService().findById(folderId);
+
+        if (folder != null)
+        {
+            additionalProperties.put("object_name_s", folder.getName());
+            additionalProperties.put("object_item_type_s", folder.getObjectType());
+            additionalProperties.put("item_type_s", folder.getObjectType());
+            additionalProperties.put("object_folder_id_i", folder.getParentFolder().getId());
+        }
+    }
+
+    private void mapAdditionalFileProperties(Map<String, Object> additionalProperties, Long fileId)
+    {
+        EcmFile file = getEcmFileDao().find(fileId);
+
+        if (file != null)
+        {
+            additionalProperties.put("object_name_s", file.getFileName());
+            additionalProperties.put("object_item_type_s", file.getObjectType());
+            additionalProperties.put("item_type_s", file.getFileActiveVersionNameExtension());
+            additionalProperties.put("object_item_size_l", getSizeBytes(file));
+            additionalProperties.put("object_folder_id_i", file.getFolder().getId());
         }
     }
 

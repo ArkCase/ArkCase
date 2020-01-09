@@ -33,7 +33,9 @@ package com.armedia.acm.plugins.ecm.service;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
+import com.armedia.acm.plugins.ecm.exception.AcmFolderException;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
+import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.RecycleBinDTO;
 import com.armedia.acm.plugins.ecm.model.RecycleBinItem;
@@ -77,6 +79,9 @@ public interface RecycleBinItemService
     RecycleBinItem putFileIntoRecycleBin(EcmFile ecmFile, Authentication authentication, HttpSession session) throws AcmUserActionFailedException, AcmObjectNotFoundException,
             AcmCreateObjectFailedException;
 
+    RecycleBinItem putFolderIntoRecycleBin(AcmFolder folder)
+            throws AcmUserActionFailedException, AcmObjectNotFoundException, AcmCreateObjectFailedException, AcmFolderException;
+
     /**
      * List all items from Recycle Bin
      *
@@ -101,7 +106,10 @@ public interface RecycleBinItemService
      * @throws  AcmUserActionFailedException, AcmObjectNotFoundException, AcmCreateObjectFailedException
      */
     List<RecycleBinItemDTO> restoreItemsFromRecycleBin(List<RecycleBinItemDTO> itemsToBeRestored, Authentication authentication)
-            throws AcmUserActionFailedException, AcmObjectNotFoundException, AcmCreateObjectFailedException;
+            throws AcmUserActionFailedException, AcmObjectNotFoundException, AcmCreateObjectFailedException, AcmFolderException;
+
+    void deleteRecycleBinItemPermanently(RecycleBinItemDTO recycleBinItemDTO, Authentication authentication, String ipAddress)
+            throws AcmObjectNotFoundException, AcmUserActionFailedException;
 
     /**
      *

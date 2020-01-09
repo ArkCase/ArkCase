@@ -34,8 +34,8 @@ angular.module('admin').factory('Admin.RecycleBinService', [ '$http', function($
 
     function removeItemsFromRecycleBin (filesToBeDeleted) {
         return $http({
-            method: 'POST',
-            url: 'api/latest/service/ecm/permanent',
+            method: 'DELETE',
+            url: 'api/latest/service/recycleBin',
             data: filesToBeDeleted,
             headers: {
                 "Content-Type": "application/json"
