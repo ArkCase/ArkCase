@@ -104,7 +104,7 @@ public class DeleteFileAPIController
     }
 
     @PreAuthorize("hasPermission(#objectId, 'FILE', 'write|group-write')")
-    @RequestMapping(value = "temporary/id/{fileId}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/file/deleteTemporary/{fileId}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public String putFileIntoRecycleBin(@PathVariable("fileId") Long objectId, Authentication authentication, HttpSession session)
             throws AcmUserActionFailedException, AcmCreateObjectFailedException, AcmAppErrorJsonMsg
@@ -140,9 +140,9 @@ public class DeleteFileAPIController
         String ipAddress = (String) session.getAttribute(EcmFileConstants.IP_ADDRESS_ATTRIBUTE);
         for (RecycleBinItemDTO file : filesToBeDeleted)
         {
-            EcmFile source = getFileService().findById(file.getFileId());
-            getFileService().deleteFilePermanently(source.getId(), file.getRecycleBinItemId());
-            log.info("File with id: {} permanently deleted", file.getFileId());
+            EcmFile source = getFileService().findById(file.getSourceId());
+            getFileService().deleteFilePermanently(source.getId(), file.getId());
+            log.info("File with id: {} permanently deleted", file.getSourceId());
             getFileEventPublisher().publishFileDeletedEvent(source, authentication, ipAddress, true);
         }
     }

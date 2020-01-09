@@ -968,11 +968,11 @@
             "configurable": true,
             "columnDefs": [
                 {
-                    "name": "fileName",
+                    "name": "sourceName",
                     "displayName": "admin.application.recycleBin.grid.fileName",
                     "visible": true,
                     "headerCellFilter": "translate",
-                    "cellTemplate": "<div context-menu='grid.appScope.contextmenuOptions(row)'>{{row.entity.fileName}}</div>"
+                    "cellTemplate": "<div context-menu='grid.appScope.contextmenuOptions(row)'>{{row.entity.sourceName}}</div>"
                 },
                 {
                     "name": "containerObjectTitle",
@@ -993,7 +993,7 @@
                     "displayName": "admin.application.recycleBin.grid.fileSizeBytes",
                     "visible": true,
                     "headerCellFilter": "translate",
-                    "cellTemplate": "<div context-menu='grid.appScope.contextmenuOptions(row)'>{{row.entity.fileSizeBytes}}</div>"
+                    "cellTemplate": "<div context-menu='grid.appScope.contextmenuOptions(row)'><span ng-if='row.entity.fileSizeBytes'>{{row.entity.fileSizeBytes}}</span> <span ng-if='row.entity.fileSizeBytes'>B</span></div>"
                 },
                 {
                     "name": "fileActiveVersionNameExtension",
