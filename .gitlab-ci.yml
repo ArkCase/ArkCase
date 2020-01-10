@@ -129,7 +129,7 @@ build_backend_develop:
     changes:
       #- .gitlab-ci.yaml
 
-deploy_server:
+.deploy_server:
   extends: .deploy_backend
   only:
     variables:
