@@ -1,32 +1,9 @@
+include:
+  - local: '.gitlab-ci-release.yml'
+
 variables:
   GIT_SSL_NO_VERIFY: "true"
   GIT_STRATEGY: fetch
-  
-  # Deploy Arkcase version on a target server Run Pipeline from web and set the following variables:
-  # ------------------------------------------------------------------------------------------------
-  # DEPLOY_SERVER: true 
-  # SERVER_IP: 10.60.24.40
-  # SSH_USER: ***REMOVED***
-  # SSH_PASSWORD: some_password
-  # ARKCASE_VERSION: 3.3.2-RC1
-  # ARKCASE_REPOSITORY: armedia.release
-  # ARKCASE_SERVICE_USER_NAME: arkuser
-  # ENVIRONMENT_NAME: Core Test
-  # ENVIRONMENT_URL: https://test.core.arkcase.com
-  
-  # Release Arkcase version
-  #RELEASE: true
-  RELEASE_SOURCE_BRANCH: develop
-  RELEASE_VERSION: 3.3.2-rc1
-  DEVELOP_NEW_VERSION: 3.3.3-SNAPSHOT
-  #Examples for release:
-  #RELEASE_SOURCE_BRANCH: arkcase_3.3.2-rc1
-  #RELEASE_VERSION: 3.3.2-rc2
-  #DEVELOP_NEW_VERSION:
-  #RELEASE_SOURCE_BRANCH: arkcase_3.3.2-rc2
-  #RELEASE_VERSION: 3.3.2-r1
-  #DEVELOP_NEW_VERSION:
-   
 
 image: arkcase-gitlab-ci:1.0.2
 
