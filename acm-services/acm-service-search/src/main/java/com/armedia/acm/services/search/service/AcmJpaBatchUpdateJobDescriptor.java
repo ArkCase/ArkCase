@@ -31,9 +31,11 @@ import com.armedia.acm.quartz.scheduler.AcmJobDescriptor;
 import com.armedia.acm.services.search.model.SearchConstants;
 import com.armedia.acm.spring.SpringContextHolder;
 
+import org.quartz.DisallowConcurrentExecution;
 import org.quartz.JobDataMap;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
+import org.quartz.PersistJobDataAfterExecution;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -43,6 +45,8 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+@DisallowConcurrentExecution
+@PersistJobDataAfterExecution
 public class AcmJpaBatchUpdateJobDescriptor extends AcmJobDescriptor
 {
     private AcmJpaBatchUpdateService jpaBatchUpdateService;
@@ -55,13 +59,11 @@ public class AcmJpaBatchUpdateJobDescriptor extends AcmJobDescriptor
     }
 
     @Override
-    public void executeJob(JobExecutionContext context) throws JobExecutionException
+    public void executeJob(JobExecutionContext context) throws InterruptedException
     {
         JobDataMap triggerDataMap = context.getTrigger().getJobDataMap();
         JobDataMap jobDataMap = context.getJobDetail().getJobDataMap();
 
-        try
-        {
             if (triggerDataMap != null && triggerDataMap.size() != 0)
             {
                 jpaBatchUpdateService.jpaBatchUpdate(triggerDataMap);
@@ -72,11 +74,6 @@ public class AcmJpaBatchUpdateJobDescriptor extends AcmJobDescriptor
             {
                 jpaBatchUpdateService.jpaBatchUpdate(jobDataMap);
             }
-        }
-        catch (InterruptedException e)
-        {
-            throw new JobExecutionException(e);
-        }
     }
 
     @Override

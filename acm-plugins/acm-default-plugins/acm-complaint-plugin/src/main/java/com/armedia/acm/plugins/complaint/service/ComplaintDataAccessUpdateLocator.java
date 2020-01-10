@@ -4,7 +4,7 @@ package com.armedia.acm.plugins.complaint.service;
  * #%L
  * ACM Default Plugin: Complaints
  * %%
- * Copyright (C) 2014 - 2018 ArkCase LLC
+ * Copyright (C) 2014 - 2019 ArkCase LLC
  * %%
  * This file is part of the ArkCase software. 
  * 

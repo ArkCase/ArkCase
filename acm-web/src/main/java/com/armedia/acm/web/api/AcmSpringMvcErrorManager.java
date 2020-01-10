@@ -1,5 +1,7 @@
 package com.armedia.acm.web.api;
 
+import com.armedia.acm.core.exceptions.AcmAccessControlException;
+
 /*-
  * #%L
  * ACM Shared Web Artifacts
@@ -29,7 +31,6 @@ package com.armedia.acm.web.api;
 
 import com.armedia.acm.core.exceptions.AcmAppErrorJsonMsg;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
-import com.armedia.acm.core.exceptions.AcmEncryptionBadKeyOrDataException;
 import com.armedia.acm.core.exceptions.AcmListObjectsFailedException;
 import com.armedia.acm.core.exceptions.AcmNotAuthorizedException;
 import com.armedia.acm.core.exceptions.AcmObjectLockException;
@@ -42,12 +43,13 @@ import com.armedia.acm.core.exceptions.AcmStateOfArkcaseGenerateReportException;
 import com.armedia.acm.core.exceptions.AcmUpdateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.core.exceptions.InvalidLookupException;
+import com.armedia.acm.crypto.exceptions.AcmEncryptionBadKeyOrDataException;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.AccessDeniedException;
@@ -116,6 +118,13 @@ public class AcmSpringMvcErrorManager
         sendResponse(HttpStatus.FORBIDDEN, response, e.getMessage());
     }
 
+    @ExceptionHandler(AcmAccessControlException.class)
+    public void handleAccessControl(HttpServletResponse response, AcmAccessControlException e)
+    {
+        log.error("Not Authorized: " + e.getMessage(), e);
+        sendResponse(HttpStatus.FORBIDDEN, response, e.getMessage());
+    }
+    
     @ExceptionHandler(AccessDeniedException.class)
     public void accessDeniedHandler(HttpServletResponse response, AccessDeniedException e)
     {

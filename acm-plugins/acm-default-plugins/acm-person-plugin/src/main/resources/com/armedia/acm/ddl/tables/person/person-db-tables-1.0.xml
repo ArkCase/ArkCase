@@ -756,4 +756,8 @@
         </addColumn>
     </changeSet>
 
+    <changeSet id="48-change_cm_year_issued_type_to_date" author="aleksandar.bujaroski">
+        <modifyDataType tableName="acm_identification" columnName="cm_year_issued" newDataType="DATE"/>
+    </changeSet>
+
 </databaseChangeLog>

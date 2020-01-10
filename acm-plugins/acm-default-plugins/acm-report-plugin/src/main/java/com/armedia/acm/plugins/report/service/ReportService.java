@@ -27,10 +27,9 @@ package com.armedia.acm.plugins.report.service;
  * #L%
  */
 
-import com.armedia.acm.core.exceptions.AcmEncryptionException;
+import com.armedia.acm.crypto.exceptions.AcmEncryptionException;
 import com.armedia.acm.plugins.report.model.Report;
 
-import org.mule.api.MuleException;
 import org.springframework.security.core.Authentication;
 
 import java.io.IOException;
@@ -43,35 +42,35 @@ import java.util.Map;
 public interface ReportService
 {
 
-    public List<Report> getPentahoReports() throws Exception, MuleException;
+    List<Report> getPentahoReports() throws Exception;
 
-    public List<Report> getAcmReports();
+    List<Report> getAcmReports();
 
-    public List<Report> getAcmReports(String userId);
+    List<Report> getAcmReports(String userId);
 
-    public Map<String, String> getAcmReportsAsMap(List<Report> reports);
+    Map<String, String> getAcmReportsAsMap(List<Report> reports);
 
-    public boolean saveReports(List<Report> reports) throws AcmEncryptionException;
+    boolean saveReports(List<Report> reports) throws AcmEncryptionException;
 
     public Map<String, List<String>> getReportToRolesMap();
 
-    public List<String> getReportToRoles(String sortDirection, Integer startRow, Integer maxRows, String filterName) throws IOException;
+    List<String> getReportToRoles(String sortDirection, Integer startRow, Integer maxRows, String filterName) throws IOException;
 
-    public List<String> getReportToRolesPaged(String sortDirection, Integer startRow, Integer maxRows) throws IOException;
+    List<String> getReportToRolesPaged(String sortDirection, Integer startRow, Integer maxRows) throws IOException;
 
-    public List<String> getReportToRolesByName(String sortDirection, Integer startRow, Integer maxRows, String filterQuery)
+    List<String> getReportToRolesByName(String sortDirection, Integer startRow, Integer maxRows, String filterQuery)
             throws IOException;
 
-    public boolean saveReportToRolesMap(Map<String, List<String>> reportToRolesMap, Authentication auth);
+    boolean saveReportToRolesMap(Map<String, List<String>> reportToRolesMap, Authentication auth);
 
-    public List<String> saveRolesToReport(String reportName, List<String> roles, Authentication auth) throws AcmEncryptionException;
+    public List<String> saveRolesToReport(String reportName, List<Object> roles, Authentication auth) throws AcmEncryptionException;
 
-    public List<String> removeRolesToReport(String reportName, List<String> roles, Authentication auth) throws Exception;
+    public List<Object> removeRolesToReport(String reportName, List<Object> roles, Authentication auth) throws Exception;
 
     public List<String> getRolesForReport(Boolean authorized, String reportId) throws AcmEncryptionException;
 
-    public List<Report> sync() throws Exception;
+    List<Report> sync() throws Exception;
 
-    public List<String> getRolesForReport(Boolean authorized, String reportId, int startRow, int maxRows, String sortBy, String sortDirection);
+    List<String> getRolesForReport(Boolean authorized, String reportId, int startRow, int maxRows, String sortBy, String sortDirection);
 
 }

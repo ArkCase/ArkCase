@@ -27,16 +27,15 @@ package com.armedia.acm.webdav;
  * #L%
  */
 
-import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
+import com.armedia.acm.camelcontext.context.CamelContextManager;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.EcmFileTransaction;
-import com.armedia.acm.plugins.ecm.utils.CmisConfigUtils;
 import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
 import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenService;
 
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -57,14 +56,13 @@ public class AcmFileSystemResourceFactory implements ResourceFactory
     private EcmFileDao fileDao;
     private EcmFileTransaction ecmFileTransaction;
     private FolderAndFilesUtils folderAndFilesUtils;
-    private MuleContextManager muleContextManager;
+    private CamelContextManager camelContextManager;
     private LockManager lockManager;
     private AcmWebDAVSecurityManager securityManager;
     private Long maxAgeSeconds;
     private String filterMapping;
     private Pattern fileExtensionPattern;
     private AuthenticationTokenService authenticationTokenService;
-    private CmisConfigUtils cmisConfigUtils;
     /**
      * A pattern to distinguish between a file URL and the URL that Microsoft Office sends for an OPTIONS request. An
      * ArkCase WebDAV file URL is assumed to end in (someNumber.someExtension), e.g., "134.docx". If a WebDAV URL does
@@ -205,16 +203,6 @@ public class AcmFileSystemResourceFactory implements ResourceFactory
         this.ecmFileTransaction = ecmFileTransaction;
     }
 
-    public MuleContextManager getMuleContextManager()
-    {
-        return muleContextManager;
-    }
-
-    public void setMuleContextManager(MuleContextManager muleContextManager)
-    {
-        this.muleContextManager = muleContextManager;
-    }
-
     public AuthenticationTokenService getAuthenticationTokenService()
     {
         return authenticationTokenService;
@@ -225,14 +213,14 @@ public class AcmFileSystemResourceFactory implements ResourceFactory
         this.authenticationTokenService = authenticationTokenService;
     }
 
-    public CmisConfigUtils getCmisConfigUtils()
+    public CamelContextManager getCamelContextManager()
     {
-        return cmisConfigUtils;
+        return camelContextManager;
     }
 
-    public void setCmisConfigUtils(CmisConfigUtils cmisConfigUtils)
+    public void setCamelContextManager(CamelContextManager camelContextManager)
     {
-        this.cmisConfigUtils = cmisConfigUtils;
+        this.camelContextManager = camelContextManager;
     }
 
     interface ResourceHandler
@@ -262,7 +250,7 @@ public class AcmFileSystemResourceFactory implements ResourceFactory
 
             log.trace("ecmFile exists? {}", ecmFile != null);
 
-            return new AcmFileResource(host, ecmFile, fileType, lockType, acmTicket, AcmFileSystemResourceFactory.this, cmisConfigUtils);
+            return new AcmFileResource(host, ecmFile, fileType, lockType, acmTicket, AcmFileSystemResourceFactory.this);
         }
     }
 }

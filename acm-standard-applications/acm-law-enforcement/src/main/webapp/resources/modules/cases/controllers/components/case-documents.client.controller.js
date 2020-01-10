@@ -130,10 +130,6 @@ angular.module('cases').controller(
                             }
                         });
 
-                        $scope.$bus.subscribe("zip_completed", function (data) {
-                            messageHandler.handleZipGenerationMessage(data.filePath);
-                        });
-
                         //$scope.treeControl.addCommandHandler({
                         //    name: "sample"
                         //    , onAllowCmd: function(nodes) {

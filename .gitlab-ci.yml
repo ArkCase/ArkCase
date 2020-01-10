@@ -1,11 +1,20 @@
+include:
+  - local: '.gitlab-ci-release.yml'
+
 variables:
   GIT_SSL_NO_VERIFY: "true"
-  GIT_STRATEGY: fetch
-  
+  GIT_STRATEGY: clone
+
 image: arkcase-gitlab-ci:1.0.2
 
 stages:
   - build
+  - deploy
+  - trigger
+  - restart
+  - release
+  - start_security_scan
+  - security_scan_results
   
 .build_backend_snapshot:
   stage: build
@@ -21,13 +30,292 @@ stages:
     - echo '  </servers>' >> /root/.m2/settings.xml
     - echo '</settings>' >> /root/.m2/settings.xml
     - export MAVEN_OPTS="-Xmx2048M -Xss256M -XX:MetaspaceSize=2048M -XX:+CMSClassUnloadingEnabled"
-    - mvn -DskipITs clean install
-    - sshpass -e sftp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null arkcase@fileshare.armedia.com <<< $'put acm-standard-applications/acm-law-enforcement/target/*.war /from-arkcase/arkcase-3.3.2.war' 
+    - mvn -DskipITs -T 4 -B deploy "-DaltDeploymentRepository=arkcase.snapshot::default::https://project.armedia.com/nexus/repository/arkcase.snapshot/"
+    - sshpass -e sftp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null arkcase@fileshare.armedia.com <<< $'put acm-standard-applications/acm-law-enforcement/target/*.war /from-arkcase/arkcase.war' 
  
+
+
+.build_frontend_snapshot:
+  stage: build
+  script:
+    - export MAVEN_OPTS="-Xmx2048M -Xss256M -XX:MetaspaceSize=2048M -XX:+CMSClassUnloadingEnabled"
+    - git clone git@gitlab.armedia.com:arkcase/arkcase-ui-core-app.git
+    - cd arkcase-ui-core-app
+    - git checkout experimental
+    # build ui-core variant
+    - /bin/cp -f $BUILD_CORE_ARTIFACTS_DIRECTORY/build.env ./.env
+    - /bin/cp -f $BUILD_CORE_ARTIFACTS_DIRECTORY/local*.js ./config/
+    - /bin/cp -f $BUILD_CORE_ARTIFACTS_DIRECTORY/default*.js ./config/
+    - npm install
+    - npm run convert
+    - npm run build:prod
+    - /bin/cp -f $BUILD_CORE_ARTIFACTS_DIRECTORY/pom.xml .
+    - /bin/cp -f $BUILD_CORE_ARTIFACTS_DIRECTORY/assembly.xml .
+    - mvn -B clean deploy "-DaltDeploymentRepository=arkcase.snapshot::default::https://project.armedia.com/nexus/repository/arkcase.snapshot/"
+    # build ui-foia variant
+    - /bin/cp -f $BUILD_FOIA_ARTIFACTS_DIRECTORY/build.env ./.env
+    - /bin/cp -f $BUILD_FOIA_ARTIFACTS_DIRECTORY/local*.js ./config/
+    - /bin/cp -f $BUILD_FOIA_ARTIFACTS_DIRECTORY/default*.js ./config/
+    - npm install
+    - npm run convert
+    - npm run build:prod
+    - /bin/cp -f $BUILD_FOIA_ARTIFACTS_DIRECTORY/pom.xml .
+    - /bin/cp -f $BUILD_FOIA_ARTIFACTS_DIRECTORY/assembly.xml .
+    - mvn -B clean deploy "-DaltDeploymentRepository=arkcase.snapshot::default::https://project.armedia.com/nexus/repository/arkcase.snapshot/"
+
+.build_artifact:
+  stage: build
+  script:
+    - mvn -DskipITs clean install
+  artifacts:
+    paths:
+      - target/*.war
+    
+.build_feature:
+  extends: .build_artifact
+  only:
+    - feature/*
+
+.deploy_backend:
+  stage: deploy
+  script:
+    # get arkcase.war version from Nexus
+    - mvn -B dependency:get -DremoteRepositories=http://project.armedia.com/nexus/repository/$ARKCASE_REPOSITORY -DgroupId=com.armedia.acm.acm-standard-applications -DartifactId=acm-law-enforcement -Dversion=$ARKCASE_VERSION -Dpackaging=war -Dtransitive=false
+    - mvn -B dependency:copy -Dartifact=com.armedia.acm.acm-standard-applications:acm-law-enforcement:$ARKCASE_VERSION:war -DoutputDirectory=.
+    - mv acm-law-enforcement-*.war arkcase.war
+    # copy artifacts to the environment
+    - export SSHPASS=$SSH_PASSWORD
+    - sshpass -e scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null arkcase.war $SSH_USER@$SERVER_IP:/home/$SSH_USER/
+    - sshpass -e ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $SSH_USER@$SERVER_IP "sudo cp /home/$SSH_USER/arkcase.war ~$ARKCASE_SERVICE_USER_NAME/ ; sudo chown $ARKCASE_SERVICE_USER_NAME:$ARKCASE_SERVICE_USER_NAME ~$ARKCASE_SERVICE_USER_NAME/arkcase.war"
+    # deploy files
+    - sshpass -e ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $SSH_USER@$SERVER_IP "sudo su -c \"bash ~$ARKCASE_SERVICE_USER_NAME/redeploy_acm_backend.sh\" $ARKCASE_SERVICE_USER_NAME"
+    # verify Arkcase is started
+    #- nslookup $CI_ENVIRONMENT_URL/
+    - wget --no-check-certificate $CI_ENVIRONMENT_URL/arkcase -O /dev/null
+    - ARKCASE_RESULT=$?
+    - if [ "$ARKCASE_RESULT" != "0" ]; then echo "ArkCase war did not start on the remote host $CI_ENVIRONMENT_URL/"; fi
+    - exit $ARKCASE_RESULT
+
+.deploy_frontend:
+  stage: deploy
+  script:
+    # download ui from Nexus
+    - mvn -B dependency:get -DremoteRepositories=http://project.armedia.com/nexus/repository/$ARKCASE_REPOSITORY -DgroupId=com.armedia.acm -DartifactId=$ARKCASE_UI_VARIANT -Dversion=$ARKCASE_VERSION -Dpackaging=zip -Dtransitive=false
+    - mvn -B dependency:copy -Dartifact=com.armedia.acm:$ARKCASE_UI_VARIANT:$ARKCASE_VERSION:zip -DoutputDirectory=.
+    - mv ui-*.zip ui.zip
+    # copy artifacts to the environment
+    - export SSHPASS=$SSH_PASSWORD
+    - sshpass -e scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ui.zip $SSH_USER@$SERVER_IP:/home/$SSH_USER/
+    - sshpass -e ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $SSH_USER@$SERVER_IP "sudo cp /home/$SSH_USER/ui.zip ~$ARKCASE_SERVICE_USER_NAME/ ; sudo chown $ARKCASE_SERVICE_USER_NAME:$ARKCASE_SERVICE_USER_NAME ~$ARKCASE_SERVICE_USER_NAME/ui.zip"
+    # deploy files
+    - sshpass -e ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $SSH_USER@$SERVER_IP "sudo su -c \"bash ~$ARKCASE_SERVICE_USER_NAME/redeploy_acm_frontend.sh\" $ARKCASE_SERVICE_USER_NAME"
 
 build_backend_develop:
   extends: .build_backend_snapshot
   only:
-    - release/3.3.2
+    - develop
+  except:
+    changes:
+      #- .gitlab-ci.yaml
 
+.build_frontend_develop:
+  extends: .build_frontend_snapshot
+  only:
+    - develop
+  variables:
+    BUILD_CORE_ARTIFACTS_DIRECTORY: ../acm-standard-applications/acm-law-enforcement/src/main/webapp/build
+    BUILD_FOIA_ARTIFACTS_DIRECTORY: ../acm-standard-applications/acm-foia/src/main/resources/build
+  except:
+    changes:
+      #- .gitlab-ci.yaml
 
+.deploy_server:
+  extends: .deploy_backend
+  only:
+    variables:
+      - $CI_PIPELINE_SOURCE == "web"
+      - $DEPLOY_SERVER
+  environment:
+    name: $ENVIRONMENT_NAME
+    url: $ENVIRONMENT_URL
+
+deploy_backend_core_dev:
+  stage: deploy
+  only:
+    - develop
+  except:
+    changes:
+      - .gitlab-ci.yaml
+  environment:
+    name: Dev Core
+    url: https://dev.core.arkcase.com
+  script:
+    - export SSHPASS=$ARKCASEMGMTSCV_PASSWORD
+    - export SSH_USER=loc.arkcasemgmtsvc
+    - export SERVER_IP=10.60.24.39
+    - sshpass -e ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $SSH_USER@$SERVER_IP "cd /etc/arkcase-install/arkcase-ce/vagrant/provisioning ; sudo ansible-playbook --connection=local -i 'localhost,' -e sftp_arkcase_password=$ARKCASE_SFTP_PASSWORD -e sftp_pentaho_password=$PENTAHO_SFTP_PASSWORD -e @dev-core-facts.yml arkcase-upgrade.yml"
+
+deploy_backend_foia_dev:
+  stage: deploy
+  only:
+    - develop
+  except:
+    changes:
+      - .gitlab-ci.yaml
+  environment:
+    name: Dev FOIA
+    url: https://dev.foia.arkcase.com
+  script:
+    - export SSHPASS=$ARKCASEMGMTSCV_PASSWORD
+    - export SSH_USER=loc.arkcasemgmtsvc
+    - export SERVER_IP=10.60.24.41
+    - sshpass -e ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $SSH_USER@$SERVER_IP "cd /etc/arkcase-install/arkcase-ce/vagrant/provisioning ; sudo ansible-playbook --connection=local -i 'localhost,' -e sftp_arkcase_password=$ARKCASE_SFTP_PASSWORD -e sftp_pentaho_password=$PENTAHO_SFTP_PASSWORD -e @dev-foia-facts.yml arkcase-foia-upgrade.yml"
+
+deploy_backend_bcgeu_dev:
+  extends: .deploy_backend
+  only:
+    - develop
+  except:
+    changes:
+      #- .gitlab-ci.yaml
+  environment:
+    name: Dev BCGEU
+    url: https://dev.bcgeu.arkcase.com
+  variables:
+    SERVER_IP: 10.60.30.34
+    SSH_USER: loc.arkcasemgmtsvc
+    SSH_PASSWORD: $ARKCASEMGMTSCV_PASSWORD
+    ARKCASE_VERSION: 3.3.3-SNAPSHOT
+    ARKCASE_REPOSITORY: arkcase.snapshot
+    ARKCASE_SERVICE_USER_NAME: arkuser
+    
+.trigger_bcgeu_develop_pipeline:
+  stage: trigger
+  only:
+    - develop
+  except:
+    changes:
+      #- .gitlab-ci.yaml
+  script:
+   # Tokens can be found and created on gitlab -> project -> Settings -> CI/CD -> Pipeline triggers
+   - curl -k -X POST -F token=aad47ac2d56cb4a15d1b2054f771c7 -F ref=webpack https://gitlab.armedia.com/api/v4/projects/381/trigger/pipeline
+   #- curl -k -X POST -F token=aad47ac2d56cb4a15d1b2054f771c7 -F ref=develop https://gitlab.armedia.com/api/v4/projects/381/trigger/pipeline
+            
+.deploy_frontend_core_dev:
+  extends: .deploy_frontend
+  only:
+    - develop
+  except:
+    changes:
+      #- .gitlab-ci.yaml
+  environment:
+    name: Dev Core
+    url: https://dev.core.arkcase.com
+  variables:
+    SERVER_IP: 10.60.24.39
+    SSH_USER: loc.arkcasemgmtsvc
+    SSH_PASSWORD: $ARKCASEMGMTSCV_PASSWORD
+    ARKCASE_VERSION: 3.3.3-SNAPSHOT
+    ARKCASE_REPOSITORY: arkcase.snapshot
+    ARKCASE_UI_VARIANT: ui-core
+    ARKCASE_SERVICE_USER_NAME: arkuser
+    
+.deploy_foia_dev:
+  extends: .deploy_backend
+  only:
+    - develop
+  except:
+    changes:
+      - .gitlab-ci.yaml
+  environment:
+    name: Dev FOIA
+    url: https://dev.foia.arkcase.com
+  variables:
+    SERVER_IP: 10.21.10.25
+    SSH_USER: loc.arkcasemgmtsvc
+    SSH_PASSWORD: $ARKCASEMGMTSCV_PASSWORD
+    ARKCASE_VERSION: 3.3.3-SNAPSHOT
+    ARKCASE_REPOSITORY: arkcase.snapshot
+    ARKCASE_UI_VARIANT: ui-foia
+    ARKCASE_SERVICE_USER_NAME: arkuser
+
+.start_security_scan:
+  stage: start_security_scan
+  only:
+    variables:
+      - $START_SECURITY_SCAN
+  script:
+    - wget https://github.com/brian1917/vcodeHMAC-CLI/releases/download/v1.0/vcodeHMAC-CLI_linux
+    - chmod 755 vcodeHMAC-CLI_linux
+    - touch credentials
+    - echo "[DEFAULT]" >> credendials
+    - echo "veracode_api_key_id = $VERACODE_API_KEY" >> credentials
+    - echo "veracode_api_key_secret = $VERACODE_API_SECRET" >> credentials
+    # get arkcase.war version from Nexus
+    - mvn -B dependency:get -DremoteRepositories=http://project.armedia.com/nexus/repository/$ARKCASE_REPOSITORY -DgroupId=com.armedia.acm.acm-standard-applications -DartifactId=acm-law-enforcement -Dversion=$ARKCASE_VERSION -Dpackaging=war -Dtransitive=false
+    - mvn -B dependency:copy -Dartifact=com.armedia.acm.acm-standard-applications:acm-law-enforcement:$ARKCASE_VERSION:war -DoutputDirectory=.
+    # Upload war
+    - 'curl -k --compressed -H "Authorization: $(./vcodeHMAC-CLI_linux -credsFile credentials -url https://analysiscenter.veracode.com/api/5.0/uploadfile.do -method POST)" https://analysiscenter.veracode.com/api/5.0/uploadfile.do -F "app_id=529559" -F "file=@acm-law-enforcement-$ARKCASE_VERSION.war"'
+    # Begin static scan
+    - 'curl -k --compressed -H "Authorization: $(./vcodeHMAC-CLI_linux -credsFile credentials -url https://analysiscenter.veracode.com/api/5.0/beginprescan.do -method POST)" https://analysiscenter.veracode.com/api/5.0/beginprescan.do -F "app_id=529559"'
+    # Start Software Composition Analysis
+    - curl -sSL https://download.sourceclear.com/ci.sh | sh
+
+start_security_scan_arkcase_snapshot:
+  extends: .start_security_scan
+  variables:
+    ARKCASE_VERSION: 3.3.3-SNAPSHOT
+    ARKCASE_REPOSITORY: arkcase.snapshot
+
+security_scan_results:
+  stage: security_scan_results
+  only:
+    variables:
+      - $SECURITY_SCAN_RESULTS
+  script:
+    - wget https://github.com/brian1917/vcodeHMAC-CLI/releases/download/v1.0/vcodeHMAC-CLI_linux
+    - chmod 755 vcodeHMAC-CLI_linux
+    - touch credentials
+    - echo "[DEFAULT]" >> credendials
+    - echo "veracode_api_key_id = $VERACODE_API_KEY" >> credentials
+    - echo "veracode_api_key_secret = $VERACODE_API_SECRET" >> credentials
+    # Get scan info
+    - 'BUILDINFO=$(curl -k --compressed -H "Authorization: $(./vcodeHMAC-CLI_linux -credsFile credentials -url https://analysiscenter.veracode.com/api/5.0/getbuildinfo.do -method POST)" https://analysiscenter.veracode.com/api/5.0/getbuildinfo.do -F "app_id=529559" 2>/dev/null)'
+    - BUILD_ID=$(grep -oPm1 "(?<=build_id=\")[^\"<]+" <<< "$BUILDINFO" | head -1)
+    # Get detailed report
+    - 'DETAILED_REPORT=$(curl -k --compressed -H "Authorization: $(./vcodeHMAC-CLI_linux -credsFile credentials -url https://analysiscenter.veracode.com/api/5.0/detailedreport.do?build_id=$BUILD_ID -method GET)" https://analysiscenter.veracode.com/api/5.0/detailedreport.do?build_id=$BUILD_ID 2>/dev/null)'
+    - SCAN_SCORE=$(grep -oPm1 "(?<=score=\")[^\"<]+" <<< "$DETAILED_REPORT" | head -1)
+    # Get detailed report as PDF
+    - 'curl -k --compressed -H "Authorization: $(./vcodeHMAC-CLI_linux -credsFile credentials -url https://analysiscenter.veracode.com/api/4.0/detailedreportpdf.do?build_id=$BUILD_ID -method GET)" https://analysiscenter.veracode.com/api/4.0/detailedreportpdf.do?build_id=$BUILD_ID > scan-report.pdf' 
+    # Send results via email
+    - echo 'set from = "veracode-scan@armedia.com"' >> ~/.muttrc
+    - echo 'set realname = "Veracode Scan"' >> ~/.muttrc
+    - echo 'set smtp_url = "smtp://relay.armedia.com:25"' >> ~/.muttrc
+    - echo 'set crypt_use_gpgme=no' >> ~/.muttrc
+    - echo 'set ssl_starttls = no' >> ~/.muttrc
+    - echo "Detailed scan result attached" | mutt -s "Veracode scan of Arkcase code on $(date +%m-%d-%y) finished with score $SCAN_SCORE" $EMAIL_ADDRESSES -a scan-report.pdf
+
+    
+.restart:
+  stage: restart
+  script:
+    # Connect to environment
+    # shutdown arkcase
+    # startup arkcase
+    # verify started
+    - not blank job
+  when: manual
+  
+release:
+  stage: release
+  only: 
+    variables:
+     - $RELEASE
+  script:
+    # create $RELEASE BRANCH
+    # update poms with new version $RELEASE_VERSION
+    # commit and push
+    # build the code and upload to Nexus
+    # deploy to test server ?
+    # update poms in develop branch to new SNAPSHOT version
+    - not blank job

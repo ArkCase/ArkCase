@@ -7,8 +7,7 @@ angular.module('directives').directive('dateTimePicker', ['moment', 'Util.DateSe
             property: '@',
             timeFormatDisabled: '@',
             datePickerId: '@',
-            afterSave : '&onAfterSave',
-            isRequired: '=?'
+            afterSave : '&onAfterSave'
         },
         link: function ($scope, element) {
             $scope.editable = false;
@@ -38,14 +37,17 @@ angular.module('directives').directive('dateTimePicker', ['moment', 'Util.DateSe
                     }
                     $scope.dateInPicker = UtilDateService.isoToDate($scope.today);
                 }
-                $scope.minYear = moment.utc($scope.dateInPicker).year() - 50;
+                $scope.minYear = 1900;
                 $scope.maxYear = moment.utc($scope.dateInPicker).year() + 1;
-            }
+            };
 
             $scope.setDate($scope.data);
 
             $scope.toggleEditable = function () {
                 $scope.editable = !$scope.editable;
+                if(!moment($(comboField).combodate("getValue")).isSame($scope.dateInPicker)){
+                    $(comboField).combodate('setValue', $scope.dateInPicker);
+                }
             };
 
             var comboField = element[0].children[1].firstElementChild;
@@ -78,7 +80,6 @@ angular.module('directives').directive('dateTimePicker', ['moment', 'Util.DateSe
             });
 
             $scope.saveDate = function () {
-                $scope.toggleEditable();
                 var editedDate = $(comboField).combodate('getValue', null);
                 if ($scope.timeFormatDisabled === "true") {
                     $scope.dateInPicker = moment(editedDate);
@@ -87,6 +88,7 @@ angular.module('directives').directive('dateTimePicker', ['moment', 'Util.DateSe
                     $scope.dateInPicker = moment(editedDate);
                     $scope.data = UtilDateService.dateToIsoDateTime($scope.dateInPicker);
                 }
+                $scope.toggleEditable();
             };
 
             $scope.cancel = function () {

@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.armedia</groupId>
     <artifactId>acm</artifactId>
-    <version>3.3.2</version>
+    <version>3.3.3-RC1</version>
     <packaging>pom</packaging>
     <name>ArkCase Case Management System</name>
     <description>Cloud-based case management system with a very nice UI</description>
@@ -32,6 +32,7 @@
         <apache-commons-lang3.version>3.5</apache-commons-lang3.version>
         <apache-commons-net.version>3.3</apache-commons-net.version>
         <apache-commons-vfs2.version>2.0</apache-commons-vfs2.version>
+        <apache-commons-text.version>1.6</apache-commons-text.version>
         <apache-httpcomponents-httpclient.version>4.5</apache-httpcomponents-httpclient.version>
         <apache-tika-parsers.version>1.16</apache-tika-parsers.version>
         <asm.version>5.0.3</asm.version>
@@ -39,7 +40,6 @@
         <barcode4j.version>2.1</barcode4j.version>
         <bouncycastle.version>1.54</bouncycastle.version>
         <c3p0.version>0.9.2.1</c3p0.version>
-        <camel.version>2.13.1</camel.version>
         <castor-xml.version>1.3.3</castor-xml.version>
         <chemistry.version>1.1.0</chemistry.version>
         <osgi.version>6.0.0</osgi.version>
@@ -47,7 +47,7 @@
         <docx4j.core>3.3.7</docx4j.core>
         <docx4j.export.fo>3.3.6</docx4j.export.fo>
         <drools.version>6.1.0.Final</drools.version>
-        <easymock.version>3.3.1</easymock.version>
+        <easymock.version>4.1</easymock.version>
         <easymock-extension.version>3.2</easymock-extension.version>
         <eclipselink-jpa.version>2.6.0</eclipselink-jpa.version>
         <ehcache.version>2.6.9</ehcache.version>
@@ -82,17 +82,17 @@
         <magic.matcher.version>0.1.2</magic.matcher.version>
         <mariadb.jdbc.version>2.2.6</mariadb.jdbc.version>
         <maven.checkstyle.plugin.version>2.15</maven.checkstyle.plugin.version>
-        <maven-jgitflow-plugin.version>1.0-m5.1</maven-jgitflow-plugin.version>
-        <milton.version>2.7.3.5</milton.version>
+	<gitflow-maven-plugin.version>1.14.0</gitflow-maven-plugin.version>
+	<milton.version>2.7.3.5</milton.version>
         <mockito.version>1.10.19</mockito.version>
-        <mule-cmis-connector.version>1.14.1</mule-cmis-connector.version>
-        <mule.version>3.9.0</mule.version>
         <mysql.version>5.1.35</mysql.version>
         <netty.version>4.1.7.Final</netty.version>
         <!-- by default spring.security.saml2.core uses opensaml version 2.6.1, which uses bouncycastle version 1.46, but we require version
             1.54 -->
         <opensaml.version>2.6.4</opensaml.version>
-        <org.apache.poi.version>3.17-beta1</org.apache.poi.version>
+        <org.apache.poi.version>3.17</org.apache.poi.version>
+        <com.itextpdf.version>5.5.10</com.itextpdf.version>
+        <net.sf.jtidy.version>r938</net.sf.jtidy.version>
         <org.json.version>20140107</org.json.version>
         <org.mvel.version>2.2.1.Final</org.mvel.version>
         <pdfbox.version>2.0.11</pdfbox.version>
@@ -103,7 +103,7 @@
         <reactor-spring.version>2.0.7.RELEASE</reactor-spring.version>
         <rome.version>1.0</rome.version>
         <slf4j.version>1.7.25</slf4j.version>
-        <solr-solrj.version>6.6.0</solr-solrj.version>
+        <solr-solrj.version>7.6.0</solr-solrj.version>
         <sonar.version>3.5.0.1254</sonar.version>
         <spring.integration.version>4.2.9.RELEASE</spring.integration.version>
         <spring.ldap.version>1.3.2.RELEASE</spring.ldap.version>
@@ -131,6 +131,17 @@
         <quartz.version>2.3.1</quartz.version>
         <jaudiotagger.version>2.0.3</jaudiotagger.version>
         <reflections.version>0.9.9</reflections.version>
+        <camel.spring.version>3.0.0-M3</camel.spring.version>
+        <camel.spi.version>3.0.0-M3</camel.spi.version>
+        <camel.core.version>3.0.0-M3</camel.core.version>
+        <camel.cmis.version>3.0.0-M3-rc2</camel.cmis.version>
+        <camel.support.version>3.0.0-M3</camel.support.version>
+        <camel.api.version>3.0.0-M3</camel.api.version>
+
+        <kryo.version>5.0.0-RC4</kryo.version>
+        <subzero.version>0.9</subzero.version>
+        <xsync-version>1.2</xsync-version>
+        <nimbusds.version>5.8</nimbusds.version>
     </properties>
     <organization>
         <name>ArkCase LLC</name>
@@ -196,28 +207,11 @@
             <id>repository.jboss.org-public</id>
             <url>https://repository.jboss.org/nexus/content/groups/public</url>
         </repository>
-        <repository>
-            <id>mulesoft-master</id>
-            <url>https://repository-master.mulesoft.org/nexus/content/groups/public/</url>
-        </repository>
         <!-- The Activiti repository -->
         <repository>
             <name>Activiti repository (hosted by Alfresco)</name>
             <id>Alfresco Maven Repository</id>
             <url>https://maven.alfresco.com/nexus/content/groups/public/</url>
-        </repository>
-        <!-- Mule repository -->
-        <repository>
-            <id>mulesoft-releases</id>
-            <name>MuleSoft Releases Repository</name>
-            <url>http://repository.mulesoft.org/nexus/content/repositories/releases/</url>
-            <layout>default</layout>
-        </repository>
-        <!-- needed for Mule since codehaus went belly-up -->
-        <repository>
-            <id>Camunda</id>
-            <name>Camunda mule deps host</name>
-            <url>https://app.camunda.com/nexus/content/repositories/public/</url>
         </repository>
         <repository>
             <id>milton-repo</id>
@@ -279,20 +273,13 @@
                 <artifactId>maven-war-plugin</artifactId>
                 <version>3.0.0</version>
                 <configuration>
+                    <webappDirectory>${project.build.directory}/arkcase</webappDirectory>
                     <archive>
                         <manifest>
                             <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
                             <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
                         </manifest>
                     </archive>
-                    <packagingExcludes>
-                        <!-- Exclude libraries needed for building acm-mule-module-cmis. These are only used in the Mule's Anypoint Studio. -->
-                        WEB-INF/lib/workbench-*.jar,
-                        WEB-INF/lib/runtime-*.jar,
-                        WEB-INF/lib/mule-devkit-*.jar,
-                        WEB-INF/lib/mule-module-devkit-*.jar,
-                        WEB-INF/lib/mail-1.4*.jar
-                    </packagingExcludes>
                 </configuration>
             </plugin>
             <plugin>
@@ -332,6 +319,7 @@
                     <compilerArgument>-Xlint:all</compilerArgument>
                     <showWarnings>true</showWarnings>
                     <showDeprecation>true</showDeprecation>
+                    <useIncrementalCompilation>false</useIncrementalCompilation>
                 </configuration>
                 <executions>
                     <execution>
@@ -359,35 +347,12 @@
                 </executions>
             </plugin>
             <plugin>
-                <groupId>external.atlassian.jgitflow</groupId>
-                <artifactId>jgitflow-maven-plugin</artifactId>
-                <version>${maven-jgitflow-plugin.version}</version>
+                <groupId>com.amashchenko.maven.plugin</groupId>
+                <artifactId>gitflow-maven-plugin</artifactId>
+                <version>${gitflow-maven-plugin.version}</version>
                 <configuration>
-                    <flowInitContext>
-                        <versionTagPrefix>acm</versionTagPrefix>
-                    </flowInitContext>
-                    <autoVersionSubmodules>true</autoVersionSubmodules>
-                    <keepBranch>false</keepBranch>
-                    <pushReleases>true</pushReleases>
-                    <allowUntracked>true</allowUntracked>
+                    <!-- optional configuration -->
                 </configuration>
-                <executions>
-                    <execution>
-                        <id>feature-branches</id>
-                        <goals>
-                            <goal>feature-start</goal>
-                        </goals>
-                        <configuration>
-                            <allowSnapshots>true</allowSnapshots>
-                            <allowUntracked>true</allowUntracked>
-                            <enableFeatureVersions>false</enableFeatureVersions>
-                            <flowInitContext>
-                                <featureBranchPrefix>feature-</featureBranchPrefix>
-                            </flowInitContext>
-                            <pushFeatures>true</pushFeatures>
-                        </configuration>
-                    </execution>
-                </executions>
             </plugin>
             <!-- code quality section -->
             <plugin>
@@ -850,191 +815,6 @@
                 <artifactId>asm</artifactId>
                 <version>${asm.version}</version>
             </dependency>
-            <!-- mule -->
-            <dependency>
-                <groupId>org.mule</groupId>
-                <artifactId>mule-core</artifactId>
-                <version>${mule.version}</version>
-                <scope>compile</scope>
-                <!-- exclude commons-lang 2.4 since it has a memory leak; force use of commons-lang 2.6 by specific dependency -->
-                <exclusions>
-                    <exclusion>
-                        <groupId>commons-lang</groupId>
-                        <artifactId>commons-lang</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>org.mvel</groupId>
-                        <artifactId>mvel2</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>asm</groupId>
-                        <artifactId>asm</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>asm</groupId>
-                        <artifactId>asm-commons</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>asm</groupId>
-                        <artifactId>asm-tree</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>org.apache.logging.log4j</groupId>
-                        <artifactId>log4j-slf4j-impl</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>org.apache.logging.log4j</groupId>
-                        <artifactId>log4j-api</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>org.apache.logging.log4j</groupId>
-                        <artifactId>log4j-1.2-api</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>org.apache.logging.log4j</groupId>
-                        <artifactId>log4j-jcl</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>org.apache.logging.log4j</groupId>
-                        <artifactId>log4j-jul</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>org.slf4j</groupId>
-                        <artifactId>jcl-over-slf4j</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
-            <dependency>
-                <groupId>org.mule.modules</groupId>
-                <artifactId>mule-module-client</artifactId>
-                <version>${mule.version}</version>
-                <scope>compile</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.mule.modules</groupId>
-                <artifactId>mule-module-http</artifactId>
-                <version>${mule.version}</version>
-                <scope>runtime</scope>
-                <exclusions>
-                    <exclusion>
-                        <groupId>javax.mail</groupId>
-                        <artifactId>mail</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
-            <dependency>
-                <groupId>org.mule.modules</groupId>
-                <artifactId>mule-module-spring-config</artifactId>
-                <version>${mule.version}</version>
-                <scope>compile</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.mule.transports</groupId>
-                <artifactId>mule-transport-vm</artifactId>
-                <version>${mule.version}</version>
-                <scope>runtime</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.mule.transports</groupId>
-                <artifactId>mule-transport-file</artifactId>
-                <version>${mule.version}</version>
-                <scope>runtime</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.mule.transports</groupId>
-                <artifactId>mule-transport-email</artifactId>
-                <version>${mule.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>javax.mail</groupId>
-                        <artifactId>mail</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
-            <dependency>
-                <groupId>org.mule.transports</groupId>
-                <artifactId>mule-transport-http</artifactId>
-                <version>${mule.version}</version>
-                <scope>runtime</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.mule.transports</groupId>
-                <artifactId>mule-transport-jms</artifactId>
-                <version>${mule.version}</version>
-                <scope>runtime</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.mule.modules</groupId>
-                <artifactId>mule-module-management</artifactId>
-                <version>${mule.version}</version>
-                <scope>runtime</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.mule.modules</groupId>
-                <artifactId>mule-module-ognl</artifactId>
-                <version>${mule.version}</version>
-                <scope>runtime</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.mule.modules</groupId>
-                <artifactId>mule-module-scripting</artifactId>
-                <version>${mule.version}</version>
-                <scope>runtime</scope>
-                <exclusions>
-                    <exclusion>
-                        <groupId>org.springframework</groupId>
-                        <artifactId>spring-aop</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>org.python</groupId>
-                        <artifactId>jython-standalone</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>org.jruby</groupId>
-                        <artifactId>jruby-core</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
-            <dependency>
-                <groupId>org.mule.modules</groupId>
-                <artifactId>mule-module-xml</artifactId>
-                <version>${mule.version}</version>
-                <scope>runtime</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.mule.modules</groupId>
-                <artifactId>mule-module-json</artifactId>
-                <version>${mule.version}</version>
-                <scope>runtime</scope>
-                <exclusions>
-                    <exclusion>
-                        <groupId>javax.mail</groupId>
-                        <artifactId>mail</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
-            <dependency>
-                <groupId>org.mule.modules</groupId>
-                <artifactId>mule-module-annotations</artifactId>
-                <version>${mule.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.mule.modules</groupId>
-                <artifactId>mule-module-devkit-support</artifactId>
-                <version>${mule.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>oauth.signpost</groupId>
-                        <artifactId>signpost-core</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
-            <dependency>
-                <groupId>org.mule.tools.devkit</groupId>
-                <artifactId>mule-devkit-annotations</artifactId>
-                <version>${mule.version}</version>
-            </dependency>
-            <!-- end of mule -->
             <!-- chemistry -->
             <dependency>
                 <groupId>org.apache.chemistry.opencmis</groupId>
@@ -1074,14 +854,40 @@
             <!-- camel -->
             <dependency>
                 <groupId>org.apache.camel</groupId>
-                <artifactId>camel-core</artifactId>
-                <version>${camel.version}</version>
+                <artifactId>camel-spring-boot-starter</artifactId>
+                <version>${camel.spring.version}</version>
             </dependency>
+
             <dependency>
                 <groupId>org.apache.camel</groupId>
-                <artifactId>camel-spring</artifactId>
-                <version>${camel.version}</version>
+                <artifactId>spi-annotations</artifactId>
+                <version>${camel.spi.version}</version>
             </dependency>
+
+            <dependency>
+                <groupId>org.apache.camel</groupId>
+                <artifactId>camel-core</artifactId>
+                <version>${camel.core.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.camel</groupId>
+                <artifactId>camel-api</artifactId>
+                <version>${camel.api.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.camel</groupId>
+                <artifactId>camel-support</artifactId>
+                <version>${camel.support.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.camel</groupId>
+                <artifactId>camel-cmis-arkcase</artifactId>
+                <version>${camel.cmis.version}</version>
+            </dependency>
+
             <!-- apache libraries -->
             <dependency>
                 <groupId>org.apache.commons</groupId>
@@ -1137,6 +943,11 @@
                 <groupId>commons-net</groupId>
                 <artifactId>commons-net</artifactId>
                 <version>${apache-commons-net.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-text</artifactId>
+                <version>${apache-commons-text.version}</version>
             </dependency>
             <!-- json -->
             <dependency>
@@ -1631,37 +1442,51 @@
                 <artifactId>hazelcast-wm</artifactId>
                 <version>3.8.3</version>
             </dependency>
+            <!-- Kryo Serialization -->
+            <dependency>
+                <groupId>com.esotericsoftware</groupId>
+                <artifactId>kryo</artifactId>
+                <version>${kryo.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>info.jerrinot</groupId>
+                <artifactId>subzero-all</artifactId>
+                <version>${subzero.version}</version>
+            </dependency>
             <!-- PDF Converter dependencies -->
             <dependency>
                 <groupId>com.itextpdf</groupId>
                 <artifactId>itextpdf</artifactId>
-                <version>5.5.10</version>
+                <version>${com.itextpdf.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.itextpdf.tool</groupId>
                 <artifactId>xmlworker</artifactId>
-                <version>5.5.10</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.poi</groupId>
-                <artifactId>poi</artifactId>
-                <version>4.1.0</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.poi</groupId>
-                <artifactId>poi-scratchpad</artifactId>
-                <version>4.1.0</version>
+                <version>${com.itextpdf.version}</version>
             </dependency>
             <dependency>
                 <groupId>net.sf.jtidy</groupId>
                 <artifactId>jtidy</artifactId>
-                <version>r938</version>
+                <version>${net.sf.jtidy.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.reflections</groupId>
                 <artifactId>reflections</artifactId>
                 <version>${reflections.version}</version>
             </dependency>
+            <dependency>
+                <groupId>com.nimbusds</groupId>
+                <artifactId>nimbus-jose-jwt</artifactId>
+                <version>${nimbusds.version}</version>
+            </dependency>
+
+            <!-- concurrency -->
+            <dependency>
+                <groupId>com.antkorwin</groupId>
+                <artifactId>xsync</artifactId>
+                <version>${xsync-version}</version>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
     <dependencies>

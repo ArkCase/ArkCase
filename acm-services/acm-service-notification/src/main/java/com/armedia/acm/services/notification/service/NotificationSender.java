@@ -20,6 +20,7 @@ import com.armedia.acm.services.email.service.AcmEmailSenderService;
 import com.armedia.acm.services.email.service.AcmMailTemplateConfigurationService;
 import com.armedia.acm.services.email.service.TemplatingEngine;
 import com.armedia.acm.services.notification.model.Notification;
+import com.armedia.acm.services.notification.model.NotificationConfig;
 import com.armedia.acm.services.notification.model.NotificationConstants;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
@@ -86,6 +87,7 @@ public abstract class NotificationSender
     private AcmDataService dataService;
     private TemplatingEngine templatingEngine;
     private AcmMailTemplateConfigurationService templateService;
+    private NotificationConfig notificationConfig;
 
     /**
      * Sends the notification to user's email. If successful, sets the notification state to
@@ -186,8 +188,10 @@ public abstract class NotificationSender
     private void setupDefaultTemplateAndBody(Notification notification, EmailWithAttachmentsDTO in)
     {
         in.setTemplate(notificationTemplate);
-        String notificationLink = notificationUtils.buildNotificationLink(notification.getParentType(), notification.getParentId(),
+        String relativeNotificationLink = notificationUtils.buildNotificationLink(notification.getParentType(), notification.getParentId(),
                 notification.getRelatedObjectType(), notification.getRelatedObjectId());
+        String baseUrl = notificationConfig.getBaseUrl();
+        String notificationLink = String.format("%s%s", baseUrl, relativeNotificationLink);
 
         String messageBody = notificationLink != null ? String.format("%s Link: %s", notification.getNote(), notificationLink)
                 : notification.getNote();
@@ -292,6 +296,16 @@ public abstract class NotificationSender
     public TemplatingEngine getTemplatingEngine()
     {
         return templatingEngine;
+    }
+
+    public NotificationConfig getNotificationConfig()
+    {
+        return notificationConfig;
+    }
+
+    public void setNotificationConfig(NotificationConfig notificationConfig)
+    {
+        this.notificationConfig = notificationConfig;
     }
 
     public void setTemplatingEngine(TemplatingEngine templatingEngine)

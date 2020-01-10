@@ -45,12 +45,24 @@ import com.armedia.acm.portalgateway.service.PortalUserServiceProvider;
 import com.armedia.acm.services.email.model.EmailBodyBuilder;
 import com.armedia.acm.services.email.model.EmailBuilder;
 import com.armedia.acm.services.email.service.AcmEmailSenderService;
-import com.armedia.acm.services.users.model.ldap.AcmLdapActionFailedException;
+import com.armedia.acm.services.notification.dao.NotificationDao;
+import com.armedia.acm.services.notification.model.Notification;
+import com.armedia.acm.services.users.dao.UserDao;
+import com.armedia.acm.services.users.model.AcmUser;
+import com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig;
 import com.armedia.acm.services.users.model.ldap.UserDTO;
 import com.armedia.acm.services.users.service.ldap.LdapUserService;
+import com.armedia.acm.spring.SpringContextHolder;
 
+import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Base64Utils;
+
+import javax.naming.AuthenticationException;
 
 import java.nio.charset.Charset;
 import java.util.Arrays;
@@ -65,8 +77,6 @@ import gov.foia.model.PortalFOIAPerson;
 import gov.foia.model.UserRegistrationRequestRecord;
 import gov.foia.model.UserResetRequestRecord;
 
-import javax.naming.AuthenticationException;
-
 /**
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Jul 12, 2018
  *
@@ -75,6 +85,8 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
 {
 
     public static final int REGISTRATION_EXPIRATION = 24 * 60 * 60 * 1000;
+
+    private Logger log = LogManager.getLogger(getClass());
 
     private AcmEmailSenderService emailSenderService;
 
@@ -99,7 +111,11 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
     @Value("${foia.portalserviceprovider.directory.name}")
     private String directoryName;
 
-    private FOIALdapAuthenticationService ldapAuthenticateService;
+    private NotificationDao notificationDao;
+
+    private UserDao userDao;
+
+    private SpringContextHolder acmContextHolder;
 
     /*
      * (non-Javadoc)
@@ -134,8 +150,18 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
 
                 registrationDao.save(record);
 
-                sendEmail(registrationRequest.getEmailAddress(), "Request registration", registrationRequestEmailTemplate,
-                        registrationRequest.getRegistrationUrl(), registrationKey);
+                String registrationLink = new String(Base64Utils.decodeFromString(registrationRequest.getRegistrationUrl()),
+                        Charset.forName("UTF-8")) + "/" + registrationKey;
+
+                Notification notification = new Notification();
+                notification.setTemplateModelName("portalRequestRegistrationLink");
+                notification.setTitle("Web Portal Registration");
+                notification.setCreator(registrationRequest.getEmailAddress());
+                notification.setNote(registrationLink);
+                notification.setEmailAddresses(registrationRequest.getEmailAddress());
+                notification.setUser(SecurityContextHolder.getContext().getAuthentication().getName());
+
+                getNotificationDao().save(notification);
 
                 return UserRegistrationResponse.requestAccepted();
             }
@@ -159,13 +185,13 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
     public UserRegistrationResponse checkRegistrationStatus(String portalId, String registrationId)
     {
         Optional<UserRegistrationRequestRecord> registrationRecord = registrationDao.findByRegistrationId(registrationId);
-        String emailAddress = registrationRecord.get().getEmailAddress();
         if (!registrationRecord.isPresent())
         {
             return UserRegistrationResponse.requestRequired();
         }
         else
         {
+            String emailAddress = registrationRecord.get().getEmailAddress();
             if (registrationRecord.get().getRegistrationTime() + REGISTRATION_EXPIRATION > System.currentTimeMillis())
             {
                 return UserRegistrationResponse.pending(emailAddress);
@@ -183,16 +209,17 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
      * java.lang.String, com.armedia.acm.portalgateway.model.PortalUser, java.lang.String)
      */
     @Override
+    @Transactional
     public UserRegistrationResponse registerUser(String portalId, String registrationId, PortalUser user, String password)
             throws PortalUserServiceException
     {
         String key = user.getEmail();
         Optional<UserRegistrationRequestRecord> registrationRecord = registrationDao.findByRegistrationId(registrationId);
-        Optional<PortalFOIAPerson> registeredPedrson = portalPersonDao.findByEmail(key);
+        Optional<PortalFOIAPerson> registeredPerson = portalPersonDao.findByEmail(key);
 
-        if (registeredPedrson.isPresent() && registeredPedrson.get().getPortalRoles().containsKey(portalId))
+        if (registeredPerson.isPresent() && registeredPerson.get().getPortalRoles().containsKey(portalId))
         {
-            if (registeredPedrson.get().getPortalRoles().get(portalId).equals(PortalUser.REJECTED_USER))
+            if (registeredPerson.get().getPortalRoles().get(portalId).equals(PortalUser.REJECTED_USER))
             {
                 return UserRegistrationResponse.rejected();
             }
@@ -222,9 +249,9 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
                 else
                 {
                     PortalFOIAPerson person;
-                    if (registeredPedrson.isPresent())
+                    if (registeredPerson.isPresent())
                     {
-                        person = registeredPedrson.get();
+                        person = registeredPerson.get();
                         person.getPortalRoles().put(portalId, PortalUser.PENDING_USER);
                     }
                     else
@@ -242,12 +269,12 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
                         portalPersonDao.save(person);
                         ldapUserService.createLdapUser(userDto, directoryName);
                     }
-                    catch (AcmUserActionFailedException | AcmLdapActionFailedException e)
+                    catch (Exception e)
                     {
+                        log.debug(e.getMessage(), e);
                         throw new PortalUserServiceException(String.format("Couldn't create LDAP user for %s", user.getEmail()), e);
                     }
 
-                    registrationDao.delete(record);
                     return UserRegistrationResponse.accepted();
                 }
             }
@@ -273,13 +300,43 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
         {
             throw new PortalUserServiceException(String.format("User %s doesn't exist!", username));
         }
-        else if (!ldapAuthenticateService.authenticate(username, password))
-        {
-            throw new PortalUserServiceException(String.format("User %s provided wrong password!", username));
-        }
         else
         {
-            return portaluserFromPortalPerson(portalId, portalUser.get());
+            AcmUser portalAcmUser = getPortalAcmUser(username);
+            AcmLdapSyncConfig ldapSyncConfig = getLdapSyncConfig(directoryName);
+            String ldapUserId = StringUtils.substringBeforeLast(portalAcmUser.getUserId(), "@");
+
+            if (ldapSyncConfig != null)
+            {
+                if (ldapSyncConfig.getUserIdAttributeName().equals("uid"))
+                {
+                    ldapUserId = portalAcmUser.getUid();
+                }
+                else if (ldapSyncConfig.getUserIdAttributeName().equals("sAMAccountName"))
+                {
+                    ldapUserId = portalAcmUser.getsAMAccountName();
+                }
+            }
+
+            FOIALdapAuthenticationService ldapAuthenticateService = getLdapAuthenticateService(directoryName);
+            if (ldapAuthenticateService == null)
+            {
+                log.debug("LDAP authentication service problem");
+                throw new PortalUserServiceException(
+                        String.format("LDAP authentication service problem!"));
+            }
+            if (!ldapAuthenticateService.authenticate(ldapUserId, password))
+            {
+                log.debug("User %s provided wrong password!", portalAcmUser.getMail());
+                throw new PortalUserServiceException(
+                        String.format("User %s provided wrong password!", portalAcmUser.getMail()));
+            }
+            else
+            {
+                PortalUser portalUserAuthenticated = portaluserFromPortalPerson(portalId, portalUser.get());
+                portalUserAuthenticated.setAcmUserId(portalAcmUser.getUserId());
+                return portalUserAuthenticated;
+            }
         }
     }
 
@@ -311,8 +368,18 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
 
             resetDao.save(record);
 
-            sendEmail(resetRequest.getEmailAddress(), "Request password reset", passwordResetRequestEmailTemplate,
-                    resetRequest.getResetUrl(), resetKey);
+            String resetLink = new String(Base64Utils.decodeFromString(resetRequest.getResetUrl()), Charset.forName("UTF-8")) + "/"
+                    + resetKey;
+
+            Notification notification = new Notification();
+            notification.setTemplateModelName("portalPasswordResetRequestLink");
+            notification.setTitle("Request password reset");
+            notification.setCreator(resetRequest.getEmailAddress());
+            notification.setNote(resetLink);
+            notification.setEmailAddresses(resetRequest.getEmailAddress());
+            notification.setUser(SecurityContextHolder.getContext().getAuthentication().getName());
+
+            getNotificationDao().save(notification);
 
             return UserResetResponse.requestAccepted();
         }
@@ -333,7 +400,6 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
         }
         else
         {
-            resetSearch.get();
             if (resetSearch.get().getRequestTime() + REGISTRATION_EXPIRATION > System.currentTimeMillis())
             {
                 return UserResetResponse.pending();
@@ -368,16 +434,24 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
             }
             else if (reset.getRequestTime() + REGISTRATION_EXPIRATION > System.currentTimeMillis())
             {
-                String key = reset.getEmailAddress();
-                Optional<PortalFOIAPerson> registeredPedrson = portalPersonDao.findByEmail(key);
+                AcmUser acmPortalUser = getPortalAcmUser(reset.getEmailAddress());
 
+                FOIALdapAuthenticationService ldapAuthenticateService = getLdapAuthenticateService(directoryName);
+                if (ldapAuthenticateService == null)
+                {
+                    log.debug("LDAP authentication service problem");
+                    throw new PortalUserServiceException(
+                            String.format("LDAP authentication service problem!"));
+                }
                 try
                 {
-                    ldapAuthenticateService.resetPortalUserPassword(registeredPedrson.get().getDefaultEmail().getValue(), password);
+                    ldapAuthenticateService.resetPortalUserPassword(acmPortalUser.getUserId(), password);
                 }
                 catch (AcmUserActionFailedException e)
                 {
-                    throw new PortalUserServiceException(String.format("Couldn't update password for LDAP user %s.", key), e);
+                    log.debug("Couldn't update password for LDAP user %s.", acmPortalUser.getMail());
+                    throw new PortalUserServiceException(
+                            String.format("Couldn't update password for LDAP user %s.", acmPortalUser.getMail()), e);
                 }
 
                 resetDao.delete(reset);
@@ -390,27 +464,39 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
         }
     }
 
-
     @Override
-    public UserResetResponse changePassword(String portalId, String userId, PortalUserCredentials portalUserCredentials) throws PortalUserServiceException
+    public UserResetResponse changePassword(String portalId, String userId, String acmUserId, PortalUserCredentials portalUserCredentials)
+            throws PortalUserServiceException
     {
 
-             try
-                {
-                    ldapAuthenticateService.changeUserPassword(userId, portalUserCredentials.getPassword(), portalUserCredentials.getNewPassword());
-                }
+        FOIALdapAuthenticationService ldapAuthenticateService = getLdapAuthenticateService(directoryName);
+        if (ldapAuthenticateService == null)
+        {
+            log.debug("LDAP authentication service problem");
+            throw new PortalUserServiceException(
+                    String.format("LDAP authentication service problem!"));
+        }
+        try
+        {
+            ldapAuthenticateService.changeUserPassword(acmUserId, portalUserCredentials.getPassword(),
+                    portalUserCredentials.getNewPassword());
+        }
 
-                catch (AcmUserActionFailedException e)
-                {
-                    if(e.getCause() instanceof AuthenticationException)
-                    {
-                        return UserResetResponse.invalidCredentials();
-                    }
-                   throw new PortalUserServiceException(String.format("Couldn't update password for LDAP user %s.", userId), e);
+        catch (AcmUserActionFailedException e)
+        {
+            if (e.getCause() instanceof AuthenticationException)
+            {
+                return UserResetResponse.invalidCredentials();
+            }
+            else
+            {
+                log.debug(String.format("Couldn't update password for LDAP user %s %s.", acmUserId, userId));
+                throw new PortalUserServiceException(String.format("Couldn't update password for user %s.", userId), e);
+            }
 
-                }
+        }
 
-                return UserResetResponse.passwordUpdated();
+        return UserResetResponse.passwordUpdated();
     }
 
     /*
@@ -421,11 +507,16 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
     @Override
     public PortalUser updateUser(String portalId, PortalUser user) throws PortalUserServiceException
     {
-        // TODO Auto-generated method stub
         Person person = getPersonDao().find(Long.valueOf(user.getPortalUserId()));
 
+        person.setGivenName(user.getFirstName());
+        person.setMiddleName(user.getMiddleName());
+        person.setFamilyName(user.getLastName());
+        person.setTitle(user.getPrefix());
+        ((PortalFOIAPerson) person).setPosition(user.getPosition());
+        person.getOrganizations().get(0).setOrganizationValue(user.getOrganization() != null ? user.getOrganization() : " ");
+
         person.getAddresses().get(0).setCity(user.getCity());
-        person.getAddresses().get(0).setCountry(user.getCountry());
         person.getAddresses().get(0).setState(user.getState());
         person.getAddresses().get(0).setStreetAddress(user.getAddress1());
         person.getAddresses().get(0).setStreetAddress2(user.getAddress2());
@@ -490,7 +581,7 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
         user.setMiddleName(person.getMiddleName());
         user.setLastName(person.getFamilyName());
         user.setPrefix(person.getTitle());
-        user.setTitle(person.getPosition());
+        user.setPosition(person.getPosition());
         user.setPhoneNumber(person.getContactMethods().stream().filter(cm -> cm.getType().equals("Phone")).findFirst().get().getValue());
 
         PostalAddress address = person.getDefaultAddress();
@@ -500,11 +591,19 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
         user.setAddress1(address.getStreetAddress());
         user.setAddress2(address.getStreetAddress2());
         user.setZipCode(address.getZip());
-
+        user.setOrganization(person.getOrganizations().get(0).getOrganizationValue());
         user.setEmail(person.getDefaultEmail().getValue());
 
         user.setRole(person.getPortalRoles().get(portalId));
 
+        if (person.getDefaultPicture() != null)
+        {
+            user.setEcmFileId(person.getDefaultPicture().getFileId());
+        }
+        else
+        {
+            user.setEcmFileId(null);
+        }
         return user;
     }
 
@@ -527,10 +626,10 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
         person.setMiddleName(user.getMiddleName());
         person.setFamilyName(user.getLastName());
         person.setTitle(user.getPrefix());
-        person.setPosition(user.getTitle());
+        person.setPosition(user.getPosition());
 
         Organization organization = new Organization();
-        organization.setOrganizationValue(" ");
+        organization.setOrganizationValue(user.getOrganization() != null ? user.getOrganization() : " ");
         organization.setOrganizationType("Corporation");
         person.getOrganizations().add(organization);
 
@@ -614,6 +713,32 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
         }
     }
 
+    private AcmLdapSyncConfig getLdapSyncConfig(String directoryName)
+    {
+        return acmContextHolder.getAllBeansOfType(AcmLdapSyncConfig.class).get(String.format("%s_sync", directoryName));
+    }
+
+    private FOIALdapAuthenticationService getLdapAuthenticateService(String directoryName)
+    {
+        return acmContextHolder.getAllBeansOfType(FOIALdapAuthenticationService.class)
+                .get(String.format("%s_ldapAuthenticateService", directoryName));
+    }
+
+    private AcmUser getPortalAcmUser(String username) throws PortalUserServiceException
+    {
+        AcmUser acmUser = null;
+        AcmLdapSyncConfig ldapSyncConfig = getLdapSyncConfig(directoryName);
+        if (ldapSyncConfig != null)
+        {
+            acmUser = userDao.findByPrefixAndEmailAddress(ldapSyncConfig.getUserPrefix(), username);
+            if (acmUser == null)
+            {
+                throw new PortalUserServiceException(String.format("User %s doesn't exist!", username));
+            }
+        }
+        return acmUser;
+    }
+
     /**
      * @param emailSenderService
      *            the emailSenderService to set
@@ -695,15 +820,6 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
         this.directoryName = directoryName;
     }
 
-    /**
-     * @param ldapAuthenticateService
-     *            the ldapAuthenticateService to set
-     */
-    public void setLdapAuthenticateService(FOIALdapAuthenticationService ldapAuthenticateService)
-    {
-        this.ldapAuthenticateService = ldapAuthenticateService;
-    }
-
     public PersonDao getPersonDao()
     {
         return personDao;
@@ -712,5 +828,33 @@ public class FOIAPortalUserServiceProvider implements PortalUserServiceProvider
     public void setPersonDao(PersonDao personDao)
     {
         this.personDao = personDao;
+    }
+
+    public void setNotificationDao(NotificationDao notificationDao)
+    {
+        this.notificationDao = notificationDao;
+    }
+
+    public NotificationDao getNotificationDao()
+    {
+        return notificationDao;
+    }
+
+    /**
+     * @param userDao
+     *            the userDao to set
+     */
+    public void setUserDao(UserDao userDao)
+    {
+        this.userDao = userDao;
+    }
+
+    /**
+     * @param acmContextHolder
+     *            the acmContextHolder to set
+     */
+    public void setAcmContextHolder(SpringContextHolder acmContextHolder)
+    {
+        this.acmContextHolder = acmContextHolder;
     }
 }

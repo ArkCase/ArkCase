@@ -93,13 +93,11 @@ angular.module('admin').controller('Admin.LabelsConfigController', [ '$scope', '
                 $scope.languagesDropdownOptions = params.languagesDropdownOptions;
                 $scope.selectedNamespaces = params.selectedNamespaces;
                 $scope.selectedLocales = params.selectedLocales;
-                $scope.toResetCustom = false;
 
                 $scope.onClickOk = function() {
                     $modalInstance.close({
                         selectedNamespaces: $scope.selectedNamespaces,
-                        selectedLocales: $scope.selectedLocales,
-                        toResetCustom: $scope.toResetCustom
+                        selectedLocales: $scope.selectedLocales
                     });
                 };
                 $scope.onClickCancel = function() {
@@ -114,30 +112,16 @@ angular.module('admin').controller('Admin.LabelsConfigController', [ '$scope', '
             var languages = _.map(result.selectedLocales, 'code');
             var namespaces = _.map(result.selectedNamespaces, 'id');
 
-            if (result.toResetCustom) {
-                LabelsConfigService.resetResource({
-                    lng: languages,
-                    ns: namespaces
-                }, function() {
-                    reloadGrid();
-                    messageService.succsessAction();
-                }, function() {
-                    $scope.disabledInputs = false;
-                    messageService.errorAction();
-                });
-
-            } else {
-                LabelsConfigService.refreshResource({
-                    lng: languages,
-                    ns: namespaces
-                }, function() {
-                    reloadGrid();
-                    messageService.succsessAction();
-                }, function() {
-                    $scope.disabledInputs = false;
-                    messageService.errorAction();
-                });
-            }
+            LabelsConfigService.resetResource({
+                lng: languages,
+                ns: namespaces
+            }, function() {
+                reloadGrid();
+                messageService.succsessAction();
+            }, function() {
+                $scope.disabledInputs = false;
+                messageService.errorAction();
+            });
 
         }, function(error) {
         });

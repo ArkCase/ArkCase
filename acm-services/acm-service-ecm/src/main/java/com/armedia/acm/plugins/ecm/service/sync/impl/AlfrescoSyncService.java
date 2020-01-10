@@ -27,7 +27,7 @@ package com.armedia.acm.plugins.ecm.service.sync.impl;
  * #L%
  */
 
-import com.armedia.acm.core.exceptions.AcmEncryptionException;
+import com.armedia.acm.crypto.exceptions.AcmEncryptionException;
 import com.armedia.acm.plugins.ecm.model.sync.EcmEvent;
 import com.armedia.acm.plugins.ecm.service.sync.EcmAuditResponseReader;
 import com.armedia.acm.web.api.MDCConstants;
@@ -131,7 +131,8 @@ public class AlfrescoSyncService implements ApplicationEventPublisherAware
         if (numAudits > 0)
         {
             long lastAuditFromFullResponse = allAudits.getJSONObject(numAudits - 1).getLong("id");
-            Map<String, Long> properties = Collections.singletonMap(lastAuditIdKey, lastAuditFromFullResponse);
+            String lastAuditId = String.valueOf(lastAuditFromFullResponse);
+            Map<String, String> properties = Collections.singletonMap(lastAuditIdKey, lastAuditId);
             lastAuditIdsPerApplication.putAll(properties);
         }
     }

@@ -1,5 +1,7 @@
 package com.armedia.acm.plugins.ecm.web.api;
 
+import com.armedia.acm.core.exceptions.AcmAccessControlException;
+
 /*-
  * #%L
  * ACM Service: Enterprise Content Management
@@ -27,7 +29,6 @@ package com.armedia.acm.plugins.ecm.web.api;
  * #L%
  */
 
-import com.armedia.acm.core.exceptions.AcmAccessControlException;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
@@ -44,8 +45,8 @@ import com.armedia.acm.plugins.ecm.service.FolderEventPublisher;
 import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
 import com.armedia.acm.services.dataaccess.service.impl.ArkPermissionEvaluator;
 
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;

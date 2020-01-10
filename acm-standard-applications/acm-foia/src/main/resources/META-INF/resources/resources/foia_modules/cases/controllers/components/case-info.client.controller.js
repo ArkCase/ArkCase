@@ -135,16 +135,7 @@ angular.module('cases').controller(
                 });
 
             };
-            $scope.userOrGroupSearch = function() {
-                var assigneUserName = _.find($scope.userFullNames, function (user)
-                {
-                    return user.id === $scope.assignee
-                });
 
-
-                $scope.isAmendmentAdded = data.amendmentFlag;
-
-            };
             $scope.userOrGroupSearch = function() {
                 var assigneUserName = _.find($scope.userFullNames, function (user)
                 {
@@ -159,7 +150,7 @@ angular.module('cases').controller(
                     templateUrl: 'modules/common/views/user-group-picker-modal.client.view.html',
                     controller: 'Common.UserGroupPickerController',
                     size: 'lg',
-                            backdrop: 'static',
+                    backdrop: 'static',
                     resolve: {
                         $filter: function() {
                             return $scope.userOrGroupSearchConfig.userOrGroupSearchFilters.userOrGroupFacetFilter;
@@ -186,6 +177,14 @@ angular.module('cases').controller(
 
                             $scope.assignee = selectedUser.object_id_s;
                             $scope.updateAssignee();
+                            
+                            //set for AFDP-6831 to inheritance in the Folder/file participants
+                            var len = $scope.objectInfo.participants.length;
+                            for (var i = 0; i < len; i++) {
+                                if($scope.objectInfo.participants[i].participantType =='assignee' || $scope.objectInfo.participants[i].participantType =='owning group'){
+                                    $scope.objectInfo.participants[i].replaceChildrenParticipant = true;
+                                }
+                            }
                             if (selectedGroup) {
                                 $scope.owningGroup = selectedGroup.object_id_s;
                                 $scope.updateOwningGroup();
@@ -200,6 +199,14 @@ angular.module('cases').controller(
                             var selectedGroup = selection.masterSelectedItem;
                             $scope.owningGroup = selectedGroup.object_id_s;
                             $scope.updateOwningGroup();
+                            
+                            //set for AFDP-6831 to inheritance in the Folder/file participants
+                            var len = $scope.objectInfo.participants.length;
+                            for (var i = 0; i < len; i++) {
+                                if($scope.objectInfo.participants[i].participantType =='owning group'|| $scope.objectInfo.participants[i].participantType =='assignee') {
+                                    $scope.objectInfo.participants[i].replaceChildrenParticipant = true;
+                                }
+                            }
                             if (selectedUser) {
                                 $scope.assignee = selectedUser.object_id_s;
                                 $scope.updateAssignee();
@@ -236,7 +243,7 @@ angular.module('cases').controller(
              */
             function saveCase() {
                 var promiseSaveInfo = Util.errorPromise($translate.instant("common.service.error.invalidData"));
-                        if (CaseInfoService.validateCaseInfo($scope.objectInfo)) {
+                if (CaseInfoService.validateCaseInfo($scope.objectInfo)) {
                     var objectInfo = Util.omitNg($scope.objectInfo);
                     promiseSaveInfo = CaseInfoService.saveFoiaRequestInfo(objectInfo);
                     promiseSaveInfo.then(function(caseInfo) {
@@ -267,7 +274,7 @@ angular.module('cases').controller(
             $scope.$on('dueDate-changed', dueDateChanged);
 
             function dueDateChanged(e, newDueDate) {
-                $scope.objectInfo.dueDate = UtilDateService.dateToIso(UtilDateService.isoToDate(newDueDate));
+                $scope.objectInfo.dueDate = new Date(newDueDate).toISOString();
                 $scope.dueDate = newDueDate.replace(/(\d{4})\-(\d{2})\-(\d{2}).*/, '$2/$3/$1');
                 if(!$scope.includeWeekends) {
                     $scope.calculateDaysObj = DueDateService.daysLeft($scope.holidays, $scope.objectInfo.dueDate);
@@ -299,6 +306,13 @@ angular.module('cases').controller(
                     id: $scope.objectInfo.id
                 });
             };
+
+            $scope.setExternalIdentifier = function (data) {
+                if (!Util.isEmpty(data)) {
+                    $scope.objectInfo.externalIdentifier = data;
+                    $scope.saveCase();
+                }
+            }
             
 
         } ]);

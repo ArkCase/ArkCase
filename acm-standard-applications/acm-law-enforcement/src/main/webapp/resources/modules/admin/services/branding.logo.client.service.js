@@ -16,7 +16,7 @@
  */
 angular.module('admin').service('Admin.BrandingLogoService', [ '$http', 'Upload', function(http, Upload) {
     return ({
-        uploadLogo: uploadLogo,
+        uploadLogo: uploadLogo
     });
 
     /**
@@ -42,4 +42,5 @@ angular.module('admin').service('Admin.BrandingLogoService', [ '$http', 'Upload'
         });
     }
     ;
+
 } ]);

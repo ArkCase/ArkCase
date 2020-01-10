@@ -28,14 +28,13 @@ package com.armedia.acm.plugins.person.web.api;
  */
 
 import com.armedia.acm.core.exceptions.AcmListObjectsFailedException;
-import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
-import com.armedia.acm.services.search.model.SolrCore;
+import com.armedia.acm.services.search.exception.SolrException;
+import com.armedia.acm.services.search.model.solr.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 
-import org.json.JSONObject;
-import org.mule.api.MuleException;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.json.JSONObject;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -61,7 +60,7 @@ public class FindPersonAPIController
             @RequestParam(value = "assocId", required = false) Long personAssociationId,
             @RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
             @RequestParam(value = "n", required = false, defaultValue = "10") int maxRows,
-            Authentication authentication) throws MuleException, AcmObjectNotFoundException, AcmListObjectsFailedException
+            Authentication authentication) throws SolrException, AcmListObjectsFailedException
     {
         if (log.isInfoEnabled())
         {

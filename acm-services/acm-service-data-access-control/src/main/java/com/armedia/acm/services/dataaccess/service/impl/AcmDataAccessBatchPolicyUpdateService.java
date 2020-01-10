@@ -1,5 +1,7 @@
 package com.armedia.acm.services.dataaccess.service.impl;
 
+import com.armedia.acm.core.exceptions.AcmAccessControlException;
+
 /*-
  * #%L
  * ACM Service: Data Access Control
@@ -27,7 +29,6 @@ package com.armedia.acm.services.dataaccess.service.impl;
  * #L%
  */
 
-import com.armedia.acm.core.exceptions.AcmAccessControlException;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.services.dataaccess.model.DataAccessControlConfig;
 import com.armedia.acm.services.dataaccess.service.AcmObjectDataAccessBatchUpdateLocator;

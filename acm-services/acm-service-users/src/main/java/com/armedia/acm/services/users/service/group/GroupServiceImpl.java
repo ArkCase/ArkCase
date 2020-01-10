@@ -31,7 +31,8 @@ import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectAlreadyExistsException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
-import com.armedia.acm.services.search.model.SolrCore;
+import com.armedia.acm.services.search.exception.SolrException;
+import com.armedia.acm.services.search.model.solr.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.search.util.AcmSolrUtil;
 import com.armedia.acm.services.users.dao.UserDao;
@@ -41,11 +42,12 @@ import com.armedia.acm.services.users.model.AcmUserState;
 import com.armedia.acm.services.users.model.group.AcmGroup;
 import com.armedia.acm.services.users.model.group.AcmGroupStatus;
 import com.armedia.acm.services.users.model.group.AcmGroupType;
+import com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig;
 import com.armedia.acm.services.users.service.AcmGroupEventPublisher;
+import com.armedia.acm.spring.SpringContextHolder;
 
-import org.mule.api.MuleException;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -54,6 +56,7 @@ import javax.persistence.FlushModeType;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
@@ -65,6 +68,8 @@ public class GroupServiceImpl implements GroupService
     private AcmGroupDao groupDao;
     private ExecuteSolrQuery executeSolrQuery;
     private AcmGroupEventPublisher acmGroupEventPublisher;
+    private SpringContextHolder springContextHolder;
+    private AcmLdapSyncConfig acmLdapSyncConfig;
 
     @Override
     public AcmGroup findByName(String name)
@@ -119,14 +124,15 @@ public class GroupServiceImpl implements GroupService
 
     @Override
     public String buildGroupsSolrQuery(Authentication auth, Integer startRow, Integer maxRows, String sortBy, String sortDirection)
-            throws MuleException
+            throws SolrException
     {
         String query = "object_type_s:GROUP AND status_lcs:ACTIVE";
+        String rowQueryParameters = "fq=hidden_b:false";
 
         log.debug("User [{}] is searching for [{}]", auth.getName(), query);
 
         return executeSolrQuery.getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, query, startRow, maxRows,
-                sortBy + " " + sortDirection);
+                sortBy + " " + sortDirection, rowQueryParameters);
     }
 
     @Override
@@ -165,7 +171,7 @@ public class GroupServiceImpl implements GroupService
     @Override
     public String getAdHocMemberGroupsByMatchingName(Authentication auth, Integer startRow, Integer maxRows, String sortBy,
             String sortDirection,
-            Boolean authorized, String groupId, String searchFilter, String groupType) throws MuleException
+            Boolean authorized, String groupId, String searchFilter, String groupType) throws SolrException
     {
         String query = "object_type_s:GROUP AND -object_id_s:" + groupId + " AND status_lcs:ACTIVE AND object_sub_type_s:"
                 + groupType
@@ -196,7 +202,7 @@ public class GroupServiceImpl implements GroupService
 
     @Override
     public String getAdHocMemberGroups(Authentication auth, Integer startRow, Integer maxRows, String sortBy, String sortDirection,
-            Boolean authorized, String groupId, String groupType) throws MuleException
+            Boolean authorized, String groupId, String groupType) throws SolrException
     {
         groupId = groupId.replace("\\", "\\\\");
         String query = "object_type_s:GROUP AND -object_id_s:" + groupId
@@ -214,7 +220,7 @@ public class GroupServiceImpl implements GroupService
 
     @Override
     public String getGroupsByNameFilter(Authentication authentication, String nameFilter, int start, int max, String sortBy, String sortDir)
-            throws MuleException
+            throws SolrException
     {
         String query = "object_type_s:GROUP AND status_lcs:ACTIVE AND -ascendants_id_ss:* AND name_partial:"
                 + nameFilter;
@@ -223,7 +229,7 @@ public class GroupServiceImpl implements GroupService
     }
 
     @Override
-    public String getLdapGroupsForUser(Authentication authentication) throws MuleException
+    public String getLdapGroupsForUser(Authentication authentication) throws SolrException
     {
         log.info("Taking all groups and ascendant groups from Solr. Authenticated user is [{}]",
                 authentication.getName());
@@ -236,7 +242,7 @@ public class GroupServiceImpl implements GroupService
     }
 
     @Override
-    public String getUserMembersForGroup(String groupName, Optional<String> userStatus, Authentication auth) throws MuleException
+    public String getUserMembersForGroup(String groupName, Optional<String> userStatus, Authentication auth) throws SolrException
     {
         String statusQuery = userStatus.map(it -> {
             try
@@ -678,7 +684,7 @@ public class GroupServiceImpl implements GroupService
 
     @Override
     public String getGroupsByParent(String groupId, int startRow, int maxRows, String sort, Authentication auth)
-            throws MuleException
+            throws SolrException
     {
         groupId = buildSafeGroupNameForSolrSearch(groupId);
         String query = "ascendants_id_ss:" + groupId
@@ -691,17 +697,49 @@ public class GroupServiceImpl implements GroupService
 
     @Override
     public String getTopLevelGroups(List<String> groupSubtype, int startRow, int maxRows, String sort, Authentication auth)
-            throws MuleException
+            throws SolrException
     {
-        String query = "object_type_s:GROUP AND -ascendants_id_ss:* AND -status_lcs:COMPLETE AND -status_lcs:DELETE "
-                + "AND -status_lcs:INACTIVE AND -status_lcs:CLOSED";
+        Map<String, AcmLdapSyncConfig> ldapSyncConfigMap = springContextHolder.getAllBeansOfType(AcmLdapSyncConfig.class);
+        StringBuilder controlGroupQueryIfAnyGroup = new StringBuilder();
+
+        List<String> controlGroups = new ArrayList<>();
+        for (Map.Entry<String, AcmLdapSyncConfig> ldapSyncConfig : ldapSyncConfigMap.entrySet())
+        {
+            acmLdapSyncConfig = ldapSyncConfig.getValue();
+            if (!acmLdapSyncConfig.getGroupControlGroup().trim().equals(""))
+            {
+                controlGroups.add(acmLdapSyncConfig.getGroupControlGroup());
+            }
+            if (!acmLdapSyncConfig.getUserControlGroup().trim().equals(""))
+            {
+                controlGroups.add(acmLdapSyncConfig.getUserControlGroup());
+            }
+
+        }
+
+        if (controlGroups.size() > 0)
+        {
+            controlGroupQueryIfAnyGroup.append("(");
+            controlGroupQueryIfAnyGroup.append(String.join(" OR ", controlGroups));
+            controlGroupQueryIfAnyGroup.append(")");
+        }
+
+        String controlGroupQuery = controlGroups.size() > 0 ? "(ascendants_id_ss:" + controlGroupQueryIfAnyGroup.toString()
+                : "(ascendants_id_ss:\"\"";
+
+        String query = controlGroupQuery
+                + " AND object_type_s:GROUP AND -status_lcs:COMPLETE AND -status_lcs:DELETE "
+                + "AND -status_lcs:INACTIVE AND -status_lcs:CLOSED) OR (object_type_s:GROUP AND "
+                + "-ascendants_id_ss:* AND -status_lcs:COMPLETE AND -status_lcs:DELETE "
+                + "AND -status_lcs:INACTIVE AND -status_lcs:CLOSED)";
 
         if (groupSubtype != null && !groupSubtype.isEmpty())
         {
             query += " AND object_sub_type_s:(" + String.join(" OR ", groupSubtype) + ")";
         }
+        String rowQueryParameters = "fq=hidden_b:false";
         return executeSolrQuery.getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, query,
-                startRow, maxRows, sort);
+                startRow, maxRows, sort, rowQueryParameters);
     }
 
     public void setUserDao(UserDao userDao)
@@ -722,6 +760,16 @@ public class GroupServiceImpl implements GroupService
     public void setAcmGroupEventPublisher(AcmGroupEventPublisher acmGroupEventPublisher)
     {
         this.acmGroupEventPublisher = acmGroupEventPublisher;
+    }
+
+    public SpringContextHolder getSpringContextHolder()
+    {
+        return springContextHolder;
+    }
+
+    public void setSpringContextHolder(SpringContextHolder springContextHolder)
+    {
+        this.springContextHolder = springContextHolder;
     }
 
     @Override

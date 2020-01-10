@@ -33,9 +33,8 @@ import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.profile.model.ProfileDTO;
 import com.armedia.acm.plugins.profile.service.UserOrgService;
 
-import org.mule.api.MuleException;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -84,7 +83,7 @@ public class ProfileInfoAPIController
     @RequestMapping(value = "/signature", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity downloadSignature(Authentication authentication, HttpServletResponse response)
-            throws AcmUserActionFailedException, MuleException
+            throws AcmUserActionFailedException
     {
         log.info("Downloading signature file for user [{}]", authentication.getName());
         Long ecmSignatureFileId = userOrgService.getUserOrgForUserId(authentication.getName()).getEcmSignatureFileId();

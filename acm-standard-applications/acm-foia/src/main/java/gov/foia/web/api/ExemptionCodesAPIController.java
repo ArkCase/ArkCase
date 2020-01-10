@@ -30,9 +30,9 @@ package gov.foia.web.api;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.services.users.service.tracker.UserTrackerService;
 
-import org.mule.util.StringUtils;
-import org.apache.logging.log4j.Logger;
+import org.apache.commons.lang.StringUtils;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;

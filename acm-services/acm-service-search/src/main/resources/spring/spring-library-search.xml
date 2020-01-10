@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:jms="http://www.springframework.org/schema/jms"
-       xmlns:aop="http://www.springframework.org/schema/aop" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.2.xsd
+    xmlns:jms="http://www.springframework.org/schema/jms"
+    xmlns:aop="http://www.springframework.org/schema/aop" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.2.xsd
 
             http://www.springframework.org/schema/jms http://www.springframework.org/schema/jms/spring-jms-4.2.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
 
@@ -11,6 +11,7 @@
 
     <bean id="solrRestClient" class="com.armedia.acm.services.search.service.solr.SolrRestClient">
         <property name="solrConfig" ref="solrConfig"/>
+        <property name="jmsTemplate" ref="jmsTemplate"/>
     </bean>
 
     <bean id="solrPostClient" class="com.armedia.acm.services.search.service.solr.DefaultSolrPostClient">
@@ -40,15 +41,16 @@
     </bean>
 
     <bean id="acmJpaBatchUpdateJob" class="com.armedia.acm.services.search.service.AcmJpaBatchUpdateJobDescriptor"
-          parent="acmJobDescriptor">
+        parent="acmJobDescriptor">
         <property name="jpaBatchUpdateService" ref="acmJpaBatchUpdateService"/>
         <property name="springContextHolder" ref="acmContextHolder"/>
     </bean>
 
     <bean id="executeSolrQuery" class="com.armedia.acm.services.search.service.ExecuteSolrQuery">
-        <property name="muleContextManager" ref="muleContextManager"/>
         <property name="objectConverter" ref="objectConverter"/>
         <property name="sendDocumentsToSolr" ref="sendDocumentsToSolr"/>
+        <property name="configuration" ref="solrConfig"/>
+        <property name="solrClientProvider" ref="solrClientProvider"/>
     </bean>
 
     <!-- event publishers -->
@@ -76,5 +78,13 @@
     <bean id="searchConfig" class="com.armedia.acm.services.search.model.solr.SearchConfig" scope="refresh">
         <property name="jsonUnmarshaller" ref="jsonUnmarshaller"/>
         <aop:scoped-proxy/>
+    </bean>
+
+    <bean id="childDocumentsSearchService" class="com.armedia.acm.services.search.service.ChildDocumentsSearchServiceImpl">
+        <property name="executeSolrQuery" ref="executeSolrQuery"/>
+    </bean>
+
+    <bean id="solrClientProvider" class="com.armedia.acm.services.search.service.solr.SolrClientProvider">
+        <property name="configuration" ref="solrConfig"/>
     </bean>
 </beans>

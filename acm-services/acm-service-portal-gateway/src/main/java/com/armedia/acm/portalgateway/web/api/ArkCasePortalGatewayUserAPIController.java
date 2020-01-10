@@ -40,8 +40,8 @@ import com.armedia.acm.portalgateway.service.PortalUserAssignementException;
 import com.armedia.acm.portalgateway.service.PortalUserService;
 import com.armedia.acm.portalgateway.service.PortalUserServiceException;
 
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -115,15 +115,8 @@ public class ArkCasePortalGatewayUserAPIController
     {
         PortalUser portalUser = new PortalUser();
         log.debug("Requesting user authentication for user at portal with [{}] ID.", portalId);
-        try
-        {
-            portalUser = portalUserService.authenticateUser(portalId, credentials);
-            return new ResponseEntity<PortalUser>(portalUser, HttpStatus.OK);
-        }
-        catch (PortalUserServiceException e)
-        {
-            return new ResponseEntity<PortalUser>(portalUser, HttpStatus.UNAUTHORIZED);
-        }
+        portalUser = portalUserService.authenticateUser(portalId, credentials);
+        return new ResponseEntity<PortalUser>(portalUser, HttpStatus.OK);
     }
 
     @CheckPortalUserAssignement
@@ -162,18 +155,16 @@ public class ArkCasePortalGatewayUserAPIController
         return portalUserService.resetPassword(portalId, resetId, password);
     }
 
-
     @RequestMapping(value = "/registrations/{userId:.+}/changePassword", method = RequestMethod.POST, produces = {
             MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE })
     @ResponseBody
     public UserResetResponse changePassword(Authentication auth, @PortalId @PathVariable(value = "portalId") String portalId,
-                                          @RequestBody PortalUserCredentials portalUserCredentials, @PathVariable String userId)
+            @RequestBody PortalUserCredentials portalUserCredentials, @PathVariable String userId)
             throws PortalUserAssignementException, PortalUserServiceException
     {
-        log.debug("Changing password for [{}] user for portal with [{}] ID.", userId,  portalId);
-        return portalUserService.changePassword(portalId, userId, portalUserCredentials);
+        log.debug("Changing password for [{}] [{}] user for portal with [{}] ID.", userId, auth.getName(), portalId);
+        return portalUserService.changePassword(portalId, userId, auth.getName(), portalUserCredentials);
     }
-
 
     @RequestMapping(method = RequestMethod.PUT, produces = { MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE })
     @ResponseBody
@@ -185,9 +176,11 @@ public class ArkCasePortalGatewayUserAPIController
         return portalUserService.updateUser(portalId, user);
     }
 
-    @RequestMapping( value = "/{portalUserId}", method = RequestMethod.GET, produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE })
+    @RequestMapping(value = "/{portalUserId}", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE,
+            MediaType.TEXT_PLAIN_VALUE })
     @ResponseBody
-    public PortalUser retrieveUser(@PortalId @PathVariable(value = "portalId") String portalId, @PathVariable(value="portalUserId") String portalUserId) throws PortalUserServiceException
+    public PortalUser retrieveUser(@PortalId @PathVariable(value = "portalId") String portalId,
+            @PathVariable(value = "portalUserId") String portalUserId) throws PortalUserServiceException
     {
         log.debug("Retrieve [{}] user for portal with [{}] ID.", portalUserId, portalId);
         return portalUserService.retrieveUser(portalUserId, portalId);

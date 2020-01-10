@@ -7,14 +7,14 @@ angular.module('directives').controller(
                 '$params',
                 '$modal',
                 '$modalInstance',
+                '$translate',
                 'Object.CalendarService',
                 'MessageService',
                 'Util.DateService',
                 'Directives.CalendarUtilService',
                 'Helper.LocaleService',
-                'Util.DateService',
                 'UtilService',
-                function($scope, $params, $modal, $modalInstance, CalendarService, MessageService, DateService, CalendarUtilService, LocaleHelper, UtilDateService, Util) {
+                function($scope, $params, $modal, $modalInstance, $translate, CalendarService, MessageService, DateService, CalendarUtilService, LocaleHelper, Util) {
                     new LocaleHelper.Locale({
                         scope: $scope
                     });
@@ -115,7 +115,7 @@ angular.module('directives').controller(
                                 $scope.selectedDayOfTheWeek.push(day.value);
                             }
                         }
-                        var recurrenceRange = CalendarUtilService.getWeeklyRecurrenceRange($scope.recurrenceTmpModel.start, $scope.selectedDayOfTheWeek, $scope.weeklyRecurrence.interval, $scope.recurrenceTmpModel.endAfterOccurrances);
+                        var recurrenceRange = CalendarUtilService.getWeeklyRecurrenceRange(new Date($scope.recurrenceTmpModel.start), $scope.selectedDayOfTheWeek, $scope.weeklyRecurrence.interval, $scope.recurrenceTmpModel.endAfterOccurrances);
                         $scope.recurrenceTmpModel.recurrenceEndBy = recurrenceRange.endBy;
                         $scope.recurrenceTmpModel.start = recurrenceRange.start;
                         $scope.recurrenceTmpModel.end = moment($scope.recurrenceTmpModel.start).add(eventDurationInMinutes, 'minutes').toDate();
@@ -323,7 +323,7 @@ angular.module('directives').controller(
                         $scope.weeklyRecurrence = {
                             interval: 1
                         };
-                        $scope.selectedDayOfTheWeek = [ $scope.daysOfTheWeekOptions[$scope.recurrenceTmpModel.start.getDay()].value ];
+                        $scope.selectedDayOfTheWeek = [ $scope.daysOfTheWeekOptions[new Date($scope.recurrenceTmpModel.start).getDay()].value ];
 
                         $scope.onWeeklyRecurrencePatternChange();
                     };
@@ -491,7 +491,7 @@ angular.module('directives').controller(
                             break;
                         }
 
-                        recurrenceDetailsDataModel.startAt = DateService.dateToIso($scope.recurrenceTmpModel.start);
+                        recurrenceDetailsDataModel.startAt = DateService.dateToIso(new Date($scope.recurrenceTmpModel.start));
 
                         switch (recurrenceRangeType) {
                         case 'NO_END_DATE':
@@ -535,35 +535,26 @@ angular.module('directives').controller(
                         $modalInstance.close(modalActionData);
                     };
 
-                    $scope.startDateChanged = function() {
-                        var todayDate = new Date();
-                        if (Util.isEmpty($scope.recurrenceTmpModel.start) || moment($scope.recurrenceTmpModel.start).isBefore(todayDate)) {
-                            $scope.recurrenceTmpModel.start = todayDate;
+                    $scope.$watch("recurrenceTmpModel.start", function(newValue, oldValue, scope) {
+                        if(!moment(newValue).isSame(oldValue)) {
+                            var dates = DateService.fixStartAndEndDirectiveDates($scope.recurrenceTmpModel.start, $scope.recurrenceTmpModel.end, oldDate, newDate, false);
+
+                            if(dates.start){
+                                $scope.recurrenceTmpModel.start = dates.start;
+                            }
+                            if(dates.end){
+                                $scope.recurrenceTmpModel.end = dates.end
+                            }
+                            $scope.minEndDate = $scope.recurrenceTmpModel.start;
                         }
+                    });
 
-                        if (moment($scope.recurrenceTmpModel.start).isAfter($scope.recurrenceTmpModel.end)) {
-                            $scope.recurrenceTmpModel.end = UtilDateService.convertToCurrentTime($scope.recurrenceTmpModel.start);
+                    $scope.$watch("recurrenceTmpModel.end", function(newValue, oldValue, scope) {
+                        var endDate = DateService.fixDirectiveEndDate($scope.recurrenceTmpModel.start, $scope.recurrenceTmpModel.end);
+                        if(endDate){
+                            $scope.recurrenceTmpModel.end = endDate;
                         }
-
-                        $scope.recurrenceTmpModel.end = UtilDateService.setSameTime($scope.recurrenceTmpModel.start, $scope.recurrenceTmpModel.end);
-                        $scope.minEndDate = $scope.recurrenceTmpModel.start;
-                    };
-
-                    $scope.endDateChanged = function() {
-                        var validateDate = DateService.validateToDate($scope.recurrenceTmpModel.start, $scope.recurrenceTmpModel.end);
-                        $scope.recurrenceTmpModel.start = validateDate.from;
-                        $scope.recurrenceTmpModel.end = validateDate.to;
-                        var todayDate = new Date();
-                        if (Util.isEmpty($scope.recurrenceTmpModel.end)) {
-                            $scope.recurrenceTmpModel.end = todayDate;
-                        }
-
-                        if (moment($scope.recurrenceTmpModel.end).isBefore($scope.recurrenceTmpModel.start)) {
-                            $scope.recurrenceTmpModel.end = UtilDateService.convertToCurrentTime($scope.recurrenceTmpModel.start);
-                        }
-
-                        $scope.recurrenceTmpModel.start = UtilDateService.setSameTime($scope.recurrenceTmpModel.start, $scope.recurrenceTmpModel.end);
-                    };
+                    });
 
                     /*Cancel the modal dialog*/
                     $scope.cancel = function() {

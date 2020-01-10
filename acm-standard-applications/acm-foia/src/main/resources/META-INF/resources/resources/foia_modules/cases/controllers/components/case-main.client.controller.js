@@ -59,7 +59,7 @@ angular.module('cases').controller(
                 });
                 populateDispositionTypes($scope.objectInfo);
                 populateRequestTrack($scope.objectInfo);
-                $scope.populateDispositionSubTypes($scope.objectInfo.disposition, $scope.objectInfo.requestType);
+                $scope.populateDispositionSubTypes($scope.objectInfo.requestType);
                 $scope.originalDueDate = objectInfo.dueDate;
 
             };
@@ -121,12 +121,12 @@ angular.module('cases').controller(
 
             };
 
-            $scope.populateDispositionSubTypes = function (selectedValue, requestType) {
-                if (selectedValue === "full-denial" && requestType == "Appeal") {
+            $scope.populateDispositionSubTypes = function (requestType) {
+                if (requestType == "Appeal") {
                     ObjectLookupService.getAppealDispositionSubTypes().then(function (appealDispositionSubType) {
                         $scope.dispositionSubTypes = appealDispositionSubType;
                     });
-                } else if (selectedValue === "full-denial" && requestType == "New Request") {
+                } else if (requestType == "New Request") {
                     ObjectLookupService.getRequestDispositionSubTypes().then(function (requestDispositionSubType) {
                         $scope.dispositionSubTypes = requestDispositionSubType;
                     });

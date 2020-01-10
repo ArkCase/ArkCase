@@ -145,28 +145,6 @@ angular.module('admin').factory('Admin.LabelsConfigService', [ '$resource', func
             method: "POST",
             url: "api/latest/plugin/admin/labelmanagement/admin-resource/reset",
             cache: false
-        },
-
-        /**
-         * @ngdoc method
-         * @name refreshResource
-         * @methodOf admin.service:Admin.LabelsConfigService
-         *
-         * @description
-         * Refresh resources without cusotm resources removing
-         *
-         * @param {Object} params Map of input parameter.
-         * @param {Object} params.lng Object that contains value for selected language from dropdown
-         * @param {Object} params.ns Object that contains value for selected namespace from dropdown
-         * @param {Function} onSuccess (Optional)Callback function of success query
-         * @param {Function} onError (Optional) Callback function when fail
-         *
-         * @returns {Object} Object returned by $resource
-         */
-        refreshResource: {
-            method: "POST",
-            url: "api/latest/plugin/admin/labelmanagement/admin-resource/refresh",
-            cache: false
         }
     });
 } ]);

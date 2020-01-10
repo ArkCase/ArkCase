@@ -1,4 +1,5 @@
-<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                    xsi:schemaLocation="
             http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
@@ -8,7 +9,13 @@
     <property name="cmGroupNameLength" value="1024" dbms="postgresql,oracle"/>
     <property name="cmGroupNameLength" value="255" dbms="mysql,mssql"/>
 
-    <changeSet id="01-create-table-acm_portal_info-fixed" author="dmiller" dbms="oracle,postgresql,mssql,mysql">
+    <changeSet id="01-1-create-table-acm_portal_info" author="vladimir.cherepnalkovski"
+               dbms="oracle,postgresql,mssql,mysql">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="acm_portal_info" schemaName="arkcase"/>
+            </not>
+        </preConditions>
         <createTable tableName="acm_portal_info">
             <column name="cm_portal_info_id" type="${idType}">
                 <constraints primaryKeyName="pk_acm_portal_info" primaryKey="true"/>
@@ -35,18 +42,23 @@
         </insert>
     </changeSet>
 
-    <changeSet id="02-alter-table-acm_portal_info-add-cm_group_name-fixed" author="dmiller" dbms="oracle,postgresql,mssql,mysql">
+    <changeSet id="02-1-alter-table-acm_portal_info-add-cm_group_name" author="vladimir.cherepnalkovski"
+               dbms="oracle,postgresql,mssql,mysql">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="acm_portal_info" columnName="cm_group_name"/>
+            </not>
+        </preConditions>
         <addColumn tableName="acm_portal_info">
             <column name="cm_group_name" type="VARCHAR(${cmGroupNameLength}))" defaultValue="0"/>
-        </addColumn>    
+        </addColumn>
     </changeSet>
 
     <changeSet id="03-alter-table-acm_portal_info-add-cm_portal_authentication_flag" author="ana.serafimoska"
                dbms="oracle,postgresql,mssql,mysql">
         <addColumn tableName="acm_portal_info">
-            <column name="cm_portal_authentication_flag" type="BOOLEAN" defaultValueBoolean="false"></column>
+            <column name="cm_portal_authentication_flag" type="BOOLEAN" defaultValueBoolean="false"/>
         </addColumn>
     </changeSet>
-
 
 </databaseChangeLog>

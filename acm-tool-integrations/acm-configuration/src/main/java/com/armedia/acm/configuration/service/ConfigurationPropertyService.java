@@ -28,10 +28,11 @@ package com.armedia.acm.configuration.service;
  */
 
 import com.armedia.acm.configuration.core.ConfigurationContainer;
+import com.armedia.acm.configuration.model.ConfigurationClientConfig;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.aop.support.AopUtils;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,8 +44,8 @@ import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
-import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service("configurationPropertyService")
@@ -59,7 +60,16 @@ public class ConfigurationPropertyService implements InitializingBean
     @Autowired
     private ConfigurableEnvironment configurableEnvironment;
 
+    @Autowired
+    private ConfigurationClientConfig configurationClientConfig;
+
     private String updatePropertiesEndpoint;
+
+    private String removePropertiesEndpoint;
+
+    private String resetPropertiesEndpoint;
+
+    private String resetFilePropertiesEndpoint;
 
     private static final Logger log = LogManager.getLogger(ConfigurationPropertyService.class);
 
@@ -68,9 +78,16 @@ public class ConfigurationPropertyService implements InitializingBean
     {
         String updatePath = (String) configurableEnvironment.getPropertySources()
                 .get("bootstrap").getProperty("configuration.server.update.path");
+        String removePath = (String) configurableEnvironment.getPropertySources()
+                .get("bootstrap").getProperty("configuration.server.remove.path");
         String serverUrl = (String) configurableEnvironment.getPropertySources()
                 .get("bootstrap").getProperty("configuration.server.url");
+        String resetPath = (String) configurableEnvironment.getPropertySources()
+                .get("bootstrap").getProperty("configuration.server.reset.path");
         updatePropertiesEndpoint = String.format("%s%s", serverUrl, updatePath);
+        removePropertiesEndpoint = String.format("%s%s", serverUrl, removePath);
+        resetPropertiesEndpoint = String.format("%s%s%s", serverUrl, "/config", resetPath);
+        resetFilePropertiesEndpoint = String.format("%s%s", resetPropertiesEndpoint, "/{applicationName}");
     }
 
     @Autowired
@@ -102,11 +119,29 @@ public class ConfigurationPropertyService implements InitializingBean
         }
     }
 
+    /**
+     * Updates properties in arkcase.yaml
+     */
     public void updateProperties(Map<String, Object> properties) throws ConfigurationPropertyException
+    {
+        updateProperties(properties, configurationClientConfig.getDefaultApplicationName());
+    }
+
+    /**
+     * Updates properties sent with the map 'properties' in the file
+     * with name 'applicationName'
+     * 
+     * @param properties
+     * @param applicationName
+     * @throws ConfigurationPropertyException
+     */
+    public void updateProperties(Map<String, Object> properties, String applicationName) throws ConfigurationPropertyException
     {
         try
         {
-            configRestTemplate.postForEntity(updatePropertiesEndpoint, properties, ResponseEntity.class, Collections.EMPTY_MAP);
+            Map<String, String> params = new HashMap<>();
+            params.put("applicationName", applicationName);
+            configRestTemplate.postForEntity(updatePropertiesEndpoint, properties, ResponseEntity.class, params);
         }
         catch (RestClientException e)
         {
@@ -115,17 +150,85 @@ public class ConfigurationPropertyService implements InitializingBean
         }
     }
 
+    /**
+     * Updates properties in arkcase.yaml
+     */
     public void updateProperties(Object propertyConfig) throws ConfigurationPropertyException
+    {
+        updateProperties(propertyConfig, configurationClientConfig.getDefaultApplicationName());
+    }
+
+    /**
+     * Updates properties sent through the object 'propertyConfig' in the file
+     * with name 'applicationName'
+     * 
+     * @param propertyConfig
+     * @param applicationName
+     * @throws ConfigurationPropertyException
+     */
+    public void updateProperties(Object propertyConfig, String applicationName) throws ConfigurationPropertyException
     {
         try
         {
+            Map<String, String> params = new HashMap<>();
+            params.put("applicationName", applicationName);
             configRestTemplate.postForEntity(updatePropertiesEndpoint,
-                    getProperties(propertyConfig), ResponseEntity.class, Collections.EMPTY_MAP);
+                    getProperties(propertyConfig), ResponseEntity.class, params);
         }
         catch (RestClientException e)
         {
             log.warn("Failed to update property due to {}", e.getMessage());
             throw new ConfigurationPropertyException("Failed to update configuration", e);
+        }
+    }
+
+    /**
+     * Removes properties sent with the map 'properties' in the file
+     * with name 'applicationName'
+     *
+     * @param properties
+     * @throws ConfigurationPropertyException
+     */
+    public void removeRuntimeProperties(List<String> properties) throws ConfigurationPropertyException
+    {
+        try
+        {
+            Map<String, String> params = new HashMap<>();
+            params.put("applicationName", configurationClientConfig.getDefaultApplicationName());
+            configRestTemplate.postForEntity(removePropertiesEndpoint, properties, ResponseEntity.class, params);
+        }
+        catch (RestClientException e)
+        {
+            log.warn("Failed to remove property due to {}", e.getMessage());
+            throw new ConfigurationPropertyException("Failed to update configuration", e);
+        }
+    }
+
+    public void resetPropertiesToDefault() throws ConfigurationPropertyException
+    {
+        try
+        {
+            configRestTemplate.delete(resetPropertiesEndpoint, ResponseEntity.class);
+        }
+        catch (RestClientException e)
+        {
+            log.warn("Failed to reset properties due to {}", e.getMessage());
+            throw new ConfigurationPropertyException("Failed to reset configuration", e);
+        }
+    }
+
+    public void resetFilePropertiesToDefault(String applicationName) throws ConfigurationPropertyException
+    {
+        try
+        {
+            Map<String, String> params = new HashMap<>();
+            params.put("applicationName", applicationName);
+            configRestTemplate.delete(resetFilePropertiesEndpoint, params);
+        }
+        catch (RestClientException e)
+        {
+            log.warn("Failed to reset properties due to {}", e.getMessage());
+            throw new ConfigurationPropertyException("Failed to reset configuration", e);
         }
     }
 }

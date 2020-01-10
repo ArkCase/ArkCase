@@ -27,17 +27,17 @@ package com.armedia.acm.services.search.web.api;
  * #L%
  */
 
+import com.armedia.acm.services.search.exception.SolrException;
 import com.armedia.acm.services.search.model.ReportGenerator;
 import com.armedia.acm.services.search.model.SearchConstants;
-import com.armedia.acm.services.search.model.SolrCore;
+import com.armedia.acm.services.search.model.solr.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.search.service.FacetedSearchService;
 import com.armedia.acm.spring.SpringContextHolder;
 
 import org.apache.commons.lang3.StringUtils;
-import org.mule.api.MuleException;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
@@ -89,7 +89,7 @@ public class FacetedSearchAPIController
             // Part of the query to NOT ESCAPE
             @RequestParam(value = "unescapedQuery", required = false, defaultValue = "") String unescapedQuery,
             HttpServletResponse response,
-            Authentication authentication) throws MuleException, UnsupportedEncodingException
+            Authentication authentication) throws SolrException, UnsupportedEncodingException
     {
         log.debug("User '" + authentication.getName() + "' is performing facet search for the query: '" + q + "' ");
 
@@ -181,7 +181,7 @@ public class FacetedSearchAPIController
             // The output stream is already closed as report is exported
             return "";
         }
-        return URLEncoder.encode(res, "UTF-8");
+        return res;
     }
 
     public void export(ReportGenerator generator, String content, HttpServletResponse response, String reportName)

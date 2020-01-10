@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('services').factory('Websockets.MessageHandler', ['$q', '$rootScope', 'Acm.StoreService', 'Object.AuditService', 'TimeTracking.InfoService', 'ObjectService', 'UtilService', 'DocTreeExt.DownloadSelectedAsZip', 'FileSaver', 'Blob', '$filter', function ($q, $rootScope, Store, ObjectAuditService, TimeTrackingInfoService, ObjectService, Util, DownloadSelectedAsZip, FileSaver, Blob, $filter) {
+angular.module('services').factory('Websockets.MessageHandler', ['$q', '$rootScope', 'Acm.StoreService', 'Object.AuditService', 'TimeTracking.InfoService', 'ObjectService', 'UtilService', 'DocTreeExt.DownloadSelectedAsZip', 'FileSaver', 'Blob', '$filter', 'Admin.BrandingLogoService', function ($q, $rootScope, Store, ObjectAuditService, TimeTrackingInfoService, ObjectService, Util, DownloadSelectedAsZip, FileSaver, Blob, $filter, brandingLogoService) {
     var Service = {};
 
     Service.handleMessage = handleMessage;

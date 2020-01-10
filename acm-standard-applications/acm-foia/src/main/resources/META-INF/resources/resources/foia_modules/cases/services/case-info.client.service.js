@@ -10,7 +10,7 @@
  *
  * Case.InfoService provides functions for Case database data
  */
-angular.module('services').factory('Case.InfoService', [ '$resource', '$translate', 'UtilService', 'CacheFactory', 'ObjectService', '$http', function($resource, $translate, Util, CacheFactory, ObjectService, $http) {
+angular.module('services').factory('Case.InfoService', [ '$resource', '$translate', 'UtilService', 'CacheFactory', 'ObjectService', '$http', 'Acm.StoreService', function($resource, $translate, Util, CacheFactory, ObjectService, $http, Store) {
 
     var caseCache = CacheFactory(ObjectService.ObjectTypes.CASE_FILE, {
         maxAge: 1 * 60 * 1000, // Items added to this cache expire after 1 minute
@@ -19,6 +19,7 @@ angular.module('services').factory('Case.InfoService', [ '$resource', '$translat
         capacity: 1
     });
     var caseGetUrl = 'api/latest/plugin/casefile/byId/';
+    var caseUrl = 'api/latest/plugin/casefile/';
 
     var Service = $resource('api/latest/plugin', {}, {
         /**
@@ -60,8 +61,28 @@ angular.module('services').factory('Case.InfoService', [ '$resource', '$translat
             url: caseGetUrl + ':id',
             cache: caseCache,
             isArray: false
+        },
+        /**
+         * @ngdoc method
+         * @name _queryCaseTasks
+         * @methodOf services:Object.TaskService
+         *
+         * @description
+         * Query child tasks for an object.
+         *
+         * @param {Object} Object of input parameter
+         * @returns {Object} Object returned by $resource
+         */
+        _queryCaseTasks: {
+            method: 'POST',
+            url: caseUrl + ':caseId/tasks',
+            cache: false
         }
     });
+
+    Service.CacheNames = {
+        CHILD_TASK_DATA: "ChildTaskData",
+    };
 
     /**
      * @ngdoc method
@@ -233,9 +254,6 @@ angular.module('services').factory('Case.InfoService', [ '$resource', '$translat
             return Util.errorPromise($translate.instant("common.service.error.invalidData"));
         }
         caseInfo.modified = null;
-        if(caseInfo.dueDate != null) {
-            caseInfo.dueDate = moment(caseInfo.dueDate.replace(/(\d{4})\-(\d{2})\-(\d{2}).*/, '$1/$2/$3'));    
-        }
         return $http({
             method: 'POST',
             url: 'api/latest/plugin/foiarequest',
@@ -293,6 +311,51 @@ angular.module('services').factory('Case.InfoService', [ '$resource', '$translat
         }
         return true;
     };
+
+    /**
+     * @ngdoc method
+     * @name queryCaseTasks
+     * @methodOf services:Object.TaskService
+     *
+     * @description
+     * Query child tasks for an object.
+     *
+     * @param {Number} caseId  Case ID
+     * @param {Object} childDocumentSearch document for which is needed to search child tasks
+     * @param {String} sortBy  (Optional)Sort property
+     * @param {String} sortDir  (Optional)Sort direction. Value can be 'asc' or 'desc'
+     *
+     * @returns {Object} Promise
+     */
+    Service.queryCaseTasks = function(caseId, childDocumentSearch, sortBy, sortDir) {
+        var cacheChildTaskData = new Store.CacheFifo(Service.CacheNames.CHILD_TASK_DATA);
+        var cacheKey = childDocumentSearch.parentType + "." + childDocumentSearch.parentId + "." + childDocumentSearch.startRow + "." + childDocumentSearch.maxRows + "." + sortBy + "." + sortDir;
+        var taskData = cacheChildTaskData.get(cacheKey);
+
+        if (!Util.isEmpty(sortBy)) {
+            childDocumentSearch.sort = sortBy + " " + Util.goodValue(sortDir, "asc");
+        }
+        else {
+            childDocumentSearch.sort = "";
+        }
+
+        return Util.serviceCall({
+            service: Service._queryCaseTasks,
+            param: {
+                caseId: caseId
+            },
+            data: childDocumentSearch,
+            result: taskData,
+            onSuccess: function(data) {
+                if (Service.validateCaseInfoNewCasefile(data)) {
+                    taskData = data;
+                    cacheChildTaskData.put(cacheKey, taskData);
+                    return taskData;
+                }
+            }
+        });
+    };
+
 
     return Service;
 } ]);

@@ -18,12 +18,6 @@
         <constructor-arg value="/logout"/>
     </bean>
 
-    <bean id="muleContextManager" class="com.armedia.acm.muletools.mulecontextmanager.MuleContextManager">
-        <property name="specificConfigFiles">
-            <list/>
-        </property>
-    </bean>
-
     <bean id="configList" class="java.util.ArrayList">
         <constructor-arg>
             <list/>

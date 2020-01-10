@@ -27,12 +27,14 @@ package com.armedia.acm.plugins.ecm.service.impl;
  * #L%
  */
 
+import com.armedia.acm.camelcontext.configuration.ArkCaseCMISConfig;
+import com.armedia.acm.camelcontext.context.CamelContextManager;
 import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.plugins.ecm.model.EcmFileContentIndexedEvent;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.ecm.utils.CmisConfigUtils;
-import com.armedia.acm.services.search.model.SolrCore;
 import com.armedia.acm.services.search.model.solr.SolrContentDocument;
+import com.armedia.acm.services.search.model.solr.SolrCore;
 import com.armedia.acm.services.search.service.solr.SolrPostClient;
 import com.armedia.acm.services.search.service.solr.SolrPostException;
 import com.armedia.acm.services.search.service.solr.SolrRestClient;
@@ -40,9 +42,8 @@ import com.armedia.acm.web.api.MDCConstants;
 
 import org.apache.chemistry.opencmis.client.api.Document;
 import org.apache.chemistry.opencmis.commons.data.ContentStream;
-import org.mule.module.cmis.connectivity.CMISCloudConnectorConnectionManager;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.slf4j.MDC;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
@@ -62,12 +63,13 @@ public class ContentFileSolrPostClient implements SolrPostClient, ApplicationEve
     private CmisConfigUtils cmisConfigUtils;
     private SolrRestClient solrRestClient;
     private ApplicationEventPublisher applicationEventPublisher;
+    private CamelContextManager camelContextManager;
 
     @Override
-    public void sendToSolr(SolrCore core, String json) throws SolrPostException
+    public void sendToSolr(String destinationQueue, SolrCore core, String json) throws SolrPostException
     {
         Objects.requireNonNull(core, "Core must be specified");
-        Objects.requireNonNull(core.getCore(), "The Solr core must have a value");
+        Objects.requireNonNull(core.getCore(solrRestClient.getSolrConfig()), "The Solr core must have a value");
         Objects.requireNonNull(json, "JSON must be specified");
 
         final SolrContentDocument solrContentDocument = getObjectConverter().getJsonUnmarshaller().unmarshall(json,
@@ -105,7 +107,9 @@ public class ContentFileSolrPostClient implements SolrPostClient, ApplicationEve
         InputStreamResource inputStreamResource = new InputStreamResource(contentStream.getStream());
         HttpEntity<InputStreamResource> entity = new HttpEntity<>(inputStreamResource, headers);
 
-        getSolrRestClient().postToSolr(core.getCore(), solrRestClient.getSolrConfig().getContentFileHandler(), entity, logText,
+        getSolrRestClient().postToSolr(destinationQueue, core.getCore(solrRestClient.getSolrConfig()),
+                solrRestClient.getSolrConfig().getContentFileHandler(), entity,
+                logText,
                 urlWithPlaceholders, urlValues);
 
         applicationEventPublisher.publishEvent(new EcmFileContentIndexedEvent(solrContentDocument));
@@ -121,9 +125,10 @@ public class ContentFileSolrPostClient implements SolrPostClient, ApplicationEve
      */
     private void storeCmisUserId(final String cmisRepositoryId)
     {
-        CMISCloudConnectorConnectionManager cmisConfig = getCmisConfigUtils().getCmisConfiguration(cmisRepositoryId);
-        boolean foundGoodCmisConfig = cmisConfig != null && cmisConfig.getUsername() != null && !cmisConfig.getUsername().trim().isEmpty();
-        String cmisUser = foundGoodCmisConfig ? cmisConfig.getUsername() : "admin";
+        ArkCaseCMISConfig config = getCamelContextManager().getRepositoryConfigs().get(cmisRepositoryId);
+        boolean foundGoodCmisConfig = config != null && config.getUsername() != null && !config.getUsername().trim().isEmpty();
+        String cmisUser = foundGoodCmisConfig ? config.getUsername() : "admin";
+
         logger.debug("found a good cmis user id? {}, in any case, our CMIS user id is {}", foundGoodCmisConfig, cmisUser);
         MDC.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, cmisUser);
         MDC.put(MDCConstants.EVENT_MDC_REQUEST_ID_KEY, UUID.randomUUID().toString());
@@ -175,4 +180,13 @@ public class ContentFileSolrPostClient implements SolrPostClient, ApplicationEve
         this.applicationEventPublisher = applicationEventPublisher;
     }
 
+    public CamelContextManager getCamelContextManager()
+    {
+        return camelContextManager;
+    }
+
+    public void setCamelContextManager(CamelContextManager camelContextManager)
+    {
+        this.camelContextManager = camelContextManager;
+    }
 }

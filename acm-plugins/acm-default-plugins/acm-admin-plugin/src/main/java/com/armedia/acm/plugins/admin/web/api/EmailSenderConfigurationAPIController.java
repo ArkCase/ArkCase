@@ -28,10 +28,13 @@ package com.armedia.acm.plugins.admin.web.api;
  */
 
 import com.armedia.acm.email.model.EmailSenderConfig;
+import com.armedia.acm.services.email.exception.MailRefusedConnectionException;
+import com.armedia.acm.services.email.exception.RejectedLoginException;
+import com.armedia.acm.services.email.exception.StartTLSNotSupportedException;
 import com.armedia.acm.services.email.sender.service.EmailSenderConfigurationServiceImpl;
 
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -92,6 +95,7 @@ public class EmailSenderConfigurationAPIController
     @RequestMapping(value = "/email/configuration/validate", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public boolean validateSmtpConfiguration(@RequestBody EmailSenderConfig configuration)
+            throws MailRefusedConnectionException, RejectedLoginException, StartTLSNotSupportedException
     {
         return emailSenderConfigurationService.validateSmtpConfiguration(configuration);
     }

@@ -39,7 +39,6 @@ import com.armedia.acm.form.project.service.ProjectFactory;
 import com.armedia.acm.form.time.service.TimeFactory;
 import com.armedia.acm.frevvo.config.FrevvoFormService;
 import com.armedia.acm.frevvo.config.FrevvoService;
-import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.pluginmanager.service.AcmPluginManager;
 import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
 import com.armedia.acm.plugins.casefile.dao.ChangeCaseStatusDao;
@@ -79,9 +78,9 @@ import com.armedia.acm.services.users.service.ldap.AcmUserActionExecutor;
 
 import org.activiti.engine.RuntimeService;
 import org.apache.commons.io.IOUtils;
-import org.json.JSONObject;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.json.JSONObject;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.security.core.Authentication;
@@ -128,7 +127,6 @@ public class FrevvoFormController implements ApplicationEventPublisherAware
 
     private SaveComplaintTransaction saveComplaintTransaction;
     private EcmFileService ecmFileService;
-    private MuleContextManager muleContextManager;
 
     private SaveCaseService saveCaseService;
 
@@ -487,16 +485,6 @@ public class FrevvoFormController implements ApplicationEventPublisherAware
     public void setCaseFileFactory(CaseFileFactory caseFileFactory)
     {
         this.caseFileFactory = caseFileFactory;
-    }
-
-    public MuleContextManager getMuleContextManager()
-    {
-        return muleContextManager;
-    }
-
-    public void setMuleContextManager(MuleContextManager muleContextManager)
-    {
-        this.muleContextManager = muleContextManager;
     }
 
     public AcmUserActionExecutor getUserActionExecutor()

@@ -30,10 +30,8 @@ package com.armedia.acm.plugins.admin.web.api;
 import com.armedia.acm.services.labels.exception.AcmLabelManagementException;
 import com.armedia.acm.services.labels.service.LabelManagementService;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -44,7 +42,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
-import java.util.Iterator;
 
 /**
  * Created by sergey on 2/14/16.
@@ -68,18 +65,7 @@ public class LabelManagementRetrieveAdminResource
 
         try
         {
-            JSONObject jsonResource = labelManagementService.getAdminResource(ns, lang);
-            JSONArray jsonResourceArray = new JSONArray();
-            // Convert json object to the array
-            Iterator<String> keys = jsonResource.keys();
-            while (keys.hasNext())
-            {
-                String key = keys.next();
-                JSONObject node = (JSONObject) jsonResource.get(key);
-                node.put("id", key);
-                jsonResourceArray.put(node);
-            }
-            return jsonResourceArray.toString();
+            return labelManagementService.getAdminResource(ns, lang).toString();
         }
         catch (Exception e)
         {

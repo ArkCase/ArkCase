@@ -59,7 +59,6 @@ import java.util.UUID;
 @ContextConfiguration(name = "spring", locations = {
         "/spring/spring-library-configuration.xml",
         "/spring/spring-library-acm-encryption.xml",
-        "/spring/spring-library-activiti-actions.xml",
         "/spring/spring-library-activiti-configuration.xml",
         "/spring/spring-library-admin.xml",
         "/spring/spring-library-authentication-token.xml",
@@ -72,7 +71,6 @@ import java.util.UUID;
         "/spring/spring-library-case-file-save.xml",
         "/spring/spring-library-complaint.xml",
         "/spring/spring-library-complaint-plugin-test.xml",
-        "/spring/spring-library-complaint-plugin-test-mule.xml",
         "/spring/spring-library-context-holder.xml",
         "/spring/spring-library-data-access-control.xml",
         "/spring/spring-library-data-source.xml",
@@ -81,7 +79,6 @@ import java.util.UUID;
         "/spring/spring-library-ecm-tika.xml",
         "/spring/spring-library-email.xml",
         "/spring/spring-library-email-smtp.xml",
-        "/spring/spring-library-event.xml",
         "/spring/spring-library-folder-watcher.xml",
         "/spring/spring-library-form-configurations.xml",
         "/spring/spring-library-forms-configuration.xml",
@@ -121,6 +118,7 @@ public class ComplaintServiceIT
     {
         String userHomePath = System.getProperty("user.home");
         System.setProperty("acm.configurationserver.propertyfile", userHomePath + "/.arkcase/acm/conf.yml");
+        System.setProperty("configuration.server.url", "http://localhost:9999");
     }
 
     private ComplaintService service;

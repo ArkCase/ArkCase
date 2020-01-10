@@ -425,16 +425,16 @@
                     "columnDefs": [
                         {
                             "name": "title",
-                            "field": "title_parseable",
-                            "sortField": "title_parseable_lcs",
+                            "field": "title",
+                            "sortField": "title",
                             "displayName": "cases.comp.tasks.table.columns.title",
                             "headerCellFilter": "translate",
-                            "cellTemplate": "<div ng-bind-html='row.entity.title_parseable' title='{{row.entity.title_parseable}}' class='ui-grid-cell-contents'></div>"
+                            "cellTemplate": "<div ng-bind-html='row.entity.title' title='{{row.entity.title}}' class='ui-grid-cell-contents'></div>"
                         },
                         {
                             "width": 150,
                             "name": "assignee",
-                            "field": "assignee_s",
+                            "field": "assignee",
                             "displayName": "cases.comp.tasks.table.columns.assignee",
                             "headerCellFilter": "translate",
                             "lookup": "userFullNames"
@@ -442,10 +442,10 @@
                         {
                             "width": 150,
                             "name": "due",
-                            "field": "due_tdt",
+                            "field": "dueDate",
                             "displayName": "cases.comp.tasks.table.columns.due",
                             "headerCellFilter": "translate",
-                            "cellTemplate": "<div>{{ row.entity.due_tdt | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>"
+                            "cellTemplate": "<div>{{ row.entity.dueDate | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>"
                         }
                     ]
                 },
@@ -907,8 +907,8 @@
                 },
                 {
                     "name": "title",
-                    "field": "title_parseable",
-                    "sortField": "title_parseable_lcs",
+                    "field": "title",
+                    "sortField": "title",
                     "displayName": "cases.comp.tasks.table.columns.title",
                     "headerCellFilter": "translate",
                     "cellTemplate": "<a href='#' title='{{row.entity.title_parseable}}' ng-click='grid.appScope.onClickObjLink($event, row.entity)'>{{row.entity.title_parseable}}</a>"
@@ -922,7 +922,7 @@
                 },
                 {
                     "name": "created",
-                    "field": "create_tdt",
+                    "field": "createDate",
                     "displayName": "cases.comp.tasks.table.columns.created",
                     "headerCellFilter": "translate",
                     "cellTemplate": "<div>{{ row.entity.create_tdt | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>"
@@ -935,7 +935,7 @@
                 },
                 {
                     "name": "due",
-                    "field": "due_tdt",
+                    "field": "dueDate",
                     "displayName": "cases.comp.tasks.table.columns.due",
                     "headerCellFilter": "translate",
                     "cellTemplate": "<div>{{ row.entity.due_tdt | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>"
@@ -1540,6 +1540,14 @@
                     "headerCellFilter": "translate",
                     "footerCellTemplate": "<div class='ui-grid-cell-contents pull-right'>Total: </div>",
                     "width": "*"
+                },
+                {
+                    "name": "itemType",
+                    "field": "itemType",
+                    "displayName": "cases.comp.billing.table.columns.type",
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<div>{{ row.entity.itemType || 'Adhoc' }}</div>",
+                    "width": "20%"
                 },
                 {
                     "name": "itemAmount",

@@ -30,6 +30,7 @@ package com.armedia.acm.plugins.ecm.pipeline.presave;
 import com.armedia.acm.plugins.ecm.dao.AcmFolderDao;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
+import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
 import com.armedia.acm.plugins.ecm.pipeline.EcmFileTransactionPipelineContext;
 import com.armedia.acm.plugins.ecm.service.PageCountService;
@@ -38,8 +39,8 @@ import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.pipeline.handler.PipelineHandler;
 
 import org.apache.chemistry.opencmis.client.api.Document;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 
@@ -74,16 +75,17 @@ public class EcmFileUpdateMetadataHandler implements PipelineHandler<EcmFile, Ec
             }
 
             entity.setActiveVersionTag(cmisDocument.getVersionLabel());
-            entity.setVersionSeriesId(cmisDocument.getVersionSeriesId());
+            entity.setVersionSeriesId(cmisDocument.getPropertyValue(EcmFileConstants.REPOSITORY_VERSION_ID));
 
             // Sets the versioning of the file
             EcmFileVersion version = new EcmFileVersion();
-            version.setCmisObjectId(cmisDocument.getId());
+            version.setCmisObjectId(
+                    cmisDocument.getPropertyValue(EcmFileConstants.REPOSITORY_VERSION_ID) + ";" + cmisDocument.getVersionLabel());
             version.setVersionTag(cmisDocument.getVersionLabel());
             version.setVersionMimeType(entity.getFileActiveVersionMimeType());
             version.setVersionFileNameExtension(entity.getFileActiveVersionNameExtension());
-            long fileSizeBytes = pipelineContext.getMergedFileByteArray() != null &&
-                    pipelineContext.getMergedFileByteArray().length > 0 ? pipelineContext.getMergedFileByteArray().length
+            long fileSizeBytes = pipelineContext.getMergedFile() != null &&
+                    pipelineContext.getMergedFile().length() > 0 ? pipelineContext.getMergedFile().length()
                             : pipelineContext.getFileContents() != null ? pipelineContext.getFileContents().length() : 0;
             version.setFileSizeBytes(fileSizeBytes);
 

@@ -29,7 +29,6 @@ package com.armedia.acm.service.outlook.service.impl;
 
 import com.armedia.acm.convertfolder.ConversionException;
 import com.armedia.acm.convertfolder.DefaultFolderAndFileConverter;
-import com.armedia.acm.core.exceptions.AcmEncryptionException;
 import com.armedia.acm.core.exceptions.AcmOutlookConnectionFailedException;
 import com.armedia.acm.core.exceptions.AcmOutlookCreateItemFailedException;
 import com.armedia.acm.core.exceptions.AcmOutlookException;
@@ -37,6 +36,7 @@ import com.armedia.acm.core.exceptions.AcmOutlookFindItemsFailedException;
 import com.armedia.acm.core.exceptions.AcmOutlookItemNotFoundException;
 import com.armedia.acm.core.exceptions.AcmOutlookListItemsFailedException;
 import com.armedia.acm.crypto.AcmCryptoUtils;
+import com.armedia.acm.crypto.exceptions.AcmEncryptionException;
 import com.armedia.acm.plugins.ecm.dao.AcmContainerDao;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
@@ -73,9 +73,9 @@ import com.armedia.acm.services.email.service.TemplatingEngine;
 import com.armedia.acm.services.users.model.AcmUser;
 
 import org.apache.commons.codec.digest.DigestUtils;
-import org.mule.util.FileUtils;
-import org.apache.logging.log4j.Logger;
+import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -152,21 +152,15 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
 
         OutlookResults<OutlookMailItem> results = new OutlookResults<>();
 
-        try
-        {
-            FindItemsResults<Item> items = getDao().findItems(service, WellKnownFolderName.Inbox, mailProperties, start, maxItems,
-                    sortField, sortAscending, filter);
+        FindItemsResults<Item> items = getDao().findItems(service, WellKnownFolderName.Inbox, mailProperties, start, maxItems,
+                sortField, sortAscending, filter);
 
-            populateResultHeaderFields(results, start, maxItems, sortField, sortAscending, items.getTotalCount(), items.isMoreAvailable(),
-                    items.getNextPageOffset() == null ? -1 : items.getNextPageOffset());
+        populateResultHeaderFields(results, start, maxItems, sortField, sortAscending, items.getTotalCount(), items.isMoreAvailable(),
+                items.getNextPageOffset() == null ? -1 : items.getNextPageOffset());
 
-            List<OutlookMailItem> messages = items.getItems().stream().map(this::messageFrom).collect(Collectors.toList());
-            results.setItems(messages);
-        }
-        catch (AcmOutlookException e)
-        {
-            disconnectAndRetry(user, e);
-        }
+        List<OutlookMailItem> messages = items.getItems().stream().map(this::messageFrom).collect(Collectors.toList());
+        results.setItems(messages);
+
 
         return results;
     }
@@ -182,21 +176,14 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
 
         OutlookResults<OutlookTaskItem> results = new OutlookResults<>();
 
-        try
-        {
-            FindItemsResults<Item> items = getDao().findItems(service, WellKnownFolderName.Tasks, taskProperties, start, maxItems,
-                    sortField, sortAscending, filter);
+        FindItemsResults<Item> items = getDao().findItems(service, WellKnownFolderName.Tasks, taskProperties, start, maxItems,
+                sortField, sortAscending, filter);
 
-            populateResultHeaderFields(results, start, maxItems, sortField, sortAscending, items.getTotalCount(), items.isMoreAvailable(),
-                    items.getNextPageOffset() == null ? -1 : items.getNextPageOffset());
+        populateResultHeaderFields(results, start, maxItems, sortField, sortAscending, items.getTotalCount(), items.isMoreAvailable(),
+                items.getNextPageOffset() == null ? -1 : items.getNextPageOffset());
 
-            List<OutlookTaskItem> tasks = items.getItems().stream().map(this::taskFrom).collect(Collectors.toList());
-            results.setItems(tasks);
-        }
-        catch (AcmOutlookException e)
-        {
-            disconnectAndRetry(user, e);
-        }
+        List<OutlookTaskItem> tasks = items.getItems().stream().map(this::taskFrom).collect(Collectors.toList());
+        results.setItems(tasks);
 
         return results;
 
@@ -345,23 +332,16 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
 
         OutlookResults<OutlookCalendarItem> results = new OutlookResults<>();
 
-        try
-        {
-            FindItemsResults<Item> items = folderId != null
-                    ? getDao().findItems(service, folderId, calendarProperties, start, maxItems, sortField, sortAscending, filter)
-                    : getDao().findItems(service, WellKnownFolderName.Calendar, calendarProperties, start, maxItems, sortField,
-                            sortAscending, filter);
+        FindItemsResults<Item> items = folderId != null
+                ? getDao().findItems(service, folderId, calendarProperties, start, maxItems, sortField, sortAscending, filter)
+                : getDao().findItems(service, WellKnownFolderName.Calendar, calendarProperties, start, maxItems, sortField,
+                        sortAscending, filter);
 
-            populateResultHeaderFields(results, start, maxItems, sortField, sortAscending, items.getTotalCount(), items.isMoreAvailable(),
-                    items.getNextPageOffset() == null ? -1 : items.getNextPageOffset());
+        populateResultHeaderFields(results, start, maxItems, sortField, sortAscending, items.getTotalCount(), items.isMoreAvailable(),
+                items.getNextPageOffset() == null ? -1 : items.getNextPageOffset());
 
-            List<OutlookCalendarItem> appts = items.getItems().stream().map(this::calendarFrom).collect(Collectors.toList());
-            results.setItems(appts);
-        }
-        catch (AcmOutlookException e)
-        {
-            disconnectAndRetry(user, e);
-        }
+        List<OutlookCalendarItem> appts = items.getItems().stream().map(this::calendarFrom).collect(Collectors.toList());
+        results.setItems(appts);
 
         return results;
 
@@ -656,21 +636,14 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
 
         OutlookResults<OutlookContactItem> results = new OutlookResults<>();
 
-        try
-        {
-            FindItemsResults<Item> items = getDao().findItems(service, WellKnownFolderName.Contacts, contactProperties, start, maxItems,
-                    sortField, sortAscending, filter);
+        FindItemsResults<Item> items = getDao().findItems(service, WellKnownFolderName.Contacts, contactProperties, start, maxItems,
+                sortField, sortAscending, filter);
 
-            populateResultHeaderFields(results, start, maxItems, sortField, sortAscending, items.getTotalCount(), items.isMoreAvailable(),
-                    items.getNextPageOffset() == null ? -1 : items.getNextPageOffset());
+        populateResultHeaderFields(results, start, maxItems, sortField, sortAscending, items.getTotalCount(), items.isMoreAvailable(),
+                items.getNextPageOffset() == null ? -1 : items.getNextPageOffset());
 
-            List<OutlookContactItem> contacts = items.getItems().stream().map(this::contactFrom).collect(Collectors.toList());
-            results.setItems(contacts);
-        }
-        catch (AcmOutlookException e)
-        {
-            disconnectAndRetry(user, e);
-        }
+        List<OutlookContactItem> contacts = items.getItems().stream().map(this::contactFrom).collect(Collectors.toList());
+        results.setItems(contacts);
 
         return results;
 
@@ -688,52 +661,34 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
 
         try
         {
-            try
-            {
-                folder = calendarItem.getFolderId() == null ? Folder.bind(service, WellKnownFolderName.Calendar)
-                        : Folder.bind(service, new FolderId(calendarItem.getFolderId()));
-            }
-            catch (Exception e)
-            {
-                throw new AcmOutlookException("Can't bind to folder id [" + calendarItem.getFolderId() + " ]!", e);
-            }
-
-            retval = getDao().createCalendarAppointment(service, folder, calendarItem);
-
-            List<AcmContainer> containers = getAcmContainerDao().findByCalendarFolderId(calendarItem.getFolderId());
-
-            // we expect that exactly one container is returned
-            if (containers.size() == 1)
-            {
-                getOutlookEventPublisher().publishCalendarEventAdded(retval, user.getUserId(), containers.get(0).getContainerObjectId(),
-                        containers.get(0).getContainerObjectType());
-            }
-            else
-            {
-                log.error(String.format("Unexpected number of containers=%d returned for calendarFolderId=%d", containers.size(),
-                        Integer.parseInt(calendarItem.getFolderId())));
-            }
-
+            folder = calendarItem.getFolderId() == null ? Folder.bind(service, WellKnownFolderName.Calendar)
+                    : Folder.bind(service, new FolderId(calendarItem.getFolderId()));
         }
-        catch (AcmOutlookException e)
+        catch (Exception e)
         {
-            disconnectAndRetry(user, e);
-
+            throw new AcmOutlookException("Can't bind to folder id [" + calendarItem.getFolderId() + " ]!", e);
         }
 
-        // we can't return null, since either the method will work and we return an apppoinment, or else the retry
+        retval = getDao().createCalendarAppointment(service, folder, calendarItem);
+
+        List<AcmContainer> containers = getAcmContainerDao().findByCalendarFolderId(calendarItem.getFolderId());
+
+        // we expect that exactly one container is returned
+        if (containers.size() == 1)
+        {
+            getOutlookEventPublisher().publishCalendarEventAdded(retval, user.getUserId(), containers.get(0).getContainerObjectId(),
+                    containers.get(0).getContainerObjectType());
+        }
+        else
+        {
+            log.error(String.format("Unexpected number of containers=%d returned for calendarFolderId=%d", containers.size(),
+                    Integer.parseInt(calendarItem.getFolderId())));
+        }
+
+        // we won't return null, since either the method will work and we return an apppoinment, or else the retry
         // handler will stop trying to retry and we'll throw the exception.
         return retval;
-    }
-
-    private void disconnectAndRetry(AcmOutlookUser user, AcmOutlookException e)
-    {
-        // disconnect the user (which evicts from cache), then rethrow; the Spring retry handler should call use
-        // again, maybe it will work this time... since connections do go bad from time to time.
-        log.info("Something went wrong in Outlook; disconnecting user.");
-        getDao().disconnect(user);
-        throw e;
-    }
+    }    
 
     @Override
     public OutlookTaskItem createOutlookTaskItem(AcmOutlookUser user, WellKnownFolderName folderName, OutlookTaskItem taskItem)
@@ -745,20 +700,13 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
 
         try
         {
-            try
-            {
-                folder = Folder.bind(service, folderName);
-            }
-            catch (Exception e)
-            {
-                throw new AcmOutlookException("Can't bind to folder(" + folderName + ")!", e);
-            }
-            retval = getDao().createTaskItem(service, folder, taskItem);
+            folder = Folder.bind(service, folderName);
         }
-        catch (AcmOutlookException e)
+        catch (Exception e)
         {
-            disconnectAndRetry(user, e);
+            throw new AcmOutlookException("Can't bind to folder(" + folderName + ")!", e);
         }
+        retval = getDao().createTaskItem(service, folder, taskItem);
 
         return retval;
 
@@ -775,21 +723,14 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
 
         try
         {
-            try
-            {
-                folder = Folder.bind(service, folderName);
-            }
-            catch (Exception e)
-            {
-                throw new AcmOutlookException("Can't bind to folder(" + folderName + ")!", e);
-            }
-
-            retval = getDao().createContactItem(service, folder, contactItem);
+            folder = Folder.bind(service, folderName);
         }
-        catch (AcmOutlookException e)
+        catch (Exception e)
         {
-            disconnectAndRetry(user, e);
+            throw new AcmOutlookException("Can't bind to folder(" + folderName + ")!", e);
         }
+
+        retval = getDao().createContactItem(service, folder, contactItem);
 
         return retval;
 
@@ -800,15 +741,7 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
     {
         ExchangeService service = connect(user);
 
-        try
-        {
-            getDao().deleteItem(service, itemId, deleteMode);
-        }
-        catch (AcmOutlookException e)
-        {
-            disconnectAndRetry(user, e);
-        }
-
+        getDao().deleteItem(service, itemId, deleteMode);
     }
 
     @Override
@@ -849,16 +782,7 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
     public void deleteAppointmentItem(AcmOutlookUser user, String appointmentId, Boolean recurring, DeleteMode deleteMode)
     {
         ExchangeService service = connect(user);
-
-        try
-        {
-            getDao().deleteAppointmentItem(service, appointmentId, recurring, deleteMode);
-        }
-        catch (AcmOutlookException e)
-        {
-            disconnectAndRetry(user, e);
-        }
-
+        getDao().deleteAppointmentItem(service, appointmentId, recurring, deleteMode);
     }
 
     @Override
@@ -869,23 +793,17 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
 
         OutlookFolder retval = null;
 
-        try
-        {
-            retval = getDao().createFolder(service, user.getEmailAddress(), parentFolderName, newFolder);
-        }
-        catch (AcmOutlookException e)
-        {
-            disconnectAndRetry(user, e);
-        }
+        retval = getDao().createFolder(service, user.getEmailAddress(), parentFolderName, newFolder);
 
-        try
+        AcmOutlookFolderCreator folderCreator;
+        try 
         {
-            AcmOutlookFolderCreator folderCreator = folderCreatorDao.getFolderCreator(user.getEmailAddress(), user.getOutlookPassword());
+            folderCreator = folderCreatorDao.getFolderCreator(user.getEmailAddress(), user.getOutlookPassword());
             folderCreatorDao.recordFolderCreator(folderCreator, objectId, objectType);
-        }
-        catch (AcmOutlookFolderCreatorDaoException e)
+        } 
+        catch (AcmOutlookFolderCreatorDaoException e) 
         {
-            disconnectAndRetry(user, new AcmOutlookException(e));
+            throw new AcmOutlookCreateItemFailedException(e);
         }
 
         return retval;
@@ -900,23 +818,17 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
         ExchangeService service = connect(user);
         OutlookFolder retval = null;
 
+        Folder folder = getDao().getFolder(service, folderId);
+
         try
         {
-            Folder folder = getDao().getFolder(service, folderId);
-
-            try
-            {
-                retval = mapFolderToOutlookFolder(folder);
-            }
-            catch (ServiceLocalException e)
-            {
-                throw new AcmOutlookConnectionFailedException("Error retrieving folder properties. ", e);
-            }
+            retval = mapFolderToOutlookFolder(folder);
         }
-        catch (AcmOutlookException e)
+        catch (ServiceLocalException e)
         {
-            disconnectAndRetry(user, e);
+            throw new AcmOutlookConnectionFailedException("Error retrieving folder properties. ", e);
         }
+
 
         return retval;
     }
@@ -926,15 +838,8 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
     {
 
         ExchangeService service = connect(user);
+        getDao().deleteFolder(service, folderId, deleteMode);
 
-        try
-        {
-            getDao().deleteFolder(service, folderId, deleteMode);
-        }
-        catch (AcmOutlookException e)
-        {
-            disconnectAndRetry(user, e);
-        }
     }
 
     @Override
@@ -942,15 +847,8 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
             throws AcmOutlookItemNotFoundException
     {
         ExchangeService service = connect(user);
+        getDao().addFolderPermission(service, folderId, permission);
 
-        try
-        {
-            getDao().addFolderPermission(service, folderId, permission);
-        }
-        catch (AcmOutlookException e)
-        {
-            disconnectAndRetry(user, e);
-        }
     }
 
     @Override
@@ -958,16 +856,7 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
             throws AcmOutlookItemNotFoundException
     {
         ExchangeService service = connect(user);
-
-        try
-        {
-            getDao().removeFolderPermission(service, folderId, permission);
-        }
-        catch (AcmOutlookException e)
-        {
-            disconnectAndRetry(user, e);
-        }
-
+        getDao().removeFolderPermission(service, folderId, permission);
     }
 
     @Override

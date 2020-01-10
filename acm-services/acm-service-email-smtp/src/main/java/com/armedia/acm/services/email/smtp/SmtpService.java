@@ -47,11 +47,9 @@ import com.armedia.acm.services.email.service.AcmEmailSenderService;
 import com.armedia.acm.services.email.service.TemplatingEngine;
 import com.armedia.acm.services.users.model.AcmUser;
 
-import org.mule.api.MuleException;
-import org.mule.api.MuleMessage;
-import org.mule.util.FileUtils;
-import org.apache.logging.log4j.Logger;
+import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.security.core.Authentication;
@@ -137,9 +135,10 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
 
         List<AcmEvent> sentEvents = new ArrayList<>();
         Map<String, InputStreamDataSource> attachments = processAttachments(in, user, sentEvents);
-        if(attachments.size() == 0)
+        if (attachments.size() == 0)
         {
-            sentEvents.add(new SmtpEventMailSent(in,user.getUserId(),in.getObjectId(),in.getObjectType(),AuthenticationUtils.getUserIpAddress()));
+            sentEvents.add(new SmtpEventMailSent(in, user != null ? user.getUserId() : null, in.getObjectId(), in.getObjectType(),
+                    AuthenticationUtils.getUserIpAddress()));
         }
         for (String emailAddress : in.getEmailAddresses())
         {
@@ -202,8 +201,8 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
             }
             catch (Exception e)
             {
-                log.error("Failed to send email to [{}].", emailAddress, exception);
                 exception = e;
+                log.error("Failed to send email to [{}].", emailAddress, exception);
             }
         }
         in.setMailSent(exception == null);
@@ -283,7 +282,7 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
                     }
                     catch (ConversionException e)
                     {
-                        log.error(String.format("Could not convert file [%s] to PDF", fileName), e);
+                        log.error("Could not convert file [{}] to PDF", fileName, e);
                     }
 
                     if (pdfConvertedFile != null)
@@ -297,7 +296,7 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
                         }
                         catch (IOException e)
                         {
-                            log.error(String.format("Could not open input stream of file [%s]", fileName), e);
+                            log.error("Could not open input stream of file [{}]", fileName, e);
                         }
                         finally
                         {
@@ -381,15 +380,23 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
             if (exception != null)
             {
                 emailResultList.add(new EmailWithEmbeddedLinksResultDTO(emailAddress, false));
-                log.error("Email message not sent ...", exception);
+                log.error("Failed to send email to [{}].", emailAddress, exception);
             }
             else
             {
                 emailResultList.add(new EmailWithEmbeddedLinksResultDTO(emailAddress, true));
             }
+            AcmEvent event = null;
+            if (in.getModelReferenceName().equals("plainEmail"))
+            {
 
-            SmtpSentEventHyperlink event = new SmtpSentEventHyperlink(in, user.getUserId(), parentId, in.getParentType());
-
+                event = new SmtpEventMailSent(in, user != null ? user.getUserId() : null, Long.parseLong(in.getParentNumber()),
+                        in.getParentType(), null);
+            }
+            else
+            {
+                event = new SmtpSentEventHyperlink(in, user != null ? user.getUserId() : null, parentId, in.getParentType());
+            }
             boolean success = (exception == null);
             event.setSucceeded(success);
             eventPublisher.publishEvent(event);

@@ -28,6 +28,8 @@ package com.armedia.acm.configuration.core.jmx;
  */
 
 import com.armedia.acm.configuration.core.ConfigurationContainer;
+import com.armedia.acm.configuration.core.LabelsConfiguration;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -45,13 +47,20 @@ public class JmxInitializer
     @Autowired
     ConfigurationContainer configurationContainer;
 
+    @Autowired
+    LabelsConfiguration labelsConfiguration;
+
     @Bean(name = "coreRegisterer")
     public MBeanExporter getMBeanExporter()
     {
         MBeanExporter mBeanExporter = new MBeanExporter();
         Map<String, Object> beans = new HashMap<>();
-        beans.put("configuration:name=configuration-service,type=com.armedia.acm.configuration.ConfigurationService,artifactId=configuration-service",
+        beans.put(
+                "configuration:name=configuration-service,type=com.armedia.acm.configuration.ConfigurationService,artifactId=configuration-service",
                 new ConfigurationFacadeJmx(configurationContainer));
+        beans.put(
+                "configuration:name=labels-service,type=com.armedia.acm.configuration.ConfigurationService,artifactId=labels-service",
+                new ConfigurationFacadeJmx(labelsConfiguration));
         mBeanExporter.setBeans(beans);
         MetadataMBeanInfoAssembler metadataMBeanInfoAssembler = new MetadataMBeanInfoAssembler();
         metadataMBeanInfoAssembler.setAttributeSource(new AnnotationJmxAttributeSource());

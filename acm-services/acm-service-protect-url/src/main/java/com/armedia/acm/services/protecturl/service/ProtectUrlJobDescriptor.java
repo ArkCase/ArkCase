@@ -29,8 +29,12 @@ package com.armedia.acm.services.protecturl.service;
 
 
 import com.armedia.acm.quartz.scheduler.AcmJobDescriptor;
+import org.quartz.DisallowConcurrentExecution;
 import org.quartz.JobExecutionContext;
+import org.quartz.PersistJobDataAfterExecution;
 
+@DisallowConcurrentExecution
+@PersistJobDataAfterExecution
 public class ProtectUrlJobDescriptor extends AcmJobDescriptor
 {
     private ProtectUrlService protectUrlService;

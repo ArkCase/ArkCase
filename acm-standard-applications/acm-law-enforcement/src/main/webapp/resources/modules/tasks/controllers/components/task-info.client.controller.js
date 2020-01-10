@@ -164,12 +164,12 @@ angular.module('tasks').controller(
                         $scope.dateInfo = $scope.dateInfo || {};
                         $scope.dateInfo.dueDate = $scope.objectInfo.dueDate;
                         $scope.dateInfo.taskStartDate = $scope.objectInfo.taskStartDate;
-                        $scope.dateInfo.isOverdue = TaskAlertsService.calculateOverdue($scope.dateInfo.dueDate);
-                        $scope.dateInfo.isDeadline = TaskAlertsService.calculateDeadline($scope.dateInfo.dueDate);
+                        $scope.dateInfo.isOverdue = TaskAlertsService.calculateOverdue(new Date($scope.dateInfo.dueDate));
+                        $scope.dateInfo.isDeadline = TaskAlertsService.calculateDeadline(new Date($scope.dateInfo.dueDate));
                         $scope.assignee = ObjectModelService.getAssignee($scope.objectInfo);
                         $scope.taskStartDateBeforeChange = $scope.dateInfo.taskStartDate;
                         $scope.dueDateBeforeChange = $scope.dateInfo.dueDate;
-
+                        
                         var utcDate = moment.utc(UtilDateService.dateToIso(new Date($scope.dateInfo.taskStartDate))).format();
                         $scope.maxYear = moment(utcDate).add(1, 'years').toDate().getFullYear();
 

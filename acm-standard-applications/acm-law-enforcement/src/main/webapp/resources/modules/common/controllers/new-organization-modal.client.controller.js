@@ -2,8 +2,8 @@
 
 angular.module('common').controller(
         'Common.NewOrganizationModalController',
-        [ '$scope', '$stateParams', '$translate', 'Organization.InfoService', '$state', 'Object.LookupService', 'UtilService', '$modal', 'ConfigService', 'MessageService', '$timeout', '$modalInstance', 'Person.InfoService',
-                function($scope, $stateParams, $translate, OrganizationInfoService, $state, ObjectLookupService, Util, $modal, ConfigService, MessageService, $timeout, $modalInstance, PersonInfoService) {
+    ['$scope', '$stateParams', '$translate', 'Organization.InfoService', '$state', 'Object.LookupService', 'UtilService', '$modal', 'ConfigService', 'MessageService', '$timeout', '$modalInstance', 'Person.InfoService', 'PhoneValidationService',
+        function ($scope, $stateParams, $translate, OrganizationInfoService, $state, ObjectLookupService, Util, $modal, ConfigService, MessageService, $timeout, $modalInstance, PersonInfoService, PhoneValidationService) {
 
                     //used for showing/hiding buttons in communication accounts
                     var contactMethodsCounts = {
@@ -354,4 +354,18 @@ angular.module('common').controller(
                     $scope.capitalizeFirstLetter = function(input) {
                         return (!!input) ? input.charAt(0).toUpperCase() + input.substr(1).toLowerCase() : '';
                     }
-                } ]);
+
+                    var regEx = PhoneValidationService.getPhoneRegex().then(function (response) {
+                        var regExp = new RegExp(response.data);
+                        regEx = regExp;
+                    });
+
+                    $scope.validateInput = function (caType) {
+                        var inputType = caType;
+                        if (inputType == 'phone') {
+                        var validateObject = PhoneValidationService.validateInput($scope.organization.defaultPhone.value, regEx)
+                        $scope.organization.defaultPhone.value = validateObject.inputValue;
+                        $scope.showPhoneError = validateObject.showPhoneError;
+                        }
+                    }
+        }]);

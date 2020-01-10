@@ -4,7 +4,7 @@ package com.armedia.acm.services.search.model.solr;
  * #%L
  * ACM Service: Search
  * %%
- * Copyright (C) 2014 - 2018 ArkCase LLC
+ * Copyright (C) 2014 - 2019 ArkCase LLC
  * %%
  * This file is part of the ArkCase software. 
  * 
@@ -29,10 +29,16 @@ package com.armedia.acm.services.search.model.solr;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.util.Assert;
 
-public class SolrConfig
+public class SolrConfig implements InitializingBean
 {
+    private static final Logger LOGGER = LogManager.getLogger(SolrConfig.class);
+
     @JsonProperty("solr.host")
     @Value("${solr.host}")
     private String host;
@@ -45,6 +51,14 @@ public class SolrConfig
     @Value("${solr.contextRoot}")
     private String contextRoot;
 
+    @JsonProperty("solr.clientType")
+    @Value("${solr.clientType}")
+    private SolrClientType clientType;
+
+    @JsonProperty("solr.protocol")
+    @Value("${solr.protocol}")
+    private String protocol;
+
     @JsonProperty("solr.quicksearch.core")
     @Value("${solr.quicksearch.core}")
     private String quickSearchCore;
@@ -52,6 +66,10 @@ public class SolrConfig
     @JsonProperty("solr.advancedsearch.core")
     @Value("${solr.advancedsearch.core}")
     private String advancedSearchCore;
+
+    @JsonProperty("solr.omitHeader")
+    @Value("${solr.omitHeader}")
+    private boolean omitHeader;
 
     @JsonProperty("solr.updateHandler")
     @Value("${solr.updateHandler}")
@@ -80,6 +98,58 @@ public class SolrConfig
     @JsonProperty("solr.suggestHandler")
     @Value("${solr.suggestHandler}")
     private String suggestHandler;
+
+    // Cloud only
+    @JsonProperty("solr.parallelUpdates")
+    @Value("${solr.parallelUpdates}")
+    private boolean parallelUpdates;
+
+    @JsonProperty("solr.zkHosts")
+    @Value("${solr.zkHosts}")
+    private String zkHosts;
+
+    /**
+     * Defines the connection timeout in milliseconds to connnect to
+     * a Solr server.
+     * A timeout value of zero is interpreted as an infinite timeout.
+     * A negative value is interpreted as undefined (system default).
+     */
+    @JsonProperty("solr.connectionTimeout")
+    @Value("${solr.connectionTimeout}")
+    private int connectionTimeout;
+
+    /**
+     * Defines the socket timeout in milliseconds which will be the read timeout.
+     * A timeout value of zero is interpreted as an infinite timeout.
+     * A negative value is interpreted as undefined (system default).
+     */
+
+    @JsonProperty("solr.socketTimeout")
+    @Value("${solr.socketTimeout}")
+    private int socketTimeout;
+
+    @Override
+    public void afterPropertiesSet()
+    {
+        validate();
+    }
+
+    /**
+     * Validate Solr configuration
+     */
+    protected void validate()
+    {
+        Assert.hasText(getProtocol(), "Invalid Solr configuration, no protocol specified");
+        Assert.hasText(getHost(), "Invalid Solr configuration, no host specified");
+        Assert.hasText(getContextRoot(), "Invalid Solr configuration, no context specified");
+        Assert.hasText(getQuickSearchCore(), "Invalid Solr configuration, no QuickSearch Core/Collection specified");
+        Assert.hasText(getAdvancedSearchCore(), "Invalid Solr configuration, no AdvancedSearch Core/Collection specified");
+        Assert.hasText(getSearchHandler(), "Invalid Solr configuration, no search handler specified");
+        Assert.hasText(getUpdateHandler(), "Invalid Solr configuration, no update handler specified");
+        Assert.hasText(getSuggestHandler(), "Invalid Solr configuration, no suggest handler specified");
+        Assert.hasText(getContentFileHandler(), "Invalid Solr configuration, no content file specified");
+        Assert.notNull(getClientType(), "Invalid Solr configuration, no client type specified");
+    }
 
     public String getHost()
     {
@@ -199,5 +269,75 @@ public class SolrConfig
     public void setSuggestHandler(String suggestHandler)
     {
         this.suggestHandler = suggestHandler;
+    }
+
+    public SolrClientType getClientType()
+    {
+        return clientType;
+    }
+
+    public void setClientType(SolrClientType clientType)
+    {
+        this.clientType = clientType;
+    }
+
+    public String getProtocol()
+    {
+        return protocol;
+    }
+
+    public void setProtocol(String protocol)
+    {
+        this.protocol = protocol;
+    }
+
+    public boolean isOmitHeader()
+    {
+        return omitHeader;
+    }
+
+    public void setOmitHeader(boolean omitHeader)
+    {
+        this.omitHeader = omitHeader;
+    }
+
+    public boolean isParallelUpdates()
+    {
+        return parallelUpdates;
+    }
+
+    public void setParallelUpdates(boolean parallelUpdates)
+    {
+        this.parallelUpdates = parallelUpdates;
+    }
+
+    public String getZkHosts()
+    {
+        return zkHosts;
+    }
+
+    public void setZkHosts(String zkHosts)
+    {
+        this.zkHosts = zkHosts;
+    }
+
+    public int getConnectionTimeout()
+    {
+        return connectionTimeout;
+    }
+
+    public void setConnectionTimeout(int connectionTimeout)
+    {
+        this.connectionTimeout = connectionTimeout;
+    }
+
+    public int getSocketTimeout()
+    {
+        return socketTimeout;
+    }
+
+    public void setSocketTimeout(int socketTimeout)
+    {
+        this.socketTimeout = socketTimeout;
     }
 }

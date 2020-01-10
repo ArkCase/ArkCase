@@ -31,6 +31,7 @@ import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmUpdateObjectFailedException;
 import com.armedia.acm.plugins.addressable.exceptions.AcmContactMethodValidationException;
 import com.armedia.acm.plugins.addressable.service.ContactMethodsUtil;
+import com.armedia.acm.plugins.addressable.service.PhoneRegexConfig;
 import com.armedia.acm.plugins.person.dao.OrganizationDao;
 import com.armedia.acm.plugins.person.model.Organization;
 import com.armedia.acm.plugins.person.model.PersonOrganizationAssociation;
@@ -52,8 +53,10 @@ import java.util.stream.Collectors;
 public class OrganizationServiceImpl implements OrganizationService
 {
     private OrganizationDao organizationDao;
+    private PhoneRegexConfig phoneRegexConfig;
 
     private PipelineManager<Organization, OrganizationPipelineContext> organizationPipelineManager;
+
 
     private Logger log = LogManager.getLogger(getClass());
 
@@ -78,7 +81,7 @@ public class OrganizationServiceImpl implements OrganizationService
         validatePersonAssociations(organization);
         try
         {
-            ContactMethodsUtil.validateContactMethodFields(organization.getContactMethods());
+            ContactMethodsUtil.validateContactMethodFields(organization.getContactMethods(), phoneRegexConfig);
         }
         catch (AcmContactMethodValidationException e)
         {
@@ -192,4 +195,13 @@ public class OrganizationServiceImpl implements OrganizationService
         this.organizationPipelineManager = organizationPipelineManager;
     }
 
+    public PhoneRegexConfig getPhoneRegexConfig()
+    {
+        return phoneRegexConfig;
+    }
+
+    public void setPhoneRegexConfig(PhoneRegexConfig phoneRegexConfig)
+    {
+        this.phoneRegexConfig = phoneRegexConfig;
+    }
 }

@@ -27,17 +27,19 @@ package com.armedia.acm.plugins.report.web.api;
  * #L%
  */
 
-import com.armedia.acm.core.exceptions.AcmEncryptionException;
 import com.armedia.acm.plugins.report.service.ReportService;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 
-import org.mule.api.MuleException;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.IOException;
 import java.util.List;
@@ -114,7 +116,7 @@ public class GetReportToRolesMapAPIController
             @RequestParam(value = "n", required = false, defaultValue = "10000") int maxRows,
             @RequestParam(value = "s", required = false, defaultValue = "name_lcs") String sortBy,
             @RequestParam(value = "dir", required = false, defaultValue = "ASC") String sortDirection,
-            Authentication auth) throws MuleException, AcmEncryptionException
+            Authentication auth)
     {
 
         LOG.debug("Taking roles from property file for specific report");

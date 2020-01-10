@@ -27,10 +27,10 @@ package com.armedia.acm.services.search.service.solr;
  * #L%
  */
 
-import com.armedia.acm.services.search.model.SolrCore;
+import com.armedia.acm.services.search.model.solr.SolrCore;
 
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -44,20 +44,22 @@ public class DefaultSolrPostClient implements SolrPostClient
     private SolrRestClient solrRestClient;
 
     @Override
-    public void sendToSolr(SolrCore core, String json) throws SolrPostException
+    public void sendToSolr(String destinationQueue, SolrCore core, String json) throws SolrPostException
     {
         Objects.requireNonNull(core, "Core must be specified");
         Objects.requireNonNull(json, "JSON must be specified");
-        Objects.requireNonNull(core.getCore(), "The Solr core must have a value");
+        Objects.requireNonNull(core.getCore(solrRestClient.getSolrConfig()), "The Solr core must have a value");
 
         String logJson = json.length() > 50 ? json.substring(0, 50) + "..." : json;
-        logger.debug("Sending to Solr core {} with JSON {}", core.getCore(), logJson);
+        logger.debug("Sending to Solr core {} with JSON {}", core.getCore(solrRestClient.getSolrConfig()), logJson);
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
         HttpEntity<String> entity = new HttpEntity<>(json, headers);
 
-        getSolrRestClient().postToSolr(core.getCore(), solrRestClient.getSolrConfig().getUpdateHandler(), entity, logJson);
+        getSolrRestClient().postToSolr(destinationQueue, core.getCore(solrRestClient.getSolrConfig()),
+                solrRestClient.getSolrConfig().getUpdateHandler(), entity,
+                logJson);
     }
 
     public SolrRestClient getSolrRestClient()

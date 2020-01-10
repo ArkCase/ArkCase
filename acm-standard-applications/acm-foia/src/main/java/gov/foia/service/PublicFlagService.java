@@ -30,79 +30,95 @@ package gov.foia.service;
 import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
-import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
+import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.Set;
 
+import gov.foia.dao.FOIAFileDao;
 import gov.foia.model.FOIAFile;
 
-public class PublicFlagService {
+public class PublicFlagService
+{
 
     private final Logger log = LogManager.getLogger(getClass());
     private EcmFileService ecmFileService;
-    private EcmFileDao ecmFileDao;
+    private FOIAFileDao foiaFileDao;
     private AcmFolderService acmFolderService;
 
+    public void updatePublicFlagForFiles(Set<Long> fileIds, Set<Long> folderIds, boolean publicFlag)
+            throws AcmUserActionFailedException, AcmObjectNotFoundException
+    {
 
-    public void updatePublicFlagForFiles(Set<Long> fileIds, Set<Long> folderIds, boolean publicFlag) throws AcmUserActionFailedException, AcmObjectNotFoundException {
-
-        for(Long folderId : folderIds)
+        for (Long folderId : folderIds)
         {
             getChildrenFilesForFolderRecursive(folderId, fileIds);
         }
 
-        for(Long fileId : fileIds)
+        for (Long fileId : fileIds)
         {
             log.info("Updating public flag for file with id [{}] with status [{}]", fileId, publicFlag);
 
-            FOIAFile ecmFile = (FOIAFile) getEcmFileDao().find(fileId);
-            ecmFile.setPublicFlag(publicFlag);
+            FOIAFile foiaFile = getFoiaFileDao().find(fileId);
+            if (foiaFile == null)
+            {
+                throw new AcmObjectNotFoundException(EcmFileConstants.OBJECT_FILE_TYPE, fileId, "File not found", null);
+            }
 
-            getEcmFileService().updateFile(ecmFile);
+            foiaFile.setPublicFlag(publicFlag);
+
+            getEcmFileService().updateFile(foiaFile);
         }
     }
 
-    private void getChildrenFilesForFolderRecursive(Long folderId, Set<Long> childrenList) throws AcmObjectNotFoundException, AcmUserActionFailedException {
+    private void getChildrenFilesForFolderRecursive(Long folderId, Set<Long> childrenList)
+            throws AcmObjectNotFoundException, AcmUserActionFailedException
+    {
 
-        for(AcmObject child : getAcmFolderService().getFolderChildren(folderId))
+        for (AcmObject child : getAcmFolderService().getFolderChildren(folderId))
         {
-            if("FILE".equals(child.getObjectType()))
+            if ("FILE".equals(child.getObjectType()))
             {
                 childrenList.add(child.getId());
             }
-            else if("FOLDER".equals(child.getObjectType()))
+            else if ("FOLDER".equals(child.getObjectType()))
             {
                 getChildrenFilesForFolderRecursive(child.getId(), childrenList);
             }
         }
     }
 
-    public EcmFileService getEcmFileService() {
+    public EcmFileService getEcmFileService()
+    {
         return ecmFileService;
     }
 
-    public void setEcmFileService(EcmFileService ecmFileService) {
+    public void setEcmFileService(EcmFileService ecmFileService)
+    {
         this.ecmFileService = ecmFileService;
     }
 
-    public EcmFileDao getEcmFileDao() {
-        return ecmFileDao;
+    public FOIAFileDao getFoiaFileDao()
+    {
+        return foiaFileDao;
     }
 
-    public void setEcmFileDao(EcmFileDao ecmFileDao) {
-        this.ecmFileDao = ecmFileDao;
+    public void setFoiaFileDao(FOIAFileDao foiaFileDao)
+    {
+        this.foiaFileDao = foiaFileDao;
     }
 
-    public AcmFolderService getAcmFolderService() {
+    public AcmFolderService getAcmFolderService()
+    {
         return acmFolderService;
     }
 
-    public void setAcmFolderService(AcmFolderService acmFolderService) {
+    public void setAcmFolderService(AcmFolderService acmFolderService)
+    {
         this.acmFolderService = acmFolderService;
     }
 }

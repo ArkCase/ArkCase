@@ -3,7 +3,7 @@
     <parent>
         <artifactId>acm-default-plugins</artifactId>
         <groupId>com.armedia.acm.acm-plugins</groupId>
-        <version>3.3.2</version>
+        <version>3.3.3-RC1</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -30,18 +30,8 @@
             <version>${acm.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.armedia.acm.acm-tool-integrations</groupId>
-            <artifactId>acm-mule-context-manager</artifactId>
-            <version>${acm.version}</version>
-        </dependency>
-        <dependency>
             <groupId>com.armedia.acm.acm-services</groupId>
             <artifactId>acm-service-plugin-manager</artifactId>
-            <version>${acm.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.armedia.acm.acm-services</groupId>
-            <artifactId>acm-service-event</artifactId>
             <version>${acm.version}</version>
         </dependency>
         <dependency>
@@ -61,11 +51,6 @@
         </dependency>
         <dependency>
             <groupId>com.armedia.acm.acm-tool-integrations</groupId>
-            <artifactId>acm-activiti-actions</artifactId>
-            <version>${acm.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.armedia.acm.acm-tool-integrations</groupId>
             <artifactId>acm-activemq-configuration</artifactId>
             <version>${acm.version}</version>
         </dependency>
@@ -73,12 +58,6 @@
             <groupId>com.armedia.acm.acm-tool-integrations</groupId>
             <artifactId>acm-drools-rule-monitor</artifactId>
             <version>${acm.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.armedia.acm.acm-tool-integrations</groupId>
-            <artifactId>acm-cmis-configuration</artifactId>
-            <version>${acm.version}</version>
-            <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>com.armedia.acm.acm-plugins.acm-default-plugins</groupId>
@@ -242,6 +221,10 @@
             <groupId>org.freemarker</groupId>
             <artifactId>freemarker</artifactId>
             <version>${freemarker.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.chemistry.opencmis</groupId>
+            <artifactId>chemistry-opencmis-client-impl</artifactId>
         </dependency>
 
     </dependencies>

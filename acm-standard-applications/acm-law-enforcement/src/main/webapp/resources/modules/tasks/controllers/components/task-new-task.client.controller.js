@@ -69,6 +69,11 @@ angular.module('tasks').controller(
                         return groups;
                     });
 
+                    ObjectLookupService.getLookupByLookupName("taskParentTypes").then(function(taskParentTypes) {
+                        $scope.taskParentTypes = taskParentTypes;
+                        return taskParentTypes;
+                    });
+
                     ConfigService.getModuleConfig("tasks").then(function(moduleConfig) {
                         $scope.config = _.find(moduleConfig.components, {
                             id: "newTask"

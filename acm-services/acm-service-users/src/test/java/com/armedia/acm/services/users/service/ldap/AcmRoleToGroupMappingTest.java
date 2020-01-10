@@ -28,8 +28,8 @@ package com.armedia.acm.services.users.service.ldap;
  */
 
 import static org.easymock.EasyMock.expect;
-import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.everyItem;
+import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.isIn;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
@@ -53,7 +53,7 @@ import java.util.stream.Collectors;
 public class AcmRoleToGroupMappingTest extends EasyMockSupport
 {
     private AcmRoleToGroupMapping unit;
-    private Map<String, String> roleToGroupMap;
+    private Map<String, List<String>> roleToGroupMap;
     private ApplicationRolesToGroupsConfig mockConfig;
 
     @Before
@@ -61,10 +61,10 @@ public class AcmRoleToGroupMappingTest extends EasyMockSupport
     {
 
         roleToGroupMap = new HashMap<>();
-        roleToGroupMap.put("ROLE_ADMINISTRATOR", "ACM_ADMINISTRATOR_DEV,ARKCASE_ADMINISTRATOR");
-        roleToGroupMap.put("ROLE_INVESTIGATOR_SUPERVISOR", "ACM_SUPERVISOR_DEV,ACM_INVESTIGATOR_VA,"
+        roleToGroupMap.put("ROLE_ADMINISTRATOR", Arrays.asList("ACM_ADMINISTRATOR_DEV,ARKCASE_ADMINISTRATOR"));
+        roleToGroupMap.put("ROLE_INVESTIGATOR_SUPERVISOR", Arrays.asList("ACM_SUPERVISOR_DEV,ACM_INVESTIGATOR_VA,"
                 + "ACM_INVESTIGATOR_DEV,ACM_ANALYST_DEV,ACM_CALLCENTER_DEV,ACM_ADMINISTRATOR_DEV,ACM_INVESTIGATOR_MK,"
-                + "ARKCASE_ADMINISTRATOR");
+                + "ARKCASE_ADMINISTRATOR"));
         unit = new AcmRoleToGroupMapping();
         mockConfig = createMock(ApplicationRolesToGroupsConfig.class);
         unit.setRolesToGroupsConfig(mockConfig);
@@ -85,7 +85,7 @@ public class AcmRoleToGroupMappingTest extends EasyMockSupport
         Set<String> expectedGroups = roleToGroupMap.entrySet()
                 .stream()
                 .flatMap(entry -> {
-                    String[] parts = entry.getValue().split(",");
+                    String[] parts = entry.getValue().toArray(new String[0]);
                     return Arrays.stream(parts);
                 })
                 .collect(Collectors.toSet());
@@ -97,19 +97,19 @@ public class AcmRoleToGroupMappingTest extends EasyMockSupport
 
         assertThat("Value set should match", actualGroups, everyItem(isIn(expectedGroups)));
 
-        roleToGroupMap.forEach((role, groupsString) -> roleToGroups.get(role)
+        roleToGroupMap.forEach((role, groups) -> roleToGroups.get(role)
                 .forEach(group -> assertThat("String with group list should contain mapped groups",
-                        groupsString, containsString(group))));
+                        groups, contains(group))));
     }
 
     @Test
     public void getGroupToRolesMapTest()
     {
-        Map<String, String> roleToGroupArray = new HashMap<>();
-        roleToGroupArray.put("ROLE_ADMINISTRATOR", "ACM_ADMINISTRATOR_DEV,ARKCASE_ADMINISTRATOR");
-        roleToGroupArray.put("ROLE_INVESTIGATOR_SUPERVISOR", "ACM_SUPERVISOR_DEV,ACM_INVESTIGATOR_VA,"
+        Map<String, List<String>> roleToGroupArray = new HashMap<>();
+        roleToGroupArray.put("ROLE_ADMINISTRATOR", Arrays.asList("ACM_ADMINISTRATOR_DEV,ARKCASE_ADMINISTRATOR"));
+        roleToGroupArray.put("ROLE_INVESTIGATOR_SUPERVISOR", Arrays.asList("ACM_SUPERVISOR_DEV,ACM_INVESTIGATOR_VA,"
                 + "ACM_INVESTIGATOR_DEV,ACM_ANALYST_DEV,ACM_CALLCENTER_DEV,ACM_ADMINISTRATOR_DEV,ACM_INVESTIGATOR_MK,"
-                + "ARKCASE_ADMINISTRATOR");
+                + "ARKCASE_ADMINISTRATOR"));
 
         expect(mockConfig.getRolesToGroups()).andReturn(roleToGroupMap).anyTimes();
 
@@ -127,7 +127,7 @@ public class AcmRoleToGroupMappingTest extends EasyMockSupport
         Set<String> actualValues = roleToGroupArray.values()
                 .stream()
                 .flatMap(it -> {
-                    String[] parts = it.split(",");
+                    String[] parts = it.toArray(new String[0]);
                     return Arrays.stream(parts);
                 })
                 .collect(Collectors.toSet());
@@ -139,8 +139,8 @@ public class AcmRoleToGroupMappingTest extends EasyMockSupport
 
         groupToRoles.forEach((key, value) -> {
             value.forEach(role -> {
-                String groups = roleToGroupArray.get(role);
-                assertThat("Comma separated groups string should contain key", groups, containsString(key));
+                List<String> groups = roleToGroupArray.get(role);
+                assertThat("Comma separated groups string should contain key", groups, contains(key));
             });
         });
     }
@@ -173,12 +173,11 @@ public class AcmRoleToGroupMappingTest extends EasyMockSupport
     @Test
     public void initializeRolesToGroupsMapping()
     {
-        Map<String, String> roleToGroupsMapping = new HashMap<>();
-        roleToGroupsMapping.put("ROLE1", "group1");
-        roleToGroupsMapping.put("Role2", "group2");
-        roleToGroupsMapping.put("ROLE_ROLE3", "group1");
-        roleToGroupsMapping.put("", "group5");
-        roleToGroupsMapping.put("ROLE4", "");
+        Map<String, List<String>> roleToGroupsMapping = new HashMap<>();
+        roleToGroupsMapping.put("ROLE1", Arrays.asList("group1"));
+        roleToGroupsMapping.put("Role2", Arrays.asList("group2"));
+        roleToGroupsMapping.put("ROLE_ROLE3", Arrays.asList(("group1")));
+        roleToGroupsMapping.put("", Arrays.asList(("group5")));
 
         expect(mockConfig.getRolesToGroups()).andReturn(roleToGroupsMapping).anyTimes();
         replayAll();

@@ -66,7 +66,7 @@ import java.time.LocalDateTime;
         "/spring/spring-library-particpants.xml",
         "/spring/spring-library-folder-watcher.xml",
         "/spring/spring-library-activiti-configuration.xml",
-        "/spring/spring-library-ecm-plugin-test-mule.xml",
+        "/spring/spring-library-add-file-camel.xml",
         "/spring/spring-library-acm-encryption.xml",
         "/spring/spring-library-audit-service.xml",
         "/spring/spring-library-user-service.xml",
@@ -77,7 +77,10 @@ import java.time.LocalDateTime;
         "/spring/spring-library-service-data.xml",
         "/spring/spring-library-configuration.xml",
         "/spring/spring-library-acm-email.xml",
-        "/spring/spring-test-quartz-scheduler.xml" })
+        "/spring/spring-test-quartz-scheduler.xml",
+        "/spring/spring-library-websockets.xml",
+        "/spring/spring-library-core-api.xml",
+        "/spring/spring-library-activemq.xml" })
 @TransactionConfiguration(defaultRollback = true, transactionManager = "transactionManager")
 public class EcmFileDaoIT
 {
@@ -85,6 +88,7 @@ public class EcmFileDaoIT
     {
         String userHomePath = System.getProperty("user.home");
         System.setProperty("acm.configurationserver.propertyfile", userHomePath + "/.arkcase/acm/conf.yml");
+        System.setProperty("configuration.server.url", "http://localhost:9999");
     }
 
     @Autowired

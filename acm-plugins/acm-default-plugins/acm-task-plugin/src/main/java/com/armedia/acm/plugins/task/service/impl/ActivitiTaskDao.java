@@ -86,8 +86,8 @@ import org.apache.commons.compress.utils.IOUtils;
 import org.apache.commons.lang.WordUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -343,7 +343,7 @@ public class ActivitiTaskDao extends AcmAbstractDao<AcmTask> implements TaskDao,
             // to ensure that the participants for new and updated ad-hoc tasks are visible to the client right away, we
             // have to apply the assignment and data access control rules right here, inline with the save operation.
             // Tasks generated or updated by the Activiti engine will have participants set by a specialized
-            // Mule flow.
+            // Camel flow.
 
             try
             {
@@ -1332,9 +1332,9 @@ public class ActivitiTaskDao extends AcmAbstractDao<AcmTask> implements TaskDao,
             String legacySystemId = (String) taskLocal.get(TaskConstants.VARIABLE_NAME_LEGACY_SYSTEM_ID);
             acmTask.setLegacySystemId(legacySystemId);
         }
-        if(acmTask.getWorkflowRequestType() == null)
+        if (acmTask.getWorkflowRequestType() == null)
         {
-            String workflowRequestType = (String)taskLocal.get(TaskConstants.VARIABLE_NAME_REQUEST_TYPE);
+            String workflowRequestType = (String) taskLocal.get(TaskConstants.VARIABLE_NAME_REQUEST_TYPE);
             acmTask.setWorkflowRequestType(workflowRequestType);
         }
         Date startDate = (Date) taskLocal.get(TaskConstants.VARIABLE_NAME_START_DATE);

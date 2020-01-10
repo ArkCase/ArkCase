@@ -27,11 +27,11 @@ package com.armedia.acm.services.functionalaccess.web.api;
  * #L%
  */
 
-import com.armedia.acm.core.exceptions.AcmEncryptionException;
+import com.armedia.acm.crypto.exceptions.AcmEncryptionException;
 import com.armedia.acm.services.functionalaccess.service.FunctionalAccessService;
 
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -71,7 +71,7 @@ public class SaveApplicationRolesToGroupsAPIController
 
     @RequestMapping(value = "/{roleName:.+}/groups", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public boolean addGroupsToApplicationRole(@PathVariable(value = "roleName") String roleName, @RequestBody List<String> groups,
+    public boolean addGroupsToApplicationRole(@PathVariable(value = "roleName") String roleName, @RequestBody List<Object> groups,
             Authentication auth) throws AcmEncryptionException
     {
         roleName = new String(Base64.getUrlDecoder().decode(roleName.getBytes()));
@@ -86,7 +86,7 @@ public class SaveApplicationRolesToGroupsAPIController
 
     @RequestMapping(value = "/{roleName:.+}/groups", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public boolean deleteGroupsFromApplicationRole(@PathVariable(value = "roleName") String roleName, @RequestBody List<String> groups,
+    public boolean deleteGroupsFromApplicationRole(@PathVariable(value = "roleName") String roleName, @RequestBody List<Object> groups,
             Authentication auth)
     {
         roleName = new String(Base64.getUrlDecoder().decode(roleName.getBytes()));

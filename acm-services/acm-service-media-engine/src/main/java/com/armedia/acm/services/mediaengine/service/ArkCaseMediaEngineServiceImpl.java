@@ -29,6 +29,7 @@ package com.armedia.acm.services.mediaengine.service;
 
 import com.armedia.acm.audit.dao.AuditDao;
 import com.armedia.acm.audit.model.AuditEvent;
+import com.armedia.acm.camelcontext.exception.ArkCaseFileRepositoryException;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.objectonverter.ArkCaseBeanUtils;
 import com.armedia.acm.plugins.ecm.dao.EcmFileVersionDao;
@@ -64,10 +65,9 @@ import org.activiti.engine.RuntimeService;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.NotImplementedException;
-import org.mule.api.MuleException;
-import org.mule.util.StringUtils;
-import org.apache.logging.log4j.Logger;
+import org.apache.commons.lang.StringUtils;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.NoResultException;
@@ -615,7 +615,7 @@ public abstract class ArkCaseMediaEngineServiceImpl<T extends MediaEngine>
     }
 
     @Override
-    public File createTempFile(MediaEngine mediaEngine, String tempPath) throws IOException, MuleException
+    public File createTempFile(MediaEngine mediaEngine, String tempPath) throws IOException, ArkCaseFileRepositoryException
     {
         InputStream mediaVersionInputStream = getEcmFileTransaction()
                 .downloadFileTransactionAsInputStream(mediaEngine.getMediaEcmFileVersion().getFile());

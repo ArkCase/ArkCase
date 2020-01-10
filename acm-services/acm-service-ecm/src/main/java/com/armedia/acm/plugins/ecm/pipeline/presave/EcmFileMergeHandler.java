@@ -27,19 +27,20 @@ package com.armedia.acm.plugins.ecm.pipeline.presave;
  * #L%
  */
 
+import com.armedia.acm.files.capture.CaptureConfig;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
-import com.armedia.acm.files.capture.CaptureConfig;
 import com.armedia.acm.plugins.ecm.pipeline.EcmFileTransactionPipelineContext;
-import com.armedia.acm.plugins.ecm.utils.EcmFileMuleUtils;
+import com.armedia.acm.plugins.ecm.utils.EcmFileCamelUtils;
 import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
 import com.armedia.acm.plugins.ecm.utils.PDFUtils;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.pipeline.handler.PipelineHandler;
 
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.List;
@@ -54,7 +55,7 @@ public class EcmFileMergeHandler implements PipelineHandler<EcmFile, EcmFileTran
     private CaptureConfig captureConfig;
     private EcmFileDao ecmFileDao;
     private FolderAndFilesUtils folderAndFilesUtils;
-    private EcmFileMuleUtils ecmFileMuleUtils;
+    private EcmFileCamelUtils ecmFileCamelUtils;
 
     @Override
     public void execute(EcmFile entity, EcmFileTransactionPipelineContext pipelineContext) throws PipelineProcessException
@@ -92,7 +93,7 @@ public class EcmFileMergeHandler implements PipelineHandler<EcmFile, EcmFileTran
                     // We need to pull the original file contents from Alfresco in order to merge with the new file
                     log.debug("Pulling original document contents from repository");
                     try (InputStream updatedFileStream = new FileInputStream(pipelineContext.getFileContents());
-                            InputStream originalFileStream = ecmFileMuleUtils.downloadFile(matchFile.getCmisRepositoryId(),
+                            InputStream originalFileStream = ecmFileCamelUtils.downloadFile(matchFile.getCmisRepositoryId(),
                                     matchFile.getVersionSeriesId()))
                     {
 
@@ -103,26 +104,19 @@ public class EcmFileMergeHandler implements PipelineHandler<EcmFile, EcmFileTran
 
                         // Appends the new PDF to the end of the old one
                         log.debug("merging the new document and the original");
-                        byte[] mergedFileByteArray = PDFUtils.mergeFiles(originalFileStream, updatedFileStream);
+                        File mergedFile = PDFUtils.mergeFileStreams(originalFileStream, updatedFileStream);
 
                         // The merged PDF content will be available to the next pipeline stage
-                        if (mergedFileByteArray != null)
-                        {
-                            pipelineContext.setMergedFileByteArray(mergedFileByteArray);
-                            pipelineContext.setIsAppend(true);
-                            pipelineContext.setEcmFile(matchFile);
-                        }
-                        else
-                        {
-                            throw new Exception("The document merge failed");
-                        }
+                        pipelineContext.setMergedFile(mergedFile);
+                        pipelineContext.setIsAppend(true);
+                        pipelineContext.setEcmFile(matchFile);
                     }
                 }
             }
         }
         catch (Exception e)
         {
-            log.error("mule pre save handler failed: {}", e.getMessage(), e);
+            log.error("Camel pre save handler failed: {}", e.getMessage(), e);
             throw new PipelineProcessException(e);
         }
     }
@@ -190,13 +184,13 @@ public class EcmFileMergeHandler implements PipelineHandler<EcmFile, EcmFileTran
         this.folderAndFilesUtils = folderAndFilesUtils;
     }
 
-    public EcmFileMuleUtils getEcmFileMuleUtils()
+    public EcmFileCamelUtils getEcmFileCamelUtils()
     {
-        return ecmFileMuleUtils;
+        return ecmFileCamelUtils;
     }
 
-    public void setEcmFileMuleUtils(EcmFileMuleUtils ecmFileMuleUtils)
+    public void setEcmFileCamelUtils(EcmFileCamelUtils ecmFileCamelUtils)
     {
-        this.ecmFileMuleUtils = ecmFileMuleUtils;
+        this.ecmFileCamelUtils = ecmFileCamelUtils;
     }
 }

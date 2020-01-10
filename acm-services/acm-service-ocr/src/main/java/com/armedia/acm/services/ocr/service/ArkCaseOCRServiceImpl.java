@@ -28,6 +28,7 @@ package com.armedia.acm.services.ocr.service;
  */
 
 import com.armedia.acm.auth.AcmAuthentication;
+import com.armedia.acm.camelcontext.exception.ArkCaseFileRepositoryException;
 import com.armedia.acm.configuration.service.ConfigurationPropertyException;
 import com.armedia.acm.core.exceptions.AcmObjectLockException;
 import com.armedia.acm.plugins.ecm.model.AcmMultipartFile;
@@ -62,9 +63,8 @@ import com.armedia.acm.web.api.MDCConstants;
 
 import org.activiti.engine.delegate.DelegateExecution;
 import org.apache.commons.lang.NotImplementedException;
-import org.mule.api.MuleException;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.slf4j.MDC;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -245,11 +245,9 @@ public class ArkCaseOCRServiceImpl extends ArkCaseMediaEngineServiceImpl<OCR>
             {
                 AcmMultipartFile multipartFile = new AcmMultipartFile(fileName, fileName, "application/pdf",
                         false,
-                        file.length(),
-                        new byte[0], stream, true);
+                        file.length(), stream, true);
 
-                getEcmFileService().update(mediaEngine.getMediaEcmFileVersion().getFile(), multipartFile,
-                        authentication);
+                getEcmFileService().update(mediaEngine.getMediaEcmFileVersion().getFile(), multipartFile, authentication);
             }
 
             getObjectLockingManager().releaseObjectLock(mediaEngine.getMediaEcmFileVersion().getFile().getId(),
@@ -338,7 +336,7 @@ public class ArkCaseOCRServiceImpl extends ArkCaseMediaEngineServiceImpl<OCR>
             LOG.error("Error while calling PROVIDER=[{}] to OCR the media for PROCESS_ID=[{}]. REASON=[{}]",
                     configuration.getService().toString(), delegateExecution.getProcessInstanceId(), e.getMessage(), e);
         }
-        catch (CreateMediaEngineToolException | AcmObjectLockException | IOException | MuleException e)
+        catch (CreateMediaEngineToolException | AcmObjectLockException | IOException | ArkCaseFileRepositoryException e)
         {
             LOG.error("Error while creating OCR with PROVIDER=[{}] for PROCESS_ID=[{}]. REASON=[{}]",
                     configuration.getService().toString(), delegateExecution.getProcessInstanceId(), e.getMessage(), e);
@@ -481,39 +479,61 @@ public class ArkCaseOCRServiceImpl extends ArkCaseMediaEngineServiceImpl<OCR>
     @Override
     public void verifyOCR() throws SaveConfigurationException
     {
+        boolean isWindows = System.getProperty("os.name").toLowerCase().startsWith("windows");
         Runtime rt = Runtime.getRuntime();
         Process pr;
         try
         {
-            pr = rt.exec("cmd /c tesseract --version");
+            if (isWindows)
+            {
+                pr = rt.exec("cmd /c tesseract --version");
+            }
+            else
+            {
+                pr = rt.exec("sh -c tesseract --version");
+            }
 
             pr.waitFor();
         }
         catch (Exception e)
         {
-            throw new SaveConfigurationException("The Tesseract engine must be installed in order to enable OCR");
+            throw new SaveConfigurationException("The Tesseract engine must be installed in order to enable OCR", e);
         }
 
         try
         {
-            pr = rt.exec("cmd /c qpdf --version");
+            if (isWindows)
+            {
+                pr = rt.exec("cmd /c qpdf --version");
+            }
+            else
+            {
+                pr = rt.exec("sh -c qpdf --version");
+            }
 
             pr.waitFor();
         }
         catch (Exception e)
         {
-            throw new SaveConfigurationException("The QPDF engine must be installed in order to enable OCR");
+            throw new SaveConfigurationException("The QPDF engine must be installed in order to enable OCR", e);
         }
 
         try
         {
-            pr = rt.exec("cmd /c magick --version");
+            if (isWindows)
+            {
+                pr = rt.exec("cmd /c magick --version");
+            }
+            else
+            {
+                pr = rt.exec("sh -c magick --version");
+            }
 
             pr.waitFor();
         }
         catch (Exception e)
         {
-            throw new SaveConfigurationException("The Image Magick engine must be installed in order to enable OCR");
+            throw new SaveConfigurationException("The Image Magick engine must be installed in order to enable OCR", e);
         }
     }
 

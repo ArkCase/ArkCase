@@ -27,56 +27,26 @@ package com.armedia.acm.report.config;
  * #L%
  */
 
-import com.armedia.acm.objectonverter.json.JSONUnmarshaller;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.armedia.acm.configuration.annotations.MapValue;
 
-import org.json.JSONObject;
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Value;
-
+import java.util.List;
 import java.util.Map;
 
-public class ReportsToRolesConfig implements InitializingBean
+public class ReportsToRolesConfig
 {
-    @JsonProperty("report.config.reportsToRoles")
-    @Value("${report.config.reportsToRoles}")
-    private String reportsToRoles;
 
-    private JSONUnmarshaller jsonUnmarshaller;
+    public static final String REPORTS_TO_ROLES_PROP_KEY = "report.config.reportsToRoles";
 
-    private Map<String, String> reportsToRolesMap;
+    private Map<String, List<String>> reportsToRolesMap;
 
-    @JsonIgnore
-    public Map<String, String> getReportsToRolesMap()
+    @MapValue(value = "report.config.reportsToRoles")
+    public Map<String, List<String>> getReportsToRolesMap()
     {
         return reportsToRolesMap;
     }
 
-    public String getReportsToRoles()
+    public void setReportsToRolesMap(Map<String, List<String>> reportsToRolesMap)
     {
-        return new JSONObject(reportsToRolesMap).toString();
-    }
-
-    public void setReportsToRoles(String reportsToRoles)
-    {
-        this.reportsToRoles = reportsToRoles;
-    }
-
-    @JsonIgnore
-    public JSONUnmarshaller getJsonUnmarshaller()
-    {
-        return jsonUnmarshaller;
-    }
-
-    public void setJsonUnmarshaller(JSONUnmarshaller jsonUnmarshaller)
-    {
-        this.jsonUnmarshaller = jsonUnmarshaller;
-    }
-
-    @Override
-    public void afterPropertiesSet() throws Exception
-    {
-        reportsToRolesMap = jsonUnmarshaller.unmarshall(reportsToRoles, Map.class);
+        this.reportsToRolesMap = reportsToRolesMap;
     }
 }

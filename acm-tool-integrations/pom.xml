@@ -3,7 +3,7 @@
     <parent>
         <artifactId>acm</artifactId>
         <groupId>com.armedia</groupId>
-        <version>3.3.2</version>
+        <version>3.3.3-RC1</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -15,9 +15,7 @@
 
     <modules>
         <module>acm-activemq-configuration</module>
-        <module>acm-activiti-actions</module>
         <module>acm-activiti-configuration</module>
-        <module>acm-cmis-configuration</module>
         <module>acm-drools-rule-monitor</module>
         <module>acm-email</module>
         <module>acm-encryption</module>
@@ -26,8 +24,6 @@
         <module>acm-files-property-file-manager</module>
         <module>acm-form-configuration</module>
         <module>acm-hazelcast-integration</module>
-        <module>acm-mule-context-manager</module>
-        <module>acm-mule-module-cmis</module>
         <module>acm-object-converter</module>
         <module>acm-object-diff</module>
         <module>acm-object-data-processing-api</module>
@@ -44,6 +40,7 @@
         <module>acm-ocr-tool</module>
         <module>acm-transcribe-tool</module>
         <module>acm-quartz-scheduler</module>
+        <module>acm-camel-context-manager</module>
     </modules>
 
 </project>

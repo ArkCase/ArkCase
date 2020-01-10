@@ -31,4 +31,5 @@ public interface AcmAssignee
 {
     String getModifier();
     String getAssigneeLdapId();
+    String getAssigneeGroupId();
 }

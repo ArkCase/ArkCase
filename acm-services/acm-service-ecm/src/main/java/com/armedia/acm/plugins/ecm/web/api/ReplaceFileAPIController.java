@@ -27,6 +27,8 @@ package com.armedia.acm.plugins.ecm.web.api;
  * #L%
  */
 
+import com.armedia.acm.camelcontext.exception.ArkCaseFileRepositoryException;
+import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.ecm.model.AcmFolderConstants;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
@@ -38,9 +40,8 @@ import com.armedia.acm.plugins.ecm.service.FileEventPublisher;
 import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
 
 import org.apache.commons.io.FilenameUtils;
-import org.mule.api.MuleException;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -78,7 +79,7 @@ public class ReplaceFileAPIController
     @RequestMapping(value = "/replace/{fileToBeReplacedId}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public EcmFile replaceFile(@PathVariable("fileToBeReplacedId") Long fileToBeReplacedId, MultipartHttpServletRequest request,
-            Authentication authentication, HttpSession session) throws AcmUserActionFailedException
+            Authentication authentication, HttpSession session) throws AcmUserActionFailedException, AcmObjectNotFoundException
     {
 
         log.info("Replacing file, fileId: {}", fileToBeReplacedId);
@@ -93,7 +94,8 @@ public class ReplaceFileAPIController
                     fileToBeReplacedId, "File not found.", null);
         }
 
-        EcmFileVersion fileToBeReplacedVersion = getFolderAndFilesUtils().getVersion(fileToBeReplaced, fileToBeReplaced.getActiveVersionTag());
+        EcmFileVersion fileToBeReplacedVersion = getFolderAndFilesUtils().getVersion(fileToBeReplaced,
+                fileToBeReplaced.getActiveVersionTag());
         EcmFile replacedFile;
 
         try (InputStream replacementStream = getInputStreamFromAttachment(request, fileToBeReplacedId))
@@ -105,10 +107,13 @@ public class ReplaceFileAPIController
             }
 
             String fileExtension = getFileExtensionFromAttachment(request, fileToBeReplacedId);
-            replacedFile = getFileTransaction().updateFileTransactionEventAware(authentication, fileToBeReplaced, replacementStream, fileExtension);
+
+            replacedFile = getFileTransaction().updateFileTransactionEventAware(authentication, fileToBeReplaced, replacementStream,
+                    fileExtension);
+            getFileService().updateFileLinks(replacedFile);
             getFileEventPublisher().publishFileReplacedEvent(replacedFile, fileToBeReplacedVersion, authentication, ipAddress, true);
         }
-        catch (MuleException | IOException e)
+        catch (ArkCaseFileRepositoryException | IOException e)
         {
             log.error("Exception occurred while trying to replace file: {}, {}", fileToBeReplaced.getFileName(), e.getMessage(),
                     e);
@@ -140,7 +145,7 @@ public class ReplaceFileAPIController
                 fileToBeReplacedId, "No file attached found.", null);
     }
 
-    private String getFileExtensionFromAttachment (MultipartHttpServletRequest request, Long fileToBeReplacedId)
+    private String getFileExtensionFromAttachment(MultipartHttpServletRequest request, Long fileToBeReplacedId)
             throws AcmUserActionFailedException, IOException
     {
         MultiValueMap<String, MultipartFile> attachments = request.getMultiFileMap();

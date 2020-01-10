@@ -32,6 +32,7 @@ import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileUpdatedEvent;
 import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
 import com.armedia.acm.plugins.ecm.model.event.EcmFileActiveVersionSetEvent;
+import com.armedia.acm.plugins.ecm.model.event.EcmFileCopiedAsLinkEvent;
 import com.armedia.acm.plugins.ecm.model.event.EcmFileCopiedEvent;
 import com.armedia.acm.plugins.ecm.model.event.EcmFileCreatedEvent;
 import com.armedia.acm.plugins.ecm.model.event.EcmFileDeletedEvent;
@@ -39,8 +40,8 @@ import com.armedia.acm.plugins.ecm.model.event.EcmFileMovedEvent;
 import com.armedia.acm.plugins.ecm.model.event.EcmFileRenamedEvent;
 import com.armedia.acm.plugins.ecm.model.event.EcmFileReplacedEvent;
 
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.security.core.Authentication;
@@ -163,5 +164,15 @@ public class FileEventPublisher implements ApplicationEventPublisherAware
         fileUpdatedEvent.setSucceeded(succeeded);
 
         eventPublisher.publishEvent(fileUpdatedEvent);
+    }
+
+    public void publishFileCopiedAsLinkEvent(EcmFile source, EcmFile original, Authentication auth, String ipAddress, boolean succeeded)
+    {
+
+        log.debug("Publishing a file copied as link event.");
+        EcmFileCopiedAsLinkEvent filedCopiedAsLinkEvent = new EcmFileCopiedAsLinkEvent(source, original, auth.getName(), ipAddress);
+        filedCopiedAsLinkEvent.setSucceeded(succeeded);
+
+        eventPublisher.publishEvent(filedCopiedAsLinkEvent);
     }
 }

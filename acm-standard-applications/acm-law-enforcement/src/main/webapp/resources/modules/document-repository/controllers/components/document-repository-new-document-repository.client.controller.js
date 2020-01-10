@@ -21,6 +21,7 @@ angular.module('document-repository').controller(
 
                     $scope.modalParams = modalParams;
                     $scope.docRepo = {};
+                    $scope.docRepo.participants = [];
                     $scope.loading = false;
                     var user = {};
 
@@ -87,7 +88,7 @@ angular.module('document-repository').controller(
                                         $scope.owningGroup.participantLdapId = selectedGroup.object_id_s;
                                         $scope.owningGroup.name = selectedGroup.name;
                                     }
-
+                                    setParticipants();
                                     return;
                                 } else if (selectedObjectType === 'GROUP') { // Selected group
                                     var selectedUser = selected.detailSelectedItems;
@@ -99,29 +100,42 @@ angular.module('document-repository').controller(
 
                                     $scope.owningGroup.participantLdapId = selectedGroup.object_id_s;
                                     $scope.owningGroup.name = selectedGroup.name;
-
+                                    setParticipants();
                                     return;
                                 }
                             }
                         });
                     };
 
+                    var newParticipant = function (type, id) {
+                        return {
+                            className: "com.armedia.acm.services.participants.model.AcmParticipant",
+                            objectType: "DOC_REPO",
+                            participantLdapId: id,
+                            participantType: type
+                        }
+                    };
+                    var setParticipants = function () {
+                        $scope.docRepo.participants.push(newParticipant('*', '*'));
+                        $scope.docRepo.participants.push(newParticipant('assignee', $scope.assignee.object_id_s));
+                        $scope.docRepo.participants.push(newParticipant('owning group', $scope.owningGroup.participantLdapId));
+                    };
+
                     $scope.changeType = function() {
+                        $scope.docRepo.participants = [];
+                        $scope.owningGroup.participantLdapId = '';
+                        $scope.owningGroup.name = '';
                         if ($scope.isPersonalDocRepo()) {
-                            $scope.owningGroup.participantLdapId = '';
-                            $scope.owningGroup.name = '';
                             $scope.assignee.name = user.fullName;
                             $scope.assignee.object_id_s = user.userId;
+                            $scope.docRepo.participants.push(newParticipant('assignee', user.userId))
                         } else {
                             $scope.assignee.name = '';
                             $scope.assignee.object_id_s = '';
-                            $scope.owningGroup.participantLdapId = '';
-                            $scope.owningGroup.name = '';
                         }
                     };
 
                     $scope.saveNewDocumentRepository = function() {
-                        $scope.docRepo.participants = [];
                         $scope.loading = true;
                         DocumentRepositoryInfoService.saveDocumentRepository($scope.docRepo).then(function(data) {
                             if ($scope.isPersonalDocRepo()) {

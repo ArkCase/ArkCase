@@ -4,7 +4,7 @@ package com.armedia.acm.data;
  * #%L
  * Tool Integrations: Spring Data Source
  * %%
- * Copyright (C) 2014 - 2018 ArkCase LLC
+ * Copyright (C) 2014 - 2019 ArkCase LLC
  * %%
  * This file is part of the ArkCase software. 
  * 

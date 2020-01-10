@@ -46,13 +46,14 @@ import com.armedia.acm.plugins.task.service.TaskDao;
 import com.armedia.acm.plugins.task.service.TaskEventPublisher;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.easymock.Capture;
+import org.easymock.EasyMock;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -110,7 +111,7 @@ public class ClaimTaskAPIControllerTest extends EasyMockSupport
         AcmTask testTask = new AcmTask();
         testTask.setTaskId(taskId);
 
-        Capture<AcmApplicationTaskEvent> capturedEvent = new Capture<>();
+        Capture<AcmApplicationTaskEvent> capturedEvent = EasyMock.newCapture();
 
         mockTaskDao.claimTask(eq(taskId), eq(userId));
         expect(mockTaskDao.findById(taskId)).andReturn(testTask);
@@ -161,7 +162,7 @@ public class ClaimTaskAPIControllerTest extends EasyMockSupport
         AcmTask found = new AcmTask();
         found.setTaskId(taskId);
 
-        Capture<AcmApplicationTaskEvent> capturedEvent = new Capture<>();
+        Capture<AcmApplicationTaskEvent> capturedEvent = EasyMock.newCapture();
 
         mockHttpSession.setAttribute("acm_ip_address", ipAddress);
 
@@ -198,7 +199,7 @@ public class ClaimTaskAPIControllerTest extends EasyMockSupport
         AcmTask testTask = new AcmTask();
         testTask.setTaskId(taskId);
 
-        Capture<AcmApplicationTaskEvent> capturedEvent = new Capture<>();
+        Capture<AcmApplicationTaskEvent> capturedEvent = EasyMock.newCapture();
 
         mockTaskDao.unclaimTask(eq(taskId));
         expect(mockTaskDao.findById(taskId)).andReturn(testTask);

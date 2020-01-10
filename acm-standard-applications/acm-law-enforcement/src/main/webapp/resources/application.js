@@ -12,8 +12,9 @@ angular.module(ApplicationConfiguration.applicationModuleName).config(
                 'tmhDynamicLocaleProvider',
                 '$httpProvider',
                 'AnalyticsProvider',
+                '$provide',
                 function($locationProvider, $translateProvider, $translatePartialLoaderProvider, dynamicLocaleProvider, $httpProvider,
-                        AnalyticsProvider) {
+                        AnalyticsProvider, $provide) {
                     $locationProvider.hashPrefix('!');
 
                     $httpProvider.interceptors.push(httpInterceptor);
@@ -27,6 +28,21 @@ angular.module(ApplicationConfiguration.applicationModuleName).config(
                         }
                         return data;
                     });
+
+                    var timezoneOffset = new Date().toString().match(/([\+-][0-9]+)/g);
+                    timezoneOffset = timezoneOffset ? timezoneOffset[0] : "UTC";
+
+                    $provide.decorator('dateFilter', ['$delegate', '$injector', function($delegate, $injector) {
+                        var oldDelegate = $delegate;
+
+                        var dateFilterInterceptor = function(date, format, timezone) {
+                            if(angular.isUndefined(timezone)) {
+                                timezone = timezoneOffset;
+                            }
+                            return oldDelegate.apply(this, [date, format, timezone]);
+                        };
+                        return dateFilterInterceptor;
+                    }]);
 
                     function noCacheInterceptor() {
                         return {
@@ -98,7 +114,7 @@ angular.module(ApplicationConfiguration.applicationModuleName).config(
                     // Add HTTP error interceptor
                     function httpInterceptor($q, $window, $rootScope, MessageService) {
                         return {
-                            responseError : responseError
+                            responseError: responseError
                         };
 
                         // Intercept the failed response.
@@ -129,39 +145,11 @@ angular.module(ApplicationConfiguration.applicationModuleName).config(
                                 MessageService.error('User has no granted permission for this action');
                             }
 
-                            // Send error message to MessageService if
-                            // is not suppressed
-                            if (isErrorSuppressed(response)) {
-                                return $q.reject(response);
-                            } else {
-                                // Only throw http error as last resort
-                                if (response.data) {
-                                    // e.g. Task already claimed ..
-                                    // exception type is ...
-                                    MessageService.error(response.data);
-                                } else if (response.statusText) {
-                                    // e.g. Unknown Error
-                                    MessageService.error(response.statusText);
-                                } else {
-                                    // e.g. Error 404 /api/latest..
-                                    MessageService.httpError(response);
-                                }
-                                return ($q.reject(response));
+                            if (response.status >= 500) {
+                                MessageService.serverError();
                             }
-                        }
-
-                        function isErrorSuppressed(response) {
-                            // dmiller 2016-04-11 suppressing errors by
-                            // default.
-                            // TODO: need a configuration flag and/or a
-                            // smarter messaging strategy
-                            var isSuppressed = true;
-                            angular.forEach(ApplicationConfiguration.suppressedErrorList, function(error) {
-                                if (error.url == response.config.url && error.status == response.status) {
-                                    isSuppressed = true;
-                                }
-                            });
-                            return isSuppressed;
+                            //Reject all unrejected responses
+                            return($q.reject(response));
                         }
                     }
 

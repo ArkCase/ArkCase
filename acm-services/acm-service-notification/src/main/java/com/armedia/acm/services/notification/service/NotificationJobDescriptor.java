@@ -29,11 +29,15 @@ package com.armedia.acm.services.notification.service;
 
 import com.armedia.acm.quartz.scheduler.AcmJobDescriptor;
 
+import org.quartz.DisallowConcurrentExecution;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
+import org.quartz.PersistJobDataAfterExecution;
 
 import java.util.Date;
 
+@DisallowConcurrentExecution
+@PersistJobDataAfterExecution
 public class NotificationJobDescriptor extends AcmJobDescriptor
 {
     private NotificationService notificationService;

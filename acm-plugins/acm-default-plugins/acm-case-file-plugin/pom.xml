@@ -3,7 +3,7 @@
     <parent>
         <groupId>com.armedia.acm.acm-plugins</groupId>
         <artifactId>acm-default-plugins</artifactId>
-        <version>3.3.2</version>
+        <version>3.3.3-RC1</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -215,6 +215,7 @@
         <dependency>
             <groupId>org.powermock</groupId>
             <artifactId>powermock-api-easymock</artifactId>
+            <version>${powermock.version2}</version>
         </dependency>
 
         <dependency>

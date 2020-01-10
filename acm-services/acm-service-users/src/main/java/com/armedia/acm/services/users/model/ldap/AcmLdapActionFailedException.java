@@ -29,6 +29,9 @@ package com.armedia.acm.services.users.model.ldap;
 
 public class AcmLdapActionFailedException extends Exception
 {
+
+    private static final long serialVersionUID = 2551206124344972637L;
+
     public AcmLdapActionFailedException(String message)
     {
         super(message);

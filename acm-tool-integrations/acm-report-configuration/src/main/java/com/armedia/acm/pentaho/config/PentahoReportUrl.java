@@ -29,8 +29,8 @@ package com.armedia.acm.pentaho.config;
 
 import com.armedia.acm.report.config.ReportUrl;
 
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.Map;
 import java.util.TreeMap;
@@ -61,7 +61,7 @@ public class PentahoReportUrl implements ReportUrl
         {
             builder.append(":").append(serverFormPort);
         }
-        String pathStr = reportsConfig.getReportToUrlMap().get(reportName);
+        String pathStr = reportsConfig.getReports().get(reportName);
         builder.append(pathStr);
         String path = builder.toString();
         log.debug("getReportUrlPath(): [{}]", path);
@@ -80,7 +80,7 @@ public class PentahoReportUrl implements ReportUrl
         Map<String, String> urlsMap = new TreeMap<>();
         String serverFormUrl = reportsConfig.getServerUrl();
         String serverFormPort = String.valueOf(reportsConfig.getServerPort());
-        for (Map.Entry<String, String> entry : reportsConfig.getReportToUrlMap().entrySet())
+        for (Map.Entry<String, String> entry : reportsConfig.getReports().entrySet())
         {
             String keyStr = entry.getKey();
 

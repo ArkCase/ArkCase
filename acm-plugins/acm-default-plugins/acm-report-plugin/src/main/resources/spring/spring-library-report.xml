@@ -9,7 +9,6 @@
 
     <bean id="reportService" class="com.armedia.acm.plugins.report.service.ReportServiceImpl">
         <property name="reportUrl" ref="reportResource"/>
-        <property name="muleContextManager" ref="muleContextManager"/>
         <property name="executeSolrQuery" ref="executeSolrQuery"/>
         <property name="searchResults">
             <bean class="com.armedia.acm.services.search.service.SearchResults"/>
@@ -19,6 +18,7 @@
         <property name="reportsToRolesConfig" ref="reportsToRolesConfig"/>
         <property name="userRoleService" ref="userRoleService"/>
         <property name="rolesConfig" ref="applicationRolesConfig"/>
+        <property name="collectionPropertiesConfigurationService" ref="collectionPropertiesConfigurationService"/>
     </bean>
 
     <bean id="uploadReportService" class="com.armedia.acm.plugins.report.service.PentahoUploadGeneratedReportService">

@@ -122,7 +122,7 @@ angular.module('directives').directive(
 
                             if (scope.treeData) {
                                 scope.$watchCollection('treeData', function(treeData, oldValue) {
-                                    if (treeData && treeData.length > 0) {
+                                    if (treeData) {
                                         $($fancytree).fancytree("getTree").reload(treeData);
                                     }
                                 });

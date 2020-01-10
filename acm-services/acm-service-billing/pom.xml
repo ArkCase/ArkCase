@@ -4,7 +4,7 @@
     <parent>
         <artifactId>acm-services</artifactId>
         <groupId>com.armedia.acm</groupId>
-        <version>3.3.2</version>
+        <version>3.3.3-RC1</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -19,21 +19,10 @@
             <artifactId>acm-spring-data-source</artifactId>
             <version>${acm.version}</version>
         </dependency>
-        <dependency>
-            <groupId>com.armedia.acm.acm-tool-integrations</groupId>
-            <artifactId>acm-cmis-configuration</artifactId>
-            <version>${acm.version}</version>
-            <scope>runtime</scope>
-        </dependency>
 
         <dependency>
             <groupId>com.armedia.acm.acm-services</groupId>
             <artifactId>acm-service-data</artifactId>
-            <version>${acm.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.armedia.acm.acm-services</groupId>
-            <artifactId>acm-service-event</artifactId>
             <version>${acm.version}</version>
         </dependency>
         <dependency>
@@ -101,7 +90,7 @@
         <dependency>
             <groupId>com.armedia.acm.acm-services</groupId>
             <artifactId>acm-service-notification</artifactId>
-            <version>3.3.2</version>
+            <version>${acm.version}</version>
             <scope>compile</scope>
         </dependency>
 

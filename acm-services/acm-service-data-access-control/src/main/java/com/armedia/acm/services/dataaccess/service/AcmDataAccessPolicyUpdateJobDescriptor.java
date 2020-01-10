@@ -30,9 +30,13 @@ package com.armedia.acm.services.dataaccess.service;
 import com.armedia.acm.quartz.scheduler.AcmJobDescriptor;
 import com.armedia.acm.services.dataaccess.service.impl.AcmDataAccessBatchPolicyUpdateService;
 
+import org.quartz.DisallowConcurrentExecution;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
+import org.quartz.PersistJobDataAfterExecution;
 
+@DisallowConcurrentExecution
+@PersistJobDataAfterExecution
 public class AcmDataAccessPolicyUpdateJobDescriptor extends AcmJobDescriptor
 {
     private AcmDataAccessBatchPolicyUpdateService dataAccessBatchPolicyUpdateService;

@@ -27,19 +27,20 @@ package com.armedia.acm.services.users.service;
  * #L%
  */
 
-import com.armedia.acm.services.search.model.SolrCore;
+import com.armedia.acm.services.search.exception.SolrException;
+import com.armedia.acm.services.search.model.solr.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
-
 import com.armedia.acm.services.users.model.ApplicationRolesToPrivilegesConfig;
-import org.mule.api.MuleException;
+
 import org.springframework.security.core.Authentication;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -75,7 +76,7 @@ public class AcmUserServiceImpl implements AcmUserService
                     AcmUser user = userDao.findByUserId(userId);
                     return user;
                 })
-                .filter(user -> user != null)
+                .filter(Objects::nonNull)
                 .collect(Collectors.toList());
     }
 
@@ -100,7 +101,7 @@ public class AcmUserServiceImpl implements AcmUserService
     @Override
     public String getUsersByName(Authentication auth, String searchFilter, String sortBy, String sortDirection, int startRow,
             int maxRows)
-            throws MuleException
+            throws SolrException
     {
 
         String query = "object_type_s:USER AND status_lcs:VALID";
@@ -113,7 +114,7 @@ public class AcmUserServiceImpl implements AcmUserService
 
     @Override
     public String getNUsers(Authentication auth, String sortBy, String sortDirection, int startRow, int maxRows)
-            throws MuleException
+            throws SolrException
     {
 
         String query = "object_type_s:USER AND status_lcs:VALID";
@@ -127,16 +128,12 @@ public class AcmUserServiceImpl implements AcmUserService
     {
         Set<String> userPrivileges = new HashSet<>();
         Set<String> userRoles = getUserRoleService().getUserRoles(name);
-        Map<String, String> rolesPrivileges = getRolesToPrivilegesConfig().getRolesToPrivileges();
-        for (Map.Entry<String, String> entry : rolesPrivileges.entrySet())
+        Map<String, List<Object>> rolesPrivileges = getRolesToPrivilegesConfig().getRolesToPrivileges();
+        for (Map.Entry<String, List<Object>> entry : rolesPrivileges.entrySet())
         {
             if(userRoles.contains(entry.getKey()))
             {
-                String[] privileges = entry.getValue().split(",");
-                for(int i = 0; i < privileges.length; i++ )
-                {
-                    userPrivileges.add(privileges[i]);
-                }
+                userPrivileges.addAll(Arrays.asList(entry.getValue().toArray(new String[0])));
             }
         }
         return userPrivileges;

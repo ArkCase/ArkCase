@@ -5,6 +5,7 @@
     <bean id="userInfoAPIController" class="com.armedia.acm.services.users.web.api.UserInfoAPIController">
         <property name="userDao" ref="userJpaDao"/>
         <property name="acmUserService" ref="acmUserService"/>
+        <property name="acmSpringActiveProfile" ref="acmSpringActiveProfile"/>
     </bean>
 
     <bean id="findParticipantTypesForObjectTypeNameAPIController"
@@ -14,17 +15,16 @@
 
     <bean id="getGroupSupervisorAPIController" class="com.armedia.acm.services.users.web.api.group.GetGroupSupervisorAPIController">
         <property name="groupDao" ref="groupDao"/>
-        <property name="muleContextManager" ref="muleContextManager"/>
+        <property name="executeSolrQuery" ref="executeSolrQuery"/>
     </bean>
 
     <bean id="getGroupMembersAPIController" class="com.armedia.acm.services.users.web.api.group.GetGroupMembersAPIController">
         <property name="groupDao" ref="groupDao"/>
-        <property name="muleContextManager" ref="muleContextManager"/>
+        <property name="executeSolrQuery" ref="executeSolrQuery"/>
     </bean>
 
     <bean id="acmGroupAPIController" class="com.armedia.acm.services.users.web.api.group.AcmGroupAPIController">
         <property name="groupService" ref="groupService"/>
-        <property name="muleContextManager" ref="muleContextManager"/>
         <property name="executeSolrQuery" ref="executeSolrQuery"/>
     </bean>
 

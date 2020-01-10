@@ -10,10 +10,6 @@
         }
     },
     {
-        "op": "remove",
-        "path": "/components/?@.id=='myCases'/columnDefs/?@.field=='alerts'"
-    },
-    {
         "op": "replace",
         "path": "/components/?@.id=='myCases'/columnDefs/?@.name=='name'",
         "value": {
@@ -57,10 +53,6 @@
     },
     {
         "op": "remove",
-        "path": "/components/?@.id=='myCases'/columnDefs/?@.name=='dueDate_tdt'"
-    },
-    {
-        "op": "remove",
         "path": "/components/?@.id=='myCases'/columnDefs/?@.name=='modified_date_tdt'"
     },
     {
@@ -68,21 +60,11 @@
         "path": "/components/?@.id=='myTasks'/columnDefs",
         "value": [
             {
-                "field": "alerts",
-                "displayName": "",
-                "cellTemplate": "<div><a ng-if=\"row.entity.isOverdue\" tooltip=\"{{'dashboard.widgets.myTasks.table.overdue.tooltip' | translate}}\" tooltip-append-to-body=\"true\" tooltip-class=\"tooltip-overdue\"><i class=\"fa fa-exclamation-circle icon-overdue\"></i></a><a ng-if=\"row.entity.isDeadline\" tooltip=\"{{'dashboard.widgets.myTasks.table.deadline.tooltip' | translate}}\" tooltip-append-to-body=\"true\" tooltip-class=\"tooltip-due-soon\"><i class=\"fa fa-exclamation-triangle icon-due-soon\"></i></a></div>",
-                "width": 40,
-                "enableSorting": false,
-                "enableColumnMenu": false
-            },
-            {
-                "name": "object_id_i",
-                "displayName": "dashboard.widgets.myTasks.table.header.taskId",
+                "name": "parent_type_s",
+                "displayName": "dashboard.widgets.myTasks.table.header.parentType",
                 "headerCellFilter": "translate",
-                "enableSorting": true,
-                "type": "number",
-                "cellTemplate": "<a data-ui-sref=\"tasks.main({id: row.entity.object_id_i})\">{{COL_FIELD}}</a>",
-                "width": 75
+                "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.parent_type_s == 'CASE_FILE' ? 'REQUEST' : row.entity.parent_type_s}}</div>",
+                "width": 110
             },
             {
                 "name": "title_parseable",
@@ -101,20 +83,22 @@
                 "displayName": "dashboard.widgets.myTasks.table.header.dueDate",
                 "headerCellFilter": "translate",
                 "cellTemplate": "<div>{{ row.entity.dueDate_tdt | date : ('common.defaultDateUIFormat' | translate)}}</div>",
-                "width": 70
+                "width": 110
             },
             {
-                "name": "status_lcs",
-                "displayName": "dashboard.widgets.myTasks.table.header.status",
-                "headerCellFilter": "translate",
-                "width": 100
+                "field": "alerts",
+                "displayName": "",
+                "cellTemplate": "<div><a ng-if=\"row.entity.isOverdue\" tooltip=\"{{'dashboard.widgets.myTasks.table.overdue.tooltip' | translate}}\" tooltip-append-to-body=\"true\" tooltip-class=\"tooltip-overdue\"><i class=\"fa fa-exclamation-circle icon-overdue\"></i></a><a ng-if=\"row.entity.isDeadline\" tooltip=\"{{'dashboard.widgets.myTasks.table.deadline.tooltip' | translate}}\" tooltip-append-to-body=\"true\" tooltip-class=\"tooltip-due-soon\"><i class=\"fa fa-exclamation-triangle icon-due-soon\"></i></a></div>",
+                "width": 40,
+                "enableSorting": false,
+                "enableColumnMenu": false
             },
             {
-                "name": "parent_id_s",
-                "displayName": "dashboard.widgets.myTasks.table.header.caseId",
+                "name": "parent_title_s",
+                "displayName": "dashboard.widgets.myTasks.table.header.parentTitle",
                 "headerCellFilter": "translate",
-                "cellTemplate": "<a data-ui-sref=\"cases.main({id: row.entity.parent_id_s})\">{{COL_FIELD}}<\/a>",
-                "width": 100
+                "cellTemplate": "<a data-ui-sref=\"cases.main({title: row.entity.parent_title_s})\">{{COL_FIELD}}<\/a>",
+                "width": 130
             }
         ]
     },

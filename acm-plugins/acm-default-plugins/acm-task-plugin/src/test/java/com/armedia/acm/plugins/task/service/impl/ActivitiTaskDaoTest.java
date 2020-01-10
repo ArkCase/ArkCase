@@ -27,7 +27,6 @@ package com.armedia.acm.plugins.task.service.impl;
  * #L%
  */
 
-import static org.easymock.EasyMock.anyString;
 import static org.easymock.EasyMock.capture;
 import static org.easymock.EasyMock.eq;
 import static org.easymock.EasyMock.expect;
@@ -266,8 +265,8 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         // data access and assignment rules
         mockDataAccessPrivilegeListener.applyAssignmentAndAccessRules(in);
 
-        Capture<List<AcmParticipant>> keepThese = new Capture<>();
-        Capture<List<AcmParticipant>> saved = new Capture<>();
+        Capture<List<AcmParticipant>> keepThese = EasyMock.newCapture();
+        Capture<List<AcmParticipant>> saved = EasyMock.newCapture();
 
         List<AcmParticipant> merged = new ArrayList<>();
         merged.add(new AcmParticipant());
@@ -1073,7 +1072,7 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         List<AcmParticipant> partList = new ArrayList<>();
         partList.add(new AcmParticipant());
 
-        Capture<AcmApplicationTaskEvent> capturedEvent = new Capture<>();
+        Capture<AcmApplicationTaskEvent> capturedEvent = EasyMock.newCapture();
 
         mockTaskEventPublisher.publishTaskEvent(capture(capturedEvent));
 

@@ -27,30 +27,27 @@ package gov.foia.service;
  * #L%
  */
 
-import static gov.foia.model.FOIAConstants.EMAIL_BODY_ATTACHMENT;
-import static gov.foia.model.FOIAConstants.EMAIL_FOOTER_ATTACHMENT;
-import static gov.foia.model.FOIAConstants.EMAIL_HEADER_ATTACHMENT;
+
 import static gov.foia.model.FOIARequestUtils.extractRequestorEmailAddress;
 
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
-import com.armedia.acm.services.email.model.EmailWithAttachmentsDTO;
+import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
 import com.armedia.acm.services.email.service.TemplatingEngine;
+import com.armedia.acm.services.notification.dao.NotificationDao;
+import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.service.NotificationSender;
 import com.armedia.acm.services.users.dao.UserDao;
 
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 import org.springframework.core.io.Resource;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.Arrays;
 
-import freemarker.template.TemplateException;
 import gov.foia.dao.FOIARequestDao;
 import gov.foia.model.FOIAConstants;
 import gov.foia.model.FOIADocumentDescriptor;
@@ -72,6 +69,7 @@ public class AcknowledgementDocumentService
     private FOIAQueueCorrespondenceService foiaQueueCorrespondenceService;
     private String emailBodyTemplate;
     private TemplatingEngine templatingEngine;
+    private NotificationDao notificationDao;
 
     public void emailAcknowledgement(Long requestId)
     {
@@ -79,51 +77,24 @@ public class AcknowledgementDocumentService
         {
             FOIARequest request = getRequestDao().find(requestId);
             String emailAddress = extractRequestorEmailAddress(request.getOriginator().getPerson());
-            if (emailAddress != null)
+            if (emailAddress != null && !emailAddress.isEmpty())
             {
-                EmailWithAttachmentsDTO emailData = new EmailWithAttachmentsDTO();
-                emailData.setEmailAddresses(Arrays.asList(emailAddress));
-
-                emailData.setSubject(String.format("%s %s", request.getRequestType(), request.getCaseNumber()));
-                emailData.setHeader(EMAIL_HEADER_ATTACHMENT);
-                try
-                {
-                    String body = getTemplatingEngine().process(emailBodyTemplate, "request", request);
-                    emailData.setBody(body);
-                    emailData.setTemplate(body);
-                }
-                catch (TemplateException | IOException e)
-                {
-                    // failing to send an email should not break the flow
-                    log.error("Unable to generate email for {} about {} with ID [{}]", emailAddress, request.getObjectType(), requestId, e);
-                    emailData.setBody(EMAIL_BODY_ATTACHMENT);
-                }
-                emailData.setFooter(EMAIL_FOOTER_ATTACHMENT);
-
                 FOIADocumentDescriptor documentDescriptor = documentGeneratorService.getDocumentDescriptor(request, FOIAConstants.ACK);
+                EcmFile letter = getEcmFileDao().findForContainerAttachmentFolderAndFileType(request.getContainer().getId(), request.getContainer().getAttachmentFolder().getId(), documentDescriptor.getDoctype());
 
-                EcmFile ackFile = getEcmFileDao().findForContainerAttachmentFolderAndFileType(request.getContainer().getId(),
-                        request.getContainer().getAttachmentFolder().getId(), documentDescriptor.getDoctype());
-                emailData.setAttachmentIds(Arrays.asList(ackFile.getFileId()));
-                Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+                EcmFileVersion ecmFileVersion = letter.getVersions().stream()
+                        .filter(fv -> fv.getVersionTag().equals(letter.getActiveVersionTag())).findFirst().get();
 
-                String userIdOrName = request.getCreator();
-                try
-                {
-                    if (request.isExternal()) // request from external portal
-                    {
-                        getNotificationSender().sendEmailWithAttachments(emailData, auth, userIdOrName);
-                    }
-                    else // request from foia app
-                    {
-                        getNotificationSender().sendEmailWithAttachments(emailData, auth, getUserDao().findByUserId(userIdOrName));
-                    }
-
-                }
-                catch (Exception e)
-                {
-                    log.error("Unable to email {} for {} [{}]", request.getRequestType(), documentDescriptor.getDoctype(), requestId, e);
-                }
+                Notification notification = new Notification();
+                notification.setTemplateModelName("requestDocumentAttached");
+                notification.setEmailAddresses(emailAddress);
+                notification.setAttachFiles(true);
+                notification.setFiles(Arrays.asList(ecmFileVersion));
+                notification.setParentId(requestId);
+                notification.setParentType(request.getObjectType());
+                notification.setTitle(String.format("%s %s", request.getRequestType(), request.getCaseNumber()));
+                notification.setUser(request.getCreator());
+                notificationDao.save(notification);
             }
         }
     }
@@ -256,5 +227,15 @@ public class AcknowledgementDocumentService
     public void setTemplatingEngine(TemplatingEngine templatingEngine)
     {
         this.templatingEngine = templatingEngine;
+    }
+
+    public NotificationDao getNotificationDao()
+    {
+        return notificationDao;
+    }
+
+    public void setNotificationDao(NotificationDao notificationDao)
+    {
+        this.notificationDao = notificationDao;
     }
 }
