@@ -2,9 +2,9 @@ package com.armedia.acm.plugins.complaint.web.api;
 
 /*-
  * #%L
- * ACM Default Plugin: Complaint
+ * ACM Default Plugin: Complaints
  * %%
- * Copyright (C) 2014 - 2018 ArkCase LLC
+ * Copyright (C) 2014 - 2019 ArkCase LLC
  * %%
  * This file is part of the ArkCase software. 
  * 
@@ -32,8 +32,8 @@ import com.armedia.acm.plugins.complaint.model.Complaint;
 import com.armedia.acm.plugins.complaint.service.GetComplaintByNumberService;
 import com.armedia.acm.services.dataaccess.service.impl.ArkPermissionEvaluator;
 
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;

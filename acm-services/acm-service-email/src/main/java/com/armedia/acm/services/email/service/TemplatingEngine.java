@@ -27,7 +27,7 @@ package com.armedia.acm.services.email.service;
  * #L%
  */
 
-import com.armedia.acm.core.ApplicationConfig;
+import com.armedia.acm.core.model.ApplicationConfig;
 
 import java.io.IOException;
 import java.io.StringReader;
@@ -71,5 +71,10 @@ public class TemplatingEngine
     public void setApplicationConfig(ApplicationConfig applicationConfig)
     {
         this.applicationConfig = applicationConfig;
+    }
+
+    public ApplicationConfig getApplicationConfig()
+    {
+        return applicationConfig;
     }
 }

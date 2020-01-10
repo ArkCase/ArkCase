@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:util="http://www.springframework.org/schema/util" xmlns="http://www.springframework.org/schema/beans"
-       xmlns:aop="http://www.springframework.org/schema/aop"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+    xmlns:util="http://www.springframework.org/schema/util" xmlns="http://www.springframework.org/schema/beans"
+    xmlns:aop="http://www.springframework.org/schema/aop"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
        http://www.springframework.org/schema/util
        http://www.springframework.org/schema/util/spring-util-2.5.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
 
@@ -38,7 +38,7 @@
     </bean>
 
     <bean id="userJpaDao" class="com.armedia.acm.services.users.dao.UserDao" init-method="init">
-        <property name="configList" ref="configList"/>
+        <property name="languageSettingsConfig" ref="languageSettingsConfig"/>
     </bean>
     <!-- End UserDao caching functionality -->
 
@@ -51,6 +51,7 @@
         <property name="groupDao" ref="groupDao"/>
         <property name="executeSolrQuery" ref="executeSolrQuery"/>
         <property name="acmGroupEventPublisher" ref="acmGroupEventPublisher"/>
+        <property name="springContextHolder" ref="acmContextHolder"/>
     </bean>
 
     <bean id="userActionExecutor" class="com.armedia.acm.services.users.service.ldap.AcmUserActionExecutor">
@@ -94,6 +95,7 @@
     <bean id="groupToSolrTransformer" class="com.armedia.acm.services.users.service.group.GroupToSolrTransformer">
         <property name="groupDao" ref="groupDao"/>
         <property name="userDao" ref="userJpaDao"/>
+        <property name="springContextHolder" ref="acmContextHolder"/>
     </bean>
 
     <bean id="ldapUserService" class="com.armedia.acm.services.users.service.ldap.LdapUserService">
@@ -251,7 +253,6 @@
 
     <bean id="applicationPrivilegesConfig" class="com.armedia.acm.services.users.model.ApplicationPrivilegesConfig" scope="refresh">
         <aop:scoped-proxy/>
-        <property name="jsonUnmarshaller" ref="jsonUnmarshaller"/>
     </bean>
 
     <bean id="applicationRolesConfig" class="com.armedia.acm.services.users.model.ApplicationRolesConfig" scope="refresh">
@@ -260,11 +261,9 @@
 
     <bean id="rolesToGroupsConfig" class="com.armedia.acm.services.users.model.ApplicationRolesToGroupsConfig" scope="refresh">
         <aop:scoped-proxy/>
-        <property name="jsonUnmarshaller" ref="jsonUnmarshaller"/>
     </bean>
 
     <bean id="rolesToPrivileges" class="com.armedia.acm.services.users.model.ApplicationRolesToPrivilegesConfig" scope="refresh">
-        <property name="jsonUnmarshaller" ref="jsonUnmarshaller"/>
         <aop:scoped-proxy/>
     </bean>
 

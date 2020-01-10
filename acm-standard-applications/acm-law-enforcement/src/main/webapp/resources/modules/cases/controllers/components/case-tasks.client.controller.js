@@ -2,8 +2,8 @@
 
 angular.module('cases').controller(
         'Cases.TasksController',
-        [ '$scope', '$state', '$stateParams', '$q', '$translate', 'UtilService', 'ConfigService', 'ObjectService', 'Object.TaskService', 'Task.WorkflowService', 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'Case.InfoService', 'Task.AlertsService', 'ModalDialogService', 'PermissionsService', '$timeout',
-                function($scope, $state, $stateParams, $q, $translate, Util, ConfigService, ObjectService, ObjectTaskService, TaskWorkflowService, HelperUiGridService, HelperObjectBrowserService, CaseInfoService, TaskAlertsService, ModalDialogService, PermissionsService, $timeout) {
+        [ '$scope', '$state', '$stateParams', '$q', '$translate', 'UtilService', 'ConfigService', 'ObjectService', 'Object.TaskService', 'Task.WorkflowService', 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'Case.InfoService', 'Task.AlertsService', 'ModalDialogService', 'PermissionsService', '$timeout', 'Authentication',
+                function($scope, $state, $stateParams, $q, $translate, Util, ConfigService, ObjectService, ObjectTaskService, TaskWorkflowService, HelperUiGridService, HelperObjectBrowserService, CaseInfoService, TaskAlertsService, ModalDialogService, PermissionsService, $timeout, Authentication) {
 
                     var componentHelper = new HelperObjectBrowserService.Component({
                         scope: $scope,
@@ -23,6 +23,14 @@ angular.module('cases').controller(
                     var gridHelper = new HelperUiGridService.Grid({
                         scope: $scope
                     });
+
+                    $scope.childDocumentSearch = {
+                        parentType: ObjectService.ObjectTypes.CASE_FILE,
+                        childTypes:["TIMESHEET", "COSTSHEET"],
+                        startRow: Util.goodValue($scope.start, 0),
+                        maxRows: Util.goodValue($scope.pageSize, 10)
+                    };
+
                     var promiseUsers = gridHelper.getUsers();
 
                     var onConfigRetrieved = function(config) {
@@ -58,11 +66,14 @@ angular.module('cases').controller(
 
                     var retrieveGridData = function() {
                         var currentObjectId = Util.goodMapValue($scope.objectInfo, "id");
+                        $scope.childDocumentSearch.parentId = currentObjectId;
+                        $scope.childDocumentSearch.startRow = Util.goodValue($scope.start, 0);
+                        $scope.childDocumentSearch.maxRows = Util.goodValue($scope.pageSize, 10);
                         if (Util.goodPositive(currentObjectId, false)) {
                             
                             ObjectTaskService.resetChildTasks(ObjectService.ObjectTypes.CASE_FILE, currentObjectId);
                             
-                            ObjectTaskService.queryChildTasks(ObjectService.ObjectTypes.CASE_FILE, currentObjectId, Util.goodValue($scope.start, 0), Util.goodValue($scope.pageSize, 10), Util.goodMapValue($scope.sort, "by"), Util.goodMapValue($scope.sort, "dir")).then(function(data) {
+                            CaseInfoService.queryCaseTasks($scope.objectInfo.id, $scope.childDocumentSearch, Util.goodMapValue($scope.sort, "by"), Util.goodMapValue($scope.sort, "dir")).then(function(data) {
                                 var tasks = data.response.docs;
                                 angular.forEach(tasks, function(task) {
                                     //calculate to show alert icons if task is in overdue or deadline is approaching if the status of the task is in different state than CLOSED.
@@ -112,8 +123,14 @@ angular.module('cases').controller(
                         }
                     };
 
+                    Authentication.queryUserInfo().then(function(userInfo) {
+                        $scope.userInfo = userInfo;
+                        $scope.userId = userInfo.userId;
+                        return userInfo;
+                    });
+
                     $scope.isDeleteDisabled = function(rowEntity) {
-                        return ((Util.isEmpty(rowEntity.task_owner_s) || (rowEntity.task_owner_s !== rowEntity.author_s)) || (rowEntity.status_s === "CLOSED"));
+                        return ((Util.isEmpty(rowEntity.assignee_s) || (rowEntity.assignee_s !== $scope.userId)) || (rowEntity.status_s === "CLOSED") || (!rowEntity.adhocTask_b));
                     };
 
                     $scope.onClickObjLink = function(event, rowEntity) {

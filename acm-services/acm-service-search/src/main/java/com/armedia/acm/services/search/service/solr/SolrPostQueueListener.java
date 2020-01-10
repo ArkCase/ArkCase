@@ -27,11 +27,13 @@ package com.armedia.acm.services.search.service.solr;
  * #L%
  */
 
-import com.armedia.acm.services.search.model.SolrCore;
+import com.armedia.acm.services.search.model.solr.SolrCore;
 
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.jms.annotation.JmsListener;
+
+import java.net.ConnectException;
 
 /**
  * Created by david.miller on 2018-04-02.
@@ -42,31 +44,49 @@ public class SolrPostQueueListener
 
     private SolrPostClient solrPostClient;
 
-    @JmsListener(destination = "solrAdvancedSearch.in", containerFactory = "jmsListenerContainerFactory")
+    private final String advancedSearchDestinationQueue = "solrAdvancedSearch.in";
+
+    private final String quickSearchDestinationQueue = "solrQuickSearch.in";
+
+    @JmsListener(destination = advancedSearchDestinationQueue, containerFactory = "jmsListenerContainerFactory")
     public void onAdvancedSearchPost(String jsonDocument)
     {
         try
         {
             logger.debug("Sending to advanced search");
-            getSolrPostClient().sendToSolr(SolrCore.ADVANCED_SEARCH, jsonDocument);
+            getSolrPostClient().sendToSolr(advancedSearchDestinationQueue, SolrCore.ADVANCED_SEARCH, jsonDocument);
         }
         catch (SolrPostException e)
         {
             logger.error("Could not post to Solr: {}", e.getMessage(), e);
+            // If solr is down, ConnectException is thrown and because of jms listener is set to
+            // sessionTransacted=true, undelivered messages are staying in solrContentFile.in queue
+            // until successful delivery
+            if (e.getCause() != null && e.getCause().getCause() instanceof ConnectException)
+            {
+                throw new RuntimeException(e);
+            }
         }
     }
 
-    @JmsListener(destination = "solrQuickSearch.in", containerFactory = "jmsListenerContainerFactory")
+    @JmsListener(destination = quickSearchDestinationQueue, containerFactory = "jmsListenerContainerFactory")
     public void onQuickSearchPost(String jsonDocument)
     {
         try
         {
             logger.debug("Sending to quick search");
-            getSolrPostClient().sendToSolr(SolrCore.QUICK_SEARCH, jsonDocument);
+            getSolrPostClient().sendToSolr(quickSearchDestinationQueue, SolrCore.QUICK_SEARCH, jsonDocument);
         }
         catch (SolrPostException e)
         {
             logger.error("Could not post to Solr: {}", e.getMessage(), e);
+            // If solr is down, ConnectException is thrown and because of jms listener is set to
+            // sessionTransacted=true, undelivered messages are staying in solrContentFile.in queue
+            // until successful delivery
+            if (e.getCause() != null && e.getCause().getCause() instanceof ConnectException)
+            {
+                throw new RuntimeException(e);
+            }
         }
     }
 

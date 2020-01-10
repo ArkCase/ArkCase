@@ -27,7 +27,7 @@ package com.armedia.acm.plugins.admin.web.api;
  * #L%
  */
 
-import com.armedia.acm.core.exceptions.AcmEncryptionException;
+import com.armedia.acm.crypto.exceptions.AcmEncryptionException;
 import com.armedia.acm.services.mediaengine.exception.SaveConfigurationException;
 import com.armedia.acm.tool.transcribe.model.AWSConfiguration;
 import com.armedia.acm.tool.transcribe.service.AWSTranscribeConfigurationService;

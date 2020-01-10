@@ -105,18 +105,6 @@ public class AuditConfig
     @Value("${audit.plugin.activiti.logging.entity.events.object.enabled}")
     private boolean activitiLoggingEntityEventsObjectEnabled;
 
-    @JsonProperty("audit.plugin.mule.flows.logging.enabled")
-    @Value("${audit.plugin.mule.flows.logging.enabled}")
-    private Boolean muleFlowsLoggingEnabled;
-
-    @JsonProperty("audit.plugin.mule.flows.logging.message.enabled")
-    @Value("${audit.plugin.mule.flows.logging.message.enabled}")
-    private Boolean muleFlowsLoggingMessageEnabled;
-
-    @JsonProperty("audit.plugin.mule.flows.logging.message.properties.enabled")
-    @Value("${audit.plugin.mule.flows.logging.message.properties.enabled}")
-    private Boolean muleFlowsLoggingMessagePropertiesEnabled;
-
     @JsonProperty("audit.plugin.contentTypesToLog")
     @Value("${audit.plugin.contentTypesToLog}")
     private String contentTypesToLogString;
@@ -323,36 +311,6 @@ public class AuditConfig
         this.activitiLoggingEntityEventsObjectEnabled = activitiLoggingEntityEventsObjectEnabled;
     }
 
-    public Boolean getMuleFlowsLoggingEnabled()
-    {
-        return muleFlowsLoggingEnabled;
-    }
-
-    public void setMuleFlowsLoggingEnabled(Boolean muleFlowsLoggingEnabled)
-    {
-        this.muleFlowsLoggingEnabled = muleFlowsLoggingEnabled;
-    }
-
-    public Boolean getMuleFlowsLoggingMessageEnabled()
-    {
-        return muleFlowsLoggingMessageEnabled;
-    }
-
-    public void setMuleFlowsLoggingMessageEnabled(Boolean muleFlowsLoggingMessageEnabled)
-    {
-        this.muleFlowsLoggingMessageEnabled = muleFlowsLoggingMessageEnabled;
-    }
-
-    public Boolean getMuleFlowsLoggingMessagePropertiesEnabled()
-    {
-        return muleFlowsLoggingMessagePropertiesEnabled;
-    }
-
-    public void setMuleFlowsLoggingMessagePropertiesEnabled(Boolean muleFlowsLoggingMessagePropertiesEnabled)
-    {
-        this.muleFlowsLoggingMessagePropertiesEnabled = muleFlowsLoggingMessagePropertiesEnabled;
-    }
-
     public String getContentTypesToLogString()
     {
         return contentTypesToLogString;
@@ -447,18 +405,20 @@ public class AuditConfig
     {
         this.organizationaHistroyEventsArrayString = organizationaHistroyEventsArrayString;
     }
+
     @JsonIgnore
     public String getEventTypeByKey(String objectType)
     {
-        switch (objectType) {
-            case "COMPLAINT":
-                return complaintHistoryEventsArrayString;
-            case "CASE_FILE":
-                return caseFileHistoryEventsArrayString;
-            case "TASK":
-                return taskHistoryEventsArrayString;
-            case "DOC_REPO":
-                return docRepoHistoryEventsArrayString;
+        switch (objectType)
+        {
+        case "COMPLAINT":
+            return complaintHistoryEventsArrayString;
+        case "CASE_FILE":
+            return caseFileHistoryEventsArrayString;
+        case "TASK":
+            return taskHistoryEventsArrayString;
+        case "DOC_REPO":
+            return docRepoHistoryEventsArrayString;
         }
         return "";
     }

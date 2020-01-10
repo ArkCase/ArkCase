@@ -32,18 +32,6 @@ package com.armedia.acm.plugins.ecm.model;
  */
 public interface EcmFileConstants
 {
-    String MULE_ENDPOINT_CREATE_FOLDER = "vm://createFolder.in";
-
-    String MULE_ENDPOINT_COPY_FILE = "vm://copyFile.in";
-
-    String MULE_ENDPOINT_RENAME_FILE = "vm://renameFile.in";
-
-    String MULE_ENDPOINT_REPLACE_FILE = "vm://updateFile.in";
-
-    String MULE_ENDPOINT_DELETE_FILE = "vm://deleteFile.in";
-
-    String MULE_ENDPOINT_MOVE_FILE = "vm://moveFile.in";
-
     String USER_ACTION_COPY_FILE = "COPY";
 
     String USER_ACTION_UPLOAD_FILE = "UPLOAD";
@@ -121,6 +109,8 @@ public interface EcmFileConstants
     String FILE_NAME = "fileName";
     String INPUT_STREAM = "inputStream";
     String RECORD = "RECORD";
+    String CMIS_DOCUMENT_ID = "cmisDocumentId";
+    String REPOSITORY_VERSION_ID = "alfcmis:nodeRef";
 
     String IP_ADDRESS_ATTRIBUTE = "acm_ip_address";
 
@@ -138,6 +128,7 @@ public interface EcmFileConstants
     String VERSIONING_STATE = "versioningState";
     String DEFAULT_CMIS_REPOSITORY_ID = "alfresco";
     String ALL_VERSIONS = "allVersions";
+    String CMIS_REPOSITORY_ID = "cmisRepositoryId";
 
     String ECM_SYNC_NODE_TYPE_FOLDER = "folder";
     String ECM_SYNC_NODE_TYPE_DOCUMENT = "document";

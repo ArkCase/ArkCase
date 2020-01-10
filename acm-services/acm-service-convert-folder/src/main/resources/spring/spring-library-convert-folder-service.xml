@@ -25,6 +25,7 @@
             </list>
         </constructor-arg>
         <property name="folderService" ref="acmFolderService"/>
+        <property name="ecmFileDao" ref="ecmFileDao"/>
     </bean>
 
     <bean id="convertEcmFileEventListener" class="com.armedia.acm.convertfolder.listener.ConvertEcmFileEventListener">

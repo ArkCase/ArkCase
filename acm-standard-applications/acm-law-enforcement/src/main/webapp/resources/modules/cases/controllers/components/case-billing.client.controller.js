@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('cases').controller('Cases.BillingController', ['$scope', '$modal', 'ConfigService', '$stateParams', 'Case.InfoService', 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'Case.BillingService', 'MessageService',
-    function($scope, $modal, ConfigService, $stateParams, CaseInfoService, HelperUiGridService, HelperObjectBrowserService, CaseBillingService, MessageService){
+angular.module('cases').controller('Cases.BillingController', ['$scope', '$modal', 'ConfigService', '$stateParams', 'Case.InfoService', 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'Case.BillingService', 'MessageService', 'UtilService',
+    function($scope, $modal, ConfigService, $stateParams, CaseInfoService, HelperUiGridService, HelperObjectBrowserService, CaseBillingService, MessageService, Util){
         new HelperObjectBrowserService.Component({
             scope: $scope,
             stateParams: $stateParams,
@@ -98,9 +98,24 @@ angular.module('cases').controller('Cases.BillingController', ['$scope', '$modal
                 }
             });
         };
-        
+
+        $scope.isInvoiceGenerated =  false;
+        CaseBillingService.getBillingInvoices($stateParams.id, 'CASE_FILE').then(function(data){
+            if(!Util.isArrayEmpty(data.data)) {
+                $scope.isInvoiceGenerated = true;
+            }
+            else {
+                $scope.isInvoiceGenerated = false;
+            }
+        });
+
+        $scope.$bus.subscribe('invoice-generated', function() {
+            $scope.isInvoiceGenerated =  true;
+        });
+
         $scope.generateInvoice = function() {
             CaseBillingService.createBillingInvoice(invoiceData).then(function() {
+                $scope.$bus.publish('invoice-generated', invoiceData);
                 MessageService.succsessAction();    
             }, function() {
                 MessageService.errorAction();

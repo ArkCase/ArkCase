@@ -27,8 +27,14 @@ package com.armedia.acm.correspondence.service;
  * #L%
  */
 
+import static org.easymock.EasyMock.capture;
+import static org.easymock.EasyMock.eq;
+import static org.easymock.EasyMock.expect;
+import static org.junit.Assert.assertEquals;
+
 import com.armedia.acm.correspondence.model.CorrespondenceMergeField;
 import com.armedia.acm.correspondence.model.CorrespondenceTemplate;
+import com.armedia.acm.correspondence.utils.ParagraphRunPoiWordGenerator;
 import com.armedia.acm.correspondence.utils.SpELWordEvaluator;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
@@ -36,7 +42,9 @@ import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.services.config.lookups.service.LookupDao;
 import com.armedia.acm.services.labels.service.TranslationService;
 import com.armedia.acm.spring.SpringContextHolder;
+
 import org.easymock.Capture;
+import org.easymock.EasyMock;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
@@ -45,6 +53,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import javax.persistence.EntityManager;
+
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
@@ -54,11 +63,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import static org.easymock.EasyMock.capture;
-import static org.easymock.EasyMock.eq;
-import static org.easymock.EasyMock.expect;
-import static org.junit.Assert.assertEquals;
 
 /**
  * Created by armdev on 12/15/14.
@@ -81,6 +85,7 @@ public class CorrespondenceGeneratorTest extends EasyMockSupport
     private CorrespondenceService mockCorrespondenceService;
     private LookupDao mockLookupDao;
     private TranslationService mockTranslationService;
+    private ParagraphRunPoiWordGenerator mockParagraphRunPoiWordGenerator;
 
     private String key1;
     private String key2;
@@ -158,6 +163,7 @@ public class CorrespondenceGeneratorTest extends EasyMockSupport
         mockCorrespondenceService = createMock(CorrespondenceService.class);
         mockLookupDao = createMock(LookupDao.class);
         mockTranslationService = createMock(TranslationService.class);
+        mockParagraphRunPoiWordGenerator = createMock(ParagraphRunPoiWordGenerator.class);
 
         SecurityContextHolder.getContext().setAuthentication(mockAuthentication);
 
@@ -214,15 +220,16 @@ public class CorrespondenceGeneratorTest extends EasyMockSupport
         Long parentObjectId = 500L;
         String objectCaseFile = "CASE_FILE";
 
-        Capture<Resource> captureResourceTemplate = new Capture<>();
+        Capture<Resource> captureResourceTemplate = EasyMock.newCapture();
 
-        Capture<String> filename = new Capture<>();
+        Capture<String> filename = EasyMock.newCapture();
 
         expect(mockLookupDao.getMergedLookups()).andReturn(lookupData()).anyTimes();
 
         mockWordGenerator.generate(capture(captureResourceTemplate), eq(mockOutputStream), eq(objectCaseFile), eq(parentObjectId));
 
-        expect(mockEcmFileDao.findSingleFileByParentObjectAndFolderCmisIdAndFileType(eq(objectCaseFile), eq(parentObjectId), eq(targetFolderCmisId),
+        expect(mockEcmFileDao.findSingleFileByParentObjectAndFolderCmisIdAndFileType(eq(objectCaseFile), eq(parentObjectId),
+                eq(targetFolderCmisId),
                 eq(correspondenceTemplate.getDocumentType()))).andReturn(null);
 
         expect(mockEcmFileService.upload(eq(correspondenceTemplate.getDocumentType() + ".docx"),
@@ -251,22 +258,24 @@ public class CorrespondenceGeneratorTest extends EasyMockSupport
         Long parentObjectId = 500L;
         String parentObjectType = "CASE_FILE";
 
-        Capture<Resource> captureResourceTemplate = new Capture<>();
+        Capture<Resource> captureResourceTemplate = EasyMock.newCapture();
 
-        Capture<String> filename = new Capture<>();
+        Capture<String> filename = EasyMock.newCapture();
 
         expect(mockLookupDao.getMergedLookups()).andReturn(lookupData()).anyTimes();
 
         mockWordGenerator.generate(capture(captureResourceTemplate), eq(mockOutputStream), eq(parentObjectType), eq(parentObjectId));
 
-        expect(mockEcmFileDao.findSingleFileByParentObjectAndFolderCmisIdAndFileType(eq(parentObjectType), eq(parentObjectId), eq(targetFolderCmisId),
+        expect(mockEcmFileDao.findSingleFileByParentObjectAndFolderCmisIdAndFileType(eq(parentObjectType), eq(parentObjectId),
+                eq(targetFolderCmisId),
                 eq(correspondenceTemplate.getDocumentType()))).andReturn(ecmFile);
 
         expect(mockEcmFileService.update(ecmFile, mockInputStream, mockAuthentication)).andReturn(null);
 
         replayAll();
 
-        unit.generateCorrespondence(mockAuthentication, parentObjectType, parentObjectId, targetFolderCmisId, correspondenceTemplate, queryArgs,
+        unit.generateCorrespondence(mockAuthentication, parentObjectType, parentObjectId, targetFolderCmisId, correspondenceTemplate,
+                queryArgs,
                 mockOutputStream, mockInputStream);
 
         verifyAll();
@@ -274,6 +283,12 @@ public class CorrespondenceGeneratorTest extends EasyMockSupport
         Resource capturedResource = captureResourceTemplate.getValue();
 
         assertEquals(correspondenceTemplate.getTemplateFilename(), capturedResource.getFilename());
+
+    }
+
+    @Test
+    public void fixBadParagraph() throws Exception
+    {
 
     }
 

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.springframework.org/schema/beans"
-       xmlns:aop="http://www.springframework.org/schema/aop"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+    xmlns:aop="http://www.springframework.org/schema/aop"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
 
     <bean id="ecmFileDao" class="com.armedia.acm.plugins.ecm.dao.EcmFileDao"/>
 
@@ -23,8 +23,11 @@
         <property name="fileDao" ref="ecmFileDao"/>
         <property name="folderDao" ref="acmFolderDao"/>
         <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
+        <property name="externalAuthenticationUtils" ref="externalAuthenticationUtils"/>
     </bean>
 
+    <bean id="xSync" class="com.antkorwin.xsync.XSync"/>
+    
     <bean id="fileParticipantService" class="com.armedia.acm.plugins.ecm.service.impl.EcmFileParticipantService">
         <property name="fileDao" ref="ecmFileDao"/>
         <property name="folderDao" ref="acmFolderDao"/>
@@ -32,15 +35,32 @@
         <property name="participantService" ref="acmParticipantService"/>
         <property name="fileParticipantServiceHelper" ref="fileParticipantServiceHelper"/>
         <property name="ecmFileConfig" ref="ecmFileConfig"/>
+        <property name="externalAuthenticationUtils" ref="externalAuthenticationUtils"/>
+        <property name="xSync" ref="xSync"/>
+        <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
     </bean>
 
     <bean id="entityParticipantsChangedEventListener"
-          class="com.armedia.acm.plugins.ecm.service.EntityParticipantsChangedEventListener">
+        class="com.armedia.acm.plugins.ecm.service.EntityParticipantsChangedEventListener">
         <property name="fileParticipantService" ref="fileParticipantService"/>
+        <property name="executor" ref="fileParticipantsThreadPoolTaskExecutor"/>
+        <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
+    </bean>
+
+    <bean id="fileParticipantsChangedEventListener"
+        class="com.armedia.acm.plugins.ecm.service.FileParticipantChangedEventListener">
+        <property name="alfrescoSyncConfig" ref="alfrescoSyncConfig"/>
+        <property name="changedParticipantToJmsSender" ref="changedParticipantToJmsSender"/>
+    </bean>
+
+    <bean id="folderParticipantsChangedEventListener"
+        class="com.armedia.acm.plugins.ecm.service.FolderParticipantChangedEventListener">
+        <property name="alfrescoSyncConfig" ref="alfrescoSyncConfig"/>
+        <property name="changedParticipantToJmsSender" ref="changedParticipantToJmsSender"/>
     </bean>
 
     <bean id="folderDataAccessUpdateLocator"
-          class="com.armedia.acm.plugins.ecm.service.impl.FolderDataAccessUpdateLocator">
+        class="com.armedia.acm.plugins.ecm.service.impl.FolderDataAccessUpdateLocator">
         <property name="folderDao" ref="acmFolderDao"/>
     </bean>
 
@@ -49,9 +69,9 @@
         <property name="captureConfig" ref="captureConfig"/>
     </bean>
 
-    <!-- Mule Utility Bean for downloading, updating, adding files -->
-    <bean id="ecmFileMuleUtils" class="com.armedia.acm.plugins.ecm.utils.EcmFileMuleUtils">
-        <property name="muleContextManager" ref="muleContextManager"/>
+    <!-- Camel Utility Bean for downloading, updating, adding files -->
+    <bean id="ecmFileCamelUtils" class="com.armedia.acm.plugins.ecm.utils.EcmFileCamelUtils">
+        <property name="camelContextManager" ref="camelContextManager"/>
         <property name="cmisConfigUtils" ref="cmisConfigUtils"/>
     </bean>
 
@@ -59,15 +79,15 @@
     <bean id="ecmFileMergeHandler" class="com.armedia.acm.plugins.ecm.pipeline.presave.EcmFileMergeHandler">
         <property name="ecmFileDao" ref="ecmFileDao"/>
         <property name="folderAndFilesUtils" ref="folderAndFilesUtils"/>
-        <property name="ecmFileMuleUtils" ref="ecmFileMuleUtils"/>
+        <property name="ecmFileCamelUtils" ref="ecmFileCamelUtils"/>
         <property name="captureConfig" ref="captureConfig"/>
     </bean>
     <bean id="ecmFileMergedContentHandler"
-          class="com.armedia.acm.plugins.ecm.pipeline.presave.EcmFileMergeContentHandler">
-        <property name="ecmFileMuleUtils" ref="ecmFileMuleUtils"/>
+        class="com.armedia.acm.plugins.ecm.pipeline.presave.EcmFileMergeContentHandler">
+        <property name="ecmFileCamelUtils" ref="ecmFileCamelUtils"/>
     </bean>
     <bean id="ecmFileNewContentHandler" class="com.armedia.acm.plugins.ecm.pipeline.presave.EcmFileNewContentHandler">
-        <property name="ecmFileMuleUtils" ref="ecmFileMuleUtils"/>
+        <property name="ecmFileCamelUtils" ref="ecmFileCamelUtils"/>
         <property name="progressIndicatorService" ref="progressIndicatorService"/>
     </bean>
     <bean id="ecmFileNewMetadataHandler" class="com.armedia.acm.plugins.ecm.pipeline.presave.EcmFileNewMetadataHandler">
@@ -76,32 +96,33 @@
         <property name="pageCountService" ref="pageCountService"/>
     </bean>
     <bean id="ecmFileMergedMetadataHandler"
-          class="com.armedia.acm.plugins.ecm.pipeline.presave.EcmFileMergedMetadataHandler">
+        class="com.armedia.acm.plugins.ecm.pipeline.presave.EcmFileMergedMetadataHandler">
         <property name="ecmFileDao" ref="ecmFileDao"/>
         <property name="folderDao" ref="acmFolderDao"/>
         <property name="pageCountService" ref="pageCountService"/>
 
     </bean>
     <bean id="ecmFileSendForPdfConversionHandler"
-          class="com.armedia.acm.plugins.ecm.pipeline.presave.EcmFileSendForPdfConversionHandler">
+        class="com.armedia.acm.plugins.ecm.pipeline.presave.EcmFileSendForPdfConversionHandler">
         <property name="captureFolderService" ref="captureFolderHandler"/>
         <property name="captureConfig" ref="captureConfig"/>
     </bean>
     <bean id="ecmFileUpdateContentHandler"
-          class="com.armedia.acm.plugins.ecm.pipeline.presave.EcmFileUpdateContentHandler">
-        <property name="ecmFileMuleUtils" ref="ecmFileMuleUtils"/>
+        class="com.armedia.acm.plugins.ecm.pipeline.presave.EcmFileUpdateContentHandler">
+        <property name="ecmFileCamelUtils" ref="ecmFileCamelUtils"/>
     </bean>
     <bean id="ecmFileUpdateMetadataHandler"
-          class="com.armedia.acm.plugins.ecm.pipeline.presave.EcmFileUpdateMetadataHandler">
+        class="com.armedia.acm.plugins.ecm.pipeline.presave.EcmFileUpdateMetadataHandler">
         <property name="ecmFileDao" ref="ecmFileDao"/>
         <property name="folderDao" ref="acmFolderDao"/>
         <property name="pageCountService" ref="pageCountService"/>
     </bean>
     <bean id="ecmFileParticipantsHandler"
-          class="com.armedia.acm.plugins.ecm.pipeline.postsave.EcmFileParticipantsHandler">
+        class="com.armedia.acm.plugins.ecm.pipeline.postsave.EcmFileParticipantsHandler">
         <property name="fileParticipantService" ref="fileParticipantService"/>
     </bean>
-    <bean id="fileUploadConversionHandler" class="com.armedia.acm.plugins.ecm.pipeline.postsave.FileUploadConversionHandler" scope="refresh">
+    <bean id="fileUploadConversionHandler" class="com.armedia.acm.plugins.ecm.pipeline.postsave.FileUploadConversionHandler"
+        scope="refresh">
         <aop:scoped-proxy/>
         <property name="fileConverterFactory" ref="fileConverterFactory"/>
         <property name="ecmFileService" ref="ecmFileService"/>
@@ -141,7 +162,7 @@
     </bean>
 
     <bean id="ecmFileTransaction" class="com.armedia.acm.plugins.ecm.service.impl.EcmFileTransactionImpl">
-        <property name="muleContextManager" ref="muleContextManager"/>
+        <property name="camelContextManager" ref="camelContextManager"/>
         <property name="ecmFileDao" ref="ecmFileDao"/>
         <property name="folderDao" ref="acmFolderDao"/>
         <property name="folderAndFilesUtils" ref="folderAndFilesUtils"/>
@@ -277,12 +298,18 @@
                 <entry key="application/x-dosexec">
                     <value>application/octet-stream</value>
                 </entry>
+                <entry key="application/json">
+                    <value>application/octet-stream</value>
+                </entry>
+                <entry key="application/vnd.wordperfect">
+                    <list>
+                        <value>application/octet-stream</value>
+                    </list>
+                </entry>
             </map>
         </property>
         <property name="progressIndicatorService" ref="progressIndicatorService"/>
     </bean>
-
-    <import resource="file:${user.home}/.arkcase/acm/activeMqSpringConfig.xml"/>
 
     <bean id="jmsTemplate" class="org.springframework.jms.core.JmsTemplate">
         <constructor-arg index="0" ref="amqConnectionFactory"/>
@@ -302,7 +329,6 @@
         <property name="ecmFileTransaction" ref="ecmFileTransaction"/>
         <property name="ecmFileDao" ref="ecmFileDao"/>
         <property name="containerFolderDao" ref="acmContainerFolderDao"/>
-        <property name="muleContextManager" ref="muleContextManager"/>
         <property name="solrQuery" ref="executeSolrQuery"/>
         <property name="searchResults" ref="searchResults"/>
         <property name="sortParameterNameToCmisFieldName">
@@ -340,6 +366,8 @@
         <property name="objectLockService" ref="objectLockService"/>
         <property name="emailSenderConfig" ref="emailSenderConfig"/>
         <property name="progressIndicatorService" ref="progressIndicatorService"/>
+        <property name="camelContextManager" ref="camelContextManager"/>
+        <property name="authenticationTokenDao" ref="authenticationTokenDao"/>
     </bean>
 
     <bean id="ecmFileToSolrTrasnformer" class="com.armedia.acm.plugins.ecm.service.EcmFileToSolrTransformer">
@@ -366,6 +394,7 @@
         <property name="objectConverter" ref="objectConverter"/>
         <property name="cmisConfigUtils" ref="cmisConfigUtils"/>
         <property name="solrRestClient" ref="solrRestClient"/>
+        <property name="camelContextManager" ref="camelContextManager"/>
     </bean>
 
     <bean id="solrPostContentFileQueueListener" class="com.armedia.acm.plugins.ecm.service.impl.SolrPostContentFileQueueListener">
@@ -373,7 +402,7 @@
     </bean>
 
     <bean id="fileWorkflowBusinessRule" class="com.armedia.acm.plugins.ecm.service.impl.FileWorkflowBusinessRule"
-          parent="simpleStatelessSingleObjectRuleManager">
+        parent="simpleStatelessSingleObjectRuleManager">
         <property name="ruleSpreadsheetFilename" value="drools-form-business-process-rules.xlsx"/>
     </bean>
 
@@ -392,7 +421,6 @@
     <bean id="acmFolderService" class="com.armedia.acm.plugins.ecm.service.impl.AcmFolderServiceImpl">
         <property name="folderDao" ref="acmFolderDao"/>
         <property name="containerDao" ref="acmContainerFolderDao"/>
-        <property name="muleContextManager" ref="muleContextManager"/>
         <property name="fileDao" ref="ecmFileDao"/>
         <property name="fileService" ref="ecmFileService"/>
         <property name="folderAndFilesUtils" ref="folderAndFilesUtils"/>
@@ -401,6 +429,7 @@
         <property name="ecmFileConfig" ref="ecmFileConfig"/>
         <property name="genericMessagesChannel" ref="genericMessagesChannel"/>
         <property name="objectLockService" ref="objectLockService"/>
+        <property name="camelContextManager" ref="camelContextManager"/>
     </bean>
 
     <bean id="folderAndFilesUtils" class="com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils">
@@ -408,6 +437,7 @@
         <property name="folderDao" ref="acmFolderDao"/>
         <property name="fileDao" ref="ecmFileDao"/>
         <property name="fileService" ref="ecmFileService"/>
+        <property name="ecmFileConfig" ref="ecmFileConfig"/>
     </bean>
 
     <bean id="fileEventPublisher" class="com.armedia.acm.plugins.ecm.service.FileEventPublisher"/>
@@ -431,7 +461,7 @@
     <bean id="pageCountService" class="com.armedia.acm.plugins.ecm.service.impl.PageCountServiceImpl"/>
 
     <bean id="fileCreatedWorkflowHandler"
-          class="com.armedia.acm.plugins.ecm.handler.FileCreatedBuckslipWorkflowHandler">
+        class="com.armedia.acm.plugins.ecm.handler.FileCreatedBuckslipWorkflowHandler">
         <property name="fileWorkflowBusinessRule" ref="fileWorkflowBusinessRule"/>
         <property name="activitiRuntimeService" ref="activitiRuntimeService"/>
         <property name="objectConverter" ref="objectConverter"/>
@@ -439,13 +469,13 @@
     </bean>
 
     <bean id="cmisConfigUtils" class="com.armedia.acm.plugins.ecm.utils.CmisConfigUtils">
-        <property name="muleContextManager" ref="muleContextManager"/>
+        <property name="camelContextManager" ref="camelContextManager"/>
     </bean>
 
     <bean id="streamService" class="com.armedia.acm.plugins.ecm.service.impl.StreamServiceImpl">
         <property name="cmisConfigUtils" ref="cmisConfigUtils"/>
         <property name="folderAndFilesUtils" ref="folderAndFilesUtils"/>
-        <property name="muleContextManager" ref="muleContextManager"/>
+        <property name="camelContextManager" ref="camelContextManager"/>
         <property name="ecmFileService" ref="ecmFileService"/>
     </bean>
 
@@ -488,6 +518,11 @@
         <aop:scoped-proxy/>
     </bean>
 
+    <bean id="changedParticipantToJmsSender" class="com.armedia.acm.plugins.ecm.service.ChangedParticipantToJmsSender">
+        <property name="objectConverter" ref="objectConverter"/>
+        <property name="jmsConnectionFactory" ref="jmsConnectionFactory"/>
+    </bean>
+
     <bean id="fileChunkService" class="com.armedia.acm.plugins.ecm.service.impl.FileChunkServiceImpl">
         <property name="folderAndFilesUtils" ref="folderAndFilesUtils"/>
         <property name="ecmFileService" ref="ecmFileService"/>
@@ -511,7 +546,25 @@
     </bean>
 
     <bean id="removeExpiredFilesJobDescriptor" class="com.armedia.acm.plugins.ecm.service.RemoveExpiredFilesJobDescriptor"
-          parent="acmJobDescriptor">
+        parent="acmJobDescriptor">
         <property name="removeExpiredFilesService" ref="removeExpiredFilesService"/>
+    </bean>
+
+    <bean id="changedParticipantToArkcaseListener" class="com.armedia.acm.plugins.ecm.service.ChangedParticipantToArkcaseListener">
+        <property name="objectConverter" ref="objectConverter"/>
+        <property name="folderAndFilesUtils" ref="folderAndFilesUtils"/>
+        <property name="ecmFileParticipantServiceHelper" ref="fileParticipantServiceHelper"/>
+        <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
+    </bean>
+
+    <bean id="messageDestination" class="org.apache.activemq.command.ActiveMQQueue">
+        <constructor-arg value="com.armedia.acm.v1.alfrescoParticipantChange.queue"/>
+    </bean>
+
+    <!-- and this is the message listener container for ChangedParticipantToArkcaseListener -->
+    <bean id="jmsContainer" class="org.springframework.jms.listener.DefaultMessageListenerContainer">
+        <property name="connectionFactory" ref="jmsConnectionFactory"/>
+        <property name="destination" ref="messageDestination"/>
+        <property name="messageListener" ref="changedParticipantToArkcaseListener"/>
     </bean>
 </beans>

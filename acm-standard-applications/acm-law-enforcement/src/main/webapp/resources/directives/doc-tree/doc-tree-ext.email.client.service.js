@@ -148,7 +148,7 @@ angular.module('services').factory('DocTreeExt.Email',
                                 EcmEmailService.sendEmailWithAttachmentsAndLinks(emailData, DocTree.getObjType());
                             } else {
                                 emailData = Email._makeEmailDataForPlainEmail(DocTree, res);
-                                EcmEmailService.sendEmail(emailData, DocTree.getObjType());
+                                EcmEmailService.sendPlainEmail(emailData, DocTree.getObjType());
                             }
                         });
                     });
@@ -233,9 +233,9 @@ angular.module('services').factory('DocTreeExt.Email',
                     emailData.body = emailModel.body;
                     emailData.footer = '\n\n' + emailModel.footer;
                     emailData.emailAddresses = emailModel.recipients;
-                    emailData.parentType = match[Util.goodMapValue(DocTree, "treeConfig.email.objectTypeRegexGroup")];
+                    emailData.parentType = DocTree._objType;
                     var objectNumber = match[Util.goodMapValue(DocTree, "treeConfig.email.objectNumberRegexGroup")];
-                    emailData.parentNumber = DocTree.objectInfo[objectNumber];
+                    emailData.parentNumber = DocTree._objId;
                     emailData.modelReferenceName = 'plainEmail';
                     return emailData;
                 },

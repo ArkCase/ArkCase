@@ -33,7 +33,6 @@ import com.armedia.acm.frevvo.model.FrevvoForm;
 import com.armedia.acm.frevvo.model.FrevvoFormConstants;
 import com.armedia.acm.frevvo.model.Strings;
 import com.armedia.acm.frevvo.model.UploadedFiles;
-import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.objectonverter.AcmMarshaller;
 import com.armedia.acm.objectonverter.AcmUnmarshaller;
 import com.armedia.acm.objectonverter.DateFormats;
@@ -55,6 +54,7 @@ import com.armedia.acm.services.config.lookups.model.StandardLookupEntry;
 import com.armedia.acm.services.config.lookups.service.LookupDao;
 import com.armedia.acm.services.functionalaccess.service.FunctionalAccessService;
 import com.armedia.acm.services.labels.service.TranslationService;
+import com.armedia.acm.services.search.exception.SolrException;
 import com.armedia.acm.services.search.model.SearchConstants;
 import com.armedia.acm.services.search.service.SearchResults;
 import com.armedia.acm.services.users.dao.UserActionDao;
@@ -63,11 +63,10 @@ import com.armedia.acm.services.users.service.ldap.AcmUserActionExecutor;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.mule.api.MuleException;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.multipart.MultipartFile;
@@ -105,7 +104,6 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService
     private String userIpAddress;
     private EcmFileDao ecmFileDao;
     private AcmUserActionExecutor userActionExecutor;
-    private MuleContextManager muleContextManager;
     private ObjectAssociationDao objectAssociationDao;
     private FunctionalAccessService functionalAccessService;
     private SearchResults searchResults;
@@ -809,10 +807,10 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService
      * @param sort
      * @param auth
      * @return
-     * @throws MuleException
+     * @throws SolrException
      */
     private Map<String, String> getGroups(List<String> roles, Map<String, List<String>> rolesToGroups, int startRow, int maxRows,
-            String sort, Authentication auth) throws MuleException
+            String sort, Authentication auth) throws SolrException
     {
         Map<String, String> groups = new HashMap<>();
 
@@ -908,16 +906,6 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService
     public void setUserActionExecutor(AcmUserActionExecutor userActionExecutor)
     {
         this.userActionExecutor = userActionExecutor;
-    }
-
-    public MuleContextManager getMuleContextManager()
-    {
-        return muleContextManager;
-    }
-
-    public void setMuleContextManager(MuleContextManager muleContextManager)
-    {
-        this.muleContextManager = muleContextManager;
     }
 
     public ObjectAssociationDao getObjectAssociationDao()

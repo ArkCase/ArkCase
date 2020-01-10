@@ -42,7 +42,6 @@ import com.amazonaws.services.transcribe.model.Settings;
 import com.amazonaws.services.transcribe.model.StartTranscriptionJobRequest;
 import com.amazonaws.services.transcribe.model.StartTranscriptionJobResult;
 import com.amazonaws.services.transcribe.model.TranscriptionJobStatus;
-import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.tool.mediaengine.exception.CreateMediaEngineToolException;
 import com.armedia.acm.tool.mediaengine.exception.GetMediaEngineToolException;
 import com.armedia.acm.tool.mediaengine.model.MediaEngineDTO;
@@ -63,10 +62,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.HttpEntity;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.mule.api.MuleException;
-import org.mule.api.MuleMessage;
 import org.springframework.scheduling.annotation.Async;
 
 import java.io.File;
@@ -88,7 +91,6 @@ public class AWSTranscribeServiceImpl implements TranscribeIntegrationService
     private final Logger LOG = LogManager.getLogger(getClass());
     private AmazonS3 s3Client;
     private AmazonTranscribe transcribeClient;
-    private MuleContextManager muleContextManager;
     private MediaEngineIntegrationEventPublisher mediaEngineIntegrationEventPublisher;
     private AWSTranscribeConfigurationService awsTranscribeConfigurationService;
     private AWSTranscribeCredentialsConfigurationService awsTranscribeCredentialsConfigurationService;
@@ -169,7 +171,7 @@ public class AWSTranscribeServiceImpl implements TranscribeIntegrationService
 
                 return transcribeDTO;
             }
-            catch (AmazonServiceException | MuleException e)
+            catch (AmazonServiceException e)
             {
                 throw new GetMediaEngineToolException(String.format("Unable to get transcribe job on Amazon. REASON=[%s].", e.getMessage()),
                         e);
@@ -308,31 +310,25 @@ public class AWSTranscribeServiceImpl implements TranscribeIntegrationService
     }
 
     private List<TranscribeItemDTO> generateTranscribeItems(GetTranscriptionJobResult result, Map<String, Object> props)
-            throws MuleException
     {
         if (result != null && result.getTranscriptionJob().getTranscript() != null)
         {
             String url = result.getTranscriptionJob().getTranscript().getTranscriptFileUri();
+            CloseableHttpClient httpClient = HttpClients.createDefault();
+            HttpGet request = new HttpGet(url);
 
-            // Mule Flow MUST contain 'https://' string in the definition itself of the endpoint
-            String urlWithoutProtocol = url.replace("https://", "");
-
-            MuleMessage message = getMuleContextManager().send("vm://getProviderTranscribe.in", urlWithoutProtocol);
-
-            MuleException muleException = message.getInboundProperty("getProviderTranscribeException");
-
-            if (muleException != null)
+            try (CloseableHttpResponse response = httpClient.execute(request))
             {
-                throw muleException;
-            }
+                LOG.debug("Response status from Amazon S3 = [{}]", response.getStatusLine().toString());
 
-            try
-            {
-                return convertJsonStringToListOfTranscribeItems(message.getPayloadAsString(), props);
+                HttpEntity entity = response.getEntity();
+                String resultTr = EntityUtils.toString(entity);
+
+                return convertJsonStringToListOfTranscribeItems(resultTr, props);
             }
             catch (Exception e)
             {
-                LOG.error("Failed to convert Amazon JSON output to list of TranscribeItem objects. REASON=[{}]", e.getMessage(), e);
+                LOG.debug("Unable to get transcribe job on Amazon. REASON=[%s].", e.getMessage(), e);
             }
         }
 
@@ -561,16 +557,6 @@ public class AWSTranscribeServiceImpl implements TranscribeIntegrationService
     public void setTranscribeClient(AmazonTranscribe transcribeClient)
     {
         this.transcribeClient = transcribeClient;
-    }
-
-    public MuleContextManager getMuleContextManager()
-    {
-        return muleContextManager;
-    }
-
-    public void setMuleContextManager(MuleContextManager muleContextManager)
-    {
-        this.muleContextManager = muleContextManager;
     }
 
     public AWSTranscribeConfigurationService getAwsTranscribeConfigurationService()

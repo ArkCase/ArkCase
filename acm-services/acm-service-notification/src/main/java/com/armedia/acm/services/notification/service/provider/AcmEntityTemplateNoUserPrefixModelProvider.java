@@ -35,11 +35,16 @@ import com.armedia.acm.data.service.AcmDataService;
 import com.armedia.acm.services.notification.helper.UserInfoHelper;
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.service.provider.model.AcmEntityTemplateModel;
+import com.armedia.acm.services.objecttitle.model.TitleConfiguration;
+import com.armedia.acm.services.objecttitle.service.ObjectTitleConfigurationService;
+
+import java.util.Map;
 
 public class AcmEntityTemplateNoUserPrefixModelProvider implements TemplateModelProvider<AcmEntityTemplateModel>
 {
     private AcmDataService dataService;
     private UserInfoHelper userInfoHelper;
+    private ObjectTitleConfigurationService objectTitleConfigurationService;
 
     @Override
     public AcmEntityTemplateModel getModel(Object object)
@@ -50,7 +55,11 @@ public class AcmEntityTemplateNoUserPrefixModelProvider implements TemplateModel
 
         String baseAssigneeLdapId = "";
         String baseModifier = "";
-        if(acmObject instanceof AcmAssignee)
+        String baseAssigneeGroupId = "";
+        String modifierEmail = "";
+        String assigneeEmail = "";
+
+        if (acmObject instanceof AcmAssignee && ((AcmAssignee) acmObject).getAssigneeLdapId() != null)
         {
             AcmAssignee acmAssignee = (AcmAssignee) acmObject;
 
@@ -59,12 +68,28 @@ public class AcmEntityTemplateNoUserPrefixModelProvider implements TemplateModel
 
             baseAssigneeLdapId = getUserInfoHelper().removeUserPrefix(assigneeLdapId);
             baseModifier = getUserInfoHelper().removeUserPrefix(modifier);
+
+            String assigneeLdapGroupId = acmAssignee.getAssigneeGroupId();
+            baseAssigneeGroupId = getUserInfoHelper().removeGroupPrefix(assigneeLdapGroupId);
+
+            modifierEmail = getUserInfoHelper().getUserEmail(modifier);
+            assigneeEmail = getUserInfoHelper().getUserEmail(assigneeLdapId);
+
         }
 
         AcmEntityTemplateModel acmEntityTemplateModel = new AcmEntityTemplateModel();
         acmEntityTemplateModel.caseFileObject = acmObject;
         acmEntityTemplateModel.assigneeUserId = baseAssigneeLdapId;
         acmEntityTemplateModel.modifierUserId = baseModifier;
+        acmEntityTemplateModel.assigneeGroupId = baseAssigneeGroupId;
+        acmEntityTemplateModel.modifierEmail = modifierEmail;
+        acmEntityTemplateModel.assigneeEmail = assigneeEmail;
+
+        Map<String, TitleConfiguration> titleConfigurationMap = objectTitleConfigurationService.getObjectTitleConfig();
+        for (TitleConfiguration value : titleConfigurationMap.values())
+        {
+            acmEntityTemplateModel.setTitleEnabled(value.getEnableTitleField());
+        }
 
         return acmEntityTemplateModel;
     }
@@ -93,5 +118,15 @@ public class AcmEntityTemplateNoUserPrefixModelProvider implements TemplateModel
     public void setUserInfoHelper(UserInfoHelper userInfoHelper)
     {
         this.userInfoHelper = userInfoHelper;
+    }
+
+    public ObjectTitleConfigurationService getObjectTitleConfigurationService()
+    {
+        return objectTitleConfigurationService;
+    }
+
+    public void setObjectTitleConfigurationService(ObjectTitleConfigurationService objectTitleConfigurationService)
+    {
+        this.objectTitleConfigurationService = objectTitleConfigurationService;
     }
 }

@@ -55,15 +55,6 @@
         <constructor-arg value="UTF-8"/>
     </bean>
 
-    <bean id="languageJsonSettings" class="org.apache.commons.io.IOUtils" factory-method="toString">
-        <constructor-arg type="java.io.InputStream">
-            <bean class="java.io.FileInputStream" destroy-method="close">
-                <constructor-arg type="java.io.File" value="${user.home}/.arkcase/acm/resources/settings/settings.json"/>
-            </bean>
-        </constructor-arg>
-        <constructor-arg value="UTF-8"/>
-    </bean>
-
     <bean id="configList" class="java.util.ArrayList">
         <constructor-arg>
             <list>
@@ -162,7 +153,7 @@
                 <bean class="com.armedia.acm.services.config.model.ConfigMap" scope="refresh">
                     <property name="configName" value="acm-reports"/>
                     <property name="description" value="Acm Reports"/>
-                    <property name="configMapping" value="#{pentahoReportsConfig.getReportToUrlMap()}"/>
+                    <property name="configMapping" value="#{pentahoReportsConfig.getReports()}"/>
                     <property name="jsonMarshaller" ref="jsonMarshaller"/>
                     <aop:scoped-proxy/>
                 </bean>
@@ -248,10 +239,11 @@
                     <property name="configDescription" value="Locale Setting"/>
                     <property name="json" ref="localeSettingsJson"/>
                 </bean>
-                <bean class="com.armedia.acm.services.config.model.JsonConfig">
+                <bean class="com.armedia.acm.services.config.model.ConfigBean">
                     <property name="configName" value="languageSettings"/>
-                    <property name="configDescription" value="Language Setting"/>
-                    <property name="json" ref="languageJsonSettings"/>
+                    <property name="description" value="Language Setting"/>
+                    <property name="config" ref="languageSettingsConfig"/>
+                    <property name="jsonMarshaller" ref="jsonMarshaller"/>
                 </bean>
                 <bean class="com.armedia.acm.services.config.model.ConfigBean">
                     <property name="configName" value="fiscalYear"/>

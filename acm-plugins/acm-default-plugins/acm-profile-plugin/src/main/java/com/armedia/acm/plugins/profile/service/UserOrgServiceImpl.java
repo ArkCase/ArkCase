@@ -27,25 +27,37 @@ package com.armedia.acm.plugins.profile.service;
  * #L%
  */
 
-import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
+import com.armedia.acm.camelcontext.arkcase.cmis.ArkCaseCMISActions;
+import com.armedia.acm.camelcontext.arkcase.cmis.ArkCaseCMISConstants;
+import com.armedia.acm.camelcontext.context.CamelContextManager;
+import com.armedia.acm.camelcontext.exception.ArkCaseFileRepositoryException;
+import com.armedia.acm.data.AuditPropertyEntityAdapter;
+import com.armedia.acm.plugins.ecm.model.AcmContainer;
+import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.EcmFileConfig;
+import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
+import com.armedia.acm.plugins.ecm.utils.EcmFileCamelUtils;
 import com.armedia.acm.plugins.person.model.Organization;
 import com.armedia.acm.plugins.person.service.OrganizationService;
 import com.armedia.acm.plugins.profile.dao.UserOrgDao;
 import com.armedia.acm.plugins.profile.model.ProfileConfig;
 import com.armedia.acm.plugins.profile.model.ProfileDTO;
 import com.armedia.acm.plugins.profile.model.UserOrg;
+import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.dao.group.AcmGroupDao;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.group.AcmGroup;
+import com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig;
 import com.armedia.acm.services.users.service.group.GroupService;
+import com.armedia.acm.spring.SpringContextHolder;
+import com.armedia.acm.web.api.MDCConstants;
 
+import org.apache.chemistry.opencmis.client.api.Folder;
+import org.apache.chemistry.opencmis.commons.PropertyIds;
 import org.apache.commons.lang3.StringUtils;
-import org.mule.api.MuleException;
-import org.mule.api.MuleMessage;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -67,8 +79,6 @@ public class UserOrgServiceImpl implements UserOrgService
 
     private ProfileConfig profileConfig;
 
-    private MuleContextManager muleContextManager;
-
     private ProfileEventPublisher eventPublisher;
 
     private AcmGroupDao groupDao;
@@ -76,6 +86,12 @@ public class UserOrgServiceImpl implements UserOrgService
     private GroupService groupService;
 
     private EcmFileConfig ecmFileConfig;
+
+    private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
+
+    private CamelContextManager camelContextManager;
+
+    private SpringContextHolder springContextHolder;
 
     @Override
     public UserOrg getUserOrgForUserId(String userId)
@@ -91,22 +107,57 @@ public class UserOrgServiceImpl implements UserOrgService
 
     @Override
     @Transactional
-    public UserOrg saveUserOrgTransaction(UserOrg userOrgInfo, Authentication authentication) throws MuleException
+    public UserOrg saveUserOrgTransaction(UserOrg userOrgInfo, Authentication authentication) throws ArkCaseFileRepositoryException
     {
-        Map<String, Object> messageProps = new HashMap<>();
-        messageProps.put("acmUser", authentication);
-        messageProps.put("configRef", muleContextManager.getMuleContext().getRegistry().lookupObject(ecmFileConfig.getDefaultCmisId()));
-
-        MuleMessage received = getMuleContextManager().send("vm://saveUserOrg.in", userOrgInfo, messageProps);
-
-        UserOrg saved = received.getPayload(UserOrg.class);
-        MuleException e = received.getInboundProperty("saveException");
-
-        if (e != null)
+        if (authentication == null || userOrgInfo == null || userOrgInfo.getUser() == null || userOrgInfo.getUser().getUserId() == null)
         {
-            throw e;
+            throw new IllegalStateException("UserOrg and user id were not specified");
         }
-        return saved;
+
+        String authenticatedUser = authentication.getName();
+        if (authenticatedUser != null)
+        {
+            getAuditPropertyEntityAdapter().setUserId(authenticatedUser);
+        }
+
+        if (userOrgInfo.getContainer() == null)
+        {
+            userOrgInfo.setContainer(new AcmContainer());
+        }
+
+        if (userOrgInfo.getContainer().getFolder() == null)
+        {
+            userOrgInfo.getContainer().setFolder(new AcmFolder());
+
+            String orgUser = userOrgInfo.getUser().getUserId();
+
+            String ecmFolderPath = getProfileLocation() + "/" + orgUser;
+            userOrgInfo.setEcmFolderPath(ecmFolderPath);
+            userOrgInfo.getContainer().getFolder().setName(orgUser);
+
+            AcmParticipant participant = new AcmParticipant();
+            participant.setParticipantLdapId(orgUser);
+            participant.setParticipantType("write");
+
+            userOrgInfo.getContainer().getFolder().getParticipants().add(participant);
+        }
+
+        if (userOrgInfo.getEcmFolderPath() != null)
+        {
+            Map<String, Object> messageProps = new HashMap<>();
+            messageProps.put(PropertyIds.PATH, userOrgInfo.getEcmFolderPath());
+            messageProps.put(EcmFileConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID);
+            messageProps.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, EcmFileCamelUtils.getCmisUser());
+
+            Folder folder = (Folder) getCamelContextManager().send(ArkCaseCMISActions.GET_OR_CREATE_FOLDER_BY_PATH, messageProps);
+            userOrgInfo.getContainer().getFolder().setCmisFolderId(folder.getPropertyValue(EcmFileConstants.REPOSITORY_VERSION_ID));
+        }
+        else
+        {
+            log.info("No need to create folder.");
+        }
+
+        return getUserOrgDao().save(userOrgInfo);
     }
 
     private ProfileDTO createProfileDTO(UserOrg userOrgInfo, Set<AcmGroup> groups)
@@ -170,7 +221,7 @@ public class UserOrgServiceImpl implements UserOrgService
                 userOrg = saveUserOrgTransaction(userOrg, authentication);
                 getEventPublisher().publishProfileEvent(userOrg, authentication, true, true);
             }
-            catch (MuleException e)
+            catch (ArkCaseFileRepositoryException e)
             {
                 log.error("UserOrg for user [{}] was not saved. {}", userId, e);
                 getEventPublisher().publishProfileEvent(userOrg, authentication, true, false);
@@ -178,7 +229,7 @@ public class UserOrgServiceImpl implements UserOrgService
         }
 
         AcmUser user = userDao.findByUserId(userId);
-        return createProfileDTO(userOrg, user.getGroups());
+        return createProfileDTO(userOrg, removeControlGroupFromUserGroups(user.getGroups(), user.getUserDirectoryName()));
     }
 
     @Override
@@ -201,7 +252,7 @@ public class UserOrgServiceImpl implements UserOrgService
         {
             userOrg = saveUserOrgTransaction(userOrg, authentication);
         }
-        catch (MuleException e)
+        catch (ArkCaseFileRepositoryException e)
         {
             log.error("UserOrg for user [{}] was not saved. {}", userId, e);
             userOrgTransactionSuccess = false;
@@ -259,6 +310,18 @@ public class UserOrgServiceImpl implements UserOrgService
         return userOrg;
     }
 
+    private Set<AcmGroup> removeControlGroupFromUserGroups(Set<AcmGroup> userGroups, String userDirectoryName)
+    {
+        AcmLdapSyncConfig acmLdapSyncConfig = springContextHolder.getAllBeansOfType(AcmLdapSyncConfig.class)
+                .get(userDirectoryName + "_sync");
+
+        return userGroups.stream()
+                .filter(userGroup -> userGroup.getDirectoryName() == null
+                        || (!userGroup.getName().equals(acmLdapSyncConfig.getUserControlGroup()) &&
+                                !userGroup.getName().equals(acmLdapSyncConfig.getGroupControlGroup())))
+                .collect(Collectors.toSet());
+    }
+
     public UserDao getUserDao()
     {
         return userDao;
@@ -287,16 +350,6 @@ public class UserOrgServiceImpl implements UserOrgService
     public void setUserOrgDao(UserOrgDao userOrgDao)
     {
         this.userOrgDao = userOrgDao;
-    }
-
-    public MuleContextManager getMuleContextManager()
-    {
-        return muleContextManager;
-    }
-
-    public void setMuleContextManager(MuleContextManager muleContextManager)
-    {
-        this.muleContextManager = muleContextManager;
     }
 
     public ProfileEventPublisher getEventPublisher()
@@ -347,5 +400,35 @@ public class UserOrgServiceImpl implements UserOrgService
     public void setEcmFileConfig(EcmFileConfig ecmFileConfig)
     {
         this.ecmFileConfig = ecmFileConfig;
+    }
+
+    public AuditPropertyEntityAdapter getAuditPropertyEntityAdapter()
+    {
+        return auditPropertyEntityAdapter;
+    }
+
+    public void setAuditPropertyEntityAdapter(AuditPropertyEntityAdapter auditPropertyEntityAdapter)
+    {
+        this.auditPropertyEntityAdapter = auditPropertyEntityAdapter;
+    }
+
+    public CamelContextManager getCamelContextManager()
+    {
+        return camelContextManager;
+    }
+
+    public void setCamelContextManager(CamelContextManager camelContextManager)
+    {
+        this.camelContextManager = camelContextManager;
+    }
+
+    public SpringContextHolder getSpringContextHolder()
+    {
+        return springContextHolder;
+    }
+
+    public void setSpringContextHolder(SpringContextHolder springContextHolder)
+    {
+        this.springContextHolder = springContextHolder;
     }
 }

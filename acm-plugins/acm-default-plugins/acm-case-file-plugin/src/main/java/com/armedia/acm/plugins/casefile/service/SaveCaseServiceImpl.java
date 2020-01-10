@@ -40,8 +40,8 @@ import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.services.pipeline.PipelineManager;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -118,9 +118,7 @@ public class SaveCaseServiceImpl implements SaveCaseService
     @Override
     @Transactional
     public CaseFile saveCase(CaseFile caseFile, Map<String, List<MultipartFile>> filesMap, Authentication authentication, String ipAddress)
-            throws AcmUserActionFailedException,
-            AcmCreateObjectFailedException, AcmUpdateObjectFailedException, AcmObjectNotFoundException, PipelineProcessException,
-            IOException
+            throws PipelineProcessException
     {
         CaseFilePipelineContext pipelineContext = new CaseFilePipelineContext();
         // populate the context
@@ -130,32 +128,20 @@ public class SaveCaseServiceImpl implements SaveCaseService
 
         List<AcmMultipartFile> files = new ArrayList<>();
 
-        if(Objects.nonNull(filesMap))
+        if (Objects.nonNull(filesMap))
         {
             for (Map.Entry<String, List<MultipartFile>> file : filesMap.entrySet())
             {
                 String fileType = file.getKey();
-                file.getValue().stream().forEach(item -> {
-                    try
-                    {
-                        AcmMultipartFile acmMultipartFile = new AcmMultipartFile(item.getName(), item.getOriginalFilename(),
-                                item.getContentType(),
-                                item.isEmpty(), item.getSize(), item.getBytes(), item.getInputStream(), false);
-                        acmMultipartFile.setType(fileType);
-                        files.add(acmMultipartFile);
-                    }
-                    catch (IOException e)
-                    {
-                        log.error("Could not read properties from {} file. Exception {}", item.getOriginalFilename(), e.getMessage());
-                    }
-                });
+                for (MultipartFile item : file.getValue())
+                {
+                    AcmMultipartFile acmMultipartFile = new AcmMultipartFile(item, false, fileType);
+                    files.add(acmMultipartFile);
+                }
             }
         }
 
-        if (Objects.nonNull(files))
-        {
-            pipelineContext.addProperty("attachmentFiles", files);
-        }
+        pipelineContext.addProperty("attachmentFiles", files);
 
         return pipelineManager.executeOperation(caseFile, pipelineContext, () -> {
 

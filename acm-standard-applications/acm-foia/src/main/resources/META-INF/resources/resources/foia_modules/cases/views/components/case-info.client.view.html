@@ -8,9 +8,15 @@
                     <small><b><span class="icon-overdue" translate>cases.comp.info.daysOverdue.label</span></b>
                     </small>
                     <small><span class="icon-overdue">({{calculateDaysObj.days}}) </span></small>
+                    <span ng-if="objectInfo.deniedFlag" class="icon-overdue" translate> cases.comp.info.requestDenied.label </span>
                 </div>
-                <div ng-if="!calculateDaysObj.isOverdue && objectInfo.queue.name != 'Release'" class="h4 font-bold">{{objectInfo.title || 'common.value.unknown' | translate }} <small>({{calculateDaysObj.days}}) <span translate>cases.comp.info.daysToComplete.label</span></small></div>
-                <div ng-if="objectInfo.queue.name == 'Release'">{{objectInfo.title || 'common.value.unknown' | translate }}</div>
+                <div ng-if="!calculateDaysObj.isOverdue && objectInfo.queue.name != 'Release'" class="h4 font-bold">{{objectInfo.title || 'common.value.unknown' | translate }} <small>({{calculateDaysObj.days}}) <span translate>cases.comp.info.daysToComplete.label</span></small>
+                    <span ng-if="objectInfo.deniedFlag" class="icon-overdue" translate> cases.comp.info.requestDenied.label </span>
+                </div>
+                <div ng-if="objectInfo.queue.name == 'Release' && !objectInfo.deniedFlag">{{objectInfo.title || 'common.value.unknown' | translate }}</div>
+                <div ng-if="objectInfo.queue.name == 'Release' && objectInfo.deniedFlag" class="h4 font-bold">{{objectInfo.title || 'common.value.unknown' | translate }}
+                    <span ng-if="objectInfo.deniedFlag" class="icon-overdue" translate> cases.comp.info.requestDenied.label </span>
+                </div>
             </div>
             <div class="col-xs-6 text-right">
                 <h4>{{objectInfo.caseNumber}}</h4>
@@ -57,6 +63,12 @@
                     <user-full-name userId="objectInfo.modifier" fallback="{{'cases.comp.approvalRouting.assigne.none' | translate}}" />
                 </div>
                 <small class="text-muted"><span translate>cases.comp.info.modifier</span></small>
+            </div>
+            <div class="col-xs-12 col-md-2">
+                <div class="h4 font-bold editable-margin-left">
+                    <a href="#" editable-text="objectInfo.externalIdentifier" onaftersave="setExternalIdentifier($data, objectInfo.externalIdentifier)">{{ objectInfo.externalIdentifier || ('common.value.unknown' | translate) }}</a>
+                </div>
+                <small class="text-muted"><span translate>cases.comp.info.externalIdentifier.label</span></small>
             </div>
         </div>
         <div class="row">

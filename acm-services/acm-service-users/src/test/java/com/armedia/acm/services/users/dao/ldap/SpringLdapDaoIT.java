@@ -27,14 +27,17 @@ package com.armedia.acm.services.users.dao.ldap;
  * #L%
  */
 
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
 import com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig;
 import com.armedia.acm.services.users.model.ldap.LdapGroup;
 import com.armedia.acm.services.users.model.ldap.LdapUser;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.test.context.ContextConfiguration;
@@ -44,9 +47,6 @@ import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
-
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 
 /**
  * Created by dmiller on 6/28/16.
@@ -61,7 +61,7 @@ import static org.junit.Assert.assertTrue;
         "/spring/spring-library-user-service-test-user-home-files.xml",
         "/spring/spring-library-search.xml",
         "/spring/spring-library-object-converter.xml",
-        "/spring/spring-library-configuration.xml"})
+        "/spring/spring-library-configuration.xml" })
 
 public class SpringLdapDaoIT
 {
@@ -69,6 +69,7 @@ public class SpringLdapDaoIT
     {
         String userHomePath = System.getProperty("user.home");
         System.setProperty("acm.configurationserver.propertyfile", userHomePath + "/.arkcase/acm/conf.yml");
+        System.setProperty("configuration.server.url", "http://localhost:9999");
     }
 
     static final Logger log = LogManager.getLogger(SpringLdapDaoIT.class);
@@ -156,7 +157,7 @@ public class SpringLdapDaoIT
         assertNotNull(result);
         assertTrue(!result.isEmpty());
 
-        String userName = result.get(0).getUid(); 
+        String userName = result.get(0).getUid();
 
         long start = System.currentTimeMillis();
         LdapUser ldapUser = springLdapUserDao.findUser(userName, ldapTemplate, acmSyncLdapConfig,

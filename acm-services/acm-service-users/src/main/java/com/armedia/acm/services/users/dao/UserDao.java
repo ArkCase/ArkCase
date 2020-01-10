@@ -27,18 +27,14 @@ package com.armedia.acm.services.users.dao;
  * #L%
  */
 
+import com.armedia.acm.core.LanguageSettingsConfig;
 import com.armedia.acm.data.AcmAbstractDao;
-import com.armedia.acm.services.config.model.AcmConfig;
 import com.armedia.acm.services.users.model.AcmRole;
 import com.armedia.acm.services.users.model.AcmRoleType;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.AcmUserState;
-import com.jayway.jsonpath.Configuration;
-import com.jayway.jsonpath.JsonPath;
-import com.jayway.jsonpath.Option;
-import com.jayway.jsonpath.spi.json.JacksonJsonNodeJsonProvider;
-import com.jayway.jsonpath.spi.mapper.JacksonMappingProvider;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.cache.annotation.Cacheable;
@@ -59,31 +55,31 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
-import java.util.Optional;
 
 public class UserDao extends AcmAbstractDao<AcmUser>
 {
     private static String DEFAULT_LOCALE_CODE = null;
     @PersistenceContext
     private EntityManager entityManager;
-    private List<AcmConfig> configList;
+    private LanguageSettingsConfig languageSettingsConfig;
     private Logger log = LogManager.getLogger(getClass());
 
     public void init()
     {
-        Optional<AcmConfig> localeSettings = configList.stream().filter(config -> config.getConfigName().equals("languageSettings"))
-                .findFirst();
-        if (localeSettings.isPresent())
+        if (languageSettingsConfig != null)
         {
-            String settings = localeSettings.get().getConfigAsJson();
-            Configuration configuration = Configuration.builder().options(Option.SUPPRESS_EXCEPTIONS)
-                    .jsonProvider(new JacksonJsonNodeJsonProvider()).mappingProvider(new JacksonMappingProvider()).build();
-            DEFAULT_LOCALE_CODE = JsonPath.using(configuration).parse(settings).read("$.defaultLocale", String.class);
+            if (StringUtils.isNotBlank(languageSettingsConfig.getLocaleCode()))
+            {
+                DEFAULT_LOCALE_CODE = languageSettingsConfig.getLocaleCode();
+            }
+            else if (StringUtils.isNotBlank(languageSettingsConfig.getDefaultLocale()))
+            {
+                DEFAULT_LOCALE_CODE = languageSettingsConfig.getDefaultLocale();
+            }
         }
         else
         {
-            DEFAULT_LOCALE_CODE = Locale.getDefault().getLanguage();
+            DEFAULT_LOCALE_CODE = "en";
         }
     }
 
@@ -175,13 +171,13 @@ public class UserDao extends AcmAbstractDao<AcmUser>
     {
         Query roleQuery = getEntityManager().createQuery("SELECT role FROM AcmRole role");
 
-        return (List<AcmRole>) roleQuery.getResultList();
+        return roleQuery.getResultList();
     }
 
     public List<AcmRole> findAllRolesByRoleType(AcmRoleType acmRoleType)
     {
         Query roleQuery = getEntityManager().createQuery("SELECT role FROM AcmRole role WHERE role.roleType= :roleType");
-        roleQuery.setParameter("roleType", acmRoleType.getRoleName());
+        roleQuery.setParameter("roleType", acmRoleType);
         List<AcmRole> retval = roleQuery.getResultList();
         return retval;
     }
@@ -318,6 +314,42 @@ public class UserDao extends AcmAbstractDao<AcmUser>
         return null;
     }
 
+    public AcmUser findByPrefixAndEmailAddress(String userPrefix, String email)
+    {
+        String select = "SELECT user FROM AcmUser user WHERE LOWER(user.mail) = :email";
+        if (StringUtils.isNotBlank(userPrefix))
+        {
+            select += " AND user.userId LIKE :userId";
+        }
+
+        TypedQuery<AcmUser> query = getEm().createQuery(select, AcmUser.class);
+        query.setParameter("email", email.toLowerCase());
+        if (StringUtils.isNotBlank(userPrefix))
+        {
+            query.setParameter("userId", userPrefix.toLowerCase() + "%");
+        }
+
+        try
+        {
+            return query.getSingleResult();
+        }
+        catch (NoResultException e)
+        {
+            log.warn("There is no user with prefix [{}] and email [{}]", userPrefix, email);
+        }
+        catch (NonUniqueResultException e)
+        {
+            log.warn("There is no unique user found with prefix [{}] and email [{}]. More than one user has this name or address",
+                    userPrefix,
+                    email);
+        }
+        catch (Exception e)
+        {
+            log.error("Error while retrieving user by prefix [{}] and email [{}]", userPrefix, email, e);
+        }
+        return null;
+    }
+
     public List<AcmUser> findByDirectory(String directoryName)
     {
         TypedQuery<AcmUser> allUsersInDirectory = getEm()
@@ -334,6 +366,54 @@ public class UserDao extends AcmAbstractDao<AcmUser>
                         AcmUser.class);
         allUsersByState.setParameter("state", state);
         return allUsersByState.getResultList();
+    }
+
+    public AcmUser findBysAMAccountName(String sAMAccountName)
+    {
+        String select = "SELECT acmUser FROM AcmUser acmUser WHERE acmUser.sAMAccountName = :sAMAccountName";
+        TypedQuery<AcmUser> query = getEm().createQuery(select, AcmUser.class);
+        query.setParameter("sAMAccountName", sAMAccountName);
+        try
+        {
+            return query.getSingleResult();
+        }
+        catch (NoResultException | NonUniqueResultException e)
+        {
+            log.error("User with sAMAccount Name : [{}] not found!", sAMAccountName);
+            return null;
+        }
+    }
+
+    public AcmUser findByUserPrincipalName(String userPrincipalName)
+    {
+        String select = "SELECT acmUser FROM AcmUser acmUser WHERE acmUser.userPrincipalName = :userPrincipalName";
+        TypedQuery<AcmUser> query = getEm().createQuery(select, AcmUser.class);
+        query.setParameter("userPrincipalName", userPrincipalName);
+        try
+        {
+            return query.getSingleResult();
+        }
+        catch (NoResultException | NonUniqueResultException e)
+        {
+            log.error("User with user principal name : [{}] not found!", userPrincipalName);
+            return null;
+        }
+    }
+
+    public AcmUser findByDistinguishedName(String distinguishedName)
+    {
+        String select = "SELECT acmUser FROM AcmUser acmUser WHERE acmUser.distinguishedName = :distinguishedName";
+        TypedQuery<AcmUser> query = getEm().createQuery(select, AcmUser.class);
+        query.setParameter("distinguishedName", distinguishedName);
+        try
+        {
+            return query.getSingleResult();
+        }
+        catch (NoResultException | NonUniqueResultException e)
+        {
+            log.error("User with distinguished name : [{}] not found!", distinguishedName);
+            return null;
+        }
     }
 
     @Transactional
@@ -360,16 +440,6 @@ public class UserDao extends AcmAbstractDao<AcmUser>
         return AcmUser.class;
     }
 
-    public List<AcmConfig> getConfigList()
-    {
-        return configList;
-    }
-
-    public void setConfigList(List<AcmConfig> configList)
-    {
-        this.configList = configList;
-    }
-
     public Long getUserCount(LocalDateTime until)
     {
         String queryText = "SELECT COUNT(acmUser) FROM AcmUser acmUser where acmUser.created < :until";
@@ -377,5 +447,14 @@ public class UserDao extends AcmAbstractDao<AcmUser>
         Query query = getEm().createQuery(queryText);
         query.setParameter("until", Date.from(ZonedDateTime.of(until, ZoneId.systemDefault()).toInstant()));
         return (Long) query.getSingleResult();
+    }
+
+    /**
+     * @param languageSettingsConfig
+     *            the languageSettingsConfig to set
+     */
+    public void setLanguageSettingsConfig(LanguageSettingsConfig languageSettingsConfig)
+    {
+        this.languageSettingsConfig = languageSettingsConfig;
     }
 }

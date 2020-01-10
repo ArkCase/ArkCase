@@ -51,7 +51,7 @@ public class OnForgotUsername implements ApplicationListener<ForgotUsernameEvent
     {
         if (forgotUsernameEvent.isSucceeded())
         {
-            AcmUser user = userDao.findByUserId(forgotUsernameEvent.getUserId());
+            AcmUser user = forgotUsernameEvent.getAcmUser();
 
             if (acmSpringActiveProfile.isSAMLEnabledEnvironment())
             {

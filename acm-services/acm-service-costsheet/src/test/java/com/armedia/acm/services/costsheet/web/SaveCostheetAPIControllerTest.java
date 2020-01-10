@@ -42,14 +42,14 @@ import com.armedia.acm.services.costsheet.model.AcmCostsheet;
 import com.armedia.acm.services.costsheet.service.CostsheetService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.easymock.Capture;
 import org.easymock.EasyMock;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -120,7 +120,7 @@ public class SaveCostheetAPIControllerTest extends EasyMockSupport
 
         costsheet.setCosts(Arrays.asList(cost1, cost2));
 
-        Capture<AcmCostsheet> saved = new Capture<>();
+        Capture<AcmCostsheet> saved = EasyMock.newCapture();
 
         expect(mockAuthentication.getName()).andReturn("acm-user");
         Capture<Authentication> capturedAuthentication = EasyMock.newCapture();
@@ -178,7 +178,7 @@ public class SaveCostheetAPIControllerTest extends EasyMockSupport
         String content = mapper.writeValueAsString(costsheet);
 
         Class<?> expectedThrowableClass = AcmCreateObjectFailedException.class;
-        Capture<AcmCostsheet> saved = new Capture<>();
+        Capture<AcmCostsheet> saved = EasyMock.newCapture();
 
         expect(mockAuthentication.getName()).andReturn("acm-user");
         Capture<Authentication> capturedAuthentication = EasyMock.newCapture();

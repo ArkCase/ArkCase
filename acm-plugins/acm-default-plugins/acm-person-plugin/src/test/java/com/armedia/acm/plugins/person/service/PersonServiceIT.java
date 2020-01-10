@@ -46,7 +46,6 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
 @ContextConfiguration(locations = {
         "/spring/spring-library-data-source.xml",
         "/spring/spring-library-person.xml",
-        "/spring/spring-library-person-plugin-test-mule.xml",
         "/spring/spring-library-context-holder.xml",
         "/spring/spring-library-property-file-manager.xml",
         "/spring/spring-library-acm-encryption.xml",
@@ -77,6 +76,7 @@ public class PersonServiceIT
     {
         String userHomePath = System.getProperty("user.home");
         System.setProperty("acm.configurationserver.propertyfile", userHomePath + "/.arkcase/acm/conf.yml");
+        System.setProperty("configuration.server.url", "http://localhost:9999");
     }
 
     @Autowired

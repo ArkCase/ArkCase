@@ -52,6 +52,9 @@ public class AlfrescoSyncConfig
     @Value("${alfresco.sync.enabled}")
     private Boolean enabled;
 
+    @Value("${alfresco.sync.ace.enabled}")
+    private Boolean aceEnabled;
+
     public String getHost()
     {
         return host;
@@ -120,5 +123,15 @@ public class AlfrescoSyncConfig
     public void setEnabled(Boolean enabled)
     {
         this.enabled = enabled;
+    }
+
+    public Boolean getAceEnabled()
+    {
+        return aceEnabled;
+    }
+
+    public void setAceEnabled(Boolean aceEnabled)
+    {
+        this.aceEnabled = aceEnabled;
     }
 }

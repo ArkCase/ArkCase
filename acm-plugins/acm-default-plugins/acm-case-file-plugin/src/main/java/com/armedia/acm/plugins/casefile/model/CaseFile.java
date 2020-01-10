@@ -864,6 +864,14 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity,
         return getParticipants().stream().filter(p -> CaseFileConstants.ASSIGNEE.equals(p.getParticipantType()))
                 .findFirst().map(p -> p.getParticipantLdapId()).orElse(null);
     }
+
+    @Override
+    @JsonIgnore
+    public String getAssigneeGroupId()
+    {
+        return getParticipants().stream().filter(p -> CaseFileConstants.OWNING_GROUP.equals(p.getParticipantType()))
+                .findFirst().map(p -> p.getParticipantLdapId()).orElse(null);
+    }
     
     @Override
     @JsonIgnore

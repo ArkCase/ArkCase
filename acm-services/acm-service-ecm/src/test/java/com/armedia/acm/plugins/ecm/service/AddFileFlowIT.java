@@ -31,11 +31,18 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
+import com.armedia.acm.camelcontext.arkcase.cmis.ArkCaseCMISActions;
+import com.armedia.acm.camelcontext.arkcase.cmis.ArkCaseCMISConstants;
+import com.armedia.acm.camelcontext.context.CamelContextManager;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
+import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
+import com.armedia.acm.plugins.ecm.utils.EcmFileCamelUtils;
 import com.armedia.acm.web.api.MDCConstants;
 
+import org.apache.camel.component.cmis.CamelCMISConstants;
 import org.apache.chemistry.opencmis.client.api.Document;
+import org.apache.chemistry.opencmis.client.api.Folder;
+import org.apache.chemistry.opencmis.commons.PropertyIds;
 import org.apache.chemistry.opencmis.commons.data.ContentStream;
 import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.LogManager;
@@ -44,8 +51,6 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mule.api.MuleMessage;
-import org.mule.api.transformer.TransformerException;
 import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
@@ -61,12 +66,11 @@ import java.util.UUID;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
-        "/spring/spring-library-ecm-plugin-test-mule.xml",
         "/spring/spring-library-acm-encryption.xml",
         "/spring/spring-library-context-holder.xml",
         "/spring/spring-library-data-source.xml",
         "/spring/spring-library-property-file-manager.xml",
-        "/spring/spring-library-add-file-mule.xml",
+        "/spring/spring-library-add-file-camel.xml",
         "/spring/spring-library-audit-service.xml",
         "/spring/spring-library-drools-rule-monitor.xml",
         "/spring/spring-library-object-converter.xml",
@@ -78,10 +82,11 @@ public class AddFileFlowIT
     {
         String userHomePath = System.getProperty("user.home");
         System.setProperty("acm.configurationserver.propertyfile", userHomePath + "/.arkcase/acm/conf.yml");
+        System.setProperty("configuration.server.url", "http://localhost:9999");
     }
 
     @Autowired
-    private MuleContextManager muleContextManager;
+    private CamelContextManager camelContextManager;
 
     private String testFolderId;
 
@@ -95,48 +100,57 @@ public class AddFileFlowIT
 
         String testPath = "/acm/test/folder";
         Map<String, Object> messageProperties = new HashMap<>();
-        messageProperties.put("configRef", muleContextManager.getMuleContext().getRegistry().lookupObject("alfresco"));
-        MuleMessage message = muleContextManager.send("vm://getTestFolderId.in", testPath, messageProperties);
-        String folderId = message.getPayloadAsString();
+
+        messageProperties.put(EcmFileConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID);
+        messageProperties.put(PropertyIds.PATH, testPath);
+
+        // TODO : Get or create folder by path
+        Folder folder = (Folder) camelContextManager.send(ArkCaseCMISActions.GET_FOLDER, messageProperties);
+
+        String folderId = folder.getPropertyValue(EcmFileConstants.REPOSITORY_VERSION_ID);
 
         testFolderId = folderId;
-
     }
 
     @Test
-    public void muleAddFileAlfresco() throws Exception
+    public void camelAddFileAlfresco() throws Exception
     {
         assertNotNull(testFolderId);
 
         log.debug("Found folder id '{}'", testFolderId);
 
-        Resource uploadFile = new ClassPathResource("/spring/spring-library-ecm-plugin-test-mule.xml");
+        Resource uploadFile = new ClassPathResource("/spring/spring-library-add-file-camel.xml");
         InputStream is = uploadFile.getInputStream();
 
         EcmFile ecmFile = new EcmFile();
 
-        ecmFile.setFileName("spring-library-ecm-plugin-test-mule.xml-" + System.currentTimeMillis());
+        ecmFile.setFileName("spring-library-add-file-camel.xml-" + System.currentTimeMillis());
         ecmFile.setFileActiveVersionMimeType("text/plain");
 
         Map<String, Object> messageProperties = new HashMap<>();
         messageProperties.put("cmisFolderId", testFolderId);
         messageProperties.put("inputStream", is);
 
-        messageProperties.put("configRef", muleContextManager.getMuleContext().getRegistry().lookupObject("alfresco"));
+        messageProperties.put(EcmFileConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID);
         messageProperties.put("versioningState", "MAJOR");
-        MuleMessage message = muleContextManager.send("vm://addFile.in", ecmFile, messageProperties);
+        messageProperties.put(PropertyIds.NAME, ecmFile.getFileName());
+        messageProperties.put(PropertyIds.CONTENT_STREAM_MIME_TYPE, "text/plain");
+        messageProperties.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, EcmFileCamelUtils.getCmisUser());
 
-        assertNotNull(message);
+        Document newDocument = (Document) camelContextManager.send(ArkCaseCMISActions.CREATE_DOCUMENT, messageProperties);
 
-        Document found = message.getPayload(Document.class);
-        assertNotNull(found.getVersionSeriesId());
-        assertNotNull(found.getContentStreamMimeType());
-        assertNotNull(found.getVersionLabel());
+        assertNotNull(newDocument);
 
-        log.debug("doc id: {}", found.getVersionSeriesId());
+        assertNotNull(newDocument.getVersionSeriesId());
+        assertNotNull(newDocument.getContentStreamMimeType());
+        assertNotNull(newDocument.getVersionLabel());
 
-        MuleMessage downloadedFile = muleContextManager.send("vm://downloadFileFlow.in", found.getVersionSeriesId(), messageProperties);
-        ContentStream filePayload = (ContentStream) downloadedFile.getPayload();
+        log.debug("doc id: {}", newDocument.getVersionSeriesId());
+
+        messageProperties.put(CamelCMISConstants.CMIS_OBJECT_ID, newDocument.getVersionSeriesId());
+        Document document = (Document) camelContextManager.send(ArkCaseCMISActions.DOWNLOAD_DOCUMENT, messageProperties);
+
+        ContentStream filePayload = document.getContentStream();
 
         assertNotNull(filePayload);
 
@@ -153,47 +167,57 @@ public class AddFileFlowIT
 
     @Ignore
     @Test
-    public void muleAddFileOpencmis() throws Exception
+    public void camelAddFileOpencmis() throws Exception
     {
         String testPath = "/acm/test/folder";
         Map<String, Object> messageProperties = new HashMap<>();
-        messageProperties.put("configRef", muleContextManager.getMuleContext().getRegistry().lookupObject("opencmis"));
-        MuleMessage message = muleContextManager.send("vm://getTestFolderId.in", testPath, messageProperties);
-        testFolderId = message.getPayloadAsString();
+        messageProperties.put(EcmFileConstants.CMIS_REPOSITORY_ID, "opencmis");
+        messageProperties.put(PropertyIds.PATH, testPath);
+
+        // TODO : Get or create folder by path
+        Folder folder = (Folder) camelContextManager.send(ArkCaseCMISActions.GET_FOLDER, messageProperties);
+
+        String folderId = folder.getPropertyValue(EcmFileConstants.REPOSITORY_VERSION_ID);
+        testFolderId = folderId;
         assertNotNull(testFolderId);
 
         log.debug("Found folder id '{}'", testFolderId);
 
-        Resource uploadFile = new ClassPathResource("/spring/spring-library-ecm-plugin-test-mule.xml");
+        Resource uploadFile = new ClassPathResource("/spring/spring-library-add-file-camel.xml");
         InputStream is = uploadFile.getInputStream();
 
         EcmFile ecmFile = new EcmFile();
 
-        ecmFile.setFileName("spring-library-ecm-plugin-test-mule.xml-" + System.currentTimeMillis());
+        ecmFile.setFileName("spring-library-add-file-camel.xml-" + System.currentTimeMillis());
         ecmFile.setFileActiveVersionMimeType("text/plain");
 
         messageProperties = new HashMap<>();
+
         messageProperties.put("cmisFolderId", testFolderId);
         messageProperties.put("inputStream", is);
 
-        messageProperties.put("configRef", muleContextManager.getMuleContext().getRegistry().lookupObject("opencmis"));
+        messageProperties.put(EcmFileConstants.CMIS_REPOSITORY_ID, "opencmis");
         messageProperties.put("versioningState", "NONE");
+        messageProperties.put(PropertyIds.NAME, ecmFile.getFileName());
+        messageProperties.put(PropertyIds.CONTENT_STREAM_MIME_TYPE, "text/plain");
+        messageProperties.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, EcmFileCamelUtils.getCmisUser());
+
         try
         {
 
-            message = muleContextManager.send("vm://addFile.in", ecmFile, messageProperties);
+            Document newDocument = (Document) camelContextManager.send(ArkCaseCMISActions.CREATE_DOCUMENT, messageProperties);
 
-            assertNotNull(message);
+            assertNotNull(newDocument);
 
-            Document found = message.getPayload(Document.class);
-            assertNotNull(found.getVersionSeriesId());
-            assertNotNull(found.getContentStreamMimeType());
-            assertNotNull(found.getVersionLabel());
+            assertNotNull(newDocument.getVersionSeriesId());
+            assertNotNull(newDocument.getContentStreamMimeType());
+            assertNotNull(newDocument.getVersionLabel());
 
-            log.debug("doc id: {}", found.getVersionSeriesId());
+            log.debug("doc id: {}", newDocument.getVersionSeriesId());
+            messageProperties.put(CamelCMISConstants.CMIS_OBJECT_ID, newDocument.getVersionSeriesId());
+            Document document = (Document) camelContextManager.send(ArkCaseCMISActions.DOWNLOAD_DOCUMENT, messageProperties);
 
-            MuleMessage downloadedFile = muleContextManager.send("vm://downloadFileFlow.in", found.getVersionSeriesId(), messageProperties);
-            ContentStream filePayload = (ContentStream) downloadedFile.getPayload();
+            ContentStream filePayload = document.getContentStream();
 
             assertNotNull(filePayload);
 
@@ -207,18 +231,18 @@ public class AddFileFlowIT
                 assertEquals(originalLines, downloadedLines);
             }
         }
-        catch (TransformerException te)
+        catch (Exception e)
         {
-            if (te.getMessage() != null)
+            if (e.getMessage() != null)
             {
-                log.debug("Transformer message: {}", te.getMessage());
-                if (te.getMessage().contains("Could not find a transformer to transform"))
+                log.debug("Transformer message: {}", e.getMessage());
+                if (e.getMessage().contains("Could not find a transformer to transform"))
                 {
                     log.info("Chemistry is not running - skipping this test.");
                 }
                 else
                 {
-                    throw te;
+                    throw e;
                 }
             }
         }

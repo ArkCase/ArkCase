@@ -34,6 +34,10 @@ public class AcmEntityTemplateModel
     public AcmObject caseFileObject;
     public String assigneeUserId;
     public String modifierUserId;
+    public String assigneeGroupId;
+    public Boolean isTitleEnabled;
+    public String modifierEmail;
+    public String assigneeEmail;
 
     public AcmObject getCaseFileObject()
     {
@@ -64,5 +68,58 @@ public class AcmEntityTemplateModel
     {
         this.modifierUserId = modifierUserId;
     }
-}
 
+    public String getAssigneeGroupId()
+    {
+        return assigneeGroupId;
+    }
+
+    public void setAssigneeGroupId(String assigneeGroupId)
+    {
+        this.assigneeGroupId = assigneeGroupId;
+    }
+
+    public Boolean getTitleEnabled()
+    {
+        return isTitleEnabled;
+    }
+
+    public void setTitleEnabled(Boolean titleEnabled)
+    {
+        isTitleEnabled = titleEnabled;
+    }
+
+    /**
+     * @return the modifierEmail
+     */
+    public String getModifierEmail()
+    {
+        return modifierEmail;
+    }
+
+    /**
+     * @param modifierEmail
+     *            the modifierEmail to set
+     */
+    public void setModifierEmail(String modifierEmail)
+    {
+        this.modifierEmail = modifierEmail;
+    }
+
+    /**
+     * @return the assigneeEmail
+     */
+    public String getAssigneeEmail()
+    {
+        return assigneeEmail;
+    }
+
+    /**
+     * @param assigneeEmail
+     *            the assigneeEmail to set
+     */
+    public void setAssigneeEmail(String assigneeEmail)
+    {
+        this.assigneeEmail = assigneeEmail;
+    }
+}

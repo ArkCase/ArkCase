@@ -36,11 +36,14 @@
     </bean>
 
     <bean id="customCssService" class="com.armedia.acm.plugins.admin.service.CustomCssService">
-        <property name="customCssFile" value="#{ systemProperties ['user.home'] }/.arkcase/acm/branding/custom.css"/>
+        <property name="customCssFile" value="#{ systemProperties ['user.home'] }/.arkcase/custom/branding/custom.css"/>
+        <property name="fileConfigurationService" ref="fileConfigurationServiceImpl"/>
+        <property name="customCssFileName" value="custom.css"/>
     </bean>
 
     <bean id="customLogoService" class="com.armedia.acm.plugins.admin.service.CustomLogoService">
-        <property name="brandingFilesLocation" value="#{ systemProperties ['user.home'] }/.arkcase/acm/branding/"/>
+        <property name="brandingFilesLocation" value="#{ systemProperties ['user.home'] }/.arkcase/custom/branding/"/>
+        <property name="fileConfigurationService" ref="fileConfigurationServiceImpl"/>
         <property name="headerLogoFile" value="header-logo.png"/>
         <property name="loginLogoFile" value="login-logo.png"/>
         <property name="emailLogoFile" value="email-logo.png"/>
@@ -67,6 +70,7 @@
         <property name="privilegesConfig" ref="applicationPrivilegesConfig"/>
         <property name="rolesToPrivilegesConfig" ref="rolesToPrivileges"/>
         <property name="configurationPropertyService" ref="configurationPropertyService"/>
+        <property name="collectionPropertiesConfigurationService" ref="collectionPropertiesConfigurationService"/>
     </bean>
 
     <bean id="historyCleanJob" class="com.armedia.acm.plugins.admin.service.HistoryCleanService">
@@ -122,17 +126,16 @@
     <bean id="cmisConfigurationService" class="com.armedia.acm.plugins.admin.service.CmisConfigurationService">
         <property name="encryptablePropertyUtils" ref="acmEncryptablePropertyUtils"/>
         <property name="cmisConfigurationTemplatesLocation" value="${user.home}/.arkcase/acm/cmis/cmis-config-templates/"/>
-        <property name="cmisTemplateXmlFile" value="mule-config-cmis.xml.ftl"/>
-        <property name="cmisTemplatePropertiesFile" value="mule-config-cmis.properties.ftl"/>
+        <property name="cmisTemplatePropertiesFile" value="camel-config-cmis.properties.ftl"/>
         <property name="cmisConfigurationLocation" value="${user.home}/.arkcase/acm/cmis/"/>
-        <property name="cmisFile" value="mule-config-%s-cmis.xml"/>
-        <property name="cmisPropertiesFile" value="mule-config-%s-cmis.properties"/>
+        <property name="cmisPropertiesFile" value="camel-config-%s-cmis.properties"/>
         <property name="cmisIdPattern" ref="cmisIdPattern"/>
         <property name="cmisPropertiesPattern" ref="cmisPropertiesPattern"/>
+        <property name="camelContextManager" ref="camelContextManager"/>
     </bean>
 
     <bean id="cmisPropertiesPattern" class="java.util.regex.Pattern" factory-method="compile">
-        <constructor-arg value="^mule[-d]config[-d][a-zA-Z0-9]+[-d]cmis.properties$"/>
+        <constructor-arg value="^camel[-d]config[-d][a-zA-Z0-9]+[-d]cmis.properties$"/>
     </bean>
     <bean id="cmisIdPattern" class="java.util.regex.Pattern" factory-method="compile">
         <constructor-arg value="^[a-zA-Z0-9.]+$"/>
@@ -170,16 +173,6 @@
 
     <bean id="documentUploadPolicyConfig" class="com.armedia.acm.plugins.admin.model.DocumentUploadPolicyConfig" scope="refresh">
         <aop:scoped-proxy/>
-    </bean>
-
-    <bean id="objectTitleConfiguration" class="com.armedia.acm.plugins.admin.model.ObjectTitleConfig" scope="refresh">
-        <property name="jsonUnmarshaller" ref="jsonUnmarshaller"/>
-        <aop:scoped-proxy proxy-target-class="true"/>
-    </bean>
-
-    <bean id="objectTitleConfigurationService" class="com.armedia.acm.plugins.admin.service.ObjectTitleConfigurationService">
-        <property name="configurationPropertyService" ref="configurationPropertyService"/>
-        <property name="objectTitleConfiguration" ref="objectTitleConfiguration" />
     </bean>
 
     <bean id="googleAnalyticsConfig" class="com.armedia.acm.plugins.admin.model.GoogleAnalyticsConfig" scope="refresh">

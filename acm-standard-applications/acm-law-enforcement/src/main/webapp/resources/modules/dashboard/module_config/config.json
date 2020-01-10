@@ -110,19 +110,17 @@
                     "enableColumnMenu": false
                 },
                 {
-                    "name": "priority_lcs",
-                    "displayName": "dashboard.widgets.myTasks.table.header.priority",
+                    "name": "parent_id_s",
+                    "displayName": "dashboard.widgets.myTasks.table.header.parentId",
                     "headerCellFilter": "translate",
-                    "width": 75
+                    "cellTemplate": "<button class='btn-link' ng-click='grid.appScope.myTasks.onClickCaseComplaintId(row.entity.parent_type_s,row.entity.parent_id_s)'>{{COL_FIELD}}</button>",
+                    "width": 100
                 },
                 {
-                    "name": "object_id_i",
-                    "displayName": "dashboard.widgets.myTasks.table.header.taskId",
+                    "name": "parent_type_s",
+                    "displayName": "dashboard.widgets.myTasks.table.header.parentType",
                     "headerCellFilter": "translate",
-                    "enableSorting": true,
-                    "type": "number",
-                    "cellTemplate": "<a data-ui-sref=\"tasks.main({id: row.entity.object_id_i})\">{{COL_FIELD}}<\/a>",
-                    "width": 75
+                    "width": 100
                 },
                 {
                     "name": "title_parseable",
@@ -131,10 +129,10 @@
                     "cellTemplate": "<a data-ui-sref=\"tasks.main({id: row.entity.object_id_s})\">{{COL_FIELD}}<\/a>"
                 },
                 {
-                    "name": "status_lcs",
-                    "displayName": "dashboard.widgets.myTasks.table.header.status",
+                    "name": "priority_lcs",
+                    "displayName": "dashboard.widgets.myTasks.table.header.priority",
                     "headerCellFilter": "translate",
-                    "width": 100
+                    "width": 75
                 },
                 {
                     "name": "dueDate_tdt",
@@ -144,10 +142,9 @@
                     "width": 70
                 },
                 {
-                    "name": "parent_id_s",
-                    "displayName": "dashboard.widgets.myTasks.table.header.objectId",
+                    "name": "status_lcs",
+                    "displayName": "dashboard.widgets.myTasks.table.header.status",
                     "headerCellFilter": "translate",
-                    "cellTemplate": "<button class='btn-link' ng-click='grid.appScope.myTasks.onClickCaseComplaintId(row.entity.parent_type_s,row.entity.parent_id_s)'>{{COL_FIELD}}</button>",
                     "width": 100
                 }
             ]

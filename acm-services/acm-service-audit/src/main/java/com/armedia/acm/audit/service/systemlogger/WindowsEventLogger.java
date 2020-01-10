@@ -28,7 +28,7 @@ package com.armedia.acm.audit.service.systemlogger;
  */
 
 import com.armedia.acm.audit.model.AuditConfig;
-import com.armedia.acm.core.ApplicationConfig;
+import com.armedia.acm.core.model.ApplicationConfig;
 
 import org.apache.commons.exec.CommandLine;
 import org.apache.commons.exec.DefaultExecutor;

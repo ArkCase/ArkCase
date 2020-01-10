@@ -27,7 +27,7 @@ package com.armedia.acm.crypto.properties;
  * #L%
  */
 
-import com.armedia.acm.core.exceptions.AcmEncryptionException;
+import com.armedia.acm.crypto.exceptions.AcmEncryptionException;
 import com.armedia.acm.crypto.AcmCryptoUtilsImpl;
 
 import org.junit.Before;
@@ -79,7 +79,7 @@ public class AcmEncryptablePropertyUtilsImplIT
     @Test
     public void encryptPassword() throws AcmEncryptionException
     {
-        String password = "***REMOVED***";
+        String password = "@rM3diA$";
 
         String encryptedPassword = utils.encryptPropertyValue(password);
 

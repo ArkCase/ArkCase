@@ -27,6 +27,7 @@ package com.armedia.acm.plugins.wopi.service;
  * #L%
  */
 
+import com.armedia.acm.camelcontext.exception.ArkCaseFileRepositoryException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.pluginmanager.service.AcmConfigurablePlugin;
@@ -48,9 +49,8 @@ import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenS
 import com.armedia.acm.services.dataaccess.service.impl.ArkPermissionEvaluator;
 import com.armedia.acm.services.users.model.AcmUser;
 
-import org.mule.api.MuleException;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.security.core.Authentication;
 
@@ -116,7 +116,7 @@ public class WopiAcmService implements AcmConfigurablePlugin
     }
 
     public void putFile(Long id, InputStreamResource resource, Authentication authentication)
-            throws AcmObjectNotFoundException, IOException, MuleException
+            throws AcmObjectNotFoundException, IOException, ArkCaseFileRepositoryException
     {
         EcmFile fileToBeReplaced = ecmFileService.findById(id);
         if (fileToBeReplaced == null)

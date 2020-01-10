@@ -31,7 +31,7 @@ import com.armedia.acm.auth.AuthenticationUtils;
 import com.armedia.acm.calendar.config.model.CalendarConfig;
 import com.armedia.acm.calendar.config.model.PurgeOptions;
 import com.armedia.acm.configuration.service.ConfigurationPropertyService;
-import com.armedia.acm.core.exceptions.AcmEncryptionException;
+import com.armedia.acm.crypto.exceptions.AcmEncryptionException;
 import com.armedia.acm.crypto.properties.AcmEncryptablePropertyUtils;
 
 import org.apache.commons.lang.StringUtils;

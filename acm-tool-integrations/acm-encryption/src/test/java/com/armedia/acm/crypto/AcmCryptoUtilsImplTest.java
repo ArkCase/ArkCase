@@ -33,7 +33,7 @@ import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-import com.armedia.acm.core.exceptions.AcmEncryptionBadKeyOrDataException;
+import com.armedia.acm.crypto.exceptions.AcmEncryptionBadKeyOrDataException;
 
 import org.apache.commons.codec.digest.DigestUtils;
 import org.junit.Before;

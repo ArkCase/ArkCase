@@ -77,7 +77,7 @@ public class AcmMailSender
             }
             catch (MessagingException e)
             {
-                log.warn("Failed to add attachment [{}]. Cause: {}.", attachment.getName(), e.getMessage());
+                log.warn("Failed to add attachment [{}]. Cause: {}.", attachment.getName(), e.getMessage(), e);
             }
         });
         mailSender.send(helper.getMimeMessage());

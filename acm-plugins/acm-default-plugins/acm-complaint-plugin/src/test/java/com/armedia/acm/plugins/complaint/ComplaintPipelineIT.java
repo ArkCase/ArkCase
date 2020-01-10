@@ -34,11 +34,11 @@ import com.armedia.acm.plugins.complaint.model.Complaint;
 import com.armedia.acm.plugins.complaint.service.SaveComplaintTransaction;
 import com.armedia.acm.web.api.MDCConstants;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
 import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -57,7 +57,6 @@ import java.util.UUID;
 @ContextConfiguration(name = "spring", locations = {
         "/spring/spring-library-configuration.xml",
         "/spring/spring-library-acm-encryption.xml",
-        "/spring/spring-library-activiti-actions.xml",
         "/spring/spring-library-activiti-configuration.xml",
         "/spring/spring-library-admin.xml",
         "/spring/spring-library-authentication-token.xml",
@@ -70,7 +69,6 @@ import java.util.UUID;
         "/spring/spring-library-case-file-save.xml",
         "/spring/spring-library-complaint.xml",
         "/spring/spring-library-complaint-plugin-test.xml",
-        "/spring/spring-library-complaint-plugin-test-mule.xml",
         "/spring/spring-library-context-holder.xml",
         "/spring/spring-library-data-access-control.xml",
         "/spring/spring-library-data-source.xml",
@@ -79,7 +77,6 @@ import java.util.UUID;
         "/spring/spring-library-ecm-tika.xml",
         "/spring/spring-library-email.xml",
         "/spring/spring-library-email-smtp.xml",
-        "/spring/spring-library-event.xml",
         "/spring/spring-library-folder-watcher.xml",
         "/spring/spring-library-form-configurations.xml",
         "/spring/spring-library-forms-configuration.xml",
@@ -118,6 +115,7 @@ public class ComplaintPipelineIT
     {
         String userHomePath = System.getProperty("user.home");
         System.setProperty("acm.configurationserver.propertyfile", userHomePath + "/.arkcase/acm/conf.yml");
+        System.setProperty("configuration.server.url", "http://localhost:9999");
     }
 
     @Autowired

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
 
     <bean id="acmJobFactory" class="com.armedia.acm.quartz.scheduler.AcmJobFactory">
         <property name="unmarshaller" ref="jsonUnmarshaller"/>
@@ -10,12 +10,14 @@
 
     <bean id="acmQuartzScheduler" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
         <property name="dataSource" ref="acmDataSource"/>
-        <property name="configLocation" value="file:${user.home}/.arkcase/acm/quartz.properties"/>
+        <property name="configLocation"
+            value="${configuration.server.url}/${application.name.default}/${application.profile.reversed}/default/spring/quartz.properties"/>
         <property name="transactionManager" ref="transactionManager"/>
         <property name="jobFactory" ref="acmJobFactory"/>
         <property name="triggers" value="#{acmJobFactory.getTriggerList()}"/>
         <property name="jobDetails" value="#{acmJobFactory.getJobDetailList()}"/>
         <property name="globalTriggerListeners" ref="acmTriggerListener"/>
+        <property name="overwriteExistingJobs" value="#{acmJobFactory.isOverwriteExistingJobs()}"/>
     </bean>
 
     <bean id="jobsJsonConfig" class="org.apache.commons.io.IOUtils" factory-method="toString">

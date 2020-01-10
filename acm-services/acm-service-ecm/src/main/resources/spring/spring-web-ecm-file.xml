@@ -13,15 +13,11 @@
     </bean>
 
     <bean id="fileDownloadAPIController" class="com.armedia.acm.plugins.ecm.web.api.FileDownloadAPIController">
-        <property name="muleContextManager" ref="muleContextManager"/>
+        <property name="camelContextManager" ref="camelContextManager"/>
         <property name="fileDao" ref="ecmFileDao"/>
         <property name="folderAndFilesUtils" ref="folderAndFilesUtils"/>
         <property name="cmisConfigUtils" ref="cmisConfigUtils"/>
         <property name="objectConverter" ref="objectConverter"/>
-        <property name="propertyFileManager" ref="propertyFileManager"/>
-        <property name="emailSenderProperties" value="${user.home}/.arkcase/acm/acmEmailSender.properties"/>
-        <property name="ecmFileService" ref="ecmFileService"/>
-        <property name="emailSenderConfig" ref="emailSenderConfig"/>
     </bean>
 
    <!-- <bean id="documentUiController" class="com.armedia.acm.plugins.ecm.web.DocumentUiController">
@@ -81,6 +77,11 @@
     </bean>
 
     <bean id="copyFileAPIController" class="com.armedia.acm.plugins.ecm.web.api.CopyFileAPIController">
+        <property name="fileService" ref="ecmFileService"/>
+        <property name="fileEventPublisher" ref="fileEventPublisher"/>
+    </bean>
+
+    <bean id="copyFileAsLinkAPIController" class="com.armedia.acm.plugins.ecm.web.api.CopyFileAsLinkAPIController">
         <property name="fileService" ref="ecmFileService"/>
         <property name="fileEventPublisher" ref="fileEventPublisher"/>
     </bean>

@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:aop="http://www.springframework.org/schema/aop"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+    xmlns:aop="http://www.springframework.org/schema/aop"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+    <aop:aspectj-autoproxy proxy-target-class="true"/>
 
     <bean id="acmSpringActiveProfile" class="com.armedia.acm.core.AcmSpringActiveProfile"/>
 
@@ -9,11 +11,16 @@
         <aop:scoped-proxy/>
     </bean>
 
-    <bean id="applicationProperties" class="com.armedia.acm.core.ApplicationConfig" scope="refresh">
+    <bean id="languageSettingsConfig" class="com.armedia.acm.core.LanguageSettingsConfig" scope="refresh">
         <aop:scoped-proxy/>
     </bean>
 
     <bean id="acmObjectUtils" class="com.armedia.acm.core.utils.AcmObjectUtilsImpl">
         <property name="packagesToScan" value="#{dataSourceConfig.jpaModelPackages}"/>
     </bean>
+
+    <bean id="applicationProperties" class="com.armedia.acm.core.model.ApplicationConfig" scope="refresh">
+        <aop:scoped-proxy/>
+    </bean>
+
 </beans>

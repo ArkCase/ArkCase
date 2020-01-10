@@ -29,6 +29,8 @@ package com.armedia.acm.muletools.mulecontextmanager;
 
 import com.armedia.acm.web.api.MDCConstants;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.mule.DefaultMuleMessage;
 import org.mule.api.MuleContext;
 import org.mule.api.MuleException;
@@ -36,7 +38,6 @@ import org.mule.api.MuleMessage;
 import org.mule.api.client.MuleClient;
 import org.mule.api.config.ConfigurationBuilder;
 import org.mule.api.context.MuleContextFactory;
-import org.mule.api.context.notification.ServerNotificationListener;
 import org.mule.api.transformer.DataType;
 import org.mule.config.AnnotationsConfigurationBuilder;
 import org.mule.config.ConfigResource;
@@ -44,11 +45,7 @@ import org.mule.config.DefaultMuleConfiguration;
 import org.mule.config.spring.SpringXmlConfigurationBuilder;
 import org.mule.context.DefaultMuleContextBuilder;
 import org.mule.context.DefaultMuleContextFactory;
-import org.mule.context.notification.MessageProcessorNotification;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
 import org.slf4j.MDC;
-import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.core.io.ClassPathResource;
@@ -128,8 +125,7 @@ public class MuleContextManager implements ApplicationContextAware
     /**
      * Set {@link MDC} thread local variables as {@link MuleMessage} outbound properties. These are later set as
      * {@link MDC} thread local
-     * variables in the the threads that Mule controls. See
-     * {@link com.armedia.acm.audit.listeners.AcmMessageProcessorNotificationListener}.
+     * variables in the the threads that Mule controls.
      *
      * @param message
      *            the {@link MuleMessage} to set the MDC variables as outbound properties
@@ -185,17 +181,7 @@ public class MuleContextManager implements ApplicationContextAware
         muleContext.getRegistry().registerObject("arkContext", applicationContext);
 
         // register our ArkCase audit listener with the Mule context. This should deliver message processor events
-        // to the auditor.
-        try
-        {
-            ServerNotificationListener<MessageProcessorNotification> auditListener = applicationContext
-                    .getBean("muleAuditMessageProcessorNotificationListener", ServerNotificationListener.class);
-            muleContext.getNotificationManager().addListener(auditListener);
-        }
-        catch (NoSuchBeanDefinitionException e)
-        {
-            log.info("No auditor listener available, hopefully this is a test method.");
-        }
+        // to the auditor
 
         if (log.isDebugEnabled())
         {

@@ -140,9 +140,9 @@ public class AlfrescoSyncServiceTest
         assertEquals(57, fourth.getValue().getAuditId());
         assertEquals(91, fifth.getValue().getAuditId());
         // the last audit ID in the first audit response is 61
-        assertEquals(61L, jobDataMap.get("applicationOne.lastAuditId"));
+        assertEquals("61", jobDataMap.get("applicationOne.lastAuditId"));
         // the last audit ID in the second audit response is 91
-        assertEquals(91L, jobDataMap.get("applicationTwo.lastAuditId"));
+        assertEquals("91", jobDataMap.get("applicationTwo.lastAuditId"));
 
     }
 

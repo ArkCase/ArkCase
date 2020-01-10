@@ -6,35 +6,37 @@ package com.armedia.acm.auth;
  * %%
  * Copyright (C) 2014 - 2018 ArkCase LLC
  * %%
- * This file is part of the ArkCase software. 
- * 
- * If the software was purchased under a paid ArkCase license, the terms of 
- * the paid license agreement will prevail.  Otherwise, the software is 
+ * This file is part of the ArkCase software.
+ *
+ * If the software was purchased under a paid ArkCase license, the terms of
+ * the paid license agreement will prevail.  Otherwise, the software is
  * provided under the following open source license terms:
- * 
+ *
  * ArkCase is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *  
+ *
  * ArkCase is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
  * #L%
  */
 
+import com.armedia.acm.auth.ad.AcmActiveDirectoryAuthenticationException;
+import com.armedia.acm.auth.ad.AcmActiveDirectoryAuthenticationProvider;
 import com.armedia.acm.auth.okta.model.OktaAPIConstants;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.spring.SpringContextHolder;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.AuthenticationServiceException;
@@ -87,6 +89,21 @@ public class AcmAuthenticationManager implements AuthenticationManager
                             providerAuthentication = provider.authenticate(authentication);
                         }
                     }
+                    else if (providerEntry.getValue() instanceof AcmActiveDirectoryAuthenticationProvider)
+                    {
+                        if (principal.isEmpty())
+                        {
+                            throw new BadCredentialsException("Empty Username");
+                        }
+                        AcmActiveDirectoryAuthenticationProvider provider = (AcmActiveDirectoryAuthenticationProvider) providerEntry
+                                .getValue();
+                        String userDomain = provider.getLdapSyncService().getLdapSyncConfig().getUserDomain();
+                        if (principal.endsWith(userDomain))
+                        {
+                            providerAuthentication = provider.authenticate(authentication);
+                        }
+
+                    }
                     else
                     {
                         providerAuthentication = providerEntry.getValue().authenticate(authentication);
@@ -107,6 +124,7 @@ public class AcmAuthenticationManager implements AuthenticationManager
             {
                 // Spring Security publishes an authentication success event all by itself, so we do not have to raise
                 // one here.
+                log.debug("Processed authentication request for user: {}", providerAuthentication.getName());
                 return getAcmAuthentication(providerAuthentication);
             }
             if (lastException != null)
@@ -114,8 +132,16 @@ public class AcmAuthenticationManager implements AuthenticationManager
                 AuthenticationException ae;
                 if (lastException instanceof ProviderNotFoundException)
                 {
+                    log.error("No authentication provider found for [{}]", authentication);
                     ae = new NoProviderFoundException("Authentication problem. Please contact your administrator.");
                 }
+                else if (lastException instanceof AuthenticationException && lastException.getCause() != null
+                        && lastException.getCause() instanceof AcmActiveDirectoryAuthenticationException)
+                {
+                    log.error("Authentication [{}] failed to authenticate: [{}]", authentication, lastException.getMessage());
+                    ae = (AuthenticationException) lastException;
+                }
+
                 else if (lastException instanceof BadCredentialsException)
                 {
                     if (getUserDao().isUserPasswordExpired(authentication.getName()))

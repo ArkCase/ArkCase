@@ -31,16 +31,13 @@ import static org.easymock.EasyMock.anyString;
 import static org.easymock.EasyMock.capture;
 import static org.easymock.EasyMock.eq;
 import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.expectLastCall;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 import com.armedia.acm.core.AcmObject;
-import com.armedia.acm.core.exceptions.AcmEncryptionException;
 import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.data.service.AcmDataService;
-import com.armedia.acm.files.propertymanager.PropertyFileManager;
 import com.armedia.acm.email.model.EmailSenderConfig;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.service.outlook.model.OutlookDTO;
@@ -50,8 +47,8 @@ import com.armedia.acm.services.email.model.EmailWithEmbeddedLinksDTO;
 import com.armedia.acm.services.email.model.EmailWithEmbeddedLinksResultDTO;
 import com.armedia.acm.services.email.service.AcmMailTemplateConfigurationService;
 import com.armedia.acm.services.email.service.TemplatingEngine;
-import com.armedia.acm.services.notification.dao.NotificationDao;
 import com.armedia.acm.services.notification.model.Notification;
+import com.armedia.acm.services.notification.model.NotificationConfig;
 import com.armedia.acm.services.notification.model.NotificationConstants;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
@@ -69,7 +66,7 @@ import java.util.List;
 
 public class MicrosoftExchangeNotificationSenderTest extends EasyMockSupport
 {
-
+    private static final String BASE_URL = "/arkcase";
     private MicrosoftExchangeNotificationSender microsoftExchangeNotificationSender;
     private AuditPropertyEntityAdapter mockAuditPropertyEntityAdapter;
     private Authentication mockAuthentication;
@@ -114,6 +111,10 @@ public class MicrosoftExchangeNotificationSenderTest extends EasyMockSupport
         microsoftExchangeNotificationSender.setTemplateService(templateService);
         microsoftExchangeNotificationSender.setDataService(acmDataService);
         microsoftExchangeNotificationSender.setTemplatingEngine(templatingEngine);
+
+        NotificationConfig notificationConfig = new NotificationConfig();
+        notificationConfig.setBaseUrl(BASE_URL);
+        microsoftExchangeNotificationSender.setNotificationConfig(notificationConfig);
     }
 
     @Test

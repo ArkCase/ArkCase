@@ -27,9 +27,10 @@ package com.armedia.acm.services.suggestion.web.api;
  * #L%
  */
 
+import com.armedia.acm.services.search.exception.SolrException;
 import com.armedia.acm.services.suggestion.model.SuggestedCase;
 import com.armedia.acm.services.suggestion.service.SimilarCasesService;
-import org.mule.api.MuleException;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -53,7 +54,7 @@ public class GetSimilarCasesAPIController
     public ResponseEntity<SuggestedCase> findSimilarCases(@PathVariable("title") String title,
                                                           @RequestParam(value = "objectId", required = false) String objectId,
                                                           @RequestParam(value = "portal", required = false, defaultValue = "false") Boolean isPortal,
-                                                          Authentication authentication) throws MuleException, ParseException
+            Authentication authentication) throws ParseException, SolrException
     {
         Long id = null;
         if(objectId != null){

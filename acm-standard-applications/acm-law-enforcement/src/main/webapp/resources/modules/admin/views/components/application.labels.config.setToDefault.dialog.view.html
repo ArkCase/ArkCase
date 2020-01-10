@@ -10,7 +10,7 @@
             <form>
                 <div class="row">
                     <div class="col-sm-6">
-                        <select multiple size="20" ng-model="selectedNamespaces" class="form-control"
+                        <select multiple size="23" ng-model="selectedNamespaces" class="form-control"
                                 ng-options="option.name for option in namespacesDropdownOptions">
                         </select>
                     </div>
@@ -18,14 +18,6 @@
                         <select multiple size="20" ng-model="selectedLocales" class="form-control"
                                 ng-options="item as item.native for item in languagesDropdownOptions track by item.code">
                         </select>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-12 checkbox">
-                        <label>
-                            <input type="checkbox" ng-model="toResetCustom" ng-click="onClickResetCustom($event)">
-                            <span translate>admin.application.labels.config.setToDefault.chkResetCustom.label</span>
-                        </label>
                     </div>
                 </div>
             </form>
@@ -38,13 +30,9 @@
             title="{{'admin.application.labels.config.setToDefault.btnCancel.title' | translate}}">
         <span translate>admin.application.labels.config.setToDefault.btnCancel.label</span>
     </button>
-    <button class="btn btn-primary" ng-click="onClickOk()"
-            title="{{'admin.application.labels.config.setToDefault.btnRefresh.title' | translate}}" ng-hide="toResetCustom">
-        <span translate>admin.application.labels.config.setToDefault.btnRefresh.label</span>
-    </button>
     <button class="btn btn-danger" ng-bootbox-confirm-action="onClickOk()"
             ng-bootbox-confirm="<i class='fa fa-exclamation-triangle text-danger'></i> {{'admin.application.labels.config.setToDefault.resetCustom.confirm' | translate}}"
-            title="{{'admin.application.labels.config.setToDefault.btnReset.title' | translate}}" ng-show="toResetCustom">
+            title="{{'admin.application.labels.config.setToDefault.btnReset.title' | translate}}">
         <i class="fa fa-trash-o"></i>
         <span translate>admin.application.labels.config.setToDefault.btnReset.label</span>
     </button>

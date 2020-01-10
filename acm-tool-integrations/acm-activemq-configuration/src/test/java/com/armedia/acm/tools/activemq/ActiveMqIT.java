@@ -36,12 +36,12 @@ import org.apache.activemq.advisory.AdvisorySupport;
 import org.apache.activemq.command.ActiveMQMessage;
 import org.apache.activemq.command.ActiveMQTopic;
 import org.apache.activemq.pool.PooledConnectionFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jms.core.JmsTemplate;
@@ -61,14 +61,13 @@ import java.util.regex.Pattern;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
-        "/spring/spring-mule-activemq.xml",
-        "/spring/spring-mule-activemq-test.xml",
+        "/spring/spring-library-activemq.xml",
         "/spring/spring-library-property-file-manager.xml",
         "/spring/spring-library-acm-encryption.xml"
 })
 /**
  * To see ActiveMQ flow control happening in this test, ensure the queue memory limit is set to "1 mb" in the
- * spring-mule-activemq.xml file. Then you will see output pause, and after a few seconds restart.
+ * spring-library-activemq.xml file. Then you will see output pause, and after a few seconds restart.
  */
 public class ActiveMqIT
 {

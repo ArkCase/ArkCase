@@ -27,12 +27,12 @@ package com.armedia.acm.plugins.admin.web.api;
  * #L%
  */
 
+import com.armedia.acm.core.LanguageSettingsConfig;
 import com.armedia.acm.services.labels.exception.AcmLabelManagementException;
 import com.armedia.acm.services.labels.service.LabelManagementService;
 
-import org.json.JSONObject;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -62,11 +62,9 @@ public class LabelManagementRetrieveDefaultLanguage
 
         try
         {
-            // Get Settings file. Create default settings file if missed
-            JSONObject jsonSettings = labelManagementService.getSettings(true);
-            JSONObject responseObject = new JSONObject();
-            responseObject.put("defaultLang", jsonSettings.getString("defaultLang"));
-            return responseObject.toString();
+            // Get Settings. Create default settings if missed
+            LanguageSettingsConfig languageSettings = labelManagementService.getSettings(true);
+            return languageSettings.toString();
         }
         catch (Exception e)
         {

@@ -32,12 +32,13 @@ import static org.junit.Assert.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
-import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.services.users.model.group.AcmGroup;
 import com.armedia.acm.services.users.model.group.AcmGroupStatus;
 import com.armedia.acm.services.users.service.group.GroupServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.easymock.EasyMockRunner;
 import org.easymock.EasyMockSupport;
 import org.easymock.Mock;
@@ -45,9 +46,6 @@ import org.easymock.TestSubject;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mule.api.MuleMessage;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -67,14 +65,10 @@ import java.util.Base64;
 @RunWith(EasyMockRunner.class)
 public class AcmGroupAPIControllerTest extends EasyMockSupport implements HandlerExceptionResolver
 {
-    @Mock
-    MuleMessage muleMessage;
     private Logger log = LogManager.getLogger(getClass());
     private MockMvc mockMvc;
     @Mock
     private GroupServiceImpl groupService;
-    @Mock
-    private MuleContextManager muleContextManager;
 
     @TestSubject
     private AcmGroupAPIController unit = new AcmGroupAPIController();

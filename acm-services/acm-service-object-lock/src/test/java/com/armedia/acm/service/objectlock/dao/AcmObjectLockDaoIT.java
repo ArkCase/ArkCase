@@ -52,7 +52,6 @@ import org.springframework.transaction.annotation.Transactional;
         "/spring/spring-library-acm-encryption.xml",
         "/spring/spring-library-object-lock-test.xml",
         "/spring/spring-library-object-lock.xml",
-        "/spring/spring-library-object-lock-mule-test.xml",
         "/spring/spring-library-object-converter.xml",
         "/spring/spring-library-configuration.xml",
         "/spring/spring-library-search.xml",
@@ -65,6 +64,7 @@ public class AcmObjectLockDaoIT
     {
         String userHomePath = System.getProperty("user.home");
         System.setProperty("acm.configurationserver.propertyfile", userHomePath + "/.arkcase/acm/conf.yml");
+        System.setProperty("configuration.server.url", "http://localhost:9999");
     }
 
     @Autowired

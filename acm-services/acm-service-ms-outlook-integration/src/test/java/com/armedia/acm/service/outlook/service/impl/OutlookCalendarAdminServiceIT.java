@@ -39,7 +39,7 @@ import static org.mockito.Mockito.when;
 
 import com.armedia.acm.calendar.config.service.EmailCredentials;
 import com.armedia.acm.calendar.config.service.EmailCredentialsVerifierService;
-import com.armedia.acm.core.exceptions.AcmEncryptionException;
+import com.armedia.acm.crypto.exceptions.AcmEncryptionException;
 import com.armedia.acm.crypto.AcmCryptoUtils;
 import com.armedia.acm.crypto.properties.AcmEncryptablePropertyEncryptionProperties;
 import com.armedia.acm.service.outlook.dao.AcmOutlookFolderCreatorDao;

@@ -1,5 +1,7 @@
 package com.armedia.acm.services.dataaccess.service.impl;
 
+import com.armedia.acm.core.exceptions.AcmAccessControlException;
+
 /*-
  * #%L
  * ACM Service: Data Access Control
@@ -27,7 +29,6 @@ package com.armedia.acm.services.dataaccess.service.impl;
  * #L%
  */
 
-import com.armedia.acm.core.exceptions.AcmAccessControlException;
 import com.armedia.acm.data.AcmBeforeInsertListener;
 import com.armedia.acm.data.AcmBeforeUpdateListener;
 import com.armedia.acm.services.dataaccess.model.DataAccessControlConfig;
@@ -39,8 +40,8 @@ import com.armedia.acm.services.participants.model.CheckParticipantListModel;
 import com.armedia.acm.services.participants.service.AcmParticipantService;
 import com.armedia.acm.services.participants.service.ParticipantsBusinessRule;
 
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.persistence.FlushModeType;
 
@@ -104,7 +105,7 @@ public class DataAccessPrivilegeListener implements AcmBeforeUpdateListener, Acm
         List<AcmParticipant> originalParticipants = new ArrayList<>();
         if (assignedObject.getId() != null)
         {
-            originalParticipants = getParticipantService().listAllParticipantsPerObjectTypeAndId(assignedObject.getObjectType(),
+            originalParticipants = getParticipantService().getAllParticipantsPerObjectTypeAndId(assignedObject.getObjectType(),
                     assignedObject.getId(), FlushModeType.COMMIT);
             originalRestricted = getParticipantService().getOriginalRestrictedFlag(assignedObject);
         }

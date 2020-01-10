@@ -39,13 +39,14 @@ import com.armedia.acm.services.note.model.NoteConstants;
 import com.armedia.acm.services.note.service.NoteEventPublisher;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.easymock.Capture;
+import org.easymock.EasyMock;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -114,8 +115,8 @@ public class SaveNoteAPIControllerTest extends EasyMockSupport
 
     public void executeTest(Note incomingNote) throws Exception
     {
-        Capture<Note> noteToSave = new Capture<>();
-        Capture<ApplicationNoteEvent> capturedEvent = new Capture<>();
+        Capture<Note> noteToSave = EasyMock.newCapture();
+        Capture<ApplicationNoteEvent> capturedEvent = EasyMock.newCapture();
 
         expect(mockNoteDao.save(capture(noteToSave))).andReturn(incomingNote);
         mockNoteEventPublisher.publishNoteEvent(capture(capturedEvent));
@@ -159,8 +160,8 @@ public class SaveNoteAPIControllerTest extends EasyMockSupport
         incomingNote.setParentType(parentType);
         incomingNote.setParentId(parentId);
 
-        Capture<Note> noteToSave = new Capture<>();
-        Capture<ApplicationNoteEvent> capturedEvent = new Capture<>();
+        Capture<Note> noteToSave = EasyMock.newCapture();
+        Capture<ApplicationNoteEvent> capturedEvent = EasyMock.newCapture();
 
         expect(mockNoteDao.save(capture(noteToSave))).andThrow(new RuntimeException("testException"));
         mockNoteEventPublisher.publishNoteEvent(capture(capturedEvent));

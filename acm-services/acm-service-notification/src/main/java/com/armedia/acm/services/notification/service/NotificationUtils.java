@@ -40,15 +40,12 @@ import java.util.Map;
 
 public class NotificationUtils
 {
-    private NotificationConfig notificationConfig;
-
     private AcmApplication acmAppConfiguration;
 
     private AcmDataService acmDataService;
 
     public String buildNotificationLink(String parentType, Long parentId, String relatedObjectType, Long relatedObjectId)
     {
-        String baseUrl = notificationConfig.getBaseUrl();
         // If relatedObjectType is null, the parent object is TOP LEVEL (Case File or Complaint)
         // else parent object is nested in top level object
         String linkedObjectType = StringUtils.isEmpty(relatedObjectType) ? parentType : relatedObjectType;
@@ -64,7 +61,7 @@ public class NotificationUtils
                 if (StringUtils.isNotEmpty(objectUrl))
                 {
                     objectUrl = String.format(objectUrl, linkedObjectId);
-                    return String.format("%s%s", baseUrl, objectUrl);
+                    return objectUrl;
                 }
             }
         }
@@ -87,16 +84,6 @@ public class NotificationUtils
             }
         }
         return null;
-    }
-
-    public NotificationConfig getNotificationConfig()
-    {
-        return notificationConfig;
-    }
-
-    public void setNotificationConfig(NotificationConfig notificationConfig)
-    {
-        this.notificationConfig = notificationConfig;
     }
 
     public AcmApplication getAcmAppConfiguration()

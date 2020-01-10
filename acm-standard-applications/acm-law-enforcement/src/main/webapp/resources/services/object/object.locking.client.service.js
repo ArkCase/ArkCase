@@ -33,6 +33,23 @@ angular.module('services').factory('Object.LockingService', [ '$resource', '$tra
         },
         /**
          * @ngdoc method
+         * @name _hasPermissionToLockObject
+         * @methodOf services:Object.LockingService
+         *
+         * @description
+         * Checks permission to lock the object.
+         *
+         * @param {String} params.objectType  Object type
+         * @param {Number} params.objectId  Object ID
+         *
+         * @returns {Boolean} Return permission to lock object
+         */
+        _hasPermissionToLockObject: {
+            method: 'GET',
+            url: 'api/v1/plugin/:objectType/:objectId/lockPermission'
+        },
+        /**
+         * @ngdoc method
          * @name _unlockObject
          * @methodOf services:Object.LockingService
          *
@@ -106,6 +123,30 @@ angular.module('services').factory('Object.LockingService', [ '$resource', '$tra
             },
             onInvalid: function(data) {
                 return data;
+            }
+        });
+    };
+
+    /**
+     * @ngdoc method
+     * @name hasPermissionToLockObject
+     * @methodOf services:Object.LockingService
+     *
+     * @description
+     * Checks permission to lock object.
+     *
+     * @param {String} params.objectType  Object type
+     * @param {Number} params.objectId  Object ID
+     *
+     * @returns {Boolean} Return permission to lock object
+     */
+    Service.hasPermissionToLockObject = function(objectId, objectType) {
+
+        return Util.serviceCall({
+            service: Service._hasPermissionToLockObject,
+            param: {
+                objectId: objectId,
+                objectType: objectType
             }
         });
     };

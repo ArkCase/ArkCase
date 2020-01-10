@@ -30,7 +30,7 @@ package com.armedia.acm.auth;
 import static java.time.temporal.ChronoUnit.DAYS;
 
 import com.armedia.acm.core.AcmApplication;
-import com.armedia.acm.core.ApplicationConfig;
+import com.armedia.acm.core.model.ApplicationConfig;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.pluginmanager.service.AcmPluginManager;
@@ -66,6 +66,7 @@ public class AcmLoginSuccessOperations
     private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
     private ObjectConverter objectConverter;
     private ApplicationConfig applicationConfig;
+    private ExternalAuthenticationUtils externalAuthenticationUtils;
 
     public void onSuccessfulAuthentication(HttpServletRequest request, Authentication authentication)
     {
@@ -139,39 +140,12 @@ public class AcmLoginSuccessOperations
         HttpSession session = request.getSession(true);
         AcmUser acmUser = (AcmUser) session.getAttribute("acm_user");
 
-        String alfrescoUserId = getAlfrescoUserIdLdapAttributeValue(acmUser);
+        String alfrescoUserId = getExternalAuthenticationUtils().getEcmServiceUserId(acmUser);
         session.setAttribute("acm_alfresco_username", alfrescoUserId);
 
         log.debug("Session 'acm_alfresco_username' set to '{}'", alfrescoUserId);
 
         MDC.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, alfrescoUserId);
-    }
-
-    private String getAlfrescoUserIdLdapAttributeValue(AcmUser acmUser)
-    {
-        /*
-         * alfrescoUserIdLdapAttribute controls the user id that is sent to Alfresco in the
-         * X-Alfresco-Remote-User header, so that Alfresco knows who the real user is. In
-         * Kerberos and CAC (smart card) environments, sometimes the ArkCase user id is not the
-         * same as the Alfresco user id... The ArkCase user id could be "david.miller@armedia.com"
-         * and the Alfresco user id would be some number from the smart card, e.g. "9283923892".
-         * So with this attribute we can control what is sent to Alfresco.
-         * Valid values: uid, samAccountName, userPrincipalName, distinguishedName
-         */
-        switch (applicationConfig.getAlfrescoUserIdLdapAttribute().toLowerCase())
-        {
-        case "samaccountname":
-            return acmUser.getsAMAccountName();
-        case "userprincipalname":
-            return acmUser.getUserPrincipalName();
-        case "uid":
-            return acmUser.getUid();
-        case "dn":
-        case "distinguishedname":
-            return acmUser.getDistinguishedName();
-        default:
-            return acmUser.getsAMAccountName();
-        }
     }
 
     protected void addIpAddressToSession(HttpServletRequest request, Authentication authentication)
@@ -300,5 +274,15 @@ public class AcmLoginSuccessOperations
     public void setApplicationConfig(ApplicationConfig applicationConfig)
     {
         this.applicationConfig = applicationConfig;
+    }
+
+    public ExternalAuthenticationUtils getExternalAuthenticationUtils()
+    {
+        return externalAuthenticationUtils;
+    }
+
+    public void setExternalAuthenticationUtils(ExternalAuthenticationUtils externalAuthenticationUtils)
+    {
+        this.externalAuthenticationUtils = externalAuthenticationUtils;
     }
 }

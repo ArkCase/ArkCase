@@ -33,8 +33,8 @@ package com.armedia.acm.plugins.report.web.api;
 import com.armedia.acm.plugins.report.model.Report;
 import com.armedia.acm.plugins.report.service.ReportService;
 
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -71,7 +71,7 @@ public class SaveReportsAPIController
             throw e;
         }
 
-        if (success == false)
+        if (!success)
         {
             throw new RuntimeException("The reports are not successfully saved.");
         }

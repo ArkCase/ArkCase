@@ -48,8 +48,6 @@ import com.armedia.acm.service.outlook.service.impl.ExchangeConfigurationService
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 
 import java.net.URI;
 import java.util.ArrayList;
@@ -112,7 +110,6 @@ public class ExchangeWebServicesOutlookDao implements OutlookDao
     private OutlookConfig outlookConfig;
 
     @Override
-    @Cacheable(value = "outlook-connection-cache", key = "#user.emailAddress")
     public ExchangeService connect(AcmOutlookUser user) throws AcmOutlookConnectionFailedException
     {
         Objects.requireNonNull(user, "User cannot be null");
@@ -153,15 +150,6 @@ public class ExchangeWebServicesOutlookDao implements OutlookDao
             log.error("Could not connect to Exchange: [{}]", e.getMessage(), e);
             throw new AcmOutlookConnectionFailedException(e.getMessage(), e);
         }
-    }
-
-    @Override
-    @CacheEvict(value = "outlook-connection-cache", key = "#user.emailAddress")
-    public void disconnect(AcmOutlookUser user)
-    {
-        // EWS apparently has no concept of "logging out" so the whole point of this method is to
-        // remove the connection from the connection cache.
-        log.info("Exchange session for user({}) has been removed from session cache", user.getEmailAddress());
     }
 
     @Override

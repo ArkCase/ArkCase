@@ -29,8 +29,12 @@ package com.armedia.acm.services.subscription.service;
 
 
 import com.armedia.acm.quartz.scheduler.AcmJobDescriptor;
+import org.quartz.DisallowConcurrentExecution;
 import org.quartz.JobExecutionContext;
+import org.quartz.PersistJobDataAfterExecution;
 
+@DisallowConcurrentExecution
+@PersistJobDataAfterExecution
 public class SubscriptionEventJobDescriptor extends AcmJobDescriptor
 {
     private SubscriptionEventBatchInsertService subscriptionEventBatchInsertService;

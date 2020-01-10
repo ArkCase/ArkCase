@@ -146,7 +146,7 @@ public class AcmParticipantDao extends AcmAbstractDao<AcmParticipant>
     public List<AcmParticipant> findParticipantsForObject(String objectType, Long objectId, FlushModeType flushModeType)
     {
 
-        String jpql = "SELECT ap " + "FROM AcmParticipant ap " + "WHERE ap.objectId = :objectId " + "AND ap.objectType = :objectType";
+        String jpql = "SELECT ap FROM AcmParticipant ap WHERE ap.objectId = :objectId AND ap.objectType = :objectType";
 
         TypedQuery<AcmParticipant> query = getEm().createQuery(jpql, AcmParticipant.class);
         query.setParameter("objectId", objectId);
@@ -157,6 +157,12 @@ public class AcmParticipantDao extends AcmAbstractDao<AcmParticipant>
         List<AcmParticipant> retval = query.getResultList();
 
         return retval;
+    }
+
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public List<AcmParticipant> getParticipantsForObject(String objectType, Long objectId, FlushModeType flushModeType)
+    {
+        return findParticipantsForObject(objectType, objectId, flushModeType);
     }
 
     @Transactional(propagation = Propagation.SUPPORTS)

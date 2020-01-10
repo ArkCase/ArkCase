@@ -53,12 +53,11 @@ import com.armedia.acm.services.participants.model.ParticipantTypes;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.web.api.MDCConstants;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mule.api.MuleException;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
 import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
@@ -74,13 +73,9 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 import java.io.IOException;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Properties;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -106,11 +101,10 @@ import java.util.stream.Collectors;
         "/spring/spring-library-data-source.xml",
         "/spring/spring-library-drools-rule-monitor.xml",
         "/spring/spring-library-ecm-file.xml",
-        "/spring/spring-library-ecm-file-lock.xml",        
+        "/spring/spring-library-ecm-file-lock.xml",
         "/spring/spring-library-ecm-tika.xml",
         "/spring/spring-library-email.xml",
         "/spring/spring-library-email-smtp.xml",
-        "/spring/spring-library-event.xml",
         "/spring/spring-library-folder-watcher.xml",
         "/spring/spring-library-form-configurations.xml",
         "/spring/spring-library-forms-configuration.xml",
@@ -119,7 +113,7 @@ import java.util.stream.Collectors;
         "/spring/spring-library-ms-outlook-plugin.xml",
         "/spring/spring-library-note.xml",
         "/spring/spring-library-notification.xml",
-        "/spring/spring-library-object-converter.xml",        
+        "/spring/spring-library-object-converter.xml",
         "/spring/spring-library-object-diff.xml",
         "/spring/spring-library-object-lock.xml",
         "/spring/spring-library-object-association-plugin.xml",
@@ -143,7 +137,7 @@ import java.util.stream.Collectors;
         "/spring/spring-library-acm-email.xml",
         "/spring/spring-library-convert-folder-service.xml",
         "/spring/spring-library-user-tracker.xml"
-    })
+})
 @TransactionConfiguration(defaultRollback = true)
 public class MergeCaseFileServiceIT
 {
@@ -151,6 +145,7 @@ public class MergeCaseFileServiceIT
     {
         String userHomePath = System.getProperty("user.home");
         System.setProperty("acm.configurationserver.propertyfile", userHomePath + "/.arkcase/acm/conf.yml");
+        System.setProperty("configuration.server.url", "http://localhost:9999");
     }
 
     private final Logger log = LogManager.getLogger(getClass());
@@ -194,7 +189,7 @@ public class MergeCaseFileServiceIT
 
     @Test
     @Transactional
-    public void mergeCaseFilesTest() throws MergeCaseFilesException, MuleException, AcmUserActionFailedException,
+    public void mergeCaseFilesTest() throws MergeCaseFilesException, AcmUserActionFailedException,
             AcmCreateObjectFailedException, IOException, AcmObjectNotFoundException, PipelineProcessException, AcmAccessControlException
     {
         auditAdapter.setUserId("auditUser");
@@ -263,19 +258,19 @@ public class MergeCaseFileServiceIT
         mergeCaseService.mergeCases(auth, ipAddress, mergeCaseOptions);
 
         sourceFiles = ecmFileDao.findForContainer(sourceSaved.getContainer().getId());
-        if ( !sourceFiles.isEmpty() )
+        if (!sourceFiles.isEmpty())
         {
             String excluded = caseConfig.getMergeExcludeDocumentTypes();
             List<String> excludedTypes = Arrays.asList(excluded.trim().replaceAll(",[\\s]*", ",").split(","));
 
             // any files left in the original case file must have a file type from
             // the exclude file types list
-            for ( EcmFile sourceFile : sourceFiles )
+            for (EcmFile sourceFile : sourceFiles)
             {
                 String found = excludedTypes.stream().filter(et -> et.equalsIgnoreCase(sourceFile.getFileType())).findFirst().orElse(null);
                 assertNotNull("File remaining in source case has type [" + sourceFile.getFileType() + "] " +
-                              "which is not in the list of excluded types [" + excluded + "]",
-                              found);
+                        "which is not in the list of excluded types [" + excluded + "]",
+                        found);
             }
         }
 
@@ -314,7 +309,7 @@ public class MergeCaseFileServiceIT
 
     @Test
     @Transactional
-    public void mergeCaseFilesParticipantSameAssigneeTest() throws MergeCaseFilesException, MuleException, AcmUserActionFailedException,
+    public void mergeCaseFilesParticipantSameAssigneeTest() throws MergeCaseFilesException, AcmUserActionFailedException,
             AcmCreateObjectFailedException, IOException, AcmObjectNotFoundException, PipelineProcessException, AcmAccessControlException
     {
         auditAdapter.setUserId("auditUser");
@@ -387,7 +382,7 @@ public class MergeCaseFileServiceIT
 
     @Test
     @Transactional
-    public void mergeCaseFilesParticipantDifferentAssigneeTest() throws MergeCaseFilesException, MuleException,
+    public void mergeCaseFilesParticipantDifferentAssigneeTest() throws MergeCaseFilesException,
             AcmUserActionFailedException, AcmCreateObjectFailedException, IOException, AcmObjectNotFoundException, PipelineProcessException,
             AcmAccessControlException
     {

@@ -88,6 +88,8 @@
                     parent="ecmFileToSolrTrasnformer"/>
 
         <beans:bean id="foiaRequestDao" class="gov.foia.dao.FOIARequestDao"/>
+        
+        <beans:bean id="foiaFileDao" class="gov.foia.dao.FOIAFileDao"/>
 
         <beans:bean id="foiaRequesterAssociationToSolrTransformer" class="gov.foia.transformer.FOIARequesterAssociationToSolrTransformer"
                     parent="personAssociationToSolrTransformer"/>
@@ -118,8 +120,8 @@
             <beans:property name="userDao" ref="userJpaDao"/>
             <beans:property name="foiaConfigurationService" ref="foiaConfigurationService"/>
             <beans:property name="foiaQueueCorrespondenceService" ref="foiaQueueCorrespondenceService"/>
-            <beans:property name="templatingEngine" ref="templatingEngine"/>
-            <beans:property name="emailBodyTemplate" value="file:${user.home}/.arkcase/acm/templates/requestDocumentAttached.html"/>
+            <beans:property name="notificationDao" ref="notificationDao"/>
+
         </beans:bean>
 
         <beans:bean id="documentGeneratorService" class="gov.foia.service.FOIADocumentGeneratorService">
@@ -241,19 +243,20 @@
             <beans:constructor-arg value=" (Appeal of %s)"/>
         </beans:bean>
 
-        <bean id="enqueueCaseFileService" class="com.armedia.acm.plugins.casefile.service.EnqueueCaseFileServiceImpl">
-            <property name="caseFileDao" ref="caseFileDao"/>
-            <property name="leaveCurrentQueueBusinessRule" ref="leaveCurrentQueueBusinessRule"/>
-            <property name="caseFileNextPossibleQueuesBusinessRule" ref="caseFileNextPossibleQueuesBusinessRule"/>
-            <property name="enterQueueBusinessRule" ref="enterQueueBusinessRule"/>
-            <property name="onLeaveQueueBusinessRule" ref="onLeaveQueueBusinessRule"/>
-            <property name="onEnterQueueBusinessRule" ref="onEnterQueueBusinessRule"/>
-            <property name="queueService" ref="queueService"/>
-            <property name="startBusinessProcessService" ref="startBusinessProcessService"/>
-            <property name="saveCaseFileBusinessRule" ref="saveCaseFileBusinessRule"/>
-            <property name="acmObjectLockService" ref="objectLockService"/>
-            <property name="systemConfigurationService" ref="foiaConfigurationService"/>
-        </bean>
+        <beans:bean id="enqueueCaseFileService" class="com.armedia.acm.plugins.casefile.service.EnqueueCaseFileServiceImpl">
+            <beans:property name="caseFileDao" ref="caseFileDao"/>
+            <beans:property name="leaveCurrentQueueBusinessRule" ref="leaveCurrentQueueBusinessRule"/>
+            <beans:property name="caseFileNextPossibleQueuesBusinessRule" ref="caseFileNextPossibleQueuesBusinessRule"/>
+            <beans:property name="enterQueueBusinessRule" ref="enterQueueBusinessRule"/>
+            <beans:property name="onLeaveQueueBusinessRule" ref="onLeaveQueueBusinessRule"/>
+            <beans:property name="onEnterQueueBusinessRule" ref="onEnterQueueBusinessRule"/>
+            <beans:property name="queueService" ref="queueService"/>
+            <beans:property name="startBusinessProcessService" ref="startBusinessProcessService"/>
+            <beans:property name="saveCaseFileBusinessRule" ref="saveCaseFileBusinessRule"/>
+            <beans:property name="acmObjectLockService" ref="objectLockService"/>
+            <beans:property name="systemConfigurationService" ref="foiaConfigurationService"/>
+            <beans:property name="caseFileEventUtility" ref="caseFileEventUtility"/>
+        </beans:bean>
 
         <beans:bean id="requestResponseFolderService" class="gov.foia.service.RequestResponseFolderService">
             <beans:property name="responseFolderConverterService" ref="responseFolderConverterService"/>
@@ -266,11 +269,15 @@
             <beans:property name="billingQueuePurger" ref="scheduledBillingQueuePurger"/>
         </beans:bean>
 
-        <bean id="foiaRequestTemplateModelProvider" class="gov.foia.model.provider.FOIARequestTemplateModelProvider">
-        </bean>
+        <beans:bean id="foiaRequestTemplateModelProvider" class="gov.foia.model.provider.FOIARequestTemplateModelProvider">
+        </beans:bean>
 
         <beans:bean id="holdQueuePurgerJobDescriptor" class="gov.foia.service.HoldQueuePurgerJobDescriptor" parent="acmJobDescriptor">
             <beans:property name="holdQueuePurger" ref="scheduledHoldQueuePurger"/>
+        </beans:bean>
+
+        <beans:bean id="requestFolderStructureService" class="gov.foia.service.RequestFolderStructureService">
+            <beans:property name="folderStructureAsString" value="#{caseConfig.folderStructure}"/>
         </beans:bean>
 
     </beans:beans>

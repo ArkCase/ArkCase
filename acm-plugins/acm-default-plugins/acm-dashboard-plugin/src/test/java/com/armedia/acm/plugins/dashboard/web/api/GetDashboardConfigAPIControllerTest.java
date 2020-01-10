@@ -116,7 +116,11 @@ public class GetDashboardConfigAPIControllerTest extends EasyMockSupport
     {
         String ipAddress = "ipAddress";
         String userId = "ann-acm";
-        String dashboardConfig = "TEST";
+        String dashboardConfig = "{\r\n" + 
+        		"    \"fruit\": \"Apple\",\r\n" + 
+        		"    \"size\": \"Large\",\r\n" + 
+        		"    \"color\": \"Red\"\r\n" + 
+        		"}";
 
         AcmUser user = new AcmUser();
         user.setUserId(userId);

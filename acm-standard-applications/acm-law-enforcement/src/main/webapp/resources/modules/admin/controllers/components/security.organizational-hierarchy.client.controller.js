@@ -9,12 +9,48 @@ angular.module('admin').controller(
                     var groupsMap = {};
                     var gridCurrentPage;
                     var gridPageSize;
+                    var controlGroups = [];
 
+                    var enableEditingLdapUsers = false;
+                    function getEnableEditingLdapUsers() {
+                        var tempLdapPromise = LdapConfigService.retrieveDirectories();
+                        tempLdapPromise.then(function(directories) {
+                            removePrefixInKey(directories.data);
+                            _.forEach(directories.data , function (data) {
+                                if(data.enableEditingLdapUsers === 'true'){
+                                    enableEditingLdapUsers = true;
+                                }
+                            });
+                            $scope.showButton = enableEditingLdapUsers;
+                        });
+                    }
+
+                    //we need this because key name contains '.'
+                    function removePrefixInKey(data) {
+                        angular.forEach(data, function(row, index) {
+                            angular.forEach(row, function(element, key) {
+                                if (key.match('.') !== -1) {
+                                    delete row[key];
+                                    var newKey = key.replace(/[a-zA-Z]*?\./, '');
+                                    row[newKey] = element;
+                                }
+                            });
+                        });
+                    }
+                    getEnableEditingLdapUsers();
                     LdapConfigService.retrieveDirectories().then(function(directories) {
                         $scope.ldapEditingEnabledPerDirectoryServer = {};
                         $scope.directoryServers = _.map(directories.data, function(ds) {
                             var dirId = ds["ldapConfig.id"];
                             var dirEnabled = ds["ldapConfig.enableEditingLdapUsers"] === "true";
+                            var groupControlGroup = ds["ldapConfig.groupControlGroup"];
+                            var userControlGroup = ds["ldapConfig.userControlGroup"];
+                            if(groupControlGroup.trim() !== ''){
+                                controlGroups.push(groupControlGroup);
+                            }
+                            if(userControlGroup.trim() !== ''){
+                                controlGroups.push(userControlGroup);
+                            }
                             $scope.ldapEditingEnabledPerDirectoryServer[dirId] = dirEnabled;
                             return {
                                 id: dirId,
@@ -55,6 +91,12 @@ angular.module('admin').controller(
                         group.lazy = true;
                         group.folder = true;
                         group.title = group.name;
+                        var hasAscendantControlGroup = false;
+                        if(controlGroups.length > 0 && group.ascendants_id_ss && group.ascendants_id_ss.length === 1){
+                                if(controlGroups.includes(group.ascendants_id_ss[0])){
+                                    hasAscendantControlGroup = true;
+                                }
+                        }
                         if (group.supervisor_id_s) {
                             if (group.supervisor_name_s)
                                 group.supervisor = group.supervisor_name_s;
@@ -64,7 +106,8 @@ angular.module('admin').controller(
                         //init children array
                         if (!group.children)
                             group.children = [];
-                        if (!group.ascendants_id_ss || group.ascendants_id_ss.length === 0) {
+                        if (!group.ascendants_id_ss || group.ascendants_id_ss.length === 0 ||
+                            hasAscendantControlGroup) {
                             //add group to root
                             if (top)
                                 $scope.data.unshift(group);

@@ -90,6 +90,9 @@ public class OnLdapContextChangedUpdateScheduler implements ApplicationListener<
                     scheduleJob(ldapPartialSyncJobName, ldapSyncConfig.getPartialSyncCron());
                     logger.info("Schedule ldap partial sync job [{}] for directory [{}].", ldapPartialSyncJobName, directoryId);
                 }
+
+                // when new ldap configuration added trigger full ldap sync
+                schedulerService.triggerJob(ldapSyncJobName);
             }
             else if (event instanceof ContextReplacedEvent)
             {
@@ -115,7 +118,7 @@ public class OnLdapContextChangedUpdateScheduler implements ApplicationListener<
     {
         JobDetail jobDetail = contextHolder.getBeanByNameIncludingChildContexts(syncJobName, JobDetail.class);
         Trigger trigger = jobFactory.createTrigger(getJobConfig(cronExpression, syncJobName), jobDetail);
-        schedulerService.rescheduleJob(jobDetail.getKey().getName(), trigger);
+        schedulerService.rescheduleJob(trigger.getKey().getName(), trigger);
     }
 
     private void scheduleJob(String syncJobName, String cronExpression)

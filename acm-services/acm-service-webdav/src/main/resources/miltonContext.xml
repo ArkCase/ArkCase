@@ -21,14 +21,13 @@
     <bean id="resource.factory" class="com.armedia.acm.webdav.AcmFileSystemResourceFactory">
         <property name="fileDao" ref="ecmFileDao"/>
         <property name="ecmFileTransaction" ref="ecmFileTransaction"/>
-        <property name="muleContextManager" ref="muleContextManager"/>
+        <property name="camelContextManager" ref="camelContextManager"/>
         <property name="folderAndFilesUtils" ref="folderAndFilesUtils"/>
         <property name="lockManager" ref="lock.manager"/>
         <property name="securityManager" ref="security.manager"/>
         <property name="maxAgeSeconds" value="300"/>
         <property name="filterMapping" value="webdav"/>
         <property name="fileExtensionPattern" ref="extensionPattern"/>
-        <property name="cmisConfigUtils" ref="cmisConfigUtils"/>
     </bean>
 
     <bean id="milton.http.manager" class="io.milton.ent.config.HttpManagerBuilderEnt">

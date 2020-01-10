@@ -187,13 +187,8 @@ public class FOIARequest extends CaseFile implements FOIAObject
     @Column(name = "fo_notification_group")
     private String notificationGroup;
 
-    @Column(name = "fo_one_day_reminder_sent")
-    @Convert(converter = BooleanToStringConverter.class)
-    private Boolean oneDayReminderSent;
-
-    @Column(name = "fo_five_days_reminder_sent")
-    @Convert(converter = BooleanToStringConverter.class)
-    private Boolean fiveDaysReminderSent;
+    @Column(name = "fo_external_identifier")
+    private String externalIdentifier;
 
     @Transient
     private String originalRequestNumber;
@@ -659,26 +654,6 @@ public class FOIARequest extends CaseFile implements FOIAObject
         this.notificationGroup = notificationGroup;
     }
 
-    public Boolean getOneDayReminderSent()
-    {
-        return oneDayReminderSent;
-    }
-
-    public void setOneDayReminderSent(Boolean oneDayReminderSent)
-    {
-        this.oneDayReminderSent = oneDayReminderSent;
-    }
-
-    public Boolean getFiveDaysReminderSent()
-    {
-        return fiveDaysReminderSent;
-    }
-
-    public void setFiveDaysReminderSent(Boolean fiveDaysReminderSent)
-    {
-        this.fiveDaysReminderSent = fiveDaysReminderSent;
-    }
-
     public FoiaConfiguration getFoiaConfiguration() {
         return foiaConfiguration;
     }
@@ -705,6 +680,16 @@ public class FOIARequest extends CaseFile implements FOIAObject
     public void setRequestAmendmentDetails(String requestAmendmentDetails) 
     {
         this.requestAmendmentDetails = requestAmendmentDetails;
+    }
+
+    public String getExternalIdentifier()
+    {
+        return externalIdentifier;
+    }
+
+    public void setExternalIdentifier(String externalIdentifier)
+    {
+        this.externalIdentifier = externalIdentifier;
     }
 
     @Override

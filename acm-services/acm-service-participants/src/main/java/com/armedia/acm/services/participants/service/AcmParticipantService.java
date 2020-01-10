@@ -4,7 +4,7 @@ package com.armedia.acm.services.participants.service;
  * #%L
  * ACM Service: Participants
  * %%
- * Copyright (C) 2014 - 2018 ArkCase LLC
+ * Copyright (C) 2014 - 2019 ArkCase LLC
  * %%
  * This file is part of the ArkCase software. 
  * 
@@ -167,6 +167,11 @@ public class AcmParticipantService
     public List<AcmParticipant> listAllParticipantsPerObjectTypeAndId(String objectType, Long objectId, FlushModeType flushModeType)
     {
         return getParticipantDao().findParticipantsForObject(objectType, objectId, flushModeType);
+    }
+
+    public List<AcmParticipant> getAllParticipantsPerObjectTypeAndId(String objectType, Long objectId, FlushModeType flushModeType)
+    {
+        return getParticipantDao().getParticipantsForObject(objectType, objectId, flushModeType);
     }
 
     public Boolean getOriginalRestrictedFlag(AcmAssignedObject assignedObject)

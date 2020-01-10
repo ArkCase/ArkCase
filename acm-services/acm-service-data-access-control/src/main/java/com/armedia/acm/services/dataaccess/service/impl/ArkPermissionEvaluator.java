@@ -8,9 +8,10 @@ import com.armedia.acm.services.dataaccess.model.DataAccessControlConstants;
 import com.armedia.acm.services.dataaccess.service.AccessControlRuleChecker;
 import com.armedia.acm.services.participants.dao.AcmParticipantDao;
 import com.armedia.acm.services.participants.model.AcmAssignedObject;
+import com.armedia.acm.services.search.exception.SolrException;
 import com.armedia.acm.services.search.model.SearchConstants;
-import com.armedia.acm.services.search.model.SolrCore;
 import com.armedia.acm.services.search.model.solr.SolrAbstractDocument;
+import com.armedia.acm.services.search.model.solr.SolrCore;
 import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.search.service.SearchResults;
@@ -21,10 +22,9 @@ import com.armedia.acm.services.users.model.group.AcmGroup;
 import com.armedia.acm.spring.SpringContextHolder;
 
 import org.apache.commons.lang3.StringUtils;
-import org.mule.api.MuleException;
-import org.reflections.Reflections;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.reflections.Reflections;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.security.access.PermissionEvaluator;
 import org.springframework.security.core.Authentication;
@@ -357,7 +357,7 @@ public class ArkPermissionEvaluator implements PermissionEvaluator, Initializing
             }
             return result;
         }
-        catch (MuleException e)
+        catch (SolrException e)
         {
             log.error("Unable to retrieve Solr document for object with id [{}] of type [{}]", objectId, objectType, e);
             return null;

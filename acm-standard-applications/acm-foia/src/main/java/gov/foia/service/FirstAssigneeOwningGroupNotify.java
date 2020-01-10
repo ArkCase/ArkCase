@@ -28,40 +28,34 @@ package gov.foia.service;
  */
 
 import com.armedia.acm.plugins.casefile.model.CaseEvent;
-import com.armedia.acm.plugins.casefile.model.CaseFile;
-import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.services.email.service.TemplatingEngine;
 import com.armedia.acm.services.notification.dao.NotificationDao;
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.service.NotificationUtils;
 import com.armedia.acm.services.participants.utils.ParticipantUtils;
+import com.armedia.acm.services.search.exception.SolrException;
 import com.armedia.acm.services.search.service.SearchResults;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.service.group.GroupService;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.mule.api.MuleException;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
 import org.springframework.context.ApplicationListener;
 import org.springframework.core.io.Resource;
-import org.springframework.security.core.Authentication;
 
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
-import freemarker.template.TemplateException;
 
 public class FirstAssigneeOwningGroupNotify implements ApplicationListener<CaseEvent>
 {
@@ -110,23 +104,27 @@ public class FirstAssigneeOwningGroupNotify implements ApplicationListener<CaseE
 
                     List<String> emailAddresses = new ArrayList<>(usersEmails.values());
 
-                    AcmUser user = getUserDao().findByUserId(assigneeId);
+                    if (assigneeId != null && !assigneeId.isEmpty())
+                    {
+                        AcmUser user = getUserDao().findByUserId(assigneeId);
 
-                    String assigneeFullName = user.getFullName();
+                        String assigneeFullName = user.getFullName();
 
-                    Notification notification = new Notification();
-                    notification.setTemplateModelName("requestAssigned");
-                    notification.setParentType(event.getObjectType());
-                    notification.setParentId(event.getObjectId());
-                    notification.setEmailAddresses(emailAddresses.stream().collect(Collectors.joining(",")));
-                    notification.setTitle(String.format("Request:%s assigned to %s", event.getCaseFile().getCaseNumber(), assigneeFullName));
-                    notification.setAttachFiles(false);
-                    notification.setUser(user.getUserId());
-                    notificationDao.save(notification);
+                        Notification notification = new Notification();
+                        notification.setTemplateModelName("requestAssigned");
+                        notification.setParentType(event.getObjectType());
+                        notification.setParentId(event.getObjectId());
+                        notification.setEmailAddresses(emailAddresses.stream().collect(Collectors.joining(",")));
+                        notification.setTitle(
+                                String.format("Request:%s assigned to %s", event.getCaseFile().getCaseNumber(), assigneeFullName));
+                        notification.setAttachFiles(false);
+                        notification.setUser(user.getUserId());
+                        notificationDao.save(notification);
+                    }
                 }
-                catch (MuleException e)
+                catch (SolrException e)
                 {
-                    LOG.error("Mule error occurred while searching for owning group members", e);
+                    LOG.error("Solr error occurred while searching for owning group members", e);
                 }
                 catch (Exception e)
                 {

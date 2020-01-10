@@ -1,8 +1,0 @@
-{
-    "analytics-audit": {
-        "title": "Log Analytise",
-        "menus": {
-            "leftnav.item": "Log Analytise"
-        }
-    }
-}

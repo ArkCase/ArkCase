@@ -27,6 +27,7 @@ package com.armedia.acm.services.transcribe.job;
  * #L%
  */
 
+import com.armedia.acm.camelcontext.exception.ArkCaseFileRepositoryException;
 import com.armedia.acm.core.exceptions.AcmObjectLockException;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
@@ -54,9 +55,8 @@ import com.armedia.acm.tool.mediaengine.model.MediaEngineDTO;
 
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.runtime.ProcessInstance;
-import org.mule.api.MuleException;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.util.List;
@@ -124,7 +124,7 @@ public class TranscribeQueueJob
                 moveSingleProcessInstanceFromQueue(processInstance, configuration);
             }
             catch (AcmObjectLockException | GetMediaEngineException
-                    | CreateMediaEngineToolException | MediaEngineProviderNotFound | IOException | MuleException e)
+                    | CreateMediaEngineToolException | MediaEngineProviderNotFound | IOException | ArkCaseFileRepositoryException e)
             {
                 LOG.error("Could not move TRANSCRIBE from the queue. REASON=[{}]", e.getMessage(), e);
             }
@@ -133,7 +133,7 @@ public class TranscribeQueueJob
 
     public void moveSingleProcessInstanceFromQueue(ProcessInstance processInstance, MediaEngineConfiguration configuration)
             throws GetMediaEngineException, CreateMediaEngineToolException,
-            MediaEngineProviderNotFound, IOException, MuleException
+            MediaEngineProviderNotFound, IOException, ArkCaseFileRepositoryException
     {
         List<Long> ids = (List<Long>) processInstance.getProcessVariables().get("IDS");
 

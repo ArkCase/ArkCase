@@ -53,13 +53,11 @@ import com.armedia.acm.services.participants.model.ParticipantTypes;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.web.api.MDCConstants;
 
-import org.easymock.EasyMock;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mule.api.MuleException;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
 import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
@@ -103,7 +101,6 @@ import java.util.UUID;
         "/spring/spring-library-ecm-tika.xml",
         "/spring/spring-library-email.xml",
         "/spring/spring-library-email-smtp.xml",
-        "/spring/spring-library-event.xml",
         "/spring/spring-library-folder-watcher.xml",
         "/spring/spring-library-form-configurations.xml",
         "/spring/spring-library-forms-configuration.xml",
@@ -135,12 +132,13 @@ import java.util.UUID;
         "/spring/spring-library-calendar-integration-exchange-service.xml"
 })
 @TransactionConfiguration(defaultRollback = true)
-public class SplitCaseFileServiceIT extends EasyMock
+public class SplitCaseFileServiceIT
 {
     static
     {
         String userHomePath = System.getProperty("user.home");
         System.setProperty("acm.configurationserver.propertyfile", userHomePath + "/.arkcase/acm/conf.yml");
+        System.setProperty("configuration.server.url", "http://localhost:9999");
     }
 
     private final Logger log = LogManager.getLogger(getClass());
@@ -172,7 +170,7 @@ public class SplitCaseFileServiceIT extends EasyMock
 
     @Test
     @Transactional
-    public void splitCaseTest() throws MergeCaseFilesException, MuleException, AcmUserActionFailedException, AcmCreateObjectFailedException,
+    public void splitCaseTest() throws MergeCaseFilesException, AcmUserActionFailedException, AcmCreateObjectFailedException,
             IOException, SplitCaseFileException, AcmFolderException, AcmObjectNotFoundException, PipelineProcessException
     {
         auditAdapter.setUserId("auditUser");

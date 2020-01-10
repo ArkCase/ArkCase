@@ -38,23 +38,20 @@ import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.web.api.MDCConstants;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.vfs2.FileObject;
 import org.apache.commons.vfs2.FileSystemException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.eclipse.persistence.dynamic.DynamicEntity;
 import org.eclipse.persistence.jaxb.JAXBContextProperties;
 import org.eclipse.persistence.jaxb.dynamic.DynamicJAXBContext;
 import org.eclipse.persistence.jaxb.dynamic.DynamicJAXBContextFactory;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
 import org.slf4j.MDC;
 import org.springframework.security.core.Authentication;
 
 import javax.activation.MimetypesFileTypeMap;
 import javax.xml.bind.Unmarshaller;
 
-import java.io.BufferedInputStream;
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -218,7 +215,7 @@ public abstract class AbstractBatchXMLFileListener extends FileEventListener
             // Save other documents as attachments
             if (docObject.getAttachments() != null)
             {
-                docObject.getAttachments().stream()
+                docObject.getAttachments()
                         .forEach(doc -> saveAttachment(cmisFolderId, objectId, objectType, doc, attachmentFileType));
             }
         }
@@ -246,13 +243,7 @@ public abstract class AbstractBatchXMLFileListener extends FileEventListener
             MimetypesFileTypeMap mimetypesFileTypeMap = new MimetypesFileTypeMap();
 
             // Take the input stream for given file
-            InputStream originalIS = new BufferedInputStream(new FileInputStream(docObject.getDocument()));
-            byte[] bytes = IOUtils.toByteArray(originalIS);
-
-            // Create clone of the input stream and close the original. We need this to be able to release
-            // original input stream to be able to move files through folders
-            InputStream cloneIS = new ByteArrayInputStream(bytes);
-            originalIS.close();
+            InputStream is = new FileInputStream(docObject.getDocument());
 
             // Take content type and create authentication object (we need authentication object for
             // EcmFileService - we need userID which in this case is set to FileConstants.XML_BATCH_USER value)
@@ -263,7 +254,7 @@ public abstract class AbstractBatchXMLFileListener extends FileEventListener
             // Create multipart file object - used "upload" service require it and using this service method is the best
             // way to upload file for given object - it creates AcmContainer object that we need for uploading
             AcmMultipartFile file = new AcmMultipartFile(docObject.getDocument().getName(), docObject.getDocument().getName(), contentType,
-                    false, docObject.getDocument().length(), bytes, cloneIS, true);
+                    false, docObject.getDocument().length(), is, true);
 
             // since this code is run via a batch job, there is no authenticated user, so we need to specify the user
             // to be used for CMIS connections. Similar to the requirement to
@@ -298,7 +289,7 @@ public abstract class AbstractBatchXMLFileListener extends FileEventListener
             List<DynamicEntity> documentsList = entity.<List<DynamicEntity>> get(FileConstants.XML_BATCH_DOCUMENTS_KEY);
 
             List<DocumentObject> attachments = getAllAttachments(documentsList);
-            documentsList.stream().forEach(element -> {
+            documentsList.forEach(element -> {
                 DocumentObject doc = getDocumentObject(element);
                 if (doc != null && doc.getId() != null && !isAttachment(doc.getEntity()))
                 {
@@ -434,7 +425,7 @@ public abstract class AbstractBatchXMLFileListener extends FileEventListener
         if (docObject != null && docObject.getAttachments() != null)
         {
             List<DocumentObject> workingAttachments = new ArrayList<>();
-            docObject.getAttachments().stream().forEach(element -> {
+            docObject.getAttachments().forEach(element -> {
                 File workingAttachment = moveFileToFolder(element.getDocument(), folder);
                 if (workingAttachment == null)
                 {
@@ -565,7 +556,7 @@ public abstract class AbstractBatchXMLFileListener extends FileEventListener
 
         if (documentsList != null)
         {
-            documentsList.stream().forEach(element -> {
+            documentsList.forEach(element -> {
                 DocumentObject doc = getDocumentObject(element);
                 if (doc != null && doc.getId() != null && isAttachment(element))
                 {

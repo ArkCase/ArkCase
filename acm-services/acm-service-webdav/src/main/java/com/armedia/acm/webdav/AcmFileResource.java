@@ -27,16 +27,19 @@ package com.armedia.acm.webdav;
  * #L%
  */
 
+import com.armedia.acm.camelcontext.arkcase.cmis.ArkCaseCMISActions;
+import com.armedia.acm.camelcontext.arkcase.cmis.ArkCaseCMISConstants;
+import com.armedia.acm.camelcontext.exception.ArkCaseFileRepositoryException;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
-import com.armedia.acm.plugins.ecm.utils.CmisConfigUtils;
+import com.armedia.acm.plugins.ecm.utils.EcmFileCamelUtils;
+import com.armedia.acm.web.api.MDCConstants;
 
+import org.apache.camel.component.cmis.CamelCMISConstants;
 import org.apache.chemistry.opencmis.commons.data.ContentStream;
 import org.apache.commons.io.IOUtils;
-import org.mule.api.MuleException;
-import org.mule.api.MuleMessage;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -68,17 +71,15 @@ public class AcmFileResource extends AcmFileSystemResource implements PropFindab
     private String fileType;
     private String lockType;
     private String acmTicket;
-    private CmisConfigUtils cmisConfigUtils;
 
     public AcmFileResource(String host, EcmFile acmFile, String fileType, String lockType, String acmTicket,
-            AcmFileSystemResourceFactory resourceFactory, CmisConfigUtils cmisConfigUtils)
+            AcmFileSystemResourceFactory resourceFactory)
     {
         super(host, resourceFactory);
         this.acmFile = acmFile;
         this.fileType = fileType;
         this.lockType = lockType;
         this.acmTicket = acmTicket;
-        this.cmisConfigUtils = cmisConfigUtils;
     }
 
     public Long getId()
@@ -143,13 +144,15 @@ public class AcmFileResource extends AcmFileSystemResource implements PropFindab
         try
         {
             Map<String, Object> messageProps = new HashMap<>();
-            messageProps.put(EcmFileConstants.CONFIGURATION_REFERENCE, cmisConfigUtils.getCmisConfiguration(acmFile.getCmisRepositoryId()));
+            messageProps.put(EcmFileConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID);
+            messageProps.put(CamelCMISConstants.CMIS_OBJECT_ID, getResourceFactory().getCmisFileId(acmFile));
+            messageProps.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, EcmFileCamelUtils.getCmisUser());
 
-            MuleMessage downloadedFile = getResourceFactory().getMuleContextManager().send("vm://downloadFileFlow.in",
-                    getResourceFactory().getCmisFileId(acmFile), messageProps);
-            if (downloadedFile.getPayload() instanceof ContentStream)
+            Object result = getResourceFactory().getCamelContextManager().send(ArkCaseCMISActions.DOWNLOAD_DOCUMENT, messageProps);
+
+            if (result instanceof ContentStream)
             {
-                ContentStream filePayload = (ContentStream) downloadedFile.getPayload();
+                ContentStream filePayload = (ContentStream) result;
                 try (InputStream fileIs = filePayload.getStream())
                 {
                     if (range != null)
@@ -169,9 +172,9 @@ public class AcmFileResource extends AcmFileSystemResource implements PropFindab
             }
 
         }
-        catch (MuleException e)
+        catch (ArkCaseFileRepositoryException e)
         {
-            LOGGER.error("Error while downloading file via Mule.", e);
+            LOGGER.error("Error while downloading file via Camel, reason: [{}]", e.getMessage(), e);
         }
     }
 
@@ -192,9 +195,9 @@ public class AcmFileResource extends AcmFileSystemResource implements PropFindab
             getResourceFactory().getEcmFileTransaction().updateFileTransactionEventAware(
                     getResourceFactory().getSecurityManager().getAuthenticationForTicket(acmTicket), acmFile, in);
         }
-        catch (MuleException | IOException e)
+        catch (ArkCaseFileRepositoryException | IOException e)
         {
-            LOGGER.error("Error while uploading file via Mule.", e);
+            LOGGER.error("Error while uploading file via Camel.", e);
         }
 
     }

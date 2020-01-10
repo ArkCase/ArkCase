@@ -28,15 +28,15 @@ package com.armedia.acm.plugins.admin.service;
  */
 
 import com.armedia.acm.audit.dao.AuditDao;
-import com.armedia.acm.core.ApplicationConfig;
+import com.armedia.acm.core.model.ApplicationConfig;
 import com.armedia.acm.objectonverter.DateFormats;
 import com.armedia.acm.services.notification.dao.NotificationDao;
 import com.armedia.acm.services.notification.model.NotificationConstants;
+import com.armedia.acm.services.search.exception.SolrException;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.mule.api.MuleException;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -80,7 +80,7 @@ public class HistoryCleanService
         {
             executeSolrQuery.sendSolrDeleteQuery("solrAdvancedSearch.in", createDeleteNotificationSolrQuery(threshold));
         }
-        catch (MuleException e)
+        catch (SolrException e)
         {
             log.error("couldn't delete notifications in solr.", e);
         }

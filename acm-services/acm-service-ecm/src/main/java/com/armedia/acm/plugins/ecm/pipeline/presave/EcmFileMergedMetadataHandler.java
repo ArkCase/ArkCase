@@ -30,6 +30,7 @@ package com.armedia.acm.plugins.ecm.pipeline.presave;
 import com.armedia.acm.plugins.ecm.dao.AcmFolderDao;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
+import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
 import com.armedia.acm.plugins.ecm.pipeline.EcmFileTransactionPipelineContext;
 import com.armedia.acm.plugins.ecm.service.PageCountService;
@@ -37,8 +38,8 @@ import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.pipeline.handler.PipelineHandler;
 
 import org.apache.chemistry.opencmis.client.api.Document;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.util.Date;
@@ -75,10 +76,11 @@ public class EcmFileMergedMetadataHandler implements PipelineHandler<EcmFile, Ec
             }
 
             // Updates the versioning of the file
-            oldFile.setVersionSeriesId(cmisDocument.getVersionSeriesId());
+            oldFile.setVersionSeriesId(cmisDocument.getPropertyValue(EcmFileConstants.REPOSITORY_VERSION_ID));
             oldFile.setActiveVersionTag(cmisDocument.getVersionLabel());
             EcmFileVersion version = new EcmFileVersion();
-            version.setCmisObjectId(cmisDocument.getId());
+            version.setCmisObjectId(
+                    cmisDocument.getPropertyValue(EcmFileConstants.REPOSITORY_VERSION_ID) + ";" + cmisDocument.getVersionLabel());
             version.setVersionTag(cmisDocument.getVersionLabel());
             version.setVersionMimeType(oldFile.getFileActiveVersionMimeType());
             version.setVersionFileNameExtension(oldFile.getFileActiveVersionNameExtension());
@@ -87,7 +89,7 @@ public class EcmFileMergedMetadataHandler implements PipelineHandler<EcmFile, Ec
             try
             {
                 int pageCount = getPageCountService().getNumberOfPages(entity.getFileActiveVersionMimeType(),
-                        pipelineContext.getMergedFileByteArray());
+                        pipelineContext.getMergedFile());
                 if (pageCount > -1)
                 {
                     oldFile.setPageCount(pageCount);

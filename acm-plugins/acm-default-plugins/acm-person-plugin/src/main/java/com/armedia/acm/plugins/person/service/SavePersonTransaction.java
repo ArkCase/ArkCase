@@ -28,52 +28,51 @@ package com.armedia.acm.plugins.person.service;
  */
 
 
-import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
+import com.armedia.acm.data.AuditPropertyEntityAdapter;
+import com.armedia.acm.plugins.person.dao.PersonDao;
 import com.armedia.acm.plugins.person.model.Person;
 
-import org.mule.api.MuleException;
-import org.mule.api.MuleMessage;
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public class SavePersonTransaction
 {
-    private MuleContextManager muleContextManager;
+    private PersonDao personDao;
+
+    private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
 
     @Transactional
-    public Person savePerson(
-            Person person,
-            Authentication authentication)
-            throws MuleException
+    public Person savePerson(Person person, Authentication authentication)
     {
-        Map<String, Object> messageProps = new HashMap<>();
-        messageProps.put("acmUser", authentication);
+        String user = authentication != null ? authentication.getName() : null;
 
-        MuleMessage received = getMuleContextManager().send("vm://savePerson.in", person, messageProps);
-
-        Person saved = received.getPayload(Person.class);
-        MuleException e = received.getInboundProperty("saveException");
-
-        if (e != null)
+        if (user != null)
         {
-            throw e;
+            getAuditPropertyEntityAdapter().setUserId(user);
         }
 
+        Person saved = getPersonDao().save(person);
+
         return saved;
-
     }
 
-    public MuleContextManager getMuleContextManager()
+    public PersonDao getPersonDao()
     {
-        return muleContextManager;
+        return personDao;
     }
 
-    public void setMuleContextManager(MuleContextManager muleContextManager)
+    public void setPersonDao(PersonDao personDao)
     {
-        this.muleContextManager = muleContextManager;
+        this.personDao = personDao;
     }
 
+    public AuditPropertyEntityAdapter getAuditPropertyEntityAdapter()
+    {
+        return auditPropertyEntityAdapter;
+    }
+
+    public void setAuditPropertyEntityAdapter(AuditPropertyEntityAdapter auditPropertyEntityAdapter)
+    {
+        this.auditPropertyEntityAdapter = auditPropertyEntityAdapter;
+    }
 }

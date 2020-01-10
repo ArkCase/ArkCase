@@ -168,6 +168,44 @@ public class FOIARequestDao extends AcmAbstractDao<FOIARequest>
         return requestStatusList;
     }
 
+
+    public List<PortalFOIARequestStatus> getLoggedUserExternalRequests(String emailAddress)
+    {
+        String queryText = "SELECT cf.caseNumber, cf.status, cf.modified, cf.publicFlag, cf.requestType FROM FOIARequest cf JOIN PersonAssociation pa JOIN pa.person p"
+                + " WHERE cf.id = pa.parentId"
+                + " AND pa.parentType='CASE_FILE'"
+                + " AND pa.personType = 'Requester'";
+
+        if (emailAddress != null && !emailAddress.equals("undefined"))
+        {
+            queryText += " AND p.creator = :emailAddress";
+        }
+
+        Query foiaRequests = getEm().createQuery(queryText);
+
+        if (emailAddress != null && !emailAddress.equals("undefined"))
+        {
+            foiaRequests.setParameter("emailAddress", emailAddress);
+        }
+
+        List<Object[]> resultList = foiaRequests.getResultList();
+
+        List<PortalFOIARequestStatus> requestStatusList = new ArrayList<>();
+        for (Object[] record : resultList)
+        {
+            PortalFOIARequestStatus requestStatus = new PortalFOIARequestStatus();
+            requestStatus.setRequestId((String) record[0]);
+            requestStatus.setRequestStatus((String) record[1]);
+            requestStatus.setUpdateDate((Date) record[2]);
+            requestStatus.setIsPublic((Boolean) record[3]);
+            requestStatus.setRequestType((String) record[4]);
+            requestStatusList.add(requestStatus);
+        }
+
+        return requestStatusList;
+    }
+
+
     /**
      * @param portalUserId
      * @return
@@ -243,6 +281,15 @@ public class FOIARequestDao extends AcmAbstractDao<FOIARequest>
         requestStatus.setIsPublic((Boolean) r[3]);
         requestStatus.setRequestType((String) r[4]);
         return requestStatus;
+    }
+    
+    public List<FOIARequest> findAllNotReleasedRequests()
+    {
+        String queryText = "SELECT request FROM FOIARequest request"
+                + " WHERE request.status != 'Released'";
+        TypedQuery<FOIARequest> allRecords = getEm().createQuery(queryText, FOIARequest.class);
+        List<FOIARequest> requests = allRecords.getResultList();
+        return requests;
     }
 
 }
