@@ -133,6 +133,11 @@ public interface AcmFolderService
 
     DeleteFolderInfo getFolderToDeleteInfo(Long folderId) throws AcmObjectNotFoundException;
 
+    void putFolderIntoRecycleBin(Long folderId)
+            throws AcmObjectNotFoundException, AcmUserActionFailedException, AcmFolderException, AcmCreateObjectFailedException;
+
+    AcmFolder removeLinksFromFilesInFolder(AcmFolder folder);
+
     AcmFolder saveFolder(AcmFolder folder);
 
     @Retryable(maxAttempts = 3, value = Exception.class, backoff = @Backoff(delay = 500))
