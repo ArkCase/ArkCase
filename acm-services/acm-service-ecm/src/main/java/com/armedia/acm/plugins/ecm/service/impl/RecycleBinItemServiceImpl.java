@@ -33,7 +33,10 @@ import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.objectonverter.DateFormats;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.dao.RecycleBinItemDao;
+import com.armedia.acm.plugins.ecm.exception.AcmFolderException;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
+import com.armedia.acm.plugins.ecm.model.AcmFolder;
+import com.armedia.acm.plugins.ecm.model.AcmFolderConstants;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.model.RecycleBinConstants;
@@ -43,6 +46,7 @@ import com.armedia.acm.plugins.ecm.model.RecycleBinItemDTO;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.ecm.service.FileEventPublisher;
+import com.armedia.acm.plugins.ecm.service.FolderEventPublisher;
 import com.armedia.acm.plugins.ecm.service.RecycleBinItemService;
 import com.armedia.acm.services.search.exception.SolrException;
 import com.armedia.acm.services.search.model.solr.SolrCore;
@@ -77,6 +81,7 @@ public class RecycleBinItemServiceImpl implements RecycleBinItemService
     private SearchResults searchResults;
     private AcmFolderService folderService;
     private FileEventPublisher fileEventPublisher;
+    private FolderEventPublisher folderEventPublisher;
 
     @Override
     public RecycleBinItem save(RecycleBinItem recycleBinItem)
@@ -104,6 +109,24 @@ public class RecycleBinItemServiceImpl implements RecycleBinItemService
         return recycleBinItem;
     }
 
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public RecycleBinItem putFolderIntoRecycleBin(AcmFolder folder)
+            throws AcmUserActionFailedException, AcmObjectNotFoundException, AcmCreateObjectFailedException, AcmFolderException
+    {
+        AcmFolder recycleBinFolder = getOrCreateContainerForRecycleBin(RecycleBinConstants.OBJECT_TYPE,
+                folder.getCmisRepositoryId()).getFolder();
+
+        AcmContainer sourceContainer = getFolderService().findContainerByFolderIdTransactionIndependent(folder.getId());
+
+        RecycleBinItem recycleBinItem = new RecycleBinItem(folder.getId(), folder.getObjectType(),
+                folder.getParentFolder().getId(), folder.getCmisRepositoryId(), sourceContainer.getId());
+        getRecycleBinItemDao().save(recycleBinItem);
+
+        getFolderService().moveFolder(folder, recycleBinFolder);
+        return recycleBinItem;
+    }
+
     private EcmFile moveToCMISFolder(EcmFile ecmFile, Long sourceContainerObjectId, String sourceContainerObjectType,
             Long destinationFolderId)
             throws AcmUserActionFailedException, AcmObjectNotFoundException, AcmCreateObjectFailedException
@@ -126,15 +149,20 @@ public class RecycleBinItemServiceImpl implements RecycleBinItemService
             JSONObject recycleBinItem = getSearchResults().getDocuments(results).getJSONObject(i);
             RecycleBinItemDTO recycleBinItemDTO = new RecycleBinItemDTO();
 
-            recycleBinItemDTO.setFileName(recycleBinItem.optString("object_name_s"));
+            recycleBinItemDTO.setObjectName(recycleBinItem.optString("object_name_s"));
+            recycleBinItemDTO.setObjectType(recycleBinItem.optString("object_item_type_s"));
             recycleBinItemDTO.setDateModified(generateDate(recycleBinItem.optString("modified_date_tdt")));
             recycleBinItemDTO.setFileSizeBytes(recycleBinItem.optLong("object_item_size_l"));
             recycleBinItemDTO.setFileActiveVersionNameExtension(recycleBinItem.optString("item_type_s"));
-            recycleBinItemDTO.setFileId(recycleBinItem.optLong("object_id_i"));
+            recycleBinItemDTO.setObjectId(recycleBinItem.optLong("object_id_i"));
             recycleBinItemDTO.setContainerId(recycleBinItem.optLong("object_container_object_id_i"));
             recycleBinItemDTO.setContainerObjectTitle(recycleBinItem.optString("object_container_object_title_s"));
             recycleBinItemDTO.setContainerObjectType(recycleBinItem.optString("object_container_object_type_s"));
-            recycleBinItemDTO.setRecycleBinItemId(recycleBinItem.optLong("item_id_i"));
+            recycleBinItemDTO.setId(recycleBinItem.optLong("item_id_i"));
+            if (recycleBinItemDTO.getObjectType().equals(AcmFolderConstants.OBJECT_FOLDER_TYPE))
+            {
+                recycleBinItemDTO.setFileSizeBytes(null);
+            }
 
             recycleBinItemDTOS.add(recycleBinItemDTO);
         }
@@ -154,21 +182,64 @@ public class RecycleBinItemServiceImpl implements RecycleBinItemService
     @Override
     @Transactional(rollbackFor = Exception.class)
     public List<RecycleBinItemDTO> restoreItemsFromRecycleBin(List<RecycleBinItemDTO> itemsToBeRestored, Authentication authentication)
-            throws AcmUserActionFailedException, AcmObjectNotFoundException, AcmCreateObjectFailedException
+            throws AcmUserActionFailedException, AcmObjectNotFoundException, AcmCreateObjectFailedException, AcmFolderException
     {
         for (RecycleBinItemDTO fileFromTrash : itemsToBeRestored)
         {
-            EcmFile ecmFile = getEcmFileDao().find(fileFromTrash.getFileId());
-            RecycleBinItem recycleBinItem = getRecycleBinItemDao().find(fileFromTrash.getRecycleBinItemId());
-            removeItemFromRecycleBin(recycleBinItem.getId());
+
+            RecycleBinItem recycleBinItem = getRecycleBinItemDao().find(fileFromTrash.getId());
             AcmContainer destinationContainer = getFolderService()
                     .findContainerByFolderIdTransactionIndependent(recycleBinItem.getSourceFolderId());
-            moveToCMISFolder(ecmFile, destinationContainer.getContainerObjectId(), destinationContainer.getContainerObjectType(),
-                    recycleBinItem.getSourceFolderId());
-            log.info("Item {} from Recycle Bin successfully restored, by user {}", fileFromTrash.getFileId(), authentication.getName());
+
+            if (recycleBinItem.getSourceObjectType().equals(AcmFolderConstants.OBJECT_FOLDER_TYPE))
+            {
+                AcmFolder acmFolder = getFolderService().findById(fileFromTrash.getObjectId());
+                AcmFolder destinationFolder = getFolderService().findById(recycleBinItem.getSourceFolderId());
+                getFolderService().moveFolder(acmFolder, destinationFolder);
+
+            }
+            else
+            {
+                EcmFile ecmFile = getEcmFileDao().find(fileFromTrash.getObjectId());
+                moveToCMISFolder(ecmFile, destinationContainer.getContainerObjectId(), destinationContainer.getContainerObjectType(),
+                        recycleBinItem.getSourceFolderId());
+            }
+            removeItemFromRecycleBin(recycleBinItem.getId());
+            log.info("Item {} from Recycle Bin successfully restored, by user {}", fileFromTrash.getObjectId(), authentication.getName());
         }
 
         return itemsToBeRestored;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void deleteRecycleBinItemPermanently(RecycleBinItemDTO itemToDelete, Authentication authentication, String ipAddress)
+            throws AcmObjectNotFoundException, AcmUserActionFailedException
+    {
+        Long itemId = itemToDelete.getObjectId();
+        Long recycleBinId = itemToDelete.getId();
+
+        if (itemToDelete.getObjectType().equals(AcmFolderConstants.OBJECT_FOLDER_TYPE))
+        {
+            AcmFolder source = getFolderService().findById(itemId);
+
+            getFolderService().deleteFolderTreeSafe(itemId, authentication);
+            removeItemFromRecycleBin(recycleBinId);
+
+            log.info("Folder with id: [{}] permanently deleted", itemId);
+            getFolderEventPublisher().publishFolderDeletedEvent(source, authentication, ipAddress, true);
+
+        }
+        else
+        {
+            EcmFile source = getEcmFileService().findById(itemId);
+
+            getEcmFileService().deleteFilePermanently(itemId, recycleBinId);
+
+            log.info("File with id: {} permanently deleted", itemId);
+            getFileEventPublisher().publishFileDeletedEvent(source, authentication, ipAddress, true);
+
+        }
     }
 
     @Override
@@ -264,4 +335,15 @@ public class RecycleBinItemServiceImpl implements RecycleBinItemService
     {
         this.fileEventPublisher = fileEventPublisher;
     }
+
+    public FolderEventPublisher getFolderEventPublisher()
+    {
+        return folderEventPublisher;
+    }
+
+    public void setFolderEventPublisher(FolderEventPublisher folderEventPublisher)
+    {
+        this.folderEventPublisher = folderEventPublisher;
+    }
+
 }
