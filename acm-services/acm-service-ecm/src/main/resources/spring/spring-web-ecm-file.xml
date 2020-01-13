@@ -57,6 +57,7 @@
     <bean id="deleteFolderAPIController" class="com.armedia.acm.plugins.ecm.web.api.DeleteFolderAPIController">
         <property name="folderService" ref="acmFolderService"/>
         <property name="folderEventPublisher" ref="folderEventPublisher"/>
+        <property name="recycleBinItemEventPublisher" ref="recycleBinItemEventPublisher"/>
     </bean>
 
     <bean id="renameFileAPIController" class="com.armedia.acm.plugins.ecm.web.api.RenameFileAPIController">
