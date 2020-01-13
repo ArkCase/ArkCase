@@ -31,8 +31,10 @@ import com.armedia.acm.auth.AuthenticationUtils;
 import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.data.AcmNameDao;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
+import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.AcmContainerEntity;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
+import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.services.email.event.SmtpEmailReceivedEvent;
@@ -61,6 +63,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -81,6 +87,7 @@ public class AcmObjectMailHandler implements ApplicationEventPublisherAware
     private AcmFolderService acmFolderService;
     private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
     private ApplicationEventPublisher eventPublisher;
+    private EcmFileDao ecmFileDao;
 
     private String objectIdRegexPattern;
     private String mailDirectory;
@@ -212,6 +219,7 @@ public class AcmObjectMailHandler implements ApplicationEventPublisherAware
                         AcmFolder folder = containerEntity.getContainer().getAttachmentFolder();
                         try (InputStream is = bodyPart.getInputStream())
                         {
+                            bodyPart.setFileName(checkDuplicateFileName(bodyPart.getFileName(),folder.getId()));
                             Authentication auth = new UsernamePasswordAuthenticationToken(userId, "");
                             getEcmFileService().upload(bodyPart.getFileName(), "attachment", "Document", is, bodyPart.getContentType(),
                                     bodyPart.getFileName(), auth,
@@ -232,6 +240,23 @@ public class AcmObjectMailHandler implements ApplicationEventPublisherAware
                 log.error("Error processing Multipart message. Exception msg: '{}' ", e.getMessage());
             }
         }
+    }
+
+    public String checkDuplicateFileName(String fileName, Long folderId)
+    {
+        int endIndex = fileName.lastIndexOf(".");
+        String newFileName = fileName.substring(0,endIndex);
+        Optional<EcmFile> sameFilesName = getEcmFileDao().findByFolderId(folderId).stream()
+                .filter(obj -> obj.getFileName().equals(fileName.substring(0,endIndex)))
+                .findAny();
+        if(sameFilesName.isPresent())
+        {
+            ZonedDateTime date = ZonedDateTime.now(ZoneOffset.UTC);
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
+            String timestampName = formatter.format(date);
+            newFileName = newFileName + "-" + timestampName;
+        }
+        return newFileName;
     }
 
     public void setObjectIdRegexPattern(String objectIdRegexPattern)
@@ -297,5 +322,15 @@ public class AcmObjectMailHandler implements ApplicationEventPublisherAware
     public void setMailDirectory(String mailDirectory)
     {
         this.mailDirectory = mailDirectory;
+    }
+
+    public EcmFileDao getEcmFileDao() 
+    {
+        return ecmFileDao;
+    }
+
+    public void setEcmFileDao(EcmFileDao ecmFileDao) 
+    {
+        this.ecmFileDao = ecmFileDao;
     }
 }
