@@ -27,6 +27,9 @@ package com.armedia.acm.plugins.ecm.service.impl;
  * #L%
  */
 
+import static com.armedia.acm.plugins.ecm.model.EcmFileConstants.OBJECT_FILE_TYPE;
+import static com.armedia.acm.plugins.ecm.model.EcmFileConstants.OBJECT_FOLDER_TYPE;
+
 import com.armedia.acm.camelcontext.arkcase.cmis.ArkCaseCMISActions;
 import com.armedia.acm.camelcontext.arkcase.cmis.ArkCaseCMISConstants;
 import com.armedia.acm.camelcontext.context.CamelContextManager;
@@ -50,6 +53,7 @@ import com.armedia.acm.plugins.ecm.model.EcmFileConfig;
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
+import com.armedia.acm.plugins.ecm.service.RecycleBinItemService;
 import com.armedia.acm.plugins.ecm.utils.CmisConfigUtils;
 import com.armedia.acm.plugins.ecm.utils.EcmFileCamelUtils;
 import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
@@ -115,6 +119,7 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
     private MessageChannel genericMessagesChannel;
     private AcmObjectLockService objectLockService;
     private CamelContextManager camelContextManager;
+    private RecycleBinItemService recycleBinItemService;
 
     @Override
     @AcmAcquireAndReleaseObjectLock(objectIdArgIndex = 0, objectType = "FOLDER", lockType = "WRITE", lockChildObjects = false, unlockChildObjects = false)
@@ -329,7 +334,7 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
 
     @Override
     @AcmAcquireAndReleaseObjectLock(objectIdArgIndex = 0, objectType = "FOLDER", lockType = "READ", lockChildObjects = false, unlockChildObjects = false)
-    public List<AcmObject> getFolderChildren(Long folderId) throws AcmUserActionFailedException, AcmObjectNotFoundException
+    public List<AcmObject> getFolderChildren(Long folderId)
     {
         List<AcmObject> objectList = new ArrayList<>();
 
@@ -1454,6 +1459,47 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
     }
 
     @Override
+    public void putFolderIntoRecycleBin(Long folderId)
+            throws AcmObjectNotFoundException, AcmUserActionFailedException, AcmFolderException, AcmCreateObjectFailedException
+    {
+        AcmFolder source = findById(folderId);
+
+        removeLinksFromFilesInFolder(source);
+
+        getRecycleBinItemService().putFolderIntoRecycleBin(source);
+    }
+
+    @Override
+    public AcmFolder removeLinksFromFilesInFolder(AcmFolder folder)
+    {
+        List<AcmObject> folderChildren = getFolderChildren(folder.getId());
+
+        List<EcmFile> files = folderChildren.stream()
+                .filter(c -> OBJECT_FILE_TYPE.equals(c.getObjectType().toUpperCase()))
+                .map(c -> ((EcmFile) c))
+                .collect(Collectors.toList());
+
+        for (EcmFile file : files)
+        {
+            if (!file.isLink())
+            {
+                getFileService().deleteFileLinks(file);
+            }
+            else
+            {
+                getFileDao().deleteFile(file.getId());
+            }
+        }
+
+        folderChildren.stream()
+                .filter(c -> OBJECT_FOLDER_TYPE.equals(c.getObjectType().toUpperCase()))
+                .map(c -> ((AcmFolder) c))
+                .forEach(this::removeLinksFromFilesInFolder);
+
+        return folder;
+    }
+
+    @Override
     public AcmFolder saveFolder(AcmFolder folder)
     {
         return getFolderDao().save(folder);
@@ -1565,7 +1611,8 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
         return objectLockService;
     }
 
-    public void setObjectLockService(AcmObjectLockService objectLockService) {
+    public void setObjectLockService(AcmObjectLockService objectLockService)
+    {
         this.objectLockService = objectLockService;
     }
 
@@ -1577,5 +1624,15 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
     public void setCamelContextManager(CamelContextManager camelContextManager)
     {
         this.camelContextManager = camelContextManager;
+    }
+
+    public RecycleBinItemService getRecycleBinItemService()
+    {
+        return recycleBinItemService;
+    }
+
+    public void setRecycleBinItemService(RecycleBinItemService recycleBinItemService)
+    {
+        this.recycleBinItemService = recycleBinItemService;
     }
 }

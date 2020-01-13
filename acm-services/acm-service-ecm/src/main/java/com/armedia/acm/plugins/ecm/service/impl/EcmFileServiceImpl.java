@@ -1640,11 +1640,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
                 recycleBinItem = getRecycleBinItemService().putFileIntoRecycleBin(file, authentication, session);
                 log.info("File {} successfully moved into recycle bin by user: {}", objectId, file.getModifier());
 
-                List<EcmFile> fileLinks = getEcmFileDao().getFileLinks(file.getVersionSeriesId());
-                for (EcmFile link : fileLinks)
-                {
-                    getEcmFileDao().deleteFile(link.getFileId());
-                }
+                deleteFileLinks(file);
             }
             else
             {
@@ -1659,6 +1655,16 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
                     file.getId(), "Could not put file into recycle bin", e);
         }
         return recycleBinItem;
+    }
+
+    @Override
+    public void deleteFileLinks(EcmFile file)
+    {
+        List<EcmFile> fileLinks = getEcmFileDao().getFileLinks(file.getVersionSeriesId());
+        for (EcmFile link : fileLinks)
+        {
+            getEcmFileDao().deleteFile(link.getFileId());
+        }
     }
 
     @Override
