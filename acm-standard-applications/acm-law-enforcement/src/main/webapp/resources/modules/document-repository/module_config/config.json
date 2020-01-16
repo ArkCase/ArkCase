@@ -97,6 +97,7 @@
                     "details",
                     "documents",
                     "participants",
+                    "tasks",
                     "notes",
                     "references",
                     "history",
@@ -125,6 +126,14 @@
                 "icon": "fa fa-users",
                 "components": [
                     "participants"
+                ]
+            },
+            {
+                "type": "p/DOC_REPO/task",
+                "label": "document-repository.tree.nodeTypes.tasks.label",
+                "icon": "fa fa-check-circle",
+                "components": [
+                    "tasks"
                 ]
             },
             {
@@ -221,6 +230,36 @@
                             "displayName": "document-repository.comp.participants.table.columns.name",
                             "headerCellFilter": "translate",
                             "lookup": "participantNames"
+                        }
+                    ]
+                },
+                {
+                    "id": "tasks",
+                    "type": "component",
+                    "columnDefs": [
+                        {
+                            "name": "title",
+                            "field": "title",
+                            "sortField": "title",
+                            "displayName": "document-repository.comp.tasks.table.columns.title",
+                            "headerCellFilter": "translate",
+                            "cellTemplate": "<div ng-bind-html='row.entity.title' title='{{row.entity.title}}' class='ui-grid-cell-contents'></div>"
+                        },
+                        {
+                            "width": 150,
+                            "name": "assignee",
+                            "field": "assignee",
+                            "displayName": "document-repository.comp.tasks.table.columns.assignee",
+                            "headerCellFilter": "translate",
+                            "lookup": "userFullNames"
+                        },
+                        {
+                            "width": 150,
+                            "name": "due",
+                            "field": "dueDate",
+                            "displayName": "document-repository.comp.tasks.table.columns.due",
+                            "headerCellFilter": "translate",
+                            "cellTemplate": "<div>{{ row.entity.dueDate | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>"
                         }
                     ]
                 },
@@ -440,6 +479,73 @@
                 "paginationPageSize": 10,
                 "start": 0
             }
+        },
+        {
+            "id": "tasks",
+            "title": "document-repository.comp.tasks.title",
+            "icon": "fa fa-check-circle",
+            "enabled": true,
+            "configurable": true,
+            "type": "grid",
+            "enableFiltering": true,
+            "paginationPageSizes": [
+                5,
+                10,
+                20,
+                50
+            ],
+            "paginationPageSize": 5,
+            "columnDefs": [
+                {
+                    "field": "alerts",
+                    "displayName": "",
+                    "cellTemplate": "<div><a ng-if=\"row.entity.isOverdue\" tooltip=\"{{'document-repository.comp.tasks.table.overdue.tooltip' | translate}}\" tooltip-append-to-body=\"true\" tooltip-class=\"tooltip-overdue\"><i class=\"fa fa-exclamation-circle icon-overdue\"></i></a><a ng-if=\"row.entity.isDeadline\" tooltip=\"{{'document-repository.comp.tasks.table.deadline.tooltip' | translate}}\" tooltip-append-to-body=\"true\" tooltip-class=\"tooltip-due-soon\"><i class=\"fa fa-exclamation-triangle icon-due-soon\"></i></a></div>",
+                    "width": 40,
+                    "enableSorting": false,
+                    "enableColumnMenu": false
+                },
+                {
+                    "name": "title",
+                    "field": "title",
+                    "sortField": "title",
+                    "displayName": "document-repository.comp.tasks.table.columns.title",
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<a href='#' title='{{row.entity.title_parseable}}' ng-click='grid.appScope.onClickObjLink($event, row.entity)'>{{row.entity.title_parseable}}</a>"
+                },
+                {
+                    "name": "assignee",
+                    "field": "assignee_s",
+                    "displayName": "document-repository.comp.tasks.table.columns.assignee",
+                    "headerCellFilter": "translate",
+                    "lookup": "userFullNames"
+                },
+                {
+                    "name": "created",
+                    "field": "createDate",
+                    "displayName": "document-repository.comp.tasks.table.columns.created",
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<div>{{ row.entity.create_tdt | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>"
+                },
+                {
+                    "name": "priority",
+                    "field": "priority_s",
+                    "displayName": "document-repository.comp.tasks.table.columns.priority",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "due",
+                    "field": "dueDate",
+                    "displayName": "document-repository.comp.tasks.table.columns.due",
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<div>{{ row.entity.due_tdt | date: ('common.defaultDateTimeUIFormat' | translate)}}</div>"
+                },
+                {
+                    "name": "status",
+                    "field": "status_s",
+                    "displayName": "document-repository.comp.tasks.table.columns.status",
+                    "headerCellFilter": "translate"
+                }
+            ]
         },
         {
             "id": "notes",

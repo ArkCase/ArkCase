@@ -44,13 +44,13 @@ import com.armedia.acm.plugins.task.service.AcmTaskService;
 import com.armedia.acm.plugins.task.service.TaskEventPublisher;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.easymock.Capture;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -105,7 +105,7 @@ public class FindTaskByIdAPIControllerTest extends EasyMockSupport
         String ipAddress = "ipAddress";
         String title = "The Test Title";
         Long taskId = 500L;
-        Long docUnderReviewId = 250L;
+        String docUnderReviewId = "250";
 
         AcmTask returned = new AcmTask();
         returned.setTaskId(taskId);
