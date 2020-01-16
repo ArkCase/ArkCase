@@ -1102,7 +1102,7 @@ public class ActivitiTaskDao extends AcmAbstractDao<AcmTask> implements TaskDao,
             retval.setAttachedToObjectName((String) hti.getProcessVariables().get(TaskConstants.VARIABLE_NAME_OBJECT_NAME));
             retval.setWorkflowRequestId((Long) hti.getProcessVariables().get(TaskConstants.VARIABLE_NAME_REQUEST_ID));
             retval.setWorkflowRequestType((String) hti.getProcessVariables().get(TaskConstants.VARIABLE_NAME_REQUEST_TYPE));
-            retval.setReviewDocumentPdfRenditionId((Long) hti.getProcessVariables().get(TaskConstants.VARIABLE_NAME_PDF_RENDITION_ID));
+            retval.setReviewDocumentPdfRenditionId((String) hti.getProcessVariables().get(TaskConstants.VARIABLE_NAME_PDF_RENDITION_ID));
             retval.setReviewDocumentFormXmlId((Long) hti.getProcessVariables().get(TaskConstants.VARIABLE_NAME_XML_RENDITION_ID));
 
             Long parentObjectId = (Long) hti.getProcessVariables().get(TaskConstants.VARIABLE_NAME_PARENT_OBJECT_ID);
@@ -1636,15 +1636,20 @@ public class ActivitiTaskDao extends AcmAbstractDao<AcmTask> implements TaskDao,
 
             acmTask.setWorkflowRequestId((Long) processVariables.get(TaskConstants.VARIABLE_NAME_REQUEST_ID));
             acmTask.setWorkflowRequestType((String) processVariables.get(TaskConstants.VARIABLE_NAME_REQUEST_TYPE));
-            acmTask.setReviewDocumentPdfRenditionId((Long) processVariables.get(TaskConstants.VARIABLE_NAME_PDF_RENDITION_ID));
+            String pdfRenditionId = processVariables.get(TaskConstants.VARIABLE_NAME_PDF_RENDITION_ID) == null ? null
+                    : processVariables.get(TaskConstants.VARIABLE_NAME_PDF_RENDITION_ID).toString();
+            acmTask.setReviewDocumentPdfRenditionId(pdfRenditionId);
             acmTask.setReviewDocumentFormXmlId((Long) processVariables.get(TaskConstants.VARIABLE_NAME_XML_RENDITION_ID));
             acmTask.setReworkInstructions((String) processVariables.get(TaskConstants.VARIABLE_NAME_REWORK_INSTRUCTIONS));
             acmTask.setTaskStartDate((Date) processVariables.get(TaskConstants.VARIABLE_NAME_START_DATE));
 
-            if (acmTask.getReviewDocumentPdfRenditionId() != null && acmTask.getReviewDocumentPdfRenditionId() > 0)
+            if (acmTask.getReviewDocumentPdfRenditionId() != null)
             {
-                EcmFile docUnderReview = getFileDao().find(acmTask.getReviewDocumentPdfRenditionId());
-                acmTask.setDocumentUnderReview(docUnderReview);
+                List<Long> docsIds = Stream.of(acmTask.getReviewDocumentPdfRenditionId().split(","))
+                        .map(Long::parseLong)
+                        .collect(Collectors.toList());
+                List<EcmFile> docsUnderReview = fileDao.findByIds(docsIds);
+                acmTask.setDocumentsToReview(docsUnderReview);
             }
 
             // AFDP-1876 if the task is part of a business process, the next assignee will be stored in process
