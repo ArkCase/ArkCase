@@ -104,7 +104,9 @@ angular.module('document-repository').controller(
                             controllerName: 'Tasks.NewTaskController',
                             params: {
                                 taskType: 'REVIEW_DOCUMENT',
-                                documentsToReview: $scope.selectedDocuments
+                                documentsToReview: $scope.selectedDocuments,
+                                parentId: $scope.objectId,
+                                parentType: $scope.objectType
                             }
                         };
                         ModalDialogService.showModal(modalMetadata);
