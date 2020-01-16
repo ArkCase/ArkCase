@@ -73,10 +73,10 @@ angular.module('tasks').controller(
                         $scope.parentObjectId = objectInfo.parentObjectId;
                         $scope.parentObjectType = objectInfo.parentObjectType;
                         var documentsUnderReview = [];
-                        if (Util.isArray($scope.objectInfo.documentUnderReview) && !Util.isArrayEmpty($scope.objectInfo.documentUnderReview)) {
-                            documentsUnderReview = $scope.objectInfo.documentUnderReview;
-                        } else if (!Util.isArray($scope.objectInfo.documentUnderReview) && !Util.isEmpty($scope.objectInfo.documentUnderReview)) {
-                            documentsUnderReview.push($scope.objectInfo.documentUnderReview);
+                        if (Util.isArray($scope.objectInfo.documentsToReview) && !Util.isArrayEmpty($scope.objectInfo.documentsToReview)) {
+                            documentsUnderReview = $scope.objectInfo.documentsToReview;
+                        } else if (!Util.isArray($scope.objectInfo.documentsToReview) && !Util.isEmpty($scope.objectInfo.documentsToReview)) {
+                            documentsUnderReview.push($scope.objectInfo.documentsToReview);
                         }
                         $scope.fqFilter = "";
                         angular.forEach(documentsUnderReview, function(document, index) {

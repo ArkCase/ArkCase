@@ -46,11 +46,14 @@ import com.armedia.acm.services.note.model.Note;
 import com.armedia.acm.services.note.model.NoteConstants;
 import com.armedia.acm.services.pipeline.PipelineManager;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
+import com.armedia.acm.services.search.exception.SolrException;
+import com.armedia.acm.services.search.model.solr.SolrCore;
+import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.tag.model.AcmAssociatedTag;
 import com.armedia.acm.services.tag.service.AssociatedTagService;
 
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -75,6 +78,8 @@ public class DocumentRepositoryServiceImpl implements DocumentRepositoryService
     private PipelineManager<DocumentRepository, DocumentRepositoryPipelineContext> pipelineManager;
 
     private DocumentRepositoryEventPublisher documentRepositoryEventPublisher;
+
+    private ExecuteSolrQuery executeSolrQuery;
 
     @Override
     public DocumentRepository findById(Long id)
@@ -178,6 +183,19 @@ public class DocumentRepositoryServiceImpl implements DocumentRepositoryService
         getAcmFolderService().deleteContainerSafe(docRepoContainer, authentication);
     }
 
+    @Override
+    public String getDocumentRepositoryTasks(Long id, String sort, int startRow, int maxRows, Authentication authentication)
+            throws SolrException
+    {
+        String rowQueryParameters = String.format(
+                "q1=object_type_s:FILE AND parent_object_id_i:%s AND parent_object_type_s: DOC_REPO&fq=object_type_s:TASK&fq=-status_s:DELETE",
+                id);
+        String query = "({!join from=parent_object_id_i to=parent_object_id_i v=$q1})";
+
+        return getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.QUICK_SEARCH, query, startRow, maxRows, sort,
+                rowQueryParameters);
+    }
+
     public DocumentRepositoryDao getDocumentRepositoryDao()
     {
         return documentRepositoryDao;
@@ -246,5 +264,15 @@ public class DocumentRepositoryServiceImpl implements DocumentRepositoryService
     public void setDocumentRepositoryEventPublisher(DocumentRepositoryEventPublisher documentRepositoryEventPublisher)
     {
         this.documentRepositoryEventPublisher = documentRepositoryEventPublisher;
+    }
+
+    public ExecuteSolrQuery getExecuteSolrQuery()
+    {
+        return executeSolrQuery;
+    }
+
+    public void setExecuteSolrQuery(ExecuteSolrQuery executeSolrQuery)
+    {
+        this.executeSolrQuery = executeSolrQuery;
     }
 }

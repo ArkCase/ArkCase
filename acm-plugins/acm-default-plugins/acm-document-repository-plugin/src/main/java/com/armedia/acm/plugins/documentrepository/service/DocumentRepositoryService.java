@@ -31,6 +31,7 @@ import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.documentrepository.model.DocumentRepository;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
+import com.armedia.acm.services.search.exception.SolrException;
 
 import org.springframework.security.core.Authentication;
 
@@ -44,4 +45,6 @@ public interface DocumentRepositoryService
             throws PipelineProcessException;
 
     void delete(Long id, Authentication authentication) throws AcmObjectNotFoundException, AcmUserActionFailedException;
+
+    String getDocumentRepositoryTasks(Long id, String sort, int startRow, int maxRows, Authentication authentication) throws SolrException;
 }
