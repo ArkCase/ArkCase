@@ -72,7 +72,7 @@ angular.module('cases').controller(
                             personDescription: "",
                             notes: "",
                             person: null,
-                            className: "com.armedia.acm.plugins.person.model.PersonAssociation"
+                            className: "gov.foia.model.FOIARequesterAssociation"
                         };
                     };
 

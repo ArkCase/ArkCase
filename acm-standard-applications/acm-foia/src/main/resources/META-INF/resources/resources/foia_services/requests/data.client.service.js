@@ -30,16 +30,17 @@ angular.module('services').factory('FOIA.Data', [ function() {
 
                 } ],
                 organizationAssociations: [],
-                contactMethods: [ {
-                    type: 'phone',
-                    value: ''
-                }, {
-                    type: 'fax',
-                    value: ''
-                }, {
-                    type: 'email',
-                    value: ''
-                } ],
+                personAssociations: [],
+                contactMethods: [],
+                defaultEmail: {
+                    type: 'email'
+                },
+                defaultPhone: {
+                    type: 'phone'
+                },
+                defaultFax: {
+                    type: 'fax'
+                },
                 organizations: []
             }
         }
