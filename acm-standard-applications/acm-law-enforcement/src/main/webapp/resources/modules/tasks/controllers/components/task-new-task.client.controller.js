@@ -164,6 +164,10 @@ angular.module('tasks').controller(
                         var taskData = angular.copy($scope.config.data);
                         taskData.dueDate = $scope.config.data.dueDate;
                         taskData.taskStartDate = $scope.config.data.taskStartDate;
+                        if($scope.modalParams.parentId !== undefined && $scope.modalParams.parentType !== undefined){
+                            taskData.parentObjectId = $scope.modalParams.parentId;
+                            taskData.parentObjectType = $scope.modalParams.parentType;
+                        }
                         if ($scope.documentsToReview && $scope.selectedBusinessProcessType != 'notDefinedWorkflow') {
                             taskData.documentsToReview = processDocumentsUnderReview();
                             TaskNewTaskService.reviewDocuments(taskData, $scope.selectedBusinessProcessType).then(reviewDocumentTaskSuccessCallback, errorCallback);

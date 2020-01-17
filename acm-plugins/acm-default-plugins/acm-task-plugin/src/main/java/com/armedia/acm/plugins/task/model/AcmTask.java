@@ -90,7 +90,7 @@ public class AcmTask implements AcmAssignedObject, Serializable, AcmLegacySystem
     private Long taskDurationInMillis;
     private String workflowRequestType;
     private Long workflowRequestId;
-    private Long reviewDocumentPdfRenditionId;
+    private String reviewDocumentPdfRenditionId;
     private Long reviewDocumentFormXmlId;
     private EcmFile documentUnderReview;
     private List<EcmFile> documentsToReview;
@@ -422,12 +422,12 @@ public class AcmTask implements AcmAssignedObject, Serializable, AcmLegacySystem
         this.workflowRequestId = workflowRequestId;
     }
 
-    public Long getReviewDocumentPdfRenditionId()
+    public String getReviewDocumentPdfRenditionId()
     {
         return reviewDocumentPdfRenditionId;
     }
 
-    public void setReviewDocumentPdfRenditionId(Long reviewDocumentPdfRenditionId)
+    public void setReviewDocumentPdfRenditionId(String reviewDocumentPdfRenditionId)
     {
         this.reviewDocumentPdfRenditionId = reviewDocumentPdfRenditionId;
     }
@@ -528,6 +528,7 @@ public class AcmTask implements AcmAssignedObject, Serializable, AcmLegacySystem
         return participants;
     }
 
+    @Override
     public void setParticipants(List<AcmParticipant> participants)
     {
         this.participants = participants;

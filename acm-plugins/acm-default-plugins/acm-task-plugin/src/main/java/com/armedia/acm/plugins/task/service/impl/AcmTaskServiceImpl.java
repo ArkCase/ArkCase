@@ -107,6 +107,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Created by nebojsha on 22.06.2015.
@@ -556,8 +557,11 @@ public class AcmTaskServiceImpl implements AcmTaskService
             AcmTask retval = taskDao.findById(id);
             if (retval.getReviewDocumentPdfRenditionId() != null)
             {
-                EcmFile docUnderReview = fileDao.find(retval.getReviewDocumentPdfRenditionId());
-                retval.setDocumentUnderReview(docUnderReview);
+                List<Long> docsIds = Stream.of(retval.getReviewDocumentPdfRenditionId().split(","))
+                        .map(Long::parseLong)
+                        .collect(Collectors.toList());
+                List<EcmFile> docsUnderReview = fileDao.findByIds(docsIds);
+                retval.setDocumentsToReview(docsUnderReview);
             }
             List<ObjectAssociation> childObjects = findChildObjects(id);
             retval.setChildObjects(childObjects);
@@ -578,8 +582,7 @@ public class AcmTaskServiceImpl implements AcmTaskService
         reviewers.add(task.getAssignee());
         List<AcmTask> createdAcmTasks = new ArrayList<>();
         Long parentObjectId = task.getAttachedToObjectId();
-        String parentObjectType = (StringUtils.isNotBlank(task.getAttachedToObjectType())) ? 
-                task.getAttachedToObjectType() : null;
+        String parentObjectType = (StringUtils.isNotBlank(task.getAttachedToObjectType())) ? task.getAttachedToObjectType() : null;
 
         if (task.getDocumentsToReview() == null || task.getDocumentsToReview().isEmpty())
         {
@@ -604,8 +607,8 @@ public class AcmTaskServiceImpl implements AcmTaskService
                 pVars.put("OBJECT_TYPE", "FILE");
                 pVars.put("OBJECT_ID", documentToReview.getFileId());
                 pVars.put("OBJECT_NAME", documentToReview.getFileName());
-                pVars.put("PARENT_OBJECT_TYPE", parentObjectType);
-                pVars.put("PARENT_OBJECT_ID", parentObjectId);
+                pVars.put("PARENT_OBJECT_TYPE", task.getParentObjectType());
+                pVars.put("PARENT_OBJECT_ID", task.getParentObjectId());
                 pVars.put("REQUEST_TYPE", "DOCUMENT_REVIEW");
 
                 AcmTask createdAcmTask = taskDao.startBusinessProcess(pVars, businessProcessName);
@@ -616,34 +619,38 @@ public class AcmTaskServiceImpl implements AcmTaskService
             return createdAcmTasks;
         }
     }
+
     @Override
     @Transactional
-    public List<AcmTask> startReviewDocumentsWorkflow(AcmTask task, String businessProcessName, Authentication authentication, List<MultipartFile> filesToUpload)
+    public List<AcmTask> startReviewDocumentsWorkflow(AcmTask task, String businessProcessName, Authentication authentication,
+            List<MultipartFile> filesToUpload)
             throws AcmTaskException, IOException, AcmCreateObjectFailedException, AcmUserActionFailedException
     {
         BusinessProcess businessProcess = new BusinessProcess();
         businessProcess.setStatus("DRAFT");
         businessProcess = saveBusinessProcess.save(businessProcess);
-        AcmContainer container = ecmFileService.createContainerFolder(businessProcess.getObjectType(), businessProcess.getId(), EcmFileConstants.DEFAULT_CMIS_REPOSITORY_ID);
+        AcmContainer container = ecmFileService.createContainerFolder(businessProcess.getObjectType(), businessProcess.getId(),
+                EcmFileConstants.DEFAULT_CMIS_REPOSITORY_ID);
         businessProcess.setContainer(container);
 
         AcmFolder folder = container.getAttachmentFolder();
 
         List<EcmFile> uploadedFiles = new ArrayList<>();
-        
+
         String fileParentObjectType = businessProcess.getObjectType();
         Long fileParentObjectId = businessProcess.getId();
-        
-        if(StringUtils.isNotBlank(task.getAttachedToObjectType()) && task.getAttachedToObjectId() != null)
+
+        if (StringUtils.isNotBlank(task.getAttachedToObjectType()) && task.getAttachedToObjectId() != null)
         {
             fileParentObjectType = task.getAttachedToObjectType();
             fileParentObjectId = task.getAttachedToObjectId();
         }
 
-        if(filesToUpload != null)
+        if (filesToUpload != null)
         {
 
-            for (MultipartFile file : filesToUpload) {
+            for (MultipartFile file : filesToUpload)
+            {
 
                 EcmFile temp = ecmFileService.upload(file.getOriginalFilename(), "Other", file, authentication,
                         folder.getCmisFolderId(), fileParentObjectType, fileParentObjectId);
@@ -651,7 +658,7 @@ public class AcmTaskServiceImpl implements AcmTaskService
             }
         }
         List<EcmFile> documentsToReview = task.getDocumentsToReview();
-        if(documentsToReview != null)
+        if (documentsToReview != null)
         {
             documentsToReview.addAll(uploadedFiles);
             task.setDocumentsToReview(documentsToReview);
@@ -659,7 +666,8 @@ public class AcmTaskServiceImpl implements AcmTaskService
         else
         {
             task.setDocumentsToReview(uploadedFiles);
-            task.setAttachedToObjectType(StringUtils.isNotBlank(task.getAttachedToObjectType()) ? task.getAttachedToObjectType() : businessProcess.getObjectType());
+            task.setAttachedToObjectType(StringUtils.isNotBlank(task.getAttachedToObjectType()) ? task.getAttachedToObjectType()
+                    : businessProcess.getObjectType());
             task.setAttachedToObjectId(task.getAttachedToObjectId() != null ? task.getAttachedToObjectId() : businessProcess.getId());
         }
         return startReviewDocumentsWorkflow(task, businessProcessName, authentication);
@@ -681,22 +689,19 @@ public class AcmTaskServiceImpl implements AcmTaskService
     }
 
     @Override
-    public void startArrestWarrantWorkflow(AcmTask task) 
+    public void startArrestWarrantWorkflow(AcmTask task)
     {
         EcmFile source = task.getDocumentsToReview().get(0);
 
         EcmFileWorkflowConfiguration configuration = new EcmFileWorkflowConfiguration();
         source.setFileType("file");
         configuration.setEcmFile(source);
-        
-
 
         configuration = getFileWorkflowBusinessRule().applyRules(configuration);
         if (!configuration.isBuckslipProcess())
         {
             return;
         }
-
 
         if (configuration.isStartProcess())
         {
@@ -710,23 +715,27 @@ public class AcmTaskServiceImpl implements AcmTaskService
             pvars.put("approvers", approversCsv);
             pvars.put("taskName", configuration.getTaskName());
 
-            pvars.put("PARENT_OBJECT_TYPE", task.getAttachedToObjectType());
-            pvars.put("PARENT_OBJECT_ID", task.getAttachedToObjectId());
+            pvars.put("PARENT_OBJECT_TYPE", task.getParentObjectType());
+            pvars.put("PARENT_OBJECT_ID", task.getParentObjectId());
+            String documentsToReviewIds = task.getDocumentsToReview()
+                    .stream()
+                    .map(file -> String.valueOf(file.getFileId()))
+                    .collect(Collectors.joining(","));
+            pvars.put("pdfRenditionId", documentsToReviewIds);
 
             pvars.put("taskDueDateExpression", configuration.getTaskDueDateExpression());
             pvars.put("taskPriority", configuration.getTaskPriority());
 
-
             pvars.put("approver1", approvers.get(0));
             pvars.put("approver2", approvers.get(1));
             pvars.put("approver3", approvers.get(2));
-            
+
             pvars.put("currentTaskName", configuration.getTaskName());
             pvars.put("owningGroup", "");
             pvars.put("dueDate", configuration.getTaskDueDateExpression());
-            
+
             getActivitiRuntimeService().startProcessInstanceByKey(processName, pvars);
-            
+
         }
     }
 
@@ -851,47 +860,47 @@ public class AcmTaskServiceImpl implements AcmTaskService
         this.authenticationManager = authenticationManager;
     }
 
-    public void setSaveBusinessProcess(SaveBusinessProcess saveBusinessProcess) 
+    public void setSaveBusinessProcess(SaveBusinessProcess saveBusinessProcess)
     {
         this.saveBusinessProcess = saveBusinessProcess;
     }
 
-    public NotificationDao getNotificationDao() 
+    public NotificationDao getNotificationDao()
     {
         return notificationDao;
     }
 
-    public void setNotificationDao(NotificationDao notificationDao) 
+    public void setNotificationDao(NotificationDao notificationDao)
     {
         this.notificationDao = notificationDao;
     }
 
-    public AcmDataService getAcmDataService() 
+    public AcmDataService getAcmDataService()
     {
         return acmDataService;
     }
 
-    public void setAcmDataService(AcmDataService acmDataService) 
+    public void setAcmDataService(AcmDataService acmDataService)
     {
         this.acmDataService = acmDataService;
     }
 
-    public FileWorkflowBusinessRule getFileWorkflowBusinessRule() 
+    public FileWorkflowBusinessRule getFileWorkflowBusinessRule()
     {
         return fileWorkflowBusinessRule;
     }
 
-    public void setFileWorkflowBusinessRule(FileWorkflowBusinessRule fileWorkflowBusinessRule) 
+    public void setFileWorkflowBusinessRule(FileWorkflowBusinessRule fileWorkflowBusinessRule)
     {
         this.fileWorkflowBusinessRule = fileWorkflowBusinessRule;
     }
 
-    public RuntimeService getActivitiRuntimeService() 
+    public RuntimeService getActivitiRuntimeService()
     {
         return activitiRuntimeService;
     }
 
-    public void setActivitiRuntimeService(RuntimeService activitiRuntimeService) 
+    public void setActivitiRuntimeService(RuntimeService activitiRuntimeService)
     {
         this.activitiRuntimeService = activitiRuntimeService;
     }

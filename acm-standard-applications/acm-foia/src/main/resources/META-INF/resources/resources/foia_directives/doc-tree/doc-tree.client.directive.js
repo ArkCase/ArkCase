@@ -2553,8 +2553,14 @@ angular
                             } else {
                                 var param = {};
                                 param.filter = DocTree.treeConfig.fqFilter;
-                                param.objType = DocTree.getObjType();
-                                param.objId = DocTree.getObjId();
+                                if(DocTree.getObjType() === 'FILE' && DocTree.objectInfo.container.containerObjectType === 'TASK' &&
+                                    DocTree.objectInfo.documentsToReview.length > 0){
+                                    param.objType =DocTree.objectInfo.documentsToReview[0].container.containerObjectType;
+                                    param.objId = DocTree.objectInfo.documentsToReview[0].container.containerObjectId;
+                                } else{
+                                    param.objType = DocTree.getObjType();
+                                    param.objId = DocTree.getObjId();
+                                }
                                 var folderId = Util.goodValue(folderNode.data.objectId, 0);
                                 if (DocTree.isTopNode(folderNode)) {
                                     folderId = 0;

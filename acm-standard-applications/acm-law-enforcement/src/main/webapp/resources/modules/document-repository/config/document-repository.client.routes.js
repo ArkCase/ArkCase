@@ -73,6 +73,11 @@ angular.module('document-repository').config([ '$stateProvider', function($state
         templateUrl: 'modules/document-repository/views/components/document-repository-participants.client.view.html'
     })
 
+    .state('document-repository.tasks', {
+        url: '/:id/tasks',
+        templateUrl: 'modules/document-repository/views/components/document-repository-tasks.client.view.html'
+    })
+
     .state('document-repository.references', {
         url: '/:id/references',
         templateUrl: 'modules/document-repository/views/components/document-repository-references.client.view.html'

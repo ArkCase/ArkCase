@@ -24,12 +24,17 @@ angular.module('services').factory(
                         _deleteDocumentRepository : {
                             method : 'DELETE',
                             url : 'api/latest/plugin/documentrepository/:id'
+                        },
+                        _getDocumentReposioryTasks : {
+                            method : 'GET',
+                            url: 'api/latest/plugin/documentrepository/:id/tasks'
                         }
                     });
 
                     Service.SessionCacheNames = {};
                     Service.CacheNames = {
-                        DOC_REPO_INFO : "DocumentRepositoryInfo"
+                        DOC_REPO_INFO : "DocumentRepositoryInfo",
+                        DOC_REPO_TASKS : "DocumentRepositoryTasks"
                     };
 
                     /**
@@ -172,6 +177,33 @@ angular.module('services').factory(
                             return false;
                         }
                         return true;
+                    };
+
+                    /**
+                     * @ngdoc method
+                     * @name getDocumentRepositoryTasks
+                     * @methodOf services:DocumentRepository.InfoService
+                     *
+                     * @description
+                     * Query document repository tasks
+                     *
+                     * @param {Number} id  Document Repository ID
+                     *
+                     * @returns {Object} Promise
+                     */
+                    Service.getDocumentRepositoryTasks = function(id) {
+                        var cacheDocumentRepositoryInfo = new Store.CacheFifo(Service.CacheNames.DOC_REPO_TASKS);
+                        var docRepoTasks = cacheDocumentRepositoryInfo.get(id);
+                        return Util.serviceCall({
+                            service : Service._getDocumentReposioryTasks,
+                            param : {
+                                id : id
+                            },
+                            result : docRepoTasks,
+                            onSuccess : function(data) {
+                                return data;
+                            }
+                        });
                     };
 
                     return Service;
