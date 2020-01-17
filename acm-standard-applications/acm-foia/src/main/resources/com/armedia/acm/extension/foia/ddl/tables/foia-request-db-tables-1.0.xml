@@ -630,13 +630,6 @@ LANGUAGE plpgsql;
         </addColumn>
     </changeSet>
 
-    <changeSet id="38-foia-acm_person-update-cm-class-name" author="ana.serafmoska"
-               logicalFilePath="/ddl/tables/foia-request-db-tables-1.0.xml">
-        <update tableName="acm_person">
-            <column name="cm_class_name" value="gov.foia.model.FOIAPerson"/>
-            <where>cm_class_name = "com.armedia.acm.plugins.person.model.Person"</where>
-        </update>
-    </changeSet>
 
 </databaseChangeLog>
 
