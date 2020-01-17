@@ -38,9 +38,10 @@ import com.armedia.acm.plugins.documentrepository.service.DocumentRepositoryEven
 import com.armedia.acm.plugins.documentrepository.service.DocumentRepositoryService;
 import com.armedia.acm.services.participants.model.DecoratedAssignedObjectParticipants;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
+import com.armedia.acm.services.search.exception.SolrException;
 
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -51,6 +52,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
@@ -120,6 +122,18 @@ public class DocumentRepositoryAPIController
     {
         log.info("Deleting Document Repository with id: [{}]", id);
         getDocumentRepositoryService().delete(id, authentication);
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/{id}/tasks", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasPermission(#id, 'DOC_REPO', 'getDocumentRepository')")
+    @ResponseBody
+    public String findDocumentRepositoryTasks(@PathVariable(value = "id") Long id,
+            @RequestParam(value = "s", required = false, defaultValue = "") String sort,
+            @RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
+            @RequestParam(value = "n", required = false, defaultValue = "10") int maxRows,
+            Authentication authentication) throws SolrException
+    {
+        return getDocumentRepositoryService().getDocumentRepositoryTasks(id, sort, startRow, maxRows, authentication);
     }
 
     public DocumentRepositoryService getDocumentRepositoryService()

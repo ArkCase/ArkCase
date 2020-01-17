@@ -185,7 +185,7 @@ deploy_backend_bcgeu_dev:
     SERVER_IP: 10.60.30.34
     SSH_USER: loc.arkcasemgmtsvc
     SSH_PASSWORD: $ARKCASEMGMTSCV_PASSWORD
-    ARKCASE_VERSION: 3.3.3-SNAPSHOT
+    ARKCASE_VERSION: 3.3.4-SNAPSHOT
     ARKCASE_REPOSITORY: arkcase.snapshot
     ARKCASE_SERVICE_USER_NAME: arkuser
     
@@ -215,7 +215,7 @@ deploy_backend_bcgeu_dev:
     SERVER_IP: 10.60.24.39
     SSH_USER: loc.arkcasemgmtsvc
     SSH_PASSWORD: $ARKCASEMGMTSCV_PASSWORD
-    ARKCASE_VERSION: 3.3.3-SNAPSHOT
+    ARKCASE_VERSION: 3.3.4-SNAPSHOT
     ARKCASE_REPOSITORY: arkcase.snapshot
     ARKCASE_UI_VARIANT: ui-core
     ARKCASE_SERVICE_USER_NAME: arkuser
@@ -234,7 +234,7 @@ deploy_backend_bcgeu_dev:
     SERVER_IP: 10.21.10.25
     SSH_USER: loc.arkcasemgmtsvc
     SSH_PASSWORD: $ARKCASEMGMTSCV_PASSWORD
-    ARKCASE_VERSION: 3.3.3-SNAPSHOT
+    ARKCASE_VERSION: 3.3.4-SNAPSHOT
     ARKCASE_REPOSITORY: arkcase.snapshot
     ARKCASE_UI_VARIANT: ui-foia
     ARKCASE_SERVICE_USER_NAME: arkuser
@@ -264,7 +264,7 @@ deploy_backend_bcgeu_dev:
 start_security_scan_arkcase_snapshot:
   extends: .start_security_scan
   variables:
-    ARKCASE_VERSION: 3.3.3-SNAPSHOT
+    ARKCASE_VERSION: 3.3.4-SNAPSHOT
     ARKCASE_REPOSITORY: arkcase.snapshot
 
 security_scan_results:
