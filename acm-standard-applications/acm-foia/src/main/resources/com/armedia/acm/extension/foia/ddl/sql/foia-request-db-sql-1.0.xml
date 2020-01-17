@@ -1,0 +1,15 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="
+            http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <!-- Update class name for existing Person in database for FOIA -->
+    <changeSet id="38-foia-acm_person-update-cm-class-name" author="ana.serafmoska"
+               logicalFilePath="/ddl/sql/foia-request-db-sql-1.0.xml">
+        <update tableName="acm_person">
+            <column name="cm_class_name" value="gov.foia.model.FOIAPerson"/>
+            <where>cm_class_name = "com.armedia.acm.plugins.person.model.Person"</where>
+        </update>
+    </changeSet>
+
+</databaseChangeLog>
+

@@ -6,7 +6,13 @@
     },
     {
         "path": "/className",
-        "op": "remove"
+        "op": "replace",
+        "value": "gov.foia.model.FOIAPerson"
+    },
+    {
+        "path": "/personAssociationClassName",
+        "op": "replace",
+        "value": "gov.foia.model.FOIARequesterAssociation"
     },
     {
         "path": "/configurable",
