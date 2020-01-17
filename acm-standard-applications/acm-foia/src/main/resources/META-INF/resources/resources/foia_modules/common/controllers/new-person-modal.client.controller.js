@@ -24,7 +24,7 @@ angular.module('common').controller(
 
                     //new person with predefined values
                     $scope.person = {
-                        className: 'com.armedia.acm.plugins.person.model.Person',
+                        className: 'gov.foia.model.FOIAPerson',
                         contactMethods: [],
                         identifications: [],
                         addresses: [],

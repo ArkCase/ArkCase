@@ -1,4 +1,4 @@
-<form name="requestForm" class="form-overflow-scroll">
+<form name="requestForm" novalidate="novalidate" class="form-overflow-scroll">
     <div class="modal-header">
         <h3><span translate>cases.newRequest.requestTitle</span></h3>
     </div>
@@ -66,6 +66,9 @@
         </div>
         <div class="panel panel-default">
             <div class="panel-heading">
+                <div class="pull-right">
+                    <button class="btn btn-primary btn-xs" ng-click="searchPerson()" translate>cases.newRequest.searchPerson</button>
+                </div>
                 <h4 class="panel-title">
                     <span translate>cases.newRequest.section2</span>
                 </h4>
@@ -132,7 +135,7 @@
                     </div>
                     <div class="col-sm-4 form-group">
                         <input type="text" class="form-control" id="phone" pattern="^\d{3}[\-]\d{3}[\-]\d{4}"
-                                ng-model="config.data.originator.person.contactMethods[0].value"
+                                ng-model="config.data.originator.person.defaultPhone.value"
                                 placeholder="{{'cases.newRequest.phone.placeholder' | translate}}" name="phone" required="required">
                         <span class="text-danger" ng-if="phoneEmpty && formInvalid" translate>
                                 cases.newRequest.phone.validation.error</span>
@@ -155,7 +158,7 @@
                     </div>
                     <div class="col-sm-4">
                         <input type="text" class="form-control" id="email"
-                                ng-model="config.data.originator.person.contactMethods[2].value"
+                                ng-model="config.data.originator.person.defaultEmail.value"
                                 placeholder="{{'cases.newRequest.email.placeholder' | translate}}" name="email"
                                 pattern="[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
                                 ng-required="config.data.deliveryMethodOfResponse == 'Email'">
