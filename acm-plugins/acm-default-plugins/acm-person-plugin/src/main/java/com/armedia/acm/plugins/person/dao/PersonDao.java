@@ -115,11 +115,6 @@ public class PersonDao extends AcmAbstractDao<Person>
         return result;
     }
 
-    public Person findByPersonId(Long id)
-    {
-        return getEntityManager().find(Person.class, id);
-    }
-
     public EntityManager getEntityManager()
     {
         return entityManager;

@@ -74,7 +74,7 @@ public class SaveFOIARequestService
         if (in.getPersonAssociations().get(0).getPerson().getId() != null)
         {
             FOIAPerson updatedPerson = (FOIAPerson) in.getPersonAssociations().get(0).getPerson();
-            FOIAPerson existingPerson = (FOIAPerson) getPersonDao().findByPersonId(in.getPersonAssociations().get(0).getPerson().getId());
+            FOIAPerson existingPerson =  (FOIAPerson) getPersonDao().find(in.getPersonAssociations().get(0).getPerson().getId());
             AcmDiff acmDiff = acmDiffService.compareObjects(existingPerson, updatedPerson);
 
             // if there is any changes made on the existing person create a new one
