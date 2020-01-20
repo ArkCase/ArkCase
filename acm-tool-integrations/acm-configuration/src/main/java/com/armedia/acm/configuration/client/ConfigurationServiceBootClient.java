@@ -29,6 +29,7 @@ package com.armedia.acm.configuration.client;
 
 import com.armedia.acm.configuration.api.environment.Environment;
 import com.armedia.acm.configuration.api.environment.PropertySource;
+import com.armedia.acm.configuration.service.CollectionPropertiesConfigurationService;
 import com.armedia.acm.configuration.service.ConfigurationPropertyException;
 import com.armedia.acm.configuration.util.MergePropertiesUtil;
 
@@ -57,6 +58,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -77,6 +79,9 @@ public class ConfigurationServiceBootClient
 
     @Autowired
     private org.springframework.core.env.Environment environment;
+
+    @Autowired
+    private CollectionPropertiesConfigurationService collectionPropertiesConfiguration;
 
     @Bean
     public RestTemplate configRestTemplate()
@@ -129,7 +134,7 @@ public class ConfigurationServiceBootClient
 
         if (defaultLangMap.size() != langMap.size())
         {
-            defaultLangMap.forEach((key, value) -> langMap.putIfAbsent(key, value));
+            defaultLangMap.forEach(langMap::putIfAbsent);
         }
         return langMap;
     }
@@ -156,14 +161,19 @@ public class ConfigurationServiceBootClient
     {
         Map<String, Object> compositeMap = new HashMap<>();
 
+
         if (result.getPropertySources() != null)
         {
+            List<String> annotatedProperties = getMapValueAnnotatedPropertyKeys(result.getPropertySources());
+
             Collections.reverse(result.getPropertySources());
 
             for (PropertySource source : result.getPropertySources())
             {
                 Map<String, Object> map = source.getSource();
-                MergePropertiesUtil.mergePropertiesFromSources(compositeMap, map);
+
+                MergePropertiesUtil.mergePropertiesFromSources(compositeMap, map, source, annotatedProperties,
+                        getActiveApplicationNames(null));
             }
         }
 
@@ -228,28 +238,7 @@ public class ConfigurationServiceBootClient
 
         String path = "/{name}/{profile}";
 
-        List<String> names;
-        if (name == null)
-        {
-            name = getActiveApplicationName();
-
-            if (StringUtils.isEmpty(name))
-            {
-                throw new IllegalStateException("Application name by configuration can't be empty");
-            }
-            else if (name instanceof List)
-            {
-                names = (List) name;
-            }
-            else
-            {
-                names = Arrays.asList(name.toString());
-            }
-        }
-        else
-        {
-            names = Arrays.asList(name.toString());
-        }
+        List<String> names = getActiveApplicationNames(name);
 
         Object profiles = getApplicationProfile();
 
@@ -290,6 +279,33 @@ public class ConfigurationServiceBootClient
         }
 
         return environments;
+    }
+
+    private List<String> getActiveApplicationNames(Object name)
+    {
+        List<String> names;
+        if (name == null)
+        {
+            name = getActiveApplicationName();
+
+            if (StringUtils.isEmpty(name))
+            {
+                throw new IllegalStateException("Application name by configuration can't be empty");
+            }
+            else if (name instanceof List)
+            {
+                names = (List<String>) name;
+            }
+            else
+            {
+                names = Arrays.asList(name.toString());
+            }
+        }
+        else
+        {
+            names = Arrays.asList(name.toString());
+        }
+        return names;
     }
 
     private RestTemplate setInterceptors(RestTemplate restTemplate, String username, String password, String authorization)
@@ -379,6 +395,26 @@ public class ConfigurationServiceBootClient
             logger.warn("Failed to get modules due to {}", e.getMessage());
             throw new ConfigurationPropertyException("Failed to get modules", e);
         }
+    }
+
+    private List<String> getMapValueAnnotatedPropertyKeys(List<PropertySource> propertySources)
+    {
+        List<String> annotatedProperties = new LinkedList<>();
+
+        for (PropertySource propertySource : propertySources)
+        {
+            Map<String, Object> map = propertySource.getSource();
+
+            String jpaModelPackages = (String) map.get("jpa.model.packages");
+
+            if (jpaModelPackages != null)
+            {
+                annotatedProperties = collectionPropertiesConfiguration.getMapValueAnnotatedKeys(jpaModelPackages);
+                return annotatedProperties;
+            }
+        }
+
+        return annotatedProperties;
     }
 
     public Object getModulesPath()
