@@ -177,6 +177,9 @@
                 <entry key="text/plain">
                     <list>
                         <value>application/octet-stream</value>
+                        <value>application/vnd.openxmlformats-officedocument.wordprocessingml.document</value>
+                        <value>application/vnd.openxmlformats-officedocument.spreadsheetml.sheet</value>
+                        <value>application/pdf</value>
                     </list>
                 </entry>
                 <entry key="application/xml">
