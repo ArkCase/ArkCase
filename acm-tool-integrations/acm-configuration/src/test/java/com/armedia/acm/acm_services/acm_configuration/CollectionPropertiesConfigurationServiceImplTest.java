@@ -73,8 +73,10 @@ public class CollectionPropertiesConfigurationServiceImplTest
     private Map<String, Object> mergedConfig;
     private Map<String, Object> arkaseYaml;
     private Map<String, Object> arkaseFoiaYaml;
+    private Map<String, Object> arkcaseLegTechYaml;
     private PropertySource arkcase;
     private PropertySource arkcaseFoia;
+    private PropertySource arkcaseLegTech;
     private List<Object> rolesToSave;
     private List<Object> privilegesToAdd;
 
@@ -91,12 +93,16 @@ public class CollectionPropertiesConfigurationServiceImplTest
         mergedConfig = new HashMap<>();
         arkaseYaml = new HashMap<>();
         arkaseFoiaYaml = new HashMap<>();
+        arkcaseLegTechYaml = new HashMap<>();
         arkcase = new PropertySource();
         arkcase.setName("arkcase.yaml");
         arkcase.setSource(arkaseYaml);
         arkcaseFoia = new PropertySource();
-        arkcaseFoia.setName("arkcaseFoia.yaml");
+        arkcaseFoia.setName("arkcase-foia.yaml");
         arkcaseFoia.setSource(arkaseFoiaYaml);
+        arkcaseLegTech = new PropertySource();
+        arkcaseLegTech.setName("arkcase-legtech.yaml");
+        arkcaseLegTech.setSource(arkcaseLegTechYaml);
         rolesToSave = new LinkedList<>();
         privilegesToAdd = new LinkedList<>();
         collectionPropertiesConfigurationServiceImpl.setConfigurationContainer(configurationContainer);
@@ -130,7 +136,7 @@ public class CollectionPropertiesConfigurationServiceImplTest
         for (PropertySource source : propertySourceList)
         {
             Map<String, Object> map = source.getSource();
-            MergePropertiesUtil.mergePropertiesFromSources(mergedConfig, map);
+            MergePropertiesUtil.mergePropertiesFromSources(mergedConfig, map, source, new LinkedList<>(), new LinkedList<>());
         }
 
         expectedValues = filterAnnotationPropertyMap(mergedConfig, "application.roles",
@@ -181,7 +187,7 @@ public class CollectionPropertiesConfigurationServiceImplTest
         for (PropertySource source : propertySourceList)
         {
             Map<String, Object> map = source.getSource();
-            MergePropertiesUtil.mergePropertiesFromSources(mergedConfig, map);
+            MergePropertiesUtil.mergePropertiesFromSources(mergedConfig, map, source, new LinkedList<>(), new LinkedList<>());
         }
 
         expectedValues = filterAnnotationPropertyMap(mergedConfig, "application.rolesToGroups",
@@ -222,7 +228,7 @@ public class CollectionPropertiesConfigurationServiceImplTest
         for (PropertySource source : propertySourceList)
         {
             Map<String, Object> map = source.getSource();
-            MergePropertiesUtil.mergePropertiesFromSources(mergedConfig, map);
+            MergePropertiesUtil.mergePropertiesFromSources(mergedConfig, map, source, new LinkedList<>(), new LinkedList<>());
         }
 
         assertThat(mergedConfig.size(), is(7));
@@ -248,7 +254,7 @@ public class CollectionPropertiesConfigurationServiceImplTest
         for (PropertySource source : propertySourceList)
         {
             Map<String, Object> map = source.getSource();
-            MergePropertiesUtil.mergePropertiesFromSources(mergedConfig, map);
+            MergePropertiesUtil.mergePropertiesFromSources(mergedConfig, map, source, new LinkedList<>(), new LinkedList<>());
         }
 
         assertThat(mergedConfig.size(), is(2));
@@ -257,6 +263,158 @@ public class CollectionPropertiesConfigurationServiceImplTest
         assertThat("Merged values from privileges should have:", mergedConfig,
                 hasEntry("application.privileges.foiaFilePrivilege", "FOIA File Privilege"));
 
+    }
+
+    @Test
+    public void mergeAndRemoveReportsFromConfiguration()
+    {
+
+        arkaseYaml.put("report.config.reports.CASE_SUMMARY", "/arkcase/pentaho/api/repos/:public:arkcase:caseSummary.prpt/viewer");
+        arkaseYaml.put("report.config.reports.COMPLAINT_DISPOSITION_COUNT",
+                "/arkcase/pentaho/api/repos/:public:arkcase:ComplaintDispositionCount.prpt/viewer");
+        arkaseYaml.put("report.config.reports.COMPLAINT_REPORT", "/arkcase/pentaho/api/repos/:public:arkcase:ComplaintReport.prpt/viewer");
+
+        arkaseFoiaYaml.put("report.config.reports.FOIA_PERSONNEL_AND_COSTS",
+                "/arkcase/pentaho/api/repos/:public:foia:FOIA Personnel and Costs.prpt/viewer");
+        arkaseFoiaYaml.put("report.config.reports.DISPOSITIONS_OF_FOIA_REQUESTS_-_ALL_PROCESSED_REQUESTS",
+                "/arkcase/pentaho/api/repos/:public:foia:Dispositions of FOIA Requests - All Processed Requests.prpt/viewer");
+        arkaseFoiaYaml.put("report.config.reports.DISPOSITIONS_OF_FOIA_REQUESTS_-_NUMBER_OF_TIMES_EXEMPTIONS_APPLIED",
+                "/arkcase/pentaho/api/repos/:public:foia:Dispositions of FOIA Requests - Number of Times Exemptions Applied.prpt/viewer");
+
+        arkcaseLegTechYaml.put("report.config.reports.5_DAY_REPORT-HOUSE",
+                "/arkcase/pentaho/api/repos/:public:legtech:5 Day Report-House.prpt/viewer");
+        arkcaseLegTechYaml.put("report.config.reports.REQUESTS_BY_CATEGORY-HOUSE",
+                "/arkcase/pentaho/api/repos/:public:legtech:Requests By Category-House.prpt/viewer");
+        arkcaseLegTechYaml.put("report.config.reports.PUBLIC_RECORDS_DATA_REPORT-SENATE",
+                "/arkcase/pentaho/api/repos/:public:legtech:Public Records Data Report-Senate.prpt/viewer");
+
+        propertySourceList.add(arkcaseLegTech);
+        propertySourceList.add(arkcaseFoia);
+        propertySourceList.add(arkcase);
+
+        Collections.reverse(propertySourceList);
+
+        for (PropertySource source : propertySourceList)
+        {
+            Map<String, Object> map = source.getSource();
+            MergePropertiesUtil.mergePropertiesFromSources(mergedConfig, map, source,
+                    new LinkedList<>(Arrays.asList("report.config.reports")), new LinkedList<>());
+        }
+
+        assertThat(mergedConfig.size(), is(3));
+        assertThat("Merged values from privileges should have:", mergedConfig,
+                hasEntry("report.config.reports.5_DAY_REPORT-HOUSE",
+                        "/arkcase/pentaho/api/repos/:public:legtech:5 Day Report-House.prpt/viewer"));
+        assertThat("Merged values from privileges should have:", mergedConfig,
+                hasEntry("report.config.reports.REQUESTS_BY_CATEGORY-HOUSE",
+                        "/arkcase/pentaho/api/repos/:public:legtech:Requests By Category-House.prpt/viewer"));
+        assertThat("Merged values from privileges should have:", mergedConfig,
+                hasEntry("report.config.reports.PUBLIC_RECORDS_DATA_REPORT-SENATE",
+                        "/arkcase/pentaho/api/repos/:public:legtech:Public Records Data Report-Senate.prpt/viewer"));
+    }
+
+    @Test
+    public void mergeReportsFromConfiguration()
+    {
+
+        arkaseYaml.put("report.config.reports.CASE_SUMMARY", "/arkcase/pentaho/api/repos/:public:arkcase:caseSummary.prpt/viewer");
+        arkaseYaml.put("report.config.reports.COMPLAINT_DISPOSITION_COUNT",
+                "/arkcase/pentaho/api/repos/:public:arkcase:ComplaintDispositionCount.prpt/viewer");
+        arkaseYaml.put("report.config.reports.COMPLAINT_REPORT", "/arkcase/pentaho/api/repos/:public:arkcase:ComplaintReport.prpt/viewer");
+
+        arkaseFoiaYaml.put("report.config.reports.FOIA_PERSONNEL_AND_COSTS",
+                "/arkcase/pentaho/api/repos/:public:foia:FOIA Personnel and Costs.prpt/viewer");
+        arkaseFoiaYaml.put("report.config.reports.DISPOSITIONS_OF_FOIA_REQUESTS_-_ALL_PROCESSED_REQUESTS",
+                "/arkcase/pentaho/api/repos/:public:foia:Dispositions of FOIA Requests - All Processed Requests.prpt/viewer");
+        arkaseFoiaYaml.put("report.config.reports.DISPOSITIONS_OF_FOIA_REQUESTS_-_NUMBER_OF_TIMES_EXEMPTIONS_APPLIED",
+                "/arkcase/pentaho/api/repos/:public:foia:Dispositions of FOIA Requests - Number of Times Exemptions Applied.prpt/viewer");
+
+        arkcaseLegTechYaml.put("report.config.~reports.5_DAY_REPORT-HOUSE",
+                "/arkcase/pentaho/api/repos/:public:legtech:5 Day Report-House.prpt/viewer");
+        arkcaseLegTechYaml.put("report.config.~reports.REQUESTS_BY_CATEGORY-HOUSE",
+                "/arkcase/pentaho/api/repos/:public:legtech:Requests By Category-House.prpt/viewer");
+        arkcaseLegTechYaml.put("report.config.~reports.PUBLIC_RECORDS_DATA_REPORT-SENATE",
+                "/arkcase/pentaho/api/repos/:public:legtech:Public Records Data Report-Senate.prpt/viewer");
+
+        propertySourceList.add(arkcaseLegTech);
+        propertySourceList.add(arkcaseFoia);
+        propertySourceList.add(arkcase);
+
+        Collections.reverse(propertySourceList);
+
+        for (PropertySource source : propertySourceList)
+        {
+            Map<String, Object> map = source.getSource();
+            MergePropertiesUtil.mergePropertiesFromSources(mergedConfig, map, source,
+                    new LinkedList<>(Arrays.asList("report.config.reports")), new LinkedList<>());
+        }
+
+        assertThat(mergedConfig.size(), is(6));
+        assertThat("Merged values from privileges should have:", mergedConfig,
+                hasEntry("report.config.reports.5_DAY_REPORT-HOUSE",
+                        "/arkcase/pentaho/api/repos/:public:legtech:5 Day Report-House.prpt/viewer"));
+        assertThat("Merged values from privileges should have:", mergedConfig,
+                hasEntry("report.config.reports.REQUESTS_BY_CATEGORY-HOUSE",
+                        "/arkcase/pentaho/api/repos/:public:legtech:Requests By Category-House.prpt/viewer"));
+        assertThat("Merged values from privileges should have:", mergedConfig,
+                hasEntry("report.config.reports.PUBLIC_RECORDS_DATA_REPORT-SENATE",
+                        "/arkcase/pentaho/api/repos/:public:legtech:Public Records Data Report-Senate.prpt/viewer"));
+    }
+
+    @Test
+    public void mergeAndRemoveMapPropertiesReportsFromConfiguration()
+    {
+
+        arkaseYaml.put("report.config.reports.CASE_SUMMARY", "/arkcase/pentaho/api/repos/:public:arkcase:caseSummary.prpt/viewer");
+        arkaseYaml.put("report.config.reports.COMPLAINT_DISPOSITION_COUNT",
+                "/arkcase/pentaho/api/repos/:public:arkcase:ComplaintDispositionCount.prpt/viewer");
+        arkaseYaml.put("report.config.reports.COMPLAINT_REPORT", "/arkcase/pentaho/api/repos/:public:arkcase:ComplaintReport.prpt/viewer");
+
+        arkaseFoiaYaml.put("report.config.reports.FOIA_PERSONNEL_AND_COSTS",
+                "/arkcase/pentaho/api/repos/:public:foia:FOIA Personnel and Costs.prpt/viewer");
+        arkaseFoiaYaml.put("report.config.reports.DISPOSITIONS_OF_FOIA_REQUESTS_-_ALL_PROCESSED_REQUESTS",
+                "/arkcase/pentaho/api/repos/:public:foia:Dispositions of FOIA Requests - All Processed Requests.prpt/viewer");
+        arkaseFoiaYaml.put("report.config.reports.DISPOSITIONS_OF_FOIA_REQUESTS_-_NUMBER_OF_TIMES_EXEMPTIONS_APPLIED",
+                "/arkcase/pentaho/api/repos/:public:foia:Dispositions of FOIA Requests - Number of Times Exemptions Applied.prpt/viewer");
+
+        arkcaseLegTechYaml.put("report.config.~reports.5_DAY_REPORT-HOUSE",
+                "/arkcase/pentaho/api/repos/:public:legtech:5 Day Report-House.prpt/viewer");
+        arkcaseLegTechYaml.put("report.config.~reports.REQUESTS_BY_CATEGORY-HOUSE",
+                "/arkcase/pentaho/api/repos/:public:legtech:Requests By Category-House.prpt/viewer");
+        arkcaseLegTechYaml.put("report.config.~reports.PUBLIC_RECORDS_DATA_REPORT-SENATE",
+                "/arkcase/pentaho/api/repos/:public:legtech:Public Records Data Report-Senate.prpt/viewer");
+        arkcaseLegTechYaml.put("report.config.reports.^FOIA_PERSONNEL_AND_COSTS",
+                "");
+
+        propertySourceList.add(arkcaseLegTech);
+        propertySourceList.add(arkcaseFoia);
+        propertySourceList.add(arkcase);
+
+        Collections.reverse(propertySourceList);
+
+        for (PropertySource source : propertySourceList)
+        {
+            Map<String, Object> map = source.getSource();
+            MergePropertiesUtil.mergePropertiesFromSources(mergedConfig, map, source,
+                    new LinkedList<>(Arrays.asList("report.config.reports")), new LinkedList<>());
+        }
+
+        assertThat(mergedConfig.size(), is(5));
+        assertThat("Merged values from privileges should have:", mergedConfig,
+                hasEntry("report.config.reports.5_DAY_REPORT-HOUSE",
+                        "/arkcase/pentaho/api/repos/:public:legtech:5 Day Report-House.prpt/viewer"));
+        assertThat("Merged values from privileges should have:", mergedConfig,
+                hasEntry("report.config.reports.REQUESTS_BY_CATEGORY-HOUSE",
+                        "/arkcase/pentaho/api/repos/:public:legtech:Requests By Category-House.prpt/viewer"));
+        assertThat("Merged values from privileges should have:", mergedConfig,
+                hasEntry("report.config.reports.PUBLIC_RECORDS_DATA_REPORT-SENATE",
+                        "/arkcase/pentaho/api/repos/:public:legtech:Public Records Data Report-Senate.prpt/viewer"));
+        assertThat("Merged values from privileges should have:", mergedConfig,
+                hasEntry("report.config.reports.DISPOSITIONS_OF_FOIA_REQUESTS_-_ALL_PROCESSED_REQUESTS",
+                        "/arkcase/pentaho/api/repos/:public:foia:Dispositions of FOIA Requests - All Processed Requests.prpt/viewer"));
+        assertThat("Merged values from privileges should have:", mergedConfig,
+                hasEntry("report.config.reports.DISPOSITIONS_OF_FOIA_REQUESTS_-_NUMBER_OF_TIMES_EXEMPTIONS_APPLIED",
+                        "/arkcase/pentaho/api/repos/:public:foia:Dispositions of FOIA Requests - Number of Times Exemptions Applied.prpt/viewer"));
     }
 
     @Test
@@ -329,7 +487,6 @@ public class CollectionPropertiesConfigurationServiceImplTest
         assertThat("Privilege should be merged in the runtime map:", privileges, hasItem("caseFileCreatePrivilege"));
         assertThat("Privilege should be merged in the runtime map:", privileges, hasItem("acmCaseModulePrivilege"));
         assertThat("Privilege should be merged in the runtime map:", privileges, hasItem("acmCategoryManagementPrivilege"));
-
     }
 
     private Map<String, Object> filterAnnotationPropertyMap(Map<String, Object> mergedConfig, String propertyKey, String listMapFlag)

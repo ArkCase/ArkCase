@@ -27,8 +27,12 @@ package com.armedia.acm.configuration.util;
  * #L%
  */
 
+import com.armedia.acm.configuration.api.environment.PropertySource;
+
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -39,11 +43,14 @@ import java.util.Map;
 public class MergePropertiesUtil
 {
 
-    public static final String LEFT_BRACKET = "[";
-    public static final String RIGHT_BRACKET = "]";
+    private static final String LEFT_BRACKET = "[";
+    private static final String RIGHT_BRACKET = "]";
 
-    public static void mergePropertiesFromSources(Map<String, Object> mergedConfig, Map<String, Object> props)
+    public static void mergePropertiesFromSources(Map<String, Object> mergedConfig, Map<String, Object> props, PropertySource sourceName,
+            List<String> annotatedProperties, List<String> activeApplications)
     {
+
+        List<String> mergedMapProperties = new LinkedList<>();
 
         for (Map.Entry<String, Object> entry : props.entrySet())
         {
@@ -55,12 +62,36 @@ public class MergePropertiesUtil
                     && (v.toString().indexOf(MergeFlags.MERGE.getSymbol()) != 0
                             && v.toString().indexOf(MergeFlags.REMOVE.getSymbol()) != 0))
             {
-                mergedConfig.put(k, entry.getValue());
+                String parent = k.contains(".") ? k.substring(0, k.lastIndexOf(".")) : k;
+
+                if (!activeApplications.contains(sourceName.extractApplicationNameFromSourceName()) && (!k.contains(LEFT_BRACKET))
+                        && annotatedProperties.contains(parent))
+                {
+                    overrideAnnotatedPropertyMap(mergedConfig, mergedMapProperties, k, v, parent);
+                }
+                else
+                {
+                    mergedConfig.put(k, v);
+                }
             }
             else
             {
                 mergeCurrentSourceWithAlreadyMergedSources(mergedConfig, k, v);
             }
+        }
+    }
+
+    private static void overrideAnnotatedPropertyMap(Map<String, Object> mergedConfig, List<String> executed, String k, Object v,
+            String parent)
+    {
+        if (!parent.contains(MergeFlags.REMOVE.getSymbol()) && !parent.contains(MergeFlags.MERGE.getSymbol()))
+        {
+            if (!executed.contains(parent))
+            {
+                removeMergedPropertyIfAlreadyMerged(mergedConfig, parent);
+                executed.add(parent);
+            }
+            mergedConfig.put(k, v);
         }
     }
 
@@ -219,7 +250,7 @@ public class MergePropertiesUtil
 
     public static String getLastKey(String value)
     {
-        String[] subkeysList = value.split("\\.");
-        return subkeysList[subkeysList.length - 1];
+        String[] subKeysList = value.split("\\.");
+        return subKeysList[subKeysList.length - 1];
     }
 }

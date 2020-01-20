@@ -62,6 +62,16 @@ public class PropertySource
         this.source = source;
     }
 
+    /**
+     * @return extract the name of the application source from url.
+     *
+     *         ex. file:C://Users//mario.gjurcheski/.arkcase/acm/acm-config-server-repo/arkcase.yaml -> arkase
+     */
+    public String extractApplicationNameFromSourceName()
+    {
+        return name.substring(name.lastIndexOf('/') + 1, name.length() - 5);
+    }
+
     @Override
     public String toString()
     {
