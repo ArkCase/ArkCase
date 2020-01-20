@@ -624,7 +624,9 @@ public class AcmTaskServiceImpl implements AcmTaskService
         BusinessProcess businessProcess = new BusinessProcess();
         businessProcess.setStatus("DRAFT");
         businessProcess = saveBusinessProcess.save(businessProcess);
-        AcmContainer container = ecmFileService.createContainerFolder(businessProcess.getObjectType(), businessProcess.getId(), EcmFileConstants.DEFAULT_CMIS_REPOSITORY_ID);
+        AcmContainer container = ecmFileService.createContainerFolder(businessProcess.getObjectType(), businessProcess.getId(),
+                EcmFileConstants.DEFAULT_CMIS_REPOSITORY_ID);
+        getAcmContainerDao().getEm().flush();
         businessProcess.setContainer(container);
 
         AcmFolder folder = container.getAttachmentFolder();
