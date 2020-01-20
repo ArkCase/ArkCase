@@ -104,4 +104,10 @@ public interface CollectionPropertiesConfigurationService
      */
     Map<String, Object> filterAndConvertProperties(String mapPropertyKey, Map<String, Object> updatedMap, boolean convertWithMap);
 
+    /**
+     * Gets all the property keys annotated with MapValue annotation.
+     *
+     */
+    List<String> getMapValueAnnotatedKeys(String packages);
+
 }
