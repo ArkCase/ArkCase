@@ -7,23 +7,25 @@ variables:
   # RELEASE_CANDIDATE_1: true
   # RELEASE_VERSION: 3.3.3-RC1
   # DEVELOP_NEW_VERSION: 3.3.4-SNAPSHOT
-  # RELEASE_ALL: true (Optional: if you want to trigger the release pipeline on all othe projects: configuration, externa-portal-ui, external-portal-backend, configuration server)  
+  # RELEASE_ALL: true (Optional: if you want to trigger the release pipeline on all othe projects: configuration, externa-portal-ui, external-portal-backend, configuration server)
 
   # Start RC2 to push commits to branch (from master branch) (**** repeat this for all additional release candididates ****)
   # ------------------------------------------------------------------------------------------------------------------------
   # START_RELEASE_CANDIDATE_X: true
   # RELEASE_VERSION: 3.3.3-RC2
+  # RELEASE_ALL: true (Optional: if you want to trigger the release pipeline on all othe projects: configuration, externa-portal-ui, external-portal-backend, configuration server)
 
   # Release RC2 (merges changes to master branch. Note: hotfix commits should be merged to both the hotfix and develop branches)
   # ----------------------------------------------------------------------------------------------------------------------------
   # RELEASE_CANDIDATE_X: true
   # RELEASE_VERSION: 3.3.3-RC2
-  # RELEASE_ALL: true (Optional: if you want to trigger the release pipeline on all othe projects: configuration, externa-portal-ui, external-portal-backend, configuration server)  
+  # RELEASE_ALL: true (Optional: if you want to trigger the release pipeline on all othe projects: configuration, externa-portal-ui, external-portal-backend, configuration server)
 
   # Release final version in master (after no more release candidates are planned)
   # ------------------------------------------------------------------------------
   # RELEASE: true
   # RELEASE_VERSION: 3.3.3
+  # RELEASE_ALL: true (Optional: if you want to trigger the release pipeline on all othe projects: configuration, externa-portal-ui, external-portal-backend, configuration server)
 
 
   # Hotfix for older Arkcase released version
@@ -33,19 +35,21 @@ variables:
   # ---------------------------------------------------------------------------------------------------------------------------------------------------
   # START_SUPPORT_BRANCH: true
   # RELEASE_TAG: 3.3.2
+  # RELEASE_ALL: true (Optional: if you want to trigger the release pipeline on all othe projects: configuration, externa-portal-ui, external-portal-backend, configuration server)
 
   # Start hotfix for Arkcase support
   # --------------------------------
   # START_HOTFIX: true
   # HOTFIX_SUPPORT_VERSION: 3.3.2 (**** keep this version for all additional hotfixes to the same base released version ****)
   # RELEASE_VERSION: 3.3.2.1       (**** increment this version for additional hotfixes like 3.3.2.2 ****)
+  # RELEASE_ALL: true (Optional: if you want to trigger the release pipeline on all othe projects: configuration, externa-portal-ui, external-portal-backend, configuration server)
 
   # Release new hotfix version
   # --------------------------
   # RELEASE_HOTFIX: true
   # HOTFIX_SUPPORT_VERSION: 3.3.2
   # RELEASE_VERSION: 3.3.2.1
-  # RELEASE_ALL: true (Optional: if you want to trigger the release pipeline on all othe projects: configuration, externa-portal-ui, external-portal-backend, configuration server)  
+  # RELEASE_ALL: true (Optional: if you want to trigger the release pipeline on all othe projects: configuration, externa-portal-ui, external-portal-backend, configuration server)
   GIT_USERNAME: 'Arkcase Build'
   GIT_USERMAIL: 'arkcase-build@armedia.com'
   GIT_URL: 'git@gitlab.armedia.com:arkcase/ArkCase.git'
