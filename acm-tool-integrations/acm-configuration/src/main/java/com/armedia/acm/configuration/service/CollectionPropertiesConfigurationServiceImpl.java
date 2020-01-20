@@ -27,23 +27,30 @@ package com.armedia.acm.configuration.service;
  * #L%
  */
 
+import com.armedia.acm.configuration.annotations.MapValue;
 import com.armedia.acm.configuration.core.ConfigurationContainer;
 import com.armedia.acm.configuration.util.MergeFlags;
 import com.armedia.acm.configuration.util.MergePropertiesUtil;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.reflections.Reflections;
+import org.reflections.scanners.MethodAnnotationsScanner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.lang.reflect.Method;
 import java.util.AbstractMap;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -436,6 +443,42 @@ public class CollectionPropertiesConfigurationServiceImpl implements CollectionP
         }
 
         return orderedMap;
+    }
+
+    @Override
+    public List<String> getMapValueAnnotatedKeys(String packages)
+    {
+        List<String> annotatedProperties = new LinkedList<>();
+        Object[] packagesToScan;
+
+        if (!packages.contains(","))
+        {
+            packages = StringUtils.substringBeforeLast(packages, ".*");
+
+            packagesToScan = new Object[] { packages };
+        }
+        else
+        {
+            List<String> packagesArray = Arrays.asList(packages.split(","));
+
+            packagesToScan = packagesArray.stream()
+                    .map(it -> StringUtils.substringBeforeLast(it, ".*"))
+                    .toArray();
+        }
+
+        Set<Method> methodsAnnotatedWith = new Reflections(packagesToScan, new MethodAnnotationsScanner())
+                .getMethodsAnnotatedWith(MapValue.class);
+
+        for (final Method method : methodsAnnotatedWith)
+        {
+            if (method.isAnnotationPresent(MapValue.class))
+            {
+                MapValue annotatedInstance = method.getAnnotation(MapValue.class);
+                annotatedProperties.add(annotatedInstance.value());
+            }
+        }
+
+        return annotatedProperties;
     }
 
     public void setConfigurationContainer(ConfigurationContainer configurationContainer)
