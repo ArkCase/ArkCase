@@ -7,7 +7,7 @@ variables:
   # RELEASE_CANDIDATE_1: true
   # RELEASE_VERSION: 3.3.3-RC1
   # DEVELOP_NEW_VERSION: 3.3.4-SNAPSHOT
-  
+  # RELEASE_ALL: true (Optional: if you want to trigger the release pipeline on all othe projects: configuration, externa-portal-ui, external-portal-backend, configuration server)  
 
   # Start RC2 to push commits to branch (from master branch) (**** repeat this for all additional release candididates ****)
   # ------------------------------------------------------------------------------------------------------------------------
@@ -18,7 +18,7 @@ variables:
   # ----------------------------------------------------------------------------------------------------------------------------
   # RELEASE_CANDIDATE_X: true
   # RELEASE_VERSION: 3.3.3-RC2
-
+  # RELEASE_ALL: true (Optional: if you want to trigger the release pipeline on all othe projects: configuration, externa-portal-ui, external-portal-backend, configuration server)  
 
   # Release final version in master (after no more release candidates are planned)
   # ------------------------------------------------------------------------------
@@ -45,6 +45,7 @@ variables:
   # RELEASE_HOTFIX: true
   # HOTFIX_SUPPORT_VERSION: 3.3.2
   # RELEASE_VERSION: 3.3.2.1
+  # RELEASE_ALL: true (Optional: if you want to trigger the release pipeline on all othe projects: configuration, externa-portal-ui, external-portal-backend, configuration server)  
   GIT_USERNAME: 'Arkcase Build'
   GIT_USERMAIL: 'arkcase-build@armedia.com'
   GIT_URL: 'git@***REMOVED***:arkcase/ArkCase.git'
@@ -72,14 +73,6 @@ release_candidate_1:
     - apt-get update
     - apt-get install -y zip sshpass
     - export SSHPASS=$SSHPASS_ARKCASE
-    # Trigger other project releases:
-    # Configuration
-    # Portal backend
-    # Portal UI
-    # Config server
-    # Snowbound???
-    # Installer
-    # Arkcase
     - mvn -B gitflow:release-start -DreleaseVersion=$RELEASE_VERSION -DcommitDevelopmentVersionAtStart=true -DdevelopmentVersion=$DEVELOP_NEW_VERSION
     - mvn -B gitflow:release-finish -DskipTestProject=true -DcommitDevelopmentVersionAtStart=true
     - git checkout master
@@ -120,13 +113,6 @@ release_candidate_X:
     - apt-get update
     - apt-get install -y zip sshpass
     - export SSHPASS=$SSHPASS_ARKCASE
-    # Trigger other project releases:
-    # Configuration
-    # Portal backend
-    # Portal UI
-    # Config server
-    # Snowbound???
-    # Installer
     - mvn -B gitflow:hotfix-finish -DpushRemote=true -DhotfixVersion=$RELEASE_VERSION -DskipTestProject=true -DskipMergeDevBranch=true
     - git checkout master
     - mvn -DskipITs -T 4 -B deploy "-DaltDeploymentRepository=arkcase.release::default::https://***REMOVED***/repository/arkcase.release/"
@@ -155,13 +141,6 @@ release:
     - apt-get update
     - apt-get install -y zip sshpass
     - export SSHPASS=$SSHPASS_ARKCASE
-    # Trigger other project releases:
-    # Configuration
-    # Portal backend
-    # Portal UI
-    # Config server
-    # Snowbound???
-    # Installer
     - mvn -B gitflow:hotfix-start -DhotfixVersion=$RELEASE_VERSION
     - mvn -B gitflow:hotfix-finish -DhotfixVersion=$RELEASE_VERSION -DskipTestProject=true -DskipMergeDevBranch=true
     - git checkout master
@@ -210,15 +189,74 @@ release_hotfix:
     - apt-get update
     - apt-get install -y zip sshpass
     - export SSHPASS=$SSHPASS_ARKCASE
-    # Trigger other project releases:
-    # Configuration
-    # Portal backend
-    # Portal UI
-    # Config server
-    # Snowbound???
-    # Installer
     - mvn -B gitflow:hotfix-finish -DpushRemote=true -DhotfixVersion=support/$HOTFIX_SUPPORT_VERSION/$RELEASE_VERSION -DskipTestProject=true -DskipMergeDevBranch=true
     - git checkout --track origin/support/$HOTFIX_SUPPORT_VERSION/$RELEASE_VERSION
     - mvn -DskipITs -T 4 -B deploy "-DaltDeploymentRepository=arkcase.release::default::https://***REMOVED***/repository/arkcase.release/"
     - sshpass -e sftp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ***REMOVED*** <<< $'put acm-standard-applications/acm-law-enforcement/target/*.war /from-arkcase/arkcase-'$RELEASE_VERSION'.war' 
     # Deploy on test servers
+
+release_all:
+  stage: release
+  only: 
+    variables:
+     - $RELEASE_ALL
+  script:
+    # Trigger other project releases:
+    # Configuration
+    - curl -k --request POST --form token=$CONFIGURATION_PROJECT_TOKEN --form ref=core
+      --form "variables[RELEASE_CANDIDATE_1]=$RELEASE_CANDIDATE_1"
+      --form "variables[RELEASE_VERSION]=$RELEASE_VERSION"
+      --form "variables[DEVELOP_NEW_VERSION]=$DEVELOP_NEW_VERSION"
+      --form "variables[START_RELEASE_CANDIDATE_X]=$START_RELEASE_CANDIDATE_X"
+      --form "variables[RELEASE_CANDIDATE_X]=$RELEASE_CANDIDATE_X"
+      --form "variables[RELEASE]=$RELEASE"
+      --form "variables[START_SUPPORT_BRANCH]=$START_SUPPORT_BRANCH"
+      --form "variables[RELEASE_TAG]=$RELEASE_TAG"
+      --form "variables[START_HOTFIX]=$START_HOTFIX"
+      --form "variables[HOTFIX_SUPPORT_VERSION]=$HOTFIX_SUPPORT_VERSION"
+      --form "variables[RELEASE_HOTFIX]=$RELEASE_HOTFIX"
+      https://***REMOVED***/api/v4/projects/30/trigger/pipeline
+    # Portal backend
+    - curl -k --request POST --form token=$EXTERNAL_WEB_PORTAL_PROJECT_TOKEN --form ref=develop
+      --form "variables[RELEASE_CANDIDATE_1]=$RELEASE_CANDIDATE_1"
+      --form "variables[RELEASE_VERSION]=$RELEASE_VERSION"
+      --form "variables[DEVELOP_NEW_VERSION]=$DEVELOP_NEW_VERSION"
+      --form "variables[START_RELEASE_CANDIDATE_X]=$START_RELEASE_CANDIDATE_X"
+      --form "variables[RELEASE_CANDIDATE_X]=$RELEASE_CANDIDATE_X"
+      --form "variables[RELEASE]=$RELEASE"
+      --form "variables[START_SUPPORT_BRANCH]=$START_SUPPORT_BRANCH"
+      --form "variables[RELEASE_TAG]=$RELEASE_TAG"
+      --form "variables[START_HOTFIX]=$START_HOTFIX"
+      --form "variables[HOTFIX_SUPPORT_VERSION]=$HOTFIX_SUPPORT_VERSION"
+      --form "variables[RELEASE_HOTFIX]=$RELEASE_HOTFIX"
+      https://***REMOVED***/api/v4/projects/193/trigger/pipeline
+    # Portal UI
+    - curl -k --request POST --form token=$EXTERNAL_WEB_PORTAL_UI_PROJECT_TOKEN --form ref=develop
+      --form "variables[RELEASE_CANDIDATE_1]=$RELEASE_CANDIDATE_1"
+      --form "variables[RELEASE_VERSION]=$RELEASE_VERSION"
+      --form "variables[DEVELOP_NEW_VERSION]=$DEVELOP_NEW_VERSION"
+      --form "variables[START_RELEASE_CANDIDATE_X]=$START_RELEASE_CANDIDATE_X"
+      --form "variables[RELEASE_CANDIDATE_X]=$RELEASE_CANDIDATE_X"
+      --form "variables[RELEASE]=$RELEASE"
+      --form "variables[START_SUPPORT_BRANCH]=$START_SUPPORT_BRANCH"
+      --form "variables[RELEASE_TAG]=$RELEASE_TAG"
+      --form "variables[START_HOTFIX]=$START_HOTFIX"
+      --form "variables[HOTFIX_SUPPORT_VERSION]=$HOTFIX_SUPPORT_VERSION"
+      --form "variables[RELEASE_HOTFIX]=$RELEASE_HOTFIX"
+      https://***REMOVED***/api/v4/projects/237/trigger/pipeline
+    # Config server
+    - curl -k --request POST --form token=$CONFIG_SERVER_PROJECT_TOKEN --form ref=develop
+      --form "variables[RELEASE_CANDIDATE_1]=$RELEASE_CANDIDATE_1"
+      --form "variables[RELEASE_VERSION]=$RELEASE_VERSION"
+      --form "variables[DEVELOP_NEW_VERSION]=$DEVELOP_NEW_VERSION"
+      --form "variables[START_RELEASE_CANDIDATE_X]=$START_RELEASE_CANDIDATE_X"
+      --form "variables[RELEASE_CANDIDATE_X]=$RELEASE_CANDIDATE_X"
+      --form "variables[RELEASE]=$RELEASE"
+      --form "variables[START_SUPPORT_BRANCH]=$START_SUPPORT_BRANCH"
+      --form "variables[RELEASE_TAG]=$RELEASE_TAG"
+      --form "variables[START_HOTFIX]=$START_HOTFIX"
+      --form "variables[HOTFIX_SUPPORT_VERSION]=$HOTFIX_SUPPORT_VERSION"
+      --form "variables[RELEASE_HOTFIX]=$RELEASE_HOTFIX"
+      https://***REMOVED***/api/v4/projects/322/trigger/pipeline
+    # Snowbound???
+    # Installer
