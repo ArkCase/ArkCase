@@ -66,6 +66,7 @@ public class ChangeCaseFileStateService
         ctx.addProperty("mode", mode);
         ctx.addProperty("caseResolution", form.getCaseResolution());
         ctx.addProperty("changeDate", form.getChangeDate().toString());
+        ctx.addProperty("changeCaseStatusFlow", form.isChangeCaseStatusFlow());
 
         pipelineManager.executeOperation(form, ctx, () -> {
 
