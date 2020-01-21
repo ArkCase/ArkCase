@@ -118,6 +118,9 @@ public class ChangeCaseStatus implements Serializable, AcmObject, AcmEntity, Acm
     @Column(name = "cm_change_case_status_modifier")
     private String modifier;
 
+    @Transient
+    private boolean changeCaseStatusFlow;
+
     @PrePersist
     public void beforeInsert()
     {
@@ -267,5 +270,13 @@ public class ChangeCaseStatus implements Serializable, AcmObject, AcmEntity, Acm
     public void setChangeDate(LocalDate changeDate)
     {
         this.changeDate = changeDate;
+    }
+
+    public boolean isChangeCaseStatusFlow() {
+        return changeCaseStatusFlow;
+    }
+
+    public void setChangeCaseStatusFlow(boolean changeCaseStatusFlow) {
+        this.changeCaseStatusFlow = changeCaseStatusFlow;
     }
 }

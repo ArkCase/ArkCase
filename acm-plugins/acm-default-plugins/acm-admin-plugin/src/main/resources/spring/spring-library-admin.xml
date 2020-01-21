@@ -28,7 +28,7 @@
 
     <bean id="linkFormsWorkflowsService" class="com.armedia.acm.plugins.admin.service.LinkFormsWorkflowsService">
         <property name="configurationLocation" value="#{ systemProperties ['user.home'] }/.arkcase/acm/rules/"/>
-        <property name="configurationFile" value="drools-form-business-process-rules.xlsx"/>
+        <property name="configurationFile" value="#{fileWorkflowBusinessRule.getRuleSpreadsheetFilename()}"/>
         <property name="configurationFileBackupTemplate" value="drools-form-business-process-rules.xlsx.%s.backup"/>
         <property name="configurationFileBackupRegex" value="^drools[-d]form[-d]business[-d]process[-d]rules.xlsx.[0-9]+.backup$"/>
         <property name="acmBpmnService" ref="processDefinitionManagementService"/>
