@@ -61,14 +61,13 @@
                             ng-if="requiredFields['dispositionType']" class="required-asterisk">*</span></label> <select
                         ng-model="requestInfo.disposition" ng-required="requiredFields['dispositionType']"
                         ng-options="dispositionType.key as dispositionType.value | translate for dispositionType in dispositionTypes"
-                        class="form-control input-md" ng-change="populateDispositionSubTypes(objectInfo.disposition, objectInfo.requestType)">
+                        class="form-control input-md" ng-change="populateDispositionSubTypes(objectInfo.requestType)">
                 </select>
                 </div>
                 <div class="form-group col-sm-6">
                     <label class="control-label"><span translate> requests.comp.details.dispositionSubType.label</span> <span
                             ng-if="requiredFields['dispositionSubType']" class="required-asterisk">*</span></label> <select
                         ng-model="requestInfo.dispositionSubtype" ng-required="requiredFields['dispositionSubType']"
-                        ng-disabled="!objectInfo.disposition || objectInfo.disposition=='partial-denial'"
                         ng-change="isChanged(objectInfo.dispositionSubtype)"
                         ng-options="dispositionSubType.key as dispositionSubType.value | translate for dispositionSubType in dispositionSubTypes"
                         class="form-control input-md">
