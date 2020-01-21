@@ -183,6 +183,7 @@ angular.module('cases').controller(
                 $scope.subjectEmpty = false;
                 $scope.deliveryMethodOfResponseEmpty = false;
                 $scope.requestCategoryEmpty = false;
+                $scope.dateRangeInvalid = false;
 
                 if ($scope.isNewRequestType()) {
 
@@ -233,6 +234,10 @@ angular.module('cases').controller(
                     }
                     if (requestForm.deliveryMethodOfResponse.$invalid) {
                         $scope.deliveryMethodOfResponseEmpty = true;
+                    }
+                    if ($scope.config.data.recordSearchDateFrom > $scope.config.data.recordSearchDateTo) {
+                        $scope.formInvalid = true;
+                        $scope.dateRangeInvalid = true;
                     }
                     if (requestForm.$valid && !$scope.formInvalid) {
                         $scope.saveNewRequest();

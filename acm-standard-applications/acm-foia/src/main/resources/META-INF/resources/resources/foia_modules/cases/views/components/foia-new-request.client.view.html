@@ -297,6 +297,8 @@
                             <date-time-picker data="config.data.recordSearchDateFrom" property="startDate"
                                     date-picker-id="comboDate1"></date-time-picker>
                         </div>
+                        <span class="text-danger" ng-if="dateRangeInvalid && formInvalid" translate>
+                                cases.newRequest.dateRange.validation.error</span>
                     </div>
                     <div class="col-sm-3 form-group">
                         <label for="recordSearchDateTo" translate>cases.newRequest.dateRange.to</label>
