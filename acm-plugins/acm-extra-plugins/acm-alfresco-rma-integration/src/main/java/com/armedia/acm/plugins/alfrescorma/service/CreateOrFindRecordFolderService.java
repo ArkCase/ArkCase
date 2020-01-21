@@ -108,7 +108,7 @@ public class CreateOrFindRecordFolderService extends AlfrescoService<String>
 
     private JSONObject buildPost(CmisObject categoryFolder, String recordFolderName)
     {
-        String categoryFolderId = categoryFolder.getId();
+        String categoryFolderId = categoryFolder.getProperty(EcmFileConstants.REPOSITORY_VERSION_ID).getValue();
 
         // The rma_identifier must always be unique, need unique id of parent folder
         String rmaIdentifier = categoryFolder.getId() + "_" + recordFolderName;
