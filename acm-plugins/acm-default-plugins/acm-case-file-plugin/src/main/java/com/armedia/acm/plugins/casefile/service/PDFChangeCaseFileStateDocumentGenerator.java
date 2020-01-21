@@ -36,6 +36,7 @@ import com.armedia.acm.plugins.ecm.service.PDFDocumentGenerator;
 import com.armedia.acm.services.pipeline.AbstractPipelineContext;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 
+import org.jsoup.Jsoup;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -86,11 +87,13 @@ public class PDFChangeCaseFileStateDocumentGenerator<D extends AcmAbstractDao, T
 
         if (!changeCaseStatus.getStatus().isEmpty())
         {
-            addElement(document, rootElem, "showStatusResolution", ctx.getPropertyValue("caseResolution").toString(),
+            addElement(document, rootElem, "caseResolution", ctx.getPropertyValue("caseResolution").toString(),
                     true);
         }
 
-        addParticipantsInXmlDocument(changeCaseStatus.getParticipants(), document, rootElem, "participantName", "participantType");
+        if(!changeCaseStatus.getParticipants().isEmpty()){
+            addElement(document, rootElem, "participant", changeCaseStatus.getParticipants().size() > 0 ?  changeCaseStatus.getParticipants().get(0).getParticipantLdapId() : "N/A", false);
+        }
 
         return document;
     }
