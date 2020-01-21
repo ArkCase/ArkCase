@@ -27,7 +27,7 @@
                             ng-blur="populateAppeal()" ng-click="requestInReleaseStatusSearch()" required="required">
                 </div>
             </div>
-            <div class="panel panel-default" ng-if="isNewRequestType()" id="topSection1">
+            <div class="panel panel-default" id="topSection1">
                 <div class="panel-heading">
                     <h4 class="panel-title">
                         <span translate>cases.newRequest.section1</span></h4>
@@ -64,7 +64,7 @@
                 </div>
             </div>
         </div>
-        <div class="panel panel-default">
+        <div class="panel panel-default" ng-if="isNewRequestType()">
             <div class="panel-heading">
                 <div class="pull-right">
                     <button class="btn btn-primary btn-xs" ng-click="searchPerson()" translate>cases.newRequest.searchPerson</button>
