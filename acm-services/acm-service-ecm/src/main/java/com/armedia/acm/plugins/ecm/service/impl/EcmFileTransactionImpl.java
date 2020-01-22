@@ -41,6 +41,7 @@ import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.model.FileUploadStage;
 import com.armedia.acm.plugins.ecm.model.ProgressbarDetails;
 import com.armedia.acm.plugins.ecm.pipeline.EcmFileTransactionPipelineContext;
+import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.ecm.service.EcmFileTransaction;
 import com.armedia.acm.plugins.ecm.service.FileEventPublisher;
 import com.armedia.acm.plugins.ecm.service.ProgressIndicatorService;
@@ -95,6 +96,7 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
     private Map<String, List<String>> mimeTypesByTika;
     private EcmFileConfig ecmFileConfig;
     private ProgressIndicatorService progressIndicatorService;
+    private EcmFileService ecmFileService;
 
     public static List<String> getAllTikaMimeTypesForFile(Map<String, List<String>> mimeTypesByTika, String value)
     {
@@ -307,7 +309,7 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
             {
                 activeVersionMimeType = metadata.getFileActiveVersionMimeType().split(";")[0];
             }
-            if(detectedMetadata.getContentType() != null && detectedMetadata.getContentType().contains(";"))
+            if (detectedMetadata.getContentType() != null && detectedMetadata.getContentType().contains(";"))
             {
                 detectedMetadata.setContentType(detectedMetadata.getContentType().split(";")[0]);
             }
@@ -336,7 +338,6 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
                     log.debug("SearchablePDF = [{}]", searchablePDF);
                 }
                 pipelineContext.setSearchablePDF(searchablePDF);
-
 
                 String fileName = getFolderAndFilesUtils().getBaseFileName(metadata.getFileName(), finalExtension);
                 metadata.setFileName(fileName);
@@ -588,6 +589,7 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
             try
             {
                 log.debug("Calling pipeline manager handlers");
+                getEcmFileService().updateFileLinks(ecmFile);
                 return getEcmFileUpdatePipelineManager().executeOperation(ecmFile, pipelineContext, () -> pipelineContext.getEcmFile());
             }
             catch (Exception e)
@@ -605,7 +607,8 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
     }
 
     @Override
-    public EcmFile updateFileTransaction(Authentication authentication, EcmFile ecmFile, InputStream fileInputStream, String fileExtension) throws IOException
+    public EcmFile updateFileTransaction(Authentication authentication, EcmFile ecmFile, InputStream fileInputStream, String fileExtension)
+            throws IOException
     {
         File file = null;
         try
@@ -630,7 +633,9 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
 
             try
             {
-                String fileName = ecmFile.getFileName() != null && ecmFile.getFileName().endsWith(ecmFile.getFileExtension())? ecmFile.getFileName() : ecmFile.getFileName() + "." + fileExtension;
+                String fileName = ecmFile.getFileName() != null && ecmFile.getFileName().endsWith(ecmFile.getFileExtension())
+                        ? ecmFile.getFileName()
+                        : ecmFile.getFileName() + "." + fileExtension;
 
                 ecmTikaFile = getEcmTikaFileService().detectFileUsingTika(file, fileName);
             }
@@ -934,5 +939,15 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
     public void setCamelContextManager(CamelContextManager camelContextManager)
     {
         this.camelContextManager = camelContextManager;
+    }
+
+    public EcmFileService getEcmFileService()
+    {
+        return ecmFileService;
+    }
+
+    public void setEcmFileService(EcmFileService ecmFileService)
+    {
+        this.ecmFileService = ecmFileService;
     }
 }
