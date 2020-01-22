@@ -309,6 +309,11 @@
                         <value>application/octet-stream</value>
                     </list>
                 </entry>
+                <entry key="application/rtf">
+                    <list>
+                        <value>application/msword</value>
+                    </list>
+                </entry>
             </map>
         </property>
         <property name="progressIndicatorService" ref="progressIndicatorService"/>
