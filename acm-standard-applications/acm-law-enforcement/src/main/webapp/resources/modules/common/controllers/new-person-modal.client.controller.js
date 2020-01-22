@@ -68,12 +68,7 @@ angular.module('common').controller(
                         return organizationTypes;
                     });
 
-                    ObjectLookupService.getPrefixes().then(function (prefixes) {
-                        $scope.prefixes = prefixes;
-                        $scope.person.title = $scope.prefixes[0].key;
-                        return prefixes;
-                    });
-
+                    
                     $scope.addContactMethod = function(contactType) {
                         $timeout(function() {
                             contactMethodsCounts[contactType]++;
