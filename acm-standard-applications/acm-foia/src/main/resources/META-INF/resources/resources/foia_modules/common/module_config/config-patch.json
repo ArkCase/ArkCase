@@ -146,6 +146,10 @@
         "path": "/docTree/menu/basic/file/?@.titleKey=='common.directive.docTree.menu.coEdit'"
     },
     {
+        "op": "remove",
+        "path": "/docTree/menu/link/file/?@.titleKey=='common.directive.docTree.menu.coEdit'"
+    },
+    {
         "op": "add",
         "path": "/docTree/menu/basic/file/-",
         "value": {
