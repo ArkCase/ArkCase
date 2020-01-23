@@ -50,12 +50,14 @@ import javax.persistence.PersistenceContext;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
+        "/spring/spring-library-person-plugin-test.xml",
         "/spring/spring-library-data-source.xml",
         "/spring/spring-library-person.xml",
-        "/spring/spring-library-person-plugin-test.xml",
+        "/spring/spring-library-addressable-plugin.xml",
         "/spring/spring-library-context-holder.xml",
         "/spring/spring-library-property-file-manager.xml",
         "/spring/spring-library-acm-encryption.xml",
+        "/spring/spring-library-user-service.xml",
         "/spring/spring-library-user-service.xml",
         "/spring/spring-library-search.xml",
         "/spring/spring-library-ecm-file.xml",
@@ -76,6 +78,13 @@ import javax.persistence.PersistenceContext;
         "/spring/spring-library-configuration.xml",
         "/spring/spring-library-folder-watcher.xml",
         "/spring/spring-library-acm-email.xml",
+        "/spring/spring-library-websockets.xml",
+        "/spring/spring-library-activemq.xml",
+        "/spring/spring-library-user-login.xml",
+        "/spring/spring-library-core-api.xml",
+        "/spring/spring-library-camel-context.xml",
+        "/spring/spring-library-authentication-token.xml",
+        "/spring/spring-library-plugin-manager.xml",
         "/spring/spring-test-quartz-scheduler.xml" })
 @TransactionConfiguration(defaultRollback = true, transactionManager = "transactionManager")
 public class PersonIT

@@ -56,6 +56,7 @@ import java.util.Map;
         "/spring/spring-library-test-activiti-configuration.xml",
         "/spring/spring-library-context-holder.xml",
         "/spring/spring-library-property-file-manager.xml",
+        "/spring/spring-library-websockets.xml",
         "/spring/spring-library-acm-encryption.xml"
 })
 public class AcmActivitiSpringIT

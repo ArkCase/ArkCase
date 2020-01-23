@@ -105,6 +105,12 @@ import java.util.UUID;
         "/spring/spring-library-configuration.xml",
         "/spring/spring-library-task-plugin-test.xml",
         "/spring/spring-library-convert-folder-service.xml",
+        "/spring/spring-test-quartz-scheduler.xml",
+        "/spring/spring-library-activemq.xml",
+        "/spring/spring-library-websockets.xml",
+        "/spring/spring-library-camel-context.xml",
+        "/spring/spring-library-ecm-file-sync.xml",
+        "/spring/spring-library-object-title.xml",
         "/spring/spring-library-business-process.xml"
 })
 @TransactionConfiguration(defaultRollback = true)

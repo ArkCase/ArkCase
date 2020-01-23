@@ -2,19 +2,6 @@
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
 
-    <bean id="acmCamelConfig" class="com.armedia.acm.camelcontext.configuration.AcmCamelConfig"/>
-
-    <bean id="camelConfigUtils" class="com.armedia.acm.camelcontext.configuration.CamelConfigUtils">
-        <property name="propertyFileManager" ref="propertyFileManager"/>
-        <property name="acmCamelConfig" ref="acmCamelConfig"/>
-    </bean>
-
-    <bean id="camelContextManager" class="com.armedia.acm.camelcontext.context.CamelContextManager"
-          destroy-method="shutdownBeans">
-        <property name="camelConfigUtils" ref="camelConfigUtils"/>
-        <property name="encryptablePropertyUtils" ref="acmEncryptablePropertyUtils"/>
-    </bean>
-
     <bean id="logoutUrl" class="java.lang.String" factory-method="valueOf">
         <constructor-arg value="logoutUrl"/>
     </bean>
@@ -32,5 +19,19 @@
     </bean>
 
     <bean id="captureConfig" class="com.armedia.acm.files.capture.CaptureConfig"/>
+
+    <bean id="cacheManager" class="org.springframework.cache.support.SimpleCacheManager">
+        <property name="caches">
+            <set>
+                <bean class="org.springframework.cache.concurrent.ConcurrentMapCacheFactoryBean">
+                    <property name="name" value="default"/>
+                </bean>
+            </set>
+        </property>
+    </bean>
+
+    <bean id="expiredUrl" class="java.lang.String">
+        <constructor-arg value="/expiredUrl"/>
+    </bean>
 
 </beans>

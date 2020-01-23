@@ -75,6 +75,10 @@ import org.springframework.transaction.annotation.Transactional;
         "/spring/spring-library-calendar-integration-exchange-service.xml",
         "/spring/spring-library-hazelcast-config.xml",
         "/spring/spring-library-holiday.xml",
+        "/spring/spring-library-activemq.xml",
+        "/spring/spring-library-camel-context.xml",
+        "/spring/spring-library-websockets.xml",
+        "/spring/spring-library-object-title.xml",
         "/spring/spring-test-quartz-scheduler.xml"
 })
 @TransactionConfiguration(defaultRollback = true, transactionManager = "transactionManager")
@@ -85,6 +89,8 @@ public class NotificationIT
         String userHomePath = System.getProperty("user.home");
         System.setProperty("acm.configurationserver.propertyfile", userHomePath + "/.arkcase/acm/conf.yml");
         System.setProperty("configuration.server.url", "http://localhost:9999");
+        System.setProperty("application.name.default", "arkcase");
+        System.setProperty("application.profile.reversed", "runtime");
     }
 
     @Autowired

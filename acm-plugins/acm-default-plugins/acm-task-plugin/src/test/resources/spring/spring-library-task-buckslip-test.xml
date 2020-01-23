@@ -15,8 +15,13 @@
         </constructor-arg>
     </bean>
 
-    <!--<bean id="logoutUrl" class="java.lang.String">-->
-    <!--<constructor-arg index="0" value="/logout"/>-->
-    <!--</bean>-->
-
+    <bean id="cacheManager" class="org.springframework.cache.support.SimpleCacheManager">
+        <property name="caches">
+            <set>
+                <bean class="org.springframework.cache.concurrent.ConcurrentMapCacheFactoryBean">
+                    <property name="name" value="default"/>
+                </bean>
+            </set>
+        </property>
+    </bean>
 </beans>

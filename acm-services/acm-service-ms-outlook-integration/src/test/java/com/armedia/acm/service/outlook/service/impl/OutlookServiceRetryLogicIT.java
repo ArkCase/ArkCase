@@ -30,7 +30,6 @@ package com.armedia.acm.service.outlook.service.impl;
 import static org.easymock.EasyMock.anyObject;
 import static org.easymock.EasyMock.eq;
 import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.expectLastCall;
 import static org.junit.Assert.fail;
 
 import com.armedia.acm.core.exceptions.AcmOutlookException;
@@ -80,8 +79,15 @@ import microsoft.exchange.webservices.data.search.filter.SearchFilter;
         "/spring/spring-library-ecm-file-lock.xml",
         "/spring/spring-library-service-data.xml",
         "/spring/spring-library-core-api.xml",
+        "/spring/spring-library-audit-service.xml",
         "/spring/spring-library-configuration.xml",
         "/spring/spring-library-convert-folder-service.xml",
+        "/spring/spring-test-quartz-scheduler.xml",
+        "/spring/spring-library-camel-context.xml",
+        "/spring/spring-library-activemq.xml",
+        "/spring/spring-library-websockets.xml",
+        "/spring/spring-library-user-login.xml",
+        "/spring/spring-library-plugin-manager.xml",
         "/spring/spring-library-folder-watcher.xml"
 })
 public class OutlookServiceRetryLogicIT extends EasyMockSupport
@@ -179,8 +185,6 @@ public class OutlookServiceRetryLogicIT extends EasyMockSupport
                 eq(sortAscending),
                 eq(filter))).andThrow(new AcmOutlookFindItemsFailedException(new NullPointerException("test exception")))
                         .times(expectedRetries);
-
-        expectLastCall().times(expectedRetries);
 
         replayAll();
 

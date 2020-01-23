@@ -65,6 +65,7 @@ import java.util.UUID;
         "/spring/spring-library-case-file-dao-test.xml",
         "/spring/spring-library-data-source.xml",
         "/spring/spring-library-user-service.xml",
+        "/spring/spring-library-core-api.xml",
         "/spring/spring-library-context-holder.xml",
         "/spring/spring-library-property-file-manager.xml",
         "/spring/spring-library-acm-encryption.xml",
@@ -79,6 +80,14 @@ import java.util.UUID;
         "/spring/spring-library-data-access-control.xml",
         "/spring/spring-library-activiti-configuration.xml",
         "/spring/spring-library-service-data.xml",
+        "/spring/spring-test-quartz-scheduler.xml",
+        "/spring/spring-library-activemq.xml",
+        "/spring/spring-library-websockets.xml",
+        "/spring/spring-library-user-login.xml",
+        "/spring/spring-library-camel-context.xml",
+        "/spring/spring-library-authentication-token.xml",
+        "/spring/spring-library-plugin-manager.xml",
+        "/spring/spring-integration-case-file-test.xml",
         "/spring/spring-library-folder-watcher.xml"
 })
 @TransactionConfiguration(defaultRollback = true)
