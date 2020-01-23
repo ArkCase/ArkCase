@@ -2,13 +2,28 @@
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-    <bean id="caseFileMailHandler" class="com.armedia.acm.plugins.casefile.handler.CaseFileMailHandler">
-        <property name="mailDirectory" value="${casefile.email.folder.relative.path}"/>
-        <property name="enabled" value="${casefile.email.handler.enabled}"/>
-        <property name="caseNumberRegexPattern" value="${casefile.email.regex.case_number}"/>
+    <bean id="alfrescoSyncConfig" class="com.armedia.acm.plugins.ecm.service.sync.AlfrescoSyncConfig"/>
+
+    <bean id="expiredUrl" class="java.lang.String">
+        <constructor-arg value="/expiredUrl"/>
     </bean>
 
-    <bean id="caseFileMailFilter" class="com.armedia.acm.plugins.casefile.filter.CaseFileMailFilter">
-        <property name="caseNumberRegexPattern" value="${casefile.email.regex.case_number}"/>
+    <bean id="jmsTemplate" class="org.springframework.jms.core.JmsTemplate">
+        <constructor-arg index="0" ref="amqConnectionFactory"/>
+        <property name="deliveryMode" value="2"/>
+        <property name="receiveTimeout" value="500"/>
+    </bean>
+
+    <bean id="billingInvoiceDocumentGenerator"
+          class="com.armedia.acm.plugins.billing.service.BillingInvoiceDocumentGenerator"/>
+
+    <bean id="cacheManager" class="org.springframework.cache.support.SimpleCacheManager">
+        <property name="caches">
+            <set>
+                <bean class="org.springframework.cache.concurrent.ConcurrentMapCacheFactoryBean">
+                    <property name="name" value="default"/>
+                </bean>
+            </set>
+        </property>
     </bean>
 </beans>

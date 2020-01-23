@@ -52,6 +52,7 @@ import java.util.List;
         "/spring/spring-library-property-file-manager.xml",
         "/spring/spring-library-acm-encryption.xml",
         "/spring-library-audit-test.xml",
+        "/spring/spring-library-websockets.xml",
         "/spring/spring-library-object-converter.xml",
         "/spring/spring-library-configuration.xml"
 })

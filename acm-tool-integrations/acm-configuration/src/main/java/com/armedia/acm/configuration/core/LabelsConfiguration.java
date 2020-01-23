@@ -88,7 +88,7 @@ public class LabelsConfiguration implements ConfigurationFacade
             labelsDefaultMap.put(key, this.configurationServiceBootClient.loadDefaultConfiguration(key, null));
             log.trace("Labels {} loaded", labelsModule);
         });
-        log.info("Finished loading labels with language: {}");
+        log.info("Finished loading labels with language: {}", defaultLocale);
     }
 
     public void includeOtherLanguageInLabelsMap(String lang)

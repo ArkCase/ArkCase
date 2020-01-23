@@ -7,4 +7,12 @@
     <bean id="auditPropertyEntityAdapter" class="com.armedia.acm.data.AuditPropertyEntityAdapter"/>
 
     <bean id="auditDao" class="com.armedia.acm.audit.dao.AuditDao"/>
+
+    <bean id="jobEventPublisher" class="com.armedia.acm.quartz.scheduler.AcmJobEventPublisher"/>
+
+    <bean id="acmJobDescriptor" class="com.armedia.acm.quartz.scheduler.AcmJobDescriptor" abstract="true">
+        <property name="jobEventPublisher" ref="jobEventPublisher"/>
+    </bean>
+
+    <bean id="applicationProperties" class="com.armedia.acm.core.model.ApplicationConfig"/>
 </beans>

@@ -34,7 +34,7 @@
         <apache-commons-vfs2.version>2.0</apache-commons-vfs2.version>
         <apache-commons-text.version>1.6</apache-commons-text.version>
         <apache-httpcomponents-httpclient.version>4.5</apache-httpcomponents-httpclient.version>
-        <apache-tika-parsers.version>1.16</apache-tika-parsers.version>
+        <apache-tika-parsers.version>1.17</apache-tika-parsers.version>
         <asm.version>5.0.3</asm.version>
         <aspectj.version>1.7.4</aspectj.version>
         <barcode4j.version>2.1</barcode4j.version>

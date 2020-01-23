@@ -54,9 +54,13 @@ import java.util.Date;
         "/spring/spring-library-property-file-manager.xml",
         "/spring/spring-library-acm-encryption.xml",
         "/spring/spring-library-user-service.xml",
+        "/spring/spring-library-core-api.xml",
         "/spring/spring-library-search.xml",
         "/spring/spring-library-note-plugin-test.xml",
         "/spring/spring-library-configuration.xml",
+        "/spring/spring-test-quartz-scheduler.xml",
+        "/spring/spring-library-activemq.xml",
+        "/spring/spring-library-websockets.xml",
         "/spring/spring-library-object-converter.xml"
 })
 @TransactionConfiguration(defaultRollback = true, transactionManager = "transactionManager")

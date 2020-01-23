@@ -48,6 +48,13 @@ import java.util.Date;
  */
 public class AuditServiceImplT extends EasyMockSupport
 {
+    static
+    {
+        String userHomePath = System.getProperty("user.home");
+        System.setProperty("acm.configurationserver.propertyfile", userHomePath + "/.arkcase/acm/conf.yml");
+        System.setProperty("configuration.server.url", "http://localhost:9999");
+    }
+
     private AuditServiceImpl auditService;
     private AuditEvent event;
     private AuditDao mockAuditDao;
@@ -70,6 +77,7 @@ public class AuditServiceImplT extends EasyMockSupport
         // given
         auditConfig.setDatabaseChangesLoggingEnabled(true);
         auditConfig.setSystemLogEnabled(false);
+        auditConfig.setDatabaseEnabled(true);
         mockAuditDao = createMock(AuditDao.class);
         expect(mockAuditDao.save(event)).andReturn(event);
         auditService.setAuditDao(mockAuditDao);
@@ -88,6 +96,7 @@ public class AuditServiceImplT extends EasyMockSupport
         // given
         auditConfig.setDatabaseChangesLoggingEnabled(false);
         auditConfig.setSystemLogEnabled(true);
+        auditConfig.setDatabaseEnabled(false);
         mockSyslogLogger = createMock(ISystemLogger.class);
         mockSyslogLogger.log(event.toString());
         expectLastCall();
@@ -107,6 +116,7 @@ public class AuditServiceImplT extends EasyMockSupport
         // given
         auditConfig.setDatabaseChangesLoggingEnabled(true);
         auditConfig.setSystemLogEnabled(true);
+        auditConfig.setDatabaseEnabled(true);
         mockSyslogLogger = createMock(ISystemLogger.class);
         mockSyslogLogger.log(event.toString());
         expectLastCall();

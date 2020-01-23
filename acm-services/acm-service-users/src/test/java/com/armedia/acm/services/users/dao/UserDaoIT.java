@@ -47,6 +47,9 @@ import java.time.LocalDate;
         "/spring/spring-config-user-service-test-dummy-beans.xml",
         "/spring/spring-library-search.xml",
         "/spring/spring-library-object-converter.xml",
+        "/spring/spring-test-quartz-scheduler.xml",
+        "/spring/spring-library-websockets.xml",
+        "/spring/spring-library-activemq.xml",
         "/spring/spring-library-configuration.xml"
 })
 public class UserDaoIT

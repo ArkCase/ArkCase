@@ -23,6 +23,11 @@
         </dependency>
         <dependency>
             <groupId>com.armedia.acm.acm-tool-integrations</groupId>
+            <artifactId>acm-websockets</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.armedia.acm.acm-tool-integrations</groupId>
             <artifactId>acm-file-folder-watcher</artifactId>
             <version>${acm.version}</version>
         </dependency>

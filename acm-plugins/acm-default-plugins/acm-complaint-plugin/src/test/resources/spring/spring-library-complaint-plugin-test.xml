@@ -24,4 +24,84 @@
 
     <bean id="emailReceiverConfig" class="com.armedia.acm.email.model.EmailReceiverConfig"/>
 
+    <bean id="acmApplication" class="com.armedia.acm.core.AcmApplication"/>
+
+    <bean id="billingInvoiceDocumentGenerator"
+          class="com.armedia.acm.plugins.billing.service.BillingInvoiceDocumentGenerator">
+        <property name="billingService" ref="billingService"/>
+        <property name="ecmFileService" ref="ecmFileService"/>
+        <property name="ecmFileDao" ref="ecmFileDao"/>
+        <property name="billingInvoiceDao" ref="billingInvoiceDao"/>
+        <property name="pdfService" ref="pdfService"/>
+    </bean>
+
+    <bean id="billingInvoiceEmailSenderService"
+          class="com.armedia.acm.plugins.billing.service.BillingInvoiceEmailSenderService">
+        <property name="billingService" ref="billingService"/>
+        <property name="notificationSender" ref="notificationSender"/>
+        <property name="notificationDao" ref="notificationDao"/>
+        <property name="fileService" ref="ecmFileService"/>
+    </bean>
+
+
+    <bean id="processMailService" class="com.armedia.acm.services.email.service.AcmProcessMailServiceImpl">
+        <property name="acmFolderService" ref="acmFolderService"/>
+        <property name="ecmFileService" ref="ecmFileService"/>
+    </bean>
+
+    <bean id="emailSenderConfigurationService" class="com.armedia.acm.services.email.sender.service.EmailSenderConfigurationServiceImpl">
+        <property name="emailSenderConfig" ref="emailSenderConfig"/>
+        <property name="configurationPropertyService" ref="configurationPropertyService"/>
+    </bean>
+
+    <bean id="emailReceiverConfigurationService"
+          class="com.armedia.acm.services.email.receiver.service.EmailReceiverConfigurationServiceImpl">
+        <property name="configurationPropertyService" ref="configurationPropertyService"/>
+        <property name="emailReceiverConfig" ref="emailReceiverConfig"/>
+    </bean>
+
+    <bean id="filesystemTemplateConfigurationService"
+          class="com.armedia.acm.services.email.service.AcmFilesystemMailTemplateConfigurationService">
+        <property name="templateConfigurations" value="file:${user.home}/.arkcase/acm/mailTemplatesConfiguration.json"/>
+        <property name="templateFolderPath" value="${user.home}/.arkcase/acm/templates"/>
+        <property name="objectConverter" ref="objectConverter"/>
+    </bean>
+
+    <bean id="configurableEmailSenderService" class="com.armedia.acm.services.email.service.AcmConfigurableEmailSenderService">
+        <property name="emailSenderMap">
+            <map>
+                <entry key="smtp" value-ref="smtpService"></entry>
+                <entry key="outlook" value-ref="outlookService"></entry>
+            </map>
+        </property>
+        <property name="emailSenderConfigurationService" ref="emailSenderConfigurationService"/>
+    </bean>
+
+    <bean id="acmEmailContentGeneratorService" class="com.armedia.acm.services.email.service.AcmEmailContentGeneratorService">
+        <property name="authenticationTokenService" ref="authenticationTokenService"/>
+        <property name="authenticationTokenDao" ref="authenticationTokenDao"/>
+        <property name="templatingEngine" ref="templatingEngine"/>
+        <property name="ecmFileDao" ref="ecmFileDao"/>
+    </bean>
+
+    <bean id="templatingEngine" class="com.armedia.acm.services.email.service.TemplatingEngine">
+        <property name="applicationConfig" ref="applicationProperties"/>
+    </bean>
+
+
+    <bean id="phoneRegexConfig" class="com.armedia.acm.plugins.addressable.service.PhoneRegexConfig"/>
+
+    <bean id="alfrescoSyncConfig" class="com.armedia.acm.plugins.ecm.service.sync.AlfrescoSyncConfig"/>
+
+    <bean id="cacheManager" class="org.springframework.cache.support.SimpleCacheManager">
+        <property name="caches">
+            <set>
+                <bean class="org.springframework.cache.concurrent.ConcurrentMapCacheFactoryBean">
+                    <property name="name" value="default"/>
+                </bean>
+            </set>
+        </property>
+    </bean>
+    <bean id="authenticationTokenDao" class="com.armedia.acm.services.authenticationtoken.dao.AuthenticationTokenDao"/>
+
 </beans>
