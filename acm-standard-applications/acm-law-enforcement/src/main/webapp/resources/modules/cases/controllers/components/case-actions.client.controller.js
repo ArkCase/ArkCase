@@ -117,11 +117,7 @@ angular.module('cases').controller(
                             casefile: objectInfo
                         };
 
-                        if (objectInfo.status == 'IN APPROVAL') {
-                            $scope.showChangeCaseStatus = false;
-                        } else {
-                            $scope.showChangeCaseStatus = true;
-                        }
+                        $scope.showChangeCaseStatus = objectInfo.status !== 'IN APPROVAL';
                     };
 
                     $scope.newCaseFile = function() {
