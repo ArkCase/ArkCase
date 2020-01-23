@@ -87,7 +87,7 @@ public class ReleaseBusinessProcessIT extends EasyMockSupport
     private ResponseFolderConverterService responseFolderConverterService;
 
     @Autowired
-    // @Qualifier("responseFolderCompressorService")
+    @Qualifier("responseFolderCompressorService")
     private ResponseFolderCompressorService responseFolderCompressorService;
 
     @Autowired
@@ -119,9 +119,6 @@ public class ReleaseBusinessProcessIT extends EasyMockSupport
     @Test
     public void release() throws Exception
     {
-        // mockedApplicationEventPublisher.publishEvent(anyObject(RequestResponseFolderCompressedEvent.class));
-        // expectLastCall();
-
         Long foiaId = 500L;
         String objectType = CaseFileConstants.OBJECT_TYPE;
 
@@ -139,17 +136,10 @@ public class ReleaseBusinessProcessIT extends EasyMockSupport
         foiaRequestFileBrokerClient.sendReleaseFile(foiaId);
         responseFolderNotifyService.sendEmailNotification(foiaId);
 
-        // replay(changeObjectStatusService, queueCaseService, responseFolderCompressorService,
-        // foiaRequestFileBrokerClient,
-        // responseFolderNotifyService);
         replayAll();
 
         rt.startProcessInstanceByKey(processName, processVariables);
 
         verifyAll();
-
-        // verify(changeObjectStatusService, queueCaseService, responseFolderCompressorService,
-        // foiaRequestFileBrokerClient,
-        // responseFolderNotifyService);
     }
 }
