@@ -168,7 +168,6 @@ public class FOIARequestDao extends AcmAbstractDao<FOIARequest>
         return requestStatusList;
     }
 
-
     public List<PortalFOIARequestStatus> getLoggedUserExternalRequests(String emailAddress)
     {
         String queryText = "SELECT cf.caseNumber, cf.status, cf.modified, cf.publicFlag, cf.requestType FROM FOIARequest cf JOIN PersonAssociation pa JOIN pa.person p"
@@ -204,7 +203,6 @@ public class FOIARequestDao extends AcmAbstractDao<FOIARequest>
 
         return requestStatusList;
     }
-
 
     /**
      * @param portalUserId
@@ -282,7 +280,7 @@ public class FOIARequestDao extends AcmAbstractDao<FOIARequest>
         requestStatus.setRequestType((String) r[4]);
         return requestStatus;
     }
-    
+
     public List<FOIARequest> findAllNotReleasedRequests()
     {
         String queryText = "SELECT request FROM FOIARequest request"
@@ -292,4 +290,15 @@ public class FOIARequestDao extends AcmAbstractDao<FOIARequest>
         return requests;
     }
 
+    public List<FOIARequest> getNextAvailableRequestInQueue(Long queueId, Date createdDate)
+    {
+        String queryText = "SELECT request FROM CaseFile request "
+                + "WHERE request.queue.id = :queueId AND request.created < :createdDate "
+                + "ORDER BY request.created DESC";
+        TypedQuery<FOIARequest> nextRequestQuery = getEm().createQuery(queryText, FOIARequest.class);
+        nextRequestQuery.setParameter("queueId", queueId);
+        nextRequestQuery.setParameter("createdDate", createdDate);
+
+        return nextRequestQuery.getResultList();
+    }
 }
