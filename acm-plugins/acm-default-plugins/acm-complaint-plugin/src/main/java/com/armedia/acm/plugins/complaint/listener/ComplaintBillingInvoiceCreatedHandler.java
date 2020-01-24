@@ -28,6 +28,9 @@ package com.armedia.acm.plugins.complaint.listener;
  */
 
 import com.armedia.acm.plugins.billing.service.BillingInvoiceDocumentGenerator;
+import com.armedia.acm.plugins.complaint.dao.ComplaintDao;
+import com.armedia.acm.plugins.complaint.model.Complaint;
+import com.armedia.acm.plugins.complaint.model.ComplaintConstants;
 import com.armedia.acm.services.billing.model.BillingInvoiceCreatedEvent;
 
 import org.springframework.context.ApplicationListener;
@@ -40,11 +43,17 @@ public class ComplaintBillingInvoiceCreatedHandler implements ApplicationListene
 {
 
     private BillingInvoiceDocumentGenerator complaintBillingInvoiceDocumentGenerator;
+    private ComplaintDao complaintDao;
 
     @Override
     public void onApplicationEvent(BillingInvoiceCreatedEvent event)
     {
-        getComplaintBillingInvoiceDocumentGenerator().generatePdf(event.getParentObjectType(), event.getParentObjectId());
+        if(event.getParentObjectType().equals(ComplaintConstants.OBJECT_TYPE))
+        {
+            Complaint complaint = getComplaintDao().find(event.getParentObjectId());
+            getComplaintBillingInvoiceDocumentGenerator().setParentObject(complaint);
+            getComplaintBillingInvoiceDocumentGenerator().generatePdf(event.getParentObjectType(), event.getParentObjectId());
+        }
     }
 
     public BillingInvoiceDocumentGenerator getComplaintBillingInvoiceDocumentGenerator()
@@ -56,5 +65,15 @@ public class ComplaintBillingInvoiceCreatedHandler implements ApplicationListene
             BillingInvoiceDocumentGenerator complaintBillingInvoiceDocumentGenerator)
     {
         this.complaintBillingInvoiceDocumentGenerator = complaintBillingInvoiceDocumentGenerator;
+    }
+
+    public ComplaintDao getComplaintDao()
+    {
+        return complaintDao;
+    }
+
+    public void setComplaintDao(ComplaintDao complaintDao)
+    {
+        this.complaintDao = complaintDao;
     }
 }
