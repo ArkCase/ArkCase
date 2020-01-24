@@ -59,7 +59,7 @@
                     "width": 60
                 },
                 {
-                    "name": "request_id_lcs",
+                    "name": "object_id_s",
                     "displayName": "queues.table.header.id",
                     "headerCellFilter": "translate",
                     "headerTooltip": "queues.table.headerTooltip.requestId",
@@ -75,7 +75,7 @@
                     "minWidth": 67
                 },
                 {
-                    "name": "title_parseable_lcs",
+                    "name": "title_parseable",
                     "displayName": "queues.table.header.title",
                     "headerCellFilter": "translate",
                     "headerTooltip": "queues.table.headerTooltip.title",
@@ -137,25 +137,10 @@
                     "displayName": "queues.table.header.due",
                     "headerCellFilter": "translate",
                     "headerTooltip": "queues.table.headerTooltip.queueDueDate",
+                    "enableFiltering": false,
                     "cellTemplate": "<div ng-click='grid.appScope.rowClick(row);' style='cursor:pointer;' class='ui-grid-cell-contents'>{{COL_FIELD CUSTOM_FILTERS}}</div>",
                     "type": "date",
-                    "minWidth": 130,
-                    "filters": [
-                        {
-                            "placeholder": "from...",
-                            "condition": 64,
-                            "flags": {
-                                "date": true
-                            }
-                        },
-                        {
-                            "placeholder": "to...",
-                            "condition": 256,
-                            "flags": {
-                                "date": true
-                            }
-                        }
-                    ]
+                    "minWidth": 130
                 },
                 {
                     "name": "daysInQueue",
