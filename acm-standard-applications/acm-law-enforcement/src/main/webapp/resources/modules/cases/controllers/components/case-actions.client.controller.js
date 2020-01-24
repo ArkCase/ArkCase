@@ -186,6 +186,7 @@ angular.module('cases').controller(
 
                         modalInstance.result.then(function(data) {
                             console.log(data);
+                            $scope.refresh();
                         }, function() {
                             console.log("error");
                         });
