@@ -245,21 +245,17 @@ angular.module('queues').factory('Queues.QueuesService', [ '$http', '$q', 'Ecm.M
                     name: filter.column
                 });
                 if (columnType && columnType.type) {
-                    if (columnType.name == 'request_id_lcs' || columnType.name == 'title_parseable_lcs') {
-                        columnType = 'number';
-                    } else {
-                        columnType = columnType.type;
-                    }
+                    columnType = columnType.type;
                 } else {
                     columnType = null;
                 }
 
                 if (columnType == 'date' && _.isDate(filter.value)) {
-                    var solrDate = moment(filter.value).toISOString();
+                    var solrDate = moment(filter.value).format("YYYY-MM-DDTHH:mm:ss") + "Z";
                     if (filter.condition == 'from') {
                         filters.push(filter.column + ':[' + solrDate + ' TO *]');
                     } else if (filter.condition == 'to') {
-                        filters.push(filter.column + ':[* TO ' + solrDate + ']');
+                        filters.push(filter.column + ':[* TO ' + solrDate.replace("00:00:00", "23:59:59") + ']');
                     }
                 } else if (columnType == 'boolean' && _.isBoolean(filter.value)) {
                     if (filter.value) {
