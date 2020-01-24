@@ -207,11 +207,21 @@ public class PeopleAPIController
             personService.saveImageForPerson(personId, image, data.isDefault(), data.getEcmFile(), auth);
             return new ResponseEntity<>(HttpStatus.OK);
         }
-        catch (PipelineProcessException | PersistenceException e)
+        catch (PipelineProcessException | PersistenceException | AcmFileTypesException e)
         {
             log.error("Error while saving Person with id: [{}]", personId, e);
             throw new AcmCreateObjectFailedException("Person", e.getMessage(), e);
         }
+    }
+
+    @PreAuthorize("hasPermission(#personId, 'PERSON', 'editObject')")
+    @RequestMapping(value = "/{personId}/images/changeImageDescription/{imageId}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public EcmFile changeImageDescription(@PathVariable("personId") Long personId, @PathVariable("imageId") Long imageId, @RequestBody UploadImageRequest data, Authentication auth)
+        throws AcmUserActionFailedException, AcmObjectNotFoundException, AcmUpdateObjectFailedException
+    {
+        log.debug("Changing description for Image with id: [{}];", imageId);
+        return personService.changeDescriptionForImage(imageId, data.isDefault(), data.getDescription(), auth);
     }
 
     @PreAuthorize("hasPermission(#personId, 'PERSON', 'editPerson')")
