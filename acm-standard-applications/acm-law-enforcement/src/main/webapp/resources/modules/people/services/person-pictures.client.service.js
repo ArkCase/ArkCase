@@ -73,6 +73,12 @@ angular.module('services').factory('Person.PicturesService', [ '$resource', '$tr
             method: 'DELETE',
             url: 'api/latest/plugin/people/:personId/images/:imageId',
             cache: false
+        },
+
+        _changeImageDescription: {
+            method: 'POST',
+            url: 'api/latest/plugin/people/:personId/images/changeImageDescription/:imageId',
+            cache: false
         }
     });
     Service.SessionCacheNames = {};
@@ -184,6 +190,22 @@ angular.module('services').factory('Person.PicturesService', [ '$resource', '$tr
             },
             sendFieldsAs: 'json-blob',
             file: file
+        });
+    };
+    Service.changeImageDescription = function (personId, imageId, isDefault, imageDescription) {
+        return Util.serviceCall({
+            service: Service._changeImageDescription,
+            param: {
+                personId: personId,
+                imageId: imageId
+            },
+            data: {
+                isDefault: isDefault,
+                description: imageDescription
+            },
+            onSuccess: function(data) {
+                return data;
+            }
         });
     };
     return Service;
