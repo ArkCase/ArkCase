@@ -647,7 +647,7 @@ angular.module('request-info').controller(
                 // default view == snowbound
                 $scope.view = "modules/document-details/views/document-viewer-snowbound.client.view.html";
 
-                $scope.transcribeEnabled = $scope.transcriptionConfiguration.data.enabled;
+                $scope.transcribeEnabled = $scope.transcriptionConfiguration.data['transcribe.enabled'];
 
                 $timeout(function () {
                     $scope.$broadcast('document-data', $scope.ecmFile);
