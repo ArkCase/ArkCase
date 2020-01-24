@@ -102,7 +102,8 @@ public interface CollectionPropertiesConfigurationService
      * @param convertWithMap
      *
      */
-    Map<String, Object> filterAndConvertProperties(String mapPropertyKey, Map<String, Object> updatedMap, boolean convertWithMap);
+    Map<String, Object> filterAndConvertProperties(String mapPropertyKey, Map<String, Object> updatedMap, boolean convertWithMap,
+            boolean convertFromTheRootKey);
 
     /**
      * Gets all the property keys annotated with MapValue annotation.
