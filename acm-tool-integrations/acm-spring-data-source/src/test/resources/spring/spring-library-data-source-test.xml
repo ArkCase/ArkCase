@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+       xmlns:int="http://www.springframework.org/schema/integration" xmlns:task="http://www.springframework.org/schema/task"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/spring-integration.xsd http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd">
 
     <bean id="testDeleteListener" class="com.armedia.acm.data.TestDeleteListener"/>
 
     <bean id="testUpdateListener" class="com.armedia.acm.data.TestUpdateListener"/>
 
     <bean id="testInsertListener" class="com.armedia.acm.data.TestInsertListener"/>
+
+    <task:executor id="channelExecutor" pool-size="4"/>
+
+    <int:publish-subscribe-channel id="objectEventChannel" task-executor="channelExecutor" min-subscribers="1"/>
+
+    <int:publish-subscribe-channel id="genericMessagesChannel" task-executor="channelExecutor" min-subscribers="1"/>
 
 </beans>

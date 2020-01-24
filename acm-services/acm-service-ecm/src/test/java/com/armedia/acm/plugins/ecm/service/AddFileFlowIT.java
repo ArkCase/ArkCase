@@ -6,22 +6,22 @@ package com.armedia.acm.plugins.ecm.service;
  * %%
  * Copyright (C) 2014 - 2018 ArkCase LLC
  * %%
- * This file is part of the ArkCase software. 
- * 
- * If the software was purchased under a paid ArkCase license, the terms of 
- * the paid license agreement will prevail.  Otherwise, the software is 
+ * This file is part of the ArkCase software.
+ *
+ * If the software was purchased under a paid ArkCase license, the terms of
+ * the paid license agreement will prevail.  Otherwise, the software is
  * provided under the following open source license terms:
- * 
+ *
  * ArkCase is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *  
+ *
  * ArkCase is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
  * #L%
@@ -75,6 +75,9 @@ import java.util.UUID;
         "/spring/spring-library-drools-rule-monitor.xml",
         "/spring/spring-library-object-converter.xml",
         "/spring/spring-library-configuration.xml",
+        "/spring/spring-library-websockets.xml",
+        "/spring/spring-library-core-api.xml",
+        "/spring/spring-library-camel-context.xml",
         "/spring/spring-test-quartz-scheduler.xml" })
 public class AddFileFlowIT
 {
@@ -95,17 +98,17 @@ public class AddFileFlowIT
     @Before
     public void setUp() throws Exception
     {
-        MDC.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, "admin");
+        MDC.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, "ann-acm");
         MDC.put(MDCConstants.EVENT_MDC_REQUEST_ID_KEY, UUID.randomUUID().toString());
 
-        String testPath = "/acm/test/folder";
+        String testPath = "/Sites/acm/documentLibrary/test/folder";
         Map<String, Object> messageProperties = new HashMap<>();
 
         messageProperties.put(EcmFileConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID);
         messageProperties.put(PropertyIds.PATH, testPath);
+        messageProperties.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, "");
 
-        // TODO : Get or create folder by path
-        Folder folder = (Folder) camelContextManager.send(ArkCaseCMISActions.GET_FOLDER, messageProperties);
+        Folder folder = (Folder) camelContextManager.send(ArkCaseCMISActions.GET_OR_CREATE_FOLDER_BY_PATH, messageProperties);
 
         String folderId = folder.getPropertyValue(EcmFileConstants.REPOSITORY_VERSION_ID);
 
@@ -129,6 +132,7 @@ public class AddFileFlowIT
 
         Map<String, Object> messageProperties = new HashMap<>();
         messageProperties.put("cmisFolderId", testFolderId);
+
         messageProperties.put("inputStream", is);
 
         messageProperties.put(EcmFileConstants.CMIS_REPOSITORY_ID, ArkCaseCMISConstants.CAMEL_CMIS_DEFAULT_REPO_ID);
@@ -148,9 +152,7 @@ public class AddFileFlowIT
         log.debug("doc id: {}", newDocument.getVersionSeriesId());
 
         messageProperties.put(CamelCMISConstants.CMIS_OBJECT_ID, newDocument.getVersionSeriesId());
-        Document document = (Document) camelContextManager.send(ArkCaseCMISActions.DOWNLOAD_DOCUMENT, messageProperties);
-
-        ContentStream filePayload = document.getContentStream();
+        ContentStream filePayload = (ContentStream) camelContextManager.send(ArkCaseCMISActions.DOWNLOAD_DOCUMENT, messageProperties);
 
         assertNotNull(filePayload);
 

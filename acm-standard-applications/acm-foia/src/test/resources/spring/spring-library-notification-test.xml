@@ -4,7 +4,4 @@
 
     <bean id="acmApplication" class="com.armedia.acm.core.AcmApplication"/>
 
-    <bean id="templatingEngine" class="com.armedia.acm.services.email.service.TemplatingEngine">
-        <property name="acmApplication" ref="acmApplication"/>
-    </bean>
 </beans>

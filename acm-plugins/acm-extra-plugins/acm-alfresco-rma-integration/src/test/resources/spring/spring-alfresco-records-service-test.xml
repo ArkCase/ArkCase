@@ -18,6 +18,18 @@
         </constructor-arg>
     </bean>
 
+    <bean id="cacheManager" class="org.springframework.cache.support.SimpleCacheManager">
+        <property name="caches">
+            <set>
+                <bean class="org.springframework.cache.concurrent.ConcurrentMapCacheFactoryBean">
+                    <property name="name" value="default"/>
+                </bean>
+            </set>
+        </property>
+    </bean>
+
+    <bean id="alfrescoSyncConfig" class="com.armedia.acm.plugins.ecm.service.sync.AlfrescoSyncConfig"/>
+
     <bean id="rmaConfig" class="com.armedia.acm.plugins.alfrescorma.model.AlfrescoRmaConfig"/>
 
 </beans>

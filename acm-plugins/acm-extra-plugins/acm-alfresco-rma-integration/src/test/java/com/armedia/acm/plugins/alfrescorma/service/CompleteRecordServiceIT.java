@@ -32,6 +32,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import com.armedia.acm.camelcontext.context.CamelContextManager;
+import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.web.api.MDCConstants;
 
 import org.apache.chemistry.opencmis.client.api.Document;
@@ -66,6 +67,7 @@ import java.util.UUID;
         "/spring/spring-library-context-holder.xml",
         "/spring/spring-library-search.xml",
         "/spring/spring-library-user-service.xml",
+        "/spring/spring-library-core-api.xml",
         "/spring/spring-library-data-access-control.xml",
         "/spring/spring-library-particpants.xml",
         "/spring/spring-library-activiti-configuration.xml",
@@ -81,6 +83,9 @@ import java.util.UUID;
         "/spring/spring-library-configuration.xml",
         "/spring/spring-library-acm-email.xml",
         "/spring/spring-library-camel-context.xml",
+        "/spring/spring-test-quartz-scheduler.xml",
+        "/spring/spring-library-websockets.xml",
+        "/spring/spring-library-activemq.xml",
         "/spring/spring-library-folder-watcher.xml"
 })
 public class CompleteRecordServiceIT
@@ -123,7 +128,7 @@ public class CompleteRecordServiceIT
         MDC.put(MDCConstants.EVENT_MDC_REQUEST_ID_KEY, UUID.randomUUID().toString());
 
         Document testFile = cmisFileWriter.writeTestFile(camelContextManager);
-        ecmFileId = testFile.getVersionSeriesId();
+        ecmFileId = testFile.getProperty(EcmFileConstants.REPOSITORY_VERSION_ID).getValue();
     }
 
     @Test

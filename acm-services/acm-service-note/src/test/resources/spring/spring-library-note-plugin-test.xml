@@ -15,4 +15,10 @@
     <bean id="auditEventConfig" class="com.armedia.acm.audit.model.AuditEventConfig">
         <property name="jsonUnmarshaller" ref="jsonUnmarshaller"/>
     </bean>
+    
+    <bean id="jmsTemplate" class="org.springframework.jms.core.JmsTemplate">
+        <constructor-arg index="0" ref="amqConnectionFactory"/>
+        <property name="deliveryMode" value="2"/>
+        <property name="receiveTimeout" value="500"/>
+    </bean>
 </beans>

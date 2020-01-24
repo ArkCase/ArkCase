@@ -123,19 +123,25 @@ import java.util.stream.Collectors;
         "/spring/spring-library-pdf-utilities.xml",
         "/spring/spring-library-person.xml",
         "/spring/spring-library-person-rules.xml",
+        "/spring/spring-library-addressable-plugin.xml",
         "/spring/spring-library-profile.xml",
         "/spring/spring-library-property-file-manager.xml",
         "/spring/spring-library-search.xml",
         "/spring/spring-library-service-data.xml",
         "/spring/spring-library-task.xml",
+        "/spring/spring-test-quartz-scheduler.xml",
         "/spring/spring-library-user-service.xml",
         "/spring/spring-library-core-api.xml",
         "/spring/spring-library-user-login.xml",
         "/spring/spring-library-plugin-manager.xml",
-        "/spring/spring-library-audit-service.xml",
         "/spring/spring-library-configuration.xml",
         "/spring/spring-library-acm-email.xml",
         "/spring/spring-library-convert-folder-service.xml",
+        "/spring/spring-library-activemq.xml",
+        "/spring/spring-library-websockets.xml",
+        "/spring/spring-library-camel-context.xml",
+        "/spring/spring-integration-case-file-test.xml",
+        "/spring/spring-library-object-title.xml",
         "/spring/spring-library-user-tracker.xml"
 })
 @TransactionConfiguration(defaultRollback = true)
@@ -144,7 +150,9 @@ public class MergeCaseFileServiceIT
     static
     {
         String userHomePath = System.getProperty("user.home");
-        System.setProperty("acm.configurationserver.propertyfile", userHomePath + "/.arkcase/acm/conf.yml");
+        System.setProperty("acm.configurationserver.propertyfile",
+
+                userHomePath + "/.arkcase/acm/conf.yml");
         System.setProperty("configuration.server.url", "http://localhost:9999");
     }
 

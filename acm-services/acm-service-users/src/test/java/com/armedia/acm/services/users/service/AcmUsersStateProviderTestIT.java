@@ -46,9 +46,12 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
         "/spring/spring-library-context-holder.xml",
         "/spring/spring-library-property-file-manager.xml",
         "/spring/spring-library-acm-encryption.xml",
-        "/spring/spring-config-user-service-test-dummy-beans.xml",
         "/spring/spring-library-search.xml",
         "/spring/spring-library-object-converter.xml",
+        "/spring/spring-test-quartz-scheduler.xml",
+        "/spring/spring-library-activemq.xml",
+        "/spring/spring-library-websockets.xml",
+        "/spring/spring-config-user-service-test-dummy-beans.xml",
         "/spring/spring-library-configuration.xml"
 })
 public class AcmUsersStateProviderTestIT

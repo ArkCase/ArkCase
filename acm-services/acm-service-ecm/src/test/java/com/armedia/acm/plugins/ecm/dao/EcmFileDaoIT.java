@@ -80,6 +80,11 @@ import java.time.LocalDateTime;
         "/spring/spring-test-quartz-scheduler.xml",
         "/spring/spring-library-websockets.xml",
         "/spring/spring-library-core-api.xml",
+        "/spring/spring-library-authentication-token.xml",
+        "/spring/spring-library-user-login.xml",
+        "/spring/spring-library-ecm-file-sync.xml",
+        "/spring/spring-library-plugin-manager.xml",
+        "/spring/spring-library-camel-context.xml",
         "/spring/spring-library-activemq.xml" })
 @TransactionConfiguration(defaultRollback = true, transactionManager = "transactionManager")
 public class EcmFileDaoIT
