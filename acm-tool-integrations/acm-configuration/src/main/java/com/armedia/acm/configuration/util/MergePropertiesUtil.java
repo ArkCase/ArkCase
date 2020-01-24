@@ -196,7 +196,8 @@ public class MergePropertiesUtil
 
     private static void removeMergedPropertyIfAlreadyMerged(Map<String, Object> mergedConfig, String k)
     {
-        mergedConfig.entrySet().removeIf(mergedEntry -> mergedEntry.getKey().startsWith(k));
+        mergedConfig.entrySet().removeIf(mergedEntry -> mergedEntry.getKey().startsWith(k + "[") || mergedEntry.getKey().equals(k)
+                || mergedEntry.getKey().startsWith(k + "."));
     }
 
     private static void mergeListEntry(Map<String, Object> mergedConfig, String k, Object v)

@@ -63,7 +63,7 @@ public class MapValueAspect
         Map<String, Object> propsFromConfiguration = configurationContainer.getConfigurationMap();
 
         Map<String, Object> props = collectionPropertiesConfigurationService.filterAndConvertProperties(propertyKey.value() + ".",
-                propsFromConfiguration, false);
+                propsFromConfiguration, false, propertyKey.convertFromTheRootKey());
 
         return props;
     }
