@@ -66,7 +66,7 @@ public class ListValueAspect
         String lastKey = MergePropertiesUtil.getLastKey(property.value());
 
         Map<String, Object> props = collectionPropertiesConfigurationService.filterAndConvertProperties(property.value() + "[",
-                propsFromConfiguration, true);
+                propsFromConfiguration, true, false);
 
         return props.get(lastKey);
     }

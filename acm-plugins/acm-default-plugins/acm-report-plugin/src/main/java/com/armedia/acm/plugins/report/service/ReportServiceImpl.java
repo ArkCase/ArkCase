@@ -410,7 +410,6 @@ public class ReportServiceImpl implements ReportService
 
     }
 
-
     @Override
     public Map<String, List<String>> getReportToRolesMap()
     {
@@ -467,8 +466,12 @@ public class ReportServiceImpl implements ReportService
     @Override
     public List<String> saveRolesToReport(String reportName, List<Object> roles, Authentication auth)
     {
-        Map<String, List<String>> reportsToRolesMapping = reportsToRolesConfig.getReportsToRolesMap();
-        List<String> rolesForReport = reportsToRolesMapping.get(reportName);
+        List<String> rolesForReport = reportsToRolesConfig.getReportsToRolesMap().get(reportName);
+
+        if (rolesForReport == null)
+        {
+            rolesForReport = new ArrayList<>();
+        }
 
         rolesForReport.addAll((List<String>) (Object) roles);
 
@@ -527,37 +530,43 @@ public class ReportServiceImpl implements ReportService
     }
 
     @Override
-    public List<String> getRolesForReport(Boolean authorized, String reportId, int startRow, int maxRows, String sortBy, String sortDirection) {
-        List<String> reportsToRolesConfigString = reportsToRolesConfig.getReportsToRolesMap().get(reportId);
+    public List<String> getRolesForReport(Boolean authorized, String reportId, int startRow, int maxRows, String sortBy,
+            String sortDirection)
+    {
+        List<String> rolesForReport = reportsToRolesConfig.getReportsToRolesMap().get(reportId);
 
-        if (reportsToRolesConfigString != null) {
-            List<String> rolesForReport = reportsToRolesConfigString;
-            List<String> result = null;
-
-            if (!authorized) {
-                result = rolesConfig.getApplicationRoles().stream()
-                        .filter(role -> rolesForReport.stream().noneMatch(r -> r.equals(role)))
-                        .collect(Collectors.toList());
-            } else {
-                result = rolesForReport;
-            }
-
-
-            if (sortDirection.contains("DESC")) {
-                Collections.sort(result, Collections.reverseOrder());
-            } else {
-                Collections.sort(result);
-            }
-
-            if (startRow > result.size()) {
-                return result;
-            }
-            maxRows = maxRows > result.size() ? result.size() : maxRows;
-
-            return result.stream().skip(startRow).limit(maxRows).collect(Collectors.toList());
-        } else {
-            return new ArrayList<>();
+        if (rolesForReport == null)
+        {
+            rolesForReport = new ArrayList<>();
         }
+
+        List<String> result = rolesConfig.getApplicationRoles();
+
+        if (authorized)
+        {
+            result.retainAll(rolesForReport);
+        }
+        else
+        {
+            result.removeAll(rolesForReport);
+        }
+
+        if (sortDirection.contains("DESC"))
+        {
+            Collections.sort(result, Collections.reverseOrder());
+        }
+        else
+        {
+            Collections.sort(result);
+        }
+
+        if (startRow > result.size())
+        {
+            return result;
+        }
+        maxRows = maxRows > result.size() ? result.size() : maxRows;
+
+        return result.stream().skip(startRow).limit(maxRows).collect(Collectors.toList());
     }
 
     public PentahoReportUrl getReportUrl()
