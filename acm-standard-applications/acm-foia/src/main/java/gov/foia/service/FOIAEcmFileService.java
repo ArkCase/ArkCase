@@ -27,9 +27,11 @@ package gov.foia.service;
  * #L%
  */
 
+import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
+
 public interface FOIAEcmFileService
 {
-    void setReviewStatus(Long fileId, String fileVersion, String reviewStatus);
+    void setReviewStatus(Long fileId, String fileVersion, String reviewStatus) throws AcmObjectNotFoundException;
 
-    void setRedactionStatus(Long fileId, String fileVersion, String redactionStatus);
+    void setRedactionStatus(Long fileId, String fileVersion, String redactionStatus) throws AcmObjectNotFoundException;
 }
