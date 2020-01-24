@@ -33,6 +33,7 @@ import com.armedia.acm.core.exceptions.AcmListObjectsFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUpdateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
+import com.armedia.acm.plugins.addressable.model.ContactMethod;
 import com.armedia.acm.plugins.addressable.model.PostalAddress;
 import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
@@ -157,9 +158,9 @@ public class FOIARequestService
                 }
                 else
                 {
+                    setDefaultPhoneAndEmailIfAny(in);
                     setDefaultAddressType(in);
                     saved = getSaveCaseService().saveCase(in, filesMap, auth, ipAddress);
-
                 }
             }
             return saved;
@@ -171,7 +172,6 @@ public class FOIARequestService
         }
     }
 
-<<<<<<< HEAD
     public Map<String, Long> getNextAvailableRequestsInQueue(Long queueId, String requestCreatedDate) throws ParseException
     {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
@@ -228,8 +228,6 @@ public class FOIARequestService
         }
     }
 
-=======
->>>>>>> f8e5b9006e2133106f0dc0d70e741ec7beda0e1b
     private void setDefaultAddressType(CaseFile saved)
     {
         Person person = saved.getOriginator().getPerson();
