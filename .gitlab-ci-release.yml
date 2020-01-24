@@ -262,5 +262,18 @@ release_all:
       --form "variables[HOTFIX_SUPPORT_VERSION]=$HOTFIX_SUPPORT_VERSION"
       --form "variables[RELEASE_HOTFIX]=$RELEASE_HOTFIX"
       https://gitlab.armedia.com/api/v4/projects/322/trigger/pipeline
-    # Snowbound???
+    # Snowbound
+    - curl -k --request POST --form token=$SNOWBOUND_PROJECT_TOKEN --form ref=core
+      --form "variables[RELEASE_CANDIDATE_1]=$RELEASE_CANDIDATE_1"
+      --form "variables[RELEASE_VERSION]=$RELEASE_VERSION"
+      --form "variables[DEVELOP_NEW_VERSION]=$DEVELOP_NEW_VERSION"
+      --form "variables[START_RELEASE_CANDIDATE_X]=$START_RELEASE_CANDIDATE_X"
+      --form "variables[RELEASE_CANDIDATE_X]=$RELEASE_CANDIDATE_X"
+      --form "variables[RELEASE]=$RELEASE"
+      --form "variables[START_SUPPORT_BRANCH]=$START_SUPPORT_BRANCH"
+      --form "variables[RELEASE_TAG]=$RELEASE_TAG"
+      --form "variables[START_HOTFIX]=$START_HOTFIX"
+      --form "variables[HOTFIX_SUPPORT_VERSION]=$HOTFIX_SUPPORT_VERSION"
+      --form "variables[RELEASE_HOTFIX]=$RELEASE_HOTFIX"
+      https://gitlab.armedia.com/api/v4/projects/39/trigger/pipeline
     # Installer
