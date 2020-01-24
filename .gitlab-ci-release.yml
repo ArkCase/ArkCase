@@ -118,6 +118,7 @@ release_candidate_X:
     - apt-get install -y zip sshpass
     - export SSHPASS=$SSHPASS_ARKCASE
     - git checkout --track origin/hotfix/$RELEASE_VERSION
+    - git checkout develop
     - mvn -B gitflow:hotfix-finish -DpushRemote=true -DhotfixVersion=$RELEASE_VERSION -DskipTestProject=true -DskipMergeDevBranch=true
     - git checkout master
     - mvn -DskipITs -T 4 -B deploy "-DaltDeploymentRepository=arkcase.release::default::https://***REMOVED***/repository/arkcase.release/"
