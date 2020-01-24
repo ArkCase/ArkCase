@@ -49,15 +49,20 @@ import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.services.notification.service.NotificationSender;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
-import org.apache.logging.log4j.Logger;
+import com.armedia.acm.services.search.service.ExecuteSolrQuery;
+
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.ZoneId;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -85,6 +90,7 @@ public class FOIARequestService
     private String appealTitleFormat;
     private QueuesTimeToCompleteService queuesTimeToCompleteService;
     private FoiaConfigurationService foiaConfigurationService;
+    private ExecuteSolrQuery executeSolrQuery;
 
     @Transactional
     public CaseFile saveRequest(CaseFile in, Map<String, List<MultipartFile>> filesMap, Authentication auth, String ipAddress)
@@ -165,6 +171,65 @@ public class FOIARequestService
         }
     }
 
+<<<<<<< HEAD
+    public Map<String, Long> getNextAvailableRequestsInQueue(Long queueId, String requestCreatedDate) throws ParseException
+    {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+        Date createdDate = sdf.parse(requestCreatedDate);
+        List<FOIARequest> nextRequests = getFoiaRequestDao().getNextAvailableRequestInQueue(queueId, createdDate);
+        Map<String, Long> nextRequestAndRequestNumInfo = new HashMap<>();
+        if (nextRequests == null || nextRequests.size() == 0)
+        {
+            nextRequestAndRequestNumInfo.put("availableRequests", 0L);
+            return nextRequestAndRequestNumInfo;
+        }
+        Long fileId = getEcmFileService().findFileByContainerAndFileType(nextRequests.get(0).getContainer().getId(), "Request Form")
+                .getId();
+        nextRequestAndRequestNumInfo.put("requestId", nextRequests.get(0).getId());
+        nextRequestAndRequestNumInfo.put("requestFormId", fileId);
+        nextRequestAndRequestNumInfo.put("availableRequests", (long) nextRequests.size());
+        return nextRequestAndRequestNumInfo;
+    }
+
+    private void setDefaultPhoneAndEmailIfAny(CaseFile saved)
+    {
+        Person person = saved.getOriginator().getPerson();
+        for (int i = 0; i < person.getContactMethods().size(); i++)
+        {
+            ContactMethod contact = person.getContactMethods().get(i);
+            if (contact != null)
+            {
+                if (contact.getType() == null)
+                {
+                    if (i == 0)
+                    {
+                        contact.setType("phone");
+                    }
+                    else if (i == 1)
+                    {
+                        contact.setType("fax");
+                    }
+                    else
+                    {
+                        contact.setType("email");
+                    }
+                }
+                String type = contact.getType();
+                String value = contact.getValue();
+                if (type.toLowerCase().equals("phone") && value != null && !value.isEmpty())
+                {
+                    person.setDefaultPhone(contact);
+                }
+                else if (type.toLowerCase().equals("email") && value != null)
+                {
+                    person.setDefaultEmail(contact);
+                }
+            }
+        }
+    }
+
+=======
+>>>>>>> f8e5b9006e2133106f0dc0d70e741ec7beda0e1b
     private void setDefaultAddressType(CaseFile saved)
     {
         Person person = saved.getOriginator().getPerson();
@@ -443,4 +508,15 @@ public class FOIARequestService
     {
         return foiaRequestDao.find(requestId);
     }
+
+    public ExecuteSolrQuery getExecuteSolrQuery()
+    {
+        return executeSolrQuery;
+    }
+
+    public void setExecuteSolrQuery(ExecuteSolrQuery executeSolrQuery)
+    {
+        this.executeSolrQuery = executeSolrQuery;
+    }
+
 }
