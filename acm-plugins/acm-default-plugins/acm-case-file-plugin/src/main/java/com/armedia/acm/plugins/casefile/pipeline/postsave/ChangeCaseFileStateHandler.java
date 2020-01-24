@@ -50,13 +50,19 @@ public class ChangeCaseFileStateHandler
         CaseFile caseFile = getCaseFileDao().find(form.getCaseId());
 
         // Update Status to "IN APPROVAL"
-        if (!caseFile.getStatus().equals("IN APPROVAL") && !"edit".equals(mode))
+
+        if(ctx.getPropertyValue("changeCaseStatusFlow").equals(false)){
+            caseFile.setStatus(form.getStatus());
+        }
+        else if (!caseFile.getStatus().equals("IN APPROVAL") && !"edit".equals(mode))
         {
             caseFile.setStatus("IN APPROVAL");
-            CaseFile updatedCaseFile = getCaseFileDao().save(caseFile);
 
-            ctx.setCaseFile(updatedCaseFile);
         }
+        CaseFile updatedCaseFile = getCaseFileDao().save(caseFile);
+
+        ctx.setCaseFile(updatedCaseFile);
+
     }
 
     @Override

@@ -47,6 +47,7 @@ angular.module('admin').controller('Admin.SecurityEmailSenderConfigurationContro
                 $scope.isSmtpValid = false;
             }
         }, function(err) {
+            $scope.isSmtpValid = false;
             MessageService.error(err.data);
         });
     };

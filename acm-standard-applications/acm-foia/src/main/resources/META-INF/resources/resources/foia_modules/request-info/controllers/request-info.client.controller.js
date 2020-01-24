@@ -60,7 +60,13 @@ angular.module('request-info').controller(
                   HelperObjectBrowserService, ObjectLookupService, ObjectModelService, CaseLookupService, UtilDateService, QueuesSvc, ObjectSubscriptionService, Util, SnowboundService, EcmService, DocumentPrintingService, NotesService, UserInfoService, MessageService, $translate,
                   DueDateService, AdminHolidayService, AdminFoiaConfigService, TranscriptionManagementService, $window, ArkCaseCrossWindowMessagingService, ObjectLockingService, UtilTimerService, DialogService) {
 
+            if(sessionStorage.getItem("startRow") == null){
+                sessionStorage.setItem("startRow", 0);
+            }
+            var nextQueueId = -1;
+            $scope.isLastRequest = false;
             $scope.openOtherDocuments = [];
+            var nextAvailableRequests = [];
             // $scope.fileChangeEvents = [];
             // $scope.fileChangeDate = null;
             // $scope.versionChangeRequest = false;
@@ -410,7 +416,6 @@ angular.module('request-info').controller(
 
             // Be sure that request info is loaded before we check lock permission
             var requestLockDeferred = $q.defer();
-            var nextAvailableRequests = [];
 
             if ($state.current.name === 'request-info.tasks') {
                 $scope.tasksTabActive = true;
@@ -424,6 +429,14 @@ angular.module('request-info').controller(
                 $scope.owningGroup = group;
                 var assignee = ObjectModelService.getAssignee(objectInfo);
                 $scope.assignee = assignee;
+                nextQueueId = objectInfo.queue.id;
+                if(sessionStorage.getItem("firstOpenedRequestId") === null){
+                    sessionStorage.setItem("firstOpenedRequestId", objectInfo.id);
+                }
+                RequestsService.getNextAvailableRequestInQueue({queueId:nextQueueId, createdDate: objectInfo.created})
+                    .$promise.then(function (data) {
+                    $scope.hasNextRequest = data.availableRequests > 0;
+                });
 
                 $scope.originalDueDate = objectInfo.dueDate;
 
@@ -545,18 +558,6 @@ angular.module('request-info').controller(
                     requestLockDeferred.resolve(null);
                 });
 
-                QueuesService.queryQueueRequests({
-                    queueId: objectInfo.queue.id,
-                    sortDir: 'asc',
-                    sortBy: 'received_date_tdt',
-                    startWith: 0
-                }).then(function (data) {
-                    nextAvailableRequests = _.filter(data.response.docs, function (item) {
-                        return item.object_id_s != $scope.requestInfo.id;
-                    });
-                    $scope.numOfRequestsInQueue = data.response.numFound;
-                });
-
                 $scope.$broadcast('request-info-retrieved', $scope.requestInfo);
 
                 if ($scope.requestInfo.queue) {
@@ -647,7 +648,7 @@ angular.module('request-info').controller(
                 // default view == snowbound
                 $scope.view = "modules/document-details/views/document-viewer-snowbound.client.view.html";
 
-                $scope.transcribeEnabled = $scope.transcriptionConfiguration.data.enabled;
+                $scope.transcribeEnabled = $scope.transcriptionConfiguration.data['transcribe.enabled'];
 
                 $timeout(function () {
                     $scope.$broadcast('document-data', $scope.ecmFile);
@@ -1039,8 +1040,7 @@ angular.module('request-info').controller(
                             releaseRequestLock($scope.requestInfo.id).then(function () {
                                 $scope.$emit('report-object-refreshed', $stateParams.id);
                                 if (name === 'Next' || name === 'Return' || name === 'Deny') {
-                                    goToNextAvailableRequestOrQueueList(deferred);
-
+                                    goToNextAvailableRequestOrQueueList();
                                 } else {
                                     deferred.resolve();
                                 }
@@ -1155,14 +1155,13 @@ angular.module('request-info').controller(
                 }, 4000);
             }
 
+
             function goToQueue(queueId) {
                 // Return to Queue for provided Queue id
                 var deferred = $q.defer();
                 $timeout(function () {
                     deferred.resolve();
-                    $state.go('queues.queue', {
-                        queueId: queueId
-                    });
+
                 }, 4000);
                 return deferred.promise;
             }
@@ -1408,7 +1407,7 @@ angular.module('request-info').controller(
                     }
                 });
             }
-
+            
             UserInfoService.getUserInfo().then(function (infoData) {
                 $scope.currentUserProfile = infoData;
             });
@@ -1486,6 +1485,15 @@ angular.module('request-info').controller(
                     });
                 });
             });
+            $scope.nextAvailableRequest = function () {
+                RequestsService.getNextAvailableRequestInQueue({queueId:nextQueueId, createdDate: $scope.objectInfo.created})
+                    .$promise.then(function (data) {
+                        $state.go('request-info', {
+                            id: data.requestId,
+                            fileId: data.requestFormId
+                        });
+                    });
+            }
         }]);
 /**
  * 2018-06-01 David Miller. This block is needed to tell the PDF.js angular module, where the PDF.js library is. Without this, on minified

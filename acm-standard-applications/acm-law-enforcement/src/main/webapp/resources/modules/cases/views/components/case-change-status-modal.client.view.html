@@ -59,7 +59,7 @@
             </div>
         </div>
 
-        <div class="panel panel-default">
+        <div class="panel panel-default" ng-if="showApprover == 'true'">
             <div class="panel-heading">
                 <h4 class="panel-title">
                     <a data-toggle="collapse" data-parent="#accordion4" href="#collapseApprovers" translate>cases.comp.change.status.approver.label</a>
@@ -69,10 +69,10 @@
                 <div class="panel-body">
                     <div class="row">
                         <div class="col-sm-6 form-group">
-                            <label class="control-label">&nbsp;</label><span class="required-asterisk">*</span>
+                            <label ng-if="showApprover == 'true'" class="control-label">&nbsp;</label><span class="required-asterisk">*</span>
                             <input type="text" ng-model="approverName" class="input-md form-control"
                                    placeholder="{{'cases.comp.change.status.approver.placeholder' | translate}}"
-                                   ng-click="userOrGroupSearch()" readonly required>
+                                   ng-click="userOrGroupSearch()" readonly ng-required="showApprover == 'true'">
                         </div>
                         <div class="col-sm-6 form-group">
                             <label for="owningGroup" translate>cases.comp.change.status.approver.owningGroup</label>

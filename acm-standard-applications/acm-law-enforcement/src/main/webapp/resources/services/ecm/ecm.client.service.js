@@ -36,8 +36,8 @@ angular.module('services').factory('EcmService', ['$resource', 'UtilService', fu
             url: 'api/latest/service/ecm/folder/:parentId/:folderName'
         },
         deleteFolder: {
-            method: 'DELETE',
-            url: 'api/latest/service/ecm/folder/:folderId'
+            method: 'POST',
+            url: 'api/latest/service/ecm/folder/deleteTemporary/:folderId'
         },
         getDeleteFolderInfo: {
             method: 'GET',
@@ -64,7 +64,7 @@ angular.module('services').factory('EcmService', ['$resource', 'UtilService', fu
         },
         deleteFileTemporary: {
             method: 'POST',
-            url: 'api/latest/service/ecm/temporary/id/:fileId'
+            url: 'api/latest/service/ecm/file/deleteTemporary/:fileId'
         },
         renameFolder: {
             method: 'POST',

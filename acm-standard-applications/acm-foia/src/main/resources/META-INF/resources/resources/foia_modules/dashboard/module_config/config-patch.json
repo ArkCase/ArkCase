@@ -273,6 +273,12 @@
                     "displayName": "dashboard.widgets.myOverdueRequests.priority",
                     "headerCellFilter": "translate",
                     "enableSorting": true
+                },
+                {
+                    "name": "dueDate_tdt",
+                    "displayName": "dashboard.widgets.myOverdueRequests.dueDate",
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<div>{{ row.entity.dueDate_tdt | date : 'shortDate' }}</div>"
                 }
             ]
         }

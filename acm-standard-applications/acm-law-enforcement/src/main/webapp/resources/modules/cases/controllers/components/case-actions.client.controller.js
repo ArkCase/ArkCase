@@ -22,8 +22,9 @@ angular.module('cases').controller(
                 'Profile.UserInfoService',
                 '$timeout',
                 'FormsType.Service',
+                'Admin.FormWorkflowsLinkService',
                 function($scope, $state, $stateParams, $translate, $q, $modal, Util, ConfigService, ObjectService, Authentication, CaseLookupService, ObjectSubscriptionService, ObjectModelService, CaseInfoService, MergeSplitService, HelperObjectBrowserService, UserInfoService, $timeout,
-                        FormsTypeService) {
+                        FormsTypeService, AdminFormWorkflowsLinkService) {
 
                     new HelperObjectBrowserService.Component({
                         scope: $scope,
@@ -36,13 +37,21 @@ angular.module('cases').controller(
                             onObjectInfoRetrieved(objectInfo);
                         }
                     });
+                    AdminFormWorkflowsLinkService.getFormWorkflowsData().then(function(payload) {
+                        //$scope.data = payload.data;
 
+                        // Add 50 empty rows at the end of file
+                        var data = angular.copy(payload.data);
+                        for (var i = 0; i < data.cells.length; i++) {
+                            if(data.cells[i][2].type === "fileType" && data.cells[i][2].value === "change_case_status"){
+                                $scope.showApprover = data.cells[i][3].value;
+                            }
+                        }
+                    });
                     $scope.showBtnChildOutcomes = false;
                     $scope.availableChildOutcomes = [];
                     $scope.merging = false;
                     $scope.splitting = false;
-                    $scope.showChangeCaseStatus = true;
-
 
                     ConfigService.getModuleConfig("cases").then(function(moduleConfig) {
                         $scope.caseFileSearchConfig = _.find(moduleConfig.components, {
@@ -64,7 +73,6 @@ angular.module('cases').controller(
                     var onObjectInfoRetrieved = function(objectInfo) {
                         $scope.restricted = objectInfo.restricted;
                         $scope.showBtnChildOutcomes = false;
-
 
                         var group = ObjectModelService.getGroup(objectInfo);
                         $scope.owningGroup = group;
@@ -109,9 +117,7 @@ angular.module('cases').controller(
                             casefile: objectInfo
                         };
 
-                        if (objectInfo.status == 'IN APPROVAL') {
-                            $scope.showChangeCaseStatus = false;
-                        }
+                        $scope.showChangeCaseStatus = objectInfo.status !== 'IN APPROVAL';
                     };
 
                     $scope.newCaseFile = function() {
@@ -162,7 +168,8 @@ angular.module('cases').controller(
 
                     $scope.changeCaseStatus = function(caseInfo) {
                         var params = {
-                            "info": caseInfo
+                            "info": caseInfo,
+                            "showApprover": $scope.showApprover
                         };
                         var modalInstance = $modal.open({
                             animation: true,
@@ -179,6 +186,7 @@ angular.module('cases').controller(
 
                         modalInstance.result.then(function(data) {
                             console.log(data);
+                            $scope.refresh();
                         }, function() {
                             console.log("error");
                         });

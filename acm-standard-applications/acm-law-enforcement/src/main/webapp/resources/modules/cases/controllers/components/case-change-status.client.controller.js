@@ -2,8 +2,8 @@
 
 angular.module('cases').controller(
         'Cases.ChangeStatusController',
-        [ '$scope', '$http', '$stateParams', '$translate', '$modalInstance', 'Complaint.InfoService', '$state', 'Object.LookupService', 'MessageService', 'UtilService', '$modal', 'ConfigService', 'ObjectService', 'modalParams', 'Case.InfoService', 'Object.ParticipantService',
-                function($scope, $http, $stateParams, $translate, $modalInstance, ComplaintInfoService, $state, ObjectLookupService, MessageService, Util, $modal, ConfigService, ObjectService, modalParams, CaseInfoService, ObjectParticipantService) {
+        [ '$scope', '$http', '$stateParams', '$translate', '$modalInstance', 'Complaint.InfoService', '$state', 'Object.LookupService', 'MessageService', 'UtilService', '$modal', 'ConfigService', 'ObjectService', 'modalParams', 'Case.InfoService', 'Object.ParticipantService','Admin.FormWorkflowsLinkService',
+                function($scope, $http, $stateParams, $translate, $modalInstance, ComplaintInfoService, $state, ObjectLookupService, MessageService, Util, $modal, ConfigService, ObjectService, modalParams, CaseInfoService, ObjectParticipantService, AdminFormWorkflowsLinkService) {
 
                     $scope.modalParams = modalParams;
                     $scope.approverName = "";
@@ -14,6 +14,7 @@ angular.module('cases').controller(
                     $scope.cancelModal = cancelModal;
                     //Objects
                     $scope.showCaseCloseStatus = false;
+                    $scope.showApprover= modalParams.showApprover;
                     $scope.changeCaseStatus = {
                         caseId: modalParams.info.caseId,
                         status: "",
@@ -25,7 +26,8 @@ angular.module('cases').controller(
                         creator: null,
                         modified: null,
                         modifier: null,
-                        description: ""
+                        description: "",
+                        changeCaseStatusFlow: $scope.showApprover == 'true'
                     };
 
                     var participantTypeApprover = 'approver';
@@ -144,7 +146,10 @@ angular.module('cases').controller(
                         $scope.loadingIcon = "fa fa-circle-o-notch fa-spin";
                         CaseInfoService.changeCaseFileState('change_case_status', $scope.changeCaseStatus).then(function(data) {
                             MessageService.info(data.info);
-                            $modalInstance.dismiss();
+                            if($scope.changeCaseStatus.changeCaseStatusFlow){
+                                $scope.changeCaseStatus.status = 'IN APPROVAL';
+                            }
+                            $modalInstance.close($scope.changeCaseStatus);
                         });
 
                     }

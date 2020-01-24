@@ -63,4 +63,10 @@ public @interface MapValue
      */
     String value();
 
+    /**
+     * Shoud be converted from the root key: e.g. "acmPluginConfigurationPrivileges" in
+     * "acmPluginConfigurationPrivileges.acmCasePluginPrivileges.acmCaseModulePrivilege"
+     */
+    boolean convertFromTheRootKey() default false;
+
 }

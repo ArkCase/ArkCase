@@ -30,11 +30,14 @@ package com.armedia.acm.plugins.admin.web.api;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
+import com.armedia.acm.plugins.ecm.exception.AcmFolderException;
+import com.armedia.acm.plugins.ecm.model.AcmFolderConstants;
 import com.armedia.acm.plugins.ecm.model.RecycleBinDTO;
 import com.armedia.acm.plugins.ecm.model.RecycleBinItemDTO;
 import com.armedia.acm.plugins.ecm.service.RecycleBinItemService;
-import org.apache.logging.log4j.Logger;
+
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -43,6 +46,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import javax.servlet.http.HttpSession;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -79,10 +84,24 @@ public class RecycleBinItemController
 
     @RequestMapping(method = RequestMethod.POST)
     @ResponseBody
-    public void restoreItemsFromRecycleBin(@RequestBody List<RecycleBinItemDTO> filesToBeRestored, Authentication authentication) throws AcmUserActionFailedException,
-            AcmObjectNotFoundException, AcmCreateObjectFailedException
+    public void restoreItemsFromRecycleBin(@RequestBody List<RecycleBinItemDTO> filesToBeRestored, Authentication authentication)
+            throws AcmUserActionFailedException,
+            AcmObjectNotFoundException, AcmCreateObjectFailedException, AcmFolderException
     {
         recycleBinItemService.restoreItemsFromRecycleBin(filesToBeRestored, authentication);
+    }
+
+    @RequestMapping(method = RequestMethod.DELETE)
+    @ResponseBody
+    public void removeItemsFromRecycleBin(@RequestBody List<RecycleBinItemDTO> filesToBeDeleted,
+            Authentication authentication, HttpSession session) throws AcmUserActionFailedException, AcmObjectNotFoundException
+    {
+        String ipAddress = (String) session.getAttribute(AcmFolderConstants.IP_ADDRESS_ATTRIBUTE);
+
+        for (RecycleBinItemDTO recycleBinItemDTO : filesToBeDeleted)
+        {
+            getRecycleBinItemService().deleteRecycleBinItemPermanently(recycleBinItemDTO, authentication, ipAddress);
+        }
     }
 
     public RecycleBinItemService getRecycleBinItemService()

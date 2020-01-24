@@ -340,6 +340,8 @@ public interface EcmFileService
     @Retryable(maxAttempts = 3, value = Exception.class, backoff = @Backoff(delay = 500))
     void deleteFileInArkcase(EcmFile file) throws AcmUserActionFailedException, AcmObjectNotFoundException;
 
+    void deleteFileLinks(EcmFile file);
+
     EcmFile renameFile(Long fileId, String newFileName) throws AcmUserActionFailedException, AcmObjectNotFoundException;
 
     EcmFile renameFileInArkcase(EcmFile file, String newFileName);

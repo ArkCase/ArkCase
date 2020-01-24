@@ -31,9 +31,9 @@ angular.module('directives').directive('dateTimePicker', ['moment', 'Util.DateSe
                     $scope.dateInPicker = new Date();
                 } else {
                     if ($scope.timeFormatDisabled === "true") {
-                        $scope.today = UtilDateService.isoToDate(date);
+                        $scope.today = (date instanceof String || typeof date == 'string') ? moment.utc(date).local().format(UtilDateService.defaultDateFormat) : date.format(UtilDateService.defaultDateFormat);
                     } else {
-                        $scope.today = UtilDateService.isoToLocalDateTime(date);
+                        $scope.today = (date instanceof String || typeof date == 'string') ? moment.utc(date).local().format(UtilDateService.defaultDateTimeFormat) : date.format(UtilDateService.defaultDateTimeFormat);
                     }
                     $scope.dateInPicker = UtilDateService.isoToDate($scope.today);
                 }
@@ -62,7 +62,11 @@ angular.module('directives').directive('dateTimePicker', ['moment', 'Util.DateSe
                         smartDays: true,
                         value: $scope.dateInPicker
                     });
-                    $scope.today = !UtilService.isEmpty($scope.data) ? UtilDateService.isoToDate($scope.data) : "";
+                    if(!UtilService.isEmpty($scope.data)) {
+                        $scope.today = ($scope.data instanceof String || typeof $scope.data == 'string') ? moment.utc($scope.data).local().format(UtilDateService.defaultDateFormat) : $scope.data.format(UtilDateService.defaultDateFormat);
+                    } else {
+                        $scope.today = "";
+                    }
                     $scope.dateInPicker = !UtilService.isEmpty($scope.data) ? UtilDateService.isoToDate($scope.data) : new Date();
                 } else {
                     $(comboField).combodate({
@@ -74,7 +78,11 @@ angular.module('directives').directive('dateTimePicker', ['moment', 'Util.DateSe
                         smartDays: true,
                         value: $scope.dateInPicker
                     });
-                    $scope.today = !UtilService.isEmpty($scope.data) ? UtilDateService.isoToLocalDateTime($scope.data) : "";
+                    if(!UtilService.isEmpty($scope.data)) {
+                        $scope.today = ($scope.data instanceof String || typeof $scope.data == 'string') ? moment.utc($scope.data).local().format(UtilDateService.defaultDateTimeFormat) : $scope.data.format(UtilDateService.defaultDateTimeFormat);
+                    } else {
+                        $scope.today = "";
+                    }
                     $scope.dateInPicker = !UtilService.isEmpty($scope.data) ? UtilDateService.isoToLocalDateTime($scope.data) : new Date();
                 }
             });

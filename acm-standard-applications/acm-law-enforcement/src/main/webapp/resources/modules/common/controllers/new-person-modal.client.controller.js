@@ -68,6 +68,7 @@ angular.module('common').controller(
                         return organizationTypes;
                     });
 
+                    
                     $scope.addContactMethod = function(contactType) {
                         $timeout(function() {
                             contactMethodsCounts[contactType]++;

@@ -71,7 +71,12 @@ public class ChangeCaseStatusApiController
         {
             message = new HashMap<>();
             changeCaseFileStateService.save(form, auth, "");
-            message.put("info", "The case file is in approval mode");
+            if(form.isChangeCaseStatusFlow()){
+                message.put("info", "The case file is in approval mode");
+            } else {
+                message.put("info", "The case file status has changed");
+            }
+
         }
         catch (Exception e)
         {
