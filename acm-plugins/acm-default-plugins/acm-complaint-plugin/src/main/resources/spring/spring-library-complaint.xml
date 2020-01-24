@@ -260,6 +260,7 @@
     <bean id="complaintBillingInvoiceCreatedHandler"
         class="com.armedia.acm.plugins.complaint.listener.ComplaintBillingInvoiceCreatedHandler">
         <property name="complaintBillingInvoiceDocumentGenerator" ref="billingInvoiceDocumentGenerator"/>
+        <property name="complaintDao" ref="acmComplaintDao"/>
     </bean>
 
     <bean id="getComplaintService" class="com.armedia.acm.plugins.complaint.service.GetComplaintServiceImpl">

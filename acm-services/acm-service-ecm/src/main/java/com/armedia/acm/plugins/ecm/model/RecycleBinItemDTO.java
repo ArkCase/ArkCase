@@ -35,35 +35,36 @@ import java.util.Date;
 
 public class RecycleBinItemDTO
 {
-
-    private Long fileId;
-    private String fileName;
+    private Long id;
+    private Long objectId;
+    private String objectName;
+    private String objectType;
     private Date dateModified;
     private String fileActiveVersionNameExtension;
     private Long fileSizeBytes;
     private Long containerId;
     private String containerObjectTitle;
     private String containerObjectType;
-    private Long recycleBinItemId;
 
     public RecycleBinItemDTO()
     {
 
     }
 
-    public RecycleBinItemDTO(Long fileId, String fileName, Date dateModified,
+    public RecycleBinItemDTO(Long objectId, String objectName, String objectType, Date dateModified,
             String fileActiveVersionNameExtension, Long fileSizeBytes,
-            Long containerId, String containerObjectTitle, String containerObjectType, Long recycleBinItemId)
+            Long containerId, String containerObjectTitle, String containerObjectType, Long id)
     {
-        this.fileId = fileId;
-        this.fileName = fileName;
+        this.id = id;
+        this.objectId = objectId;
+        this.objectName = objectName;
+        this.objectType = objectType;
         this.dateModified = dateModified;
         this.fileActiveVersionNameExtension = fileActiveVersionNameExtension;
         this.fileSizeBytes = fileSizeBytes;
         this.containerId = containerId;
         this.containerObjectTitle = containerObjectTitle;
         this.containerObjectType = containerObjectType;
-        this.recycleBinItemId = recycleBinItemId;
 
     }
 
@@ -77,24 +78,34 @@ public class RecycleBinItemDTO
         this.containerId = containerId;
     }
 
-    public Long getFileId()
+    public Long getObjectId()
     {
-        return fileId;
+        return objectId;
     }
 
-    public void setFileId(Long fileId)
+    public void setObjectId(Long objectId)
     {
-        this.fileId = fileId;
+        this.objectId = objectId;
     }
 
-    public String getFileName()
+    public String getObjectName()
     {
-        return fileName;
+        return objectName;
     }
 
-    public void setFileName(String fileName)
+    public String getObjectType()
     {
-        this.fileName = fileName;
+        return objectType;
+    }
+
+    public void setObjectType(String objectType)
+    {
+        this.objectType = objectType;
+    }
+
+    public void setObjectName(String objectName)
+    {
+        this.objectName = objectName;
     }
 
     public Date getDateModified()
@@ -147,13 +158,13 @@ public class RecycleBinItemDTO
         this.containerObjectTitle = containerObjectTitle;
     }
 
-    public Long getRecycleBinItemId()
+    public Long getId()
     {
-        return recycleBinItemId;
+        return id;
     }
 
-    public void setRecycleBinItemId(Long recycleBinItemId)
+    public void setId(Long id)
     {
-        this.recycleBinItemId = recycleBinItemId;
+        this.id = id;
     }
 }

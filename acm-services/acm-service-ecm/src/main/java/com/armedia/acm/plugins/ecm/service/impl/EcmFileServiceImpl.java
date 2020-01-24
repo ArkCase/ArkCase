@@ -782,10 +782,10 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     public AcmCmisObjectList listFlatSearchResultsAdvanced(Authentication auth, AcmContainer container, String category, String sortBy,
             String sortDirection, int startRow, int maxRows, String searchFilter) throws AcmListObjectsFailedException
     {
-        String query = String.format("(object_type_s:FILE AND parent_object_type_s:%s)",
-                container.getContainerObjectType());
+        String query = String.format("object_type_s:FILE AND parent_object_type_s:%s AND parent_object_id_s:%s",
+                container.getContainerObjectType(), container.getContainerObjectId());
+        String fq = searchFilter.equals("") ? "hidden_b:false" : String.format("fq=(%s) AND hidden_b:false", searchFilter);
 
-        String fq = String.format("fq=(%s) AND hidden_b:false", searchFilter);
         return findObjects(auth, container, container.getFolder().getId(), category, query, fq, startRow, maxRows, sortBy, sortDirection);
     }
 
@@ -1640,11 +1640,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
                 recycleBinItem = getRecycleBinItemService().putFileIntoRecycleBin(file, authentication, session);
                 log.info("File {} successfully moved into recycle bin by user: {}", objectId, file.getModifier());
 
-                List<EcmFile> fileLinks = getEcmFileDao().getFileLinks(file.getVersionSeriesId());
-                for (EcmFile link : fileLinks)
-                {
-                    getEcmFileDao().deleteFile(link.getFileId());
-                }
+                deleteFileLinks(file);
             }
             else
             {
@@ -1659,6 +1655,16 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
                     file.getId(), "Could not put file into recycle bin", e);
         }
         return recycleBinItem;
+    }
+
+    @Override
+    public void deleteFileLinks(EcmFile file)
+    {
+        List<EcmFile> fileLinks = getEcmFileDao().getFileLinks(file.getVersionSeriesId());
+        for (EcmFile link : fileLinks)
+        {
+            getEcmFileDao().deleteFile(link.getFileId());
+        }
     }
 
     @Override
@@ -2000,6 +2006,8 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     public void updateFileLinks(EcmFile file) throws AcmObjectNotFoundException
     {
         List<EcmFile> links = getFileLinks(file.getFileId());
+        int activeVersionIndex = (int) Double.parseDouble(file.getActiveVersionTag());
+        String cmisObjectId = file.getVersions().get(activeVersionIndex - 1).getCmisObjectId();
         links.forEach(f -> {
             f.setFileType(file.getFileType());
             f.setActiveVersionTag(file.getActiveVersionTag());
@@ -2015,6 +2023,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
             f.setPageCount(file.getPageCount());
             f.setSecurityField(file.getSecurityField());
             f.getVersions().get(0).setVersionTag(file.getActiveVersionTag());
+            f.getVersions().get(0).setCmisObjectId(cmisObjectId);
 
             getEcmFileDao().save(f);
         });

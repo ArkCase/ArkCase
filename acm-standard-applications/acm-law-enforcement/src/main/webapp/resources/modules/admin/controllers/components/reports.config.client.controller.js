@@ -201,7 +201,6 @@ function($scope, ReportsConfigService, LookupService, $q, $sce, MessageService) 
             currentAuthRoles = currentAuthRoles.concat(toBeAdded);
 
             ReportsConfigService.addRolesToReport(selectedObject.key, toBeAdded).then(function(data) {
-                $scope.reCreateReports(selectedObject, data.data);
                 MessageService.succsessAction();
             }, function() {
                 //error adding role
@@ -216,7 +215,6 @@ function($scope, ReportsConfigService, LookupService, $q, $sce, MessageService) 
             });
 
             ReportsConfigService.removeRolesFromReport(selectedObject.key, toBeRemoved).then(function(data) {
-                $scope.reCreateReports(selectedObject, data.data);
                 MessageService.succsessAction();
             }, function() {
                 //error adding role

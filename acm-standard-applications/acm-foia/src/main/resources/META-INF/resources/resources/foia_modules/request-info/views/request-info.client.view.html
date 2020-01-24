@@ -19,7 +19,9 @@
                     </div>
 
                     <div class="col-xs-12 col-md-2">
-                        <div class="h4 font-bold">{{requestInfo.creator | mapKeyValue: userList:'object_id_s':'name' || 'common.value.unknown' | translate}}</div>
+                        <div class="h4 font-bold">{{requestInfo.creator | mapKeyValue: userList:'object_id_s':'name' ||
+                            'common.value.unknown' | translate}}
+                        </div>
                         <small class="text-muted"><span translate>requests.comp.info.creator.label</span></small>
                     </div>
                     <div class="col-xs-12 col-md-2">
@@ -53,20 +55,20 @@
 
                 </div>
                 <div class="row" ng-if="transcribeEnabled && showVideoPlayer">
-                    <div class="col-sm-6 col-md-3">
+                    <div class="col-sm-6 col-md-2">
                         <div class="h4 font-bold">{{transcribeObjectModel.language || 'common.value.unknown' | translate}}</div>
                         <small class="text-muted" translate>documentDetails.comp.transcription.mediaViewer.language</small>
                     </div>
 
-                    <div class="col-sm-6 col-md-3">
+                    <div class="col-sm-6 col-md-2">
                         <div class="h4 font-bold">{{transcribeObjectModel.wordCount || 0}}</div>
                         <small class="text-muted" translate>documentDetails.comp.transcription.mediaViewer.wordCount</small>
                     </div>
-                    <div class="col-sm-6 col-md-3">
+                    <div class="col-sm-6 col-md-2">
                         <div class="h4 font-bold">{{transcribeObjectModel.confidence || 0}}%</div>
                         <small class="text-muted" translate>documentDetails.comp.transcription.mediaViewer.confidence</small>
                     </div>
-                    <div class="col-sm-6 col-md-3">
+                    <div class="col-sm-6 col-md-2">
                         <div class="h4 font-bold" ng-style="{'color': colorTranscribeStatus()}">{{transcribeObjectModel.status ||
                             'documentDetails.comp.transcription.mediaViewer.readyForTranscription' | translate}}
                         </div>
@@ -115,7 +117,8 @@
                             <span translate>requests.tabs.documents</span>
                         </tab-heading>
                         <ng-form name="documentsForm" novalidate>
-                            <div ng-include="'modules/request-info/views/components/documents.client.view.html'" ng-if="documentsTabActive"></div>
+                            <div ng-include="'modules/request-info/views/components/documents.client.view.html'"
+                                    ng-if="documentsTabActive"></div>
 
                         </ng-form>
                     </tab>
@@ -135,7 +138,8 @@
                         <tab-heading>
                             <span translate>requests.tabs.references</span>
                         </tab-heading>
-                        <div ng-include="'modules/request-info/views/components/references.client.view.html'" ng-if="referencesTabActive"></div>
+                        <div ng-include="'modules/request-info/views/components/references.client.view.html'"
+                                ng-if="referencesTabActive"></div>
                     </tab>
                     <tab active="historyTabActive">
                         <tab-heading>
@@ -155,7 +159,7 @@
                         </tab-heading>
                         <div ng-include="'modules/request-info/views/components/billing.client.view.html'" ng-if="billingTabActive"></div>
                     </tab>
-                    <tab active="transcriptionTabActive" ng-show="showVideoPlayer && transcribeEnabled">
+                    <tab active="transcriptionTabActive" ng-show="transcriptionTabActive">
                         <tab-heading>
                             <span translate>documentDetails.comp.transcription.title</span>
                         </tab-heading>
@@ -165,37 +169,44 @@
                 </tabset>
                 <footer class="panel" ng-if="requestInfo.queue">
                     <div class="panel-body">
-                        <fieldset permission="buttonAction" permission-object-type="CASE_FILE" permission-properties="requestInfo" permission-action="disable">
+                        <fieldset permission="buttonAction" permission-object-type="CASE_FILE" permission-properties="requestInfo"
+                                permission-action="disable">
                             <div class="pull-left">
                                 <button class="btn btn-sm btn-default" ng-disabled="requestInProgress || requestInfo.queue.name == 'Intake'"
                                         ng-click="saveAndReferesh()">
                                     <i class="{{saveLoadingIcon}}"></i>
                                 </button>
-    
+
                                 <button class="btn btn-sm btn-default" ng-disabled="requestInProgress || requestInfo.queue.name == 'Intake'"
                                         ng-show="printEnabled" ng-click="printDocument()">
                                     <span class="fa fa-print"></span>
                                 </button>
-    
+
                                 <button class="btn btn-sm btn-default" permission="subscribe" permission-object-type="CASE_FILE"
                                         permission-properties="requestInfo" permission-action="hide"
-                                        ng-disabled="!subscribeEnabled || requestInProgress || requestInfo.queue.name == 'Intake'" ng-show="!requestSubscribed"
-                                        ng-click="subscribe()">
+                                        ng-disabled="!subscribeEnabled || requestInProgress || requestInfo.queue.name == 'Intake'"
+                                        ng-show="!requestSubscribed" ng-click="subscribe()">
                                     <span class="fa fa-bell-o"></span>
                                 </button>
-    
+
                                 <button class="btn btn-sm btn-default" permission="subscribe" permission-object-type="CASE_FILE"
                                         permission-properties="requestInfo" permission-action="hide"
-                                        ng-disabled="!subscribeEnabled || requestInProgress || requestInfo.queue.name == 'Intake'" ng-show="requestSubscribed"
-                                        ng-click="unsubscribe()">
+                                        ng-disabled="!subscribeEnabled || requestInProgress || requestInfo.queue.name == 'Intake'"
+                                        ng-show="requestSubscribed" ng-click="unsubscribe()">
                                     <span class="fa fa-bell-slash"></span>
                                 </button>
                             </div>
                             <div class="pull-right">
                                 <div class="btn-group">
-                                  <button class="btn btn-sm btn-default" ng-click="onClickNextQueue(nextQueue.name, createNewRequestForm.$dirty)"
-                                          ng-disabled="requestInProgress  || (nextQueue.disabled && requestInfo.status =='In Review')"
-                                          ng-repeat="nextQueue in availableQueues">
+<<<<<<< HEAD
+                                    <button class="btn btn-sm btn-default" ng-click="nextAvailableRequest()"
+                                            ng-disabled="requestInProgress  || (nextQueue.disabled && requestInfo.status =='In Review') || !hasNextRequest"
+=======
+                                    <button class="btn btn-sm btn-default"
+                                            ng-click="onClickNextQueue(nextQueue.name, createNewRequestForm.$dirty)"
+                                            ng-disabled="requestInProgress  || (nextQueue.disabled && requestInfo.status =='In Review')"
+>>>>>>> f8e5b9006e2133106f0dc0d70e741ec7beda0e1b
+                                            ng-repeat="nextQueue in availableQueues">
                                         <i class="{{loadingIcon}}" ng-if="nextQueue.name == nameButton && loading"></i>
                                         <i class="fa fa-check" ng-hide="loading && nextQueue.name == nameButton"></i>
                                         <span>{{nextQueue.name}}</span>

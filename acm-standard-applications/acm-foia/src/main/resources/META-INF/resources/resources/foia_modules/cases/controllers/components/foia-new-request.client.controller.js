@@ -3,9 +3,9 @@
 angular.module('cases').controller(
     'Cases.NewRequestController',
     ['$scope', '$sce', '$q', '$modal', '$translate', 'ConfigService', 'FOIA.Data', 'Request.InfoService', 'ObjectService', 'modalParams', 'Object.LookupService', 'Util.DateService', 'MessageService', 'UtilService',
-        'Requests.RequestsService', 'Dialog.BootboxService', 'Organization.InfoService', '$location', '$anchorScroll', 'Admin.ObjectTitleConfigurationService',
-
-        function ($scope, $sce, $q, $modal, $translate, ConfigService, Data, RequestInfoService, ObjectService, modalParams, ObjectLookupService, UtilDateService, MessageService, Util, RequestsService, DialogService, OrganizationInfoService, $location, $anchorScroll, AdminObjectTitleConfigurationService) {
+        'Requests.RequestsService', 'Dialog.BootboxService', 'Organization.InfoService', '$location', '$anchorScroll', 'Admin.ObjectTitleConfigurationService', 'Person.InfoService',
+        function ($scope, $sce, $q, $modal, $translate, ConfigService, Data, RequestInfoService, ObjectService, modalParams, ObjectLookupService, UtilDateService, MessageService, Util, RequestsService, DialogService, OrganizationInfoService, $location, $anchorScroll,
+                  AdminObjectTitleConfigurationService, PersonInfoService) {
 
             $scope.modalParams = modalParams;
             $scope.loading = false;
@@ -96,8 +96,9 @@ angular.module('cases').controller(
             var componentsAgenciesPromise = ObjectLookupService.getLookupByLookupName("componentsAgencies");
             var organizationTypeLookup = ObjectLookupService.getPersonOrganizationRelationTypes();
             var promiseConfigTitle = AdminObjectTitleConfigurationService.getObjectTitleConfiguration();
+            var personTypesLookup = ObjectLookupService.getPersonTypes(ObjectService.ObjectTypes.CASE_FILE, true);
 
-            $q.all([requestConfig, componentsAgenciesPromise, organizationTypeLookup, prefixNewRequest, newRequestTypes, deliveryMethodOfResponsesRequest, payFeesRequest, requestCategories, stateRequest, promiseConfigTitle]).then(function (data) {
+            $q.all([requestConfig, componentsAgenciesPromise, organizationTypeLookup, prefixNewRequest, newRequestTypes, deliveryMethodOfResponsesRequest, payFeesRequest, requestCategories, stateRequest, promiseConfigTitle, personTypesLookup]).then(function (data) {
 
                 var moduleConfig = data[0];
                 var componentsAgencies = data[1];
@@ -109,11 +110,14 @@ angular.module('cases').controller(
                 var categories = data[7];
                 var states = data[8];
                 var configTitle = data[9];
+                var personTypes = data[10];
 
                 if (!Util.isEmpty(configTitle)) {
                     $scope.enableTitle = configTitle.data.CASE_FILE.enableTitleField;
                 }
                 $scope.organizationTypes = organizationTypes;
+
+                $scope.personTypes = personTypes;
 
                 $scope.config = _.find(moduleConfig.components, {
                     id: "requests"
@@ -183,6 +187,7 @@ angular.module('cases').controller(
                 $scope.subjectEmpty = false;
                 $scope.deliveryMethodOfResponseEmpty = false;
                 $scope.requestCategoryEmpty = false;
+                $scope.dateRangeInvalid = false;
 
                 if ($scope.isNewRequestType()) {
 
@@ -234,6 +239,10 @@ angular.module('cases').controller(
                     if (requestForm.deliveryMethodOfResponse.$invalid) {
                         $scope.deliveryMethodOfResponseEmpty = true;
                     }
+                    if ($scope.config.data.recordSearchDateFrom > $scope.config.data.recordSearchDateTo) {
+                        $scope.formInvalid = true;
+                        $scope.dateRangeInvalid = true;
+                    }
                     if (requestForm.$valid && !$scope.formInvalid) {
                         $scope.saveNewRequest();
                     } else {
@@ -260,6 +269,70 @@ angular.module('cases').controller(
             $scope.isNewRequestType = function () {
                 return $scope.config && $scope.config.data.requestType === 'New Request';
             };
+
+            // -------------------  people --------------------------------------------------------------------
+            $scope.searchPerson = function () {
+                var params = {
+                    showSetPrimary: false,
+                    addNewEnabled: false,
+                    isDefault: false,
+                    types: $scope.personTypes,
+                    type: $scope.personTypes[0].key,
+                    typeEnabled: false
+                };
+
+                var modalInstance = $modal.open({
+                    scope: $scope,
+                    animation: true,
+                    templateUrl: 'modules/common/views/add-person-modal.client.view.html',
+                    controller: 'Common.AddPersonModalController',
+                    size: 'md',
+                    backdrop: 'static',
+                    resolve: {
+                        params: function () {
+                            return params;
+                        }
+                    }
+                });
+
+                modalInstance.result.then(function (data) {
+                    PersonInfoService.getPersonInfo(data.personId).then(function (person) {
+                        data.person = person;
+                        setPersonAssociation({}, data);
+                    })
+                });
+
+            };
+
+            function setPersonAssociation(association, data) {
+                association.person = data.person;
+                association.personType = data.type;
+
+                //if is new created, add it to the person associations list
+                if (!$scope.config.data.originator.person.personAssociations) {
+                    $scope.config.data.originator.person.personAssociations = [];
+                }
+
+                if (!_.includes($scope.config.data.originator.person.personAssociations, association)) {
+                    $scope.config.data.originator.person.personAssociations.push(association);
+                }
+
+                //populate contact information section
+                $scope.config.data.originator.person = angular.copy(association.person);
+
+                var phone = _.find($scope.config.data.originator.person.contactMethods, {
+                    type: 'phone'
+                });
+                $scope.config.data.originator.person.defaultPhone = phone;
+
+                var email = _.find($scope.config.data.originator.person.contactMethods, {
+                    type: 'email'
+                });
+
+                $scope.config.data.originator.person.defaultEmail = email;
+            }
+
+            // ------------------ end person added ----------------- //
 
             $scope.searchOrganization = function () {
                 var associationFound = _.find($scope.config.data.originator.person.organizationAssociations, function (item) {
@@ -343,6 +416,26 @@ angular.module('cases').controller(
                 $scope.loadingIcon = "fa fa-circle-o-notch fa-spin";
                 var formdata = new FormData();
                 var basicData = {};
+
+                //check if person is existing and remove the contactMethods array
+                if ($scope.config.data.originator.person.id != null) {
+                    $scope.config.data.originator.person.contactMethods = [];
+                }
+
+                if (!$scope.config.data.originator.person.defaultPhone.value) {
+                    $scope.config.data.originator.person.defaultPhone = null;
+                } else {
+                    $scope.config.data.originator.person.defaultPhone.type = "phone";
+                    $scope.config.data.originator.person.contactMethods.push($scope.config.data.originator.person.defaultPhone);
+                }
+
+                if (Util.isEmpty($scope.config.data.originator.person.defaultEmail) || !$scope.config.data.originator.person.defaultEmail.value) {
+                    $scope.config.data.originator.person.defaultEmail = null;
+                } else {
+                    $scope.config.data.originator.person.defaultEmail.type = "email";
+                    $scope.config.data.originator.person.contactMethods.push($scope.config.data.originator.person.defaultEmail);
+                }
+
                 for (var property in $scope.config.data) {
                     if ($scope.config.data.hasOwnProperty(property)) {
                         basicData[property] = $scope.config.data[property];

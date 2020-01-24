@@ -27,23 +27,30 @@ package com.armedia.acm.configuration.service;
  * #L%
  */
 
+import com.armedia.acm.configuration.annotations.MapValue;
 import com.armedia.acm.configuration.core.ConfigurationContainer;
 import com.armedia.acm.configuration.util.MergeFlags;
 import com.armedia.acm.configuration.util.MergePropertiesUtil;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.reflections.Reflections;
+import org.reflections.scanners.MethodAnnotationsScanner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.lang.reflect.Method;
 import java.util.AbstractMap;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -294,13 +301,22 @@ public class CollectionPropertiesConfigurationServiceImpl implements CollectionP
      *
      */
     @Override
-    public Map<String, Object> filterAndConvertProperties(String mapPropertyKey, Map<String, Object> updatedMap, boolean convertWithMap)
+    public Map<String, Object> filterAndConvertProperties(String mapPropertyKey, Map<String, Object> updatedMap, boolean convertWithMap,
+            boolean convertFromTheRootKey)
     {
         // filter the nested proprty key to avoid map conversion
         Function<Map.Entry<String, Object>, Map.Entry<String, Object>> transform = entry -> {
 
-            String lastSubKey = MergePropertiesUtil.getLastKey(entry.getKey());
-            return new AbstractMap.SimpleEntry<>(lastSubKey, entry.getValue());
+            if (convertFromTheRootKey)
+            {
+                String withTheRootKey = entry.getKey().substring(entry.getKey().indexOf(".") + 1);
+                return new AbstractMap.SimpleEntry<>(withTheRootKey, entry.getValue());
+            }
+            else
+            {
+                String withoutRootKey = MergePropertiesUtil.getLastKey(entry.getKey());
+                return new AbstractMap.SimpleEntry<>(withoutRootKey, entry.getValue());
+            }
         };
 
         // filter all the properties from configuration that contains the propertyKey from the annotation
@@ -370,7 +386,7 @@ public class CollectionPropertiesConfigurationServiceImpl implements CollectionP
             List<Object> propertyValues,
             Map<String, Object> updatedMap, boolean combineList)
     {
-        updatedMap = filterAndConvertProperties(mapPropertyKey, updatedMap, true);
+        updatedMap = filterAndConvertProperties(mapPropertyKey, updatedMap, true, false);
 
         return combineProperties(mapEntryKey, propertyValues, updatedMap, combineList);
 
@@ -436,6 +452,42 @@ public class CollectionPropertiesConfigurationServiceImpl implements CollectionP
         }
 
         return orderedMap;
+    }
+
+    @Override
+    public List<String> getMapValueAnnotatedKeys(String packages)
+    {
+        List<String> annotatedProperties = new LinkedList<>();
+        Object[] packagesToScan;
+
+        if (!packages.contains(","))
+        {
+            packages = StringUtils.substringBeforeLast(packages, ".*");
+
+            packagesToScan = new Object[] { packages };
+        }
+        else
+        {
+            List<String> packagesArray = Arrays.asList(packages.split(","));
+
+            packagesToScan = packagesArray.stream()
+                    .map(it -> StringUtils.substringBeforeLast(it, ".*"))
+                    .toArray();
+        }
+
+        Set<Method> methodsAnnotatedWith = new Reflections(packagesToScan, new MethodAnnotationsScanner())
+                .getMethodsAnnotatedWith(MapValue.class);
+
+        for (final Method method : methodsAnnotatedWith)
+        {
+            if (method.isAnnotationPresent(MapValue.class))
+            {
+                MapValue annotatedInstance = method.getAnnotation(MapValue.class);
+                annotatedProperties.add(annotatedInstance.value());
+            }
+        }
+
+        return annotatedProperties;
     }
 
     public void setConfigurationContainer(ConfigurationContainer configurationContainer)

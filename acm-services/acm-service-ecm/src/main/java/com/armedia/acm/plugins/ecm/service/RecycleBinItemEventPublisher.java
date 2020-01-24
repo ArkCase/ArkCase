@@ -27,10 +27,13 @@ package com.armedia.acm.plugins.ecm.service;
  * #L%
  */
 
+import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
+import com.armedia.acm.plugins.ecm.model.event.AcmFolderMovedEvent;
 import com.armedia.acm.plugins.ecm.model.event.EcmFileMovedEvent;
-import org.apache.logging.log4j.Logger;
+
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.security.core.Authentication;
@@ -54,5 +57,14 @@ public class RecycleBinItemEventPublisher implements ApplicationEventPublisherAw
         fileMovedEvent.setSucceeded(succeeded);
 
         eventPublisher.publishEvent(fileMovedEvent);
+    }
+
+    public void publishFolderMovedToRecycleBinEvent(AcmFolder source, Authentication auth, String ipAddress, boolean succeeded)
+    {
+        log.debug("Publishing a folder {} moved to recycle bin event.", source.getId());
+        AcmFolderMovedEvent folderMovedEvent = new AcmFolderMovedEvent(source, auth.getName(), ipAddress);
+        folderMovedEvent.setSucceeded(succeeded);
+
+        eventPublisher.publishEvent(folderMovedEvent);
     }
 }

@@ -57,5 +57,8 @@
             <beans:property name="requestFolderStructureService" ref="requestFolderStructureService"/>
         </beans:bean>
 
+        <beans:bean id="getNextAvailableRequestAPIController" class="gov.foia.web.api.GetNextAvailableRequestAPIController">
+            <beans:property name="foiaRequestService" ref="foiaRequestService"/>
+        </beans:bean>
     </beans:beans>
 </beans:beans>
