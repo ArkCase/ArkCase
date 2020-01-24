@@ -56,6 +56,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -241,18 +242,19 @@ public class FOIAEcmFileServiceImpl extends EcmFileServiceImpl implements FOIAEc
     }
 
     @Override
-    public void setReviewStatus(Long fileId, String fileVersion, String reviewStatus)
+    public void setReviewStatus(Long fileId, String fileVersion, String reviewStatus) throws AcmObjectNotFoundException
     {
         setReviewRedactionStatus(fileId, fileVersion, reviewStatus, "review");
     }
 
     @Override
-    public void setRedactionStatus(Long fileId, String fileVersion, String redactionStatus)
+    public void setRedactionStatus(Long fileId, String fileVersion, String redactionStatus) throws AcmObjectNotFoundException
     {
         setReviewRedactionStatus(fileId, fileVersion, redactionStatus, "redaction");
     }
 
     private void setReviewRedactionStatus(Long fileId, String fileVersion, String status, String statusType)
+            throws AcmObjectNotFoundException
     {
         EcmFile file = getEcmFileDao().find(fileId);
         List<EcmFileVersion> fileVersions = file.getVersions();
@@ -273,6 +275,7 @@ public class FOIAEcmFileServiceImpl extends EcmFileServiceImpl implements FOIAEc
             {
                 ((FOIAEcmFileVersion) fileVersionToUpdate).setRedactionStatus(status);
             }
+            updateFileLinks(file);
             getEcmFileDao().save(file);
         }
     }
@@ -301,6 +304,34 @@ public class FOIAEcmFileServiceImpl extends EcmFileServiceImpl implements FOIAEc
         tmpPdfConvertedFile = new File(tmpPdfConvertedFullFileName);
 
         return tmpPdfConvertedFile;
+    }
+
+    @Override
+    public void updateFileLinks(EcmFile file) throws AcmObjectNotFoundException
+    {
+        List<EcmFile> links = getFileLinks(file.getFileId());
+        int activeVersionIndex = (int) Double.parseDouble(file.getActiveVersionTag());
+        FOIAEcmFileVersion activeVersion = (FOIAEcmFileVersion) file.getVersions().get(activeVersionIndex - 1);
+        ArrayList<EcmFileVersion> versions = new ArrayList<>();
+        versions.add(activeVersion);
+        links.forEach(f -> {
+            f.setFileType(file.getFileType());
+            f.setActiveVersionTag(file.getActiveVersionTag());
+            f.setFileName(file.getFileName());
+            f.setContainer(file.getContainer());
+            f.setStatus(file.getStatus());
+            f.setCategory(file.getCategory());
+            f.setFileActiveVersionMimeType(file.getFileActiveVersionMimeType());
+            f.setClassName(file.getClassName());
+            f.setFileActiveVersionNameExtension(file.getFileActiveVersionNameExtension());
+            f.setFileSource(file.getFileSource());
+            f.setLegacySystemId(file.getLegacySystemId());
+            f.setPageCount(file.getPageCount());
+            f.setSecurityField(file.getSecurityField());
+            f.setVersions(versions);
+
+            getEcmFileDao().save(f);
+        });
     }
 
     /**
