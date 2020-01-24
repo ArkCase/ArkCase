@@ -37,12 +37,15 @@ public class AcmCostsheetAssociatedEvent extends AcmEvent
 
     private static final long serialVersionUID = -3652527955108616909L;
 
-    public AcmCostsheetAssociatedEvent(AcmStatefulEntity source, Long sourceId, String sourceType, String eventType, String userId,
+    public AcmCostsheetAssociatedEvent(AcmStatefulEntity source, Long sourceParentObjectId, Long sourceId, String sourceParentObjectType, String sourceType, String eventType, String userId,
             String ipAddress, Date eventDate, boolean succeeded)
     {
         super(source);
 
+        setParentObjectId(sourceParentObjectId);
         setObjectId(sourceId);
+        setParentObjectType(sourceParentObjectType);
+        setObjectType(sourceType);
         setObjectType(sourceType);
         setEventType(eventType);
         setUserId(userId);
