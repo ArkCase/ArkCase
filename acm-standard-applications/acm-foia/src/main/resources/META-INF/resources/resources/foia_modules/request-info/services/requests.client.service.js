@@ -72,6 +72,15 @@ angular.module('request-info').factory('RequestInfo.RequestsService', [ '$resour
             transformResponse: function(data, headers) {
                 return null;
             }
+        },
+
+        getNextAvailableRequestInQueue: {
+            method: 'GET',
+            params: {
+                createdDate: '@createdDate',
+            },
+            url: 'api/v1/plugin/request/nextAvailableRequestInQueue/:queueId',
+            cache: false
         }
     });
 } ]);
