@@ -146,7 +146,10 @@ angular.module('cases').controller(
                         $scope.loadingIcon = "fa fa-circle-o-notch fa-spin";
                         CaseInfoService.changeCaseFileState('change_case_status', $scope.changeCaseStatus).then(function(data) {
                             MessageService.info(data.info);
-                            $modalInstance.dismiss();
+                            if($scope.changeCaseStatus.changeCaseStatusFlow){
+                                $scope.changeCaseStatus.status = 'IN APPROVAL';
+                            }
+                            $modalInstance.close($scope.changeCaseStatus);
                         });
 
                     }
