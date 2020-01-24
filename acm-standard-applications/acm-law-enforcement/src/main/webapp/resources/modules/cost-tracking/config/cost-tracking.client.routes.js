@@ -8,7 +8,6 @@ angular.module('cost-tracking').config([ '$stateProvider', function($stateProvid
             translatePartialLoader: [ '$translate', '$translatePartialLoader', function($translate, $translatePartialLoader) {
                 $translatePartialLoader.addPart('common');
                 $translatePartialLoader.addPart('cost-tracking');
-                $translatePartialLoader.addPart('request-info');
                 return $translate.refresh();
             } ]
         }
