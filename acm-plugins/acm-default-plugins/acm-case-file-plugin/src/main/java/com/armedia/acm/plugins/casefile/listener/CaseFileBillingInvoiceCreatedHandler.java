@@ -30,6 +30,7 @@ package com.armedia.acm.plugins.casefile.listener;
 import com.armedia.acm.plugins.billing.service.BillingInvoiceDocumentGenerator;
 import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
+import com.armedia.acm.plugins.casefile.model.CaseFileConstants;
 import com.armedia.acm.services.billing.model.BillingInvoiceCreatedEvent;
 
 import org.springframework.context.ApplicationListener;
@@ -47,9 +48,12 @@ public class CaseFileBillingInvoiceCreatedHandler implements ApplicationListener
     @Override
     public void onApplicationEvent(BillingInvoiceCreatedEvent event)
     {
-        CaseFile caseFile = getCaseFileDao().find(event.getParentObjectId());
-        getCaseFileBillingInvoiceDocumentGenerator().setParentObject(caseFile);
-        getCaseFileBillingInvoiceDocumentGenerator().generatePdf(event.getParentObjectType(), event.getParentObjectId());
+        if(event.getParentObjectType().equals(CaseFileConstants.OBJECT_TYPE))
+        {
+            CaseFile caseFile = getCaseFileDao().find(event.getParentObjectId());
+            getCaseFileBillingInvoiceDocumentGenerator().setParentObject(caseFile);
+            getCaseFileBillingInvoiceDocumentGenerator().generatePdf(event.getParentObjectType(), event.getParentObjectId());
+        }
     }
 
     public BillingInvoiceDocumentGenerator getCaseFileBillingInvoiceDocumentGenerator()
