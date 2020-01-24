@@ -222,6 +222,18 @@ public class PersonServiceImpl implements PersonService
     }
 
     @Override
+    public EcmFile changeDescriptionForImage(Long imageId, Boolean isDefault, String imageDescription, Authentication auth) throws AcmUserActionFailedException, AcmObjectNotFoundException, AcmUpdateObjectFailedException
+    {
+        EcmFile imageFile = ecmFileService.findById(imageId);
+        if (imageFile == null)
+        {
+            throw new AcmObjectNotFoundException("Image",  imageId, "Image not found with ID:[{}];");
+        }
+        imageFile.setDescription(imageDescription);
+        return ecmFileService.updateFile(imageFile);
+    }
+
+    @Override
     public void deleteImageForPerson(Long personId, Long imageId) throws AcmObjectNotFoundException, AcmUserActionFailedException
     {
         Person person = get(personId);
@@ -344,8 +356,8 @@ public class PersonServiceImpl implements PersonService
     @Override
     @Transactional
     public EcmFile saveImageForPerson(Long personId, MultipartFile image, boolean isDefault, EcmFile metadata, Authentication auth)
-            throws IOException, AcmUserActionFailedException, AcmCreateObjectFailedException, AcmUpdateObjectFailedException,
-            AcmObjectNotFoundException, PipelineProcessException
+            throws IOException, AcmCreateObjectFailedException, AcmUpdateObjectFailedException,
+            PipelineProcessException, AcmFileTypesException
     {
         Person person = personDao.find(personId);
         Objects.requireNonNull(person, "Person not found.");
@@ -354,21 +366,29 @@ public class PersonServiceImpl implements PersonService
                 person.getContainer().getFolder());
         Objects.requireNonNull(picturesFolderObj, "Pictures folder not found.");
 
-        EcmFile uploaded;
-
-        if (image != null)
+        File pictureFile = null;
+        try
         {
-            String fileName = image.getOriginalFilename();
-            String uniqueFileName = folderAndFilesUtils.createUniqueIdentificator(fileName);
-
-            metadata.setFileName(fileName);
-            uploaded = ecmFileService.upload(auth, PersonOrganizationConstants.PERSON_OBJECT_TYPE, personId,
-                    picturesFolderObj.getCmisFolderId(), uniqueFileName, image.getInputStream(), metadata);
+            pictureFile = File.createTempFile("arkcase-update-image-for-person-", null);
+            FileUtils.copyInputStreamToFile(image.getInputStream(), pictureFile);
+            EcmTikaFile ecmTikaFile = ecmTikaFileService.detectFileUsingTika(pictureFile, image.getName());
+            if (!ecmTikaFile.getContentType().startsWith("image"))
+            {
+                throw new AcmFileTypesException("File is not of type image, got " + ecmTikaFile.getContentType());
+            }
         }
-        else
+        catch (SAXException | TikaException e)
         {
-            uploaded = ecmFileService.updateFile(metadata);
+            throw new AcmFileTypesException("Error parsing contentType", e);
         }
+        finally
+        {
+            FileUtils.deleteQuietly(pictureFile);
+        }
+
+        String fileName = image.getOriginalFilename();
+        metadata.setFileName(fileName);
+        EcmFile uploaded = ecmFileService.update(metadata, image, auth);
 
         if (isDefault)
         {
@@ -584,6 +604,10 @@ public class PersonServiceImpl implements PersonService
     public void setPersonDao(PersonDao personDao)
     {
         this.personDao = personDao;
+    }
+
+    public EcmFileService getEcmFileService() {
+        return ecmFileService;
     }
 
     public void setEcmFileService(EcmFileService ecmFileService)

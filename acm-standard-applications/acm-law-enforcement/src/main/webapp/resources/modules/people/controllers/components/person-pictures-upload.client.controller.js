@@ -1,4 +1,4 @@
-angular.module('people').controller('Person.PictureUploadDialogController', [ '$scope', '$modalInstance', 'params', function($scope, $modalInstance, params) {
+angular.module('people').controller('Person.PictureUploadDialogController', [ '$scope', '$modalInstance', 'params', 'Person.PicturesService', 'MessageService', function($scope, $modalInstance, params, PicturesService, MessageService) {
     $scope.userPicture = {};
     $scope.userPicture.isEdit = false;
 
@@ -22,6 +22,16 @@ angular.module('people').controller('Person.PictureUploadDialogController', [ '$
             image: $scope.image,
             isDefault: $scope.isDefault,
             isEdit: $scope.isEdit
+        });
+    };
+    $scope.changeImageDescription = function () {
+        PicturesService.changeImageDescription($scope.objectInfo.id, $scope.image.fileId, $scope.isDefault, $scope.image.description).then(function (data) {
+            $modalInstance.close({
+                image: data
+            });
+            MessageService.succsessAction();
+        }, function () {
+            MessageService.errorAction();
         });
     };
 } ]);
