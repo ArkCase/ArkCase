@@ -301,13 +301,22 @@ public class CollectionPropertiesConfigurationServiceImpl implements CollectionP
      *
      */
     @Override
-    public Map<String, Object> filterAndConvertProperties(String mapPropertyKey, Map<String, Object> updatedMap, boolean convertWithMap)
+    public Map<String, Object> filterAndConvertProperties(String mapPropertyKey, Map<String, Object> updatedMap, boolean convertWithMap,
+            boolean convertFromTheRootKey)
     {
         // filter the nested proprty key to avoid map conversion
         Function<Map.Entry<String, Object>, Map.Entry<String, Object>> transform = entry -> {
 
-            String lastSubKey = MergePropertiesUtil.getLastKey(entry.getKey());
-            return new AbstractMap.SimpleEntry<>(lastSubKey, entry.getValue());
+            if (convertFromTheRootKey)
+            {
+                String withTheRootKey = entry.getKey().substring(entry.getKey().indexOf(".") + 1);
+                return new AbstractMap.SimpleEntry<>(withTheRootKey, entry.getValue());
+            }
+            else
+            {
+                String withoutRootKey = MergePropertiesUtil.getLastKey(entry.getKey());
+                return new AbstractMap.SimpleEntry<>(withoutRootKey, entry.getValue());
+            }
         };
 
         // filter all the properties from configuration that contains the propertyKey from the annotation
@@ -377,7 +386,7 @@ public class CollectionPropertiesConfigurationServiceImpl implements CollectionP
             List<Object> propertyValues,
             Map<String, Object> updatedMap, boolean combineList)
     {
-        updatedMap = filterAndConvertProperties(mapPropertyKey, updatedMap, true);
+        updatedMap = filterAndConvertProperties(mapPropertyKey, updatedMap, true, false);
 
         return combineProperties(mapEntryKey, propertyValues, updatedMap, combineList);
 
