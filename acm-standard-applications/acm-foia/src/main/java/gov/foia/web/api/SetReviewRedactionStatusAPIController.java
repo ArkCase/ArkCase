@@ -27,9 +27,10 @@ package gov.foia.web.api;
  * #L%
  */
 
-import gov.foia.service.FOIAEcmFileService;
-import org.apache.logging.log4j.Logger;
+import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
+
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -39,6 +40,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import gov.foia.service.FOIAEcmFileService;
 
 @Controller
 @RequestMapping({ "/api/v1/service/ecm", "/api/latest/service/ecm" })
@@ -52,13 +54,13 @@ public class SetReviewRedactionStatusAPIController
     @RequestMapping(value = "/file/{fileId}/version/{fileVersion}/review/{reviewStatus}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public void setReviewStatus(@PathVariable("fileId") Long fileId,
-                                            @PathVariable("fileVersion") String fileVersion,
-                                            @PathVariable("reviewStatus") String reviewStatus,
-                                            Authentication authentication)
+            @PathVariable("fileVersion") String fileVersion,
+            @PathVariable("reviewStatus") String reviewStatus,
+            Authentication authentication) throws AcmObjectNotFoundException
     {
         log.debug("Trying to set Review Status for EcmFile with Id [{}]", fileId);
 
-        if(reviewStatus.equals("none"))
+        if (reviewStatus.equals("none"))
         {
             reviewStatus = new String();
         }
@@ -71,13 +73,13 @@ public class SetReviewRedactionStatusAPIController
     @RequestMapping(value = "/file/{fileId}/version/{fileVersion}/redaction/{redactionStatus}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public void setRedactionStatus(@PathVariable("fileId") Long fileId,
-                                @PathVariable("fileVersion") String fileVersion,
-                                @PathVariable("redactionStatus") String redactionStatus,
-                                Authentication authentication)
+            @PathVariable("fileVersion") String fileVersion,
+            @PathVariable("redactionStatus") String redactionStatus,
+            Authentication authentication) throws AcmObjectNotFoundException
     {
         log.debug("Trying to set Redaction Status for EcmFile with Id [{}]", fileId);
 
-        if(redactionStatus.equals("none"))
+        if (redactionStatus.equals("none"))
         {
             redactionStatus = new String();
         }
