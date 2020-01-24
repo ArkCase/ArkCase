@@ -119,6 +119,7 @@ import java.util.UUID;
         "/spring/spring-library-pdf-utilities.xml",
         "/spring/spring-library-person.xml",
         "/spring/spring-library-person-rules.xml",
+        "/spring/spring-library-addressable-plugin.xml",
         "/spring/spring-library-profile.xml",
         "/spring/spring-library-property-file-manager.xml",
         "/spring/spring-library-search.xml",
@@ -128,8 +129,13 @@ import java.util.UUID;
         "/spring/spring-library-core-api.xml",
         "/spring/spring-library-user-login.xml",
         "/spring/spring-library-plugin-manager.xml",
-        "/spring/spring-library-audit-service.xml",
-        "/spring/spring-library-calendar-integration-exchange-service.xml"
+        "/spring/spring-library-calendar-integration-exchange-service.xml",
+        "/spring/spring-integration-case-file-test.xml",
+        "/spring/spring-test-quartz-scheduler.xml",
+        "/spring/spring-library-activemq.xml",
+        "/spring/spring-library-websockets.xml",
+        "/spring/spring-library-object-title.xml",
+        "/spring/spring-library-camel-context.xml"
 })
 @TransactionConfiguration(defaultRollback = true)
 public class SplitCaseFileServiceIT

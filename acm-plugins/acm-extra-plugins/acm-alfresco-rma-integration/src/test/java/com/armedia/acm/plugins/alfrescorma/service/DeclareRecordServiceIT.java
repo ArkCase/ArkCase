@@ -31,6 +31,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 import com.armedia.acm.camelcontext.context.CamelContextManager;
+import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.web.api.MDCConstants;
 
 import org.apache.chemistry.opencmis.client.api.Document;
@@ -56,6 +57,7 @@ import java.util.UUID;
         "/spring/spring-alfresco-records-service-test.xml",
         "/spring/spring-library-alfresco-service.xml",
         "/spring/spring-library-acm-encryption.xml",
+        "/spring/spring-library-camel-context.xml",
         "/spring/spring-library-property-file-manager.xml"
 })
 public class DeclareRecordServiceIT
@@ -83,7 +85,7 @@ public class DeclareRecordServiceIT
         MDC.put(MDCConstants.EVENT_MDC_REQUEST_ID_KEY, UUID.randomUUID().toString());
 
         Document testFile = cmisFileWriter.writeTestFile(camelContextManager);
-        ecmFileId = testFile.getVersionSeriesId();
+        ecmFileId = testFile.getProperty(EcmFileConstants.REPOSITORY_VERSION_ID).getValue();
     }
 
     @Test

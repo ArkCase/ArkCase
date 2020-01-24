@@ -61,6 +61,8 @@ import java.util.regex.Pattern;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
+        "/spring/spring-library-configuration.xml",
+        "/spring/spring-library-object-converter.xml",
         "/spring/spring-library-activemq.xml",
         "/spring/spring-library-property-file-manager.xml",
         "/spring/spring-library-acm-encryption.xml"
@@ -74,6 +76,13 @@ public class ActiveMqIT
     public transient final Logger log = LogManager.getLogger(getClass());
 
     private final MessageCounter messageCounter = new MessageCounter();
+
+    static
+    {
+        String userHomePath = System.getProperty("user.home");
+        System.setProperty("acm.configurationserver.propertyfile", userHomePath + "/.arkcase/acm/conf.yml");
+        System.setProperty("configuration.server.url", "http://localhost:9999");
+    }
 
     @Autowired
     @Qualifier("jmsConnectionFactory")

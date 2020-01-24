@@ -60,6 +60,8 @@ import java.util.UUID;
         "/spring/spring-library-acm-encryption.xml",
         "/spring/spring-library-protect-url-test.xml",
         "/spring/spring-library-configuration.xml",
+        "/spring/spring-test-quartz-scheduler.xml",
+        "/spring/spring-library-websockets.xml",
         "/spring/spring-library-object-converter.xml"
 })
 public class ProtectUrlServiceImplIT
