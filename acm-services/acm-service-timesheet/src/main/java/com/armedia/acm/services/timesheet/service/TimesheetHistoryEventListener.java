@@ -62,17 +62,18 @@ public class TimesheetHistoryEventListener implements ApplicationListener<AcmTim
             times.forEach(time -> {
                 if (!time.getType().equals("OTHER"))
                 {
-                    Long objectId = time.getObjectId();
-                    String objectType = time.getType();
-                    String eventType = "com.armedia.acm." + objectType.replace("_", "").toLowerCase() + ".timesheet.associated";
+                    Long parentObjectId = time.getObjectId();
+                    Long objectId = timesheet.getId();
+                    String parentObjectType = time.getType();
+                    String objectType = timesheet.getObjectType();
+                    String eventType = "com.armedia.acm." + parentObjectType.replace("_", "").toLowerCase() + ".timesheet.associated";
 
-                    AcmAbstractDao<AcmObject> dao = getAcmDataService().getDaoByObjectType(objectType);
-                    AcmStatefulEntity entity = (AcmStatefulEntity) dao.find(objectId);
+                    AcmAbstractDao<AcmObject> dao = getAcmDataService().getDaoByObjectType(parentObjectType);
+                    AcmStatefulEntity entity = (AcmStatefulEntity) dao.find(parentObjectId);
 
                     if (entity != null)
                     {
-                        AcmTimesheetAssociatedEvent acmTimesheetAssociatedEvent = new AcmTimesheetAssociatedEvent(entity, objectId,
-                                objectType, eventType, event.getUserId(), event.getIpAddress(), event.getEventDate(), true);
+                        AcmTimesheetAssociatedEvent acmTimesheetAssociatedEvent = new AcmTimesheetAssociatedEvent(entity, parentObjectId, objectId, parentObjectType, objectType, eventType, event.getUserId(), event.getIpAddress(), event.getEventDate(), true);
                         getTimesheetAssociatedEventPublisher().publishEvent(acmTimesheetAssociatedEvent);
                     }
                 }
