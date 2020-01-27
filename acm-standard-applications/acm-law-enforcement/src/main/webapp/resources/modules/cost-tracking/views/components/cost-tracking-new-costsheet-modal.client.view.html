@@ -81,8 +81,11 @@
                             <div class="col-sm-2 form-group" style="padding-left: 0px;">
                                 <label translate>costTracking.comp.newCostsheet.cost.amount</label>
                                 <span class="required-asterisk">*</span>
-                                <input type="number" step=".01" class="form-control" ng-model="cost.value"
+                                <div class="input-group">
+                                    <span class="input-group-addon">$</span>
+                                    <input type="number" step=".01" placeholder="0.00" class="form-control" ng-model="cost.value"
                                         ng-blur="updateBalance(costsheet.costs)" required />
+                                </div>
                             </div>
                             <div class="col-sm-1 form-group" style="padding-left: 0px;">
                                 <label class="control-label">&nbsp;</label>
@@ -108,8 +111,10 @@
                             </div>
                         </div>
                         <div class="col-sm-2 form-group" style="padding-left: 0px;">
-                            <div style="border: 1px solid #ccc; padding: 5px;">
-                                {{sumAmount | number:2}}
+                            <div style="border: 1px solid #ccc; padding: 0px;">
+                                <div class="input-group">
+                                    <span class="input-group-addon">$ {{sumAmount | number:2}}</span>
+                                </div>
                             </div>
                         </div>
                     </div>
