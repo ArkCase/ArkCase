@@ -30,6 +30,7 @@ package gov.foia.pipeline.presave;
 import com.armedia.acm.objectonverter.ArkCaseBeanUtils;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
+import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.pipeline.EcmFileTransactionPipelineContext;
 import com.armedia.acm.plugins.ecm.pipeline.presave.EcmFileNewMetadataHandler;
 import com.armedia.acm.plugins.ecm.service.impl.EcmTikaFile;
@@ -71,12 +72,13 @@ public class FOIAEcmFileNewMetadataHandler extends EcmFileNewMetadataHandler
                 throw new PipelineProcessException("cmisDocument is null");
             }
 
-            entity.setVersionSeriesId(cmisDocument.getVersionSeriesId());
+            entity.setVersionSeriesId(cmisDocument.getPropertyValue(EcmFileConstants.REPOSITORY_VERSION_ID));
             entity.setActiveVersionTag(cmisDocument.getVersionLabel());
 
             // Sets the versioning of the file
             FOIAEcmFileVersion version = new FOIAEcmFileVersion();
-            version.setCmisObjectId(cmisDocument.getId());
+            version.setCmisObjectId(
+                    cmisDocument.getPropertyValue(EcmFileConstants.REPOSITORY_VERSION_ID) + ";" + cmisDocument.getVersionLabel());
             version.setVersionTag(cmisDocument.getVersionLabel());
             version.setVersionMimeType(entity.getFileActiveVersionMimeType());
             version.setVersionFileNameExtension(entity.getFileActiveVersionNameExtension());

@@ -30,6 +30,7 @@ package gov.foia.pipeline.presave;
 import com.armedia.acm.plugins.ecm.dao.AcmFolderDao;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
+import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.pipeline.EcmFileTransactionPipelineContext;
 import com.armedia.acm.plugins.ecm.service.PageCountService;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
@@ -76,10 +77,11 @@ public class FOIAEcmFileMergedMetadataHandler implements PipelineHandler<EcmFile
             }
 
             // Updates the versioning of the file
-            oldFile.setVersionSeriesId(cmisDocument.getVersionSeriesId());
+            oldFile.setVersionSeriesId(cmisDocument.getPropertyValue(EcmFileConstants.REPOSITORY_VERSION_ID));
             oldFile.setActiveVersionTag(cmisDocument.getVersionLabel());
             FOIAEcmFileVersion version = new FOIAEcmFileVersion();
-            version.setCmisObjectId(cmisDocument.getId());
+            version.setCmisObjectId(
+                    cmisDocument.getPropertyValue(EcmFileConstants.REPOSITORY_VERSION_ID) + ";" + cmisDocument.getVersionLabel());
             version.setVersionTag(cmisDocument.getVersionLabel());
             version.setVersionMimeType(oldFile.getFileActiveVersionMimeType());
             version.setVersionFileNameExtension(oldFile.getFileActiveVersionNameExtension());
