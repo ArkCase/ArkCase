@@ -89,10 +89,10 @@ public class PortalRequestAPIController
     @RequestMapping(value = "/external/user/status", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public List<PortalFOIARequestStatus> getLoggedUserExternalRequests(Authentication auth,
-            @RequestParam(value = "emailAddress") String emailAddress)
+            @RequestParam(value = "emailAddress") String emailAddress, @RequestParam(value="requestId") String requestId)
             throws AcmObjectNotFoundException
     {
-        return getPortalRequestService().getLoggedUserExternalRequests(auth.getName());
+        return getPortalRequestService().getLoggedUserExternalRequests(auth.getName(), requestId);
     }
 
     @RequestMapping(value = "/external/readingroom", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
