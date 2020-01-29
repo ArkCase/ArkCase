@@ -6,6 +6,7 @@ angular.module('cases').controller(
                 function($scope, $http, $stateParams, $translate, $modalInstance, ComplaintInfoService, $state, ObjectLookupService, MessageService, Util, $modal, ConfigService, ObjectService, modalParams, CaseInfoService, ObjectParticipantService, AdminFormWorkflowsLinkService) {
 
                     $scope.modalParams = modalParams;
+                    $scope.currentStatus = modalParams.info.status;
                     $scope.approverName = "";
                     $scope.groupName = "";
                     //Functions
