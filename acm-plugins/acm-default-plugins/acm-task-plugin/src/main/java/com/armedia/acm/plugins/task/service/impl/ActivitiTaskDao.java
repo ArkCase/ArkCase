@@ -1104,8 +1104,16 @@ public class ActivitiTaskDao extends AcmAbstractDao<AcmTask> implements TaskDao,
             retval.setWorkflowRequestType((String) hti.getProcessVariables().get(TaskConstants.VARIABLE_NAME_REQUEST_TYPE));
             if (hti.getProcessVariables().get(TaskConstants.VARIABLE_NAME_PDF_RENDITION_ID) != null)
             {
-                retval.setReviewDocumentPdfRenditionId(
-                        ((Long) hti.getProcessVariables().get(TaskConstants.VARIABLE_NAME_PDF_RENDITION_ID)).toString());
+                if (hti.getProcessVariables().get(TaskConstants.VARIABLE_NAME_PDF_RENDITION_ID).toString().contains(","))
+                {
+                    retval.setReviewDocumentPdfRenditionId(
+                            hti.getProcessVariables().get(TaskConstants.VARIABLE_NAME_PDF_RENDITION_ID).toString());
+                }
+                else
+                {
+                    retval.setReviewDocumentPdfRenditionId(
+                            ((Long) hti.getProcessVariables().get(TaskConstants.VARIABLE_NAME_PDF_RENDITION_ID)).toString());
+                }
             }
             retval.setReviewDocumentFormXmlId((Long) hti.getProcessVariables().get(TaskConstants.VARIABLE_NAME_XML_RENDITION_ID));
 
