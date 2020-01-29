@@ -24,6 +24,7 @@
                     </div>
                     <div class="row form-group">
                         <div class="col-sm-6">
+                            <div class="col-sm-4">
                             <span translate>cases.comp.change.status.information.status.title</span>
 							<span class="required-asterisk">*</span>
                             <p class="input-group">
@@ -34,6 +35,11 @@
                                     </option>
                                 </select>
                             </p>
+                            </div>
+                            <div class="col-sm-8" style="text-align: left; padding-top: 25px">
+                                <span class="h4 font-bold" translate="cases.comp.change.status.information.status.current" />
+                                <span class="h4 font-bold">{{": " + currentStatus}}</span>
+                            </div>
                         </div>
                     </div>
                     <div class="row form-group" ng-if="showCaseCloseStatus">
