@@ -198,14 +198,8 @@
                             </div>
                             <div class="pull-right">
                                 <div class="btn-group">
-<<<<<<< HEAD
                                     <button class="btn btn-sm btn-default" ng-click="nextAvailableRequest()"
                                             ng-disabled="requestInProgress  || (nextQueue.disabled && requestInfo.status =='In Review') || !hasNextRequest"
-=======
-                                    <button class="btn btn-sm btn-default"
-                                            ng-click="onClickNextQueue(nextQueue.name, createNewRequestForm.$dirty)"
-                                            ng-disabled="requestInProgress  || (nextQueue.disabled && requestInfo.status =='In Review')"
->>>>>>> f8e5b9006e2133106f0dc0d70e741ec7beda0e1b
                                             ng-repeat="nextQueue in availableQueues">
                                         <i class="{{loadingIcon}}" ng-if="nextQueue.name == nameButton && loading"></i>
                                         <i class="fa fa-check" ng-hide="loading && nextQueue.name == nameButton"></i>
