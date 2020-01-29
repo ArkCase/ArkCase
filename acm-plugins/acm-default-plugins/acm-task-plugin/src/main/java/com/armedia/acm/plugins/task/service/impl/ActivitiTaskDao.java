@@ -1102,7 +1102,19 @@ public class ActivitiTaskDao extends AcmAbstractDao<AcmTask> implements TaskDao,
             retval.setAttachedToObjectName((String) hti.getProcessVariables().get(TaskConstants.VARIABLE_NAME_OBJECT_NAME));
             retval.setWorkflowRequestId((Long) hti.getProcessVariables().get(TaskConstants.VARIABLE_NAME_REQUEST_ID));
             retval.setWorkflowRequestType((String) hti.getProcessVariables().get(TaskConstants.VARIABLE_NAME_REQUEST_TYPE));
-            retval.setReviewDocumentPdfRenditionId((String) hti.getProcessVariables().get(TaskConstants.VARIABLE_NAME_PDF_RENDITION_ID));
+            if (hti.getProcessVariables().get(TaskConstants.VARIABLE_NAME_PDF_RENDITION_ID) != null)
+            {
+                if (hti.getProcessVariables().get(TaskConstants.VARIABLE_NAME_PDF_RENDITION_ID).toString().contains(","))
+                {
+                    retval.setReviewDocumentPdfRenditionId(
+                            hti.getProcessVariables().get(TaskConstants.VARIABLE_NAME_PDF_RENDITION_ID).toString());
+                }
+                else
+                {
+                    retval.setReviewDocumentPdfRenditionId(
+                            ((Long) hti.getProcessVariables().get(TaskConstants.VARIABLE_NAME_PDF_RENDITION_ID)).toString());
+                }
+            }
             retval.setReviewDocumentFormXmlId((Long) hti.getProcessVariables().get(TaskConstants.VARIABLE_NAME_XML_RENDITION_ID));
 
             Long parentObjectId = (Long) hti.getProcessVariables().get(TaskConstants.VARIABLE_NAME_PARENT_OBJECT_ID);

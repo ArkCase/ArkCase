@@ -55,17 +55,18 @@ public class CostsheetHistoryEventListener implements ApplicationListener<AcmCos
 
             AcmCostsheet costsheet = (AcmCostsheet) event.getSource();
 
-            String objectType = costsheet.getParentType();
-            Long objectId = costsheet.getParentId();
-            String eventType = "com.armedia.acm." + objectType.replace("_", "").toLowerCase() + ".costsheet.associated";
+            String parentObjectType = costsheet.getParentType();
+            String objectType = costsheet.getObjectType();
+            Long parentObjectId = costsheet.getParentId();
+            Long objectId = costsheet.getId();
+            String eventType = "com.armedia.acm." + parentObjectType.replace("_", "").toLowerCase() + ".costsheet.associated";
 
-            AcmAbstractDao<AcmObject> dao = getAcmDataService().getDaoByObjectType(objectType);
-            AcmStatefulEntity entity = (AcmStatefulEntity) dao.find(objectId);
+            AcmAbstractDao<AcmObject> dao = getAcmDataService().getDaoByObjectType(parentObjectType);
+            AcmStatefulEntity entity = (AcmStatefulEntity) dao.find(parentObjectId);
 
             if (entity != null)
             {
-                AcmCostsheetAssociatedEvent acmCostsheetAssociatedEvent = new AcmCostsheetAssociatedEvent(entity, objectId, objectType,
-                        eventType, event.getUserId(), event.getIpAddress(), event.getEventDate(), true);
+                AcmCostsheetAssociatedEvent acmCostsheetAssociatedEvent = new AcmCostsheetAssociatedEvent(entity, parentObjectId, objectId, parentObjectType, objectType, eventType, event.getUserId(), event.getIpAddress(), event.getEventDate(), true);
                 getCostsheetAssociatedEventPublisher().publishEvent(acmCostsheetAssociatedEvent);
             }
         }
