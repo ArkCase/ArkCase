@@ -126,7 +126,8 @@ public class FOIAEcmFileServiceImpl extends EcmFileServiceImpl implements FOIAEc
             fileCopy.setExemptionCodes(file.getExemptionCodes());
 
             FOIAEcmFileVersion fileCopyVersion = new FOIAEcmFileVersion();
-            fileCopyVersion.setCmisObjectId(cmisObject.getPropertyValue(EcmFileConstants.REPOSITORY_VERSION_ID));
+            fileCopyVersion.setCmisObjectId(
+                    cmisObject.getPropertyValue(EcmFileConstants.REPOSITORY_VERSION_ID) + ";" + cmisObject.getVersionLabel());
             fileCopyVersion.setVersionTag(cmisObject.getVersionLabel());
             fileCopyVersion.setReviewStatus(new String());
             fileCopyVersion.setRedactionStatus(new String());
