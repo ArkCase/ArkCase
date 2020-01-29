@@ -168,7 +168,7 @@ public class FOIARequestDao extends AcmAbstractDao<FOIARequest>
         return requestStatusList;
     }
 
-    public List<PortalFOIARequestStatus> getLoggedUserExternalRequests(String emailAddress)
+    public List<PortalFOIARequestStatus> getLoggedUserExternalRequests(String emailAddress, String requestId)
     {
         String queryText = "SELECT cf.caseNumber, cf.status, cf.modified, cf.publicFlag, cf.requestType FROM FOIARequest cf JOIN PersonAssociation pa JOIN pa.person p"
                 + " WHERE cf.id = pa.parentId"
@@ -180,11 +180,21 @@ public class FOIARequestDao extends AcmAbstractDao<FOIARequest>
             queryText += " AND p.creator = :emailAddress";
         }
 
+        if (requestId != null && !requestId.equals("undefined"))
+        {
+            queryText += " AND cf.caseNumber = :caseNumber";
+        }
+
         Query foiaRequests = getEm().createQuery(queryText);
 
         if (emailAddress != null && !emailAddress.equals("undefined"))
         {
             foiaRequests.setParameter("emailAddress", emailAddress);
+        }
+
+        if (requestId != null && !requestId.equals("undefined"))
+        {
+            foiaRequests.setParameter("caseNumber", requestId);
         }
 
         List<Object[]> resultList = foiaRequests.getResultList();
