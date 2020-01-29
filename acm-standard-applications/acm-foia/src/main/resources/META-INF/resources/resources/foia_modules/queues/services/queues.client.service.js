@@ -268,7 +268,8 @@ angular.module('queues').factory('Queues.QueuesService', [ '$http', '$q', 'Ecm.M
                     filters.push(filter.column + ':' + filter.value);
                 } else if (_.isString(filter.value) && (!columnType || columnType == 'string' || columnType == 'object')) {
                     // Remove * from request. and add '*' to the end of request
-                    filter.value = filter.value.replace('*', '');
+                    var filterValue = '*+AND+' + filter.column + ':*';
+                    filter.value = _.contains(filter.value, ' ') ? '*' + filter.value.split(' ').join(filterValue) : filter.value.replace('*', '');
                     filters.push(filter.column + ':' + filter.value + '*');
                 }
             });
