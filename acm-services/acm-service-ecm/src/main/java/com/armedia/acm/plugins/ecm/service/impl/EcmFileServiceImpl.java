@@ -1047,7 +1047,8 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
             Document cmisdocument = (Document) getCamelContextManager().send(ArkCaseCMISActions.COPY_DOCUMENT, props);
 
             EcmFileVersion fileCopyVersion = new EcmFileVersion();
-            fileCopyVersion.setCmisObjectId(cmisdocument.getPropertyValue(EcmFileConstants.REPOSITORY_VERSION_ID));
+            fileCopyVersion.setCmisObjectId(
+                    cmisdocument.getPropertyValue(EcmFileConstants.REPOSITORY_VERSION_ID) + ";" + cmisdocument.getVersionLabel());
             fileCopyVersion.setVersionTag(cmisdocument.getVersionLabel());
             copyFileVersionMetadata(file, fileCopyVersion);
 
