@@ -21,7 +21,8 @@ angular.module('common').controller('Common.HistoryController',
 
             $scope.ObjectTypes = ObjectService.ObjectTypes;
 
-            ConfigService.getModuleConfig("common").then(function(moduleConfig) {
+            $scope.selectedEventType =
+                ConfigService.getModuleConfig("common").then(function(moduleConfig) {
                 $scope.config = moduleConfig;
                 onConfigRetrieved(moduleConfig.objectHistoryClientGrid);
                 return moduleConfig;
