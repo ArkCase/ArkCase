@@ -38,10 +38,10 @@ public class SmtpEventSentEvent extends AcmEvent
 
     public SmtpEventSentEvent(Object source, String userId)
     {
-        this(source, userId, null, null, null);
+        this(source, userId, null, null, null, null, null);
     }
 
-    public SmtpEventSentEvent(Object source, String userId, Long objectId, String objectType, String ipAddress)
+    public SmtpEventSentEvent(Object source, String userId, Long objectId, String objectType, Long parentObjectId, String parentObjectType, String ipAddress)
     {
         super(source);
         setUserId(userId);
@@ -51,6 +51,8 @@ public class SmtpEventSentEvent extends AcmEvent
             setObjectId(objectId);
             setObjectType(objectType);
             setIpAddress(ipAddress);
+            setParentObjectId(parentObjectId);
+            setParentObjectType(parentObjectType);
         }
     }
 

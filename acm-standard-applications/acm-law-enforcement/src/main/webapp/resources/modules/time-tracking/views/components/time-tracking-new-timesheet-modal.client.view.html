@@ -153,7 +153,11 @@
                                     </div>
                                     <div class="col-sm-2" style="padding: 0px;">
                                         <b>Total Cost</b>
-                                        <div style="border: 1px solid #ccc; height: 34px; padding: 7px;">{{time.totalCost | number:2}}</div>
+                                        <div style="border: 1px solid #ccc; height: 34px">
+                                            <div class="input-group" style="height: 100%">
+                                                <span class="input-group-addon">$ {{time.totalCost | number:2}}</span>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

@@ -13,10 +13,6 @@ angular.module('reports').controller('ReportsController',
 
             $scope.data = Data.getData();
 
-             $scope.iframeLoadedCallBack = function () {
-                $scope.modalInstance.close();
-            };
-
             $scope.data.fiscalYears = [];
             
             var promiseModuleConfig = ConfigService.getModuleConfig("reports");
@@ -78,6 +74,10 @@ angular.module('reports').controller('ReportsController',
                     backdrop: 'static'
                 });
                 $scope.modalInstance = modalInstance;
+
+                $scope.iframeLoadedCallBack = function () {
+                    $scope.modalInstance.close();
+                };
 
                 if ($scope.data.dateSearchType == 'FISCAL_YEAR') {
                     var fiscalYear = _.find($scope.data.fiscalYears, {
