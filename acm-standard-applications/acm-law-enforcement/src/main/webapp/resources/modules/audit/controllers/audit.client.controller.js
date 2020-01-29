@@ -15,10 +15,6 @@ angular.module('audit').controller(
                         return config;
                     });
 
-                    $scope.iframeLoadedCallBack = function () {
-                         $scope.modalInstance.close();
-                    };
-
                     $scope.showXmlReport = false;
 
                     $scope.$on('send-type-id', getObjectValues);
@@ -88,6 +84,10 @@ angular.module('audit').controller(
                             backdrop: 'static'
                         });
                         $scope.modalInstance = modalInstance;
+
+                        $scope.iframeLoadedCallBack = function () {
+                            $scope.modalInstance.close();
+                        };
 
                         var reportUri = $scope.auditReportUri;
                         if ($scope.showXmlReport) {
