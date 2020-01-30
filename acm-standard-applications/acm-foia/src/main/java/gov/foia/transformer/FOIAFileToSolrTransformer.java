@@ -33,11 +33,12 @@ import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
 import com.armedia.acm.services.search.model.solr.SolrContentDocument;
 import com.armedia.acm.services.search.model.solr.SolrDocument;
 
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.Map;
 
+import gov.foia.model.FOIAEcmFileVersion;
 import gov.foia.model.FOIAFile;
 
 public class FOIAFileToSolrTransformer extends EcmFileToSolrTransformer
@@ -132,6 +133,13 @@ public class FOIAFileToSolrTransformer extends EcmFileToSolrTransformer
 
     private void mapRequestProperties(FOIAFile file, Map<String, Object> additionalProperties)
     {
+        FOIAEcmFileVersion activeFileVersion = (FOIAEcmFileVersion) file.getVersions()
+                .stream()
+                .filter(ecmFileVersion -> ecmFileVersion.getVersionTag().equals(file.getActiveVersionTag()))
+                .findFirst()
+                .orElse(null);
         additionalProperties.put("public_flag_b", file.getPublicFlag());
+        additionalProperties.put("redaction_status_s", activeFileVersion.getRedactionStatus());
+        additionalProperties.put("review_status_s", activeFileVersion.getReviewStatus());
     }
 }
