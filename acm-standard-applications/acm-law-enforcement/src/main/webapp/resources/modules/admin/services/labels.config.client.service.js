@@ -99,8 +99,7 @@ angular.module('admin').factory('Admin.LabelsConfigService', [ '$resource', func
         updateResource: {
             method: "PUT",
             url: "api/latest/plugin/admin/labelmanagement/admin-resource?lang=:lang&ns=:ns",
-            cache: false,
-            isArray: true
+            cache: false
         },
 
         /**
