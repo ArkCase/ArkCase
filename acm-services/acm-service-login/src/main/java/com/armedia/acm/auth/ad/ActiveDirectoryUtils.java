@@ -47,8 +47,7 @@ public class ActiveDirectoryUtils
     private static final String USER_PASSWORD_HAS_EXPIRED = "User password has expired.";
     private static final String USER_MUST_RESET_PASSWORD = "User must reset password.";
     private static final String USER_NOT_PERMITTED_TO_LOGON_AT_THIS_TIME = "User not permitted to logon at this time.";
-    private static final String SUPPLIED_PASSWORD_IS_INVALID = "Supplied password is invalid.";
-    private static final String USER_WAS_NOT_FOUND = "User was not found.";
+    private static final String BAD_CREDENTIALS = "Bad credentials";
     private static final Pattern SUB_ERROR_CODE = Pattern.compile(".*data\\s([0-9a-f]{3,4}).*");
 
     protected static MessageSourceAccessor messages = SpringSecurityMessageSource.getAccessor();
@@ -78,10 +77,10 @@ public class ActiveDirectoryUtils
     {
         switch (ActiveDirectoryError.toActiveDirectoryError(code))
         {
+
         case USERNAME_NOT_FOUND:
-            return USER_WAS_NOT_FOUND;
         case INVALID_PASSWORD:
-            return SUPPLIED_PASSWORD_IS_INVALID;
+            return BAD_CREDENTIALS;
         case INVALID_LOGON_HOURS:
             return USER_NOT_PERMITTED_TO_LOGON_AT_THIS_TIME;
         case PASSWORD_EXPIRED:
@@ -128,7 +127,7 @@ public class ActiveDirectoryUtils
 
     public static BadCredentialsException badCredentials()
     {
-        return new BadCredentialsException(SUPPLIED_PASSWORD_IS_INVALID);
+        return new BadCredentialsException(BAD_CREDENTIALS);
     }
 
     public static BadCredentialsException badCredentials(Throwable cause)
