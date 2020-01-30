@@ -19,7 +19,7 @@
         <div class="form-group" ng-hide="isEdit">
             <label>{{ 'admin.security.ldapConfig.data.id' | translate }}</label>
 			<span class="required-asterisk">*</span>
-            <input name="dirId" class="form-control" type="text" ng-model="dir.id" ng-pattern="/^[a-zA-Z0-9.]*$/"
+            <input name="dirId" class="form-control" type="text" ng-model="dir.id" ng-pattern="/^[a-zA-Z0-9_]*$/"
                     placeholder="{{ 'admin.security.ldapConfig.data.placeholders.id' | translate }}"
                     title="{{'admin.security.ldapConfig.data.id.validationMessage' | translate}}" required>
             <span ng-show="ldapConfigForm.dirId.$error.pattern" translate>admin.security.ldapConfig.data.id.validationMessage</span>
