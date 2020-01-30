@@ -310,6 +310,10 @@
                     <entry key="creator" value="author"/>
                     <entry key="modifier" value="modifier_s"/>
                     <entry key="category" value="category_s"/>
+                    <entry key="redactionStatus" value="redaction_status_s"/>
+                    <entry key="reviewStatus" value="review_status_s"/>
+                    <entry key="status" value="status_s"/>
+                    <entry key="public" value="public_flag_b"/>
                 </map>
             </beans:property>
             <beans:property name="solrObjectTypeToAcmType">

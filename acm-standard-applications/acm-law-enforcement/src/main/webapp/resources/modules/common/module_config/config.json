@@ -87,14 +87,20 @@
       },
       {
         "name": "version",
+        "field": "version",
         "displayName": "common.directive.docTree.table.columns.version",
+        "headTemplate": "<label id='version' class='doc-tree-header' style='cursor: pointer;'></label>",
+        "icon": "<i class='fa fa-fw' data-sort='version' data-dir='ASC'></i>",
         "__todo__cellTemplate": "<div>{{ row.entity.created | date : 'shortDate' }}</div>",
         "width": "6%",
         "index": 8
       },
       {
         "name": "status",
+        "field": "status",
         "displayName": "common.directive.docTree.table.columns.status",
+        "headTemplate": "<label id='status' class='doc-tree-header' style='cursor: pointer;'></label>",
+        "icon": "<i class='fa fa-fw' data-sort='status' data-dir='ASC'></i>",
         "__todo__cellTemplate": "{{node.data.status}}",
         "width": "8%",
         "index": 9

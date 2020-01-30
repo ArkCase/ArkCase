@@ -42,7 +42,7 @@ public class SolrReindexEcmFileExecutor implements AcmDataUpdateExecutor
     @Override
     public String getUpdateId()
     {
-        return "solr-ecm-files-reindex-1";
+        return "solr-ecm-files-reindex-2";
     }
 
     @Override
