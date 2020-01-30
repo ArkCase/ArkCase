@@ -671,7 +671,7 @@ public class LdapConfigurationService implements InitializingBean
     public void afterPropertiesSet() throws Exception
     {
         this.ldapConfigurationLocationPattern = Pattern.compile(ldapDirectoryConfig.getLdapPropertiesFileRegex());
-        this.ldapDirectoryNamePattern = Pattern.compile("^[a-zA-Z0-9.]+$");
+        this.ldapDirectoryNamePattern = Pattern.compile("^[a-zA-Z0-9_]+$");
         this.ldapUserFilePattern = Pattern.compile(ldapDirectoryConfig.getLdapUserFileRegex());
         this.ldapUserPropertiesFilePattern = Pattern.compile(ldapDirectoryConfig.getLdapUserPropertiesFileRegex());
         this.ldapGroupFilePattern = Pattern.compile(ldapDirectoryConfig.getLdapGroupFileRegex());
