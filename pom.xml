@@ -97,7 +97,7 @@
         <pdfbox.version>2.0.11</pdfbox.version>
         <postgresql.version>9.3-1100-jdbc41</postgresql.version>
         <powermock.version>1.7.0</powermock.version>
-        <puppycrawl.version>6.8.1</puppycrawl.version>
+        <puppycrawl.version>8.29</puppycrawl.version>
         <reactor.version>2.0.8.RELEASE</reactor.version>
         <reactor-spring.version>2.0.7.RELEASE</reactor-spring.version>
         <rome.version>1.0</rome.version>
