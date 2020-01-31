@@ -195,10 +195,10 @@ public class LabelManagementService
      * @param labelsResource
      * @return
      */
-    public Map<String, Object> updateResource(String resource, String labelsResource)
+    public Map<String, String> updateResource(String resource, String labelsResource)
     {
         JSONObject value = new JSONObject(resource);
-        Map<String, Object> properties = new HashMap<>();
+        Map<String, String> properties = new HashMap<>();
 
         if (!value.getString("description").isEmpty())
         {
