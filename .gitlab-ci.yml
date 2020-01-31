@@ -305,17 +305,3 @@ security_scan_results:
     # verify started
     - not blank job
   when: manual
-  
-release:
-  stage: release
-  only: 
-    variables:
-     - $RELEASE
-  script:
-    # create $RELEASE BRANCH
-    # update poms with new version $RELEASE_VERSION
-    # commit and push
-    # build the code and upload to Nexus
-    # deploy to test server ?
-    # update poms in develop branch to new SNAPSHOT version
-    - not blank job
