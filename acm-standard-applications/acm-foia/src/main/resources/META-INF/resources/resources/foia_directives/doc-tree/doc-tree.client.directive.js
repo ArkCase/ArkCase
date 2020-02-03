@@ -446,12 +446,14 @@ angular
                         //todo: move to column renderer
                         jqTreeBody.on("change", "select.docversion", DocTree.onChangeVersion);
                         jqTreeBody.on("dblclick", "select.docversion", DocTree.onDblClickVersion);
+                        jqTreeBody.on("change", "select.reviewstatus", DocTree.onChangeReviewStatus);
+                        jqTreeBody.on("change", "select.redactionstatus", DocTree.onChangeRedactionStatus);
 
                         var jqTreeHead = jqTree.find("thead");
-                        jqTreeHead.find("input:checkbox").on("click", function(e) {
+                        jqTreeHead.find("input:checkbox").on("click", function (e) {
                             DocTree.onClickBtnChkAllDocument(e, this);
                         });
-                        jqTreeHead.find("label").on("click", function(e) {
+                        jqTreeHead.find("label").on("click", function (e) {
                             DocTree.onClickBtnSort(e, this);
                         });
 
@@ -1393,9 +1395,6 @@ angular
                                             }
                                         }
                                         $(element).replaceWith($td);
-
-                                        var jqTreeBody = DocTree.jqTree.find("tbody");
-                                        jqTreeBody.on("change", "select.reviewstatus", DocTree.onChangeReviewStatus);
                                     }
                                 },
                                 {
@@ -1418,9 +1417,6 @@ angular
                                             }
                                         }
                                         $(element).replaceWith($td);
-
-                                        var jqTreeBody = DocTree.jqTree.find("tbody");
-                                        jqTreeBody.on("change", "select.redactionstatus", DocTree.onChangeRedactionStatus);
                                     }
                                 },
                                 {
@@ -1460,13 +1456,9 @@ angular
                                 {
                                     name : "public",
                                     renderer : function(element, node, columnDef, isReadOnly) {
-                                        Ecm.getFile({
-                                            fileId: node.data.objectId
-                                        }).$promise.then(function(file) {
-                                            if(file.publicFlag === true){
-                                                $(element).text("PUBLIC");
-                                            }
-                                        });
+                                        if (node.data.publicFlag === true) {
+                                            $(element).text("PUBLIC");
+                                        }
                                     }
                                 }];
                         }
@@ -3885,6 +3877,7 @@ angular
                             nodeData.data.category = Util.goodValue(fileData.category);
                             nodeData.data.version = Util.goodValue(fileData.version);
                             nodeData.data.lock = Util.goodValue(fileData.lock);
+                            nodeData.data.publicFlag = Util.goodValue(fileData.publicFlag);
                             nodeData.data.modifier = Util.goodValue(fileData.modifier);
                             nodeData.data.link = Util.goodValue(fileData.link);
 

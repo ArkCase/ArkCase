@@ -77,6 +77,9 @@ public interface SearchConstants
     String PROPERTY_MIME_TYPE = "mime_type_s";
     String PROPERTY_EXT = "ext_s";
     String PROPERTY_STATUS = "status_s";
+    String PROPERTY_PUBLIC_FLAG = "public_flag_b";
+    String PROPERTY_REDACTION_STATUS = "redaction_status_s";
+    String PROPERTY_REVIEW_STATUS = "review_status_s";
     String PROPERTY_GROUPS_ID_SS = "groups_id_ss";
     String PROPERTY_QUEUE_ID_S = "queue_id_s";
     String PROPERTY_QUEUE_NAME_S = "queue_name_s";
