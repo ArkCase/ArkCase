@@ -37,6 +37,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.Map;
+import java.util.Optional;
 
 import gov.foia.model.FOIAEcmFileVersion;
 import gov.foia.model.FOIAFile;
@@ -108,8 +109,8 @@ public class FOIAFileToSolrTransformer extends EcmFileToSolrTransformer
     }
 
     @Override
-    public SolrContentDocument toContentFileIndex(EcmFile in) {
-
+    public SolrContentDocument toContentFileIndex(EcmFile in)
+    {
         SolrContentDocument solr = null;
 
         if (in instanceof FOIAFile)
@@ -133,13 +134,14 @@ public class FOIAFileToSolrTransformer extends EcmFileToSolrTransformer
 
     private void mapRequestProperties(FOIAFile file, Map<String, Object> additionalProperties)
     {
-        FOIAEcmFileVersion activeFileVersion = (FOIAEcmFileVersion) file.getVersions()
+        additionalProperties.put("public_flag_b", file.getPublicFlag());
+
+        Optional<FOIAEcmFileVersion> activeFileVersion = file.getVersions()
                 .stream()
                 .filter(ecmFileVersion -> ecmFileVersion.getVersionTag().equals(file.getActiveVersionTag()))
-                .findFirst()
-                .orElse(null);
-        additionalProperties.put("public_flag_b", file.getPublicFlag());
-        additionalProperties.put("redaction_status_s", activeFileVersion.getRedactionStatus());
-        additionalProperties.put("review_status_s", activeFileVersion.getReviewStatus());
+                .map(it -> (FOIAEcmFileVersion) it)
+                .findFirst();
+        additionalProperties.put("redaction_status_s", activeFileVersion.map(FOIAEcmFileVersion::getRedactionStatus).orElse(null));
+        additionalProperties.put("review_status_s", activeFileVersion.map(FOIAEcmFileVersion::getReviewStatus).orElse(null));
     }
 }
