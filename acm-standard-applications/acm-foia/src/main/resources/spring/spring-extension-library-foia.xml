@@ -133,10 +133,15 @@
             <beans:property name="solrReindexService" ref="solrReindexService"/>
         </beans:bean>
 
+        <beans:bean id="solrReindexFOIAFileExecutor" class="gov.foia.service.dataupdate.SolrReindexFoiaFileExecutor">
+            <property name="solrReindexService" ref="solrReindexService"/>
+        </beans:bean>
+
         <beans:bean id="foiaExtensionDataUpdateExecutor" class="gov.foia.service.dataupdate.FoiaExtensionDataUpdateExecutor">
             <beans:property name="foiaDataUpdateExecutors">
                 <beans:list>
                     <beans:ref bean="foiaNotificationDataUpdateExecutor"/>
+                    <beans:ref bean="solrReindexFOIAFileExecutor"/>
                 </beans:list>
             </beans:property>
 

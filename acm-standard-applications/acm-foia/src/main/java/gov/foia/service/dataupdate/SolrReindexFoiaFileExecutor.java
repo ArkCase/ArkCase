@@ -1,10 +1,10 @@
-package com.armedia.acm.services.dataupdate.service;
+package gov.foia.service.dataupdate;
 
 /*-
  * #%L
- * ACM Service: Data Update Service
+ * ACM Standard Application: Freedom of Information Act
  * %%
- * Copyright (C) 2014 - 2019 ArkCase LLC
+ * Copyright (C) 2014 - 2018 ArkCase LLC
  * %%
  * This file is part of the ArkCase software. 
  * 
@@ -27,14 +27,14 @@ package com.armedia.acm.services.dataupdate.service;
  * #L%
  */
 
-import com.armedia.acm.plugins.ecm.model.EcmFile;
+import com.armedia.acm.services.dataupdate.service.AcmDataUpdateExecutor;
+import com.armedia.acm.services.dataupdate.service.SolrReindexService;
 
 import java.util.Arrays;
 
-/**
- * @author aleksandar.bujaroski
- */
-public class SolrReindexEcmFileExecutor implements AcmDataUpdateExecutor
+import gov.foia.model.FOIAFile;
+
+public class SolrReindexFoiaFileExecutor implements AcmDataUpdateExecutor
 {
 
     private SolrReindexService solrReindexService;
@@ -42,13 +42,13 @@ public class SolrReindexEcmFileExecutor implements AcmDataUpdateExecutor
     @Override
     public String getUpdateId()
     {
-        return "solr-ecm-files-reindex-1";
+        return "solr-foia-files-reindex-1";
     }
 
     @Override
     public void execute()
     {
-        getSolrReindexService().reindex(Arrays.asList(EcmFile.class));
+        solrReindexService.reindex(Arrays.asList(FOIAFile.class));
     }
 
     public SolrReindexService getSolrReindexService()
