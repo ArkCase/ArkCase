@@ -79,10 +79,9 @@
                 </div>
                 <div class="form-group col-sm-4">
                     <label class="control-label">{{ 'tasks.newTask.businessProcessTypes.label' | translate }}</label>
-                    <span class="required-asterisk">*</span>
                     <select ng-model="selectedBusinessProcessType" ng-change="updateBusinessProcessType(selectedBusinessProcessType)"
                             ng-options="businessProcessType.key as businessProcessType.value | translate for businessProcessType in businessProcessTypes"
-                            class="form-control input-md" ng-disabled="taskType === 'ACM_TASK' && filesToUpload.length <= 0">
+                            class="form-control input-md">
                     </select>
                 </div>
             </div>
@@ -113,21 +112,6 @@
                                 </ul>
                             </label>
                         </fieldset>
-                    <span ng-if="taskType === 'REVIEW_DOCUMENT' && documentsToReviewIds.length === 0 && selectedBusinessProcessType != 'notDefinedWorkflow' " class="text-danger" translate>
-                      tasks.newTask.noSelectedReviewDocsErrorMsg
-                    </span>
-                    <span ng-if="taskType === 'REVIEW_DOCUMENT' && filesToUpload.length > 0 && selectedBusinessProcessType != 'acmDocumentTaskWorkflow' && documentsToReviewIds.length === 0" class="text-danger" translate>
-                      tasks.newTask.noSelectedReviewDocsWorkflowErrorMsg
-                    </span>
-                    <span ng-if="(taskType != 'REVIEW_DOCUMENT' && filesToUpload.length === 0 && selectedBusinessProcessType == 'acmDocumentTaskWorkflow')" class="text-danger" translate>
-                      tasks.newTask.noSelectedDocsErrorMsg
-                    </span>
-                    <span ng-if="(taskType != 'REVIEW_DOCUMENT' && filesToUpload.length > 0 && selectedBusinessProcessType != 'acmDocumentTaskWorkflow')" class="text-danger" translate>
-                      tasks.newTask.noSelectedWorkflowErrorMsg
-                    </span>
-                    <span ng-if="(taskType === 'REVIEW_DOCUMENT' && documentsToReviewIds.length > 0 && selectedBusinessProcessType == 'notDefinedWorkflow')" class="text-danger" translate>
-                      tasks.newTask.noSelectedWorkflowErrorMsg
-                    </span>
                 </div>
             </div>
             <div class="row">
@@ -142,11 +126,8 @@
         <button type="button" class="btn btn-secondary btn-sm" data-toggle="tooltip" data-title="Cancel" ng-click="cancelModal()">
             <span translate> tasks.newTask.cancelButton </span>
         </button>
-        <button type="submit"
-                ng-disabled="task.$invalid || saved || (taskType === 'REVIEW_DOCUMENT' && documentsToReview && documentsToReviewIds.length === 0)
-                             || (selectedBusinessProcessType == 'notDefinedWorkflow' && (filesToUpload.length > 0 || taskType === 'REVIEW_DOCUMENT') )
-                             || (taskType != 'REVIEW_DOCUMENT' && filesToUpload.length > 0 && selectedBusinessProcessType != 'acmDocumentTaskWorkflow')"
-                class="btn btn-primary btn-sm" data-toggle="tooltip" id="saveButton" data-title="Save">
+        <button type="submit" ng-disabled="task.$invalid || saved" class="btn btn-primary btn-sm" data-toggle="tooltip" id="saveButton"
+                data-title="Save">
             <i class="fa fa-floppy-o" ng-hide="loading"></i>
             <i class="fa fa-circle-o-notch fa-spin" ng-if="loading"></i>
             <span translate> tasks.newTask.saveButton </span>
