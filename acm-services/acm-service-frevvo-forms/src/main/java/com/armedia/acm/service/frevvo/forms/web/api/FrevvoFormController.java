@@ -39,7 +39,6 @@ import com.armedia.acm.form.project.service.ProjectFactory;
 import com.armedia.acm.form.time.service.TimeFactory;
 import com.armedia.acm.frevvo.config.FrevvoFormService;
 import com.armedia.acm.frevvo.config.FrevvoService;
-import com.armedia.acm.pluginmanager.service.AcmPluginManager;
 import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
 import com.armedia.acm.plugins.casefile.dao.ChangeCaseStatusDao;
 import com.armedia.acm.plugins.casefile.service.SaveCaseService;
@@ -111,7 +110,6 @@ public class FrevvoFormController implements ApplicationEventPublisherAware
 
     private Map<String, Object> properties;
     private AuthenticationTokenService authenticationTokenService;
-    private AcmPluginManager acmPluginManager;
     private UserDao userDao;
     private UserActionDao userActionDao;
     private ComplaintDao complaintDao;
@@ -330,23 +328,6 @@ public class FrevvoFormController implements ApplicationEventPublisherAware
     public void setAuthenticationTokenService(AuthenticationTokenService authenticationTokenService)
     {
         this.authenticationTokenService = authenticationTokenService;
-    }
-
-    /**
-     * @return the acmPluginManager
-     */
-    public AcmPluginManager getAcmPluginManager()
-    {
-        return acmPluginManager;
-    }
-
-    /**
-     * @param acmPluginManager
-     *            the acmPluginManager to set
-     */
-    public void setAcmPluginManager(AcmPluginManager acmPluginManager)
-    {
-        this.acmPluginManager = acmPluginManager;
     }
 
     /**

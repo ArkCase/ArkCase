@@ -1,10 +1,10 @@
-package com.armedia.acm.services.users.model;
+package com.armedia.acm.pluginmanager.model;
 
 /*-
  * #%L
- * ACM Service: Users
+ * ACM Service: Plugin Manager
  * %%
- * Copyright (C) 2014 - 2019 ArkCase LLC
+ * Copyright (C) 2014 - 2020 ArkCase LLC
  * %%
  * This file is part of the ArkCase software. 
  * 
@@ -33,21 +33,21 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ApplicationRolesToPrivilegesConfig
+public class ApplicationPluginPrivilegesConfig
 {
 
-    public static final String ROLES_TO_PRIVILEGES_PROP_KEY = "application.rolesToPrivileges";
+    public static final String PLUGIN_CONFIG_PRIVILEGES_PROP_KEY = "acmPluginConfigurationPrivileges";
 
-    private Map<String, List<Object>> rolesToPrivileges = new HashMap<>();
+    private Map<String, Map<String, List<String>>> pluginConfigPrivileges = new HashMap<>();
 
-    @MapValue(value = "application.rolesToPrivileges")
-    public Map<String, List<Object>> getRolesToPrivileges()
+    @MapValue(value = "acmPluginConfigurationPrivileges", convertFromTheRootKey = true)
+    public Map<String, Map<String, List<String>>> getPluginPrivilegeToUrls()
     {
-        return rolesToPrivileges;
+        return pluginConfigPrivileges;
     }
 
-    public void setRolesToPrivileges(Map<String, List<Object>> rolesToPrivileges)
+    public void setPluginConfigPrivileges(Map<String, Map<String, List<String>>> pluginConfigPrivileges)
     {
-        this.rolesToPrivileges = rolesToPrivileges;
+        this.pluginConfigPrivileges = pluginConfigPrivileges;
     }
 }

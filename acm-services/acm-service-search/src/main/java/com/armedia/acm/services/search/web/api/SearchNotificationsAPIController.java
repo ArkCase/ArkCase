@@ -27,7 +27,6 @@ package com.armedia.acm.services.search.web.api;
  * #L%
  */
 
-import com.armedia.acm.pluginmanager.service.AcmPluginManager;
 import com.armedia.acm.services.search.exception.SolrException;
 import com.armedia.acm.services.search.model.ApplicationSearchEvent;
 import com.armedia.acm.services.search.model.SearchConstants;
@@ -62,7 +61,6 @@ public class SearchNotificationsAPIController
 
     private ExecuteSolrQuery executeSolrQuery;
     private SearchEventPublisher searchEventPublisher;
-    private AcmPluginManager acmPluginManager;
 
     @RequestMapping(value = { "/api/v1/plugin/searchNotifications/advanced",
             "/api/latest/plugin/searchNotifications/advanced" }, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -130,16 +128,6 @@ public class SearchNotificationsAPIController
                 getSearchEventPublisher().publishSearchEvent(event);
             }
         }
-    }
-
-    public AcmPluginManager getAcmPluginManager()
-    {
-        return acmPluginManager;
-    }
-
-    public void setAcmPluginManager(AcmPluginManager acmPluginManager)
-    {
-        this.acmPluginManager = acmPluginManager;
     }
 
     public ExecuteSolrQuery getExecuteSolrQuery()
