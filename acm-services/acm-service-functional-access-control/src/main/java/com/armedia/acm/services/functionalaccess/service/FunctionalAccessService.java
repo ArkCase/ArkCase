@@ -132,4 +132,14 @@ public interface FunctionalAccessService
     String getGroupsByPrivilege(List<String> roles, Map<String, List<String>> rolesToGroups, int startRow, int maxRows, String sort,
             Authentication auth) throws SolrException;
 
+    /**
+     * Retreaves all the roles associated to some privilege from ApplicationRolesToPrivilegesConfig configuration class.
+     *
+     * @param privilege
+     *
+     * @return role names
+     *
+     */
+    List<String> getRolesByPrivilege(String privilege);
+
 }

@@ -60,17 +60,13 @@
 
     <!-- Roles Privileges API-->
     <bean id="rolesPrivilegesService" class="com.armedia.acm.plugins.admin.service.RolesPrivilegesService">
-        <property name="applicationRolesPrivilegesTemplatesLocation"
-                  value="#{ systemProperties ['user.home'] }/.arkcase/acm/spring/roles-privileges-templates/"/>
-        <property name="applicationRolesPrivilegesTemplateFile" value="spring-acm-global-privileges.xml.ftl"/>
-        <property name="applicationRolesPrivilegesFile"
-                  value="#{ systemProperties ['user.home'] }/.arkcase/acm/spring/spring-config-acm-plugins/spring-acm-global-privileges.xml"/>
         <property name="userDao" ref="userJpaDao"/>
         <property name="rolesConfig" ref="applicationRolesConfig"/>
         <property name="privilegesConfig" ref="applicationPrivilegesConfig"/>
         <property name="rolesToPrivilegesConfig" ref="rolesToPrivileges"/>
         <property name="configurationPropertyService" ref="configurationPropertyService"/>
         <property name="collectionPropertiesConfigurationService" ref="collectionPropertiesConfigurationService"/>
+        <property name="functionalAccessService" ref="functionalAccessService"/>
     </bean>
 
     <bean id="historyCleanJob" class="com.armedia.acm.plugins.admin.service.HistoryCleanService">

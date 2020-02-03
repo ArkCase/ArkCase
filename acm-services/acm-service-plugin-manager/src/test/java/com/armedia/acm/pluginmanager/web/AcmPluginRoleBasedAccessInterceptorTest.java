@@ -6,22 +6,22 @@ package com.armedia.acm.pluginmanager.web;
  * %%
  * Copyright (C) 2014 - 2018 ArkCase LLC
  * %%
- * This file is part of the ArkCase software. 
- * 
- * If the software was purchased under a paid ArkCase license, the terms of 
- * the paid license agreement will prevail.  Otherwise, the software is 
+ * This file is part of the ArkCase software.
+ *
+ * If the software was purchased under a paid ArkCase license, the terms of
+ * the paid license agreement will prevail.  Otherwise, the software is
  * provided under the following open source license terms:
- * 
+ *
  * ArkCase is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *  
+ *
  * ArkCase is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with ArkCase. If not, see <http://www.gnu.org/licenses/>.
  * #L%
@@ -35,6 +35,7 @@ import com.armedia.acm.core.exceptions.AcmNotAuthorizedException;
 import com.armedia.acm.pluginmanager.model.AcmPlugin;
 import com.armedia.acm.pluginmanager.model.AcmPluginPrivilege;
 import com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege;
+import com.armedia.acm.pluginmanager.model.ApplicationPluginPrivilegesConfig;
 import com.armedia.acm.pluginmanager.service.AcmPluginManager;
 
 import org.easymock.EasyMockSupport;
@@ -49,6 +50,7 @@ import javax.servlet.http.HttpSession;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -62,6 +64,7 @@ public class AcmPluginRoleBasedAccessInterceptorTest extends EasyMockSupport
 
     private AcmPluginRoleBasedAccessInterceptor unit;
     private AcmPluginManager acmPluginManager;
+    private ApplicationPluginPrivilegesConfig pluginPrivilegesConfig;
 
     @Before
     public void setUp()
@@ -73,6 +76,8 @@ public class AcmPluginRoleBasedAccessInterceptorTest extends EasyMockSupport
         unit = new AcmPluginRoleBasedAccessInterceptor();
 
         acmPluginManager = new AcmPluginManager();
+        pluginPrivilegesConfig = new ApplicationPluginPrivilegesConfig();
+
         unit.setAcmPluginManager(acmPluginManager);
     }
 
@@ -130,6 +135,7 @@ public class AcmPluginRoleBasedAccessInterceptorTest extends EasyMockSupport
 
         try
         {
+            unit.setPluginPrivilegesConfig(pluginPrivilegesConfig);
             unit.preHandle(mockRequest, mockResponse, null);
             fail("Expecting AcmNotAuthorizedException but did not happen");
         }
@@ -153,7 +159,6 @@ public class AcmPluginRoleBasedAccessInterceptorTest extends EasyMockSupport
 
         AcmPlugin plugin = new AcmPlugin();
         plugin.setUrlPrivileges(Arrays.asList(urlPrivilege));
-        acmPluginManager.registerPlugin(plugin);
 
         expect(mockRequest.getSession(false)).andReturn(mockSession);
 
@@ -169,6 +174,7 @@ public class AcmPluginRoleBasedAccessInterceptorTest extends EasyMockSupport
 
         try
         {
+            unit.setPluginPrivilegesConfig(pluginPrivilegesConfig);
             unit.preHandle(mockRequest, mockResponse, null);
             fail("Expecting AcmNotAuthorizedException but did not happen");
         }
@@ -184,18 +190,16 @@ public class AcmPluginRoleBasedAccessInterceptorTest extends EasyMockSupport
     @Test
     public void preHandle_rightPrivileges() throws Exception
     {
-        AcmPluginPrivilege privilege = new AcmPluginPrivilege();
-        privilege.setPrivilegeName("privilegeName");
-        AcmPluginUrlPrivilege urlPrivilege = new AcmPluginUrlPrivilege();
-        urlPrivilege.setHttpMethod(HttpMethod.GET);
-        urlPrivilege.setUrl("/url");
-        urlPrivilege.setRequiredPrivilege(privilege);
-
-        AcmPlugin plugin = new AcmPlugin();
-        plugin.setUrlPrivileges(Arrays.asList(urlPrivilege));
-        acmPluginManager.registerPlugin(plugin);
-
         expect(mockRequest.getSession(false)).andReturn(mockSession);
+
+        Map<String, Map<String, List<String>>> acmUrlPrivilegeConfig = new HashMap<>();
+        Map<String, List<String>> urlHttpMehtods = new HashMap<>();
+        urlHttpMehtods.put("GET", Arrays.asList("/url"));
+        acmUrlPrivilegeConfig.put("privilegeName", urlHttpMehtods);
+
+        pluginPrivilegesConfig.setPluginConfigPrivileges(acmUrlPrivilegeConfig);
+
+        unit.setPluginPrivilegesConfig(pluginPrivilegesConfig);
 
         Map<String, Boolean> userPrivs = new HashMap<>();
         userPrivs.put("privilegeName", Boolean.TRUE);

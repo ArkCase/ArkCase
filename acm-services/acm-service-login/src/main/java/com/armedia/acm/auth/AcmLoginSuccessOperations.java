@@ -33,11 +33,12 @@ import com.armedia.acm.core.AcmApplication;
 import com.armedia.acm.core.model.ApplicationConfig;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.objectonverter.ObjectConverter;
-import com.armedia.acm.pluginmanager.service.AcmPluginManager;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
+import com.armedia.acm.services.users.model.ApplicationRolesToPrivilegesConfig;
 import com.armedia.acm.web.api.MDCConstants;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.slf4j.MDC;
@@ -49,6 +50,7 @@ import javax.servlet.http.HttpSession;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -60,13 +62,13 @@ public class AcmLoginSuccessOperations
 {
     private static final int DAYS_TO_PASSWORD_EXPIRATION = 10;
     private Logger log = LogManager.getLogger(getClass());
-    private AcmPluginManager acmPluginManager;
     private AcmApplication acmApplication;
     private UserDao userDao;
     private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
     private ObjectConverter objectConverter;
     private ApplicationConfig applicationConfig;
     private ExternalAuthenticationUtils externalAuthenticationUtils;
+    private ApplicationRolesToPrivilegesConfig rolesToPrivilegesConfig;
 
     public void onSuccessfulAuthentication(HttpServletRequest request, Authentication authentication)
     {
@@ -166,23 +168,26 @@ public class AcmLoginSuccessOperations
 
     protected void addPrivilegesToSession(HttpServletRequest request, Authentication authentication)
     {
-        List<String> allPrivileges = new ArrayList<>();
+        List<Object> allPrivileges = new ArrayList<>();
 
         if (authentication.getAuthorities() != null)
         {
             for (GrantedAuthority authority : authentication.getAuthorities())
             {
-                List<String> privileges = getAcmPluginManager().getPrivilegesForRole(authority.getAuthority());
-                allPrivileges.addAll(privileges);
+                List<Object> privileges = getPrivilegesForRole(authority.getAuthority());
+                if (privileges != null)
+                {
+                    allPrivileges.addAll(privileges);
+                }
             }
         }
 
         // we have to put a map in the session because of how JSTL works. It's easier to check for
         // a map entry than to see if an element exists in a list.
         Map<String, Boolean> privilegeMap = new HashMap<>();
-        for (String privilege : allPrivileges)
+        for (Object privilege : allPrivileges)
         {
-            privilegeMap.put(privilege, Boolean.TRUE);
+            privilegeMap.put((String) privilege, Boolean.TRUE);
         }
 
         HttpSession session = request.getSession(true);
@@ -221,14 +226,24 @@ public class AcmLoginSuccessOperations
 
     }
 
-    public AcmPluginManager getAcmPluginManager()
+    public List<Object> getPrivilegesForRole(String role)
     {
-        return acmPluginManager;
-    }
-
-    public void setAcmPluginManager(AcmPluginManager acmPluginManager)
-    {
-        this.acmPluginManager = acmPluginManager;
+        if (rolesToPrivilegesConfig.getRolesToPrivileges().containsKey(role))
+        {
+            return Collections.unmodifiableList(rolesToPrivilegesConfig.getRolesToPrivileges().get(role));
+        }
+        else
+        {
+            String wildCardRole = StringUtils.substringBeforeLast(role, "@") + "@*";
+            if (rolesToPrivilegesConfig.getRolesToPrivileges().containsKey(wildCardRole))
+            {
+                return Collections.unmodifiableList(rolesToPrivilegesConfig.getRolesToPrivileges().get(wildCardRole));
+            }
+            else
+            {
+                return Collections.emptyList();
+            }
+        }
     }
 
     public AcmApplication getAcmApplication()
@@ -284,5 +299,10 @@ public class AcmLoginSuccessOperations
     public void setExternalAuthenticationUtils(ExternalAuthenticationUtils externalAuthenticationUtils)
     {
         this.externalAuthenticationUtils = externalAuthenticationUtils;
+    }
+
+    public void setRolesToPrivilegesConfig(ApplicationRolesToPrivilegesConfig rolesToPrivilegesConfig)
+    {
+        this.rolesToPrivilegesConfig = rolesToPrivilegesConfig;
     }
 }
