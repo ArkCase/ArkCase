@@ -28,13 +28,14 @@ package com.armedia.acm.auth;
  */
 
 import static org.easymock.EasyMock.expect;
+import static org.junit.Assert.assertEquals;
 
 import com.armedia.acm.core.AcmApplication;
 import com.armedia.acm.core.model.ApplicationConfig;
 import com.armedia.acm.objectonverter.ObjectConverter;
-import com.armedia.acm.pluginmanager.service.AcmPluginManager;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
+import com.armedia.acm.services.users.model.ApplicationRolesToPrivilegesConfig;
 
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
@@ -52,26 +53,31 @@ import java.util.Map;
 
 public class AcmLoginSuccessOperationsTest extends EasyMockSupport
 {
+    private final String roleAdd = "role_add";
+    private final String roleAdmin = "role_admin";
+    private final String wildCardRole = "ADMIN@*";
+    private final String privilegeAdd = "add";
+
     private AcmLoginSuccessOperations unit;
 
     private HttpSession mockSession;
     private Authentication mockAuthentication;
     private HttpServletRequest mockRequest;
-    private AcmPluginManager mockPluginManager;
+    private ApplicationRolesToPrivilegesConfig mockRolesToPrivilegesConfig;
     private UserDao mockUserDao;
 
     @Before
     public void setUp()
     {
         unit = new AcmLoginSuccessOperations();
+        mockRolesToPrivilegesConfig = new ApplicationRolesToPrivilegesConfig();
 
         mockSession = createMock(HttpSession.class);
         mockRequest = createMock(HttpServletRequest.class);
         mockAuthentication = createMock(Authentication.class);
-        mockPluginManager = createMock(AcmPluginManager.class);
         mockUserDao = createMock(UserDao.class);
 
-        unit.setAcmPluginManager(mockPluginManager);
+        unit.setRolesToPrivilegesConfig(mockRolesToPrivilegesConfig);
         unit.setUserDao(mockUserDao);
         unit.setObjectConverter(ObjectConverter.createObjectConverterForTests());
     }
@@ -140,12 +146,14 @@ public class AcmLoginSuccessOperationsTest extends EasyMockSupport
         Map<String, Boolean> privilegeMap = new HashMap<>();
         privilegeMap.put(privilege, Boolean.TRUE);
 
-        List<String> privilegeList = Arrays.asList(privilege);
+        List<Object> privilegeList = Arrays.asList(privilege);
 
         AcmGrantedAuthority authority = new AcmGrantedAuthority(roleAdd);
         expect((List<AcmGrantedAuthority>) mockAuthentication.getAuthorities()).andReturn(Arrays.asList(authority)).atLeastOnce();
 
-        expect(mockPluginManager.getPrivilegesForRole(roleAdd)).andReturn(privilegeList);
+        Map<String, List<Object>> rolesToPrivileges = new HashMap<>();
+        rolesToPrivileges.put(roleAdd, privilegeList);
+        mockRolesToPrivilegesConfig.setRolesToPrivileges(rolesToPrivileges);
 
         expect(mockRequest.getSession(true)).andReturn(mockSession);
 
@@ -190,4 +198,51 @@ public class AcmLoginSuccessOperationsTest extends EasyMockSupport
 
         verifyAll();
     }
+
+    @Test
+    public void getPrivilegesForRole()
+    {
+        createRolesToPrivilegesConfiguration();
+
+        List<Object> privileges = unit.getPrivilegesForRole(roleAdd);
+
+        assertEquals(1, privileges.size());
+
+        assertEquals(privilegeAdd, privileges.get(0));
+
+    }
+
+    @Test
+    public void getPrivilegesForWildCardRole()
+    {
+        createRolesToPrivilegesConfiguration();
+
+        List<Object> privileges = unit.getPrivilegesForRole("ADMIN@ARMEDIA.COM");
+
+        assertEquals(1, privileges.size());
+
+        assertEquals(privilegeAdd, privileges.get(0));
+
+    }
+
+    @Test
+    public void getPrivilegesForRole_noPrivileges()
+    {
+
+        List<Object> privileges = unit.getPrivilegesForRole(roleAdd);
+
+        assertEquals(0, privileges.size());
+
+    }
+
+    private void createRolesToPrivilegesConfiguration()
+    {
+        Map<String, List<Object>> rolesToPrivileges = new HashMap<>();
+        rolesToPrivileges.put(roleAdd, Arrays.asList(privilegeAdd));
+        rolesToPrivileges.put(roleAdmin, Arrays.asList(privilegeAdd));
+        rolesToPrivileges.put(wildCardRole, Arrays.asList(privilegeAdd));
+
+        mockRolesToPrivilegesConfig.setRolesToPrivileges(rolesToPrivileges);
+    }
+
 }
