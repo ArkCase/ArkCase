@@ -28,7 +28,10 @@ angular.module('tasks').factory('Task.NewTaskService', [ '$http', '$httpParamSer
             method: 'POST',
             url: 'api/latest/plugin/task/adHocTask',
             data: taskData,
-            cache: false
+            cache: false,
+            headers: {
+                'Content-Type': undefined
+            }
         });
     };
 

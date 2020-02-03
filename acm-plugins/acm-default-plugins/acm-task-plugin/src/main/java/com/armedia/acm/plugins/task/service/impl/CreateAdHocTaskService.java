@@ -29,6 +29,9 @@ package com.armedia.acm.plugins.task.service.impl;
 
 import com.armedia.acm.core.exceptions.AcmAppErrorJsonMsg;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
+import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
+import com.armedia.acm.plugins.ecm.model.AcmFolder;
+import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.task.exception.AcmTaskException;
 import com.armedia.acm.plugins.task.model.AcmApplicationTaskEvent;
 import com.armedia.acm.plugins.task.model.AcmTask;
@@ -47,16 +50,20 @@ import org.apache.logging.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.security.core.Authentication;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 public class CreateAdHocTaskService {
     private TaskDao taskDao;
     private TaskEventPublisher taskEventPublisher;
     private ExecuteSolrQuery executeSolrQuery;
+    private EcmFileService ecmFileService;
 
     private SearchResults searchResults = new SearchResults();
     private Logger log = LogManager.getLogger(getClass());
 
-    public AcmTask createAdHocTask(AcmTask in, Authentication authentication, String ipAddress) throws AcmCreateObjectFailedException, AcmAppErrorJsonMsg
+    public AcmTask createAdHocTask(AcmTask in, List<MultipartFile> filesToUpload, Authentication authentication,  String ipAddress) throws AcmCreateObjectFailedException, AcmAppErrorJsonMsg, AcmUserActionFailedException
     {
         log.info("Creating ad-hoc task.");
         String user = authentication.getName();
@@ -106,9 +113,17 @@ public class CreateAdHocTaskService {
             }
 
             AcmTask adHocTask = getTaskDao().createAdHocTask(in);
+            AcmFolder folder = adHocTask.getContainer().getAttachmentFolder();
+            for (MultipartFile file : filesToUpload)
+            {
+
+                ecmFileService.upload(file.getOriginalFilename(), "Other", file, authentication,
+                        folder.getCmisFolderId(),
+                        adHocTask.getObjectType(),
+                        adHocTask.getTaskId());
+            }
 
             publishAdHocTaskCreatedEvent(authentication, ipAddress, adHocTask, true);
-
             return adHocTask;
         }
         catch (AcmTaskException e)
@@ -238,4 +253,15 @@ public class CreateAdHocTaskService {
     {
         this.log = log;
     }
+
+    public EcmFileService getEcmFileService() 
+    {
+        return ecmFileService;
+    }
+
+    public void setEcmFileService(EcmFileService ecmFileService) 
+    {
+        this.ecmFileService = ecmFileService;
+    }
+
 }
