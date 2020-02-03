@@ -7,9 +7,10 @@
             <div class="row">
                 <div class="col-sm-6 form-group">
                     <label for="assignee" translate> tasks.newTask.assignee.label </label>
+                    <span class="required-asterisk">*</span>
                     <input type="text" id="assignee" ng-model="userOrGroupName" class="input-md form-control"
                             placeholder="{{ 'tasks.newTask.assignee.placeholder' | translate }}" id="assignee"
-                            style="background-color: white;" ng-click="userOrGroupSearch()" readonly>
+                            style="background-color: white;" ng-click="userOrGroupSearch()" readonly required>
                 </div>
 
                 <div class="col-sm-6 form-group">
