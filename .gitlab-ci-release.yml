@@ -171,6 +171,9 @@ start_hotfix:
     variables:
      - $START_HOTFIX
   script:
+    - git config --global user.name "$GIT_USERNAME"
+    - git config --global user.email "$GIT_USERMAIL"
+    - git remote set-url origin "$GIT_URL"
     - git checkout support/$HOTFIX_SUPPORT_VERSION
     - mvn -B gitflow:hotfix-start -DpushRemote=true -DhotfixVersion=$RELEASE_VERSION -DfromBranch=support/$HOTFIX_SUPPORT_VERSION
 
