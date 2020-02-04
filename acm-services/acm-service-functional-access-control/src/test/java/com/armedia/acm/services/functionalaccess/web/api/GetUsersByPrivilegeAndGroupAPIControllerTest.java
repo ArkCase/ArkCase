@@ -137,7 +137,7 @@ public class GetUsersByPrivilegeAndGroupAPIControllerTest extends EasyMockSuppor
         rolesToGroups.put(role2, Arrays.asList(group2.getName()));
 
         expect(mockAuthentication.getName()).andReturn("user");
-
+        expect(mockFunctionalAccessService.getRolesByPrivilege(privilege)).andReturn(rolesForPrivilege);
         // this is a unit test, so we are only verifying our class returns the results it got from the
         // functional access control service. We need unit tests on the functional access control service, to
         // ensure it is working correctly.
@@ -217,7 +217,8 @@ public class GetUsersByPrivilegeAndGroupAPIControllerTest extends EasyMockSuppor
         rolesToGroups.put(role2, Arrays.asList(group2.getName()));
 
         expect(mockAuthentication.getName()).andReturn("user");
-
+        expect(mockFunctionalAccessService.getRolesByPrivilege("acm-privilege"))
+                .andReturn(Arrays.asList("ROLE_ADMINISTRATOR", "ROLE_INVESTIGATOR_SUPERVISOR"));
         expect(mockFunctionalAccessService.getApplicationRolesToGroups()).andReturn(rolesToGroups);
         expect(mockFunctionalAccessService.getUsersByRolesAndGroups(rolesForPrivilege, rolesToGroups, group1.getName(), null))
                 .andReturn(group1.getUserMembers(true));
