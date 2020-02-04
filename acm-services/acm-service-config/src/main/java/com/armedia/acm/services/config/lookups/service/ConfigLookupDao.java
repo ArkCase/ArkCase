@@ -57,6 +57,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.springframework.beans.factory.InitializingBean;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -68,7 +69,7 @@ import java.util.stream.Collectors;
 /**
  * Created by bojan.milenkoski on 25.8.2017
  */
-public class ConfigLookupDao implements LookupDao
+public class ConfigLookupDao implements LookupDao, InitializingBean
 {
     private static final Configuration configuration = Configuration.builder().jsonProvider(new JacksonJsonNodeJsonProvider())
             .mappingProvider(new JacksonMappingProvider()).build();
@@ -103,6 +104,12 @@ public class ConfigLookupDao implements LookupDao
         }
 
         return null;
+    }
+
+    @Override
+    public void afterPropertiesSet()
+    {
+        mergeLookups();
     }
 
     @Override
