@@ -95,6 +95,7 @@
             <property name="foiaRequestDao" ref="foiaRequestDao"/>
             <property name="holidayConfigurationService" ref="holidayConfigurationService"/>
             <property name="userDao" ref="userJpaDao"/>
+            <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
         </beans:bean>
 
         <beans:bean id="dueDateReminderJobDescriptor" class="gov.foia.service.DueDateReminderJobDescriptor">
