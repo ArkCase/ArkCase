@@ -199,6 +199,7 @@ release_hotfix:
     - apt-get update
     - apt-get install -y zip sshpass
     - export SSHPASS=$SSHPASS_ARKCASE
+    - git checkout hotfix/support/$HOTFIX_SUPPORT_VERSION/$RELEASE_VERSION
     - mvn -B gitflow:hotfix-finish -DpushRemote=true -DhotfixVersion=support/$HOTFIX_SUPPORT_VERSION/$RELEASE_VERSION -DskipTestProject=true -DskipMergeDevBranch=true
     - git checkout --track origin/support/$HOTFIX_SUPPORT_VERSION
     - mvn -DskipITs -T 4 -B deploy "-DaltDeploymentRepository=arkcase.release::default::https://project.armedia.com/nexus/repository/arkcase.release/"
