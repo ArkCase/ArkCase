@@ -29,29 +29,36 @@ package com.armedia.acm.plugins.task.web.api;
 
 import com.armedia.acm.core.exceptions.AcmAppErrorJsonMsg;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
+import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.task.model.AcmTask;
 import com.armedia.acm.plugins.task.service.impl.CreateAdHocTaskService;
 
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpSession;
+
+import java.util.List;
 
 @RequestMapping({ "/api/v1/plugin/task", "/api/latest/plugin/task" })
 public class CreateAdHocTaskAPIController
 {
     private CreateAdHocTaskService createAdHocTaskService;
 
-    @RequestMapping(value = "/adHocTask", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/adHocTask", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseBody
-    public AcmTask createAdHocTask(@RequestBody AcmTask in, Authentication authentication, HttpSession httpSession) throws AcmAppErrorJsonMsg, AcmCreateObjectFailedException {
+    public AcmTask createAdHocTask(@RequestPart(name = "task") AcmTask in,
+            @RequestPart(name = "files") List<MultipartFile> filesToUpload, Authentication authentication, HttpSession httpSession)
+            throws AcmAppErrorJsonMsg, AcmCreateObjectFailedException, AcmUserActionFailedException
+    {
 
         String ipAddress = (String) httpSession.getAttribute("acm_ip_address");
-        return createAdHocTaskService.createAdHocTask(in, authentication, ipAddress);
+        return createAdHocTaskService.createAdHocTask(in, filesToUpload, authentication, ipAddress);
     }
 
     public CreateAdHocTaskService getCreateAdHocTaskService()

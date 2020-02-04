@@ -37,17 +37,19 @@ angular.module('document-details').controller(
                     }
 
                      function onShowLoader() {
-                        var loaderModal = $modal.open({
-                            animation: true,
-                            templateUrl: 'modules/common/views/object.modal.loading-spinner.html',
-                            size: 'sm',
-                            backdrop: 'static'
-                        });
-                        $scope.loaderModal = loaderModal;
-                    }
+                         var loaderModal = $modal.open({
+                             animation: true,
+                             templateUrl: 'modules/common/views/object.modal.loading-spinner.html',
+                             size: 'sm',
+                             backdrop: 'static'
+                         });
+                         $scope.loaderModal = loaderModal;
+                         $scope.loaderOpened = true;
+                     }
 
                     function onHideLoader() {
                         $scope.loaderModal.close();
+                        $scope.loaderOpened = false;
                     }
 
                     $scope.iframeLoaded = function() {
@@ -60,7 +62,6 @@ angular.module('document-details').controller(
                             ArkCaseCrossWindowMessagingService.start('snowbound', $scope.ecmFileProperties['ecm.viewer.snowbound']);
                         });
                         onHideLoader();
-                        $scope.loaderOpened = false;
                     };
 
                     function onSelectAnnotationTags(data) {
@@ -210,10 +211,8 @@ angular.module('document-details').controller(
                     $scope.openSnowboundViewer = function() {
                         if ($scope.loaderOpened == false) {
                             onShowLoader();
-                            $scope.loaderOpened == true;
                         } else {
                             onHideLoader();
-                            $scope.loaderOpened == false;
                         }
                         var viewerUrl = SnowboundService.buildSnowboundUrl($scope.ecmFileProperties, $scope.acmTicket, $scope.userId, $scope.userFullName, $scope.fileInfo, !$scope.editingMode, $scope.caseInfo.caseNumber);
                         $scope.documentViewerUrl = $sce.trustAsResourceUrl(viewerUrl);
@@ -406,7 +405,6 @@ angular.module('document-details').controller(
                             $scope.$broadcast('refresh-ocr');
                         });
                         onHideLoader();
-                        $scope.loaderOpened = true;
                     });
 
                     $scope.$bus.subscribe('sync-progress', function(data) {

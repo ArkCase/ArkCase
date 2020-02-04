@@ -1,10 +1,10 @@
-package com.armedia.acm.services.users.model;
+package gov.foia.service.dataupdate;
 
 /*-
  * #%L
- * ACM Service: Users
+ * ACM Standard Application: Freedom of Information Act
  * %%
- * Copyright (C) 2014 - 2019 ArkCase LLC
+ * Copyright (C) 2014 - 2018 ArkCase LLC
  * %%
  * This file is part of the ArkCase software. 
  * 
@@ -27,27 +27,37 @@ package com.armedia.acm.services.users.model;
  * #L%
  */
 
-import com.armedia.acm.configuration.annotations.MapValue;
+import com.armedia.acm.services.dataupdate.service.AcmDataUpdateExecutor;
+import com.armedia.acm.services.dataupdate.service.SolrReindexService;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.Arrays;
 
-public class ApplicationRolesToPrivilegesConfig
+import gov.foia.model.FOIAFile;
+
+public class SolrReindexFoiaFileExecutor implements AcmDataUpdateExecutor
 {
 
-    public static final String ROLES_TO_PRIVILEGES_PROP_KEY = "application.rolesToPrivileges";
+    private SolrReindexService solrReindexService;
 
-    private Map<String, List<Object>> rolesToPrivileges = new HashMap<>();
-
-    @MapValue(value = "application.rolesToPrivileges")
-    public Map<String, List<Object>> getRolesToPrivileges()
+    @Override
+    public String getUpdateId()
     {
-        return rolesToPrivileges;
+        return "solr-foia-files-reindex-1";
     }
 
-    public void setRolesToPrivileges(Map<String, List<Object>> rolesToPrivileges)
+    @Override
+    public void execute()
     {
-        this.rolesToPrivileges = rolesToPrivileges;
+        solrReindexService.reindex(Arrays.asList(FOIAFile.class));
+    }
+
+    public SolrReindexService getSolrReindexService()
+    {
+        return solrReindexService;
+    }
+
+    public void setSolrReindexService(SolrReindexService solrReindexService)
+    {
+        this.solrReindexService = solrReindexService;
     }
 }

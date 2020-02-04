@@ -1,13 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
+    xmlns:aop="http://www.springframework.org/schema/aop"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+                        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
 
     <bean id="acmPluginManager" class="com.armedia.acm.pluginmanager.service.AcmPluginManager">
-        <property name="springContextHolder" ref="acmContextHolder"/>
-    </bean>
-
-    <bean id="acmPluginFolder" class="java.io.File">
-        <constructor-arg value="${user.home}/.arkcase/acm/spring/spring-config-acm-plugins"/>
     </bean>
 
     <bean id="acmPluginResourceExpression" class="java.lang.String">
@@ -16,14 +13,12 @@
 
     <bean id="acmPluginPathMatchingResolver" class="org.springframework.core.io.support.PathMatchingResourcePatternResolver"/>
 
-    <bean id="acmPluginDeployer" class="com.armedia.acm.spring.SpringClasspathCopier">
-        <property name="resourcePattern" ref="acmPluginResourceExpression"/>
-        <property name="deployFolder" ref="acmPluginFolder"/>
-        <property name="resolver" ref="acmPluginPathMatchingResolver"/>
-    </bean>
-
     <bean id="acmConfigurablePluginsManager" class="com.armedia.acm.pluginmanager.service.AcmConfigurablePluginsManager">
         <property name="contextHolder" ref="acmContextHolder"/>
+    </bean>
+
+    <bean id="appPluginPrivileges" class="com.armedia.acm.pluginmanager.model.ApplicationPluginPrivilegesConfig" scope="refresh">
+        <aop:scoped-proxy/>
     </bean>
 
 </beans>

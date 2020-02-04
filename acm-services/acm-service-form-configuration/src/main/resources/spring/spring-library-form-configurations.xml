@@ -32,7 +32,6 @@
         <property name="userDao" ref="userJpaDao"/>
         <property name="userActionDao" ref="userActionDao"/>
         <property name="userActionExecutor" ref="userActionExecutor"/>
-        <property name="acmPluginManager" ref="acmPluginManager"/>
         <property name="functionalAccessService" ref="functionalAccessService"/>
         <property name="searchResults" ref="searchResults"/>
         <property name="lookupDao" ref="lookupDao"/>

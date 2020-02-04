@@ -171,6 +171,10 @@ start_hotfix:
     variables:
      - $START_HOTFIX
   script:
+    - git config --global user.name "$GIT_USERNAME"
+    - git config --global user.email "$GIT_USERMAIL"
+    - git remote set-url origin "$GIT_URL"
+    - git checkout support/$HOTFIX_SUPPORT_VERSION
     - mvn -B gitflow:hotfix-start -DpushRemote=true -DhotfixVersion=$RELEASE_VERSION -DfromBranch=support/$HOTFIX_SUPPORT_VERSION
 
 release_hotfix:
@@ -196,7 +200,7 @@ release_hotfix:
     - apt-get install -y zip sshpass
     - export SSHPASS=$SSHPASS_ARKCASE
     - mvn -B gitflow:hotfix-finish -DpushRemote=true -DhotfixVersion=support/$HOTFIX_SUPPORT_VERSION/$RELEASE_VERSION -DskipTestProject=true -DskipMergeDevBranch=true
-    - git checkout --track origin/support/$HOTFIX_SUPPORT_VERSION/$RELEASE_VERSION
+    - git checkout --track origin/support/$HOTFIX_SUPPORT_VERSION
     - mvn -DskipITs -T 4 -B deploy "-DaltDeploymentRepository=arkcase.release::default::https://***REMOVED***/repository/arkcase.release/"
     - sshpass -e sftp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ***REMOVED*** <<< $'put acm-standard-applications/acm-law-enforcement/target/*.war /from-arkcase/arkcase-'$RELEASE_VERSION'.war' 
     # Deploy on test servers

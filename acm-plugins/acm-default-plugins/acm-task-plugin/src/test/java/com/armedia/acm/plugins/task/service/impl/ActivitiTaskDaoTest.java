@@ -39,6 +39,7 @@ import static org.junit.Assert.fail;
 
 import com.armedia.acm.plugins.ecm.dao.AcmContainerDao;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
+import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.task.exception.AcmTaskException;
 import com.armedia.acm.plugins.task.model.AcmApplicationTaskEvent;
 import com.armedia.acm.plugins.task.model.AcmTask;
@@ -125,6 +126,8 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
     private AcmContainerDao mockAcmContainerDao;
     private AcmContainer mockAcmContainer;
 
+    private EcmFileService mockFileService;
+
     @Before
     public void setUp() throws Exception
     {
@@ -157,6 +160,7 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         mockHistoricVariableInstance = createMock(HistoricVariableInstance.class);
         mockAcmContainerDao = createMock(AcmContainerDao.class);
         mockAcmContainer = createMock(AcmContainer.class);
+        mockFileService = createMock(EcmFileService.class);
         unit = new ActivitiTaskDao();
 
         Map<String, Integer> acmPriorityToActivitiPriority = new HashMap<>();
@@ -173,7 +177,7 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         unit.setRequiredFieldsPerOutcomeMap(new HashMap<>());
         unit.setTaskEventPublisher(mockTaskEventPublisher);
         unit.setContainerFolderDao(mockAcmContainerDao);
-
+        unit.setFileService(mockFileService);
         //
     }
 
@@ -273,7 +277,8 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
 
         expect(mockParticipantDao.removeAllOtherParticipantsForObject(eq("TASK"), eq(in.getTaskId()), capture(keepThese))).andReturn(0);
         expect(mockParticipantDao.saveParticipants(capture(saved))).andReturn(merged);
-
+        expect(mockFileService.createContainerFolder("TASK", in.getId(), "alfresco")).andReturn(mockAcmContainer);
+        
         replayAll();
 
         unit.save(in);

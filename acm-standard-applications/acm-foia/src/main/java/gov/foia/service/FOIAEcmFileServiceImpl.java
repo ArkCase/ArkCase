@@ -57,6 +57,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -277,6 +278,7 @@ public class FOIAEcmFileServiceImpl extends EcmFileServiceImpl implements FOIAEc
                 ((FOIAEcmFileVersion) fileVersionToUpdate).setRedactionStatus(status);
             }
             updateFileLinks(file);
+            file.setModified(new Date());
             getEcmFileDao().save(file);
         }
     }
