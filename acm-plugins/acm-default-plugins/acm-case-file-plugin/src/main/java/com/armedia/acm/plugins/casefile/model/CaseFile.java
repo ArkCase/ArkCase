@@ -143,6 +143,10 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity,
     @Column(name = "cm_case_details")
     private String details;
 
+    @Lob
+    @Column(name = "cm_case_details_summary")
+    private String caseDetailsSummary;
+
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     @Column(name = "cm_case_incident_date")
     @Temporal(TemporalType.TIMESTAMP)
@@ -746,6 +750,14 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity,
         this.securityField = securityField;
     }
 
+    public String getCaseDetailsSummary() {
+        return caseDetailsSummary;
+    }
+
+    public void setCaseDetailsSummary(String caseDetailsSummary) {
+        this.caseDetailsSummary = caseDetailsSummary;
+    }
+
     @Override
     @JsonIgnore
     public String getObjectType()
@@ -763,6 +775,7 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity,
                 ", title='" + title + '\'' +
                 ", status='" + status + '\'' +
                 ", details='" + details + '\'' +
+                ", caseDetailsSummary='" + caseDetailsSummary + '\'' +
                 ", incidentDate=" + incidentDate +
                 ", created=" + created +
                 ", creator='" + creator + '\'' +
