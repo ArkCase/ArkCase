@@ -25,7 +25,7 @@ angular.module('services').factory('Object.LookupService', [ '$q', '$resource', 
          * @returns {Object} Data returned by $resource
          */
         _getGroups: {
-            url: "api/latest/service/functionalaccess/groups/acm-complaint-approve?n=1000&s=name asc",
+            url: "api/latest/service/functionalaccess/groups/acmComplaintApprovePrivilege?n=1000&s=name asc",
             method: "GET",
             cache: false
         }

@@ -57,6 +57,9 @@ public class AcmCmisObject implements Serializable
     private Integer pageCount;
     private AcmObjectLock lock;
     private String ext;
+    private boolean publicFlag;
+    private String reviewStatus;
+    private String redactionStatus;
     private boolean link;
 
     public Long getObjectId()
@@ -237,5 +240,35 @@ public class AcmCmisObject implements Serializable
     public void setLink(boolean link)
     {
         this.link = link;
+    }
+
+    public boolean getPublicFlag()
+    {
+        return publicFlag;
+    }
+
+    public void setPublicFlag(boolean publicFlag)
+    {
+        this.publicFlag = publicFlag;
+    }
+
+    public String getReviewStatus()
+    {
+        return reviewStatus;
+    }
+
+    public void setReviewStatus(String reviewStatus)
+    {
+        this.reviewStatus = reviewStatus;
+    }
+
+    public String getRedactionStatus()
+    {
+        return redactionStatus;
+    }
+
+    public void setRedactionStatus(String redactionStatus)
+    {
+        this.redactionStatus = redactionStatus;
     }
 }

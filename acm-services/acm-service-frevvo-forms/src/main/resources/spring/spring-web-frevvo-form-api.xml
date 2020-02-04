@@ -5,7 +5,6 @@
     <bean id="frevvoFormController" class="com.armedia.acm.service.frevvo.forms.web.api.FrevvoFormController">
         <property name="properties" ref="acm-form-properties"/>
         <property name="authenticationTokenService" ref="authenticationTokenService"/>
-        <property name="acmPluginManager" ref="acmPluginManager"/>
         <property name="userDao" ref="userJpaDao"/>
         <property name="userActionDao" ref="userActionDao"/>
         <property name="userActionExecutor" ref="userActionExecutor"/>

@@ -24,7 +24,6 @@
     <bean id="searchNotificationsAPIController"
         class="com.armedia.acm.services.search.web.api.SearchNotificationsAPIController">
         <property name="executeSolrQuery" ref="executeSolrQuery"/>
-        <property name="acmPluginManager" ref="acmPluginManager"/>
         <property name="searchEventPublisher" ref="acmSearchEventPublisher"/>
     </bean>
 

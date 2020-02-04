@@ -23,7 +23,7 @@ angular.module('services').factory('Complaint.LookupService', [ '$resource', '$t
          * @returns {Object} Object returned by $resource
          */
         _getApprovers: {
-            url: 'api/latest/service/functionalaccess/users/acm-complaint-approve/:group/:assignee',
+            url: 'api/latest/service/functionalaccess/users/acmComplaintApprovePrivilege/:group/:assignee',
             cache: true,
             isArray: true
         }

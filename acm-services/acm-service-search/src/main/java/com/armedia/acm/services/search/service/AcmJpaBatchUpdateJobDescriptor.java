@@ -34,6 +34,7 @@ import org.quartz.DisallowConcurrentExecution;
 import org.quartz.JobDataMap;
 import org.quartz.JobExecutionContext;
 import org.quartz.PersistJobDataAfterExecution;
+import org.quartz.Trigger;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -59,12 +60,19 @@ public class AcmJpaBatchUpdateJobDescriptor extends AcmJobDescriptor
     @Override
     public void executeJob(JobExecutionContext context) throws InterruptedException
     {
-        JobDataMap triggerJobDataMap = context.getTrigger().getJobDataMap();
+        Trigger trigger = context.getTrigger();
+
+        JobDataMap triggerJobDataMap = trigger.getJobDataMap();
         JobDataMap jobDataMap = context.getJobDetail().getJobDataMap();
-        if (jobDataMap.isEmpty())
+
+        boolean onDemandTrigger = trigger.getNextFireTime() == null;
+
+        if (jobDataMap.isEmpty() || (onDemandTrigger && !triggerJobDataMap.isEmpty()))
         {
+            jobDataMap.clear();
             jobDataMap.putAll(triggerJobDataMap);
         }
+
         jpaBatchUpdateService.jpaBatchUpdate(jobDataMap);
     }
 

@@ -27,13 +27,12 @@ package com.armedia.acm.services.functionalaccess.web.api;
  * #L%
  */
 
-import com.armedia.acm.pluginmanager.service.AcmPluginManager;
 import com.armedia.acm.services.functionalaccess.model.FunctionalAccessConstants;
 import com.armedia.acm.services.functionalaccess.service.FunctionalAccessService;
 import com.armedia.acm.services.users.model.AcmUser;
 
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -51,7 +50,6 @@ import java.util.Set;
 public class GetUsersByPrivilegeAndGroupAPIController
 {
     private Logger log = LogManager.getLogger(getClass());
-    private AcmPluginManager pluginManager;
     private FunctionalAccessService functionalAccessService;
 
     @RequestMapping(method = RequestMethod.GET, value = "/users/{privilege}", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -62,17 +60,13 @@ public class GetUsersByPrivilegeAndGroupAPIController
             log.debug("Looking for users for privilege '" + privilege);
         }
 
-        List<AcmUser> retval = new ArrayList<>();
-
-        List<String> rolesForPrivilege = getPluginManager().getRolesForPrivilege(privilege);
+        List<String> rolesForPrivilege = getFunctionalAccessService().getRolesByPrivilege(privilege);
         Map<String, List<String>> rolesToGroups = getFunctionalAccessService().getApplicationRolesToGroups();
 
         // Creating set to avoid duplicates. AcmUser has overrided "equals" and "hasCode" methods
         Set<AcmUser> users = getFunctionalAccessService().getUsersByRolesAndGroups(rolesForPrivilege, rolesToGroups, null, null);
 
-        retval.addAll(users);
-
-        return retval;
+        return new ArrayList<>(users);
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/users/{privilege}/{group}", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -84,17 +78,13 @@ public class GetUsersByPrivilegeAndGroupAPIController
             log.debug("Looking for users for privilege '" + privilege + "' and group " + group);
         }
 
-        List<AcmUser> retval = new ArrayList<>();
-
-        List<String> rolesForPrivilege = getPluginManager().getRolesForPrivilege(privilege);
+        List<String> rolesForPrivilege = getFunctionalAccessService().getRolesByPrivilege(privilege);
         Map<String, List<String>> rolesToGroups = getFunctionalAccessService().getApplicationRolesToGroups();
 
         // Creating set to avoid duplicates. AcmUser has overrided "equals" and "hasCode" methods
         Set<AcmUser> users = getFunctionalAccessService().getUsersByRolesAndGroups(rolesForPrivilege, rolesToGroups, group, null);
 
-        retval.addAll(users);
-
-        return retval;
+        return new ArrayList<>(users);
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/users/{privilege}/{group}/{currentAssignee}", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -114,28 +104,14 @@ public class GetUsersByPrivilegeAndGroupAPIController
             group = null;
         }
 
-        List<AcmUser> retval = new ArrayList<>();
-
-        List<String> rolesForPrivilege = getPluginManager().getRolesForPrivilege(privilege);
+        List<String> rolesForPrivilege = getFunctionalAccessService().getRolesByPrivilege(privilege);
         Map<String, List<String>> rolesToGroups = getFunctionalAccessService().getApplicationRolesToGroups();
 
         // Creating set to avoid duplicates. AcmUser has overrided "equals" and "hasCode" methods
         Set<AcmUser> users = getFunctionalAccessService().getUsersByRolesAndGroups(rolesForPrivilege, rolesToGroups, group,
                 currentAssignee);
 
-        retval.addAll(users);
-
-        return retval;
-    }
-
-    public AcmPluginManager getPluginManager()
-    {
-        return pluginManager;
-    }
-
-    public void setPluginManager(AcmPluginManager pluginManager)
-    {
-        this.pluginManager = pluginManager;
+        return new ArrayList<>(users);
     }
 
     public FunctionalAccessService getFunctionalAccessService()

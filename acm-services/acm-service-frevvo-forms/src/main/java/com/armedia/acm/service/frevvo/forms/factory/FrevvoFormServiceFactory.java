@@ -150,7 +150,6 @@ public class FrevvoFormServiceFactory
             service.setUserActionDao(frevvoFormController.getUserActionDao());
             service.setUserActionExecutor(frevvoFormController.getUserActionExecutor());
             service.setSearchResults(frevvoFormController.getSearchResults());
-            service.setAcmPluginManager(frevvoFormController.getAcmPluginManager());
             service.setEcmFileDao(frevvoFormController.getEcmFileDao());
             service.setSaveCaseService(frevvoFormController.getSaveCaseService());
             service.setCaseFileDao(frevvoFormController.getCaseFileDao());
