@@ -2,6 +2,19 @@
     <div class="panel panel-success panel-grid">
         <div class="panel-heading">
             <div class="panel-title">
+                <span translate>cases.comp.details.caseSummary.title</span>
+                <div class="pull-right">
+                    <button class="btn btn-default btn-xs" ng-click="saveDetailsSummary()"><i class="fa fa-lg fa-save"></i></button>
+                </div>
+            </div>
+        </div>
+        <div>
+            <textarea rows=5 ng-model="objectInfo.caseDetailsSummary" class="input-md form-control"></textarea>
+        </div>
+    </div>
+    <div class="panel panel-success panel-grid">
+        <div class="panel-heading">
+            <div class="panel-title">
                 <span translate>cases.comp.details.title</span>
                 <div class="pull-right">
                     <button class="btn btn-default btn-xs" ng-click="saveDetails()"><i class="fa fa-lg fa-save"></i></button>

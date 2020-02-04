@@ -544,4 +544,10 @@
         </addColumn>
     </changeSet>
 
+    <changeSet id="35-add-case-details-summary" author="martin.jovanovski">
+        <addColumn tableName="acm_case_file">
+            <column name="cm_case_details_summary" type="CLOB"/>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>
