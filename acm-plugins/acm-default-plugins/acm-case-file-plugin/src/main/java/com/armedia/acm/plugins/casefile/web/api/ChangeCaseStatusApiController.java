@@ -82,8 +82,6 @@ public class ChangeCaseStatusApiController
                 message.put("info", "The case file is in approval mode");
             } else {
                 message.put("info", "The case file status has changed");
-            }
-            if(!form.isChangeCaseStatusFlow()){
                 CaseFile caseFile = getDao().find(form.getCaseId());
                 getCaseFileEventUtility().raiseEvent(caseFile, caseFile.getStatus(), caseFile.getModified(), ((AcmAuthenticationDetails) auth.getDetails()).getRemoteAddress(), auth.getName(), auth);
             }
