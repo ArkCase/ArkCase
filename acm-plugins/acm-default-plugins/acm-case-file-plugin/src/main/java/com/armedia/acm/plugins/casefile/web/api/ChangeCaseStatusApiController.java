@@ -27,11 +27,15 @@ package com.armedia.acm.plugins.casefile.web.api;
  * #L%
  */
 
+import com.armedia.acm.auth.AcmAuthenticationDetails;
 import com.armedia.acm.core.exceptions.AcmAppErrorJsonMsg;
+import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
+import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.casefile.model.ChangeCaseStateContants;
 import com.armedia.acm.plugins.casefile.model.ChangeCaseStatus;
 import com.armedia.acm.plugins.casefile.service.ChangeCaseFileStateService;
 
+import com.armedia.acm.plugins.casefile.utility.CaseFileEventUtility;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 import org.springframework.http.MediaType;
@@ -56,6 +60,8 @@ public class ChangeCaseStatusApiController
     private Logger log = LogManager.getLogger(getClass());
 
     private ChangeCaseFileStateService changeCaseFileStateService;
+    private CaseFileEventUtility caseFileEventUtility;
+    private CaseFileDao dao;
 
     @RequestMapping(value = "/change/status/{mode}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
@@ -71,12 +77,16 @@ public class ChangeCaseStatusApiController
         {
             message = new HashMap<>();
             changeCaseFileStateService.save(form, auth, "");
+
             if(form.isChangeCaseStatusFlow()){
                 message.put("info", "The case file is in approval mode");
             } else {
                 message.put("info", "The case file status has changed");
             }
-
+            if(!form.isChangeCaseStatusFlow()){
+                CaseFile caseFile = getDao().find(form.getCaseId());
+                getCaseFileEventUtility().raiseEvent(caseFile, caseFile.getStatus(), caseFile.getModified(), ((AcmAuthenticationDetails) auth.getDetails()).getRemoteAddress(), auth.getName(), auth);
+            }
         }
         catch (Exception e)
         {
@@ -105,5 +115,25 @@ public class ChangeCaseStatusApiController
     public void setChangeCaseFileStateService(ChangeCaseFileStateService changeCaseFileStateService)
     {
         this.changeCaseFileStateService = changeCaseFileStateService;
+    }
+
+    public CaseFileEventUtility getCaseFileEventUtility()
+    {
+        return caseFileEventUtility;
+    }
+
+    public void setCaseFileEventUtility(CaseFileEventUtility caseFileEventUtility)
+    {
+        this.caseFileEventUtility = caseFileEventUtility;
+    }
+
+    public CaseFileDao getDao()
+    {
+        return dao;
+    }
+
+    public void setDao(CaseFileDao dao)
+    {
+        this.dao = dao;
     }
 }
