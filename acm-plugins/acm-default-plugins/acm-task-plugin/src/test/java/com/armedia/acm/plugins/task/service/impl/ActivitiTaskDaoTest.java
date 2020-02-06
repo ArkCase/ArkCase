@@ -39,6 +39,8 @@ import static org.junit.Assert.fail;
 
 import com.armedia.acm.plugins.ecm.dao.AcmContainerDao;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
+import com.armedia.acm.plugins.ecm.model.AcmFolder;
+import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.task.exception.AcmTaskException;
 import com.armedia.acm.plugins.task.model.AcmApplicationTaskEvent;
@@ -277,7 +279,24 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
 
         expect(mockParticipantDao.removeAllOtherParticipantsForObject(eq("TASK"), eq(in.getTaskId()), capture(keepThese))).andReturn(0);
         expect(mockParticipantDao.saveParticipants(capture(saved))).andReturn(merged);
-        expect(mockFileService.createContainerFolder("TASK", in.getId(), "alfresco")).andReturn(mockAcmContainer);
+        
+        String cmisRepositoryId = "cmisRepositoryId";
+        String cmisFolderId = "cmisFolderId";
+
+        AcmContainer container = new AcmContainer();
+        container.setContainerObjectId(taskId);
+        container.setContainerObjectType(objectType);
+        container.setCmisRepositoryId(cmisRepositoryId);
+
+        AcmFolder newFolder = new AcmFolder();
+        newFolder.setCmisFolderId(cmisFolderId);
+        newFolder.setCmisRepositoryId(cmisRepositoryId);
+        newFolder.setName(EcmFileConstants.CONTAINER_FOLDER_NAME);
+        newFolder.setParticipants(merged);
+        container.setFolder(newFolder);
+        container.setAttachmentFolder(newFolder);
+
+        expect(mockFileService.getOrCreateContainer("TASK", in.getTaskId(), "alfresco")).andReturn(container);
         
         replayAll();
 

@@ -30,6 +30,7 @@ package com.armedia.acm.plugins.task.service.impl;
 import com.armedia.acm.core.AcmNotifiableEntity;
 import com.armedia.acm.core.exceptions.AcmAccessControlException;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
+import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.data.AcmNotificationDao;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
@@ -387,10 +388,16 @@ public class ActivitiTaskDao extends AcmAbstractDao<AcmTask> implements TaskDao,
             AcmContainer container = null;
             try
             {
-                container = fileService.createContainerFolder(TaskConstants.OBJECT_TYPE, in.getId(),
+                
+                
+                container = fileService.getOrCreateContainer(TaskConstants.OBJECT_TYPE, in.getId(),
                         EcmFileConstants.DEFAULT_CMIS_REPOSITORY_ID);
+                if(container.getAttachmentFolder().getParticipants().isEmpty()) 
+                {
+                    container.getAttachmentFolder().setParticipants(getFileParticipantService().getFolderParticipantsFromAssignedObject(in.getParticipants()));
+                }
             }
-            catch (AcmCreateObjectFailedException e)
+            catch (AcmCreateObjectFailedException | AcmUserActionFailedException e)
             {
                 log.error("Can not create container folder for TASK with ID: [{}]", in.getId());
             }
