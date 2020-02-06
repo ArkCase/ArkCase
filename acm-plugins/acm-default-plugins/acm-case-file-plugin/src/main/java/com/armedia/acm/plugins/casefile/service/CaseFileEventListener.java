@@ -35,6 +35,7 @@ import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.casefile.model.CaseFileConstants;
 import com.armedia.acm.plugins.casefile.utility.CaseFileEventUtility;
 import com.armedia.acm.plugins.outlook.service.OutlookContainerCalendarService;
+import com.armedia.acm.plugins.person.model.PersonAssociation;
 import com.armedia.acm.service.objecthistory.dao.AcmAssignmentDao;
 import com.armedia.acm.service.objecthistory.model.AcmAssignment;
 import com.armedia.acm.service.objecthistory.model.AcmObjectHistory;
@@ -139,6 +140,8 @@ public class CaseFileEventListener implements ApplicationListener<AcmObjectHisto
                                     "Owning Group Changed from " + owningGroup + " to " + updatedOwningGroup);
                         }
 
+                        checkPersonAssociation(existing, updatedCaseFile, event.getIpAddress());
+
                         checkParticipants(existing, updatedCaseFile, event.getIpAddress());
 
                         if (isStatusChanged(existing, updatedCaseFile))
@@ -224,6 +227,28 @@ public class CaseFileEventListener implements ApplicationListener<AcmObjectHisto
         String updatedDetails = updatedCaseFile.getDetails();
         String details = caseFile.getDetails();
         return !Objects.equals(details, updatedDetails);
+    }
+
+    public void checkPersonAssociation(CaseFile existingCaseFile, CaseFile updatedCaseFile, String ipAddress)
+    {
+        List<PersonAssociation> existingPersons = existingCaseFile.getPersonAssociations();
+        List<PersonAssociation> updatedPersons = updatedCaseFile.getPersonAssociations();
+
+        for (PersonAssociation person : existingPersons)
+        {
+            if (!updatedPersons.contains(person))
+            {
+                getCaseFileEventUtility().raisePersonAssociationsDeletedEvent(person,updatedCaseFile, ipAddress);
+            }
+        }
+
+        for (PersonAssociation person : updatedPersons)
+        {
+            if (!existingPersons.contains(person))
+            {
+                getCaseFileEventUtility().raisePersonAssociationsAddEvent(person, updatedCaseFile, ipAddress);
+            }
+        }
     }
 
     public void checkParticipants(CaseFile caseFile, CaseFile updatedCaseFile, String ipAddress)
