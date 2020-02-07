@@ -168,7 +168,7 @@ angular.module('tasks').controller(
                             taskData.parentObjectId = $scope.modalParams.parentId;
                             taskData.parentObjectType = $scope.modalParams.parentType;
                         }
-                        if ($scope.documentsToReview && $scope.selectedBusinessProcessType != 'notDefinedWorkflow') {
+                        if ($scope.documentsToReview && $scope.selectedBusinessProcessType == 'acmDocumentTaskWorkflow' && $scope.filesToUpload.length < 1) {
                             taskData.documentsToReview = processDocumentsUnderReview();
                             TaskNewTaskService.reviewDocuments(taskData, $scope.selectedBusinessProcessType).then(reviewDocumentTaskSuccessCallback, errorCallback);
                         }
