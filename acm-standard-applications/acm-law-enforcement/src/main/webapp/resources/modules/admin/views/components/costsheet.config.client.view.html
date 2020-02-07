@@ -2,7 +2,7 @@
     <div class="panel panel-success panel-grid">
         <div class="panel-heading">
             <div class="panel-title">
-                <span translate>admin.forms.costsheetConfiguration.workflow</span>
+                <span translate>admin.forms.costsheetConfiguration.costSheetProperties</span>
                 <div class="pull-right">
                     <button class="btn btn-default btn-xs" ng-click="saveCostsheetProperties()">
                         <i class="fa fa-lg fa-save"></i></button>
@@ -16,6 +16,16 @@
                         <label>
                             <input type="checkbox" ng-model="costsheetProperties['cost.plugin.useApprovalWorkflow']">
                             <span translate>admin.forms.costsheetConfiguration.useWorkflowCheckbox</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" ng-model="costsheetProperties['cost.plugin.addCostsheetToBilling']">
+                            <span translate>admin.forms.costsheetConfiguration.addCostsheetToBilling</span>
                         </label>
                     </div>
                 </div>

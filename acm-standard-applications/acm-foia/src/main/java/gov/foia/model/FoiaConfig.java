@@ -28,6 +28,7 @@ package gov.foia.model;
  */
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+
 import org.springframework.beans.factory.annotation.Value;
 
 public class FoiaConfig
@@ -69,8 +70,16 @@ public class FoiaConfig
     private Boolean notificationGroupsEnabled;
 
     @JsonProperty("moveToBillingQueueEnabled")
-     @Value("${moveToBillingQueueEnabled}")
+    @Value("${moveToBillingQueueEnabled}")
     private Boolean moveToBillingQueueEnabled;
+
+    @JsonProperty("requireTimesheetToCompleteStandardRequest")
+    @Value("${requireTimesheetToCompleteStandardRequest}")
+    private Boolean requireTimesheetToCompleteStandardRequest;
+
+    @JsonProperty("requireTimesheetToCompleteDeniedRequest")
+    @Value("${requireTimesheetToCompleteDeniedRequest}")
+    private Boolean requireTimesheetToCompleteDeniedRequest;
 
 
 
@@ -172,5 +181,25 @@ public class FoiaConfig
     public void setMoveToBillingQueueEnabled(Boolean moveToBillingQueueEnabled)
     {
         this.moveToBillingQueueEnabled = moveToBillingQueueEnabled;
+    }
+
+    public Boolean getRequireTimesheetToCompleteStandardRequest()
+    {
+        return requireTimesheetToCompleteStandardRequest;
+    }
+
+    public void setRequireTimesheetToCompleteStandardRequest(Boolean requireTimesheetToCompleteStandardRequest)
+    {
+        this.requireTimesheetToCompleteStandardRequest = requireTimesheetToCompleteStandardRequest;
+    }
+
+    public Boolean getRequireTimesheetToCompleteDeniedRequest()
+    {
+        return requireTimesheetToCompleteDeniedRequest;
+    }
+
+    public void setRequireTimesheetToCompleteDeniedRequest(Boolean requireTimesheetToCompleteDeniedRequest)
+    {
+        this.requireTimesheetToCompleteDeniedRequest = requireTimesheetToCompleteDeniedRequest;
     }
 }

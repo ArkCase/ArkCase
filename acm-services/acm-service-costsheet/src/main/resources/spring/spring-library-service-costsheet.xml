@@ -36,6 +36,7 @@
     <bean id="costsheetWorkflowListener" class="com.armedia.acm.services.costsheet.service.CostsheetWorkflowListener">
         <property name="fileWorkflowBusinessRule" ref="fileWorkflowBusinessRule"/>
         <property name="activitiRuntimeService" ref="activitiRuntimeService"/>
+        <property name="costsheetConfig" ref="costsheetConfig"/>
     </bean>
 
     <bean id="costsheetHistoryEventListener" class="com.armedia.acm.services.costsheet.service.CostsheetHistoryEventListener">
