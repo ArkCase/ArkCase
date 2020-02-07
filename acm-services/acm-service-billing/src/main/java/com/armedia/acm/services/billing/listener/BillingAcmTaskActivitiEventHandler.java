@@ -29,24 +29,23 @@ package com.armedia.acm.services.billing.listener;
 
 import com.armedia.acm.activiti.AcmTaskActivitiEvent;
 import com.armedia.acm.services.billing.exception.CreateBillingItemException;
+import com.armedia.acm.services.billing.model.BillingConstants;
 import com.armedia.acm.services.billing.model.BillingItem;
 import com.armedia.acm.services.billing.service.BillingService;
-import com.armedia.acm.services.billing.model.BillingConstants;
 import com.armedia.acm.services.costsheet.dao.AcmCostsheetDao;
 import com.armedia.acm.services.costsheet.model.AcmCostsheet;
+import com.armedia.acm.services.costsheet.model.CostsheetConfig;
 import com.armedia.acm.services.costsheet.model.CostsheetConstants;
 import com.armedia.acm.services.timesheet.dao.AcmTimesheetDao;
 import com.armedia.acm.services.timesheet.model.AcmTimesheet;
+import com.armedia.acm.services.timesheet.model.TimesheetConfig;
 import com.armedia.acm.services.timesheet.model.TimesheetConstants;
-
 import com.armedia.acm.services.timesheet.service.TimesheetService;
-import org.apache.logging.log4j.Logger;
+
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.context.ApplicationListener;
 import org.springframework.scheduling.annotation.Async;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @author sasko.tanaskoski
@@ -59,6 +58,9 @@ public class BillingAcmTaskActivitiEventHandler implements ApplicationListener<A
     private AcmCostsheetDao acmCostsheetDao;
     private BillingService billingService;
     private TimesheetService timesheetService;
+    private CostsheetConfig costsheetConfig;
+    private TimesheetConfig timesheetConfig;
+
     private Logger log = LogManager.getLogger(getClass());
 
     @Override
@@ -66,15 +68,22 @@ public class BillingAcmTaskActivitiEventHandler implements ApplicationListener<A
     public void onApplicationEvent(AcmTaskActivitiEvent event)
     {
 
-        if (event.getTaskEvent().equals("complete") && event.getProcessVariables().containsKey("reviewOutcome") && event.getProcessVariables().get("reviewOutcome").equals("APPROVE"))
+        if (event.getTaskEvent().equals("complete") && event.getProcessVariables().containsKey("reviewOutcome")
+                && event.getProcessVariables().get("reviewOutcome").equals("APPROVE"))
         {
             switch (event.getParentObjectType())
             {
             case TimesheetConstants.OBJECT_TYPE:
-                handleTimesheet(event);
+                if (timesheetConfig.getAddTimesheetToBilling())
+                {
+                    handleTimesheet(event);
+                }
                 break;
             case CostsheetConstants.OBJECT_TYPE:
-                handleCostsheet(event);
+                if (costsheetConfig.getAddCostsheetToBilling())
+                {
+                    handleCostsheet(event);
+                }
             }
         }
 
@@ -85,7 +94,8 @@ public class BillingAcmTaskActivitiEventHandler implements ApplicationListener<A
         AcmTimesheet timesheet = getAcmTimesheetDao().find(event.getParentObjectId());
 
         getTimesheetService().accumulateTimesheetByTypeAndChangeCode(timesheet).values().stream().forEach(acmTime -> {
-            createBillingItem(event.getUserId(), timesheet.getTitle(), acmTime.getObjectId(), acmTime.getType(), acmTime.getTotalCost(), BillingConstants.BILLING_ITEM_TYPE_TIMESHEET);
+            createBillingItem(event.getUserId(), timesheet.getTitle(), acmTime.getObjectId(), acmTime.getType(), acmTime.getTotalCost(),
+                    BillingConstants.BILLING_ITEM_TYPE_TIMESHEET);
         });
     }
 
@@ -97,7 +107,8 @@ public class BillingAcmTaskActivitiEventHandler implements ApplicationListener<A
                 costsheet.calculateBalance(), BillingConstants.BILLING_ITEM_TYPE_COSTSHEET);
     }
 
-    private void createBillingItem(String userId, String title, Long parentObjectId, String parentObjectType, double balance, String itemType)
+    private void createBillingItem(String userId, String title, Long parentObjectId, String parentObjectType, double balance,
+            String itemType)
     {
         try
         {
@@ -183,5 +194,25 @@ public class BillingAcmTaskActivitiEventHandler implements ApplicationListener<A
     public void setTimesheetService(TimesheetService timesheetService)
     {
         this.timesheetService = timesheetService;
+    }
+
+    public CostsheetConfig getCostsheetConfig()
+    {
+        return costsheetConfig;
+    }
+
+    public void setCostsheetConfig(CostsheetConfig costsheetConfig)
+    {
+        this.costsheetConfig = costsheetConfig;
+    }
+
+    public TimesheetConfig getTimesheetConfig()
+    {
+        return timesheetConfig;
+    }
+
+    public void setTimesheetConfig(TimesheetConfig timesheetConfig)
+    {
+        this.timesheetConfig = timesheetConfig;
     }
 }

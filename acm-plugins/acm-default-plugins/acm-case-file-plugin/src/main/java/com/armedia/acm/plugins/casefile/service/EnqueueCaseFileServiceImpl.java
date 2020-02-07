@@ -44,9 +44,10 @@ import com.armedia.acm.plugins.casefile.utility.CaseFileEventUtility;
 import com.armedia.acm.plugins.casefile.web.api.CaseFileEnqueueResponse;
 import com.armedia.acm.plugins.casefile.web.api.CaseFileEnqueueResponse.ErrorReason;
 import com.armedia.acm.service.objectlock.service.AcmObjectLockService;
+import com.armedia.acm.services.timesheet.service.TimesheetService;
 
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
@@ -87,6 +88,8 @@ public class EnqueueCaseFileServiceImpl implements EnqueueCaseFileService
 
     private CaseFileEventUtility caseFileEventUtility;
 
+    private TimesheetService timesheetService;
+
     @Override
     @Transactional
     public CaseFileEnqueueResponse enqueueCaseFile(Long caseId, String nextQueue, CaseFilePipelineContext context)
@@ -107,6 +110,10 @@ public class EnqueueCaseFileServiceImpl implements EnqueueCaseFileService
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         AcmAuthenticationDetails details = (AcmAuthenticationDetails) auth.getDetails();
         String ipAddress = details.getRemoteAddress();
+
+        boolean hasAnyAssociatedTimesheets = getTimesheetService().getByObjectIdAndType(
+                caseId, CaseFileConstants.OBJECT_TYPE, 0, 1, "") != null;
+        caseFile.setHasAnyAssociatedTimesheets(hasAnyAssociatedTimesheets);
 
         if (nextQueueAction != null && nextQueueAction.equals("Deny"))
         {
@@ -375,5 +382,15 @@ public class EnqueueCaseFileServiceImpl implements EnqueueCaseFileService
     public void setCaseFileEventUtility(CaseFileEventUtility caseFileEventUtility)
     {
         this.caseFileEventUtility = caseFileEventUtility;
+    }
+
+    public TimesheetService getTimesheetService()
+    {
+        return timesheetService;
+    }
+
+    public void setTimesheetService(TimesheetService timesheetService)
+    {
+        this.timesheetService = timesheetService;
     }
 }

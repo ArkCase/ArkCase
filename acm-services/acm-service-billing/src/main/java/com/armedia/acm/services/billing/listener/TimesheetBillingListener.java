@@ -34,10 +34,11 @@ import com.armedia.acm.services.billing.service.BillingService;
 import com.armedia.acm.services.timesheet.dao.AcmTimesheetDao;
 import com.armedia.acm.services.timesheet.model.AcmTimesheet;
 import com.armedia.acm.services.timesheet.model.AcmTimesheetEvent;
+import com.armedia.acm.services.timesheet.model.TimesheetConfig;
 import com.armedia.acm.services.timesheet.service.TimesheetService;
 
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.context.ApplicationListener;
 
 public class TimesheetBillingListener implements ApplicationListener<AcmTimesheetEvent>
@@ -47,11 +48,13 @@ public class TimesheetBillingListener implements ApplicationListener<AcmTimeshee
     private AcmTimesheetDao acmTimesheetDao;
     private BillingService billingService;
     private TimesheetService timesheetService;
+    private TimesheetConfig timesheetConfig;
 
     @Override
     public void onApplicationEvent(AcmTimesheetEvent acmTimesheetEvent)
     {
-        if (acmTimesheetEvent != null && !acmTimesheetEvent.isStartWorkflow())
+        if (acmTimesheetEvent != null && !acmTimesheetEvent.isStartWorkflow()
+                && getTimesheetConfig().getAddTimesheetToBilling())
         {
             AcmTimesheet timesheet = (AcmTimesheet) acmTimesheetEvent.getSource();
             if ("FINAL".equals(timesheet.getStatus()))
@@ -66,11 +69,13 @@ public class TimesheetBillingListener implements ApplicationListener<AcmTimeshee
         AcmTimesheet timesheet = (AcmTimesheet) event.getSource();
 
         getTimesheetService().accumulateTimesheetByTypeAndChangeCode(timesheet).values().forEach(acmTime -> {
-            createBillingItem(event.getUserId(), timesheet.getTitle(), acmTime.getObjectId(), acmTime.getType(), acmTime.getTotalCost(), BillingConstants.BILLING_ITEM_TYPE_TIMESHEET);
+            createBillingItem(event.getUserId(), timesheet.getTitle(), acmTime.getObjectId(), acmTime.getType(), acmTime.getTotalCost(),
+                    BillingConstants.BILLING_ITEM_TYPE_TIMESHEET);
         });
     }
 
-    private void createBillingItem(String userId, String title, Long parentObjectId, String parentObjectType, double balance, String itemType)
+    private void createBillingItem(String userId, String title, Long parentObjectId, String parentObjectType, double balance,
+            String itemType)
     {
         try
         {
@@ -125,5 +130,15 @@ public class TimesheetBillingListener implements ApplicationListener<AcmTimeshee
     public void setTimesheetService(TimesheetService timesheetService)
     {
         this.timesheetService = timesheetService;
+    }
+
+    public TimesheetConfig getTimesheetConfig()
+    {
+        return timesheetConfig;
+    }
+
+    public void setTimesheetConfig(TimesheetConfig timesheetConfig)
+    {
+        this.timesheetConfig = timesheetConfig;
     }
 }

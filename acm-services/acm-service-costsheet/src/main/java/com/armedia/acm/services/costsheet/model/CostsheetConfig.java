@@ -47,6 +47,14 @@ public class CostsheetConfig implements AcmPluginConfigBean
     @Value("${cost.plugin.useApprovalWorkflow}")
     private Boolean useApprovalWorkflow;
 
+    @JsonProperty("cost.plugin.addCostsheetToBilling")
+    @Value("${cost.plugin.addCostsheetToBilling}")
+    private Boolean addCostsheetToBilling;
+
+    @JsonProperty("cost.plugin.workflowProcessName")
+    @Value("${cost.plugin.workflowProcessName}")
+    private String workflowProcessName;
+
     public String getRootFolder()
     {
         return rootFolder;
@@ -91,5 +99,25 @@ public class CostsheetConfig implements AcmPluginConfigBean
     public void setUseApprovalWorkflow(Boolean useApprovalWorkflow)
     {
         this.useApprovalWorkflow = useApprovalWorkflow;
+    }
+
+    public Boolean getAddCostsheetToBilling()
+    {
+        return addCostsheetToBilling;
+    }
+
+    public void setAddCostsheetToBilling(Boolean addCostsheetToBilling)
+    {
+        this.addCostsheetToBilling = addCostsheetToBilling;
+    }
+
+    public String getWorkflowProcessName()
+    {
+        return workflowProcessName;
+    }
+
+    public void setWorkflowProcessName(String workflowProcessName)
+    {
+        this.workflowProcessName = workflowProcessName;
     }
 }

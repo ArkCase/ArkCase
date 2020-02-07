@@ -47,6 +47,14 @@ public class TimesheetConfig implements AcmPluginConfigBean
     @Value("${time.plugin.useApprovalWorkflow}")
     private Boolean useApprovalWorkflow;
 
+    @JsonProperty("time.plugin.addTimesheetToBilling")
+    @Value("${time.plugin.addTimesheetToBilling}")
+    private Boolean addTimesheetToBilling;
+
+    @JsonProperty("time.plugin.workflowProcessName")
+    @Value("${time.plugin.workflowProcessName}")
+    private String workflowProcessName;
+
     public String getRootFolder()
     {
         return rootFolder;
@@ -91,5 +99,25 @@ public class TimesheetConfig implements AcmPluginConfigBean
     public String getSearchTreeSort()
     {
         return searchTreeSort;
+    }
+
+    public Boolean getAddTimesheetToBilling()
+    {
+        return addTimesheetToBilling;
+    }
+
+    public void setAddTimesheetToBilling(Boolean addTimesheetToBilling)
+    {
+        this.addTimesheetToBilling = addTimesheetToBilling;
+    }
+
+    public String getWorkflowProcessName()
+    {
+        return workflowProcessName;
+    }
+
+    public void setWorkflowProcessName(String workflowProcessName)
+    {
+        this.workflowProcessName = workflowProcessName;
     }
 }
