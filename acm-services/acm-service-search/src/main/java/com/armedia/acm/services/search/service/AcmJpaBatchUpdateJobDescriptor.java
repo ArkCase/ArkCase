@@ -38,8 +38,10 @@ import org.quartz.Trigger;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -84,10 +86,24 @@ public class AcmJpaBatchUpdateJobDescriptor extends AcmJobDescriptor
 
         DateFormat solrDateFormat = new SimpleDateFormat(SearchConstants.SOLR_DATE_FORMAT);
 
-        return transformers.stream()
-                .map(it -> it.getAcmObjectTypeSupported().getCanonicalName())
-                .collect(Collectors.toMap(Function.identity(),
-                        it -> solrDateFormat.format(new Date())));
+        Map<String, String> jobDataMap = new HashMap<>();
+        String formattedDate = solrDateFormat.format(new Date());
+        // put arkcase transformers first
+        for (AcmObjectToSolrDocTransformer transformer : transformers.stream().filter(
+                t -> t.getAcmObjectTypeSupported().getCanonicalName().startsWith("com.armedia.acm"))
+                .collect(Collectors.toCollection(ArrayList::new)))
+        {
+            jobDataMap.put(transformer.getAcmObjectTypeSupported().getCanonicalName(), formattedDate);
+        }
+        // put not arkcase transformers from extensions to be able
+        for (AcmObjectToSolrDocTransformer transformer : transformers.stream().filter(
+                t -> !t.getAcmObjectTypeSupported().getCanonicalName().startsWith("com.armedia.acm"))
+                .collect(Collectors.toCollection(ArrayList::new)))
+        {
+            jobDataMap.put(transformer.getAcmObjectTypeSupported().getCanonicalName(), formattedDate);
+        }
+
+        return jobDataMap;
     }
 
     public AcmJpaBatchUpdateService getJpaBatchUpdateService()
