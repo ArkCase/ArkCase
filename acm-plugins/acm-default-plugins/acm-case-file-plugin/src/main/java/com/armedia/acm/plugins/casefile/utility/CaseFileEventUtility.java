@@ -33,6 +33,9 @@ import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.casefile.model.CaseFileConstants;
 import com.armedia.acm.plugins.casefile.model.CaseFileModifiedEvent;
 import com.armedia.acm.plugins.casefile.model.CaseFileParticipantsModifiedEvent;
+import com.armedia.acm.plugins.person.model.PersonAssociation;
+import com.armedia.acm.plugins.person.model.PersonAssociationAddEvent;
+import com.armedia.acm.plugins.person.model.PersonAssociationDeletedEvent;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 
 import org.apache.logging.log4j.Logger;
@@ -89,6 +92,32 @@ public class CaseFileEventUtility implements ApplicationEventPublisherAware
         event.setIpAddress(ipAddress);
         event.setEventStatus(eventStatus);
         event.setEventDescription(description);
+        applicationEventPublisher.publishEvent(event);
+    }
+
+    public void raisePersonAssociationsAddEvent(PersonAssociation personAssociation, CaseFile source, String ipAddress)
+    {
+        PersonAssociationAddEvent event = new PersonAssociationAddEvent(personAssociation, personAssociation.getParentType(),
+                personAssociation.getParentId(), ipAddress);
+        event.setSucceeded(true);
+        event.setIpAddress(ipAddress);
+        event.setParentObjectId(source.getId());
+        event.setParentObjectType(source.getObjectType());
+        event.setParentObjectName(source.getCaseNumber());
+        event.setEventDescription(personAssociation.getPerson().getFullName());
+        applicationEventPublisher.publishEvent(event);
+    }
+
+    public void raisePersonAssociationsDeletedEvent(PersonAssociation personAssociation, CaseFile source, String ipAddress)
+    {
+        PersonAssociationDeletedEvent event = new PersonAssociationDeletedEvent(personAssociation, personAssociation.getParentType(),
+                personAssociation.getParentId(), ipAddress);
+        event.setSucceeded(true);
+        event.setIpAddress(ipAddress);
+        event.setParentObjectId(source.getId());
+        event.setParentObjectType(source.getObjectType());
+        event.setParentObjectName(source.getCaseNumber());
+        event.setEventDescription(personAssociation.getPerson().getFullName());
         applicationEventPublisher.publishEvent(event);
     }
 
