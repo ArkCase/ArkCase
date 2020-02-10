@@ -1058,7 +1058,8 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
             fileCopyVersion.setVersionTag(cmisdocument.getVersionLabel());
             copyFileVersionMetadata(file, fileCopyVersion);
 
-            EcmFile fileCopy = copyEcmFile(file, targetFolder, targetContainer, fileCopyVersion, cmisdocument.getVersionSeriesId(),
+            EcmFile fileCopy = copyEcmFile(file, targetFolder, targetContainer, fileCopyVersion,
+                    cmisdocument.getPropertyValue(EcmFileConstants.REPOSITORY_VERSION_ID),
                     cmisdocument.getVersionLabel());
 
             EcmFile result = getEcmFileDao().save(fileCopy);
