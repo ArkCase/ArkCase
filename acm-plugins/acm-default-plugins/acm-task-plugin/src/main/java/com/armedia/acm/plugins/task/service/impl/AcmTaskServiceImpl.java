@@ -607,8 +607,8 @@ public class AcmTaskServiceImpl implements AcmTaskService
                 pVars.put("OBJECT_TYPE", "FILE");
                 pVars.put("OBJECT_ID", documentToReview.getFileId());
                 pVars.put("OBJECT_NAME", documentToReview.getFileName());
-                pVars.put("PARENT_OBJECT_TYPE", task.getParentObjectType());
-                pVars.put("PARENT_OBJECT_ID", task.getParentObjectId());
+                pVars.put("PARENT_OBJECT_TYPE", parentObjectType);
+                pVars.put("PARENT_OBJECT_ID", parentObjectId);
                 pVars.put("REQUEST_TYPE", "DOCUMENT_REVIEW");
 
                 AcmTask createdAcmTask = taskDao.startBusinessProcess(pVars, businessProcessName);
@@ -659,7 +659,7 @@ public class AcmTaskServiceImpl implements AcmTaskService
             }
         }
         List<EcmFile> documentsToReview = task.getDocumentsToReview();
-        if (documentsToReview != null)
+        if (!documentsToReview.isEmpty())
         {
             documentsToReview.addAll(uploadedFiles);
             task.setDocumentsToReview(documentsToReview);
