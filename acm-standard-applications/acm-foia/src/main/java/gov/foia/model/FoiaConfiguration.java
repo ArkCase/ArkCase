@@ -41,6 +41,8 @@ public class FoiaConfiguration extends SystemConfiguration
     private Boolean requestExtensionWorkingDaysEnabled;
     private Boolean purgeRequestWhenInHoldEnabled;
     private Boolean moveToBillingQueueEnabled;
+    private Boolean requireTimesheetToCompleteStandardRequest;
+    private Boolean requireTimesheetToCompleteDeniedRequest;
 
     public Integer getMaxDaysInBillingQueue()
     {
@@ -140,5 +142,25 @@ public class FoiaConfiguration extends SystemConfiguration
     public void setMoveToBillingQueueEnabled(Boolean moveToBillingQueueEnabled)
     {
         this.moveToBillingQueueEnabled = moveToBillingQueueEnabled;
+    }
+
+    public Boolean getRequireTimesheetToCompleteStandardRequest()
+    {
+        return requireTimesheetToCompleteStandardRequest;
+    }
+
+    public void setRequireTimesheetToCompleteStandardRequest(Boolean requireTimesheetToCompleteStandardRequest)
+    {
+        this.requireTimesheetToCompleteStandardRequest = requireTimesheetToCompleteStandardRequest;
+    }
+
+    public Boolean getRequireTimesheetToCompleteDeniedRequest()
+    {
+        return requireTimesheetToCompleteDeniedRequest;
+    }
+
+    public void setRequireTimesheetToCompleteDeniedRequest(Boolean requireTimesheetToCompleteDeniedRequest)
+    {
+        this.requireTimesheetToCompleteDeniedRequest = requireTimesheetToCompleteDeniedRequest;
     }
 }

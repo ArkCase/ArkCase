@@ -30,20 +30,19 @@ package com.armedia.acm.services.costsheet.service;
  * #L%
  */
 
-import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.impl.FileWorkflowBusinessRule;
-import com.armedia.acm.plugins.ecm.workflow.EcmFileWorkflowConfiguration;
 import com.armedia.acm.services.costsheet.model.AcmCostsheet;
 import com.armedia.acm.services.costsheet.model.AcmCostsheetEvent;
+import com.armedia.acm.services.costsheet.model.CostsheetConfig;
 import com.armedia.acm.services.costsheet.model.CostsheetConstants;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.participants.model.ParticipantTypes;
 
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.runtime.ProcessInstance;
-import org.codehaus.plexus.util.StringUtils;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.codehaus.plexus.util.StringUtils;
 import org.springframework.context.ApplicationListener;
 
 import java.util.ArrayList;
@@ -62,11 +61,12 @@ public class CostsheetWorkflowListener implements ApplicationListener<AcmCostshe
 
     private FileWorkflowBusinessRule fileWorkflowBusinessRule;
     private RuntimeService activitiRuntimeService;
+    private CostsheetConfig costsheetConfig;
 
     @Override
     public void onApplicationEvent(AcmCostsheetEvent event)
     {
-        if (event != null && event.isStartWorkflow())
+        if (event != null && event.isStartWorkflow() && costsheetConfig.getUseApprovalWorkflow())
         {
             startWorkflow(event);
         }
@@ -74,31 +74,8 @@ public class CostsheetWorkflowListener implements ApplicationListener<AcmCostshe
 
     protected void startWorkflow(AcmCostsheetEvent event)
     {
-        EcmFile pdfRendition = event.getUploadedFiles().getPdfRendition();
-        EcmFileWorkflowConfiguration configuration = new EcmFileWorkflowConfiguration();
-
-        configuration.setEcmFile(pdfRendition);
-
-        LOG.debug("Calling business rules");
-
-        configuration = getFileWorkflowBusinessRule().applyRules(configuration);
-        if (configuration.isBuckslipProcess())
-        {
-            // CostsheetWorkflowListener is not handling buckslip process
-            return;
-        }
-        LOG.debug("Start process? " + configuration.isStartProcess());
-
-        if (configuration.isStartProcess())
-        {
-            startWorkflow(event, configuration);
-        }
-    }
-
-    private void startWorkflow(AcmCostsheetEvent event, EcmFileWorkflowConfiguration configuration)
-    {
         AcmCostsheet costsheet = (AcmCostsheet) event.getSource();
-        String processName = configuration.getProcessName();
+        String processName = costsheetConfig.getWorkflowProcessName();
 
         String author = event.getUserId();
         List<String> reviewers = findReviewers(event);
@@ -187,5 +164,15 @@ public class CostsheetWorkflowListener implements ApplicationListener<AcmCostshe
     public void setActivitiRuntimeService(RuntimeService activitiRuntimeService)
     {
         this.activitiRuntimeService = activitiRuntimeService;
+    }
+
+    public CostsheetConfig getCostsheetConfig()
+    {
+        return costsheetConfig;
+    }
+
+    public void setCostsheetConfig(CostsheetConfig costsheetConfig)
+    {
+        this.costsheetConfig = costsheetConfig;
     }
 }

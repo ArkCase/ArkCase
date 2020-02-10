@@ -36,10 +36,6 @@ angular.module('admin').controller('Admin.TimesheetController',
                 chargeRoleItems: []
             };
 
-            $scope.timesheetProperties = {
-                "time.plugin.useApprovalWorkflow": "true"
-            };
-
             $scope.chargeRoleDropdownOptions = [];
 
             var reloadGrid = function() {
@@ -64,17 +60,17 @@ angular.module('admin').controller('Admin.TimesheetController',
             });
 
             var saveConfig = function() {
-                TimesheetConfigurationService.saveConfig($scope.timesheetConfig).then(function(response) {
+                TimesheetConfigurationService.saveConfig($scope.timesheetConfig).then(function (response) {
                     MessageService.succsessAction();
-                }, function(reaspon) {
+                }, function (reason) {
                     MessageService.errorAction();
                 });
             };
 
             $scope.saveTimesheetProperties = function() {
-                TimesheetConfigurationService.saveProperties($scope.timesheetProperties).then(function(response) {
+                TimesheetConfigurationService.saveProperties($scope.timesheetProperties).then(function (response) {
                     MessageService.succsessAction();
-                }, function(reaspon) {
+                }, function (reason) {
                     MessageService.errorAction();
                 });
             };

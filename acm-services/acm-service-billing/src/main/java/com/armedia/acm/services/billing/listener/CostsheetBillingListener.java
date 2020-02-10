@@ -34,9 +34,10 @@ import com.armedia.acm.services.billing.service.BillingService;
 import com.armedia.acm.services.costsheet.dao.AcmCostsheetDao;
 import com.armedia.acm.services.costsheet.model.AcmCostsheet;
 import com.armedia.acm.services.costsheet.model.AcmCostsheetEvent;
+import com.armedia.acm.services.costsheet.model.CostsheetConfig;
 
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.context.ApplicationListener;
 
 public class CostsheetBillingListener implements ApplicationListener<AcmCostsheetEvent>
@@ -45,14 +46,15 @@ public class CostsheetBillingListener implements ApplicationListener<AcmCostshee
 
     private AcmCostsheetDao acmCostsheetDao;
     private BillingService billingService;
+    private CostsheetConfig costsheetConfig;
 
     @Override
     public void onApplicationEvent(AcmCostsheetEvent acmCostsheetEvent)
     {
-        if (acmCostsheetEvent != null && !acmCostsheetEvent.isStartWorkflow())
+        if (acmCostsheetEvent != null && !acmCostsheetEvent.isStartWorkflow() && getCostsheetConfig().getAddCostsheetToBilling())
         {
-            AcmCostsheet costsheet = (AcmCostsheet)acmCostsheetEvent.getSource();
-            if("FINAL".equals(costsheet.getStatus()))
+            AcmCostsheet costsheet = (AcmCostsheet) acmCostsheetEvent.getSource();
+            if ("FINAL".equals(costsheet.getStatus()))
             {
                 generateBillingItems(acmCostsheetEvent);
             }
@@ -61,8 +63,9 @@ public class CostsheetBillingListener implements ApplicationListener<AcmCostshee
 
     private void generateBillingItems(AcmCostsheetEvent acmCostsheetEvent)
     {
-        AcmCostsheet costsheet = (AcmCostsheet)acmCostsheetEvent.getSource();
-        BillingItem costsheetBillingItem = populateBillingItem(acmCostsheetEvent.getUserId(), costsheet.getTitle(), costsheet.getParentId(), costsheet.getParentType(), costsheet.calculateBalance(), BillingConstants.BILLING_ITEM_TYPE_COSTSHEET);
+        AcmCostsheet costsheet = (AcmCostsheet) acmCostsheetEvent.getSource();
+        BillingItem costsheetBillingItem = populateBillingItem(acmCostsheetEvent.getUserId(), costsheet.getTitle(), costsheet.getParentId(),
+                costsheet.getParentType(), costsheet.calculateBalance(), BillingConstants.BILLING_ITEM_TYPE_COSTSHEET);
 
         try
         {
@@ -75,7 +78,8 @@ public class CostsheetBillingListener implements ApplicationListener<AcmCostshee
         }
     }
 
-    private BillingItem populateBillingItem(String creator, String itemDescription, Long parentObjectId, String parentObjectType, Double itemAmount, String itemType)
+    private BillingItem populateBillingItem(String creator, String itemDescription, Long parentObjectId, String parentObjectType,
+            Double itemAmount, String itemType)
     {
         BillingItem billingItem = new BillingItem();
         billingItem.setCreator(creator);
@@ -106,5 +110,15 @@ public class CostsheetBillingListener implements ApplicationListener<AcmCostshee
     public void setBillingService(BillingService billingService)
     {
         this.billingService = billingService;
+    }
+
+    public CostsheetConfig getCostsheetConfig()
+    {
+        return costsheetConfig;
+    }
+
+    public void setCostsheetConfig(CostsheetConfig costsheetConfig)
+    {
+        this.costsheetConfig = costsheetConfig;
     }
 }
